@@ -1,8 +1,8 @@
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useTokenPriceQuery, useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
+import { TokenQuery, useTokenPriceQuery, useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { ChainReplace, TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
@@ -57,12 +57,11 @@ export default function TokenDetailsPage() {
   }, [setCurrentPriceQuery, tokenPriceQuery])
 
   if (!tokenQuery) return <TokenDetailsPageSkeleton />
-
   return (
     <TokenDetails
       urlAddress={tokenAddress}
       chain={chain}
-      tokenQuery={tokenQuery}
+      tokenQuery={tokenQuery as ChainReplace<TokenQuery>}
       tokenPriceQuery={currentPriceQuery}
       onChangeTimePeriod={setTimePeriod}
       inputTokenAddress={parsedInputTokenAddress}

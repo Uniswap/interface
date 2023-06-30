@@ -4,7 +4,7 @@ import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import { PortfolioBalancesQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
+import { ChainReplace, getTokenDetailsURL, gqlToCurrency, isInterfaceSupportedGqlChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
@@ -68,14 +68,26 @@ export default function Tokens({ account }: { account: string }) {
       {visibleTokens.map(
         (tokenBalance) =>
           tokenBalance.token &&
-          meetsThreshold(tokenBalance, hideSmallBalances) && (
-            <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
+          meetsThreshold(tokenBalance, hideSmallBalances) &&
+          isInterfaceSupportedGqlChain(tokenBalance.token.chain) && (
+            <TokenRow
+              key={tokenBalance.id}
+              {...tokenBalance}
+              token={tokenBalance.token as ChainReplace<PortfolioToken>}
+            />
           )
       )}
       <ExpandoRow isExpanded={showHiddenTokens} toggle={toggleHiddenTokens} numItems={hiddenTokens.length}>
         {hiddenTokens.map(
           (tokenBalance) =>
-            tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
+            tokenBalance.token &&
+            isInterfaceSupportedGqlChain(tokenBalance.token.chain) && (
+              <TokenRow
+                key={tokenBalance.id}
+                {...tokenBalance}
+                token={tokenBalance.token as ChainReplace<PortfolioToken>}
+              />
+            )
         )}
       </ExpandoRow>
     </PortfolioTabWrapper>
@@ -90,7 +102,7 @@ type TokenBalance = NonNullable<
   NonNullable<NonNullable<PortfolioBalancesQuery['portfolios']>[number]>['tokenBalances']
 >[number]
 
-type PortfolioToken = NonNullable<TokenBalance['token']>
+type PortfolioToken = ChainReplace<NonNullable<TokenBalance['token']>>
 
 function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: TokenBalance & { token: PortfolioToken }) {
   const percentChange = tokenProjectMarket?.pricePercentChange?.value ?? 0

@@ -3,13 +3,13 @@ import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { TokenQueryData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID, ChainReplace } from 'graphql/data/util'
 
 import AssetLogo, { AssetLogoBaseProps } from './AssetLogo'
 
 export default function QueryTokenLogo(
   props: AssetLogoBaseProps & {
-    token?: TopToken | TokenQueryData | SearchToken
+    token?: ChainReplace<TopToken | TokenQueryData | SearchToken>
   }
 ) {
   const chainId = props.token?.chain ? CHAIN_NAME_TO_CHAIN_ID[props.token?.chain] : undefined

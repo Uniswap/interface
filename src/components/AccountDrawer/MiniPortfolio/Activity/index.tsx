@@ -3,8 +3,12 @@ import { useAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
-import { TransactionStatus, useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { PollingInterval } from 'graphql/data/util'
+import {
+  AssetActivityPartsFragment,
+  TransactionStatus,
+  useTransactionListQuery,
+} from 'graphql/data/__generated__/types-and-hooks'
+import { ChainReplace, isInterfaceSupportedGqlChain, PollingInterval } from 'graphql/data/util'
 import { atom, useAtom } from 'jotai'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useEffect, useMemo } from 'react'
@@ -144,7 +148,11 @@ export function ActivityTab({ account }: { account: string }) {
   }, [drawerOpen, lastFetched, refetch, setLastFetched])
 
   const activityGroups = useMemo(() => {
-    const remoteMap = parseRemoteActivities(data?.portfolios?.[0].assetActivities)
+    const remoteMap = parseRemoteActivities(
+      data?.portfolios?.[0].assetActivities?.filter((activity) =>
+        isInterfaceSupportedGqlChain(activity.chain)
+      ) as ChainReplace<AssetActivityPartsFragment>[]
+    )
     const allActivities = combineActivities(localMap, remoteMap, account)
     return createGroups(allActivities)
   }, [data?.portfolios, localMap, account])

@@ -9,14 +9,12 @@ import gql from 'graphql-tag'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 
-import {
-  Chain,
-  TopTokens100Query,
-  useTopTokens100Query,
-  useTopTokensSparklineQuery,
-} from './__generated__/types-and-hooks'
+import { TopTokens100Query, useTopTokens100Query, useTopTokensSparklineQuery } from './__generated__/types-and-hooks'
 import {
   CHAIN_NAME_TO_CHAIN_ID,
+  ChainReplace,
+  InterfaceGqlChain,
+  isInterfaceSupportedGqlChain,
   isPricePoint,
   PollingInterval,
   PricePoint,
@@ -84,7 +82,7 @@ gql`
   }
 `
 
-function useSortedTokens(tokens: TopTokens100Query['topTokens']) {
+function useSortedTokens(tokens: ChainReplace<TopTokens100Query['topTokens']>) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
@@ -114,7 +112,7 @@ function useSortedTokens(tokens: TopTokens100Query['topTokens']) {
   }, [tokens, sortMethod, sortAscending])
 }
 
-function useFilteredTokens(tokens: TopTokens100Query['topTokens']) {
+function useFilteredTokens(tokens: ChainReplace<TopTokens100Query['topTokens']>) {
   const filterString = useAtomValue(filterStringAtom)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
@@ -130,7 +128,7 @@ function useFilteredTokens(tokens: TopTokens100Query['topTokens']) {
         return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
       })
     }
-    return returnTokens
+    return returnTokens.filter((token) => isInterfaceSupportedGqlChain(token.chain))
   }, [tokens, lowercaseFilterString])
 }
 
@@ -140,13 +138,13 @@ export type SparklineMap = { [key: string]: PricePoint[] | undefined }
 export type TopToken = NonNullable<NonNullable<TopTokens100Query>['topTokens']>[number]
 
 interface UseTopTokensReturnValue {
-  tokens?: TopToken[]
+  tokens?: ChainReplace<TopToken>[]
   tokenSortRank: Record<string, number>
   loadingTokens: boolean
   sparklines: SparklineMap
 }
 
-export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
+export function useTopTokens(chain: InterfaceGqlChain): UseTopTokensReturnValue {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
@@ -173,7 +171,14 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     PollingInterval.Fast
   )
 
-  const unwrappedTokens = useMemo(() => data?.topTokens?.map((token) => unwrapToken(chainId, token)), [chainId, data])
+  const unwrappedTokens = useMemo(
+    () =>
+      data?.topTokens
+        ?.filter((token) => isInterfaceSupportedGqlChain(token.chain))
+        .map((token) => unwrapToken(chainId, token)),
+    [chainId, data]
+  ) as ChainReplace<TopTokens100Query['topTokens']>
+
   const sortedTokens = useSortedTokens(unwrappedTokens)
   const tokenSortRank = useMemo(
     () =>

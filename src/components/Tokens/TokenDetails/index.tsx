@@ -26,7 +26,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { QueryToken } from 'graphql/data/Token'
-import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID, ChainReplace, getTokenDetailsURL, InterfaceGqlChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
@@ -67,7 +67,7 @@ function useOnChainToken(address: string | undefined, skip: boolean) {
 function useRelevantToken(
   address: string | undefined,
   pageChainId: number,
-  tokenQueryData: TokenQueryData | undefined
+  tokenQueryData: ChainReplace<TokenQueryData> | undefined
 ) {
   const { chainId: activeChainId } = useWeb3React()
   const queryToken = useMemo(() => {
@@ -89,8 +89,8 @@ function useRelevantToken(
 type TokenDetailsProps = {
   urlAddress?: string
   inputTokenAddress?: string
-  chain: Chain
-  tokenQuery: TokenQuery
+  chain: InterfaceGqlChain
+  tokenQuery: ChainReplace<TokenQuery>
   tokenPriceQuery?: TokenPriceQuery
   onChangeTimePeriod: OnChangeTimePeriod
 }

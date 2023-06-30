@@ -57,7 +57,7 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
 }
 
 // TODO(DAT-33) Update when BE adds Ethereum Sepolia to supported chains
-export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
+export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [SupportedChainId.MAINNET]: Chain.Ethereum,
   [SupportedChainId.GOERLI]: Chain.EthereumGoerli,
   [SupportedChainId.POLYGON]: Chain.Polygon,
@@ -71,7 +71,7 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.BNB]: Chain.Bnb,
 }
 
-export function chainIdToBackendName(chainId: number | undefined) {
+export function chainIdToBackendName(chainId: number | undefined): InterfaceGqlChain {
   return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
     ? CHAIN_ID_TO_BACKEND_NAME[chainId]
     : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.MAINNET]
@@ -88,14 +88,14 @@ const GQL_CHAINS: number[] = [
 export function isGqlSupportedChain(chainId: number | undefined): chainId is SupportedChainId {
   return !!chainId && GQL_CHAINS.includes(chainId)
 }
-export function toContractInput(currency: Currency): ContractInput {
+export function toContractInput(currency: Currency): ChainReplace<ContractInput> {
   const chain = chainIdToBackendName(currency.chainId)
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 
 export function gqlToCurrency(token: {
   address?: string
-  chain: Chain
+  chain: InterfaceGqlChain
   standard?: TokenStandard
   decimals?: number
   name?: string
@@ -106,7 +106,7 @@ export function gqlToCurrency(token: {
   else return new Token(chainId, token.address, token.decimals ?? 18, token.name, token.symbol)
 }
 
-const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
+const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   ethereum: Chain.Ethereum,
   polygon: Chain.Polygon,
   celo: Chain.Celo,
@@ -115,12 +115,35 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   bnb: Chain.Bnb,
 }
 
-export function validateUrlChainParam(chainName: string | undefined) {
+export function validateUrlChainParam(chainName: string | undefined): InterfaceGqlChain {
   return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
+export type InterfaceGqlChain =
+  | Chain.Ethereum
+  | Chain.EthereumGoerli
+  | Chain.EthereumSepolia
+  | Chain.Polygon
+  | Chain.Celo
+  | Chain.Optimism
+  | Chain.Arbitrum
+  | Chain.Bnb
+
+export function isInterfaceSupportedGqlChain(chain: Chain): chain is InterfaceGqlChain {
+  return [
+    Chain.Ethereum,
+    Chain.EthereumGoerli,
+    Chain.EthereumSepolia,
+    Chain.Polygon,
+    Chain.Celo,
+    Chain.Optimism,
+    Chain.Arbitrum,
+    Chain.Bnb,
+  ].includes(chain)
+}
+
 // TODO(cartcrom): refactor into safer lookup & replace usage
-export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
+export const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: SupportedChainId } = {
   [Chain.Ethereum]: SupportedChainId.MAINNET,
   [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
   [Chain.EthereumSepolia]: SupportedChainId.SEPOLIA,
@@ -128,15 +151,21 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
   [Chain.Celo]: SupportedChainId.CELO,
   [Chain.Optimism]: SupportedChainId.OPTIMISM,
   [Chain.Arbitrum]: SupportedChainId.ARBITRUM_ONE,
-  [Chain.UnknownChain]: SupportedChainId.MAINNET,
   [Chain.Bnb]: SupportedChainId.BNB,
 }
 
-export function fromGraphQLChain(chain: Chain): SupportedChainId {
+export function fromGraphQLChain(chain: InterfaceGqlChain): SupportedChainId {
   return CHAIN_NAME_TO_CHAIN_ID[chain]
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
+// TODO: combine this with isInterfaceSupportedGqlChain ?
+export const BACKEND_CHAIN_NAMES: InterfaceGqlChain[] = [
+  Chain.Ethereum,
+  Chain.Polygon,
+  Chain.Optimism,
+  Chain.Arbitrum,
+  Chain.Celo,
+]
 
 export function getTokenDetailsURL({
   address,
@@ -172,3 +201,12 @@ export function unwrapToken<
     extensions: undefined, // prevents marking cross-chain wrapped tokens as native
   }
 }
+type Replace<T, TReplace, TWith> = T extends TReplace
+  ? T extends TReplace
+    ? TWith | Exclude<T, TReplace>
+    : T
+  : {
+      [P in keyof T]: Replace<T[P], TReplace, TWith>
+    }
+
+export type ChainReplace<T> = Replace<T, Chain, InterfaceGqlChain>

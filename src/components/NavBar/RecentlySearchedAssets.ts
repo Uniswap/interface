@@ -2,7 +2,12 @@ import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
-import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
+import {
+  CHAIN_NAME_TO_CHAIN_ID,
+  ChainReplace,
+  InterfaceGqlChain,
+  isInterfaceSupportedGqlChain,
+} from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { GenieCollection } from 'nft/types'
@@ -17,7 +22,7 @@ type RecentlySearchedAsset = {
 
 // Temporary measure used until backend supports addressing by "NATIVE"
 const NATIVE_QUERY_ADDRESS_INPUT = null as unknown as string
-function getQueryAddress(chain: Chain) {
+function getQueryAddress(chain: InterfaceGqlChain) {
   return getNativeTokenDBAddress(chain) ?? NATIVE_QUERY_ADDRESS_INPUT
 }
 
@@ -48,8 +53,10 @@ export function useRecentlySearchedAssets() {
       collectionAddresses: shortenedHistory.filter((asset) => asset.isNft).map((asset) => asset.address),
       contracts: shortenedHistory
         .filter((asset) => !asset.isNft)
+        .filter((token) => isInterfaceSupportedGqlChain(token.chain))
         .map((token) => ({
-          address: token.address === NATIVE_CHAIN_ID ? getQueryAddress(token.chain) : token.address,
+          address:
+            token.address === NATIVE_CHAIN_ID ? getQueryAddress(token.chain as InterfaceGqlChain) : token.address,
           chain: token.chain,
         })),
     },
@@ -78,12 +85,16 @@ export function useRecentlySearchedAssets() {
       [queryCollections]
     )
     collections?.forEach((collection) => (resultsMap[collection.address] = collection))
-    queryData.tokens?.filter(Boolean).forEach((token) => {
-      resultsMap[token.address ?? `NATIVE-${token.chain}`] = token
-    })
+    queryData.tokens
+      ?.filter((token) => isInterfaceSupportedGqlChain(token?.chain))
+      .forEach((token) => {
+        resultsMap[token.address ?? `NATIVE-${token.chain}`] = token as ChainReplace<SearchToken>
+      })
 
     const data: (SearchToken | GenieCollection)[] = []
     shortenedHistory.forEach((asset) => {
+      if (!isInterfaceSupportedGqlChain(asset.chain)) return
+
       if (asset.address === 'NATIVE') {
         // Handles special case where wMATIC data needs to be used for MATIC
         const native = nativeOnChain(CHAIN_NAME_TO_CHAIN_ID[asset.chain] ?? SupportedChainId.MAINNET)

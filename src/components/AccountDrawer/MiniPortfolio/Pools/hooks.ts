@@ -7,8 +7,8 @@ import { MULTICALL_ADDRESS, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDR
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { BaseContract } from 'ethers/lib/ethers'
-import { ContractInput, useUniswapPricesQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { toContractInput } from 'graphql/data/util'
+import { ContractInput, UniswapPricesQuery, useUniswapPricesQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { ChainReplace, isInterfaceSupportedGqlChain, toContractInput } from 'graphql/data/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
@@ -55,11 +55,14 @@ export function usePoolPriceMap(positions: PositionInfo[] | undefined) {
   const contracts = useMemo(() => {
     if (!positions || !positions.length) return []
     // Avoids fetching duplicate tokens by placing in map
-    const contractMap = positions.reduce((acc: { [key: string]: ContractInput }, { pool: { token0, token1 } }) => {
-      acc[currencyKey(token0)] = toContractInput(token0)
-      acc[currencyKey(token1)] = toContractInput(token1)
-      return acc
-    }, {})
+    const contractMap = positions.reduce(
+      (acc: { [key: string]: ChainReplace<ContractInput> }, { pool: { token0, token1 } }) => {
+        acc[currencyKey(token0)] = toContractInput(token0)
+        acc[currencyKey(token1)] = toContractInput(token1)
+        return acc
+      },
+      {}
+    )
     return Object.values(contractMap)
   }, [positions])
 
@@ -67,10 +70,14 @@ export function usePoolPriceMap(positions: PositionInfo[] | undefined) {
 
   const priceMap = useMemo(
     () =>
-      data?.tokens?.reduce((acc: PriceMap, current) => {
-        if (current) acc[currencyKeyFromGraphQL(current)] = current.project?.markets?.[0]?.price?.value
-        return acc
-      }, {}) ?? {},
+      data?.tokens
+        ?.filter((token) => isInterfaceSupportedGqlChain(token.chain))
+        .reduce((acc: PriceMap, current) => {
+          if (current)
+            acc[currencyKeyFromGraphQL(current as ChainReplace<NonNullable<UniswapPricesQuery['tokens']>[0]>)] =
+              current.project?.markets?.[0]?.price?.value
+          return acc
+        }, {}) ?? {},
     [data?.tokens]
   )
 

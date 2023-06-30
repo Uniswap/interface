@@ -14,7 +14,7 @@ import {
   TokenApprovalPartsFragment,
   TokenTransferPartsFragment,
 } from 'graphql/data/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'graphql/data/util'
+import { ChainReplace, fromGraphQLChain } from 'graphql/data/util'
 import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
@@ -23,11 +23,11 @@ import { MOONPAY_SENDER_ADDRESSES } from '../constants'
 import { Activity } from './types'
 
 type TransactionChanges = {
-  NftTransfer: NftTransferPartsFragment[]
-  TokenTransfer: TokenTransferPartsFragment[]
-  TokenApproval: TokenApprovalPartsFragment[]
-  NftApproval: NftApprovalPartsFragment[]
-  NftApproveForAll: NftApproveForAllPartsFragment[]
+  NftTransfer: ChainReplace<NftTransferPartsFragment>[]
+  TokenTransfer: ChainReplace<TokenTransferPartsFragment>[]
+  TokenApproval: ChainReplace<TokenApprovalPartsFragment>[]
+  NftApproval: ChainReplace<NftApprovalPartsFragment>[]
+  NftApproveForAll: ChainReplace<NftApproveForAllPartsFragment>[]
 }
 
 // TODO: Move common contract metadata to a backend service
@@ -75,7 +75,7 @@ function isSameAddress(a?: string, b?: string) {
   return a === b || a?.toLowerCase() === b?.toLowerCase() // Lazy-lowercases the addresses
 }
 
-function callsPositionManagerContract(assetActivity: AssetActivityPartsFragment) {
+function callsPositionManagerContract(assetActivity: ChainReplace<AssetActivityPartsFragment>) {
   return isSameAddress(
     assetActivity.transaction.to,
     NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[fromGraphQLChain(assetActivity.chain)]
@@ -93,7 +93,10 @@ function getCollectionCounts(nftTransfers: NftTransferPartsFragment[]): { [key: 
   }, {} as { [key: string]: number | undefined })
 }
 
-function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment) {
+function getSwapTitle(
+  sent: ChainReplace<TokenTransferPartsFragment>,
+  received: ChainReplace<TokenTransferPartsFragment>
+) {
   if (
     sent.tokenStandard === 'NATIVE' &&
     isSameAddress(nativeOnChain(fromGraphQLChain(sent.asset.chain)).wrapped.address, received.asset.address)
@@ -167,7 +170,7 @@ function parseLPTransfers(changes: TransactionChanges) {
   }
 }
 
-function parseSendReceive(changes: TransactionChanges, assetActivity: AssetActivityPartsFragment) {
+function parseSendReceive(changes: TransactionChanges, assetActivity: ChainReplace<AssetActivityPartsFragment>) {
   // TODO(cartcrom): remove edge cases after backend implements
   // Edge case: Receiving two token transfers in interaction w/ V3 manager === removing liquidity. These edge cases should potentially be moved to backend
   if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
@@ -214,7 +217,7 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: AssetActiv
   return { title: t`Unknown Send` }
 }
 
-function parseMint(changes: TransactionChanges, assetActivity: AssetActivityPartsFragment) {
+function parseMint(changes: TransactionChanges, assetActivity: ChainReplace<AssetActivityPartsFragment>) {
   const collectionMap = getCollectionCounts(changes.NftTransfer)
   if (Object.keys(collectionMap).length === 1) {
     const collectionName = Object.keys(collectionMap)[0]
@@ -228,11 +231,14 @@ function parseMint(changes: TransactionChanges, assetActivity: AssetActivityPart
   return { title: t`Unknown Mint` }
 }
 
-function parseUnknown(_changes: TransactionChanges, assetActivity: AssetActivityPartsFragment) {
+function parseUnknown(_changes: TransactionChanges, assetActivity: ChainReplace<AssetActivityPartsFragment>) {
   return { title: t`Contract Interaction`, ...COMMON_CONTRACTS[assetActivity.transaction.to.toLowerCase()] }
 }
 
-type ActivityTypeParser = (changes: TransactionChanges, assetActivity: AssetActivityPartsFragment) => Partial<Activity>
+type ActivityTypeParser = (
+  changes: TransactionChanges,
+  assetActivity: ChainReplace<AssetActivityPartsFragment>
+) => Partial<Activity>
 const ActivityParserByType: { [key: string]: ActivityTypeParser | undefined } = {
   [ActivityType.Swap]: parseSwap,
   [ActivityType.Approve]: parseApprove,
@@ -255,7 +261,7 @@ function getLogoSrcs(changes: TransactionChanges): string[] {
   return Array.from(logoSet).filter(Boolean) as string[]
 }
 
-function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activity | undefined {
+function parseRemoteActivity(assetActivity: ChainReplace<AssetActivityPartsFragment>): Activity | undefined {
   try {
     const changes = assetActivity.assetChanges.reduce(
       (acc: TransactionChanges, assetChange) => {
@@ -289,7 +295,7 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
   }
 }
 
-export function parseRemoteActivities(assetActivities?: AssetActivityPartsFragment[]) {
+export function parseRemoteActivities(assetActivities?: ChainReplace<AssetActivityPartsFragment>[]) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
     const activity = parseRemoteActivity(assetActivity)
     if (activity) acc[activity.hash] = activity

@@ -2,8 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { Chain } from 'graphql/data/Token'
-import { fromGraphQLChain } from 'graphql/data/util'
+import { fromGraphQLChain, InterfaceGqlChain } from 'graphql/data/util'
 
 export type CurrencyKey = string
 
@@ -18,7 +17,7 @@ export function currencyKey(currency: Currency): CurrencyKey {
 
 export function currencyKeyFromGraphQL(contract: {
   address?: string
-  chain: Chain
+  chain: InterfaceGqlChain
   standard?: TokenStandard
 }): CurrencyKey {
   const chainId = fromGraphQLChain(contract.chain)

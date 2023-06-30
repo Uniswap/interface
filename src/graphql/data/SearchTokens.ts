@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import invariant from 'tiny-invariant'
 
 import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
-import { chainIdToBackendName } from './util'
+import { chainIdToBackendName, ChainReplace, isInterfaceSupportedGqlChain } from './util'
 
 gql`
   query SearchTokens($searchQuery: String!) {
@@ -44,7 +44,7 @@ gql`
 
 const ARB_ADDRESS = ARB.address.toLowerCase()
 
-export type SearchToken = NonNullable<NonNullable<SearchTokensQuery['searchTokens']>[number]>
+export type SearchToken = ChainReplace<NonNullable<NonNullable<SearchTokensQuery['searchTokens']>[number]>>
 
 /* Returns the more relevant cross-chain token based on native status and search chain */
 function dedupeCrosschainTokens(current: SearchToken, existing: SearchToken | undefined, searchChain: Chain) {
@@ -96,12 +96,18 @@ export function useSearchTokens(searchQuery: string, chainId: number) {
     const searchChain = chainIdToBackendName(chainId)
     // Stores results, allowing overwriting cross-chain tokens w/ more 'relevant token'
     const selectionMap: { [projectId: string]: SearchToken } = {}
-    data?.searchTokens?.forEach((token) => {
-      if (token.project?.id) {
-        const existing = selectionMap[token.project.id]
-        selectionMap[token.project.id] = dedupeCrosschainTokens(token, existing, searchChain)
-      }
-    })
+    data?.searchTokens
+      ?.filter((token) => isInterfaceSupportedGqlChain(token.chain))
+      .forEach((token) => {
+        if (token.project?.id) {
+          const existing = selectionMap[token.project.id]
+          selectionMap[token.project.id] = dedupeCrosschainTokens(
+            token as ChainReplace<SearchToken>,
+            existing,
+            searchChain
+          )
+        }
+      })
     return Object.values(selectionMap).sort(
       searchTokenSortFunction.bind(null, searchChain, WRAPPED_NATIVE_CURRENCY[chainId]?.address)
     )
