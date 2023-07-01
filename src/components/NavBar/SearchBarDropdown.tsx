@@ -57,7 +57,7 @@ const SearchBarDropdownSection = ({
 }: SearchBarDropdownSectionProps) => {
   return (
     <Column gap="12" data-cy="searchbar-dropdown">
-      <Row paddingX="16" paddingY="4" gap="8" color="gray300" className={subheadSmall} style={{ lineHeight: '20px' }}>
+      <Row paddingX="16" paddingY="4" gap="8" color="gray" className={subheadSmall} style={{ lineHeight: '20px' }}>
         {headerIcon ? headerIcon : null}
         <Box>{header}</Box>
       </Row>
@@ -302,7 +302,7 @@ export const SearchBarDropdown = ({
                 isLoading={!searchHistory}
               />
             )}
-            {!isNFTPage && (
+            {/*!isNFTPage && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={shortenedHistory.length}
@@ -317,7 +317,7 @@ export const SearchBarDropdown = ({
                 headerIcon={<TrendingArrow />}
                 isLoading={!trendingTokenData}
               />
-            )}
+            )*/}
             {/*!isTokenPage && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}

@@ -149,7 +149,7 @@ export const LeverageInputSection = styled(ResponsiveHeaderText)`
 
 export const SwapSection = styled.div`
   position: relative;
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 16px;
   padding: 16px;
   color: ${({ theme }) => theme.textSecondary};
@@ -217,6 +217,7 @@ export const LeverageGaugeSection = styled(SwapSection) <{ showDetailsDropdown: 
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+
   // border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
   // border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
 `

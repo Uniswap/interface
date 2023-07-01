@@ -659,7 +659,6 @@ const TradeTabContent = () => {
             ) : null}
           </OutputSwapSection>
           <LeverageGaugeSection showDetailsDropdown={(!inputError && leverage) || (!leverage && showDetailsDropdown)} >
-            <LightCard>
               <AutoColumn gap="md">
                 <RowBetween>
                   <ThemedText.DeprecatedMain fontWeight={400}>
@@ -715,7 +714,6 @@ const TradeTabContent = () => {
                   </>
                 )}
               </AutoColumn>
-            </LightCard>
           </LeverageGaugeSection>
           <DetailsSwapSection>
             <SwapDetailsDropdown

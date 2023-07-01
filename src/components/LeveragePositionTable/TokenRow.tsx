@@ -373,7 +373,7 @@ export const HEADER_DESCRIPTIONS: Record<PositionSortMethod, ReactNode | undefin
   ),
   [PositionSortMethod.ENTRYPRICE]: (
     <Trans>
-      Entry Price
+      Your Entry and Current Price
     </Trans>
   ),
   [PositionSortMethod.PNL]: (
@@ -635,7 +635,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   // pnl in input token.
   // entry price in quote token / base token
-  const [pnl, entryPrice] = useMemo(() => {
+  const [pnl, entryPrice, currentPrice] = useMemo(() => {
     if (
       pool?.token0Price &&
       pool?.token1Price &&
@@ -644,6 +644,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
       token0 &&
       token1
     ) {
+      let curPrice = position.isToken0 ? new BN(pool.token1Price.toFixed(DEFAULT_ERC20_DECIMALS))
+      : new BN(pool.token0Price.toFixed(DEFAULT_ERC20_DECIMALS))
+     
       // entryPrice if isToken0, output is in token0. so entry price would be in input token / output token
       let _entryPrice = new BN(position.initialCollateral).plus(position.totalDebtInput).dividedBy(position.totalPosition)
 
@@ -667,15 +670,15 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
       if (pool.token0Price.greaterThan(1)) {
         // entry price = token1 / token0
-        return [_pnl, position.isToken0 ? _entryPrice.toNumber() : new BN(1).dividedBy(_entryPrice).toNumber()]
+        return [_pnl, position.isToken0 ? _entryPrice.toNumber() : new BN(1).dividedBy(_entryPrice).toNumber(), curPrice]
       } else {
         // entry price = token0 / token1
-        return [_pnl, position.isToken0 ? new BN(1).dividedBy(_entryPrice).toNumber() : _entryPrice.toNumber()]
+        return [_pnl, position.isToken0 ? new BN(1).dividedBy(_entryPrice).toNumber() : _entryPrice.toNumber(), new BN(1).dividedBy(curPrice).toNumber()]
       }
     }
-    return [undefined, undefined]
+    return [undefined, undefined, undefined]
   }, [position, pool?.token0Price, pool?.token1Price, token0, token1])
-
+  // console.log('tokens', token0, token1,quoteBaseSymbol )
   const quoteBaseSymbol = useMemo(() => {
     if (token0 && token1 && pool?.token0Price) {
       if (!pool.token0Price.greaterThan(1)) {
@@ -785,7 +788,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                   <DeltaText delta={Number(pnl)}>
                     {pnl ? ((Math.round(Number(pnl)*10000)/10000)) : "-"} 
                   </DeltaText>
-                  </TruncatedTableText>
+                   </TruncatedTableText>
                   {inputCurrencySymbol}               
                 </RowBetween>
               
@@ -796,9 +799,8 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           entryPrice={
             <Trans>
               <AutoColumn>
-              <TruncatedText>
-                {(Math.round(Number(entryPrice)*10000)/10000)}
-              </TruncatedText>
+                {(Math.round(Number(entryPrice)*10000000)/10000000)}
+                {" / " + (Math.round(Number(currentPrice)*10000000)/10000000)+" "}
               {quoteBaseSymbol}
               </AutoColumn>
             </Trans>
@@ -806,7 +808,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           remainingPremium={
             <Trans>
               <TruncatedTableText>
-                {(remainingPremium ? remainingPremium: 0)}
+                {(remainingPremium ? Math.round(Number(remainingPremium)*1000000)/1000000: 0)}
               </TruncatedTableText>
               {` ${inputCurrencySymbol}`}
             </Trans>

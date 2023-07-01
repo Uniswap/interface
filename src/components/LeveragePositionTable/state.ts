@@ -9,7 +9,7 @@ export enum PositionSortMethod {
   // RECENT_PREMIUM = 'Recent Premium',
   REPAYTIME = 'Time Left',
   PNL = 'PnL',
-  ENTRYPRICE = 'Entry Price',
+  ENTRYPRICE = 'Entry/Current Price',
   REMAINING = "Prem. Left",
   ACTIONS = 'Actions'
   // UNUSED_PREMIUM = 'Unused Premium'
