@@ -446,7 +446,6 @@ const BorrowTabContent = () => {
             ) : null}
           </OutputSwapSection>
           <LeverageGaugeSection showDetailsDropdown={(!borrowInputError)} >
-            <LightCard>
               <AutoColumn gap="md">
                 <RowBetween>
                   <MouseoverTooltip text="Loan-to-Value">
@@ -500,7 +499,6 @@ const BorrowTabContent = () => {
                   </>
                 )}
               </AutoColumn>
-            </LightCard>
           </LeverageGaugeSection>
           <DetailsSwapSection>
             <BorrowDetailsDropdown
