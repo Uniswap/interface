@@ -1484,7 +1484,7 @@ export function BorrowReduceCollateralModalFooter({
           <>
             <RowBetween>
               <ThemedText.DeprecatedMain fontWeight={400}>
-                <Trans>Collateral Reduce Amount ({`${position?.initialCollateral ? formatNumber(Number(reduceAmount) / Number(position?.initialCollateral) * 100) : "-"}% Reduction`})</Trans>
+                <Trans>Collateral Reduce Amount ({`${position?.initialCollateral ? new BN(Number(reduceAmount) / Number(position?.initialCollateral) * 100).toString() : "-"}% Reduction`})</Trans>
               </ThemedText.DeprecatedMain>
             </RowBetween>
             <AutoColumn>
@@ -1847,7 +1847,7 @@ export function BorrowReduceDebtModalFooter({
           <>
             <RowBetween>
               <ThemedText.DeprecatedMain fontWeight={400}>
-                <Trans>Debt Reduce Amount ({`${position?.totalDebtInput ? formatNumber(Number(reduceAmount) / Number(position?.totalDebtInput) * 100) : "-"}% Reduction`})</Trans>
+                <Trans>Debt Reduce Amount ({`${position?.totalDebtInput ? formatNumber(Number(reduceAmount) / Number(position?.totalDebtInput) * 100, NumberType.SwapTradeAmount) : "-"}% Reduction`})</Trans>
               </ThemedText.DeprecatedMain>
             </RowBetween>
             <AutoColumn>

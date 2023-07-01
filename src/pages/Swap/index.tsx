@@ -101,6 +101,7 @@ import { WarningIcon } from 'components/TokenSafety/TokenSafetyIcon'
 
 import BorrowTabContent from "./borrowModal"
 import moment from 'moment'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 
 const TradeTabContent = React.lazy(() => import('./swapModal'));
 
@@ -708,7 +709,7 @@ export default function Swap({ className }: { className?: string }) {
 
     return limitlessPositions ?
     limitlessPositions.filter((position) => {
-      return !position.isBorrow && Number(position.unusedPremium) > 0 && Number(position.repayTime) + 86400 > timestamp
+      return !position.isBorrow 
     }) : []
   }, [limitlessPositionsLoading, limitlessPositions ])
   const borrowPositions = useMemo(() => {
@@ -716,7 +717,7 @@ export default function Swap({ className }: { className?: string }) {
     const timestamp = now.unix()
     return limitlessPositions ?
     limitlessPositions.filter((position) => {
-      return position.isBorrow && Number(position.unusedPremium) > 0 && Number(position.repayTime) + 86400 > timestamp 
+      return position.isBorrow 
     }) : []
   }, [limitlessPositionsLoading, limitlessPositions])
 

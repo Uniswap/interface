@@ -341,7 +341,7 @@ export function ReduceLeverageModalFooter({
           <>
             <RowBetween>
               <ThemedText.DeprecatedMain fontWeight={400}>
-                <Trans>Reduce Amount ({`${position?.totalPosition ? formatNumber(Number(reduceAmount) / Number(position?.totalPosition) * 100) : "-"}% Reduction`})</Trans>
+                <Trans>Reduce Amount ({`${position?.totalPosition ? new BN((Number(reduceAmount) / Number(position?.totalPosition) * 100)).toString() : "-"}% Reduction`})</Trans>
               </ThemedText.DeprecatedMain>
             </RowBetween>
             <AutoColumn>

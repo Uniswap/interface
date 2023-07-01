@@ -142,6 +142,7 @@ const StyledConnectButton = styled.button`
   border: none;
   border-top-left-radius: ${FULL_BORDER_RADIUS}px;
   border-bottom-left-radius: ${FULL_BORDER_RADIUS}px;
+  border-radius: 16px;
   cursor: pointer;
   font-weight: 600;
   font-size: 16px;

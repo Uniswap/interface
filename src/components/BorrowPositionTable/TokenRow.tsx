@@ -666,7 +666,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const remainingPremium = useMemo(() => {
     if (position) {
       const timeLeft = moment.duration(moment.unix(Number(position.repayTime)).add(1, 'days').diff(now));
-      return position.unusedPremium * (timeLeft.asSeconds() / 86400);
+      return position.unusedPremium * (timeLeft.asSeconds() / 86400) < 0 ? 0 : position.unusedPremium * (timeLeft.asSeconds() / 86400);
     }
     return "-"
   }, [position, now])

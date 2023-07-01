@@ -24,7 +24,7 @@ import { AdvancedBorrowSwapDetails, AdvancedLeverageSwapDetails, AdvancedSwapDet
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 import { BorrowCreationDetails, LeverageTrade, useSwapState } from 'state/swap/hooks'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
-import { formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
+import { NumberType, formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
 import { BigNumber as BN } from "bignumber.js"
 
 const ArrowWrapper = styled.div`
@@ -480,7 +480,7 @@ export function LeverageModalHeader({
                 fontWeight={500}
                 color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.textSecondary : theme.textSecondary}
               >
-                {leverageTrade?.inputAmount?.toSignificant(18)} (+ {formatNumber(leverageTrade?.quotedPremium)})
+                {leverageTrade?.inputAmount?.toSignificant(18)} (+ {formatNumber(leverageTrade?.quotedPremium, NumberType.SwapTradeAmount)})
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">

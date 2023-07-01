@@ -449,9 +449,11 @@ const BorrowTabContent = () => {
             <LightCard>
               <AutoColumn gap="md">
                 <RowBetween>
-                  <ThemedText.DeprecatedMain fontWeight={400}>
-                    <Trans>LTV (%)</Trans>
-                  </ThemedText.DeprecatedMain>
+                  <MouseoverTooltip text="Loan-to-Value">
+                    <ThemedText.DeprecatedMain fontWeight={400}>
+                      <Trans>LTV (%)</Trans>
+                    </ThemedText.DeprecatedMain>
+                  </MouseoverTooltip>
                 </RowBetween>
                 {(
                   <>
