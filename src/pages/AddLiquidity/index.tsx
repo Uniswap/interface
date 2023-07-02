@@ -625,12 +625,12 @@ export default function AddLiquidity() {
               <Row justifyContent="flex-end" style={{ width: 'fit-content', minWidth: 'fit-content' }}>
                 <MediumOnly>
                   <ButtonText onClick={clearAll} margin="0 15px 0 0">
-                    <ThemedText.DeprecatedBlue fontSize="12px">
-                      <Trans>Clear All</Trans>
-                    </ThemedText.DeprecatedBlue>
+                    <ThemedText.DeprecatedWhite fontSize="12px">
+                      <Trans>Reset</Trans>
+                    </ThemedText.DeprecatedWhite>
                   </ButtonText>
                 </MediumOnly>
-                {baseCurrency && quoteCurrency ? (
+                {/*baseCurrency && quoteCurrency ? (
                   <RateToggle
                     currencyA={baseCurrency}
                     currencyB={quoteCurrency}
@@ -645,7 +645,7 @@ export default function AddLiquidity() {
                       )
                     }}
                   />
-                ) : null}
+                ) : null*/}
               </Row>
             )}
           </AddRemoveTabs>
@@ -773,6 +773,22 @@ export default function AddLiquidity() {
                             <ThemedText.DeprecatedLabel>
                               <Trans>Select Price Range</Trans>
                             </ThemedText.DeprecatedLabel>
+                            {baseCurrency && quoteCurrency ? (
+                              <RateToggle
+                                currencyA={baseCurrency}
+                                currencyB={quoteCurrency}
+                                handleRateToggle={() => {
+                                  if (!ticksAtLimit[Bound.LOWER] && !ticksAtLimit[Bound.UPPER]) {
+                                    onLeftRangeInput((invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? '')
+                                    onRightRangeInput((invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? '')
+                                    onFieldAInput(formattedAmounts[Field.CURRENCY_B] ?? '')
+                                  }
+                                  navigate(
+                                    `/add/${currencyIdB as string}/${currencyIdA as string}${feeAmount ? '/' + feeAmount : ''}`
+                                  )
+                                }}
+                              />
+                            ) : null}
                           </RowBetween>
 
                           {price && baseCurrency && quoteCurrency && !noLiquidity && (
@@ -801,6 +817,8 @@ export default function AddLiquidity() {
                                   {quoteCurrency?.symbol} per {baseCurrency.symbol}
                                 </ThemedText.DeprecatedBody>
                               </Trans>
+                            {!noLiquidity && <PresetsButtons onSetFullRange={handleSetFullRange} />}
+
                             </AutoRow>
                           )}
 
@@ -910,8 +928,8 @@ export default function AddLiquidity() {
                               feeAmount={feeAmount}
                               ticksAtLimit={ticksAtLimit}
                             />
-                            {!noLiquidity && <PresetsButtons onSetFullRange={handleSetFullRange} />}
-                            {!noLiquidity && <PresetsButtonsFull onSetFullRange={handleSetFullRange} />}
+                            {/*!noLiquidity && <PresetsButtons onSetFullRange={handleSetFullRange} />*/}
+                            {/*!noLiquidity && <PresetsButtonsFull onSetFullRange={handleSetFullRange} />*/}
 
                           </AutoColumn>
                         </StackedItem>
@@ -923,7 +941,7 @@ export default function AddLiquidity() {
                             {/*<AlertTriangle stroke={theme.deprecated_primary2} size="16px" />*/}
                             <ThemedText.DeprecatedLabel ml="12px" fontSize="12px">
                               <Trans>
-                                Your position will earn only premiums when out of range, and trading fees as well when in range. 
+                                Your position will earn only premiums when out of range, but trading fees as well when in range. 
                               </Trans>
                          
                             </ThemedText.DeprecatedLabel>

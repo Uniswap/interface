@@ -171,7 +171,7 @@ export const SwapSection = styled.div`
     height: 100%;
     pointer-events: none;
     content: '';
-    border: 1px solid ${({ theme }) => theme.backgroundModule};
+    border: 1px solid ${({ theme }) => theme.backgroundSurface};
   }
 
   &:hover:before {
@@ -208,8 +208,9 @@ export const OutputSwapSection = styled(SwapSection) <{ showDetailsDropdown: boo
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
   // border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
   // border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 10;
+  border-bottom-right-radius:10;
+
 `
 export const LeverageGaugeSection = styled(SwapSection) <{ showDetailsDropdown: boolean }>`
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
@@ -790,6 +791,7 @@ export default function Swap({ className }: { className?: string }) {
 
             <SwapWrapper chainId={chainId} className={className} id="swap-page">
               <SwapHeader allowedSlippage={allowedSlippage} activeTab={activeTab} />
+
               <TabContent id={ActiveSwapTab.TRADE} activeTab={activeTab}>
                 <TradeTabContent />
               </TabContent>

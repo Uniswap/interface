@@ -670,7 +670,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
       if (pool.token0Price.greaterThan(1)) {
         // entry price = token1 / token0
-        return [_pnl, position.isToken0 ? _entryPrice.toNumber() : new BN(1).dividedBy(_entryPrice).toNumber(), curPrice]
+        return [_pnl, position.isToken0 ? _entryPrice.toNumber() : new BN(1).dividedBy(_entryPrice).toNumber(), position.isToken0? new BN(1).dividedBy(curPrice).toNumber(): curPrice]
       } else {
         // entry price = token0 / token1
         return [_pnl, position.isToken0 ? new BN(1).dividedBy(_entryPrice).toNumber() : _entryPrice.toNumber(), new BN(1).dividedBy(curPrice).toNumber()]
@@ -809,6 +809,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
             <Trans>
               <TruncatedTableText>
                 {(remainingPremium ? Math.round(Number(remainingPremium)*1000000)/1000000: 0)}
+                / {position.unusedPremium}
               </TruncatedTableText>
               {` ${inputCurrencySymbol}`}
             </Trans>
