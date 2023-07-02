@@ -47,7 +47,7 @@ import { GrayCard, LightCard } from '../../components/Card'
 import { AutoColumn, Column } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import LeveragedOutputPanel from '../../components/CurrencyInputPanel/leveragedOutputPanel'
-import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal, { BorrowConfirmModal, LeverageConfirmModal } from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
@@ -190,8 +190,9 @@ const TabHeader = styled.div<{ active: boolean }>`
   background: ${({active, theme}) => active ? theme.backgroundSurface : theme.backgroundBackdrop }
 `
 
-const MainSwapContainer = styled(RowBetween)`
+const MainSwapContainer = styled(Row)`
   align-items: flex-start;
+  justify-content: space-evenly;
 `
 
 export const InputLeverageSection = styled(SwapSection)`
@@ -246,7 +247,6 @@ const ChartContainer = styled(AutoColumn)`
 
 const PositionsContainer = styled.div`
   margin-right: 20px;
-  margin-top: 15px;
   // background-color: ${({ theme }) => theme.backgroundSurface};
   max-width: 1200px;
   width: 100%;
@@ -272,7 +272,8 @@ const LeftContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  width:95%;
+  min-width: 700px;
+  max-width: 1100px;
 `
 
 const LeveragePositionsWrapper = styled.main`

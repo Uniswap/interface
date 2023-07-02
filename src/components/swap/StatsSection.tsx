@@ -41,7 +41,7 @@ const Header = styled(ThemedText.MediumHeader)`
 
 const StatPrice = styled.div`
   margin-top: 4px;
-  font-size: 28px;
+  font-size: 20px;
   color: ${({ theme }) => theme.textPrimary};
 `
 const NoData = styled.div`

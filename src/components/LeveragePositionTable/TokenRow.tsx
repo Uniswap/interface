@@ -593,6 +593,12 @@ export function LoadingRow(props: { first?: boolean; last?: boolean }) {
   )
 }
 
+export const FlexStartRow = styled(Row)`
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content:flex-start;
+`
+
 interface LoadedRowProps {
   position: LimitlessPositionDetails
 }
@@ -676,7 +682,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
         return [_pnl, position.isToken0 ? new BN(1).dividedBy(_entryPrice).toNumber() : _entryPrice.toNumber(), new BN(1).dividedBy(curPrice).toNumber()]
       }
     }
-    return [undefined, undefined, undefined]
+    return [0, 0, 0]
   }, [position, pool?.token0Price, pool?.token1Price, token0, token1])
   // console.log('tokens', token0, token1,quoteBaseSymbol )
   const quoteBaseSymbol = useMemo(() => {
@@ -730,50 +736,38 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
             <ClickableContent>
               <RowBetween>
                 <PositionInfo>
-                  <TruncatedTableText>
                     <GreenText> x{
-                      // leverageFactor
-                      (Math.round(leverageFactor*1000)/1000)
+                      `${(Math.round(leverageFactor*1000)/1000)} ${outputCurrencySymbol}`
                     }</GreenText> 
-                  </TruncatedTableText>
-                  {" " + outputCurrencySymbol}
                 </PositionInfo>
               </RowBetween>
             </ClickableContent>
           }
           value={
-            <Row width="auto">
+            <FlexStartRow>
               <UnderlineText>
-                <TruncatedTableText>
-                  {(Math.round(Number(position.totalPosition)*10000)/10000)}
-                </TruncatedTableText>
-                {" " + outputCurrencySymbol}
+              {`${formatNumber(Number(position.totalPosition), NumberType.SwapTradeAmount)} ${outputCurrencySymbol}`}
               </UnderlineText>
-              <Edit3 size={12}/>
-            </Row>
+              <Edit3 size={14}/>
+            </FlexStartRow>
           }
           collateral={
-            <Trans>
-              <TruncatedTableText>
-                {(Math.round(Number(position.initialCollateral)*10000)/10000)}
-              </TruncatedTableText>
-              {" " + inputCurrencySymbol}
-            </Trans>
+            <FlexStartRow>
+              {`${formatNumber(Number(position.initialCollateral), NumberType.SwapTradeAmount)} ${inputCurrencySymbol}`}
+            </FlexStartRow>
           }
           repaymentTime={
             <Trans>
-              <TruncatedTableText>
                 {!isOverDue ? (
                   <GreenText>
                     {timeLeft}
                   </GreenText>
                 ) : (
                   <RedText>
-                    -{0}
+                    {0}
                   </RedText>
                 )
                 }
-              </TruncatedTableText>
             </Trans>
           }
           PnL={
@@ -783,13 +777,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                   <ArrowCell>
                     {arrow}
                   </ArrowCell>
-                  
-                  <TruncatedTableText>
                   <DeltaText delta={Number(pnl)}>
-                    {pnl ? ((Math.round(Number(pnl)*10000)/10000)) : "-"} 
-                  </DeltaText>
-                   </TruncatedTableText>
-                  {inputCurrencySymbol}               
+                    {pnl ? `${formatNumber(Number(pnl), NumberType.SwapTradeAmount)} ${inputCurrencySymbol}` : "-"} 
+                  </DeltaText>              
                 </RowBetween>
               
               </AutoRow>
@@ -799,18 +789,13 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           entryPrice={
             <Trans>
               <AutoColumn>
-                {(Math.round(Number(entryPrice)*10000000)/10000000)}
-                {" / " + (Math.round(Number(currentPrice)*10000000)/10000000)+" "}
-              {quoteBaseSymbol}
+                {`${formatNumber(Number(entryPrice), NumberType.SwapTradeAmount)}/${formatNumber(Number(currentPrice), NumberType.SwapTradeAmount)} ${quoteBaseSymbol}`}
               </AutoColumn>
             </Trans>
           }
           remainingPremium={
             <Trans>
-              <TruncatedTableText>
-                {(remainingPremium ? Math.round(Number(remainingPremium)*1000000)/1000000: 0)}
-              </TruncatedTableText>
-              {` ${inputCurrencySymbol}`}
+              {`${(remainingPremium ? formatNumber(Number(remainingPremium),NumberType.SwapTradeAmount) : 0)} ${inputCurrencySymbol}`}
             </Trans>
           }
           // recentPremium={
