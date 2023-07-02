@@ -49,6 +49,7 @@ import { Fraction, Price } from '@uniswap/sdk-core'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { formatSymbol } from 'lib/utils/formatSymbol'
 import Row from 'components/Row'
+import { FlexStartRow } from 'components/LeveragePositionTable/TokenRow'
 
 const Cell = styled.div`
   display: flex;
@@ -600,8 +601,9 @@ white-space: nowrap;
 text-overflow: ellipsis;
 `
 export const UnderlineText = styled(Row)`
+width: fit-content;
 align-items: flex-start;
-text-decoration: ${({theme}) =>  `underline dashed ${theme.textTertiary}`};
+text-decoration: ${({theme}) =>  `underline dashed ${theme.textPrimary}`};
 `
 
 
@@ -668,7 +670,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
       const timeLeft = moment.duration(moment.unix(Number(position.repayTime)).add(1, 'days').diff(now));
       return position.unusedPremium * (timeLeft.asSeconds() / 86400) < 0 ? 0 : position.unusedPremium * (timeLeft.asSeconds() / 86400);
     }
-    return "-"
+    return 0
   }, [position, now])
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
@@ -689,55 +691,42 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           ltv={
             <Trans>
-              <TruncatedTableText>
                 {new BN((Number(ltv) * 100)).toString()}%
-                </TruncatedTableText>
             </Trans>
           }
           borrowedAmount={
-              <Row width="auto">
+              <FlexStartRow>
                 <UnderlineText>
-                <TruncatedTableText>
-                  {(Number(position.totalDebtInput))}
-                </TruncatedTableText>
-                {" " + outputCurrencySymbol}
+                  {`${formatNumber(Number(position.totalDebtInput), NumberType.SwapTradeAmount)} ${outputCurrencySymbol}`}
                 </UnderlineText>
-                <Edit3 size={12}/>
-              </Row>
+                <Edit3 size={14}/>
+              </FlexStartRow>
           }
           collateral={
-            <Row width="auto">
+            <FlexStartRow>
               <UnderlineText>
-                <TruncatedTableText>
-                {(Number(position.initialCollateral))}
-              </TruncatedTableText>
-              {inputCurrencySymbol}
+                {`${formatNumber(Number(position.initialCollateral), NumberType.SwapTradeAmount)} ${inputCurrencySymbol}`}
               </UnderlineText>
-              <Edit3 size={12}/>
-            </Row>
+              <Edit3 size={14}/>
+            </FlexStartRow>
           }
           repaymentTime={
             <Trans>
-              <TruncatedTableText>
-                {!isOverDue ? (
-                  <GreenText>
-                    {timeLeft}
-                  </GreenText>
-                ) : (
-                  <RedText>
-                    -{timeLeft}
-                  </RedText>
-                )
-                }
-              </TruncatedTableText>
+              {!isOverDue ? (
+                <GreenText>
+                  {timeLeft}
+                </GreenText>
+              ) : (
+                <RedText>
+                  {0}
+                </RedText>
+              )
+              }
             </Trans>
           }
           remainingPremium={
             <Trans>
-              <TruncatedTableText>
-                {(remainingPremium)}
-              </TruncatedTableText>
-              {" " + outputCurrencySymbol}
+                {`${formatNumber(remainingPremium,  NumberType.SwapTradeAmount)} ${outputCurrencySymbol}`}
             </Trans>
           }
           position={position}
