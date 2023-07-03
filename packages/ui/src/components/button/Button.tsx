@@ -1,5 +1,3 @@
-import { Link, LinkProps } from 'react-router-dom'
-
 import {
   ButtonFrame,
   ButtonProps as TamaguiButtonProps,
@@ -76,39 +74,3 @@ export const Button = CustomButtonFrame.styleable(({ children, ...props }: Butto
     </CustomButtonFrame>
   )
 })
-
-// TODO: if we ever decide to not use React Router for navigation, we should remove this component as well since it won't be needed
-export const LinkButton = ({
-  to,
-  state,
-  onClick,
-  children,
-  ...props
-}: ButtonProps & {
-  to: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  state?: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onClick?: any
-  linkStyleProps?: Pick<LinkProps, 'style'>
-}): JSX.Element => (
-  <Link
-    state={state}
-    style={{ ...styles.linkButton, ...props.linkStyleProps?.style }}
-    to={to}
-    onClick={onClick}>
-    <Button {...props} theme={props.theme}>
-      {children}
-    </Button>
-  </Link>
-)
-
-const styles = {
-  linkButton: {
-    display: 'flex',
-    textDecoration: 'none',
-    focus: {
-      outline: 'none',
-    },
-  },
-}

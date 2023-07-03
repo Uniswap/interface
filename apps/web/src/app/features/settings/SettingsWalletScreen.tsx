@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { BackButtonHeader } from 'src/app/features/settings/BackButtonHeader'
 import { SettingsWalletRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
 import { Switch, Text, XStack, YStack } from 'ui/src'
 import PencilIcon from 'ui/src/assets/icons/pencil.svg'
-import { Button, LinkButton } from 'ui/src/components/button/Button'
+import { Button } from 'ui/src/components/button/Button'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import {
   EditAccountAction,
@@ -25,6 +25,7 @@ export function SettingsWalletScreen(): JSX.Element {
 function WalletScreenContent({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const { navigateBack } = useExtensionNavigation()
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
   const account = useAccount(address)
@@ -63,9 +64,9 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
               <Text variant="bodyLarge">{t('Edit nickname')}</Text>
               <Text variant="bodyMicro">{nickname}</Text>
             </YStack>
-            <LinkButton to={SettingsWalletRoutes.EditNickname.valueOf()}>
+            <Button onPress={(): void => navigate(SettingsWalletRoutes.EditNickname.valueOf())}>
               <PencilIcon height={iconSizes.icon24} width={iconSizes.icon24} />
-            </LinkButton>
+            </Button>
           </XStack>
           <XStack flexGrow={1} justifyContent="space-between" paddingVertical="$spacing12">
             <YStack>

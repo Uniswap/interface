@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import {
   CreateOnboardingRoutes,
   ImportOnboardingRoutes,
@@ -5,7 +6,7 @@ import {
 } from 'src/app/navigation/constants'
 import { Circle, Icons, Image, Stack, Text, XStack, YStack } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
-import { LinkButton } from 'ui/src/components/button/Button'
+import { Button } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { opacify } from 'ui/src/theme/color/utils'
 import { iconSizes } from 'ui/src/theme/iconSizes'
@@ -45,6 +46,7 @@ function InfoRow({
 }
 
 export function IntroScreen(): JSX.Element {
+  const navigate = useNavigate()
   return (
     <XStack
       alignItems="center"
@@ -73,18 +75,22 @@ export function IntroScreen(): JSX.Element {
         <Text marginBottom="$spacing48" textAlign="center" variant="headlineMedium">
           Get started with Uniswap Wallet
         </Text>
-        <LinkButton
+        <Button
           flexGrow={1}
           theme="secondary"
-          to={`${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Password}`}>
+          onPress={(): void =>
+            navigate(`${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Password}`)
+          }>
           I already have a wallet
-        </LinkButton>
-        <LinkButton
+        </Button>
+        <Button
           flexGrow={1}
           theme="primary"
-          to={`${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Password}`}>
+          onPress={(): void =>
+            navigate(`${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Password}`)
+          }>
           Create a new wallet
-        </LinkButton>
+        </Button>
       </YStack>
       <YStack alignItems="flex-start" gap="$spacing24" justifyContent="center">
         <InfoRow

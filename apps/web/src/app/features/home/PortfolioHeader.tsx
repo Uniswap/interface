@@ -4,7 +4,7 @@ import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { useDappContext } from 'src/background/features/dapp/hooks'
 import { Icons, Popover, XStack } from 'ui/src'
-import { LinkButton } from 'ui/src/components/button/Button'
+import { Button } from 'ui/src/components/button/Button'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
@@ -61,17 +61,13 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
             </Popover.Content>
           </Popover>
         ) : null}
-        <LinkButton
-          icon={
-            <Icons.Settings
-              color="$textSecondary"
-              height={iconSizes.icon24}
-              width={iconSizes.icon24}
-            />
-          }
-          padding={0}
-          to="/settings"
-        />
+        <Button padding={0} onPress={(): void => navigate('/settings')}>
+          <Icons.Settings
+            color="$textSecondary"
+            height={iconSizes.icon24}
+            width={iconSizes.icon24}
+          />
+        </Button>
       </XStack>
     </XStack>
   )
