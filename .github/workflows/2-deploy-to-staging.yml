@@ -1,0 +1,63 @@
+name: 2 | Deploy staging
+on:
+  push:
+    branches:
+      - 'releases/staging'
+
+jobs:
+  deploy-to-staging:
+    runs-on: ubuntu-latest
+    environment:
+      name: deploy/staging
+    steps:
+      - name: Send Slack message that deploy is starting
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        continue-on-error: true
+        with:
+          payload: |
+            {
+              "text": "Staging deploy started for branch: ${{ github.ref_name }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn prepare
+      - run: yarn build
+        env:
+          REACT_APP_STAGING: 1
+      - name: Update Cloudflare Pages deployment
+        id: pages-deployment
+        uses: cloudflare/pages-action@364c7ca09a4b57837c5967871d64a2c31adb8c0d
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: interface-staging
+          directory: build
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          # Cloudflare uses `main` as the default production branch, so we push using the `main` branch so that it can be aliased by a custom domain.
+          branch: main
+      - name: Send Slack message about deployment outcome
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        continue-on-error: true
+        if: always()
+        with:
+          payload: |
+            {
+              "text": "Staging deploy **${{ steps.pages-deployment.outcome }}** for: ${{ github.ref_name }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - name: Upload source maps to Sentry
+        uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd
+        continue-on-error: true
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: staging
+          sourcemaps: './build/static/js'
+          url_prefix: '~/static/js'

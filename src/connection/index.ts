@@ -4,7 +4,7 @@ import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector } from '@web3-react/types'
-import { WalletConnect } from '@web3-react/walletconnect'
+import { WalletConnect as WalletConnectV2 } from '@web3-react/walletconnect-v2'
 import { SupportedChainId } from 'constants/chains'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
@@ -52,7 +52,7 @@ export const gnosisSafeConnection: Connection = {
   type: ConnectionType.GNOSIS_SAFE,
 }
 
-const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnect>((actions) => {
+const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnectV2>((actions) => {
   // Avoid testing for the best URL by only passing a single URL per chain.
   // Otherwise, WC will not initialize until all URLs have been tested (see getBestUrl in web3-react).
   const RPC_URLS_WITHOUT_FALLBACKS = Object.entries(RPC_URLS).reduce(
@@ -62,11 +62,13 @@ const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletCo
     }),
     {}
   )
-  return new WalletConnect({
+  return new WalletConnectV2({
     actions,
     options: {
+      projectId: 'c5220802fbb362d942d7ef3813ed29c2',
       rpc: { ...RPC_URLS_WITHOUT_FALLBACKS, ...RPC_URLS_FOR_BRIDGE },
-      qrcode: true,
+      showQrModal: true,
+      chains: [9001],
     },
     onError,
   })

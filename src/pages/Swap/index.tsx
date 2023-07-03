@@ -21,7 +21,6 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { TokenInfoContainer, TokenNameCell } from 'components/Tokens/TokenDetails/Skeleton'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import Widget from 'components/Widget'
 import { isSupportedChain } from 'constants/chains'
 import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
@@ -624,13 +623,7 @@ export default function Swap({ className, intro }: { className?: string; intro?:
 
           <PageWrapper>
             {swapWidgetEnabled ? (
-              <Widget
-                defaultTokens={{
-                  [Field.INPUT]: loadedInputCurrency ?? undefined,
-                  [Field.OUTPUT]: loadedOutputCurrency ?? undefined,
-                }}
-                width="100%"
-              />
+              <></>
             ) : (
               <SwapWrapper className={className} id="swap-page">
                 <SwapHeader allowedSlippage={allowedSlippage} />
