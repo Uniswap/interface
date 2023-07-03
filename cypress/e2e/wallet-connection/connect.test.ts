@@ -1,4 +1,5 @@
 import { getTestSelector } from '../../utils'
+import { UNCONNECTED_WALLET_USER_STATE } from '../../utils/user-state'
 
 describe('disconnect wallet', () => {
   it('should clear state', () => {
@@ -27,7 +28,7 @@ describe('disconnect wallet', () => {
 
 describe('connect wallet', () => {
   it('should load state', () => {
-    cy.visit('/swap', { ethereum: 'hardhat', userState: {} })
+    cy.visit('/swap', { ethereum: 'hardhat', userState: UNCONNECTED_WALLET_USER_STATE })
 
     // Connect the wallet
     cy.get(getTestSelector('navbar-connect-wallet')).contains('Connect').click()

@@ -1,9 +1,9 @@
 import { getTestSelector } from '../utils'
-import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
+import { CONNECTED_WALLET_USER_STATE, UNCONNECTED_WALLET_USER_STATE } from '../utils/user-state'
 
 describe('Landing Page', () => {
   it('shows landing page when no user state exists', () => {
-    cy.visit('/', { userState: {} })
+    cy.visit('/', { userState: UNCONNECTED_WALLET_USER_STATE })
     cy.get(getTestSelector('landing-page'))
     cy.screenshot()
   })
