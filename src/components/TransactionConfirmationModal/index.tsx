@@ -24,6 +24,8 @@ import Row, { RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 import { SmallButtonPrimary } from 'components/Button'
 import { ReactComponent as LogoGradient } from '../../assets/svg/full_logo_gradient.svg'
+import { NumberType, formatNumber } from '@uniswap/conedison/format'
+import { useCurrency } from 'hooks/Tokens'
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundFloating};
@@ -179,13 +181,8 @@ export function TransactionSubmittedContent({
 }
 
 
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 0.25fr;
-`
-
 const ReduceWrapper = styled.div`
-  background: ${({theme}) => `linear-gradient(to bottom right, ${theme.backgroundBackdrop}, ${theme.background})`};
+  background: ${({theme}) => `linear-gradient(to bottom right, ${theme.backgroundBackdrop} 25%, ${theme.backgroundSurface} 50%, ${theme.backgroundModule} 75%, ${theme.backgroundInteractive} 90%)`};
   border-radius: 20px;
   outline: 1px solid ${({ theme }) => theme.backgroundOutline};
   width: 100%;
@@ -193,21 +190,50 @@ const ReduceWrapper = styled.div`
 `
 
 const Container = styled.div`
-  grid-column: 1 / 3;
+
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
 `
 
 const SymbolsContainer = styled(Row)`
-  grid-column: 1 / 3;
   justify-content: flex-start;
   align-content: center;
   margin-top: 12px;
   margin-bottom: 12px;
 `
 
-const DeltaText = styled.span<{ delta: number | undefined, size: number }>`
+const DeltaText = styled.span<{ delta: number | undefined, size: number, marginRight: string | undefined }>`
   font-size: ${({size}) => `${size}px`};
   color: ${({ theme, delta }) =>
     delta !== undefined ? (Math.sign(delta) < 0 ? theme.accentFailure : theme.accentSuccess) : theme.textPrimary};
+  margin-right: ${({marginRight}) => marginRight ?? "0"}
+`
+
+const LeverageContainer = styled.div`
+  padding-right: 12px;
+  border-right: solid 1px ${({theme}) => theme.white};
+`
+
+const PerpetualTitleContainer = styled.div`
+  margin-left: 12px;
+`
+
+export interface TransactionPositionDetails {
+  pnl: number,
+  initialCollateral: number,
+  inputCurrencyId: string,
+  outputCurrencyId: string,
+  entryPrice: number,
+  markPrice: number,
+  leverageFactor: number,
+  quoteBaseSymbol: string
+}
+
+const FlexStartRow = styled(Row)`
+  flex-flow: row nowrap;
+  align-items: baseline;
+  justify-content:flex-start;
 `
 
 export function ReduceLeverageTransactionSubmittedContent({
@@ -219,15 +245,9 @@ export function ReduceLeverageTransactionSubmittedContent({
   inline,
 }: {
   onDismiss: () => void
-  hash: string | undefined
+  hash: string
   chainId: number
-  positionData: {
-    pnl: number,
-    inputCurrencySymbol: string,
-    outputCurrencySymbol: string,
-    entryPrice: number,
-    markPrice: number
-  } | undefined
+  positionData:  TransactionPositionDetails
   currencyToAdd?: Currency | undefined
   inline?: boolean // not in modal
 }) {
@@ -239,6 +259,18 @@ export function ReduceLeverageTransactionSubmittedContent({
   const logoURL = useCurrencyLogoURIs(token)[0]
 
   const [success, setSuccess] = useState<boolean | undefined>()
+
+  const {
+    pnl,
+    initialCollateral,
+    inputCurrencyId,
+    outputCurrencyId,
+    entryPrice,
+    markPrice,
+    leverageFactor,
+    quoteBaseSymbol
+  } = positionData
+  
 
   const addToken = useCallback(() => {
     if (!token?.symbol || !connector.watchAsset) return
@@ -253,22 +285,43 @@ export function ReduceLeverageTransactionSubmittedContent({
       .catch(() => setSuccess(false))
   }, [connector, logoURL, token])
 
+  const inputCurrency = useCurrency(positionData.inputCurrencyId)
+  const outputCurrency = useCurrency(positionData.outputCurrencyId)
+
   return (
     <ReduceWrapper>
-        <Container>
+        <RowBetween>
           <LogoGradient width={140} height={40}/>
-        </Container>
+          <CloseIcon onClick={onDismiss} />
+        </RowBetween>
+        <FlexStartRow marginTop="6px">
+          <ThemedText.LmtWhite>Closed Position</ThemedText.LmtWhite>
+        </FlexStartRow>
         <SymbolsContainer>
-        <ThemedText.DeprecatedLargeHeader>40x</ThemedText.DeprecatedLargeHeader>
-        <ThemedText.DeprecatedLargeHeader>BTC-ETH Perpetual</ThemedText.DeprecatedLargeHeader>
+        <LeverageContainer>
+          <ThemedText.LmtWhite>{formatNumber(positionData.leverageFactor, NumberType.SwapTradeAmount)}x</ThemedText.LmtWhite>
+        </LeverageContainer>
+        <PerpetualTitleContainer>
+          <ThemedText.LmtWhite>{`${inputCurrency?.symbol}/${outputCurrency?.symbol} Perpetual`}</ThemedText.LmtWhite>
+        </PerpetualTitleContainer>
         </SymbolsContainer>
-        <Container>
-          <DeltaText delta={100} size={24}>
-            +100% (+ 0.10 ETH)
+        <FlexStartRow>
+
+          <DeltaText delta={pnl} size={30} marginRight={"6px"}>
+            {`${formatNumber(pnl/initialCollateral * 100)}%`}
           </DeltaText>
-        </Container>
-        <ThemedText.DeprecatedMediumHeader>Entry Price 1.00 BTC/ETH</ThemedText.DeprecatedMediumHeader>
-        <ThemedText.DeprecatedMediumHeader>Mark Price 1.25 BTC/ETH</ThemedText.DeprecatedMediumHeader>
+          <DeltaText delta={pnl} size={18} marginRight={undefined}>
+            ({pnl > 0 ? `+ ${formatNumber(pnl, NumberType.SwapTradeAmount)} ${inputCurrency?.symbol}` : `${formatNumber(pnl, NumberType.SwapTradeAmount)} ${inputCurrency?.symbol}`})
+          </DeltaText>
+        </FlexStartRow>
+        <FlexStartRow marginTop="6px">
+          <ThemedText.PriceSmall marginRight="6px">{`Entry Price: `}</ThemedText.PriceSmall>
+          <ThemedText.Gold>{` ${formatNumber(entryPrice)} ${quoteBaseSymbol}`}</ThemedText.Gold>
+        </FlexStartRow>
+        <FlexStartRow>
+          <ThemedText.PriceSmall marginRight="6px">{`Mark Price: `}</ThemedText.PriceSmall>
+          <ThemedText.Gold>{` ${formatNumber(markPrice)} ${quoteBaseSymbol}`}</ThemedText.Gold>
+        </FlexStartRow>
     </ReduceWrapper>
   )
 }
@@ -434,13 +487,7 @@ interface ConfirmationModalProps {
   content: () => ReactNode
   attemptingTxn: boolean
   pendingText: ReactNode
-  positionData?: {
-    pnl: number,
-    inputCurrencySymbol: string,
-    outputCurrencySymbol: string,
-    entryPrice: number,
-    markPrice: number
-  } | undefined
+  positionData?: TransactionPositionDetails | undefined
   currencyToAdd?: Currency | undefined
   setIsLoadingQuote?: (arg:boolean) => void
   isLoadingQuote?: boolean
@@ -501,20 +548,14 @@ export function ReduceLeverageTransactionConfirmationModal({
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
-      ) : hash ? (
-        <TransactionSubmittedContent
+      ) : hash && positionData ? (
+        <ReduceLeverageTransactionSubmittedContent
           chainId={chainId}
           hash={hash}
           onDismiss={onDismiss}
           currencyToAdd={currencyToAdd}
+          positionData={positionData}
         />
-        // <ReduceLeverageTransactionSubmittedContent
-        //   chainId={chainId}
-        //   hash={hash}
-        //   onDismiss={onDismiss}
-        //   currencyToAdd={currencyToAdd}
-        //   positionData={positionData}
-        // />
       ) : (
         content()
       )}

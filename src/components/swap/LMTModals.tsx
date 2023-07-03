@@ -5,7 +5,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 
 
 import TransactionConfirmationModal, {
-  ConfirmationModalContent, ReduceLeverageTransactionConfirmationModal,
+  ConfirmationModalContent, ReduceLeverageTransactionConfirmationModal, TransactionPositionDetails,
 } from '../TransactionConfirmationModal'
 import SwapModalFooter, { AddPremiumLeverageModalFooter, AddPremiumBorrowModalFooter, BorrowReduceCollateralModalFooter, BorrowReduceDebtModalFooter } from './SwapModalFooter'
 import { ReduceLeverageModalFooter } from 'components/modalFooters/ReduceLeverageModalFooter'
@@ -14,6 +14,7 @@ import { BorrowPremiumPositionDetails, ReduceBorrowDetails, ReduceLeveragePositi
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { useLiquidityManagerContract } from 'hooks/useContract'
+import { feth_s, fusdc_s } from 'constants/fake-tokens'
 
 export default function ReducePositionModal({
   trader,
@@ -39,7 +40,7 @@ export default function ReducePositionModal({
 
   const { loading, error, position } = useLimitlessPositionFromTokenId(tokenId)
   const [txHash, setTxHash] = useState("")
-  const [positionData, setPositionData] = useState()
+  const [positionData, setPositionData] = useState<TransactionPositionDetails>()
   const [attemptingTxn, setAttemptingTxn] = useState(false)
 
 

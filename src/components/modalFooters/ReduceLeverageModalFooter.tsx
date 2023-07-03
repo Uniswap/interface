@@ -24,7 +24,7 @@ import AnimatedDropdown from 'components/AnimatedDropdown'
 
 import { BigNumber as BN } from "bignumber.js"
 import { useCurrency, useToken } from 'hooks/Tokens'
-import { formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
+import { NumberType, formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
 import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { LimitlessPositionDetails } from 'types/leveragePosition'
@@ -43,6 +43,7 @@ import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 // import { Info } from 'react-feather'
 // import Loader from 'components/Icons/LoadingSpinner'
 import { usePool } from 'hooks/usePools'
+import { TransactionPositionDetails } from 'components/TransactionConfirmationModal'
 // import { useSingleCallResult } from 'lib/hooks/multicall'
 // import { QuoterV2 } from 'types/v3'
 // import { MouseoverValueLabel } from 'components/swap/AdvancedSwapDetails'
@@ -67,6 +68,9 @@ function useDerivedLeverageReduceInfo(
     returnedAmount: string
     unusedPremium: string
     premium: string,
+    currentPrice: number,
+    entryPrice: number,
+    quoteBaseSymbol: string
   } | undefined,
   userError: React.ReactNode | undefined
 } {
@@ -79,6 +83,8 @@ function useDerivedLeverageReduceInfo(
   const { account } = useWeb3React()
   const currency0 = useCurrency(position?.token0Address)
   const currency1 = useCurrency(position?.token1Address)
+
+  
 
   const relevantTokenBalances = useCurrencyBalances(
     account ?? undefined,
@@ -127,8 +133,48 @@ function useDerivedLeverageReduceInfo(
     !userError && laggedfxn()
   }, [userError, leverageManager, trader, tokenId, allowedSlippage, reduceAmount])
 
+  const [poolState, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, position?.poolFee)
+  
+  const [entryPrice, currentPrice, quoteBaseSymbol] = useMemo(() => {
+    if (
+      pool?.token0Price &&
+      pool?.token1Price &&
+      // position.creationPrice &&
+      position &&
+      currency0 &&
+      currency1
+    ) {
+      let curPrice = position.isToken0 ? new BN(pool.token1Price.toFixed(DEFAULT_ERC20_DECIMALS))
+      : new BN(pool.token0Price.toFixed(DEFAULT_ERC20_DECIMALS))
+     
+      // entryPrice if isToken0, output is in token0. so entry price would be in input token / output token
+      let _entryPrice = new BN(position.initialCollateral).plus(position.totalDebtInput).dividedBy(position.totalPosition)
+
+      // use token0 as quote, token1 as base
+      // pnl will be in output token
+      // entry price will be in quote token.
+
+      if (pool.token0Price.greaterThan(1)) {
+        // entry price = token1 / token0
+        return [
+          position.isToken0 ? _entryPrice.toNumber() : new BN(1).dividedBy(_entryPrice).toNumber(), 
+          position.isToken0 ? new BN(1).dividedBy(curPrice).toNumber(): curPrice.toNumber(),
+          `${currency0.symbol}/${currency1.symbol}`
+        ]
+      } else {
+        // entry price = token0 / token1
+        return [
+          position.isToken0 ? new BN(1).dividedBy(_entryPrice).toNumber() : _entryPrice.toNumber(), 
+          new BN(1).dividedBy(curPrice).toNumber(),
+          `${currency1.symbol}/${currency0.symbol}`
+        ]
+      }
+    }
+    return [undefined, undefined, undefined]
+  }, [position, pool?.token0Price, pool?.token1Price, currency0, currency1])
+  
   const transactionInfo = useMemo(() => {
-    if (contractResult) {
+    if (contractResult && entryPrice && currentPrice && quoteBaseSymbol) {
       const { reducePositionResult } = contractResult
       let token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
       let token1Amount = new BN(reducePositionResult[1].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
@@ -143,7 +189,10 @@ function useDerivedLeverageReduceInfo(
         pnl,
         returnedAmount,
         unusedPremium,
-        premium
+        premium,
+        entryPrice,
+        currentPrice,
+        quoteBaseSymbol
       }
     } else {
       return undefined
@@ -173,7 +222,7 @@ export function ReduceLeverageModalFooter({
   trader: string | undefined,
   setAttemptingTxn: (attemptingTxn: boolean) => void
   setTxHash: (txHash: string) => void
-  setPositionData: (positionData: any) => void
+  setPositionData: (positionData: TransactionPositionDetails) => void
 }) {
   // const [nonce, setNonce] = useState(0)
   const { error, position } = useLimitlessPositionFromTokenId(tokenId)
@@ -189,10 +238,6 @@ export function ReduceLeverageModalFooter({
   const token1 = useToken(position?.token1Address)
   
   const inputIsToken0 = !position?.isToken0
-
-  // const [, pool] = usePool(token0, token1, position?.poolFee)
-
-
 
   const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
   const [showDetails, setShowDetails] = useState(true)
@@ -238,10 +283,16 @@ export function ReduceLeverageModalFooter({
             outputCurrencyId: !inputIsToken0 ? currencyId(token0) : currencyId(token1)
           })
           setTxHash(hash)
-          // setPositionData({
-          //   pnl: transactionInfo.pnl,
-
-          // })
+          setPositionData({
+            pnl: Number(transactionInfo.pnl),
+            initialCollateral: Number(position.initialCollateral),
+            leverageFactor: (Number(position.totalDebtInput) + Number(position.initialCollateral)) / Number(position.initialCollateral),
+            inputCurrencyId:  inputIsToken0 ? currencyId(token0) : currencyId(token1),
+            outputCurrencyId: !inputIsToken0 ? currencyId(token0) : currencyId(token1),
+            entryPrice: transactionInfo.entryPrice,
+            markPrice: transactionInfo.currentPrice,
+            quoteBaseSymbol: transactionInfo.quoteBaseSymbol
+          });
           setAttemptingTxn(false)
         }).catch((err: any) => {
           setAttemptingTxn(false)
@@ -448,7 +499,7 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                `${Number(transactionInfo?.unusedPremium)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${formatNumber(Number(transactionInfo?.unusedPremium), NumberType.SwapTradeAmount)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                               }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
@@ -497,19 +548,13 @@ export function ReduceLeverageModalFooter({
                             <TruncatedText>
 
                               {
-                                `${(Math.round(Number(transactionInfo?.pnl) * 1000) / 1000)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${formatNumber(Number(transactionInfo?.pnl), NumberType.SwapTradeAmount)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
 
                               }
                             </TruncatedText>
-                  <DeltaText delta={Number(100 * (Math.round(Number(transactionInfo?.pnl) * 1000) / 1000) / (Number(initCollateral)))}>
-                    {100 * (Math.round(Number(transactionInfo?.pnl) * 1000) / 1000) / (Number(initCollateral))} %
-                  </DeltaText>                             
-                            {/*<TruncatedText>
-                              ({
-                                `${100 * (Math.round(Number(transactionInfo?.pnl) * 1000) / 1000) / (Number(initCollateral))} %`
-
-                              })
-                            </TruncatedText>*/}
+                          <DeltaText delta={Number(100 * (Math.round(Number(transactionInfo?.pnl) * 1000) / 1000) / (Number(initCollateral)))}>
+                            {formatNumber(100 * Number(transactionInfo?.pnl) / (Number(initCollateral)), NumberType.SwapTradeAmount)} %
+                          </DeltaText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>

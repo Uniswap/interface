@@ -22,6 +22,9 @@ export const ThemedText = {
   BodySecondary(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color="textSecondary" {...props} />
   },
+  Gold(props: TextProps) {
+    return <TextWrapper fontWeight={800} fontSize={16} color="gold" {...props} />
+  },
   BodySmall(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} color="textPrimary" {...props} />
   },
@@ -33,6 +36,9 @@ export const ThemedText = {
   },
   HeadlineSmall(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={20} lineHeight="28px" color="textPrimary" {...props} />
+  },
+  PriceSmall(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={16} lineHeight="28px" color="textPrimary" {...props} />
   },
   HeadlineMedium(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={28} color="textPrimary" {...props} />
@@ -79,6 +85,9 @@ export const ThemedText = {
   },
   DeprecatedWhite(props: TextProps) {
     return <TextWrapper fontWeight={500} color="white" {...props} />
+  },
+  LmtWhite(props: TextProps) {
+    return <TextWrapper fontWeight={1000} fontSize="20px" color="white" {...props} />
   },
   DeprecatedBody(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color="textPrimary" {...props} />

@@ -49,8 +49,13 @@ import { Fraction, Price } from '@uniswap/sdk-core'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { formatSymbol } from 'lib/utils/formatSymbol'
 import Row from 'components/Row'
-import { FlexStartRow } from 'components/LeveragePositionTable/TokenRow'
+// import { FlexStartRow } from 'components/LeveragePositionTable/TokenRow'
 
+const FlexStartRow = styled(Row)`
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content:flex-start;
+`
 const Cell = styled.div`
   display: flex;
   align-items: center;

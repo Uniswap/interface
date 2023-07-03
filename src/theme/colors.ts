@@ -179,7 +179,7 @@ export const darkTheme = {
   accentWarning: colors.gold200,
   accentFailure: colors.red300,
   accentCritical: colors.red300,
-
+  gold: "#c9b832",
   accentActionSoft: opacify(24, colors.blue400),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green400),
