@@ -8,6 +8,7 @@ import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 import { toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { toSlippagePercent } from 'utils/slippage'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
 import {
@@ -246,6 +247,7 @@ export function transformRoutesToTrade(
         needsWrap: needsWrapIfUniswapX,
         auctionPeriodSecs: data.quote.auctionPeriodSecs,
         deadlineBufferSecs: data.quote.deadlineBufferSecs,
+        slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
       }),
     }
   }

@@ -1,6 +1,6 @@
 import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/gouda-sdk'
 import { MixedRouteSDK, Protocol, Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 
@@ -162,6 +162,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
   classicGasUseEstimateUSD: string | null | undefined
   auctionPeriodSecs: number
   deadlineBufferSecs: number
+  slippageTolerance: Percent
 
   constructor({
     currencyIn,
@@ -174,6 +175,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     classicGasUseEstimateUSD,
     auctionPeriodSecs,
     deadlineBufferSecs,
+    slippageTolerance,
   }: {
     currencyIn: Currency
     currenciesOut: Currency[]
@@ -185,6 +187,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     classicGasUseEstimateUSD?: string | null
     auctionPeriodSecs: number
     deadlineBufferSecs: number
+    slippageTolerance: Percent
   }) {
     super({ currencyIn, currenciesOut, orderInfo, tradeType })
     this.quoteId = quoteId
@@ -193,6 +196,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     this.classicGasUseEstimateUSD = classicGasUseEstimateUSD
     this.auctionPeriodSecs = auctionPeriodSecs
     this.deadlineBufferSecs = deadlineBufferSecs
+    this.slippageTolerance = slippageTolerance
   }
 }
 

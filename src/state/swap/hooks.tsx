@@ -11,7 +11,7 @@ import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
-import { isClassicTrade } from 'state/routing/utils'
+import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
@@ -149,10 +149,18 @@ export function useDerivedSwapInfo(
     [inputCurrency, outputCurrency]
   )
 
-  // allowed slippage is either auto slippage, or custom user defined slippage if auto slippage disabled
-  const autoSlippage = useAutoSlippageTolerance(isClassicTrade(trade.trade) ? trade.trade : undefined)
-  // TODO (Gouda): slippageTolerance for Gouda trades should be read from the backend response
-  const allowedSlippage = useUserSlippageToleranceWithDefault(autoSlippage)
+  // allowed slippage for classic trades is either auto slippage, or custom user defined slippage if auto slippage disabled
+  const classicAutoSlippage = useAutoSlippageTolerance(isClassicTrade(trade.trade) ? trade.trade : undefined)
+
+  // slippage for uniswapx trades is defined by the quote response
+  const uniswapXAutoSlippage = isUniswapXTrade(trade.trade) ? trade.trade.slippageTolerance : undefined
+
+  // Uniswap interface recommended slippage amount
+  const autoSlippage = uniswapXAutoSlippage ?? classicAutoSlippage
+  const classicAllowedSlippage = useUserSlippageToleranceWithDefault(autoSlippage)
+
+  // slippage amount used to submit the trade
+  const allowedSlippage = uniswapXAutoSlippage ?? classicAllowedSlippage
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
