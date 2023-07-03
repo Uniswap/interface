@@ -10,7 +10,7 @@ import { Z_INDEX } from 'theme/zIndex'
 import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div`
-  padding: 10px 10px 0px;
+  padding: 10px 24px 0px;
   max-width: 1700px;
   width: 100%;
   margin-right: auto;
@@ -26,7 +26,7 @@ export const PageWrapper = styled.div`
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
 export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
-  min-width: 340px;
+  min-width: 400px;
   max-width: 600px;
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
@@ -38,7 +38,7 @@ export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   // box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
   z-index: ${Z_INDEX.deprecated_content};
   transition: transform 250ms ease;
-  margin-left: 8px;
+  margin-left: 20px;
   &:hover {
     border: 0px solid ${({ theme }) => theme.backgroundOutline};
   }

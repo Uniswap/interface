@@ -687,10 +687,11 @@ export function AdvancedLeverageSwapDetails({
           label="Quoted Price"
           value={Math.round(Number(price) * 1000000) / 1000000}
           syncing={syncing}
-          symbolAppend={`${trade?.outputAmount.currency.symbol} / ${trade?.inputAmount.currency.symbol}`}
+          symbolAppend={"/"+String(Math.round(Number(1/price) * 1000000) / 1000000)}
+          // symbolAppend={`${trade?.outputAmount.currency.symbol} / ${trade?.inputAmount.currency.symbol}`}
         />
         <ValueLabel
-          description="The premium payment required to open this position"
+          description="The premium payment required to open this position. It depletes at a constant rate for 24 hours, and when you close your position early, you will regain the remaining amount."
           label="Quoted Premium"
           value={Math.round(Number(leverageTrade?.quotedPremium) * 100000) / 100000}
           syncing={syncing}
@@ -703,6 +704,14 @@ export function AdvancedLeverageSwapDetails({
           syncing={syncing}
           symbolAppend={trade?.inputAmount.currency.symbol}
         />}
+        <ValueLabel
+          description="The maximum loss you can incur is capped by which UniswapV3 ticks you borrow from. The highest value it can take is your margin.  
+          The exact value depends on the ticks you borrow from, if you borrow closer to the current market price(where you borrow depends on the pool's liquidity condition), the more expensive the premium, but the less maximum loss. This value does not account for premiums."
+          label="Maximum Loss"
+          value={Math.round(Number(leverageTrade?.inputAmount?.toExact()) * 100000) / 100000}
+          syncing={syncing}
+          symbolAppend={trade?.inputAmount.currency.symbol}
+        />
         <ValueLabel
           description="Fees paid for trade "
           label="Fees"

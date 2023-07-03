@@ -47,7 +47,7 @@ import { GrayCard, LightCard } from '../../components/Card'
 import { AutoColumn, Column } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import LeveragedOutputPanel from '../../components/CurrencyInputPanel/leveragedOutputPanel'
-import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal, { BorrowConfirmModal, LeverageConfirmModal } from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
@@ -171,7 +171,7 @@ export const SwapSection = styled.div`
     height: 100%;
     pointer-events: none;
     content: '';
-    border: 1px solid ${({ theme }) => theme.backgroundModule};
+    border: 1px solid ${({ theme }) => theme.backgroundSurface};
   }
 
   &:hover:before {
@@ -190,9 +190,8 @@ const TabHeader = styled.div<{ active: boolean }>`
   background: ${({active, theme}) => active ? theme.backgroundSurface : theme.backgroundBackdrop }
 `
 
-const MainSwapContainer = styled(Row)`
+const MainSwapContainer = styled(RowBetween)`
   align-items: flex-start;
-  justify-content: space-evenly;
 `
 
 export const InputLeverageSection = styled(SwapSection)`
@@ -209,8 +208,9 @@ export const OutputSwapSection = styled(SwapSection) <{ showDetailsDropdown: boo
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
   // border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
   // border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 10;
+  border-bottom-right-radius:10;
+
 `
 export const LeverageGaugeSection = styled(SwapSection) <{ showDetailsDropdown: boolean }>`
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
@@ -247,6 +247,7 @@ const ChartContainer = styled(AutoColumn)`
 
 const PositionsContainer = styled.div`
   margin-right: 20px;
+  margin-top: 15px;
   // background-color: ${({ theme }) => theme.backgroundSurface};
   max-width: 1200px;
   width: 100%;
@@ -272,8 +273,7 @@ const LeftContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  min-width: 700px;
-  max-width: 1100px;
+  width:95%;
 `
 
 const LeveragePositionsWrapper = styled.main`
@@ -791,6 +791,7 @@ export default function Swap({ className }: { className?: string }) {
 
             <SwapWrapper chainId={chainId} className={className} id="swap-page">
               <SwapHeader allowedSlippage={allowedSlippage} activeTab={activeTab} />
+
               <TabContent id={ActiveSwapTab.TRADE} activeTab={activeTab}>
                 <TradeTabContent />
               </TabContent>

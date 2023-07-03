@@ -499,6 +499,7 @@ const TradeTabContent = () => {
           fiatValueOutput={fiatValueTradeOutput}
         />
       )}
+
       <div style={{ display: 'relative' }}>
         <InputSection leverage={leverage}>
           <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
@@ -567,7 +568,7 @@ const TradeTabContent = () => {
                 onSwitchTokens(leverage)
               }}
               color={theme.textPrimary}
-            >
+            >  
               <ArrowDown
                 size="16"
                 color={

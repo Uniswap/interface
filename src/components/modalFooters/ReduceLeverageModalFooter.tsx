@@ -16,6 +16,7 @@ import { HideSmall, Separator, ThemedText } from 'theme'
 import { SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 import Slider from 'components/Slider'
 import styled, { keyframes, useTheme } from 'styled-components'
+import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 
 
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
@@ -388,9 +389,9 @@ export function ReduceLeverageModalFooter({
                               </Trans>
                             }
                           >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                            <ThemedText.LabelSmall >
                               <Trans>Position to close</Trans>
-                            </ThemedText.DeprecatedSubHeader>
+                            </ThemedText.LabelSmall>
                           </MouseoverTooltip>
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
@@ -414,9 +415,9 @@ export function ReduceLeverageModalFooter({
                               </Trans>
                             }
                           >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                            <ThemedText.LabelSmall >
                               <Trans>Expected Output</Trans>
-                            </ThemedText.DeprecatedSubHeader>
+                            </ThemedText.LabelSmall>
                           </MouseoverTooltip>
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
@@ -434,13 +435,13 @@ export function ReduceLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Premium remaining returned from last payment
+                                Premium remaining from last payment returned. The amount returned is inversely proportional to how long the position was opened. 
                               </Trans>
                             }
                           >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                            <ThemedText.LabelSmall >
                               <Trans>Premium Returned</Trans>
-                            </ThemedText.DeprecatedSubHeader>
+                            </ThemedText.LabelSmall>
                           </MouseoverTooltip>
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
@@ -458,13 +459,13 @@ export function ReduceLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Trade asset left after repaying debt
+                                May be positive when price moves against you, where some portion of your margin will be converted to trade output asset. 
                               </Trans>
                             }
                           >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                            <ThemedText.LabelSmall >
                               <Trans>Returned Amount</Trans>
-                            </ThemedText.DeprecatedSubHeader>
+                            </ThemedText.LabelSmall>
                           </MouseoverTooltip>
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
@@ -482,29 +483,33 @@ export function ReduceLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Expected PnL from what you originally paid
+                                Expected PnL in relation to your collateral. Does NOT account for paid premiums
                               </Trans>
                             }
                           >
-                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                            <ThemedText.LabelSmall >
                               <Trans>Expected PnL</Trans>
-                            </ThemedText.DeprecatedSubHeader>
+                            </ThemedText.LabelSmall>
                           </MouseoverTooltip>
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
+
                               {
                                 `${(Math.round(Number(transactionInfo?.pnl) * 1000) / 1000)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
 
                               }
                             </TruncatedText>
-                            <TruncatedText>
+                  <DeltaText delta={Number(100 * (Math.round(Number(transactionInfo?.pnl) * 1000) / 1000) / (Number(initCollateral)))}>
+                    {100 * (Math.round(Number(transactionInfo?.pnl) * 1000) / 1000) / (Number(initCollateral))} %
+                  </DeltaText>                             
+                            {/*<TruncatedText>
                               ({
                                 `${100 * (Math.round(Number(transactionInfo?.pnl) * 1000) / 1000) / (Number(initCollateral))} %`
 
                               })
-                            </TruncatedText>
+                            </TruncatedText>*/}
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
