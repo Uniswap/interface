@@ -6,19 +6,23 @@ import { Text, XStack, YStack } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { useAsyncData } from 'wallet/src/utils/hooks'
 
 export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
   const { t } = useTranslation()
-  const activeAccount = useActiveAccountWithThrow() // TODO: pass in address through navigation since this doesn't have to be active account at all times
-
+  const mnemonicAccounts = useNonPendingSignerAccounts()
+  const mnemonicAccount = mnemonicAccounts[0] as SignerMnemonicAccount
+  if (!mnemonicAccount) {
+    throw new Error('Screen should not be accessed unless mnemonic account exists')
+  }
   const recoveryPhraseArray =
     useAsyncData(
       useCallback(
-        async () => Keyring.retrieveMnemonicUnlocked(activeAccount.address),
-        [activeAccount.address]
+        async () => Keyring.retrieveMnemonicUnlocked(mnemonicAccount.mnemonicId),
+        [mnemonicAccount.mnemonicId]
       )
     ).data?.split(' ') ?? []
   const halfLength = recoveryPhraseArray.length / 2
