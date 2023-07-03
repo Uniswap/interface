@@ -1,5 +1,5 @@
 diff --git a/node_modules/colorthief/src/color-thief-node.js b/node_modules/colorthief/src/color-thief-node.js
-index efc73b3..74b5384 100644
+index efc73b3..aef3e8d 100644
 --- a/node_modules/colorthief/src/color-thief-node.js
 +++ b/node_modules/colorthief/src/color-thief-node.js
 @@ -1,4 +1,4 @@
@@ -8,11 +8,13 @@ index efc73b3..74b5384 100644
  const quantize = require('@lokesh.dhakar/quantize');
  
  function createPixelArray(imgData, pixelCount, quality) {
-@@ -46,11 +46,12 @@ function validateOptions(options) {
+@@ -45,15 +45,23 @@ function validateOptions(options) {
+ }
  
  function loadImg(img) {
-     return new Promise((resolve, reject) => {
+-    return new Promise((resolve, reject) => {
 -        getPixels(img, function(err, data) {
++    const p1 = new Promise((resolve, reject) => {
 +        var png = new PNG();
 +        png.parse(img, function(err, img_data) {
              if(err) {
@@ -23,7 +25,21 @@ index efc73b3..74b5384 100644
              }
          })
      });
-@@ -78,7 +79,7 @@ function getPalette(img, colorCount = 10, quality = 10) {
++    const p2 = new Promise((resolve, reject) => {
++        setTimeout(() => {
++            reject('timeout');
++        }
++        , 10);
++    });
++    return Promise.race([p1, p2]);
+ }
+ 
+ function getColor(img, quality) {
+@@ -75,10 +83,11 @@ function getPalette(img, colorCount = 10, quality = 10) {
+         quality
+     });
+     
++
      return new Promise((resolve, reject) => {
          loadImg(img)
              .then(imgData => {
