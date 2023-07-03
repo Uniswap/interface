@@ -75,7 +75,7 @@
     "g:format:deps": "syncpack format",
     "g:lint": "turbo run lint --parallel",
     "g:lint:fix": "turbo run lint:fix --parallel",
-    "g:rm:nodemodules": "rm -rf node_modules apps/*/node_modules config/*/node_modules packages/*/node_modules",
+    "g:rm:nodemodules": "rm -rf node_modules",
     "g:run-all-checks": "turbo run typecheck lint test build --parallel",
     "g:test": "turbo run test --parallel",
     "g:typecheck": "turbo run typecheck --parallel",
