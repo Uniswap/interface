@@ -16,7 +16,7 @@ import {
   useTopTokensSparklineQuery,
 } from './__generated__/types-and-hooks'
 import {
-  CHAIN_NAME_TO_CHAIN_ID,
+  fromGraphQLChain,
   isPricePoint,
   PollingInterval,
   PricePoint,
@@ -147,7 +147,7 @@ interface UseTopTokensReturnValue {
 }
 
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
+  const chainId = fromGraphQLChain(chain)
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
   const { data: sparklineQuery } = usePollQueryWhileMounted(
@@ -158,7 +158,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   )
 
   const sparklines = useMemo(() => {
-    const unwrappedTokens = sparklineQuery?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))
+    const unwrappedTokens = chainId && sparklineQuery?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))
     const map: SparklineMap = {}
     unwrappedTokens?.forEach(
       (current) => current?.address && (map[current.address] = current?.market?.priceHistory?.filter(isPricePoint))
@@ -173,7 +173,10 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     PollingInterval.Fast
   )
 
-  const unwrappedTokens = useMemo(() => data?.topTokens?.map((token) => unwrapToken(chainId, token)), [chainId, data])
+  const unwrappedTokens = useMemo(
+    () => chainId && data?.topTokens?.map((token) => unwrapToken(chainId, token)),
+    [chainId, data]
+  )
   const sortedTokens = useSortedTokens(unwrappedTokens)
   const tokenSortRank = useMemo(
     () =>

@@ -56,10 +56,23 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
   return p !== null
 }
 
+const UX_SUPPORTED_GQL_CHAINS = [
+  Chain.Ethereum,
+  Chain.EthereumGoerli,
+  Chain.EthereumSepolia,
+  Chain.Polygon,
+  Chain.Celo,
+  Chain.Optimism,
+  Chain.Arbitrum,
+  Chain.Bnb,
+] as const
+type InterfaceGqlChain = typeof UX_SUPPORTED_GQL_CHAINS[number]
+
 // TODO(DAT-33) Update when BE adds Ethereum Sepolia to supported chains
-export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
+export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [SupportedChainId.MAINNET]: Chain.Ethereum,
   [SupportedChainId.GOERLI]: Chain.EthereumGoerli,
+  [SupportedChainId.SEPOLIA]: Chain.EthereumSepolia,
   [SupportedChainId.POLYGON]: Chain.Polygon,
   [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
   [SupportedChainId.CELO]: Chain.Celo,
@@ -100,8 +113,9 @@ export function gqlToCurrency(token: {
   decimals?: number
   name?: string
   symbol?: string
-}): Currency {
+}): Currency | undefined {
   const chainId = fromGraphQLChain(token.chain)
+  if (!chainId) return undefined
   if (token.standard === TokenStandard.Native || !token.address) return nativeOnChain(chainId)
   else return new Token(chainId, token.address, token.decimals ?? 18, token.name, token.symbol)
 }
@@ -120,7 +134,7 @@ export function validateUrlChainParam(chainName: string | undefined) {
 }
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
-export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
+export const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: SupportedChainId } = {
   [Chain.Ethereum]: SupportedChainId.MAINNET,
   [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
   [Chain.EthereumSepolia]: SupportedChainId.SEPOLIA,
@@ -128,12 +142,15 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
   [Chain.Celo]: SupportedChainId.CELO,
   [Chain.Optimism]: SupportedChainId.OPTIMISM,
   [Chain.Arbitrum]: SupportedChainId.ARBITRUM_ONE,
-  [Chain.UnknownChain]: SupportedChainId.MAINNET,
   [Chain.Bnb]: SupportedChainId.BNB,
 }
 
-export function fromGraphQLChain(chain: Chain): SupportedChainId {
-  return CHAIN_NAME_TO_CHAIN_ID[chain]
+function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
+  return (UX_SUPPORTED_GQL_CHAINS as ReadonlyArray<Chain>).includes(chain)
+}
+
+export function fromGraphQLChain(chain: Chain): SupportedChainId | undefined {
+  return isSupportedGQLChain(chain) ? CHAIN_NAME_TO_CHAIN_ID[chain] : undefined
 }
 
 export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]

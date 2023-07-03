@@ -76,10 +76,9 @@ function isSameAddress(a?: string, b?: string) {
 }
 
 function callsPositionManagerContract(assetActivity: AssetActivityPartsFragment) {
-  return isSameAddress(
-    assetActivity.transaction.to,
-    NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[fromGraphQLChain(assetActivity.chain)]
-  )
+  const supportedChain = fromGraphQLChain(assetActivity.chain)
+  if (!supportedChain) return false
+  return isSameAddress(assetActivity.transaction.to, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[supportedChain])
 }
 
 // Gets counts for number of NFTs in each collection present
@@ -94,14 +93,19 @@ function getCollectionCounts(nftTransfers: NftTransferPartsFragment[]): { [key: 
 }
 
 function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment) {
+  const supportedSentChain = fromGraphQLChain(sent.asset.chain)
+  const supportedReceivedChain = fromGraphQLChain(received.asset.chain)
+  if (!supportedSentChain || !supportedReceivedChain) {
+    throw new Error('Invalid activity from unsupported chain retrieved from GQL')
+  }
   if (
     sent.tokenStandard === 'NATIVE' &&
-    isSameAddress(nativeOnChain(fromGraphQLChain(sent.asset.chain)).wrapped.address, received.asset.address)
+    isSameAddress(nativeOnChain(supportedSentChain).wrapped.address, received.asset.address)
   )
     return t`Wrapped`
   else if (
     received.tokenStandard === 'NATIVE' &&
-    isSameAddress(nativeOnChain(fromGraphQLChain(received.asset.chain)).wrapped.address, received.asset.address)
+    isSameAddress(nativeOnChain(supportedReceivedChain).wrapped.address, received.asset.address)
   ) {
     return t`Unwrapped`
   } else {
@@ -269,9 +273,13 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
       },
       { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
     )
+    const supportedChain = fromGraphQLChain(assetActivity.chain)
+    if (!supportedChain) {
+      throw new Error('Invalid activity from unsupported chain retrieved from GQL')
+    }
     const defaultFields = {
       hash: assetActivity.transaction.hash,
-      chainId: fromGraphQLChain(assetActivity.chain),
+      chainId: supportedChain,
       status: assetActivity.transaction.status,
       timestamp: assetActivity.timestamp,
       logos: getLogoSrcs(changes),
