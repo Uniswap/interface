@@ -39,7 +39,7 @@ import {
   useActiveAccountWithThrow,
   useSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
-import { activateAccount } from 'wallet/src/features/wallet/slice'
+import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import {
   WalletConnectEvent,
   WCEventType,
@@ -353,7 +353,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
           activeAccount={activeAccount}
           onClose={(): void => setModalState(PendingConnectionModalState.Hidden)}
           onPressAccount={(account): void => {
-            dispatch(activateAccount(account.address))
+            dispatch(setAccountAsActive(account.address))
             setModalState(PendingConnectionModalState.Hidden)
           }}
         />

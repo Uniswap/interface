@@ -9,7 +9,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
-import { activateAccount, addAccount } from 'wallet/src/features/wallet/slice'
+import { addAccount, setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export function* createAccount() {
@@ -33,7 +33,7 @@ export function* createAccount() {
       backups: existingBackups,
     })
   )
-  yield* put(activateAccount(address))
+  yield* put(setAccountAsActive(address))
   logger.debug('createAccountSaga', '', 'New account created:', address)
 }
 

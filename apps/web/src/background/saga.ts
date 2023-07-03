@@ -1,9 +1,9 @@
 import {
-  createAndActivateAccountActions,
-  createAndActivateAccountReducer,
-  createAndActivateAccountSaga,
-  createAndActivateAccountSagaName,
-} from 'src/app/features/accounts/createAndActivateAccountSaga'
+  createAndSelectActivatedAccountActions,
+  createAndSelectActivatedAccountName,
+  createAndSelectActivatedAccountReducer,
+  createAndSelectActivatedAccountSaga,
+} from 'src/app/features/accounts/createAndSelectActivatedAccountSaga'
 import { dappRequestApprovalWatcher } from 'src/background/features/dappRequests/dappRequestApprovalWatcherSaga'
 import {
   dappRequestWatcher,
@@ -53,11 +53,11 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     reducer: createAccountReducer,
     actions: createAccountActions,
   },
-  [createAndActivateAccountSagaName]: {
-    name: createAndActivateAccountSagaName,
-    wrappedSaga: createAndActivateAccountSaga,
-    reducer: createAndActivateAccountReducer,
-    actions: createAndActivateAccountActions,
+  [createAndSelectActivatedAccountName]: {
+    name: createAndSelectActivatedAccountName,
+    wrappedSaga: createAndSelectActivatedAccountSaga,
+    reducer: createAndSelectActivatedAccountReducer,
+    actions: createAndSelectActivatedAccountActions,
   },
   [editAccountSagaName]: {
     name: editAccountSagaName,

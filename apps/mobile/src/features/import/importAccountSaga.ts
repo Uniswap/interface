@@ -5,9 +5,9 @@ import { all, call, put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
-  activateAccount,
   addAccount,
   addAccounts,
+  setAccountAsActive,
   unlockWallet,
 } from 'wallet/src/features/wallet/slice'
 import { getValidAddress } from 'wallet/src/utils/addresses'
@@ -121,7 +121,7 @@ function* importRestoreBackupAccounts(mnemonicId: string, indexes = [0]) {
 function* onAccountImport(account: Account, ignoreActivate?: boolean) {
   yield* put(addAccount(account))
   if (!ignoreActivate) {
-    yield* put(activateAccount(account.address))
+    yield* put(setAccountAsActive(account.address))
   }
   yield* put(unlockWallet())
   logger.debug('importAccount', '', `New ${account.type} account imported: ${account.address}`)

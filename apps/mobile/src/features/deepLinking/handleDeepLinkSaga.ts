@@ -15,7 +15,7 @@ import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
 import { call, fork, put, takeLatest } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { selectAccounts, selectActiveAccount } from 'wallet/src/features/wallet/selectors'
-import { activateAccount } from 'wallet/src/features/wallet/slice'
+import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import serializeError from 'wallet/src/utils/serializeError'
 
 export interface DeepLink {
@@ -75,7 +75,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     const fiatOnRamp = url.searchParams.get('fiatOnRamp') === 'true'
 
     const validUserAddress = yield* call(parseAndValidateUserAddress, userAddress)
-    yield* put(activateAccount(validUserAddress))
+    yield* put(setAccountAsActive(validUserAddress))
 
     switch (screen) {
       case 'transaction':

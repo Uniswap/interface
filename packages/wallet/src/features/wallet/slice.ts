@@ -67,7 +67,7 @@ const slice = createSlice({
       const firstAccountId = Object.keys(state.accounts)[0]
       state.activeAccountAddress = firstAccountId ?? null
     },
-    markAsNonPending: (state, action: PayloadAction<Address[]>) => {
+    setAccountsNonPending: (state, action: PayloadAction<Address[]>) => {
       const addresses = action.payload
       addresses.forEach((address) => {
         const id = getValidAddress(address, true)
@@ -84,7 +84,7 @@ const slice = createSlice({
       if (!state.accounts[id]) throw new Error(`Cannot edit missing account ${id}`)
       state.accounts[id] = updatedAccount
     },
-    activateAccount: (state, action: PayloadAction<Address>) => {
+    setAccountAsActive: (state, action: PayloadAction<Address>) => {
       const address = action.payload
       const id = getValidAddress(address, true)
       if (!id) throw new Error('Cannot activate an account with an invalid address')
@@ -121,9 +121,9 @@ export const {
   addAccounts,
   removeAccount,
   removeAccounts,
-  markAsNonPending,
+  setAccountsNonPending,
   editAccount,
-  activateAccount,
+  setAccountAsActive,
   unlockWallet,
   lockWallet,
   resetWallet,

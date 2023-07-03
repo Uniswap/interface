@@ -8,7 +8,7 @@ import { handleTransactionLink } from 'src/features/deepLinking/handleTransactio
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { account } from 'src/test/fixtures'
-import { activateAccount } from 'wallet/src/features/wallet/slice'
+import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
 const swapUrl = `https://uniswap.org/app?screen=swap&userAddress=${account.address}`
 const transactionUrl = `https://uniswap.org/app?screen=transaction&userAddress=${account.address}`
@@ -35,7 +35,7 @@ describe(handleDeepLink, () => {
         },
       })
       .call(parseAndValidateUserAddress, account.address)
-      .put(activateAccount(account.address))
+      .put(setAccountAsActive(account.address))
       .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
         url: swapDeepLinkPayload.url,
         screen: 'swap',

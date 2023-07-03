@@ -1,11 +1,11 @@
 import { createStore, Store } from '@reduxjs/toolkit'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {
-  activateAccount,
   addAccount,
-  markAsNonPending,
   removeAccount,
   removeAccounts,
+  setAccountAsActive,
+  setAccountsNonPending,
   walletReducer,
   WalletState,
 } from './slice'
@@ -43,24 +43,24 @@ describe(walletReducer, () => {
 
   it('marks account as non-pending', () => {
     store.dispatch(addAccount(ACCOUNT_1))
-    store.dispatch(markAsNonPending([ACCOUNT_1.address]))
+    store.dispatch(setAccountsNonPending([ACCOUNT_1.address]))
     expect(store.getState().accounts[ACCOUNT_1.address]?.pending).toBe(false)
   })
 
   it('throws when marking unknown account as non-pending', () => {
-    expect(() => store.dispatch(markAsNonPending([ACCOUNT_1.address]))).toThrow(
+    expect(() => store.dispatch(setAccountsNonPending([ACCOUNT_1.address]))).toThrow(
       `Cannot enable missing account ${ACCOUNT_1.address}`
     )
   })
 
   it('sets active account', () => {
     store.dispatch(addAccount(ACCOUNT_1))
-    store.dispatch(activateAccount(ACCOUNT_1.address))
+    store.dispatch(setAccountAsActive(ACCOUNT_1.address))
     expect(store.getState().activeAccountAddress).toBe(ACCOUNT_1.address)
   })
 
   it('throws when setting unknown active account', () => {
-    expect(() => store.dispatch(activateAccount(ACCOUNT_1.address))).toThrow(
+    expect(() => store.dispatch(setAccountAsActive(ACCOUNT_1.address))).toThrow(
       `Cannot activate missing account ${ACCOUNT_1.address}`
     )
   })
@@ -70,7 +70,7 @@ describe(walletReducer, () => {
     store.dispatch(addAccount(ACCOUNT_2))
     expect(Object.values(store.getState().accounts).length).toEqual(2)
 
-    store.dispatch(activateAccount(ACCOUNT_2.address))
+    store.dispatch(setAccountAsActive(ACCOUNT_2.address))
     expect(store.getState().activeAccountAddress).toBe(ACCOUNT_2.address)
 
     // Removing ACCOUNT_2 should set the active account to ACCOUNT_1
@@ -88,7 +88,7 @@ describe(walletReducer, () => {
     store.dispatch(addAccount(ACCOUNT_2))
     expect(Object.values(store.getState().accounts).length).toEqual(2)
 
-    store.dispatch(activateAccount(ACCOUNT_2.address))
+    store.dispatch(setAccountAsActive(ACCOUNT_2.address))
     expect(store.getState().activeAccountAddress).toBe(ACCOUNT_2.address)
 
     // Removing both accounts should set the active account to null

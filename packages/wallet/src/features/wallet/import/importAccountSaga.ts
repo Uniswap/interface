@@ -3,7 +3,7 @@ import { all, call, put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { activateAccount, addAccounts } from 'wallet/src/features/wallet/slice'
+import { addAccounts, setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 import { ImportAccountParams, ImportAccountType } from './types'
@@ -161,7 +161,7 @@ function* importMnemonicAccounts(
 function* onAccountImport(account: Account, ignoreActivate?: boolean) {
   yield* put(addAccounts([account]))
   if (!ignoreActivate) {
-    yield* put(activateAccount(account.address))
+    yield* put(setAccountAsActive(account.address))
   }
   // yield* put(unlockWallet())
   logger.debug('importAccount', '', `New ${account.type} account imported: ${account.address}`)

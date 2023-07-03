@@ -3,9 +3,9 @@ import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import {
-  createAndActivateAccountActions,
-  createAndActivateAccountSagaName,
-} from 'src/app/features/accounts/createAndActivateAccountSaga'
+  createAndSelectActivatedAccountActions,
+  createAndSelectActivatedAccountName,
+} from 'src/app/features/accounts/createAndSelectActivatedAccountSaga'
 import { useAppDispatch } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { Icons, ScrollView, Text, XStack, YStack } from 'ui/src'
@@ -13,7 +13,7 @@ import { Flex } from 'ui/src/components/layout/Flex'
 import { adjustColor, useUniconColors } from 'ui/src/components/Unicon/utils'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { activateAccount } from 'wallet/src/features/wallet/slice'
+import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
 export function AccountSwitcherScreen(): JSX.Element {
   const navigate = useNavigate()
@@ -32,12 +32,12 @@ export function AccountSwitcherScreen(): JSX.Element {
 
   const { glow } = useUniconColors(activeAddress)
 
-  useSagaStatus(createAndActivateAccountSagaName, () => {
+  useSagaStatus(createAndSelectActivatedAccountName, () => {
     navigate(-1)
   })
 
   const onCreateWallet = (): void => {
-    dispatch(createAndActivateAccountActions.trigger())
+    dispatch(createAndSelectActivatedAccountActions.trigger())
   }
 
   const onClose = (): void => {
@@ -81,7 +81,7 @@ export function AccountSwitcherScreen(): JSX.Element {
                 address={address}
                 selected={activeAddress === address}
                 onAccountSelect={(): void => {
-                  dispatch(activateAccount(address))
+                  dispatch(setAccountAsActive(address))
                   navigate(-1)
                 }}
               />

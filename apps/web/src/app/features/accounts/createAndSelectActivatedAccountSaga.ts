@@ -8,21 +8,21 @@ import {
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 /**
- * Create and activate an account in a single step
+ * Create, activate, and mark an account as active in a single step
  */
-function* createAndActivateAccount(validatedPassword: string) {
+function* createAndSelectActivatedAccount(validatedPassword: string) {
   yield* call(createAccount, { validatedPassword })
   yield* call(managePendingAccounts, PendingAccountActions.ActivateAndSelect)
   logger.debug(
-    'createAndActivateAccountSaga',
-    'createAndActivateAccount',
+    'createAndSelectActivatedAccountSaga',
+    'createAndSelectActivatedAccount',
     'Created a new wallet from an existing seed phrase'
   )
 }
 
 export const {
-  name: createAndActivateAccountSagaName,
-  wrappedSaga: createAndActivateAccountSaga,
-  reducer: createAndActivateAccountReducer,
-  actions: createAndActivateAccountActions,
-} = createMonitoredSaga(createAndActivateAccount, 'createAndActivateAccount')
+  name: createAndSelectActivatedAccountName,
+  wrappedSaga: createAndSelectActivatedAccountSaga,
+  reducer: createAndSelectActivatedAccountReducer,
+  actions: createAndSelectActivatedAccountActions,
+} = createMonitoredSaga(createAndSelectActivatedAccount, 'createAndSelectActivatedAccount')

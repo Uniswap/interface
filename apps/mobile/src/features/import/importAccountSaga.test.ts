@@ -9,9 +9,9 @@ import {
 import { signerManager } from 'src/test/fixtures'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {
-  activateAccount,
   addAccount,
   addAccounts,
+  setAccountAsActive,
   unlockWallet,
 } from 'wallet/src/features/wallet/slice'
 import { SAMPLE_SEED, SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
@@ -63,7 +63,7 @@ describe(importAccount, () => {
         timeImportedMs: expect.any(Number),
         mnemonicId: SAMPLE_SEED_ADDRESS_1,
       }),
-      activateAccount(SAMPLE_SEED_ADDRESS_1),
+      setAccountAsActive(SAMPLE_SEED_ADDRESS_1),
       unlockWallet(),
     ])
   })
@@ -100,7 +100,7 @@ describe(importAccount, () => {
         pending: true,
         timeImportedMs: expect.any(Number),
       }),
-      activateAccount(SAMPLE_SEED_ADDRESS_1),
+      setAccountAsActive(SAMPLE_SEED_ADDRESS_1),
       unlockWallet(),
     ])
   })

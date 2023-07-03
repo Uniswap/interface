@@ -24,7 +24,7 @@ import {
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
-import { activateAccount } from 'wallet/src/features/wallet/slice'
+import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 import { useTimeout } from 'wallet/src/utils/timing'
 
@@ -136,7 +136,7 @@ export function SelectWallets(): JSX.Element {
         )
       } else {
         if (!isFirstAccountActive.current) {
-          dispatch(activateAccount(address))
+          dispatch(setAccountAsActive(address))
           isFirstAccountActive.current = true
         }
         const account = pendingAccounts[address]

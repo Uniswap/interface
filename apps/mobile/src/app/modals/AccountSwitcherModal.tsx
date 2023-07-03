@@ -35,8 +35,8 @@ import {
   useNativeAccountExists,
 } from 'wallet/src/features/wallet/hooks'
 import {
-  activateAccount,
   removeAccounts,
+  setAccountAsActive,
   setFinishedOnboarding,
 } from 'wallet/src/features/wallet/slice'
 
@@ -125,8 +125,8 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const onPressAccount = useCallback(
     (address: Address) => {
       onClose()
-      // allow close modal logic to finish in JS thread before `activateAccount` logic kicks in
-      setImmediate(() => dispatch(activateAccount(address)))
+      // allow close modal logic to finish in JS thread before `setAccountAsActive` logic kicks in
+      setImmediate(() => dispatch(setAccountAsActive(address)))
     },
     [dispatch, onClose]
   )
