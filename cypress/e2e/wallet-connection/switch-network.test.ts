@@ -122,9 +122,9 @@ describe('network switching', () => {
 
 describe('network switching from URL param', () => {
   it('should switch network from URL param', () => {
-    cy.visit('/swap?chain=optimism', { ethereum: 'hardhat' })
+    cy.visit('/swap?chain=polygon', { ethereum: 'hardhat' })
     cy.get(getTestSelector('web3-status-connected'))
     cy.wait('@wallet_switchEthereumChain')
-    waitsForActiveChain('Optimism')
+    waitsForActiveChain('Polygon')
   })
 })
