@@ -15,7 +15,7 @@ const GridContainer = styled.div`
   display: flex;
   flex-direction: column;
   // margin-top: 8px;
-  width:100%;
+  // width:100%;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   background-color: ${({ theme }) => theme.backgroundSurface};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),

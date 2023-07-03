@@ -20,9 +20,10 @@ import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Modal from '../Modal'
-import { RowBetween, RowFixed } from '../Row'
+import Row, { RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 import { SmallButtonPrimary } from 'components/Button'
+import { ReactComponent as LogoGradient } from '../../assets/svg/full_logo_gradient.svg'
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundFloating};
@@ -178,17 +179,55 @@ export function TransactionSubmittedContent({
 }
 
 
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 0.25fr;
+`
 
-function LeverageTransactionSubmittedContent({
+const ReduceWrapper = styled.div`
+  background: ${({theme}) => `linear-gradient(to bottom right, ${theme.backgroundBackdrop}, ${theme.background})`};
+  border-radius: 20px;
+  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
+  width: 100%;
+  padding: 1rem;
+`
+
+const Container = styled.div`
+  grid-column: 1 / 3;
+`
+
+const SymbolsContainer = styled(Row)`
+  grid-column: 1 / 3;
+  justify-content: flex-start;
+  align-content: center;
+  margin-top: 12px;
+  margin-bottom: 12px;
+`
+
+const DeltaText = styled.span<{ delta: number | undefined, size: number }>`
+  font-size: ${({size}) => `${size}px`};
+  color: ${({ theme, delta }) =>
+    delta !== undefined ? (Math.sign(delta) < 0 ? theme.accentFailure : theme.accentSuccess) : theme.textPrimary};
+`
+
+export function ReduceLeverageTransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
+  positionData,
   currencyToAdd,
   inline,
 }: {
   onDismiss: () => void
   hash: string | undefined
   chainId: number
+  positionData: {
+    pnl: number,
+    inputCurrencySymbol: string,
+    outputCurrencySymbol: string,
+    entryPrice: number,
+    markPrice: number
+  } | undefined
   currencyToAdd?: Currency | undefined
   inline?: boolean // not in modal
 }) {
@@ -215,50 +254,22 @@ function LeverageTransactionSubmittedContent({
   }, [connector, logoURL, token])
 
   return (
-    <Wrapper>
-      <Section inline={inline}>
-        {!inline && (
-          <RowBetween>
-            <div />
-            <CloseIcon onClick={onDismiss} />
-          </RowBetween>
-        )}
-        <ConfirmedIcon inline={inline}>
-          <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
-        </ConfirmedIcon>
-        <AutoColumn gap="md" justify="center" style={{ paddingBottom: '12px' }}>
-          <ThemedText.MediumHeader textAlign="center">
-            <Trans>Transaction submitted</Trans>
-          </ThemedText.MediumHeader>
-          {currencyToAdd && connector.watchAsset && (
-            <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
-              {!success ? (
-                <RowFixed>
-                  <Trans>Add {currencyToAdd.symbol}</Trans>
-                </RowFixed>
-              ) : (
-                <RowFixed>
-                  <Trans>Added {currencyToAdd.symbol} </Trans>
-                  <CheckCircle size="16px" stroke={theme.accentSuccess} style={{ marginLeft: '6px' }} />
-                </RowFixed>
-              )}
-            </ButtonLight>
-          )}
-          <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
-            <Text fontWeight={600} fontSize={20} color={theme.accentTextLightPrimary}>
-              {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
-            </Text>
-          </ButtonPrimary>
-          {chainId && hash && (
-            <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={600} fontSize={14} color={theme.accentAction}>
-                <Trans>View on {chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
-              </Text>
-            </ExternalLink>
-          )}
-        </AutoColumn>
-      </Section>
-    </Wrapper>
+    <ReduceWrapper>
+        <Container>
+          <LogoGradient width={140} height={40}/>
+        </Container>
+        <SymbolsContainer>
+        <ThemedText.DeprecatedLargeHeader>40x</ThemedText.DeprecatedLargeHeader>
+        <ThemedText.DeprecatedLargeHeader>BTC-ETH Perpetual</ThemedText.DeprecatedLargeHeader>
+        </SymbolsContainer>
+        <Container>
+          <DeltaText delta={100} size={24}>
+            +100% (+ 0.10 ETH)
+          </DeltaText>
+        </Container>
+        <ThemedText.DeprecatedMediumHeader>Entry Price 1.00 BTC/ETH</ThemedText.DeprecatedMediumHeader>
+        <ThemedText.DeprecatedMediumHeader>Mark Price 1.25 BTC/ETH</ThemedText.DeprecatedMediumHeader>
+    </ReduceWrapper>
   )
 }
 
@@ -423,8 +434,14 @@ interface ConfirmationModalProps {
   content: () => ReactNode
   attemptingTxn: boolean
   pendingText: ReactNode
+  positionData?: {
+    pnl: number,
+    inputCurrencySymbol: string,
+    outputCurrencySymbol: string,
+    entryPrice: number,
+    markPrice: number
+  } | undefined
   currencyToAdd?: Currency | undefined
-
   setIsLoadingQuote?: (arg:boolean) => void
   isLoadingQuote?: boolean
 }
@@ -456,6 +473,48 @@ export default function TransactionConfirmationModal({
           onDismiss={onDismiss}
           currencyToAdd={currencyToAdd}
         />
+      ) : (
+        content()
+      )}
+    </Modal>
+  )
+}
+
+export function ReduceLeverageTransactionConfirmationModal({
+  isOpen,
+  onDismiss,
+  attemptingTxn,
+  hash,
+  pendingText,
+  content,
+  currencyToAdd,
+  positionData
+}: ConfirmationModalProps) {
+  const { chainId } = useWeb3React()
+
+  if (!chainId) return null
+
+  // confirmation screen
+  return (
+    <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight={90}>
+      {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
+        <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
+      ) : attemptingTxn ? (
+        <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
+      ) : hash ? (
+        <TransactionSubmittedContent
+          chainId={chainId}
+          hash={hash}
+          onDismiss={onDismiss}
+          currencyToAdd={currencyToAdd}
+        />
+        // <ReduceLeverageTransactionSubmittedContent
+        //   chainId={chainId}
+        //   hash={hash}
+        //   onDismiss={onDismiss}
+        //   currencyToAdd={currencyToAdd}
+        //   positionData={positionData}
+        // />
       ) : (
         content()
       )}

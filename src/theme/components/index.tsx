@@ -20,6 +20,7 @@ import { Z_INDEX } from 'theme/zIndex'
 import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_triangle.svg'
 import { anonymizeLink } from '../../utils/anonymizeLink'
 
+
 // TODO: Break this file into a components folder
 
 export const CloseIcon = styled(X)<{ onClick: () => void }>`

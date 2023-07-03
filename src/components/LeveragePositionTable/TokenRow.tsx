@@ -798,25 +798,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               {`${(remainingPremium ? formatNumber(Number(remainingPremium),NumberType.SwapTradeAmount) : 0)} ${inputCurrencySymbol}`}
             </Trans>
           }
-          // recentPremium={
-          //   <Trans>
-          //     <AutoColumn>
-          //       <ThemedText.TableText>
-          //         {formatNumber(Number(position.recentPremium))} {isToken0 ? token0?.symbol : token1?.symbol}
-          //       </ThemedText.TableText>
-          //     </AutoColumn>
-          //   </Trans>
-          // }
-          // unusedPremium={
-          //   <Trans>
-          //     <ThemedText.TableText>
-          //       {formatNumber(Number(position.unusedPremium))} {isToken0 ? token1?.symbol : token0?.symbol}
-          //     </ThemedText.TableText>
-          //   </Trans>
-          // }
           position={position}
-        // first={tokenListIndex === 0}
-        // last={tokenListIndex === tokenListLength - 1}
         />
       </StyledLoadedRow>
     </div>

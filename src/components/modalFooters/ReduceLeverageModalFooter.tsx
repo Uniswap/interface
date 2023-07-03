@@ -164,13 +164,15 @@ export function ReduceLeverageModalFooter({
   tokenId,
   trader,
   setAttemptingTxn,
-  setTxHash
+  setTxHash,
+  setPositionData
 }: {
   leverageManagerAddress: string | undefined
   tokenId: string | undefined
   trader: string | undefined,
   setAttemptingTxn: (attemptingTxn: boolean) => void
   setTxHash: (txHash: string) => void
+  setPositionData: (positionData: any) => void
 }) {
   // const [nonce, setNonce] = useState(0)
   const { error, position } = useLimitlessPositionFromTokenId(tokenId)
@@ -189,10 +191,31 @@ export function ReduceLeverageModalFooter({
 
   // const [, pool] = usePool(token0, token1, position?.poolFee)
 
+
+
+  const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
+  const [showDetails, setShowDetails] = useState(true)
+  const theme = useTheme()
+
+  const [, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)
+
+  const [debouncedSlippage, setDebouncedSlippage] = useDebouncedChangeHandler(slippage, setSlippage)
+  const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
+
+  const {
+    transactionInfo,
+    userError
+  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState)
+  
+  useEffect(() => {
+    (!!userError || !transactionInfo) && showDetails //&& setShowDetails(false)
+  }, [userError, transactionInfo])
+  const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
+
   const handleReducePosition = useMemo(() => {
     if (
       leverageManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalPosition) &&
-      token0 && token1
+      token0 && token1 && transactionInfo
       ) {
       const formattedSlippage = new BN(slippage).plus(100).shiftedBy(16).toFixed(0)
       const formattedReduceAmount = new BN(reduceAmount).shiftedBy(18).toFixed(0);
@@ -214,6 +237,10 @@ export function ReduceLeverageModalFooter({
             outputCurrencyId: !inputIsToken0 ? currencyId(token0) : currencyId(token1)
           })
           setTxHash(hash)
+          // setPositionData({
+          //   pnl: transactionInfo.pnl,
+
+          // })
           setAttemptingTxn(false)
         }).catch((err: any) => {
           setAttemptingTxn(false)
@@ -226,68 +253,9 @@ export function ReduceLeverageModalFooter({
     leverageManagerAddress, slippage, tokenId, trader, position, reduceAmount,
     token0,
     token1,
-    inputIsToken0
+    inputIsToken0,
+    transactionInfo
   ])
-
-  const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
-  const [showDetails, setShowDetails] = useState(true)
-  const theme = useTheme()
-
-  const [, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.poolFee)
-
-  const [debouncedSlippage, setDebouncedSlippage] = useDebouncedChangeHandler(slippage, setSlippage)
-  const [debouncedReduceAmount, setDebouncedReduceAmount] = useDebouncedChangeHandler(reduceAmount, setReduceAmount);
-
-  // const quoter = useQuoter(true) as QuoterV2 | null;
-
-  // useEffect(() => {
-  //   async function getPremium() {
-  //     if (pool && position && token1 && token0 && position?.token1Address && position?.token0Address && quoter && Number(reduceAmount) > 0) {
-  //       const newTotalPosition = Number(position.totalPosition) - Number(reduceAmount)
-  //       try {
-  //         const result = await quoter?.callStatic.quoteExactInputSingle(
-  //           {
-  //             tokenIn: position.isToken0 ? position.token0Address : position.token1Address,
-  //             tokenOut: position.isToken0 ? position.token1Address : position.token0Address,
-  //             amountIn: new BN(newTotalPosition).shiftedBy(18).toFixed(0),
-  //             fee: pool.fee,
-  //             sqrtPriceLimitX96: 0
-  //           }
-  //         )
-  //         if (result) {
-  //           const amountOut = new BN(result.amountOut.toString()).shiftedBy(-18).toNumber()
-  //           setPremium(amountOut * 0.002)
-  //         }
-  //         return
-  //       } catch (err) {
-  //         console.log("error getting premium: ", err)
-  //       }
-  //     }
-  //     setPremium(0)
-  //   }
-
-  //   getPremium()
-  // }, [position, reduceAmount, pool, quoter])
-
-  // const inputCurrency = useCurrency(position?.isToken0 ? position?.token1Address : position?.token0Address)
-
-  // const [approvalState, approveManager] = useApproveCallback(
-  //   inputCurrency ?
-  //     CurrencyAmount.fromRawAmount(inputCurrency, new BN(premium).shiftedBy(18).toFixed(0)) : undefined,
-  //   position?.leverageManagerAddress ?? undefined
-  // )
-
-
-
-  const {
-    transactionInfo,
-    userError
-  } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState)
-  
-  useEffect(() => {
-    (!!userError || !transactionInfo) && showDetails //&& setShowDetails(false)
-  }, [userError, transactionInfo])
-  const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
 
   const disabled = !!userError || !transactionInfo
   // const debt = position?.totalDebtInput;
