@@ -56,16 +56,18 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
   return p !== null
 }
 
-const UX_SUPPORTED_GQL_CHAINS = [
+export const GQL_MAINNET_CHAINS = [
   Chain.Ethereum,
-  Chain.EthereumGoerli,
-  Chain.EthereumSepolia,
   Chain.Polygon,
   Chain.Celo,
   Chain.Optimism,
   Chain.Arbitrum,
   Chain.Bnb,
 ] as const
+
+const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
+
+const UX_SUPPORTED_GQL_CHAINS = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS] as const
 type InterfaceGqlChain = typeof UX_SUPPORTED_GQL_CHAINS[number]
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
