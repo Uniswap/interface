@@ -242,7 +242,7 @@ const commonTheme = {
   chain_570_background: colors.networkRollux,
   promotional: colors.magenta300,
 
-  brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
+  brandedGradient: 'linear-gradient(90deg, #19EBCE 0%, #8A15E6 84.28%)',
   promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
 
   hoverState: opacify(24, colors.blue200),
@@ -252,7 +252,7 @@ const commonTheme = {
 export const darkTheme = {
   ...commonTheme,
 
-  userThemeColor: colors.magentaVibrant,
+  userThemeColor: colors.cyanText,
 
   background: colors.bgDark,
   backgroundImage: `radial-gradient(60% 50% at 50% 45% , #56BED8, ${colors.bgDark})`,
@@ -312,7 +312,7 @@ export const darkTheme = {
 export const lightTheme: Theme = {
   ...commonTheme,
 
-  userThemeColor: colors.magentaVibrant,
+  userThemeColor: colors.purpleMain,
 
   background: colors.bgLight,
   backgroundImage: 'radial-gradient(60% 50% at 50% 45%, #68e1ffbe, #e6faff)',
