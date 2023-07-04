@@ -68,7 +68,6 @@ const UX_SUPPORTED_GQL_CHAINS = [
 ] as const
 type InterfaceGqlChain = typeof UX_SUPPORTED_GQL_CHAINS[number]
 
-// TODO(DAT-33) Update when BE adds Ethereum Sepolia to supported chains
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [SupportedChainId.MAINNET]: Chain.Ethereum,
   [SupportedChainId.GOERLI]: Chain.EthereumGoerli,
@@ -133,8 +132,7 @@ export function validateUrlChainParam(chainName: string | undefined) {
   return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
-// TODO(cartcrom): refactor into safer lookup & replace usage
-export const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: SupportedChainId } = {
+const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: SupportedChainId } = {
   [Chain.Ethereum]: SupportedChainId.MAINNET,
   [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
   [Chain.EthereumSepolia]: SupportedChainId.SEPOLIA,
@@ -145,7 +143,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: SupportedChai
   [Chain.Bnb]: SupportedChainId.BNB,
 }
 
-function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
+export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
   return (UX_SUPPORTED_GQL_CHAINS as ReadonlyArray<Chain>).includes(chain)
 }
 
