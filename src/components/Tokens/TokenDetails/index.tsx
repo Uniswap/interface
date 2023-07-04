@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import * as Sentry from '@sentry/react'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
@@ -66,12 +67,12 @@ function useOnChainToken(address: string | undefined, skip: boolean) {
 // Token will be null if still loading from on-chain, and undefined if unavailable
 function useRelevantToken(
   address: string | undefined,
-  pageChainId: number,
+  pageChainId: number | undefined,
   tokenQueryData: TokenQueryData | undefined
 ) {
   const { chainId: activeChainId } = useWeb3React()
   const queryToken = useMemo(() => {
-    if (!address) return undefined
+    if (!address || !pageChainId) return undefined
     if (address === NATIVE_CHAIN_ID) return nativeOnChain(pageChainId)
     if (tokenQueryData) return new QueryToken(address, tokenQueryData)
     return undefined
@@ -112,10 +113,6 @@ export default function TokenDetails({
 
   const { chainId: connectedChainId } = useWeb3React()
   const pageChainId = fromGraphQLChain(chain)
-  if (!pageChainId) {
-    throw new Error('Invalid token details route: Invalid chain passed from TokenDetailsQuery')
-  }
-
   const tokenQueryData = tokenQuery.token
   const crossChainMap = useMemo(
     () =>
@@ -188,8 +185,19 @@ export default function TokenDetails({
     },
     [continueSwap, setContinueSwap]
   )
+
+  if (!pageChainId) {
+    const error = new Error('Invalid chain passed from TokenDetailsQuery')
+    Sentry.withScope((scope) => {
+      scope.setExtra('tokenQuery', tokenQuery)
+      scope.setExtra('chain', chain)
+      Sentry.captureException(error)
+    })
+    return null
+  }
+
   // address will never be undefined if token is defined; address is checked here to appease typechecker
-  if (detailedToken === undefined || !address || !pageChainId) {
+  if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
   }
   return (

@@ -1,4 +1,5 @@
 import { t } from '@lingui/macro'
+import * as Sentry from '@sentry/react'
 import { formatFiatPrice, formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { SupportedChainId } from '@uniswap/sdk-core'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
@@ -92,11 +93,16 @@ function getCollectionCounts(nftTransfers: NftTransferPartsFragment[]): { [key: 
   }, {} as { [key: string]: number | undefined })
 }
 
-function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment) {
+function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment): string | undefined {
   const supportedSentChain = fromGraphQLChain(sent.asset.chain)
   const supportedReceivedChain = fromGraphQLChain(received.asset.chain)
   if (!supportedSentChain || !supportedReceivedChain) {
-    throw new Error('Invalid activity from unsupported chain retrieved from GQL')
+    Sentry.withScope((scope) => {
+      scope.setExtra('supportedSentChain', supportedSentChain)
+      scope.setExtra('supportedReceivedChain', supportedReceivedChain)
+      Sentry.captureException(new Error('Invalid activity from unsupported chain received from GQL'))
+    })
+    return undefined
   }
   if (
     sent.tokenStandard === 'NATIVE' &&
@@ -275,7 +281,11 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
     )
     const supportedChain = fromGraphQLChain(assetActivity.chain)
     if (!supportedChain) {
-      throw new Error('Invalid activity from unsupported chain retrieved from GQL')
+      Sentry.withScope((scope) => {
+        scope.setExtra('gqlActivity', assetActivity)
+        Sentry.captureException(new Error('Invalid activity from unsupported chain received from GQL'))
+      })
+      return undefined
     }
     const defaultFields = {
       hash: assetActivity.transaction.hash,

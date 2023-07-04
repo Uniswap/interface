@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
@@ -87,7 +88,11 @@ export function useRecentlySearchedAssets() {
         // Handles special case where wMATIC data needs to be used for MATIC
         const chain = fromGraphQLChain(asset.chain)
         if (!chain) {
-          throw new Error('Invalid chain retrieved from Seach Token/collection Query')
+          Sentry.withScope((scope) => {
+            scope.setExtra('searchedAsset', asset)
+            Sentry.captureException(new Error('Invalid chain retrieved from Seach Token/Collection Query'))
+          })
+          return
         }
         const native = nativeOnChain(chain)
         const queryAddress = getQueryAddress(asset.chain)?.toLowerCase() ?? `NATIVE-${asset.chain}`
