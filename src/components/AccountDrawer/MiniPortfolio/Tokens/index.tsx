@@ -83,7 +83,7 @@ export default function Tokens({ account }: { account: string }) {
 
     for (const [tokenAddress, balance] of tokenBalanceEntries) {
       const tokenData = tokenDataMap[tokenAddress]
-      if (tokenData && balance) {
+      if (tokenData && balance && parseFloat(balance?.toExact()) > 0) {
         newPortifolio.push({
           token: tokenData,
           decimals: balance.currency.decimals,
@@ -105,13 +105,15 @@ export default function Tokens({ account }: { account: string }) {
             symbol: balance.currency.symbol,
           } as TokenData
 
-          newPortifolio.push({
-            token: nativeData,
-            decimals: balance.currency.decimals,
-            chainId: balance.currency.chainId,
-            balancePrice: parseFloat(balance?.toExact()) * nativeData.priceUSD,
-            balanceCurrency: parseFloat(balance?.toExact()),
-          })
+          if (parseFloat(balance?.toExact()) > 0) {
+            newPortifolio.push({
+              token: nativeData,
+              decimals: balance.currency.decimals,
+              chainId: balance.currency.chainId,
+              balancePrice: parseFloat(balance?.toExact()) * nativeData.priceUSD,
+              balanceCurrency: parseFloat(balance?.toExact()),
+            })
+          }
         }
       }
     }
