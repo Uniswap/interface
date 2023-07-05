@@ -3,9 +3,9 @@ import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
 import getColor from '../../../utils/getColor'
+import getNetworkLogoUrl from '../../../utils/getNetworkLogoURL'
 import getSetup from '../../../utils/getSetup'
 import getToken from '../../../utils/getToken'
-import getNetworkLogoUrl from '../../../utils/getNetworkLogoURL'
 
 export async function onRequestGet({ params, request }) {
   try {
@@ -63,20 +63,19 @@ export async function onRequestGet({ params, request }) {
                 color: 'white',
               }}
             >
-              <img
-                src={data.image}
-                width="144px"
-              >
-                {networkLogo != '' && (<img
-                  src = {networkLogo}
-                  width="48px"
-                  style={{
-                    position: 'absolute',
-                    right: '2px',
-                    bottom: '0px',
-                    borderRadius: '100%',
-                  }}
-                />)}
+              <img src={data.image} width="144px">
+                {networkLogo != '' && (
+                  <img
+                    src={networkLogo}
+                    width="48px"
+                    style={{
+                      position: 'absolute',
+                      right: '2px',
+                      bottom: '0px',
+                      borderRadius: '100%',
+                    }}
+                  />
+                )}
               </img>
               <div
                 style={{
