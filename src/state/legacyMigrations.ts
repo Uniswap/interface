@@ -1,8 +1,6 @@
 import { ConnectionType } from 'connection/types'
-import { DEFAULT_LIST_OF_LISTS } from 'constants/lists'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 
-import { ListsState, NEW_LIST_STATE } from './lists/reducer'
 import { RouterPreference } from './routing/slice'
 import { TransactionState } from './transactions/reducer'
 import { UserState } from './user/reducer'
@@ -27,38 +25,6 @@ export function legacyTransactionMigrations(state: any): TransactionState {
       }
     })
   })
-  return result
-}
-
-export function legacyListsMigrations(state: any): ListsState {
-  // Make a copy of the object so we can mutate it.
-  const result = JSON.parse(JSON.stringify(state))
-
-  if (!result.lastInitializedDefaultListOfLists) {
-    return result
-  } else if (result.lastInitializedDefaultListOfLists) {
-    // lastInitializedDefaultListOfLists is expected to be string[]
-    const lastInitializedSet = result.lastInitializedDefaultListOfLists.reduce(
-      (s: Set<string>, l: string) => s.add(l),
-      new Set()
-    )
-    const newListOfListsSet = DEFAULT_LIST_OF_LISTS.reduce<Set<string>>((s, l) => s.add(l), new Set())
-
-    DEFAULT_LIST_OF_LISTS.forEach((listUrl) => {
-      if (!lastInitializedSet.has(listUrl)) {
-        result.byUrl[listUrl] = NEW_LIST_STATE
-      }
-    })
-
-    result.lastInitializedDefaultListOfLists.forEach((listUrl: string) => {
-      if (!newListOfListsSet.has(listUrl)) {
-        delete result.byUrl[listUrl]
-      }
-    })
-  }
-
-  result.lastInitializedDefaultListOfLists = DEFAULT_LIST_OF_LISTS
-
   return result
 }
 
@@ -101,6 +67,13 @@ export function legacyUserMigrations(state: any): UserState {
   // If `userRouterPreference` is not present, reset to default
   if (typeof result.userRouterPreference !== 'string') {
     result.userRouterPreference = RouterPreference.AUTO
+  }
+
+  //If `buyFiatFlowCompleted` is present, delete it using filtering
+  if ('buyFiatFlowCompleted' in result) {
+    //ignoring due to type errors occuring since we now remove this state
+    //@ts-ignore
+    delete result.buyFiatFlowCompleted
   }
 
   result.lastUpdateVersionTimestamp = currentTimestamp()

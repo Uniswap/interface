@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, TokenList, VersionUpgrade } from '@uniswap/token-lists'
 
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
+import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
 
 export interface ListsState {
@@ -19,7 +20,7 @@ export interface ListsState {
 
 type ListState = ListsState['byUrl'][string]
 
-export const NEW_LIST_STATE: ListState = {
+const NEW_LIST_STATE: ListState = {
   error: null,
   current: null,
   loadingRequestId: null,
@@ -109,5 +110,31 @@ export default createReducer(initialState, (builder) =>
         current: state.byUrl[url].pendingUpdate,
         pendingUpdate: null,
       }
+    })
+    .addCase(updateVersion, (state) => {
+      // state loaded from localStorage, but new lists have never been initialized
+      if (!state.lastInitializedDefaultListOfLists) {
+        state.byUrl = initialState.byUrl
+      } else if (state.lastInitializedDefaultListOfLists) {
+        const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
+          (s, l) => s.add(l),
+          new Set()
+        )
+        const newListOfListsSet = DEFAULT_LIST_OF_LISTS.reduce<Set<string>>((s, l) => s.add(l), new Set())
+
+        DEFAULT_LIST_OF_LISTS.forEach((listUrl) => {
+          if (!lastInitializedSet.has(listUrl)) {
+            state.byUrl[listUrl] = NEW_LIST_STATE
+          }
+        })
+
+        state.lastInitializedDefaultListOfLists.forEach((listUrl) => {
+          if (!newListOfListsSet.has(listUrl)) {
+            delete state.byUrl[listUrl]
+          }
+        })
+      }
+
+      state.lastInitializedDefaultListOfLists = DEFAULT_LIST_OF_LISTS
     })
 )

@@ -9,8 +9,6 @@ import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  buyFiatFlowCompleted?: boolean
-
   selectedWallet?: ConnectionType
 
   // the timestamp of the last updateVersion action
@@ -58,7 +56,6 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  buyFiatFlowCompleted: undefined,
   selectedWallet: undefined,
   userLocale: null,
   userRouterPreference: RouterPreference.AUTO,
@@ -78,9 +75,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateUserBuyFiatFlowCompleted(state, action) {
-      state.buyFiatFlowCompleted = action.payload
-    },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
     },
@@ -130,7 +124,6 @@ const userSlice = createSlice({
 export const {
   addSerializedPair,
   addSerializedToken,
-  updateUserBuyFiatFlowCompleted,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateUserRouterPreference,

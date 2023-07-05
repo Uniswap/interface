@@ -1,7 +1,7 @@
 import { createMigrate, MigrationManifest, PersistedState, PersistMigrate } from 'redux-persist'
 import { MigrationConfig } from 'redux-persist/es/createMigrate'
 
-import { legacyListsMigrations, legacyTransactionMigrations, legacyUserMigrations } from './legacyMigrations'
+import { legacyTransactionMigrations, legacyUserMigrations } from './legacyMigrations'
 import { initialState as initialListsState } from './lists/reducer'
 import { initialState as initialTransactionsState } from './transactions/reducer'
 import { initialState as initialUserState } from './user/reducer'
@@ -36,7 +36,7 @@ export const migrations: MigrationManifest = {
     const result = {
       user: legacyUserMigrations(newUser),
       transactions: legacyTransactionMigrations(newTransactions),
-      lists: legacyListsMigrations(newLists),
+      lists: newLists,
       _persist: { version: 0, rehydrated: true },
     }
 

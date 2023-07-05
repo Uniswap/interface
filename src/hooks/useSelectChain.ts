@@ -22,7 +22,7 @@ export default function useSelectChain() {
       try {
         await switchChain(connector, targetChain)
       } catch (error) {
-        if (!didUserReject(connection, error)) {
+        if (!didUserReject(connection, error) && error.code !== -32002 /* request already pending */) {
           console.error('Failed to switch networks', error)
           dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: 'failed-network-switch' }))
         }
