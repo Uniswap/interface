@@ -24,7 +24,12 @@ module.exports = function (api) {
         globals: ['__scanCodes', '__scanOCR'],
       },
     ],
-    'transform-inline-environment-variables',
+    [
+      'transform-inline-environment-variables',
+      {
+        include: ['TAMAGUI_TARGET', 'NODE_ENV'],
+      },
+    ],
     // TypeScript compiles this, but in production builds, metro doesn't use tsc
     '@babel/plugin-proposal-logical-assignment-operators',
     // metro doesn't like these

@@ -9,13 +9,13 @@ import { NFTViewer } from 'src/components/images/NFTViewer'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
 import { DappIconPlaceholder } from 'src/components/WalletConnect/DappHeaderIcon'
+import { Logos } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import Approve from 'ui/src/assets/icons/approve.svg'
 import IncomingArrow from 'ui/src/assets/icons/arrow-down-in-circle.svg'
 import OutgoingArrow from 'ui/src/assets/icons/arrow-up-in-circle.svg'
 import UnknownStatus from 'ui/src/assets/icons/question-in-circle.svg'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
-import MoonpayLogo from 'ui/src/assets/logos/moonpay.svg'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
@@ -62,7 +62,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
 
   const logo =
     txType === TransactionType.FiatPurchase ? (
-      <MoonpayLogo width={size} />
+      <Logos.Moonpay width={size} />
     ) : assetType === AssetType.Currency ? (
       <CurrencyLogo hideNetworkLogo currencyInfo={props.currencyInfo} size={size} />
     ) : (

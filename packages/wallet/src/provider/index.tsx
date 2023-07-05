@@ -1,16 +1,19 @@
 import { Store } from '@reduxjs/toolkit'
+import { ReactNode } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
-import { TamaguiProviderProps } from 'ui/src'
-import { Provider as TamaguiProvider } from './tamagui-provider'
+import { TamaguiProvider } from './tamagui-provider'
 
-export function Provider({
-  children,
-  store,
-  ...rest
-}: Omit<TamaguiProviderProps, 'config'> & { store: Store }): JSX.Element {
+interface SharedProviderProps {
+  children: ReactNode
+  reduxStore: Store
+}
+
+// A provider meant for sharing across all surfaces.
+// Props should be defined as needed and clarified in name to improve readability
+export function SharedProvider({ reduxStore, children }: SharedProviderProps): JSX.Element {
   return (
-    <ReduxProvider store={store}>
-      <TamaguiProvider {...rest}>{children}</TamaguiProvider>
+    <ReduxProvider store={reduxStore}>
+      <TamaguiProvider>{children}</TamaguiProvider>
     </ReduxProvider>
   )
 }
