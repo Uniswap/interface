@@ -119,3 +119,12 @@ describe('network switching', () => {
     cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'Select token')
   })
 })
+
+describe('network switching from URL param', () => {
+  it('should switch network from URL param', () => {
+    cy.visit('/swap?chain=polygon', { ethereum: 'hardhat' })
+    cy.get(getTestSelector('web3-status-connected'))
+    cy.wait('@wallet_switchEthereumChain')
+    waitsForActiveChain('Polygon')
+  })
+})

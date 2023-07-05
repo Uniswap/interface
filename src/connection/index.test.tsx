@@ -114,12 +114,12 @@ describe('connection utility/metadata tests', () => {
     expect(displayed.length).toEqual(5)
   })
 
-  it('Phantom Wallet Injected Desktop', async () => {
+  it('Phantom Wallet Injected Desktop displays as MetaMask', async () => {
     createPhantomEnviroment()
     const { displayed, injected } = createWalletEnvironment({ isMetaMask: true }) // Phantom sets isMetaMask to true
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getName()).toBe('Phantom')
+    expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
     expect(displayed.length).toEqual(5)
