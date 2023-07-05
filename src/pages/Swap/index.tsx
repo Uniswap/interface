@@ -538,6 +538,7 @@ export function Swap({
           inputCurrency={inputCurrency}
           originalTrade={tradeToConfirm}
           onAcceptChanges={handleAcceptChanges}
+          onCurrencySelection={onCurrencySelection}
           swapResult={swapResult}
           allowedSlippage={allowedSlippage}
           onConfirm={handleSwap}

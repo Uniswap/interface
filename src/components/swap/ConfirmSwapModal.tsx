@@ -23,6 +23,7 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { Field } from 'state/swap/actions'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -70,12 +71,14 @@ function useConfirmModalState({
   onSwap,
   allowance,
   doesTradeDiffer,
+  onCurrencySelection,
 }: {
   trade: InterfaceTrade
   allowedSlippage: Percent
   onSwap: () => void
   allowance: Allowance
   doesTradeDiffer: boolean
+  onCurrencySelection: (field: Field, currency: Currency) => void
 }) {
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
@@ -137,7 +140,9 @@ function useConfirmModalState({
           onWrap?.()
             .then((wrapTxHash) => {
               setWrapTxHash(wrapTxHash)
-              // TODO (Gouda): Change user currency input to WETH at this point
+              // After the wrap has succeeded, reset the input currency to be WETH
+              // because the trade will be on WETH -> token
+              onCurrencySelection(Field.INPUT, trade.inputAmount.currency)
               sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                 chain_id: chainId,
                 token_symbol: maximumAmountIn?.currency.symbol,
@@ -267,6 +272,7 @@ export default function ConfirmSwapModal({
   allowance,
   onConfirm,
   onDismiss,
+  onCurrencySelection,
   swapError,
   swapResult,
   swapQuoteReceivedDate,
@@ -283,6 +289,7 @@ export default function ConfirmSwapModal({
   onConfirm: () => void
   swapError?: Error
   onDismiss: () => void
+  onCurrencySelection: (field: Field, currency: Currency) => void
   swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
@@ -294,6 +301,7 @@ export default function ConfirmSwapModal({
       trade,
       allowedSlippage,
       onSwap: onConfirm,
+      onCurrencySelection,
       allowance,
       doesTradeDiffer: Boolean(doesTradeDiffer),
     })
