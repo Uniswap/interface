@@ -11,6 +11,7 @@ import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { SupportedChainId } from 'constants/chains'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
+import { Phantom } from 'web3-react-phantom'
 
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
@@ -60,6 +61,21 @@ const injectedConnection: Connection = {
     return false
   },
 }
+
+const [phantomInjected, phantomInjectedHooks] = initializeConnector<Phantom>(
+  (actions) => new Phantom({ actions, onError })
+)
+
+const phantomConnection: Connection = {
+  getName: () => 'Phantom',
+  connector: phantomInjected,
+  hooks: phantomInjectedHooks,
+  type: ConnectionType.PHANTOM,
+  getIcon: (isDarkMode: boolean) => getInjection(isDarkMode).icon,
+  shouldDisplay: () => !!window.phantom?.ethereum?.isPhantom,
+  // If on non-injected, non-mobile browser, prompt user to install Metamask
+}
+
 const [web3GnosisSafe, web3GnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
 export const gnosisSafeConnection: Connection = {
   getName: () => 'Gnosis Safe',
@@ -172,6 +188,7 @@ export function getConnections() {
     coinbaseWalletConnection,
     gnosisSafeConnection,
     networkConnection,
+    phantomConnection,
   ]
 }
 
@@ -201,6 +218,8 @@ export function getConnection(c: Connector | ConnectionType) {
         return networkConnection
       case ConnectionType.GNOSIS_SAFE:
         return gnosisSafeConnection
+      case ConnectionType.PHANTOM:
+        return phantomConnection
     }
   }
 }

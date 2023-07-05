@@ -254,6 +254,7 @@
     "video-extensions": "^1.2.0",
     "wcag-contrast": "^3.0.0",
     "web-vitals": "^2.1.0",
+    "web3-react-phantom": "^1.0.4",
     "workbox-core": "^6.1.0",
     "workbox-navigation-preload": "^6.1.0",
     "workbox-precaching": "^6.1.0",

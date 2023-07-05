@@ -3436,7 +3436,7 @@
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.2.0.tgz#a3150eeb09cc7ab207ebf6d7b9ad311a9bdbed12"
   integrity sha512-FZfhjEDbT5GRswV3C6uvLPHMiVD6lQBmpoX5+eSiPaMTXte/IKqI5dykDxzZB/WBeK/CDuQRBWarPdi3FNY2zQ==
 
-"@noble/hashes@^1.1.2", "@noble/hashes@1.3.0", "@noble/hashes@~1.3.0":
+"@noble/hashes@1.3.0", "@noble/hashes@^1.1.2", "@noble/hashes@~1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.3.0.tgz#085fd70f6d7d9d109671090ccae1d3bec62554a1"
   integrity sha512-ilHEACi9DwqJB0pw7kv+Apvh50jiiSyR/cQ3y4W7lOR5mhvn/50FLUfsnfJz0BDZtl/RR16kXvptiv6q1msYZg==
@@ -6690,24 +6690,6 @@
     "@walletconnect/ethereum-provider" "^1.7.8"
     "@web3-react/types" "^8.2.0"
     eventemitter3 "^4.0.7"
-
-"@web3modal/core@2.4.5":
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/@web3modal/core/-/core-2.4.5.tgz#506161e37b8431fc8d605aed7a73d93e3f8ee7b4"
-  integrity sha512-iulOIW2irVaq+xWTzzM2xbRI4TCR0yTnV2Yz+ifIFl+r3OF3ZOC1jsy4jJnKL7/6e7p4NmmKJk0/w951KzCF5g==
-  dependencies:
-    buffer "6.0.3"
-    valtio "1.10.5"
-
-"@web3modal/ui@2.4.5":
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/@web3modal/ui/-/ui-2.4.5.tgz#bd388faeafd9abf72abffc85613b3d7038adcf14"
-  integrity sha512-LvGjGL7vyQrUrrQOtFAK0SyxJs1yozOnJjP7s7gWXJa7wFWCE+kVjrhE8VrKbwx7nHe78IFA1rs7V1ncCirqVQ==
-  dependencies:
-    "@web3modal/core" "2.4.5"
-    lit "2.7.5"
-    motion "10.16.2"
-    qrcode "1.5.3"
 
 "@webassemblyjs/ast@1.11.5", "@webassemblyjs/ast@^1.11.5":
   version "1.11.5"
@@ -19179,14 +19161,6 @@ v8-to-istanbul@^8.1.0:
     convert-source-map "^1.6.0"
     source-map "^0.7.3"
 
-valtio@1.10.5:
-  version "1.10.5"
-  resolved "https://registry.yarnpkg.com/valtio/-/valtio-1.10.5.tgz#7852125e3b774b522827d96bd9c76d285c518678"
-  integrity sha512-jTp0k63VXf4r5hPoaC6a6LCG4POkVSh629WLi1+d5PlajLsbynTMd7qAgEiOSPxzoX5iNvbN7iZ/k/g29wrNiQ==
-  dependencies:
-    proxy-compare "2.5.1"
-    use-sync-external-store "1.2.0"
-
 valtio@1.10.6:
   version "1.10.6"
   resolved "https://registry.yarnpkg.com/valtio/-/valtio-1.10.6.tgz#80ed00198b949939863a0fa56ae687abb417fc4f"
@@ -19357,6 +19331,13 @@ web-vitals@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-2.1.0.tgz#ebf5428875ab5bfc1056c2e80cd177001287de7b"
   integrity sha512-npEyJP8jHf3J71t1tRTEtz9FeKp8H2udWJUUq5ykfPhhstr//TUxiYhIEzLNwk4zv2ybAilMn7v7N6Mxmuitmg==
+
+web3-react-phantom@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/web3-react-phantom/-/web3-react-phantom-1.0.4.tgz#e3e58f1015bd4d600d922fac29206e44cf867a35"
+  integrity sha512-HKgmpJuHCQpPPUpNpe+/JSJNEMpUYce/TfcN2eERUj3fYZwRkHWOk1Uuw1sYJZKZYV6znME2iOmvGxyHl1oOpA==
+  dependencies:
+    "@web3-react/types" "^8.2.0"
 
 web3-utils@^1.3.4:
   version "1.7.5"
