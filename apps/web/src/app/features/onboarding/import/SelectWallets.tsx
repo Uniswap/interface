@@ -46,13 +46,7 @@ export function SelectWallets(): JSX.Element {
 
   const isImportingAccounts = addresses.length !== NUMBER_OF_WALLETS_TO_IMPORT
 
-  const {
-    data,
-    loading,
-    // TODO: add error state with refetch
-    // refetch,
-    error,
-  } = useSelectWalletScreenQuery({
+  const { data, loading, refetch, error } = useSelectWalletScreenQuery({
     variables: { ownerAddresses: addresses },
     /*
      * Wait until all the addresses have been added to the store before querying.
@@ -61,8 +55,10 @@ export function SelectWallets(): JSX.Element {
     skip: isImportingAccounts,
   })
 
-  // TODO: add error state with retry
-  // const onRetry = useCallback(() => refetch(), [refetch])
+  const onRetry = useCallback(() => {
+    setIsForcedLoading(true)
+    refetch()
+  }, [refetch])
 
   const allAddressBalances = data?.portfolios
 
@@ -166,12 +162,16 @@ export function SelectWallets(): JSX.Element {
     ? t('Searching for wallets')
     : isOnlyOneAccount
     ? t('One wallet found')
+    : showError
+    ? t('Error importing wallets')
     : t('Select wallets to import')
 
   const subtitle = isLoading
     ? t('Your wallets will appear below.')
     : isOnlyOneAccount
     ? t('Please confirm that the wallet below is the one you’d like to import.')
+    : showError
+    ? t('Something went wrong and your wallets couldn’t be imported.')
     : t(
         'You can import any of your wallet addresses that are associated with your recovery phrase.'
       )
@@ -186,7 +186,18 @@ export function SelectWallets(): JSX.Element {
       title={title}
       onSubmit={onSubmit}>
       <ScrollView height={180} showsVerticalScrollIndicator={false} width="100%">
-        {isLoading ? (
+        {showError && !isLoading ? (
+          <Stack gap="$spacing24" p="spacing12" width="100%">
+            <Text color="$accentCritical" textAlign="center" variant="buttonLabelMedium">
+              Couldn't load addresses
+            </Text>
+            <XStack justifyContent="center">
+              <Button theme="secondary" onPress={onRetry}>
+                Retry
+              </Button>
+            </XStack>
+          </Stack>
+        ) : isLoading ? (
           <YStack gap="$spacing12">
             <LoadingWalletPreviewCard />
             <LoadingWalletPreviewCard />

@@ -34,7 +34,8 @@ export default function WalletPreviewCard({
       alignItems="center"
       borderColor={selected ? gradientStart : unselectedBorderColor}
       borderRadius="$rounded20"
-      borderWidth={1}
+      borderWidth={2}
+      cursor="pointer"
       paddingHorizontal="$spacing16"
       paddingVertical="$spacing16"
       width="100%"
@@ -76,7 +77,7 @@ export function LoadingWalletPreviewCard(): JSX.Element {
       backgroundColor="background1"
       borderColor="$backgroundOutline"
       borderRadius="$rounded20"
-      borderWidth={1}
+      borderWidth={2}
       paddingHorizontal="$spacing16"
       paddingVertical="$spacing16"
       width="100%">
