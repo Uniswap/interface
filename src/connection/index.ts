@@ -7,6 +7,7 @@ import { Actions, Connector } from '@web3-react/types'
 import GNOSIS_ICON from 'assets/images/gnosis.png'
 import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
+import PHANTOM_ICON from 'assets/wallets/phantom-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { SupportedChainId } from 'constants/chains'
@@ -71,9 +72,8 @@ const phantomConnection: Connection = {
   connector: phantomInjected,
   hooks: phantomInjectedHooks,
   type: ConnectionType.PHANTOM,
-  getIcon: (isDarkMode: boolean) => getInjection(isDarkMode).icon,
+  getIcon: () => PHANTOM_ICON,
   shouldDisplay: () => !!window.phantom?.ethereum?.isPhantom,
-  // If on non-injected, non-mobile browser, prompt user to install Metamask
 }
 
 const [web3GnosisSafe, web3GnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
