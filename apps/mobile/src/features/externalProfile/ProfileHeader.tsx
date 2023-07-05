@@ -38,9 +38,9 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
   const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
 
   // ENS avatar and avatar colors
-  const { data: avatar, isLoading } = useENSAvatar(address)
+  const { data: avatar, loading } = useENSAvatar(address)
   const { colors: avatarColors } = useExtractedColors(avatar)
-  const hasAvatar = !!avatar && !isLoading
+  const hasAvatar = !!avatar && !loading
 
   // Unicon colors
   const { gradientStart: uniconGradientStart, gradientEnd: uniconGradientEnd } =
@@ -48,7 +48,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
 
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors = useMemo(() => {
-    if (isLoading || (hasAvatar && !avatarColors)) {
+    if (loading || (hasAvatar && !avatarColors)) {
       return [theme.colors.background0, theme.colors.background0]
     }
     if (hasAvatar && avatarColors && avatarColors.base) {
@@ -58,7 +58,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
   }, [
     avatarColors,
     hasAvatar,
-    isLoading,
+    loading,
     theme.colors.background0,
     uniconGradientEnd,
     uniconGradientStart,

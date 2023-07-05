@@ -3,6 +3,7 @@ import { onError } from '@apollo/client/link/error'
 import { RestLink } from 'apollo-link-rest'
 import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
+import { getOnChainEnsFetch, STUB_ONCHAIN_ENS_ENDPOINT } from 'wallet/src/features/ens/api'
 import { logger } from 'wallet/src/features/logger/logger'
 import {
   getOnChainBalancesFetch,
@@ -16,6 +17,7 @@ const REST_API_URL = uniswapUrls.apiBaseUrl
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ENDPOINT_TO_FETCHER: Record<string, (body: any) => Promise<Response>> = {
   [REST_API_URL + STUB_ONCHAIN_BALANCES_ENDPOINT]: getOnChainBalancesFetch,
+  [REST_API_URL + STUB_ONCHAIN_ENS_ENDPOINT]: getOnChainEnsFetch,
 }
 // Handles fetching data from REST APIs
 // Responses will be stored in graphql cache

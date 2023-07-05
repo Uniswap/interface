@@ -67,7 +67,6 @@ import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ChainsState, initialChainsState } from 'wallet/src/features/chains/slice'
-import { ensApi } from 'wallet/src/features/ens/api'
 import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
 import {
   TransactionDetails,
@@ -974,11 +973,11 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v31 to 32', () => {
-    const v31Stub = { ...v31Schema, [ensApi.reducerPath]: 'defined' }
+    const v31Stub = { ...v31Schema, ENS: 'defined' }
 
     const v32 = migrations[32](v31Stub)
 
-    expect(v32[ensApi.reducerPath]).toBe(undefined)
+    expect(v32.ENS).toBe(undefined)
   })
 
   it('migrates from v32 to 33', () => {

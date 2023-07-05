@@ -42,7 +42,7 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
    * is `uniswap.eth`, then we should show "uni.eth | owned by uniswap.eth"
    */
   const completedENSName = getCompletedENSName(ensName ?? null)
-  const { data: fetchedPrimaryENSName, isFetching: isFetchingPrimaryENSName } = useENSName(
+  const { data: fetchedPrimaryENSName, loading: isFetchingPrimaryENSName } = useENSName(
     savedPrimaryENSName ? undefined : address
   )
 

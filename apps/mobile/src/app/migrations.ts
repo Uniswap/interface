@@ -11,7 +11,6 @@ import { TransactionState } from 'src/features/transactions/slice'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ChainsState } from 'wallet/src/features/chains/slice'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
-import { ensApi } from 'wallet/src/features/ens/api'
 import {
   ChainIdToTxIdToDetails,
   TransactionStatus,
@@ -462,7 +461,7 @@ export const migrations = {
   32: function resetEnsApi(state: any) {
     const newState = { ...state }
 
-    delete newState[ensApi.reducerPath]
+    delete newState.ENS
 
     return newState
   },

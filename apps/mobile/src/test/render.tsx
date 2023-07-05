@@ -18,7 +18,6 @@ import { persistedReducer } from 'src/app/store'
 import { theme } from 'ui/src/theme/restyle/theme'
 import { setupCache } from 'wallet/src/data/cache'
 import { getErrorLink } from 'wallet/src/data/links'
-import { ensApi } from 'wallet/src/features/ens/api'
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -47,7 +46,7 @@ export function renderWithProviders(
       middleware: (getDefaultMiddleware) =>
         // TODO: fix typing
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getDefaultMiddleware().concat(ensApi.middleware) as any,
+        getDefaultMiddleware() as any,
     }),
     ...renderOptions
   }: ExtendedRenderOptions = {}

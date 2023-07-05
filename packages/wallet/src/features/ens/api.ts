@@ -1,92 +1,113 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { createApi, fetchBaseQuery, retry, skipToken } from '@reduxjs/toolkit/query/react'
+import { providers } from 'ethers'
+import { useMemo } from 'react'
+import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
-import { walletContextValue } from 'wallet/src/features/wallet/context'
+import { useRestQuery } from 'wallet/src/data/rest'
+import { getEthersProvider } from 'wallet/src/features/providers/getEthersProvider'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'wallet/src/utils/time'
+import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
+
+// stub endpoint to conform to REST endpoint styles
+// Rest link should intercept and use custom fetcher instead
+export const STUB_ONCHAIN_ENS_ENDPOINT = '/onchain-ens'
+
+export enum EnsLookupType {
+  Name = 'name',
+  Address = 'address',
+  Avatar = 'avatar',
+}
+
 export type EnslookupParams = {
+  type: EnsLookupType
   nameOrAddress: string
   chainId: ChainId
 }
 
-const ENS_REDUCER_NAME = 'ENS'
 const ENS_TTL_MS = 5 * ONE_MINUTE_MS
 
-const staggeredBaseQuery = retry(fetchBaseQuery({ baseUrl: '/' }), {
-  maxRetries: 5,
-})
+async function getNameFetch(address: string, provider: providers.JsonRpcProvider) {
+  const name = await provider.lookupAddress(address)
 
-export const ensApi = createApi({
-  reducerPath: ENS_REDUCER_NAME,
-  baseQuery: staggeredBaseQuery,
-  // given we do not purge entries, acts as TTL
-  refetchOnMountOrArgChange: ENS_TTL_MS / ONE_SECOND_MS,
-  endpoints: (builder) => ({
-    // takes an address "0xasdf..." and converts it to the ENS "x.eth"
-    name: builder.query<string | null, EnslookupParams>({
-      queryFn: async (params: EnslookupParams) => {
-        const { nameOrAddress: address } = params
-        try {
-          const provider = walletContextValue.providers.getProvider(ChainId.Mainnet)
-          const name = await provider.lookupAddress(address)
+  // ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy
+  // and recommends that you perform a match on the forward resolution
+  // see: https://docs.ens.domains/dapp-developer-guide/resolving-names#reverse-resolution
+  const fwdAddr = name ? await provider.resolveName(name) : null
 
-          /* ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy
-            and recommends that you perform a match on the forward resolution
-            see: https://docs.ens.domains/dapp-developer-guide/resolving-names#reverse-resolution
-          */
-          const fwdAddr = name ? await provider.resolveName(name) : null
-          // Normalize data as provider response is checksummed
-          const checkedName = areAddressesEqual(fwdAddr, address) ? name : null
-          return { data: checkedName }
-        } catch (e: unknown) {
-          return { error: { status: 500, data: JSON.stringify(e) } }
-        }
-      },
-    }),
+  // Normalize data as provider response is checksummed
+  return areAddressesEqual(fwdAddr, address) ? name : null
+}
 
-    // takes a name e.g. "payian.eth" and returns the address (or null if no record exists)
-    address: builder.query<string | null, EnslookupParams>({
-      queryFn: async (params: EnslookupParams) => {
-        const { nameOrAddress: name } = params
-        try {
-          const provider = walletContextValue.providers.getProvider(ChainId.Mainnet)
-          const address = await provider.resolveName(name)
+async function getAddressFetch(name: string, provider: providers.JsonRpcProvider) {
+  return await provider.resolveName(name)
+}
 
-          return { data: address }
-        } catch (e: unknown) {
-          return { error: { status: 500, data: JSON.stringify(e) } }
-        }
-      },
-    }),
+async function getAvatarFetch(address: string, provider: providers.JsonRpcProvider) {
+  const name = await provider.lookupAddress(address)
+  const fwdAddr = name ? await provider.resolveName(name) : null
+  const checkedName = areAddressesEqual(address, fwdAddr) ? name : null
+  return checkedName ? await provider.getAvatar(checkedName) : null
+}
 
-    // Takes an address, does ens name lookup, and returns the URL for ENS Avatar, if set.
-    // We duplicate logic from "name" query to benefit from caching on address only
-    avatar: builder.query<string | null, EnslookupParams>({
-      queryFn: async (params: EnslookupParams) => {
-        const { nameOrAddress: address } = params
-        try {
-          const provider = walletContextValue.providers.getProvider(ChainId.Mainnet)
-          const name = await provider.lookupAddress(address)
-          const fwdAddr = name ? await provider.resolveName(name) : null
-          const checkedName = areAddressesEqual(address, fwdAddr) ? name : null
-          const avatarURL = checkedName ? await provider.getAvatar(checkedName) : null
-          return { data: avatarURL }
-        } catch (e: unknown) {
-          return { error: { status: 500, data: JSON.stringify(e) } }
-        }
-      },
-    }),
-  }),
-})
+export const getOnChainEnsFetch = async (params: EnslookupParams): Promise<Response> => {
+  const { type, nameOrAddress } = params
+  const provider = getEthersProvider(ChainId.Mainnet, config)
 
-const { useNameQuery, useAddressQuery, useAvatarQuery } = ensApi
+  let response: string | null
+
+  switch (type) {
+    case EnsLookupType.Name:
+      response = await getNameFetch(nameOrAddress, provider)
+      break
+    case EnsLookupType.Address:
+      response = await getAddressFetch(nameOrAddress, provider)
+      break
+    case EnsLookupType.Avatar:
+      response = await getAvatarFetch(nameOrAddress, provider)
+      break
+    default:
+      throw new Error(`Invalid ENS lookup type: ${type}`)
+  }
+
+  return new Response(JSON.stringify({ data: response }))
+}
+
+function useEnsQuery(
+  type: EnsLookupType,
+  nameOrAddress?: string | null,
+  chainId: ChainId = ChainId.Mainnet
+) {
+  const result = useRestQuery<{ data?: string; timestamp: number }, EnslookupParams>(
+    STUB_ONCHAIN_ENS_ENDPOINT,
+    // the query is skipped if this is not defined so the assertion is okay
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    { type, nameOrAddress: nameOrAddress!, chainId },
+    ['data', 'timestamp'],
+    { skip: !nameOrAddress }
+  )
+
+  const { data, error, refetch } = result
+
+  return useMemo(() => {
+    if (data?.timestamp && Date.now() - data.timestamp > ENS_TTL_MS) {
+      refetch?.()
+      return { ...result, data: undefined }
+    }
+
+    return {
+      ...result,
+      data: data?.data,
+      error,
+    }
+  }, [data, error, refetch, result])
+}
 
 export function useENSName(address?: Address, chainId: ChainId = ChainId.Mainnet) {
-  return useNameQuery(address ? { nameOrAddress: address, chainId } : skipToken)
+  return useEnsQuery(EnsLookupType.Name, address, chainId)
 }
 export function useAddressFromEns(maybeName: string | null, chainId: ChainId = ChainId.Mainnet) {
-  return useAddressQuery(maybeName ? { nameOrAddress: maybeName, chainId } : skipToken)
+  return useEnsQuery(EnsLookupType.Address, maybeName, chainId)
 }
 export function useENSAvatar(address?: string | null, chainId: ChainId = ChainId.Mainnet) {
-  return useAvatarQuery(address ? { nameOrAddress: address, chainId } : skipToken)
+  return useEnsQuery(EnsLookupType.Avatar, address, chainId)
 }

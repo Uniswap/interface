@@ -22,11 +22,8 @@ export function useENS(
   const validAddress = getValidAddress(debouncedNameOrAddress, false, false)
   const maybeName = validAddress ? null : debouncedNameOrAddress // if it's a valid address then it's not a name
 
-  const { currentData: name, isFetching: nameFetching } = useENSName(
-    validAddress ?? undefined,
-    chainId
-  )
-  const { currentData: address, isFetching: addressFetching } = useAddressFromEns(
+  const { data: name, loading: nameFetching } = useENSName(validAddress ?? undefined, chainId)
+  const { data: address, loading: addressFetching } = useAddressFromEns(
     autocompleteDomain ? getCompletedENSName(maybeName) : maybeName,
     chainId
   )

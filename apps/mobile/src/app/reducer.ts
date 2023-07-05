@@ -11,13 +11,11 @@ import { telemetryReducer } from 'src/features/telemetry/slice'
 import { tokensReducer } from 'src/features/tokens/tokensSlice'
 import { transactionReducer } from 'src/features/transactions/slice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
-import { ensApi } from 'wallet/src/features/ens/api'
 import { sharedReducers } from 'wallet/src/state/reducer'
 import { monitoredSagaReducers } from './saga'
 
 const reducers = {
   ...sharedReducers,
-  [ensApi.reducerPath]: ensApi.reducer,
   [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,
   appearanceSettings: appearanceSettingsReducer,
   biometricSettings: biometricSettingsReducer,

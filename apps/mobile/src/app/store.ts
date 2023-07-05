@@ -7,7 +7,6 @@ import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
 import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
 import { importAccountSagaName } from 'src/features/import/importAccountSaga'
-import { ensApi } from 'wallet/src/features/ens/api'
 import { logger } from 'wallet/src/features/logger/logger'
 import { createStore } from 'wallet/src/state'
 import { RootReducerNames } from 'wallet/src/state/reducer'
@@ -33,9 +32,7 @@ export const reduxStorage: Storage = {
 }
 
 // list of apis to ignore when logging errors, i.e. logging is handled by api
-const rtkQueryErrorLoggerIgnoreList: Array<ReducerNames> = [
-  ensApi.reducerPath, // verbose
-]
+const rtkQueryErrorLoggerIgnoreList: Array<ReducerNames> = []
 const rtkQueryErrorLogger: Middleware = () => (next) => (action: PayloadAction<unknown>) => {
   if (!isRejectedWithValue(action)) {
     return next(action)
@@ -79,7 +76,6 @@ const whitelist: Array<ReducerNames | RootReducerNames> = [
   'tokens',
   'transactions',
   'wallet',
-  ensApi.reducerPath,
 ]
 
 export const persistConfig = {
@@ -118,12 +114,7 @@ export const setupStore = (
     reducer: persistedReducer,
     preloadedState,
     additionalSagas: [mobileSaga],
-    middlewareAfter: [
-      ensApi.middleware,
-      fiatOnRampApi.middleware,
-      rtkQueryErrorLogger,
-      ...middlewares,
-    ],
+    middlewareAfter: [fiatOnRampApi.middleware, rtkQueryErrorLogger, ...middlewares],
     enhancers: [sentryReduxEnhancer],
   })
 }
