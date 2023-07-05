@@ -9,6 +9,7 @@ on:
   push:
     branches:
       - main
+      - releases/staging
   pull_request:
 
 jobs:
@@ -166,3 +167,44 @@ jobs:
         with:
           name: Cypress tests
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+
+  pre:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6.4.1
+        with:
+          script: |
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.payload.pull_request.head.sha || context.payload.head_commit.sha,
+              state: 'pending',
+              context: 'Test / promotion',
+              description: 'Running tests...',
+              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.runId
+            })
+
+  post:
+    if: always()
+    needs: [pre, lint, typecheck, deps-tests, unit-tests, cypress-test-matrix]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6.4.1
+        with:
+          script: |
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.payload.pull_request.head.sha || context.payload.head_commit.sha,
+              state: ${{ env.STATUS }} ? 'success' : 'failure',
+              context: 'Test / promotion',
+              description: ${{ env.STATUS }} ? 'All tests passed' : 'One or more tests failed and are blocking promotion',
+              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.runId
+            })
+        env:
+          STATUS: |
+            ${{ needs.lint.result == 'success' }} &&
+            ${{ needs.typecheck.result == 'success' }} &&
+            ${{ needs.deps-tests.result == 'success' }} &&
+            ${{ needs.unit-tests.result == 'success' }} &&
+            ${{ needs.cypress-test-matrix.result == 'success' }}
