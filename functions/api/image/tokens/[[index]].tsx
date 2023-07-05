@@ -5,6 +5,7 @@ import React from 'react'
 import getColor from '../../../utils/getColor'
 import getSetup from '../../../utils/getSetup'
 import getToken from '../../../utils/getToken'
+import getNetworkLogoUrl from '../../../utils/getNetworkLogoURL'
 
 export async function onRequestGet({ params, request }) {
   try {
@@ -23,8 +24,8 @@ export async function onRequestGet({ params, request }) {
     }
 
     const palette = await getColor(data.image)
+    const networkLogo = getNetworkLogoUrl(networkName)
 
-    //change data.name from all uppercase to first letter of every word uppercase 
     const words = data.name.split(' ')
     let name = ''
     for (let i = 0; i < words.length; i++) {
@@ -65,7 +66,18 @@ export async function onRequestGet({ params, request }) {
               <img
                 src={data.image}
                 width="144px"
-              />
+              >
+                {networkLogo != '' && (<img
+                  src = {networkLogo}
+                  width="48px"
+                  style={{
+                    position: 'absolute',
+                    right: '2px',
+                    bottom: '0px',
+                    borderRadius: '100%',
+                  }}
+                />)}
+              </img>
               <div
                 style={{
                   fontFamily: 'Inter',
