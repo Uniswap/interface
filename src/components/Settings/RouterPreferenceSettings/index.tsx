@@ -6,14 +6,17 @@ import { RowBetween, RowFixed } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import { useUniswapXEnabled } from 'featureFlags/flags/gouda'
+import { useAppDispatch } from 'state/hooks'
 import { RouterPreference } from 'state/routing/slice'
 import { useRouterPreference } from 'state/user/hooks'
+import { updateDisabledUniswapX } from 'state/user/reducer'
 import { Divider, ThemedText } from 'theme'
 
 export default function RouterPreferenceSettings() {
   const { chainId } = useWeb3React()
   const [routerPreference, setRouterPreference] = useRouterPreference()
   const uniswapXEnabled = useUniswapXEnabled() && chainId && isUniswapXSupportedChain(chainId)
+  const dispatch = useAppDispatch()
 
   return (
     <>
@@ -37,9 +40,13 @@ export default function RouterPreferenceSettings() {
             <Toggle
               id="toggle-uniswap-x-button"
               isActive={routerPreference === RouterPreference.X}
-              toggle={() =>
+              toggle={() => {
+                if (routerPreference === RouterPreference.X) {
+                  // We need to remember if a user disables Uniswap X, so we don't show the opt-in flow again.
+                  dispatch(updateDisabledUniswapX({ disabledUniswapX: true }))
+                }
                 setRouterPreference(routerPreference === RouterPreference.X ? RouterPreference.API : RouterPreference.X)
-              }
+              }}
             />
           </RowBetween>
           <Divider />
