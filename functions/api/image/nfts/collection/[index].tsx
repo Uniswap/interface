@@ -42,7 +42,7 @@ export async function onRequestGet({ params, request }) {
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'flex-end',
-                gap: '64px',
+                gap: '48px',
                 width: '100%',
               }}
             >
@@ -50,9 +50,11 @@ export async function onRequestGet({ params, request }) {
                 src={data.image}
                 alt={data.name}
                 width="500px"
+                height="500px"
                 style={{
-                  borderRadius: '24px',
-                  boxShadow: '0px 0px 24px rgba(0, 0, 0, 0.25)',
+                  borderRadius: '60px',
+                  //boxShadow: '0px 0px 24px rgba(0, 0, 0, 0.25)',
+                  objectFit: 'cover',
                 }}
               />
               <div

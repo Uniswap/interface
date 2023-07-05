@@ -24,6 +24,14 @@ export async function onRequestGet({ params, request }) {
 
     const palette = await getColor(data.image)
 
+    //change data.name from all uppercase to first letter of every word uppercase 
+    const words = data.name.split(' ')
+    let name = ''
+    for (let i = 0; i < words.length; i++) {
+      name += words[i].charAt(0).toUpperCase() + words[i].slice(1).toLowerCase() + ' '
+    }
+    name = name.trim()
+
     return new ImageResponse(
       (
         <div
@@ -56,38 +64,34 @@ export async function onRequestGet({ params, request }) {
             >
               <img
                 src={data.image}
-                width="168px"
-                style={{
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
-                }}
+                width="144px"
               />
               <div
                 style={{
                   fontFamily: 'Inter',
                   fontSize: '72px',
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
+                  lineHeight: '58px',
+                  marginLeft: '-5px',
+                  marginTop: '24px',
                 }}
               >
-                {data.name}
+                {name}
               </div>
               <div
                 style={{
                   display: 'flex',
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  alignItems: 'center',
+                  alignItems: 'flex-end',
                   width: '100%',
-                  marginTop: 'auto',
-                  marginLeft: '-9px',
-                  marginBottom: '-9px',
                 }}
               >
                 <div
                   style={{
                     fontFamily: 'Inter',
                     fontSize: '168px',
+                    lineHeight: '133px',
+                    marginLeft: '-13px',
                   }}
                 >
                   {data.symbol}
