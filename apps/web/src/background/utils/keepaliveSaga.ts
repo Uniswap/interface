@@ -1,6 +1,8 @@
-import { call, cancel, cancelled, delay, fork, take } from 'typed-redux-saga'
+import { REHYDRATE } from 'redux-persist'
+import { call, cancel, cancelled, delay, fork, put, take } from 'typed-redux-saga'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { logger } from 'wallet/src/features/logger/logger'
+import { lockWallet } from 'wallet/src/features/wallet/slice'
 import { SagaStatus } from 'wallet/src/utils/saga'
 import serializeError from 'wallet/src/utils/serializeError'
 
@@ -19,6 +21,10 @@ let lastCall = Date.now()
  * @ref see ``doWork()` for implementation details.
  */
 export function* keepAliveSaga() {
+  // When browser is restarted, previous state may still be unlocked although password does not exist in memory.
+  // Wait for rehydration so we can override previous auth state, and ensure wallet is locked on startup.
+  yield* take(REHYDRATE)
+  yield* put(lockWallet())
   while (
     // waits for success auth action to be dispatched
 
