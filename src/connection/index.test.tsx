@@ -24,8 +24,9 @@ describe('connection utility/metadata tests', () => {
     const coinbase = getConnection(ConnectionType.COINBASE_WALLET)
     const uniswap = getConnection(ConnectionType.UNISWAP_WALLET)
     const walletconnect = getConnection(ConnectionType.WALLET_CONNECT_V2)
+    const phantom = getConnection(ConnectionType.PHANTOM)
 
-    return { displayed, injected, coinbase, uniswap, walletconnect }
+    return { displayed, injected, coinbase, uniswap, walletconnect, phantom }
   }
 
   const createPhantomEnviroment = () => {
@@ -116,13 +117,16 @@ describe('connection utility/metadata tests', () => {
 
   it('Phantom Wallet Injected Desktop displays as MetaMask', async () => {
     createPhantomEnviroment()
-    const { displayed, injected } = createWalletEnvironment({ isMetaMask: true }) // Phantom sets isMetaMask to true
+    const { displayed, injected, phantom } = createWalletEnvironment({ isMetaMask: true }) // Phantom sets isMetaMask to true
 
     expect(displayed.includes(injected)).toBe(true)
     expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
-    expect(displayed.length).toEqual(5)
+    expect(displayed.includes(phantom)).toBe(true)
+    expect(phantom.getName()).toBe('Phantom')
+
+    expect(displayed.length).toEqual(6)
   })
 
   const UNKNOWN_MM_INJECTOR = { isRandomWallet: true, isMetaMask: true } as Window['window']['ethereum']
