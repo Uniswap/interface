@@ -27,26 +27,27 @@ export default function useUniswapXSwapCallback(trade: DutchOrderTrade | undefin
         if (!trade) throw new Error('missing trade')
 
         const signDutchOrder = async (): Promise<{ signature: string; updatedOrder: DutchOrder }> => {
-          const startTime = Math.floor(Date.now() / 1000) + DEFAULT_START_TIME_PADDING_SECONDS
-          setTraceData('startTime', startTime)
-
-          const endTime = startTime + trade.auctionPeriodSecs
-          setTraceData('endTime', endTime)
-
-          const deadline = endTime + trade.deadlineBufferSecs
-          setTraceData('deadline', deadline)
-
-          // Set timestamp and account based values when the user clicks 'swap' to make them as recent as possible
-          const updatedOrder = DutchOrderBuilder.fromOrder(trade.order)
-            .startTime(startTime)
-            .endTime(endTime)
-            .deadline(deadline)
-            .offerer(account)
-            .nonFeeRecipient(account)
-            .build()
-
-          const { domain, types, values } = updatedOrder.permitData()
           try {
+            const startTime = Math.floor(Date.now() / 1000) + DEFAULT_START_TIME_PADDING_SECONDS
+            setTraceData('startTime', startTime)
+
+            const endTime = startTime + trade.auctionPeriodSecs
+            setTraceData('endTime', endTime)
+
+            const deadline = endTime + trade.deadlineBufferSecs
+            setTraceData('deadline', deadline)
+
+            // Set timestamp and account based values when the user clicks 'swap' to make them as recent as possible
+            const updatedOrder = DutchOrderBuilder.fromOrder(trade.order)
+              .decayStartTime(startTime)
+              .decayEndTime(endTime)
+              .deadline(deadline)
+              .swapper(account)
+              .nonFeeRecipient(account)
+              .build()
+
+            const { domain, types, values } = updatedOrder.permitData()
+
             const signature = await signTypedData(provider.getSigner(account), domain, types, values)
             if (deadline < Math.floor(Date.now() / 1000)) {
               return signDutchOrder()
