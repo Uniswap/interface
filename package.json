@@ -186,7 +186,6 @@
     "@visx/react-spring": "^2.12.2",
     "@visx/responsive": "^2.10.0",
     "@visx/shape": "^2.11.1",
-    "@walletconnect/modal": "^2.5.4",
     "@web3-react/coinbase-wallet": "^8.2.0",
     "@web3-react/core": "^8.2.0",
     "@web3-react/eip1193": "^8.2.0",
