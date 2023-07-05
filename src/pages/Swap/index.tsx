@@ -315,7 +315,7 @@ export function Swap({
   const fiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
   const stablecoinPriceImpact = useMemo(
     () =>
-      routeIsSyncing || !trade
+      routeIsSyncing || !isClassicTrade(trade)
         ? undefined
         : computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
     [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
