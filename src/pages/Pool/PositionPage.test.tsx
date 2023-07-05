@@ -9,6 +9,7 @@ import * as useV3Positions from 'hooks/useV3Positions'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen } from 'test-utils/render'
 import { PositionDetails } from 'types/position'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import PositionPage from './PositionPage'
 
@@ -43,6 +44,9 @@ const pool = new Pool(
   200958
 )
 
+const USDC_AMOUNT = CurrencyAmount.fromRawAmount(USDC_MAINNET, '1224156977')
+const WETH_AMOUNT = CurrencyAmount.fromRawAmount(WETH9[1], '500807669662847869')
+
 describe('position page', () => {
   it('correctly collects the correct amount', () => {
     mocked(useV3Positions.useV3PositionFromTokenId).mockImplementation(() => {
@@ -61,10 +65,7 @@ describe('position page', () => {
       return [PoolState.EXISTS, pool]
     })
     mocked(useV3PositionFees).mockImplementation(() => {
-      return [
-        CurrencyAmount.fromRawAmount(USDC_MAINNET, '1224156977'),
-        CurrencyAmount.fromRawAmount(WETH9[1], '500807669662847869'),
-      ]
+      return [USDC_AMOUNT, WETH_AMOUNT]
     })
 
     render(<PositionPage />)
@@ -72,6 +73,8 @@ describe('position page', () => {
     const collectFeesButton = screen.queryByTestId('collect-fees-button') as HTMLButtonElement
     expect(collectFeesButton).toBeInTheDocument()
     expect(screen.getByText('Collect fees')).toBeInTheDocument()
+    expect(screen.getByText(formatCurrencyAmount(USDC_AMOUNT, 4))).toBeInTheDocument()
+    expect(screen.getByText(formatCurrencyAmount(WETH_AMOUNT, 4))).toBeInTheDocument()
     fireEvent.click(collectFeesButton)
     expect(screen.getByText('Collecting fees will withdraw currently available fees for you.')).toBeInTheDocument()
     const modalCollectFeesButton = screen.queryByTestId('modal-collect-fees-button') as HTMLButtonElement
