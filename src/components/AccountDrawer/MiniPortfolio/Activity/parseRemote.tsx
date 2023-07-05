@@ -113,12 +113,17 @@ function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferP
   }
 }
 
-function getSwapDescriptor(
-  tokenIn: TokenAssetPartsFragment,
-  outputAmount: string,
-  tokenOut: TokenAssetPartsFragment,
+function getSwapDescriptor({
+  tokenIn,
+  inputAmount,
+  tokenOut,
+  outputAmount,
+}: {
+  tokenIn: TokenAssetPartsFragment
+  outputAmount: string
+  tokenOut: TokenAssetPartsFragment
   inputAmount: string
-) {
+}) {
   return `${inputAmount} ${tokenIn.symbol} for ${outputAmount} ${tokenOut.symbol}`
 }
 
@@ -151,7 +156,7 @@ function parseSwap(changes: TransactionChanges) {
       const outputAmount = formatNumberOrString(received.quantity, NumberType.TokenNonTx)
       return {
         title: getSwapTitle(sent, received),
-        descriptor: getSwapDescriptor(sent.asset, outputAmount, received.asset, inputAmount),
+        descriptor: getSwapDescriptor({ tokenIn: sent.asset, inputAmount, tokenOut: received.asset, outputAmount }),
       }
     }
   }
@@ -280,7 +285,12 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, orderStatus } = details
   const uniswapXOrderStatus = OrderStatusTable[orderStatus]
   const { status, statusMessage, title } = OrderTextTable[uniswapXOrderStatus]
-  const descriptor = getSwapDescriptor(inputToken, inputTokenQuantity, outputToken, outputTokenQuantity)
+  const descriptor = getSwapDescriptor({
+    tokenIn: inputToken,
+    inputAmount: inputTokenQuantity,
+    tokenOut: outputToken,
+    outputAmount: outputTokenQuantity,
+  })
 
   return {
     hash: details.hash,
