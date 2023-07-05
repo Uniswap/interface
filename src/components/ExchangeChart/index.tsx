@@ -15,7 +15,7 @@ import { uniswapClient, useUniswapSubgraph } from 'graphql/limitlessGraph/uniswa
 import { useLimitlessSubgraph, limitlessClient } from 'graphql/limitlessGraph/limitlessClients';
 import { V3_CORE_FACTORY_ADDRESSES as UNISWAP_FACTORIES } from "constants/addresses-uniswap"
 import { V3_CORE_FACTORY_ADDRESSES as LIMITLESS_FACTORIES, POOL_INIT_CODE_HASH } from "constants/addresses"
-import { useContract } from 'hooks/useContract';
+import { useContract, usePoolContract, useTokenContract } from 'hooks/useContract';
 import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { Interface } from '@ethersproject/abi'
 import { usePool } from 'hooks/usePools';
@@ -129,20 +129,20 @@ export const PoolDataSection = ({
 	const [poolState, limitlessPool] = usePool(currency0 ?? undefined, currency1 ?? undefined, fee)
 	const [symbol, setSymbol] = useState("missing pool")
 	const [stats, setStats] = useState<{
-		price: number | null,
-		delta: number | null,
+		price: number,
+		delta: number,
 		// token0Volume: number | null,
 		// token1Volume: number | null,
-		high24h: number | null,
-		low24h: number | null,
-		invertPrice: boolean
-	}>({
-		price: null,
-		delta: null,
-		high24h: null,
-		low24h: null,
-		invertPrice: false
-	})
+		high24h: number,
+		low24h: number,
+		invertPrice: boolean,
+		token1Reserve: number,
+		token0Reserve: number
+	}>()
+
+
+	const token0Contract = useTokenContract(token0?.address)
+	const token1Contract = useTokenContract(token1?.address)
 
 	useEffect(() => {
 		if (token0 && token1) {
@@ -150,7 +150,7 @@ export const PoolDataSection = ({
 			// console.log("lmt: ", uniswapPoolAddress)
 			const fetch = async () => {
 				try {
-					if (uniswapPoolAddress) {
+					if (uniswapPoolAddress && token0Contract && token1Contract && limitlessPoolAddress) {
 						const result = await uniswapClient.query(
 							{
 								query: LATEST_POOL_DAY_QUERY,
@@ -160,6 +160,9 @@ export const PoolDataSection = ({
 								fetchPolicy: 'network-only',
 							}
 						)
+
+						let token1Reserve = await token0Contract.callStatic.balanceOf(limitlessPoolAddress)
+						let token0Reserve = await token1Contract.callStatic.balanceOf(limitlessPoolAddress)
 
 						const priceQuery = await uniswapClient.query(
 							{
@@ -198,32 +201,29 @@ export const PoolDataSection = ({
 								price24hHigh = Number(high)
 								price24hLow = Number(low)
 							}
+
 							setStats(
 								{
 									price: Number(price),
 									delta: delta,
 									high24h: price24hHigh,
 									low24h: price24hLow,
-									invertPrice
+									invertPrice,
+									token0Reserve: new BN(token0Reserve.toString()).shiftedBy(18).toNumber(),
+									token1Reserve: new BN(token1Reserve.toString()).shiftedBy(18).toNumber(),
 								}
 							)
 						}
 					}
 				} catch (err) {
-					// console.log("subgraph error: ", err)
-					setStats({
-						price: null,
-						delta: null,
-						high24h: null,
-						low24h: null,
-						invertPrice: false
-					})
+					console.log("stats section error: ", err)
+					setStats(undefined)
 				}
 			}
 
 			fetch()
 		}
-	}, [lastUpdate, uniswapPoolAddress, uniswapPoolExists, pool])
+	}, [lastUpdate, uniswapPoolAddress, uniswapPoolExists, pool, limitlessPoolAddress, token0Contract, token1Contract])
 
 	// console.log("stats: ", stats)
 
@@ -339,13 +339,9 @@ export const PoolDataSection = ({
 				<StatsSection
 					address={uniswapPoolAddress ?? ""}
 					chainId={chainId}
-					inversePrice={stats.invertPrice}
 					token0Symbol={token0?.symbol}
 					token1Symbol={token1?.symbol}
-					price={stats.price}
-					delta={stats.delta}
-					priceHigh24H={stats.high24h}
-					priceLow24H={stats.low24h}
+					stats={stats}
 				/>
 			</StatsContainer>
 			<div style={{ height: "450px" }}>

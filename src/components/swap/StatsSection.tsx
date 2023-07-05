@@ -86,38 +86,49 @@ function Stat({
 type StatsSectionProps = {
   chainId: SupportedChainId
   address: string
-  inversePrice: boolean
+  // inversePrice: boolean
   token0Symbol?: string
   token1Symbol?: string
-  priceHigh24H?: NumericStat
-  priceLow24H?: NumericStat
-  delta?: NumericStat
-  price?: NumericStat
+  stats?: {
+		price: number,
+		delta: number,
+		high24h: number,
+		low24h: number,
+		invertPrice: boolean,
+		token1Reserve: number,
+		token0Reserve: number
+	}
+  // priceHigh24H?: NumericStat
+  // priceLow24H?: NumericStat
+  // delta?: NumericStat
+  // price?: NumericStat
+  // token0Reserve?: number,
+  // token1Reserve?: number
 }
 export default function StatsSection(props: StatsSectionProps) {
-  const { chainId, address, priceHigh24H, priceLow24H, delta, price, inversePrice, token0Symbol, token1Symbol } = props
+  const { chainId, address, stats, token0Symbol, token1Symbol } = props
   const { label, infoLink } = getChainInfo(chainId) ? getChainInfo(chainId) : { label: null,  infoLink: null }
 
   // if inversePrice then token0 is base token, otherwise token0 is quote token
-  const arrow = getDeltaArrow(delta, 18)
+  const arrow = getDeltaArrow(stats?.delta, 18)
 
-  const baseQuoteSymbol = inversePrice ? `${token0Symbol} / ${token1Symbol}` : `${token1Symbol} / ${token0Symbol}`
+  const baseQuoteSymbol = stats?.invertPrice ? `${token0Symbol} / ${token1Symbol}` : `${token1Symbol} / ${token0Symbol}`
 
-  if (priceHigh24H || priceLow24H || delta || price) {
+  if (stats?.high24h || stats?.low24h || stats?.delta || stats?.price) {
     return (
       <StatsWrapper data-testid="token-details-stats">
         <TokenStatsSection>
           <StatPair>
             <Stat
               dataCy="current-price"
-              value={price}
+              value={stats?.price}
               description={
                 <Trans>
                   Current Price
                 </Trans>
               }
               isPrice={true}
-              baseTokenSymbol={inversePrice ? token0Symbol : token1Symbol}
+              baseTokenSymbol={stats?.invertPrice ? token0Symbol : token1Symbol}
               title={<Trans>Current Price ({baseQuoteSymbol})</Trans>}
             />
             <StatWrapper data-cy={"delta-24h"}>
@@ -129,8 +140,8 @@ export default function StatsSection(props: StatsSectionProps) {
                   <ArrowCell>
                     {arrow}
                   </ArrowCell>
-                  <DeltaText delta={Number(delta)}>
-                    {delta ? formatNumber(delta, NumberType.SwapTradeAmount) : "-"}%
+                  <DeltaText delta={Number(stats?.delta)}>
+                    {stats?.delta ? formatNumber(stats?.delta, NumberType.SwapTradeAmount) : "-"}%
                   </DeltaText>
                 </AutoRow>
               </StatPrice>
@@ -138,11 +149,19 @@ export default function StatsSection(props: StatsSectionProps) {
           </StatPair>
           <StatPair>
             <Stat dataCy="24h-low" value={
-              priceLow24H
+              stats?.low24h
             } title={<Trans>24h low ({baseQuoteSymbol})</Trans>} />
             <Stat dataCy="24h-high" value={
-              priceHigh24H
+              stats?.high24h
             } title={<Trans>24h high ({baseQuoteSymbol})</Trans>} />
+          </StatPair>
+          <StatPair>
+            <Stat dataCy="liq-below" value={
+              stats?.token1Reserve
+            } title={<Trans>Liquidity Below ({token1Symbol})</Trans>} />
+            <Stat dataCy="liq-above" value={
+              stats?.token0Reserve
+            } title={<Trans>Liquidity Above ({token0Symbol})</Trans>} />
           </StatPair>
         </TokenStatsSection>
       </StatsWrapper>

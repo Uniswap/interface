@@ -150,7 +150,7 @@ const StyledConnectButton = styled.button`
   color: white;
 `
 
-function Web3StatusInner() {
+function  Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
   const getConnection = useGetConnection()
   const connection = getConnection(connector)
