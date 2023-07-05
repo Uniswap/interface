@@ -115,7 +115,7 @@ export function gqlToCurrency(token: {
   name?: string
   symbol?: string
 }): Currency | undefined {
-  const chainId = fromGraphQLChain(token.chain)
+  const chainId = supportedChainIdFromGQLChain(token.chain)
   if (!chainId) return undefined
   if (token.standard === TokenStandard.Native || !token.address) return nativeOnChain(chainId)
   else return new Token(chainId, token.address, token.decimals ?? 18, token.name, token.symbol)
@@ -149,7 +149,7 @@ export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
   return (UX_SUPPORTED_GQL_CHAINS as ReadonlyArray<Chain>).includes(chain)
 }
 
-export function fromGraphQLChain(chain: Chain): SupportedChainId | undefined {
+export function supportedChainIdFromGQLChain(chain: Chain): SupportedChainId | undefined {
   return isSupportedGQLChain(chain) ? CHAIN_NAME_TO_CHAIN_ID[chain] : undefined
 }
 

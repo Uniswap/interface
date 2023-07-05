@@ -27,7 +27,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { QueryToken } from 'graphql/data/Token'
-import { fromGraphQLChain, getTokenDetailsURL } from 'graphql/data/util'
+import { getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
@@ -112,7 +112,7 @@ export default function TokenDetails({
   )
 
   const { chainId: connectedChainId } = useWeb3React()
-  const pageChainId = fromGraphQLChain(chain)
+  const pageChainId = supportedChainIdFromGQLChain(chain)
   const tokenQueryData = tokenQuery.token
   const crossChainMap = useMemo(
     () =>

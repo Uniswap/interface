@@ -1,9 +1,9 @@
 import { nativeOnChain } from 'constants/tokens'
 import { Chain } from 'graphql/data/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'graphql/data/util'
+import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 
 export function getNativeTokenDBAddress(chain: Chain): string | undefined {
-  const pageChainId = fromGraphQLChain(chain)
+  const pageChainId = supportedChainIdFromGQLChain(chain)
   if (pageChainId === undefined) {
     return undefined
   }

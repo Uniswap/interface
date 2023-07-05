@@ -15,7 +15,7 @@ import {
   TokenApprovalPartsFragment,
   TokenTransferPartsFragment,
 } from 'graphql/data/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'graphql/data/util'
+import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
@@ -77,7 +77,7 @@ function isSameAddress(a?: string, b?: string) {
 }
 
 function callsPositionManagerContract(assetActivity: AssetActivityPartsFragment) {
-  const supportedChain = fromGraphQLChain(assetActivity.chain)
+  const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
   if (!supportedChain) return false
   return isSameAddress(assetActivity.transaction.to, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[supportedChain])
 }
@@ -94,8 +94,8 @@ function getCollectionCounts(nftTransfers: NftTransferPartsFragment[]): { [key: 
 }
 
 function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment): string | undefined {
-  const supportedSentChain = fromGraphQLChain(sent.asset.chain)
-  const supportedReceivedChain = fromGraphQLChain(received.asset.chain)
+  const supportedSentChain = supportedChainIdFromGQLChain(sent.asset.chain)
+  const supportedReceivedChain = supportedChainIdFromGQLChain(received.asset.chain)
   if (!supportedSentChain || !supportedReceivedChain) {
     Sentry.withScope((scope) => {
       scope.setExtra('supportedSentChain', supportedSentChain)
@@ -279,7 +279,7 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
       },
       { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
     )
-    const supportedChain = fromGraphQLChain(assetActivity.chain)
+    const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
     if (!supportedChain) {
       Sentry.withScope((scope) => {
         scope.setExtra('gqlActivity', assetActivity)

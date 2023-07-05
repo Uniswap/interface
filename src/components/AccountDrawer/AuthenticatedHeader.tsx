@@ -228,7 +228,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
   const { data: portfolioBalances } = usePortfolioBalancesQuery({
-    variables: { ownerAddress: account ?? '', chains: GQL_MAINNET_CHAINS.concat() },
+    variables: { ownerAddress: account ?? '', chains: GQL_MAINNET_CHAINS.slice() },
     fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
   })
   const portfolio = portfolioBalances?.portfolios?.[0]

@@ -45,7 +45,7 @@ export default function PrefetchBalancesWrapper({ children }: PropsWithChildren)
   const [hasUnfetchedBalances, setHasUnfetchedBalances] = useState(true)
   const fetchBalances = useCallback(() => {
     if (account) {
-      prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS.concat() } })
+      prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS.slice() } })
       setHasUnfetchedBalances(false)
     }
   }, [account, prefetchPortfolioBalances])

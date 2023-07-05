@@ -16,10 +16,10 @@ import {
   useTopTokensSparklineQuery,
 } from './__generated__/types-and-hooks'
 import {
-  fromGraphQLChain,
   isPricePoint,
   PollingInterval,
   PricePoint,
+  supportedChainIdFromGQLChain,
   toHistoryDuration,
   unwrapToken,
   usePollQueryWhileMounted,
@@ -147,7 +147,7 @@ interface UseTopTokensReturnValue {
 }
 
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
-  const chainId = fromGraphQLChain(chain)
+  const chainId = supportedChainIdFromGQLChain(chain)
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
   const { data: sparklineQuery } = usePollQueryWhileMounted(
