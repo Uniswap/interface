@@ -159,7 +159,7 @@
     "@uniswap/analytics": "^1.3.1",
     "@uniswap/analytics-events": "^2.13.0",
     "@uniswap/conedison": "^1.7.1",
-    "@uniswap/gouda-sdk": "^1.0.0-alpha.3",
+    "@uniswap/gouda-sdk": "^1.0.0-alpha.4",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
