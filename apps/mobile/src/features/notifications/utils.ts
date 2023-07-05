@@ -1,10 +1,9 @@
-import { BigintIsh, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { i18n } from 'src/app/i18n'
 import { SpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
-import { logger } from 'wallet/src/features/logger/logger'
 import {
   AppNotificationType,
   ReceiveCurrencyTxNotification,
@@ -19,10 +18,9 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
-import { convertScientificNotationToNumber } from 'wallet/src/utils/convertScientificNotation'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice } from 'wallet/src/utils/format'
-import serializeError from 'wallet/src/utils/serializeError'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
   const { event, dappName, chainId } = appNotification
@@ -289,24 +287,16 @@ export const getFormattedCurrencyAmount = (
 ): string => {
   if (!currency) return ''
 
-  try {
-    // Convert scientific notation into number format so it can be parsed by BigInt properly
-    const parsedCurrencyAmountRaw: string | BigintIsh =
-      convertScientificNotationToNumber(currencyAmountRaw)
+  const currencyAmount = getCurrencyAmount({
+    value: currencyAmountRaw,
+    valueType: ValueType.Raw,
+    currency,
+  })
 
-    const currencyAmount = CurrencyAmount.fromRawAmount<Currency>(currency, parsedCurrencyAmountRaw)
-    const formattedAmount = formatCurrencyAmount(currencyAmount)
-    return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
-  } catch (error) {
-    logger.error('Could not format currency amount', {
-      tags: {
-        file: 'notifications/utils',
-        function: 'getFormattedCurrencyAmount',
-        error: serializeError(error),
-      },
-    })
-    return ''
-  }
+  if (!currencyAmount) return ''
+
+  const formattedAmount = formatCurrencyAmount(currencyAmount)
+  return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
 }
 
 const getUSDValue = (

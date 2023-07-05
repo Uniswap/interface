@@ -19,7 +19,7 @@ interface GasFeeResponseBase {
   }
 }
 
-interface GasFeeReponseEip1559 extends GasFeeResponseBase {
+interface GasFeeResponseEip1559 extends GasFeeResponseBase {
   type: FeeType.Eip1559
   maxFeePerGas: {
     normal: string
@@ -54,7 +54,7 @@ export type TransactionEip1559FeeParams = {
 }
 
 // GasFeeResponse is the type that comes directly from the Gas Service API
-export type GasFeeResponse = GasFeeReponseEip1559 | GasFeeResponseLegacy
+export type GasFeeResponse = GasFeeResponseEip1559 | GasFeeResponseLegacy
 
 // TransactionGasFeeInfo is the transformed response that is readily usable
 // by components

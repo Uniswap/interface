@@ -2,6 +2,7 @@ import { getIosPushNotificationServiceEnvironmentAsync } from 'expo-application'
 import { getOnesignalPushTokenOrError } from 'src/features/notifications/Onesignal'
 import { config } from 'wallet/src/config'
 import { logger } from 'wallet/src/features/logger/logger'
+import serializeError from 'wallet/src/utils/serializeError'
 
 const WC_PUSH_SERVER_BASE_URL = 'https://us-central1-uniswap-mobile.cloudfunctions.net'
 const WC_REGISTER_ENDPOINT = 'onWalletConnectRegistration'
@@ -90,7 +91,7 @@ export async function registerWCv2ClientForPushNotifications(clientId: string): 
       tags: {
         file: 'walletConnectApi',
         function: 'registerWCv2ClientForPushNotifications',
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
   }

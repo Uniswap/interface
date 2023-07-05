@@ -1,7 +1,11 @@
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { BigNumber } from 'ethers'
 import { logger } from 'wallet/src/features/logger/logger'
 import { convertScientificNotationToNumber } from 'wallet/src/utils/convertScientificNotation'
+import serializeError from 'wallet/src/utils/serializeError'
+
+const HAS_NO_NUMBERS_REGEX = /^([^0-9]*)$/
 
 export enum ValueType {
   'Raw' = 'uint256', // integer format (the "raw" uint256) - usually used in smart contracts / how data is stored on-chain
@@ -30,7 +34,7 @@ export function getCurrencyAmount<T extends Currency>({
   if (!value || !currency) return undefined
 
   try {
-    let parsedValue = convertScientificNotationToNumber(value)
+    let parsedValue = sanitizeTokenAmount({ value, valueType })
 
     if (valueType === ValueType.Exact) {
       parsedValue = parseUnits(parsedValue, currency.decimals).toString()
@@ -50,10 +54,31 @@ export function getCurrencyAmount<T extends Currency>({
         chain: currency.chainId,
         address: currency.wrapped.address,
         decimals: currency.decimals,
-        error: JSON.stringify(error),
+        error: serializeError(error),
       },
     })
 
     return null
   }
+}
+
+const sanitizeTokenAmount = ({
+  value,
+  valueType,
+}: {
+  value: string
+  valueType: ValueType
+}): string => {
+  let sanitizedValue = convertScientificNotationToNumber(value)
+
+  if (valueType === ValueType.Exact && HAS_NO_NUMBERS_REGEX.test(sanitizedValue)) {
+    throw new Error('Provided value has no digits')
+  }
+
+  if (valueType === ValueType.Raw) {
+    // use BigNumber to do the sanitization of integers for us
+    sanitizedValue = BigNumber.from(sanitizedValue).toString()
+  }
+
+  return sanitizedValue
 }

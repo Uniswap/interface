@@ -5,7 +5,8 @@ export function convertScientificNotationToNumber(value: string): string {
   let convertedValue = value
 
   // Convert scientific notation into number format so it can be parsed by BigInt properly
-  if (value.includes('e')) {
+  // Ignore if value is a valid hex value
+  if (value.includes('e') && !value.startsWith('0x')) {
     const [xStr, eStr] = value.split('e')
     let x = Number(xStr)
     let e = Number(eStr)
