@@ -131,7 +131,7 @@ function toDutchOrderInfo(orderInfoJSON: DutchOrderInfoJSON): DutchOrderInfo {
 // Prepares the currencies used for the actual Swap (either Gouda or Universal Router)
 // May not match `currencyIn` that the user selected because for ETH inputs in Gouda, the actual
 // swap will use WETH.
-function getTradeCurrencies(args: GetQuoteArgs, data: URAQuoteResponse): [Currency, Currency] {
+function getTradeCurrencies(args: GetQuoteArgs, isUniswapXTrade: boolean): [Currency, Currency] {
   const {
     tokenInAddress,
     tokenInChainId,
@@ -158,7 +158,7 @@ function getTradeCurrencies(args: GetQuoteArgs, data: URAQuoteResponse): [Curren
         symbol: tokenOutSymbol,
       })
 
-  if (data.routing === URAQuoteType.CLASSIC) {
+  if (!isUniswapXTrade) {
     return [currencyIn, currencyOut]
   }
 
@@ -189,9 +189,13 @@ export function transformRoutesToTrade(
   data: URAQuoteResponse,
   quoteMethod: QuoteMethod
 ): TradeResult {
-  const { tradeType, needsWrapIfUniswapX } = args
+  const { tradeType, needsWrapIfUniswapX, routerPreference } = args
 
-  const [currencyIn, currencyOut] = getTradeCurrencies(args, data)
+  // During the opt-in period, only return Gouda quotes if the user has turned on the setting,
+  // even if it is the better quote.
+  const showUniswapXTrade = data.routing === URAQuoteType.DUTCH_LIMIT && routerPreference === RouterPreference.X
+
+  const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
   const { gasUseEstimateUSD, blockNumber, routes } = getClassicTradeDetails(currencyIn, currencyOut, data)
 
   const classicTrade = new ClassicTrade({
@@ -230,9 +234,7 @@ export function transformRoutesToTrade(
     quoteMethod,
   })
 
-  // During the opt-in period, only return Gouda quotes if the user has turned on the setting,
-  // even if it is the better quote.
-  if (data.routing === URAQuoteType.DUTCH_LIMIT && args.routerPreference === RouterPreference.X) {
+  if (showUniswapXTrade) {
     const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
     return {
       state: QuoteState.SUCCESS,
