@@ -206,7 +206,7 @@ export function CurrencySearch({
     [debouncedQuery, native, searchCurrencies, handleCurrencySelect]
   )
 
-  console.log("searchCurrencies", searchCurrencies)
+  // console.log("searchCurrencies", searchCurrencies)
 
   // menu ui
   const [open, toggle] = useToggle(false)
@@ -220,7 +220,7 @@ export function CurrencySearch({
       : undefined
   )
 
-  console.log('filteredInactiveTokens', filteredInactiveTokens, searchCurrencies)
+  // console.log('filteredInactiveTokens', filteredInactiveTokens, searchCurrencies)
 
   // Timeout token loader after 3 seconds to avoid hanging in a loading state.
   useEffect(() => {

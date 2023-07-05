@@ -102,6 +102,8 @@ import { WarningIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import BorrowTabContent from "./borrowModal"
 import moment from 'moment'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
+import { TokenSelector } from 'components/swap/TokenSelector'
+import { Row } from 'nft/components/Flex'
 
 const TradeTabContent = React.lazy(() => import('./swapModal'));
 
@@ -739,14 +741,16 @@ export default function Swap({ className }: { className?: string }) {
         <PageWrapper>
           <MainSwapContainer>
             <LeftContainer>
-
               <StatsContainer>
                 <TokenInfoContainer data-testid="token-info-container">
-
                   <TokenNameCell>
                     {inputCurrency && outputCurrency && <DoubleCurrencyLogo currency0={inputCurrency as Currency} currency1={outputCurrency as Currency} size={40} margin />}
                     {inputCurrency && outputCurrency
-                      ? <ThemedText.LargeHeader>{(outputCurrency.symbol)}/{(inputCurrency.symbol)}</ThemedText.LargeHeader>
+                      ? (
+                        <Row>
+                          <TokenSelector isInput={false}/><TokenSelector isInput={true}/>
+                        </Row>
+                      )
                       : <ThemedText.LargeHeader>Pair not found</ThemedText.LargeHeader>}
 
                     {inputApprovalState !== ApprovalState.APPROVED && <SmallMaxButton onClick={() => inputApprove()} width="10%">
@@ -756,8 +760,6 @@ export default function Swap({ className }: { className?: string }) {
                       <Trans><WarningIcon size="1.25em" /> Approve {outputCurrency?.symbol}</Trans>
                     </SmallMaxButton>}
                   </TokenNameCell>
-
-
                 </TokenInfoContainer>
                 <PoolDataSection
                   chainId={chainId ?? 11155111}
@@ -802,10 +804,7 @@ export default function Swap({ className }: { className?: string }) {
 
             </SwapWrapper>
           </MainSwapContainer>
-
-          {/*<NetworkAlert /> */}
         </PageWrapper>
-        {/*<SwitchLocaleLink />*/}
         {!swapIsUnsupported ? null : (
           <UnsupportedCurrencyFooter
             show={swapIsUnsupported}
