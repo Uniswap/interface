@@ -102,7 +102,10 @@ function _SwapForm({
   const actionButtonDisabled =
     noValidSwap || blockingWarning || swapDataRefreshing || isBlocked || isBlockedLoading
 
-  const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Low)
+  // We clear swap warnings while refreshing in order to show the loading indicator
+  const swapWarning = swapDataRefreshing
+    ? null
+    : warnings.find((warning) => warning.severity >= WarningSeverity.Low)
   const swapWarningColor = getAlertColor(swapWarning?.severity)
 
   const onSwapWarningClick = (): void => {
