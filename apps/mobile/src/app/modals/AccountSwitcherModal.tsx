@@ -72,7 +72,7 @@ export function AccountSwitcherModal(): JSX.Element {
       backgroundColor={theme.colors.background1}
       name={ModalName.AccountSwitcher}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}>
-      <Screen bg="background1" edges={[]}>
+      <Screen bg="background1" noInsets={true}>
         <AccountSwitcher
           onClose={(): void => {
             dispatch(closeModal({ name: ModalName.AccountSwitcher }))

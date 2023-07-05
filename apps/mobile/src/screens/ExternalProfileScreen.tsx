@@ -18,7 +18,6 @@ import ProfileHeader from 'src/features/externalProfile/ProfileHeader'
 import { SectionName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.ExternalProfile>
@@ -125,7 +124,7 @@ export function ExternalProfileScreen({
 
   return (
     <ExploreModalAwareView>
-      <Screen edges={EMPTY_ARRAY}>
+      <Screen noInsets={true}>
         <Trace
           directFromPage
           logImpression

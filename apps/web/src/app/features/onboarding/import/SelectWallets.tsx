@@ -9,7 +9,8 @@ import {
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
-import { ScrollView, YStack } from 'ui/src'
+import { ScrollView, Stack, Text, XStack, YStack } from 'ui/src'
+import { Button } from 'ui/src/components/button/Button'
 import { useSelectWalletScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   EditAccountAction,

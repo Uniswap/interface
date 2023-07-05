@@ -11,7 +11,6 @@ import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { flex } from 'ui/src/theme/restyle/flex'
 import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 
 // Distance to scroll to show scrolled state header elements
 const SHOW_HEADER_SCROLL_Y_DISTANCE = 50
@@ -60,7 +59,7 @@ export function HeaderScrollScreen({
   })
 
   return (
-    <Screen bg={backgroundColor} edges={fullScreen ? EMPTY_ARRAY : ['top', 'left', 'right']}>
+    <Screen bg={backgroundColor} edges={['top', 'left', 'right']} noInsets={fullScreen}>
       {showHandleBar ? <HandleBar backgroundColor={theme.colors.background0} /> : null}
       <ScrollHeader
         alwaysShowCenterElement={alwaysShowCenterElement}

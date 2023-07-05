@@ -2,7 +2,6 @@ import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
   PoolType,
@@ -81,7 +80,7 @@ export function computeRoutes(
   | undefined {
   if (!quoteResult || !quoteResult.route) return
 
-  if (quoteResult.route.length === 0) return EMPTY_ARRAY
+  if (quoteResult.route.length === 0) return
 
   const tokenIn = quoteResult.route[0]?.[0]?.tokenIn
   const tokenOut = quoteResult.route[0]?.[quoteResult.route[0]?.length - 1]?.tokenOut

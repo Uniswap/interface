@@ -12,9 +12,9 @@ type ScreenProps = BackgroundColorShorthandProps<Theme> &
   //  lets you choose if `edges` are added as margin or padding, but we don’t use that so
   // our Screen component doesn't need to support it
   Omit<NativeSafeAreaViewProps, 'mode'> &
-  BoxProps
+  BoxProps & { noInsets?: boolean }
 
-function SafeAreaWithInsets({ children, edges, ...rest }: ScreenProps): JSX.Element {
+function SafeAreaWithInsets({ children, edges, noInsets, ...rest }: ScreenProps): JSX.Element {
   // Safe area insets are wrong (0 when they shouldn't be) when using the <SafeAreaView>
   // component from react-native-safe-area-context, because when the initial screen is
   // outside the viewport (as is the case with a screen slide-in animation on navigation)
@@ -26,7 +26,9 @@ function SafeAreaWithInsets({ children, edges, ...rest }: ScreenProps): JSX.Elem
 
   const safeAreaStyles = useMemo(() => {
     const style: { [key: string]: number } = {}
-    // Default to all edges, use empty array for no edges.
+
+    if (noInsets) return style
+
     if (!edges) {
       return {
         paddingTop: insets.top,
@@ -48,7 +50,7 @@ function SafeAreaWithInsets({ children, edges, ...rest }: ScreenProps): JSX.Elem
       style.paddingRight = insets.right
     }
     return style
-  }, [edges, insets])
+  }, [edges, insets, noInsets])
 
   return (
     <SafeAreaBox style={safeAreaStyles} {...rest}>

@@ -1,6 +1,5 @@
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useTransactionListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
@@ -59,7 +58,8 @@ export function useFormattedTransactionDataForActivity(
   )
 
   const formattedTransactions = useMemo(() => {
-    if (!data) return EMPTY_ARRAY
+    if (!data) return
+
     return parseDataResponseToTransactionDetails(data, hideSpamTokens)
   }, [data, hideSpamTokens])
 

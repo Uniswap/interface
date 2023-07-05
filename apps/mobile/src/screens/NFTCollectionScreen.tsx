@@ -28,7 +28,6 @@ import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { theme } from 'ui/src/theme/restyle/theme'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { isError } from 'wallet/src/data/utils'
 import {
   NftCollectionScreenQuery,
@@ -210,7 +209,7 @@ export function NFTCollectionScreen({
 
   if (isError(networkStatus, !!data)) {
     return (
-      <Screen edges={[]}>
+      <Screen noInsets={true}>
         <Flex grow>
           <NFTCollectionHeader data={undefined} loading={true} />
           <BaseCard.ErrorState
@@ -231,7 +230,7 @@ export function NFTCollectionScreen({
         logImpression={!!traceProperties}
         properties={traceProperties}
         screen={Screens.NFTCollection}>
-        <Screen edges={EMPTY_ARRAY}>
+        <Screen noInsets={true}>
           <ScrollHeader
             fullScreen
             centerElement={

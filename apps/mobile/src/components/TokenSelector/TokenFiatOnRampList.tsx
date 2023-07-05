@@ -15,7 +15,6 @@ import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { ChainId } from 'wallet/src/constants/chains'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { fromMoonpayNetwork } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
@@ -164,7 +163,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
         ref={flatListRef}
         ListEmptyComponent={<Flex />}
         ListFooterComponent={<Inset all="spacing36" />}
-        data={data ?? EMPTY_ARRAY}
+        data={data}
         keyExtractor={key}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="always"

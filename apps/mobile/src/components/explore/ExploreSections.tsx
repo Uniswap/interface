@@ -20,7 +20,7 @@ import {
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/favorites/selectors'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
-import { EMPTY_ARRAY, PollingInterval } from 'wallet/src/constants/misc'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   Chain,
   ExploreTokensTabQuery,
@@ -164,7 +164,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
           </Flex>
         </>
       }
-      data={showLoading ? EMPTY_ARRAY : topTokenItems}
+      data={showLoading ? undefined : topTokenItems}
       keyExtractor={tokenKey}
       renderItem={renderItem}
       showsHorizontalScrollIndicator={false}

@@ -11,7 +11,6 @@ import { selectActiveAccountNotifications } from 'src/features/notifications/sel
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
 import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -29,8 +28,7 @@ export function PendingNotificationBadge({
   const theme = useAppTheme()
   const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
   const notifications = useAppSelector(selectActiveAccountNotifications)
-  const sortedPendingTransactions =
-    useSortedPendingTransactions(activeAccountAddress) || EMPTY_ARRAY
+  const sortedPendingTransactions = useSortedPendingTransactions(activeAccountAddress)
   const hasNotifications = useSelectAddressHasNotifications(activeAccountAddress)
 
   const { preload, navigate } = useEagerActivityNavigation()
