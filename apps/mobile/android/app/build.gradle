@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: 'maven-publish'
+apply plugin: 'kotlin-android'
 
 import com.android.build.OutputFile
 
@@ -194,6 +195,9 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    //kotlin
+    implementation 'androidx.core:core-ktx:$'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.10"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
