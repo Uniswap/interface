@@ -44,7 +44,7 @@ const getDownloadAppLink = (options: OpenDownloadAppOptions = defaultDownloadApp
 export const getDownloadAppLinkProps = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) => {
   return {
     href: getDownloadAppLink(options),
-    onClick(e: MouseEvent) {
+    onClick(e: { preventDefault: () => void }) {
       e.preventDefault()
       openDownloadApp(options)
     },
