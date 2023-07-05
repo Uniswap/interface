@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
 import { useMemo } from 'react'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { InterfaceTrade, QuoteMethod, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
 
@@ -31,6 +31,7 @@ export function useBestTrade(
 ): {
   state: TradeState
   trade?: InterfaceTrade
+  method?: QuoteMethod
 } {
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
