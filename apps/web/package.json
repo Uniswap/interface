@@ -70,7 +70,7 @@
     "lint": "eslint . --ext ts,tsx",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "start": "npm-run-all start:webpack typecheck",
-    "start:webpack": "TAMAGUI_TARGET=web webpack serve --config webpack.config.js",
+    "start:webpack": "webpack serve --config webpack.config.js",
     "test": "jest --passWithNoTests",
     "typecheck": "tsc -b"
   }
