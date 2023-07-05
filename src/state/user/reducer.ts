@@ -50,6 +50,7 @@ export interface UserState {
   timestamp: number
   URLWarningVisible: boolean
   hideUniswapWalletBanner: boolean
+  disabledUniswapX?: boolean
   // undefined means has not gone through A/B split yet
   showSurveyPopup?: boolean
 }
@@ -105,6 +106,9 @@ const userSlice = createSlice({
     },
     updateHideUniswapWalletBanner(state, action) {
       state.hideUniswapWalletBanner = action.payload.hideUniswapWalletBanner
+    },
+    updateDisabledUniswapX(state, action) {
+      state.disabledUniswapX = action.payload.disabledUniswapX
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -190,5 +194,6 @@ export const {
   updateUserLocale,
   updateUserSlippageTolerance,
   updateHideUniswapWalletBanner,
+  updateDisabledUniswapX,
 } = userSlice.actions
 export default userSlice.reducer

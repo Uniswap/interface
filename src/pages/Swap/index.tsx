@@ -39,7 +39,7 @@ import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
-import { useRouterPreference } from 'state/user/hooks'
+import { useRouterPreference, useUserDisabledUniswapX } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -519,6 +519,8 @@ export function Swap({
 
   const [routerPreference, setRouterPreference] = useRouterPreference()
 
+  const userDisabledUniswapX = useUserDisabledUniswapX()
+
   return (
     <SwapWrapper chainId={chainId} className={className} id="swap-page">
       <TokenSafetyModal
@@ -737,8 +739,7 @@ export function Swap({
           )}
         </div>
       </AutoColumn>
-      {/* TODO (Gouda): Don't show if user has already turned on/off UniswapX manually */}
-      {isClassicTrade(trade) && trade.isUniswapXBetter && (
+      {isClassicTrade(trade) && trade.isUniswapXBetter && !userDisabledUniswapX && (
         <Trace
           shouldLogImpression
           name="UniswapX Opt In Impression"
