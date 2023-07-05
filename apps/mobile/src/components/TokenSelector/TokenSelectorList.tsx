@@ -10,23 +10,41 @@ import { Loader } from 'src/components/loading'
 import { useBottomSheetFocusHook } from 'src/components/modals/hooks'
 import { Text } from 'src/components/Text'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
+import {
+  renderSuggestedTokenItem,
+  suggestedTokensKeyExtractor,
+} from 'src/components/TokenSelector/TokenSelectorSwapOutputList'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'wallet/src/constants/chains'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
-export type OnSelectCurrency = (currency: Currency, section: TokenSection, index: number) => void
+export type OnSelectCurrency = (
+  currency: Currency,
+  section: SuggestedTokenSection | TokenSection,
+  index: number
+) => void
 
 export type TokenSection = {
   title: string
   data: TokenOption[]
 }
 
-export type SuggestedTokenSection = Omit<TokenSection, 'data'> & {
+export type SuggestedTokenSection = {
+  title: string
   data: TokenOption[][]
 }
 
 export type TokenSelectorListSections = Array<SuggestedTokenSection | TokenSection>
+
+function isSuggestedTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
+  return Array.isArray(data)
+}
+
+function isSuggestedTokenSection(
+  section: SuggestedTokenSection | TokenSection
+): section is SuggestedTokenSection {
+  return Array.isArray((section as SuggestedTokenSection).data[0])
+}
 
 function TokenOptionItemWrapper({
   tokenOption,
@@ -44,9 +62,10 @@ function TokenOptionItemWrapper({
   showWarnings: boolean
 }): JSX.Element {
   const onPress = useCallback(
-    () => onSelectCurrency?.(tokenOption.currencyInfo.currency, section, index),
+    () => onSelectCurrency(tokenOption.currencyInfo.currency, section, index),
     [index, onSelectCurrency, section, tokenOption.currencyInfo.currency]
   )
+
   return (
     <TokenOptionItem
       option={tokenOption}
@@ -101,17 +120,33 @@ function _TokenSelectorList({
   }, [chainFilter, sections?.length])
 
   const renderItem = useCallback(
-    ({ item, section, index }: { item: TokenOption; section: TokenSection; index: number }) => {
-      return (
-        <TokenOptionItemWrapper
-          chainFilter={chainFilter}
-          index={index}
-          section={section}
-          showWarnings={Boolean(showTokenWarnings)}
-          tokenOption={item}
-          onSelectCurrency={onSelectCurrency}
-        />
-      )
+    ({
+      item,
+      section,
+      index,
+    }: {
+      item: TokenOption | TokenOption[]
+      section: SuggestedTokenSection | TokenSection
+      index: number
+    }) => {
+      if (isSuggestedTokenItem(item) && isSuggestedTokenSection(section)) {
+        return renderSuggestedTokenItem({ item, section, index, onSelectCurrency })
+      }
+
+      if (!isSuggestedTokenItem(item) && !isSuggestedTokenSection(section)) {
+        return (
+          <TokenOptionItemWrapper
+            chainFilter={chainFilter}
+            index={index}
+            section={section}
+            showWarnings={Boolean(showTokenWarnings)}
+            tokenOption={item}
+            onSelectCurrency={onSelectCurrency}
+          />
+        )
+      }
+
+      return null
     },
     [chainFilter, onSelectCurrency, showTokenWarnings]
   )
@@ -155,7 +190,7 @@ function _TokenSelectorList({
 
   return (
     <Box flexGrow={1}>
-      <BottomSheetSectionList
+      <BottomSheetSectionList<TokenOption | TokenOption[], SuggestedTokenSection | TokenSection>
         ref={sectionListRef}
         ListEmptyComponent={emptyElement}
         ListFooterComponent={Footer}
@@ -166,7 +201,7 @@ function _TokenSelectorList({
         keyboardShouldPersistTaps="always"
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
-        sections={sections ?? EMPTY_ARRAY}
+        sections={sections ?? []}
         showsVerticalScrollIndicator={false}
         windowSize={4}
       />
@@ -184,7 +219,9 @@ export function SectionHeader({ title }: { title: string }): JSX.Element {
   )
 }
 
-function key(item: TokenOption): CurrencyId {
+function key(item: TokenOption | TokenOption[]): CurrencyId {
+  if (isSuggestedTokenItem(item)) return suggestedTokensKeyExtractor(item)
+
   return item.currencyInfo.currencyId
 }
 

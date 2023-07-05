@@ -24,7 +24,6 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { theme } from 'ui/src/theme/restyle/theme'
 import { ChainId } from 'wallet/src/constants/chains'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
@@ -71,7 +70,9 @@ export function useSelectTransaction(
   return useAppSelector(makeSelectTransaction(address, chainId, txId))
 }
 
-export function useSelectAddressTransactions(address: Address | null): TransactionDetails[] {
+export function useSelectAddressTransactions(
+  address: Address | null
+): TransactionDetails[] | undefined {
   return useAppSelector(makeSelectAddressTransactions(address))
 }
 
@@ -268,23 +269,26 @@ export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>):
  */
 export function useMergeLocalAndRemoteTransactions(
   address: string,
-  remoteTransactions: TransactionDetails[]
-): TransactionDetails[] {
+  remoteTransactions: TransactionDetails[] | undefined
+): TransactionDetails[] | undefined {
   const localTransactions = useSelectAddressTransactions(address)
 
   // Merge local and remote txns into array of single type.
-  const combinedTransactionList = useMemo((): TransactionDetails[] => {
-    if (!address) return EMPTY_ARRAY
+  const combinedTransactionList = useMemo((): TransactionDetails[] | undefined => {
+    if (!address) return
 
     const localHashes: Set<string> = new Set()
-    localTransactions.forEach((t: { hash: string }) => localHashes.add(t.hash))
+    localTransactions?.forEach((t: { hash: string }) => localHashes.add(t.hash))
 
-    const deDupedRemoteTxs = remoteTransactions.reduce((accum: TransactionDetails[], txn) => {
-      if (!localHashes.has(txn.hash)) accum.push(txn) // dedupe
-      return accum
-    }, [])
+    const deDupedRemoteTxs = (remoteTransactions ?? []).reduce(
+      (accum: TransactionDetails[], txn) => {
+        if (!localHashes.has(txn.hash)) accum.push(txn) // dedupe
+        return accum
+      },
+      []
+    )
 
-    return [...localTransactions, ...deDupedRemoteTxs].sort((a, b) =>
+    return [...(localTransactions ?? []), ...deDupedRemoteTxs].sort((a, b) =>
       a.addedTime > b.addedTime ? -1 : 1
     )
   }, [address, localTransactions, remoteTransactions])
@@ -315,15 +319,15 @@ export function useLowestPendingNonce(): BigNumberish | undefined {
 export function useAllTransactionsBetweenAddresses(
   sender: Address,
   recipient: string | undefined | null
-): TransactionDetails[] {
+): TransactionDetails[] | undefined {
   const txnsToSearch = useSelectAddressTransactions(sender)
   return useMemo(() => {
-    if (!sender || !recipient || !txnsToSearch) return EMPTY_ARRAY
-    const commonTxs = txnsToSearch.filter(
+    if (!sender || !recipient || !txnsToSearch) return
+
+    return txnsToSearch.filter(
       (tx: TransactionDetails) =>
         tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient === recipient
     )
-    return commonTxs.length ? commonTxs : EMPTY_ARRAY
   }, [recipient, sender, txnsToSearch])
 }
 

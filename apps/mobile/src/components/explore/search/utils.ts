@@ -8,7 +8,6 @@ import {
   SearchResultType,
   TokenSearchResult,
 } from 'src/features/explore/searchHistorySlice'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 
@@ -20,8 +19,8 @@ type ExploreSearchResult = NonNullable<ExploreSearchQuery>
 export function formatTokenSearchResults(
   data: ExploreSearchResult['searchTokens'],
   searchQuery: string
-): TokenSearchResult[] {
-  if (!data) return EMPTY_ARRAY
+): TokenSearchResult[] | undefined {
+  if (!data) return
 
   // Prevent showing "duplicate" token search results for tokens that are on multiple chains
   // and share the same TokenProject id. Only show the token that has the highest 1Y Uniswap trading volume
@@ -83,8 +82,9 @@ function isExactTokenSearchResultMatch(searchResult: TokenSearchResult, query: s
 
 export function formatNFTCollectionSearchResults(
   data: ExploreSearchResult['nftCollections']
-): NFTCollectionSearchResult[] {
-  if (!data) return EMPTY_ARRAY
+): NFTCollectionSearchResult[] | undefined {
+  if (!data) return
+
   return data.edges.reduce<NFTCollectionSearchResult[]>((accum, { node }) => {
     const formatted = gqlNFTToNFTCollectionSearchResult(node)
     if (formatted) {

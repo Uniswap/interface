@@ -192,6 +192,14 @@ module.exports = {
         ],
       },
     },
+    {
+      // enable the rule specifically for TypeScript files
+      files: ['*.ts', '*.mts', '*.cts', '*.tsx'],
+      "excludedFiles": ["migrations.ts", "./**/*.test.ts", "./**/*.test.tsx", "./test/**"],
+      rules: {
+        "@typescript-eslint/no-unsafe-return": 'error',
+      },
+    },
     // ignore return type in saga files given return types are unwieldy and tied
     // to implementation details.
     {

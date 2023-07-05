@@ -1,5 +1,4 @@
 import { TokenOption } from 'src/components/TokenSelector/types'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { CurrencyInfo, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { differenceWith } from 'wallet/src/utils/array'
 import { areCurrencyIdsEqual } from 'wallet/src/utils/currencyId'
@@ -70,8 +69,8 @@ function isExactTokenOptionMatch(searchResult: TokenOption, query: string): bool
 
 export function getTokenOptionsSection(
   title: string,
-  tokenOptions: TokenOption[] | undefined
-): TokenSection[] {
+  tokenOptions?: TokenOption[]
+): TokenSection[] | undefined {
   return tokenOptions?.length
     ? [
         {
@@ -79,5 +78,5 @@ export function getTokenOptionsSection(
           data: tokenOptions,
         },
       ]
-    : EMPTY_ARRAY
+    : undefined
 }

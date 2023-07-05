@@ -1,4 +1,10 @@
 // From on https://github.com/Uniswap/wallet-internal/blob/main/apps/mobile/src/lib/RNEthersRs.ts
+declare module 'react-native' {
+  interface NativeModulesStatic {
+    RNEthersRS: IKeyring
+  }
+}
+
 import { NativeModules } from 'react-native'
 import { NotImplementedError } from 'wallet/src/utils/errors'
 import { IKeyring } from './Keyring'

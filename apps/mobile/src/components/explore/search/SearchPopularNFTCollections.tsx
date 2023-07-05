@@ -7,17 +7,29 @@ import {
 } from 'src/components/explore/search/utils'
 import { Inset } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
-import { NFTCollectionSearchResult } from 'src/features/explore/searchHistorySlice'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
+import {
+  NFTCollectionSearchResult,
+  SearchResultType,
+} from 'src/features/explore/searchHistorySlice'
 import { useSearchPopularNftCollectionsQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+
+function isNFTCollectionSearchResult(
+  result: NFTCollectionSearchResult | null
+): result is NFTCollectionSearchResult {
+  return (result as NFTCollectionSearchResult).type === SearchResultType.NFTCollection
+}
 
 export function SearchPopularNFTCollections(): JSX.Element {
   // Load popular NFTs by top trading volume
   const { data, loading } = useSearchPopularNftCollectionsQuery()
 
   const formattedItems = useMemo(() => {
-    if (!data?.topCollections?.edges) return EMPTY_ARRAY
-    return data.topCollections.edges.map(({ node }) => gqlNFTToNFTCollectionSearchResult(node))
+    if (!data?.topCollections?.edges) return
+
+    const searchResults = data.topCollections.edges.map(({ node }) =>
+      gqlNFTToNFTCollectionSearchResult(node)
+    )
+    return searchResults.filter(isNFTCollectionSearchResult)
   }, [data])
 
   if (loading) {

@@ -6,15 +6,17 @@ import {
 } from 'src/components/TokenSelector/hooks'
 import {
   OnSelectCurrency,
-  TokenSection,
   TokenSelectorList,
+  TokenSelectorListSections,
 } from 'src/components/TokenSelector/TokenSelectorList'
 import { getTokenOptionsSection, tokenOptionDifference } from 'src/components/TokenSelector/utils'
 import { ChainId } from 'wallet/src/constants/chains'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
-function useTokenSectionsForSwapInput(chainFilter: ChainId | null): GqlResult<TokenSection[]> {
+function useTokenSectionsForSwapInput(
+  chainFilter: ChainId | null
+): GqlResult<TokenSelectorListSections> {
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
@@ -44,13 +46,14 @@ function useTokenSectionsForSwapInput(chainFilter: ChainId | null): GqlResult<To
 
   const sections = useMemo(() => {
     if (loading) return
+
     const popularMinusPortfolioTokens = tokenOptionDifference(
       popularTokenOptions,
       portfolioTokenOptions
     )
     return [
-      ...getTokenOptionsSection(t('Your tokens'), portfolioTokenOptions),
-      ...getTokenOptionsSection(t('Popular tokens'), popularMinusPortfolioTokens),
+      ...(getTokenOptionsSection(t('Your tokens'), portfolioTokenOptions) ?? []),
+      ...(getTokenOptionsSection(t('Popular tokens'), popularMinusPortfolioTokens) ?? []),
     ]
   }, [loading, popularTokenOptions, portfolioTokenOptions, t])
 

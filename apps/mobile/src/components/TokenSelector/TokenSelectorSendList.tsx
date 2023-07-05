@@ -37,7 +37,7 @@ function useTokenSectionsForSend(chainFilter: ChainId | null): GqlResult<TokenSe
   const error = !portfolioTokenOptions && portfolioTokenOptionsError
 
   const sections = useMemo(() => {
-    return [...getTokenOptionsSection(t('Your tokens'), portfolioTokenOptions)]
+    return getTokenOptionsSection(t('Your tokens'), portfolioTokenOptions)
   }, [portfolioTokenOptions, t])
 
   return useMemo(

@@ -49,13 +49,14 @@ export function RecipientInputPanel({
 export function RecipientPrevTransfers({ recipient }: { recipient: string }): JSX.Element {
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()
-  const prevTxns = useAllTransactionsBetweenAddresses(activeAddress, recipient).length
+  const previousTransactions = useAllTransactionsBetweenAddresses(activeAddress, recipient)
+  const prevTxnsCount = previousTransactions?.length ?? 0
 
   return (
     <Text color="textTertiary" textAlign="center" variant="subheadSmall">
-      {prevTxns === 1
-        ? t('{{ prevTxns }} previous transfer', { prevTxns })
-        : t('{{ prevTxns }} previous transfers', { prevTxns })}
+      {prevTxnsCount === 1
+        ? t('{{ prevTxnsCount }} previous transfer', { prevTxnsCount })
+        : t('{{ prevTxnsCount }} previous transfers', { prevTxnsCount })}
     </Text>
   )
 }

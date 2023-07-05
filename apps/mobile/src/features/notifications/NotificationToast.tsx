@@ -50,8 +50,8 @@ export function NotificationToast({
 }: NotificationToastProps): JSX.Element {
   const dispatch = useAppDispatch()
   const notifications = useAppSelector(selectActiveAccountNotifications)
-  const currentNotification = notifications[0]
-  const hasQueuedNotification = !!notifications[1]
+  const currentNotification = notifications?.[0]
+  const hasQueuedNotification = !!notifications?.[1]
 
   const showOffset = useSafeAreaInsets().top
   const bannerOffset = useSharedValue(HIDE_OFFSET_Y)
@@ -69,7 +69,7 @@ export function NotificationToast({
   const dismissLatest = useCallback(() => {
     bannerOffset.value = withSpring(HIDE_OFFSET_Y, SPRING_ANIMATION)
     setTimeout(() => dispatch(popNotification({ address })), 500)
-    if (notifications.length > 1) {
+    if (notifications && notifications.length > 1) {
       bannerOffset.value = withDelay(100, withSpring(showOffset, SPRING_ANIMATION))
     }
   }, [address, bannerOffset, dispatch, notifications, showOffset])

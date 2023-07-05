@@ -33,6 +33,7 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 export const BaseAnimatedText = (props: TextProps): JSX.Element => {
   const { style, text, ...rest } = props
   const animatedProps = useAnimatedProps(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return {
       text: text.value,
       // Here we use any because the text prop is not available in the type

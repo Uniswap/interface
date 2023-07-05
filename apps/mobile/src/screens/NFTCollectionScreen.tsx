@@ -41,16 +41,16 @@ const ESTIMATED_ITEM_SIZE = 104 // heuristic provided by FlashList
 
 const LOADING_ITEM = 'loading'
 const LOADING_BUFFER_AMOUNT = 9
-const LOADING_ITEMS_ARRAY = Array(LOADING_BUFFER_AMOUNT).fill(LOADING_ITEM)
+const LOADING_ITEMS_ARRAY: NFTItem[] = Array(LOADING_BUFFER_AMOUNT).fill(LOADING_ITEM)
 
 const keyExtractor = (item: NFTItem | string, index: number): string =>
   typeof item === 'string'
     ? `${LOADING_ITEM}-${index}`
     : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
 
-function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTItem[] {
+function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTItem[] | undefined {
   const items = data?.nftAssets?.edges?.flatMap((item) => item.node)
-  if (!items) return EMPTY_ARRAY
+  if (!items) return
 
   return items.map((item): NFTItem => {
     return {
@@ -86,14 +86,12 @@ export function NFTCollectionScreen({
 
   // Parse response for overview data and collection grid data
   const collectionData = data?.nftCollections?.edges?.[0]?.node
-  const collectionItems = useMemo(() => {
-    return gqlNFTAssetToNFTItem(data)
-  }, [data])
+  const collectionItems = useMemo(() => gqlNFTAssetToNFTItem(data), [data])
 
   // Fill in grid with loading boxes if we have incomplete data and are loading more
   const extraLoadingItemAmount =
     networkStatus === NetworkStatus.fetchMore || networkStatus === NetworkStatus.loading
-      ? LOADING_BUFFER_AMOUNT + (3 - (collectionItems.length % 3))
+      ? LOADING_BUFFER_AMOUNT + (3 - ((collectionItems ?? []).length % 3))
       : undefined
 
   const onListEndReached = useCallback(() => {
@@ -193,13 +191,13 @@ export function NFTCollectionScreen({
   const gridDataLoading = networkStatus === NetworkStatus.loading && !collectionItems
 
   const gridDataWithLoadingElements = useMemo(() => {
-    if (gridDataLoading) {
-      return LOADING_ITEMS_ARRAY
-    }
-    if (extraLoadingItemAmount) {
-      return [...collectionItems, ...Array(extraLoadingItemAmount).fill(LOADING_ITEM)]
-    }
-    return collectionItems
+    if (gridDataLoading) return LOADING_ITEMS_ARRAY
+
+    const extraLoadingItems: NFTItem[] = extraLoadingItemAmount
+      ? Array(extraLoadingItemAmount).fill(LOADING_ITEM)
+      : []
+
+    return [...(collectionItems ?? []), ...extraLoadingItems]
   }, [collectionItems, extraLoadingItemAmount, gridDataLoading])
 
   const traceProperties = useMemo(

@@ -1,13 +1,12 @@
-import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { AppModalState, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import {
+  makeSelectSessions,
   selectHasPendingSessionError,
   selectPendingRequests,
   selectPendingSession,
-  selectSessions,
 } from 'src/features/walletConnect/selectors'
 import {
   WalletConnectPendingSession,
@@ -24,8 +23,7 @@ interface WalletConnect {
 }
 
 export function useWalletConnect(address: Maybe<string>): WalletConnect {
-  const sessionSelector = useMemo(() => selectSessions(address), [address])
-  const sessions = useAppSelector(sessionSelector)
+  const sessions = useAppSelector(makeSelectSessions(address)) ?? []
   const pendingRequests = useAppSelector(selectPendingRequests)
   const modalState = useAppSelector(selectModalState(ModalName.WalletConnectScan))
   const pendingSession = useAppSelector(selectPendingSession)

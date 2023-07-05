@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { NativeModules } from 'react-native'
 import { ALL_SUPPORTED_CHAIN_IDS } from 'wallet/src/constants/chains'
 

@@ -17,7 +17,7 @@ export function TransactionActivity({ address }: { address: Address }): JSX.Elem
     useFormattedTransactionDataForActivity(
       address,
       false,
-      (_: string, transactions: TransactionDetails[]) => transactions
+      (_: string, transactions?: TransactionDetails[]) => transactions
     )
 
   // hardcoding example loading for now until we implement each item

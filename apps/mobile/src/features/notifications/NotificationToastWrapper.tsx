@@ -21,7 +21,7 @@ import { TransactionType } from 'wallet/src/features/transactions/types'
 
 export function NotificationToastWrapper(): JSX.Element | null {
   const notifications = useAppSelector(selectActiveAccountNotifications)
-  const notification = notifications[0]
+  const notification = notifications?.[0]
 
   if (!notification) return null
 

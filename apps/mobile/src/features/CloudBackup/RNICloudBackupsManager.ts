@@ -1,3 +1,17 @@
+interface RNICloudBackupsManager {
+  isICloudAvailable: () => Promise<boolean>
+  deleteICloudMnemonicBackup: (mnemonicId: string) => Promise<boolean>
+  startFetchingICloudBackups: () => Promise<void>
+  stopFetchingICloudBackups: () => Promise<void>
+  backupMnemonicToICloud: (mnemonicId: string, password: string) => Promise<boolean>
+  restoreMnemonicFromICloud: (mnemonicId: string, password: string) => Promise<boolean>
+}
+
+declare module 'react-native' {
+  interface NativeModulesStatic {
+    RNICloudBackupsManager: RNICloudBackupsManager
+  }
+}
 import { NativeModules } from 'react-native'
 
 const { RNICloudBackupsManager } = NativeModules

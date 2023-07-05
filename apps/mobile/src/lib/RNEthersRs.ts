@@ -1,4 +1,11 @@
+declare module 'react-native' {
+  interface NativeModulesStatic {
+    RNEthersRS: IKeyring
+  }
+}
+
 import { NativeModules } from 'react-native'
+import { IKeyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 const { RNEthersRS } = NativeModules
 

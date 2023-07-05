@@ -35,7 +35,8 @@ export function TransferFormSpeedbumps({
   const { t } = useTranslation()
 
   const activeAddress = useActiveAccountAddressWithThrow()
-  const isNewRecipient = useAllTransactionsBetweenAddresses(activeAddress, recipient).length === 0
+  const previousTransactions = useAllTransactionsBetweenAddresses(activeAddress, recipient)
+  const isNewRecipient = !previousTransactions || previousTransactions.length === 0
   const currentSignerAccounts = useSignerAccounts()
   const isSignerRecipient = useMemo(
     () => currentSignerAccounts.some((a) => a.address === recipient),

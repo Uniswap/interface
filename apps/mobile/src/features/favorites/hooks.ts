@@ -1,6 +1,9 @@
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
+import {
+  makeSelectHasTokenFavorited,
+  selectWatchedAddressSet,
+} from 'src/features/favorites/selectors'
 import {
   addFavoriteToken,
   addWatchedAddress,
@@ -49,4 +52,8 @@ export function useToggleWatchedWalletCallback(address: Address): () => void {
       dispatch(addWatchedAddress({ address }))
     }
   }, [address, dispatch, isFavoriteWallet, displayName])
+}
+
+export function useSelectHasTokenFavorited(currencyId: string): boolean {
+  return useAppSelector(makeSelectHasTokenFavorited(currencyId))
 }

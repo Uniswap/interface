@@ -11,7 +11,8 @@ export class PersistedStorage {
 
   async getItem(key: string): Promise<string | undefined> {
     const result = await chrome.storage[this.area].get(key)
-    return result[key]
+    const item = result[key]
+    return typeof item === 'string' ? item : undefined
   }
 
   async getAll(): Promise<Record<string, string>> {

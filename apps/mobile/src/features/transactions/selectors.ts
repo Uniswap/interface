@@ -5,7 +5,6 @@ import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
 import { TransactionState } from 'src/features/transactions/slice'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 import { ChainId } from 'wallet/src/constants/chains'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import {
   SendTokenTransactionInfo,
   TransactionDetails,
@@ -25,11 +24,12 @@ export const selectHasDoneASwap = createSelector(selectTransactions, (transactio
 
 export const makeSelectAddressTransactions = (
   address: Address | null
-): Selector<MobileState, TransactionDetails[]> =>
+): Selector<MobileState, TransactionDetails[] | undefined> =>
   createSelector(selectTransactions, (transactions) => {
-    if (!address) return EMPTY_ARRAY
+    if (!address) return
+
     const addressTransactions = transactions[address]
-    if (!addressTransactions) return EMPTY_ARRAY
+    if (!addressTransactions) return
 
     return unique(flattenObjectOfObjects(addressTransactions), (tx, _, self) => {
       // Remove dummy fiat onramp transactions from TransactionList, notification badge, etc.

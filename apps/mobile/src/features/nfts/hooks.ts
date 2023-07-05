@@ -178,7 +178,7 @@ export function useNFTMenu({
 
 // Apply to NFTs fetched from API hidden filter, which is stored in Redux
 export function useGroupNftsByVisibility(
-  nftDataItems: Array<NFTItem>,
+  nftDataItems: Array<NFTItem> | undefined,
   showHidden: boolean,
   owner: Address
 ): {
@@ -187,7 +187,7 @@ export function useGroupNftsByVisibility(
 } {
   const nftsData = useAppSelector(selectNftsData)
   return useMemo(() => {
-    const { shown, hidden } = nftDataItems.reduce<{
+    const { shown, hidden } = (nftDataItems ?? []).reduce<{
       shown: NFTItem[]
       hidden: NFTItem[]
     }>(

@@ -1,21 +1,36 @@
+import { createSelector, Selector } from '@reduxjs/toolkit'
 import { MobileState } from 'src/app/reducer'
 import {
   WalletConnectPendingSession,
   WalletConnectRequest,
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 
 export const selectSessions =
   (address: Maybe<string>) =>
-  (state: MobileState): WalletConnectSession[] => {
-    if (!address) return EMPTY_ARRAY
+  (state: MobileState): WalletConnectSession[] | undefined => {
+    if (!address) return
 
     const wcAccount = state.walletConnect.byAccount[address]
-    if (!wcAccount) return EMPTY_ARRAY
+    if (!wcAccount) return
 
     return Object.values(wcAccount.sessions)
   }
+
+export const makeSelectSessions = (
+  address: Maybe<Address>
+): Selector<MobileState, WalletConnectSession[] | undefined> =>
+  createSelector(
+    (state: MobileState) => state.walletConnect.byAccount,
+    (sessionsByAccount) => {
+      if (!address) return
+
+      const wcAccount = sessionsByAccount[address]
+      if (!wcAccount) return
+
+      return Object.values(wcAccount.sessions)
+    }
+  )
 
 export const selectPendingRequests = (state: MobileState): WalletConnectRequest[] => {
   return state.walletConnect.pendingRequests

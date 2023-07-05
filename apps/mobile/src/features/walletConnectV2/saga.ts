@@ -152,7 +152,7 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
       const { chains } = namespace
       // EVM chain(s) are specified in either `eip155:CHAIN` or chains array
       const eip155Chains = key.includes(':') ? [key] : chains
-      proposalChainIds.push(...getSupportedWalletConnectChains(eip155Chains))
+      proposalChainIds.push(...(getSupportedWalletConnectChains(eip155Chains) ?? []))
     })
 
     yield* put(
@@ -306,7 +306,7 @@ function* populateActiveSessions() {
     const chains: ChainId[] = []
     Object.entries(session.namespaces).forEach(([key, namespace]) => {
       const eip155Chains = key.includes(':') ? [key] : namespace.chains
-      chains.push(...getSupportedWalletConnectChains(eip155Chains))
+      chains.push(...(getSupportedWalletConnectChains(eip155Chains) ?? []))
     })
 
     yield* put(

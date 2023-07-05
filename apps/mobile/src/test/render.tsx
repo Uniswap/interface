@@ -45,7 +45,7 @@ export function renderWithProviders(
       preloadedState,
       middleware: (getDefaultMiddleware) =>
         // TODO: fix typing
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
         getDefaultMiddleware() as any,
     }),
     ...renderOptions

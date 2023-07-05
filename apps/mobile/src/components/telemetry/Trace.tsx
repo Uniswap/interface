@@ -83,18 +83,18 @@ function _Trace({
   const parentTrace = useTrace()
 
   // Component props are destructured to ensure shallow comparison
-  const combinedProps = useMemo(
-    () => ({
+  const combinedProps = useMemo(() => {
+    // removes `undefined` values
+    const filteredProps = {
+      ...(screen ? { screen } : {}),
+      ...(section ? { section } : {}),
+      ...(modal ? { modal } : {}),
+      ...(element ? { element } : {}),
+    }
+
+    return {
       ...parentTrace,
-      // removes `undefined` values
-      ...JSON.parse(
-        JSON.stringify({
-          screen,
-          section,
-          modal,
-          element,
-        })
-      ),
+      ...filteredProps,
       marks: startMark
         ? {
             ...parentTrace.marks,
@@ -102,9 +102,8 @@ function _Trace({
             [startMark]: initialRenderTimestamp.current,
           }
         : parentTrace.marks,
-    }),
-    [parentTrace, startMark, screen, section, modal, element]
-  )
+    }
+  }, [parentTrace, startMark, screen, section, modal, element])
 
   // Log impression on mount for elements that are not part of the navigation tree
   useEffect(() => {

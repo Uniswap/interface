@@ -33,7 +33,9 @@ export function HomeScreen(): JSX.Element {
           width="100%">
           <PortfolioHeader
             address={address}
-            onLockPress={(): void => dispatch(authActions.reset())}
+            onLockPress={(): void => {
+              dispatch(authActions.reset())
+            }}
           />
           <PortfolioBalance address={address} />
           <Tabs

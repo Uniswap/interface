@@ -25,7 +25,7 @@ describe('#useRoute', () => {
       route: [],
     })
 
-    expect(result).toEqual([])
+    expect(result).toEqual(undefined)
   })
 
   it('handles a single route trade from DAI to USDC from v3', () => {

@@ -9,7 +9,7 @@ import { Trace } from 'src/components/telemetry/Trace'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
 import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
-import { TokenSection } from 'src/components/TokenSelector/TokenSelectorList'
+import { SuggestedTokenSection, TokenSection } from 'src/components/TokenSelector/TokenSelectorList'
 import { TokenSelectorSearchResultsList } from 'src/components/TokenSelector/TokenSelectorSearchResultsList'
 import { TokenSelectorSendList } from 'src/components/TokenSelector/TokenSelectorSendList'
 import { TokenSelectorSwapInputList } from 'src/components/TokenSelector/TokenSelectorSwapInputList'
@@ -83,7 +83,7 @@ function _TokenSelectorModal({
       : undefined
 
   const onSelectCurrencyCallback = useCallback(
-    (currency: Currency, section: TokenSection, index: number): void => {
+    (currency: Currency, section: SuggestedTokenSection | TokenSection, index: number): void => {
       const searchContext: SearchContext = {
         category: section.title,
         query: searchFilter ?? undefined,

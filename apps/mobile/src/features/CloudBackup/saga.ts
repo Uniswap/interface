@@ -1,5 +1,5 @@
 import { Action } from '@reduxjs/toolkit'
-import { NativeEventEmitter, NativeModules } from 'react-native'
+import { NativeEventEmitter, NativeModule, NativeModules } from 'react-native'
 import { eventChannel } from 'redux-saga'
 import { foundCloudBackup } from 'src/features/CloudBackup/cloudBackupSlice'
 import { ICloudBackupsManagerEventType, ICloudMnemonicBackup } from 'src/features/CloudBackup/types'
@@ -40,7 +40,9 @@ export function* cloudBackupsManagerSaga() {
 }
 
 export function* watchICloudBackupEvents() {
-  const iCloudManagerEvents = new NativeEventEmitter(NativeModules.RNICloudBackupsManager)
+  const iCloudManagerEvents = new NativeEventEmitter(
+    NativeModules.RNICloudBackupsManager as unknown as NativeModule
+  )
   const channel = yield* call(createICloudBackupManagerChannel, iCloudManagerEvents)
 
   while (true) {

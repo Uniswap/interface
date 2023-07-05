@@ -1,4 +1,4 @@
-import { createSelector } from '@reduxjs/toolkit'
+import { createSelector, Selector } from '@reduxjs/toolkit'
 import { MobileState } from 'src/app/reducer'
 import { AccountToNftData, AccountToTokenVisibility } from 'src/features/favorites/slice'
 import { unique } from 'wallet/src/utils/array'
@@ -9,11 +9,8 @@ export const selectHasFavoriteTokens = createSelector(selectFavoriteTokens, (tok
   Boolean(tokens?.length > 0)
 )
 
-// Used to reference specific token without depending on entire array
-export const selectHasFavoriteToken = createSelector(
-  [selectFavoriteTokens, (_, address): string => address],
-  (tokens, address) => tokens?.includes(address.toLowerCase())
-)
+export const makeSelectHasTokenFavorited = (currencyId: string): Selector<MobileState, boolean> =>
+  createSelector(selectFavoriteTokens, (tokens) => tokens?.includes(currencyId.toLowerCase()))
 
 const selectWatchedAddresses = (state: MobileState): string[] => state.favorites.watchedAddresses
 export const selectWatchedAddressSet = createSelector(

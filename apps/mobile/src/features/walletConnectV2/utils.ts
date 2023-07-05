@@ -4,7 +4,6 @@ import { utils } from 'ethers'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { ChainId } from 'wallet/src/constants/chains'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { logger } from 'wallet/src/features/logger/logger'
 import { EthMethod, EthSignMethod } from 'wallet/src/features/walletConnect/types'
@@ -43,8 +42,8 @@ export const getSessionNamespaces = (
  * @param {string[]} chains list of chain strings as received from WalletConnect (ex. "eip155:1")
  * @returns {ChainId[]} list of supported ChainIds
  */
-export const getSupportedWalletConnectChains = (chains?: string[]): ChainId[] => {
-  if (!chains) return EMPTY_ARRAY
+export const getSupportedWalletConnectChains = (chains?: string[]): ChainId[] | undefined => {
+  if (!chains) return
 
   return chains
     .map((chain) => getChainIdFromEIP155String(chain))

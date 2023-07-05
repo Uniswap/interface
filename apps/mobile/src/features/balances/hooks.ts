@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { selectTokensVisibility } from 'src/features/favorites/selectors'
 import { toggleTokenVisibility, TokenVisibility } from 'src/features/favorites/slice'
 import { useSelectLocalTxCurrencyIds } from 'src/features/transactions/hooks'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -198,9 +197,7 @@ export function useTokenBalancesGroupedByVisibility({
     useAccountTokensVisibilitySettings(owner)
 
   return useMemo(() => {
-    if (!balancesById) {
-      return { tokens: EMPTY_ARRAY, numHidden: 0 }
-    }
+    if (!balancesById) return { tokens: [], numHidden: 0 }
 
     const { shown, hidden } = Object.values(balancesById).reduce<{
       shown: PortfolioBalance[]

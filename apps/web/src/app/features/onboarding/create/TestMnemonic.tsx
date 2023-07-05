@@ -10,7 +10,6 @@ import {
 } from 'src/app/navigation/constants'
 import { Input, Text, XStack } from 'ui/src'
 import { inputStyles } from 'ui/src/components/input/utils'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 
 export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }): JSX.Element {
   const navigate = useNavigate()
@@ -26,15 +25,15 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
   )
 
   // Pick NUMBER_OF_TESTS random words
-  const testingWordIndexes: number[] = useMemo(() => {
-    return createdMnemonic
-      ? selectRandomNumbers(createdMnemonic.length, numberOfTests)
-      : EMPTY_ARRAY
-  }, [createdMnemonic, numberOfTests])
+  const testingWordIndexes = useMemo(
+    () =>
+      createdMnemonic ? selectRandomNumbers(createdMnemonic.length, numberOfTests) : undefined,
+    [createdMnemonic, numberOfTests]
+  )
 
   // Save the next word index for reuse, ensuring it's not undefined
   const nextWordIndex = useMemo(
-    () => testingWordIndexes[completedTests] || 0,
+    () => testingWordIndexes?.[completedTests] ?? 0,
     [completedTests, testingWordIndexes]
   )
   const nextWordNumber = nextWordIndex + 1

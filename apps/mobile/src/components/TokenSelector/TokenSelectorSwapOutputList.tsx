@@ -10,7 +10,7 @@ import {
 import { SuggestedToken } from 'src/components/TokenSelector/SuggestedToken'
 import {
   OnSelectCurrency,
-  TokenSection,
+  SuggestedTokenSection,
   TokenSelectorList,
   TokenSelectorListSections,
 } from 'src/components/TokenSelector/TokenSelectorList'
@@ -20,13 +20,38 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
-function suggestedTokensKeyExtractor(suggestedTokens: TokenOption[]): string {
+export function suggestedTokensKeyExtractor(suggestedTokens: TokenOption[]): string {
   return suggestedTokens.map((token) => token.currencyInfo.currencyId).join('-')
 }
 
-function useTokenSectionsForSwapOutput(
-  chainFilter: ChainId | null,
+export function renderSuggestedTokenItem({
+  item: suggestedTokens,
+  index,
+  section,
+  onSelectCurrency,
+}: {
+  item: TokenOption[]
+  section: SuggestedTokenSection
+  index: number
   onSelectCurrency: OnSelectCurrency
+}): JSX.Element {
+  return (
+    <Flex row flexWrap="wrap" gap="none">
+      {suggestedTokens.map((token) => (
+        <SuggestedToken
+          key={token.currencyInfo.currencyId}
+          index={index}
+          section={section}
+          token={token}
+          onSelectCurrency={onSelectCurrency}
+        />
+      ))}
+    </Flex>
+  )
+}
+
+function useTokenSectionsForSwapOutput(
+  chainFilter: ChainId | null
 ): GqlResult<TokenSelectorListSections> {
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
@@ -78,50 +103,19 @@ function useTokenSectionsForSwapOutput(
     refetchPortfolioTokenOptions,
   ])
 
-  const renderSuggestedTokenItem = useCallback(
-    ({
-      item: suggestedTokens,
-      index,
-      section,
-    }: {
-      item: TokenOption[]
-      section: TokenSection
-      index: number
-    }): JSX.Element => {
-      return (
-        <Flex row flexWrap="wrap" gap="none">
-          {suggestedTokens.map((token) => (
-            <SuggestedToken
-              key={token.currencyInfo.currencyId}
-              index={index}
-              section={section}
-              token={token}
-              onSelectCurrency={onSelectCurrency}
-            />
-          ))}
-        </Flex>
-      )
-    },
-    [onSelectCurrency]
-  )
+  const sections = useMemo<TokenSelectorListSections>(() => {
+    if (loading) return []
 
-  const sections = useMemo(() => {
-    if (loading) return
     const popularMinusPortfolioTokens = tokenOptionDifference(
       popularTokenOptions,
       portfolioTokenOptions
     )
+
     return [
-      // we show suggested as pills, so we need a separate renderItem for this sections
-      {
-        title: t('Suggested'),
-        // we draw the pills as a single item of a section list, hence [...]
-        data: [commonTokenOptions],
-        keyExtractor: suggestedTokensKeyExtractor,
-        renderItem: renderSuggestedTokenItem,
-      },
-      ...getTokenOptionsSection(t('Favorites'), favoriteTokenOptions),
-      ...getTokenOptionsSection(t('Popular tokens'), popularMinusPortfolioTokens),
+      // we draw the pills as a single item of a section list, so `data` is an array of Token[]
+      { title: t('Suggested'), data: [commonTokenOptions] },
+      ...(getTokenOptionsSection(t('Favorites'), favoriteTokenOptions) ?? []),
+      ...(getTokenOptionsSection(t('Popular tokens'), popularMinusPortfolioTokens) ?? []),
     ]
   }, [
     commonTokenOptions,
@@ -129,7 +123,6 @@ function useTokenSectionsForSwapOutput(
     loading,
     popularTokenOptions,
     portfolioTokenOptions,
-    renderSuggestedTokenItem,
     t,
   ])
 
@@ -151,12 +144,7 @@ function _TokenSelectorSwapOutputList({
   onSelectCurrency: OnSelectCurrency
   chainFilter: ChainId | null
 }): JSX.Element {
-  const {
-    data: sections,
-    loading,
-    error,
-    refetch,
-  } = useTokenSectionsForSwapOutput(chainFilter, onSelectCurrency)
+  const { data: sections, loading, error, refetch } = useTokenSectionsForSwapOutput(chainFilter)
 
   return (
     <TokenSelectorList

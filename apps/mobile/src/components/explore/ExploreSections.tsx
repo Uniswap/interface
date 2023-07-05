@@ -66,7 +66,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   usePollOnFocusOnly(startPolling, stopPolling, PollingInterval.Fast)
 
   const topTokenItems = useMemo(() => {
-    if (!data || !data.topTokens) return EMPTY_ARRAY
+    if (!data || !data.topTokens) return
 
     // special case to replace weth with eth because the backend does not return eth data
     // eth will be defined only if all the required data is available

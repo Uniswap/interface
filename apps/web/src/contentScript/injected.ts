@@ -121,6 +121,7 @@ function addExtensionRequestListener(): void {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isValidMessage(message: any): message is Message {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return message && typeof message === 'object' && 'type' in message
 }
 

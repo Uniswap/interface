@@ -34,7 +34,6 @@ import { removePendingSession } from 'src/features/walletConnect/walletConnectSl
 import { Screens } from 'src/screens/Screens'
 import NoNFTsIcon from 'ui/src/assets/icons/empty-state-picture.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { NftsTabQuery, useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useAdaptiveFooterHeight } from './hooks'
@@ -46,9 +45,10 @@ const ESTIMATED_ITEM_SIZE = 251 // heuristic provided by FlashList
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const LOADING_ITEM = 'loading'
 
-function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] {
+function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] | undefined {
   const items = data?.nftBalances?.edges?.flatMap((item) => item.node)
-  if (!items) return EMPTY_ARRAY
+  if (!items) return
+
   const nfts = items
     .filter((item) => item?.ownedAsset?.nftContract?.address && item?.ownedAsset?.tokenId)
     .map((item): NFTItem => {
@@ -163,7 +163,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(
 
     const nftDataItems = formatNftItems(data)
     const shouldAddInLoadingItem =
-      networkStatus === NetworkStatus.fetchMore && nftDataItems.length % 2 === 1
+      networkStatus === NetworkStatus.fetchMore && nftDataItems && nftDataItems.length % 2 === 1
 
     const onListEndReached = useCallback(() => {
       if (!data?.nftBalances?.pageInfo?.hasNextPage) return

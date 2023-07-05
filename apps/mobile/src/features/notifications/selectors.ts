@@ -1,6 +1,5 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { MobileState } from 'src/app/reducer'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { AppNotification } from 'wallet/src/features/notifications/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
@@ -11,7 +10,7 @@ export const selectActiveAccountNotifications = createSelector(
   selectNotificationQueue,
   selectActiveAccountAddress,
   (notificationQueue, address) => {
-    if (!address) return EMPTY_ARRAY
+    if (!address) return
     // If a notification doesn't have an address param assume it belongs to the active account
     return notificationQueue.filter((notif) => !notif.address || notif.address === address)
   }

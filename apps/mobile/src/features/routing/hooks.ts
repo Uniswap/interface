@@ -4,7 +4,9 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { useQuoteQuery } from 'wallet/src/features/routing/api'
+import { TradeQuoteResult } from 'wallet/src/features/routing/types'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import {
@@ -25,11 +27,8 @@ export interface UseQuoteProps {
   isUSDQuote?: boolean
 }
 
-/**
- * Fetches quote from Routing API
- */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useRouterQuote(params: UseQuoteProps) {
+// Fetches quote from Routing API
+export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResult> {
   const recipient = useActiveAccount()
 
   const {

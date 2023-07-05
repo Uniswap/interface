@@ -26,16 +26,16 @@ export interface AllFormattedTransactions {
 }
 
 export function formatTransactionsByDate(
-  transactions: TransactionDetails[]
+  transactions: TransactionDetails[] | undefined
 ): AllFormattedTransactions {
   // timestamp in ms for start of time periods
   const msTimestampCutoff24h = dayjs().subtract(24, 'hour').valueOf()
   const msTimestampCutoffYear = dayjs().startOf('year').valueOf()
 
-  // Segement by time periods.
-  const [pending, last24hTransactionList, olderThan24HTransactionList] = transactions.reduce<
-    [TransactionDetails[], TransactionDetails[], TransactionDetails[]]
-  >(
+  // Segment by time periods.
+  const [pending, last24hTransactionList, olderThan24HTransactionList] = (
+    transactions ?? []
+  ).reduce<[TransactionDetails[], TransactionDetails[], TransactionDetails[]]>(
     (accum, item) => {
       if (
         // Want all incomplete transactions

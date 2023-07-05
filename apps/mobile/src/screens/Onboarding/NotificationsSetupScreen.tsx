@@ -102,7 +102,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
 
   const onPressEnableNotifications = (): void => {
     promptPushPermission(() => {
-      addresses.forEach((address) =>
+      addresses.forEach((address) => {
         dispatch(
           editAccountActions.trigger({
             type: EditAccountAction.TogglePushNotification,
@@ -110,7 +110,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
             address,
           })
         )
-      )
+      })
     }, showNotificationSettingsAlert)
 
     navigateToNextScreen()

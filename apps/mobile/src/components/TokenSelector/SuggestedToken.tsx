@@ -5,7 +5,10 @@ import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Pill } from 'src/components/text/Pill'
-import { OnSelectCurrency, TokenSection } from 'src/components/TokenSelector/TokenSelectorList'
+import {
+  OnSelectCurrency,
+  SuggestedTokenSection,
+} from 'src/components/TokenSelector/TokenSelectorList'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 
@@ -18,7 +21,7 @@ function _SuggestedToken({
   onSelectCurrency: OnSelectCurrency
   token: TokenOption
   index: number
-  section: TokenSection
+  section: SuggestedTokenSection
 }): JSX.Element {
   const { currency, logoUrl } = token.currencyInfo
   const theme = useAppTheme()

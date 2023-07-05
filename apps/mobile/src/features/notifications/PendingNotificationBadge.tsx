@@ -37,7 +37,7 @@ export function PendingNotificationBadge({
 
   /*************** In-app txn confirmed  **************/
 
-  const currentNotification = notifications[0]
+  const currentNotification = notifications?.[0]
   if (currentNotification?.type === AppNotificationType.Transaction) {
     const { txStatus } = currentNotification
     if (txStatus === TransactionStatus.Success) {
@@ -57,9 +57,9 @@ export function PendingNotificationBadge({
 
   /*************** Pending in-app txn  **************/
 
-  const pendingTransactionCount = sortedPendingTransactions.length
+  const pendingTransactionCount = (sortedPendingTransactions ?? []).length
   const txPendingLongerThanLimit =
-    sortedPendingTransactions[0] &&
+    sortedPendingTransactions?.[0] &&
     Date.now() - sortedPendingTransactions[0].addedTime > PENDING_TX_TIME_LIMIT
 
   // If a transaction has been pending for longer than 5 mins, then don't show the pending icon anymore
@@ -90,8 +90,8 @@ export function PendingNotificationBadge({
   }
 
   /**
-   Has unchecked notification status (triggered by Transaction history updater or transaction watcher saga). 
-   Aka, will flip status to true when any local or remote transaction is confirmed. 
+   Has unchecked notification status (triggered by Transaction history updater or transaction watcher saga).
+   Aka, will flip status to true when any local or remote transaction is confirmed.
   **/
 
   if (hasNotifications) {

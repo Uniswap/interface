@@ -6,7 +6,6 @@ import { Inset } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
 import { ChainId } from 'wallet/src/constants/chains'
-import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import {
   Chain,
   SearchPopularTokensQuery,
@@ -21,7 +20,7 @@ export function SearchPopularTokens(): JSX.Element {
   const { data, loading } = useSearchPopularTokensQuery()
 
   const popularTokens = useMemo(() => {
-    if (!data || !data.topTokens) return EMPTY_ARRAY
+    if (!data || !data.topTokens) return
 
     // special case to replace weth with eth because the backend does not return eth data
     // eth will be defined only if all the required data is available
