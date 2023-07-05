@@ -26,6 +26,7 @@ import { SmallButtonPrimary } from 'components/Button'
 import { ReactComponent as LogoGradient } from '../../assets/svg/full_logo_gradient.svg'
 import { NumberType, formatNumber } from '@uniswap/conedison/format'
 import { useCurrency } from 'hooks/Tokens'
+import { ReduceLeveragePositionTransactionInfo, TransactionDetails, TransactionInfo, TransactionType } from 'state/transactions/types'
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundFloating};
@@ -182,8 +183,9 @@ export function TransactionSubmittedContent({
 
 
 const ReduceWrapper = styled.div`
-  background: ${({theme}) => `linear-gradient(to bottom right, ${theme.backgroundBackdrop} 25%, ${theme.backgroundSurface} 50%, ${theme.backgroundModule} 75%, ${theme.backgroundInteractive} 90%)`};
+  background: ${({theme}) => `linear-gradient(to bottom right, ${theme.backgroundBackdrop} 25%, ${theme.backgroundSurface} 50%, #131A2A 75%, ${theme.backgroundInteractive} 90%)`};
   border-radius: 20px;
+  opacity: 1;
   outline: 1px solid ${({ theme }) => theme.backgroundOutline};
   width: 100%;
   padding: 1rem;
@@ -236,29 +238,10 @@ const FlexStartRow = styled(Row)`
   justify-content:flex-start;
 `
 
-export function ReduceLeverageTransactionSubmittedContent({
-  onDismiss,
-  chainId,
-  hash,
-  positionData,
-  currencyToAdd,
-  inline,
-}: {
-  onDismiss: () => void
-  hash: string
-  chainId: number
-  positionData:  TransactionPositionDetails
-  currencyToAdd?: Currency | undefined
-  inline?: boolean // not in modal
-}) {
+export function  ReduceLeverageTransactionPopupContent({ tx, chainId, removeThisPopup }: {tx: TransactionDetails, chainId: number, removeThisPopup: () => void}) {
   const theme = useTheme()
 
   const { connector } = useWeb3React()
-
-  const token = currencyToAdd?.wrapped
-  const logoURL = useCurrencyLogoURIs(token)[0]
-
-  const [success, setSuccess] = useState<boolean | undefined>()
 
   const {
     pnl,
@@ -269,44 +252,32 @@ export function ReduceLeverageTransactionSubmittedContent({
     markPrice,
     leverageFactor,
     quoteBaseSymbol
-  } = positionData
-  
+  } = tx.info as ReduceLeveragePositionTransactionInfo
 
-  const addToken = useCallback(() => {
-    if (!token?.symbol || !connector.watchAsset) return
-    connector
-      .watchAsset({
-        address: token.address,
-        symbol: token.symbol,
-        decimals: token.decimals,
-        image: logoURL,
-      })
-      .then(() => setSuccess(true))
-      .catch(() => setSuccess(false))
-  }, [connector, logoURL, token])
+  const [success, setSuccess] = useState<boolean | undefined>()
 
-  const inputCurrency = useCurrency(positionData.inputCurrencyId)
-  const outputCurrency = useCurrency(positionData.outputCurrencyId)
+
+  const inputCurrency = useCurrency(inputCurrencyId)
+  const outputCurrency = useCurrency(outputCurrencyId)
 
   return (
     <ReduceWrapper>
         <RowBetween>
           <LogoGradient width={140} height={40}/>
-          <CloseIcon onClick={onDismiss} />
+          <CloseIcon onClick={removeThisPopup}/>
         </RowBetween>
         <FlexStartRow marginTop="6px">
           <ThemedText.LmtWhite>Closed Position</ThemedText.LmtWhite>
         </FlexStartRow>
         <SymbolsContainer>
         <LeverageContainer>
-          <ThemedText.LmtWhite>{formatNumber(positionData.leverageFactor, NumberType.SwapTradeAmount)}x</ThemedText.LmtWhite>
+          <ThemedText.LmtWhite>{formatNumber(leverageFactor, NumberType.SwapTradeAmount)}x</ThemedText.LmtWhite>
         </LeverageContainer>
         <PerpetualTitleContainer>
           <ThemedText.LmtWhite>{`${inputCurrency?.symbol}/${outputCurrency?.symbol} Perpetual`}</ThemedText.LmtWhite>
         </PerpetualTitleContainer>
         </SymbolsContainer>
         <FlexStartRow>
-
           <DeltaText delta={pnl} size={30} marginRight={"6px"}>
             {`${formatNumber(pnl/initialCollateral * 100)}%`}
           </DeltaText>
@@ -321,7 +292,7 @@ export function ReduceLeverageTransactionSubmittedContent({
         <FlexStartRow>
           <ThemedText.PriceSmall marginRight="6px">{`Mark Price: `}</ThemedText.PriceSmall>
           <ThemedText.Gold>{` ${formatNumber(markPrice)} ${quoteBaseSymbol}`}</ThemedText.Gold>
-        </FlexStartRow>
+        </FlexStartRow> 
     </ReduceWrapper>
   )
 }
@@ -548,45 +519,8 @@ export function ReduceLeverageTransactionConfirmationModal({
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
-      ) : hash && positionData ? (
-        <ReduceLeverageTransactionSubmittedContent
-          chainId={chainId}
-          hash={hash}
-          onDismiss={onDismiss}
-          currencyToAdd={currencyToAdd}
-          positionData={positionData}
-        />
-      ) : (
-        content()
-      )}
-    </Modal>
-  )
-}
-
-export function LevTransactionConfirmationModal({
-  isOpen,
-  onDismiss,
-  attemptingTxn,
-  hash,
-  pendingText,
-  content,
-  currencyToAdd,
-
-  setIsLoadingQuote, 
-  isLoadingQuote
-}: ConfirmationModalProps) {
-  const { chainId } = useWeb3React()
-
-  if (!chainId) return null
-  // confirmation screen
-  return (
-    <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight={90}>
-      {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
-        <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
-      ) : attemptingTxn ? (
-        <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
-        <TransactionSubmittedContent
+        <TransactionSubmittedContent 
           chainId={chainId}
           hash={hash}
           onDismiss={onDismiss}
@@ -595,11 +529,47 @@ export function LevTransactionConfirmationModal({
       ) : (
         content()
       )}
-      {setIsLoadingQuote&& (<SmallButtonPrimary 
-           onClick={() => setIsLoadingQuote(!isLoadingQuote)} 
-      >
-        <Trans>Refresh Quote</Trans>
-      </SmallButtonPrimary>)}
     </Modal>
   )
 }
+
+// export function LevTransactionConfirmationModal({
+//   isOpen,
+//   onDismiss,
+//   attemptingTxn,
+//   hash,
+//   pendingText,
+//   content,
+//   currencyToAdd,
+
+//   setIsLoadingQuote, 
+//   isLoadingQuote
+// }: ConfirmationModalProps) {
+//   const { chainId } = useWeb3React()
+
+//   if (!chainId) return null
+//   // confirmation screen
+//   return (
+//     <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight={90}>
+//       {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
+//         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
+//       ) : attemptingTxn ? (
+//         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
+//       ) : hash ? (
+//         <TransactionSubmittedContent
+//           chainId={chainId}
+//           hash={hash}
+//           onDismiss={onDismiss}
+//           currencyToAdd={currencyToAdd}
+//         />
+//       ) : (
+//         content()
+//       )}
+//       {setIsLoadingQuote&& (<SmallButtonPrimary 
+//            onClick={() => setIsLoadingQuote(!isLoadingQuote)} 
+//       >
+//         <Trans>Refresh Quote</Trans>
+//       </SmallButtonPrimary>)}
+//     </Modal>
+//   )
+// }

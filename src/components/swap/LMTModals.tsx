@@ -40,7 +40,7 @@ export default function ReducePositionModal({
 
   const { loading, error, position } = useLimitlessPositionFromTokenId(tokenId)
   const [txHash, setTxHash] = useState("")
-  const [positionData, setPositionData] = useState<TransactionPositionDetails>()
+  // const [positionData, setPositionData] = useState<TransactionPositionDetails>()
   const [attemptingTxn, setAttemptingTxn] = useState(false)
 
 
@@ -61,7 +61,7 @@ export default function ReducePositionModal({
       leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}
       setAttemptingTxn={setAttemptingTxn}
       setTxHash={setTxHash}
-      setPositionData={setPositionData}
+      // setPositionData={setPositionData}
       />)
   }, [
     onConfirm
@@ -88,12 +88,11 @@ export default function ReducePositionModal({
   )
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <ReduceLeverageTransactionConfirmationModal
+      <TransactionConfirmationModal
         isOpen={isOpen}
         onDismiss={onModalDismiss}
         attemptingTxn={attemptingTxn}
         hash={txHash}
-        positionData={positionData}
         content={confirmationContent}
         pendingText={pendingText}
       />

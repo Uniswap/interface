@@ -6,6 +6,8 @@ import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent } from '../../state/application/reducer'
 import FailedNetworkSwitchPopup from './FailedNetworkSwitchPopup'
 import TransactionPopup from './TransactionPopup'
+import { useTransaction } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 
 const StyledClose = styled(X)`
   position: absolute;
@@ -45,6 +47,7 @@ export default function PopupItem({
   popKey: string
 }) {
   const removePopup = useRemovePopup()
+  removeAfterMs = null;
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
   useEffect(() => {
     if (removeAfterMs === null) return undefined
@@ -61,16 +64,33 @@ export default function PopupItem({
   const theme = useTheme()
 
   let popupContent
+  let transactionType: TransactionType;
   if ('txn' in content) {
-    popupContent = <TransactionPopup hash={content.txn.hash} />
+    
+    popupContent = TransactionPopup({ hash: content.txn.hash, removeThisPopup })
+
+    return (
+      <>
+      { popupContent }
+      </>
+    )
+    
   } else if ('failedSwitchNetwork' in content) {
     popupContent = <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
-  }
 
-  return popupContent ? (
-    <Popup>
+    return (
+      <Popup>
       <StyledClose color={theme.textSecondary} onClick={removeThisPopup} />
-      {popupContent}
-    </Popup>
-  ) : null
+        {popupContent}
+      </Popup>
+    )
+  }
+  return null
+
+  // return popupContent ? (
+  //   <Popup>
+  //     <StyledClose color={theme.textSecondary} onClick={removeThisPopup} />
+  //     {popupContent}
+  //   </Popup>
+  // ) : null
 }

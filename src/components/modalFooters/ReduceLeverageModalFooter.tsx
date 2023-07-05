@@ -43,7 +43,7 @@ import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 // import { Info } from 'react-feather'
 // import Loader from 'components/Icons/LoadingSpinner'
 import { usePool } from 'hooks/usePools'
-import { TransactionPositionDetails } from 'components/TransactionConfirmationModal'
+import moment from "moment"
 // import { useSingleCallResult } from 'lib/hooks/multicall'
 // import { QuoterV2 } from 'types/v3'
 // import { MouseoverValueLabel } from 'components/swap/AdvancedSwapDetails'
@@ -215,14 +215,14 @@ export function ReduceLeverageModalFooter({
   trader,
   setAttemptingTxn,
   setTxHash,
-  setPositionData
+  // setPositionData
 }: {
   leverageManagerAddress: string | undefined
   tokenId: string | undefined
   trader: string | undefined,
   setAttemptingTxn: (attemptingTxn: boolean) => void
   setTxHash: (txHash: string) => void
-  setPositionData: (positionData: TransactionPositionDetails) => void
+  // setPositionData: (positionData: TransactionPositionDetails) => void
 }) {
   // const [nonce, setNonce] = useState(0)
   const { error, position } = useLimitlessPositionFromTokenId(tokenId)
@@ -279,11 +279,6 @@ export function ReduceLeverageModalFooter({
           addTransaction(hash, {
             type: TransactionType.REDUCE_LEVERAGE,
             reduceAmount: inputReduceAmount ?? "",
-            inputCurrencyId: inputIsToken0 ? currencyId(token0) : currencyId(token1),
-            outputCurrencyId: !inputIsToken0 ? currencyId(token0) : currencyId(token1)
-          })
-          setTxHash(hash)
-          setPositionData({
             pnl: Number(transactionInfo.pnl),
             initialCollateral: Number(position.initialCollateral),
             leverageFactor: (Number(position.totalDebtInput) + Number(position.initialCollateral)) / Number(position.initialCollateral),
@@ -291,8 +286,10 @@ export function ReduceLeverageModalFooter({
             outputCurrencyId: !inputIsToken0 ? currencyId(token0) : currencyId(token1),
             entryPrice: transactionInfo.entryPrice,
             markPrice: transactionInfo.currentPrice,
-            quoteBaseSymbol: transactionInfo.quoteBaseSymbol
-          });
+            quoteBaseSymbol: transactionInfo.quoteBaseSymbol,
+            timestamp: moment().format('YYYY-MM-DD')
+          })
+          setTxHash(hash)
           setAttemptingTxn(false)
         }).catch((err: any) => {
           setAttemptingTxn(false)

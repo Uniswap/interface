@@ -201,7 +201,25 @@ export interface ReduceLeveragePositionTransactionInfo {
   reduceAmount: string
   inputCurrencyId: string
   outputCurrencyId: string
+  entryPrice: number
+  markPrice: number
+  pnl: number
+  quoteBaseSymbol: string
+  initialCollateral: number
+  leverageFactor: number
+  timestamp: string
 }
+
+// type: TransactionType.REDUCE_LEVERAGE,
+//             reduceAmount: inputReduceAmount ?? "",
+//             pnl: Number(transactionInfo.pnl),
+//             initialCollateral: Number(position.initialCollateral),
+//             leverageFactor: (Number(position.totalDebtInput) + Number(position.initialCollateral)) / Number(position.initialCollateral),
+//             inputCurrencyId:  inputIsToken0 ? currencyId(token0) : currencyId(token1),
+//             outputCurrencyId: !inputIsToken0 ? currencyId(token0) : currencyId(token1),
+//             entryPrice: transactionInfo.entryPrice,
+//             markPrice: transactionInfo.currentPrice,
+//             quoteBaseSymbol: transactionInfo.quoteBaseSymbol
 
 export interface AddLeveragePremiumTransactionInfo {
   type: TransactionType.PREMIUM_LEVERAGE,

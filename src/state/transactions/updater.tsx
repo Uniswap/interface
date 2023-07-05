@@ -92,6 +92,7 @@ export default function Updater() {
           })
         )
       }
+
       addPopup(
         {
           txn: { hash },
