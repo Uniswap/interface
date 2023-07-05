@@ -45,6 +45,7 @@ const DEFAULT_CHAINS = [
   ChainId.OPTIMISM,
   ChainId.POLYGON,
   ChainId.CELO,
+  ChainId.BNB,
   ChainId.AVALANCHE,
 ]
 

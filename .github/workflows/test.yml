@@ -108,7 +108,6 @@ jobs:
   cypress-test-matrix:
     needs: [build-e2e, cypress-rerun]
     runs-on: ubuntu-latest
-    container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
     strategy:
       fail-fast: false
       matrix:
@@ -142,7 +141,7 @@ jobs:
           parallel: true
           start: yarn serve
           wait-on: 'http://localhost:3000'
-          browser: chrome
+          browser: electron
           group: e2e
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
