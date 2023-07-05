@@ -54,7 +54,7 @@ const StyledSpinner = styled(CustomLightSpinner)`
   top: 0;
 `
 
-const MOONPAY_SUPPORTED_CURRENCY_CODES = [
+export const MOONPAY_SUPPORTED_CURRENCY_CODES = [
   'eth',
   'eth_arbitrum',
   'eth_optimism',

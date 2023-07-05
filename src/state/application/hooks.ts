@@ -41,6 +41,20 @@ async function getMoonpayAvailability(): Promise<boolean> {
   return data.isBuyAllowed ?? false
 }
 
+export async function getMoonpayAllowedCurrencies(): Promise<string[]> {
+  const moonpayPublishableKey = process.env.REACT_APP_MOONPAY_PUBLISHABLE_KEY
+  if (!moonpayPublishableKey) {
+    throw new Error('Must provide a publishable key for moonpay.')
+  }
+  const moonpayApiURI = process.env.REACT_APP_MOONPAY_API
+  if (!moonpayApiURI) {
+    throw new Error('Must provide an api endpoint for moonpay.')
+  }
+  const res = await fetch(`${moonpayApiURI}/v3/currencies?apiKey=${moonpayPublishableKey}`)
+  const data = await (res.json() as Promise<{ code: string }[]>)
+  return data.map((currency) => currency.code) ?? []
+}
+
 export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () => void) {
   const dispatch = useAppDispatch()
   const { available, availabilityChecked } = useAppSelector((state: AppState) => state.application.fiatOnramp)
