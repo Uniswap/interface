@@ -12,7 +12,7 @@ if (UNISWAPX_API_URL === undefined) {
 
 function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]) {
   const orderHashes = orders.map((order) => order.orderHash).join(',')
-  return global.fetch(`${UNISWAPX_API_URL}/orders?offerer=${account}&orderHashes=${orderHashes}`)
+  return global.fetch(`${UNISWAPX_API_URL}/orders?swapper=${account}&orderHashes=${orderHashes}`)
 }
 
 const OFF_CHAIN_ORDER_STATUS_POLLING = 2000 // every 2 seconds
