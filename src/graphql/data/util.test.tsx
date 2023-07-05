@@ -21,4 +21,16 @@ describe('fromGraphQLChain', () => {
       expect(fromGraphQLChain(chain)).toBe(undefined)
     }
   })
+
+  it('should not crash when a new BE chain is added', () => {
+    enum NewChain {
+      NewChain = 'NEW_CHAIN',
+    }
+    const ExpandedChainList = [...Object.values(Chain), NewChain.NewChain as unknown as Chain]
+
+    for (const chain of ExpandedChainList) {
+      if (isSupportedGQLChain(chain)) continue
+      expect(fromGraphQLChain(chain)).toBe(undefined)
+    }
+  })
 })
