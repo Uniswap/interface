@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
 import { OnboardingInputError } from 'src/app/features/onboarding/OnboardingInputError'
@@ -12,6 +12,9 @@ import {
   EditAccountAction,
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
+import { setAccountAsActive, setAccountsNonPending } from 'wallet/src/features/wallet/slice'
 
 export function NameWallet({ nextPath }: { nextPath: string }): JSX.Element {
   const navigate = useNavigate()
@@ -22,19 +25,36 @@ export function NameWallet({ nextPath }: { nextPath: string }): JSX.Element {
   )
   const { walletName, setWalletName, pendingAddress } = useOnboardingContext()
 
-  const onSubmit = (): void => {
-    if (walletName !== '' && pendingAddress) {
-      dispatch(
-        editAccountActions.trigger({
-          type: EditAccountAction.Rename,
-          address: pendingAddress,
-          newName: walletName,
-        })
-      )
-      navigate(nextPath)
-    } else {
-      setWalletNamingErrorString('Please enter a name for this wallet')
+  // Reference pending accounts to avoid any lag in saga import.
+  const pendingAccount = Object.values(usePendingAccounts())?.[0]
+
+  const defaultName: string = useMemo(() => {
+    if (!pendingAccount || pendingAccount.type === AccountType.Readonly) {
+      return ''
     }
+
+    const derivationIndex = pendingAccount.derivationIndex
+    return pendingAccount.name || `Wallet ${derivationIndex + 1}`
+  }, [pendingAccount])
+
+  const onSubmit = (): void => {
+    if (!pendingAddress) {
+      return
+    }
+
+    dispatch(
+      editAccountActions.trigger({
+        type: EditAccountAction.Rename,
+        address: pendingAddress,
+        newName: walletName || defaultName,
+      })
+    )
+    dispatch(setAccountsNonPending([pendingAddress]))
+    // webext-redux's dispatch returns a promise. We don't currently
+    // type dispatch: () => Promise, so we wrap in `resolve` here.
+    Promise.resolve(dispatch(setAccountAsActive(pendingAddress))).then(() => {
+      navigate(nextPath)
+    })
   }
 
   return (
@@ -57,13 +77,12 @@ export function NameWallet({ nextPath }: { nextPath: string }): JSX.Element {
           paddingVertical="$spacing12"
           placeholder="Wallet 1"
           placeholderTextColor="$textTertiary"
+          value={walletName || defaultName}
           width="100%"
           onChange={(): void => {
             setWalletNamingErrorString(undefined)
           }}
-          onChangeText={(text): void => {
-            setWalletName(text)
-          }}
+          onChangeText={setWalletName}
           onSubmitEditing={onSubmit}
         />
         {walletNamingErrorString && <OnboardingInputError error={walletNamingErrorString} />}

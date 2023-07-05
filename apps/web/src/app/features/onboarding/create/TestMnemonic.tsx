@@ -7,16 +7,13 @@ import {
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { useAppDispatch } from 'src/background/store'
 import { Input, Stack, Text, XStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { inputStyles } from 'ui/src/components/input/utils'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
-import { setAccountAsActive, setAccountsNonPending } from 'wallet/src/features/wallet/slice'
 
 export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }): JSX.Element {
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
 
   const { pendingAddress: createdAddress, pendingMnemonic: createdMnemonic } =
     useOnboardingContext()
@@ -48,8 +45,6 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
     }
     const validWord = userWordInput === createdMnemonic[nextWordIndex]
     if (validWord && isLastTest()) {
-      dispatch(setAccountsNonPending([createdAddress]))
-      dispatch(setAccountAsActive(createdAddress))
       navigate(
         `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Naming}`
       )
@@ -59,15 +54,7 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
     } else {
       // TODO error state / notify user in some way, not yet designed
     }
-  }, [
-    createdAddress,
-    createdMnemonic,
-    dispatch,
-    isLastTest,
-    navigate,
-    nextWordIndex,
-    userWordInput,
-  ])
+  }, [createdAddress, createdMnemonic, isLastTest, navigate, nextWordIndex, userWordInput])
 
   return (
     <Stack alignItems="center" gap="$spacing36" minWidth={450}>

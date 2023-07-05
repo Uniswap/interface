@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -39,25 +39,20 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
   // Reference pending accounts to avoid any lag in saga import.
   const pendingAccount = Object.values(usePendingAccounts())?.[0]
 
-  // To track the first time a default name is set. After this is true it shouldn't be set again
-  const [hasDefaultName, setHasDefaultName] = useState(false)
-  const [newAccountName, setNewAccountName] = useState<string>('')
-  const [focused, setFocused] = useState(false)
-
-  useAddBackButton(navigation)
-
   // Sets the default wallet nickname based on derivation index once the pendingAccount is set.
-  useEffect(() => {
-    if (hasDefaultName || !pendingAccount || pendingAccount.type === AccountType.Readonly) {
-      return
+  const defaultAccountName: string = useMemo(() => {
+    if (!pendingAccount || pendingAccount.type === AccountType.Readonly) {
+      return ''
     }
 
     const derivationIndex = pendingAccount.derivationIndex
-    const defaultName =
-      pendingAccount.name || t('Wallet {{ number }}', { number: derivationIndex + 1 })
-    setNewAccountName(defaultName)
-    setHasDefaultName(true)
-  }, [pendingAccount, hasDefaultName, t])
+    return pendingAccount.name || t('Wallet {{ number }}', { number: derivationIndex + 1 }) || ''
+  }, [pendingAccount, t])
+
+  const [newAccountName, setNewAccountName] = useState<string>(defaultAccountName)
+  const [focused, setFocused] = useState(false)
+
+  useAddBackButton(navigation)
 
   useEffect(() => {
     const beforeRemoveListener = (): void => {
