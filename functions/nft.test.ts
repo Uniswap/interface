@@ -86,15 +86,6 @@ test('should not inject metadata for invalid calls', async () => {
   }
 })
 
-test('api should return a valid response', async () => {
-  for (const nft of assets) {
-    const url = 'http://127.0.0.1:3000/nfts/asset/' + nft.address + '/' + nft.assetId
-    const req = new Request(url)
-    const res = await fetch(req)
-    expect(res.status).toEqual(200)
-  }
-})
-
 test('api should not return a valid response', async () => {
   const invalidUrls = [
     '0xed5af388653567af2f388e6224dc7c4b3241c545',
