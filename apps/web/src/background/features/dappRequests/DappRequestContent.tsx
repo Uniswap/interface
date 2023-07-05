@@ -3,7 +3,7 @@ import { XStack, YStack } from 'ui/src'
 import { Button, ButtonSize } from 'ui/src/components/button/Button'
 import { Text } from 'ui/src/components/text/Text'
 import { ChainId } from 'wallet/src/constants/chains'
-import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { DappRequestType } from './dappRequestTypes'
 import { SendTransactionDetails } from './requestContent/SendTransactionContent'
 import { SignMessageDetails } from './requestContent/SignMessageContent'
@@ -23,9 +23,8 @@ export function DappRequestContent(): JSX.Element {
   const lastRequest = pendingRequests[pendingRequests.length - 1]
   const requestWithDisplay = parseRequest(lastRequest)
 
-  const accounts = useAccounts()
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
-  const activeAccount = accounts[activeAccountAddress]
+  const activeAccount = useActiveAccountWithThrow()
+
   if (!activeAccount) {
     throw new Error('No active account')
   }
