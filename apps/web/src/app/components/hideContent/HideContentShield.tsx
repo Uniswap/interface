@@ -19,7 +19,7 @@ export function HideContentShield({
       alignItems="center"
       backgroundColor={color}
       borderRadius="$rounded16"
-      gap="$spacing16"
+      gap="$spacing24"
       height="100%"
       justifyContent="center"
       opacity={visibility ? 0 : 1}
@@ -29,8 +29,8 @@ export function HideContentShield({
       <Button
         backgroundColor="$background3"
         borderRadius="$rounded12"
-        paddingHorizontal="$spacing12"
-        paddingVertical="$spacing4"
+        paddingHorizontal="$spacing16"
+        paddingVertical="$spacing8"
         onPress={onShowContent}>
         {t('Reveal')}
       </Button>

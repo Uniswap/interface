@@ -2,15 +2,14 @@ import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'r
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import WalletPreviewCard, { LoadingWalletPreviewCard } from 'src/app/components/WalletPreviewCard'
-import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
+import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import {
   ImportOnboardingRoutes,
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
-import { ScrollView, Stack, Text, XStack, YStack } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
+import { ScrollView, YStack } from 'ui/src'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 import { useSelectWalletScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
@@ -178,11 +177,14 @@ export function SelectWallets(): JSX.Element {
       )
 
   return (
-    <Stack alignItems="center" gap="$spacing36" width={ONBOARDING_CONTENT_WIDTH}>
-      <YStack alignItems="center" gap="$spacing8">
-        <Text variant="headlineMedium">{title}</Text>
-        <Text variant="subheadSmall">{subtitle}</Text>
-      </YStack>
+    <OnboardingScreen
+      nextButtonEnabled={
+        !isImportingAccounts && !isLoading && !showError && selectedAddresses.length > 0
+      }
+      nextButtonText="Continue"
+      subtitle={subtitle}
+      title={title}
+      onSubmit={onSubmit}>
       <ScrollView height={180} showsVerticalScrollIndicator={false} width="100%">
         {isLoading ? (
           <YStack gap="$spacing12">
@@ -207,20 +209,6 @@ export function SelectWallets(): JSX.Element {
           </YStack>
         )}
       </ScrollView>
-      <XStack gap="$spacing12" width="100%">
-        <Button flexGrow={1} theme="secondary" onPress={(): void => navigate(-1)}>
-          Back
-        </Button>
-        <Button
-          disabled={
-            isImportingAccounts || isLoading || !!showError || selectedAddresses.length === 0
-          }
-          flexGrow={1}
-          theme="primary"
-          onPress={onSubmit}>
-          Finish
-        </Button>
-      </XStack>
-    </Stack>
+    </OnboardingScreen>
   )
 }

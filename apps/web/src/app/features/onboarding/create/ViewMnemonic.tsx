@@ -2,17 +2,16 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HideContentShield } from 'src/app/components/hideContent/HideContentShield'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
+import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { UniconWithLockIcon } from 'src/app/features/onboarding/UniconWithLockIcon'
-import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
 import {
   CreateOnboardingRoutes,
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { Stack, XStack } from 'tamagui'
-import { Text, YStack } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
+import { Circle, Text, XStack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
@@ -29,9 +28,9 @@ export function ViewMnemonic(): JSX.Element {
   } = useOnboardingContext()
   const [showPhrase, setShowPhrase] = useState(false)
 
-  const mnemonicRows: string[][] = useMemo(() => {
+  const mnemonicRows: string[][] | undefined = useMemo(() => {
     if (!createdMnemonic) {
-      return []
+      return undefined
     }
 
     return [...Array(NUM_ROWS).keys()].map((v) => {
@@ -66,15 +65,20 @@ export function ViewMnemonic(): JSX.Element {
   }
 
   return (
-    <Stack alignItems="center" minWidth={ONBOARDING_CONTENT_WIDTH}>
-      {createdAddress ? <UniconWithLockIcon address={createdAddress} /> : null}
-      <Text variant="headlineSmall">Write down your recovery phrase</Text>
-      <Text color="$textTertiary" variant="bodySmall">
-        This is the only way you can restore your wallet.
-      </Text>
-      <Text color="$accentCritical" variant="bodySmall">
-        Do not view or share with anyone
-      </Text>
+    <OnboardingScreen
+      Icon={
+        createdAddress ? (
+          <UniconWithLockIcon address={createdAddress} />
+        ) : (
+          <Circle backgroundColor="$background2" size={iconSizes.icon64} />
+        )
+      }
+      nextButtonEnabled={!!createdAddress}
+      nextButtonText="Next"
+      subtitle="This is the only way you can restore your wallet."
+      title="Write down your recovery phrase"
+      warningSubtitle="Do not view or share with anyone"
+      onSubmit={onSubmit}>
       <Flex margin="$spacing16" onHoverOut={(): void => setShowPhrase(false)}>
         <YStack
           backgroundColor="$background1"
@@ -83,26 +87,30 @@ export function ViewMnemonic(): JSX.Element {
           gap="$spacing12"
           padding="$spacing24"
           width="100%">
-          {mnemonicRows.map((rowWords, i) => (
-            <SeedPhraseRow indexOffset={i * ROW_SIZE + 1} words={rowWords} />
-          ))}
+          {mnemonicRows !== undefined
+            ? mnemonicRows.map((rowWords, i) => (
+                <SeedPhraseRow
+                  key={`${i}-row-words`}
+                  indexOffset={i * ROW_SIZE + 1}
+                  words={rowWords}
+                />
+              ))
+            : // TODO: replace with proper loading placeholder
+              Array.from({ length: NUM_ROWS }).map((_, i) => (
+                <XStack gap="$spacing16">
+                  {Array.from({ length: ROW_SIZE }).map((__, j) => (
+                    <SeedPhraseWord key={j} index={j} indexOffset={i * ROW_SIZE + 1} word="..." />
+                  ))}
+                </XStack>
+              ))}
         </YStack>
         <HideContentShield
           color="$background2"
-          visibility={showPhrase}
+          visibility={showPhrase && mnemonicRows !== undefined}
           onShowContent={(): void => setShowPhrase(true)}
         />
       </Flex>
-
-      <XStack gap="$spacing12" width="100%">
-        <Button flexGrow={1} theme="secondary" onPress={(): void => navigate(-1)}>
-          Back
-        </Button>
-        <Button flexGrow={1} theme="primary" onPress={onSubmit}>
-          Next
-        </Button>
-      </XStack>
-    </Stack>
+    </OnboardingScreen>
   )
 }
 
@@ -116,23 +124,37 @@ function SeedPhraseRow({
   return (
     <XStack gap="$spacing16">
       {words.map((word, index) => (
-        <XStack
-          key={index}
-          alignContent="center"
-          alignItems="center"
-          backgroundColor="$background2"
-          borderRadius="$spacing16"
-          gap="$spacing16"
-          height={48}
-          paddingHorizontal="$spacing16"
-          paddingVertical={12}
-          width={132}>
-          <Text color="$textTertiary" variant="bodySmall">
-            {String(index + indexOffset).padStart(2, '0')}
-          </Text>
-          <Text variant="bodySmall">{word}</Text>
-        </XStack>
+        <SeedPhraseWord key={index} index={index} indexOffset={indexOffset} word={word} />
       ))}
+    </XStack>
+  )
+}
+
+function SeedPhraseWord({
+  index,
+  indexOffset,
+  word,
+}: {
+  index: number
+  indexOffset: number
+  word: string
+}): JSX.Element {
+  return (
+    <XStack
+      alignContent="center"
+      alignItems="center"
+      backgroundColor="$background2"
+      borderRadius="$spacing16"
+      gap="$spacing16"
+      height={48}
+      paddingHorizontal="$spacing16"
+      paddingVertical={12}
+      width={132}>
+      <Text color="$textTertiary" variant="bodySmall">
+        {/* padStart adds a 0 at the start of 1-character numbers so they'll show up like "01, 02, ... 09, 10" instead of "1, 2, ... 9, 10" in order to match the designs*/}
+        {String(index + indexOffset).padStart(2, '0')}
+      </Text>
+      <Text variant="bodySmall">{word}</Text>
     </XStack>
   )
 }

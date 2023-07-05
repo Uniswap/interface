@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
-import { OnboardingInputError } from 'src/app/features/onboarding/OnboardingInputError'
-import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
+import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
+import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import {
   ImportOnboardingRoutes,
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
-import { Input, Stack, Text, XStack, YStack } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
-import { inputStyles } from 'ui/src/components/input/utils'
+import { Circle, Icons } from 'ui/src'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -59,51 +58,25 @@ export function ImportMnemonic(): JSX.Element {
   }, [mnemonic, navigate, dispatch, password])
 
   return (
-    <Stack alignItems="center" gap="$spacing36" width={ONBOARDING_CONTENT_WIDTH}>
-      <YStack alignItems="center" gap="$spacing8">
-        <Text variant="headlineMedium">Enter your recovery phrase</Text>
-        <Text variant="subheadSmall">
-          Your recovery phrase will only be stored locally on your browser
-        </Text>
-      </YStack>
-      <YStack alignItems="center" gap="$spacing8" width="100%">
-        <Input
-          autoFocus
-          secureTextEntry
-          backgroundColor="$background1"
-          borderColor="$backgroundOutline"
-          borderRadius="$rounded12"
-          borderWidth={1}
-          focusStyle={inputStyles.inputFocus}
-          height="auto"
-          hoverStyle={inputStyles.inputHover}
-          id="mnemonic"
-          paddingHorizontal="$spacing16"
-          paddingVertical="$spacing12"
-          placeholder="word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
-          placeholderTextColor="$textTertiary"
-          value={mnemonic}
-          width="100%"
-          onChange={(): void => {
-            setErrorMessage(undefined)
-          }}
-          onChangeText={setMnemonic}
-          onSubmitEditing={onSubmit}
-        />
-        {errorMessage && <OnboardingInputError error={errorMessage} />}
-      </YStack>
-      <XStack gap="$spacing12" width="100%">
-        <Button flexGrow={1} theme="secondary" onPress={(): void => navigate(-1)}>
-          Back
-        </Button>
-        <Button
-          disabled={!mnemonic || !!errorMessage}
-          flexGrow={1}
-          theme="primary"
-          onPress={onSubmit}>
-          Next
-        </Button>
-      </XStack>
-    </Stack>
+    <OnboardingScreen
+      Icon={
+        <Circle backgroundColor="$magentaDark" height={iconSizes.icon64} width={iconSizes.icon64}>
+          <Icons.FileListLock color="$magentaVibrant" size={iconSizes.icon36} />
+        </Circle>
+      }
+      inputError={errorMessage}
+      nextButtonEnabled={!!mnemonic && !errorMessage}
+      nextButtonText="Continue"
+      subtitle="Your recovery phrase will only be stored locally on your browser"
+      title="Enter your recovery phrase"
+      onSubmit={onSubmit}>
+      <OnboardingInput
+        hideInput
+        placeholderText="word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
+        value={mnemonic}
+        onChangeText={setMnemonic}
+        onSubmit={onSubmit}
+      />
+    </OnboardingScreen>
   )
 }

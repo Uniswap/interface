@@ -6,7 +6,7 @@ import { iconSizes } from 'ui/src/theme/iconSizes'
 export function UniconWithLockIcon({ address }: { address: Address }): JSX.Element {
   return (
     <Flex>
-      <Unicon address={address} size={60} />
+      <Unicon address={address} size={iconSizes.icon64} />
       <Flex
         backgroundColor="$background3"
         borderRadius="$roundedFull"

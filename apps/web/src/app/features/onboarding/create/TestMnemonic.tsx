@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
+import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { UniconWithLockIcon } from 'src/app/features/onboarding/UniconWithLockIcon'
 import {
   CreateOnboardingRoutes,
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { Input, Stack, Text, XStack } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
+import { Input, Text, XStack } from 'ui/src'
 import { inputStyles } from 'ui/src/components/input/utils'
 import { EMPTY_ARRAY } from 'wallet/src/constants/misc'
 
@@ -57,15 +57,18 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
   }, [createdAddress, createdMnemonic, isLastTest, navigate, nextWordIndex, userWordInput])
 
   return (
-    <Stack alignItems="center" gap="$spacing36" minWidth={450}>
-      <UniconWithLockIcon address={createdAddress ?? ''} />
-      <Text variant="headlineSmall">
-        What's the <Text color="$magentaVibrant">{getNumberWithOrdinal(nextWordNumber)} </Text> word
-        of your recovery phrase?
-      </Text>
-      <Text color="$textTertiary" variant="bodyLarge">
-        Let's make sure you've recorded it down
-      </Text>
+    <OnboardingScreen
+      nextButtonEnabled
+      Icon={<UniconWithLockIcon address={createdAddress ?? ''} />}
+      nextButtonText="Next"
+      subtitle="Let's make sure you've recorded it down"
+      title={
+        <Text variant="headlineSmall">
+          What's the <Text color="$magentaVibrant">{getNumberWithOrdinal(nextWordNumber)} </Text>{' '}
+          word of your recovery phrase?
+        </Text>
+      }
+      onSubmit={onNext}>
       <XStack
         borderColor="$backgroundOutline"
         borderRadius="$rounded12"
@@ -95,17 +98,10 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
           value={userWordInput}
           width="100%"
           onChangeText={setUserWordInput}
+          onSubmitEditing={onNext}
         />
       </XStack>
-      <XStack gap="$spacing12" width="100%">
-        <Button flexGrow={1} theme="secondary" onPress={(): void => navigate(-1)}>
-          Back
-        </Button>
-        <Button flexGrow={1} theme="primary" onPress={onNext}>
-          Next
-        </Button>
-      </XStack>
-    </Stack>
+    </OnboardingScreen>
   )
 }
 
