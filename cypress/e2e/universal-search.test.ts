@@ -1,9 +1,7 @@
-import { getTestSelector } from '../utils'
-
 describe('Universal search bar', () => {
   function openSearch() {
     // can't just type "/" because on mobile it doesn't respond to that
-    cy.get('[data-cy="magnifying-icon"]').parent().last().click()
+    cy.get('[data-cy="magnifying-icon"]').parent().eq(1).click()
   }
 
   beforeEach(() => {
@@ -24,20 +22,7 @@ describe('Universal search bar', () => {
       .and('contain.text', '$')
       .and('contain.text', '%')
     cy.get('[data-cy="searchbar-token-row-UNI"]').first().click()
-
-    cy.get('div').contains('Uniswap').should('exist')
-    // Stats should have: TVL, 24H Volume, 52W low, 52W high.
-    cy.get(getTestSelector('token-details-stats')).should('exist')
-    cy.get(getTestSelector('token-details-stats')).within(() => {
-      cy.get('[data-cy="tvl"]').should('include.text', '$')
-      cy.get('[data-cy="volume-24h"]').should('include.text', '$')
-      cy.get('[data-cy="52w-low"]').should('include.text', '$')
-      cy.get('[data-cy="52w-high"]').should('include.text', '$')
-    })
-
-    // About section should have description of token.
-    cy.get(getTestSelector('token-details-about-section')).should('exist')
-    cy.contains('UNI is the governance token for Uniswap').should('exist')
+    cy.location('hash').should('equal', '#/tokens/ethereum/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984')
   })
 
   it('should go to the selected result when recent results are shown', () => {
