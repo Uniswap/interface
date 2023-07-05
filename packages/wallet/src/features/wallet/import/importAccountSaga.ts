@@ -1,9 +1,9 @@
 import dayjs from 'dayjs'
 import { all, call, put } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { addAccounts, setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import { addAccounts, setAccountAsActive, unlockWallet } from 'wallet/src/features/wallet/slice'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 import { ImportAccountParams, ImportAccountType } from './types'
@@ -24,8 +24,8 @@ export function* importAccount(params: ImportAccountParams) {
       params.markAsActive,
       params.ignoreActivate
     )
-    // } else if (type === ImportAccountType.RestoreBackup) {
-    //   yield* call(importRestoreBackupAccounts, params.mnemonicId, params.indexes)
+  } else if (type === ImportAccountType.RestoreBackup) {
+    yield* call(importRestoreBackupAccounts, params.mnemonicId, params.indexes)
   } else {
     throw new Error('Unsupported import account type')
   }
@@ -72,7 +72,7 @@ function* importAddressAccount(address: string, name?: string, ignoreActivate?: 
  */
 function* importMnemonicAccounts(
   validatedMnemonic: string,
-  validatedPassword: string,
+  validatedPassword?: string,
   name?: string,
   indexes = [0],
   markAsActive?: boolean,
@@ -86,12 +86,7 @@ function* importMnemonicAccounts(
   // generate private keys and return addresses for all derivation indexes
   const addresses = yield* all(
     indexes.map((index) => {
-      return call(
-        [Keyring, Keyring.generateAndStorePrivateKey],
-        mnemonicId,
-        index,
-        validatedPassword
-      )
+      return call([Keyring, Keyring.generateAndStorePrivateKey], mnemonicId, index)
     })
   )
 
@@ -125,45 +120,34 @@ function* importMnemonicAccounts(
   yield* call(onAccountImport, activeAccount, ignoreActivate)
 }
 
-// function* importRestoreBackupAccounts(
-//   mnemonicId: string,
-//   indexes = [0]
-// ): Generator<
-//   | AllEffect<SagaGenerator<string, CallEffect<string>>>
-//   | PutEffect<{
-//       payload: Account[]
-//       type: string
-//     }>,
-//   void,
-//   unknown
-// > {
-//   // generate private keys and return addresses for all derivation indexes
-//   const addresses = yield* all(
-//     indexes.map((index) => {
-//       return call(generateAndStorePrivateKey, mnemonicId, index)
-//     })
-//   )
-//   const accounts = addresses.map((address, index) => {
-//     const account: Account = {
-//       type: AccountType.SignerMnemonic,
-//       address,
-//       pending: true,
-//       timeImportedMs: dayjs().valueOf(),
-//       derivationIndex: index,
-//       mnemonicId,
-//       backups: [BackupType.Cloud],
-//     }
-//     return account
-//   })
-//   yield* put(addAccounts(accounts))
-// }
+function* importRestoreBackupAccounts(mnemonicId: string, indexes = [0]) {
+  // generate private keys and return addresses for all derivation indexes
+  const addresses = yield* all(
+    indexes.map((index) => {
+      return call([Keyring, Keyring.generateAndStorePrivateKey], mnemonicId, index)
+    })
+  )
+  const accounts = addresses.map((address, index) => {
+    const account: Account = {
+      type: AccountType.SignerMnemonic,
+      address,
+      pending: true,
+      timeImportedMs: dayjs().valueOf(),
+      derivationIndex: index,
+      mnemonicId,
+      backups: [BackupType.Cloud],
+    }
+    return account
+  })
+  yield* put(addAccounts(accounts))
+}
 
 function* onAccountImport(account: Account, ignoreActivate?: boolean) {
   yield* put(addAccounts([account]))
   if (!ignoreActivate) {
     yield* put(setAccountAsActive(account.address))
   }
-  // yield* put(unlockWallet())
+  yield* put(unlockWallet())
   logger.debug('importAccount', '', `New ${account.type} account imported: ${account.address}`)
 }
 

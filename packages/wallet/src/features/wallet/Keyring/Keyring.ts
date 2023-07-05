@@ -56,14 +56,9 @@ export interface IKeyring {
    * use public address associated with mnemonic)
    * @param derivationIndex number used to specify a which derivation index to use for deriving a private key
    * from the mnemonic
-   * @param password The password used to encrypt the private key. Marked as optional depending on the platform.
    * @returns public address associated with private key generated from the mnemonic at given derivation index
    */
-  generateAndStorePrivateKey(
-    mnemonicId: string,
-    derivationIndex: number,
-    password?: string
-  ): Promise<string>
+  generateAndStorePrivateKey(mnemonicId: string, derivationIndex: number): Promise<string>
 
   signTransactionHashForAddress(address: string, hash: string, chainId: number): Promise<string>
 

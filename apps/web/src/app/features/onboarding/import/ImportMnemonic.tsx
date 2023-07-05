@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
 import { OnboardingInputError } from 'src/app/features/onboarding/OnboardingInputError'
@@ -12,6 +12,10 @@ import { useAppDispatch } from 'src/background/store'
 import { Input, Stack, Text, XStack, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { inputStyles } from 'ui/src/components/input/utils'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
@@ -25,32 +29,30 @@ export function ImportMnemonic(): JSX.Element {
   const { password } = useOnboardingContext()
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
+  useEffect(() => {
+    // Delete any pending accounts before entering flow.
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
+  }, [dispatch])
+
   // Add all accounts from mnemonic.
   const onSubmit = useCallback(() => {
-    // Check phrase validation
-    const {
-      validMnemonic,
-      error,
-      // invalidWord
-    } = validateMnemonic(mnemonic)
+    const { validMnemonic, error } = validateMnemonic(mnemonic)
 
     if (error) {
       // TODO: better error handling
       setErrorMessage(`Invalid recovery phrase: ${error}`)
       return
     }
-    try {
-      dispatch(
-        importAccountActions.trigger({
-          type: ImportAccountType.Mnemonic,
-          validatedMnemonic: validMnemonic,
-          validatedPassword: password,
-          indexes: Array.from(Array(NUMBER_OF_WALLETS_TO_IMPORT).keys()),
-        })
-      )
-    } catch (e) {
-      setErrorMessage(`Error importing mnemonic: ${e}`)
-    }
+
+    dispatch(
+      importAccountActions.trigger({
+        type: ImportAccountType.Mnemonic,
+        validatedMnemonic: validMnemonic,
+        validatedPassword: password,
+        indexes: Array.from(Array(NUMBER_OF_WALLETS_TO_IMPORT).keys()),
+      })
+    )
+
     navigate(
       `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Select}`
     )

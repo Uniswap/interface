@@ -1,7 +1,7 @@
 import { runSaga } from '@redux-saga/core'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { addAccounts, setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import { addAccounts, setAccountAsActive, unlockWallet } from 'wallet/src/features/wallet/slice'
 import {
   SAMPLE_PASSWORD,
   SAMPLE_SEED,
@@ -67,7 +67,7 @@ describe(importAccount, () => {
         },
       ]),
       setAccountAsActive(SAMPLE_SEED_ADDRESS_1),
-      // unlockWallet(),
+      unlockWallet(),
     ])
   })
 
@@ -106,7 +106,7 @@ describe(importAccount, () => {
         },
       ]),
       setAccountAsActive(SAMPLE_SEED_ADDRESS_1),
-      // unlockWallet(),
+      unlockWallet(),
     ])
   })
 })

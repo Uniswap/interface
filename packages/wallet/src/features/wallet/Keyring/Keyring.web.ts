@@ -220,7 +220,6 @@ export class WebKeyring implements IKeyring {
    * Derives private key and public address from mnemonic associated with `mnemonicId` for given `derivationIndex`. Stores the private key in store with key.
    * @param mnemonicId key string associated with mnemonic to generate private key for (currently convention is to use public address associated with mnemonic)
    * @param derivationIndex number used to specify a which derivation index to use for deriving a private key from the mnemonic
-   * @param password the password to decrypt the private key
    * @returns public address associated with private key generated from the mnemonic at given derivation index
    */
   async generateAndStorePrivateKey(mnemonicId: string, derivationIndex: number): Promise<string> {

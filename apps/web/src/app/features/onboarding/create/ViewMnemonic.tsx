@@ -22,7 +22,6 @@ const NUM_ROWS = 4
 export function ViewMnemonic(): JSX.Element {
   const navigate = useNavigate()
   const {
-    password,
     pendingMnemonic: createdMnemonic,
     pendingAddress: createdAddress,
     setPendingAddress: setCreatedAddress,
@@ -47,21 +46,16 @@ export function ViewMnemonic(): JSX.Element {
 
     // retrieve mnemonic and split by space to get array of words
     async function splitMnemonicIntoWordArray(): Promise<void> {
-      if (pendingAccountAddress) {
-        setCreatedAddress(pendingAccountAddress)
-        const mnemonicString = await Keyring.retrieveMnemonicUnlocked(pendingAccountAddress)
-        setCreatedMnemonic(mnemonicString?.split(' '))
+      if (!pendingAccountAddress) {
+        return
       }
+
+      setCreatedAddress(pendingAccountAddress)
+      const mnemonicString = await Keyring.retrieveMnemonicUnlocked(pendingAccountAddress)
+      setCreatedMnemonic(mnemonicString?.split(' '))
     }
     splitMnemonicIntoWordArray()
-  }, [
-    pendingAccountAddress,
-    createdAddress,
-    navigate,
-    password,
-    setCreatedAddress,
-    setCreatedMnemonic,
-  ])
+  }, [pendingAccountAddress, setCreatedAddress, setCreatedMnemonic])
 
   const onSubmit = (): void => {
     if (createdAddress) {

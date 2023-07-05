@@ -3,12 +3,6 @@ import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
 import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
-import {
-  importAccountActions,
-  importAccountReducer,
-  importAccountSaga,
-  importAccountSagaName,
-} from 'src/features/import/importAccountSaga'
 import { notificationWatcher } from 'src/features/notifications/notificationWatcherSaga'
 import {
   createAccountActions,
@@ -51,6 +45,12 @@ import {
   pendingAccountSaga,
   pendingAccountSagaName,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
+import {
+  importAccountActions,
+  importAccountReducer,
+  importAccountSaga,
+  importAccountSagaName,
+} from 'wallet/src/features/wallet/import/importAccountSaga'
 import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
 
 // All regular sagas must be included here
