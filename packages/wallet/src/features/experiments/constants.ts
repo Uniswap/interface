@@ -3,7 +3,7 @@
  * These should match the Gate Key on Statsig
  */
 export enum FEATURE_FLAGS {
-  SwapPermit2 = 'swap-permit-2',
+  ExampleFlag = 'example-flag', // FEATURE_FLAGS enum cannot be empty for string typings to work
 }
 
 /**

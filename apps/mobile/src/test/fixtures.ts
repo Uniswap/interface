@@ -5,13 +5,14 @@ import {
   NetInfoUnknownState,
 } from '@react-native-community/netinfo'
 import { TradeType } from '@uniswap/sdk-core'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { BigNumber, providers } from 'ethers'
 import { finalizeTransaction } from 'src/features/transactions/slice'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20, Weth } from 'wallet/src/abis/types'
 import WETH_ABI from 'wallet/src/abis/weth.json'
 import { config } from 'wallet/src/config'
-import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
+import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE, UNI } from 'wallet/src/constants/tokens'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -139,7 +140,7 @@ export const txResponse = {
 export const txTypeInfo: ApproveTransactionInfo = {
   type: TransactionType.Approve,
   tokenAddress: tokenContract.address,
-  spender: SWAP_ROUTER_ADDRESSES[ChainId.Goerli],
+  spender: UNIVERSAL_ROUTER_ADDRESS(ChainId.Goerli),
 }
 
 export const txDetailsPending: TransactionDetails = {

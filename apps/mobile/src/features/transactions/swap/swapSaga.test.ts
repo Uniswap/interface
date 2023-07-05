@@ -1,12 +1,12 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { call } from '@redux-saga/core/effects'
 import { TradeType } from '@uniswap/sdk-core'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { expectSaga } from 'redux-saga-test-plan'
 import { sendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { approveAndSwap, SwapParams } from 'src/features/transactions/swap/swapSaga'
 import { account, mockProvider } from 'src/test/fixtures'
-import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
@@ -24,7 +24,7 @@ const methodParameters: MethodParameters = {
 }
 
 const CHAIN_ID = ChainId.Goerli
-const swapRouterAddress = SWAP_ROUTER_ADDRESSES[CHAIN_ID]
+const universalRouterAddress = UNIVERSAL_ROUTER_ADDRESS(CHAIN_ID)
 
 const transactionTypeInfo: ExactInputSwapTransactionInfo = {
   type: TransactionType.Swap,
@@ -49,7 +49,7 @@ const mockApproveTxRequest = {
 
 const mockSwapTxRequest = {
   chainId: 1,
-  to: swapRouterAddress,
+  to: universalRouterAddress,
   data: '0x0',
 }
 

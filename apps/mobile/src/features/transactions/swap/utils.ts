@@ -1,4 +1,3 @@
-import { SwapOptions, SwapRouter } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import {
   SwapOptions as UniversalRouterSwapOptions,
@@ -7,7 +6,6 @@ import {
 import { BigNumber } from 'ethers'
 import { TFunction } from 'i18next'
 import { ElementName } from 'src/features/telemetry/constants'
-import { PermitOptions } from 'src/features/transactions/permit/usePermitSignature'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import {
   CurrencyField,
@@ -201,18 +199,14 @@ export const slippageToleranceToPercent = (slippage: number): Percent => {
 
 interface MethodParameterArgs {
   permit2Signature?: PermitSignatureInfo
-  permitInfo: Maybe<PermitOptions>
   trade: Trade
   address: string
-  universalRouterEnabled: boolean
 }
 
 export const getSwapMethodParameters = ({
   permit2Signature,
   trade,
   address,
-  permitInfo,
-  universalRouterEnabled,
 }: MethodParameterArgs): { calldata: string; value: string } => {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
   const baseOptions = {
@@ -220,21 +214,14 @@ export const getSwapMethodParameters = ({
     recipient: address,
   }
 
-  if (universalRouterEnabled || permit2Signature) {
-    const universalRouterSwapOptions: UniversalRouterSwapOptions = permit2Signature
-      ? {
-          ...baseOptions,
-          inputTokenPermit: {
-            signature: permit2Signature.signature,
-            ...permit2Signature.permitMessage,
-          },
-        }
-      : baseOptions
-    return UniversalSwapRouter.swapERC20CallParameters(trade, universalRouterSwapOptions)
-  }
-
-  const swapOptions: SwapOptions = permitInfo
-    ? { ...baseOptions, inputTokenPermit: permitInfo }
-    : { ...baseOptions }
-  return SwapRouter.swapCallParameters(trade, swapOptions)
+  const universalRouterSwapOptions: UniversalRouterSwapOptions = permit2Signature
+    ? {
+        ...baseOptions,
+        inputTokenPermit: {
+          signature: permit2Signature.signature,
+          ...permit2Signature.permitMessage,
+        },
+      }
+    : baseOptions
+  return UniversalSwapRouter.swapERC20CallParameters(trade, universalRouterSwapOptions)
 }

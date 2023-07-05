@@ -4,8 +4,6 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useQuoteQuery } from 'wallet/src/features/routing/api'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
@@ -33,7 +31,6 @@ export interface UseQuoteProps {
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useRouterQuote(params: UseQuoteProps) {
   const recipient = useActiveAccount()
-  const enableUniversalRouter = useFeatureFlag(FEATURE_FLAGS.SwapPermit2)
 
   const {
     amountSpecified,
@@ -74,7 +71,7 @@ export function useRouterQuote(params: UseQuoteProps) {
     skipQuery
       ? undefined
       : {
-          enableUniversalRouter,
+          enableUniversalRouter: true,
           tokenInAddress,
           tokenInChainId,
           tokenOutAddress,
