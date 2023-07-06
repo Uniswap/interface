@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { PortfolioHeader } from 'src/app/features/home/PortfolioHeader'
 import { TransactionActivity } from 'src/app/features/transactions/TransactionActivity'
-import { useAppDispatch } from 'src/background/store'
 import { Tabs } from 'tamagui'
 import { Text, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
@@ -16,8 +15,6 @@ enum HomeTabs {
 
 export function HomeScreen(): JSX.Element {
   const address = useActiveAccountAddressWithThrow()
-  const dispatch = useAppDispatch()
-
   const [selectedTab, setSelectedTab] = useState<HomeTabs>(HomeTabs.Tokens)
 
   return (
@@ -37,7 +34,7 @@ export function HomeScreen(): JSX.Element {
             onValueChange={(v: string): void => {
               setSelectedTab(HomeTabs[v as keyof typeof HomeTabs])
             }}>
-            <YStack>
+            <YStack flexGrow={1}>
               <Flex flex={1} marginHorizontal="$spacing12" marginTop="$spacing16">
                 <Tabs.List unstyled>
                   <Tabs.Tab unstyled backgroundColor={undefined} value={HomeTabs.Tokens}>

@@ -1,11 +1,11 @@
 import { memo } from 'react'
-import { Image } from 'tamagui'
+import { Image, XStack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
-import { formatNumber, NumberType } from 'wallet/src/utils/format'
+import { formatNumber, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 interface TokenBalanceItemProps {
   portfolioBalance: PortfolioBalance
@@ -18,7 +18,7 @@ export const TOKEN_BALANCE_ITEM_HEIGHT = 56
 
 export const TokenBalanceItem = memo(
   ({ portfolioBalance, onPressToken, loading }: TokenBalanceItemProps) => {
-    const { quantity, currencyInfo, relativeChange24 } = portfolioBalance
+    const { quantity, currencyInfo, balanceUSD } = portfolioBalance
     const { currency } = currencyInfo
 
     const onPress = (): void => {
@@ -49,29 +49,26 @@ export const TokenBalanceItem = memo(
             flexDirection="row"
             flexShrink={1}
             gap="$spacing12"
-            overflow="hidden">
+            overflow="hidden"
+            width="100%">
             <Image
               height={iconSizes.icon36}
               src={currencyInfo.logoUrl ?? ''}
               width={iconSizes.icon36}
             />
-            <Flex alignItems="flex-start" flexShrink={1} gap="$none">
+            <XStack alignItems="center" flexGrow={1} gap="$none" justifyContent="space-between">
               <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
-                {currency.name ?? currency.symbol}
+                {currency.symbol}
               </Text>
-              <Flex alignItems="center" flexDirection="row" gap="$spacing8" minHeight={20}>
+              <YStack alignItems="flex-end" flexGrow={1} justifyContent="flex-end">
+                <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
+                  {formatUSDPrice(balanceUSD)}
+                </Text>
                 <Text color="$textTertiary" numberOfLines={1} variant="subheadSmall">
                   {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
                 </Text>
-                <Text
-                  color={
-                    relativeChange24 && relativeChange24 > 0 ? '$accentSuccess' : '$accentCritical'
-                  }
-                  variant="subheadSmall">
-                  {relativeChange24 ? `${Math.abs(relativeChange24).toFixed(2)}%` : ''}
-                </Text>
-              </Flex>
-            </Flex>
+              </YStack>
+            </XStack>
           </Flex>
         )}
       </Flex>
