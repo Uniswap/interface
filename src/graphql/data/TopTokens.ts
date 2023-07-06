@@ -140,7 +140,7 @@ export type SparklineMap = { [key: string]: PricePoint[] | undefined }
 export type TopToken = NonNullable<NonNullable<TopTokens100Query>['topTokens']>[number]
 
 interface UseTopTokensReturnValue {
-  tokens?: TopToken[]
+  tokens?: readonly TopToken[]
   tokenSortRank: Record<string, number>
   loadingTokens: boolean
   sparklines: SparklineMap
