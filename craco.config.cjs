@@ -95,6 +95,9 @@ module.exports = {
       // See https://github.com/vanilla-extract-css/vanilla-extract/issues/771#issuecomment-1249524366.
       new VanillaExtractPlugin({ identifiers: 'short' }),
       new RetryChunkLoadPlugin({
+        cacheBust: `function() {
+          return Date.now();
+        }`,
         retryDelay: `function(retryAttempt) {
           return 2 ** (retryAttempt - 1) * 500;
         }`,
