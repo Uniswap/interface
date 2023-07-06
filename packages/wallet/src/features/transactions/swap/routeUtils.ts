@@ -10,7 +10,7 @@ import {
   V3PoolInRoute,
 } from 'wallet/src/features/routing/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { Trade } from 'wallet/src/features/transactions/swap/trade'
+import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function transformQuoteToTrade(

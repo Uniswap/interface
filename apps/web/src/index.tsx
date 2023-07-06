@@ -4,6 +4,9 @@ import { logger } from 'wallet/src/features/logger/logger'
 import { Store } from 'webext-redux'
 import { WebState } from './background/store'
 import { PortName } from './types'
+;(globalThis as any).regeneratorRuntime = undefined // eslint-disable-line @typescript-eslint/no-explicit-any
+// The globalThis.regeneratorRuntime = undefined addresses a potentially unsafe-eval problem
+// see https://github.com/facebook/regenerator/issues/378#issuecomment-802628326
 
 logger.debug('content_window', 'init', 'initial load')
 

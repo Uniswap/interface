@@ -60,7 +60,7 @@
     "webpack-node-externals": "3.0.0"
   },
   "jest": {
-    "preset": "jest-presets/jest/web",
+    "preset": "jest-presets/jest",
     "displayName": "Web App"
   },
   "private": true,

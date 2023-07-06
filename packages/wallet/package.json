@@ -49,7 +49,7 @@
     "typescript": "4.9.4"
   },
   "jest": {
-    "preset": "jest-presets/jest/web",
+    "preset": "jest-presets/jest",
     "displayName": "Common Wallet Package"
   },
   "main": "src/index.ts",

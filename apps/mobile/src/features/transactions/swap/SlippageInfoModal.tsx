@@ -14,7 +14,7 @@ import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { opacify } from 'ui/src/theme/color/utils'
 import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
-import { Trade } from 'wallet/src/features/transactions/swap/trade'
+import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 
 export type SlippageInfoModalProps = {

@@ -13,14 +13,13 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
-import { Trade } from 'wallet/src/features/transactions/swap/trade'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
+import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import {
   areCurrencyIdsEqual,
   buildWrappedNativeCurrencyId,
@@ -150,26 +149,6 @@ export function sumGasFees(gasFee1?: string | undefined, gasFee2?: string): stri
   if (!gasFee1 || !gasFee2) return gasFee1 || gasFee2
 
   return BigNumber.from(gasFee1).add(gasFee2).toString()
-}
-
-export const clearStaleTrades = (
-  trade: Trade,
-  currencyIn: Maybe<Currency>,
-  currencyOut: Maybe<Currency>
-): Trade | null => {
-  const currencyInAddress = currencyIn?.wrapped.address
-  const currencyOutAddress = currencyOut?.wrapped.address
-
-  const inputsMatch =
-    !!currencyInAddress &&
-    areAddressesEqual(currencyInAddress, trade?.inputAmount.currency.wrapped.address)
-  const outputsMatch =
-    !!currencyOutAddress &&
-    areAddressesEqual(currencyOutAddress, trade?.outputAmount.currency.wrapped.address)
-
-  // if the addresses entered by the user don't match what is being returned by the quote endpoint
-  // then set `trade` to null
-  return inputsMatch && outputsMatch ? trade : null
 }
 
 export const prepareSwapFormState = ({

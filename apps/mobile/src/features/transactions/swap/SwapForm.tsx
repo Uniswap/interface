@@ -19,7 +19,6 @@ import { Trace } from 'src/components/telemetry/Trace'
 import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
 import { Text } from 'src/components/Text'
 import { TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
-import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
   useShouldShowNativeKeyboard,
@@ -43,6 +42,7 @@ import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info.svg'
+import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { formatCurrencyAmount, formatPrice, NumberType } from 'wallet/src/utils/format'
 

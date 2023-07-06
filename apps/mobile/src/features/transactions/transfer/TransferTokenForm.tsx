@@ -19,7 +19,6 @@ import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
 import { TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
-import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
   useShouldShowNativeKeyboard,
@@ -40,6 +39,7 @@ import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
+import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { usePrevious } from 'wallet/src/utils/hooks'
 

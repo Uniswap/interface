@@ -6,9 +6,9 @@ import { Box, Flex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
-import { useUSDValue } from 'src/features/gas/hooks'
 import InfoCircleSVG from 'ui/src/assets/icons/info-circle.svg'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 export function NetworkFee({

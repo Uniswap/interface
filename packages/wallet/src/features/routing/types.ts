@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { Trade } from 'wallet/src/features/transactions/swap/trade'
+import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 
 // Routing API types
 

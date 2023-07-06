@@ -10,16 +10,9 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { CurrencyInfo } from 'src/features/dataApi/types'
-import { useSimulatedGasLimit } from 'src/features/routing/hooks'
-import {
-  STABLECOIN_AMOUNT_OUT,
-  useUSDCPrice,
-  useUSDCValue,
-} from 'src/features/routing/useUSDCPrice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { getBaseTradeAnalyticsProperties } from 'src/features/transactions/swap/analytics'
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
-import { useSetTradeSlippage, useTrade } from 'src/features/transactions/swap/useTrade'
 import {
   getSwapMethodParameters,
   getWrapType,
@@ -49,9 +42,19 @@ import { logger } from 'wallet/src/features/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
+import { useSimulatedGasLimit } from 'wallet/src/features/routing/hooks'
+import {
+  STABLECOIN_AMOUNT_OUT,
+  useUSDCPrice,
+  useUSDCValue,
+} from 'wallet/src/features/routing/useUSDCPrice'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { Trade } from 'wallet/src/features/transactions/swap/trade'
 import { usePermit2Signature } from 'wallet/src/features/transactions/swap/usePermit2Signature'
+import {
+  Trade,
+  useSetTradeSlippage,
+  useTrade,
+} from 'wallet/src/features/transactions/swap/useTrade'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import {
   useActiveAccount,

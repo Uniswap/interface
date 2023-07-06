@@ -10,7 +10,7 @@ import {
 import { call, put } from 'typed-redux-saga'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { logger } from 'wallet/src/features/logger/logger'
-import { Trade } from 'wallet/src/features/transactions/swap/trade'
+import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   TransactionDetails,
   TransactionOptions,

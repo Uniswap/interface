@@ -10,7 +10,7 @@ import { account, mockProvider } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { Trade } from 'wallet/src/features/transactions/swap/trade'
+import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   ExactInputSwapTransactionInfo,
   TransactionType,

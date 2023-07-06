@@ -1,24 +1,10 @@
 import { BigNumber, providers } from 'ethers'
 import { useMemo } from 'react'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'src/features/gas/adjustGasFee'
-import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
-import { ChainId } from 'wallet/src/constants/chains'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'wallet/src/constants/transactions'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { FeeType, GasSpeed } from 'wallet/src/features/gas/types'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
-
-export function useUSDValue(chainId?: ChainId, ethValueInWei?: string): string | undefined {
-  const currencyAmount = getCurrencyAmount({
-    value: ethValueInWei,
-    valueType: ValueType.Raw,
-    currency: chainId ? NativeCurrency.onChain(chainId) : undefined,
-  })
-
-  return useUSDCValue(currencyAmount)?.toExact()
-}
 
 type CancelationGasFeeDetails = {
   cancelRequest: providers.TransactionRequest
