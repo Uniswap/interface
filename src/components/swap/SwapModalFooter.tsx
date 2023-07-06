@@ -1,11 +1,11 @@
-import { Trans } from '@lingui/macro'
+import { Plural, Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { formatPriceImpact } from '@uniswap/conedison/format'
+import { formatNumber, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
-import { MouseoverTooltip } from 'components/Tooltip'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -13,7 +13,7 @@ import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade } from 'state/routing/types'
-import { isClassicTrade } from 'state/routing/utils'
+import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -24,6 +24,7 @@ import { getPriceImpactWarning } from 'utils/prices'
 
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
+import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styleds'
 import { Label } from './SwapModalHeaderAmount'
 
@@ -82,6 +83,7 @@ export default function SwapModalFooter({
   const label = `${trade.executionPrice.baseCurrency?.symbol} `
   const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
   const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
+  const txCount = getTransactionCount(trade)
 
   return (
     <>
@@ -104,13 +106,24 @@ export default function SwapModalFooter({
               }
             >
               <Label cursor="help">
-                <Trans>Network fee</Trans>
+                <Trans>
+                  Network <Plural value={txCount} one="fee" other="fees" />
+                </Trans>
               </Label>
             </MouseoverTooltip>
-            <DetailRowValue>
-              {/* TODO (Gouda): add new gas *breakdown* tooltip over this component. */}
-              {isClassicTrade(trade) ? (trade.gasUseEstimateUSD ? `~$${trade.gasUseEstimateUSD}` : '-') : '$0.00'}
-            </DetailRowValue>
+            <MouseoverTooltip
+              // If there is only one transaction/estimate, we don't need a breakdown.
+              disabled={txCount <= 1}
+              placement="right"
+              size={TooltipSize.Small}
+              text={<GasBreakdownTooltip trade={trade} />}
+            >
+              <DetailRowValue>
+                {trade.totalGasUseEstimateUSD === 0
+                  ? '$0.00'
+                  : formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}
+              </DetailRowValue>
+            </MouseoverTooltip>
           </Row>
         </ThemedText.BodySmall>
         {isClassicTrade(trade) && (

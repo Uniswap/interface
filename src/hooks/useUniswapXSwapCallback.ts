@@ -1,6 +1,10 @@
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { SwapEventName } from '@uniswap/analytics-events'
 import { signTypedData } from '@uniswap/conedison/provider/signing'
 import { DutchOrder, DutchOrderBuilder } from '@uniswap/gouda-sdk'
+import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
@@ -16,8 +20,17 @@ type DutchAuctionOrderResponse = DutchAuctionOrderError | DutchAuctionOrderSucce
 const isErrorResponse = (res: Response, order: DutchAuctionOrderResponse): order is DutchAuctionOrderError =>
   res.status < 200 || res.status > 202
 
-export default function useUniswapXSwapCallback(trade: DutchOrderTrade | undefined) {
+export default function useUniswapXSwapCallback({
+  trade,
+  allowedSlippage,
+  fiatValues,
+}: {
+  trade?: DutchOrderTrade
+  fiatValues: { amountIn?: number; amountOut?: number }
+  allowedSlippage: Percent
+}) {
   const { account, provider } = useWeb3React()
+  const analyticsContext = useTrace()
 
   return useCallback(
     async () =>
@@ -64,6 +77,15 @@ export default function useUniswapXSwapCallback(trade: DutchOrderTrade | undefin
 
         const { signature, updatedOrder } = await signDutchOrder()
 
+        sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
+          ...formatSwapSignedAnalyticsEventProperties({
+            trade,
+            allowedSlippage,
+            fiatValues,
+          }),
+          ...analyticsContext,
+        })
+
         // TODO(Gouda): Update with final URL
         const res = await fetch('https://6q5qkya37k.execute-api.us-east-2.amazonaws.com/prod/dutch-auction/order', {
           method: 'POST',
@@ -90,6 +112,6 @@ export default function useUniswapXSwapCallback(trade: DutchOrderTrade | undefin
           response: { orderHash: body.hash, deadline: updatedOrder.info.deadline },
         }
       }),
-    [trade, provider, account]
+    [account, provider, trade, allowedSlippage, fiatValues, analyticsContext]
   )
 }

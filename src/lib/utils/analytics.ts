@@ -70,7 +70,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   trade: InterfaceTrade
   allowedSlippage: Percent
   fiatValues: { amountIn?: number; amountOut?: number }
-  txHash: string
+  txHash?: string
 }) => ({
   transaction_hash: txHash,
   token_in_amount_usd: fiatValues.amountIn,

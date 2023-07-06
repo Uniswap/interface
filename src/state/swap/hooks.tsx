@@ -97,6 +97,7 @@ export function useDerivedSwapInfo(
   trade: {
     trade?: InterfaceTrade
     state: TradeState
+    uniswapXGasUseEstimateUSD?: number
   }
   allowedSlippage: Percent
   autoSlippage: Percent
@@ -130,7 +131,9 @@ export function useDerivedSwapInfo(
   const trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
-    (isExactIn ? outputCurrency : inputCurrency) ?? undefined
+    (isExactIn ? outputCurrency : inputCurrency) ?? undefined,
+    undefined,
+    account
   )
 
   const currencyBalances = useMemo(

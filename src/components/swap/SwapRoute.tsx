@@ -21,9 +21,9 @@ export default function SwapRoute({ trade, syncing }: { trade: ClassicTrade; syn
     // TODO(WEB-2022)
     // Can `trade.gasUseEstimateUSD` be defined when `chainId` is not in `SUPPORTED_GAS_ESTIMATE_CHAIN_IDS`?
     trade.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
-      ? trade.gasUseEstimateUSD === '0.00'
+      ? trade.gasUseEstimateUSD === 0
         ? '<$0.01'
-        : '$' + trade.gasUseEstimateUSD
+        : '$' + trade.gasUseEstimateUSD.toFixed(2)
       : undefined
 
   return (

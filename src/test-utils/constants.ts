@@ -44,7 +44,8 @@ export const TEST_TRADE_EXACT_INPUT = new ClassicTrade({
   ],
   v2Routes: [],
   tradeType: TradeType.EXACT_INPUT,
-  gasUseEstimateUSD: '1.00',
+  gasUseEstimateUSD: 1.0,
+  approveInfo: { needsApprove: false },
   quoteMethod: QuoteMethod.CLIENT_SIDE,
 })
 
@@ -59,6 +60,7 @@ export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
   v2Routes: [],
   tradeType: TradeType.EXACT_OUTPUT,
   quoteMethod: QuoteMethod.CLIENT_SIDE,
+  approveInfo: { needsApprove: false },
 })
 
 export const TEST_ALLOWED_SLIPPAGE = new Percent(2, 100)
@@ -86,8 +88,9 @@ export const TEST_DUTCH_TRADE = new DutchOrderTrade({
   },
   tradeType: TradeType.EXACT_INPUT,
   quoteId: '0x0000000',
-  needsWrap: false,
-  classicGasUseEstimateUSD: '7.87',
+  approveInfo: { needsApprove: false },
+  wrapInfo: { needsWrap: false },
+  classicGasUseEstimateUSD: 7.87,
   auctionPeriodSecs: 120,
   deadlineBufferSecs: 30,
   slippageTolerance: new Percent(5, 100),
@@ -123,8 +126,9 @@ export const TEST_DUTCH_TRADE_ETH_INPUT = new DutchOrderTrade({
   },
   tradeType: TradeType.EXACT_INPUT,
   quoteId: '0x0000000',
-  needsWrap: true,
-  classicGasUseEstimateUSD: '7.87',
+  wrapInfo: { needsWrap: false },
+  approveInfo: { needsApprove: false },
+  classicGasUseEstimateUSD: 7.87,
   auctionPeriodSecs: 120,
   deadlineBufferSecs: 30,
   slippageTolerance: new Percent(5, 100),

@@ -1,13 +1,14 @@
-import { Trans } from '@lingui/macro'
+import { Plural, Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade } from 'state/routing/types'
-import { isClassicTrade } from 'state/routing/utils'
+import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import formatPriceImpact from 'utils/formatPriceImpact'
 
 import { Separator, ThemedText } from '../../theme'
@@ -15,6 +16,7 @@ import Column from '../Column'
 import RouterLabel from '../RouterLabel'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip, TooltipSize } from '../Tooltip'
+import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 import SwapRoute from './SwapRoute'
 import UniswapXGasTooltip from './UniswapXGasTooltip'
 
@@ -45,9 +47,9 @@ function TextWithLoadingPlaceholder({
 export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
+  const txCount = getTransactionCount(trade)
 
-  const supportsGasEstimate =
-    isClassicTrade(trade) && trade.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
+  const supportsGasEstimate = chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
 
   return (
     <Column gap="md">
@@ -62,12 +64,28 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             }
           >
             <ThemedText.BodySmall color="textSecondary">
-              <Trans>Network fee</Trans>
+              <Trans>
+                Network <Plural value={txCount} one="fee" other="fees" />
+              </Trans>
             </ThemedText.BodySmall>
           </MouseoverTooltip>
-          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            <ThemedText.BodySmall>~${trade.gasUseEstimateUSD}</ThemedText.BodySmall>
-          </TextWithLoadingPlaceholder>
+          <MouseoverTooltip
+            // If there is only one transaction/estimate, we don't need a breakdown.
+            disabled={txCount <= 1}
+            placement="right"
+            size={TooltipSize.Small}
+            text={<GasBreakdownTooltip trade={trade} />}
+          >
+            <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+              <ThemedText.BodySmall>
+                {`${trade.totalGasUseEstimateUSD ? '~' : ''}${
+                  trade.totalGasUseEstimateUSD === 0
+                    ? '$0.00'
+                    : formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)
+                }`}
+              </ThemedText.BodySmall>
+            </TextWithLoadingPlaceholder>
+          </MouseoverTooltip>
         </RowBetween>
       )}
       {isClassicTrade(trade) && (

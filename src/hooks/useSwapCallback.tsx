@@ -35,7 +35,11 @@ export function useSwapCallback(
   const addOrder = useAddOrder()
   const { account, chainId } = useWeb3React()
 
-  const uniswapXSwapCallback = useUniswapXSwapCallback(isUniswapXTrade(trade) ? trade : undefined)
+  const uniswapXSwapCallback = useUniswapXSwapCallback({
+    trade: isUniswapXTrade(trade) ? trade : undefined,
+    allowedSlippage,
+    fiatValues,
+  })
 
   const universalRouterSwapCallback = useUniversalRouterSwapCallback(
     isClassicTrade(trade) ? trade : undefined,

@@ -19,7 +19,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
   routerPreference: typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
-  skipFetch?: boolean
+  skipFetch?: boolean,
+  account?: string
 ): {
   state: TradeState
   trade?: ClassicTrade
@@ -30,7 +31,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference,
-  skipFetch?: boolean
+  skipFetch?: boolean,
+  account?: string
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -47,7 +49,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
-  skipFetch = false
+  skipFetch = false,
+  account?: string
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -61,6 +64,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   )
 
   const queryArgs = useRoutingAPIArguments({
+    account,
     tokenIn: currencyIn,
     tokenOut: currencyOut,
     amount: skipFetch ? undefined : amountSpecified,
@@ -113,9 +117,19 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: isCurrent ? TradeState.VALID : TradeState.LOADING,
         trade: tradeResult.trade,
+        uniswapXGasUseEstimateUSD: tradeResult.uniswapXGasUseEstimateUSD,
       }
     }
-  }, [amountSpecified, isCurrent, isError, queryArgs, skipFetch, tradeResult?.state, tradeResult?.trade])
+  }, [
+    amountSpecified,
+    isCurrent,
+    isError,
+    queryArgs,
+    skipFetch,
+    tradeResult?.state,
+    tradeResult?.trade,
+    tradeResult?.uniswapXGasUseEstimateUSD,
+  ])
 }
 
 // only want to enable this when app hook called
