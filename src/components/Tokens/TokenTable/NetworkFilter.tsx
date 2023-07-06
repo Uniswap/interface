@@ -1,7 +1,7 @@
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
 import {
-  BACKEND_CHAIN_NAMES,
+  BACKEND_SUPPORTED_CHAINS,
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   supportedChainIdFromGQLChain,
   validateUrlChainParam,
@@ -146,7 +146,7 @@ export default function NetworkFilter() {
       </NetworkFilterOption>
       {open && (
         <MenuTimeFlyout>
-          {BACKEND_CHAIN_NAMES.map((network) => {
+          {BACKEND_SUPPORTED_CHAINS.map((network) => {
             const chainInfo = getChainInfo(supportedChainIdFromGQLChain(network))
             return (
               <InternalLinkMenuItem
