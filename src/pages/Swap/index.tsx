@@ -263,7 +263,6 @@ const StatsContainer = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 32px;
   padding: 18px;
-  max-width: 1200px;
   width: 100%;
   margin-top: 0px;
   margin-right: 20px;
@@ -275,7 +274,8 @@ const LeftContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  width:95%;
+  min-width: 46rem;
+  max-width: 80rem;
 `
 
 const LeveragePositionsWrapper = styled.main`

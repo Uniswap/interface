@@ -26,14 +26,16 @@ export const PageWrapper = styled.div`
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
 export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
-  min-width: 370px;
-  max-width: 600px;
+  min-width: 20.75rem;
+  max-width: 36rem;
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 32px;
   border: 0px solid ${({ theme }) => theme.background};
   padding: 18px;
   box-shadow:  '0px 40px 120px 0px #f0b90b29';
+  flex-flow: row nowrap;
+  align-items: space-evenly;
 
   // box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
   z-index: ${Z_INDEX.deprecated_content};
