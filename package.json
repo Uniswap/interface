@@ -249,7 +249,7 @@
     "tiny-invariant": "^1.2.0",
     "ua-parser-js": "^1.0.35",
     "use-resize-observer": "^9.1.0",
-    "uuid": "^8.3.2",
+    "uuid": "^9.0.0",
     "video-extensions": "^1.2.0",
     "wcag-contrast": "^3.0.0",
     "web-vitals": "^2.1.0",

@@ -6,6 +6,7 @@ import { initializeAnalytics, OriginApplication } from '@uniswap/analytics'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { isSentryEnabled } from 'utils/env'
 import { getEnvName, isProductionEnv } from 'utils/env'
+import { v4 as v4uuid } from 'uuid'
 
 import { beforeSend } from './errors'
 
@@ -15,6 +16,12 @@ window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
 // Actual KEYs are set by proxy servers.
 const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
 export const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
+
+let sentryUserId = localStorage.getItem('sentry-user-id')
+if (!sentryUserId) {
+  sentryUserId = v4uuid()
+  localStorage.setItem('sentry-user-id', sentryUserId)
+}
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
@@ -30,6 +37,8 @@ Sentry.init({
   ],
   beforeSend,
 })
+
+Sentry.setUser({ id: sentryUserId })
 
 initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
   proxyUrl: process.env.REACT_APP_AMPLITUDE_PROXY_URL,
