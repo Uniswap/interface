@@ -40,6 +40,11 @@ Sentry.init({
   beforeSend,
 })
 
+const SENTRY_USER_ID_KEY = 'sentry-user-id'
+let sentryUserId = localStorage.getItem(SENTRY_USER_ID_KEY)
+if (!sentryUserId) {
+  localStorage.setItem(SENTRY_USER_ID_KEY, (sentryUserId = uuidv4()))
+}
 Sentry.setUser({ id: sentryUserId })
 
 initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
