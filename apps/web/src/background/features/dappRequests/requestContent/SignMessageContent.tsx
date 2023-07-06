@@ -20,29 +20,22 @@ export const SignMessageDetails = ({
   }
 
   return (
-    <YStack gap="$spacing16" width="100%">
-      <Text textAlign="center" variant="headlineSmall">
-        Signature request from {dappName}
-      </Text>
-      <Text textAlign="center" variant="headlineSmall">
-        {dappUrl}
-      </Text>
-      <YStack>
-        <YStack
-          backgroundColor="$backgroundScrim"
-          borderTopLeftRadius="$rounded16"
-          borderTopRightRadius="$rounded16"
-          gap="$spacing16"
-          margin="$none"
-          overflow="scroll"
-          paddingHorizontal="$spacing16"
-          paddingVertical="$spacing12">
-          <Text color="$textSecondary" variant="bodySmall">
-            {signMessageRequest.messageHex}
-          </Text>
-        </YStack>
-        <AddressFooter account={activeAccount} />
+    <YStack flex={1} gap="$spacing16" width="100%">
+      <YStack
+        backgroundColor="$backgroundScrim"
+        borderTopLeftRadius="$rounded16"
+        borderTopRightRadius="$rounded16"
+        flex={1}
+        gap="$spacing16"
+        margin="$none"
+        overflow="scroll"
+        paddingHorizontal="$spacing16"
+        paddingVertical="$spacing12">
+        <Text color="$textSecondary" variant="bodySmall">
+          {signMessageRequest.messageHex}
+        </Text>
       </YStack>
+      <AddressFooter account={activeAccount} />
     </YStack>
   )
 }
