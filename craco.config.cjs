@@ -98,7 +98,7 @@ module.exports = {
         cacheBust: `function() {
           return 'cache-bust=' + Date.now();
         }`,
-        // Retries with backoff (500ms, 1000ms, 2000ms).
+        // Retries with exponential backoff (500ms, 1000ms, 2000ms).
         retryDelay: `function(retryAttempt) {
           return 2 ** (retryAttempt - 1) * 500;
         }`,
