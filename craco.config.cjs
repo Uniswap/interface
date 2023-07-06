@@ -96,7 +96,7 @@ module.exports = {
       new VanillaExtractPlugin({ identifiers: 'short' }),
       new RetryChunkLoadPlugin({
         retryDelay: `function(retryAttempt) {
-          return 2 ** (retryAttempt - 1) * 1000;
+          return 2 ** (retryAttempt - 1) * 500;
         }`,
         maxRetries: 3,
       }),
