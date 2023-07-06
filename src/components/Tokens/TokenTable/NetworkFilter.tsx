@@ -2,7 +2,7 @@ import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
 import {
   BACKEND_CHAIN_NAMES,
-  BACKEND_UNSUPPORTED_CHAIN_IDS,
+  BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   supportedChainIdFromGQLChain,
   validateUrlChainParam,
 } from 'graphql/data/util'
@@ -169,7 +169,7 @@ export default function NetworkFilter() {
               </InternalLinkMenuItem>
             )
           })}
-          {BACKEND_UNSUPPORTED_CHAIN_IDS.map((network) => {
+          {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
             const chainInfo = getChainInfo(network)
             return (
               <InternalLinkMenuItem
