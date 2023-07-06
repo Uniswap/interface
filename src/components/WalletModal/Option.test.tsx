@@ -23,7 +23,7 @@ const mockConnection1: Connection = {
     deactivate: jest.fn(),
   } as unknown as Connector,
   getIcon: () => UNIWALLET_ICON,
-  type: ConnectionType.UNISWAP_WALLET,
+  type: ConnectionType.UNISWAP_WALLET_V2,
 } as unknown as Connection
 
 const mockConnection2: Connection = {
