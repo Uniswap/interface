@@ -128,7 +128,7 @@ export function CurrencySearch({
               return true
             })
             .sort(tokenComparator.bind(null, balances))
-        : [],
+        : filteredTokens,
     [
       balancesAreLoading,
       filteredTokens,
