@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
@@ -120,7 +120,7 @@ function TransactionSubmittedContent({
       .catch(() => setSuccess(false))
   }, [connector, logoURL, token])
 
-  const explorerText = `View on ${chainId === ChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}`
+  const explorerText = chainId === ChainId.MAINNET ? t`View on  Etherscan` : t`View on Block Explorer`
 
   return (
     <Wrapper>
@@ -159,9 +159,7 @@ function TransactionSubmittedContent({
           </ButtonPrimary>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <ThemedText.Link color={theme.accentAction}>
-                <Trans>{explorerText}</Trans>
-              </ThemedText.Link>
+              <ThemedText.Link color={theme.accentAction}>{explorerText}</ThemedText.Link>
             </ExternalLink>
           )}
         </ConfirmationModalContentWrapper>
