@@ -15,7 +15,7 @@ import { PopupAlertTriangle } from './FailedNetworkSwitchPopup'
 import { ReduceLeverageTransactionPopupContent } from 'components/TransactionConfirmationModal'
 import { X } from 'react-feather'
 
-const Descriptor = styled(ThemedText.BodySmall)`
+export const Descriptor = styled(ThemedText.BodySmall)`
   ${EllipsisStyle}
 `
 

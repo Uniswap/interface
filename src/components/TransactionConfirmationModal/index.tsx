@@ -27,6 +27,11 @@ import { ReactComponent as LogoGradient } from '../../assets/svg/full_logo_gradi
 import { NumberType, formatNumber } from '@uniswap/conedison/format'
 import { useCurrency } from 'hooks/Tokens'
 import { ReduceLeveragePositionTransactionInfo, TransactionDetails, TransactionInfo, TransactionType } from 'state/transactions/types'
+import PortfolioRow from 'components/WalletDropdown/MiniPortfolio/PortfolioRow'
+import { PopupAlertTriangle } from 'components/Popups/FailedNetworkSwitchPopup'
+import { parseLocalActivity } from 'components/WalletDropdown/MiniPortfolio/Activity/parseLocal'
+import { useCombinedActiveList } from 'state/lists/hooks'
+import { Descriptor } from 'components/Popups/TransactionPopup'
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundFloating};
@@ -242,6 +247,8 @@ export function  ReduceLeverageTransactionPopupContent({ tx, chainId, removeThis
   const theme = useTheme()
 
   const { connector } = useWeb3React()
+  const tokens = useCombinedActiveList()
+  const activity = parseLocalActivity(tx, chainId, tokens)
 
   const {
     pnl,
@@ -254,14 +261,23 @@ export function  ReduceLeverageTransactionPopupContent({ tx, chainId, removeThis
     quoteBaseSymbol
   } = tx.info as ReduceLeveragePositionTransactionInfo
 
-  const [success, setSuccess] = useState<boolean | undefined>()
+  const success = tx.receipt?.status === 1
+
 
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
 
+  if (!activity) {
+    return null
+  }
+
+  const explorerUrl = getExplorerLink(chainId, tx.hash, ExplorerDataType.TRANSACTION)
+
+
   return (
-    <ReduceWrapper>
+    success ? (
+      <ReduceWrapper>
         <RowBetween>
           <LogoGradient width={150} height={50}/>
           <CloseIcon onClick={removeThisPopup}/>
@@ -294,7 +310,21 @@ export function  ReduceLeverageTransactionPopupContent({ tx, chainId, removeThis
           <ThemedText.Gold>{` ${formatNumber(markPrice)} ${quoteBaseSymbol}`}</ThemedText.Gold>
         </FlexStartRow> 
     </ReduceWrapper>
-  )
+    ) : (
+      <PortfolioRow
+        left={
+          <PopupAlertTriangle/>
+        }
+        title={<ThemedText.SubHeader fontWeight={500}>{activity.title}</ThemedText.SubHeader>}
+        descriptor={
+          <Descriptor color="textSecondary">
+            {activity.descriptor}
+            {/* {ENSName ?? activity.otherAccount} */}
+          </Descriptor>
+        }
+        onClick={() => window.open(explorerUrl, '_blank')}
+      />
+  ))
 }
 
 
