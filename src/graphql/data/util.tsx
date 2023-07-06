@@ -1,4 +1,5 @@
 import { QueryResult } from '@apollo/client'
+import * as Sentry from '@sentry/react'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
@@ -68,7 +69,7 @@ export const GQL_MAINNET_CHAINS = [
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
 
 const UX_SUPPORTED_GQL_CHAINS = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS] as const
-type InterfaceGqlChain = typeof UX_SUPPORTED_GQL_CHAINS[number]
+export type InterfaceGqlChain = typeof UX_SUPPORTED_GQL_CHAINS[number]
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [SupportedChainId.MAINNET]: Chain.Ethereum,
@@ -121,7 +122,7 @@ export function gqlToCurrency(token: {
   else return new Token(chainId, token.address, token.decimals ?? 18, token.name, token.symbol)
 }
 
-const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
+const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   ethereum: Chain.Ethereum,
   polygon: Chain.Polygon,
   celo: Chain.Celo,
@@ -153,6 +154,22 @@ export function supportedChainIdFromGQLChain(chain: InterfaceGqlChain): Supporte
 export function supportedChainIdFromGQLChain(chain: Chain): SupportedChainId | undefined
 export function supportedChainIdFromGQLChain(chain: Chain): SupportedChainId | undefined {
   return isSupportedGQLChain(chain) ? CHAIN_NAME_TO_CHAIN_ID[chain] : undefined
+}
+
+export function logSentryErrorForUnsupportedChain({
+  extras,
+  errorMessage,
+}: {
+  extras?: Record<string, any>
+  errorMessage: string
+}) {
+  Sentry.withScope((scope) => {
+    extras &&
+      Object.entries(extras).map(([k, v]) => {
+        scope.setExtra(k, v)
+      })
+    Sentry.captureException(new Error(errorMessage))
+  })
 }
 
 export const BACKEND_CHAIN_NAMES: InterfaceGqlChain[] = [
