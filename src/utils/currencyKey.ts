@@ -3,7 +3,7 @@ import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain } from 'graphql/data/Token'
-import { fromGraphQLChain } from 'graphql/data/util'
+import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 
 export type CurrencyKey = string
 
@@ -21,8 +21,9 @@ export function currencyKeyFromGraphQL(contract: {
   chain: Chain
   standard?: TokenStandard
 }): CurrencyKey {
-  const chainId = fromGraphQLChain(contract.chain)
+  const chainId = supportedChainIdFromGQLChain(contract.chain)
   const address = contract.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : contract.address
   if (!address) throw new Error('Non-native token missing address')
+  if (!chainId) throw new Error('Unsupported chain from pools query')
   return buildCurrencyKey(chainId, address)
 }

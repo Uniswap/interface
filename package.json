@@ -118,7 +118,7 @@
     "jest-styled-components": "^7.0.8",
     "ms.macro": "^2.0.0",
     "path-browserify": "^1.0.1",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.8",
     "process": "^0.11.10",
     "react-scripts": "^5.0.1",
     "resize-observer-polyfill": "^1.5.1",
