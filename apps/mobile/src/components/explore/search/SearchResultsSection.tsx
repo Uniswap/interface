@@ -159,8 +159,10 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   const sortedSearchResults: SearchResultOrHeader[] = useMemo(() => {
     // Format results arrays with header, and handle empty results
-    const nftsWithHeader = nftCollectionResults ? [NFTHeaderItem, ...nftCollectionResults] : []
-    const tokensWithHeader = tokenResults ? [TokenHeaderItem, ...tokenResults] : []
+    const nftsWithHeader = nftCollectionResults?.length
+      ? [NFTHeaderItem, ...nftCollectionResults]
+      : []
+    const tokensWithHeader = tokenResults?.length ? [TokenHeaderItem, ...tokenResults] : []
     const walletsWithHeader =
       walletSearchResults.length > 0 ? [WalletHeaderItem, ...walletSearchResults] : []
 

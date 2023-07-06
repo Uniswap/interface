@@ -626,4 +626,17 @@ export const migrations = {
     }
     return newState
   },
+
+  46: function deleteRTKQuerySlices(state: any) {
+    const newState = { ...state }
+
+    delete newState.ENS
+    delete newState.ens
+    delete newState.gasApi
+    delete newState.onChainBalanceApi
+    delete newState.routingApi
+    delete newState.trmApi
+
+    return newState
+  },
 }

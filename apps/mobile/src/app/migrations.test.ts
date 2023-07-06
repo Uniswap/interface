@@ -43,6 +43,7 @@ import {
   v42Schema,
   v43Schema,
   v44Schema,
+  v45Schema,
   v4Schema,
   v5Schema,
   v6Schema,
@@ -80,7 +81,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/types'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 
-// helps with object assignement
+// helps with object assignment
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getAllKeysOfNestedObject = (obj: any, prefix = ''): string[] => {
   const keys = Object.keys(obj)
@@ -1141,5 +1142,17 @@ describe('Redux state migrations', () => {
     const v45 = migrations[45](v44Stub)
 
     expect(v45.favorites.tokensVisibility).toEqual({})
+  })
+
+  it('migrates from v45 to 46', () => {
+    const v45Stub = { ...v45Schema }
+    const v46 = migrations[46](v45Stub)
+
+    expect(v46.ENS).toBeUndefined()
+    expect(v46.ens).toBeUndefined()
+    expect(v46.gasApi).toBeUndefined()
+    expect(v46.onChainBalanceApi).toBeUndefined()
+    expect(v46.routingApi).toBeUndefined()
+    expect(v46.trmApi).toBeUndefined()
   })
 })

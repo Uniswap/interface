@@ -31,35 +31,25 @@ export const reduxStorage: Storage = {
   },
 }
 
-// list of apis to ignore when logging errors, i.e. logging is handled by api
-const rtkQueryErrorLoggerIgnoreList: Array<ReducerNames> = []
 const rtkQueryErrorLogger: Middleware = () => (next) => (action: PayloadAction<unknown>) => {
   if (!isRejectedWithValue(action)) {
     return next(action)
   }
 
-  const shouldSkipErrorLogging = rtkQueryErrorLoggerIgnoreList.some((reducerName) =>
-    action.type.startsWith(reducerName)
-  )
-  if (shouldSkipErrorLogging) {
-    // still log in debug to ensure those errors are surfaced, but avoids polluting sentry
-    logger.debug('store', 'rtkQueryErrorLogger', JSON.stringify(action))
-  } else {
-    logger.error(action.error, {
-      tags: {
-        file: 'store',
-        function: 'rtkQueryErrorLogger',
-        error: JSON.stringify({
-          type: action.type,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          endpointName: (action.meta as any)?.arg?.endpointName,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          status: (action.payload as any)?.status,
-          error: action.error,
-        }),
-      },
-    })
-  }
+  logger.error(action.error, {
+    tags: {
+      file: 'store',
+      function: 'rtkQueryErrorLogger',
+      error: JSON.stringify({
+        type: action.type,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        endpointName: (action.meta as any)?.arg?.endpointName,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        status: (action.payload as any)?.status,
+        error: action.error,
+      }),
+    },
+  })
 
   return next(action)
 }
@@ -82,7 +72,7 @@ export const persistConfig = {
   key: 'root',
   storage: reduxStorage,
   whitelist,
-  version: 45,
+  version: 46,
   migrate: createMigrate(migrations),
 }
 

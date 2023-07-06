@@ -299,6 +299,25 @@ export const v45Schema = {
   },
 }
 
+const v45SchemaIntermediate = {
+  ...v44Schema,
+  ENS: undefined,
+  ens: undefined,
+  gasApi: undefined,
+  onChainBalanceApi: undefined,
+  routingApi: undefined,
+  trmApi: undefined,
+}
+
+delete v45SchemaIntermediate.ENS
+delete v45SchemaIntermediate.ens
+delete v45SchemaIntermediate.gasApi
+delete v45SchemaIntermediate.onChainBalanceApi
+delete v45SchemaIntermediate.routingApi
+delete v45SchemaIntermediate.trmApi
+
+export const v46Schema = { ...v45SchemaIntermediate }
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v45Schema => v45Schema
+export const getSchema = (): typeof v46Schema => v46Schema
