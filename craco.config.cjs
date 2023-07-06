@@ -99,11 +99,11 @@ module.exports = {
         cacheBust: `function() {
           return ''
         }`,
-        // Retries with backoff (500ms, 1000ms, 2000ms, 4000ms).
+        // Retries with backoff (500ms, 1000ms, 2000ms).
         retryDelay: `function(retryAttempt) {
           return 2 ** (retryAttempt - 1) * 500;
         }`,
-        maxRetries: 4,
+        maxRetries: 3,
       }),
     ],
     configure: (webpackConfig) => {
