@@ -1,4 +1,4 @@
 {
-  "globalSetup": "<rootDir>/global-setup.js",
-  "globalTeardown": "<rootDir>/global-teardown.js"
+  "globalSetup": "<rootDir>/global-setup.ts",
+  "globalTeardown": "<rootDir>/global-teardown.ts"
 }
