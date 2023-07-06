@@ -52,7 +52,10 @@ export function IntroScreen(): JSX.Element {
           onPress={(): void =>
             navigate(`${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Password}`)
           }>
-          Create a new wallet
+          {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}
+          <Text color="$white" variant="buttonLabelMedium">
+            Create a new wallet
+          </Text>
         </Button>
         <Button
           flexGrow={1}
@@ -60,7 +63,10 @@ export function IntroScreen(): JSX.Element {
           onPress={(): void =>
             navigate(`${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Password}`)
           }>
-          I already have a wallet
+          {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}
+          <Text color="$textPrimary" variant="buttonLabelMedium">
+            I already have a wallet
+          </Text>
         </Button>
       </YStack>
     </XStack>

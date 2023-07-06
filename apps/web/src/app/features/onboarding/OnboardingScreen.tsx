@@ -60,7 +60,7 @@ export const OnboardingScreen = ({
           flexShrink={1}
           padding="$spacing16"
           onPress={(): void => navigate(-1)}>
-          <Icons.BackArrow size={iconSizes.icon24} />
+          <Icons.BackArrow color="$textSecondary" size={iconSizes.icon24} />
         </Button>
         <Button
           backgroundColor={nextButtonEnabled ? '$magentaVibrant' : '$background3'}
@@ -68,7 +68,8 @@ export const OnboardingScreen = ({
           flexGrow={1}
           theme="primary"
           onPress={onSubmit}>
-          <Text color="$white" variant="buttonLabelMedium">
+          {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}
+          <Text color={nextButtonEnabled ? '$white' : '$textTertiary'} variant="buttonLabelMedium">
             {nextButtonText}
           </Text>
         </Button>
