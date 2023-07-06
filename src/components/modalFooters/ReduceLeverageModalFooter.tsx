@@ -464,7 +464,7 @@ export function ReduceLeverageModalFooter({
                             }
                           >
                             <ThemedText.LabelSmall >
-                              <Trans>Expected Output</Trans>
+                              <Trans>Exp. Output</Trans>
                             </ThemedText.LabelSmall>
                           </MouseoverTooltip>
                         </RowFixed>

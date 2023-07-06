@@ -627,7 +627,7 @@ export function AdvancedLeverageSwapDetails({
       <AutoColumn gap="sm">
         <ValueLabel
           description='The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.'
-          label={leverageTrade?.existingPosition ? 'Added Position' : 'Expected Output'}
+          label={leverageTrade?.existingPosition ? 'Added Position' : 'Exp. Output'}
           value={
             addedOutput
           }
