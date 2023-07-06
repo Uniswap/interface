@@ -4,7 +4,12 @@ import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import { PortfolioBalancesQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { getTokenDetailsURL, GQL_MAINNET_CHAINS, gqlToCurrency } from 'graphql/data/util'
+import {
+  getTokenDetailsURL,
+  GQL_MAINNET_CHAINS,
+  gqlToCurrency,
+  logSentryErrorForUnsupportedChain,
+} from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
@@ -103,7 +108,13 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
   }, [navigate, token, toggleWalletDrawer])
 
   const currency = gqlToCurrency(token)
-  if (!currency) return null
+  if (!currency) {
+    logSentryErrorForUnsupportedChain({
+      extras: { token },
+      errorMessage: 'Token from unsupported chain received from Mini Portfolio Token Balance Query',
+    })
+    return null
+  }
   return (
     <TraceEvent
       events={[BrowserEvent.onClick]}

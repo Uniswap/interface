@@ -1,8 +1,7 @@
-import * as Sentry from '@sentry/react'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
-import { supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { GenieCollection } from 'nft/types'
@@ -88,9 +87,9 @@ export function useRecentlySearchedAssets() {
         // Handles special case where wMATIC data needs to be used for MATIC
         const chain = supportedChainIdFromGQLChain(asset.chain)
         if (!chain) {
-          Sentry.withScope((scope) => {
-            scope.setExtra('searchedAsset', asset)
-            Sentry.captureException(new Error('Invalid chain retrieved from Seach Token/Collection Query'))
+          logSentryErrorForUnsupportedChain({
+            extras: { asset },
+            errorMessage: 'Invalid chain retrieved from Seach Token/Collection Query',
           })
           return
         }

@@ -1,5 +1,4 @@
 import { t } from '@lingui/macro'
-import * as Sentry from '@sentry/react'
 import { formatFiatPrice, formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { SupportedChainId } from '@uniswap/sdk-core'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
@@ -15,7 +14,7 @@ import {
   TokenApprovalPartsFragment,
   TokenTransferPartsFragment,
 } from 'graphql/data/__generated__/types-and-hooks'
-import { supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
@@ -97,10 +96,9 @@ function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferP
   const supportedSentChain = supportedChainIdFromGQLChain(sent.asset.chain)
   const supportedReceivedChain = supportedChainIdFromGQLChain(received.asset.chain)
   if (!supportedSentChain || !supportedReceivedChain) {
-    Sentry.withScope((scope) => {
-      scope.setExtra('supportedSentChain', supportedSentChain)
-      scope.setExtra('supportedReceivedChain', supportedReceivedChain)
-      Sentry.captureException(new Error('Invalid activity from unsupported chain received from GQL'))
+    logSentryErrorForUnsupportedChain({
+      extras: { sentAsset: sent.asset, receivedAsset: received.asset },
+      errorMessage: 'Invalid activity from unsupported chain received from GQL',
     })
     return undefined
   }
@@ -281,9 +279,9 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
     )
     const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
     if (!supportedChain) {
-      Sentry.withScope((scope) => {
-        scope.setExtra('gqlActivity', assetActivity)
-        Sentry.captureException(new Error('Invalid activity from unsupported chain received from GQL'))
+      logSentryErrorForUnsupportedChain({
+        extras: { assetActivity },
+        errorMessage: 'Invalid activity from unsupported chain received from GQL',
       })
       return undefined
     }
