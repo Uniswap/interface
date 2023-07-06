@@ -24,16 +24,16 @@ export const FEE_AMOUNT_DETAIL: Record<
   [FeeAmount.LOW]: {
     label: '0.05',
     description: <Trans>Best for stable pairs.</Trans>,
-    supportedChains: SUPPORTED_CHAINS.concat(),
+    supportedChains: [...SUPPORTED_CHAINS],
   },
   [FeeAmount.MEDIUM]: {
     label: '0.3',
     description: <Trans>Best for most pairs.</Trans>,
-    supportedChains: SUPPORTED_CHAINS.concat(),
+    supportedChains: [...SUPPORTED_CHAINS],
   },
   [FeeAmount.HIGH]: {
     label: '1',
     description: <Trans>Best for exotic pairs.</Trans>,
-    supportedChains: SUPPORTED_CHAINS.concat(),
+    supportedChains: [...SUPPORTED_CHAINS],
   },
 }
