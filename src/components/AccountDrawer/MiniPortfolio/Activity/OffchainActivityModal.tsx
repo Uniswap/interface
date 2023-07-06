@@ -39,11 +39,11 @@ export function useOpenOffchainActivityModal() {
 }
 
 const Wrapper = styled(AutoColumn).attrs({ gap: 'md', grow: true })`
-  padding: 24px;
+  padding: 16px;
 `
 
 const ContentContainer = styled(AutoColumn).attrs({ justify: 'center', gap: 'md' })`
-  padding: 28px 24px 24px 24px;
+  padding: 28px 44px 24px 44px;
 `
 
 const StyledXButton = styled(X)`
@@ -80,14 +80,10 @@ const Success = styled(AnimatedEntranceConfirmationIcon)`
   margin-bottom: 10px;
 `
 
-const TitleText = styled(ThemedText.HeadlineSmall)`
-  font-weight: 500;
-`
-
 const LearnMoreLink = styled(ExternalLink)`
   font-weight: 600;
 `
-const DescriptionText = styled(ThemedText.LabelSmall)`
+const DescriptionText = styled(ThemedText.LabelMicro)`
   text-align: center;
 `
 
@@ -122,7 +118,7 @@ function useOrderAmounts(
   }
 }
 
-function OrderContent({ order }: { order: SelectedOrderInfo }) {
+export function OrderContent({ order }: { order: SelectedOrderInfo }) {
   const amounts = useOrderAmounts(order.details)
 
   const explorerLink = order?.details?.txHash
@@ -134,10 +130,10 @@ function OrderContent({ order }: { order: SelectedOrderInfo }) {
       return (
         <ContentContainer>
           <Loader />
-          <TitleText>{t`Swapping`}</TitleText>
+          <ThemedText.SubHeaderLarge>{t`Swapping`}</ThemedText.SubHeaderLarge>
           <Column>
             {amounts && <TradeSummary trade={amounts} />}
-            <ThemedText.Caption paddingTop="40px" textAlign="center">
+            <ThemedText.Caption paddingTop="48px" textAlign="center">
               <ExternalLink href="https://google.com">{t`Learn more about swapping with UniswapX`}</ExternalLink>
             </ThemedText.Caption>
           </Column>
@@ -148,10 +144,10 @@ function OrderContent({ order }: { order: SelectedOrderInfo }) {
       return (
         <ContentContainer>
           <Success />
-          <TitleText>{t`Swapped`}</TitleText>
+          <ThemedText.SubHeaderLarge>{t`Swapped`}</ThemedText.SubHeaderLarge>
           <Column>
             {amounts && <TradeSummary trade={amounts} />}
-            <ThemedText.Caption paddingTop="40px" textAlign="center">
+            <ThemedText.Caption paddingTop="48px" textAlign="center">
               {explorerLink && <ExternalLink href={explorerLink}>{t`View on Explorer`}</ExternalLink>}
             </ThemedText.Caption>
           </Column>
@@ -161,7 +157,7 @@ function OrderContent({ order }: { order: SelectedOrderInfo }) {
       return (
         <ContentContainer>
           <ErrorContent />
-          <TitleText>{t`Cancelled`}</TitleText>
+          <ThemedText.SubHeaderLarge>{t`Cancelled`}</ThemedText.SubHeaderLarge>
           <ThemedText.LabelSmall textAlign="center">{t`This order was cancelled`}</ThemedText.LabelSmall>
         </ContentContainer>
       )
@@ -169,10 +165,10 @@ function OrderContent({ order }: { order: SelectedOrderInfo }) {
       return (
         <ContentContainer>
           <ErrorContent />
-          <TitleText>{t`Swap expired`}</TitleText>
+          <ThemedText.SubHeaderLarge>{t`Swap expired`}</ThemedText.SubHeaderLarge>
           <DescriptionText>
             {t`Your swap expired before it could be filled. Try again or`}{' '}
-            <LearnMoreLink href="https://google.com">{t` learn more.`}</LearnMoreLink>
+            <LearnMoreLink href="https://google.com">{t` learn more`}.</LearnMoreLink>
           </DescriptionText>
         </ContentContainer>
       )
@@ -180,10 +176,10 @@ function OrderContent({ order }: { order: SelectedOrderInfo }) {
       return (
         <ContentContainer>
           <ErrorContent />
-          <TitleText>{t`Error`}</TitleText>
+          <ThemedText.SubHeaderLarge>{t`Error`}</ThemedText.SubHeaderLarge>
           <ThemedText.LabelSmall textAlign="center">
             {t`Your swap couldn't be filled at this time. Try again or `}{' '}
-            <LearnMoreLink href="https://google.com">{t` learn more.`}</LearnMoreLink>
+            <LearnMoreLink href="https://google.com">{t` learn more`}.</LearnMoreLink>
           </ThemedText.LabelSmall>
         </ContentContainer>
       )
@@ -191,7 +187,7 @@ function OrderContent({ order }: { order: SelectedOrderInfo }) {
       return (
         <ContentContainer>
           <ErrorContent />
-          <TitleText>{t`Insufficient funds for swap`}</TitleText>
+          <ThemedText.SubHeaderLarge>{t`Insufficient funds for swap`}</ThemedText.SubHeaderLarge>
           <ThemedText.LabelSmall textAlign="center">{t`You didn't have enough ${
             amounts?.inputAmount.currency.symbol ?? amounts?.inputAmount.currency.name ?? t`of the input token`
           } to complete this swap.`}</ThemedText.LabelSmall>
