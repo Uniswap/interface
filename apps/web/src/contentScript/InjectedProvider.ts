@@ -156,7 +156,7 @@ export class InjectedProvider extends EventEmitter {
           break
         }
         case ExtensionRequestType.Disconnect: {
-          this._handleDisconnected()
+          this.handleDisconnectAccount()
         }
       }
     }
@@ -176,7 +176,7 @@ export class InjectedProvider extends EventEmitter {
         case ExtensionRequestType.GetConnectionStatus: {
           const response = {
             type: DappToExtensionRequestType.ConnectionStatus,
-            connected: this.isConnected(),
+            connected: this.publicKey !== null,
           }
 
           window.postMessage(response)
@@ -544,8 +544,13 @@ export class InjectedProvider extends EventEmitter {
     return response.signature
   }
 
+  handleDisconnectAccount = async (): Promise<void> => {
+    this.publicKey = null
+    this.emit('accountsChanged', [])
+  }
+
   /**
-   * Handle a disconnection notification from Uniswap Extension.
+   * Handle case where all chains are disconnected from provider
    */
   _handleDisconnected = async (): Promise<void> => {
     if (this.isConnected()) {
@@ -557,6 +562,7 @@ export class InjectedProvider extends EventEmitter {
         ...InjectedProvider._defaultState,
       })
     }
+
     // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#disconnect
     this.emit('disconnect', {
       code: 4900,
