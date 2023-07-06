@@ -177,7 +177,7 @@ export function CurrencyRow({
         </Column>
         {showCurrencyAmount ? (
           <RowFixed style={{ justifySelf: 'flex-end' }}>
-            {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
+            {account ? balance ? <Balance balance={balance} /> : <Loader /> : null}
             {isSelected && <CheckIcon />}
           </RowFixed>
         ) : (
