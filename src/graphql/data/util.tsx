@@ -128,8 +128,14 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   avalanche: Chain.Avalanche,
 }
 
+/**
+ * @param chainName parsed in chain name from url query parameter
+ * @returns if chainName is a valid chain name supported by the backend, returns the backend chain name, otherwise returns Chain.Ethereum
+ */
 export function validateUrlChainParam(chainName: string | undefined) {
-  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
+  const isValidChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
+  const isValidBackEndChain = isValidChainName && isSupportedGQLChain(URL_CHAIN_PARAM_TO_BACKEND[chainName])
+  return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
 const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
