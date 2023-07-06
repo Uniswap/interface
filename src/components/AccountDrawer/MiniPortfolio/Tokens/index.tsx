@@ -6,7 +6,7 @@ import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import { PortfolioBalancesQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import {
   getTokenDetailsURL,
-  GQL_MAINNET_CHAINS,
+  GQL_MAINNET_CHAINS_MUTABLE,
   gqlToCurrency,
   logSentryErrorForUnsupportedChain,
 } from 'graphql/data/util'
@@ -36,7 +36,7 @@ export default function Tokens({ account }: { account: string }) {
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
   const { data } = usePortfolioBalancesQuery({
-    variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS.slice() },
+    variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS_MUTABLE },
     fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
     errorPolicy: 'all',
   })
