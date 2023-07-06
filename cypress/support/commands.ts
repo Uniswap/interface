@@ -58,7 +58,7 @@ Cypress.Commands.overwrite(
             // Set initial user state.
             win.localStorage.setItem(
               'redux_localstorage_simple_user', // storage key for the user reducer using 'redux-localstorage-simple'
-              JSON.stringify(options?.userState ?? CONNECTED_WALLET_USER_STATE)
+              JSON.stringify({ ...CONNECTED_WALLET_USER_STATE, ...(options?.userState ?? {}) })
             )
 
             // Set feature flags, if configured.
