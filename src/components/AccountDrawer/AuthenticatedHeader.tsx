@@ -13,14 +13,13 @@ import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
-import { useAtomValue } from 'jotai/utils'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, CreditCard, IconProps, Info, LogOut, Settings } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled, { useTheme } from 'styled-components/macro'
@@ -172,7 +171,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
-  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
