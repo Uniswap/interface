@@ -3,6 +3,7 @@ import {
   Message,
   TransactionRejectedResponse,
 } from 'src/background/features/dappRequests/dappRequestTypes'
+import { logger } from 'wallet/src/features/logger/logger'
 
 export function sendMessageToActiveTab(message: Message, onError?: () => void): void {
   chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
@@ -16,8 +17,20 @@ export function sendMessageToActiveTab(message: Message, onError?: () => void): 
   })
 }
 
-export function sendMessageToSpecificTab(message: Message, tabId: number): void {
-  chrome.tabs.sendMessage<Message>(tabId, message)
+export function sendMessageToSpecificTab(
+  message: Message,
+  tabId: number,
+  onError?: () => void
+): void {
+  chrome.tabs.sendMessage<Message>(tabId, message).catch((e) => {
+    onError?.()
+    logger.error(e, {
+      tags: {
+        file: 'messageUtils',
+        function: 'sendMessageToSpecificTab',
+      },
+    })
+  })
 }
 
 export function sendRejectionToContentScript(requestId: string, senderTabId: number): void {
