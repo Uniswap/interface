@@ -5,7 +5,6 @@ import { useAppDispatch } from 'src/background/store'
 import { Tabs } from 'tamagui'
 import { Text, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { authActions } from 'wallet/src/features/auth/saga'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { TokenBalanceList } from 'wallet/src/features/portfolio/TokenBalanceList'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -31,12 +30,7 @@ export function HomeScreen(): JSX.Element {
           paddingBottom="$spacing24"
           paddingTop="$spacing8"
           width="100%">
-          <PortfolioHeader
-            address={address}
-            onLockPress={(): void => {
-              dispatch(authActions.reset())
-            }}
-          />
+          <PortfolioHeader address={address} />
           <PortfolioBalance address={address} />
           <Tabs
             defaultValue={HomeTabs.Tokens}

@@ -14,7 +14,6 @@ import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type PortfolioHeaderProps = {
   address: Address
-  onLockPress?: () => void
 }
 
 export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element {

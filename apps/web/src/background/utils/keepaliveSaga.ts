@@ -1,9 +1,7 @@
 import { REHYDRATE } from 'redux-persist'
 import { call, cancel, cancelled, delay, fork, put, take } from 'typed-redux-saga'
-import { authActions } from 'wallet/src/features/auth/saga'
 import { logger } from 'wallet/src/features/logger/logger'
-import { lockWallet } from 'wallet/src/features/wallet/slice'
-import { SagaStatus } from 'wallet/src/utils/saga'
+import { lockWallet, unlockWallet } from 'wallet/src/features/wallet/slice'
 import serializeError from 'wallet/src/utils/serializeError'
 
 const KEEP_ALIVE_INTERVAL_MS = 5000 // * 60 * 1000 // 5 minutes
@@ -26,20 +24,22 @@ export function* keepAliveSaga() {
   yield* take(REHYDRATE)
   yield* put(lockWallet())
   while (
-    // waits for success auth action to be dispatched
-
+    // Watch for wallet to be unlocked
     yield* take(
       // could be any action type dispatched by store
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (action: any) =>
-        action.type === authActions.progress.type && action.payload === SagaStatus.Success
+      (action: any) => action.type === unlockWallet.type
     )
   ) {
     // start keep alive task in the background
     const keepAliveTask = yield* fork(keepAliveLoop)
 
-    // wait for auth reset action to be dispatched
-    yield* take(authActions.reset.type)
+    // Watch for wallet to be locked
+    yield* take(
+      // could be any action type dispatched by store
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (action: any) => action.type === lockWallet.type
+    )
 
     // after wallet is locked, cancel background keep alive task
     // (will cause forked keepAliveLoop task to jump to finally block)
