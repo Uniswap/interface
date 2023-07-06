@@ -13,7 +13,7 @@ export const PageWrapper = styled.div`
   padding: 10px 14px 0px;
   max-width: 1700px;
   display: grid;
-  grid-template-columns: 2fr 1fr; 
+  grid-template-columns: 2fr 380px; 
   width: 100%;
   margin-right: auto;
   margin-left:auto;
