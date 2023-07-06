@@ -12,21 +12,39 @@ type DappContext = {
   dappUrl: string
   dappName: string
   dappConnected: boolean
+  dappIconUrl?: string
 }
 
-export function useDappContext(updateTrigger?: boolean): DappContext {
+/**
+ * Hook used to get the dApp context
+ * @param tabId - the id of the tab to get the dapp context from (undefined defaults to the active tab).
+ * We should typically use a specific tabId, and use active tab only when dapp details do not matter (e.g. popup edge cases)
+ * @param updateTrigger - a boolean that can be used to trigger an update of the dapp context
+ **/
+export function useDappContext(tabId?: number, updateTrigger?: boolean): DappContext {
   const [dappUrl, setDappUrl] = useState('')
   const [dappName, setDappName] = useState('')
   const [dappConnected, setDappConnected] = useState(false)
+  const [dappIconUrl, setDappIconUrl] = useState<string | undefined>(undefined)
 
+  // TODO (EXT-188): add a way to update this dapp context whenver the active tab changes
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tab = tabs[0]
-      if (tab) {
+    if (tabId) {
+      chrome.tabs.get(tabId, (tab) => {
         setDappUrl(extractBaseUrl(tab?.url) || '')
         setDappName(tab?.title || '')
-      }
-    })
+        setDappIconUrl(tab.favIconUrl)
+      })
+    } else {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const tab = tabs[0]
+        if (tab) {
+          setDappUrl(extractBaseUrl(tab?.url) || '')
+          setDappName(tab?.title || '')
+          setDappIconUrl(tab.favIconUrl)
+        }
+      })
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const connectionStatusListener = (request: any): void => {
@@ -42,7 +60,7 @@ export function useDappContext(updateTrigger?: boolean): DappContext {
       requestId: uuidv4(),
     }
     sendMessageToActiveTab(request)
-  }, [updateTrigger])
+  }, [updateTrigger, tabId])
 
-  return { dappUrl, dappName, dappConnected }
+  return { dappUrl, dappName, dappConnected, dappIconUrl }
 }

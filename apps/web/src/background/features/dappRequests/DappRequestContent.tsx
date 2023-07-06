@@ -1,8 +1,11 @@
+import { useDappContext } from 'src/background/features/dapp/hooks'
+import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
+import { Image } from 'tamagui'
 import { XStack, YStack } from 'ui/src'
 import { Button, ButtonSize } from 'ui/src/components/button/Button'
 import { Text } from 'ui/src/components/text/Text'
-import { ChainId } from 'wallet/src/constants/chains'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { DappRequestType } from './dappRequestTypes'
 import { SendTransactionDetails } from './requestContent/SendTransactionContent'
@@ -11,74 +14,80 @@ import { SignTypedDataDetails } from './requestContent/SignTypedDataContent'
 import { confirmRequest, rejectRequest } from './saga'
 import { DappRequestStoreItem } from './slice'
 
-export interface RequestDisplayDetails {
-  message: string
-  title: string
-  request: DappRequestStoreItem
-}
-
 export function DappRequestContent(): JSX.Element {
+  const dispatch = useAppDispatch()
   // Show only the last request
   const pendingRequests = useAppSelector((state) => state.dappRequests.pending)
-  const lastRequest = pendingRequests[pendingRequests.length - 1]
-  const requestWithDisplay = parseRequest(lastRequest)
+  const request = pendingRequests[pendingRequests.length - 1]
+
+  const { dappName, dappUrl, dappIconUrl } = useDappContext(request?.senderTabId)
 
   const activeAccount = useActiveAccountWithThrow()
+  const activeChainId = useAppSelector(selectChainByDappAndWallet(dappUrl, activeAccount.address))
 
   if (!activeAccount) {
     throw new Error('No active account')
   }
-  // TODO: get active chain id
-  const activeChainId = ChainId.Mainnet
 
-  const dispatch = useAppDispatch()
-
-  const onConfirm = (requestDisplay: RequestDisplayDetails): void => {
+  const onConfirm = (requestToConfirm: DappRequestStoreItem): void => {
     const shouldCloseWindow = pendingRequests.length <= 1
-    dispatch(confirmRequest(requestDisplay.request))
+    dispatch(confirmRequest(requestToConfirm))
     if (shouldCloseWindow) {
       window.close()
     }
   }
 
-  const onCancel = (requestDisplay: RequestDisplayDetails): void => {
+  const onCancel = (requestToCancel: DappRequestStoreItem): void => {
     const shouldCloseWindow = pendingRequests.length <= 1
-    dispatch(rejectRequest(requestDisplay.request))
+    dispatch(rejectRequest(requestToCancel))
     if (shouldCloseWindow) {
       window.close()
     }
   }
 
-  if (!pendingRequests || pendingRequests.length === 0) {
+  if (!request) {
     return <Text>No approvals pending</Text>
   }
 
   let displayDetails = null
-  switch (requestWithDisplay.request.dappRequest.type) {
+  switch (request.dappRequest.type) {
     case DappRequestType.SignMessage:
-      displayDetails = (
-        <SignMessageDetails activeAccount={activeAccount} request={requestWithDisplay} />
-      )
+      displayDetails = <SignMessageDetails activeAccount={activeAccount} request={request} />
       break
     case DappRequestType.SignTypedData:
       displayDetails = (
         <SignTypedDataDetails
           activeAccount={activeAccount}
           chainId={activeChainId}
-          request={requestWithDisplay}
+          request={request}
         />
       )
       break
     case DappRequestType.SendTransaction:
       displayDetails = (
-        <SendTransactionDetails activeAccount={activeAccount} request={requestWithDisplay} />
+        <SendTransactionDetails activeAccount={activeAccount} dappUrl={dappUrl} request={request} />
       )
+      break
+  }
+  let title = 'Confirm?'
+  switch (request?.dappRequest.type) {
+    case DappRequestType.SignMessage:
+      title = `Signature request from ${dappName}?`
+      break
+    case DappRequestType.SignTypedData:
+      title = `Signature request from ${dappName}`
+      break
+    case DappRequestType.SendTransaction:
+      title = `Approve transaction from ${dappName}`
+      break
+    case DappRequestType.GetAccount:
+      title = `Connect to ${dappName}?`
       break
   }
 
   return (
     <YStack
-      key={requestWithDisplay.request.dappRequest.requestId}
+      key={request.dappRequest.requestId}
       alignItems="stretch"
       backgroundColor="$background"
       flex={1}
@@ -86,73 +95,37 @@ export function DappRequestContent(): JSX.Element {
       justifyContent="center"
       padding="$spacing24"
       width="100%">
+      <Image
+        alignSelf="center"
+        height={iconSizes.icon40}
+        source={{ uri: dappIconUrl }}
+        width={iconSizes.icon40}
+      />
       <Text textAlign="center" variant="headlineSmall">
-        {requestWithDisplay.title}
+        {title}
+      </Text>
+      <Text color="$accentBranded" textAlign="center" variant="bodyMicro">
+        {dappUrl}
       </Text>
       <YStack alignItems="stretch" flexShrink={1} width="100%">
-        {displayDetails ? (
-          displayDetails
-        ) : (
-          <YStack gap="$spacing12">
-            <Text variant="subheadLarge">{requestWithDisplay?.message}</Text>
-            <Text variant="bodySmall">ID: {requestWithDisplay.request.dappRequest.requestId}</Text>
-          </YStack>
-        )}
+        {displayDetails}
       </YStack>
       <XStack gap="$spacing12">
         <Button
           buttonSize={ButtonSize.Medium}
           flex={1}
           theme="secondary"
-          onPress={(): void => onCancel(requestWithDisplay)}>
+          onPress={(): void => onCancel(request)}>
           Cancel
         </Button>
         <Button
           buttonSize={ButtonSize.Medium}
           flex={1}
           theme="primary"
-          onPress={(): void => onConfirm(requestWithDisplay)}>
+          onPress={(): void => onConfirm(request)}>
           Approve
         </Button>
       </XStack>
     </YStack>
   )
-}
-
-const parseRequest = (request?: DappRequestStoreItem): RequestDisplayDetails => {
-  if (!request) {
-    throw new Error('No request to parse')
-  }
-  switch (request.dappRequest.type) {
-    case DappRequestType.SignMessage:
-      return {
-        message: 'Sign this message?',
-        title: 'Sign Message Request',
-        request,
-      }
-    case DappRequestType.SignTypedData:
-      return {
-        message: 'Sign this data?',
-        title: 'Sign TypedData Request',
-        request,
-      }
-    case DappRequestType.SendTransaction:
-      return {
-        message: 'Confirm this transaction?',
-        title: 'Transaction Request',
-        request,
-      }
-    case DappRequestType.GetAccount:
-      return {
-        message: 'Connect to this dApp?',
-        title: 'Connection Request',
-        request,
-      }
-  }
-  // TODO: Add other request types here
-  return {
-    message: 'Confirm this request?',
-    title: 'Generic Request',
-    request,
-  }
 }

@@ -1,8 +1,10 @@
-import { RequestDisplayDetails } from 'src/background/features/dappRequests/DappRequestContent'
 import { SignTypedDataRequest } from 'src/background/features/dappRequests/dappRequestTypes'
+import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
+import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
 import { Text, XStack, YStack } from 'ui/src'
-import { Unicon } from 'ui/src/components/Unicon'
+import { Flex } from 'ui/src/components/layout/Flex'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { EthTypedMessage } from 'wallet/src/features/wallet/signing/types'
 
 export const SignTypedDataDetails = ({
   activeAccount,
@@ -11,54 +13,19 @@ export const SignTypedDataDetails = ({
 }: {
   activeAccount: Account
   chainId: number
-  request: RequestDisplayDetails
+  request: DappRequestStoreItem
 }): JSX.Element => {
-  const rawTypedData = (request.request.dappRequest as SignTypedDataRequest).typedData
-  const typedData = JSON.parse(rawTypedData)
+  const rawTypedData = (request.dappRequest as SignTypedDataRequest).typedData
+  const typedData: EthTypedMessage = JSON.parse(rawTypedData)
 
   return (
-    <YStack flex={1} overflow="scroll" width="100%">
-      <YStack
-        backgroundColor="$backgroundScrim"
-        borderTopLeftRadius="$rounded16"
-        borderTopRightRadius="$rounded16"
-        gap="$spacing16"
-        margin="$none"
-        paddingHorizontal="$spacing16"
-        paddingVertical="$spacing12">
+    <YStack backgroundColor="$backgroundScrim" borderRadius="$rounded16" flex={1}>
+      <YStack flexShrink={1} gap="$spacing16" margin="$none" overflow="scroll" padding="$spacing16">
         {getParsedObjectDisplay(chainId, typedData.message)}
       </YStack>
-      <YStack
-        backgroundColor="$backgroundScrim"
-        borderBottomLeftRadius="$rounded16"
-        borderBottomRightRadius="$rounded16">
-        <XStack
-          borderTopColor="$background"
-          borderTopWidth="$spacing1"
-          justifyContent="space-between"
-          paddingHorizontal="$spacing16"
-          paddingVertical="$spacing16">
-          <XStack gap="$spacing8">
-            <Unicon address={activeAccount.address} />
-            <Text variant="subheadSmall">
-              {activeAccount.name === undefined ? 'Wallet' : activeAccount.name}
-            </Text>
-          </XStack>
-          <Text
-            color="$textSecondary"
-            overflow="hidden"
-            textAlign="right"
-            textOverflow="ellipsis"
-            variant="bodySmall">
-            {/* TODO: Use util to format address */}
-            {activeAccount.address.substring(0, 4)}...
-            {activeAccount.address.substring(
-              activeAccount.address.length - 4,
-              activeAccount.address.length
-            )}
-          </Text>
-        </XStack>
-      </YStack>
+      <Flex>
+        <AddressFooter account={activeAccount} />
+      </Flex>
     </YStack>
   )
 }
@@ -79,10 +46,17 @@ const getParsedObjectDisplay = (
       {Object.keys(obj).map((objKey) => {
         const childValue = obj[objKey]
 
+        // obj is a json object, check if childValue is an array:
         if (typeof childValue === 'object') {
           return (
-            <YStack key={objKey} gap="$spacing4">
-              <Text color="textTertiary" marginLeft={depth * 5} variant="monospace">
+            <YStack key={objKey} gap="$spacing8">
+              <Text
+                alignItems="flex-start"
+                color="$textSecondary"
+                ellipse={true}
+                fontSize={14}
+                fontWeight="300"
+                variant="monospace">
                 {objKey}
               </Text>
               {getParsedObjectDisplay(chainId, childValue, depth + 1)}
@@ -92,24 +66,19 @@ const getParsedObjectDisplay = (
 
         if (typeof childValue === 'string') {
           return (
-            <XStack key={objKey} alignItems="flex-start" gap="$spacing8" marginLeft={depth * 5}>
-              <Text color="textTertiary" paddingVertical="$spacing4" variant="monospace">
+            <XStack
+              key={objKey}
+              alignItems="center"
+              flex={1}
+              gap="$spacing8"
+              paddingVertical="$spacing4"
+              width="100%">
+              <Text color="$textSecondary" fontSize={14} fontWeight="300" variant="monospace">
                 {objKey}
               </Text>
-              <YStack flexShrink={1}>
-                {/* // TODO: Add address type validation */}
-                {/* {getValidAddress(childValue, true) ? (
-                  <AddressButton
-                    address={childValue}
-                    chainId={chainId}
-                    textVariant="monospace"
-                  />
-                ) : ( */}
-                <Text paddingVertical="$spacing4" variant="monospace">
-                  {childValue}
-                </Text>
-                {/* )} */}
-              </YStack>
+              <Text fontSize={14} fontWeight="300">
+                {childValue}
+              </Text>
             </XStack>
           )
         }

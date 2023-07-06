@@ -25,7 +25,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
 
   // Value does not matter, only used as a trigger to re-render the component when the dapp connection status changes
   const [updateConnectionStatus, setUpdateConnectionStatus] = useState(false)
-  const { dappConnected } = useDappContext(updateConnectionStatus)
+  const { dappConnected } = useDappContext(undefined, updateConnectionStatus)
 
   return (
     <XStack alignItems="center" justifyContent="space-between" padding="$spacing16">

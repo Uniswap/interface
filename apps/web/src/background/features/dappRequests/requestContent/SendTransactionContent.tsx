@@ -1,26 +1,27 @@
-import { useDappContext } from 'src/background/features/dapp/hooks'
 import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
-import { RequestDisplayDetails } from 'src/background/features/dappRequests/DappRequestContent'
 import { SendTransactionRequest } from 'src/background/features/dappRequests/dappRequestTypes'
+import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
+import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
 import { useAppSelector } from 'src/background/store'
 import { Text, XStack, YStack } from 'ui/src'
-import { Unicon } from 'ui/src/components/Unicon'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 export const SendTransactionDetails = ({
   activeAccount,
   request,
+  dappUrl,
 }: {
   activeAccount: Account
-  request: RequestDisplayDetails
-}): JSX.Element => {
-  const sendTransactionRequest = request.request.dappRequest as SendTransactionRequest
-  const sending = sendTransactionRequest.transaction.value
 
+  request: DappRequestStoreItem
+  dappUrl: string
+}): JSX.Element => {
+  const sendTransactionRequest = request.dappRequest as SendTransactionRequest
+
+  const sending = sendTransactionRequest.transaction.value
   const toAddress = sendTransactionRequest.transaction.to
 
-  const dappUrl = useDappContext().dappUrl
   const chainId = useAppSelector(selectChainByDappAndWallet(activeAccount.address, dappUrl))
 
   //TODO(EXT-157): convert to USD
@@ -85,28 +86,14 @@ export const SendTransactionDetails = ({
           paddingHorizontal="$spacing16"
           paddingVertical="$spacing12"
           width="100%">
-          <Text variant="subheadSmall">Network fee</Text>
+          <Text color="$textSecondary" variant="bodySmall">
+            Network fee
+          </Text>
           <Text color="$textSecondary" textAlign="right" variant="bodySmall">
             {networkFee}
           </Text>
         </XStack>
-
-        <XStack
-          alignItems="center"
-          borderTopColor="$background"
-          borderTopWidth="$spacing1"
-          justifyContent="space-between"
-          paddingHorizontal="$spacing16"
-          paddingVertical="$spacing16">
-          <XStack alignItems="center" gap="$spacing8">
-            <Unicon address={activeAccount.address} />
-            <Text variant="subheadSmall">{activeAccount.name ?? 'Wallet'}</Text>
-          </XStack>
-          <Text color="$textSecondary" textAlign="right" variant="bodySmall">
-            {/* TODO: Use util to format address */}
-            {activeAccount.address.substring(0, 8)}...
-          </Text>
-        </XStack>
+        <AddressFooter account={activeAccount} />
       </YStack>
     </YStack>
   )

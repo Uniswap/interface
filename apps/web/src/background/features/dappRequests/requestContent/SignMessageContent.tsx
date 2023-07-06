@@ -1,7 +1,8 @@
-import { RequestDisplayDetails } from 'src/background/features/dappRequests/DappRequestContent'
+import { useDappContext } from 'src/background/features/dapp/hooks'
 import { SignMessageRequest } from 'src/background/features/dappRequests/dappRequestTypes'
-import { Text, XStack, YStack } from 'ui/src'
-import { Unicon } from 'ui/src/components/Unicon'
+import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
+import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
+import { Text, YStack } from 'ui/src'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 export const SignMessageDetails = ({
@@ -9,9 +10,11 @@ export const SignMessageDetails = ({
   request,
 }: {
   activeAccount: Account
-  request: RequestDisplayDetails
+  request: DappRequestStoreItem
 }): JSX.Element => {
-  const signMessageRequest = request.request.dappRequest as SignMessageRequest
+  const { dappName, dappUrl } = useDappContext()
+
+  const signMessageRequest = request.dappRequest as SignMessageRequest
   if (!signMessageRequest) {
     throw new Error('No sign message request')
   }
@@ -19,7 +22,10 @@ export const SignMessageDetails = ({
   return (
     <YStack gap="$spacing16" width="100%">
       <Text textAlign="center" variant="headlineSmall">
-        {request.title}
+        Signature request from {dappName}
+      </Text>
+      <Text textAlign="center" variant="headlineSmall">
+        {dappUrl}
       </Text>
       <YStack>
         <YStack
@@ -28,46 +34,14 @@ export const SignMessageDetails = ({
           borderTopRightRadius="$rounded16"
           gap="$spacing16"
           margin="$none"
+          overflow="scroll"
           paddingHorizontal="$spacing16"
           paddingVertical="$spacing12">
           <Text color="$textSecondary" variant="bodySmall">
             {signMessageRequest.messageHex}
           </Text>
         </YStack>
-        <YStack
-          backgroundColor="$backgroundScrim"
-          borderBottomLeftRadius="$rounded16"
-          borderBottomRightRadius="$rounded16"
-          width="100%">
-          <XStack
-            borderTopColor="$background"
-            borderTopWidth="$spacing1"
-            flex={1}
-            justifyContent="space-between"
-            paddingHorizontal="$spacing16"
-            paddingVertical="$spacing16"
-            width="100%">
-            <XStack alignItems="center" gap="$spacing8" maxWidth="100%">
-              <Unicon address={activeAccount.address} />
-              <Text textOverflow="ellipsis" variant="subheadSmall">
-                {activeAccount.name === undefined ? 'Wallet' : activeAccount.name}
-              </Text>
-            </XStack>
-            <Text
-              color="$textSecondary"
-              overflow="hidden"
-              textAlign="right"
-              textOverflow="ellipsis"
-              variant="bodySmall">
-              {/* TODO: Use util to format address */}
-              {activeAccount.address.substring(0, 4)}...
-              {activeAccount.address.substring(
-                activeAccount.address.length - 4,
-                activeAccount.address.length
-              )}
-            </Text>
-          </XStack>
-        </YStack>
+        <AddressFooter account={activeAccount} />
       </YStack>
     </YStack>
   )
