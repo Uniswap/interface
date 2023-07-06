@@ -69,7 +69,7 @@ export const GQL_MAINNET_CHAINS = [
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
 
 const UX_SUPPORTED_GQL_CHAINS = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS] as const
-export type InterfaceGqlChain = typeof UX_SUPPORTED_GQL_CHAINS[number]
+export type InterfaceGqlChain = (typeof UX_SUPPORTED_GQL_CHAINS)[number]
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [SupportedChainId.MAINNET]: Chain.Ethereum,
