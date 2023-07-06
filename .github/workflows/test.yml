@@ -38,8 +38,9 @@ jobs:
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-tsc-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-tsc-
+          # Types must be regenerated if any typings change: dependencies or the GraphQL schema.
+          key: ${{ runner.os }}-tsc-${{ hashFiles('yarn.lock', 'src/graphql/**/schema.graphql') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-tsc-${{ hashFiles('yarn.lock', 'src/graphql/**/schema.graphql') }}
       - run: yarn typecheck
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
