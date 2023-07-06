@@ -6,7 +6,7 @@ import { initializeAnalytics, OriginApplication } from '@uniswap/analytics'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { isSentryEnabled } from 'utils/env'
 import { getEnvName, isProductionEnv } from 'utils/env'
-import { v4 as v4uuid } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 import { beforeSend } from './errors'
 
