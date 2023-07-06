@@ -12,6 +12,9 @@ export const uniswapUrls = {
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
   nftUrl: 'https://app.uniswap.org/#/nfts',
+  interfaceUrl: 'https://app.uniswap.org/#/swap',
+  moonpayHelpUrl:
+    'https://support.uniswap.org/hc/en-us/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-',
 }
 
 function getUniswapApiBaseUrl(): string {

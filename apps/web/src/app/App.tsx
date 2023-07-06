@@ -166,7 +166,8 @@ function App({ store }: { store: Store }): JSX.Element {
       <GraphqlProvider>
         <ToastProvider>
           <RouterProvider router={router} />
-          <ToastViewport bottom={0} flexDirection="column" left={0} right={0} />
+          <ToastViewport bottom={0} flexDirection="column" left={0} name="popup" right={0} />
+          <ToastViewport left={0} name="onboarding" right={0} top={0} />
           <BottomToast />
         </ToastProvider>
       </GraphqlProvider>

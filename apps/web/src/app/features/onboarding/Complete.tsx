@@ -1,29 +1,45 @@
+import { Toast } from '@tamagui/toast'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
-import { Circle, Image, Stack, Theme, XStack, YStack } from 'tamagui'
-import { Text } from 'ui/src'
+import { Circle, Image, Stack, XStack, YStack } from 'tamagui'
+import { Icons, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import MoreIcon from 'ui/src/assets/icons/more.svg'
 import PinIcon from 'ui/src/assets/icons/pin.svg'
-import { PuzzleIcon } from 'ui/src/assets/icons/PuzzleIcon'
-import { Button } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Unicon } from 'ui/src/components/Unicon'
+import { opacify } from 'ui/src/theme/color/utils'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useAccount, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 const POPUP_WIDTH = 400
 const POPUP_OFFSET = 20
-const POPUP_ARROW_WIDTH = 24
-const POPUP_ARROW_OFFSET = 115
 const POPUP_SHADOW_RADIUS = 1000
 
 const PINNED_CHECK_FREQUENCY_IN_MS = 750
 
+// TODO(spore): replace with proper themed colors
+const ONBOARDING_COLORS = {
+  GREEN: '#00D395',
+  BLUE: '#12AAFF',
+  PINK: '#FD82FF',
+  YELLOW: '#E8A803',
+}
+
+const ONBOARDING_COLORS_SOFT = {
+  GREEN: opacify(20, ONBOARDING_COLORS.GREEN),
+  BLUE: opacify(20, ONBOARDING_COLORS.BLUE),
+  PINK: opacify(20, ONBOARDING_COLORS.PINK),
+  YELLOW: opacify(20, ONBOARDING_COLORS.YELLOW),
+}
+
 export function Complete(): JSX.Element {
   const address = useActiveAccountAddressWithThrow()
-
+  const { t } = useTranslation()
   // TODO(EXT-186): handle default naming better
   const account = useAccount(address)
   const ensName = undefined // TODO: Add ENS lookup logic
@@ -49,30 +65,62 @@ export function Complete(): JSX.Element {
       clearInterval(intervalId)
     }
   }, [])
+
   return (
     <>
       <Stack alignItems="center" width={ONBOARDING_CONTENT_WIDTH}>
         <YStack gap="$spacing12">
           <YStack alignItems="center" gap="$spacing12">
-            {/* TODO: use AddressDisplay here */}
-            <Unicon address={address} size={iconSizes.icon64} />
-            <Text color="$textPrimary" variant="headlineLarge">
-              {nickname}
-            </Text>
+            <YStack alignItems="center" gap="$spacing24">
+              {/* TODO: use AddressDisplay here */}
+              <Unicon address={address} size={iconSizes.icon64} />
+              <Text color="$textPrimary" variant="headlineLarge">
+                {nickname}
+              </Text>
+            </YStack>
             <Text color="$textSecondary" variant="subheadSmall">
               {sanitizeAddressText(shortenAddress(address))}
             </Text>
           </YStack>
-          <XStack gap="$spacing12" paddingVertical="$spacing36">
-            {/* TODO: add 3 action buttons: Swap, Buy crypto, Take a tour */}
-            <Text color="$secondary" variant="buttonLabelMedium">
-              {/* this copy is just a placeholder and will be replaced by action buttons */}
-              All set! Don't forget to pin the extension in your browser.
-            </Text>
-          </XStack>
-          <Button flexGrow={1} theme="secondary" onPress={(): void => window.close()}>
-            Close
-          </Button>
+          <YStack gap="$spacing12" paddingVertical="$spacing36">
+            <XStack gap="$spacing12">
+              {/* TODO(EXT-210): clean up use of colors here and just pass color value */}
+              <OnboardingCompleteCard
+                Icon={<Icons.Buy color={ONBOARDING_COLORS.GREEN} size={iconSizes.icon20} />}
+                backgroundColor={ONBOARDING_COLORS_SOFT.GREEN}
+                color={ONBOARDING_COLORS.GREEN}
+                title="Buy crypto"
+                url={uniswapUrls.moonpayHelpUrl}
+              />
+              <OnboardingCompleteCard
+                disabled
+                Icon={<Icons.ArrowDown color={ONBOARDING_COLORS.BLUE} size={iconSizes.icon20} />}
+                backgroundColor={ONBOARDING_COLORS_SOFT.BLUE}
+                color={ONBOARDING_COLORS.BLUE}
+                title="Transfer from exchange"
+                url={uniswapUrls.interfaceUrl}
+              />
+            </XStack>
+            <XStack gap="$spacing12">
+              <OnboardingCompleteCard
+                Icon={
+                  <Icons.SwapActionButton color={ONBOARDING_COLORS.PINK} size={iconSizes.icon20} />
+                }
+                backgroundColor={ONBOARDING_COLORS_SOFT.PINK}
+                color={ONBOARDING_COLORS.PINK}
+                title="Swap"
+                url={uniswapUrls.interfaceUrl}
+              />
+              <OnboardingCompleteCard
+                disabled
+                Icon={<Icons.BookOpen color={ONBOARDING_COLORS.YELLOW} size={iconSizes.icon20} />}
+                backgroundColor={ONBOARDING_COLORS_SOFT.YELLOW}
+                color={ONBOARDING_COLORS.YELLOW}
+                title="Take a tour"
+                url={uniswapUrls.interfaceUrl}
+              />
+            </XStack>
+          </YStack>
         </YStack>
       </Stack>
       {!isPinned ? (
@@ -91,17 +139,6 @@ export function Complete(): JSX.Element {
             shadowColor="$textTertiary"
             shadowRadius={POPUP_SHADOW_RADIUS}
             width={POPUP_WIDTH}>
-            {/* arrow pointer attached to popup box */}
-            <Stack
-              backgroundColor="$background2"
-              height={POPUP_ARROW_WIDTH}
-              position="absolute"
-              right={POPUP_ARROW_OFFSET}
-              rotate="45deg"
-              top={-POPUP_ARROW_WIDTH / 2}
-              width={POPUP_ARROW_WIDTH}
-              zIndex={999999}
-            />
             {/* heading and puzzle icon */}
             <Stack gap="$spacing2">
               <Text numberOfLines={1} variant="bodySmall">
@@ -111,9 +148,8 @@ export function Complete(): JSX.Element {
                 <Text numberOfLines={1} variant="bodySmall">
                   by clicking on the
                 </Text>
-                <Theme name="branded">
-                  <PuzzleIcon />
-                </Theme>
+                {/* TODO(EXT-210): constant icon sizes */}
+                <Icons.Puzzle color="$magentaVibrant" size={iconSizes.icon20} />
                 <Text numberOfLines={1} variant="bodySmall">
                   icon, and then the pin
                 </Text>
@@ -168,24 +204,68 @@ export function Complete(): JSX.Element {
         </Stack>
       ) : (
         // extension was pinned, show success message
-        <Stack position="absolute" top={10} width={360}>
-          <Stack
-            alignItems="center"
-            backgroundColor="$background2"
-            borderColor="$backgroundOutline"
-            borderRadius="$roundedFull"
-            borderWidth={1}
-            display="flex"
-            flexDirection="row"
-            gap="$spacing4"
-            justifyContent="center"
-            opacity={0.9}
-            paddingHorizontal="$spacing24"
-            paddingVertical="$spacing12">
-            <Text variant="subheadSmall">✅ Awesome! It's safe to close this tab now.</Text>
-          </Stack>
-        </Stack>
+        <Toast
+          backgroundColor="$background2"
+          borderColor="$backgroundOutline"
+          borderRadius="$roundedFull"
+          borderWidth={1}
+          gap="$spacing4"
+          justifyContent="center"
+          marginTop="$spacing12"
+          opacity={0.9}
+          paddingHorizontal="$spacing36"
+          paddingVertical="$spacing24"
+          viewportName="onboarding">
+          <Toast.Title alignItems="center" display="flex" flexDirection="row" gap="$spacing8">
+            <Icons.Checkmark color="$accentSuccess" size={iconSizes.icon24} />
+            <Text variant="bodyLarge">{t("Awesome! It's safe to close this tab now")}</Text>
+          </Toast.Title>
+        </Toast>
       )}
     </>
+  )
+}
+
+interface OnboardingCompleteCardProps {
+  title: string
+  url: string
+  Icon: JSX.Element
+  backgroundColor: string
+  color: string
+  disabled?: boolean
+}
+
+const linkStyles = {
+  textDecoration: 'none',
+}
+
+function OnboardingCompleteCard({
+  title,
+  url,
+  Icon,
+  backgroundColor,
+  color,
+  disabled,
+}: OnboardingCompleteCardProps): JSX.Element {
+  return (
+    <Link rel="noopener noreferrer" style={{ ...linkStyles }} target="_blank" to={url}>
+      <Stack
+        alignItems="flex-start"
+        backgroundColor={backgroundColor}
+        borderColor="$backgroundOutline"
+        borderRadius="$rounded20"
+        borderWidth={1}
+        cursor={disabled ? 'not-allowed' : 'pointer'}
+        display="flex"
+        height={100}
+        justifyContent="space-between"
+        padding="$spacing16"
+        width={200}>
+        {Icon}
+        <Text color={color} textDecorationLine="none" variant="subheadSmall">
+          {title}
+        </Text>
+      </Stack>
+    </Link>
   )
 }

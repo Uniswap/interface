@@ -31,6 +31,7 @@ export function AccountItem({
     showToast('Copied to clipboard', {
       native: false,
       duration: 3000,
+      viewportName: 'popup',
     })
     e.stopPropagation()
   }
