@@ -1591,7 +1591,7 @@ export function BorrowReduceCollateralModalFooter({
                             }
                           >
                             <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Expected Output</Trans>
+                              <Trans>Output</Trans>
                             </ThemedText.DeprecatedSubHeader>
                           </MouseoverTooltip>
                         </RowFixed>

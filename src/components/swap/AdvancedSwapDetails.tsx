@@ -93,7 +93,7 @@ export function AdvancedSwapDetails({
         <MouseoverValueLabel 
           description='The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending.'
           value={trade?.outputAmount.toFixed(3)}
-          label={<Trans>Expected Output</Trans>}
+          label={<Trans>Output</Trans>}
           appendSymbol={trade.outputAmount.currency.symbol}
         />
         <MouseoverValueLabel
@@ -101,55 +101,7 @@ export function AdvancedSwapDetails({
           value={<FormattedPriceImpact priceImpact={priceImpact} />}
           label={<Trans>Price Impact</Trans>}
         />
-        {/* <RowBetween>
-          <RowFixed>
-            <MouseoverTooltip
-              text={
-                <Trans>
-                  The amount you expect to receive at the current market price. You may receive less or more if the
-                  market price changes while your transaction is pending.
-                </Trans>
-              }
-              disableHover={hideInfoTooltips}
-            >
-              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Expected Output</Trans>
-              </ThemedText.DeprecatedSubHeader>
-            </MouseoverTooltip>
-          </RowFixed>
-          <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-            <StyledText textAlign="right" fontSize={14}>
-              <TruncatedText>
-                {trade?.outputAmount.toFixed(3)
-                  ? `${trade?.outputAmount.toFixed(3)}`
-                  : '-'}
-              </TruncatedText>
-              {trade.outputAmount.currency.symbol}
-            </StyledText>
-          </TextWithLoadingPlaceholder>
-        </RowBetween> */}
-        {/* <RowBetween>
-          <RowFixed>
-            <MouseoverTooltip
-              text={<Trans>The impact your trade has on the market price of this pool.</Trans>}
-              disableHover={hideInfoTooltips}
-            >
-              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Price Impact</Trans>
-              </ThemedText.DeprecatedSubHeader>
-            </MouseoverTooltip>
-          </RowFixed>
-          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-
-            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              <TruncatedText>
-                <FormattedPriceImpact priceImpact={priceImpact} />
-              </TruncatedText>
-            </ThemedText.DeprecatedBlack>
-
-
-          </TextWithLoadingPlaceholder>
-        </RowBetween> */}
+  
         <Separator />
         <MouseoverValueLabel 
           description='The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.'
