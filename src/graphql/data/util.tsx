@@ -1,4 +1,5 @@
 import { QueryResult } from '@apollo/client'
+import * as Sentry from '@sentry/react'
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms.macro'
@@ -55,10 +56,24 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
   return p !== null
 }
 
-// TODO(DAT-33) Update when BE adds Ethereum Sepolia to supported chains
-export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
+export const GQL_MAINNET_CHAINS = [
+  Chain.Ethereum,
+  Chain.Polygon,
+  Chain.Celo,
+  Chain.Optimism,
+  Chain.Arbitrum,
+  Chain.Bnb,
+] as const
+
+const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
+
+const UX_SUPPORTED_GQL_CHAINS = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS] as const
+export type InterfaceGqlChain = typeof UX_SUPPORTED_GQL_CHAINS[number]
+
+export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [ChainId.MAINNET]: Chain.Ethereum,
   [ChainId.GOERLI]: Chain.EthereumGoerli,
+  [ChainId.SEPOLIA]: Chain.EthereumSepolia,
   [ChainId.POLYGON]: Chain.Polygon,
   [ChainId.POLYGON_MUMBAI]: Chain.Polygon,
   [ChainId.CELO]: Chain.Celo,
@@ -94,13 +109,14 @@ export function gqlToCurrency(token: {
   decimals?: number
   name?: string
   symbol?: string
-}): Currency {
-  const chainId = fromGraphQLChain(token.chain)
+}): Currency | undefined {
+  const chainId = supportedChainIdFromGQLChain(token.chain)
+  if (!chainId) return undefined
   if (token.standard === TokenStandard.Native || !token.address) return nativeOnChain(chainId)
   else return new Token(chainId, token.address, token.decimals ?? 18, token.name, token.symbol)
 }
 
-const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
+const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   ethereum: Chain.Ethereum,
   polygon: Chain.Polygon,
   celo: Chain.Celo,
@@ -113,8 +129,7 @@ export function validateUrlChainParam(chainName: string | undefined) {
   return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
-// TODO(cartcrom): refactor into safer lookup & replace usage
-export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: ChainId } = {
+const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
   [Chain.Ethereum]: ChainId.MAINNET,
   [Chain.EthereumGoerli]: ChainId.GOERLI,
   [Chain.EthereumSepolia]: ChainId.SEPOLIA,
@@ -122,15 +137,42 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: ChainId } = {
   [Chain.Celo]: ChainId.CELO,
   [Chain.Optimism]: ChainId.OPTIMISM,
   [Chain.Arbitrum]: ChainId.ARBITRUM_ONE,
-  [Chain.UnknownChain]: ChainId.MAINNET,
   [Chain.Bnb]: ChainId.BNB,
 }
 
-export function fromGraphQLChain(chain: Chain): ChainId {
-  return CHAIN_NAME_TO_CHAIN_ID[chain]
+export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
+  return (UX_SUPPORTED_GQL_CHAINS as ReadonlyArray<Chain>).includes(chain)
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
+export function supportedChainIdFromGQLChain(chain: InterfaceGqlChain): ChainId
+export function supportedChainIdFromGQLChain(chain: Chain): ChainId | undefined
+export function supportedChainIdFromGQLChain(chain: Chain): ChainId | undefined {
+  return isSupportedGQLChain(chain) ? CHAIN_NAME_TO_CHAIN_ID[chain] : undefined
+}
+
+export function logSentryErrorForUnsupportedChain({
+  extras,
+  errorMessage,
+}: {
+  extras?: Record<string, any>
+  errorMessage: string
+}) {
+  Sentry.withScope((scope) => {
+    extras &&
+      Object.entries(extras).map(([k, v]) => {
+        scope.setExtra(k, v)
+      })
+    Sentry.captureException(new Error(errorMessage))
+  })
+}
+
+export const BACKEND_CHAIN_NAMES: InterfaceGqlChain[] = [
+  Chain.Ethereum,
+  Chain.Polygon,
+  Chain.Optimism,
+  Chain.Arbitrum,
+  Chain.Celo,
+]
 
 export function getTokenDetailsURL({
   address,
