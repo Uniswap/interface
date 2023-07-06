@@ -69,3 +69,26 @@ it('renders currency rows correctly when currencies list is non-empty', () => {
   expect(screen.getByText('DAI')).toBeInTheDocument()
   expect(screen.getByText('USDC')).toBeInTheDocument()
 })
+
+it('renders currency rows correctly with balances', () => {
+  render(
+    <CurrencyList
+      height={10}
+      currencies={[DAI, USDC_MAINNET, WBTC]}
+      otherListTokens={[]}
+      selectedCurrency={null}
+      onCurrencySelect={noOp}
+      isLoading={false}
+      searchQuery=""
+      isAddressSearch=""
+      showCurrencyAmount
+      balances={{
+        [DAI.address.toLowerCase()]: { usdValue: 2, balance: 2 },
+      }}
+    />
+  )
+  expect(screen.getByText('Wrapped BTC')).toBeInTheDocument()
+  expect(screen.getByText('DAI')).toBeInTheDocument()
+  expect(screen.getByText('USDC')).toBeInTheDocument()
+  expect(screen.getByText('2')).toBeInTheDocument()
+})
