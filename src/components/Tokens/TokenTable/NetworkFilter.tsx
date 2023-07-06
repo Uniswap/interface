@@ -1,8 +1,8 @@
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
 import {
-  BACKEND_SUPPORTED_CHAINS,
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
+  BACKEND_SUPPORTED_CHAINS,
   supportedChainIdFromGQLChain,
   validateUrlChainParam,
 } from 'graphql/data/util'
