@@ -63,6 +63,7 @@ export const GQL_MAINNET_CHAINS = [
   Chain.Optimism,
   Chain.Arbitrum,
   Chain.Bnb,
+  Chain.Avalanche,
 ] as const
 
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
@@ -83,6 +84,7 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [ChainId.OPTIMISM]: Chain.Optimism,
   [ChainId.OPTIMISM_GOERLI]: Chain.Optimism,
   [ChainId.BNB]: Chain.Bnb,
+  [ChainId.AVALANCHE]: Chain.Avalanche,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -123,13 +125,13 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   arbitrum: Chain.Arbitrum,
   optimism: Chain.Optimism,
   bnb: Chain.Bnb,
+  avalanche: Chain.Avalanche,
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
   return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
-// TODO: Update when BE adds Avalanche to supported chains
 const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
   [Chain.Ethereum]: ChainId.MAINNET,
   [Chain.EthereumGoerli]: ChainId.GOERLI,
@@ -139,7 +141,7 @@ const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
   [Chain.Optimism]: ChainId.OPTIMISM,
   [Chain.Arbitrum]: ChainId.ARBITRUM_ONE,
   [Chain.Bnb]: ChainId.BNB,
-  // [Chain.Avalanche]: ChainId.AVALANCHE,
+  [Chain.Avalanche]: ChainId.AVALANCHE,
 }
 
 export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
