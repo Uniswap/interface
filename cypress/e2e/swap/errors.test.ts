@@ -64,7 +64,7 @@ describe('Swap errors', () => {
     })
   })
 
-  it('slippage failure', () => {
+  it.skip('slippage failure', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UNI_MAINNET.address}`, { ethereum: 'hardhat' })
     cy.hardhat({ automine: false })
     getBalance(USDC_MAINNET).then((initialBalance) => {

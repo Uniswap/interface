@@ -9,6 +9,7 @@ import {
   SharedEventName,
   SwapEventName,
 } from '@uniswap/analytics-events'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -37,7 +38,6 @@ import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
-import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -265,7 +265,7 @@ export function Swap({
   }, [connectedChainId, prefilledState, previousConnectedChainId, previousPrefilledState])
 
   const {
-    trade: { state: tradeState, trade },
+    trade: { state: tradeState, trade, method },
     allowedSlippage,
     autoSlippage,
     currencyBalances,
@@ -360,7 +360,7 @@ export function Swap({
       [independentField]: typedValue,
       [dependentField]: showWrap
         ? parsedAmounts[independentField]?.toExact() ?? ''
-        : formatTransactionAmount(currencyAmountToPreciseFloat(parsedAmounts[dependentField])),
+        : formatCurrencyAmount(parsedAmounts[dependentField], NumberType.SwapTradeAmount, ''),
     }),
     [dependentField, independentField, parsedAmounts, showWrap, typedValue]
   )
@@ -528,10 +528,10 @@ export function Swap({
 
     setSwapQuoteReceivedDate(new Date())
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatEventPropertiesForTrade(trade, allowedSlippage, trade.gasUseEstimateUSD ?? undefined),
+      ...formatEventPropertiesForTrade(trade, allowedSlippage, trade.gasUseEstimateUSD ?? undefined, method),
       ...trace,
     })
-  }, [prevTrade, trade, trace, allowedSlippage])
+  }, [prevTrade, trade, trace, allowedSlippage, method])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
