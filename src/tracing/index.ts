@@ -17,10 +17,12 @@ window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
 const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
 export const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
 
-let sentryUserId = localStorage.getItem('sentry-user-id')
+const SENTRY_USER_ID_KEY = 'sentry-user-id'
+
+let sentryUserId = localStorage.getItem(SENTRY_USER_ID_KEY)
 if (!sentryUserId) {
   sentryUserId = v4uuid()
-  localStorage.setItem('sentry-user-id', sentryUserId)
+  localStorage.setItem(SENTRY_USER_ID_KEY, sentryUserId)
 }
 
 Sentry.init({
