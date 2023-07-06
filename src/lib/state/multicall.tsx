@@ -16,11 +16,10 @@ export default multicall
  */
 function getBlocksPerFetchForChainId(chainId: number | undefined): number {
   switch (chainId) {
-    case ChainId.AVALANCHE:
-      return 30
     case ChainId.ARBITRUM_ONE:
     case ChainId.OPTIMISM:
       return 15
+    case ChainId.AVALANCHE:
     case ChainId.BNB:
     case ChainId.CELO:
     case ChainId.CELO_ALFAJORES:
