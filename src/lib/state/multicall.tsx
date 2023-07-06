@@ -12,7 +12,7 @@ export default multicall
 /**
  *
  * @param chainId
- * @returns The approximate number of blocks written to the corresponding chainId per Ethereum mainnet epoch.
+ * @returns The approximate whole number of blocks written to the corresponding chainId per Ethereum mainnet epoch.
  */
 function getBlocksPerFetchForChainId(chainId: number | undefined): number {
   switch (chainId) {
