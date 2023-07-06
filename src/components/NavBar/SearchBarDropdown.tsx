@@ -313,7 +313,7 @@ export const SearchBarDropdown = ({
                 isLoading={!trendingTokenData}
               />
             )}
-            {!isTokenPage && !shouldDisableNFTRoutes && (
+            {Boolean(!isTokenPage && !shouldDisableNFTRoutes) && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
