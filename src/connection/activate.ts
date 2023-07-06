@@ -32,7 +32,7 @@ function useTryActivation() {
   const currentPage = getCurrentPageFromLocation(pathname)
 
   return useCallback(
-    async (connection: Connection, onSuccess?: () => void, chainId?: SupportedChainId) => {
+    async (connection: Connection, onSuccess: () => void, chainId?: SupportedChainId) => {
       // Skips wallet connection if the connection should override the default
       // behavior, i.e. install MetaMask or launch Coinbase app
       if (connection.overrideActivate?.(chainId)) return
@@ -50,7 +50,7 @@ function useTryActivation() {
         // Clears pending connection state
         setActivationState(IDLE_ACTIVATION_STATE)
 
-        onSuccess?.()
+        onSuccess()
       } catch (error) {
         // Gracefully handles errors from the user rejecting a connection attempt
         if (didUserReject(connection, error)) {
