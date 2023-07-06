@@ -13,17 +13,12 @@ import { beforeSend } from './errors'
 // Dump some metadata into the window to allow client verification.
 window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
 
+// This is used to identify the user in Sentry.
+const SENTRY_USER_ID_KEY = 'sentry-user-id'
+
 // Actual KEYs are set by proxy servers.
 const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
 export const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
-
-const SENTRY_USER_ID_KEY = 'sentry-user-id'
-
-let sentryUserId = localStorage.getItem(SENTRY_USER_ID_KEY)
-if (!sentryUserId) {
-  sentryUserId = v4uuid()
-  localStorage.setItem(SENTRY_USER_ID_KEY, sentryUserId)
-}
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
@@ -40,7 +35,6 @@ Sentry.init({
   beforeSend,
 })
 
-const SENTRY_USER_ID_KEY = 'sentry-user-id'
 let sentryUserId = localStorage.getItem(SENTRY_USER_ID_KEY)
 if (!sentryUserId) {
   localStorage.setItem(SENTRY_USER_ID_KEY, (sentryUserId = uuidv4()))
