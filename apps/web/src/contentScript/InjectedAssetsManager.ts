@@ -1,3 +1,4 @@
+import { spacing } from 'ui/src/theme/spacing'
 import { logger } from 'wallet/src/features/logger/logger'
 
 const TAG_ID_PREFIX = 'uniswap-wallet'
@@ -63,7 +64,9 @@ const INJECTED_FRAMES = {
 function injectFrame<T extends string = keyof typeof INJECTED_FRAMES>(
   filename: T,
   container = document.body || document.documentElement,
-  css = 'position:absolute; bottom:0;right:50px;display:block;z-index:99999999;border:none;width:350px;height:600px;'
+  css = `position:absolute; bottom:0;right:50px;display:block;z-index:99999999;border:none;width:${
+    350 + spacing.spacing12 * 2
+  }px;height:600px;`
 ): void {
   const extensionOrigin = 'chrome-extension://' + chrome.runtime.id
   if (location.ancestorOrigins?.contains(extensionOrigin)) {

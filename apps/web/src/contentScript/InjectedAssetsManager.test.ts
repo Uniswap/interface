@@ -64,12 +64,12 @@ describe('injectIFrames', () => {
         <iframe
           id="uniswap-wallet-index.html#/route1"
           src="chrome/path/to/index.html#/route1"
-          style="position: absolute; bottom: 0px; right: 50px; display: block; z-index: 99999999; width: 350px; height: 600px;"
+          style="position: absolute; bottom: 0px; right: 50px; display: block; z-index: 99999999; width: 374px; height: 600px;"
         />
         <iframe
           id="uniswap-wallet-index.html#/route2"
           src="chrome/path/to/index.html#/route2"
-          style="position: absolute; bottom: 0px; right: 50px; display: block; z-index: 99999999; width: 350px; height: 600px;"
+          style="position: absolute; bottom: 0px; right: 50px; display: block; z-index: 99999999; width: 374px; height: 600px;"
         />
       </body>
     `)
