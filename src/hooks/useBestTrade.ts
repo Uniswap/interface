@@ -23,7 +23,8 @@ export function useBestTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
-  routerPreferenceOverride?: RouterPreference.X
+  routerPreferenceOverride?: RouterPreference.X,
+  account?: string
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -33,7 +34,8 @@ export function useBestTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
-  routerPreferenceOverride?: RouterPreference.API | RouterPreference.CLIENT
+  routerPreferenceOverride?: RouterPreference.API | RouterPreference.CLIENT,
+  account?: string
 ): {
   state: TradeState
   trade?: ClassicTrade
@@ -48,7 +50,8 @@ export function useBestTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
-  routerPreferenceOverride?: RouterPreference
+  routerPreferenceOverride?: RouterPreference,
+  account?: string
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -80,7 +83,8 @@ export function useBestTrade(
     amountSpecified ? debouncedAmount : undefined,
     debouncedOtherCurrency,
     routerPreferenceOverride ?? routerPreference,
-    !(autoRouterSupported && shouldGetTrade) // skip fetching
+    !(autoRouterSupported && shouldGetTrade), // skip fetching
+    account
   )
 
   const inDebounce =

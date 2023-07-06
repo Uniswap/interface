@@ -104,9 +104,13 @@ export enum TradeFillType {
   UniswapX = 'uniswap_x', // off-chain trades, no routes
 }
 
+export type ApproveInfo = { needsApprove: true; approveGasEstimateUSD: number } | { needsApprove: false }
+export type WrapInfo = { needsWrap: true; wrapGasEstimateUSD: number } | { needsWrap: false }
+
 export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   public readonly fillType = TradeFillType.Classic
-  gasUseEstimateUSD: string | null | undefined
+  approveInfo: ApproveInfo
+  gasUseEstimateUSD?: number // gas estimate for swaps
   blockNumber: string | null | undefined
   isUniswapXBetter: boolean | undefined
   fromClientRouter: boolean | undefined
@@ -119,14 +123,17 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     isUniswapXBetter,
     requestId,
     quoteMethod,
+    approveInfo,
     ...routes
   }: {
-    gasUseEstimateUSD?: string | null
+    gasUseEstimateUSD?: number
+    totalGasUseEstimateUSD?: number
     blockNumber?: string | null
     isUniswapXBetter?: boolean
     requestId?: string
     quoteMethod: QuoteMethod
     fromClientRouter?: boolean
+    approveInfo: ApproveInfo
     v2Routes: {
       routev2: V2Route<Currency, Currency>
       inputAmount: CurrencyAmount<Currency>
@@ -150,6 +157,16 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     this.isUniswapXBetter = isUniswapXBetter
     this.requestId = requestId
     this.quoteMethod = quoteMethod
+    this.approveInfo = approveInfo
+  }
+
+  // gas estimate for maybe approve + swap
+  public get totalGasUseEstimateUSD(): number | undefined {
+    if (this.approveInfo.needsApprove && this.gasUseEstimateUSD) {
+      return this.approveInfo.approveGasEstimateUSD + this.gasUseEstimateUSD
+    }
+
+    return this.gasUseEstimateUSD
   }
 }
 
@@ -157,9 +174,10 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
   public readonly fillType = TradeFillType.UniswapX
   quoteId?: string
   requestId?: string
-  needsWrap: boolean
+  wrapInfo: WrapInfo
+  approveInfo: ApproveInfo
   // The gas estimate of the reference classic trade, if there is one.
-  classicGasUseEstimateUSD: string | null | undefined
+  classicGasUseEstimateUSD?: number
   auctionPeriodSecs: number
   deadlineBufferSecs: number
   slippageTolerance: Percent
@@ -171,7 +189,8 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     tradeType,
     quoteId,
     requestId,
-    needsWrap,
+    wrapInfo,
+    approveInfo,
     classicGasUseEstimateUSD,
     auctionPeriodSecs,
     deadlineBufferSecs,
@@ -183,8 +202,9 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     tradeType: TradeType
     quoteId?: string
     requestId?: string
-    needsWrap: boolean
-    classicGasUseEstimateUSD?: string | null
+    approveInfo: ApproveInfo
+    wrapInfo: WrapInfo
+    classicGasUseEstimateUSD?: number
     auctionPeriodSecs: number
     deadlineBufferSecs: number
     slippageTolerance: Percent
@@ -192,11 +212,23 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     super({ currencyIn, currenciesOut, orderInfo, tradeType })
     this.quoteId = quoteId
     this.requestId = requestId
-    this.needsWrap = needsWrap
+    this.approveInfo = approveInfo
+    this.wrapInfo = wrapInfo
     this.classicGasUseEstimateUSD = classicGasUseEstimateUSD
     this.auctionPeriodSecs = auctionPeriodSecs
     this.deadlineBufferSecs = deadlineBufferSecs
     this.slippageTolerance = slippageTolerance
+  }
+
+  public get totalGasUseEstimateUSD(): number {
+    if (this.wrapInfo.needsWrap && this.approveInfo.needsApprove) {
+      return this.wrapInfo.wrapGasEstimateUSD + this.approveInfo.approveGasEstimateUSD
+    }
+
+    if (this.wrapInfo.needsWrap) return this.wrapInfo.wrapGasEstimateUSD
+    if (this.approveInfo.needsApprove) return this.approveInfo.approveGasEstimateUSD
+
+    return 0
   }
 }
 
@@ -221,10 +253,13 @@ export type TradeResult =
   | {
       state: QuoteState.NOT_FOUND
       trade?: undefined
+      uniswapXGasUseEstimateUSD?: undefined
     }
   | {
       state: QuoteState.SUCCESS
       trade: InterfaceTrade
+      // TODO (Gouda): We can remove this return value after opt-in period
+      uniswapXGasUseEstimateUSD?: number
     }
 
 export enum PoolType {

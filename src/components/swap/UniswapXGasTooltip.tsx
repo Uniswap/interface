@@ -31,9 +31,9 @@ const InlineCaption = styled(ThemedText.Caption)`
 
 export default function UniswapXGasTooltip({ trade }: { trade: DutchOrderTrade }) {
   const formattedGasPriceString = trade?.classicGasUseEstimateUSD
-    ? trade.classicGasUseEstimateUSD === '0.00'
+    ? trade.classicGasUseEstimateUSD === 0
       ? '<$0.01'
-      : '$' + trade.classicGasUseEstimateUSD
+      : '$' + trade.classicGasUseEstimateUSD.toFixed(2)
     : '$0'
   return (
     <Container>

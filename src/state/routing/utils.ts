@@ -1,17 +1,25 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/gouda-sdk'
+import { MaxUint256 } from '@uniswap/permit2-sdk'
 import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
+import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
+import ERC20_ABI from 'abis/erc20.json'
+import { Erc20, Weth } from 'abis/types'
+import WETH_ABI from 'abis/weth.json'
+import { SupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
-import { isBsc, isMatic, nativeOnChain } from 'constants/tokens'
+import { isBsc, isMatic, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { getContract } from 'utils'
 import { toSlippagePercent } from 'utils/slippage'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
 import {
+  ApproveInfo,
   ClassicQuoteData,
   ClassicTrade,
   DutchOrderTrade,
@@ -27,6 +35,7 @@ import {
   URAQuoteType,
   V2PoolInRoute,
   V3PoolInRoute,
+  WrapInfo,
 } from './types'
 
 interface RouteResult {
@@ -170,34 +179,109 @@ function getClassicTradeDetails(
   currencyOut: Currency,
   data: URAQuoteResponse
 ): {
-  gasUseEstimateUSD?: string
+  gasUseEstimate?: number
+  gasUseEstimateUSD?: number
   blockNumber?: string
   routes?: RouteResult[]
 } {
   const classicQuote =
     data.routing === URAQuoteType.CLASSIC ? data.quote : data.allQuotes.find(isClassicQuoteResponse)?.quote
-
   return {
-    gasUseEstimateUSD: classicQuote?.gasUseEstimateUSD,
+    gasUseEstimate: classicQuote?.gasUseEstimate ? parseFloat(classicQuote.gasUseEstimate) : undefined,
+    gasUseEstimateUSD: classicQuote?.gasUseEstimateUSD ? parseFloat(classicQuote.gasUseEstimateUSD) : undefined,
     blockNumber: classicQuote?.blockNumber,
     routes: classicQuote ? computeRoutes(currencyIn, currencyOut, classicQuote.route) : undefined,
   }
 }
 
-export function transformRoutesToTrade(
+// TODO (Gouda): add fallback gas limits per chain? l2s have higher costs
+const WRAP_FALLBACK_GAS_LIMIT = 45_000
+const APPROVE_FALLBACK_GAS_LIMIT = 65_000
+
+async function getApproveInfo(
+  account: string | undefined,
+  currency: Currency,
+  amount: string,
+  usdCostPerGas?: number
+): Promise<ApproveInfo> {
+  // native currencies do not need token approvals
+  if (currency.isNative) return { needsApprove: false }
+
+  // If any of these arguments aren't provided, then we cannot generate approval cost info
+  if (!account || !usdCostPerGas) return { needsApprove: false }
+
+  const provider = RPC_PROVIDERS[currency.chainId as SupportedChainId]
+  const tokenContract = getContract(currency.address, ERC20_ABI, provider) as Erc20
+
+  const allowance = await tokenContract.callStatic.allowance(account, PERMIT2_ADDRESS)
+  if (!allowance.lt(amount)) return { needsApprove: false }
+
+  const approveTx = await tokenContract.populateTransaction.approve(PERMIT2_ADDRESS, MaxUint256)
+  let approveGasUseEstimate
+  try {
+    approveGasUseEstimate = (await provider.estimateGas({ from: account, ...approveTx })).toNumber()
+  } catch (_) {
+    // estimateGas will error if the account doesn't have sufficient token balance, but we should show an estimated cost anyway
+    approveGasUseEstimate = APPROVE_FALLBACK_GAS_LIMIT
+  }
+
+  return { needsApprove: true, approveGasEstimateUSD: approveGasUseEstimate * usdCostPerGas }
+}
+
+async function getWrapInfo(
+  needsWrap: boolean,
+  account: string | undefined,
+  chainId: SupportedChainId,
+  amount: string,
+  usdCostPerGas?: number
+): Promise<WrapInfo> {
+  if (!needsWrap) return { needsWrap: false }
+
+  const provider = RPC_PROVIDERS[chainId]
+  const wethAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address
+
+  // If any of these arguments aren't provided, then we cannot generate wrap cost info
+  if (!wethAddress || !usdCostPerGas) return { needsWrap: false }
+
+  const wethContract = getContract(wethAddress, WETH_ABI, provider, account) as Weth
+  const wethTx = await wethContract.populateTransaction.deposit({ value: amount })
+  let wrapGasUseEstimate
+  try {
+    // estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway
+    wrapGasUseEstimate = (await provider.estimateGas({ from: account, ...wethTx })).toNumber()
+  } catch (_) {
+    wrapGasUseEstimate = WRAP_FALLBACK_GAS_LIMIT
+  }
+
+  return { needsWrap: true, wrapGasEstimateUSD: wrapGasUseEstimate * usdCostPerGas }
+}
+
+export async function transformRoutesToTrade(
   args: GetQuoteArgs,
   data: URAQuoteResponse,
   quoteMethod: QuoteMethod
-): TradeResult {
-  const { tradeType, needsWrapIfUniswapX, routerPreference } = args
+): Promise<TradeResult> {
+  const { tradeType, needsWrapIfUniswapX, routerPreference, account, amount } = args
 
   // During the opt-in period, only return Gouda quotes if the user has turned on the setting,
   // even if it is the better quote.
   const showUniswapXTrade = data.routing === URAQuoteType.DUTCH_LIMIT && routerPreference === RouterPreference.X
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
-  const { gasUseEstimateUSD, blockNumber, routes } = getClassicTradeDetails(currencyIn, currencyOut, data)
+  const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate } = getClassicTradeDetails(
+    currencyIn,
+    currencyOut,
+    data
+  )
 
+  // If the top-level URA quote type is DUTCH_LIMIT, then UniswapX is better for the user
+  const isUniswapXBetter = data.routing === URAQuoteType.DUTCH_LIMIT
+
+  // Some sus javascript float math but it's ok because its just an estimate for display purposes
+  const usdCostPerGas = gasUseEstimateUSD && gasUseEstimate ? gasUseEstimateUSD / gasUseEstimate : undefined
+
+  const approveInfo = await getApproveInfo(account, currencyIn, amount, usdCostPerGas)
+  let uniswapXGasUseEstimateUSD: number | undefined
   const classicTrade = new ClassicTrade({
     v2Routes:
       routes
@@ -226,35 +310,47 @@ export function transformRoutesToTrade(
           outputAmount,
         })) ?? [],
     tradeType,
-    gasUseEstimateUSD: gasUseEstimateUSD ? parseFloat(gasUseEstimateUSD).toFixed(2).toString() : undefined,
+    gasUseEstimateUSD,
+    approveInfo,
     blockNumber,
-    // If the top-level URA quote type is DUTCH_LIMIT, then UniswapX is better for the user
-    isUniswapXBetter: data.routing === URAQuoteType.DUTCH_LIMIT,
+    isUniswapXBetter,
     requestId: data.quote.requestId,
     quoteMethod,
   })
 
-  if (showUniswapXTrade) {
+  if (isUniswapXBetter) {
     const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
-    return {
-      state: QuoteState.SUCCESS,
-      trade: new DutchOrderTrade({
-        currencyIn,
-        currenciesOut: [currencyOut],
-        orderInfo,
-        tradeType,
-        quoteId: data.quote.quoteId,
-        requestId: data.quote.requestId,
-        classicGasUseEstimateUSD: classicTrade.gasUseEstimateUSD,
-        needsWrap: needsWrapIfUniswapX,
-        auctionPeriodSecs: data.quote.auctionPeriodSecs,
-        deadlineBufferSecs: data.quote.deadlineBufferSecs,
-        slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
-      }),
+    const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)
+
+    const uniswapXTrade = new DutchOrderTrade({
+      currencyIn,
+      currenciesOut: [currencyOut],
+      orderInfo,
+      tradeType,
+      quoteId: data.quote.quoteId,
+      requestId: data.quote.requestId,
+      classicGasUseEstimateUSD: classicTrade.totalGasUseEstimateUSD,
+      wrapInfo,
+      approveInfo,
+      auctionPeriodSecs: data.quote.auctionPeriodSecs,
+      deadlineBufferSecs: data.quote.deadlineBufferSecs,
+      slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
+    })
+
+    uniswapXGasUseEstimateUSD = uniswapXTrade.totalGasUseEstimateUSD
+
+    // During the opt-in period, only return Gouda quotes if the user has turned on the setting,
+    // even if it is the better quote.
+    if (args.routerPreference === RouterPreference.X) {
+      return {
+        state: QuoteState.SUCCESS,
+        trade: uniswapXTrade,
+      }
     }
   }
 
-  return { state: QuoteState.SUCCESS, trade: classicTrade }
+  // Return uniswapXGasUseEstimateUSD as a reference price just for opt-in period
+  return { state: QuoteState.SUCCESS, trade: classicTrade, uniswapXGasUseEstimateUSD }
 }
 
 function parseToken({ address, chainId, decimals, symbol }: ClassicQuoteData['route'][0][0]['tokenIn']): Token {
@@ -308,4 +404,19 @@ export function shouldUseAPIRouter(args: GetQuoteArgs): boolean {
   }
 
   return routerPreference === RouterPreference.API || routerPreference === RouterPreference.X
+}
+
+export function getTransactionCount(trade: InterfaceTrade): number {
+  let count = 0
+  if (trade.approveInfo.needsApprove) {
+    count++ // approval step, which can happen in both classic and uniswapx
+  }
+  if (isUniswapXTrade(trade)) {
+    if (trade.wrapInfo.needsWrap) {
+      count++ // wrapping step for uniswapx
+    }
+  } else {
+    count++ // classic onchain swap
+  }
+  return count
 }

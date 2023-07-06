@@ -267,7 +267,7 @@ export function Swap({
   }, [connectedChainId, prefilledState, previousConnectedChainId, previousPrefilledState])
 
   const {
-    trade: { state: tradeState, trade },
+    trade: { state: tradeState, trade, uniswapXGasUseEstimateUSD },
     allowedSlippage,
     autoSlippage,
     currencyBalances,
@@ -748,7 +748,9 @@ export function Swap({
         >
           <Row justify="space-between">
             {/* TODO (Gouda): NATE THIS IS ALL YOU */}
-            <div>GOUDA IS BETTER SO TURN IT ON :D</div>
+            <div>
+              Swap for ${uniswapXGasUseEstimateUSD?.toFixed(2)} instead of ${trade.totalGasUseEstimateUSD?.toFixed(2)}
+            </div>
             <Toggle
               id="toggle-uniswap-x-button"
               isActive={routerPreference === RouterPreference.X}

@@ -89,7 +89,7 @@ function useConfirmModalState({
   // at the bottom of the modal, even after they complete steps 1 and 2.
   const generateRequiredSteps = useCallback(() => {
     const steps: PendingConfirmModalState[] = []
-    if (trade.fillType === TradeFillType.UniswapX && trade.needsWrap) {
+    if (trade.fillType === TradeFillType.UniswapX && trade.wrapInfo.needsWrap) {
       steps.push(ConfirmModalState.WRAPPING)
     }
     // Any existing USDT allowance needs to be reset before we can approve the new amount (mainnet only).
@@ -200,6 +200,7 @@ function useConfirmModalState({
       onWrap,
       trace,
       trade,
+      onCurrencySelection,
     ]
   )
 

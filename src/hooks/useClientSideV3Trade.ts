@@ -147,6 +147,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
         ],
         tradeType,
         quoteMethod: QuoteMethod.CLIENT_SIDE,
+        approveInfo: { needsApprove: false },
       }),
     }
   }, [amountSpecified, currenciesAreTheSame, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])

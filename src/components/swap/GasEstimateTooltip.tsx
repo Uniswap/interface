@@ -1,9 +1,10 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
-import { RowFixed } from 'components/Row'
+import Row, { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { InterfaceTrade } from 'state/routing/types'
@@ -31,12 +32,13 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
     return null
   }
 
+  const formattedGasPriceString =
+    trade?.totalGasUseEstimateUSD === 0 ? '$0.00' : formatNumber(trade?.totalGasUseEstimateUSD, NumberType.FiatGasPrice)
+
   if (isClassicTrade(trade)) {
-    if (!trade?.gasUseEstimateUSD) {
+    if (!trade?.totalGasUseEstimateUSD) {
       return null
     }
-
-    const formattedGasPriceString = trade.gasUseEstimateUSD === '0.00' ? '<$0.01' : '$' + trade.gasUseEstimateUSD
 
     return (
       <MouseoverTooltip
@@ -77,7 +79,14 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
       <LoadingOpacityContainer $loading={loading}>
         <RowFixed gap="xs">
           <UniswapXRouterIcon />
-          <ThemedText.BodySmall color="textSecondary">$0.00</ThemedText.BodySmall>
+          <ThemedText.BodySmall color="textSecondary">
+            <Row gap="xs">
+              <div>{formattedGasPriceString}</div>
+              <div>
+                <s>{formatNumber(trade.classicGasUseEstimateUSD, NumberType.FiatGasPrice)}</s>
+              </div>
+            </Row>
+          </ThemedText.BodySmall>
         </RowFixed>
       </LoadingOpacityContainer>
     </MouseoverTooltip>
