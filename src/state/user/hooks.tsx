@@ -19,7 +19,6 @@ import {
   addSerializedToken,
   updateHideClosedPositions,
   updateHideUniswapWalletBanner,
-  updateUserBuyFiatFlowCompleted,
   updateUserDeadline,
   updateUserLocale,
   updateUserRouterPreference,
@@ -63,18 +62,6 @@ export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: Sup
   )
 
   return [locale, setLocale]
-}
-
-export function useBuyFiatFlowCompleted(): [boolean | undefined, (buyFiatFlowCompleted: boolean) => void] {
-  const dispatch = useAppDispatch()
-  const buyFiatFlowCompleted = useAppSelector((state) => state.user.buyFiatFlowCompleted)
-  const setBuyFiatFlowCompleted = useCallback(
-    (buyFiatFlowCompleted: boolean) => {
-      dispatch(updateUserBuyFiatFlowCompleted(buyFiatFlowCompleted))
-    },
-    [dispatch]
-  )
-  return [buyFiatFlowCompleted, setBuyFiatFlowCompleted]
 }
 
 export function useRouterPreference(): [RouterPreference, (routerPreference: RouterPreference) => void] {

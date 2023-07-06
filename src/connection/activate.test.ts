@@ -1,5 +1,8 @@
 import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
+import { SupportedChainId } from 'constants/chains'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { updateSelectedWallet } from 'state/user/reducer'
 import { createDeferredPromise } from 'test-utils/promise'
 
 import { act, renderHook } from '../test-utils/render'
@@ -35,6 +38,7 @@ function createMockConnection(
     hooks: {} as unknown as Web3ReactHooks,
     type,
     shouldDisplay: () => true,
+    overrideActivate: jest.fn(),
     connector: new MockConnector(activate, deactivate),
   }
 }
@@ -54,18 +58,25 @@ it('Should call activate function on a connection', async () => {
   const activationResponse = createDeferredPromise()
   const mockConnection = createMockConnection(jest.fn().mockImplementation(() => activationResponse.promise))
 
+  renderHook(() => useAppDispatch()(updateSelectedWallet({ wallet: ConnectionType.INJECTED })))
+  const initialSelectedWallet = renderHook(() => useAppSelector((state) => state.user.selectedWallet))
+  expect(initialSelectedWallet.result.current).toBeDefined()
+
   const result = renderHook(useActivationState).result
   const onSuccess = jest.fn()
 
   let activationCall: Promise<void> = new Promise(jest.fn())
   act(() => {
-    activationCall = result.current.tryActivation(mockConnection, onSuccess)
+    activationCall = result.current.tryActivation(mockConnection, onSuccess, SupportedChainId.OPTIMISM)
   })
 
   expect(result.current.activationState).toEqual({ status: ActivationStatus.PENDING, connection: mockConnection })
+  expect(mockConnection.overrideActivate).toHaveBeenCalledWith(SupportedChainId.OPTIMISM)
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(console.debug).toHaveBeenLastCalledWith(`Connection activating: ${mockConnection.getName()}`)
   expect(onSuccess).toHaveBeenCalledTimes(0)
+  const pendingSelectedWallet = renderHook(() => useAppSelector((state) => state.user.selectedWallet))
+  expect(pendingSelectedWallet.result.current).toBeUndefined()
 
   await act(async () => {
     activationResponse.resolve()
@@ -77,6 +88,8 @@ it('Should call activate function on a connection', async () => {
   expect(console.debug).toHaveBeenLastCalledWith(`Connection activated: ${mockConnection.getName()}`)
   expect(console.debug).toHaveBeenCalledTimes(2)
   expect(onSuccess).toHaveBeenCalledTimes(1)
+  const finalSelectedWallet = renderHook(() => useAppSelector((state) => state.user.selectedWallet))
+  expect(finalSelectedWallet.result.current).toBeDefined()
 })
 
 it('Should properly deactivate pending connection attempts', async () => {
