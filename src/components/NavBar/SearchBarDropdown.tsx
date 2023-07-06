@@ -9,6 +9,7 @@ import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-a
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -148,6 +149,7 @@ export const SearchBarDropdown = ({
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/tokens')
   const [resultsState, setResultsState] = useState<ReactNode>()
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
     3,
@@ -311,7 +313,7 @@ export const SearchBarDropdown = ({
                 isLoading={!trendingTokenData}
               />
             )}
-            {!isTokenPage && (
+            {Boolean(!isTokenPage && !shouldDisableNFTRoutes) && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
@@ -351,6 +353,7 @@ export const SearchBarDropdown = ({
     trace,
     searchHistory,
     trendingCollectionsAreLoading,
+    shouldDisableNFTRoutes,
   ])
 
   const showBNBComingSoonBadge = chainId === SupportedChainId.BNB && !isLoading

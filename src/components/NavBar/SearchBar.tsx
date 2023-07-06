@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
@@ -7,6 +7,7 @@ import clsx from 'clsx'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { organizeSearchResults } from 'lib/utils/searchBar'
@@ -50,6 +51,7 @@ export const SearchBar = () => {
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -102,8 +104,16 @@ export const SearchBar = () => {
     ...trace,
   }
   const placeholderText = useMemo(() => {
-    return isMobileOrTablet ? `Search` : `Search tokens and NFT collections`
-  }, [isMobileOrTablet])
+    if (isMobileOrTablet) {
+      return t`Search`
+    } else {
+      if (shouldDisableNFTRoutes) {
+        return t`Search tokens`
+      } else {
+        return t`Search tokens and NFT collections`
+      }
+    }
+  }, [isMobileOrTablet, shouldDisableNFTRoutes])
 
   const handleKeyPress = useCallback(
     (event: any) => {
@@ -174,26 +184,19 @@ export const SearchBar = () => {
             element={InterfaceElementName.NAVBAR_SEARCH_INPUT}
             properties={{ ...trace }}
           >
-            <Trans
-              id={placeholderText}
-              render={({ translation }) => (
-                <Box
-                  as="input"
-                  data-cy="search-bar-input"
-                  placeholder={translation as string}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    !isOpen && toggleOpen()
-                    setSearchValue(event.target.value)
-                  }}
-                  onBlur={() =>
-                    sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
-                  }
-                  className={`${styles.searchBarInput} ${styles.searchContentLeftAlign}`}
-                  value={searchValue}
-                  ref={inputRef}
-                  width="full"
-                />
-              )}
+            <Box
+              as="input"
+              data-cy="search-bar-input"
+              placeholder={placeholderText}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                !isOpen && toggleOpen()
+                setSearchValue(event.target.value)
+              }}
+              onBlur={() => sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
+              className={`${styles.searchBarInput} ${styles.searchContentLeftAlign}`}
+              value={searchValue}
+              ref={inputRef}
+              width="full"
             />
           </TraceEvent>
           {!isOpen && <KeyShortCut>/</KeyShortCut>}
