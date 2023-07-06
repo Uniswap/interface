@@ -220,10 +220,16 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
         paddingBottom={innerPaddingBottom}
         paddingTop={innerPaddingTop}>
         {currencyInfo && (
-          <Flex fill grow row onLayout={onLayout}>
+          <Flex
+            fill
+            grow
+            row
+            alignItems="center"
+            height={MAX_INPUT_FONT_SIZE}
+            overflow="hidden"
+            onLayout={onLayout}>
             <AmountInput
               ref={inputRef}
-              alignSelf="stretch"
               autoFocus={autoFocus ?? focus}
               backgroundColor="none"
               borderWidth={0}
@@ -231,8 +237,11 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               flex={1}
               fontFamily={theme.textVariants.headlineMedium.fontFamily}
               fontSize={fontSize}
-              height={MAX_INPUT_FONT_SIZE}
               maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
+              // This is a hacky workaround for Android to prevent text from being cut off
+              // (the text input height is greater than the font size and the input is
+              // centered vertically, so the caret is cut off but the text is not)
+              minHeight={2 * MAX_INPUT_FONT_SIZE}
               overflow="visible"
               placeholder="0"
               placeholderTextColor={theme.colors.textTertiary}
