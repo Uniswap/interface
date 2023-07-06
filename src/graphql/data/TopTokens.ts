@@ -16,10 +16,10 @@ import {
   useTopTokensSparklineQuery,
 } from './__generated__/types-and-hooks'
 import {
-  CHAIN_NAME_TO_CHAIN_ID,
   isPricePoint,
   PollingInterval,
   PricePoint,
+  supportedChainIdFromGQLChain,
   toHistoryDuration,
   unwrapToken,
   usePollQueryWhileMounted,
@@ -140,14 +140,14 @@ export type SparklineMap = { [key: string]: PricePoint[] | undefined }
 export type TopToken = NonNullable<NonNullable<TopTokens100Query>['topTokens']>[number]
 
 interface UseTopTokensReturnValue {
-  tokens?: TopToken[]
+  tokens?: readonly TopToken[]
   tokenSortRank: Record<string, number>
   loadingTokens: boolean
   sparklines: SparklineMap
 }
 
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
+  const chainId = supportedChainIdFromGQLChain(chain)
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
   const { data: sparklineQuery } = usePollQueryWhileMounted(
@@ -158,7 +158,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   )
 
   const sparklines = useMemo(() => {
-    const unwrappedTokens = sparklineQuery?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))
+    const unwrappedTokens = chainId && sparklineQuery?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))
     const map: SparklineMap = {}
     unwrappedTokens?.forEach(
       (current) => current?.address && (map[current.address] = current?.market?.priceHistory?.filter(isPricePoint))
@@ -173,7 +173,10 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     PollingInterval.Fast
   )
 
-  const unwrappedTokens = useMemo(() => data?.topTokens?.map((token) => unwrapToken(chainId, token)), [chainId, data])
+  const unwrappedTokens = useMemo(
+    () => chainId && data?.topTokens?.map((token) => unwrapToken(chainId, token)),
+    [chainId, data]
+  )
   const sortedTokens = useSortedTokens(unwrappedTokens)
   const tokenSortRank = useMemo(
     () =>
