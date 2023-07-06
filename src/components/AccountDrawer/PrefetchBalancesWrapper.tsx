@@ -1,5 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { usePortfolioBalancesLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import usePrevious from 'hooks/usePrevious'
 import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAllTransactions } from 'state/transactions/hooks'
@@ -44,7 +45,7 @@ export default function PrefetchBalancesWrapper({ children }: PropsWithChildren)
   const [hasUnfetchedBalances, setHasUnfetchedBalances] = useState(true)
   const fetchBalances = useCallback(() => {
     if (account) {
-      prefetchPortfolioBalances({ variables: { ownerAddress: account } })
+      prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS } })
       setHasUnfetchedBalances(false)
     }
   }, [account, prefetchPortfolioBalances])

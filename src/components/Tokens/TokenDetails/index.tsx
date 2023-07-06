@@ -26,7 +26,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { QueryToken } from 'graphql/data/Token'
-import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
+import { getTokenDetailsURL, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
@@ -89,7 +89,7 @@ function useRelevantToken(
 type TokenDetailsProps = {
   urlAddress?: string
   inputTokenAddress?: string
-  chain: Chain
+  chain: InterfaceGqlChain
   tokenQuery: TokenQuery
   tokenPriceQuery?: TokenPriceQuery
   onChangeTimePeriod: OnChangeTimePeriod
@@ -111,8 +111,7 @@ export default function TokenDetails({
   )
 
   const { chainId: connectedChainId } = useWeb3React()
-  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
-
+  const pageChainId = supportedChainIdFromGQLChain(chain)
   const tokenQueryData = tokenQuery.token
   const crossChainMap = useMemo(
     () =>
@@ -185,6 +184,7 @@ export default function TokenDetails({
     },
     [continueSwap, setContinueSwap]
   )
+
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />

@@ -3,7 +3,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import {
   BACKEND_CHAIN_NAMES,
   BACKEND_UNSUPPORTED_CHAIN_IDS,
-  CHAIN_NAME_TO_CHAIN_ID,
+  supportedChainIdFromGQLChain,
   validateUrlChainParam,
 } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -121,7 +121,7 @@ export default function NetworkFilter() {
   const { chainName } = useParams<{ chainName?: string }>()
   const currentChainName = validateUrlChainParam(chainName)
 
-  const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
+  const chainInfo = getChainInfo(supportedChainIdFromGQLChain(currentChainName))
 
   return (
     <StyledMenu ref={node}>
@@ -133,7 +133,7 @@ export default function NetworkFilter() {
       >
         <StyledMenuContent>
           <NetworkLabel>
-            <Logo src={chainInfo?.logoUrl} /> {chainInfo?.label}
+            <Logo src={chainInfo.logoUrl} /> {chainInfo.label}
           </NetworkLabel>
           <Chevron open={open}>
             {open ? (
@@ -147,8 +147,7 @@ export default function NetworkFilter() {
       {open && (
         <MenuTimeFlyout>
           {BACKEND_CHAIN_NAMES.map((network) => {
-            const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[network])
-            if (!chainInfo) return null
+            const chainInfo = getChainInfo(supportedChainIdFromGQLChain(network))
             return (
               <InternalLinkMenuItem
                 key={network}

@@ -115,7 +115,7 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: QuoteData): Tra
     v2Routes:
       routes
         ?.filter(
-          (r): r is typeof routes[0] & { routev2: NonNullable<typeof routes[0]['routev2']> } => r.routev2 !== null
+          (r): r is (typeof routes)[0] & { routev2: NonNullable<(typeof routes)[0]['routev2']> } => r.routev2 !== null
         )
         .map(({ routev2, inputAmount, outputAmount }) => ({
           routev2,
@@ -125,7 +125,7 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: QuoteData): Tra
     v3Routes:
       routes
         ?.filter(
-          (r): r is typeof routes[0] & { routev3: NonNullable<typeof routes[0]['routev3']> } => r.routev3 !== null
+          (r): r is (typeof routes)[0] & { routev3: NonNullable<(typeof routes)[0]['routev3']> } => r.routev3 !== null
         )
         .map(({ routev3, inputAmount, outputAmount }) => ({
           routev3,
@@ -135,7 +135,7 @@ export function transformRoutesToTrade(args: GetQuoteArgs, data: QuoteData): Tra
     mixedRoutes:
       routes
         ?.filter(
-          (r): r is typeof routes[0] & { mixedRoute: NonNullable<typeof routes[0]['mixedRoute']> } =>
+          (r): r is (typeof routes)[0] & { mixedRoute: NonNullable<(typeof routes)[0]['mixedRoute']> } =>
             r.mixedRoute !== null
         )
         .map(({ mixedRoute, inputAmount, outputAmount }) => ({
