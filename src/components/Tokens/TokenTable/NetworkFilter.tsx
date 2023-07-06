@@ -130,7 +130,7 @@ export default function NetworkFilter() {
       >
         <StyledMenuContent>
           <NetworkLabel>
-            <Logo src={chainInfo?.logoUrl} /> {chainInfo?.label}
+            <Logo src={chainInfo.logoUrl} /> {chainInfo.label}
           </NetworkLabel>
           <Chevron open={open}>
             {open ? (
@@ -145,7 +145,6 @@ export default function NetworkFilter() {
         <MenuTimeFlyout>
           {BACKEND_CHAIN_NAMES.map((network) => {
             const chainInfo = getChainInfo(supportedChainIdFromGQLChain(network))
-            if (!chainInfo) return null
             return (
               <InternalLinkMenuItem
                 key={network}
@@ -169,8 +168,8 @@ export default function NetworkFilter() {
           })}
           <InternalLinkMenuItem data-testid="tokens-network-filter-option-bnb-chain" disabled>
             <NetworkLabel>
-              <Logo src={BNBChainInfo?.logoUrl} />
-              {BNBChainInfo?.label}
+              <Logo src={BNBChainInfo.logoUrl} />
+              {BNBChainInfo.label}
             </NetworkLabel>
             <Tag>Coming soon</Tag>
           </InternalLinkMenuItem>
