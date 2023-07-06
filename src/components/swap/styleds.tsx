@@ -12,6 +12,8 @@ import { AutoColumn } from '../Column'
 export const PageWrapper = styled.div`
   padding: 10px 24px 0px;
   max-width: 1700px;
+  display: grid;
+  grid-template-columns: 2fr 1fr; 
   width: 100%;
   margin-right: auto;
   margin-left:auto;
@@ -26,8 +28,6 @@ export const PageWrapper = styled.div`
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
 export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
-  min-width: 20.75rem;
-  max-width: 36rem;
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 32px;

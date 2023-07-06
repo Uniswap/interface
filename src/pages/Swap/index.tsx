@@ -274,8 +274,6 @@ const LeftContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  min-width: 46rem;
-  max-width: 80rem;
 `
 
 const LeveragePositionsWrapper = styled.main`
@@ -739,8 +737,7 @@ export default function Swap({ className }: { className?: string }) {
           showCancel={true}
         />
         <PageWrapper>
-          <MainSwapContainer>
-            <LeftContainer>
+        <LeftContainer>
               <StatsContainer>
                 <TokenInfoContainer data-testid="token-info-container">
                   <TokenNameCell>
@@ -803,7 +800,6 @@ export default function Swap({ className }: { className?: string }) {
               </TabContent>
 
             </SwapWrapper>
-          </MainSwapContainer>
         </PageWrapper>
         {!swapIsUnsupported ? null : (
           <UnsupportedCurrencyFooter
