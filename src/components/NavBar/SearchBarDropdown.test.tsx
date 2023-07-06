@@ -7,7 +7,7 @@ import { SearchBarDropdown } from './SearchBarDropdown'
 jest.mock('hooks/useDisableNFTRoutes')
 
 const SearchBarDropdownProps = {
-  toggleOpen: () => {},
+  toggleOpen: () => void 0,
   tokens: [],
   collections: [],
   queryText: '',
