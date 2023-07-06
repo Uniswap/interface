@@ -14,7 +14,7 @@ import {
   TokenApprovalPartsFragment,
   TokenTransferPartsFragment,
 } from 'graphql/data/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'graphql/data/util'
+import { logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
@@ -76,10 +76,9 @@ function isSameAddress(a?: string, b?: string) {
 }
 
 function callsPositionManagerContract(assetActivity: AssetActivityPartsFragment) {
-  return isSameAddress(
-    assetActivity.transaction.to,
-    NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[fromGraphQLChain(assetActivity.chain)]
-  )
+  const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
+  if (!supportedChain) return false
+  return isSameAddress(assetActivity.transaction.to, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[supportedChain])
 }
 
 // Gets counts for number of NFTs in each collection present
@@ -93,15 +92,24 @@ function getCollectionCounts(nftTransfers: NftTransferPartsFragment[]): { [key: 
   }, {} as { [key: string]: number | undefined })
 }
 
-function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment) {
+function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment): string | undefined {
+  const supportedSentChain = supportedChainIdFromGQLChain(sent.asset.chain)
+  const supportedReceivedChain = supportedChainIdFromGQLChain(received.asset.chain)
+  if (!supportedSentChain || !supportedReceivedChain) {
+    logSentryErrorForUnsupportedChain({
+      extras: { sentAsset: sent.asset, receivedAsset: received.asset },
+      errorMessage: 'Invalid activity from unsupported chain received from GQL',
+    })
+    return undefined
+  }
   if (
     sent.tokenStandard === 'NATIVE' &&
-    isSameAddress(nativeOnChain(fromGraphQLChain(sent.asset.chain)).wrapped.address, received.asset.address)
+    isSameAddress(nativeOnChain(supportedSentChain).wrapped.address, received.asset.address)
   )
     return t`Wrapped`
   else if (
     received.tokenStandard === 'NATIVE' &&
-    isSameAddress(nativeOnChain(fromGraphQLChain(received.asset.chain)).wrapped.address, received.asset.address)
+    isSameAddress(nativeOnChain(supportedReceivedChain).wrapped.address, received.asset.address)
   ) {
     return t`Unwrapped`
   } else {
@@ -269,9 +277,17 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
       },
       { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
     )
+    const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
+    if (!supportedChain) {
+      logSentryErrorForUnsupportedChain({
+        extras: { assetActivity },
+        errorMessage: 'Invalid activity from unsupported chain received from GQL',
+      })
+      return undefined
+    }
     const defaultFields = {
       hash: assetActivity.transaction.hash,
-      chainId: fromGraphQLChain(assetActivity.chain),
+      chainId: supportedChain,
       status: assetActivity.transaction.status,
       timestamp: assetActivity.timestamp,
       logos: getLogoSrcs(changes),
@@ -289,7 +305,7 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
   }
 }
 
-export function parseRemoteActivities(assetActivities?: AssetActivityPartsFragment[]) {
+export function parseRemoteActivities(assetActivities?: readonly AssetActivityPartsFragment[]) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
     const activity = parseRemoteActivity(assetActivity)
     if (activity) acc[activity.hash] = activity

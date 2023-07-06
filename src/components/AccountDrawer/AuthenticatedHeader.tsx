@@ -13,6 +13,8 @@ import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
+import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
+import { useAtomValue } from 'jotai/utils'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
@@ -23,8 +25,8 @@ import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme'
+import { shortenAddress } from 'utils'
 
-import { shortenAddress } from '../../nft/utils/address'
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
@@ -39,6 +41,7 @@ const AuthenticatedHeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow: auto;
 `
 
 const HeaderButton = styled(ThemeButton)`
@@ -103,7 +106,6 @@ const StatusWrapper = styled.div`
   display: inline-block;
   width: 70%;
   max-width: 70%;
-  overflow: hidden;
   padding-right: 14px;
   display: inline-flex;
 `
@@ -226,9 +228,10 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
   const { data: portfolioBalances } = usePortfolioBalancesQuery({
-    variables: { ownerAddress: account ?? '' },
+    variables: { ownerAddress: account ?? '', chains: GQL_MAINNET_CHAINS },
     fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
   })
+
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
@@ -239,16 +242,16 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     <AuthenticatedHeaderWrapper>
       <HeaderWrapper>
         <StatusWrapper>
-          <StatusIcon connection={connection} size={40} />
+          <StatusIcon account={account} connection={connection} size={40} />
           {account && (
             <AccountNamesWrapper>
               <ThemedText.SubHeader>
-                <CopyText toCopy={ENSName ?? account}>{ENSName ?? shortenAddress(account, 4, 4)}</CopyText>
+                <CopyText toCopy={ENSName ?? account}>{ENSName ?? shortenAddress(account)}</CopyText>
               </ThemedText.SubHeader>
               {/* Displays smaller view of account if ENS name was rendered above */}
               {ENSName && (
                 <ThemedText.BodySmall color="textTertiary">
-                  <CopyText toCopy={account}>{shortenAddress(account, 4, 4)}</CopyText>
+                  <CopyText toCopy={account}>{shortenAddress(account)}</CopyText>
                 </ThemedText.BodySmall>
               )}
             </AccountNamesWrapper>

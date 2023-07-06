@@ -9,6 +9,7 @@ import {
   SharedEventName,
   SwapEventName,
 } from '@uniswap/analytics-events'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -26,18 +27,18 @@ import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { useSwapCallback } from 'hooks/useSwapCallback'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
-import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
+import { formatEventPropertiesForTrade } from 'lib/utils/analytics'
 import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
-import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { switchChain } from 'utils/switchChain'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -264,7 +265,7 @@ export function Swap({
   }, [connectedChainId, prefilledState, previousConnectedChainId, previousPrefilledState])
 
   const {
-    trade: { state: tradeState, trade },
+    trade: { state: tradeState, trade, method },
     allowedSlippage,
     autoSlippage,
     currencyBalances,
@@ -359,7 +360,7 @@ export function Swap({
       [independentField]: typedValue,
       [dependentField]: showWrap
         ? parsedAmounts[independentField]?.toExact() ?? ''
-        : formatTransactionAmount(currencyAmountToPreciseFloat(parsedAmounts[dependentField])),
+        : formatCurrencyAmount(parsedAmounts[dependentField], NumberType.SwapTradeAmount, ''),
     }),
     [dependentField, independentField, parsedAmounts, showWrap, typedValue]
   )
@@ -441,6 +442,11 @@ export function Swap({
         })
       })
       .catch((error) => {
+        if (!didUserReject(error)) {
+          sendAnalyticsEvent(SwapEventName.SWAP_ERROR, {
+            confirmedTrade: tradeToConfirm,
+          })
+        }
         setSwapState((currentState) => ({
           ...currentState,
           swapError: error,
@@ -455,6 +461,7 @@ export function Swap({
     account,
     trade?.inputAmount?.currency?.symbol,
     trade?.outputAmount?.currency?.symbol,
+    tradeToConfirm,
   ])
 
   // errors
@@ -521,14 +528,17 @@ export function Swap({
 
     setSwapQuoteReceivedDate(new Date())
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined),
+      ...formatEventPropertiesForTrade(trade, allowedSlippage, trade.gasUseEstimateUSD ?? undefined, method),
       ...trace,
     })
-  }, [prevTrade, trade, trace])
+  }, [prevTrade, trade, trace, allowedSlippage, method])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
+
+  const switchChain = useSwitchChain()
+  const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
 
   return (
     <SwapWrapper chainId={chainId} className={className} id="swap-page">
@@ -662,6 +672,10 @@ export function Swap({
               <ThemedText.DeprecatedMain mb="4px">
                 <Trans>Unsupported Asset</Trans>
               </ThemedText.DeprecatedMain>
+            </ButtonPrimary>
+          ) : switchingChain ? (
+            <ButtonPrimary disabled={true}>
+              <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
             </ButtonPrimary>
           ) : !account ? (
             <TraceEvent

@@ -54,9 +54,9 @@ describe('beforeSend', () => {
     expect(beforeSend(ERROR, { originalException })).toBe(ERROR)
   })
 
-  it('propagates user rejected request errors', () => {
+  it('filters user rejected request errors', () => {
     const originalException = new Error('user rejected transaction')
-    expect(beforeSend(ERROR, { originalException })).toBe(ERROR)
+    expect(beforeSend(ERROR, { originalException })).toBeNull()
   })
 
   it('filters block number polling errors', () => {
@@ -125,6 +125,18 @@ describe('beforeSend', () => {
       const originalException = new Error(
         "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inlin..."
       )
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
+    it('filters blocked frame errors', () => {
+      const originalException = new Error(
+        'Blocked a frame with origin "https://app.uniswap.org" from accessing a cross-origin frame.'
+      )
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
+    it('fiters write permission denied errors', () => {
+      const originalException = new Error('NotAllowedError: Write permission denied.')
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
 

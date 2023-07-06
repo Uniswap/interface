@@ -19,7 +19,6 @@ import {
   addSerializedToken,
   updateHideClosedPositions,
   updateHideUniswapWalletBanner,
-  updateUserBuyFiatFlowCompleted,
   updateUserDeadline,
   updateUserLocale,
   updateUserRouterPreference,
@@ -65,18 +64,6 @@ export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: Sup
   return [locale, setLocale]
 }
 
-export function useBuyFiatFlowCompleted(): [boolean | undefined, (buyFiatFlowCompleted: boolean) => void] {
-  const dispatch = useAppDispatch()
-  const buyFiatFlowCompleted = useAppSelector((state) => state.user.buyFiatFlowCompleted)
-  const setBuyFiatFlowCompleted = useCallback(
-    (buyFiatFlowCompleted: boolean) => {
-      dispatch(updateUserBuyFiatFlowCompleted(buyFiatFlowCompleted))
-    },
-    [dispatch]
-  )
-  return [buyFiatFlowCompleted, setBuyFiatFlowCompleted]
-}
-
 export function useRouterPreference(): [RouterPreference, (routerPreference: RouterPreference) => void] {
   const dispatch = useAppDispatch()
 
@@ -103,7 +90,7 @@ export function useUserSlippageTolerance(): [
     return state.user.userSlippageTolerance
   })
 
-  // TODO(WEB-3291): Keep `userSlippageTolerance` as Percent in Redux store and remove this conversion
+  // TODO(WEB-1985): Keep `userSlippageTolerance` as Percent in Redux store and remove this conversion
   const userSlippageTolerance = useMemo(
     () =>
       userSlippageToleranceRaw === SlippageTolerance.Auto

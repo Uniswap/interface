@@ -1,63 +1,49 @@
 import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect-v2'
+import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId, UniWalletSupportedChains } from 'constants/chains'
+import {
+  L1_CHAIN_IDS,
+  L2_CHAIN_IDS,
+  SupportedChainId,
+  TESTNET_CHAIN_IDS,
+  UniWalletSupportedChains,
+} from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
+import { useAtomValue } from 'jotai/utils'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
 import { useIsMobile } from 'nft/hooks'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
-import { isProductionEnv } from 'utils/env'
+import { getSupportedChainIdsFromWalletConnectSession } from 'utils/getSupportedChainIdsFromWalletConnectSession'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
 import { NavDropdown } from './NavDropdown'
 
-const NETWORK_SELECTOR_CHAINS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
-  SupportedChainId.BNB,
-]
-
-if (!isProductionEnv()) {
-  NETWORK_SELECTOR_CHAINS.push(SupportedChainId.SEPOLIA)
-}
+const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
 
 interface ChainSelectorProps {
   leftAlign?: boolean
 }
 
-// accounts is an array of strings in the format of "eip155:<chainId>:<address>"
-function getChainsFromEIP155Accounts(accounts?: string[]): SupportedChainId[] {
-  if (!accounts) return []
-  return accounts
-    .map((account) => {
-      const splitAccount = account.split(':')
-      return splitAccount[1] ? parseInt(splitAccount[1]) : undefined
-    })
-    .filter((x) => x !== undefined) as SupportedChainId[]
-}
-
-function useWalletSupportedChains() {
+function useWalletSupportedChains(): SupportedChainId[] {
   const { connector } = useWeb3React()
 
   const connectionType = getConnection(connector).type
 
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
-      return getChainsFromEIP155Accounts((connector as WalletConnect).provider?.session?.namespaces.eip155.accounts)
+      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnect).provider?.session)
     case ConnectionType.UNISWAP_WALLET:
       return UniWalletSupportedChains
     default:
@@ -71,6 +57,26 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const isMobile = useIsMobile()
 
   const theme = useTheme()
+
+  const showTestnets = useAtomValue(showTestnetsAtom)
+  const walletSupportsChain = useWalletSupportedChains()
+
+  const [supportedChains, unsupportedChains] = useMemo(() => {
+    const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter(
+      (chain) => showTestnets || !TESTNET_CHAIN_IDS.has(chain)
+    ).reduce(
+      (acc, chain) => {
+        if (walletSupportsChain.includes(chain)) {
+          acc.supported.push(chain)
+        } else {
+          acc.unsupported.push(chain)
+        }
+        return acc
+      },
+      { supported: [], unsupported: [] } as Record<string, SupportedChainId[]>
+    )
+    return [supported, unsupported]
+  }, [showTestnets, walletSupportsChain])
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -93,8 +99,6 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     [selectChain, setIsOpen]
   )
 
-  const walletSupportsChain = useWalletSupportedChains()
-
   if (!chainId) {
     return null
   }
@@ -103,14 +107,23 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
-      <Column paddingX="8">
-        {NETWORK_SELECTOR_CHAINS.map((selectorChain: SupportedChainId) => (
+      <Column paddingX="8" data-testid="chain-selector-options">
+        {supportedChains.map((selectorChain) => (
           <ChainSelectorRow
             disabled={!walletSupportsChain.includes(selectorChain)}
             onSelectChain={onSelectChain}
             targetChain={selectorChain}
             key={selectorChain}
             isPending={selectorChain === pendingChainId}
+          />
+        ))}
+        {unsupportedChains.map((selectorChain) => (
+          <ChainSelectorRow
+            disabled
+            onSelectChain={() => undefined}
+            targetChain={selectorChain}
+            key={selectorChain}
+            isPending={false}
           />
         ))}
       </Column>
@@ -127,6 +140,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     <Box position="relative" ref={ref}>
       <MouseoverTooltip text={t`Your wallet's current network is unsupported.`} disabled={isSupported}>
         <Row
+          data-testid="chain-selector"
           as="button"
           gap="8"
           className={styles.ChainSelector}

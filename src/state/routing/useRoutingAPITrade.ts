@@ -10,7 +10,7 @@ import { useMemo } from 'react'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
 import { useGetQuoteQuery as useGetQuoteQueryV2 } from 'state/routing/v2Slice'
 
-import { InterfaceTrade, QuoteState, TradeState } from './types'
+import { InterfaceTrade, QuoteMethod, QuoteState, TradeState } from './types'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
@@ -30,6 +30,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 ): {
   state: TradeState
   trade?: InterfaceTrade
+  method?: QuoteMethod
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -86,15 +87,25 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     } else if (tradeResult?.state === QuoteState.NOT_FOUND && isCurrent) {
       return TRADE_NOT_FOUND
     } else if (!tradeResult?.trade) {
-      // TODO(WEB-3307): use `isLoading` returned by rtk-query hook instead of checking for `trade` status
+      // TODO(WEB-1985): use `isLoading` returned by rtk-query hook instead of checking for `trade` status
       return TRADE_LOADING
     } else {
       return {
         state: isCurrent ? TradeState.VALID : TradeState.LOADING,
         trade: tradeResult.trade,
+        method: tradeResult?.method,
       }
     }
-  }, [amountSpecified, isCurrent, isError, queryArgs, skipFetch, tradeResult?.state, tradeResult?.trade])
+  }, [
+    amountSpecified,
+    isCurrent,
+    isError,
+    queryArgs,
+    skipFetch,
+    tradeResult?.state,
+    tradeResult?.trade,
+    tradeResult?.method,
+  ])
 }
 
 // only want to enable this when app hook called

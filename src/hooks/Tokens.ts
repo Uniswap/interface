@@ -30,7 +30,7 @@ function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<SupportedCha
   }, [chainId, tokenMap])
 }
 
-// TODO(INFRA-164): after disallowing unchecked index access, refactor ChainTokenMap to not use ?'s
+// TODO(WEB-2347): after disallowing unchecked index access, refactor ChainTokenMap to not use ?'s
 export type ChainTokenMap = { [chainId in number]?: { [address in string]?: Token } }
 /** Returns tokens from all token lists on all chains, combined with user added tokens */
 export function useAllTokensMultichain(): ChainTokenMap {

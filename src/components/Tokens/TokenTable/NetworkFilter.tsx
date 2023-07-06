@@ -1,6 +1,7 @@
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
-import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
+import { BACKEND_CHAIN_NAMES, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
@@ -116,8 +117,8 @@ export default function NetworkFilter() {
   const { chainName } = useParams<{ chainName?: string }>()
   const currentChainName = validateUrlChainParam(chainName)
 
-  const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
-  const BNBChainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID.BNB)
+  const chainInfo = getChainInfo(supportedChainIdFromGQLChain(currentChainName))
+  const BNBChainInfo = getChainInfo(supportedChainIdFromGQLChain(Chain.Bnb))
 
   return (
     <StyledMenu ref={node}>
@@ -129,7 +130,7 @@ export default function NetworkFilter() {
       >
         <StyledMenuContent>
           <NetworkLabel>
-            <Logo src={chainInfo?.logoUrl} /> {chainInfo?.label}
+            <Logo src={chainInfo.logoUrl} /> {chainInfo.label}
           </NetworkLabel>
           <Chevron open={open}>
             {open ? (
@@ -143,8 +144,7 @@ export default function NetworkFilter() {
       {open && (
         <MenuTimeFlyout>
           {BACKEND_CHAIN_NAMES.map((network) => {
-            const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[network])
-            if (!chainInfo) return null
+            const chainInfo = getChainInfo(supportedChainIdFromGQLChain(network))
             return (
               <InternalLinkMenuItem
                 key={network}
