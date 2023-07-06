@@ -307,7 +307,7 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
   }
 }
 
-export function parseRemoteActivities(assetActivities?: AssetActivityPartsFragment[]) {
+export function parseRemoteActivities(assetActivities?: readonly AssetActivityPartsFragment[]) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
     const activity = parseRemoteActivity(assetActivity)
     if (activity) acc[activity.hash] = activity

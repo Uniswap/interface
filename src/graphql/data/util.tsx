@@ -149,11 +149,19 @@ export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
   return (UX_SUPPORTED_GQL_CHAINS as ReadonlyArray<Chain>).includes(chain)
 }
 
+export function supportedChainIdFromGQLChain(chain: InterfaceGqlChain): SupportedChainId
+export function supportedChainIdFromGQLChain(chain: Chain): SupportedChainId | undefined
 export function supportedChainIdFromGQLChain(chain: Chain): SupportedChainId | undefined {
   return isSupportedGQLChain(chain) ? CHAIN_NAME_TO_CHAIN_ID[chain] : undefined
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
+export const BACKEND_CHAIN_NAMES: InterfaceGqlChain[] = [
+  Chain.Ethereum,
+  Chain.Polygon,
+  Chain.Optimism,
+  Chain.Arbitrum,
+  Chain.Celo,
+]
 
 export function getTokenDetailsURL({
   address,

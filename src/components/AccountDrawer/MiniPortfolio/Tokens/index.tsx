@@ -31,7 +31,7 @@ export default function Tokens({ account }: { account: string }) {
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
   const { data } = usePortfolioBalancesQuery({
-    variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS.slice() },
+    variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS },
     fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
     errorPolicy: 'all',
   })
