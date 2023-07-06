@@ -95,9 +95,8 @@ module.exports = {
       // See https://github.com/vanilla-extract-css/vanilla-extract/issues/771#issuecomment-1249524366.
       new VanillaExtractPlugin({ identifiers: 'short' }),
       new RetryChunkLoadPlugin({
-        // This clears query parameters from the chunk URL, as we don't want these to be cached.
         cacheBust: `function() {
-          return ''
+          return 'cache-bust=' + Date.now();
         }`,
         // Retries with backoff (500ms, 1000ms, 2000ms).
         retryDelay: `function(retryAttempt) {
