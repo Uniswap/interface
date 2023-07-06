@@ -39,7 +39,7 @@ const mockConnection2: Connection = {
 describe('Wallet Option', () => {
   it('renders default state', () => {
     const component = render(<Option connection={mockConnection1} />)
-    const option = component.getByTestId('wallet-option-UNISWAP_WALLET')
+    const option = component.getByTestId('wallet-option-UNISWAP_WALLET_V2')
     expect(option).toBeEnabled()
     expect(option).toHaveProperty('selected', false)
 
@@ -56,7 +56,7 @@ describe('Wallet Option', () => {
         <Option connection={mockConnection2} />
       </>
     )
-    const option1 = component.getByTestId('wallet-option-UNISWAP_WALLET')
+    const option1 = component.getByTestId('wallet-option-UNISWAP_WALLET_V2')
     const option2 = component.getByTestId('wallet-option-INJECTED')
 
     expect(option1).toBeEnabled()
