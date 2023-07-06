@@ -103,7 +103,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.BNB,
 ] as const
 
-export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
+export type SupportedL1ChainId = (typeof L1_CHAIN_IDS)[number]
 
 /**
  * Controls some L2 specific behavior, e.g. slippage tolerance, special UI behavior.
@@ -116,7 +116,7 @@ export const L2_CHAIN_IDS = [
   SupportedChainId.OPTIMISM_GOERLI,
 ] as const
 
-export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
+export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
 
 export function isPolygonChain(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
   return chainId === SupportedChainId.POLYGON || chainId === SupportedChainId.POLYGON_MUMBAI

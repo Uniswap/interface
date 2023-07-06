@@ -6,7 +6,7 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import { sendEvent } from 'components/analytics'
-import { fromGraphQLChain } from 'graphql/data/util'
+import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
@@ -97,7 +97,7 @@ export function CurrencySearch({
       data?.portfolios?.[0].tokenBalances?.reduce((balanceMap, tokenBalance) => {
         if (
           tokenBalance.token?.chain &&
-          fromGraphQLChain(tokenBalance.token?.chain) === chainId &&
+          supportedChainIdFromGQLChain(tokenBalance.token?.chain) === chainId &&
           tokenBalance.token?.address !== undefined &&
           tokenBalance.denominatedValue?.value !== undefined
         ) {

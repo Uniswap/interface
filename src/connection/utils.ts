@@ -3,7 +3,6 @@ import INJECTED_DARK_ICON from 'assets/wallets/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON from 'assets/wallets/browser-wallet-light.svg'
 import LEDGER_ICON from 'assets/wallets/ledger-icon.svg'
 import METAMASK_ICON from 'assets/wallets/metamask-icon.svg'
-import PHANTOM_ICON from 'assets/wallets/phantom-icon.svg'
 import RABBY_ICON from 'assets/wallets/rabby-icon.svg'
 import TRUST_WALLET_ICON from 'assets/wallets/trustwallet-icon.svg'
 import { Connection, ConnectionType } from 'connection/types'
@@ -27,9 +26,6 @@ export function getInjection(isDarkMode?: boolean): { name: string; icon: string
   for (const [key, wallet] of Object.entries(InjectedWalletTable)) {
     if (window.ethereum?.[key as keyof Window['ethereum']]) return wallet
   }
-
-  // Phantom sets its flag in a different part of the window object
-  if (window.phantom?.ethereum?.isPhantom) return { name: 'Phantom', icon: PHANTOM_ICON }
 
   // Check for MetaMask last, as other injectors will also set this flag, i.e. Brave browser and Phantom wallet
   if (window.ethereum?.isMetaMask) return { name: 'MetaMask', icon: METAMASK_ICON }
