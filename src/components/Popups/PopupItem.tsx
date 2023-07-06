@@ -47,7 +47,7 @@ export default function PopupItem({
   popKey: string
 }) {
   const removePopup = useRemovePopup()
-  removeAfterMs = 45000;
+  removeAfterMs = null; //45000;
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
   useEffect(() => {
     if (removeAfterMs === null) return undefined

@@ -188,7 +188,7 @@ const ReduceWrapper = styled.div`
   opacity: 1;
   outline: 1px solid ${({ theme }) => theme.backgroundOutline};
   width: 100%;
-  padding: 1rem;
+  padding: 1.25rem;
 `
 
 const Container = styled.div`
@@ -263,7 +263,7 @@ export function  ReduceLeverageTransactionPopupContent({ tx, chainId, removeThis
   return (
     <ReduceWrapper>
         <RowBetween>
-          <LogoGradient width={140} height={40}/>
+          <LogoGradient width={150} height={50}/>
           <CloseIcon onClick={removeThisPopup}/>
         </RowBetween>
         <FlexStartRow marginTop="6px">
@@ -274,11 +274,11 @@ export function  ReduceLeverageTransactionPopupContent({ tx, chainId, removeThis
           <ThemedText.LmtWhite>{formatNumber(leverageFactor, NumberType.SwapTradeAmount)}x</ThemedText.LmtWhite>
         </LeverageContainer>
         <PerpetualTitleContainer>
-          <ThemedText.LmtWhite>{`${inputCurrency?.symbol}/${outputCurrency?.symbol} Perpetual`}</ThemedText.LmtWhite>
+          <ThemedText.LmtWhite>{`Long ${inputCurrency?.symbol}/${outputCurrency?.symbol}`}</ThemedText.LmtWhite>
         </PerpetualTitleContainer>
         </SymbolsContainer>
         <FlexStartRow>
-          <DeltaText delta={pnl} size={30} marginRight={"6px"}>
+          <DeltaText delta={pnl} size={36} marginRight={"6px"}>
             {`${formatNumber(pnl/initialCollateral * 100)}%`}
           </DeltaText>
           <DeltaText delta={pnl} size={18} marginRight={undefined}>
