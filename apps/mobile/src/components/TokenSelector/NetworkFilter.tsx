@@ -1,8 +1,7 @@
 import { ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, LayoutAnimation } from 'react-native'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { Keyboard, LayoutAnimation, StyleSheet, VirtualizedList } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import {
@@ -10,7 +9,7 @@ import {
   SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,
 } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Chevron } from 'src/components/icons/Chevron'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { useNetworkOptions } from 'src/components/Network/hooks'
 import { Text } from 'src/components/Text'
@@ -23,6 +22,7 @@ import { useActiveChainIds } from 'wallet/src/features/chains/hooks'
 
 const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
+const NETWORK_ICON_SHIFT = 10
 
 interface NetworkFilterProps {
   selectedChain: ChainId | null
@@ -32,6 +32,30 @@ interface NetworkFilterProps {
 }
 
 type EllipsisPosition = 'start' | 'end'
+
+type ListItem = 'ellipsis' | number
+
+function renderItem({ item: chainId }: { item: ListItem }): JSX.Element {
+  return (
+    <Box key={chainId} borderColor="background1" style={styles.networksInSeriesIcon}>
+      {chainId === ELLIPSIS ? (
+        <Flex
+          centered
+          backgroundColor="textTertiary"
+          height={NETWORK_ICON_SIZE}
+          style={styles.ellipsisIcon}
+          width={NETWORK_ICON_SIZE}>
+          <EllipsisIcon color={colors.white} height={iconSizes.icon12} width={iconSizes.icon12} />
+        </Flex>
+      ) : (
+        <NetworkLogo chainId={chainId} shape="square" size={NETWORK_ICON_SIZE} />
+      )}
+    </Box>
+  )
+}
+function keyExtractor(item: ListItem): string {
+  return item.toString()
+}
 
 function NetworksInSeries({
   networks,
@@ -46,29 +70,25 @@ function NetworksInSeries({
     ...(ellipsisPosition === 'end' ? [ELLIPSIS] : []),
   ] as Array<ChainId | typeof ELLIPSIS>
 
+  const getItem = (_data: unknown, index: number): ListItem => {
+    // items[index] must exists here as index is bounded by getItemCount
+    return items[index] as ListItem
+  }
+
+  const getItemCount = (): number => {
+    return items.length
+  }
+
   return (
-    <AnimatedFlex row entering={FadeIn} exiting={FadeOut} gap="none">
-      {items.map((chainId) => (
-        <Box key={chainId} borderColor="background1" style={styles.networksInSeriesIcon}>
-          {chainId === ELLIPSIS ? (
-            <Flex
-              centered
-              backgroundColor="textTertiary"
-              height={NETWORK_ICON_SIZE}
-              style={styles.ellipsisIcon}
-              width={NETWORK_ICON_SIZE}>
-              <EllipsisIcon
-                color={colors.white}
-                height={iconSizes.icon12}
-                width={iconSizes.icon12}
-              />
-            </Flex>
-          ) : (
-            <NetworkLogo chainId={chainId} shape="square" size={NETWORK_ICON_SIZE} />
-          )}
-        </Box>
-      ))}
-    </AnimatedFlex>
+    <Box>
+      <VirtualizedList<ListItem>
+        contentContainerStyle={styles.networkListContainer}
+        getItem={getItem}
+        getItemCount={getItemCount}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+      />
+    </Box>
   )
 }
 
@@ -152,13 +172,17 @@ export function NetworkFilter({
   )
 }
 
-const styles = {
+const styles = StyleSheet.create({
   ellipsisIcon: {
     borderRadius: NETWORK_LOGO_SQUARE_BORDER_RADIUS,
   },
-  networksInSeriesIcon: {
-    marginLeft: -10,
-    borderWidth: 2,
-    borderRadius: 8,
+  networkListContainer: {
+    flexDirection: 'row',
+    paddingLeft: NETWORK_ICON_SHIFT,
   },
-}
+  networksInSeriesIcon: {
+    borderRadius: 8,
+    borderWidth: 2,
+    marginLeft: -NETWORK_ICON_SHIFT,
+  },
+})
