@@ -176,7 +176,7 @@ function TransactionSummaryLayout({
               </Flex>
               <Flex grow row>
                 <Box flexGrow={1} flexShrink={1}>
-                  <Text color="textPrimary" variant="bodyLarge">
+                  <Text color="textPrimary" variant="subheadSmall">
                     {caption}
                   </Text>
                 </Box>
