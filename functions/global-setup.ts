@@ -4,5 +4,6 @@ module.exports = async function globalSetup() {
   globalThis.servers = await setup({
     command: `yarn start:wrangler`,
     port: 3000,
+    launchTimeout: 50000,
   })
 }
