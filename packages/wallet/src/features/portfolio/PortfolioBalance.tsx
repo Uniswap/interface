@@ -1,24 +1,56 @@
+import { Icons } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
+import { opacify } from 'ui/src/theme/color/utils'
 import { usePortfolioUSDBalance } from 'wallet/src/features/portfolio/hooks'
 
 type WalletBalanceProps = {
   address: Address
 }
 
-const TempFakeButton = ({ label }: { label: string }): JSX.Element => {
+const disabledHoverStyle = { cursor: 'not-allowed' }
+const enabledHoverStyle = { cursor: 'pointer' }
+
+// TODO(spore): replace with proper themed colors
+const CTA_COLORS = {
+  PINK: '#FD82FF',
+  GREEN: '#00D395',
+  YELLOW: '#E8A803',
+}
+
+const CTA_COLORS_SOFT = {
+  PINK: opacify(20, CTA_COLORS.PINK),
+  GREEN: opacify(15, CTA_COLORS.GREEN),
+  YELLOW: opacify(15, CTA_COLORS.YELLOW),
+}
+
+// TODO(EXT-210): fix up passing of Icon to reuse color prop and constant icon size etc
+const TempFakeButton = ({
+  label,
+  backgroundColor,
+  color,
+  Icon,
+  url,
+}: {
+  label: string
+  backgroundColor: string
+  color: string
+  Icon: JSX.Element
+  url?: string
+}): JSX.Element => {
   return (
     <Flex
-      alignItems="center"
-      backgroundColor="$accentActionSoft"
+      alignItems="flex-start"
+      backgroundColor={backgroundColor}
       borderRadius="$rounded16"
-      flexGrow={1}
-      // eslint-disable-next-line react-native/no-inline-styles
-      hoverStyle={{ cursor: 'not-allowed' }}
-      justifyContent="center"
-      paddingHorizontal="$spacing24"
-      paddingVertical="$spacing8">
-      <Text color="$accentAction" fontWeight="600" variant="bodyLarge">
+      flex={1}
+      flexBasis={1}
+      gap="$spacing12"
+      hoverStyle={url ? enabledHoverStyle : disabledHoverStyle}
+      justifyContent="space-between"
+      padding="$spacing12">
+      {Icon}
+      <Text color={color} fontWeight="600" variant="bodyLarge">
         {label}
       </Text>
     </Flex>
@@ -46,8 +78,26 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
             </Text>
           </Flex>
           <Flex flexDirection="row" gap="$spacing8">
-            <TempFakeButton label="Swap" />
-            <TempFakeButton label="Send" />
+            {/* TODO(EXT-210): fix up passing of Icon to reuse color prop and constant icon size etc
+             */}
+            <TempFakeButton
+              Icon={<Icons.CoinConvert color={CTA_COLORS.PINK} size="$icon.24" />}
+              backgroundColor={CTA_COLORS_SOFT.PINK}
+              color={CTA_COLORS.PINK}
+              label="Swap"
+            />
+            <TempFakeButton
+              Icon={<Icons.SendRoundedAirplane color={CTA_COLORS.GREEN} size="$icon.24" />}
+              backgroundColor={CTA_COLORS_SOFT.GREEN}
+              color={CTA_COLORS.GREEN}
+              label="Send"
+            />
+            <TempFakeButton
+              Icon={<Icons.ReceiveDots color={CTA_COLORS.YELLOW} size="$icon.24" />}
+              backgroundColor={CTA_COLORS_SOFT.YELLOW}
+              color={CTA_COLORS.YELLOW}
+              label="Receive"
+            />
           </Flex>
         </>
       )}
