@@ -30,4 +30,9 @@ describe('#getExplorerLink', () => {
   it('goerli', () => {
     expect(getExplorerLink(5, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://goerli.etherscan.io/address/abc')
   })
+  it('avalanche', () => {
+    expect(getExplorerLink(ChainId.AVALANCHE, 'abc', ExplorerDataType.ADDRESS)).toEqual(
+      'https://snowtrace.io/address/abc'
+    )
+  })
 })

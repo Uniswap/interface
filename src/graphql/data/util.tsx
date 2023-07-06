@@ -129,6 +129,7 @@ export function validateUrlChainParam(chainName: string | undefined) {
   return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
+// TODO: Update when BE adds Avalanche to supported chains
 const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
   [Chain.Ethereum]: ChainId.MAINNET,
   [Chain.EthereumGoerli]: ChainId.GOERLI,
@@ -138,6 +139,7 @@ const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
   [Chain.Optimism]: ChainId.OPTIMISM,
   [Chain.Arbitrum]: ChainId.ARBITRUM_ONE,
   [Chain.Bnb]: ChainId.BNB,
+  // [Chain.Avalanche]: ChainId.AVALANCHE,
 }
 
 export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
@@ -166,13 +168,14 @@ export function logSentryErrorForUnsupportedChain({
   })
 }
 
-export const BACKEND_CHAIN_NAMES: InterfaceGqlChain[] = [
+export const BACKEND_SUPPORTED_CHAINS = [
   Chain.Ethereum,
   Chain.Polygon,
   Chain.Optimism,
   Chain.Arbitrum,
   Chain.Celo,
-]
+] as const
+export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE] as const
 
 export function getTokenDetailsURL({
   address,

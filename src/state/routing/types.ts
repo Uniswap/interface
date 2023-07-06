@@ -159,5 +159,6 @@ export enum PoolType {
 export enum SwapRouterNativeAssets {
   MATIC = 'MATIC',
   BNB = 'BNB',
+  AVAX = 'AVAX',
   ETH = 'ETH',
 }

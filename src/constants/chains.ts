@@ -33,6 +33,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   ChainId.OPTIMISM,
   ChainId.ARBITRUM_ONE,
   ChainId.BNB,
+  ChainId.AVALANCHE,
 ] as const
 
 /**
@@ -44,6 +45,7 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
   ChainId.ARBITRUM_ONE,
   ChainId.BNB,
   ChainId.ARBITRUM_GOERLI,
+  ChainId.AVALANCHE,
 ] as const
 
 export const TESTNET_CHAIN_IDS = [
@@ -67,6 +69,7 @@ export const L1_CHAIN_IDS = [
   ChainId.CELO,
   ChainId.CELO_ALFAJORES,
   ChainId.BNB,
+  ChainId.AVALANCHE,
 ] as const
 
 export type SupportedL1ChainId = (typeof L1_CHAIN_IDS)[number]

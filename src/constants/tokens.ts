@@ -234,22 +234,43 @@ export const CEUR_CELO_ALFAJORES = new Token(
 )
 
 export const USDC_BSC = new Token(ChainId.BNB, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 18, 'USDC', 'USDC')
-
 export const USDT_BSC = new Token(ChainId.BNB, '0x55d398326f99059fF775485246999027B3197955', 18, 'USDT', 'USDT')
-
 export const ETH_BSC = new Token(ChainId.BNB, '0x2170Ed0880ac9A755fd29B2688956BD959F933F8', 18, 'ETH', 'Ethereum')
-
 export const MATIC_BSC = new Token(ChainId.BNB, '0xCC42724C6683B7E57334c4E856f4c9965ED682bD', 18, 'MATIC', 'Matic')
-
 export const FRAX_BSC = new Token(ChainId.BNB, '0x90C97F71E18723b0Cf0dfa30ee176Ab653E89F40', 18, 'FRAX', 'FRAX')
-
 export const BTC_BSC = new Token(ChainId.BNB, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
-
 export const CAKE_BSC = new Token(ChainId.BNB, '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', 18, 'CAKE', 'Cake')
-
 export const BUSD_BSC = new Token(ChainId.BNB, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD')
-
 export const DAI_BSC = new Token(ChainId.BNB, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
+
+export const USDC_AVALANCHE = new Token(
+  ChainId.AVALANCHE,
+  '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+  6,
+  'USDC',
+  'USDC Token'
+)
+export const USDT_AVALANCHE = new Token(
+  ChainId.AVALANCHE,
+  '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7',
+  6,
+  'USDT',
+  'Tether USD'
+)
+export const WETH_AVALANCHE = new Token(
+  ChainId.AVALANCHE,
+  '0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
+export const DAI_AVALANCHE = new Token(
+  ChainId.AVALANCHE,
+  '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
+  18,
+  'DAI.e',
+  'Dai.e Token'
+)
 
 export const UNI: { [chainId: number]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESSES[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),
@@ -327,6 +348,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'Celo native asset'
   ),
   [ChainId.BNB]: new Token(ChainId.BNB, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'Wrapped BNB'),
+  [ChainId.AVALANCHE]: new Token(
+    ChainId.AVALANCHE,
+    '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
+    18,
+    'WAVAX',
+    'Wrapped AVAX'
+  ),
 }
 
 export function isCelo(chainId: number): chainId is ChainId.CELO | ChainId.CELO_ALFAJORES {
@@ -388,6 +416,28 @@ class BscNativeCurrency extends NativeCurrency {
   }
 }
 
+export function isAvalanche(chainId: number): chainId is ChainId.AVALANCHE {
+  return chainId === ChainId.AVALANCHE
+}
+
+class AvaxNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isAvalanche(this.chainId)) throw new Error('Not avalanche')
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isAvalanche(chainId)) throw new Error('Not avalanche')
+    super(chainId, 18, 'AVAX', 'AVAX')
+  }
+}
+
 class ExtendedEther extends Ether {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
@@ -412,6 +462,8 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = getCeloNativeCurrency(chainId)
   } else if (isBsc(chainId)) {
     nativeCurrency = new BscNativeCurrency(chainId)
+  } else if (isAvalanche(chainId)) {
+    nativeCurrency = new AvaxNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }
@@ -439,5 +491,6 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: s
     [ChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [ChainId.GOERLI]: USDC_GOERLI.address,
     [ChainId.SEPOLIA]: USDC_SEPOLIA.address,
+    [ChainId.AVALANCHE]: USDC_AVALANCHE.address,
   },
 }

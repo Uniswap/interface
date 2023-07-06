@@ -9,11 +9,18 @@ const multicall = createMulticall()
 
 export default multicall
 
+/**
+ *
+ * @param chainId
+ * @returns The approximate whole number of blocks written to the corresponding chainId per Ethereum mainnet epoch.
+ */
 function getBlocksPerFetchForChainId(chainId: number | undefined): number {
+  // TODO(WEB-2437): See if these numbers need to be updated
   switch (chainId) {
     case ChainId.ARBITRUM_ONE:
     case ChainId.OPTIMISM:
       return 15
+    case ChainId.AVALANCHE:
     case ChainId.BNB:
     case ChainId.CELO:
     case ChainId.CELO_ALFAJORES:
