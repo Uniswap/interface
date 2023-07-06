@@ -36,13 +36,19 @@ export function Password({
     if (passwordValidationResult.valid) {
       setPassword(enteredPassword)
       setPasswordError(undefined)
+
       navigate(nextPath)
 
       // in import flow, we create the account later in the flow
       // in create flow, we need to create it here
       if (createAccountOnNext) {
         dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
-        dispatch(createAccountActions.trigger({ validatedPassword: enteredPassword }))
+        dispatch(
+          createAccountActions.trigger({
+            validatedPassword: enteredPassword,
+            skipSetAsActive: true,
+          })
+        )
       }
     } else {
       setPasswordError(passwordValidationResult.validationErrorString)

@@ -17,7 +17,6 @@ import RemoveSeedPhraseWarningModal from 'src/components/modals/WarningModal/Rem
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
-import { createAccountActions } from 'src/features/onboarding/create/createAccountSaga'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
@@ -25,6 +24,7 @@ import { openSettings } from 'src/utils/linking'
 import PlusIcon from 'ui/src/assets/icons/plus.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
   PendingAccountActions,
   pendingAccountActions,

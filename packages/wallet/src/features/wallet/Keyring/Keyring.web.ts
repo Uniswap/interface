@@ -15,7 +15,7 @@ const passwordKey = '.password.'
 enum ErrorType {
   StoreMnemonicError = 'storeMnemonicError',
   RetrieveMnemonicError = 'retrieveMnemonicError',
-  RetrievePasswordError = 'retreivePasswordError',
+  RetrievePasswordError = 'retrievePasswordError',
 }
 
 /**

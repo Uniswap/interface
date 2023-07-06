@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { call, put } from 'typed-redux-saga'
+import { logger } from 'wallet/src/features/logger/logger'
 import {
   AccountType,
   BackupType,
@@ -7,28 +8,30 @@ import {
 } from 'wallet/src/features/wallet/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
-import { addAccount } from 'wallet/src/features/wallet/slice'
+import { addAccount, setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 interface CreateAccountParams {
-  validatedPassword: string
+  validatedPassword?: string
+  // by default, the created account will be activated. some flows may want to
+  // skip activation until later in onboarding
+  skipSetAsActive?: boolean
 }
 
-export function* createAccount(params: CreateAccountParams) {
+export function* createAccount(params: CreateAccountParams = {}) {
   const sortedMnemonicAccounts: SignerMnemonicAccount[] = yield* appSelect(
     selectSortedSignerMnemonicAccounts
   )
   const { nextDerivationIndex, mnemonicId, existingBackups } = yield* call(
     getNewAccountParams,
-    params.validatedPassword,
-    sortedMnemonicAccounts
+    sortedMnemonicAccounts,
+    params.validatedPassword
   )
   const address = yield* call(
     [Keyring, Keyring.generateAndStorePrivateKey],
     mnemonicId,
-    nextDerivationIndex,
-    params.validatedPassword
+    nextDerivationIndex
   )
   yield* put(
     addAccount({
@@ -41,12 +44,19 @@ export function* createAccount(params: CreateAccountParams) {
       backups: existingBackups,
     })
   )
-  // in mobile we activate the account here, but on web we wait for a later stage of onboarding to activate it, in case the onboarding flow gets abandoned
+
+  // a password is only provided when first creating an account on web, and web
+  // flow will activate the account later
+  if (!params.skipSetAsActive) {
+    yield* put(setAccountAsActive(address))
+  }
+
+  logger.debug('createAccountSaga', '', 'New account created:', address)
 }
 
 async function getNewAccountParams(
-  password: string,
-  sortedAccounts: SignerMnemonicAccount[]
+  sortedAccounts: SignerMnemonicAccount[],
+  password?: string
 ): Promise<{
   nextDerivationIndex: number
   mnemonicId: string

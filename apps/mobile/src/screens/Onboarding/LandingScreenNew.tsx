@@ -12,13 +12,13 @@ import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
-import { createAccountActions } from 'src/features/onboarding/create/createAccountSaga'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { uniswapUrls } from 'wallet/src/constants/urls'
+import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
   PendingAccountActions,
   pendingAccountActions,

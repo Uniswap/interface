@@ -1,17 +1,21 @@
 import { LinearGradient } from '@tamagui/linear-gradient'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
-import {
-  createAndSelectActivatedAccountActions,
-  createAndSelectActivatedAccountName,
-} from 'src/app/features/accounts/createAndSelectActivatedAccountSaga'
 import { useAppDispatch } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { Icons, ScrollView, Text, XStack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { adjustColor, useUniconColors } from 'ui/src/components/Unicon/utils'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import {
+  createAccountActions,
+  createAccountSagaName,
+} from 'wallet/src/features/wallet/create/createAccountSaga'
+import {
+  pendingAccountActions,
+  PendingAccountActions,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
@@ -32,18 +36,22 @@ export function AccountSwitcherScreen(): JSX.Element {
 
   const { glow } = useUniconColors(activeAddress)
 
-  useSagaStatus(createAndSelectActivatedAccountName, () => {
+  const onClose = useCallback((): void => {
     navigate(-1)
-  })
+  }, [navigate])
+
+  useSagaStatus(createAccountSagaName, onClose)
 
   const onCreateWallet = (): void => {
-    dispatch(createAndSelectActivatedAccountActions.trigger())
-  }
+    dispatch(createAccountActions.trigger())
 
-  const onClose = (): void => {
-    navigate(-1)
+    // TODO(EXT-206): navigate to onboarding instead, and activate at end of onboarding
+    // navigate(
+    //   `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Naming}`
+    // )
+    // HACK: mark non pending immediately
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateAndSelect))
   }
-
   const uniconAccentColor = adjustColor(glow, -100)
 
   return (

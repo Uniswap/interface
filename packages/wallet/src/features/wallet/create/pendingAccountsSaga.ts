@@ -7,7 +7,7 @@ import {
   setAccountsNonPending,
 } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
-import { createMonitoredSaga } from 'wallet/src/utils/saga'
+import { createSaga } from 'wallet/src/utils/saga'
 
 export enum PendingAccountActions {
   Activate = 'Activate',
@@ -42,9 +42,7 @@ export function* managePendingAccounts(pendingAccountAction: PendingAccountActio
   logger.debug('pendingAccountsSaga', 'managePendingAccounts', 'Updated pending accounts.')
 }
 
-export const {
-  name: pendingAccountSagaName,
-  wrappedSaga: pendingAccountSaga,
-  reducer: pendingAccountReducer,
-  actions: pendingAccountActions,
-} = createMonitoredSaga(managePendingAccounts, 'managePendingAccounts')
+export const { wrappedSaga: pendingAccountSaga, actions: pendingAccountActions } = createSaga(
+  managePendingAccounts,
+  'managePendingAccounts'
+)

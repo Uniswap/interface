@@ -4,12 +4,6 @@ import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
 import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
 import { notificationWatcher } from 'src/features/notifications/notificationWatcherSaga'
-import {
-  createAccountActions,
-  createAccountReducer,
-  createAccountSaga,
-  createAccountSagaName,
-} from 'src/features/onboarding/create/createAccountSaga'
 import { telemetrySaga } from 'src/features/telemetry/saga'
 import {
   swapActions,
@@ -40,11 +34,12 @@ import {
   editAccountSagaName,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import {
-  pendingAccountActions,
-  pendingAccountReducer,
-  pendingAccountSaga,
-  pendingAccountSagaName,
-} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
+  createAccountActions,
+  createAccountReducer,
+  createAccountSaga,
+  createAccountSagaName,
+} from 'wallet/src/features/wallet/create/createAccountSaga'
+import { pendingAccountSaga } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import {
   importAccountActions,
   importAccountReducer,
@@ -56,15 +51,16 @@ import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
 // All regular sagas must be included here
 const sagas = [
   accountCleanupWatcher,
-  telemetrySaga,
-  initFirebase,
-  deepLinkWatcher,
-  transactionWatcher,
-  firebaseDataWatcher,
-  notificationWatcher,
-  walletConnectV2Saga,
-  signWcRequestSaga,
   cloudBackupsManagerSaga,
+  deepLinkWatcher,
+  firebaseDataWatcher,
+  initFirebase,
+  notificationWatcher,
+  pendingAccountSaga,
+  signWcRequestSaga,
+  telemetrySaga,
+  transactionWatcher,
+  walletConnectV2Saga,
 ]
 
 // All monitored sagas must be included here
@@ -86,12 +82,6 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: importAccountSaga,
     reducer: importAccountReducer,
     actions: importAccountActions,
-  },
-  [pendingAccountSagaName]: {
-    name: pendingAccountSagaName,
-    wrappedSaga: pendingAccountSaga,
-    reducer: pendingAccountReducer,
-    actions: pendingAccountActions,
   },
   [transferTokenSagaName]: {
     name: transferTokenSagaName,

@@ -11,7 +11,6 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
-import { createAccountActions } from 'src/features/onboarding/create/createAccountSaga'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
@@ -23,6 +22,7 @@ import ImportIcon from 'ui/src/assets/icons/arrow-rightwards-down.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SeedPhraseIcon from 'ui/src/assets/icons/pencil.svg'
 import { Theme } from 'ui/src/theme/restyle/theme'
+import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
   PendingAccountActions,
   pendingAccountActions,

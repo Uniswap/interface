@@ -102,7 +102,7 @@ class NullKeyring implements IKeyring {
   }
 
   // returns the address of the generated key
-  generateAndStorePrivateKey(): Promise<string> {
+  generateAndStorePrivateKey(_menemonicId: string, _derivationIndex: number): Promise<string> {
     throw new NotImplementedError('generateAndStorePrivateKey')
   }
 

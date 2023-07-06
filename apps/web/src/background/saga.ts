@@ -1,9 +1,3 @@
-import {
-  createAndSelectActivatedAccountActions,
-  createAndSelectActivatedAccountName,
-  createAndSelectActivatedAccountReducer,
-  createAndSelectActivatedAccountSaga,
-} from 'src/app/features/accounts/createAndSelectActivatedAccountSaga'
 import { dappRequestApprovalWatcher } from 'src/background/features/dappRequests/dappRequestApprovalWatcherSaga'
 import {
   dappRequestWatcher,
@@ -24,12 +18,7 @@ import {
   createAccountSaga,
   createAccountSagaName,
 } from 'wallet/src/features/wallet/create/createAccountSaga'
-import {
-  pendingAccountActions,
-  pendingAccountReducer,
-  pendingAccountSaga,
-  pendingAccountSagaName,
-} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
+import { pendingAccountSaga } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import {
   importAccountActions,
   importAccountReducer,
@@ -53,12 +42,6 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     reducer: createAccountReducer,
     actions: createAccountActions,
   },
-  [createAndSelectActivatedAccountName]: {
-    name: createAndSelectActivatedAccountName,
-    wrappedSaga: createAndSelectActivatedAccountSaga,
-    reducer: createAndSelectActivatedAccountReducer,
-    actions: createAndSelectActivatedAccountActions,
-  },
   [editAccountSagaName]: {
     name: editAccountSagaName,
     wrappedSaga: editAccountSaga,
@@ -71,20 +54,15 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     reducer: importAccountReducer,
     actions: importAccountActions,
   },
-  [pendingAccountSagaName]: {
-    name: pendingAccountSagaName,
-    wrappedSaga: pendingAccountSaga,
-    reducer: pendingAccountReducer,
-    actions: pendingAccountActions,
-  },
 } as const
 
 const sagasInitializedOnStartup = [
-  dappRequestWatcher,
   dappRequestApprovalWatcher,
+  dappRequestWatcher,
   extensionRequestWatcher,
-  keepAliveSaga,
   initProviders,
+  keepAliveSaga,
+  pendingAccountSaga,
 ] as const
 
 export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)
