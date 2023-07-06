@@ -120,6 +120,8 @@ function TransactionSubmittedContent({
       .catch(() => setSuccess(false))
   }, [connector, logoURL, token])
 
+  const explorerText = `View on ${chainId === ChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}`
+
   return (
     <Wrapper>
       <AutoColumn>
@@ -158,7 +160,7 @@ function TransactionSubmittedContent({
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
               <ThemedText.Link color={theme.accentAction}>
-                <Trans>View on {chainId === ChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
+                <Trans>{explorerText}</Trans>
               </ThemedText.Link>
             </ExternalLink>
           )}
