@@ -76,7 +76,7 @@ export interface QuoteData {
   routeString: string
 }
 
-export type QuoteDataV2 = {
+export type QuoteReponse = {
   routing: RouterPreference.API
   quote: QuoteData
 }
