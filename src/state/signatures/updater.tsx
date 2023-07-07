@@ -7,6 +7,7 @@ import { useCallback, useMemo } from 'react'
 import { PopupType } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { addTransaction } from 'state/transactions/reducer'
+import { toSerializableReceipt } from 'state/transactions/updater'
 import { isL2ChainId } from 'utils/chains'
 
 import { useAddPopup } from '../application/hooks'
@@ -51,7 +52,7 @@ export default function Updater() {
               from: updatedOrder.offerer, // TODO(WEB-2053): use filler as from once tx reducer is organized by account
               hash: update.txHash,
               info: updatedOrder.swapInfo,
-              receipt,
+              receipt: toSerializableReceipt(receipt),
             })
           )
           dispatch(updateSignature(updatedOrder))
