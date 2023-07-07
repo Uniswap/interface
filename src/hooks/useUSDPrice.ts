@@ -17,7 +17,6 @@ export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): {
   const address = useMemo(() => {
     if (currency) {
       if ('tokenInfo' in currency) {
-        console.log('aqui')
         const token = currency as WrappedTokenInfo
         return token.address
       }
