@@ -144,6 +144,7 @@ jobs:
           wait-on: 'http://localhost:3000'
           browser: electron
           group: e2e
+          spec: ${{ github.ref_name == 'releases/staging' && 'cypress/{e2e,staging}/**/*.test.ts' || 'cypress/e2e/**/*.test.ts' }}
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -169,6 +170,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
   pre:
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v6.4.1
@@ -177,7 +179,7 @@ jobs:
             github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: context.payload.pull_request.head.sha || context.payload.head_commit.sha,
+              sha: context.payload.head_commit.sha,
               state: 'pending',
               context: 'Test / promotion',
               description: 'Running tests...',
@@ -185,7 +187,7 @@ jobs:
             })
 
   post:
-    if: always()
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
     needs: [pre, lint, typecheck, deps-tests, unit-tests, cypress-test-matrix]
     runs-on: ubuntu-latest
     steps:
@@ -195,7 +197,7 @@ jobs:
             github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: context.payload.pull_request.head.sha || context.payload.head_commit.sha,
+              sha: context.payload.head_commit.sha,
               state: ${{ env.STATUS }} ? 'success' : 'failure',
               context: 'Test / promotion',
               description: ${{ env.STATUS }} ? 'All tests passed' : 'One or more tests failed and are blocking promotion',

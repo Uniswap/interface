@@ -28,6 +28,6 @@ export default defineConfig({
       return config
     },
     baseUrl: 'http://localhost:3000',
-    specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
+    specPattern: 'cypress/{e2e,staging}/**/*.test.ts',
   },
 })
