@@ -8,15 +8,16 @@ import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/st
 import { t } from '@lingui/macro'
 import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJSON from '@uniswap/governance/build/Uni.json'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
-import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import {
+  ChainId,
+  CurrencyAmount,
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
-} from 'constants/addresses'
-import { SupportedChainId } from 'constants/chains'
+  Token,
+} from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
+import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
@@ -240,10 +241,10 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   const proposalCount2 = useProposalCount(gov2)
 
   const gov0ProposalIndexes = useMemo(() => {
-    return chainId === SupportedChainId.MAINNET ? V0_PROPOSAL_IDS : countToIndices(proposalCount0)
+    return chainId === ChainId.MAINNET ? V0_PROPOSAL_IDS : countToIndices(proposalCount0)
   }, [chainId, proposalCount0])
   const gov1ProposalIndexes = useMemo(() => {
-    return chainId === SupportedChainId.MAINNET ? V1_PROPOSAL_IDS : countToIndices(proposalCount1)
+    return chainId === ChainId.MAINNET ? V1_PROPOSAL_IDS : countToIndices(proposalCount1)
   }, [chainId, proposalCount1])
   const gov2ProposalIndexes = useMemo(() => {
     return countToIndices(proposalCount2, 8)
@@ -344,7 +345,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   if (
     !latestGovernanceContract ||
     !quorumVotes ||
-    chainId !== SupportedChainId.MAINNET ||
+    chainId !== ChainId.MAINNET ||
     !uni ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   )

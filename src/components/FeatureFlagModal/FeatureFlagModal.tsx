@@ -2,7 +2,6 @@ import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'fe
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
 import { useWalletConnectFallbackFlag } from 'featureFlags/flags/walletConnectPopover'
 import { useWalletConnectV2Flag } from 'featureFlags/flags/walletConnectV2'
 import { useUpdateAtom } from 'jotai/utils'
@@ -210,12 +209,6 @@ export default function FeatureFlagModal() {
         value={useDetailsV2Flag()}
         featureFlag={FeatureFlag.detailsV2}
         label="Use the new details page for nfts"
-      />
-      <FeatureFlagOption
-        variant={UnifiedRouterVariant}
-        value={useRoutingAPIV2Flag()}
-        featureFlag={FeatureFlag.uraEnabled}
-        label="Enable the Unified Routing API"
       />
       <FeatureFlagOption
         variant={BaseVariant}

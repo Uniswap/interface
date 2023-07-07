@@ -1,4 +1,4 @@
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -29,7 +29,7 @@ export const SwapWrapper = styled.main<{ chainId?: number }>`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
   padding-top: 12px;
-  box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
+  box-shadow: ${({ chainId }) => !!chainId && chainId === ChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
   z-index: ${Z_INDEX.default};
   transition: transform 250ms ease;
 
