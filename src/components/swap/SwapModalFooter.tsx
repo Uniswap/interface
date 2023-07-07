@@ -111,13 +111,7 @@ export default function SwapModalFooter({
                 </Trans>
               </Label>
             </MouseoverTooltip>
-            <MouseoverTooltip
-              // If there is only one transaction/estimate, we don't need a breakdown.
-              disabled={txCount <= 1}
-              placement="right"
-              size={TooltipSize.Small}
-              text={<GasBreakdownTooltip trade={trade} />}
-            >
+            <MouseoverTooltip placement="right" size={TooltipSize.Small} text={<GasBreakdownTooltip trade={trade} />}>
               <DetailRowValue>
                 {trade.totalGasUseEstimateUSD === 0
                   ? '$0.00'
