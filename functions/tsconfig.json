@@ -6,7 +6,7 @@
     "noEmit": true,
     "strict": true,
     "target": "ES6",
-    "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/jest", // avoid clobbering the build tsbuildinfo
+    "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
     "types": ["jest", "node"],
     "jsx": "react",
     "moduleResolution": "NodeNext",
