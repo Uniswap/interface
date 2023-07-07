@@ -182,6 +182,7 @@ export function SettingsScreen(): JSX.Element {
           ItemSeparatorComponent={renderItemSeparator}
           ListFooterComponent={<FooterSettings />}
           ListHeaderComponent={<WalletSettings />}
+          initialNumToRender={20}
           keyExtractor={(_item, index): string => 'settings' + index}
           renderItem={renderItem}
           renderSectionFooter={(): JSX.Element => <Flex pt="spacing24" />}

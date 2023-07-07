@@ -220,6 +220,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
           // https://shopify.github.io/flash-list/docs/fundamentals/performant-components#getitemtype
           getItemType={getActivityItemType}
           keyExtractor={keyExtractor}
+          maxToRenderPerBatch={20}
           numColumns={1}
           refreshControl={refreshControl}
           refreshing={refreshing}

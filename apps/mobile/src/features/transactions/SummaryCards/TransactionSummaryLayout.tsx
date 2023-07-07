@@ -2,7 +2,7 @@
 import { ResponsiveValue } from '@shopify/restyle'
 import dayjs from 'dayjs'
 import { providers } from 'ethers'
-import { default as React, useEffect, useMemo, useState } from 'react'
+import { default as React, memo, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -247,4 +247,4 @@ function TransactionSummaryLayout({
   )
 }
 
-export default TransactionSummaryLayout
+export default memo(TransactionSummaryLayout)
