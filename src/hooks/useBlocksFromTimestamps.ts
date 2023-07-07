@@ -1,5 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { START_BLOCKS } from 'constants/blocks'
+import { SupportedChainId } from 'constants/chains'
 import { blockClient } from 'graphql/thegraph/apollo'
 import gql from 'graphql-tag'
 import { useEffect, useMemo, useState } from 'react'
@@ -41,13 +42,13 @@ export function useBlocksFromTimestamps(
   const activeBlockClient = blockClientOverride ?? blockClient
 
   // derive blocks based on active network
-  const networkBlocks = blocks?.[570]
+  const networkBlocks = blocks?.[SupportedChainId.ROLLUX]
 
   useEffect(() => {
     async function fetchData() {
       const results = await splitQuery(GET_BLOCKS, activeBlockClient, [], timestamps)
       if (results) {
-        setBlocks({ ...(blocks ?? {}), [570]: results })
+        setBlocks({ ...(blocks ?? {}), [SupportedChainId.ROLLUX]: results })
       } else {
         setError(true)
       }
@@ -58,11 +59,11 @@ export function useBlocksFromTimestamps(
   })
 
   const blocksFormatted = useMemo(() => {
-    if (blocks?.[570]) {
-      const networkBlocks = blocks?.[570]
+    if (blocks?.[SupportedChainId.ROLLUX]) {
+      const networkBlocks = blocks?.[SupportedChainId.ROLLUX]
 
       const formatted = []
-      const deploymentBlock = START_BLOCKS[570]
+      const deploymentBlock = START_BLOCKS[SupportedChainId.ROLLUX]
 
       for (const [t, networkBlock] of Object.entries(networkBlocks)) {
         const nb = networkBlock as any[]

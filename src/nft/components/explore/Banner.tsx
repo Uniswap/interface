@@ -8,7 +8,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { opacify } from 'theme/utils'
 
 import { Carousel, LoadingCarousel } from './Carousel'
 import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
@@ -45,7 +44,7 @@ const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
 `
 
 const PlainBackground = styled(AbsoluteFill)`
-  background: ${({ theme }) => `linear-gradient(${opacify(10, theme.userThemeColor)}, transparent)`};
+  background: ${({ theme }) => theme.brandedGradient};
 `
 
 const BannerMainArea = styled.div`
