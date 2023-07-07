@@ -49,7 +49,6 @@ describe('Wallet Option', () => {
   it('connect when clicked', async () => {
     const activationResponse = createDeferredPromise()
     mocked(mockConnection1.connector.activate).mockReturnValue(activationResponse.promise)
-    expect(mockConnection1.connector.activate).toHaveBeenCalledTimes(1)
 
     const component = render(
       <>
@@ -65,7 +64,9 @@ describe('Wallet Option', () => {
     expect(option2).toBeEnabled()
     expect(option2).toHaveProperty('selected', false)
 
+    expect(mockConnection1.connector.activate).toHaveBeenCalledTimes(0)
     act(() => option1.click())
+    expect(mockConnection1.connector.activate).toHaveBeenCalledTimes(1)
 
     expect(option1).toBeDisabled()
     expect(option1).toHaveProperty('selected', true)
