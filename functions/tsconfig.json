@@ -12,7 +12,7 @@
     "moduleResolution": "NodeNext",
   },
   "exclude": ["node_modules"],
-  "include": ["**/*.ts", "global.d.ts"],
+  "include": ["**/*.ts"],
   "watchOptions": {
     "excludeDirectories": ["node_modules"]
   }
