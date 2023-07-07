@@ -4,8 +4,9 @@ import { AddressFooter } from 'src/background/features/dappRequests/requestConte
 import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
 import { useAppSelector } from 'src/background/store'
 import { Text, XStack, YStack } from 'ui/src'
-import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
+import { useTransactionGasFee, useUSDValue } from 'wallet/src/features/gas/hooks'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 export const SendTransactionDetails = ({
   activeAccount,
@@ -24,11 +25,11 @@ export const SendTransactionDetails = ({
 
   const chainId = useAppSelector(selectChainByDappAndWallet(activeAccount.address, dappUrl))
 
-  //TODO(EXT-157): convert to USD
   const networkFee = useTransactionGasFee({
     chainId,
     ...sendTransactionRequest.transaction,
   })?.gasFee
+  const gasFeeUSD = useUSDValue(chainId, networkFee)
 
   const contractFunction = sendTransactionRequest.transaction.type
   return (
@@ -90,7 +91,7 @@ export const SendTransactionDetails = ({
             Network fee
           </Text>
           <Text color="$textSecondary" textAlign="right" variant="bodySmall">
-            {networkFee}
+            {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
           </Text>
         </XStack>
         <AddressFooter account={activeAccount} />
