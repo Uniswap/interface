@@ -1,10 +1,9 @@
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
 import { LogoImage, MissingImageLogo } from 'components/Logo/AssetLogo'
 import { Unicon } from 'components/Unicon'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import useENSAvatar from 'hooks/useENSAvatar'
 import React from 'react'
@@ -37,7 +36,7 @@ const DoubleLogoContainer = styled.div`
 `
 
 type MultiLogoProps = {
-  chainId: SupportedChainId
+  chainId: ChainId
   accountAddress?: string
   currencies?: Array<Currency | undefined>
   images?: (string | undefined)[]
@@ -85,7 +84,7 @@ const L2LogoContainer = styled.div<{ $backgroundColor?: string }>`
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
 export function PortfolioLogo({
-  chainId = SupportedChainId.MAINNET,
+  chainId = ChainId.MAINNET,
   accountAddress,
   currencies,
   images,
@@ -142,7 +141,7 @@ export function PortfolioLogo({
   }
 
   const L2Logo =
-    chainId !== SupportedChainId.MAINNET && chainLogo ? (
+    chainId !== ChainId.MAINNET && chainLogo ? (
       <L2LogoContainer $backgroundColor={squareLogoUrl ? theme.backgroundSurface : theme.textPrimary}>
         {squareLogoUrl ? (
           <SquareChainLogo src={chainLogo} alt="chainLogo" />

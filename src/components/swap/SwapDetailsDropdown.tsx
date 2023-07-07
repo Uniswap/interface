@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
+import { TraceEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -8,6 +8,7 @@ import Column from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { formatEventPropertiesForTrade } from 'lib/utils/analytics'
 import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
@@ -102,6 +103,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
+  const trace = useTrace()
 
   return (
     <Wrapper>
@@ -109,6 +111,10 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
         events={[BrowserEvent.onClick]}
         name={SwapEventName.SWAP_DETAILS_EXPANDED}
         element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
+        properties={{
+          ...(trade ? formatEventPropertiesForTrade(trade, allowedSlippage) : {}),
+          ...trace,
+        }}
         shouldLogImpression={!showDetails}
       >
         <StyledHeaderRow

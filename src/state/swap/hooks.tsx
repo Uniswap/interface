@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -9,7 +8,7 @@ import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'state/hooks'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { InterfaceTrade, QuoteMethod, TradeState } from 'state/routing/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
@@ -74,7 +73,7 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(
   state: SwapState,
-  chainId: SupportedChainId | undefined
+  chainId: ChainId | undefined
 ): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
@@ -83,6 +82,7 @@ export function useDerivedSwapInfo(
   trade: {
     trade?: InterfaceTrade
     state: TradeState
+    method?: QuoteMethod
   }
   allowedSlippage: Percent
   autoSlippage: Percent

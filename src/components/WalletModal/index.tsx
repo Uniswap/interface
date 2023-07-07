@@ -4,6 +4,7 @@ import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { getConnections, networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
+import { ConnectionType } from 'connection/types'
 import { isSupportedChain } from 'constants/chains'
 import { useEffect } from 'react'
 import { Settings } from 'react-feather'
@@ -44,6 +45,8 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
 
   const { activationState } = useActivationState()
 
+  const hiddenWalletConnectTypes = [ConnectionType.WALLET_CONNECT, ConnectionType.UNISWAP_WALLET]
+
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
     if (chainId && isSupportedChain(chainId) && connector !== networkConnection.connector) {
@@ -63,7 +66,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         <AutoColumn gap="16px">
           <OptionGrid data-testid="option-grid">
             {connections
-              .filter((connection) => connection.shouldDisplay())
+              .filter((connection) => connection.shouldDisplay() && !hiddenWalletConnectTypes.includes(connection.type))
               .map((connection) => (
                 <Option key={connection.getName()} connection={connection} />
               ))}

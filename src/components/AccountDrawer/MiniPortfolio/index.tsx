@@ -4,13 +4,12 @@ import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventNa
 import Column from 'components/Column'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { AutoRow } from 'components/Row'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
-import { useAtomValue } from 'jotai/utils'
 import { useEffect, useState } from 'react'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useHasPendingTransactions } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { ActivityTab } from './Activity'
 import NFTs from './NFTs'
@@ -24,6 +23,10 @@ const Wrapper = styled(Column)`
   flex-direction: column;
   height: 100%;
   gap: 12px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    margin-bottom: 48px;
+  }
 
   ${PortfolioRowWrapper} {
     &:hover {
@@ -95,8 +98,8 @@ export default function MiniPortfolio({ account }: { account: string }) {
   const isNftPage = useIsNftPage()
   const theme = useTheme()
   const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const [activityUnread, setActivityUnread] = useState(false)
-  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
   const { component: Page, key: currentKey } = Pages[currentPage]
 
