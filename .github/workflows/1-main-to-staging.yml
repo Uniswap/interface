@@ -14,7 +14,8 @@ jobs:
     environment:
       name: push/staging
     steps:
-      - uses: actions/github-script@v6.4.1
+      - name: Check test status
+        uses: actions/github-script@v6.4.1
         with:
           script: |
             const statuses = await github.rest.repos.listCommitStatusesForRef({
@@ -22,7 +23,6 @@ jobs:
               repo: context.repo.repo,
               ref: context.payload.head_commit.sha
             })
-            core.info('Statuses: ' + JSON.stringify(statuses))
             const status = statuses.data.find(status => status.context === 'Test / promotion')?.state || 'missing'
             core.info('Status: ' + status)
             if (status !== 'success') {
