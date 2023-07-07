@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unused-modules */
-import getCollection from '../../utils/getCollection'
 import { MetaTagInjector } from '../../components/collectionInjector'
+import getCollection from '../../utils/getCollection'
 
 export const onRequest: PagesFunction<{}> = async ({ params, request, env, next }) => {
   try {

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unused-modules */
-import getToken from '../utils/getToken'
 import { MetaTagInjector } from '../components/tokenInjector'
+import getToken from '../utils/getToken'
 
 export const onRequest: PagesFunction<{}> = async ({ params, request, env, next }) => {
   try {
