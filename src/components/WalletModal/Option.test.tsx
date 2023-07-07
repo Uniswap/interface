@@ -1,6 +1,6 @@
 import { Connector } from '@web3-react/types'
 import UNIWALLET_ICON from 'assets/images/uniwallet.png'
-import { useAccountDrawer } from 'components/AccountDrawer'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { Connection, ConnectionType } from 'connection/types'
 import { mocked } from 'test-utils/mocked'
 import { createDeferredPromise } from 'test-utils/promise'
@@ -13,7 +13,7 @@ jest.mock('components/AccountDrawer')
 
 beforeEach(() => {
   jest.spyOn(console, 'debug').mockReturnValue()
-  mocked(useAccountDrawer).mockReturnValue([true, mockToggleDrawer])
+  mocked(useToggleAccountDrawer).mockReturnValue(mockToggleDrawer)
 })
 
 const mockConnection1: Connection = {
@@ -56,7 +56,7 @@ describe('Wallet Option', () => {
         <Option connection={mockConnection2} />
       </>
     )
-    const option1 = component.getByTestId('wallet-option-UNISWAP_WALLET')
+    const option1 = component.getByTestId('wallet-option-UNISWAP_WALLET_V2')
     const option2 = component.getByTestId('wallet-option-INJECTED')
 
     expect(option1).toBeEnabled()
@@ -64,7 +64,9 @@ describe('Wallet Option', () => {
     expect(option2).toBeEnabled()
     expect(option2).toHaveProperty('selected', false)
 
-    await act(() => option1.click())
+    expect(mockConnection1.connector.activate).toHaveBeenCalledTimes(0)
+    act(() => option1.click())
+    expect(mockConnection1.connector.activate).toHaveBeenCalledTimes(1)
 
     expect(option1).toBeDisabled()
     expect(option1).toHaveProperty('selected', true)

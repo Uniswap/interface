@@ -59,7 +59,7 @@ export const EmptyNftsIcon = (props: SVGProps) => {
 export const EmptyPoolsIcon = (props: SVGProps) => {
   const { primary, secondary } = useEmptyStateIconColors()
   return (
-    <svg {...props} width="81" height="85" viewBox="0 0 81 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg {...props} width="81" height="97" viewBox="0 0 81 85" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         fillRule="evenodd"
         clipRule="evenodd"

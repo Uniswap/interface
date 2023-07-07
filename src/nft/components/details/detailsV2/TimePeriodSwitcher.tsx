@@ -67,7 +67,7 @@ const supportedTimePeriods = [
   HistoryDuration.Year,
   HistoryDuration.Max,
 ] as const
-export type SupportedTimePeriodsType = typeof supportedTimePeriods[number]
+export type SupportedTimePeriodsType = (typeof supportedTimePeriods)[number]
 
 const supportedTimePeriodsData: Record<SupportedTimePeriodsType, ReactNode> = {
   [HistoryDuration.Week]: <Trans>1 week</Trans>,

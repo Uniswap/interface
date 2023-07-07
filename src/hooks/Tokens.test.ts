@@ -1,4 +1,4 @@
-import { SupportedChainId as MockSupportedChainId } from 'constants/chains'
+import { ChainId as MockChainId } from '@uniswap/sdk-core'
 import {
   DAI as MockDAI,
   USDC_MAINNET as MockUSDC_MAINNET,
@@ -13,11 +13,11 @@ import { useAllTokensMultichain } from './Tokens'
 jest.mock('../state/lists/hooks.ts', () => {
   return {
     useCombinedTokenMapFromUrls: () => ({
-      [MockSupportedChainId.MAINNET]: {
+      [MockChainId.MAINNET]: {
         [MockDAI.address]: { token: MockDAI },
         [MockUSDC_MAINNET.address]: { token: MockUSDC_MAINNET },
       },
-      [MockSupportedChainId.POLYGON]: {
+      [MockChainId.POLYGON]: {
         [MockWETH_POLYGON.address]: { token: MockWETH_POLYGON },
       },
     }),
@@ -27,11 +27,11 @@ jest.mock('../state/lists/hooks.ts', () => {
 jest.mock('../state/hooks.ts', () => {
   return {
     useAppSelector: () => ({
-      [MockSupportedChainId.MAINNET]: {
+      [MockChainId.MAINNET]: {
         [MockDAI.address]: MockDAI,
         [MockUSDT.address]: MockUSDT,
       },
-      [MockSupportedChainId.OPTIMISM]: {
+      [MockChainId.OPTIMISM]: {
         [MockUSDC_OPTIMISM.address]: MockUSDC_OPTIMISM,
       },
     }),
@@ -43,15 +43,15 @@ describe('useAllTokensMultichain', () => {
     const { result } = renderHook(() => useAllTokensMultichain())
 
     expect(result.current).toStrictEqual({
-      [MockSupportedChainId.MAINNET]: {
+      [MockChainId.MAINNET]: {
         [MockDAI.address]: MockDAI,
         [MockUSDC_MAINNET.address]: MockUSDC_MAINNET,
         [MockUSDT.address]: MockUSDT,
       },
-      [MockSupportedChainId.POLYGON]: {
+      [MockChainId.POLYGON]: {
         [MockWETH_POLYGON.address]: MockWETH_POLYGON,
       },
-      [MockSupportedChainId.OPTIMISM]: {
+      [MockChainId.OPTIMISM]: {
         [MockUSDC_OPTIMISM.address]: MockUSDC_OPTIMISM,
       },
     })
