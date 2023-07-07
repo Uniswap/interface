@@ -1,6 +1,6 @@
 import { createMulticall, ListenerOptions } from '@uniswap/redux-multicall'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
 import { useInterfaceMulticall } from 'hooks/useContract'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useMemo } from 'react'
@@ -9,14 +9,21 @@ const multicall = createMulticall()
 
 export default multicall
 
+/**
+ *
+ * @param chainId
+ * @returns The approximate whole number of blocks written to the corresponding chainId per Ethereum mainnet epoch.
+ */
 function getBlocksPerFetchForChainId(chainId: number | undefined): number {
+  // TODO(WEB-2437): See if these numbers need to be updated
   switch (chainId) {
-    case SupportedChainId.ARBITRUM_ONE:
-    case SupportedChainId.OPTIMISM:
+    case ChainId.ARBITRUM_ONE:
+    case ChainId.OPTIMISM:
       return 15
-    case SupportedChainId.BNB:
-    case SupportedChainId.CELO:
-    case SupportedChainId.CELO_ALFAJORES:
+    case ChainId.AVALANCHE:
+    case ChainId.BNB:
+    case ChainId.CELO:
+    case ChainId.CELO_ALFAJORES:
       return 5
     default:
       return 1

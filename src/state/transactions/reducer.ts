@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 
 import { updateVersion } from '../global/actions'
 import { TransactionDetails, TransactionInfo } from './types'
@@ -13,7 +13,7 @@ export interface TransactionState {
 }
 
 interface AddTransactionPayload {
-  chainId: SupportedChainId
+  chainId: ChainId
   from: string
   hash: string
   info: TransactionInfo
