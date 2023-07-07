@@ -11,6 +11,7 @@ const COINGECKO_ARBITRUM_LIST = 'https://tokens.coingecko.com/arbitrum-one/all.j
 const COINGECKO_OPTIMISM_LIST = 'https://tokens.coingecko.com/optimistic-ethereum/all.json'
 const COINGECKO_CELO_LIST = 'https://tokens.coingecko.com/celo/all.json'
 const COINGECKO_POLYGON_LIST = 'https://tokens.coingecko.com/polygon-pos/all.json'
+const COINGECKO_AVAX_LIST = 'https://tokens.coingecko.com/avalanche/all.json'
 const COMPOUND_LIST = 'https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json'
 const GEMINI_LIST = 'https://www.gemini.com/uniswap/manifest.json'
 const KLEROS_LIST = 't2crtokens.eth'
@@ -21,6 +22,8 @@ export const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json
 export const ARBITRUM_LIST = 'https://bridge.arbitrum.io/token-list-42161.json'
 export const CELO_LIST = 'https://celo-org.github.io/celo-token-list/celo.tokenlist.json'
 export const PLASMA_BNB_LIST = 'https://raw.githubusercontent.com/plasmadlt/plasma-finance-token-list/master/bnb.json'
+export const AVALANCHE_LIST =
+  'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/token_list.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST, UNI_UNSUPPORTED_LIST]
 
@@ -37,6 +40,7 @@ export const DEFAULT_INACTIVE_LIST_URLS: string[] = [
   COINGECKO_OPTIMISM_LIST,
   COINGECKO_CELO_LIST,
   COINGECKO_POLYGON_LIST,
+  COINGECKO_AVAX_LIST,
   KLEROS_LIST,
   GEMINI_LIST,
   WRAPPED_LIST,
@@ -45,6 +49,7 @@ export const DEFAULT_INACTIVE_LIST_URLS: string[] = [
   OPTIMISM_LIST,
   CELO_LIST,
   PLASMA_BNB_LIST,
+  AVALANCHE_LIST,
   ...UNSUPPORTED_LIST_URLS,
 ]
 

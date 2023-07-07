@@ -1,4 +1,5 @@
 import { t } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect-v2'
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
@@ -6,13 +7,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { getChainInfo } from 'constants/chainInfo'
-import {
-  L1_CHAIN_IDS,
-  L2_CHAIN_IDS,
-  SupportedChainId,
-  TESTNET_CHAIN_IDS,
-  UniWalletSupportedChains,
-} from 'constants/chains'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS, UniWalletSupportedChains } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -36,7 +31,7 @@ interface ChainSelectorProps {
   leftAlign?: boolean
 }
 
-function useWalletSupportedChains(): SupportedChainId[] {
+function useWalletSupportedChains(): ChainId[] {
   const { connector } = useWeb3React()
 
   const connectionType = getConnection(connector).type
@@ -63,7 +58,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const [supportedChains, unsupportedChains] = useMemo(() => {
     const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter(
-      (chain) => showTestnets || !TESTNET_CHAIN_IDS.has(chain)
+      (chain: number) => showTestnets || !TESTNET_CHAIN_IDS.includes(chain)
     ).reduce(
       (acc, chain) => {
         if (walletSupportsChain.includes(chain)) {
@@ -73,7 +68,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
         }
         return acc
       },
-      { supported: [], unsupported: [] } as Record<string, SupportedChainId[]>
+      { supported: [], unsupported: [] } as Record<string, ChainId[]>
     )
     return [supported, unsupported]
   }, [showTestnets, walletSupportsChain])
@@ -87,10 +82,10 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const selectChain = useSelectChain()
   useSyncChainQuery()
 
-  const [pendingChainId, setPendingChainId] = useState<SupportedChainId | undefined>(undefined)
+  const [pendingChainId, setPendingChainId] = useState<ChainId | undefined>(undefined)
 
   const onSelectChain = useCallback(
-    async (targetChainId: SupportedChainId) => {
+    async (targetChainId: ChainId) => {
       setPendingChainId(targetChainId)
       await selectChain(targetChainId)
       setPendingChainId(undefined)

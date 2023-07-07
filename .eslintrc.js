@@ -13,7 +13,6 @@ module.exports = {
       files: ['**/*'],
       rules: {
         'multiline-comment-style': ['error', 'separate-lines'],
-        'rulesdir/enforce-retry-on-import': 'error',
         'rulesdir/no-undefined-or': 'error',
       },
     },
