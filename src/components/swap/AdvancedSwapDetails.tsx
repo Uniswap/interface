@@ -18,7 +18,6 @@ import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip, TooltipSize } from '../Tooltip'
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 import SwapRoute from './SwapRoute'
-import UniswapXGasTooltip from './UniswapXGasTooltip'
 
 interface AdvancedSwapDetailsProps {
   trade: InterfaceTrade
@@ -70,11 +69,9 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             </ThemedText.BodySmall>
           </MouseoverTooltip>
           <MouseoverTooltip
-            // If there is only one transaction/estimate, we don't need a breakdown.
-            disabled={txCount <= 1}
             placement="right"
             size={TooltipSize.Small}
-            text={<GasBreakdownTooltip trade={trade} />}
+            text={<GasBreakdownTooltip trade={trade} hideUniswapXDescription />}
           >
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
               <ThemedText.BodySmall>
@@ -164,7 +161,8 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         ) : (
           <MouseoverTooltip
             size={TooltipSize.Small}
-            text={<UniswapXGasTooltip data-testid="swap-route-info" trade={trade} />}
+            text={<GasBreakdownTooltip trade={trade} hideFees />}
+            placement="right"
             onOpen={() => {
               sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
                 element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,

@@ -8,13 +8,12 @@ import Row, { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { InterfaceTrade } from 'state/routing/types'
-import { isClassicTrade } from 'state/routing/utils'
+import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
-import SwapRoute from './SwapRoute'
-import UniswapXGasTooltip from './UniswapXGasTooltip'
+import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 
 const StyledGasIcon = styled(GasIcon)`
   height: 18px;
@@ -35,56 +34,28 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
   const formattedGasPriceString =
     trade?.totalGasUseEstimateUSD === 0 ? '$0.00' : formatNumber(trade?.totalGasUseEstimateUSD, NumberType.FiatGasPrice)
 
-  if (isClassicTrade(trade)) {
-    if (!trade?.totalGasUseEstimateUSD) {
-      return null
-    }
-
-    return (
-      <MouseoverTooltip
-        size={TooltipSize.Large}
-        // TODO(WEB-3304)
-        // Most of Swap-related components accept either `syncing`, `loading` or both props at the same time.
-        // We are often using them interchangeably, or pass both values as one of them (`syncing={loading || syncing}`).
-        // This is confusing and can lead to unpredicted UI behavior. We should refactor and unify this.
-        text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={loading} />}
-        onOpen={() => {
-          sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
-            element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
-          })
-        }}
-        placement="bottom"
-      >
-        <LoadingOpacityContainer $loading={loading}>
-          <RowFixed gap="xs">
-            <StyledGasIcon />
-            <ThemedText.BodySmall color="textSecondary">{formattedGasPriceString}</ThemedText.BodySmall>
-          </RowFixed>
-        </LoadingOpacityContainer>
-      </MouseoverTooltip>
-    )
-  }
-
   return (
     <MouseoverTooltip
       size={TooltipSize.Small}
-      text={<UniswapXGasTooltip data-testid="swap-route-info" trade={trade} />}
+      text={<GasBreakdownTooltip trade={trade} />}
       onOpen={() => {
         sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
           element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
         })
       }}
-      placement="bottom"
+      placement="right"
     >
       <LoadingOpacityContainer $loading={loading}>
         <RowFixed gap="xs">
-          <UniswapXRouterIcon />
+          {isUniswapXTrade(trade) ? <UniswapXRouterIcon /> : <StyledGasIcon />}
           <ThemedText.BodySmall color="textSecondary">
             <Row gap="xs">
               <div>{formattedGasPriceString}</div>
-              <div>
-                <s>{formatNumber(trade.classicGasUseEstimateUSD, NumberType.FiatGasPrice)}</s>
-              </div>
+              {isUniswapXTrade(trade) && (
+                <div>
+                  <s>{formatNumber(trade.classicGasUseEstimateUSD, NumberType.FiatGasPrice)}</s>
+                </div>
+              )}
             </Row>
           </ThemedText.BodySmall>
         </RowFixed>
