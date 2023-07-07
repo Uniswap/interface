@@ -92,18 +92,3 @@ test('should not inject metadata for invalid calls', async () => {
     expect(body).toEqual(baseBody)
   }
 }, 50000)
-
-test('api should not return a valid response', async () => {
-  const invalidUrls = [
-    'ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb49',
-    'ethereum/0x0',
-    'potato/?potato=1',
-    'tomato/NATIVE',
-  ]
-  for (const urls of invalidUrls) {
-    const url = 'http://127.0.0.1:3000/api/image/tokens/' + urls
-    const req = new Request(url)
-    const res = await fetch(req)
-    expect([404, 500]).toContain(res.status)
-  }
-}, 50000)

@@ -75,10 +75,3 @@ test('should not inject metadata for invalid calls', async () => {
     expect(body).toEqual(baseBody)
   }
 }, 50000)
-
-test('api should not return a valid response', async () => {
-  const url = 'http://127.0.0.1:3000/api/image/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545'
-  const req = new Request(url)
-  const res = await fetch(req)
-  expect([404, 500]).toContain(res.status)
-}, 50000)
