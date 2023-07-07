@@ -14,7 +14,7 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import { Button, ExternalLink } from '../../theme'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected, fortmatic, portis, NETWORK_CHAIN_ID, NETWORK_URL } from '../../connectors'
+import { injected,walletconnect, fortmatic, portis, NETWORK_CHAIN_ID, NETWORK_URL } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { AbstractConnector } from '@web3-react/abstract-connector'
@@ -232,6 +232,25 @@ export default function WalletModal({
           )
         }
         return null
+      }
+      
+      //Todo: remove after migrating to WalletConnect v2
+      if (option.connector === walletconnect) {
+        return (
+          <> 
+           <Option
+            id={`connect-${key}`}
+            onClick={() => { }}
+            key={key}
+            active={false}
+            clickable={false}
+            color={option.color}
+            header={option.name}
+            subheader={<p>We are planning to migrate to WalletConnect v2.<br/>Please use MetaMask for now.</p>} 
+            icon={require('../../assets/images/' + option.iconName)}
+          /></>
+         
+        )
       }
 
       // overwrite injected when needed
