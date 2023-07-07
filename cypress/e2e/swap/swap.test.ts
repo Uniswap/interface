@@ -58,7 +58,7 @@ describe('Swap', () => {
         // Select USDC
         cy.get('#swap-currency-output .open-currency-select-button').click()
         cy.get(getTestSelector('token-search-input')).type(USDC_MAINNET.address)
-        cy.contains('USDC').click()
+        cy.get(getTestSelector('common-base-USDC')).click()
 
         // Enter amount to swap
         cy.get('#swap-currency-output .token-amount-input').type('1').should('have.value', '1')

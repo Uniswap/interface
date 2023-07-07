@@ -81,6 +81,7 @@ export default function CommonBases({
                 onClick={() => !isSelected && onSelect(currency)}
                 disable={isSelected}
                 key={currencyId(currency)}
+                data-testid={`common-base-${currency.symbol}`}
               >
                 <CurrencyLogoFromList currency={currency} />
                 <Text fontWeight={500} fontSize={16}>
