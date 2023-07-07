@@ -1,13 +1,7 @@
 type MetaTagInjectorInput = {
-  id: any
-  tokenId: any
-  address: any
   name: any
   image: any
-  collectionName: any
-  rarity: any
   uniswapUrl: any
-  listing: any
 }
 
 export class MetaTagInjector {

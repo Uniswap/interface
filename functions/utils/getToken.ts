@@ -17,7 +17,6 @@ export default async function getToken(networkName: string, tokenAddress: string
   const formattedAsset = {
     name: asset.name,
     network: networkName,
-    price: asset.market?.price?.value ? asset.market.price.value : 0,
     image: asset.project?.logoUrl,
     uniswapUrl: url,
     symbol: asset.symbol,

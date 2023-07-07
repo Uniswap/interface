@@ -1,7 +1,6 @@
 type MetaTagInjectorInput = {
   name: any
   network: any
-  price: any
   image: any
   uniswapUrl: any
   symbol: any

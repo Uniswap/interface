@@ -16,20 +16,10 @@ export default async function getAsset(collectionAddress: string, tokenId: strin
   if (!asset) {
     return undefined
   }
-  const listing = asset.listings.edges[0]?.node
-  const listingInfo = listing
-    ? `Currently listed on ${listing.marketplace} for ${listing.price.value} ETH`
-    : 'Not currently listed'
   const formattedAsset = {
-    id: asset.id,
-    tokenId: asset.tokenId,
-    address: collectionAddress,
     name: asset.name ? asset.name : asset.collection?.name + ' #' + asset.tokenId,
     image: asset.image?.url,
-    collectionName: asset.collection?.name,
-    rarity: asset.rarities?.[0]?.rank,
     uniswapUrl: url,
-    listing: listingInfo,
   }
   return formattedAsset
 }
