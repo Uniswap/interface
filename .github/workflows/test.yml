@@ -179,7 +179,7 @@ jobs:
             github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: context.payload.head_commit.sha,
+              sha: context.sha,
               state: 'pending',
               context: 'Test / promotion',
               description: 'Running tests...',
@@ -197,7 +197,7 @@ jobs:
             github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: context.payload.head_commit.sha,
+              sha: context.sha,
               state: ${{ env.STATUS }} ? 'success' : 'failure',
               context: 'Test / promotion',
               description: ${{ env.STATUS }} ? 'All tests passed' : 'One or more tests failed and are blocking promotion',
