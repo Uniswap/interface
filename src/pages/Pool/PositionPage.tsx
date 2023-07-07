@@ -4,7 +4,7 @@ import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { formatPrice, NumberType } from '@uniswap/conedison/format'
-import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
@@ -19,7 +19,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { CHAIN_IDS_TO_NAMES, isSupportedChain, SupportedChainId } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
 import { isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
@@ -52,7 +52,7 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
 
-const getTokenLink = (chainId: SupportedChainId, address: string) => {
+const getTokenLink = (chainId: ChainId, address: string) => {
   if (isGqlSupportedChain(chainId)) {
     const chainName = CHAIN_IDS_TO_NAMES[chainId]
     return `${window.location.origin}/#/tokens/${chainName}/${address}`

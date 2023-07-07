@@ -1,5 +1,5 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import React from 'react'
 import styled, { css } from 'styled-components/macro'
@@ -63,7 +63,7 @@ const L2NetworkLogo = styled.div<{ networkUrl?: string; parentSize: string }>`
 export default function AssetLogo({
   isNative,
   address,
-  chainId = SupportedChainId.MAINNET,
+  chainId = ChainId.MAINNET,
   symbol,
   backupImg,
   size = '24px',
