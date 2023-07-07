@@ -76,7 +76,7 @@ export interface QuoteData {
   routeString: string
 }
 
-export type QuoteDataV2 = {
+export type QuoteReponse = {
   routing: RouterPreference.API
   quote: QuoteData
 }
@@ -159,5 +159,6 @@ export enum PoolType {
 export enum SwapRouterNativeAssets {
   MATIC = 'MATIC',
   BNB = 'BNB',
+  AVAX = 'AVAX',
   ETH = 'ETH',
 }

@@ -1,4 +1,4 @@
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import { createStore, Store } from 'redux'
 
 import { updateVersion } from '../global/actions'
@@ -29,7 +29,7 @@ describe('transaction reducer', () => {
         },
       })
       store.dispatch(updateVersion())
-      expect(store.getState()[SupportedChainId.MAINNET]['abc']).toBeUndefined()
+      expect(store.getState()[ChainId.MAINNET]['abc']).toBeUndefined()
     })
     it('keeps old format transactions that do have info', () => {
       store = createStore(reducer, {
@@ -41,7 +41,7 @@ describe('transaction reducer', () => {
         },
       })
       store.dispatch(updateVersion())
-      expect(store.getState()[SupportedChainId.MAINNET]['abc']).toBeTruthy()
+      expect(store.getState()[ChainId.MAINNET]['abc']).toBeTruthy()
     })
   })
 
@@ -83,7 +83,7 @@ describe('transaction reducer', () => {
     it('no op if not valid transaction', () => {
       store.dispatch(
         finalizeTransaction({
-          chainId: SupportedChainId.MAINNET,
+          chainId: ChainId.MAINNET,
           hash: '0x0',
           receipt: {
             status: 1,
@@ -103,7 +103,7 @@ describe('transaction reducer', () => {
       store.dispatch(
         addTransaction({
           hash: '0x0',
-          chainId: SupportedChainId.MAINNET,
+          chainId: ChainId.MAINNET,
           nonce: 2,
           info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0', amount: '10000' },
           from: '0x0',
@@ -112,7 +112,7 @@ describe('transaction reducer', () => {
       const beforeTime = new Date().getTime()
       store.dispatch(
         finalizeTransaction({
-          chainId: SupportedChainId.MAINNET,
+          chainId: ChainId.MAINNET,
           hash: '0x0',
           receipt: {
             status: 1,
@@ -126,7 +126,7 @@ describe('transaction reducer', () => {
           },
         })
       )
-      const tx = store.getState()[SupportedChainId.MAINNET]?.['0x0']
+      const tx = store.getState()[ChainId.MAINNET]?.['0x0']
       expect(tx?.confirmedTime).toBeGreaterThanOrEqual(beforeTime)
       expect(tx?.receipt).toEqual({
         status: 1,
@@ -145,7 +145,7 @@ describe('transaction reducer', () => {
     it('no op if not valid transaction', () => {
       store.dispatch(
         checkedTransaction({
-          chainId: SupportedChainId.MAINNET,
+          chainId: ChainId.MAINNET,
           hash: '0x0',
           blockNumber: 1,
         })
@@ -156,7 +156,7 @@ describe('transaction reducer', () => {
       store.dispatch(
         addTransaction({
           hash: '0x0',
-          chainId: SupportedChainId.MAINNET,
+          chainId: ChainId.MAINNET,
           nonce: 3,
           info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0', amount: '10000' },
           from: '0x0',
@@ -164,19 +164,19 @@ describe('transaction reducer', () => {
       )
       store.dispatch(
         checkedTransaction({
-          chainId: SupportedChainId.MAINNET,
+          chainId: ChainId.MAINNET,
           hash: '0x0',
           blockNumber: 1,
         })
       )
-      const tx = store.getState()[SupportedChainId.MAINNET]?.['0x0']
+      const tx = store.getState()[ChainId.MAINNET]?.['0x0']
       expect(tx?.lastCheckedBlockNumber).toEqual(1)
     })
     it('never decreases', () => {
       store.dispatch(
         addTransaction({
           hash: '0x0',
-          chainId: SupportedChainId.MAINNET,
+          chainId: ChainId.MAINNET,
           nonce: 4,
           info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0', amount: '10000' },
           from: '0x0',
@@ -184,19 +184,19 @@ describe('transaction reducer', () => {
       )
       store.dispatch(
         checkedTransaction({
-          chainId: SupportedChainId.MAINNET,
+          chainId: ChainId.MAINNET,
           hash: '0x0',
           blockNumber: 3,
         })
       )
       store.dispatch(
         checkedTransaction({
-          chainId: SupportedChainId.MAINNET,
+          chainId: ChainId.MAINNET,
           hash: '0x0',
           blockNumber: 1,
         })
       )
-      const tx = store.getState()[SupportedChainId.MAINNET]?.['0x0']
+      const tx = store.getState()[ChainId.MAINNET]?.['0x0']
       expect(tx?.lastCheckedBlockNumber).toEqual(3)
     })
   })
@@ -205,7 +205,7 @@ describe('transaction reducer', () => {
     it('removes all transactions for the chain', () => {
       store.dispatch(
         addTransaction({
-          chainId: SupportedChainId.MAINNET,
+          chainId: ChainId.MAINNET,
           hash: '0x0',
           nonce: 5,
           info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def', amount: '10000' },
@@ -214,7 +214,7 @@ describe('transaction reducer', () => {
       )
       store.dispatch(
         addTransaction({
-          chainId: SupportedChainId.OPTIMISM,
+          chainId: ChainId.OPTIMISM,
           nonce: 6,
           hash: '0x1',
           info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def', amount: '10000' },
@@ -222,20 +222,14 @@ describe('transaction reducer', () => {
         })
       )
       expect(Object.keys(store.getState())).toHaveLength(2)
-      expect(Object.keys(store.getState())).toEqual([
-        String(SupportedChainId.MAINNET),
-        String(SupportedChainId.OPTIMISM),
-      ])
-      expect(Object.keys(store.getState()[SupportedChainId.MAINNET] ?? {})).toEqual(['0x0'])
-      expect(Object.keys(store.getState()[SupportedChainId.OPTIMISM] ?? {})).toEqual(['0x1'])
-      store.dispatch(clearAllTransactions({ chainId: SupportedChainId.MAINNET }))
+      expect(Object.keys(store.getState())).toEqual([String(ChainId.MAINNET), String(ChainId.OPTIMISM)])
+      expect(Object.keys(store.getState()[ChainId.MAINNET] ?? {})).toEqual(['0x0'])
+      expect(Object.keys(store.getState()[ChainId.OPTIMISM] ?? {})).toEqual(['0x1'])
+      store.dispatch(clearAllTransactions({ chainId: ChainId.MAINNET }))
       expect(Object.keys(store.getState())).toHaveLength(2)
-      expect(Object.keys(store.getState())).toEqual([
-        String(SupportedChainId.MAINNET),
-        String(SupportedChainId.OPTIMISM),
-      ])
-      expect(Object.keys(store.getState()[SupportedChainId.MAINNET] ?? {})).toEqual([])
-      expect(Object.keys(store.getState()[SupportedChainId.OPTIMISM] ?? {})).toEqual(['0x1'])
+      expect(Object.keys(store.getState())).toEqual([String(ChainId.MAINNET), String(ChainId.OPTIMISM)])
+      expect(Object.keys(store.getState()[ChainId.MAINNET] ?? {})).toEqual([])
+      expect(Object.keys(store.getState()[ChainId.OPTIMISM] ?? {})).toEqual(['0x1'])
     })
   })
 })

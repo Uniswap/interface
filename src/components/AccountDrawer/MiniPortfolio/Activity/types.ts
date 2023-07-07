@@ -1,12 +1,11 @@
-import { Currency } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { AssetActivityPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 
 type Receipt = AssetActivityPartsFragment['transaction']
 
 export type Activity = {
   hash: string
-  chainId: SupportedChainId
+  chainId: ChainId
   status: TransactionStatus
   timestamp: number
   title: string
