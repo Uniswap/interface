@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unused-modules */
 import getAsset from '../../utils/getAsset'
-import { MetaTagInjector } from './assetInjector'
+import { MetaTagInjector } from '../../components/assetInjector'
 
 export const onRequest: PagesFunction<{}> = async ({ params, request, env, next }) => {
   try {
