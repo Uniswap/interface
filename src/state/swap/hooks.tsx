@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -74,7 +73,7 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(
   state: SwapState,
-  chainId: SupportedChainId | undefined
+  chainId: ChainId | undefined
 ): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }

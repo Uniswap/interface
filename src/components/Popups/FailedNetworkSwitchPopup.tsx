@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import styled from 'styled-components/macro'
 
 import { ThemedText } from '../../theme'
@@ -22,7 +22,7 @@ export const PopupAlertTriangle = styled(AlertTriangleFilled)`
   height: 32px;
 `
 
-export default function FailedNetworkSwitchPopup({ chainId }: { chainId: SupportedChainId }) {
+export default function FailedNetworkSwitchPopup({ chainId }: { chainId: ChainId }) {
   const chainInfo = getChainInfo(chainId)
 
   return (
