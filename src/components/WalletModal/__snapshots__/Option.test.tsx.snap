@@ -118,7 +118,7 @@ exports[`Wallet Option renders default state 1`] = `
     >
       <img
         alt="Mock Connection 1"
-        src="uniwallet.png"
+        src="uniswap_wallet.png"
       />
     </div>
     <div
