@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
 import { initializeConnector } from '@web3-react/core'
 import { GnosisSafe } from '@web3-react/gnosis-safe'
@@ -9,7 +10,6 @@ import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
-import { SupportedChainId } from 'constants/chains'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
@@ -83,7 +83,7 @@ export const walletConnectV1Connection: Connection = {
 }
 
 export const walletConnectV2Connection: Connection = new (class implements Connection {
-  private initializer = (actions: Actions, defaultChainId = SupportedChainId.MAINNET) =>
+  private initializer = (actions: Actions, defaultChainId = ChainId.MAINNET) =>
     new WalletConnectV2({ actions, defaultChainId, onError })
 
   type = ConnectionType.WALLET_CONNECT_V2
@@ -92,7 +92,7 @@ export const walletConnectV2Connection: Connection = new (class implements Conne
   shouldDisplay = () => !getIsInjectedMobileBrowser()
 
   private _connector = initializeConnector<WalletConnectV2>(this.initializer)
-  overrideActivate = (chainId?: SupportedChainId) => {
+  overrideActivate = (chainId?: ChainId) => {
     // Always re-create the connector, so that the chainId is updated.
     this._connector = initializeConnector((actions) => this.initializer(actions, chainId))
     return false
@@ -136,7 +136,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     new CoinbaseWallet({
       actions,
       options: {
-        url: RPC_URLS[SupportedChainId.MAINNET][0],
+        url: RPC_URLS[ChainId.MAINNET][0],
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO,
         reloadOnDisconnect: false,

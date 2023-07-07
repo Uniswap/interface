@@ -1,8 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { Token } from '@uniswap/sdk-core'
+import { ChainId, SUPPORTED_CHAINS, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
@@ -48,12 +47,10 @@ export function useTransactionRemover() {
   )
 }
 
-export function useMultichainTransactions(): [TransactionDetails, SupportedChainId][] {
+export function useMultichainTransactions(): [TransactionDetails, ChainId][] {
   const state = useAppSelector((state) => state.transactions)
-  return ALL_SUPPORTED_CHAIN_IDS.flatMap((chainId) =>
-    state[chainId]
-      ? Object.values(state[chainId]).map((tx): [TransactionDetails, SupportedChainId] => [tx, chainId])
-      : []
+  return SUPPORTED_CHAINS.flatMap((chainId) =>
+    state[chainId] ? Object.values(state[chainId]).map((tx): [TransactionDetails, ChainId] => [tx, chainId]) : []
   )
 }
 

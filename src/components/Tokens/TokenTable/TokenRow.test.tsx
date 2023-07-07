@@ -1,4 +1,4 @@
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import { Currency, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { render, screen } from 'test-utils/render'
@@ -72,7 +72,7 @@ describe('LoadedRow.tsx', () => {
           __typename: 'Token',
           id: 'VG9rZW46RVRIRVJFVU1fMHhBMGI4Njk5MWM2MjE4YjM2YzFkMTlENGEyZTlFYjBjRTM2MDZlQjQ4',
           name: 'USD Coin',
-          chain: CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.MAINNET],
+          chain: CHAIN_ID_TO_BACKEND_NAME[ChainId.MAINNET],
           address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
           symbol: 'USDC',
           standard: TokenStandard.Erc20,
@@ -96,7 +96,7 @@ describe('LoadedRow.tsx', () => {
           __typename: 'Token',
           id: 'VG9rZW46RVRIRVJFVU1fMHhBMGI4Njk5MWM2MjE4YjM2YzFkMTlENGEyZTlFYjBjRTM2MDZlQjQ4',
           name: 'USD Coin',
-          chain: CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.MAINNET],
+          chain: CHAIN_ID_TO_BACKEND_NAME[ChainId.MAINNET],
           address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
           symbol: 'USDC',
           standard: TokenStandard.Erc20,

@@ -1,7 +1,7 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { ChainId } from '@uniswap/sdk-core'
 import { Connection } from 'connection/types'
-import { SupportedChainId } from 'constants/chains'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback } from 'react'
@@ -32,7 +32,7 @@ function useTryActivation() {
   const currentPage = getCurrentPageFromLocation(pathname)
 
   return useCallback(
-    async (connection: Connection, onSuccess: () => void, chainId?: SupportedChainId) => {
+    async (connection: Connection, onSuccess: () => void, chainId?: ChainId) => {
       // Skips wallet connection if the connection should override the default
       // behavior, i.e. install MetaMask or launch Coinbase app
       if (connection.overrideActivate?.(chainId)) return
