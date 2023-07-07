@@ -12,7 +12,7 @@ export enum TokenSortMethod {
 
 export const filterStringAtom = atomWithReset<string>('')
 export const filterTimeAtom = atom<TimePeriod>(TimePeriod.DAY)
-export const sortMethodAtom = atom<TokenSortMethod>(TokenSortMethod.VOLUME)
+export const sortMethodAtom = atom<TokenSortMethod>(TokenSortMethod.TOTAL_VALUE_LOCKED)
 export const sortAscendingAtom = atom<boolean>(false)
 
 /* keep track of sort category for token table */
