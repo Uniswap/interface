@@ -19,6 +19,7 @@
     "i18n": "yarn i18n:extract --clean && yarn i18n:compile",
     "prepare": "concurrently \"npm:ajv\" \"npm:contracts\" \"npm:graphql\" \"npm:i18n\"",
     "start": "craco start",
+    "start:cloud": "NODE_OPTIONS=--dns-result-order=ipv4first PORT=3001 npx wrangler pages dev --proxy=3001 --port=3000 -- yarn start",
     "build": "craco build",
     "build:e2e": "REACT_APP_CSP_ALLOW_UNSAFE_EVAL=true REACT_APP_ADD_COVERAGE_INSTRUMENTATION=true craco build",
     "analyze": "source-map-explorer 'build/static/js/*.js' --only-mapped",
@@ -26,6 +27,7 @@
     "lint": "yarn eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ .",
     "typecheck": "tsc",
     "test": "craco test",
+    "test:cloud": "NODE_OPTIONS=--experimental-vm-modules yarn jest functions  --watch --config=functions/jest.config.json",
     "cypress:open": "cypress open --browser chrome --e2e",
     "cypress:run": "cypress run --browser chrome --e2e",
     "deduplicate": "yarn-deduplicate --strategy=highest"
@@ -66,6 +68,8 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.22.7",
+    "@cloudflare/workers-types": "^4.20230518.0",
     "@craco/craco": "^7.1.0",
     "@ethersproject/experimental": "^5.4.0",
     "@lingui/cli": "^3.9.0",
@@ -103,6 +107,7 @@
     "@vanilla-extract/jest-transform": "^1.1.1",
     "@vanilla-extract/webpack-plugin": "^2.1.11",
     "@walletconnect/types": "^2.8.6",
+    "babel-jest": "^29.6.1",
     "babel-plugin-istanbul": "^6.1.1",
     "buffer": "^6.0.3",
     "concurrently": "^8.0.1",
@@ -113,6 +118,8 @@
     "eslint-plugin-import": "^2.27",
     "eslint-plugin-rulesdir": "^0.2.2",
     "hardhat": "^2.14.0",
+    "jest": "^29.6.1",
+    "jest-dev-server": "^9.0.0",
     "jest-fail-on-console": "^3.1.1",
     "jest-fetch-mock": "^3.0.3",
     "jest-styled-components": "^7.0.8",
@@ -124,9 +131,11 @@
     "resize-observer-polyfill": "^1.5.1",
     "serve": "^11.3.2",
     "source-map-explorer": "^2.5.3",
+    "ts-jest": "^29.1.1",
     "ts-transform-graphql-tag": "^0.2.1",
     "typechain": "^5.0.0",
     "typescript": "^4.4.3",
+    "wrangler": "https://prerelease-registry.devprod.cloudflare.dev/workers-sdk/runs/4925945367/npm-package-wrangler-3048",
     "webpack-retry-chunk-load-plugin": "^3.1.1",
     "yarn-deduplicate": "^6.0.0"
   },
