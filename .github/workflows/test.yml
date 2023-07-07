@@ -177,7 +177,7 @@ jobs:
             github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: context.payload.pull_request.head.sha || context.payload.head_commit.sha,
+              sha: context.payload.pull_request?.head.sha || context.payload.head_commit.sha,
               state: 'pending',
               context: 'Test / promotion',
               description: 'Running tests...',
@@ -195,7 +195,7 @@ jobs:
             github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: context.payload.pull_request.head.sha || context.payload.head_commit.sha,
+              sha: context.payload.pull_request?.head.sha || context.payload.head_commit.sha,
               state: ${{ env.STATUS }} ? 'success' : 'failure',
               context: 'Test / promotion',
               description: ${{ env.STATUS }} ? 'All tests passed' : 'One or more tests failed and are blocking promotion',
@@ -208,3 +208,41 @@ jobs:
             ${{ needs.deps-tests.result == 'success' }} &&
             ${{ needs.unit-tests.result == 'success' }} &&
             ${{ needs.cypress-test-matrix.result == 'success' }}
+
+  pre-check:
+    needs: [pre]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6.4.1
+        with:
+          script: |
+            const statuses = await github.rest.repos.listCommitStatusesForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.payload.pull_request?.head.sha || context.payload.head_commit.sha,
+            })
+            core.info('Statuses: ' + JSON.stringify(statuses))
+            const status = statuses.data.find(status => status.context === 'Test / promotion')?.state || 'missing'
+            core.info('Status: ' + status)
+            if (status !== 'success') {
+              core.setFailed('"Test / promotion" must be successful before pushing')
+            }
+
+  post-check:
+    needs: [post]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6.4.1
+        with:
+          script: |
+            const statuses = await github.rest.repos.listCommitStatusesForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.payload.pull_request?.head.sha || context.payload.head_commit.sha,
+            })
+            core.info('Statuses: ' + JSON.stringify(statuses))
+            const status = statuses.data.find(status => status.context === 'Test / promotion')?.state || 'missing'
+            core.info('Status: ' + status)
+            if (status !== 'success') {
+              core.setFailed('"Test / promotion" must be successful before pushing')
+            }
