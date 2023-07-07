@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
-import { PAGE_SIZE } from 'graphql/tokens/TokenData'
+import { PAGE_SIZE, TokenData } from 'graphql/tokens/TokenData'
 import { useFetchedTokenData } from 'graphql/tokens/TokenData'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useMemo } from 'react'
@@ -8,7 +8,7 @@ import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
-import { filterStringAtom } from '../state'
+import { filterStringAtom, filterTimeAtom, sortAscendingAtom, sortMethodAtom } from '../state'
 import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
 
 const GridContainer = styled.div`
@@ -80,19 +80,45 @@ export default function TokenTable() {
   const tokensAddress = newTokens?.map((token) => token.id) || []
   const filterString = useAtomValue(filterStringAtom)
   const { loading: tokenDataLoading, data: tokenData } = useFetchedTokenData(tokensAddress)
+  const sortMethod = useAtomValue(sortMethodAtom)
+  const sortAscending = useAtomValue(sortAscendingAtom)
+  const timePeriod = useAtomValue(filterTimeAtom)
 
-  const filteredData = useMemo(() => {
-    return tokenData?.filter((obj) => {
+  const filteredAndSortedData = useMemo(() => {
+    const sortMethodMapping: { [key: string]: keyof TokenData } = {
+      Change: timePeriod === 0 ? 'priceUSDChange' : 'priceUSDChangeWeek',
+      TVL: 'tvlUSD',
+      Price: 'priceUSD',
+      Volume: timePeriod === 0 ? 'volumeUSD' : 'volumeUSDWeek',
+    }
+
+    const filtered = tokenData?.filter((obj) => {
       const nameMatch = obj.name.toLowerCase().includes(filterString.toLowerCase())
       const symbolMatch = obj.symbol.toLowerCase().includes(filterString.toLowerCase())
+
       return nameMatch || symbolMatch
     })
-  }, [filterString, tokenData])
+
+    const sorted = filtered?.sort((a, b) => {
+      const fieldA = a[sortMethodMapping[sortMethod]]
+      const fieldB = b[sortMethodMapping[sortMethod]]
+
+      if (fieldA < fieldB) {
+        return sortAscending ? -1 : 1
+      }
+      if (fieldA > fieldB) {
+        return sortAscending ? 1 : -1
+      }
+      return 0
+    })
+
+    return sorted
+  }, [filterString, sortAscending, sortMethod, timePeriod, tokenData])
 
   /* loading and error state */
   if (loading && tokenDataLoading && !newTokens && !tokenData) {
     return <LoadingTokenTable rowCount={PAGE_SIZE} />
-  } else if (!filteredData) {
+  } else if (!filteredAndSortedData) {
     return (
       <NoTokensState
         message={
@@ -108,13 +134,13 @@ export default function TokenTable() {
       <GridContainer>
         <HeaderRow />
         <TokenDataContainer>
-          {filteredData?.map(
+          {filteredAndSortedData?.map(
             (token, index) =>
               token?.address && (
                 <LoadedRow
                   key={token.address}
                   tokenListIndex={index}
-                  tokenListLength={filteredData.length}
+                  tokenListLength={filteredAndSortedData.length}
                   token={token}
                   sortRank={index + 1}
                 />

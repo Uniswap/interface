@@ -33,7 +33,7 @@ import invariant from 'tiny-invariant'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
+import { ButtonError, ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
@@ -592,9 +592,9 @@ export default function Swap({ className }: { className?: string }) {
                     </ThemedText.DeprecatedMain>
                   </ButtonPrimary>
                 ) : !account ? (
-                  <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
+                  <ButtonPrimary onClick={toggleWalletDrawer} fontWeight={600}>
                     <Trans>Connect Wallet</Trans>
-                  </ButtonLight>
+                  </ButtonPrimary>
                 ) : showWrap ? (
                   <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap} fontWeight={600}>
                     {wrapInputError ? (

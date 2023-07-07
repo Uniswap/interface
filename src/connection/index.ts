@@ -61,7 +61,7 @@ export const networkConnection: Connection = {
 const getIsCoinbaseWalletBrowser = () => isMobile && getIsCoinbaseWallet()
 const getIsMetaMaskBrowser = () => isMobile && getIsMetaMaskWallet()
 const getIsInjectedMobileBrowser = () => getIsCoinbaseWalletBrowser() || getIsMetaMaskBrowser()
-const getIsPaliWalletBrowser = () => !isMobile && getIsPaliWallet()
+const getIsPaliWalletBrowser = () => getIsPaliWallet()
 
 const getShouldAdvertiseMetaMask = () =>
   !getIsMetaMaskWallet() && !isMobile && (!getIsInjected() || getIsCoinbaseWallet()) && !getIsPaliWallet()

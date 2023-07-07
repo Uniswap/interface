@@ -9,12 +9,13 @@ export const getIsMetaMaskWallet = () =>
   Boolean(
     window.ethereum?.isMetaMask &&
       window.ethereum?.wallet !== 'pali-v2' &&
+      window.ethereum?.wallet !== 'pali-mobile' &&
       !allNonMetamaskFlags.some((flag) => window.ethereum?.[flag])
   )
 
 export const getIsPaliWallet = () =>
   Boolean(
-    window.ethereum?.wallet === 'pali-v2' &&
+    (window.ethereum?.wallet === 'pali-v2' || window.ethereum?.wallet === 'pali-mobile') &&
       window.ethereum?.isMetaMask &&
       !allNonMetamaskFlags.some((flag) => window.ethereum?.[flag])
   )

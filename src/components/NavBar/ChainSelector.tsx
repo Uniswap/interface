@@ -100,17 +100,18 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
         <Row
           as="button"
           gap="8"
+          alignItems="center"
           className={styles.ChainSelector}
           background={isOpen ? 'accentActiveSoft' : 'none'}
           onClick={() => setIsOpen(!isOpen)}
         >
           {!isSupported ? (
-            <AlertTriangle size={20} color={theme.textSecondary} />
+            <AlertTriangle size={20} color={theme.accentCritical} />
           ) : (
             <img src={info.logoUrl} alt={info.label} className={styles.Image} data-testid="chain-selector-logo" />
           )}
 
-          <Label>{info?.label || ''}</Label>
+          {info?.label && <Label>{info?.label || ''}</Label>}
         </Row>
       </MouseoverTooltip>
       {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
