@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
+import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { UniconWithLockIcon } from 'src/app/features/onboarding/UniconWithLockIcon'
 import {
@@ -8,8 +9,7 @@ import {
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { Input, Text, XStack } from 'ui/src'
-import { inputStyles } from 'ui/src/components/input/utils'
+import { Stack, Text, XStack } from 'ui/src'
 
 export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }): JSX.Element {
   const navigate = useNavigate()
@@ -62,42 +62,28 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
       nextButtonText="Next"
       subtitle="Let's make sure you've recorded it down"
       title={
-        <Text variant="headlineSmall">
-          What's the <Text color="$magentaVibrant">{getNumberWithOrdinal(nextWordNumber)} </Text>{' '}
-          word of your recovery phrase?
-        </Text>
+        <Stack paddingHorizontal="$spacing36">
+          <Text variant="headlineMedium">
+            What's the <Text color="$magentaVibrant">{getNumberWithOrdinal(nextWordNumber)} </Text>{' '}
+            word of your recovery phrase?
+          </Text>
+        </Stack>
       }
       onSubmit={onNext}>
-      <XStack
-        borderColor="$backgroundOutline"
-        borderRadius="$rounded12"
-        borderWidth={1}
-        focusStyle={inputStyles.inputFocus}
-        hoverStyle={inputStyles.inputHover}>
+      <XStack position="relative" width="100%">
         <Text
           color="$textTertiary"
-          paddingHorizontal="$spacing16"
-          paddingVertical="$spacing12"
-          variant="bodyLarge">
+          padding="$spacing24"
+          position="absolute"
+          variant="headlineSmall">
           {String(nextWordNumber).padStart(2, '0')}
         </Text>
-        <Input
-          autoFocus
-          backgroundColor="$background1"
-          borderColor="$backgroundOutline"
-          borderRadius="$rounded12"
-          borderWidth={0}
-          focusStyle={inputStyles.noOutline}
-          height="auto"
-          hoverStyle={inputStyles.noOutline}
-          paddingHorizontal="$spacing16"
-          paddingVertical="$spacing12"
-          placeholder=""
-          placeholderTextColor="$textTertiary"
+        <OnboardingInput
+          centered
+          placeholderText=""
           value={userWordInput}
-          width="100%"
           onChangeText={setUserWordInput}
-          onSubmitEditing={onNext}
+          onSubmit={onNext}
         />
       </XStack>
     </OnboardingScreen>

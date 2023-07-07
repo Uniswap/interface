@@ -72,7 +72,7 @@ export function ImportMnemonic(): JSX.Element {
       onSubmit={onSubmit}>
       <OnboardingInput
         hideInput
-        placeholderText="word1 word2 word3 word4 word5 word6 word7 word8 word9 word10 word11 word12"
+        placeholderText="Recovery phrase (12 words)"
         value={mnemonic}
         onChangeText={setMnemonic}
         onSubmit={onSubmit}
