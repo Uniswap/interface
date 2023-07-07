@@ -74,15 +74,18 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 }
 
 // similar to trade.maximumAmountIn except you can customize the input currency you want
+// this is useful for UniswapX ETH inputs where the currency we want to display is ETH but the actual
+// trade has WETH as the currency input
 function getMaximumAmountIn(
   currencyAmount: CurrencyAmount<Currency>,
+  customCurrency: Currency,
   slippageTolerance: Percent,
   tradeType: TradeType
 ) {
   if (tradeType === TradeType.EXACT_INPUT) return currencyAmount
 
   const slippageAdjustedAmountIn = new Fraction(ONE).add(slippageTolerance).multiply(currencyAmount.quotient).quotient
-  return CurrencyAmount.fromRawAmount(currencyAmount.currency, slippageAdjustedAmountIn)
+  return CurrencyAmount.fromRawAmount(customCurrency, slippageAdjustedAmountIn)
 }
 
 // from the current swap inputs, compute the best trade and return it.
@@ -194,7 +197,9 @@ export function useDerivedSwapInfo(
       currencyBalances[Field.INPUT],
       // derive maxAmountIn from input currency instead of trade's input currency because the trade currency could refer
       // to the currency post-wrap (for Gouda ETH inputs)
-      parsedAmount && trade?.trade && getMaximumAmountIn(parsedAmount, allowedSlippage, trade.trade.tradeType),
+      trade?.trade &&
+        inputCurrency &&
+        getMaximumAmountIn(trade.trade.inputAmount, inputCurrency, allowedSlippage, trade.trade.tradeType),
     ]
 
     if (balanceIn && maxAmountIn && balanceIn.lessThan(maxAmountIn)) {
@@ -202,7 +207,7 @@ export function useDerivedSwapInfo(
     }
 
     return inputError
-  }, [account, allowedSlippage, currencies, currencyBalances, parsedAmount, to, trade.trade])
+  }, [account, currencies, parsedAmount, to, currencyBalances, trade.trade, inputCurrency, allowedSlippage])
 
   return useMemo(
     () => ({
