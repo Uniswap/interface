@@ -2,20 +2,17 @@ const collections = [
   {
     address: '0xed5af388653567af2f388e6224dc7c4b3241c544',
     collectionName: 'Azuki',
-    image:
-      'https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?w=500&auto=format',
+    image: 'http://127.0.0.1:3000/api/image/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c544',
   },
   {
     address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
     collectionName: 'Bored Ape Yacht Club',
-    image:
-      'https://i.seadn.io/gae/Ju9CkWtV-1Okvf45wo8UctR-M9He2PjILP0oOvxE89AyiPPGtrR3gysu1Zgy0hjd2xKIgjJJtWIc0ybj4Vd7wv8t3pxDGHoJBzDB?w=500&auto=format',
+    image: 'http://127.0.0.1:3000/api/image/nfts/collection/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
   },
   {
     address: '0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b',
     collectionName: 'CLONE X - X TAKASHI MURAKAMI',
-    image:
-      'https://i.seadn.io/gae/XN0XuD8Uh3jyRWNtPTFeXJg_ht8m5ofDx6aHklOiy4amhFuWUa0JaR6It49AH8tlnYS386Q0TW_-Lmedn0UET_ko1a3CbJGeu5iHMg?w=500&auto=format',
+    image: 'http://127.0.0.1:3000/api/image/nfts/collection/0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b',
   },
 ]
 

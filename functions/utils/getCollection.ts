@@ -2,6 +2,8 @@ import { CollectionDocument } from '../../src/graphql/data/__generated__/types-a
 import { getApolloClient } from './getApolloClient'
 
 export default async function getCollection(collectionAddress: string, url: string) {
+  const origin = new URL(url).origin
+  const imageUrl = origin + '/api/image/nfts/collection/' + collectionAddress
   const client = getApolloClient()
   const { data } = await client.query({
     query: CollectionDocument,
@@ -15,7 +17,7 @@ export default async function getCollection(collectionAddress: string, url: stri
   }
   const formattedAsset = {
     name: collection.name,
-    image: collection.image?.url,
+    image: imageUrl,
     uniswapUrl: url,
     isVerified: collection.isVerified,
   }

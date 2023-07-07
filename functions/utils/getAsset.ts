@@ -2,6 +2,8 @@ import { AssetDocument } from '../../src/graphql/data/__generated__/types-and-ho
 import { getApolloClient } from './getApolloClient'
 
 export default async function getAsset(collectionAddress: string, tokenId: string, url: string) {
+  const origin = new URL(url).origin
+  const imageUrl = origin + '/api/image/nfts/asset/' + collectionAddress + '/' + tokenId
   const client = getApolloClient()
   const { data } = await client.query({
     query: AssetDocument,
@@ -25,7 +27,7 @@ export default async function getAsset(collectionAddress: string, tokenId: strin
     tokenId: asset.tokenId,
     address: collectionAddress,
     name: asset.name ? asset.name : asset.collection?.name + ' #' + asset.tokenId,
-    image: asset.image?.url,
+    image: imageUrl,
     collectionName: asset.collection?.name,
     rarity: asset.rarities?.[0]?.rank,
     uniswapUrl: url,
