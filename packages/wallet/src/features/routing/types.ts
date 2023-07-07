@@ -1,7 +1,44 @@
 import { Token } from '@uniswap/sdk-core'
+import { ChainId } from 'wallet/src/constants/chains'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 
 // Routing API types
+export enum RouterPreference {
+  AUTO = 'auto',
+  API = 'api',
+  CLIENT = 'client',
+}
+
+export interface QuoteRequest {
+  tokenInChainId: ChainId
+  tokenIn: string
+  tokenOutChainId: ChainId
+  tokenOut: string
+  amount: string
+  type: 'EXACT_INPUT' | 'EXACT_OUTPUT'
+  configs: [
+    {
+      protocols: string[]
+      routingType: 'CLASSIC'
+      enableUniversalRouter: boolean
+      recipient?: string
+      slippageTolerance?: number
+      deadline?: number
+      simulateFromAddress?: string
+      permitSignature?: string
+      permitAmount?: string
+      permitExpiration?: string
+      permitSigDeadline?: string
+      permitNonce?: string
+    }
+  ]
+}
+
+export type QuoteResponse = {
+  routing: RouterPreference.API
+  quote: QuoteResult
+  timestamp: number // used as a cache ttl
+}
 
 export interface QuoteResult {
   quoteId?: string
@@ -21,7 +58,6 @@ export interface QuoteResult {
   route: Array<(V3PoolInRoute | V2PoolInRoute)[]>
   routeString: string
   simulationError?: boolean
-  timestamp: number // used as a cache ttl
 }
 
 export interface TradeQuoteResult {

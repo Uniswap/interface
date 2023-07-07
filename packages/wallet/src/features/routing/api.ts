@@ -8,22 +8,14 @@ import { useRestQuery } from 'wallet/src/data/rest'
 import { logger } from 'wallet/src/features/logger/logger'
 import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/routeUtils'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
-import { serializeQueryParams } from 'wallet/src/features/transactions/swap/utils'
 import { SwapRouterNativeAssets } from 'wallet/src/utils/currencyId'
 import serializeError from 'wallet/src/utils/serializeError'
 import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
-import { QuoteResult, TradeQuoteResult } from './types'
+import { QuoteRequest, QuoteResponse, TradeQuoteResult } from './types'
 
 const DEFAULT_DEADLINE_S = 60 * 30 // 30 minutes in seconds
 
 const protocols: string[] = ['v2', 'v3', 'mixed']
-
-const DEFAULT_QUERY_PARAMS = {
-  protocols: protocols.map((p) => p.toLowerCase()).join(','),
-  // example other params
-  // forceCrossProtocol: 'true',
-  // minSplits: '5',
-}
 
 // error string hardcoded in @uniswap/routing-api
 export const SWAP_NO_ROUTE_ERROR = 'NO_ROUTE'
@@ -53,7 +45,8 @@ export function useQuoteQuery(
   request: TradeQuoteRequest | undefined,
   { pollInterval }: QueryHookOptions
 ): ReturnType<typeof useRestQuery<TradeQuoteResult>> {
-  let serializedParams = ''
+  let params: QuoteRequest | Record<string, never> = {}
+
   if (request) {
     const {
       amount,
@@ -96,51 +89,35 @@ export function useQuoteQuery(
         }
       : undefined
 
-    serializedParams = serializeQueryParams({
-      ...DEFAULT_QUERY_PARAMS,
-      amount,
-      enableUniversalRouter,
-      tokenInAddress,
+    params = {
       tokenInChainId,
-      tokenOutAddress,
+      tokenIn: tokenInAddress,
       tokenOutChainId,
-      type,
-      ...recipientParams,
-      ...simulatedParams,
-      ...permit2Params,
-    })
+      tokenOut: tokenOutAddress,
+      amount,
+      type: type === 'exactIn' ? 'EXACT_INPUT' : 'EXACT_OUTPUT',
+      configs: [
+        {
+          protocols,
+          routingType: 'CLASSIC',
+          enableUniversalRouter,
+          ...recipientParams,
+          ...simulatedParams,
+          ...permit2Params,
+        },
+      ],
+    }
   }
 
-  const result = useRestQuery<QuoteResult, { params: string }>(
-    `/v1/quote?${serializedParams}`,
-    // the params need to be passed as variables even though they're not being used in the query because they are used as the cache key
-    { params: serializedParams },
-    [
-      'quoteId',
-      'blockNumber',
-      'amount',
-      'amountDecimals',
-      'gasPriceWei',
-      'gasUseEstimate',
-      'gasUseEstimateQuote',
-      'gasUseEstimateQuoteDecimals',
-      'gasUseEstimateUSD',
-      'methodParameters',
-      'quote',
-      'quoteDecimals',
-      'quoteGasAdjusted',
-      'quoteGasAdjustedDecimals',
-      'route',
-      'routeString',
-      'simulationError',
-      'timestamp',
-    ],
+  const result = useRestQuery<QuoteResponse, QuoteRequest | Record<string, never>>(
+    '/v2/quote',
+    params,
+    ['quote', 'routing'],
     {
       pollInterval,
       skip: !request,
       notifyOnNetworkStatusChange: true,
-    },
-    'GET'
+    }
   )
 
   return useMemo(() => {
@@ -174,15 +151,15 @@ export function useQuoteQuery(
         tradeType,
         request?.deadline,
         request?.slippageTolerance,
-        result.data
+        result.data.quote
       )
 
       return {
         ...result,
         data: {
           trade,
-          simulationError: result.data.simulationError,
-          gasUseEstimate: result.data.gasUseEstimate,
+          simulationError: result.data.quote.simulationError,
+          gasUseEstimate: result.data.quote.gasUseEstimate,
           timestamp: Date.now(),
         },
       }
