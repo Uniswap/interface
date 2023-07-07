@@ -359,17 +359,6 @@ export const SearchBarDropdown = ({
 
   const showChainComingSoonBadge = chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) && !isLoading
   const logoUri = getChainInfo(chainId)?.logoUrl
-  let comingSoonText
-  switch (chainId) {
-    case ChainId.BNB:
-      comingSoonText = <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
-      break
-    case ChainId.AVALANCHE:
-      comingSoonText = <Trans>Coming soon: search and explore tokens on Avalanche Chain</Trans>
-      break
-    default:
-      break
-  }
 
   return (
     <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>
@@ -379,11 +368,22 @@ export const SearchBarDropdown = ({
           <ChainComingSoonBadge>
             <ChainLogo src={logoUri} />
             <ThemedText.BodySmall color="textSecondary" fontSize="14px" fontWeight="400" lineHeight="20px">
-              {comingSoonText}
+              <ComingSoonText chainId={chainId} />
             </ThemedText.BodySmall>
           </ChainComingSoonBadge>
         )}
       </Box>
     </Column>
   )
+}
+
+function ComingSoonText({ chainId }: { chainId: ChainId }) {
+  switch (chainId) {
+    case ChainId.BNB:
+      return <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
+    case ChainId.AVALANCHE:
+      return <Trans>Coming soon: search and explore tokens on Avalanche Chain</Trans>
+    default:
+      return null
+  }
 }

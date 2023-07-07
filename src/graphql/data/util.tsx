@@ -134,7 +134,8 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
  */
 export function validateUrlChainParam(chainName: string | undefined) {
   const isValidChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
-  const isValidBackEndChain = isValidChainName && isSupportedGQLChain(URL_CHAIN_PARAM_TO_BACKEND[chainName])
+  const isValidBackEndChain =
+    isValidChainName && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(isValidChainName)
   return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
