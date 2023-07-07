@@ -71,12 +71,22 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange }: Spark
     fetchData()
   }, [startTimestamp, tokenData.address, qtyDataPerTime])
 
-  const pricePoint = [] as PricePoint[]
-  data.map((price) => {
-    pricePoint.push({ timestamp: price.time, value: price.close })
-  })
+  const pricePoints = useMemo(() => {
+    const priceMap = new Map()
 
-  const pricePoints = tokenData?.address ? pricePoint : null
+    data.forEach((price) => {
+      if (!priceMap.has(price.close)) {
+        priceMap.set(price.close, {
+          timestamp: price.time,
+          value: price.close,
+        })
+      }
+    })
+
+    const pricePoint: PricePoint[] = Array.from(priceMap.values())
+
+    return tokenData?.address ? pricePoint : null
+  }, [data, tokenData?.address])
 
   // Don't display if there's one or less pricepoints
   if (!pricePoints || pricePoints.length <= 1) {
