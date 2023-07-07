@@ -691,7 +691,7 @@ export function Swap({
           ) : showWrap ? (
             <ButtonPrimary
               disabled={Boolean(wrapInputError)}
-              onClick={onWrap}
+              onClick={() => onWrap?.().catch((e) => console.error('Could not wrap/unwrap', e))}
               fontWeight={600}
               data-testid="wrap-button"
             >
