@@ -6,8 +6,8 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { useGetConnection } from 'connection'
 import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
 import { useFetchedTokenData } from 'graphql/tokens/TokenData'
-import { useTokenBalances } from 'lib/hooks/useCurrencyBalance'
-import { useCallback } from 'react'
+import { useNativeCurrencyBalances, useTokenBalances } from 'lib/hooks/useCurrencyBalance'
+import { useCallback, useEffect, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, Copy, IconProps, Power, Settings } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -95,7 +95,7 @@ export function PortfolioArrow({ change, ...rest }: { change: number } & IconPro
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { connector, ENSName } = useWeb3React()
   const dispatch = useAppDispatch()
-
+  const [totalBalance, setTotalBalance] = useState(0)
   const getConnection = useGetConnection()
   const connection = getConnection(connector)
   const disconnect = useCallback(() => {
@@ -107,11 +107,26 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   }, [connector, dispatch])
 
   const { tokens } = useNewTopTokens()
+  const nativeBalances = useNativeCurrencyBalances([account])
   const { chainId } = useWeb3React()
 
   const tokensAddress = tokens?.map((token) => token.id) || []
   const ERC20Tokens: Token[] = []
-  if (tokens && tokens?.length > 0)
+
+  const nativeBalancesEntries = Object.entries(nativeBalances)
+  if (nativeBalancesEntries && nativeBalancesEntries.length > 0) {
+    nativeBalancesEntries?.map((token) =>
+      ERC20Tokens.push({
+        address: 'NATIVE',
+        chainId,
+        symbol: token[1]?.currency.symbol,
+        name: token[1]?.currency.name,
+        decimals: Number(token[1]?.currency.decimals),
+      } as Token)
+    )
+  }
+
+  if (tokens && tokens?.length > 0) {
     tokens?.map((token) =>
       ERC20Tokens.push({
         address: token.id,
@@ -121,21 +136,44 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         decimals: Number(token.decimals),
       } as Token)
     )
+  }
 
   const tokenBalances = useTokenBalances(account, ERC20Tokens)
   const tokenBalanceEntries = Object.entries(tokenBalances)
 
   const { loading: tokenDataLoading, data: tokenData } = useFetchedTokenData(tokensAddress)
 
-  const tokenDataMap = tokenData ? Object.fromEntries(tokenData.map((token) => [token.address, token])) : {}
+  useEffect(() => {
+    const tokenDataMap = tokenData ? Object.fromEntries(tokenData.map((token) => [token.address, token])) : {}
 
-  let totalBalance = 0
-  for (const [tokenAddress, balance] of tokenBalanceEntries) {
-    const tokenData = tokenDataMap[tokenAddress]
-    if (tokenData && balance) {
-      totalBalance += parseFloat(balance?.toExact()) * tokenData.priceUSD
+    const newTotalBalance = tokenBalanceEntries.reduce((total, [tokenAddress, balance]) => {
+      const tokenData = tokenDataMap[tokenAddress]
+      if (tokenData && balance) {
+        const balanceFloat = parseFloat(balance?.toExact())
+        if (!isNaN(balanceFloat)) {
+          return total + balanceFloat * tokenData.priceUSD
+        }
+      }
+      return total
+    }, 0)
+
+    let nativePrice = 0
+    if (nativeBalances && nativeBalancesEntries) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      nativePrice = nativeBalancesEntries.reduce((total, [address, balance]) => {
+        const tokenData = tokenDataMap['0x4200000000000000000000000000000000000006']
+        if (tokenData && balance) {
+          const balanceFloat = parseFloat(balance?.toExact())
+          if (!isNaN(balanceFloat)) {
+            return total + balanceFloat * tokenData.priceUSD
+          }
+        }
+        return total
+      }, 0)
     }
-  }
+
+    setTotalBalance(newTotalBalance + nativePrice)
+  }, [nativeBalances, nativeBalancesEntries, tokenBalanceEntries, tokenData])
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -167,18 +205,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <ThemedText.HeadlineLarge fontWeight={500}>
               {formatNumber(totalBalance, NumberType.PortfolioBalance)}
             </ThemedText.HeadlineLarge>
-            {/* <AutoRow marginBottom="20px">
-              {absoluteChange !== 0 && percentChange && (
-                <>
-                  <PortfolioArrow change={absoluteChange as number} />
-                  <ThemedText.BodySecondary>
-                    {`${formatNumber(Math.abs(absoluteChange as number), NumberType.PortfolioBalance)} (${formatDelta(
-                      percentChange
-                    )})`}
-                  </ThemedText.BodySecondary>
-                </>
-              )}
-            </AutoRow> */}
           </FadeInColumn>
         ) : (
           <Column gap="xs">
