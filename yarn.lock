@@ -9403,7 +9403,7 @@ command-line-args@^4.0.7:
     find-replace "^1.0.3"
     typical "^2.6.1"
 
-commander@*, commander@^9.3.0, commander@^9.4.0:
+commander@*, commander@^9.4.0:
   version "9.5.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-9.5.0.tgz#bc08d1eb5cedf7ccb797a96199d41c7bc3e60d30"
   integrity sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==
@@ -14914,7 +14914,7 @@ jest@^27.4.3:
     import-local "^3.0.2"
     jest-cli "^27.5.1"
 
-jest@^29.5.0:
+jest@^29.6.1:
   version "29.6.1"
   resolved "https://registry.yarnpkg.com/jest/-/jest-29.6.1.tgz#74be1cb719c3abe439f2d94aeb18e6540a5b02ad"
   integrity sha512-Nirw5B4nn69rVUZtemCQhwxOBhm0nsp3hmtF4rzCeWD7BkjAXRIji7xWQfnTNbz9g0aVsBX6aZK3n+23LM6uDw==
@@ -21122,15 +21122,6 @@ wait-on@^7.0.1:
     lodash "^4.17.21"
     minimist "^1.2.7"
     rxjs "^7.8.0"
-
-wait-port@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/wait-port/-/wait-port-1.0.4.tgz#6f9474645ddbf7701ac100ab6762438edf6e5689"
-  integrity sha512-w8Ftna3h6XSFWWc2JC5gZEgp64nz8bnaTp5cvzbJSZ53j+omktWTDdwXxEF0jM8YveviLgFWvNGrSvRHnkyHyw==
-  dependencies:
-    chalk "^4.1.2"
-    commander "^9.3.0"
-    debug "^4.3.4"
 
 walker@^1.0.7, walker@^1.0.8:
   version "1.0.8"

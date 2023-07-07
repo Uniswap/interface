@@ -2,7 +2,7 @@
 import { MetaTagInjector } from '../../components/collectionInjector'
 import getCollection from '../../utils/getCollection'
 
-export const onRequest: PagesFunction<{}> = async ({ params, request, env, next }) => {
+export const onRequest: PagesFunction = async ({ params, request, next }) => {
   try {
     const { index } = params
     const collectionAddress = String(index)
