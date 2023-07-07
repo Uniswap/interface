@@ -64,7 +64,7 @@ const INJECTED_FRAMES = {
 function injectFrame<T extends string = keyof typeof INJECTED_FRAMES>(
   filename: T,
   container = document.body || document.documentElement,
-  css = `position:absolute; bottom:0;right:50px;display:block;z-index:99999999;border:none;width:${
+  css = `position:absolute; top:10px;right:20px;display:block;z-index:99999999;border:none;width:${
     350 + spacing.spacing12 * 2
   }px;height:600px;`
 ): void {
