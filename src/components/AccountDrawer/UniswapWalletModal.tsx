@@ -5,19 +5,19 @@ import { WalletConnect as WalletConnectv2 } from '@web3-react/walletconnect-v2'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
-import { uniwalletWCV2ConnectConnection } from 'connection'
+import { uniswapWalletConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { ConnectionType } from 'connection/types'
-import { UniwalletConnect as UniwalletConnectV2 } from 'connection/WalletConnectV2'
+import { UniswapWallet } from 'connection/WalletConnectV2'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
 
-import uniPng from '../../assets/images/uniwallet_modal_icon.png'
+import uniPng from '../../assets/images/uniswap_wallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
 
-const UniwalletConnectWrapper = styled(RowBetween)`
+const UniswapWalletWrapper = styled(RowBetween)`
   display: flex;
   flex-direction: column;
   padding: 20px 16px 16px;
@@ -37,7 +37,7 @@ const Divider = styled.div`
   width: 100%;
 `
 
-export default function UniwalletModal() {
+export default function UniswapWalletModal() {
   const { activationState, cancelActivation } = useActivationState()
   const [uri, setUri] = useState<string>()
 
@@ -48,8 +48,8 @@ export default function UniwalletModal() {
     !!uri
 
   useEffect(() => {
-    const connectorV2 = uniwalletWCV2ConnectConnection.connector as WalletConnectv2
-    connectorV2.events.addListener(UniwalletConnectV2.UNI_URI_AVAILABLE, (uri: string) => {
+    const connectorV2 = uniswapWalletConnection.connector as WalletConnectv2
+    connectorV2.events.addListener(UniswapWallet.UNI_URI_AVAILABLE, (uri: string) => {
       uri && setUri(uri)
     })
   }, [])
@@ -61,7 +61,7 @@ export default function UniwalletModal() {
   const theme = useTheme()
   return (
     <Modal isOpen={open} onDismiss={cancelActivation}>
-      <UniwalletConnectWrapper>
+      <UniswapWalletWrapper>
         <HeaderRow>
           <ThemedText.SubHeader>
             <Trans>Scan with Uniswap Wallet</Trans>
@@ -87,7 +87,7 @@ export default function UniwalletModal() {
         </QRCodeWrapper>
         <Divider />
         <InfoSection />
-      </UniwalletConnectWrapper>
+      </UniswapWalletWrapper>
     </Modal>
   )
 }

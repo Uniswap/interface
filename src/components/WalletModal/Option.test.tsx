@@ -1,5 +1,5 @@
 import { Connector } from '@web3-react/types'
-import UNIWALLET_ICON from 'assets/images/uniwallet.png'
+import UNISWAP_WALLET_ICON from 'assets/images/uniswap_wallet.png'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { Connection, ConnectionType } from 'connection/types'
 import { mocked } from 'test-utils/mocked'
@@ -22,7 +22,7 @@ const mockConnection1: Connection = {
     activate: jest.fn(),
     deactivate: jest.fn(),
   } as unknown as Connector,
-  getIcon: () => UNIWALLET_ICON,
+  getIcon: () => UNISWAP_WALLET_ICON,
   type: ConnectionType.UNISWAP_WALLET_V2,
 } as unknown as Connection
 
@@ -32,7 +32,7 @@ const mockConnection2: Connection = {
     activate: jest.fn(),
     deactivate: jest.fn(),
   } as unknown as Connector,
-  getIcon: () => UNIWALLET_ICON,
+  getIcon: () => UNISWAP_WALLET_ICON,
   type: ConnectionType.INJECTED,
 } as unknown as Connection
 

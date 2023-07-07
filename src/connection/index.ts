@@ -8,7 +8,7 @@ import { Actions, Connector } from '@web3-react/types'
 import GNOSIS_ICON from 'assets/images/gnosis.png'
 import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
-import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
+import UNISWAP_WALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
@@ -16,7 +16,7 @@ import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
 import { getInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
-import { UniwalletConnect as UniwalletWCV2Connect, WalletConnectV2 } from './WalletConnectV2'
+import { UniswapWallet, WalletConnectV2 } from './WalletConnectV2'
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
@@ -92,15 +92,15 @@ export const walletConnectV2Connection: Connection = new (class implements Conne
   }
 })()
 
-const [web3WCV2UniwalletConnect, web3WCV2UniwalletConnectHooks] = initializeConnector<UniwalletWCV2Connect>(
-  (actions) => new UniwalletWCV2Connect({ actions, onError })
+const [web3UniswapWallet, web3UniswapWalletHooks] = initializeConnector<UniswapWallet>(
+  (actions) => new UniswapWallet({ actions, onError })
 )
-export const uniwalletWCV2ConnectConnection: Connection = {
+export const uniswapWalletConnection: Connection = {
   getName: () => 'Uniswap Wallet',
-  connector: web3WCV2UniwalletConnect,
-  hooks: web3WCV2UniwalletConnectHooks,
+  connector: web3UniswapWallet,
+  hooks: web3UniswapWalletHooks,
   type: ConnectionType.UNISWAP_WALLET_V2,
-  getIcon: () => UNIWALLET_ICON,
+  getIcon: () => UNISWAP_WALLET_ICON,
   shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonIOSPhone),
   isNew: true,
 }
@@ -138,7 +138,7 @@ const coinbaseWalletConnection: Connection = {
 
 export function getConnections() {
   return [
-    uniwalletWCV2ConnectConnection,
+    uniswapWalletConnection,
     injectedConnection,
     walletConnectV2Connection,
     coinbaseWalletConnection,
@@ -163,7 +163,7 @@ export function getConnection(c: Connector | ConnectionType) {
       case ConnectionType.WALLET_CONNECT_V2:
         return walletConnectV2Connection
       case ConnectionType.UNISWAP_WALLET_V2:
-        return uniwalletWCV2ConnectConnection
+        return uniswapWalletConnection
       case ConnectionType.NETWORK:
         return networkConnection
       case ConnectionType.GNOSIS_SAFE:

@@ -7,7 +7,7 @@ import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { WalletConnectV2 } from 'connection/WalletConnectV2'
 import { getChainInfo } from 'constants/chainInfo'
-import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS, UniWalletSupportedChains } from 'constants/chains'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS, UniswapWalletSupportedChains } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -40,7 +40,7 @@ function useWalletSupportedChains(): ChainId[] {
     case ConnectionType.WALLET_CONNECT_V2:
       return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
     case ConnectionType.UNISWAP_WALLET_V2:
-      return UniWalletSupportedChains
+      return UniswapWalletSupportedChains
     default:
       return NETWORK_SELECTOR_CHAINS
   }
