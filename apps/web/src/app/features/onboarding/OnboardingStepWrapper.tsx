@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
-import { Circle, Stack, XStack } from 'ui/src'
+import { Circle, Icons, Stack, XStack } from 'ui/src'
 
 type OnboardingStepsProps = {
   methodRoute?: string
@@ -24,7 +24,7 @@ function OnboardingStepIndicator({ steps, methodRoute }: OnboardingStepsProps): 
   }
 
   return (
-    <XStack gap="$spacing12" marginBottom="$spacing36">
+    <XStack alignItems="center" gap="$spacing12" justifyContent="center" marginBottom="$spacing36">
       {steps.map((step) => (
         <StepCircle
           key={step}
@@ -40,5 +40,9 @@ function StepCircle({ route }: { route: string }): JSX.Element {
 
   const active = pathname === route
 
-  return <Circle backgroundColor={active ? '$textPrimary' : '$background3'} size={10} />
+  if (!active) {
+    return <Circle backgroundColor="$background3" size="$icon.8" />
+  }
+
+  return <Icons.Sparkle color="$textPrimary" size="$icon.16" />
 }
