@@ -20,7 +20,7 @@ import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Modal from '../Modal'
-import Row, { RowBetween, RowFixed } from '../Row'
+import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 import { SmallButtonPrimary } from 'components/Button'
 import { ReactComponent as LogoGradient } from '../../assets/svg/full_logo_gradient.svg'
@@ -32,6 +32,7 @@ import { PopupAlertTriangle } from 'components/Popups/FailedNetworkSwitchPopup'
 import { parseLocalActivity } from 'components/WalletDropdown/MiniPortfolio/Activity/parseLocal'
 import { useCombinedActiveList } from 'state/lists/hooks'
 import { Descriptor } from 'components/Popups/TransactionPopup'
+import backgroundImage from 'assets/images/visualbg.png'
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundFloating};
@@ -188,43 +189,19 @@ export function TransactionSubmittedContent({
 
 
 const ReduceWrapper = styled.div`
-  background: ${({theme}) => `linear-gradient(to bottom right, ${theme.backgroundBackdrop} 25%, ${theme.backgroundSurface} 50%, #131A2A 75%, ${theme.backgroundInteractive} 90%)`};
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  background-image: url(${backgroundImage});
+  background-size: contain;
+  background-repeat: no-repeat;
   border-radius: 20px;
   opacity: 1;
   outline: 1px solid ${({ theme }) => theme.backgroundOutline};
-  width: 100%;
   padding: 1.25rem;
 `
 
-const Container = styled.div`
-
-  flex-flow: row nowrap;
-  justify-content: flex-start;
-  align-items: center;
-`
-
-const SymbolsContainer = styled(Row)`
-  justify-content: flex-start;
-  align-content: center;
-  margin-top: 12px;
-  margin-bottom: 12px;
-`
-
-const DeltaText = styled.span<{ delta: number | undefined, size: number, marginRight: string | undefined }>`
-  font-size: ${({size}) => `${size}px`};
-  color: ${({ theme, delta }) =>
-    delta !== undefined ? (Math.sign(delta) < 0 ? theme.accentFailure : theme.accentSuccess) : theme.textPrimary};
-  margin-right: ${({marginRight}) => marginRight ?? "0"}
-`
-
-const LeverageContainer = styled.div`
-  padding-right: 12px;
-  border-right: solid 1px ${({theme}) => theme.white};
-`
-
-const PerpetualTitleContainer = styled.div`
-  margin-left: 12px;
-`
 
 export interface TransactionPositionDetails {
   pnl: number,
@@ -237,10 +214,27 @@ export interface TransactionPositionDetails {
   quoteBaseSymbol: string
 }
 
-const FlexStartRow = styled(Row)`
+const AmboyText = styled.div<{ color: string, size: number}>`
+  font-family: 'Parkinson Amboy Black', Roboto;
+  font-size: ${({size}) => size}px;
+  color: ${({color}) => color};
+`
+
+const AgencyB = styled.div<{color: string, size: number}>`
+  font-family: 'AGENCYB', Roboto;
+  font-size: ${({size}) => size}px;
+  color: ${({color}) => color};
+`
+const CenterRow = styled.div`
+  display: flex;
   flex-flow: row nowrap;
-  align-items: baseline;
-  justify-content:flex-start;
+  justify-content: center;
+  align-items: center;
+`
+
+const CloseItem = styled.div`
+  align-self: flex-end;
+  justify-self: flex-end;
 `
 
 export function  ReduceLeverageTransactionPopupContent({ tx, chainId, removeThisPopup }: {tx: TransactionDetails, chainId: number, removeThisPopup: () => void}) {
@@ -274,41 +268,38 @@ export function  ReduceLeverageTransactionPopupContent({ tx, chainId, removeThis
 
   const explorerUrl = getExplorerLink(chainId, tx.hash, ExplorerDataType.TRANSACTION)
 
-
   return (
     success ? (
       <ReduceWrapper>
-        <RowBetween>
-          <LogoGradient width={150} height={50}/>
-          <CloseIcon onClick={removeThisPopup}/>
-        </RowBetween>
-        <FlexStartRow marginTop="6px">
-          <ThemedText.LmtWhite>Closed Position</ThemedText.LmtWhite>
-        </FlexStartRow>
-        <SymbolsContainer>
-        <LeverageContainer>
-          <ThemedText.LmtWhite>{formatNumber(leverageFactor, NumberType.SwapTradeAmount)}x</ThemedText.LmtWhite>
-        </LeverageContainer>
-        <PerpetualTitleContainer>
-          <ThemedText.LmtWhite>{`Long ${inputCurrency?.symbol}/${outputCurrency?.symbol}`}</ThemedText.LmtWhite>
-        </PerpetualTitleContainer>
-        </SymbolsContainer>
-        <FlexStartRow>
-          <DeltaText delta={pnl} size={36} marginRight={"6px"}>
-            {`${formatNumber(pnl/initialCollateral * 100)}%`}
-          </DeltaText>
-          <DeltaText delta={pnl} size={18} marginRight={undefined}>
-            ({pnl > 0 ? `+ ${formatNumber(pnl, NumberType.SwapTradeAmount)} ${inputCurrency?.symbol}` : `${formatNumber(pnl, NumberType.SwapTradeAmount)} ${inputCurrency?.symbol}`})
-          </DeltaText>
-        </FlexStartRow>
-        <FlexStartRow marginTop="6px">
-          <ThemedText.PriceSmall marginRight="6px">{`Entry Price: `}</ThemedText.PriceSmall>
-          <ThemedText.Gold>{` ${formatNumber(entryPrice)} ${quoteBaseSymbol}`}</ThemedText.Gold>
-        </FlexStartRow>
-        <FlexStartRow>
-          <ThemedText.PriceSmall marginRight="6px">{`Mark Price: `}</ThemedText.PriceSmall>
-          <ThemedText.Gold>{` ${formatNumber(markPrice)} ${quoteBaseSymbol}`}</ThemedText.Gold>
-        </FlexStartRow> 
+        <CenterRow>
+          <AmboyText size={36} color={"#ffffff"}>
+            Closed Position
+          </AmboyText>
+          <CloseItem>
+            <CloseIcon onClick={removeThisPopup}/>
+          </CloseItem>
+        </CenterRow>
+        <AgencyB size={24} color={"#ffffff"}>
+          {`${formatNumber(leverageFactor, NumberType.SwapTradeAmount)}x | Long ${inputCurrency?.symbol}/${outputCurrency?.symbol}`}
+        </AgencyB>
+        <AmboyText size={48} color={pnl > 0 ? "#00ff0c" : "#ff2a00"}>
+          {`${formatNumber(pnl/initialCollateral * 100)}%`}
+        </AmboyText>
+        <AgencyB size={24} color={"#ffffff"}>
+        ({pnl > 0 ? `+ ${formatNumber(pnl, NumberType.SwapTradeAmount)} ${inputCurrency?.symbol}` : `${formatNumber(pnl, NumberType.SwapTradeAmount)} ${inputCurrency?.symbol}`})
+        </AgencyB>
+        <CenterRow>
+        <div style={{ "margin": "3px"}}><AgencyB size={24} color={"#ffffff"}>{`Entry Price: `}</AgencyB></div>
+          
+          <AgencyB size={24} color={'#f600ff'}>{` ${formatNumber(entryPrice)} ${quoteBaseSymbol}`}</AgencyB>
+        </CenterRow>
+        <CenterRow>
+          <div style={{ "margin": "3px"}}>
+          <AgencyB size={24} color={"#ffffff"}>{`Mark Price: `}</AgencyB>
+          </div>
+          <AgencyB size={24} color={'#f600ff'}>{` ${formatNumber(markPrice)} ${quoteBaseSymbol}`}</AgencyB>
+        </CenterRow>
+        <LogoGradient width={150} height={50}/>
     </ReduceWrapper>
     ) : (
       <PortfolioRow
