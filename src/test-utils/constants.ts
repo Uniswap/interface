@@ -65,37 +65,6 @@ export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
 
 export const TEST_ALLOWED_SLIPPAGE = new Percent(2, 100)
 
-export const TEST_DUTCH_TRADE = new DutchOrderTrade({
-  currencyIn: TEST_TOKEN_1,
-  currenciesOut: [TEST_TOKEN_2],
-  orderInfo: {
-    reactor: 'test_reactor',
-    swapper: 'test_offerer',
-    additionalValidationContract: '0x0',
-    additionalValidationData: '0x0',
-    nonce: BigNumber.from(1),
-    deadline: 1000,
-    decayStartTime: 0,
-    decayEndTime: 10,
-    exclusiveFiller: '0x3456',
-    exclusivityOverrideBps: BigNumber.from(0),
-    input: {
-      token: TEST_TOKEN_1.address,
-      startAmount: BigNumber.from(1000),
-      endAmount: BigNumber.from(900),
-    },
-    outputs: [],
-  },
-  tradeType: TradeType.EXACT_INPUT,
-  quoteId: '0x0000000',
-  approveInfo: { needsApprove: false },
-  wrapInfo: { needsWrap: false },
-  classicGasUseEstimateUSD: 7.87,
-  auctionPeriodSecs: 120,
-  deadlineBufferSecs: 30,
-  slippageTolerance: new Percent(5, 100),
-})
-
 export const TEST_DUTCH_TRADE_ETH_INPUT = new DutchOrderTrade({
   currencyIn: ETH_MAINNET.wrapped,
   currenciesOut: [TEST_TOKEN_2],

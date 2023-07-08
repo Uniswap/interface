@@ -68,7 +68,7 @@ export function GasBreakdownTooltip({
           <Divider />
         </>
       )}
-      {isUniswapXTrade(trade) && hideUniswapXDescription ? (
+      {isUniswapXTrade(trade) && !hideUniswapXDescription ? (
         <ThemedText.Caption color="textSecondary">
           <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient> aggregates onchain and offchain orders for better
           prices and lower network fees.
