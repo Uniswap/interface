@@ -254,9 +254,11 @@ export function ReduceLeverageModalFooter({
   } = useDerivedLeverageReduceInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, position, debouncedReduceAmount, setDerivedState)
   
   useEffect(() => {
-    (!!userError || !transactionInfo) && showDetails //&& setShowDetails(false)
+    (!!userError || !transactionInfo) && showDetails && setShowDetails(false)
   }, [userError, transactionInfo])
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
+
+  console.log('reduceLeverage', showDetails, transactionInfo, userError)
 
   const handleReducePosition = useMemo(() => {
     if (
@@ -418,7 +420,7 @@ export function ReduceLeverageModalFooter({
               <RowFixed>
                 <RotatingArrow
                   stroke={position?.token0Address ? theme.textTertiary : theme.deprecated_bg3}
-                  open={Boolean(position?.token0Address && showDetails)}
+                  open={Boolean(showDetails)}
                 />
               </RowFixed>
 
