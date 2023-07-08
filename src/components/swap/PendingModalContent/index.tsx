@@ -192,7 +192,7 @@ function getContent(args: ContentArgs): PendingModalStep {
         href = getExplorerLink(chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)
       } else if (swapPending && trade?.fillType === TradeFillType.UniswapX) {
         labelText = t`Learn more about swapping with UniswapX`
-        // TODO(gouda): add actual help center url
+        // TODO(UniswapX): add actual help center url
         href = 'https://google.com'
       } else if (swapPending) {
         labelText = t`Proceed in your wallet`
@@ -229,7 +229,7 @@ export function PendingModalContent({
     swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined
   )
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
-  // TODO(Gouda): Support UniswapX status here too
+  // TODO(UniswapX): Support UniswapX status here too
   const uniswapXSwapConfirmed = Boolean(swapResult)
 
   const swapConfirmed = TradeFillType.Classic ? classicSwapConfirmed : uniswapXSwapConfirmed

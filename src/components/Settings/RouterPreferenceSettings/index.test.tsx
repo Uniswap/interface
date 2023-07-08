@@ -5,7 +5,7 @@ import { fireEvent, render, screen } from 'test-utils/render'
 
 import RouterPreferenceSettings from '.'
 
-jest.mock('featureFlags/flags/gouda', () => ({
+jest.mock('featureFlags/flags/uniswapx', () => ({
   useUniswapXEnabled: () => true,
 }))
 

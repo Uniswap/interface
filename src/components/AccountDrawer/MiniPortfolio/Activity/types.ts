@@ -7,7 +7,7 @@ export type Activity = {
   hash: string
   chainId: SupportedChainId
   status: TransactionStatus
-  // TODO(Goudascan): decouple Activity from UniswapXOrderStatus once we can link goudascan instead of needing data for modal
+  // TODO (UniswapX): decouple Activity from UniswapXOrderStatus once we can link UniswapXScan instead of needing data for modal
   offchainOrderStatus?: UniswapXOrderStatus
   statusMessage?: string
   timestamp: number

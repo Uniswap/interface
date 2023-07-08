@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useFiatOnRampButtonEnabled } from 'featureFlags/flags/fiatOnRampButton'
-import { useUniswapXEnabled } from 'featureFlags/flags/gouda'
+import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -36,8 +36,8 @@ export default function SwapHeader({
     <StyledSwapHeader>
       <HeaderButtonContainer>
         <ThemedText.SubHeader>
-          {/* TODO (Gouda): remove this and just say "Swap" */}
-          {isUniswapXEnabled ? <Trans>Gouda Swap</Trans> : <Trans>Swap</Trans>}
+          {/* TODO (UniswapX): remove this and just say "Swap" */}
+          {isUniswapXEnabled ? <Trans>UniswapX Swap</Trans> : <Trans>Swap</Trans>}
         </ThemedText.SubHeader>
         {fiatOnRampButtonEnabled && <SwapBuyFiatButton />}
       </HeaderButtonContainer>

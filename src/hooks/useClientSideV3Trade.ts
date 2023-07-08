@@ -23,7 +23,7 @@ const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
 
 const DEFAULT_GAS_QUOTE = 2_000_000
 
-// TODO (Gouda or in general): Deprecate this?
+// TODO (UniswapX or in general): Deprecate this?
 /**
  * Returns the best v3 trade for a desired swap
  * @param tradeType whether the swap is an exact in/out

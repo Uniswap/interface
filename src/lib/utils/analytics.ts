@@ -34,7 +34,7 @@ export const getPriceUpdateBasisPoints = (
   return formatPercentInBasisPointsNumber(changePercentage)
 }
 
-// TODO (Gouda): rename this to formatEventPropertiesForTrade for easier merge later
+// TODO(UniswapX): rename this to formatEventPropertiesForTrade for easier merge later
 export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSlippage: Percent) {
   return {
     routing: trade.fillType,

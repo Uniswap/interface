@@ -64,10 +64,10 @@ const DEFAULT_QUERY_PARAMS = {
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   const { account, tradeType, tokenOutAddress, tokenInChainId } = args
 
-  const goudaDutchLimit = {
-    offerer: account,
+  const uniswapx = {
+    swapper: account,
     // Protocol supports swap+send to different destination address, but
-    // for now recipient === offerer
+    // for now recipient === swapper
     recipient: account,
     routingType: URAQuoteType.DUTCH_LIMIT,
   }
@@ -83,7 +83,6 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
   if (
     !args.uniswapXEnabled ||
-    // TODO (Gouda): enable ETH out once api is ready
     tokenOutIsNative ||
     tradeType === TradeType.EXACT_OUTPUT ||
     !isUniswapXSupportedChain(tokenInChainId)
@@ -91,7 +90,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     return [classic]
   }
 
-  return [goudaDutchLimit, classic]
+  return [uniswapx, classic]
 }
 
 export const routingApi = createApi({

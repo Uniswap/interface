@@ -15,7 +15,7 @@ import {
 } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import useTransactionDeadline from './useTransactionDeadline'
-// TODO (Gouda): make this named export
+// TODO (UniswapX): make this named export
 import useUniswapXSwapCallback from './useUniswapXSwapCallback'
 import { useUniversalRouterSwapCallback } from './useUniversalRouter'
 
