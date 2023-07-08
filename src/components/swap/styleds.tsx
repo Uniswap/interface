@@ -31,6 +31,7 @@ export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 32px;
+  height: fit-content;
   border: 0px solid ${({ theme }) => theme.background};
   padding: 18px;
   box-shadow:  '0px 40px 120px 0px #f0b90b29';

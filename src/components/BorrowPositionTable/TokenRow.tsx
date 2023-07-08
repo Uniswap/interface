@@ -431,6 +431,12 @@ function HeaderCell({
   )
 }
 
+export const PremiumButton = styled(MaxButton)`
+  font-size: 12px;
+  padding: 4px;
+  min-width: 28px;
+`
+
 /* Token Row: skeleton row component */
 function PositionRow({
   header,
@@ -476,9 +482,9 @@ function PositionRow({
   }
   const actions = (!header ? (
     <ActionsContainer>
-      <ReduceButton width="auto" onClick={() => setShowAddPremium(!showAddPremium)} >
+      <PremiumButton width="auto" onClick={() => setShowAddPremium(!showAddPremium)} >
         <Trans>pay</Trans>
-      </ReduceButton>
+      </PremiumButton>
     </ActionsContainer>
   ): (
     (
