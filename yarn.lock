@@ -5550,10 +5550,10 @@
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@uniswap/conedison@^1.7.1":
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.7.1.tgz#10076d57fe111abff106d3cd3704f02c37eb0c8e"
-  integrity sha512-iFH36R4cPy2daffrHoJ5/iLhgUFUVbNXujd7dYWPzAaS7XOleQ0tHrRmoUcwnO5Z50jDyZC0A86+yOs3UGj8bw==
+"@uniswap/conedison@^1.7.2":
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.7.2.tgz#e7d8bae122bbd2e485cf01d04cc15fadaa31590e"
+  integrity sha512-Jt8bPCI3tSTwRPgfjAQGMtwND256X/qkcOXMFYEz5976gR1Yu8qh9zy7oJ90XYiIaERaW30l92qKJ5yVDx7FFw==
 
 "@uniswap/default-token-list@^2.0.0":
   version "2.2.0"
