@@ -37,20 +37,14 @@ export function AccountSwitcherScreen(): JSX.Element {
   const { glow } = useUniconColors(activeAddress)
 
   const onClose = useCallback((): void => {
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateAndSelect))
     navigate(-1)
-  }, [navigate])
+  }, [navigate, dispatch])
 
   useSagaStatus(createAccountSagaName, onClose)
 
   const onCreateWallet = (): void => {
     dispatch(createAccountActions.trigger())
-
-    // TODO(EXT-206): navigate to onboarding instead, and activate at end of onboarding
-    // navigate(
-    //   `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Naming}`
-    // )
-    // HACK: mark non pending immediately
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateAndSelect))
   }
   const uniconAccentColor = adjustColor(glow, -100)
 
@@ -97,7 +91,7 @@ export function AccountSwitcherScreen(): JSX.Element {
           })}
         </YStack>
       </ScrollView>
-      <Flex alignItems="center" paddingBottom="$spacing12">
+      <Flex alignItems="center" cursor="pointer" paddingBottom="$spacing12">
         <Text color="$textSecondary" variant="bodyLarge" onPress={onCreateWallet}>
           Create another wallet
         </Text>
