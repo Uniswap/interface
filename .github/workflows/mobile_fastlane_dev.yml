@@ -1,6 +1,7 @@
 name: '[mobile] Fastlane deploy dev (iOS)'
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - releases/dev
@@ -14,12 +15,12 @@ jobs:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
-          ref: releases/dev
+          ref: ${{ github.ref }}
 
       - name: 📲 Fastlane Deploy Dev
         uses: ./.github/actions/mobile_fastlane_deploy
         with:
-          branch: releases/dev
+          branch: ${{ github.ref }}
           configuration: Dev
           sentry-env: development
           apple-app-id: ${{ secrets.APPLE_APP_ID_DEV }}
