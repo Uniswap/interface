@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import WalletPreviewCard, { LoadingWalletPreviewCard } from 'src/app/components/WalletPreviewCard'
+import WalletPreviewCard from 'src/app/components/WalletPreviewCard'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import {
   ImportOnboardingRoutes,
@@ -9,7 +9,7 @@ import {
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
-import { ScrollView, Stack, Text, XStack, YStack } from 'ui/src'
+import { Icons, ScrollView, Stack, Text, XStack, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { useSelectWalletScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
@@ -40,6 +40,8 @@ function isImportableAccount(account: {
 }): account is ImportableAccount {
   return (account as ImportableAccount).ownerAddress !== undefined
 }
+
+const SPIN_SPEED = 1000
 
 export function SelectWallets(): JSX.Element {
   const dispatch = useAppDispatch()
@@ -174,17 +176,13 @@ export function SelectWallets(): JSX.Element {
 
   const isLoading = loading || isForcedLoading || isImportingAccounts
 
-  const title = isLoading
-    ? t('Searching for wallets')
-    : isOnlyOneAccount
+  const title = isOnlyOneAccount
     ? t('One wallet found')
     : showError
     ? t('Error importing wallets')
     : t('Select wallets to import')
 
-  const subtitle = isLoading
-    ? t('Your wallets will appear below.')
-    : isOnlyOneAccount
+  const subtitle = isOnlyOneAccount
     ? t('Please confirm that the wallet below is the one you’d like to import.')
     : showError
     ? t('Something went wrong and your wallets couldn’t be imported.')
@@ -192,17 +190,39 @@ export function SelectWallets(): JSX.Element {
         'You can import any of your wallet addresses that are associated with your recovery phrase.'
       )
 
+  if (isLoading) {
+    return (
+      <YStack alignItems="center" gap="$spacing36" justifyContent="center">
+        <Stack height={80} position="relative" width={80}>
+          <Stack bottom={0} left={0} position="absolute" right={0} top={0}>
+            <Icons.LoadingSpinnerOuter color="$brandedAccentSoft" size={80} />
+          </Stack>
+          <Stack
+            bottom={0}
+            left={0}
+            position="absolute"
+            right={0}
+            style={{ animation: `spin ${SPIN_SPEED}ms linear infinite` }}
+            top={0}>
+            <Icons.LoadingSpinnerInner color="$magentaVibrant" size={80} />
+          </Stack>
+        </Stack>
+        <Text color="$textSecondary" textAlign="center" variant="headlineSmall">
+          Finding your wallets...
+        </Text>
+      </YStack>
+    )
+  }
+
   return (
     <OnboardingScreen
-      nextButtonEnabled={
-        !isImportingAccounts && !isLoading && !showError && selectedAddresses.length > 0
-      }
+      nextButtonEnabled={!isImportingAccounts && !showError && selectedAddresses.length > 0}
       nextButtonText="Continue"
       subtitle={subtitle}
       title={title}
       onSubmit={onSubmit}>
       <ScrollView height={180} showsVerticalScrollIndicator={false} width="100%">
-        {showError && !isLoading ? (
+        {showError ? (
           <Stack gap="$spacing24" p="spacing12" width="100%">
             <Text color="$accentCritical" textAlign="center" variant="buttonLabelMedium">
               Couldn't load addresses
@@ -213,11 +233,6 @@ export function SelectWallets(): JSX.Element {
               </Button>
             </XStack>
           </Stack>
-        ) : isLoading ? (
-          <YStack gap="$spacing12">
-            <LoadingWalletPreviewCard />
-            <LoadingWalletPreviewCard />
-          </YStack>
         ) : (
           <YStack gap="$spacing12" position="relative" width="100%">
             {initialShownAccounts?.map((account) => {
