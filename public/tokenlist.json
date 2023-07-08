@@ -1,0 +1,42 @@
+[
+  {
+    "chainId": 1666600000,
+    "address": "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+    "symbol": "WONE",
+    "name": "Wrapped ONE",
+    "decimals": 18,
+    "logoURI": "https://assets.coingecko.com/coins/images/4344/small/Y88JAze.png"
+  },
+  {
+    "chainId": 1666600000,
+    "address": "0x118f50d23810c5E09Ebffb42d7D3328dbF75C2c2",
+    "symbol": "1WBTC",
+    "name": "Wrapped BTC",
+    "decimals": 8,
+    "logoURI": "https://assets.coingecko.com/coins/images/7598/small/wrapped_bitcoin_wbtc.png"
+  },
+  {
+    "chainId": 1666600000,
+    "address": "0x4cC435d7b9557d54d6EF02d69Bbf72634905Bf11",
+    "symbol": "1ETH",
+    "name": "ETH",
+    "decimals": 18,
+    "logoURI": "https://assets.coingecko.com/coins/images/279/small/ethereum.png"
+  },
+  {
+    "chainId": 1666600000,
+    "address": "0xF2732e8048f1a411C63e2df51d08f4f52E598005",
+    "symbol": "1USDT",
+    "name": "Tether USD",
+    "decimals": 6,
+    "logoURI": "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png"
+  },
+  {
+    "chainId": 1666600000,
+    "address": "0xBC594CABd205bD993e7FfA6F3e9ceA75c1110da5",
+    "symbol": "1USDC",
+    "name": "USD Coin",
+    "decimals": 6,
+    "logoURI": "https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png"
+  }
+]
