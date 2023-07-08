@@ -15,6 +15,8 @@ const CHAIN_SUBGRAPH_URL: Record<number, string> = {
   [SupportedChainId.CELO]: 'https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo',
 
   [SupportedChainId.BNB]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc',
+
+  [SupportedChainId.HARMONY]: 'https://api.thegraph.com/subgraphs/name/potvik/uniswap-v3-harmony',
 }
 
 const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[SupportedChainId.MAINNET] })

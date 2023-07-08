@@ -47,14 +47,37 @@ export const BRIDGED_USDC_ARBITRUM = new Token(
   'USD//C'
 )
 
-export const BRIDGED_BUSD = new Token(
+export const WBTC_HARMONY = new Token(
   SupportedChainId.HARMONY,
-  '0xFeee03BFBAA49dc8d11DDAab8592546018dfb709',
-  18,
-  '1BUSD',
-  'USD//C'
+  '0x118f50d23810c5E09Ebffb42d7D3328dbF75C2c2',
+  8,
+  '1WBTC',
+  'Wrapped BTC'
 )
 
+export const ETH_HARMONY = new Token(
+  SupportedChainId.HARMONY,
+  '0x4cC435d7b9557d54d6EF02d69Bbf72634905Bf11',
+  18,
+  '1ETH',
+  'ETH'
+)
+
+export const USDT_HARMONY = new Token(
+  SupportedChainId.HARMONY,
+  '0xF2732e8048f1a411C63e2df51d08f4f52E598005',
+  6,
+  '1USDT',
+  'Tether USD'
+)
+
+export const USDC_HARMONY = new Token(
+  SupportedChainId.HARMONY,
+  '0xBC594CABd205bD993e7FfA6F3e9ceA75c1110da5',
+  6,
+  '1USDC',
+  'USD Coin'
+)
 
 export const USDC_ARBITRUM = new Token(
   SupportedChainId.ARBITRUM_ONE,
@@ -543,6 +566,28 @@ class BscNativeCurrency extends NativeCurrency {
   }
 }
 
+function isHarmony(chainId: number): chainId is SupportedChainId.HARMONY {
+  return chainId === SupportedChainId.HARMONY
+}
+
+class HarmonyNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isHarmony(this.chainId)) throw new Error('Not harmony')
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isHarmony(chainId)) throw new Error('Not harmony')
+    super(chainId, 18, 'ONE', 'ONE')
+  }
+}
+
 class ExtendedEther extends Ether {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
@@ -560,6 +605,9 @@ class ExtendedEther extends Ether {
 const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
 export function nativeOnChain(chainId: number): NativeCurrency | Token {
   if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
+
+  chainId = chainId ||  SupportedChainId.HARMONY;
+
   let nativeCurrency: NativeCurrency | Token
   if (isMatic(chainId)) {
     nativeCurrency = new MaticNativeCurrency(chainId)
@@ -567,9 +615,12 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = getCeloNativeCurrency(chainId)
   } else if (isBsc(chainId)) {
     nativeCurrency = new BscNativeCurrency(chainId)
+  } else if (isHarmony(chainId)) {
+    nativeCurrency = new HarmonyNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }
+
   return (cachedNativeCurrency[chainId] = nativeCurrency)
 }
 
@@ -593,6 +644,7 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
     [SupportedChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [SupportedChainId.GOERLI]: USDC_GOERLI.address,
+    [SupportedChainId.HARMONY]: USDC_HARMONY.address,
     // [SupportedChainId.SEPOLIA]: USDC_SEPOLIA.address,
   },
 }

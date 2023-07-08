@@ -5,7 +5,6 @@ import { SupportedChainId } from 'constants/chains'
 import {
   AMPL,
   BRIDGED_USDC_ARBITRUM,
-  BRIDGED_BUSD,
   BTC_BSC,
   BUSD_BSC,
   CAKE_BSC,
@@ -52,6 +51,10 @@ import {
   WETH_POLYGON,
   WETH_POLYGON_MUMBAI,
   WRAPPED_NATIVE_CURRENCY,
+  WBTC_HARMONY,
+  ETH_HARMONY,
+  USDT_HARMONY,
+  USDC_HARMONY,
 } from './tokens'
 
 type ChainTokenList = {
@@ -153,7 +156,13 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.SEPOLIA] as Token,
   ],
 
-  [SupportedChainId.HARMONY]: [BRIDGED_BUSD],
+  [SupportedChainId.HARMONY]: [
+    nativeOnChain(SupportedChainId.HARMONY), 
+    WBTC_HARMONY,
+    ETH_HARMONY,
+    USDT_HARMONY,
+    USDC_HARMONY
+  ],
 
   [SupportedChainId.ARBITRUM_ONE]: [
     nativeOnChain(SupportedChainId.ARBITRUM_ONE),

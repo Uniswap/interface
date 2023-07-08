@@ -61,6 +61,8 @@ export const routingApi = createApi({
             try {
               await queryFulfilled
             } catch (error: unknown) {
+              
+
               if (error && typeof error === 'object' && 'error' in error) {
                 const queryError = (error as Record<'error', FetchBaseQueryError>).error
                 if (typeof queryError.status === 'number') {

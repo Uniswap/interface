@@ -3,11 +3,15 @@ import { Protocol } from '@uniswap/router-sdk'
 import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import { trace } from 'tracing/trace'
+import qs from 'qs'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
 import { QuoteDataV2, QuoteState, TradeResult } from './types'
 import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
 
+const API_QUERY_PARAMS = {
+  protocols: 'v2,v3,mixed',
+}
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
 }
@@ -21,7 +25,7 @@ const CLASSIC_SWAP_QUERY_PARAMS = {
 export const routingApiV2 = createApi({
   reducerPath: 'routingApiV2',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.uniswap.org/v2/',
+    baseUrl: 'https://25yyxm5tub.execute-api.us-east-1.amazonaws.com/prod/',
   }),
   endpoints: (build) => ({
     getQuote: build.query<TradeResult, GetQuoteArgs>({
@@ -58,24 +62,17 @@ export const routingApiV2 = createApi({
         if (shouldUseAPIRouter(routerPreference)) {
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
-            const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
-
-            const requestBody = {
+            const type = isExactInput(tradeType) ? 'exactIn' : 'exactOut'
+            const query = qs.stringify({
+              ...API_QUERY_PARAMS,
+              tokenInAddress,
               tokenInChainId,
-              tokenIn: tokenInAddress,
+              tokenOutAddress,
               tokenOutChainId,
-              tokenOut: tokenOutAddress,
               amount,
               type,
-              configs: [CLASSIC_SWAP_QUERY_PARAMS],
-            }
-
-            const response = await fetch({
-              method: 'POST',
-              url: '/quote',
-              body: JSON.stringify(requestBody),
             })
-
+            const response = await fetch(`quote?${query}`)
             if (response.error) {
               try {
                 // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
@@ -89,8 +86,9 @@ export const routingApiV2 = createApi({
               }
             }
 
-            const quoteData = response.data as QuoteDataV2
-            const tradeResult = transformRoutesToTrade(args, quoteData.quote)
+            const quoteData = response.data as any;
+            
+            const tradeResult = transformRoutesToTrade(args, quoteData)
 
             return { data: tradeResult }
           } catch (error: any) {

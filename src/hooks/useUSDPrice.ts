@@ -18,6 +18,7 @@ const ETH_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Currency> } = {
   [SupportedChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.OPTIMISM), 10e18),
   [SupportedChainId.POLYGON]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.POLYGON), 10_000e18),
   [SupportedChainId.CELO]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.CELO), 10e18),
+  [SupportedChainId.HARMONY]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.HARMONY), 10e18),
 }
 
 function useETHValue(currencyAmount?: CurrencyAmount<Currency>): {

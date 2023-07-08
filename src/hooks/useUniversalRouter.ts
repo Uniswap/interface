@@ -61,12 +61,16 @@ export function useUniversalRouterSwapCallback(
         if (!trade) throw new Error('missing trade')
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
+
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
           slippageTolerance: options.slippageTolerance,
           deadlineOrPreviousBlockhash: options.deadline?.toString(),
           inputTokenPermit: options.permit,
           fee: options.feeOptions,
         })
+
+        console.log(22, options, data);
+
         const tx = {
           from: account,
           to: UNIVERSAL_ROUTER_ADDRESS(chainId),

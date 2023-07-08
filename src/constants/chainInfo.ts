@@ -13,6 +13,7 @@ import polygonSquareLogoUrl from 'assets/svg/polygon_square_logo.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
 import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
+import harmonyLogo from 'assets/svg/harmony_logo.svg'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
 import { ARBITRUM_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
@@ -225,13 +226,13 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [SupportedChainId.HARMONY]: {
     networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://explorer.testnet.harmony.one/',
+    docs: 'https://docs.harmony.one/',
+    explorer: 'https://explorer.harmony.one/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Harmony',
-    logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Harmony', symbol: 'ONE', decimals: 18 },
     color: darkTheme.chain_1,
+    logoUrl: harmonyLogo,
   },
 }
 
