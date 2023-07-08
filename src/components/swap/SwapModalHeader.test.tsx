@@ -33,7 +33,7 @@ describe('SwapModalHeader.tsx', () => {
     )
   })
 
-  it('renders ETH input token for an ETH input Gouda swap', () => {
+  it('renders ETH input token for an ETH input UniswapX swap', () => {
     const { asFragment } = render(
       <SwapModalHeader
         inputCurrency={ETH_MAINNET}

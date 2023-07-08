@@ -218,7 +218,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 </DocumentFragment>
 `;
 
-exports[`SwapModalHeader.tsx renders ETH input token for an ETH input Gouda swap 1`] = `
+exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX swap 1`] = `
 <DocumentFragment>
   .c3 {
   box-sizing: border-box;

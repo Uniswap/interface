@@ -137,8 +137,8 @@ function toDutchOrderInfo(orderInfoJSON: DutchOrderInfoJSON): DutchOrderInfo {
   }
 }
 
-// Prepares the currencies used for the actual Swap (either Gouda or Universal Router)
-// May not match `currencyIn` that the user selected because for ETH inputs in Gouda, the actual
+// Prepares the currencies used for the actual Swap (either UniswapX or Universal Router)
+// May not match `currencyIn` that the user selected because for ETH inputs in UniswapX, the actual
 // swap will use WETH.
 function getTradeCurrencies(args: GetQuoteArgs, isUniswapXTrade: boolean): [Currency, Currency] {
   const {
@@ -194,7 +194,7 @@ function getClassicTradeDetails(
   }
 }
 
-// TODO (Gouda): add fallback gas limits per chain? l2s have higher costs
+// TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
 const WRAP_FALLBACK_GAS_LIMIT = 45_000
 const APPROVE_FALLBACK_GAS_LIMIT = 65_000
 
@@ -263,7 +263,7 @@ export async function transformRoutesToTrade(
 ): Promise<TradeResult> {
   const { tradeType, needsWrapIfUniswapX, routerPreference, account, amount } = args
 
-  // During the opt-in period, only return Gouda quotes if the user has turned on the setting,
+  // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
   // even if it is the better quote.
   const showUniswapXTrade = data.routing === URAQuoteType.DUTCH_LIMIT && routerPreference === RouterPreference.X
 
@@ -339,7 +339,7 @@ export async function transformRoutesToTrade(
 
     uniswapXGasUseEstimateUSD = uniswapXTrade.totalGasUseEstimateUSD
 
-    // During the opt-in period, only return Gouda quotes if the user has turned on the setting,
+    // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
     // even if it is the better quote.
     if (args.routerPreference === RouterPreference.X) {
       return {

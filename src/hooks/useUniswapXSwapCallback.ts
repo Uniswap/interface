@@ -86,7 +86,7 @@ export default function useUniswapXSwapCallback({
           ...analyticsContext,
         })
 
-        // TODO(Gouda): Update with final URL
+        // TODO(UniswapX): Update with final URL
         const res = await fetch('https://***REMOVED***.execute-api.us-east-2.amazonaws.com/prod/dutch-auction/order', {
           method: 'POST',
           body: JSON.stringify({
@@ -99,10 +99,10 @@ export default function useUniswapXSwapCallback({
 
         const body = (await res.json()) as DutchAuctionOrderResponse
 
-        // TODO(Gouda): For now, `errorCode` is not always present in the response, so we have to fallback
+        // TODO(UniswapX): For now, `errorCode` is not always present in the response, so we have to fallback
         // check for status code and perform this type narrowing.
         if (isErrorResponse(res, body)) {
-          // TODO(Gouda): Provide a similar utility to `swapErrorToUserReadableMessage` once
+          // TODO(UniswapX): Provide a similar utility to `swapErrorToUserReadableMessage` once
           // backend team provides a list of error codes and potential messages
           throw new Error(`${body.errorCode ?? body.detail ?? 'Unknown error'}`)
         }

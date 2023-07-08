@@ -196,7 +196,7 @@ export function useDerivedSwapInfo(
     const [balanceIn, maxAmountIn] = [
       currencyBalances[Field.INPUT],
       // derive maxAmountIn from input currency instead of trade's input currency because the trade currency could refer
-      // to the currency post-wrap (for Gouda ETH inputs)
+      // to the currency post-wrap (for UniswapX ETH inputs)
       trade?.trade &&
         inputCurrency &&
         getMaximumAmountIn(trade.trade.inputAmount, inputCurrency, allowedSlippage, trade.trade.tradeType),

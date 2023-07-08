@@ -200,7 +200,7 @@ export const MOONPAY_SENDER_ADDRESSES = [
   '0xd108fd0e8c8e71552a167e7a44ff1d345d233ba6',
 ]
 
-// Converts GQL backend orderStatus enum to the enum used by the frontend and gouda backend
+// Converts GQL backend orderStatus enum to the enum used by the frontend and UniswapX backend
 export const OrderStatusTable: { [key in SwapOrderStatus]: UniswapXOrderStatus } = {
   [SwapOrderStatus.Open]: UniswapXOrderStatus.OPEN,
   [SwapOrderStatus.Expired]: UniswapXOrderStatus.EXPIRED,

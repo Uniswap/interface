@@ -161,7 +161,7 @@ fragment AssetActivityParts on AssetActivity {
   }
 }
 
-# TODO(gouda): return to a pagesize of 50 pre-launch
+# TODO(UniswapX): return to a pagesize of 50 pre-launch
 query Activity($account: String!) {
   portfolios(ownerAddresses: [$account]) {
     id

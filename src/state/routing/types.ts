@@ -258,7 +258,7 @@ export type TradeResult =
   | {
       state: QuoteState.SUCCESS
       trade: InterfaceTrade
-      // TODO (Gouda): We can remove this return value after opt-in period
+      // TODO(UniswapX): We can remove this return value after opt-in period
       uniswapXGasUseEstimateUSD?: number
     }
 
@@ -285,10 +285,10 @@ type ClassicAPIConfig = {
   protocols: Protocol[]
 }
 
-type GoudaDutchLimitConfig = {
-  offerer?: string
+type UniswapXConfig = {
+  swapper?: string
   exclusivityOverrideBps?: number
   auctionPeriodSecs?: number
 }
 
-export type RoutingConfig = (GoudaDutchLimitConfig | ClassicAPIConfig)[]
+export type RoutingConfig = (UniswapXConfig | ClassicAPIConfig)[]

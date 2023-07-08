@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { useUniswapXEnabled } from 'featureFlags/flags/gouda'
 import { useRoutingAPIForPrice } from 'featureFlags/flags/priceRoutingApi'
+import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'

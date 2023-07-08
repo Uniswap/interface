@@ -40,7 +40,7 @@ interface AmountProps {
   amount?: CurrencyAmount<Currency>
   usdAmount?: number
   // The currency used here can be different than the currency denoted in the `amount` prop
-  // For Gouda ETH input trades, the trade object will have WETH as the amount.currency, but
+  // For UniswapX ETH input trades, the trade object will have WETH as the amount.currency, but
   // the user's real input currency is ETH, so show ETH instead
   currency: Currency
 }
