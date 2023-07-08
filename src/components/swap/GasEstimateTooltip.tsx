@@ -31,9 +31,6 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
     return null
   }
 
-  const formattedGasPriceString =
-    trade?.totalGasUseEstimateUSD === 0 ? '$0.00' : formatNumber(trade?.totalGasUseEstimateUSD, NumberType.FiatGasPrice)
-
   return (
     <MouseoverTooltip
       size={TooltipSize.Small}
@@ -50,7 +47,7 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
           {isUniswapXTrade(trade) ? <UniswapXRouterIcon /> : <StyledGasIcon />}
           <ThemedText.BodySmall color="textSecondary">
             <Row gap="xs">
-              <div>{formattedGasPriceString}</div>
+              <div>{formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}</div>
               {isUniswapXTrade(trade) && (
                 <div>
                   <s>{formatNumber(trade.classicGasUseEstimateUSD, NumberType.FiatGasPrice)}</s>
