@@ -88,7 +88,6 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
     const { tokens, numHidden } = useTokenBalancesGroupedByVisibility({
       balancesById,
       expandHiddenTokens: hiddenTokensExpanded,
-      owner,
     })
 
     useEffect(() => {
@@ -194,7 +193,6 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
                 return (
                   <TokenBalanceItem
                     isWarmLoading={isWarmLoading}
-                    owner={owner}
                     portfolioBalance={item}
                     onPressToken={onPressToken}
                   />

@@ -22,7 +22,7 @@ import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHead
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
-import { useTokenBalanceContextMenu } from 'src/features/balances/hooks'
+import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
@@ -45,7 +45,6 @@ import {
 import { AssetType } from 'wallet/src/entities/assets'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 import { formatUSDPrice } from 'wallet/src/utils/format'
 
@@ -63,15 +62,24 @@ function HeaderPriceLabel({ price }: { price: Price }): JSX.Element {
   )
 }
 
-function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefined }): JSX.Element {
+function HeaderTitleElement({
+  data,
+  ellipsisMenuVisible,
+}: {
+  data: TokenDetailsScreenQuery | undefined
+  ellipsisMenuVisible?: boolean
+}): JSX.Element {
   const { t } = useTranslation()
 
   const token = data?.token
   const tokenProject = token?.project
 
   return (
-    // ml="spacing32" is needed to compensate `...` menu, so the header is centered
-    <Flex alignItems="center" gap="none" justifyContent="space-between" ml="spacing32">
+    <Flex
+      alignItems="center"
+      gap="none"
+      justifyContent="space-between"
+      ml={ellipsisMenuVisible ? 'spacing32' : 'none'}>
       <HeaderPriceLabel price={tokenProject?.markets?.[0]?.price} />
       <Flex centered row gap="spacing4">
         <TokenLogo
@@ -159,8 +167,6 @@ function TokenDetails({
 }): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
-
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const currencyChainId = currencyIdToChain(_currencyId) ?? ChainId.Mainnet
   const currencyAddress = currencyIdToAddress(_currencyId)
@@ -279,9 +285,8 @@ function TokenDetails({
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
-  const { menuActions, onContextMenuPress } = useTokenBalanceContextMenu({
+  const { menuActions, onContextMenuPress } = useTokenContextMenu({
     currencyId: _currencyId,
-    owner: activeAccountAddress,
     isSpam: currentChainBalance?.currencyInfo.isSpam,
     isNative: currentChainBalance?.currencyInfo.currency.isNative,
     balanceUSD: currentChainBalance?.balanceUSD,
@@ -292,20 +297,24 @@ function TokenDetails({
   // shall be the same color as heart icon in not favorited state next to it
   const ellipsisColor = isDarkMode ? theme.colors.textTertiary : theme.colors.backgroundOutline
 
+  const ellipsisMenuVisible = menuActions.length > 0
+
   return (
     <Trace screen={Screens.TokenDetails}>
       <HeaderScrollScreen
-        centerElement={<HeaderTitleElement data={data} />}
+        centerElement={<HeaderTitleElement data={data} ellipsisMenuVisible={ellipsisMenuVisible} />}
         renderedInModal={inModal}
         rightElement={
           <Flex row alignItems="center">
-            <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
-              <EllipsisIcon
-                color={ellipsisColor}
-                height={iconSizes.icon16}
-                width={iconSizes.icon16}
-              />
-            </ContextMenu>
+            {ellipsisMenuVisible && (
+              <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
+                <EllipsisIcon
+                  color={ellipsisColor}
+                  height={iconSizes.icon16}
+                  width={iconSizes.icon16}
+                />
+              </ContextMenu>
+            )}
             <TokenDetailsFavoriteButton currencyId={_currencyId} />
           </Flex>
         }

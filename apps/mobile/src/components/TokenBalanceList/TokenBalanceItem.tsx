@@ -9,7 +9,7 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
-import { useTokenBalanceContextMenu } from 'src/features/balances/hooks'
+import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { formatNumber, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
@@ -18,13 +18,12 @@ interface TokenBalanceItemProps {
   portfolioBalance: PortfolioBalance
   onPressToken?: (currencyId: CurrencyId) => void
   isWarmLoading?: boolean
-  owner: Address
 }
 
 export const TOKEN_BALANCE_ITEM_HEIGHT = 56
 
 export const TokenBalanceItem = memo(
-  ({ portfolioBalance, onPressToken, isWarmLoading, owner }: TokenBalanceItemProps) => {
+  ({ portfolioBalance, onPressToken, isWarmLoading }: TokenBalanceItemProps) => {
     const { quantity, currencyInfo, relativeChange24, balanceUSD } = portfolioBalance
     const { currency, currencyId, isSpam } = currencyInfo
     const theme = useAppTheme()
@@ -33,12 +32,12 @@ export const TokenBalanceItem = memo(
       onPressToken?.(currencyInfo.currencyId)
     }
 
-    const { menuActions, onContextMenuPress } = useTokenBalanceContextMenu({
+    const { menuActions, onContextMenuPress } = useTokenContextMenu({
       currencyId,
-      owner,
       isSpam,
       balanceUSD,
       isNative: currency.isNative,
+      accountHoldsToken: true,
     })
 
     return (

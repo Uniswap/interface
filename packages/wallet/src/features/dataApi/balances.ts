@@ -40,7 +40,7 @@ export function usePortfolioBalances({
   onCompleted,
   fetchPolicy,
 }: {
-  address: Address
+  address?: Address
   shouldPoll?: boolean
   hideSmallBalances?: boolean
   hideSpamTokens?: boolean
@@ -58,7 +58,7 @@ export function usePortfolioBalances({
     notifyOnNetworkStatusChange: true,
     onCompleted,
     pollInterval: shouldPoll ? PollingInterval.KindaFast : undefined,
-    variables: { ownerAddress: address },
+    variables: address ? { ownerAddress: address } : undefined,
     skip: !address,
   })
 

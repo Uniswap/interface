@@ -115,21 +115,21 @@ export const slice = createSlice({
     toggleTokenVisibility: (
       state,
       {
-        payload: { currencyId, owner, currentlyVisible },
+        payload: { currencyId, accountAddress, currentlyVisible },
       }: PayloadAction<{
         currencyId: string
-        owner: Address
+        accountAddress: Address
         currentlyVisible: boolean
       }>
     ) => {
-      state.tokensVisibility[owner] ??= {}
-      const ownerTokensData = state.tokensVisibility[owner] ?? {}
-      const tokenData = ownerTokensData[currencyId]
+      state.tokensVisibility[accountAddress] ??= {}
+      const accountTokensData = state.tokensVisibility[accountAddress] ?? {}
+      const tokenData = accountTokensData[currencyId]
       // flip existing or create new visibility record
       if (tokenData) {
         tokenData.isVisible = !tokenData.isVisible
       } else {
-        ownerTokensData[currencyId] = { isVisible: !currentlyVisible }
+        accountTokensData[currencyId] = { isVisible: !currentlyVisible }
       }
     },
 
