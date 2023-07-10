@@ -111,7 +111,7 @@ export default function Option({
   id: string
 }) {
   const content = (
-    <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active}>
+    <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active}  disabled={!clickable}>
       <OptionCardLeft>
         <HeaderText color={color}>
           {active ? (
@@ -125,7 +125,9 @@ export default function Option({
           )}
           {header}
         </HeaderText>
-        {subheader && <SubHeader>{subheader}</SubHeader>}
+       {subheader && (
+          <SubHeader style={{ textAlign: clickable ? 'center' : 'left' }}>{subheader}</SubHeader>
+        )} 
       </OptionCardLeft>
       <IconWrapper size={size}>
         <img src={icon} alt={'Icon'} />
