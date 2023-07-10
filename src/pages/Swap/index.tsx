@@ -22,6 +22,7 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
+import { useIsAvalancheEnabled } from 'featureFlags/flags/avalanche'
 import useENSAddress from 'hooks/useENSAddress'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
@@ -135,7 +136,7 @@ const TRADE_STRING = 'SwapRouter'
 export default function SwapPage({ className }: { className?: string }) {
   const { chainId: connectedChainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
-
+  const isAvalancheEnabled = useIsAvalancheEnabled()
   const location = useLocation()
 
   return (
@@ -148,6 +149,7 @@ export default function SwapPage({ className }: { className?: string }) {
             [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
             [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
           }}
+          disableTokenInputs={!isAvalancheEnabled && connectedChainId === ChainId.AVALANCHE}
         />
         <NetworkAlert />
       </PageWrapper>

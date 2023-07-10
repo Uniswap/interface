@@ -2,7 +2,6 @@ import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { ChainId } from '@uniswap/sdk-core'
 import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS } from 'constants/chains'
-import { filterChainsForAvalanche } from 'featureFlags/flags/avalanche'
 import { Z_INDEX } from 'theme/zIndex'
 import { isIOS } from 'utils/userAgent'
 
@@ -26,13 +25,12 @@ export class WalletConnectV2 extends WalletConnect {
     onError,
   }: Omit<WalletConnectConstructorArgs, 'options'> & { defaultChainId: number; qrcode?: boolean }) {
     const darkmode = Boolean(window.matchMedia('(prefers-color-scheme: dark)'))
-    const gatedL1Chains = filterChainsForAvalanche([...L1_CHAIN_IDS])
     super({
       actions,
       options: {
         projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID as string,
         chains: [defaultChainId],
-        optionalChains: [...gatedL1Chains, ...L2_CHAIN_IDS],
+        optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
         showQrModal: qrcode,
         rpcMap: RPC_URLS_WITHOUT_FALLBACKS,
         // as of 6/16/2023 there are no docs for `optionalMethods`

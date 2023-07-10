@@ -101,7 +101,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     return null
   }
 
-  const isSupported = !!info
+  const isSupported = !!info && (isAvalancheEnabled || chainId !== ChainId.AVALANCHE)
 
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>

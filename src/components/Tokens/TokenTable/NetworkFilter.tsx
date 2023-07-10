@@ -1,5 +1,6 @@
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
+import { filterChainsForAvalanche } from 'featureFlags/flags/avalanche'
 import {
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   BACKEND_SUPPORTED_CHAINS,
@@ -117,6 +118,7 @@ export default function NetworkFilter() {
   const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const navigate = useNavigate()
+  const gatedUnsupportedChains = filterChainsForAvalanche([...BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS])
 
   const { chainName } = useParams<{ chainName?: string }>()
   const currentChainName = validateUrlChainParam(chainName)
@@ -169,7 +171,7 @@ export default function NetworkFilter() {
               </InternalLinkMenuItem>
             )
           })}
-          {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
+          {gatedUnsupportedChains.map((network) => {
             const chainInfo = getChainInfo(network)
             return (
               <InternalLinkMenuItem
