@@ -6,7 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
-import { filterChainsForAvalanche } from 'featureFlags/flags/avalanche'
+import { useFilterChainsForAvalanche } from 'featureFlags/flags/avalanche'
 import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
@@ -357,7 +357,7 @@ export const SearchBarDropdown = ({
     trendingCollectionsAreLoading,
     shouldDisableNFTRoutes,
   ])
-  const gatedUnsupportedChains = filterChainsForAvalanche([...BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS])
+  const gatedUnsupportedChains = useFilterChainsForAvalanche([...BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS])
   const showChainComingSoonBadge = chainId && gatedUnsupportedChains.includes(chainId) && !isLoading
   const logoUri = getChainInfo(chainId)?.logoUrl
 

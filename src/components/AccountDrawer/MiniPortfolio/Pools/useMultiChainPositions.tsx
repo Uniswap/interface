@@ -4,7 +4,7 @@ import { computePoolAddress, Pool, Position } from '@uniswap/v3-sdk'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
-import { filterChainsForAvalanche } from 'featureFlags/flags/avalanche'
+import { useFilterChainsForAvalanche } from 'featureFlags/flags/avalanche'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionDetails } from 'types/position'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
@@ -62,7 +62,7 @@ type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean
  * @returns positions, fees
  */
 export default function useMultiChainPositions(account: string, chains = DEFAULT_CHAINS): UseMultiChainPositionsData {
-  const gatedChains = filterChainsForAvalanche(chains)
+  const gatedChains = useFilterChainsForAvalanche(chains)
   const pms = useV3ManagerContracts(gatedChains)
   const multicalls = useInterfaceMulticallContracts(gatedChains)
 
