@@ -1,25 +1,18 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { MaxUint256 } from '@uniswap/permit2-sdk'
 import { MixedRouteSDK } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
+import { ChainId, Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { AlphaRouter } from '@uniswap/smart-order-router'
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
-import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import ERC20_ABI from 'abis/erc20.json'
-import { Erc20, Weth } from 'abis/types'
-import WETH_ABI from 'abis/weth.json'
-import { SupportedChainId } from 'constants/chains'
+import { asSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
-import { isBsc, isMatic, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
-import { getContract } from 'utils'
+import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
+import { getApproveInfo, getWrapInfo } from './gas'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
 import {
-  ApproveInfo,
   ClassicQuoteData,
   ClassicTrade,
   DutchOrderTrade,
@@ -35,7 +28,6 @@ import {
   URAQuoteType,
   V2PoolInRoute,
   V3PoolInRoute,
-  WrapInfo,
 } from './types'
 
 interface RouteResult {
@@ -51,7 +43,7 @@ export function getRouter(chainId: ChainId): AlphaRouter {
   const router = routers.get(chainId)
   if (router) return router
 
-  const supportedChainId = toSupportedChainId(chainId)
+  const supportedChainId = asSupportedChain(chainId)
   if (supportedChainId) {
     const provider = RPC_PROVIDERS[supportedChainId]
     const router = new AlphaRouter({ chainId, provider })
@@ -194,68 +186,6 @@ function getClassicTradeDetails(
   }
 }
 
-// TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
-const WRAP_FALLBACK_GAS_LIMIT = 45_000
-const APPROVE_FALLBACK_GAS_LIMIT = 65_000
-
-async function getApproveInfo(
-  account: string | undefined,
-  currency: Currency,
-  amount: string,
-  usdCostPerGas?: number
-): Promise<ApproveInfo> {
-  // native currencies do not need token approvals
-  if (currency.isNative) return { needsApprove: false }
-
-  // If any of these arguments aren't provided, then we cannot generate approval cost info
-  if (!account || !usdCostPerGas) return { needsApprove: false }
-
-  const provider = RPC_PROVIDERS[currency.chainId as SupportedChainId]
-  const tokenContract = getContract(currency.address, ERC20_ABI, provider) as Erc20
-
-  const allowance = await tokenContract.callStatic.allowance(account, PERMIT2_ADDRESS)
-  if (!allowance.lt(amount)) return { needsApprove: false }
-
-  const approveTx = await tokenContract.populateTransaction.approve(PERMIT2_ADDRESS, MaxUint256)
-  let approveGasUseEstimate
-  try {
-    approveGasUseEstimate = (await provider.estimateGas({ from: account, ...approveTx })).toNumber()
-  } catch (_) {
-    // estimateGas will error if the account doesn't have sufficient token balance, but we should show an estimated cost anyway
-    approveGasUseEstimate = APPROVE_FALLBACK_GAS_LIMIT
-  }
-
-  return { needsApprove: true, approveGasEstimateUSD: approveGasUseEstimate * usdCostPerGas }
-}
-
-async function getWrapInfo(
-  needsWrap: boolean,
-  account: string | undefined,
-  chainId: SupportedChainId,
-  amount: string,
-  usdCostPerGas?: number
-): Promise<WrapInfo> {
-  if (!needsWrap) return { needsWrap: false }
-
-  const provider = RPC_PROVIDERS[chainId]
-  const wethAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address
-
-  // If any of these arguments aren't provided, then we cannot generate wrap cost info
-  if (!wethAddress || !usdCostPerGas) return { needsWrap: false }
-
-  const wethContract = getContract(wethAddress, WETH_ABI, provider, account) as Weth
-  const wethTx = await wethContract.populateTransaction.deposit({ value: amount })
-  let wrapGasUseEstimate
-  try {
-    // estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway
-    wrapGasUseEstimate = (await provider.estimateGas({ from: account, ...wethTx })).toNumber()
-  } catch (_) {
-    wrapGasUseEstimate = WRAP_FALLBACK_GAS_LIMIT
-  }
-
-  return { needsWrap: true, wrapGasEstimateUSD: wrapGasUseEstimate * usdCostPerGas }
-}
-
 export async function transformRoutesToTrade(
   args: GetQuoteArgs,
   data: URAQuoteResponse,
@@ -383,6 +313,7 @@ export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
     if (isMatic(currency.chainId)) return SwapRouterNativeAssets.MATIC
     if (isBsc(currency.chainId)) return SwapRouterNativeAssets.BNB
+    if (isAvalanche(currency.chainId)) return SwapRouterNativeAssets.AVAX
     return SwapRouterNativeAssets.ETH
   }
 

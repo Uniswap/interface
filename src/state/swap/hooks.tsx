@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { ONE } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -73,25 +71,10 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D': true, // v2 router 02
 }
 
-// similar to trade.maximumAmountIn except you can customize the input currency you want
-// this is useful for UniswapX ETH inputs where the currency we want to display is ETH but the actual
-// trade has WETH as the currency input
-function getMaximumAmountIn(
-  currencyAmount: CurrencyAmount<Currency>,
-  customCurrency: Currency,
-  slippageTolerance: Percent,
-  tradeType: TradeType
-) {
-  if (tradeType === TradeType.EXACT_INPUT) return currencyAmount
-
-  const slippageAdjustedAmountIn = new Fraction(ONE).add(slippageTolerance).multiply(currencyAmount.quotient).quotient
-  return CurrencyAmount.fromRawAmount(customCurrency, slippageAdjustedAmountIn)
-}
-
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(
   state: SwapState,
-  chainId: SupportedChainId | undefined
+  chainId: ChainId | undefined
 ): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
@@ -101,6 +84,7 @@ export function useDerivedSwapInfo(
     trade?: InterfaceTrade
     state: TradeState
     uniswapXGasUseEstimateUSD?: number
+    error?: any
   }
   allowedSlippage: Percent
   autoSlippage: Percent
@@ -195,19 +179,15 @@ export function useDerivedSwapInfo(
     // compare input balance to max input based on version
     const [balanceIn, maxAmountIn] = [
       currencyBalances[Field.INPUT],
-      // derive maxAmountIn from input currency instead of trade's input currency because the trade currency could refer
-      // to the currency post-wrap (for UniswapX ETH inputs)
-      trade?.trade &&
-        inputCurrency &&
-        getMaximumAmountIn(trade.trade.inputAmount, inputCurrency, allowedSlippage, trade.trade.tradeType),
+      trade?.trade && trade.trade.maximumAmountIn(allowedSlippage),
     ]
 
     if (balanceIn && maxAmountIn && balanceIn.lessThan(maxAmountIn)) {
-      inputError = <Trans>Insufficient {maxAmountIn.currency.symbol} balance</Trans>
+      inputError = <Trans>Insufficient {balanceIn.currency.symbol} balance</Trans>
     }
 
     return inputError
-  }, [account, currencies, parsedAmount, to, currencyBalances, trade.trade, inputCurrency, allowedSlippage])
+  }, [account, currencies, parsedAmount, to, currencyBalances, trade.trade, allowedSlippage])
 
   return useMemo(
     () => ({

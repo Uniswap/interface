@@ -301,11 +301,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               >
                 <div>
                   <div
-<<<<<<< HEAD
-                    class="c14 css-zhpkf8"
-=======
                     class="c12 css-zhpkf8"
->>>>>>> upstream/main
                   >
                     Price Impact
                   </div>

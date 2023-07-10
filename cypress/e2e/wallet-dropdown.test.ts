@@ -55,7 +55,7 @@ describe('Wallet Dropdown', () => {
 
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
-      cy.get(getTestSelector('testnets-toggle')).click()
+      cy.get('#testnets-toggle').click()
       cy.get(getTestSelector('close-account-drawer')).click()
       cy.get(getTestSelector('chain-selector')).last().click()
       cy.get(getTestSelector('chain-selector-options')).should('contain.text', 'Sepolia')

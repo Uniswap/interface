@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
+const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -93,6 +94,16 @@ module.exports = {
       // See https://vanilla-extract.style/documentation/integrations/webpack/#identifiers for docs.
       // See https://github.com/vanilla-extract-css/vanilla-extract/issues/771#issuecomment-1249524366.
       new VanillaExtractPlugin({ identifiers: 'short' }),
+      new RetryChunkLoadPlugin({
+        cacheBust: `function() {
+          return 'cache-bust=' + Date.now();
+        }`,
+        // Retries with exponential backoff (500ms, 1000ms, 2000ms).
+        retryDelay: `function(retryAttempt) {
+          return 2 ** (retryAttempt - 1) * 500;
+        }`,
+        maxRetries: 3,
+      }),
     ],
     configure: (webpackConfig) => {
       // Configure webpack plugins:

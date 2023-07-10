@@ -22,7 +22,7 @@ describe('connection utility/metadata tests', () => {
     const displayed = getConnections().filter((c) => c.shouldDisplay())
     const injected = getConnection(ConnectionType.INJECTED)
     const coinbase = getConnection(ConnectionType.COINBASE_WALLET)
-    const uniswap = getConnection(ConnectionType.UNISWAP_WALLET)
+    const uniswap = getConnection(ConnectionType.UNISWAP_WALLET_V2)
     const walletconnect = getConnection(ConnectionType.WALLET_CONNECT_V2)
 
     return { displayed, injected, coinbase, uniswap, walletconnect }
@@ -114,12 +114,12 @@ describe('connection utility/metadata tests', () => {
     expect(displayed.length).toEqual(4)
   })
 
-  it('Phantom Wallet Injected Desktop', async () => {
+  it('Phantom Wallet Injected Desktop displays as MetaMask', async () => {
     createPhantomEnviroment()
     const { displayed, injected } = createWalletEnvironment({ isMetaMask: true }) // Phantom sets isMetaMask to true
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getName()).toBe('Phantom')
+    expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
     expect(displayed.length).toEqual(4)

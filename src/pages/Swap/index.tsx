@@ -9,7 +9,8 @@ import {
   SharedEventName,
   SwapEventName,
 } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
+import { ChainId, Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
@@ -20,7 +21,7 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import Toggle from 'components/Toggle'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
-import { isSupportedChain, SupportedChainId } from 'constants/chains'
+import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
@@ -41,7 +42,6 @@ import { TradeState } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserDisabledUniswapX } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
-import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -66,7 +66,6 @@ import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
-import { supportedChainId } from '../../utils/supportedChainId'
 
 export const ArrowContainer = styled.div`
   display: inline-flex;
@@ -121,7 +120,7 @@ function getIsValidSwapQuote(
   tradeState: TradeState,
   swapInputError?: ReactNode
 ): boolean {
-  return Boolean(swapInputError && trade && tradeState === TradeState.VALID)
+  return Boolean(!swapInputError && trade && tradeState === TradeState.VALID)
 }
 
 function largerPercentValue(a?: Percent, b?: Percent) {
@@ -175,7 +174,7 @@ export function Swap({
 }: {
   className?: string
   prefilledState?: Partial<SwapState>
-  chainId?: SupportedChainId
+  chainId?: ChainId
   onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
   disableTokenInputs?: boolean
 }) {
@@ -216,7 +215,7 @@ export function Swap({
         })
         .filter((token: Token) => {
           // Any token addresses that are loaded from the shorthands map do not need to show the import URL
-          const supported = supportedChainId(chainId)
+          const supported = asSupportedChain(chainId)
           if (!supported) return true
           return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
             const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]
@@ -322,7 +321,6 @@ export function Swap({
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers(dispatch)
-  const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   const handleTypeInput = useCallback(
@@ -365,7 +363,7 @@ export function Swap({
       [independentField]: typedValue,
       [dependentField]: showWrap
         ? parsedAmounts[independentField]?.toExact() ?? ''
-        : formatTransactionAmount(currencyAmountToPreciseFloat(parsedAmounts[dependentField])),
+        : formatCurrencyAmount(parsedAmounts[dependentField], NumberType.SwapTradeAmount, ''),
     }),
     [dependentField, independentField, parsedAmounts, showWrap, typedValue]
   )
@@ -721,8 +719,8 @@ export function Swap({
                 }}
                 id="swap-button"
                 data-testid="swap-button"
-                disabled={!isValid || routeIsSyncing || routeIsLoading}
-                error={isValid && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
+                disabled={!getIsValidSwapQuote(trade, tradeState, swapInputError)}
+                error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
               >
                 <Text fontSize={20} fontWeight={600}>
                   {swapInputError ? (

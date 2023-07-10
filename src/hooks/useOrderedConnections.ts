@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 
 const SELECTABLE_WALLETS = [
-  ConnectionType.UNISWAP_WALLET,
+  ConnectionType.UNISWAP_WALLET_V2,
   ConnectionType.INJECTED,
   ConnectionType.WALLET_CONNECT_V2,
   ConnectionType.COINBASE_WALLET,

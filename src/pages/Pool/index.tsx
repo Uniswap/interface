@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
+import { V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
@@ -20,7 +21,6 @@ import styled, { css, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
-import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
@@ -142,6 +142,7 @@ const MainContentWrapper = styled.main`
   flex-direction: column;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
+  overflow: hidden;
 `
 
 function PositionsLoadingPlaceholder() {

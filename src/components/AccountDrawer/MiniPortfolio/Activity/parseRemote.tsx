@@ -1,9 +1,8 @@
 import { t } from '@lingui/macro'
 import { formatFiatPrice, formatNumberOrString, NumberType } from '@uniswap/conedison/format'
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { ChainId, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
-import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESS } from 'constants/addresses'
 import { nativeOnChain } from 'constants/tokens'
 import {
   ActivityType,
@@ -18,7 +17,7 @@ import {
   TokenTransferPartsFragment,
   TransactionDetailsPartsFragment,
 } from 'graphql/data/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'graphql/data/util'
+import { logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
@@ -42,7 +41,7 @@ const ENS_IMG =
   'https://464911102-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/collections%2F2TjMAeHSzwlQgcOdL48E%2Ficon%2FKWP0gk2C6bdRPliWIA6o%2Fens%20transparent%20background.png?alt=media&token=bd28b063-5a75-4971-890c-97becea09076'
 
 const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
-  [UNI_ADDRESS[SupportedChainId.MAINNET].toLowerCase()]: {
+  [UNI_ADDRESSES[ChainId.MAINNET].toLowerCase()]: {
     title: t`UNI Governance`,
     descriptor: t`Contract Interaction`,
     logos: [UNI_IMG],
@@ -80,10 +79,9 @@ function isSameAddress(a?: string, b?: string) {
 }
 
 function callsPositionManagerContract(assetActivity: TransactionActivity) {
-  return isSameAddress(
-    assetActivity.details.to,
-    NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[fromGraphQLChain(assetActivity.chain)]
-  )
+  const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
+  if (!supportedChain) return false
+  return isSameAddress(assetActivity.details.to, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[supportedChain])
 }
 
 // Gets counts for number of NFTs in each collection present
@@ -97,15 +95,24 @@ function getCollectionCounts(nftTransfers: NftTransferPartsFragment[]): { [key: 
   }, {} as { [key: string]: number | undefined })
 }
 
-function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment) {
+function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment): string | undefined {
+  const supportedSentChain = supportedChainIdFromGQLChain(sent.asset.chain)
+  const supportedReceivedChain = supportedChainIdFromGQLChain(received.asset.chain)
+  if (!supportedSentChain || !supportedReceivedChain) {
+    logSentryErrorForUnsupportedChain({
+      extras: { sentAsset: sent.asset, receivedAsset: received.asset },
+      errorMessage: 'Invalid activity from unsupported chain received from GQL',
+    })
+    return undefined
+  }
   if (
     sent.tokenStandard === 'NATIVE' &&
-    isSameAddress(nativeOnChain(fromGraphQLChain(sent.asset.chain)).wrapped.address, received.asset.address)
+    isSameAddress(nativeOnChain(supportedSentChain).wrapped.address, received.asset.address)
   )
     return t`Wrapped`
   else if (
     received.tokenStandard === 'NATIVE' &&
-    isSameAddress(nativeOnChain(fromGraphQLChain(received.asset.chain)).wrapped.address, received.asset.address)
+    isSameAddress(nativeOnChain(supportedReceivedChain).wrapped.address, received.asset.address)
   ) {
     return t`Unwrapped`
   } else {
@@ -281,7 +288,7 @@ function getLogoSrcs(changes: TransactionChanges): string[] {
   return Array.from(logoSet).filter(Boolean) as string[]
 }
 
-function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity {
+function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity | undefined {
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, orderStatus } = details
   const uniswapXOrderStatus = OrderStatusTable[orderStatus]
   const { status, statusMessage, title } = OrderTextTable[uniswapXOrderStatus]
@@ -292,9 +299,18 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
     outputAmount: outputTokenQuantity,
   })
 
+  const supportedChain = supportedChainIdFromGQLChain(chain)
+  if (!supportedChain) {
+    logSentryErrorForUnsupportedChain({
+      extras: { details },
+      errorMessage: 'Invalid activity from unsupported chain received from GQL',
+    })
+    return undefined
+  }
+
   return {
     hash: details.hash,
-    chainId: fromGraphQLChain(chain),
+    chainId: supportedChain,
     status,
     statusMessage,
     offchainOrderStatus: uniswapXOrderStatus,
@@ -325,9 +341,17 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
       },
       { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
     )
+    const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
+    if (!supportedChain) {
+      logSentryErrorForUnsupportedChain({
+        extras: { assetActivity },
+        errorMessage: 'Invalid activity from unsupported chain received from GQL',
+      })
+      return undefined
+    }
     const defaultFields = {
       hash: assetActivity.details.hash,
-      chainId: fromGraphQLChain(assetActivity.chain),
+      chainId: supportedChain,
       status: assetActivity.details.status,
       timestamp: assetActivity.timestamp,
       logos: getLogoSrcs(changes),
@@ -345,7 +369,7 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
   }
 }
 
-export function parseRemoteActivities(assetActivities?: AssetActivityPartsFragment[]) {
+export function parseRemoteActivities(assetActivities?: readonly AssetActivityPartsFragment[]) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
     const activity = parseRemoteActivity(assetActivity)
     if (activity) acc[activity.hash] = activity

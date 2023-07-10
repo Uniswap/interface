@@ -1,9 +1,9 @@
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 
 import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
-const UNI_MAINNET = UNI[SupportedChainId.MAINNET]
+const UNI_MAINNET = UNI[ChainId.MAINNET]
 
 describe('Swap', () => {
   describe('Swap on main page', () => {
