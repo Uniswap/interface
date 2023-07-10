@@ -1,4 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { useAvalancheFlag } from 'featureFlags/flags/avalanche'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
@@ -213,6 +214,12 @@ export default function FeatureFlagModal() {
         value={useRoutingAPIForPriceFlag()}
         featureFlag={FeatureFlag.routingAPIPrice}
         label="Use the URA or routing-api for price fetches"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useAvalancheFlag()}
+        featureFlag={FeatureFlag.avalanche}
+        label="Enable Avalanche chain"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useIsAvalancheEnabled } from 'featureFlags/flags/avalanche'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -88,6 +89,7 @@ export function useDerivedSwapInfo(
   autoSlippage: Percent
 } {
   const { account } = useWeb3React()
+  const isAvalancheEnabled = useIsAvalancheEnabled()
 
   const {
     independentField,
@@ -97,7 +99,10 @@ export function useDerivedSwapInfo(
     recipient,
   } = state
 
-  const inputCurrency = useCurrency(inputCurrencyId, chainId)
+  const inputCurrency = useCurrency(
+    isAvalancheEnabled || chainId !== ChainId.AVALANCHE ? inputCurrencyId : undefined,
+    chainId
+  )
   const outputCurrency = useCurrency(outputCurrencyId, chainId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
