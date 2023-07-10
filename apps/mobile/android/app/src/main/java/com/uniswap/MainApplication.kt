@@ -21,10 +21,11 @@ class MainApplication : Application(), ReactApplication {
                 return BuildConfig.DEBUG
             }
 
-            override fun getPackages(): List<ReactPackage> {
+            override fun getPackages(): List<ReactPackage> =
+            PackageList(this).packages.apply {
                 // Packages that cannot be autolinked yet can be added manually here, for example:
                 // packages.add(new MyReactNativePackage());
-                return PackageList(this).packages
+                add(UniswapPackage())
             }
 
             override fun getJSMainModuleName(): String {
@@ -62,9 +63,9 @@ class MainApplication : Application(), ReactApplication {
             if (BuildConfig.DEBUG) {
                 try {
                     /*
-         We use reflection here to pick up the class that initializes Flipper,
-        since Flipper library is not available in release mode
-        */
+                    We use reflection here to pick up the class that initializes Flipper,
+                    since Flipper library is not available in release mode
+                    */
                     val aClass = Class.forName("com.uniswap.ReactNativeFlipper")
                     aClass
                         .getMethod(

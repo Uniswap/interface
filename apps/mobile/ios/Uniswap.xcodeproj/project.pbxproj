@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* UniswapTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* UniswapTests.m */; };
+		034F01A92A4F11D4008CB8BF /* RCTThemeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 034F01A82A4F11D4008CB8BF /* RCTThemeModule.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -89,6 +90,8 @@
 		00E356EE1AD99517003FC87E /* UniswapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UniswapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* UniswapTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniswapTests.m; sourceTree = "<group>"; };
+		034F01A72A4F11BD008CB8BF /* RCTThemeModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTThemeModule.h; sourceTree = "<group>"; };
+		034F01A82A4F11D4008CB8BF /* RCTThemeModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTThemeModule.m; sourceTree = "<group>"; };
 		0DAAE6F1B194B03FAC33323D /* libPods-Uniswap-UniswapTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Uniswap-UniswapTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* Uniswap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Uniswap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Uniswap/AppDelegate.h; sourceTree = "<group>"; };
@@ -203,9 +206,19 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		03DD298C2A4CE34B00E3E0F5 /* Appearance */ = {
+			isa = PBXGroup;
+			children = (
+				034F01A72A4F11BD008CB8BF /* RCTThemeModule.h */,
+				034F01A82A4F11D4008CB8BF /* RCTThemeModule.m */,
+			);
+			name = Appearance;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* Uniswap */ = {
 			isa = PBXGroup;
 			children = (
+				03DD298C2A4CE34B00E3E0F5 /* Appearance */,
 				E3C8C9DD291C4D2C000E00EA /* RiveAssets */,
 				F35AFD3627EE49230011A725 /* Uniswap.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -766,6 +779,7 @@
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				A3F0A5B3272B1E9A00895B25 /* RNEthersRS.swift in Sources */,
 				FD7304CC28A364EF0085BDEA /* MnemonicTextField.swift in Sources */,
+				034F01A92A4F11D4008CB8BF /* RCTThemeModule.m in Sources */,
 				D63452452821BD540018ED83 /* WalletConnectSendTransactionHandler.swift in Sources */,
 				FDDCC725289AE92600BCD4F3 /* MnemonicTestView.swift in Sources */,
 				A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */,

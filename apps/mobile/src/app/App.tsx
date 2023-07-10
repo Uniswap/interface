@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { StrictMode, useCallback, useEffect, useState } from 'react'
-import { StatusBar } from 'react-native'
+import { NativeModules, StatusBar } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -148,6 +148,12 @@ function App(): JSX.Element | null {
 
 function AppInner(): JSX.Element {
   const isDarkMode = useIsDarkMode()
+
+  useEffect(() => {
+    // TODO: This is a temporary solution (it should be replaced with Appearance.setColorScheme
+    // after updating RN to 0.72.0 or higher)
+    NativeModules.ThemeModule.setColorScheme(isDarkMode ? 'dark' : 'light')
+  }, [isDarkMode])
 
   return <NavStack isDarkMode={isDarkMode} />
 }
