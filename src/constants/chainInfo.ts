@@ -62,6 +62,7 @@ type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & 
 } & { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 
 const CHAIN_INFO: ChainInfoMap = {
+  /*
   [SupportedChainId.MAINNET]: {
     networkType: NetworkType.L1,
     docs: 'https://docs.uniswap.org/',
@@ -224,6 +225,7 @@ const CHAIN_INFO: ChainInfoMap = {
     color: darkTheme.chain_56,
     backgroundColor: darkTheme.chain_56_background,
   },
+  */
   [SupportedChainId.HARMONY]: {
     networkType: NetworkType.L1,
     docs: 'https://docs.harmony.one/',
@@ -258,7 +260,7 @@ export function getChainInfo(chainId: any): any {
   return undefined
 }
 
-const MAINNET_INFO = CHAIN_INFO[SupportedChainId.MAINNET]
+const MAINNET_INFO = CHAIN_INFO[SupportedChainId.HARMONY]
 export function getChainInfoOrDefault(chainId: number | undefined) {
   return getChainInfo(chainId) ?? MAINNET_INFO
 }

@@ -376,8 +376,6 @@ export function Swap({
     isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
 
-  console.log(111111, allowance);
-
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
     [currencyBalances]
