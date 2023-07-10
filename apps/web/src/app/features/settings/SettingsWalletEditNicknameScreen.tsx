@@ -10,7 +10,7 @@ import {
   EditAccountAction,
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { useAccount } from 'wallet/src/features/wallet/hooks'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export function SettingsWalletEditNicknameScreen(): JSX.Element {
   const { address } = useParams()
@@ -24,9 +24,7 @@ function EditNicknameScreenContent({ address }: { address: Address }): JSX.Eleme
   const dispatch = useAppDispatch()
   const { navigateBack } = useExtensionNavigation()
 
-  const account = useAccount(address)
-  const ensName = null // TODO: Add ENS lookup logic
-  const nickname = ensName || account.name
+  const nickname = useDisplayName(address)?.name
 
   const [nicknameField, setNicknameField] = useState<string>('')
   const [showNicknamePlaceholder, setShowNicknamePlaceholder] = useState(true)

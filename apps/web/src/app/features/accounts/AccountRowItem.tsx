@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Text, XStack } from 'ui/src'
 import { Unicon } from 'ui/src/components/Unicon'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { useAccount } from 'wallet/src/features/wallet/hooks'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 type AccountRowItemProps = {
@@ -12,12 +12,9 @@ type AccountRowItemProps = {
 
 /** Helper component to display identicon and formatted address */
 export function AccountRowItem({ address, onPress }: AccountRowItemProps): JSX.Element {
-  const account = useAccount(address)
-  const name = account.name // TODO: Add useDisplayName once available as 1st choice
-
-  // const { name } = useDisplayName(address)
-  // // TODO: Replace wtih AccountIcon once available
-  // // const { data: avatar } = useENSAvatar(address)
+  const name = useDisplayName(address)?.name
+  // TODO: Replace wtih AccountIcon once available
+  // const { data: avatar } = useENSAvatar(address)
 
   const icon = useMemo(() => {
     return <Unicon address={address} size={iconSizes.icon28} />

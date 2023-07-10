@@ -2,7 +2,7 @@ import { LinearGradient } from '@tamagui/linear-gradient'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
-import { useAppDispatch } from 'src/background/store'
+import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { Icons, ScrollView, Text, XStack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
@@ -16,7 +16,8 @@ import {
   pendingAccountActions,
   PendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { selectAllAccountsSorted } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
 export function AccountSwitcherScreen(): JSX.Element {
@@ -24,14 +25,12 @@ export function AccountSwitcherScreen(): JSX.Element {
   const dispatch = useAppDispatch()
 
   const activeAddress = useActiveAccountAddressWithThrow()
-  const accounts = useAccounts()
-
+  const accounts = useAppSelector(selectAllAccountsSorted)
   const accountAddresses = useMemo(() => {
-    const addresses = Object.keys(accounts)
-    addresses.sort((a: Address, b: Address) => {
-      return a === activeAddress ? -1 : b === activeAddress ? 1 : 0
-    })
-    return addresses
+    const addresses = accounts
+      .map((account) => account.address)
+      .filter((address) => address !== activeAddress)
+    return [activeAddress, ...addresses]
   }, [accounts, activeAddress])
 
   const { glow } = useUniconColors(activeAddress)

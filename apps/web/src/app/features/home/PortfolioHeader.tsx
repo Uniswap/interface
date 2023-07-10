@@ -10,7 +10,7 @@ import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { Unicon } from 'ui/src/components/Unicon'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type PortfolioHeaderProps = {
   address: Address
@@ -18,6 +18,8 @@ type PortfolioHeaderProps = {
 
 export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element {
   const navigate = useNavigate()
+
+  const displayName = useDisplayName(address)?.name
 
   const onPressAccount = (): void => {
     navigate(AppRoutes.AccountSwitcher.valueOf())
@@ -36,7 +38,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         justifyContent="center"
         onPress={onPressAccount}>
         <Unicon address={address} size={iconSizes.icon36} />
-        <Text variant="subheadSmall">{sanitizeAddressText(shortenAddress(address))}</Text>
+        <Text variant="subheadSmall">{displayName}</Text>
         <Chevron
           color="$textSecondary"
           direction="s"

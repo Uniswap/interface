@@ -23,7 +23,7 @@ export function SettingsScreen(): JSX.Element {
   const allAccountsSorted: Account[] = useAppSelector(selectAllAccountsSorted)
 
   // TODO: Add better dynamic logic for showing the show all button based on height once Tamagui supports ref.height
-  const showAllWalletsButton = allAccountsSorted.length > 6
+  const showAllWalletsButton = allAccountsSorted.length > DEFAULT_ACCOUNTS_TO_DISPLAY
   const [showAll, setShowAll] = useState(false)
 
   const onPressLockWallet = (): void => {

@@ -8,6 +8,7 @@ import { Unicon } from 'ui/src/components/Unicon'
 import { colorsDark } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { usePortfolioUSDBalance } from 'wallet/src/features/portfolio/hooks'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type AccountItemProps = {
@@ -25,6 +26,7 @@ export function AccountItem({
 }: AccountItemProps): JSX.Element {
   const { portfolioBalanceUSD, loading, error } = usePortfolioUSDBalance(address)
   const { show: showToast } = useToastController()
+  const displayName = useDisplayName(address)?.name
 
   const copyAddress = (e: GestureResponderEvent): void => {
     navigator.clipboard.writeText(address)
@@ -58,9 +60,8 @@ export function AccountItem({
           )}
         </XStack>
         <Flex>
-          <Text color="$textPrimary" variant="bodySmall">
-            {/* TODO get name, relies on ENS and as a result rtk-query */}
-            {sanitizeAddressText(shortenAddress(address))}
+          <Text color="$textPrimary" variant="bodyLarge">
+            {displayName}
           </Text>
           <XStack>
             <XStack space alignItems="center" flex={1}>

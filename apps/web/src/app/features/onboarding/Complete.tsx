@@ -13,7 +13,7 @@ import { Unicon } from 'ui/src/components/Unicon'
 import { opacify } from 'ui/src/theme/color/utils'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { uniswapUrls } from 'wallet/src/constants/urls'
-import { useAccount, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 const POPUP_WIDTH = 400
@@ -40,10 +40,7 @@ const ONBOARDING_COLORS_SOFT = {
 export function Complete(): JSX.Element {
   const address = useActiveAccountAddressWithThrow()
   const { t } = useTranslation()
-  // TODO(EXT-186): handle default naming better
-  const account = useAccount(address)
-  const ensName = undefined // TODO: Add ENS lookup logic
-  const nickname = ensName || account.name || 'Wallet 1' // TODO: Update after ens is defined
+  const nickname = useDisplayName(address)?.name
 
   if (!address) {
     throw new Error('No address found')

@@ -12,8 +12,7 @@ import {
   EditAccountAction,
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { useAccount } from 'wallet/src/features/wallet/hooks'
-import { shortenAddress } from 'wallet/src/utils/addresses'
+import { useAccount, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export function SettingsWalletScreen(): JSX.Element {
   const { address } = useParams()
@@ -29,8 +28,7 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
   const dispatch = useAppDispatch()
 
   const account = useAccount(address)
-  const ensName = undefined // TODO: Add ENS lookup logic
-  const nickname = ensName || account.name // TODO: Update after ens is defined
+  const displayName = useDisplayName(address)?.name
 
   const handleSpamTokensToggle = (): void => {
     dispatch(
@@ -56,13 +54,13 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
 
   return (
     <YStack backgroundColor="$background0" flex={1}>
-      <BackButtonHeader headerText={nickname || shortenAddress(address)} />
+      <BackButtonHeader headerText={displayName ?? 'Wallet'} />
       <YStack flexGrow={1} justifyContent="space-between" padding="$spacing12">
         <YStack>
           <XStack flexGrow={1} justifyContent="space-between" paddingVertical="$spacing12">
             <YStack>
               <Text variant="bodyLarge">{t('Edit nickname')}</Text>
-              <Text variant="bodyMicro">{nickname}</Text>
+              <Text variant="bodyMicro">{displayName}</Text>
             </YStack>
             <Button onPress={(): void => navigate(SettingsWalletRoutes.EditNickname.valueOf())}>
               <PencilIcon height={iconSizes.icon24} width={iconSizes.icon24} />
