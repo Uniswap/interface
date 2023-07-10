@@ -5,7 +5,14 @@ import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { BarChartIcon, DiscordIconMenu, EllipsisIcon, PoolIcon, TwitterIconMenu } from 'nft/components/icons'
+import {
+  BarChartIcon,
+  DiscordIconMenu,
+  EllipsisIcon,
+  PegasysIcon,
+  PoolIcon,
+  TwitterIconMenu,
+} from 'nft/components/icons'
 import { body, bodySmall } from 'nft/css/common.css'
 import { ReactNode, useReducer, useRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
@@ -193,13 +200,20 @@ export const MenuDropdown = () => {
                     </PrimaryMenuRow.Text>
                   </Box>
                 </PaliButtonText>
-                {/* TODO: analytics link */}
                 <PrimaryMenuRow href="https://info.pegasys.fi/">
                   <Icon>
                     <BarChartIcon width={24} height={24} color={theme.textPrimary} />
                   </Icon>
                   <PrimaryMenuRow.Text>
                     <Trans>View more analytics</Trans>
+                  </PrimaryMenuRow.Text>
+                </PrimaryMenuRow>
+                <PrimaryMenuRow href="https://v1.pegasys.fi/">
+                  <Icon>
+                    <PegasysIcon width={24} height={24} color={theme.textPrimary} />
+                  </Icon>
+                  <PrimaryMenuRow.Text>
+                    <Trans>Go to V1</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
               </Column>
