@@ -617,15 +617,14 @@ text-decoration: ${({theme}) =>  `underline dashed ${theme.textPrimary}`};
 `
 
 const OutputText = styled.div`
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
-  height: fit-content;
+  height: 12px;
   color: ${({theme}) => theme.textSecondary};
 `
 const InputText = styled.div`
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
-  height: fit-content;
   color: ${({theme}) => theme.textSecondary};
 `
 
@@ -704,7 +703,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           header={false}
           // listNumber={sortRank}
           positionInfo={
-            <ClickableContent>
+
               <PositionInfo>
                   <OutputText>
                     {outputCurrencySymbol}
@@ -713,7 +712,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                   {inputCurrencySymbol}
                   </InputText>
                 </PositionInfo>
-            </ClickableContent>
+
           }
           ltv={
             <Trans>
