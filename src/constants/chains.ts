@@ -16,6 +16,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
   [ChainId.BNB]: 'bnb',
   [ChainId.AVALANCHE]: 'avalanche',
+  [ChainId.BASE_GOERLI]: 'base_goerli',
 } as const
 
 export function isSupportedChain(chainId: number | null | undefined | ChainId): chainId is SupportedChainsType {
@@ -55,6 +56,7 @@ export const TESTNET_CHAIN_IDS = [
   ChainId.ARBITRUM_GOERLI,
   ChainId.OPTIMISM_GOERLI,
   ChainId.CELO_ALFAJORES,
+  ChainId.BASE_GOERLI,
 ] as const
 
 /**
@@ -83,6 +85,7 @@ export const L2_CHAIN_IDS = [
   ChainId.ARBITRUM_GOERLI,
   ChainId.OPTIMISM,
   ChainId.OPTIMISM_GOERLI,
+  ChainId.BASE_GOERLI,
 ] as const
 
 export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]

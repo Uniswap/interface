@@ -20,6 +20,7 @@ export const FEE_AMOUNT_DETAIL: Record<
       ChainId.POLYGON,
       ChainId.POLYGON_MUMBAI,
       ChainId.AVALANCHE,
+      ChainId.BASE_GOERLI,
     ],
   },
   [FeeAmount.LOW]: {
