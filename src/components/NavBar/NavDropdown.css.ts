@@ -11,7 +11,6 @@ const baseNavDropdown = style([
     paddingBottom: '8',
     paddingTop: '8',
   }),
-  {},
 ])
 
 export const NavDropdown = style([
