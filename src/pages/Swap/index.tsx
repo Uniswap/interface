@@ -174,16 +174,16 @@ export const SwapSection = styled.div`
     height: 100%;
     pointer-events: none;
     content: '';
-    border: 1px solid ${({ theme }) => theme.backgroundSurface};
+    // border: 1px solid ${({ theme }) => theme.backgroundSurface};
   }
 
-  &:hover:before {
-    border-color: ${({ theme }) => theme.stateOverlayHover};
-  }
+  // &:hover:before {
+  //   border-color: ${({ theme }) => theme.stateOverlayHover};
+  // }
 
-  &:focus-within:before {
-    border-color: ${({ theme }) => theme.stateOverlayPressed};
-  }
+  // &:focus-within:before {
+  //   border-color: ${({ theme }) => theme.stateOverlayPressed};
+  // }
 `
 
 const TabHeader = styled.div<{ active: boolean }>`
