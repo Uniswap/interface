@@ -10,10 +10,6 @@ export function useIsAvalancheEnabled(): boolean {
   return useAvalancheFlag() === BaseVariant.Enabled
 }
 
-// export function filterChainsForAvalanche(chains: ChainId[]): ChainId[] {
-//   return chains.filter((chain) => chain !== ChainId.AVALANCHE || useIsAvalancheEnabled())
-// }
-
 export function useFilterChainsForAvalanche(chains: ChainId[]): ChainId[] {
   const isAvalancheEnabled = useIsAvalancheEnabled()
   return chains.filter((chain) => chain !== ChainId.AVALANCHE || isAvalancheEnabled)
