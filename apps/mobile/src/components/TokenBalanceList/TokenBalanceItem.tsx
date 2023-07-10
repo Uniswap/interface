@@ -1,5 +1,6 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
@@ -26,6 +27,7 @@ export const TokenBalanceItem = memo(
   ({ portfolioBalance, onPressToken, isWarmLoading }: TokenBalanceItemProps) => {
     const { quantity, currencyInfo, relativeChange24, balanceUSD } = portfolioBalance
     const { currency, currencyId, isSpam } = currencyInfo
+    const { t } = useTranslation()
     const theme = useAppTheme()
 
     const onPress = (): void => {
@@ -91,7 +93,9 @@ export const TokenBalanceItem = memo(
                   color={isWarmLoading ? 'textSecondary' : 'textPrimary'}
                   numberOfLines={1}
                   variant="bodyLarge">
-                  {formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
+                  {portfolioBalance.balanceUSD === 0
+                    ? t('N/A')
+                    : formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
                 </Text>
                 <Text color="textSecondary">
                   <RelativeChange

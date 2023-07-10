@@ -139,6 +139,7 @@
   "Are you sure?": "Are you sure?",
   "Read less": "Read less",
   "Read more": "Read more",
+  "N/A": "N/A",
   "Couldn't load token balances": "Couldn't load token balances",
   "Failed to fetch token balances": "Failed to fetch token balances",
   "Balances on other networks": "Balances on other networks",
