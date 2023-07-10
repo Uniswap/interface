@@ -167,7 +167,7 @@ export const darkTheme = {
   backgroundModule: opacify(8, colors.gray300), // #293249', // "#181926", // colors.gray800
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
-  backgroundOutline: opacify(24, colors.gray900),
+  backgroundOutline: opacify(24, colors.gray300),
   backgroundScrim: opacify(72, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.gray900),
   textPrimary: colors.gray200,

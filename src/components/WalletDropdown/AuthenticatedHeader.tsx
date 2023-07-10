@@ -287,36 +287,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
           </Column>
         )}
-       {/* <HeaderButton
-          size={ButtonSize.medium}
-          emphasis={ButtonEmphasis.medium}
-          onClick={handleBuyCryptoClick}
-          disabled={disableBuyCryptoButton}
-        >
-          {error ? (
-            <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
-          ) : (
-            <>
-              {fiatOnrampAvailabilityLoading ? (
-                <StyledLoadingButtonSpinner />
-              ) : (
-                <CreditCard height="20px" width="20px" />
-              )}{' '}
-              <Trans>Buy crypto</Trans>
-            </>
-          )}
-        </HeaderButton>
-        {!shouldDisableNFTRoutes && (
-          <HeaderButton
-            data-testid="nft-view-self-nfts"
-            onClick={navigateToProfile}
-            size={ButtonSize.medium}
-            emphasis={ButtonEmphasis.medium}
-          >
-            <Trans>View and sell NFTs</Trans>
-          </HeaderButton>
-        )}
-      */}
         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
           <FiatOnrampNotAvailableText marginTop="8px">
             <Trans>Not available in your region</Trans>

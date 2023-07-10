@@ -310,7 +310,6 @@ export function  ReduceLeverageTransactionPopupContent({ tx, chainId, removeThis
         descriptor={
           <Descriptor color="textSecondary">
             {activity.descriptor}
-            {/* {ENSName ?? activity.otherAccount} */}
           </Descriptor>
         }
         onClick={() => window.open(explorerUrl, '_blank')}
@@ -553,44 +552,3 @@ export function ReduceLeverageTransactionConfirmationModal({
     </Modal>
   )
 }
-
-// export function LevTransactionConfirmationModal({
-//   isOpen,
-//   onDismiss,
-//   attemptingTxn,
-//   hash,
-//   pendingText,
-//   content,
-//   currencyToAdd,
-
-//   setIsLoadingQuote, 
-//   isLoadingQuote
-// }: ConfirmationModalProps) {
-//   const { chainId } = useWeb3React()
-
-//   if (!chainId) return null
-//   // confirmation screen
-//   return (
-//     <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight={90}>
-//       {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
-//         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
-//       ) : attemptingTxn ? (
-//         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
-//       ) : hash ? (
-//         <TransactionSubmittedContent
-//           chainId={chainId}
-//           hash={hash}
-//           onDismiss={onDismiss}
-//           currencyToAdd={currencyToAdd}
-//         />
-//       ) : (
-//         content()
-//       )}
-//       {setIsLoadingQuote&& (<SmallButtonPrimary 
-//            onClick={() => setIsLoadingQuote(!isLoadingQuote)} 
-//       >
-//         <Trans>Refresh Quote</Trans>
-//       </SmallButtonPrimary>)}
-//     </Modal>
-//   )
-// }

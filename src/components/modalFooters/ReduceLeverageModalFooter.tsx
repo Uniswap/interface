@@ -311,8 +311,6 @@ export function ReduceLeverageModalFooter({
   const disabled = !!userError || !transactionInfo
   // const debt = position?.totalDebtInput;
   const initCollateral = position?.initialCollateral;
-  // const received = inputIsToken0 ? (Math.abs(Number(transactionInfo?.token0Amount)) - Number(debt))
-  //   : (Math.abs(Number(transactionInfo?.token1Amount)) - Number(debt))
 
   return (
     <AutoRow>

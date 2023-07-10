@@ -104,6 +104,7 @@ import moment from 'moment'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { TokenSelector } from 'components/swap/TokenSelector'
 import { Row } from 'nft/components/Flex'
+import { ActivityTab } from 'components/WalletDropdown/MiniPortfolio/Activity/ActivityTab'
 
 const TradeTabContent = React.lazy(() => import('./swapModal'));
 
@@ -186,8 +187,8 @@ export const SwapSection = styled.div`
 `
 
 const TabHeader = styled.div<{ active: boolean }>`
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  // border-top-left-radius: 16px;
+  // border-top-right-radius: 16px;
   width: 200px;
   background: ${({active, theme}) => active ? theme.backgroundSurface : theme.backgroundBackdrop }
 `
@@ -289,6 +290,12 @@ const LeveragePositionsWrapper = styled.main`
     0px 24px 32px rgba(0, 0, 0, 0.01);
 `
 
+const ActivityWrapper = styled.main`
+  max-height: 240px;
+  overflow-y: auto;
+  background-color: ${({theme}) => theme.backgroundSurface};
+`
+
 export function getIsValidSwapQuote(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
   tradeState: TradeState,
@@ -321,10 +328,8 @@ export default function Swap({ className }: { className?: string }) {
   // const swapWidgetEnabled = useSwapWidgetEnabled()
 
   const {
-    onSwitchTokens, onCurrencySelection, onUserInput,
-    onChangeRecipient, onLeverageFactorChange,
-    onLeverageChange, onLeverageManagerAddress, onLTVChange, onBorrowManagerAddress,
-    onPremiumChange
+    onCurrencySelection, onUserInput,
+    onLeverageManagerAddress, onBorrowManagerAddress,
   } = useSwapActionHandlers()
 
   // token warning stuff
@@ -709,21 +714,22 @@ export default function Swap({ className }: { className?: string }) {
     const  now = moment()
     const timestamp = now.unix()
 
-    return limitlessPositions ?
+    return limitlessPositions && !limitlessPositionsLoading ?
     limitlessPositions.filter((position) => {
       return !position.isBorrow 
-    }) : []
+    }) : undefined
   }, [limitlessPositionsLoading, limitlessPositions ])
   const borrowPositions = useMemo(() => {
     const  now = moment()
     const timestamp = now.unix()
-    return limitlessPositions ?
+    return limitlessPositions && !limitlessPositionsLoading ?
     limitlessPositions.filter((position) => {
       return position.isBorrow 
-    }) : []
+    }) : undefined
   }, [limitlessPositionsLoading, limitlessPositions])
 
   const [activePositionTable, setActiveTable] = useState(1)
+
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -765,25 +771,36 @@ export default function Swap({ className }: { className?: string }) {
                   fee={pool?.fee}
                 />
               </StatsContainer>
-              <Hr />
               <PositionsContainer>
                 <TableHeader>
-                  <TabHeader active={activePositionTable === 1}>
-                  <TabNavItem id={1} activeTab={activePositionTable} setActiveTab={setActiveTable}>
+                  <TabNavItem id={1} activeTab={activePositionTable} setActiveTab={setActiveTable} first={true}>
                     Leverage Positions
                   </TabNavItem>
-                  </TabHeader>
-                  <TabHeader active={activePositionTable === 2}>
                   <TabNavItem id={2} activeTab={activePositionTable} setActiveTab={setActiveTable}>
                     Borrow Positions
                   </TabNavItem>
-                  </TabHeader>
+                  <TabNavItem id={3} activeTab={activePositionTable} setActiveTab={setActiveTable} last={true}>
+                    History
+                  </TabNavItem>
                 </TableHeader>
                 <TabContent id={1} activeTab={activePositionTable}>
                 <LeveragePositionsTable positions={leveragePositions} loading={limitlessPositionsLoading} />
                 </TabContent>
                 <TabContent id={2} activeTab={activePositionTable}>
                 <BorrowPositionsTable positions={borrowPositions} loading={limitlessPositionsLoading} />
+                </TabContent>
+                <TabContent id={3} activeTab={activePositionTable}>
+                {!account ?(
+                  <Trans>
+                    Missing Account
+                  </Trans>
+                ) : (
+                  <ActivityWrapper>
+                    <ActivityTab account={account}/>
+                  </ActivityWrapper>
+                  
+                )
+                }
                 </TabContent>
               </PositionsContainer>
             </LeftContainer>

@@ -30,7 +30,7 @@ export function useLimitlessPositionFromKeys(account: string | undefined, manage
 }
 
 // hacked
-export function useLimitlessPositions(account: string | undefined): {loading: boolean, positions: LimitlessPositionDetails[]} {
+export function useLimitlessPositions(account: string | undefined): {loading: boolean, positions: LimitlessPositionDetails[] | undefined} {
   const {chainId} = useWeb3React()
   const globalStorage = useGlobalStorageContract()
 
@@ -58,13 +58,13 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
   const someTokenIdsLoading = useMemo(() => tokenIdResults.some(({ loading }) => loading), [tokenIdResults])
 
   const tokenIds = useMemo(() => {
-    if (account) {
+    if (account && !someTokenIdsLoading && tokenIdResults.length > 0) {
       return tokenIdResults
         .map(({ result }) => result)
         .filter((result): result is CallStateResult => !!result)
         .map((result) => BigNumber.from(result[0]))
     }
-    return []
+    return undefined
   }, [account, tokenIdResults])
 
   const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
@@ -129,9 +129,10 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
     }
     return undefined
   }, [results, tokenIds])
+
   return {
-    loading: false,
-    positions: positions ?? []
+    loading: loading,
+    positions: positions
   }
 }
 

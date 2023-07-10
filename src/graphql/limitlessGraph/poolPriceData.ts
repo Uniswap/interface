@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isAddress } from 'ethers/lib/utils'
-import { gql, ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { gql, ApolloClient, NormalizedCacheObject, ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount, computePoolAddress } from '@uniswap/v3-sdk'
 import { V3_CORE_FACTORY_ADDRESSES as UNISWAP_FACTORIES } from "constants/addresses-uniswap"
@@ -12,7 +12,7 @@ import { useContract } from 'hooks/useContract'
 import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { Interface } from '@ethersproject/abi'
 import { useLimitlessSubgraph } from './limitlessClients'
-import dayjs, { OpUnitType }from 'dayjs'
+import dayjs, { OpUnitType } from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 
@@ -108,7 +108,7 @@ export const LATEST_POOL_INFO_QUERY = gql`
       token1Price
     }
   }
-` 
+`
 
 interface PriceResults {
   poolHourDatas: {
@@ -143,7 +143,7 @@ export async function fetchPoolPriceData(
         error: false,
       }
     }
-  
+
     const { data: result, errors, loading, error } = await dataClient.query({
       query: POOL_PRICE_CHART,
       variables: {
@@ -179,8 +179,8 @@ export async function fetchPoolPriceData(
       }
     }
 
-    if (formattedHistory.length > countBack) { 
-      return {  
+    if (formattedHistory.length > countBack) {
+      return {
         data: formattedHistory.slice(formattedHistory.length - countBack, formattedHistory.length),
         error: false,
       }
@@ -198,6 +198,55 @@ export async function fetchPoolPriceData(
     error: true,
   }
 }
+
+const tokenSearch = gql`
+  query findTokens($text: String!) {
+    tokenSearch(text: $text) {
+      id
+      name
+      symbol
+      decimals
+    }
+  }
+`
+
+/// uses limitless subgraph for token search
+export function useTokenSearchQuery(text: string) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
+
+  const limitlessClient = useLimitlessSubgraph();
+
+  useEffect(() => {
+    let isMounted = true;  // add this flag to prevent state updates on unmounted components
+    if (text.length > 0) {
+      setLoading(true);
+      setError(null);
+      limitlessClient.query({
+        query: tokenSearch,
+        variables: { text: text.toLowerCase() + ":*" }
+      })
+        .then(({ data }) => {
+          if (isMounted) {
+            setData(data);
+            setLoading(false);
+          }
+        })
+        .catch(error => {
+          if (isMounted) {
+            setError(error);
+            setLoading(false);
+          }
+        });
+    }
+
+    return () => { isMounted = false; }; // cleanup function to avoid memory leaks
+  }, [text, limitlessClient]);
+
+  return { loading, error, data };
+}
+
 
 export async function fetchLiveBar(
   chainId: number,
@@ -269,9 +318,9 @@ export async function fetchLiveBar(
 
       return result
     }
-  } catch(err) {
+  } catch (err) {
   }
-  return 
+  return
 }
 
 interface PoolPrice {
@@ -330,7 +379,7 @@ export function usePoolPriceData(
   // console.log("poolPriceData: ", error, uniswapPoolAddress, uniswapPoolContract, uniswapPoolExists, limitlessPoolAddress)
 
   useEffect(() => {
-    async function fetch () {
+    async function fetch() {
       if (uniswapPoolAddress && uniswapPoolContract) {
         try {
           const feeGrowthGlobal0X128 = await uniswapPoolContract.callStatic.feeGrowthGlobal0X128()
@@ -349,74 +398,5 @@ export function usePoolPriceData(
   const oldestTimestampFetched = priceData?.oldestFetchedTimestamp
   const utcCurrentTime = dayjs()
   const startTimestamp = utcCurrentTime.subtract(1, timeWindow).startOf('hour').unix()
-
-  useEffect(() => {
-    async function fetch() {
-      // if (uniswapPoolAddress && limitlessPoolAddress) {
-      //   const { data, error: fetchingError } = await fetchPoolPriceData(
-      //     uniswapPoolExists ? uniswapPoolAddress : limitlessPoolAddress,
-      //     interval,
-      //     startTimestamp,
-      //     uniswapPoolExists ? uniswapClient : limitlessClient
-      //   )
-
-      //   if (data) {
-      //     setPriceData({
-      //       priceData: data,
-      //       oldestFetchedTimestamp: startTimestamp,
-      //     })
-      //   }
-      //   if (fetchingError) {
-      //     console.log('Error fetching pool price data', fetchingError)
-      //     setError(true)
-      //   }
-      // }
-      // const { data, error: fetchingError } = await fetchPoolPriceData(
-      //   address,
-      //   interval,
-      //   startTimestamp,
-      //   dataClient
-      // )
-
-    }
-
-    if (!priceData && !error) {
-      fetch()
-    }
-  }, [
-    error,
-    interval,
-    oldestTimestampFetched,
-    priceData,
-    startTimestamp,
-    timeWindow,
-    limitlessPoolAddress,
-    uniswapPoolAddress,
-  ])
-
-  // const fakePriceData = [
-  //   {
-  //     time: 1682377200,
-  //     open: 5.0465835688061,
-  //     close: 16.0465835688061,
-  //     high: 20.0465835688061,
-  //     low: 3.0465835688061,
-  //   },
-  //   {
-  //     time: 1682377350,
-  //     open: 13.0465835688061,
-  //     close: 16.0465835688061,
-  //     high: 12.0465835688061,
-  //     low: 20.0465835688061,
-  //   },
-  //   {
-  //     time: 1682377900,
-  //     open: 50.0465835688061,
-  //     close: 25.0465835688061,
-  //     high: 80.0465835688061,
-  //     low: 20.0465835688061,
-  //   },    
-  // ]
-  // return data
   return priceData?.priceData ?? []
 }

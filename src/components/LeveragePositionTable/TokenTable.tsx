@@ -26,7 +26,7 @@ const GridContainer = styled.div`
   border-top-left-radius: 0;
   justify-content: center;
   align-items: center;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  // border: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
 
 const TokenDataContainer = styled.div`
@@ -80,22 +80,21 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
   )
 }
 
-export default function PositionsTable({positions, loading}: {positions: LimitlessPositionDetails[], loading: boolean}) {
+export default function PositionsTable({positions, loading}: {positions?: LimitlessPositionDetails[], loading: boolean}) {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   // const { tokens, tokenSortRank, loadingTokens, sparklines } = useTopTokens(chainName)
 
   /* loading and error state */
-  if (loading) {
-    return <LoadingTokenTable rowCount={PAGE_SIZE} />
-  } else if (false) {
-  } else if (positions.length == 0) {
+  if (loading || !positions) {
+    return <LoadingTokenTable rowCount={1} />
+  } else if (positions?.length == 0) {
     return <NoTokensState message={<Trans>No positions found</Trans>} />
   } else {
     return (
       <GridContainer>
         <HeaderRow />
         <TokenDataContainer>
-          {positions.map(
+          {positions?.map(
             (position, index) =>
             position?.tokenId && (
                 <LoadedRow

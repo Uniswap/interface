@@ -161,8 +161,8 @@ export const PoolDataSection = ({
 							}
 						)
 
-						let token1Reserve = await token0Contract.callStatic.balanceOf(limitlessPoolAddress)
-						let token0Reserve = await token1Contract.callStatic.balanceOf(limitlessPoolAddress)
+						let token1Reserve = await token1Contract.callStatic.balanceOf(limitlessPoolAddress)
+						let token0Reserve = await token0Contract.callStatic.balanceOf(limitlessPoolAddress)
 
 						const priceQuery = await uniswapClient.query(
 							{

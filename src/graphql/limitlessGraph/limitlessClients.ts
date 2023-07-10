@@ -5,7 +5,7 @@ import store from '../../state/index'
 import { useWeb3React } from '@web3-react/core'
 
 const CHAIN_SUBGRAPH_URL: Record<number, string> = {
-  [SupportedChainId.POLYGON_MUMBAI]: 'https://api.studio.thegraph.com/query/40393/limitless-subgraph-mumbai/0.0.20',
+  [SupportedChainId.SEPOLIA]: 'https://api.studio.thegraph.com/query/40393/limitless-sepolia/version/latest',
 }
 
 const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[SupportedChainId.MAINNET] })
@@ -28,7 +28,8 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 
 export const limitlessClient = new ApolloClient({
   cache: new InMemoryCache(),
-  link: concat(authMiddleware, httpLink),
+  uri: 'https://api.studio.thegraph.com/query/40393/limitless-sepolia/version/latest'
+  //link: concat(authMiddleware, httpLink),
 })
 
 export function useLimitlessSubgraph(): ApolloClient<NormalizedCacheObject> {

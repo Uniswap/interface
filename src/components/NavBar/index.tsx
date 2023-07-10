@@ -133,12 +133,12 @@ const Navbar = ({ blur }: { blur: boolean }) => {
             </Row>
           </Box>
           <Box className={styles.searchContainer}>
-            <SearchBar />
+            {/* <SearchBar /> */}
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
               <Box position="relative" display={{ sm: 'flex', navSearchInputVisible: 'none' }}>
-                <SearchBar />
+                {/* <SearchBar /> */}
               </Box>
               {/* {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />} */}
               {!isNftPage && (

@@ -44,7 +44,7 @@ export function useRecentlySearchedAssets() {
   const shortenedHistory = useMemo(() => history.slice(0, 4), [history])
 
   const { data: queryData, loading } = useRecentlySearchedAssetsQuery({
-    variables: {
+    variables: {  
       collectionAddresses: shortenedHistory.filter((asset) => asset.isNft).map((asset) => asset.address),
       contracts: shortenedHistory
         .filter((asset) => !asset.isNft)

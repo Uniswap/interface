@@ -87,7 +87,7 @@ const MobileBottomBar = styled.div`
 
 const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   ${flexRowNoWrap};
-  background-color: ${({ theme, transparent }) => !transparent && theme.backgroundSurface};
+  background-color: ${({ theme, transparent }) => !transparent && theme.backgroundBackdrop};
   border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;

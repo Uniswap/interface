@@ -49,6 +49,7 @@ import { Fraction, Price } from '@uniswap/sdk-core'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { formatSymbol } from 'lib/utils/formatSymbol'
 import Row from 'components/Row'
+import { Box } from 'rebass'
 // import { FlexStartRow } from 'components/LeveragePositionTable/TokenRow'
 
 const FlexStartRow = styled(Row)`
@@ -79,8 +80,6 @@ const StyledTokenRow = styled.div<{
     padding-top: ${first ? '8px' : '0px'};
     padding-bottom: ${last ? '8px' : '0px'};
   `}
-  padding-left: 8px;
-  padding-right: 8px;
   transition: ${({
   theme: {
     transition: { duration, timing },
@@ -145,7 +144,6 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   font-size: 14px;
   height: 48px;
   line-height: 16px;
-  padding: 0px 12px;
   width: 100%;
   justify-content: center;
 
@@ -169,7 +167,6 @@ const ListNumberCell = styled(Cell) <{ header: boolean }>`
 `
 const DataCell = styled(Cell) <{ sortable: boolean }>`
   justify-content: flex-end;
-  min-width: 80px;
   user-select: ${({ sortable }) => (sortable ? 'none' : 'unset')};
   transition: ${({
   theme: {
@@ -348,7 +345,11 @@ const InfoIconContainer = styled.div`
   align-items: center;
   cursor: help;
 `
-const PositionInfo = styled(AutoColumn)`
+const PositionInfo = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
   margin-left: 8px;
 `
 
@@ -498,8 +499,7 @@ function PositionRow({
 
   const rowCells = (
     <>
-      {/* <ListNumberCell header={header}>{listNumber}</ListNumberCell> */}
-      {showReduceCollateral && (
+      {!header && showReduceCollateral && (
         <ReduceBorrowCollateralModal
         trader={account}
         isOpen={showReduceCollateral}
@@ -531,12 +531,12 @@ function PositionRow({
       )}
       <NameCell data-testid="name-cell">{positionInfo}</NameCell>
       <PriceCell data-testid="value-cell" sortable={header}>
-      <EditCell onClick={() => {setShowReduceBorrowed(true)}} disabled={false}>
+      <EditCell onClick={() => {!header && setShowReduceBorrowed(true)}} disabled={false}>
         {borrowedAmount}
         </EditCell>
       </PriceCell>
       <PriceCell data-testid="collateral-cell" sortable={header}>
-        <EditCell onClick={() => {setShowReduceCollateral(true)}} disabled={false}>
+        <EditCell onClick={() => {!header && setShowReduceCollateral(true)}} disabled={false}>
         {collateral}
         </EditCell>
       </PriceCell>
@@ -554,7 +554,6 @@ function PositionRow({
           actions
         }
       </ActionCell>
-      {/* <SparkLineCell>{sparkLine}</SparkLineCell> */}
     </>
   )
 
@@ -567,7 +566,9 @@ export function HeaderRow() {
   return (
     <PositionRow
       header={true}
-      positionInfo={<ThemedText.TableText>Position</ThemedText.TableText>}
+      positionInfo={<Box marginLeft="8px">
+        <ThemedText.TableText>Position</ThemedText.TableText>
+      </Box>}
       borrowedAmount={<HeaderCell category={PositionSortMethod.BORROWED_AMOUNT} />}
       collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
       remainingPremium={<HeaderCell category={PositionSortMethod.REMAINING} />}
@@ -595,8 +596,6 @@ export function LoadingRow(props: { first?: boolean; last?: boolean }) {
       collateral={<LoadingBubble />}
       repaymentTime={<LoadingBubble />}
       remainingPremium={<LoadingBubble />}
-      // recentPremium={<LoadingBubble />}
-      // unusedPremium={<LoadingBubble />}
       {...props}
     />
   )
@@ -615,6 +614,19 @@ export const UnderlineText = styled(Row)`
 width: fit-content;
 align-items: flex-start;
 text-decoration: ${({theme}) =>  `underline dashed ${theme.textPrimary}`};
+`
+
+const OutputText = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  height: fit-content;
+  color: ${({theme}) => theme.textSecondary};
+`
+const InputText = styled.div`
+  font-size: 12px;
+  font-weight: 600;
+  height: fit-content;
+  color: ${({theme}) => theme.textSecondary};
 `
 
 
@@ -693,16 +705,19 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           // listNumber={sortRank}
           positionInfo={
             <ClickableContent>
-              <RowBetween>
-                <PositionInfo>
-                  {inputCurrencySymbol} {"<->"} {outputCurrencySymbol}
+              <PositionInfo>
+                  <OutputText>
+                    {outputCurrencySymbol}
+                  </OutputText>
+                  <InputText>
+                  {inputCurrencySymbol}
+                  </InputText>
                 </PositionInfo>
-              </RowBetween>
             </ClickableContent>
           }
           ltv={
             <Trans>
-                {new BN((Number(ltv) * 100)).toString()}%
+                {formatNumber(Number(ltv) * 100, NumberType.SwapTradeAmount)}%
             </Trans>
           }
           borrowedAmount={

@@ -148,8 +148,8 @@ export const SearchBarDropdown = ({
 
   const { pathname } = useLocation()
   const { chainId } = useWeb3React()
-  const isNFTPage = useIsNftPage()
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
+  const isNFTPage = false // useIsNftPage()
+  const isNftGraphqlEnabled = false// useNftGraphqlEnabled()
   const isTokenPage = pathname.includes('/tokens')
   const [resultsState, setResultsState] = useState<ReactNode>()
 
@@ -249,39 +249,29 @@ export const SearchBarDropdown = ({
           </Box>
         )
 
-      const collectionSearchResults =
-        collections.length > 0 ? (
-          <SearchBarDropdownSection
-            hoveredIndex={hoveredIndex}
-            startingIndex={showCollectionsFirst ? 0 : tokens.length}
-            setHoveredIndex={setHoveredIndex}
-            toggleOpen={toggleOpen}
-            suggestions={collections}
-            eventProperties={{
-              suggestion_type: NavBarSearchTypes.COLLECTION_SUGGESTION,
-              ...eventProperties,
-            }}
-            header={<Trans>Pairs</Trans>}
-          />
-        ) : (
-          <Box className={styles.notFoundContainer}>No Pairs found.</Box>
-        )
+      // const collectionSearchResults =
+      //   collections.length > 0 ? (
+      //     <SearchBarDropdownSection
+      //       hoveredIndex={hoveredIndex}
+      //       startingIndex={showCollectionsFirst ? 0 : tokens.length}
+      //       setHoveredIndex={setHoveredIndex}
+      //       toggleOpen={toggleOpen}
+      //       suggestions={collections}
+      //       eventProperties={{
+      //         suggestion_type: NavBarSearchTypes.COLLECTION_SUGGESTION,
+      //         ...eventProperties,
+      //       }}
+      //       header={<Trans>Pairs</Trans>}
+      //     />
+      //   ) : (
+      //     <Box className={styles.notFoundContainer}>No Pairs found.</Box>
+      //   )
 
       const currentState = () =>
         hasInput ? (
           // Empty or Up to 8 combined tokens and nfts
           <Column gap="20">
-            {showCollectionsFirst ? (
-              <>
-                {collectionSearchResults}
-                {tokenSearchResults}
-              </>
-            ) : (
-              <>
-                {tokenSearchResults}
-                {collectionSearchResults}
-              </>
-            )}
+            {tokenSearchResults}
           </Column>
         ) : (
           // Recent Searches, Trending Tokens, Trending Collections
@@ -302,7 +292,7 @@ export const SearchBarDropdown = ({
                 isLoading={!searchHistory}
               />
             )}
-            {/*!isNFTPage && (
+            {/* !isNFTPage && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={shortenedHistory.length}
@@ -317,7 +307,7 @@ export const SearchBarDropdown = ({
                 headerIcon={<TrendingArrow />}
                 isLoading={!trendingTokenData}
               />
-            )*/}
+            ) */}
             {/*!isTokenPage && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}

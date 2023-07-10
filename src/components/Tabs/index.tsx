@@ -9,12 +9,21 @@ import { ActiveSwapTab } from "state/swap/actions";
 
 const TabContainer = styled.div;
 
-const TabHeader = styled.div<{ isActive: boolean}>`
+const TabHeader = styled.div<{ isActive: boolean, first: boolean, last: boolean}>`
   padding: 10px 20px;
-  background-color: ${({ theme, isActive }) => isActive ? theme.background : 'black'};
+  background-color: ${({ theme, isActive }) => isActive ? theme.backgroundSurface : theme.background};
   cursor: pointer;
-  border-radius: 10px;
+  // border-radius: 10px;
+  border-top-left-radius: ${({first}) => first ? "8px" : "0"};
+  border-top-right-radius: ${({last}) => last ? "8px" : "0"};
+  color: ${({ theme, isActive }) => (isActive ? theme.textSecondary : theme.textTertiary)};
+  font-size: 16px;
+  font-weight: 500;
 
+  :hover {
+    user-select: initial;
+    color: ${({ theme }) => theme.textSecondary};
+  }
 `
 
 
@@ -24,7 +33,7 @@ export default function SwapTabHeader({
   activeTab,
   handleSetTab
 }: {
-  activeTab: number,
+  activeTab: number,  
   handleSetTab: () => void
 }) {
   const isTrade = activeTab == ActiveSwapTab.TRADE
@@ -56,18 +65,20 @@ export const TabContent = ({id, activeTab, children}: {
  );
 };
 
-export const TabNavItem =  ({ id, activeTab, setActiveTab, children }: {
+export const TabNavItem =  ({ id, activeTab, setActiveTab, first, last, children }: {
   id: number,
   activeTab: number,
   setActiveTab: (id: number) => void,
-  children: React.ReactNode
+  children: React.ReactNode,
+  first?: boolean,
+  last?: boolean
 }) => {
     const handleClick = useCallback(() => {
       setActiveTab(id);
     }, [id, setActiveTab]);
     
    return (
-      <TabHeader isActive={id === activeTab} onClick={handleClick}>
+      <TabHeader isActive={id === activeTab} onClick={handleClick} first={first ?? false} last={last ?? false}>
         { children }
       </TabHeader>
     );

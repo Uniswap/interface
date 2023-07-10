@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 
 import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
 import { chainIdToBackendName } from './util'
+import { useTokenSearchQuery } from 'graphql/limitlessGraph/poolPriceData'
 
 gql`
   query SearchTokens($searchQuery: String!) {
@@ -73,30 +74,35 @@ function searchTokenSortFunction(
 }
 
 export function useSearchTokens(searchQuery: string, chainId: number) {
-  const { data, loading, error } = useSearchTokensQuery({
-    variables: {
-      searchQuery,
-    },
-    skip: !searchQuery,
-  })
+  // const { data, loading, error } = useSearchTokensQuery({
+  //   variables: {
+  //     searchQuery,
+  //   },
+  //   skip: !searchQuery,
+  // })
 
-  const sortedTokens = useMemo(() => {
-    const searchChain = chainIdToBackendName(chainId)
-    // Stores results, allowing overwriting cross-chain tokens w/ more 'relevant token'
-    const selectionMap: { [projectId: string]: SearchToken } = {}
-    data?.searchTokens?.forEach((token) => {
-      if (token.project?.id) {
-        const existing = selectionMap[token.project.id]
-        if (isMoreRevelantToken(token, existing, searchChain)) selectionMap[token.project.id] = token
-      }
-    })
-    return Object.values(selectionMap).sort(
-      searchTokenSortFunction.bind(null, searchChain, WRAPPED_NATIVE_CURRENCY[chainId]?.address)
-    )
-  }, [data, chainId])
+  const {data, loading, error} = useTokenSearchQuery(searchQuery)
+// console.log('searchQuery', data)
+
+  // const sortedTokens = useMemo(() => {
+  //   const searchChain = chainIdToBackendName(chainId)
+  //   // Stores results, allowing overwriting cross-chain tokens w/ more 'relevant token'
+  //   const selectionMap: { [projectId: string]: SearchToken } = {};
+  //   (data as any)?.tokenSearch?.forEach((token: any) => {
+  //     if (token.project?.id) {
+  //       const existing = selectionMap[token.project.id]
+  //       if (isMoreRevelantToken(token, existing, searchChain)) selectionMap[token.project.id] = token
+  //     }
+  //   })
+  //   return Object.values(selectionMap).sort(
+  //     searchTokenSortFunction.bind(null, searchChain, WRAPPED_NATIVE_CURRENCY[chainId]?.address)
+  //   )
+  // }, [data, chainId])
+
 
   return {
-    data: sortedTokens,
+    data: (data as any)?.tokenSearch,
+    // data: data,
     loading,
     error,
   }

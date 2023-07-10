@@ -23,7 +23,7 @@ export const StatWrapper = styled.div`
   font-size: 14px;
   min-width: 168px;
   flex: 1;
-  padding: 8px 0px;
+  padding: 2px 0px;
 `
 const TokenStatsSection = styled.div`
   display: flex;
@@ -40,8 +40,8 @@ const Header = styled(ThemedText.MediumHeader)`
 `
 
 const StatPrice = styled.div`
-  margin-top: 4px;
-  font-size: 28px;
+  margin-top: 2px;
+  font-size: 18px;
   color: ${({ theme }) => theme.textPrimary};
 `
 const NoData = styled.div`

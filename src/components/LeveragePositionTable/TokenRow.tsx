@@ -50,6 +50,7 @@ import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { formatSymbol } from 'lib/utils/formatSymbol'
 import { TruncatedText } from 'components/swap/styleds'
 import { EditCell, UnderlineText } from 'components/BorrowPositionTable/TokenRow'
+import { Box } from 'rebass'
 
 const Cell = styled.div`
   display: flex;
@@ -74,8 +75,8 @@ const StyledTokenRow = styled.div<{
     padding-top: ${first ? '8px' : '0px'};
     padding-bottom: ${last ? '8px' : '0px'};
   `}
-  padding-left: 8px;
-  padding-right: 8px;
+  // padding-left: 8px;
+  // padding-right: 8px;
   transition: ${({
   theme: {
     transition: { duration, timing },
@@ -140,7 +141,6 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   font-size: 14px;
   height: 48px;
   line-height: 16px;
-  padding: 0px 12px;
   width: 100%;
   justify-content: center;
 
@@ -164,7 +164,6 @@ const ListNumberCell = styled(Cell) <{ header: boolean }>`
 `
 const DataCell = styled(Cell) <{ sortable: boolean }>`
   justify-content: flex-end;
-  min-width: 80px;
   user-select: ${({ sortable }) => (sortable ? 'none' : 'unset')};
   transition: ${({
   theme: {
@@ -491,7 +490,7 @@ function PositionRow({
   const rowCells = (
     <>
       {/* <ListNumberCell header={header}>{listNumber}</ListNumberCell> */}
-      {showReduce && (
+      {!header && showReduce && (
         <ReducePositionModal
           isOpen={showReduce}
           trader={account}
@@ -502,7 +501,7 @@ function PositionRow({
           onConfirm={() => { }}
         />
       )}
-      {showAddPremium && (
+      {!header && showAddPremium && (
         <AddLeveragePremiumModal
           trader={account}
           isOpen={showAddPremium}
@@ -552,7 +551,9 @@ export function HeaderRow() {
   return (
     <PositionRow
       header={true}
-      positionInfo={<ThemedText.TableText>Position</ThemedText.TableText>}
+      positionInfo={<Box marginLeft="8px">
+        <ThemedText.TableText>Position</ThemedText.TableText>
+      </Box>}
       value={<HeaderCell category={PositionSortMethod.VALUE} />}
       collateral={<HeaderCell category={PositionSortMethod.COLLATERAL} />}
       PnL={<HeaderCell category={PositionSortMethod.PNL} />}
@@ -774,12 +775,12 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
             <Trans>
               <AutoRow>
               <RowBetween>
-                  <ArrowCell>
-                    {arrow}
-                  </ArrowCell>
                   <DeltaText delta={Number(pnl)}>
                     {pnl ? `${formatNumber(Number(pnl), NumberType.SwapTradeAmount)} ${inputCurrencySymbol}` : "-"} 
-                  </DeltaText>              
+                  </DeltaText>   
+                  {/* <ArrowCell>
+                    {arrow}
+                  </ArrowCell>            */}
                 </RowBetween>
               
               </AutoRow>

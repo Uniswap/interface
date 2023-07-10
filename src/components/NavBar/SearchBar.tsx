@@ -61,11 +61,11 @@ export const SearchBar = () => {
 
   const { chainId } = useWeb3React()
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
-
-
-  const isNFTPage = false; // useIsNftPage()
-
+  // console.log('tokens', tokens)
+  const isNFTPage = false
   const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
+
+  // const reducedTokens = tokens?.slice(0, 5);
 
   // close dropdown on escape
   useEffect(() => {
