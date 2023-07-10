@@ -45,11 +45,18 @@ import InvalidTokenDetails from './InvalidTokenDetails'
 const TokenSymbol = styled.span`
   text-transform: uppercase;
   color: ${({ theme }) => theme.textSecondary};
+  margin-left: 8px;
 `
 const TokenActions = styled.div`
   display: flex;
   gap: 16px;
   color: ${({ theme }) => theme.textSecondary};
+`
+const TokenTitle = styled.div`
+  display: flex;
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: inline;
+  }
 `
 
 function useOnChainToken(address: string | undefined, skip: boolean) {
@@ -204,9 +211,10 @@ export default function TokenDetails({
             <TokenInfoContainer data-testid="token-info-container">
               <TokenNameCell>
                 <CurrencyLogo currency={detailedToken} size="32px" hideL2Icon={false} />
-
-                {detailedToken.name ?? <Trans>Name not found</Trans>}
-                <TokenSymbol>{detailedToken.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+                <TokenTitle>
+                  {detailedToken.name ?? <Trans>Name not found</Trans>}
+                  <TokenSymbol>{detailedToken.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+                </TokenTitle>
               </TokenNameCell>
               <TokenActions>
                 <ShareButton currency={detailedToken} />
