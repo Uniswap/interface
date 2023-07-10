@@ -58,7 +58,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         blurOnSubmit={false}
         maxFontSizeMultiplier={1.4}
         multiline={true}
-        numberOfLines={4}
         onBlur={[Function]}
         onChangeText={[Function]}
         onFocus={[Function]}
@@ -85,6 +84,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           ]
         }
         testID="import_account_form/input"
+        textAlignVertical="bottom"
       />
     </View>
     <View

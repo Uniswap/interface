@@ -232,7 +232,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       blurOnSubmit={true}
                       maxFontSizeMultiplier={1.4}
                       multiline={true}
-                      numberOfLines={4}
                       onBlur={[Function]}
                       onChangeText={[Function]}
                       onFocus={[Function]}
@@ -259,6 +258,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                         ]
                       }
                       testID="import_account_form/input"
+                      textAlignVertical="bottom"
                     />
                   </View>
                   <View

@@ -39,3 +39,7 @@ dist/out-tsc/*
 
 # ci
 .ci-cache/
+
+
+# JetBrains
+.idea/

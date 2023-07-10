@@ -6,14 +6,13 @@ import {
   LayoutRectangle,
   StyleSheet,
   TextInput as NativeTextInput,
-  View,
 } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import PasteButton from 'src/components/buttons/PasteButton'
-import { TextInput } from 'src/components/input/TextInput'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
+import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { SectionName } from 'src/features/telemetry/constants'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { Theme } from 'ui/src/theme/restyle/theme'
@@ -104,58 +103,22 @@ export function GenericImportForm({
           py={py}
           width="100%">
           {/* TODO: [MOB-225] make Box press re-focus TextInput. Fine for now since TexInput has autoFocus */}
-          <Box
-            alignItems="flex-end"
-            flexDirection="row"
-            justifyContent={inputAlignment}
-            width="100%">
-            <TextInput
-              ref={textInputRef}
-              autoFocus
-              autoCapitalize="none"
-              autoCorrect={Boolean(autoCorrect)}
-              backgroundColor="none"
-              blurOnSubmit={blurOnSubmit ?? false}
-              fontSize={INPUT_FONT_SIZE}
-              justifyContent="center"
-              lineHeight={INPUT_FONT_SIZE}
-              maxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
-              multiline={true}
-              numberOfLines={4}
-              px="none"
-              py="none"
-              returnKeyType="done"
-              scrollEnabled={false}
-              selectionColor={theme.colors.textPrimary}
-              spellCheck={false}
-              testID="import_account_form/input"
-              textAlign={inputAlignment === 'center' || !value ? 'left' : 'center'}
-              value={value}
-              width={value ? 'auto' : (layout?.width || 0) + theme.spacing.spacing8}
-              onBlur={handleBlur}
-              onChangeText={onChange}
-              onFocus={handleFocus}
-              onSubmitEditing={handleSubmit}
-            />
-            {inputSuffix && value && !value.includes(inputSuffix) ? (
-              <View pointerEvents="none">
-                <TextInput
-                  backgroundColor="none"
-                  color="textSecondary"
-                  editable={false}
-                  fontSize={INPUT_FONT_SIZE}
-                  justifyContent="center"
-                  lineHeight={INPUT_FONT_SIZE}
-                  maxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
-                  multiline={true}
-                  px="none"
-                  py="none"
-                  scrollEnabled={false}
-                  value={inputSuffix}
-                />
-              </View>
-            ) : null}
-          </Box>
+          <InputWithSuffix
+            autoCorrect={Boolean(autoCorrect)}
+            blurOnSubmit={blurOnSubmit ?? false}
+            inputAlignment={inputAlignment}
+            inputFontSize={INPUT_FONT_SIZE}
+            inputMaxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
+            inputSuffix={inputSuffix}
+            layout={layout}
+            textInputRef={textInputRef}
+            theme={theme}
+            value={value}
+            onBlur={handleBlur}
+            onChangeText={onChange}
+            onFocus={handleFocus}
+            onSubmitEditing={handleSubmit}
+          />
           {!value && (
             <Flex
               centered
