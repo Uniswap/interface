@@ -11,9 +11,7 @@ const baseNavDropdown = style([
     paddingBottom: '8',
     paddingTop: '8',
   }),
-  {
-    boxShadow: '0px 4px 12px 0px #00000026',
-  },
+  {},
 ])
 
 export const NavDropdown = style([
@@ -22,7 +20,7 @@ export const NavDropdown = style([
     position: 'absolute',
     borderRadius: '12',
   }),
-  {},
+  { boxShadow: '0px 4px 12px 0px #00000026' },
 ])
 
 export const mobileNavDropdown = style([
@@ -32,7 +30,7 @@ export const mobileNavDropdown = style([
     borderTopRightRadius: '12',
     borderTopLeftRadius: '12',
     top: 'unset',
-    bottom: '56',
+    bottom: '50',
     left: '0',
     right: '0',
     width: 'full',
