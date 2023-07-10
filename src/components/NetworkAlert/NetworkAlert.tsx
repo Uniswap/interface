@@ -130,7 +130,7 @@ const LinkOutToBridge = styled(ExternalLink)`
   padding: 6px 8px;
   text-decoration: none !important;
   width: 100%;
-  z-index: ${Z_INDEX.hover};
+  z-index: ${Z_INDEX.deprecated_zero};
 `
 
 const StyledArrowUpRight = styled(ArrowUpRight)`
