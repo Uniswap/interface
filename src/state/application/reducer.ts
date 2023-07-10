@@ -44,6 +44,7 @@ export interface ApplicationState {
   readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
   readonly openModal: ApplicationModal | null
   readonly popupList: PopupList
+  readonly buyTokenCode?: string
 }
 
 const initialState: ApplicationState = {
@@ -51,6 +52,7 @@ const initialState: ApplicationState = {
   chainId: null,
   openModal: null,
   popupList: [],
+  buyTokenCode: 'eth',
 }
 
 const applicationSlice = createSlice({
@@ -87,9 +89,12 @@ const applicationSlice = createSlice({
         return popup
       })
     },
+    updateBuyTokenCode(state, action) {
+      state.buyTokenCode = action.payload
+    },
   },
 })
 
-export const { updateChainId, setFiatOnrampAvailability, setOpenModal, addPopup, removePopup } =
+export const { updateChainId, setFiatOnrampAvailability, setOpenModal, addPopup, removePopup, updateBuyTokenCode } =
   applicationSlice.actions
 export default applicationSlice.reducer

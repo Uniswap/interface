@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
-import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
+import { useCloseModal, useModalIsOpen, useUpdateBuyTokenCode } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 import { CustomLightSpinner, ThemedText } from 'theme'
@@ -78,6 +78,7 @@ export default function FiatOnrampModal() {
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [buyTokenCode] = useUpdateBuyTokenCode()
 
   const fetchSignedIframeUrl = useCallback(async () => {
     if (!account) {
@@ -97,7 +98,7 @@ export default function FiatOnrampModal() {
         body: JSON.stringify({
           theme: isDarkMode ? 'dark' : 'light',
           colorCode: theme.accentAction,
-          defaultCurrencyCode: 'eth',
+          defaultCurrencyCode: buyTokenCode ?? 'eth',
           redirectUrl: 'https://app.uniswap.org/#/swap',
           walletAddresses: JSON.stringify(
             MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(

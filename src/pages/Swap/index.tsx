@@ -15,6 +15,7 @@ import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
+import { MOONPAY_SUPPORTED_CURRENCY_CODES } from 'components/FiatOnrampModal'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
@@ -35,6 +36,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from
 import { ArrowDown } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useUpdateBuyTokenCode } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
@@ -130,6 +132,51 @@ function largerPercentValue(a?: Percent, b?: Percent) {
   return undefined
 }
 
+function CHAIN_ADDRESS_TO_CODE(chain: ChainId | undefined, address: string | undefined) {
+  switch (chain) {
+    case ChainId.MAINNET:
+      switch (address) {
+        case 'NATIVE':
+          return 'eth'
+        case '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48':
+          return 'usdc'
+        case '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599':
+          return 'wbtc'
+        case '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2':
+          return 'weth'
+        case '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0':
+          return 'polygon'
+        default:
+          return 'eth'
+      }
+    case ChainId.ARBITRUM_ONE:
+      switch (address) {
+        case '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9':
+          return 'usdc_arbitrum'
+        default:
+          return 'eth_arbitrum'
+      }
+    case ChainId.OPTIMISM:
+      switch (address) {
+        case '0x2791bca1f2de4661ed88a30c99a7a9449aa84174':
+          return 'usdc_optimism'
+        default:
+          return 'eth_optimism'
+      }
+    case ChainId.POLYGON:
+      switch (address) {
+        case '0x2791bca1f2de4661ed88a30c99a7a9449aa84174':
+          return 'usdc_polygon'
+        case '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619':
+          return 'matic_polygon'
+        default:
+          return 'eth_polygon'
+      }
+    default:
+      return 'eth'
+  }
+}
+
 const TRADE_STRING = 'SwapRouter'
 
 export default function SwapPage({ className }: { className?: string }) {
@@ -200,6 +247,18 @@ export function Swap({
   )
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
+  }, [])
+
+  const [, setBuyTokenCode] = useUpdateBuyTokenCode()
+
+  useEffect(() => {
+    async function getMoonpayCurrencies() {
+      const tokenAddress = prefilledState?.[Field.OUTPUT]?.currencyId?.toLowerCase() ?? 'eth'
+      let code = CHAIN_ADDRESS_TO_CODE(chainId, tokenAddress)
+      code = MOONPAY_SUPPORTED_CURRENCY_CODES.includes(code) ? code : 'eth'
+      setBuyTokenCode(code)
+    }
+    getMoonpayCurrencies()
   }, [])
 
   // dismiss warning if all imported tokens are in active lists
