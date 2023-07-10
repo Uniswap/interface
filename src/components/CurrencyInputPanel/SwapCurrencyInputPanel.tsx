@@ -266,7 +266,7 @@ export default function SwapCurrencyInputPanel({
       <Container hideInput={hideInput}>
       {isTrade ? (
         <Trans>{isInput ? ("Pay") :
-        (isLevered ? "Long" : "What you get")
+        (isLevered ? "Total Output" : "What you get")
         }</Trans>
         ): (
         <Trans>{isInput? "Collateral": 'Added Debt'}</Trans>
@@ -292,7 +292,6 @@ export default function SwapCurrencyInputPanel({
               $loading={loading}
             />
           )}
-
           <CurrencySelect
             disabled={!chainAllowed}
             visible={currency !== undefined}
