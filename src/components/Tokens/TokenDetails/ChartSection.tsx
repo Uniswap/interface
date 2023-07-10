@@ -50,6 +50,7 @@ function usePriceHistory(tokenData: TokenData, timePeriod: TimePeriod): PricePoi
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await fetchTokenPriceData(tokenData.address, ONE_HOUR_SECONDS, startTimestamp, qtyDataPerTime)
+      console.log('tokenData.address', tokenData.address)
       setData(data)
     }
 
@@ -62,8 +63,8 @@ function usePriceHistory(tokenData: TokenData, timePeriod: TimePeriod): PricePoi
     const priceMap = new Map()
 
     data.forEach((price) => {
-      if (!priceMap.has(price.close)) {
-        priceMap.set(price.close, {
+      if (!priceMap.has(price.time)) {
+        priceMap.set(price.time, {
           timestamp: price.time,
           value: price.close,
         })

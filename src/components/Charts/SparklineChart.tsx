@@ -72,11 +72,11 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange }: Spark
   }, [startTimestamp, tokenData.address, qtyDataPerTime])
 
   const pricePoints = useMemo(() => {
-    const priceMap = new Map()
+    const priceMap = new Map<number, PricePoint>()
 
     data.forEach((price) => {
-      if (!priceMap.has(price.close)) {
-        priceMap.set(price.close, {
+      if (!priceMap.has(price.time)) {
+        priceMap.set(price.time, {
           timestamp: price.time,
           value: price.close,
         })
