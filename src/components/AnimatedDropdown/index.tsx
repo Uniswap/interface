@@ -22,14 +22,7 @@ export default function AnimatedDropdown({ open, children }: React.PropsWithChil
     },
   })
   return (
-    <animated.div
-      style={{
-        ...props,
-        overflow: 'hidden',
-        width: '100%',
-        willChange: 'height',
-      }}
-    >
+    <animated.div style={{ ...props, overflow: 'hidden', width: '100%', willChange: 'height' }}>
       <div ref={ref}>{children}</div>
     </animated.div>
   )

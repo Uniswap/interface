@@ -1,5 +1,6 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ActivationStatus, useActivationState } from 'connection/activate'
@@ -56,6 +57,7 @@ const IconWrapper = styled.div`
     align-items: flex-end;
   `};
 `
+
 const Wrapper = styled.div<{ disabled: boolean }>`
   align-items: stretch;
   display: flex;
@@ -80,8 +82,9 @@ interface OptionProps {
 }
 export default function Option({ connection }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
-  const toggleAccountDrawerOpen = useToggleAccountDrawer()
-  const activate = () => tryActivation(connection, toggleAccountDrawerOpen)
+  const toggleAccountDrawer = useToggleAccountDrawer()
+  const { chainId } = useWeb3React()
+  const activate = () => tryActivation(connection, toggleAccountDrawer, chainId)
 
   const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
   const isCurrentOptionPending = isSomeOptionPending && activationState.connection.type === connection.type

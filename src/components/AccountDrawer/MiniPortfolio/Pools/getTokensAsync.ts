@@ -1,8 +1,7 @@
-import { Token } from '@uniswap/sdk-core'
+import { ChainId, Token } from '@uniswap/sdk-core'
 import ERC20_ABI from 'abis/erc20.json'
 import { Erc20Interface } from 'abis/types/Erc20'
 import { Erc20Bytes32Interface } from 'abis/types/Erc20Bytes32'
-import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { Interface } from 'ethers/lib/utils'
 import { UniswapInterfaceMulticall } from 'types/v3'
@@ -38,7 +37,7 @@ async function fetchChunk(multicall: UniswapInterfaceMulticall, chunk: Call[]): 
   }
 }
 
-function tryParseToken(address: string, chainId: SupportedChainId, data: CallResult[]) {
+function tryParseToken(address: string, chainId: ChainId, data: CallResult[]) {
   try {
     const [nameData, symbolData, decimalsData, nameDataBytes32, symbolDataBytes32] = data
 
@@ -61,7 +60,7 @@ function tryParseToken(address: string, chainId: SupportedChainId, data: CallRes
   }
 }
 
-function parseTokens(addresses: string[], chainId: SupportedChainId, returnData: CallResult[]) {
+function parseTokens(addresses: string[], chainId: ChainId, returnData: CallResult[]) {
   const tokenDataSlices = arrayToSlices(returnData, 5)
 
   return tokenDataSlices.reduce((acc: TokenMap, slice, index) => {
@@ -90,7 +89,7 @@ const TokenPromiseCache: { [key: CurrencyKey]: Promise<Token | undefined> | unde
 // Returns tokens using a single RPC call to the multicall contract
 export async function getTokensAsync(
   addresses: string[],
-  chainId: SupportedChainId,
+  chainId: ChainId,
   multicall: UniswapInterfaceMulticall
 ): Promise<TokenMap> {
   if (addresses.length === 0) return {}

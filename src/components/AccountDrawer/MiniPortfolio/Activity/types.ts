@@ -1,11 +1,10 @@
-import { Currency } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 
 export type Activity = {
   hash: string
-  chainId: SupportedChainId
+  chainId: ChainId
   status: TransactionStatus
   // TODO (UniswapX): decouple Activity from UniswapXOrderStatus once we can link UniswapXScan instead of needing data for modal
   offchainOrderStatus?: UniswapXOrderStatus

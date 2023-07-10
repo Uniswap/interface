@@ -1,11 +1,10 @@
 import { t, Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { ColumnCenter } from 'components/Column'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { SupportedChainId } from 'constants/chains'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
@@ -265,7 +264,7 @@ export function PendingModalContent({
   }
 
   // On mainnet, we show the success icon once the tx is sent, since it takes longer to confirm than on L2s.
-  const showSuccess = swapConfirmed || (swapPending && chainId === SupportedChainId.MAINNET)
+  const showSuccess = swapConfirmed || (swapPending && chainId === ChainId.MAINNET)
 
   return (
     <PendingModalContainer gap="lg">

@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { TradeType } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/smart-order-router'
+import { ChainId, TradeType } from '@uniswap/sdk-core'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
@@ -93,7 +92,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   return [uniswapx, classic]
 }
 
-export const routingApi = createApi({
+export const routingApiV2 = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.uniswap.org/v2/',
@@ -155,7 +154,10 @@ export const routingApi = createApi({
                 // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
                 const errorData = response.error.data as any
                 // NO_ROUTE should be treated as a valid response to prevent retries.
-                if (typeof errorData === 'object' && errorData?.errorCode === 'NO_ROUTE') {
+                if (
+                  typeof errorData === 'object' &&
+                  (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
+                ) {
                   return { data: { state: QuoteState.NOT_FOUND } }
                 }
               } catch {
@@ -199,4 +201,4 @@ export const routingApi = createApi({
   }),
 })
 
-export const { useGetQuoteQuery } = routingApi
+export const { useGetQuoteQuery } = routingApiV2

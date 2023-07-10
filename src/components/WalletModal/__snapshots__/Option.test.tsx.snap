@@ -108,7 +108,7 @@ exports[`Wallet Option renders default state 1`] = `
 
 <button
   class="c0"
-  data-testid="wallet-option-UNISWAP_WALLET"
+  data-testid="wallet-option-UNISWAP_WALLET_V2"
 >
   <div
     class="c1"

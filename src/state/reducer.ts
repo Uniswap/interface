@@ -7,8 +7,7 @@ import lists from './lists/reducer'
 import logs from './logs/slice'
 import mint from './mint/reducer'
 import mintV3 from './mint/v3/reducer'
-import { routingApi } from './routing/slice'
-import { routingApiV2 } from './routing/v2Slice'
+import { routingApiV2 } from './routing/slice'
 import signatures from './signatures/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
@@ -27,6 +26,5 @@ export default {
   multicall: multicall.reducer,
   lists,
   logs,
-  [routingApi.reducerPath]: routingApi.reducer,
   [routingApiV2.reducerPath]: routingApiV2.reducer,
 }

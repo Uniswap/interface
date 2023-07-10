@@ -31,17 +31,15 @@ export default function PopupItem({
 
   const { chainId } = useWeb3React()
 
-  if (!chainId) return null
-
   switch (content.type) {
     case PopupType.Transaction: {
-      return <TransactionPopupContent hash={content.hash} chainId={chainId} onClose={onClose} />
+      return chainId ? <TransactionPopupContent hash={content.hash} chainId={chainId} onClose={onClose} /> : null
     }
     case PopupType.Order: {
       return <UniswapXOrderPopupContent orderHash={content.orderHash} onClose={onClose} />
     }
     case PopupType.FailedSwitchNetwork: {
-      return <FailedNetworkSwitchPopup chainId={content.chainId} onClose={onClose} />
+      return <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} onClose={onClose} />
     }
   }
 }

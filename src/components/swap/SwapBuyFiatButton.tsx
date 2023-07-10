@@ -6,19 +6,11 @@ import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
-import { useBuyFiatFlowCompleted } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-
-const Dot = styled.div`
-  height: 8px;
-  width: 8px;
-  background-color: ${({ theme }) => theme.accentActive};
-  border-radius: 50%;
-`
 
 export const MOONPAY_REGION_AVAILABILITY_ARTICLE =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
@@ -46,7 +38,6 @@ const StyledTextButton = styled(ButtonText)`
 export default function SwapBuyFiatButton() {
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
-  const [buyFiatFlowCompleted, setBuyFiatFlowCompleted] = useBuyFiatFlowCompleted()
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
@@ -73,10 +64,8 @@ export default function SwapBuyFiatButton() {
       setBuyFiatFlowState(BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
     } else if (fiatOnrampAvailable && account) {
       openFiatOnRampModal()
-      setBuyFiatFlowCompleted(true)
       setBuyFiatFlowState(BuyFiatFlowState.INACTIVE)
     } else if (!fiatOnrampAvailable) {
-      setBuyFiatFlowCompleted(true)
       setBuyFiatFlowState(BuyFiatFlowState.INACTIVE)
     }
   }, [
@@ -86,7 +75,6 @@ export default function SwapBuyFiatButton() {
     walletDrawerOpen,
     toggleWalletDrawer,
     openFiatOnRampModal,
-    setBuyFiatFlowCompleted,
   ])
 
   // Continue buy fiat flow automatically when requisite state changes have occured.
@@ -135,7 +123,6 @@ export default function SwapBuyFiatButton() {
       >
         <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
           <Trans>Buy</Trans>
-          {!buyFiatFlowCompleted && <Dot data-testid="buy-fiat-flow-incomplete-indicator" />}
         </StyledTextButton>
       </TraceEvent>
     </MouseoverTooltip>

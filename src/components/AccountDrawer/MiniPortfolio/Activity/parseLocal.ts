@@ -1,10 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
 import { formatCurrencyAmount } from '@uniswap/conedison/format'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from '@uniswap/smart-order-router'
 import UniswapXBolt from 'assets/svg/bolt.svg'
-import { SupportedChainId } from 'constants/chains'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap, useAllTokensMultichain } from 'hooks/Tokens'
 import { useMemo } from 'react'
@@ -29,7 +28,7 @@ import {
 import { getActivityTitle, OrderTextTable } from '../constants'
 import { Activity, ActivityMap } from './types'
 
-function getCurrency(currencyId: string, chainId: SupportedChainId, tokens: ChainTokenMap): Currency | undefined {
+function getCurrency(currencyId: string, chainId: ChainId, tokens: ChainTokenMap): Currency | undefined {
   return currencyId === 'ETH' ? nativeOnChain(chainId) : tokens[chainId]?.[currencyId]
 }
 
@@ -49,7 +48,7 @@ function buildCurrencyDescriptor(
 
 function parseSwap(
   swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
-  chainId: SupportedChainId,
+  chainId: ChainId,
   tokens: ChainTokenMap
 ): Partial<Activity> {
   const tokenIn = getCurrency(swap.inputCurrencyId, chainId, tokens)
@@ -66,7 +65,7 @@ function parseSwap(
   }
 }
 
-function parseWrap(wrap: WrapTransactionInfo, chainId: SupportedChainId, status: TransactionStatus): Partial<Activity> {
+function parseWrap(wrap: WrapTransactionInfo, chainId: ChainId, status: TransactionStatus): Partial<Activity> {
   const native = nativeOnChain(chainId)
   const wrapped = native.wrapped
   const [input, output] = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
@@ -80,7 +79,7 @@ function parseWrap(wrap: WrapTransactionInfo, chainId: SupportedChainId, status:
 
 function parseApproval(
   approval: ApproveTransactionInfo,
-  chainId: SupportedChainId,
+  chainId: ChainId,
   tokens: ChainTokenMap,
   status: TransactionStatus
 ): Partial<Activity> {
@@ -101,7 +100,7 @@ type GenericLPInfo = Omit<
   AddLiquidityV3PoolTransactionInfo | RemoveLiquidityV3TransactionInfo | AddLiquidityV2PoolTransactionInfo,
   'type'
 >
-function parseLP(lp: GenericLPInfo, chainId: SupportedChainId, tokens: ChainTokenMap): Partial<Activity> {
+function parseLP(lp: GenericLPInfo, chainId: ChainId, tokens: ChainTokenMap): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
   const quoteCurrency = getCurrency(lp.quoteCurrencyId, chainId, tokens)
   const [baseRaw, quoteRaw] = [lp.expectedAmountBaseRaw, lp.expectedAmountQuoteRaw]
@@ -112,7 +111,7 @@ function parseLP(lp: GenericLPInfo, chainId: SupportedChainId, tokens: ChainToke
 
 function parseCollectFees(
   collect: CollectFeesTransactionInfo,
-  chainId: SupportedChainId,
+  chainId: ChainId,
   tokens: ChainTokenMap
 ): Partial<Activity> {
   // Adapts CollectFeesTransactionInfo to generic LP type
@@ -127,7 +126,7 @@ function parseCollectFees(
 
 function parseMigrateCreateV3(
   lp: MigrateV2LiquidityToV3TransactionInfo | CreateV3PoolTransactionInfo,
-  chainId: SupportedChainId,
+  chainId: ChainId,
   tokens: ChainTokenMap
 ): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
@@ -141,7 +140,7 @@ function parseMigrateCreateV3(
 
 export function transactionToActivity(
   details: TransactionDetails,
-  chainId: SupportedChainId,
+  chainId: ChainId,
   tokens: ChainTokenMap
 ): Activity | undefined {
   try {

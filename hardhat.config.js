@@ -1,4 +1,4 @@
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 
 /* eslint-env node */
 require('dotenv').config()
@@ -16,12 +16,12 @@ const forkingConfig = {
 }
 
 const forks = {
-  [SupportedChainId.MAINNET]: {
+  [ChainId.MAINNET]: {
     url: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
     blockNumber: BLOCK_NUMBER,
     ...forkingConfig,
   },
-  [SupportedChainId.POLYGON]: {
+  [ChainId.POLYGON]: {
     url: `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
     blockNumber: POLYGON_BLOCK_NUMBER,
     ...forkingConfig,
@@ -32,8 +32,8 @@ module.exports = {
   forks,
   networks: {
     hardhat: {
-      chainId: SupportedChainId.MAINNET,
-      forking: forks[SupportedChainId.MAINNET],
+      chainId: ChainId.MAINNET,
+      forking: forks[ChainId.MAINNET],
       accounts: {
         count: 2,
       },
