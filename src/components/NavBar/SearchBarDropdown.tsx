@@ -1,14 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import Badge from 'components/Badge'
-import { SupportedChainId } from 'constants/chains'
+import { getChainInfo } from 'constants/chainInfo'
 import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
+import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'graphql/data/util'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -19,7 +22,6 @@ import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import BnbLogoURI from '../../assets/svg/bnb-logo.svg'
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { Suspend } from '../Suspense/Suspend'
 import { SuspenseFallbackToPreviousContents } from '../Suspense/SuspenseFallbackToPreviousContents'
@@ -31,11 +33,9 @@ function isCollection(suggestion: GenieCollection | SearchToken | TrendingCollec
   return (suggestion as SearchToken).decimals === undefined
 }
 
-type SearchBarSuggestion = GenieCollection | SearchToken
-
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
-  suggestions: SearchBarSuggestion[]
+  suggestions: (GenieCollection | SearchToken)[]
   header: JSX.Element
   headerIcon?: JSX.Element
   hoveredIndex?: number
@@ -107,12 +107,12 @@ function isKnownToken(token: SearchToken) {
   return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
 }
 
-const BNBLogo = styled.img`
+const ChainLogo = styled.img`
   height: 20px;
   width: 20px;
   margin-right: 8px;
 `
-const BNBComingSoonBadge = styled(Badge)`
+const ChainComingSoonBadge = styled(Badge)`
   align-items: center;
   background-color: ${({ theme }) => theme.backgroundModule};
   color: ${({ theme }) => theme.textSecondary};
@@ -134,24 +134,11 @@ interface SearchBarDropdownProps {
   isLoading: boolean
 }
 
-const useSearchTrendingTokens = () => {
-  const { pathname } = useLocation()
-  const isTokenPage = pathname.includes('/tokens')
-  const { data: trendingTokenData } = useTrendingTokens(useWeb3React().chainId)
-  const trendingTokensLength = isTokenPage ? 3 : 2
-  return {
-    data: trendingTokenData,
-    results: useMemo(
-      () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<SearchToken>(trendingTokensLength)],
-      [trendingTokenData, trendingTokensLength]
-    ),
-  }
-}
-
 export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
   const { isLoading } = props
   const { chainId } = useWeb3React()
-  const showBNBComingSoonBadge = chainId === SupportedChainId.BNB && !isLoading
+  const showChainComingSoonBadge = chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) && !isLoading
+  const logoUri = getChainInfo(chainId)?.logoUrl
 
   return (
     <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>
@@ -161,41 +148,33 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
             <SearchBarDropdownContents {...props} />
           </Suspend>
         </SuspenseFallbackToPreviousContents>
-        {showBNBComingSoonBadge && (
-          <BNBComingSoonBadge>
-            <BNBLogo src={BnbLogoURI} />
+        {showChainComingSoonBadge && (
+          <ChainComingSoonBadge>
+            <ChainLogo src={logoUri} />
             <ThemedText.BodySmall color="textSecondary" fontSize="14px" fontWeight="400" lineHeight="20px">
-              <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
+              <ComingSoonText chainId={chainId} />
             </ThemedText.BodySmall>
-          </BNBComingSoonBadge>
+          </ChainComingSoonBadge>
         )}
       </Box>
     </Column>
   )
 }
 
-const SearchBarDropdownContents = ({
-  queryText,
-  collections,
-  tokens,
-  hasInput,
+function SearchBarDropdownContents({
   toggleOpen,
-}: SearchBarDropdownProps) => {
+  tokens,
+  collections,
+  queryText,
+  hasInput,
+}: SearchBarDropdownProps): JSX.Element {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
-
   const { data: searchHistory } = useRecentlySearchedAssets()
-
-  const shortenedHistory: SearchBarSuggestion[] = useMemo(
-    () => searchHistory?.slice(0, 2) ?? [...Array<SearchToken>(2)],
-    [searchHistory]
-  )
-
-  const isNFTPage = useIsNftPage()
+  const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<SearchToken>(2)], [searchHistory])
   const { pathname } = useLocation()
+  const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/tokens')
-  const { data: trendingTokenData, results: trendingTokens } = useSearchTrendingTokens()
-  const trace = JSON.stringify(useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH }))
-  const { results } = useSearchTrendingTokens()
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
     3,
@@ -219,17 +198,19 @@ const SearchBarDropdownContents = ({
       : [...Array<GenieCollection>(isNFTPage ? 3 : 2)]
   }, [trendingCollections, isNFTPage, trendingCollectionsAreLoading])
 
+  const { data: trendingTokenData } = useTrendingTokens(useWeb3React().chainId)
+
+  const trendingTokensLength = isTokenPage ? 3 : 2
+  const trendingTokens = useMemo(
+    () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<SearchToken>(trendingTokensLength)],
+    [trendingTokenData, trendingTokensLength]
+  )
+
   const totalSuggestions = hasInput
     ? tokens.length + collections.length
     : Math.min(shortenedHistory.length, 2) +
       (isNFTPage || !isTokenPage ? formattedTrendingCollections?.length ?? 0 : 0) +
-      (isTokenPage || !isNFTPage ? results?.length ?? 0 : 0)
-
-  const hasVerifiedCollection = collections.some((collection) => collection.isVerified)
-  const hasKnownToken = tokens.some(isKnownToken)
-  const showCollectionsFirst =
-    (isNFTPage && (hasVerifiedCollection || !hasKnownToken)) || (!isNFTPage && !hasKnownToken && hasVerifiedCollection)
-  const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, ...JSON.parse(trace) }
+      (isTokenPage || !isNFTPage ? trendingTokens?.length ?? 0 : 0)
 
   // Navigate search results via arrow keys
   useEffect(() => {
@@ -257,6 +238,15 @@ const SearchBarDropdownContents = ({
       document.removeEventListener('keydown', keyDownHandler)
     }
   }, [toggleOpen, hoveredIndex, totalSuggestions])
+
+  const hasVerifiedCollection = collections.some((collection) => collection.isVerified)
+  const hasKnownToken = tokens.some(isKnownToken)
+  const showCollectionsFirst =
+    (isNFTPage && (hasVerifiedCollection || !hasKnownToken)) || (!isNFTPage && !hasKnownToken && hasVerifiedCollection)
+
+  const trace = JSON.stringify(useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH }))
+
+  const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, ...JSON.parse(trace) }
 
   const tokenSearchResults =
     tokens.length > 0 ? (
@@ -348,7 +338,7 @@ const SearchBarDropdownContents = ({
               isLoading={!trendingTokenData}
             />
           )}
-          {!isTokenPage && (
+          {Boolean(!isTokenPage && !shouldDisableNFTRoutes) && (
             <SearchBarDropdownSection
               hoveredIndex={hoveredIndex}
               startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
@@ -368,4 +358,15 @@ const SearchBarDropdownContents = ({
       )}
     </>
   )
+}
+
+function ComingSoonText({ chainId }: { chainId: ChainId }) {
+  switch (chainId) {
+    case ChainId.BNB:
+      return <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
+    case ChainId.AVALANCHE:
+      return <Trans>Coming soon: search and explore tokens on Avalanche Chain</Trans>
+    default:
+      return null
+  }
 }
