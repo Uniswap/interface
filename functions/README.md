@@ -44,3 +44,4 @@ Functions will be deployed to Cloudlfare where they will be ran automatically wh
   - [Open Graph Protocol](https://ogp.me/)
   - [Open Graph Image Generation](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation)
   - [Cloudflare Workers](https://developers.cloudflare.com/workers/)
+  - [HTML Rewriter](https://developers.cloudflare.com/workers/runtime-apis/html-rewriter/)
