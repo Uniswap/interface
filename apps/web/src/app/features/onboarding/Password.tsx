@@ -31,25 +31,25 @@ export function Password({
 
   const enteredPassword = passwordInputProps.value
 
-  const onSubmit = (): void => {
+  const onSubmit = async (): Promise<void> => {
     const passwordValidationResult = validatePassword(enteredPassword)
     if (passwordValidationResult.valid) {
       setPassword(enteredPassword)
       setPasswordError(undefined)
 
-      navigate(nextPath)
-
       // in import flow, we create the account later in the flow
       // in create flow, we need to create it here
       if (createAccountOnNext) {
-        dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
-        dispatch(
+        await dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
+        await dispatch(
           createAccountActions.trigger({
             validatedPassword: enteredPassword,
             skipSetAsActive: true,
           })
         )
       }
+
+      navigate(nextPath)
     } else {
       setPasswordError(passwordValidationResult.validationErrorString)
     }

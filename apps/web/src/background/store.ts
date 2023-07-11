@@ -1,14 +1,16 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { combineReducers } from 'redux'
+import { AnyAction, combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
 import { dappReducer } from 'src/background/features/dapp/slice'
 import { dappRequestReducer } from 'src/background/features/dappRequests/slice'
 import { loggerMiddleware } from 'src/background/utils/loggerMiddleware'
 import { PortName } from 'src/types'
 import { SagaGenerator, select } from 'typed-redux-saga'
+import { logger } from 'wallet/src/features/logger/logger'
 import { createStore, RootState } from 'wallet/src/state'
 import { sharedReducers } from 'wallet/src/state/reducer'
-import { wrapStore } from 'webext-redux'
+import serializeError from 'wallet/src/utils/serializeError'
+import { Store, wrapStore } from 'webext-redux'
 import { persistConfig } from './reducer'
 import { monitoredSagaReducers, webRootSaga } from './saga'
 
@@ -48,10 +50,32 @@ export function initializeStore(
 // TODO: set up lint rule to prevent imports from packages/wallet
 export type WebState = ReturnType<typeof webReducer> & RootState
 export type ReducerNames = keyof typeof webReducers
-export type AppDispatch = ReturnType<typeof createStore>['dispatch']
+export type AppDispatch = Store<AnyAction>['dispatch']
 export type AppSelector<T> = (state: WebState) => T
 
-export const useAppDispatch: () => AppDispatch = useDispatch
+export const useAppDispatch = (): ((action: AnyAction) => Promise<AnyAction | undefined>) => {
+  const appDispatch = useDispatch()
+
+  const wrappedAppDispatch = (action: AnyAction): Promise<AnyAction | undefined> => {
+    try {
+      // webext-redux wraps dispatch in a promise
+      return Promise.resolve(appDispatch(action))
+    } catch (e) {
+      logger.error('Dispatch error', {
+        tags: {
+          file: 'store',
+          function: 'appDispatch',
+          message: serializeError(e),
+        },
+      })
+
+      return Promise.resolve(undefined)
+    }
+  }
+
+  return wrappedAppDispatch
+}
+
 export const useAppSelector: TypedUseSelectorHook<WebState> = useSelector
 
 // Use in sagas for better typing when selecting from redux state

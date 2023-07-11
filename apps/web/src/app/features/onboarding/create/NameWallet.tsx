@@ -31,24 +31,22 @@ export function NameWallet({ nextPath }: { nextPath: string }): JSX.Element {
     return pendingAccount.name || `Wallet ${derivationIndex + 1}`
   }, [pendingAccount])
 
-  const onSubmit = (): void => {
+  const onSubmit = async (): Promise<void> => {
     if (!pendingAddress) {
       return
     }
 
-    dispatch(
+    await dispatch(
       editAccountActions.trigger({
         type: EditAccountAction.Rename,
         address: pendingAddress,
         newName: walletName || defaultName,
       })
     )
-    dispatch(setAccountsNonPending([pendingAddress]))
-    // webext-redux's dispatch returns a promise. We don't currently
-    // type dispatch: () => Promise, so we wrap in `resolve` here.
-    Promise.resolve(dispatch(setAccountAsActive(pendingAddress))).then(() => {
-      navigate(nextPath)
-    })
+    await dispatch(setAccountsNonPending([pendingAddress]))
+    await dispatch(setAccountAsActive(pendingAddress))
+
+    navigate(nextPath)
   }
 
   return (
