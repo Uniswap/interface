@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { useSuspendif } from '../../hooks/useSuspendif'
+import { useSuspendIf } from '../../hooks/useSuspendIf'
 
 export const Suspend = (props: { if: boolean; children: React.ReactNode }) => {
-  useSuspendif(props.if)
+  useSuspendIf(props.if)
   return <>{props.children}</>
 }
