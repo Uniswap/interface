@@ -57,7 +57,7 @@
     "patch-package": "^6.5.1",
     "polished": "^3.3.2",
     "postinstall-postinstall": "^2.1.0",
-    "prettier": "^1.17.0",
+    "prettier": "^3.0.0",
     "qs": "^6.9.4",
     "react": "^18.2.0",
     "react-device-detect": "^1.6.2",
