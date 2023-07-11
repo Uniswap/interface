@@ -1,4 +1,5 @@
 import { AnyAction, Dispatch } from 'redux'
+import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import {
   BaseDappResponse,
   DappRequestType,
@@ -54,7 +55,7 @@ function maybeOpenOnboarding(state: WebState, dispatch: Dispatch<AnyAction>): vo
   const isOnboarded = isOnboardedSelector(state)
 
   if (!isOnboarded) {
-    chrome.tabs.create({ url: 'index.html#/onboarding' })
+    focusOrCreateOnboardingTab()
   }
 
   chrome.runtime.onMessage.addListener(

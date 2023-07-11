@@ -16,3 +16,19 @@ export const useExtensionNavigation = (): {
 
   return { navigateTo, navigateBack }
 }
+
+export async function focusOrCreateOnboardingTab(): Promise<void> {
+  const extension = await chrome.management.getSelf()
+
+  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/*` })
+
+  const tabIndex = tabs[0]?.index
+  const windowId = tabs[0]?.windowId
+
+  if (tabIndex && windowId) {
+    chrome.tabs.highlight({ windowId, tabs: tabIndex })
+    return
+  }
+
+  chrome.tabs.create({ url: 'index.html#/onboarding' })
+}

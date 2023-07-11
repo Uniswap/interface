@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import Locked from 'src/app/features/lockScreen/Locked'
+import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { DappRequestContent } from 'src/background/features/dappRequests/DappRequestContent'
 import { useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
@@ -24,7 +26,16 @@ export function MainContent(): JSX.Element {
 const CONTENT_MIN_HEIGHT = 576 // Subtract 2 * $spacing12 from 600 height
 
 export function WebNavigation(): JSX.Element {
+  const isOnboarded = useAppSelector(isOnboardedSelector)
   const isLoggedIn = useAppSelector((state) => state.wallet.isUnlocked)
+
+  useEffect(() => {
+    if (!isOnboarded) {
+      // TODO: consider moving this logic someplace else once we fix the bug that shows the "Enter your password to unlock" prompt even when users haven't set up a password yet.
+      focusOrCreateOnboardingTab()
+    }
+  }, [isOnboarded])
+
   return (
     <YStack backgroundColor="$background2">
       <YStack
