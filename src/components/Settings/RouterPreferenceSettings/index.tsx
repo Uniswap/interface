@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
-import UniswapXRouterLabel from 'components/RouterLabel/UniswapXRouterLabel'
+import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import { RowBetween, RowFixed } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { isUniswapXSupportedChain } from 'constants/chains'
@@ -26,11 +26,7 @@ export default function RouterPreferenceSettings() {
             <RowFixed>
               <Column gap="xs">
                 <ThemedText.BodySecondary>
-                  <UniswapXRouterLabel>
-                    <ThemedText.BodySecondary>
-                      <Trans>Uniswap X</Trans>
-                    </ThemedText.BodySecondary>
-                  </UniswapXRouterLabel>
+                  <UniswapXBrandMark />
                 </ThemedText.BodySecondary>
                 <ThemedText.Caption color="textSecondary">
                   <Trans>When available, broadcasts off-chain orders for better prices and lower network fees.</Trans>

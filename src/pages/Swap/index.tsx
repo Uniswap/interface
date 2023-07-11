@@ -14,58 +14,55 @@ import { ChainId, Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
+import AddressInputPanel from 'components/AddressInputPanel'
+import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
+import { GrayCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import { AutoRow } from 'components/Row'
+import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
+import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
+import { ArrowWrapper, PageWrapper, SwapWrapper } from 'components/swap/styleds'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
-import Toggle from 'components/Toggle'
+import SwapHeader from 'components/swap/SwapHeader'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
+import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
+import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
+import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useUSDPrice } from 'hooks/useUSDPrice'
+import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import JSBI from 'jsbi'
-import { formatCommonPropertiesForTrade, formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
-import { ReactNode } from 'react'
+import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
+import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
-import { RouterPreference } from 'state/routing/slice'
-import { InterfaceTrade } from 'state/routing/types'
-import { TradeState } from 'state/routing/types'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
-import { useRouterPreference, useUserDisabledUniswapX } from 'state/user/hooks'
+import { Field, replaceSwapState } from 'state/swap/actions'
+import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
+import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
 import styled, { useTheme } from 'styled-components/macro'
+import { LinkStyledButton, ThemedText } from 'theme'
+import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
+import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
-import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { GrayCard } from '../../components/Card'
-import { AutoColumn } from '../../components/Column'
-import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import Row, { AutoRow } from '../../components/Row'
-import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import { ArrowWrapper, PageWrapper, SwapWrapper } from '../../components/swap/styleds'
-import SwapHeader from '../../components/swap/SwapHeader'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import { getSwapCurrencyId, TOKEN_SHORTHANDS } from '../../constants/tokens'
-import { useCurrency, useDefaultActiveTokens } from '../../hooks/Tokens'
-import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
-import { Field, replaceSwapState } from '../../state/swap/actions'
-import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from '../../state/swap/hooks'
-import swapReducer, { initialState as initialSwapState, SwapState } from '../../state/swap/reducer'
-import { LinkStyledButton, ThemedText } from '../../theme'
-import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
+import { useScreenSize } from '../../hooks/useScreenSize'
+import { UniswapXOptIn } from './UniswapXOptIn'
 
 export const ArrowContainer = styled.div`
   display: inline-flex;
@@ -265,15 +262,16 @@ export function Swap({
     }
   }, [connectedChainId, prefilledState, previousConnectedChainId, previousPrefilledState])
 
+  const swapInfo = useDerivedSwapInfo(state, chainId)
   const {
-    trade: { state: tradeState, trade, uniswapXGasUseEstimateUSD },
+    trade: { state: tradeState, trade },
     allowedSlippage,
     autoSlippage,
     currencyBalances,
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = useDerivedSwapInfo(state, chainId)
+  } = swapInfo
 
   const {
     wrapType,
@@ -514,12 +512,9 @@ export function Swap({
   const inputCurrency = currencies[Field.INPUT]
   const switchChain = useSwitchChain()
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
+  const showOptInSmall = !useScreenSize().navSearchInputVisible
 
-  const [routerPreference, setRouterPreference] = useRouterPreference()
-
-  const userDisabledUniswapX = useUserDisabledUniswapX()
-
-  return (
+  const swapElement = (
     <SwapWrapper chainId={chainId} className={className} id="swap-page">
       <TokenSafetyModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
@@ -738,33 +733,14 @@ export function Swap({
           )}
         </div>
       </AutoColumn>
-      {isClassicTrade(trade) && trade.isUniswapXBetter && !userDisabledUniswapX && (
-        <Trace
-          shouldLogImpression
-          name="UniswapX Opt In Impression"
-          properties={formatCommonPropertiesForTrade(trade, allowedSlippage)}
-        >
-          <Row justify="space-between">
-            {/* TODO (Gouda): NATE THIS IS ALL YOU */}
-            <div>
-              Swap for ${uniswapXGasUseEstimateUSD?.toFixed(2)} instead of ${trade.totalGasUseEstimateUSD?.toFixed(2)}
-            </div>
-            <Toggle
-              id="toggle-uniswap-x-button"
-              isActive={routerPreference === RouterPreference.X}
-              toggle={() => {
-                const newPreference =
-                  routerPreference === RouterPreference.X ? RouterPreference.API : RouterPreference.X
-                sendAnalyticsEvent('UniswapX Opt In Toggled', {
-                  ...formatCommonPropertiesForTrade(trade, allowedSlippage),
-                  new_preference: newPreference,
-                })
-                setRouterPreference(newPreference)
-              }}
-            />
-          </Row>
-        </Trace>
-      )}
+      {!showOptInSmall && <UniswapXOptIn isSmall={false} swapInfo={swapInfo} />}
     </SwapWrapper>
+  )
+
+  return (
+    <>
+      {swapElement}
+      {showOptInSmall && <UniswapXOptIn isSmall swapInfo={swapInfo} />}
+    </>
   )
 }
