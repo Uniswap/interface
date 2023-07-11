@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'

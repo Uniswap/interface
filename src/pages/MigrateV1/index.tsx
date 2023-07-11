@@ -1,5 +1,5 @@
 import { JSBI, Token } from '@uniswap/sdk'
-import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
+import { useCallback, useContext, useMemo, useState, useEffect, SetStateAction } from 'react'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
@@ -24,7 +24,10 @@ export default function MigrateV1() {
   const { account, chainId } = useActiveWeb3React()
 
   const [tokenSearch, setTokenSearch] = useState<string>('')
-  const handleTokenSearchChange = useCallback(e => setTokenSearch(e.target.value), [setTokenSearch])
+  const handleTokenSearchChange = useCallback(
+    (e: { target: { value: SetStateAction<string> } }) => setTokenSearch(e.target.value),
+    [setTokenSearch]
+  )
 
   // automatically add the search token
   const token = useToken(tokenSearch)

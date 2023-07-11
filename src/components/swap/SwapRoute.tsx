@@ -1,5 +1,5 @@
 import { Trade } from '@uniswap/sdk'
-import React, { Fragment, memo, useContext } from 'react'
+import { Fragment, memo, useContext } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'

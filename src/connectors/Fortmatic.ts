@@ -27,7 +27,7 @@ export class FortmaticConnector extends FortmaticConnectorCore {
 
     const provider = this.fortmatic.getProvider()
 
-    const pollForOverlayReady = new Promise(resolve => {
+    const pollForOverlayReady = new Promise<void>(resolve => {
       const interval = setInterval(() => {
         if (provider.overlayReady) {
           clearInterval(interval)

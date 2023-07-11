@@ -1,7 +1,7 @@
 import { ChainId, JSBI, Percent, Token, WETH } from '@uniswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
-import { injected, walletconnect } from '../connectors'
+import { injected } from '../connectors'
 
 export const ROUTER_ADDRESS = '0x501f63210aE6D7Eeb50DaE74DA5Ae407515ee246'
 
@@ -99,15 +99,17 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#E8831D'
   },
-  WALLET_CONNECT: {
-    connector: walletconnect,
-    name: 'WalletConnect',
-    iconName: 'walletConnectIcon.svg',
-    description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
-    href: null,
-    color: '#4196FC',
-    mobile: true
-  },
+  //Todo: walletconnect
+
+  // WALLET_CONNECT: {
+  //   connector: walletconnect,
+  //   name: 'WalletConnect',
+  //   iconName: 'walletConnectIcon.svg',
+  //   description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
+  //   href: null,
+  //   color: '#4196FC',
+  //   mobile: true
+  // },
   // WALLET_LINK: {
   //   connector: walletlink,
   //   name: 'Coinbase Wallet',

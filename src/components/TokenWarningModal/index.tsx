@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk'
 import { transparentize } from 'polished'
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'

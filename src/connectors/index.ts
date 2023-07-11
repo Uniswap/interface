@@ -1,7 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { PortisConnector } from '@web3-react/portis-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+// import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 
 import { FortmaticConnector } from './Fortmatic'
@@ -30,15 +30,16 @@ export const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 42, 31337, 167, 167001, 167005]
 })
 
-// mainnet only
-export const walletconnect = new WalletConnectConnector({
-  rpc: {
-    [NETWORK_CHAIN_ID]: NETWORK_URL
-  },
-  bridge: 'https://bridge.walletconnect.org',
-  qrcode: true,
-  pollingInterval: 15000
-})
+//Todo: walletconnect
+// // mainnet only
+// export const walletconnect = new WalletConnectConnector({
+//   rpc: {
+//     [NETWORK_CHAIN_ID]: NETWORK_URL
+//   },
+//   bridge: 'https://bridge.walletconnect.org',
+//   qrcode: true,
+//   pollingInterval: 15000
+// })
 
 // mainnet only
 export const fortmatic = new FortmaticConnector({

@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { JSBI, Token, TokenAmount, WETH, Fraction, Percent, CurrencyAmount } from '@uniswap/sdk'
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { ButtonConfirmed } from '../../components/Button'

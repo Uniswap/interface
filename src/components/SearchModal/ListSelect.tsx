@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
+import { SetStateAction, memo, useCallback, useMemo, useRef, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import { usePopper } from 'react-popper'
@@ -256,7 +256,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   const adding = Boolean(lists[listUrlInput]?.loadingRequestId)
   const [addError, setAddError] = useState<string | null>(null)
 
-  const handleInput = useCallback(e => {
+  const handleInput = useCallback((e: { target: { value: SetStateAction<string> } }) => {
     setListUrlInput(e.target.value)
     setAddError(null)
   }, [])
@@ -290,7 +290,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   }, [listUrlInput])
 
   const handleEnterKey = useCallback(
-    e => {
+    (e: { key: string }) => {
       if (validUrl && e.key === 'Enter') {
         handleAddList()
       }

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import { useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import useENS from '../../hooks/useENS'
@@ -82,7 +82,7 @@ export default function AddressInputPanel({
   const { address, loading, name } = useENS(value)
 
   const handleInput = useCallback(
-    event => {
+    (event: { target: { value: any } }) => {
       const input = event.target.value
       const withoutSpaces = input.replace(/\s+/g, '')
       onChange(withoutSpaces)

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import { useCallback, useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
@@ -13,9 +13,9 @@ import { ExternalLink as LinkIcon } from 'react-feather'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+// import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import { fortmatic, injected, portis, walletlink } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import { getEtherscanLink } from '../../utils'
@@ -248,13 +248,17 @@ export default function AccountDetails({
           <Identicon />
         </IconWrapper>
       )
-    } else if (connector === walletconnect) {
-      return (
-        <IconWrapper size={16}>
-          <img src={WalletConnectIcon} alt={'wallet connect logo'} />
-        </IconWrapper>
-      )
-    } else if (connector === walletlink) {
+    }
+    //Todo: walletconnect
+
+    // else if (connector === walletconnect) {
+    //   return (
+    //     <IconWrapper size={16}>
+    //       <img src={WalletConnectIcon} alt={'wallet connect logo'} />
+    //     </IconWrapper>
+    //   )
+    // }
+    else if (connector === walletlink) {
       return (
         <IconWrapper size={16}>
           <img src={CoinbaseWalletIcon} alt={'coinbase wallet logo'} />

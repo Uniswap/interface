@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@uniswap/sdk'
-import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -174,7 +174,7 @@ export default function CurrencyList({
   const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...currencies] : currencies), [currencies, showETH])
 
   const Row = useCallback(
-    ({ data, index, style }) => {
+    ({ data, index, style }: { data: Currency[]; index: number; style: CSSProperties }) => {
       const currency: Currency = data[index]
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))

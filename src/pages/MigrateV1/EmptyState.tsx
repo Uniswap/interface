@@ -1,4 +1,3 @@
-import React from 'react'
 import { AutoColumn } from '../../components/Column'
 import { TYPE } from '../../theme'
 

@@ -1,5 +1,5 @@
-import { CurrencyAmount, JSBI, Token, Trade } from '@uniswap/sdk'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { Currency, CurrencyAmount, JSBI, Token, Trade } from '@uniswap/sdk'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
@@ -276,7 +276,7 @@ export default function Swap() {
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
-    inputCurrency => {
+    (inputCurrency: Currency) => {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
@@ -287,9 +287,10 @@ export default function Swap() {
     maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
-  const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
-    onCurrencySelection
-  ])
+  const handleOutputSelect = useCallback(
+    (outputCurrency: Currency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
+    [onCurrencySelection]
+  )
 
   return (
     <>

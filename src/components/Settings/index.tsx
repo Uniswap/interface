@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useState } from 'react'
+import { useRef, useContext, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import styled from 'styled-components'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'

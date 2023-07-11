@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
@@ -16,7 +16,6 @@ import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, fortmatic, portis, NETWORK_CHAIN_ID, NETWORK_URL } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import switchNetwork from '../../utils/switchNetwork'
 
@@ -180,10 +179,12 @@ export default function WalletModal({
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
 
-    // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-    if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
-      connector.walletConnectProvider = undefined
-    }
+    // // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
+    // if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
+    //   connector.walletConnectProvider = undefined
+    // }
+
+    //Todo: walletconnect
 
     connector &&
       activate(connector, undefined, true).catch(error => {

@@ -1,5 +1,4 @@
 import { Percent } from '@uniswap/sdk'
-import React from 'react'
 import { ONE_BIPS } from '../../constants'
 import { warningSeverity } from '../../utils/prices'
 import { ErrorText } from './styleds'

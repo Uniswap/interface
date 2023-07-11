@@ -1,4 +1,3 @@
-import React from 'react'
 import { Text } from 'rebass'
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'

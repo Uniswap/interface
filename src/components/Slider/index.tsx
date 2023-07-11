@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import styled from 'styled-components'
 
 const StyledRangeInput = styled.input<{ size: number }>`
@@ -98,7 +98,7 @@ interface InputSliderProps {
 
 export default function Slider({ value, onChange, min = 0, step = 1, max = 100, size = 28 }: InputSliderProps) {
   const changeCallback = useCallback(
-    e => {
+    (    e: { target: { value: string } }) => {
       onChange(parseInt(e.target.value))
     },
     [onChange]

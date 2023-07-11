@@ -1,5 +1,5 @@
 import { Trade, TradeType } from '@uniswap/sdk'
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'

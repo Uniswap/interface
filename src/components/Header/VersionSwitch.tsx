@@ -56,7 +56,7 @@ export default function VersionSwitch() {
   }, [location, query, version, versionSwitchAvailable])
 
   const handleClick = useCallback(
-    e => {
+    (e: { preventDefault: () => void }) => {
       if (!versionSwitchAvailable) e.preventDefault()
     },
     [versionSwitchAvailable]

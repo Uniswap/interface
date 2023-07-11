@@ -1,5 +1,5 @@
 import { stringify } from 'qs'
-import React, { useContext, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { useLocation } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'

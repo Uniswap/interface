@@ -9,16 +9,16 @@ import { useGesture } from 'react-use-gesture'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
+const StyledDialogOverlay = styled(({ className, ...props }) => (
+  <AnimatedDialogOverlay className={className} {...props} />
+))`
   &[data-reach-dialog-overlay] {
     z-index: 2;
     background-color: transparent;
     overflow: hidden;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background-color: ${({ theme }) => theme.modalBG};
   }
 `
@@ -89,14 +89,18 @@ export default function Modal({
   initialFocusRef,
   children
 }: ModalProps) {
-  const fadeTransition = useTransition(isOpen, null, {
-    config: { duration: 200 },
+  const transitions = useTransition(isOpen, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
-    leave: { opacity: 0 }
+    leave: { opacity: 0 },
+    config: { duration: 200 }
   })
 
-  const [{ y }, set] = useSpring(() => ({ y: 0, config: { mass: 1, tension: 210, friction: 20 } }))
+  const [{ y }, set] = useSpring((): { y: number; config: { mass: number; tension: number; friction: number } } => ({
+    y: 0,
+    config: { mass: 1, tension: 210, friction: 20 }
+  }))
+
   const bind = useGesture({
     onDrag: state => {
       set({
@@ -110,28 +114,27 @@ export default function Modal({
 
   return (
     <>
-      {fadeTransition.map(
-        ({ item, key, props }) =>
-          item && (
-            <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
-              <StyledDialogContent
-                {...(isMobile
-                  ? {
-                      ...bind(),
-                      style: { transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) }
-                    }
-                  : {})}
-                aria-label="dialog content"
-                minHeight={minHeight}
-                maxHeight={maxHeight}
-                mobile={isMobile}
-              >
-                {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
-                {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
-                {children}
-              </StyledDialogContent>
-            </StyledDialogOverlay>
-          )
+      {transitions((styles, item) =>
+        item ? (
+          <StyledDialogOverlay style={styles} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
+            <StyledDialogContent
+              {...(isMobile
+                ? {
+                    ...bind(),
+                    style: { transform: y.to(y => `translateY(${y > 0 ? y : 0}px)`) }
+                  }
+                : {})}
+              aria-label="dialog content"
+              minHeight={minHeight}
+              maxHeight={maxHeight}
+              mobile={isMobile}
+            >
+              {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
+              {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
+              {children}
+            </StyledDialogContent>
+          </StyledDialogOverlay>
+        ) : null
       )}
     </>
   )

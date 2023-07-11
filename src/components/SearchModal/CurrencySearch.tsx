@@ -1,5 +1,5 @@
 import { Currency, ETHER, Token } from '@uniswap/sdk'
-import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
@@ -109,7 +109,7 @@ export function CurrencySearch({
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback(event => {
+  const handleInput = useCallback((event: { target: { value: any } }) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)

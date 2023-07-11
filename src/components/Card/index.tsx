@@ -1,4 +1,4 @@
-import React from 'react'
+
 import styled from 'styled-components'
 import { CardProps, Text } from 'rebass'
 import { Box } from 'rebass/styled-components'
