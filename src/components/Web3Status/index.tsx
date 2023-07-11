@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken, lighten } from 'polished'
@@ -23,7 +24,9 @@ import Identicon from '../Identicon'
 import Loader from '../Loader'
 
 import { RowBetween } from '../Row'
-import WalletModal from '../WalletModal'
+// import WalletModal from '../WalletModal'
+
+import { Web3Button } from '@web3modal/react'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -179,7 +182,7 @@ function Web3StatusInner() {
     return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
   }, [allTransactions])
 
-  const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
+  const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
@@ -196,6 +199,7 @@ function Web3StatusInner() {
           <>
             {hasSocks ? SOCK : null}
             <Text>{ENSName || shortenAddress(account)}</Text>
+            <Web3Button />
           </>
         )}
         {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
@@ -212,6 +216,7 @@ function Web3StatusInner() {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
         <Text>{t('Connect to a wallet')}</Text>
+        <Web3Button />
       </Web3StatusConnect>
     )
   }
@@ -230,8 +235,8 @@ export default function Web3Status() {
     return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
   }, [allTransactions])
 
-  const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
-  const confirmed = sortedRecentTransactions.filter(tx => tx.receipt).map(tx => tx.hash)
+  const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
+  const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
 
   if (!contextNetwork.active && !active) {
     return null
@@ -240,7 +245,7 @@ export default function Web3Status() {
   return (
     <>
       <Web3StatusInner />
-      <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
+      {/* <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} /> */}
     </>
   )
 }

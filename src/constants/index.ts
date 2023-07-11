@@ -99,15 +99,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#E8831D'
   },
-  WALLET_CONNECT: {
-    connector: undefined,
-    name: 'WalletConnect - Temporarily Disabled',
-    iconName: 'walletConnectIcon.svg',
-    description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
-    href: null,
-    color: '#4196FC',
-    mobile: true
-  },
+
   // WALLET_LINK: {
   //   connector: walletlink,
   //   name: 'Coinbase Wallet',
