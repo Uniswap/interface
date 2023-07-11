@@ -463,6 +463,29 @@ export function Swap({
     tradeToConfirm,
   ])
 
+  const handleOnWrap = useCallback(() => {
+    if (!onWrap) return
+    onWrap()
+      .then(() => {
+        onUserInput(Field.INPUT, '')
+      })
+      .catch((error) => {
+        console.log(error)
+        if (!didUserReject(error)) {
+          sendAnalyticsEvent(SwapEventName.SWAP_ERROR, {
+            wrapType,
+            input: currencies[Field.INPUT],
+            output: currencies[Field.OUTPUT],
+          })
+        }
+        setSwapState((currentState) => ({
+          ...currentState,
+          swapError: error,
+          txHash: undefined,
+        }))
+      })
+  }, [currencies, onUserInput, onWrap, wrapType])
+
   // errors
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
 
@@ -707,7 +730,7 @@ export function Swap({
           ) : showWrap ? (
             <ButtonPrimary
               disabled={Boolean(wrapInputError)}
-              onClick={onWrap}
+              onClick={handleOnWrap}
               fontWeight={600}
               data-testid="wrap-button"
             >
