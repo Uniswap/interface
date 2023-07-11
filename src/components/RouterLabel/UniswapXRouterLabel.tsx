@@ -1,7 +1,9 @@
 import Row from 'components/Row'
-import { PropsWithChildren, useRef } from 'react'
+import { useRef } from 'react'
 import styled from 'styled-components/macro'
 import { v4 as uuid } from 'uuid'
+
+import { BoxProps } from '../../nft/components/Box'
 
 // Gradient with a fallback to solid color.
 const Gradient = styled.div`
@@ -46,11 +48,15 @@ export const UniswapXRouterIcon = () => {
   )
 }
 
-export default function UniswapXRouterLabel({ children }: PropsWithChildren) {
+export type UnswapXRouterLabelProps = BoxProps & {
+  disableTextGradient?: boolean
+}
+
+export default function UniswapXRouterLabel({ children, disableTextGradient, ...rest }: UnswapXRouterLabelProps) {
   return (
-    <Row gap="sm" width="auto">
+    <Row gap="xs" width="auto" {...rest} style={{ display: 'inline-flex', ...rest.style }}>
       <UniswapXRouterIcon />
-      <Gradient>{children}</Gradient>
+      {disableTextGradient ? children : <Gradient>{children}</Gradient>}
     </Row>
   )
 }

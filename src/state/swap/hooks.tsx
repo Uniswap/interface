@@ -71,11 +71,7 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D': true, // v2 router 02
 }
 
-// from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(
-  state: SwapState,
-  chainId: ChainId | undefined
-): {
+export type SwapInfo = {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount?: CurrencyAmount<Currency>
@@ -88,7 +84,10 @@ export function useDerivedSwapInfo(
   }
   allowedSlippage: Percent
   autoSlippage: Percent
-} {
+}
+
+// from the current swap inputs, compute the best trade and return it.
+export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefined): SwapInfo {
   const { account } = useWeb3React()
 
   const {
