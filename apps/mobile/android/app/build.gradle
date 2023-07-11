@@ -159,9 +159,27 @@ android {
             keyPassword 'android'
         }
     }
+
+    flavorDimensions += "variant"
+
+    productFlavors {
+      dev {
+        isDefault(true)
+        applicationIdSuffix ".dev"
+        dimension "variant"
+      }
+      beta {
+        applicationIdSuffix ".beta"
+        dimension "variant"
+      }
+      prod {
+        dimension "variant"
+      }
+    }
+
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+          signingConfig signingConfigs.debug
         }
         release {
             // Caution! In production, you need to generate your own keystore file.

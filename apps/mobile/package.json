@@ -4,7 +4,10 @@
   "private": true,
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --variant=devDebug",
+    "android:beta": "react-native run-android --variant=betaDebug",
+    "android:prod": "react-native run-android --variant=prodDebug",
+    "android:prod:release": "react-native run-android --variant=prodRelease",
     "clean": "react-native-clean-project",
     "debug": "react-devtools",
     "deduplicate": "yarn-deduplicate --strategy=fewer",
