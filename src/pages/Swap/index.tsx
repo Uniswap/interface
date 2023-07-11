@@ -466,11 +466,15 @@ export function Swap({
   const handleOnWrap = useCallback(() => {
     if (!onWrap) return
     onWrap()
-      .then(() => {
+      .then((hash) => {
+        setSwapState((currentState) => ({
+          ...currentState,
+          swapError: undefined,
+          txHash: hash,
+        }))
         onUserInput(Field.INPUT, '')
       })
       .catch((error) => {
-        console.log(error)
         if (!didUserReject(error)) {
           sendAnalyticsEvent(SwapEventName.SWAP_ERROR, {
             wrapType,
