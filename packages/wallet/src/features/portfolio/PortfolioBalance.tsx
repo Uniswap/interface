@@ -1,4 +1,4 @@
-import { Icons } from 'ui/src'
+import { ColorTokens, getToken, Icons, validToken } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { opacify } from 'ui/src/theme/color/utils'
@@ -33,8 +33,8 @@ const TempFakeButton = ({
   url,
 }: {
   label: string
-  backgroundColor: string
-  color: string
+  backgroundColor: ColorTokens
+  color: ColorTokens
   Icon: JSX.Element
   url?: string
 }): JSX.Element => {
@@ -81,21 +81,23 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
             {/* TODO(EXT-210): fix up passing of Icon to reuse color prop and constant icon size etc
              */}
             <TempFakeButton
-              Icon={<Icons.CoinConvert color={CTA_COLORS.PINK} size="$icon.24" />}
-              backgroundColor={CTA_COLORS_SOFT.PINK}
-              color={CTA_COLORS.PINK}
+              Icon={<Icons.CoinConvert color={CTA_COLORS.PINK} size={getToken('$icon.24')} />}
+              backgroundColor={validToken(CTA_COLORS_SOFT.PINK)}
+              color={validToken(CTA_COLORS.PINK)}
               label="Swap"
             />
             <TempFakeButton
-              Icon={<Icons.SendRoundedAirplane color={CTA_COLORS.GREEN} size="$icon.24" />}
-              backgroundColor={CTA_COLORS_SOFT.GREEN}
-              color={CTA_COLORS.GREEN}
+              Icon={
+                <Icons.SendRoundedAirplane color={CTA_COLORS.GREEN} size={getToken('$icon.24')} />
+              }
+              backgroundColor={validToken(CTA_COLORS_SOFT.GREEN)}
+              color={validToken(CTA_COLORS.GREEN)}
               label="Send"
             />
             <TempFakeButton
-              Icon={<Icons.ReceiveDots color={CTA_COLORS.YELLOW} size="$icon.24" />}
-              backgroundColor={CTA_COLORS_SOFT.YELLOW}
-              color={CTA_COLORS.YELLOW}
+              Icon={<Icons.ReceiveDots color={CTA_COLORS.YELLOW} size={getToken('$icon.24')} />}
+              backgroundColor={validToken(CTA_COLORS_SOFT.YELLOW)}
+              color={validToken(CTA_COLORS.YELLOW)}
               label="Receive"
             />
           </Flex>

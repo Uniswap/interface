@@ -144,7 +144,7 @@ function SeedPhraseWord({
       alignContent="center"
       alignItems="center"
       backgroundColor="$background2"
-      borderRadius="$spacing16"
+      borderRadius="$rounded16"
       gap="$spacing16"
       height={48}
       paddingHorizontal="$spacing16"

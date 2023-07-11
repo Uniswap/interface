@@ -155,13 +155,20 @@ const Icon = forwardRef<Svg, IconProps>((props, ref) => {
     ...restProps,
   } = props
   const theme = useTheme()
-
-  const size = typeof sizeProp === 'string' ? getTokenValue(sizeProp, 'size') : sizeProp
+  
+  const size =
+    getTokenValue(
+      // @ts-expect-error it falls back to undefined
+      sizeProp,
+      'size'
+    ) ?? sizeProp
 
   const strokeWidth =
-    typeof strokeWidthProp === 'string'
-      ? getTokenValue(strokeWidthProp, 'size')
-      : strokeWidthProp
+    getTokenValue(
+      // @ts-expect-error it falls back to undefined
+      strokeWidthProp,
+      'size'
+    ) ?? strokeWidthProp
 
   const color = 
     // @ts-expect-error its fine to access colorProp undefined
@@ -220,6 +227,11 @@ export const ${cname} = memo<IconProps>(Icon)
 
   const formattedIndex = await eslintFormat(indexFile)
   await writeFile(join(outDir, 'index.ts'), formattedIndex, 'utf-8')
+
+  // eslint-disable-next-line no-console
+  console.log(
+    `⚠️ Warning: The CameraScan icon needs manual removing strokeWidth="10", we could automate...`
+  )
 }
 
 const eslint = new ESLint({ fix: true })

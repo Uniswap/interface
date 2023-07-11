@@ -1,4 +1,4 @@
-import { Circle, Stack, Text, XStack, YStack } from 'ui/src'
+import { Circle, Stack, Text, validToken, XStack, YStack } from 'ui/src'
 import { CheckmarkIcon } from 'ui/src/assets/icons/CheckmarkIcon'
 import { Unicon } from 'ui/src/components/Unicon'
 import { useUniconColors } from 'ui/src/components/Unicon/utils'
@@ -32,7 +32,7 @@ export default function WalletPreviewCard({
   return (
     <Stack
       alignItems="center"
-      borderColor={selected ? gradientStart : unselectedBorderColor}
+      borderColor={validToken(selected ? gradientStart : unselectedBorderColor)}
       borderRadius="$rounded20"
       borderWidth={2}
       cursor="pointer"

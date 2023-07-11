@@ -33,4 +33,8 @@ export const config = createTamagui({
     hoverNone: { hover: 'none' },
     pointerCoarse: { pointer: 'coarse' },
   }),
+  settings: {
+    allowedStyleValues: 'somewhat-strict-web',
+    autocompleteSpecificTokens: 'except-special',
+  },
 })

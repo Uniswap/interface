@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
-import { Icons, ScrollView, Text, XStack, YStack } from 'ui/src'
+import { Icons, ScrollView, Text, validToken, XStack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { adjustColor, useUniconColors } from 'ui/src/components/Unicon/utils'
 import { iconSizes } from 'ui/src/theme/iconSizes'
@@ -78,7 +78,7 @@ export function AccountSwitcherScreen(): JSX.Element {
             return (
               <AccountItem
                 key={address}
-                accentColor={glow}
+                accentColor={validToken(glow)}
                 address={address}
                 selected={activeAddress === address}
                 onAccountSelect={(): void => {

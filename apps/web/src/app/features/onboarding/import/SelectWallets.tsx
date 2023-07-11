@@ -223,7 +223,11 @@ export function SelectWallets(): JSX.Element {
       onSubmit={onSubmit}>
       <ScrollView height={180} showsVerticalScrollIndicator={false} width="100%">
         {showError ? (
-          <Stack gap="$spacing24" p="spacing12" width="100%">
+          <Stack
+            gap="$spacing24"
+            // @ts-expect-error were using spacing for size, but its ok...
+            p="spacing12"
+            width="100%">
             <Text color="$accentCritical" textAlign="center" variant="buttonLabelMedium">
               Couldn't load addresses
             </Text>

@@ -13,10 +13,19 @@ const Icon = forwardRef<Svg, IconProps>((props, ref) => {
   } = props
   const theme = useTheme()
 
-  const size = typeof sizeProp === 'string' ? getTokenValue(sizeProp, 'size') : sizeProp
+  const size =
+    getTokenValue(
+      // @ts-expect-error it falls back to undefined
+      sizeProp,
+      'size'
+    ) ?? sizeProp
 
   const strokeWidth =
-    typeof strokeWidthProp === 'string' ? getTokenValue(strokeWidthProp, 'size') : strokeWidthProp
+    getTokenValue(
+      // @ts-expect-error it falls back to undefined
+      strokeWidthProp,
+      'size'
+    ) ?? strokeWidthProp
 
   const color =
     // @ts-expect-error its fine to access colorProp undefined

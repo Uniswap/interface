@@ -1,6 +1,6 @@
 import { useToastController } from '@tamagui/toast'
 import { GestureResponderEvent } from 'react-native'
-import { Text, XStack, YStack } from 'ui/src'
+import { ColorTokens, Text, XStack, YStack } from 'ui/src'
 import CheckIcon from 'ui/src/assets/icons/check.svg'
 import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
 import { Flex } from 'ui/src/components/layout/Flex'
@@ -12,7 +12,7 @@ import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type AccountItemProps = {
-  accentColor: string
+  accentColor: ColorTokens
   address: Address
   selected: boolean
   onAccountSelect?: () => void

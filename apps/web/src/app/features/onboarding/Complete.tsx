@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
 import { Circle, Image, Stack, XStack, YStack } from 'tamagui'
-import { Icons, Text } from 'ui/src'
+import { ColorTokens, Icons, Text, validToken } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import MoreIcon from 'ui/src/assets/icons/more.svg'
 import PinIcon from 'ui/src/assets/icons/pin.svg'
@@ -84,16 +84,16 @@ export function Complete(): JSX.Element {
               {/* TODO(EXT-210): clean up use of colors here and just pass color value */}
               <OnboardingCompleteCard
                 Icon={<Icons.Buy color={ONBOARDING_COLORS.GREEN} size={iconSizes.icon20} />}
-                backgroundColor={ONBOARDING_COLORS_SOFT.GREEN}
-                color={ONBOARDING_COLORS.GREEN}
+                backgroundColor={validToken(ONBOARDING_COLORS_SOFT.GREEN)}
+                color={validToken(ONBOARDING_COLORS.GREEN)}
                 title="Buy crypto"
                 url={uniswapUrls.moonpayHelpUrl}
               />
               <OnboardingCompleteCard
                 disabled
                 Icon={<Icons.ArrowDown color={ONBOARDING_COLORS.BLUE} size={iconSizes.icon20} />}
-                backgroundColor={ONBOARDING_COLORS_SOFT.BLUE}
-                color={ONBOARDING_COLORS.BLUE}
+                backgroundColor={validToken(ONBOARDING_COLORS_SOFT.BLUE)}
+                color={validToken(ONBOARDING_COLORS.BLUE)}
                 title="Transfer from exchange"
                 url={uniswapUrls.interfaceUrl}
               />
@@ -103,16 +103,16 @@ export function Complete(): JSX.Element {
                 Icon={
                   <Icons.SwapActionButton color={ONBOARDING_COLORS.PINK} size={iconSizes.icon20} />
                 }
-                backgroundColor={ONBOARDING_COLORS_SOFT.PINK}
-                color={ONBOARDING_COLORS.PINK}
+                backgroundColor={validToken(ONBOARDING_COLORS_SOFT.PINK)}
+                color={validToken(ONBOARDING_COLORS.PINK)}
                 title="Swap"
                 url={uniswapUrls.interfaceUrl}
               />
               <OnboardingCompleteCard
                 disabled
                 Icon={<Icons.BookOpen color={ONBOARDING_COLORS.YELLOW} size={iconSizes.icon20} />}
-                backgroundColor={ONBOARDING_COLORS_SOFT.YELLOW}
-                color={ONBOARDING_COLORS.YELLOW}
+                backgroundColor={validToken(ONBOARDING_COLORS_SOFT.YELLOW)}
+                color={validToken(ONBOARDING_COLORS.YELLOW)}
                 title="Take a tour"
                 url={uniswapUrls.interfaceUrl}
               />
@@ -227,8 +227,8 @@ interface OnboardingCompleteCardProps {
   title: string
   url: string
   Icon: JSX.Element
-  backgroundColor: string
-  color: string
+  backgroundColor: ColorTokens
+  color: ColorTokens
   disabled?: boolean
 }
 

@@ -1,4 +1,4 @@
-import { namedIconSizes, Text } from 'ui/src'
+import { namedIconSizes, Text, validToken } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 
 interface TransactionLoaderProps {
@@ -26,8 +26,8 @@ export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Elem
             centered
             bg="$background3"
             borderRadius="$roundedFull"
-            height={namedIconSizes.transactionHistory}
-            width={namedIconSizes.transactionHistory}
+            height={validToken(namedIconSizes.transactionHistory)}
+            width={validToken(namedIconSizes.transactionHistory)}
           />
           <Flex shrink gap="$none">
             <Flex row alignItems="center" gap="$spacing4">

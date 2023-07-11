@@ -26,9 +26,11 @@ export const OnboardingInput = ({
       borderColor="$backgroundOutline"
       borderRadius="$rounded12"
       borderWidth={1}
+      // @ts-expect-error TODO type and fix
       focusStyle={inputStyles.inputFocus}
       fontSize={fonts.subheadLarge.fontSize}
       height="auto"
+      // @ts-expect-error TODO type and fix
       hoverStyle={inputStyles.inputHover}
       paddingHorizontal={centered ? '$spacing60' : '$spacing24'}
       paddingVertical="$spacing24"
