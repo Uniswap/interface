@@ -32,7 +32,7 @@ import {
   SettingsWalletRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { SharedProvider } from 'wallet/src/provider'
+import { Provider } from 'wallet/src/provider'
 import { Store } from 'webext-redux'
 import { MainContent, WebNavigation } from './navigation'
 
@@ -166,7 +166,7 @@ const router = createHashRouter([
 
 function App({ store }: { store: Store }): JSX.Element {
   return (
-    <SharedProvider reduxStore={store}>
+    <Provider store={store}>
       <GraphqlProvider>
         <ToastProvider>
           <RouterProvider router={router} />
@@ -175,7 +175,7 @@ function App({ store }: { store: Store }): JSX.Element {
           <BottomToast />
         </ToastProvider>
       </GraphqlProvider>
-    </SharedProvider>
+    </Provider>
   )
 }
 

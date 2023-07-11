@@ -2,16 +2,18 @@ import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { EtherscanIcon } from 'src/components/icons/EtherscanIcon'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
 import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
 import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
 import AddressIcon from 'ui/src/assets/icons/sticky-note-text-square.svg'
 import TwitterIcon from 'ui/src/assets/icons/twitter.svg'
+import EtherscanLogoDark from 'ui/src/assets/logos/etherscan-logo-dark.svg'
+import EtherscanLogoLight from 'ui/src/assets/logos/etherscan-logo-light.svg'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
@@ -180,7 +182,7 @@ export function TokenDetailsStats({
               />
             )}
             <LinkButton
-              Icon={EtherscanIcon}
+              Icon={useIsDarkMode() ? EtherscanLogoDark : EtherscanLogoLight}
               buttonType={LinkButtonType.Link}
               element={ElementName.TokenLinkEtherscan}
               label={t('Etherscan')}

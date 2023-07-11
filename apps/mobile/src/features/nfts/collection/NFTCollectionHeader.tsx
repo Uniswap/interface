@@ -13,8 +13,8 @@ import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import { useExtractedColors } from 'src/utils/colors'
-import { Logos } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
+import EthereumLogo from 'ui/src/assets/logos/ethereum.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
 import { NftCollectionScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -188,7 +188,7 @@ export function NFTCollectionHeader({
                   )} `}
                 </Text>
                 {collectionStats?.floorPrice?.value !== undefined ? (
-                  <Logos.Ethereum color={theme.colors.textPrimary} />
+                  <EthereumLogo color={theme.colors.textPrimary} />
                 ) : null}
               </Flex>
             </Flex>
@@ -204,7 +204,7 @@ export function NFTCollectionHeader({
                   )}`}
                 </Text>
                 {collectionStats?.totalVolume?.value !== undefined ? (
-                  <Logos.Ethereum color={theme.colors.textPrimary} />
+                  <EthereumLogo color={theme.colors.textPrimary} />
                 ) : null}
               </Flex>
             </Flex>

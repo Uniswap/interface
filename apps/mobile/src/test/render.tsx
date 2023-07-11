@@ -10,6 +10,7 @@ import {
   RenderOptions,
 } from '@testing-library/react-native'
 import React, { PropsWithChildren } from 'react'
+import { Provider } from 'react-redux'
 import { ReactTestRendererJSON } from 'react-test-renderer'
 import type { MobileState } from 'src/app/reducer'
 import type { AppStore } from 'src/app/store'
@@ -17,7 +18,6 @@ import { persistedReducer } from 'src/app/store'
 import { theme } from 'ui/src/theme/restyle/theme'
 import { setupCache } from 'wallet/src/data/cache'
 import { getErrorLink } from 'wallet/src/data/links'
-import { SharedProvider } from 'wallet/src/provider'
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -61,11 +61,11 @@ Record<string, any> & {
 
     return (
       <MockedProvider addTypename={false} cache={setupCache()} link={link} mocks={mocks}>
-        <SharedProvider reduxStore={store}>
+        <Provider store={store}>
           <NavigationContainer>
             <ThemeProvider theme={theme}>{children}</ThemeProvider>
           </NavigationContainer>
-        </SharedProvider>
+        </Provider>
       </MockedProvider>
     )
   }
@@ -103,9 +103,9 @@ Record<string, any> & {
 
     return (
       <MockedProvider addTypename={false} cache={setupCache()} link={link} mocks={mocks}>
-        <SharedProvider reduxStore={store}>
+        <Provider store={store}>
           <ThemeProvider theme={theme}>{children}</ThemeProvider>
-        </SharedProvider>
+        </Provider>
       </MockedProvider>
     )
   }

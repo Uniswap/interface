@@ -1,14 +1,18 @@
 import React from 'react'
-import { SvgProps } from 'react-native-svg'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
-import { Logos } from 'ui/src'
+import EtherscanLogoDark from 'ui/src/assets/logos/etherscan-logo-dark.svg'
+import EtherscanLogoLight from 'ui/src/assets/logos/etherscan-logo-light.svg'
 
-export function EtherscanIcon({ width, height }: SvgProps): JSX.Element {
+type Props = {
+  size: number
+}
+
+export function EtherscanIcon({ size }: Props): JSX.Element {
   const isDarkMode = useIsDarkMode()
 
   return isDarkMode ? (
-    <Logos.EtherscanLogoDark height={height} width={width} />
+    <EtherscanLogoDark height={size} width={size} />
   ) : (
-    <Logos.EtherscanLogoLight height={height} width={width} />
+    <EtherscanLogoLight height={size} width={size} />
   )
 }
