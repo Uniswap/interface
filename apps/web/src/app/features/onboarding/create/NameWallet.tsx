@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
 import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
@@ -17,9 +17,6 @@ export function NameWallet({ nextPath }: { nextPath: string }): JSX.Element {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  const [walletNamingErrorString, setWalletNamingErrorString] = useState<string | undefined>(
-    undefined
-  )
   const { walletName, setWalletName, pendingAddress } = useOnboardingContext()
 
   // Reference pending accounts to avoid any lag in saga import.
@@ -36,11 +33,6 @@ export function NameWallet({ nextPath }: { nextPath: string }): JSX.Element {
 
   const onSubmit = (): void => {
     if (!pendingAddress) {
-      return
-    }
-
-    if (!walletName) {
-      setWalletNamingErrorString('Please enter a name for your wallet')
       return
     }
 
@@ -62,14 +54,13 @@ export function NameWallet({ nextPath }: { nextPath: string }): JSX.Element {
   return (
     <OnboardingScreen
       Icon={<UniconWithLockIcon address={pendingAddress ?? ''} />}
-      inputError={walletNamingErrorString}
       nextButtonEnabled={walletName !== ''}
       nextButtonText="Finish"
       subtitle="This nickname is only visible to you"
       title="Give your wallet a name"
       onSubmit={onSubmit}>
       <OnboardingInput
-        placeholderText="Wallet 1"
+        placeholderText={defaultName}
         onChangeText={setWalletName}
         onSubmit={onSubmit}
       />

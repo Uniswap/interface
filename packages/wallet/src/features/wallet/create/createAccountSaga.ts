@@ -33,6 +33,7 @@ export function* createAccount(params: CreateAccountParams = {}) {
     mnemonicId,
     nextDerivationIndex
   )
+
   yield* put(
     addAccount({
       type: AccountType.SignerMnemonic,
@@ -42,6 +43,7 @@ export function* createAccount(params: CreateAccountParams = {}) {
       derivationIndex: nextDerivationIndex,
       mnemonicId,
       backups: existingBackups,
+      name: `Wallet ${nextDerivationIndex + 1}`, // TODO(EXT-255): add translation
     })
   )
 

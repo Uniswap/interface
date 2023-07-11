@@ -78,7 +78,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
         editAccountActions.trigger({
           type: EditAccountAction.Rename,
           address: pendingAccount?.address,
-          newName: newAccountName,
+          newName: newAccountName || pendingAccount.name,
         })
       )
     }
@@ -91,7 +91,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
       <Box my="spacing24">
         {pendingAccount ? (
           <CustomizationSection
-            accountName={newAccountName}
+            accountName={newAccountName || pendingAccount.name || ''}
             address={pendingAccount?.address}
             focused={focused}
             setAccountName={setNewAccountName}
