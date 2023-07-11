@@ -24,7 +24,7 @@ import { ThemedText } from 'theme'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { Suspend } from '../Suspense/Suspend'
-import { SuspenseFallbackToPreviousContents } from '../Suspense/SuspenseFallbackToPreviousContents'
+import { SuspenseWithPreviousRenderAsFallback } from '../Suspense/SuspenseWithPreviousRenderAsFallback'
 import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
@@ -143,11 +143,11 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
   return (
     <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
-        <SuspenseFallbackToPreviousContents>
+        <SuspenseWithPreviousRenderAsFallback>
           <Suspend if={isLoading}>
             <SearchBarDropdownContents {...props} />
           </Suspend>
-        </SuspenseFallbackToPreviousContents>
+        </SuspenseWithPreviousRenderAsFallback>
         {showChainComingSoonBadge && (
           <ChainComingSoonBadge>
             <ChainLogo src={logoUri} />
