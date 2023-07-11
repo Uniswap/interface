@@ -62,7 +62,8 @@ export const TokenBalanceList = ({ owner }: TokenBalanceListProps): JSX.Element 
       backgroundColor="$background1"
       marginTop="$spacing16"
       // TODO: make this dynamic
-      maxHeight={330}
+      maxHeight={310}
+      paddingBottom="$spacing16"
       showsVerticalScrollIndicator={false}
       width="100%">
       {listItems?.map((balance: PortfolioBalance) => {
