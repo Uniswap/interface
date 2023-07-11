@@ -3,7 +3,7 @@ import { deepCopy } from '@ethersproject/properties'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
 import { isPlain } from '@reduxjs/toolkit'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId, SupportedChainsType } from '@uniswap/sdk-core'
 
 import { AVERAGE_L1_BLOCK_TIME } from './chainInfo'
 import { CHAIN_IDS_TO_NAMES } from './chains'
@@ -20,7 +20,7 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
     return this._blockCache
   }
 
-  constructor(chainId: SupportedChainId) {
+  constructor(chainId: SupportedChainsType) {
     // Including networkish allows ethers to skip the initial detectNetwork call.
     super(RPC_URLS[chainId][0], /* networkish= */ { chainId, name: CHAIN_IDS_TO_NAMES[chainId] })
 
@@ -57,17 +57,18 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
 /**
  * These are the only JsonRpcProviders used directly by the interface.
  */
-export const RPC_PROVIDERS: { [key in SupportedChainId]: StaticJsonRpcProvider } = {
-  [SupportedChainId.MAINNET]: new AppJsonRpcProvider(SupportedChainId.MAINNET),
-  [SupportedChainId.GOERLI]: new AppJsonRpcProvider(SupportedChainId.GOERLI),
-  [SupportedChainId.SEPOLIA]: new AppJsonRpcProvider(SupportedChainId.SEPOLIA),
-  [SupportedChainId.OPTIMISM]: new AppJsonRpcProvider(SupportedChainId.OPTIMISM),
-  [SupportedChainId.OPTIMISM_GOERLI]: new AppJsonRpcProvider(SupportedChainId.OPTIMISM_GOERLI),
-  [SupportedChainId.ARBITRUM_ONE]: new AppJsonRpcProvider(SupportedChainId.ARBITRUM_ONE),
-  [SupportedChainId.ARBITRUM_GOERLI]: new AppJsonRpcProvider(SupportedChainId.ARBITRUM_GOERLI),
-  [SupportedChainId.POLYGON]: new AppJsonRpcProvider(SupportedChainId.POLYGON),
-  [SupportedChainId.POLYGON_MUMBAI]: new AppJsonRpcProvider(SupportedChainId.POLYGON_MUMBAI),
-  [SupportedChainId.CELO]: new AppJsonRpcProvider(SupportedChainId.CELO),
-  [SupportedChainId.CELO_ALFAJORES]: new AppJsonRpcProvider(SupportedChainId.CELO_ALFAJORES),
-  [SupportedChainId.BNB]: new AppJsonRpcProvider(SupportedChainId.BNB),
+export const RPC_PROVIDERS: { [key in SupportedChainsType]: StaticJsonRpcProvider } = {
+  [ChainId.MAINNET]: new AppJsonRpcProvider(ChainId.MAINNET),
+  [ChainId.GOERLI]: new AppJsonRpcProvider(ChainId.GOERLI),
+  [ChainId.SEPOLIA]: new AppJsonRpcProvider(ChainId.SEPOLIA),
+  [ChainId.OPTIMISM]: new AppJsonRpcProvider(ChainId.OPTIMISM),
+  [ChainId.OPTIMISM_GOERLI]: new AppJsonRpcProvider(ChainId.OPTIMISM_GOERLI),
+  [ChainId.ARBITRUM_ONE]: new AppJsonRpcProvider(ChainId.ARBITRUM_ONE),
+  [ChainId.ARBITRUM_GOERLI]: new AppJsonRpcProvider(ChainId.ARBITRUM_GOERLI),
+  [ChainId.POLYGON]: new AppJsonRpcProvider(ChainId.POLYGON),
+  [ChainId.POLYGON_MUMBAI]: new AppJsonRpcProvider(ChainId.POLYGON_MUMBAI),
+  [ChainId.CELO]: new AppJsonRpcProvider(ChainId.CELO),
+  [ChainId.CELO_ALFAJORES]: new AppJsonRpcProvider(ChainId.CELO_ALFAJORES),
+  [ChainId.BNB]: new AppJsonRpcProvider(ChainId.BNB),
+  [ChainId.AVALANCHE]: new AppJsonRpcProvider(ChainId.AVALANCHE),
 }

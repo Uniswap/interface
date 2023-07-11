@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
 import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'
 import { mocked } from 'test-utils/mocked'
@@ -20,7 +20,7 @@ const pendingTransactionResponse = {
   gasLimit: BigNumber.from(1000),
   data: '0x',
   value: BigNumber.from(0),
-  chainId: SupportedChainId.MAINNET,
+  chainId: ChainId.MAINNET,
   confirmations: 0,
   blockNumber: undefined,
   blockHash: undefined,
@@ -43,7 +43,7 @@ describe('Transactions hooks', () => {
     mocked(useWeb3React).mockReturnValue({ chainId: 1, account: '0x123' } as ReturnType<typeof useWeb3React>)
 
     jest.useFakeTimers()
-    store.dispatch(clearAllTransactions({ chainId: SupportedChainId.MAINNET }))
+    store.dispatch(clearAllTransactions({ chainId: ChainId.MAINNET }))
   })
 
   function addPendingTransaction(txInfo: TransactionInfo) {
@@ -59,7 +59,7 @@ describe('Transactions hooks', () => {
     act(() => {
       store.dispatch(
         finalizeTransaction({
-          chainId: SupportedChainId.MAINNET,
+          chainId: ChainId.MAINNET,
           hash: pendingTransactionResponse.hash,
           receipt: {
             status: 1,
@@ -78,7 +78,7 @@ describe('Transactions hooks', () => {
 
   it('useTransactionAdder adds a transaction', () => {
     addPendingTransaction(mockApprovalTransactionInfo)
-    expect(store.getState().transactions[SupportedChainId.MAINNET][pendingTransactionResponse.hash]).toEqual({
+    expect(store.getState().transactions[ChainId.MAINNET][pendingTransactionResponse.hash]).toEqual({
       hash: pendingTransactionResponse.hash,
       info: mockApprovalTransactionInfo,
       from: pendingTransactionResponse.from,
@@ -95,7 +95,7 @@ describe('Transactions hooks', () => {
     act(() => {
       remover.current(pendingTransactionResponse.hash)
     })
-    expect(store.getState().transactions[SupportedChainId.MAINNET][pendingTransactionResponse.hash]).toBeUndefined()
+    expect(store.getState().transactions[ChainId.MAINNET][pendingTransactionResponse.hash]).toBeUndefined()
   })
 
   describe('useHasPendingApproval', () => {
