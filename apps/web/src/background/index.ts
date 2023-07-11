@@ -1,6 +1,7 @@
 import { AnyAction, Dispatch } from 'redux'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import {
+  BaseDappRequest,
   BaseDappResponse,
   DappRequestType,
 } from 'src/background/features/dappRequests/dappRequestTypes'
@@ -24,12 +25,16 @@ const initApp = async (checkOnboardingOpen: boolean): Promise<undefined> => {
 
   const store = await initializeStore()
 
-  if (store) {
-    if (checkOnboardingOpen) {
-      maybeOpenOnboarding(store.getState() as unknown as WebState, store.dispatch)
-    } else {
-      notifyStoreInitialized()
-    }
+  if (!store) {
+    return
+  }
+
+  initMessageBridge(store.dispatch)
+
+  if (checkOnboardingOpen) {
+    maybeOpenOnboarding(store.getState() as unknown as WebState)
+  } else {
+    notifyStoreInitialized()
   }
 }
 
@@ -51,27 +56,33 @@ chrome.runtime.onConnect.addListener((port) => {
   initApp(port.name === PortName.Popup)
 })
 
-function maybeOpenOnboarding(state: WebState, dispatch: Dispatch<AnyAction>): void {
+function maybeOpenOnboarding(state: WebState): void {
   const isOnboarded = isOnboardedSelector(state)
 
   if (!isOnboarded) {
     focusOrCreateOnboardingTab()
   }
+}
 
+function initMessageBridge(dispatch: Dispatch<AnyAction>): void {
   chrome.runtime.onMessage.addListener(
     (
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      request: any,
+      request: unknown,
       sender: chrome.runtime.MessageSender,
       _sendResponse: (response: BaseDappResponse) => void
     ) => {
-      // The type above for request doesn't guarantee that the type is SendTransactionRequest
-      if (!Object.values(DappRequestType).includes(request.type)) return
+      // Validates this is a known request before casting.
+      if (
+        !('type' in (request as Partial<BaseDappRequest>)) ||
+        !Object.values(DappRequestType).includes((request as BaseDappRequest).type)
+      ) {
+        return
+      }
 
       // Dispatches a saga action which will handle side effects as well
       dispatch(
         addRequest({
-          dappRequest: request,
+          dappRequest: request as BaseDappRequest,
           senderTabId: sender.tab?.id || 0,
         })
       )
