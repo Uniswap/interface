@@ -13,11 +13,16 @@ import optimismSquareLogoUrl from 'assets/svg/optimism_square_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import polygonSquareLogoUrl from 'assets/svg/polygon_square_logo.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
+
+import harmonyCircleLogoUrl from 'assets/images/harmonyCircleLogo.png'
+import harmonySquareLogoUrl from 'assets/images/harmonySquareLogo.jpeg'
+import harmonyLogo from 'assets/images/harmonyLogo.png'
+
 import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { ARBITRUM_LIST, AVALANCHE_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
+import { ARBITRUM_LIST, AVALANCHE_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST, HARMONY_TOKEN_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms`12s`
 
@@ -240,6 +245,22 @@ const CHAIN_INFO: ChainInfoMap = {
     defaultListUrl: AVALANCHE_LIST,
     color: darkTheme.chain_43114,
     backgroundColor: darkTheme.chain_43114_background,
+  },
+  [ChainId.HARMONY]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms`10m`,
+    bridge: 'https://bridge.harmony.one/one',
+    docs: 'https://docs.harmony.one/',
+    explorer: 'https://explorer.harmony.one/',
+    infoLink: 'https://info.thinkincoin.com/#/',
+    label: 'Harmony Network',
+    logoUrl: harmonyLogo,
+    circleLogoUrl: harmonyCircleLogoUrl,
+    squareLogoUrl: harmonySquareLogoUrl,
+    nativeCurrency: { name: 'Harmony', symbol: 'ONE', decimals: 18 },
+    defaultListUrl: HARMONY_TOKEN_LIST,
+    color: darkTheme.chain_56,
+    backgroundColor: darkTheme.chain_56_background,
   },
 } as const
 
