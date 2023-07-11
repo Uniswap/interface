@@ -38,5 +38,29 @@
     "name": "USD Coin",
     "decimals": 6,
     "logoURI": "https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png"
+  },
+  {
+    "chainId": 1666600000,
+    "address": "0x2DA729BA5231d2C79290aBA4a8b85a5c94dA4724",
+    "symbol": "arbUSDT",
+    "name": "Tether USD",
+    "decimals": 6,
+    "logoURI": "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png"
+  },
+  {
+    "chainId": 1666600000,
+    "address": "0x9b5fae311A4A4b9d838f301C9c27b55d19BAa4Fb",
+    "symbol": "arbUSDC",
+    "name": "USD Coin (Arb1)",
+    "decimals": 6,
+    "logoURI": "https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png"
+  },
+  {
+    "chainId": 1666600000,
+    "address": "0x7C07d01C9DaB5aBB09CE2b42242a7570F25fC2CC",
+    "symbol": "arbDAI",
+    "name": "Dai Stablecoin",
+    "decimals": 18,
+    "logoURI": "https://assets.coingecko.com/coins/images/9956/small/Badge_Dai.png"
   }
 ]
