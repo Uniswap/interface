@@ -1,19 +1,19 @@
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
+import { ReduceLeverageTransactionPopupContent } from 'components/TransactionConfirmationModal'
 import { parseLocalActivity } from 'components/WalletDropdown/MiniPortfolio/Activity/parseLocal'
 import { PortfolioLogo } from 'components/WalletDropdown/MiniPortfolio/PortfolioLogo'
 import PortfolioRow from 'components/WalletDropdown/MiniPortfolio/PortfolioRow'
 import useENSName from 'hooks/useENSName'
+import { X } from 'react-feather'
 import { useCombinedActiveList } from 'state/lists/hooks'
 import { useTransaction } from 'state/transactions/hooks'
-import { TransactionDetails, TransactionInfo, TransactionType } from 'state/transactions/types'
+import { TransactionDetails, TransactionType } from 'state/transactions/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { PopupAlertTriangle } from './FailedNetworkSwitchPopup'
-import { ReduceLeverageTransactionPopupContent } from 'components/TransactionConfirmationModal'
-import { X } from 'react-feather'
 
 export const Descriptor = styled(ThemedText.BodySmall)`
   ${EllipsisStyle}
@@ -91,10 +91,11 @@ export default function TransactionPopup({ hash, removeThisPopup }: { hash: stri
   const { chainId } = useWeb3React()
 
   const tx = useTransaction(hash)
+  const theme = useTheme()
 
   if (!chainId || !tx) return null
 
-  const theme = useTheme()
+
 
   switch(tx.info.type) {
     case TransactionType.REDUCE_LEVERAGE:

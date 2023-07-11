@@ -1,36 +1,27 @@
-import { useEffect, useRef, useMemo } from 'react';
-import {
-	widget,
-	ChartingLibraryWidgetOptions,
-	LanguageCode,
-	ResolutionString,
-	IChartingLibraryWidget
-} from 'public/charting_library';
-import { useState } from 'react';
-import { defaultChartProps, DEFAULT_PERIOD, disabledFeaturesOnMobile } from "./constants";
-import useDatafeed from "./useDataFeed";
-import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk';
-import { Currency, Token } from '@uniswap/sdk-core';
-import { uniswapClient, useUniswapSubgraph } from 'graphql/limitlessGraph/uniswapClients';
-import { useLimitlessSubgraph, limitlessClient } from 'graphql/limitlessGraph/limitlessClients';
-import { V3_CORE_FACTORY_ADDRESSES as UNISWAP_FACTORIES } from "constants/addresses-uniswap"
-import { V3_CORE_FACTORY_ADDRESSES as LIMITLESS_FACTORIES, POOL_INIT_CODE_HASH } from "constants/addresses"
-import { useContract, usePoolContract, useTokenContract } from 'hooks/useContract';
-import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { Interface } from '@ethersproject/abi'
-import { usePool } from 'hooks/usePools';
-import { useCurrency } from 'hooks/Tokens';
-import { convertBNToNum } from 'hooks/useV3Positions';
-import { LoadingRows } from 'components/Loader/styled';
-import { ThemedText } from 'theme';
-import StatsSection from 'components/swap/StatsSection';
-import { useQuery } from "@apollo/client";
-import moment from "moment"
-import { POOL_STATS_QUERY } from 'graphql/limitlessGraph/queries';
+import { Token } from '@uniswap/sdk-core';
+import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
+import { computePoolAddress,FeeAmount } from '@uniswap/v3-sdk';
 import { BigNumber as BN } from "bignumber.js"
-import styled from 'styled-components';
-import { LATEST_POOL_DAY_QUERY, LATEST_POOL_INFO_QUERY } from 'graphql/limitlessGraph/poolPriceData';
+import StatsSection from 'components/swap/StatsSection';
+import { POOL_INIT_CODE_HASH,V3_CORE_FACTORY_ADDRESSES as LIMITLESS_FACTORIES } from "constants/addresses"
 import { getFakePool, getFakeSymbol, isFakePair } from 'constants/fake-tokens';
+import { LATEST_POOL_DAY_QUERY, LATEST_POOL_INFO_QUERY } from 'graphql/limitlessGraph/poolPriceData';
+import { uniswapClient } from 'graphql/limitlessGraph/uniswapClients';
+import { useCurrency } from 'hooks/Tokens';
+import { useTokenContract } from 'hooks/useContract';
+import { usePool } from 'hooks/usePools';
+import moment from "moment"
+import {
+	IChartingLibraryWidget,
+	LanguageCode,
+	widget} from 'public/charting_library';
+import { useEffect, useMemo,useRef } from 'react';
+import { useState } from 'react';
+import styled from 'styled-components/macro';
+
+import { defaultChartProps } from "./constants";
+import useDatafeed from "./useDataFeed";
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI)
 
@@ -38,22 +29,22 @@ const StatsContainer = styled.div`
 	margin-top:0px;
 `
 
-export interface ChartContainerProps {
-	symbol: ChartingLibraryWidgetOptions['symbol'];
-	interval: ChartingLibraryWidgetOptions['interval'];
+// interface ChartContainerProps {
+// 	symbol: ChartingLibraryWidgetOptions['symbol'];
+// 	interval: ChartingLibraryWidgetOptions['interval'];
 
-	// BEWARE: no trailing slash is expected in feed URL
-	datafeedUrl: string;
-	libraryPath: ChartingLibraryWidgetOptions['library_path'];
-	chartsStorageUrl: ChartingLibraryWidgetOptions['charts_storage_url'];
-	chartsStorageApiVersion: ChartingLibraryWidgetOptions['charts_storage_api_version'];
-	clientId: ChartingLibraryWidgetOptions['client_id'];
-	userId: ChartingLibraryWidgetOptions['user_id'];
-	fullscreen: ChartingLibraryWidgetOptions['fullscreen'];
-	autosize: ChartingLibraryWidgetOptions['autosize'];
-	studiesOverrides: ChartingLibraryWidgetOptions['studies_overrides'];
-	container: ChartingLibraryWidgetOptions['container'];
-}
+// 	// BEWARE: no trailing slash is expected in feed URL
+// 	datafeedUrl: string;
+// 	libraryPath: ChartingLibraryWidgetOptions['library_path'];
+// 	chartsStorageUrl: ChartingLibraryWidgetOptions['charts_storage_url'];
+// 	chartsStorageApiVersion: ChartingLibraryWidgetOptions['charts_storage_api_version'];
+// 	clientId: ChartingLibraryWidgetOptions['client_id'];
+// 	userId: ChartingLibraryWidgetOptions['user_id'];
+// 	fullscreen: ChartingLibraryWidgetOptions['fullscreen'];
+// 	autosize: ChartingLibraryWidgetOptions['autosize'];
+// 	studiesOverrides: ChartingLibraryWidgetOptions['studies_overrides'];
+// 	container: ChartingLibraryWidgetOptions['container'];
+// }
 
 const getLanguageFromURL = (): LanguageCode | null => {
 	const regex = new RegExp('[\\?&]lang=([^&#]*)');
@@ -103,7 +94,7 @@ export const PoolDataSection = ({
 			// }).toLowerCase()
 		}
 		return undefined
-	}, [chainId, token0, token1, fee])
+	}, [chainId, token0, token1])
 
 	// console.log("uniswapPoolAddress", uniswapPoolAddress)
 
@@ -161,8 +152,8 @@ export const PoolDataSection = ({
 							}
 						)
 
-						let token1Reserve = await token1Contract.callStatic.balanceOf(limitlessPoolAddress)
-						let token0Reserve = await token0Contract.callStatic.balanceOf(limitlessPoolAddress)
+						const token1Reserve = await token1Contract.callStatic.balanceOf(limitlessPoolAddress)
+						const token0Reserve = await token0Contract.callStatic.balanceOf(limitlessPoolAddress)
 
 						const priceQuery = await uniswapClient.query(
 							{
@@ -192,7 +183,7 @@ export const PoolDataSection = ({
 							let price24hLow;
 							if (invertPrice) {
 								price = 1 / price;
-								let price24hAgo = 1 / open;
+								const price24hAgo = 1 / open;
 								delta = (Number(price) - Number(price24hAgo)) / Number(price24hAgo) * 100
 								price24hHigh = 1 / Number(low) // Math.max(...data.map((item: any) => 1 / Number(item.high)))
 								price24hLow = 1 / Number(high) // Math.min(...data.map((item: any) => 1 / Number(item.low)))
@@ -205,12 +196,12 @@ export const PoolDataSection = ({
 							setStats(
 								{
 									price: Number(price),
-									delta: delta,
+									delta,
 									high24h: price24hHigh,
 									low24h: price24hLow,
 									invertPrice,
-									token0Reserve: new BN(token0Reserve.toString()).shiftedBy(18).toNumber(),
-									token1Reserve: new BN(token1Reserve.toString()).shiftedBy(18).toNumber(),
+									token0Reserve: new BN(token0Reserve.toString()).shiftedBy(-18).toNumber(),
+									token1Reserve: new BN(token1Reserve.toString()).shiftedBy(-18).toNumber(),
 								}
 							)
 						}
@@ -223,9 +214,9 @@ export const PoolDataSection = ({
 
 			fetch()
 		}
-	}, [lastUpdate, uniswapPoolAddress, uniswapPoolExists, pool, limitlessPoolAddress, token0Contract, token1Contract])
+	}, [lastUpdate, uniswapPoolAddress, uniswapPoolExists, pool, limitlessPoolAddress, token0Contract, token1Contract, token0, token1])
 
-	// console.log("stats: ", stats)
+	console.log("stats: ", token0?.symbol, token1?.symbol, stats)
 
 	// useEffect(() => {
 	// 	async function fetch() {
@@ -247,7 +238,6 @@ export const PoolDataSection = ({
 	// })
 	// console.log('symbol', symbol)
 	useEffect(() => {
-
 		if (token0 && token1 && isFakePair(chainId, token0?.address.toLowerCase(), token1?.address.toLowerCase())) {
 
 			setSymbol(getFakeSymbol(chainId, token0.address.toLowerCase(), token1.address.toLowerCase()) as string)
@@ -284,14 +274,14 @@ export const PoolDataSection = ({
 		} else {
 			setSymbol("missing pool")
 		}
-	}, [token0, token1])
+	}, [token0, token1, chainId, limitlessPool, limitlessPoolAddress, uniswapPoolAddress, uniswapPoolExists, uniswapToken0Price])
 
 	useEffect(() => {
 		// console.log("symbolExchangeChart: ", symbol)
 		const widgetOptions = {
 			debug: false,
 			symbol: !symbol ? "missing pool" : symbol,
-			datafeed: datafeed,
+			datafeed,
 			theme: defaultChartProps.theme,
 			container: chartContainerRef.current,
 			library_path: defaultChartProps.library_path,
@@ -314,7 +304,7 @@ export const PoolDataSection = ({
 
 		tvWidgetRef.current = new widget(widgetOptions as any);
 
-		tvWidgetRef.current!.onChartReady(function () {
+		tvWidgetRef.current?.onChartReady(function () {
 			setChartReady(true);
 
 			tvWidgetRef.current?.activeChart().dataReady(() => {
@@ -331,7 +321,7 @@ export const PoolDataSection = ({
 				setChartDataLoading(true);
 			}
 		};
-	}, [chainId, symbol, uniswapPoolAddress, fee]);
+	}, [chainId, symbol, uniswapPoolAddress, fee, datafeed]);
 
 	return (
 		<>
@@ -350,7 +340,7 @@ export const PoolDataSection = ({
 						height: '100%'
 					}}
 					ref={chartContainerRef}
-					className={'TVChartContainer'}
+					className="TVChartContainer"
 				/>
 			</div>
 		</>

@@ -1,57 +1,56 @@
+import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent,Trace, TraceEvent } from "@uniswap/analytics"
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName, SwapEventName } from "@uniswap/analytics-events"
 import { Trade } from "@uniswap/router-sdk"
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from "@uniswap/sdk-core"
 import { useWeb3React } from "@web3-react/core"
+import { BigNumber as BN } from "bignumber.js";
+import AddressInputPanel from "components/AddressInputPanel"
 import { sendEvent } from "components/analytics"
-import { Text } from 'rebass'
-import ConfirmSwapModal, { LeverageConfirmModal } from "components/swap/ConfirmSwapModal"
+import { ButtonError, ButtonLight, ButtonPrimary } from "components/Button"
+import { GrayCard } from "components/Card"
+import { AutoColumn } from "components/Column"
+import LeveragedOutputPanel from "components/CurrencyInputPanel/leveragedOutputPanel"
+import SwapCurrencyInputPanel from "components/CurrencyInputPanel/SwapCurrencyInputPanel"
+import Loader from 'components/Icons/LoadingSpinner'
+import { AutoRow, RowBetween } from "components/Row"
+import Slider from "components/Slider"
 import confirmPriceImpactWithoutFee from "components/swap/confirmPriceImpactWithoutFee"
+import ConfirmSwapModal, { LeverageConfirmModal } from "components/swap/ConfirmSwapModal"
+import PriceImpactWarning from "components/swap/PriceImpactWarning"
+import SwapDetailsDropdown from "components/swap/SwapDetailsDropdown"
+import { MouseoverTooltip } from "components/Tooltip"
+import { useToggleWalletDrawer } from "components/WalletDropdown"
 import { ROUTER_ADDRESSES } from "constants/addresses"
 import { isSupportedChain } from "constants/chains"
-import { useCurrency } from "hooks/Tokens"
+import { ApprovalState, useApproveCallback } from "hooks/useApproveCallback"
+import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler"
 import useENSAddress from "hooks/useENSAddress"
+import { useIsSwapUnsupported } from "hooks/useIsSwapUnsupported"
 import usePermit2Allowance, { AllowanceState } from "hooks/usePermit2Allowance"
 import { useAddLeveragePositionCallback, useSwapCallback } from "hooks/useSwapCallback"
 import { useUSDPrice } from "hooks/useUSDPrice"
 import useWrapCallback, { WrapErrorText, WrapType } from "hooks/useWrapCallback"
+import JSBI from "jsbi"
+import { Checkbox } from "nft/components/layout/Checkbox"
 import { useCallback, useMemo, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { ArrowDown, Info } from 'react-feather'
+import { Text } from 'rebass'
 import { LeverageTradeState, TradeState } from "state/routing/types"
 import { Field } from "state/swap/actions"
-import { useBestPool, useDefaultsFromURLSearch, useDerivedLeverageCreationInfo, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from "state/swap/hooks"
+import { useBestPool, useDerivedLeverageCreationInfo, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from "state/swap/hooks"
+import { useExpertModeManager } from "state/user/hooks"
+import { useTheme } from "styled-components/macro"
+import { LinkStyledButton, ThemedText } from "theme"
+import invariant from "tiny-invariant"
 import { computeFiatValuePriceImpact } from "utils/computeFiatValuePriceImpact"
-import { ArrowContainer, DetailsSwapSection, InputLeverageSection, InputSection, LeverageGaugeSection, LeverageInputSection, OutputSwapSection, StyledNumericalInput, getIsValidSwapQuote } from "."
-import { Trace, TraceEvent, sendAnalyticsEvent } from "@uniswap/analytics"
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName, SwapEventName } from "@uniswap/analytics-events"
-import SwapCurrencyInputPanel from "components/CurrencyInputPanel/SwapCurrencyInputPanel"
-import { Trans } from '@lingui/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from "utils/formatNumbers"
 import { maxAmountSpend } from "utils/maxAmountSpend"
-import LeveragedOutputPanel from "components/CurrencyInputPanel/leveragedOutputPanel"
-import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
-import { BigNumber as BN } from "bignumber.js";
-import { ArrowDown, Info } from 'react-feather'
-import JSBI from "jsbi"
-import { useTheme } from "styled-components"
-import { AutoRow, RowBetween } from "components/Row"
-import { LinkStyledButton, ThemedText } from "theme"
-import { GrayCard, LightCard } from "components/Card"
-import { AutoColumn } from "components/Column"
-import { Checkbox } from "nft/components/layout/Checkbox"
-import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler"
-import AddressInputPanel from "components/AddressInputPanel"
-import { ResponsiveHeaderText, SmallMaxButton } from '../RemoveLiquidity/styled'
-import Slider from "components/Slider"
-import SwapDetailsDropdown from "components/swap/SwapDetailsDropdown"
-import PriceImpactWarning from "components/swap/PriceImpactWarning"
-import { useIsSwapUnsupported } from "hooks/useIsSwapUnsupported"
-import { useExpertModeManager } from "state/user/hooks"
 import { computeRealizedPriceImpact, warningSeverity } from "utils/prices"
-import { ButtonError, ButtonLight, ButtonPrimary } from "components/Button"
-import { useToggleWalletDrawer } from "components/WalletDropdown"
-import { MouseoverTooltip } from "components/Tooltip"
-import invariant from "tiny-invariant"
-import Loader from 'components/Icons/LoadingSpinner'
-import { ApprovalState, useApproveCallback } from "hooks/useApproveCallback"
+
+import { ArrowWrapper, SwapCallbackError } from '../../components/swap/styleds'
+import { SmallMaxButton } from '../RemoveLiquidity/styled'
+import { ArrowContainer, DetailsSwapSection, getIsValidSwapQuote,InputLeverageSection, InputSection, LeverageGaugeSection, LeverageInputSection, OutputSwapSection, StyledNumericalInput } from "."
 
 const TRADE_STRING = 'SwapRouter';
 
@@ -68,36 +67,37 @@ function largerPercentValue(a?: Percent, b?: Percent) {
 
 const TradeTabContent = () => {
   const theme = useTheme()
-  const navigate = useNavigate()
-  const { account, chainId, provider } = useWeb3React()
-  const loadedUrlParams = useDefaultsFromURLSearch()
-  const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
-  const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
+  // const navigate = useNavigate()
+  const { account, chainId } = useWeb3React()
+  // const loadedUrlParams = useDefaultsFromURLSearch()
+  // const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
+  // const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
   // const swapWidgetEnabled = useSwapWidgetEnabled()
 
   const {
     onSwitchTokens, onCurrencySelection, onUserInput,
     onChangeRecipient, onLeverageFactorChange,
-    onLeverageChange, onLeverageManagerAddress, onLTVChange, onBorrowManagerAddress,
+    onLeverageChange, 
     onPremiumChange
   } = useSwapActionHandlers()
 
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
 
   // token warning stuff
-  const [loadedInputCurrency, loadedOutputCurrency] = [
-    useCurrency(loadedUrlParams?.[Field.INPUT]?.currencyId),
-    useCurrency(loadedUrlParams?.[Field.OUTPUT]?.currencyId),
-  ]
-  const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
-  const urlLoadedTokens: Token[] = useMemo(
-    () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
-    [loadedInputCurrency, loadedOutputCurrency]
-  )
+  // const [loadedInputCurrency, loadedOutputCurrency] = [
+  //   useCurrency(loadedUrlParams?.[Field.INPUT]?.currencyId),
+  //   useCurrency(loadedUrlParams?.[Field.OUTPUT]?.currencyId),
+  // ]
 
-  const handleConfirmTokenWarning = useCallback(() => {
-    setDismissTokenWarning(true)
-  }, [])
+  // const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
+  // const urlLoadedTokens: Token[] = useMemo(
+  //   () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
+  //   [loadedInputCurrency, loadedOutputCurrency]
+  // )
+
+  // const handleConfirmTokenWarning = useCallback(() => {
+  //   setDismissTokenWarning(true)
+  // }, [])
 
   const {
     trade: { state: tradeState, trade },
@@ -115,9 +115,9 @@ const TradeTabContent = () => {
     leverageFactor,
     leverage,
     leverageManagerAddress,
-    activeTab,
+    // activeTab,
     ltv,
-    borrowManagerAddress,
+    // borrowManagerAddress,
     premium
   } = useSwapState()
 
@@ -174,7 +174,7 @@ const TradeTabContent = () => {
           [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
           [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
         },
-    [currencies, independentField, parsedAmount, showWrap, trade]
+    [independentField, parsedAmount, showWrap, trade]
   )
 
   const allowance = usePermit2Allowance(
@@ -270,6 +270,7 @@ const TradeTabContent = () => {
     account,
     trade?.inputAmount?.currency?.symbol,
     trade?.outputAmount?.currency?.symbol,
+    showLeverageConfirm
   ])
 
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
@@ -306,7 +307,7 @@ const TradeTabContent = () => {
         ? parsedAmounts[independentField]?.toExact() ?? ''
         : formatTransactionAmount(currencyAmountToPreciseFloat(parsedAmounts[dependentField])),
     }),
-    [currencies, dependentField, independentField, parsedAmounts, showWrap, typedValue]
+    [dependentField, independentField, parsedAmounts, showWrap, typedValue]
   )
 
   const handleLeverageCreation = useCallback(() => {
@@ -329,7 +330,7 @@ const TradeTabContent = () => {
             : (recipientAddress ?? recipient) === account
               ? 'Swap w/o Send + recipient'
               : 'Swap w/ Send',
-        label: [TRADE_STRING, trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, 'MH'].join(
+        label: [TRADE_STRING, inputCurrency?.symbol, outputCurrency?.symbol, 'MH'].join(
           '/'
         ),
       })
@@ -346,7 +347,7 @@ const TradeTabContent = () => {
         })
       })
   }, [
-    leverageCallback, leverageTrade, showLeverageConfirm
+    leverageCallback, showLeverageConfirm, account, recipient, inputCurrency, outputCurrency, recipientAddress, showConfirm, tradeToConfirm
   ])
 
   const handleConfirmDismiss = useCallback(() => {
@@ -357,7 +358,7 @@ const TradeTabContent = () => {
       // onLTVChange('')
       onPremiumChange(0)
     }
-  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
+  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash, onLeverageFactorChange, onPremiumChange])
 
   const handleInputSelect = useCallback(
     (inputCurrency: Currency) => {
@@ -446,7 +447,7 @@ const TradeTabContent = () => {
     else {
       return [undefined]
     }
-  }, [inputCurrency, parsedAmounts[Field.INPUT], ltv, pool, outputCurrency, premium])
+  }, [inputCurrency, parsedAmounts, outputCurrency, premium])
 
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
     leverageApproveAmount,
@@ -458,7 +459,7 @@ const TradeTabContent = () => {
     } catch (err) {
       console.log("approveLeverageManager err: ", err)
     }
-  }, [leverageManagerAddress, parsedAmounts[Field.INPUT], approveLeverageManager])
+  }, [approveLeverageManager])
 
   return (
     <>

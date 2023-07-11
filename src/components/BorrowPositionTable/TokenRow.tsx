@@ -622,6 +622,7 @@ const OutputText = styled.div`
   height: 12px;
   color: ${({theme}) => theme.textSecondary};
 `
+
 const InputText = styled.div`
   font-size: 10px;
   font-weight: 600;

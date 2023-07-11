@@ -1,46 +1,47 @@
-import { Trace, TraceEvent } from "@uniswap/analytics"
-import { ArrowContainer, DetailsSwapSection, InputSection, LeverageGaugeSection, LeverageInputSection, OutputSwapSection, StyledBorrowNumericalInput, getIsValidSwapQuote } from "."
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName, SwapEventName } from "@uniswap/analytics-events"
-import SwapCurrencyInputPanel from "components/CurrencyInputPanel/SwapCurrencyInputPanel"
 import { Trans } from "@lingui/macro"
-import { useDerivedBorrowCreationInfo, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from "state/swap/hooks"
-import { ActiveSwapTab, Field } from "state/swap/actions"
-import { useCallback, useMemo, useState } from "react"
-import useWrapCallback, { WrapType } from "hooks/useWrapCallback"
-import { currencyAmountToPreciseFloat, formatTransactionAmount } from "utils/formatNumbers"
+import { Trace, TraceEvent } from "@uniswap/analytics"
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName, SwapEventName } from "@uniswap/analytics-events"
 import { Currency, CurrencyAmount, Percent } from "@uniswap/sdk-core"
-import { maxAmountSpend } from "utils/maxAmountSpend"
-import { ApprovalState, useApproveCallback } from "hooks/useApproveCallback"
-import { BigNumber as BN } from "bignumber.js";
-import { sendEvent } from "components/analytics"
-import { useUSDPrice } from "hooks/useUSDPrice"
-import { TradeState } from "state/routing/types"
-import { isSupportedChain } from "constants/chains"
 import { useWeb3React } from "@web3-react/core"
-import { ArrowWrapper } from "components/swap/styleds"
-import { useTheme } from "styled-components"
-import JSBI from "jsbi"
-import { computeFiatValuePriceImpact } from "utils/computeFiatValuePriceImpact"
-import { AutoRow, RowBetween } from "components/Row"
-import { LinkStyledButton, ThemedText } from "theme"
+import { BigNumber as BN } from "bignumber.js";
 import AddressInputPanel from "components/AddressInputPanel"
-import { GrayCard, LightCard } from "components/Card"
-import { AutoColumn } from "components/Column"
-import { SmallMaxButton } from "pages/RemoveLiquidity/styled"
-import Slider from "components/Slider"
-import { BorrowDetailsDropdown } from "components/swap/SwapDetailsDropdown"
-import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler"
-import { computeRealizedPriceImpact, warningSeverity } from "utils/prices"
-import { useIsSwapUnsupported } from "hooks/useIsSwapUnsupported"
-import PriceImpactWarning from "components/swap/PriceImpactWarning"
+import { sendEvent } from "components/analytics"
 import { ButtonError, ButtonLight, ButtonPrimary } from "components/Button"
-import { useToggleWalletDrawer } from "components/WalletDropdown"
-import { Text } from 'rebass'
+import { GrayCard } from "components/Card"
+import { AutoColumn } from "components/Column"
+import SwapCurrencyInputPanel from "components/CurrencyInputPanel/SwapCurrencyInputPanel"
 import Loader from 'components/Icons/LoadingSpinner'
-import { MouseoverTooltip } from "components/Tooltip"
-import { ArrowDown, Info } from 'react-feather'
-import { useAddBorrowPositionCallback } from "hooks/useSwapCallback"
+import { AutoRow, RowBetween } from "components/Row"
+import Slider from "components/Slider"
 import { BorrowConfirmModal } from "components/swap/ConfirmSwapModal"
+import PriceImpactWarning from "components/swap/PriceImpactWarning"
+import { ArrowWrapper } from "components/swap/styleds"
+import { BorrowDetailsDropdown } from "components/swap/SwapDetailsDropdown"
+import { MouseoverTooltip } from "components/Tooltip"
+import { useToggleWalletDrawer } from "components/WalletDropdown"
+import { isSupportedChain } from "constants/chains"
+import { ApprovalState, useApproveCallback } from "hooks/useApproveCallback"
+import useDebouncedChangeHandler from "hooks/useDebouncedChangeHandler"
+import { useIsSwapUnsupported } from "hooks/useIsSwapUnsupported"
+import { useAddBorrowPositionCallback } from "hooks/useSwapCallback"
+import { useUSDPrice } from "hooks/useUSDPrice"
+import useWrapCallback, { WrapType } from "hooks/useWrapCallback"
+import JSBI from "jsbi"
+import { SmallMaxButton } from "pages/RemoveLiquidity/styled"
+import { useCallback, useMemo, useState } from "react"
+import { ArrowDown, Info } from 'react-feather'
+import { Text } from 'rebass'
+import { TradeState } from "state/routing/types"
+import { Field } from "state/swap/actions"
+import { useDerivedBorrowCreationInfo, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from "state/swap/hooks"
+import { useTheme } from "styled-components/macro"
+import { LinkStyledButton, ThemedText } from "theme"
+import { computeFiatValuePriceImpact } from "utils/computeFiatValuePriceImpact"
+import { currencyAmountToPreciseFloat, formatTransactionAmount } from "utils/formatNumbers"
+import { maxAmountSpend } from "utils/maxAmountSpend"
+import { computeRealizedPriceImpact, warningSeverity } from "utils/prices"
+
+import { ArrowContainer, DetailsSwapSection, getIsValidSwapQuote,InputSection, LeverageGaugeSection, LeverageInputSection, OutputSwapSection, StyledBorrowNumericalInput } from "."
 
 function largerPercentValue(a?: Percent, b?: Percent) {
   if (a && b) {
@@ -59,20 +60,20 @@ const BorrowTabContent = () => {
     independentField,
     typedValue,
     recipient,
-    leverageFactor,
+    // leverageFactor,
     leverage,
-    leverageManagerAddress,
-    activeTab,
+    // leverageManagerAddress,
+    // activeTab,
     ltv,
     borrowManagerAddress,
     premium
   } = useSwapState()
 
-  const { account, chainId, provider } = useWeb3React()
+  const { account, chainId } = useWeb3React()
 
   const {
     trade: { state: tradeState, trade },
-    allowedSlippage,
+    // allowedSlippage,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -82,7 +83,7 @@ const BorrowTabContent = () => {
   const {
     onSwitchTokens, onCurrencySelection, onUserInput,
     onChangeRecipient, onLeverageFactorChange,
-    onLeverageChange, onLeverageManagerAddress, onLTVChange, onBorrowManagerAddress,
+    onLTVChange,
     onPremiumChange
   } = useSwapActionHandlers()
 
@@ -98,8 +99,8 @@ const BorrowTabContent = () => {
 
   const {
     wrapType,
-    execute: onWrap,
-    inputError: wrapInputError,
+    // execute: onWrap,
+    // inputError: wrapInputError,
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
 
@@ -114,7 +115,7 @@ const BorrowTabContent = () => {
           [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
           [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
         },
-    [currencies, independentField, parsedAmount, showWrap, trade]
+    [independentField, parsedAmount, showWrap, trade]
   )
   const toggleWalletDrawer = useToggleWalletDrawer()
   const [inputCurrency, outputCurrency] = useMemo(() => {
@@ -145,7 +146,7 @@ const BorrowTabContent = () => {
     else {
       return [undefined, undefined, undefined]
     }
-  }, [inputCurrency, parsedAmounts[Field.INPUT], ltv, outputCurrency, premium])
+  }, [inputCurrency, parsedAmounts, outputCurrency, premium])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
@@ -181,7 +182,7 @@ const BorrowTabContent = () => {
     borrowTrade
   )
 
-  const isBorrowTab = ActiveSwapTab.BORROW == activeTab
+  // const isBorrowTab = ActiveSwapTab.BORROW == activeTab
 
   const borrowIsValid = !borrowInputError
 
@@ -256,14 +257,14 @@ const BorrowTabContent = () => {
         ? parsedAmounts[independentField]?.toExact() ?? ''
         : formatTransactionAmount(currencyAmountToPreciseFloat(parsedAmounts[dependentField])),
     }),
-    [currencies, dependentField, independentField, parsedAmounts, showWrap, typedValue]
+    [dependentField, independentField, parsedAmounts, showWrap, typedValue]
   )
 
   const [debouncedLTV, debouncedSetLTV] = useDebouncedChangeHandler(ltv ?? "", onLTVChange);
 
   const [borrowRouteNotFound, borrowRouteIsLoading] = useMemo(
     () => [borrowState === TradeState.NO_ROUTE_FOUND, borrowState === TradeState.LOADING]
-    , [borrowTrade])
+    , [borrowState])
 
   const updateInputBorrowAllowance = useCallback(async () => {
     try {
@@ -271,7 +272,7 @@ const BorrowTabContent = () => {
     } catch (err) {
       console.log("approveBorrowManager err: ", err)
     }
-  }, [borrowManagerAddress, parsedAmounts[Field.INPUT], approveInputBorrowManager])
+  }, [approveInputBorrowManager])
 
   const updateOutputBorrowAllowance = useCallback(async () => {
     try {
@@ -279,7 +280,7 @@ const BorrowTabContent = () => {
     } catch (err) {
       console.log("approveBorrowManager err: ", err)
     }
-  }, [borrowManagerAddress, parsedAmounts[Field.INPUT], approveOutputBorrowManager])
+  }, [approveOutputBorrowManager])
 
   const handleAddBorrowPosition = useCallback(() => {
     if (!borrowCallback) {
@@ -311,7 +312,7 @@ const BorrowTabContent = () => {
         })
       })
   }, [
-    borrowCallback
+    borrowCallback, showConfirm
   ])
 
   const handleConfirmDismiss = useCallback(() => {
@@ -322,7 +323,7 @@ const BorrowTabContent = () => {
       onLTVChange('')
       onPremiumChange(0)
     }
-  }, [attemptingTxn, onUserInput, txHash])
+  }, [attemptingTxn, onUserInput, txHash, onLTVChange, onLeverageFactorChange, onPremiumChange])
 
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
     const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
@@ -454,8 +455,7 @@ const BorrowTabContent = () => {
                     </ThemedText.DeprecatedMain>
                   </MouseoverTooltip>
                 </RowBetween>
-                {(
-                  <>
+                <>
                     <RowBetween>
                       <LeverageInputSection>
                         <StyledBorrowNumericalInput
@@ -497,7 +497,6 @@ const BorrowTabContent = () => {
                       float={true}
                     />
                   </>
-                )}
               </AutoColumn>
           </LeverageGaugeSection>
           <DetailsSwapSection>
@@ -539,7 +538,7 @@ const BorrowTabContent = () => {
               </GrayCard>
             ) : !borrowIsValid ? (
               <ButtonError
-                onClick={() => { }}
+                onClick={() => {}}
                 id="borrow-button"
                 disabled={
                   true

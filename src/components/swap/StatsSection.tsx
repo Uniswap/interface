@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { AutoRow } from 'components/Row'
 import { ArrowCell } from 'components/Tokens/TokenDetails/PriceChart'
 import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
@@ -7,18 +7,16 @@ import { DeltaText } from 'components/Tokens/TokenDetails/PriceChart'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import { base } from 'nft/css/reset.css'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
-import { BigNumber as BN } from "bignumber.js"
 
-export const UNSUPPORTED_METADATA_CHAINS = [SupportedChainId.BNB]
+const UNSUPPORTED_METADATA_CHAINS = [SupportedChainId.BNB]
 
 // import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
 
-export const StatWrapper = styled.div`
+ const StatWrapper = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   min-width: 168px;
@@ -29,7 +27,7 @@ const TokenStatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
-export const StatPair = styled.div`
+const StatPair = styled.div`
   display: flex;
   flex: 1;
   flex-wrap: wrap;
@@ -47,7 +45,7 @@ const StatPrice = styled.div`
 const NoData = styled.div`
   color: ${({ theme }) => theme.textTertiary};
 `
-export const StatsWrapper = styled.div`
+const StatsWrapper = styled.div`
   gap: 16px;
   ${textFadeIn}
 `
@@ -131,10 +129,10 @@ export default function StatsSection(props: StatsSectionProps) {
               baseTokenSymbol={stats?.invertPrice ? token0Symbol : token1Symbol}
               title={<Trans>Current Price ({baseQuoteSymbol})</Trans>}
             />
-            <StatWrapper data-cy={"delta-24h"}>
+            <StatWrapper data-cy="delta-24h">
               <MouseoverTooltip text={<Trans>
                 The amount percentage change in asset over last 24 hours. 
-              </Trans>}>{<Trans>24h Change</Trans>}</MouseoverTooltip>
+              </Trans>}><Trans>24h Change</Trans></MouseoverTooltip>
               <StatPrice>
                 <AutoRow>
                   <ArrowCell>
