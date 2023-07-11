@@ -6216,10 +6216,10 @@
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@uniswap/conedison@^1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.7.2.tgz#e7d8bae122bbd2e485cf01d04cc15fadaa31590e"
-  integrity sha512-Jt8bPCI3tSTwRPgfjAQGMtwND256X/qkcOXMFYEz5976gR1Yu8qh9zy7oJ90XYiIaERaW30l92qKJ5yVDx7FFw==
+"@uniswap/conedison@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.8.0.tgz#60fcfa1475780350a719510ccee1f6a49f8c5cf8"
+  integrity sha512-EeC37bbrd4sJnqW3TxNhExdWUBvzyJDhbTXcbDzFdBh/bg5sOCu1NbYJEnrjwBHEfewc9nF2OjEzejJFyJUx9A==
 
 "@uniswap/default-token-list@^11.2.0":
   version "11.2.0"
