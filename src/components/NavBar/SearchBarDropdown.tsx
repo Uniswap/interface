@@ -23,7 +23,7 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
-import { Suspend } from '../Suspense/Suspend'
+import { SuspendConditionally } from '../Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from '../Suspense/SuspenseWithPreviousRenderAsFallback'
 import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
@@ -144,9 +144,9 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
     <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
         <SuspenseWithPreviousRenderAsFallback>
-          <Suspend if={isLoading}>
+          <SuspendConditionally if={isLoading}>
             <SearchBarDropdownContents {...props} />
-          </Suspend>
+          </SuspendConditionally>
         </SuspenseWithPreviousRenderAsFallback>
         {showChainComingSoonBadge && (
           <ChainComingSoonBadge>
