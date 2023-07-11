@@ -144,7 +144,7 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
     <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
         <SuspenseFallbackToPreviousContents>
-          <Suspend when={isLoading}>
+          <Suspend if={isLoading}>
             <SearchBarDropdownContents {...props} />
           </Suspend>
         </SuspenseFallbackToPreviousContents>

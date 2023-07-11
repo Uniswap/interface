@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export const useSuspendWhen = (shouldSuspend = false) => {
+export function useSuspendIf(shouldSuspend = false) {
   const [resolve, setResolve] = useState<((val?: unknown) => void) | undefined>()
 
   if (!resolve && shouldSuspend) {
