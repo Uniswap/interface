@@ -1,5 +1,5 @@
 // a list of tokens by chain
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@thinkincoin-libs/sdk-core'
 
 import {
   AMPL,

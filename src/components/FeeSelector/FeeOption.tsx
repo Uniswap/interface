@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { ButtonRadioChecked } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'

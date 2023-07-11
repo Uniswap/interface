@@ -8,7 +8,7 @@ import {
   TICK_LENS_ADDRESSES,
   V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
-} from '@uniswap/sdk-core'
+} from '@thinkincoin-libs/sdk-core'
 import QuoterV2Json from '@uniswap/swap-router-contracts/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'

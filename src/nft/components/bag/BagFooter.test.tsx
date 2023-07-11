@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
-import { ChainId, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, Percent } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { nativeOnChain } from 'constants/tokens'
 import { useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'

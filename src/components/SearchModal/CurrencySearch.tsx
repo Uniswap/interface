@@ -2,7 +2,7 @@
 import { t, Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import useDebounce from 'hooks/useDebounce'

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { getChainInfo } from 'constants/chainInfo'

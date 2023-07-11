@@ -1,6 +1,6 @@
-import { ChainId, CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@thinkincoin-libs/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
-import { computePoolAddress, Pool, Position } from '@uniswap/v3-sdk'
+import { computePoolAddress, Pool, Position } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'

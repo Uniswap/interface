@@ -1,5 +1,5 @@
 import { formatCurrencyAmount, formatNumber, NumberType } from '@uniswap/conedison/format'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@thinkincoin-libs/sdk-core'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'

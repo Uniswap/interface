@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { shallowEqual } from 'react-redux'
 
 import { Wallet } from './types'

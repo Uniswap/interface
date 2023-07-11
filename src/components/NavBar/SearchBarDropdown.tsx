@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import Badge from 'components/Badge'

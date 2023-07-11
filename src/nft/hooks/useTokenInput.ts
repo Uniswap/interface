@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@thinkincoin-libs/sdk-core'
 import { TokenTradeInput } from 'graphql/data/__generated__/types-and-hooks'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'

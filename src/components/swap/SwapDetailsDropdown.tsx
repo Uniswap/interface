@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'

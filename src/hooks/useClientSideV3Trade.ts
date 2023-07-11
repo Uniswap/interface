@@ -1,5 +1,5 @@
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { Route, SwapQuoter } from '@uniswap/v3-sdk'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@thinkincoin-libs/sdk-core'
+import { Route, SwapQuoter } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useSingleContractWithCallData } from 'lib/hooks/multicall'

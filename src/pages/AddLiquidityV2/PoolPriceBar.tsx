@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, Price } from '@uniswap/sdk-core'
+import { Currency, Percent, Price } from '@thinkincoin-libs/sdk-core'
 import { Text } from 'rebass'
 import { useTheme } from 'styled-components/macro'
 

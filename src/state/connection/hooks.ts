@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
 import { useMemo } from 'react'

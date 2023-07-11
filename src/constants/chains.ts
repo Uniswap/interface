@@ -1,4 +1,4 @@
-import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
+import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@thinkincoin-libs/sdk-core'
 
 export const UniWalletSupportedChains = [ChainId.MAINNET, ChainId.ARBITRUM_ONE, ChainId.OPTIMISM, ChainId.POLYGON]
 

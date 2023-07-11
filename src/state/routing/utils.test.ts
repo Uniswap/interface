@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { ChainId, Token } from '@thinkincoin-libs/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 
 import { PoolType } from './types'

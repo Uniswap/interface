@@ -5,7 +5,7 @@
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Wallet } from '@ethersproject/wallet'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 
 // todo: figure out how env vars actually work in CI
 // const TEST_PRIVATE_KEY = Cypress.env('INTEGRATION_TEST_PRIVATE_KEY')

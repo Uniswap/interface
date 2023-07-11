@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { getChainInfo } from 'constants/chainInfo'
 import { darken } from 'polished'
 import { useState } from 'react'

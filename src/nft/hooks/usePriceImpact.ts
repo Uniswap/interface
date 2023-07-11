@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@thinkincoin-libs/sdk-core'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { useTheme } from 'styled-components/macro'

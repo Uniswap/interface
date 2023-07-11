@@ -1,7 +1,7 @@
-import { Trade } from '@uniswap/router-sdk'
-import { CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
-import { Route as V3Route } from '@uniswap/v3-sdk'
+import { Trade } from '@thinkincoin/router-sdk'
+import { CurrencyAmount, Percent, TradeType } from '@thinkincoin-libs/sdk-core'
+import { Pair, Route as V2Route } from '@thinkincoin-libs/uniswap-v2-sdk'
+import { Route as V3Route } from '@thinkincoin-libs/uniswap-v3-sdk'
 import JSBI from 'jsbi'
 import {
   TEST_POOL_12,

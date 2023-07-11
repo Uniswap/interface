@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
-import { V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { V2_FACTORY_ADDRESSES } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { NftActivityType, NftMarketplace, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'

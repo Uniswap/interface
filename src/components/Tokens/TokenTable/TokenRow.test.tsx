@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { Currency, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { render, screen } from 'test-utils/render'

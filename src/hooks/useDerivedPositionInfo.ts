@@ -1,4 +1,4 @@
-import { Pool, Position } from '@uniswap/v3-sdk'
+import { Pool, Position } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { usePool } from 'hooks/usePools'
 import { PositionDetails } from 'types/position'
 

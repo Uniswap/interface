@@ -6,7 +6,7 @@ import {
   SwapEventName,
   SwapPriceUpdateUserResponse,
 } from '@uniswap/analytics-events'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'

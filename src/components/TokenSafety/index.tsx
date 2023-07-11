@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@thinkincoin-libs/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'

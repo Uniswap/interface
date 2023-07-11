@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'

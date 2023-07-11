@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
 import { initializeConnector } from '@web3-react/core'
 import { GnosisSafe } from '@web3-react/gnosis-safe'

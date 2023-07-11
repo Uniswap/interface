@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent } from '@thinkincoin-libs/sdk-core'
 import JSBI from 'jsbi'
 
 const ONE = new Fraction(1, 1)

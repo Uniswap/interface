@@ -1,5 +1,5 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'

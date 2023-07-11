@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { ChainId, SUPPORTED_CHAINS, Token } from '@uniswap/sdk-core'
+import { ChainId, SUPPORTED_CHAINS, Token } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'

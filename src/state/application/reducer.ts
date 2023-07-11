@@ -1,5 +1,5 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 
 export type PopupContent =

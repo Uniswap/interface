@@ -1,6 +1,6 @@
 import { QueryResult } from '@apollo/client'
 import * as Sentry from '@sentry/react'
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@thinkincoin-libs/sdk-core'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms.macro'
 import { useEffect } from 'react'

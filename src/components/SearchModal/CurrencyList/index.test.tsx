@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react'
-import { Currency, CurrencyAmount as mockCurrencyAmount, Token as mockToken } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount as mockCurrencyAmount, Token as mockToken } from '@thinkincoin-libs/sdk-core'
 import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'
 import * as mockJSBI from 'jsbi'
 import { render } from 'test-utils/render'

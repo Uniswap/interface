@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'

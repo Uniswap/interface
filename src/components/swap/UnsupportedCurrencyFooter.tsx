@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonEmpty } from 'components/Button'
 import Card, { OutlineCard } from 'components/Card'

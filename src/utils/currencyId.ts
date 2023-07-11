@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@thinkincoin-libs/sdk-core'
 
 export function currencyId(currency: Currency): string {
   if (currency.isNative) return 'ETH'

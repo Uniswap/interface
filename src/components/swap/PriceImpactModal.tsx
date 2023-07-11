@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { formatPriceImpact } from '@uniswap/conedison/format'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@thinkincoin-libs/sdk-core'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'

@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { getChainInfo } from 'constants/chainInfo'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import React from 'react'

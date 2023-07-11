@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@thinkincoin-libs/sdk-core'
 import { useRoutingAPIForPrice } from 'featureFlags/flags/priceRoutingApi'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'

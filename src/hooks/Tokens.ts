@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
 import { DEFAULT_INACTIVE_LIST_URLS, DEFAULT_LIST_OF_LISTS } from 'constants/lists'

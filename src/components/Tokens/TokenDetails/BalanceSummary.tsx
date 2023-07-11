@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'

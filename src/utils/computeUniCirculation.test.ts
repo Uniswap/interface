@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@thinkincoin-libs/sdk-core'
 import JSBI from 'jsbi'
 
 import { ZERO_ADDRESS } from '../constants/misc'

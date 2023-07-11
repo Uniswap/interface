@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@thinkincoin-libs/sdk-core'
 import { ReactComponent as PapersIcon } from 'assets/svg/papers-text.svg'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'

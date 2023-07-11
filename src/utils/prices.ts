@@ -1,7 +1,7 @@
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Trade } from '@thinkincoin/router-sdk'
+import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@thinkincoin-libs/sdk-core'
+import { Pair } from '@thinkincoin-libs/uniswap-v2-sdk'
+import { FeeAmount } from '@thinkincoin-libs/uniswap-v3-sdk'
 import JSBI from 'jsbi'
 
 import {

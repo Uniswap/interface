@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@thinkincoin-libs/sdk-core'
 import { OutlineCard } from 'components/Card'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'

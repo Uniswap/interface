@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { DAI_ARBITRUM } from '@uniswap/smart-order-router'
 import { BRIDGED_USDC_ARBITRUM, DAI, USDC_MAINNET } from 'constants/tokens'
 import { render } from 'test-utils/render'

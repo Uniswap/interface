@@ -1,5 +1,5 @@
 import { SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@thinkincoin-libs/sdk-core'
 import {
   formatPercentInBasisPointsNumber,
   formatPercentNumber,

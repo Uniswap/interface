@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@thinkincoin-libs/sdk-core'
 import styled from 'styled-components/macro'
 
 import CurrencyLogo from '../Logo/CurrencyLogo'

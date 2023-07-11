@@ -1,5 +1,5 @@
-import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { computePairAddress, Pair } from '@uniswap/v2-sdk'
+import { Percent, Token, V2_FACTORY_ADDRESSES } from '@thinkincoin-libs/sdk-core'
+import { computePairAddress, Pair } from '@thinkincoin-libs/uniswap-v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'

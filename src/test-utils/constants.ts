@@ -1,6 +1,6 @@
-import { CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Token, TradeType } from '@thinkincoin-libs/sdk-core'
 import { V3Route } from '@uniswap/smart-order-router'
-import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool } from '@thinkincoin-libs/uniswap-v3-sdk'
 import JSBI from 'jsbi'
 import { ClassicTrade } from 'state/routing/types'
 

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'

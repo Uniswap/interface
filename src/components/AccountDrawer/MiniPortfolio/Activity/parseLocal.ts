@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
 import { formatCurrencyAmount } from '@uniswap/conedison/format'
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@thinkincoin-libs/sdk-core'
 import { nativeOnChain } from '@uniswap/smart-order-router'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap, useAllTokensMultichain } from 'hooks/Tokens'

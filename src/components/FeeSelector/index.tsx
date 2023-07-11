@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Currency } from '@thinkincoin-libs/sdk-core'
+import { FeeAmount } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import { ButtonGray } from 'components/Button'

@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 
 /* eslint-env node */
 require('dotenv').config()
@@ -8,6 +8,7 @@ require('dotenv').config()
 // TODO(WEB-2187): Make more dynamic to avoid manually updating
 const BLOCK_NUMBER = 17388567
 const POLYGON_BLOCK_NUMBER = 43600000
+const HARMONY_BLOCK_NUMBER = 44134893
 
 const forkingConfig = {
   httpHeaders: {
@@ -24,6 +25,11 @@ const forks = {
   [ChainId.POLYGON]: {
     url: `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
     blockNumber: POLYGON_BLOCK_NUMBER,
+    ...forkingConfig,
+  },
+  [ChainId.HARMONY]: {
+    url: `https://api.harmony.one`,
+    blockNumber: HARMONY_BLOCK_NUMBER,
     ...forkingConfig,
   },
 }

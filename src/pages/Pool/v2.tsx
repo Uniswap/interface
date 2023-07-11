@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Pair } from '@uniswap/v2-sdk'
+import { Pair } from '@thinkincoin-libs/uniswap-v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { UNSUPPORTED_V2POOL_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'

@@ -10,8 +10,8 @@ import {
   SwapEventName,
 } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
-import { ChainId, Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { ChainId, Currency, CurrencyAmount, Percent, Token } from '@thinkincoin-libs/sdk-core'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@thinkincoin/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'

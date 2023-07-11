@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Fraction, TradeType } from '@uniswap/sdk-core'
+import { Fraction, TradeType } from '@thinkincoin-libs/sdk-core'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
 

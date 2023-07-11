@@ -1,4 +1,4 @@
-import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, WETH9 } from '@thinkincoin-libs/sdk-core'
 
 import { ARB, UNI } from '../../src/constants/tokens'
 import { getTestSelector } from '../utils'

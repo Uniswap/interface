@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@thinkincoin-libs/sdk-core'
 
 export const getTestSelector = (selectorId: string) => `[data-testid=${selectorId}]`
 

@@ -1,5 +1,5 @@
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { Trade } from '@thinkincoin/router-sdk'
+import { Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@thinkincoin-libs/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { InterfaceTrade, QuoteMethod } from 'state/routing/types'
 import { computeRealizedPriceImpact } from 'utils/prices'

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import { useCallback, useEffect } from 'react'

@@ -1,5 +1,5 @@
-import { Currency } from '@uniswap/sdk-core'
-import { Pool, Route } from '@uniswap/v3-sdk'
+import { Currency } from '@thinkincoin-libs/sdk-core'
+import { Pool, Route } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useMemo } from 'react'
 

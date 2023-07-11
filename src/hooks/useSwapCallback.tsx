@@ -1,5 +1,5 @@
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Trade } from '@thinkincoin/router-sdk'
+import { Currency, Percent, TradeType } from '@thinkincoin-libs/sdk-core'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useMemo } from 'react'
 

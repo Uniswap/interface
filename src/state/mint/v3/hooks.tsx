@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Rounding, Token } from '@thinkincoin-libs/sdk-core'
 import {
   encodeSqrtRatioX96,
   FeeAmount,
@@ -10,7 +10,7 @@ import {
   TICK_SPACINGS,
   TickMath,
   tickToPrice,
-} from '@uniswap/v3-sdk'
+} from '@thinkincoin-libs/uniswap-v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'

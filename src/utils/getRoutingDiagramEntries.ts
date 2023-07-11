@@ -1,7 +1,7 @@
-import { Protocol } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Protocol } from '@thinkincoin/router-sdk'
+import { Currency, Percent, TradeType } from '@thinkincoin-libs/sdk-core'
+import { Pair } from '@thinkincoin-libs/uniswap-v2-sdk'
+import { FeeAmount } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { InterfaceTrade } from 'state/routing/types'
 
 export interface RoutingDiagramEntry {

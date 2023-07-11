@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent, TradeType } from '@thinkincoin-libs/sdk-core'
 import Column, { AutoColumn } from 'components/Column'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { InterfaceTrade } from 'state/routing/types'

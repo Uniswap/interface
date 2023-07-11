@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Fraction } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction } from '@thinkincoin-libs/sdk-core'
 import JSBI from 'jsbi'
 
 const CURRENCY_AMOUNT_MIN = new Fraction(JSBI.BigInt(1), JSBI.BigInt(1000000))

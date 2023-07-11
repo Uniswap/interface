@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'

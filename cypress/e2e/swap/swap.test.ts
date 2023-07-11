@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 
 import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'

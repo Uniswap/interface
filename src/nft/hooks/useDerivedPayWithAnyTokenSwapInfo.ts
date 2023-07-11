@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, NativeCurrency, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, NativeCurrency, Percent, Token, TradeType } from '@thinkincoin-libs/sdk-core'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import { useMemo } from 'react'

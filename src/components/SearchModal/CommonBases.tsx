@@ -1,6 +1,6 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@thinkincoin-libs/sdk-core'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'

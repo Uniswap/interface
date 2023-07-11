@@ -1,5 +1,5 @@
-import { Token } from '@uniswap/sdk-core'
-import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
+import { Token } from '@thinkincoin-libs/sdk-core'
+import { FeeAmount, TICK_SPACINGS } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { TickData } from 'graphql/thegraph/AllV3TicksQuery'
 import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'

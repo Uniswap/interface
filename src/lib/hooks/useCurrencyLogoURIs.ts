@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@thinkincoin-libs/sdk-core'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
 import { isAddress } from 'utils'

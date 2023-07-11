@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { formatNumber, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@thinkincoin-libs/sdk-core'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'

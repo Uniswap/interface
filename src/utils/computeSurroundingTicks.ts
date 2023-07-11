@@ -1,5 +1,5 @@
-import { Token } from '@uniswap/sdk-core'
-import { tickToPrice } from '@uniswap/v3-sdk'
+import { Token } from '@thinkincoin-libs/sdk-core'
+import { tickToPrice } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 
