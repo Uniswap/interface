@@ -3,6 +3,7 @@ import './App.css'
 import { ToastProvider, ToastViewport } from '@tamagui/toast'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 import { GraphqlProvider } from 'src/app/apollo'
+import { ErrorBoundary } from 'src/app/components/ErrorBoundary'
 import { BottomToast } from 'src/app/components/toast/BottomToast'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
 import { Complete } from 'src/app/features/onboarding/Complete'
@@ -39,6 +40,7 @@ const router = createHashRouter([
   {
     path: `/${TopLevelRoutes.Onboarding}`,
     element: <OnboardingWrapper />,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         path: '',
@@ -120,11 +122,13 @@ const router = createHashRouter([
   // TODO: flesh out notifications route
   {
     path: `/${TopLevelRoutes.Notifications}`,
+    errorElement: <ErrorBoundary />,
     element: <div>Notifications</div>,
   },
   {
     path: '',
     element: <WebNavigation />,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         path: '',
