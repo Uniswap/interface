@@ -24,6 +24,7 @@ export const CELO_LIST = 'https://celo-org.github.io/celo-token-list/celo.tokenl
 export const PLASMA_BNB_LIST = 'https://raw.githubusercontent.com/plasmadlt/plasma-finance-token-list/master/bnb.json'
 export const AVALANCHE_LIST =
   'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/token_list.json'
+export const HARMONY_TOKEN_LIST = 'https://raw.githubusercontent.com/ThinkinCoin/Harmony-token-list/master/src/tokens/mainnet.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST, UNI_UNSUPPORTED_LIST]
 
@@ -50,6 +51,7 @@ export const DEFAULT_INACTIVE_LIST_URLS: string[] = [
   CELO_LIST,
   PLASMA_BNB_LIST,
   AVALANCHE_LIST,
+  HARMONY_TOKEN_LIST,
   ...UNSUPPORTED_LIST_URLS,
 ]
 

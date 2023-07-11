@@ -16,6 +16,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
   [ChainId.BNB]: 'bnb',
   [ChainId.AVALANCHE]: 'avalanche',
+  [ChainId.HARMONY]: 'harmony',
 } as const
 
 export function isSupportedChain(chainId: number | null | undefined | ChainId): chainId is SupportedChainsType {
@@ -34,6 +35,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   ChainId.ARBITRUM_ONE,
   ChainId.BNB,
   ChainId.AVALANCHE,
+  ChainId.HARMONY,
 ] as const
 
 /**
@@ -46,6 +48,7 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
   ChainId.BNB,
   ChainId.ARBITRUM_GOERLI,
   ChainId.AVALANCHE,
+  ChainId.HARMONY,
 ] as const
 
 export const TESTNET_CHAIN_IDS = [
@@ -70,6 +73,7 @@ export const L1_CHAIN_IDS = [
   ChainId.CELO_ALFAJORES,
   ChainId.BNB,
   ChainId.AVALANCHE,
+  ChainId.HARMONY,
 ] as const
 
 export type SupportedL1ChainId = (typeof L1_CHAIN_IDS)[number]
