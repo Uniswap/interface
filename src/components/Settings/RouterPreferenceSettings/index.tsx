@@ -10,7 +10,17 @@ import { useAppDispatch } from 'state/hooks'
 import { RouterPreference } from 'state/routing/slice'
 import { useRouterPreference } from 'state/user/hooks'
 import { updateDisabledUniswapX } from 'state/user/reducer'
-import { Divider, ThemedText } from 'theme'
+import styled from 'styled-components/macro'
+import { Divider, ExternalLink, ThemedText } from 'theme'
+
+const InlineLink = styled(ThemedText.Caption)`
+  color: ${({ theme }) => theme.accentAction};
+  display: inline;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+`
 
 export default function RouterPreferenceSettings() {
   const { chainId } = useWeb3React()
@@ -29,7 +39,10 @@ export default function RouterPreferenceSettings() {
                   <UniswapXBrandMark />
                 </ThemedText.BodySecondary>
                 <ThemedText.Caption color="textSecondary">
-                  <Trans>When available, broadcasts off-chain orders for better prices and lower network fees.</Trans>
+                  <Trans>When available, aggregates liquidity sources for better prices and gas free swaps.</Trans>{' '}
+                  <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
+                    <InlineLink>Learn more</InlineLink>
+                  </ExternalLink>
                 </ThemedText.Caption>
               </Column>
             </RowFixed>
