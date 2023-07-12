@@ -525,6 +525,16 @@
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-private-property-in-object/-/plugin-proposal-private-property-in-object-7.21.0-placeholder-for-preset-env.2.tgz#7844f9289546efa9febac2de4cfe358a050bd703"
   integrity sha512-SOSkfJDddaM7mak6cPEpswyTRnuRltl429hMraQEglW+OkovnCzsiszTmsrlY//qLFjCpQDFRvjdm2wA5pPm9w==
 
+"@babel/plugin-proposal-private-property-in-object@^7.21.11":
+  version "7.21.11"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-private-property-in-object/-/plugin-proposal-private-property-in-object-7.21.11.tgz#69d597086b6760c4126525cfa154f34631ff272c"
+  integrity sha512-0QZ8qP/3RLDVBwBFoWAwCtgcDZJVwA5LUJRZU8x2YFfKNuFq161wK3cuGrALu5yiPu+vzwTAg/sMWVNeWeNyaw==
+  dependencies:
+    "@babel/helper-annotate-as-pure" "^7.18.6"
+    "@babel/helper-create-class-features-plugin" "^7.21.0"
+    "@babel/helper-plugin-utils" "^7.20.2"
+    "@babel/plugin-syntax-private-property-in-object" "^7.14.5"
+
 "@babel/plugin-proposal-unicode-property-regex@^7.4.4":
   version "7.18.6"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-unicode-property-regex/-/plugin-proposal-unicode-property-regex-7.18.6.tgz#af613d2cd5e643643b65cded64207b15c85cb78e"
@@ -5199,6 +5209,89 @@
   resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.4.3.tgz#af975e367743fa91989cd666666aec31a8f50591"
   integrity sha512-kCUc5MEwaEMakkO5x7aoD+DLi02ehmEM2QCGWvNqAS1dV/fAvORWEjnjsEIvml59M7Y5kCkWN6fCCyPOe8OL6Q==
 
+"@thinkincoin-libs/permit2-sdk@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@thinkincoin-libs/permit2-sdk/-/permit2-sdk-1.2.0.tgz#28abf0254875082a0ef3e2ec70f3c2035e24fb5f"
+  integrity sha512-NslkqpspidEjt/cnjW9V+81gtv5tKeyLMLlxJRpxGYf78cfeEQ1ZGkp5j3U8VVJzx7Mu+NRgRPhsRD/ot1EOIQ==
+  dependencies:
+    ethers "^5.3.1"
+    tiny-invariant "^1.3.1"
+
+"@thinkincoin-libs/sdk-core@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@thinkincoin-libs/sdk-core/-/sdk-core-4.0.2.tgz#60916f07838b25a268f79e2cf9e482dd39298a3c"
+  integrity sha512-OOq4yEkDkKB07NDY3Ok/i/HhtHvhP3RNm1Lel/kYRZKHmjt6SY3+wSVEI4ij8U/3WR2pUj8LFvEEM7Ih6/WsOA==
+  dependencies:
+    "@ethersproject/address" "^5.0.2"
+    big.js "^5.2.2"
+    decimal.js-light "^2.5.0"
+    jsbi "^3.1.4"
+    tiny-invariant "^1.1.0"
+    toformat "^2.0.0"
+
+"@thinkincoin-libs/swap-router-contracts@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@thinkincoin-libs/swap-router-contracts/-/swap-router-contracts-1.0.1.tgz#e7564a820a0edb768570e0323d01a564d3100516"
+  integrity sha512-uTyF5SRPGZlW1vZ9LFaFhnUG4GdLqtsM3gu9XU1dPnF9cYgIoDRrK0E40wg6OGPuIxvlT+H30I7o/TCrZoGUVQ==
+  dependencies:
+    "@openzeppelin/contracts" "3.4.2-solc-0.7"
+    "@uniswap/v2-core" "1.0.1"
+    "@uniswap/v3-core" "1.0.0"
+    "@uniswap/v3-periphery" "1.4.1"
+    dotenv "^14.2.0"
+    hardhat-watcher "^2.1.1"
+
+"@thinkincoin-libs/uniswap-v2-sdk@^3.0.8":
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/@thinkincoin-libs/uniswap-v2-sdk/-/uniswap-v2-sdk-3.0.8.tgz#468e04fed592e70fcc327a2e9e70d7795df2cfff"
+  integrity sha512-aR36eQqKCdm9z8n5wi1tKA7gwQpIjMsHS3LlOV+IlQPV7MJlEmLzZr97cG09zct2iQIQAZOzdu4afJLgY6h6JQ==
+  dependencies:
+    "@ethersproject/address" "^5.0.0"
+    "@ethersproject/solidity" "^5.0.0"
+    "@thinkincoin-libs/sdk-core" "^4.0.2"
+    "@uniswap/v2-sdk" "^3.0.1"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+
+"@thinkincoin-libs/uniswap-v3-sdk@^3.9.7":
+  version "3.9.7"
+  resolved "https://registry.yarnpkg.com/@thinkincoin-libs/uniswap-v3-sdk/-/uniswap-v3-sdk-3.9.7.tgz#579a8bcabe127d7722f0ece1e497fb2c220d7ec3"
+  integrity sha512-TRKrumxYdamXf80BYy5fiwFSFSEtHTdHOi8GYKvg66V5HJ6hKIjr1DDQQKaBs9iA+Pu6YCPx8aNQPiEJyN/QoQ==
+  dependencies:
+    "@ethersproject/abi" "^5.0.12"
+    "@ethersproject/solidity" "^5.0.9"
+    "@thinkincoin-libs/sdk-core" "^4.0.2"
+    "@uniswap/swap-router-contracts" "^1.2.1"
+    "@uniswap/v3-periphery" "^1.1.1"
+    "@uniswap/v3-staker" "1.0.0"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+
+"@thinkincoin/router-sdk@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@thinkincoin/router-sdk/-/router-sdk-1.4.1.tgz#8150cec34b9e0a9fa3f7483feeab3e9266fc3cee"
+  integrity sha512-6VUJ7rImhANHraNOnKtzcGDmLTuNppAlw6F5LCFZdg8p+syVq6U18nP6D1TeowCHv0r/paiehtDtdLVw0WCCsw==
+  dependencies:
+    "@ethersproject/abi" "^5.5.0"
+    "@thinkincoin-libs/sdk-core" "^4.0.2"
+    "@thinkincoin-libs/swap-router-contracts" "1.0.1"
+    "@thinkincoin-libs/uniswap-v2-sdk" "^3.0.8"
+    "@thinkincoin-libs/uniswap-v3-sdk" "^3.9.7"
+
+"@thinkincoin/universal-router-sdk@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@thinkincoin/universal-router-sdk/-/universal-router-sdk-1.0.5.tgz#6d7b8dd5c1a9c08a100ac3ef63a35e240213cc38"
+  integrity sha512-8nc6NZRfk7FbMJ1ri5E8jNoqVt/oJm73bDLBJvs7jH0blV4k1D1dBY7cdM8PeiH5kvi5tkgeU477V0DPRqdT9g==
+  dependencies:
+    "@thinkincoin-libs/permit2-sdk" "^1.2.0"
+    "@thinkincoin-libs/sdk-core" "^4.0.2"
+    "@thinkincoin-libs/uniswap-v2-sdk" "^3.0.8"
+    "@thinkincoin-libs/uniswap-v3-sdk" "^3.9.7"
+    "@thinkincoin/router-sdk" "^1.4.1"
+    "@uniswap/universal-router" "1.4.3"
+    bignumber.js "^9.0.2"
+    ethers "^5.3.1"
+
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
@@ -6297,7 +6390,7 @@
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.8.3"
 
-"@uniswap/sdk-core@^3.0.0-alpha.3", "@uniswap/sdk-core@^3.0.1", "@uniswap/sdk-core@^3.1.0", "@uniswap/sdk-core@^3.2.6":
+"@uniswap/sdk-core@^3.0.0-alpha.3", "@uniswap/sdk-core@^3.0.1", "@uniswap/sdk-core@^3.1.0":
   version "3.2.6"
   resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.2.6.tgz#1a652516fab0c6bc1420c2226648da967a10f52a"
   integrity sha512-MvH/3G0W0sM2g7XjaUy9qU7IabxL/KQp/ucU0AQGpVxiTaAhmVRtsjkkv9UDyzpIXVrmevl4kRgV7KKE29UuXA==
@@ -6364,7 +6457,7 @@
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.31.tgz#ff3852bd505ec7b4c276625c762ea79a93a919ec"
   integrity sha512-BQVoelKCRf64IToPEs1wxiXOnhr/ukwPOF78XG11PrTAOL4F8umjYKFb8ZPv1/dIJsPaC7GhLSriEqyp94SasQ==
 
-"@uniswap/universal-router-sdk@^1.3.8", "@uniswap/universal-router-sdk@^1.3.9", "@uniswap/universal-router-sdk@^1.5.3":
+"@uniswap/universal-router-sdk@^1.3.8", "@uniswap/universal-router-sdk@^1.3.9":
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.5.3.tgz#7397250f9569ed0b29d94e2d00831e8dc0cccb46"
   integrity sha512-C6JuOY9JxHjN5Eec67CIMFm3SAP4uqiGFnaUzBQM30HfWUBOdc8NJZ+5v5UIluydKu4VepB0xH3bnQ6tgsCx2Q==
