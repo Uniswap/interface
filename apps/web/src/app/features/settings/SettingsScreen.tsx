@@ -48,7 +48,6 @@ export function SettingsScreen(): JSX.Element {
           ))}
         {showAllWalletsButton ? (
           <Button
-            backgroundColor="$textOnDimPrimary"
             borderRadius="$roundedFull"
             padding="$spacing4"
             onPress={(): void => setShowAll(!showAll)}>
