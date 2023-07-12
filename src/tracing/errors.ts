@@ -23,9 +23,10 @@ export const beforeSend: Required<ClientOptions>['beforeSend'] = (event: ErrorEv
   return event
 }
 
-/** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
-function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
-  return 'requestBody' in error && typeof (error as unknown as Record<'requestBody', unknown>).requestBody === 'string'
+type ErrorLike = Pick<Error, 'message'>
+
+function isErrorLike(error: unknown): error is ErrorLike {
+  return error instanceof Object && 'message' in error && typeof error.message === 'string'
 }
 
 // Since the interface currently uses HashRouter, URLs will have a # before the path.
@@ -44,13 +45,11 @@ function updateRequestUrl(event: ErrorEvent) {
 
 // TODO(WEB-2400): Refactor to use a config instead of returning true for each condition.
 function shouldRejectError(error: EventHint['originalException']) {
-  if ('message' in error) {
-    // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
-    // If block number polling, it should not be considered an exception.
-    if (isEthersRequestError(error)) {
-      const method = JSON.parse(error.requestBody).method
-      if (method === 'eth_blockNumber') return true
-    }
+  // Some libraries throw ErrorLike objects ({ code, message, stack }) instead of true Errors.
+  if (isErrorLike(error)) {
+    // Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
+    // These are caused by user navigation away from the page before a request has finished.
+    if (error instanceof DOMException && error?.name === 'AbortError') return true
 
     // If the error is based on a user rejecting, it should not be considered an exception.
     // TODO(WEB-2398): we should catch these errors and handle them gracefully instead.
@@ -64,15 +63,6 @@ function shouldRejectError(error: EventHint['originalException']) {
     // Therefore, this can be ignored.
     if (error.message.match(/Unexpected token '<'/)) return true
 
-    // Errors coming from a browser extension can be ignored. These errors are usually caused by extensions injecting
-    // scripts into the page, which we cannot control.
-    if (error.stack?.match(/-extension:\/\//i)) return true
-
-    // Errors coming from OneKey (a desktop wallet) can be ignored for now.
-    // These errors are either application-specific, or they will be thrown separately outside of OneKey.
-    if (error.stack?.match(/OneKey/i)) return true
-
-    // Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
     // For example, if a user runs an eval statement in console this error would still get thrown.
     // TODO(WEB-2348): We should extend this to filter out any type of CSP error.
     if (error.message.match(/'unsafe-eval'.*content security policy/i)) return true
@@ -92,8 +82,23 @@ function shouldRejectError(error: EventHint['originalException']) {
       return true
     }
 
-    // These are caused by user navigation away from the page before a request has finished.
-    if (error instanceof DOMException && error?.name === 'AbortError') return true
+    if ('stack' in error && typeof error.stack === 'string') {
+      // Errors coming from a browser extension can be ignored. These errors are usually caused by extensions injecting
+      // scripts into the page, which we cannot control.
+      if (error.stack.match(/-extension:\/\//i)) return true
+
+      // Errors coming from OneKey (a desktop wallet) can be ignored for now.
+      // These errors are either application-specific, or they will be thrown separately outside of OneKey.
+      if (error.stack.match(/OneKey/i)) return true
+    }
+
+    // ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}) includes requestBody.
+    if ('requestBody' in error && typeof error.requestBody === 'string') {
+      const method = JSON.parse(error.requestBody).method
+      // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
+      // If block number polling, it should not be considered an exception.
+      if (method === 'eth_blockNumber') return true
+    }
   }
 
   return false
