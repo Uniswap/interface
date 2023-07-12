@@ -144,7 +144,7 @@ export const darkTheme = {
   backgroundBackdrop: colors.gray950,
   backgroundSurface: colors.gray900,
   backgroundModule: colors.gray800,
-  backgroundInteractive: colors.green700,
+  backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
   backgroundOutline: opacify(24, colors.gray300),
   backgroundScrim: opacify(72, colors.gray900),
@@ -167,18 +167,18 @@ export const darkTheme = {
   accentWarningSoft: opacify(24, colors.gold200),
   accentFailureSoft: opacify(12, colors.red300),
 
-  accentTextDarkPrimary: opacify(80, colors.green900),
-  accentTextDarkSecondary: opacify(60, colors.green900),
-  accentTextDarkTertiary: opacify(24, colors.green900),
+  accentTextDarkPrimary: opacify(80, colors.gray900),
+  accentTextDarkSecondary: opacify(60, colors.gray900),
+  accentTextDarkTertiary: opacify(24, colors.gray900),
 
-  accentTextLightPrimary: colors.gray50,
+  accentTextLightPrimary: colors.green50,
   accentTextLightSecondary: opacify(72, colors.green50),
   accentTextLightTertiary: opacify(12, colors.green50),
 
   deepShadow: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);',
   shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
 
-  networkDefaultShadow: `0px 40px 120px ${opacify(16, colors.blue400)}`,
+  networkDefaultShadow: `0px 40px 120px ${opacify(16, colors.green400)}`,
 
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),
