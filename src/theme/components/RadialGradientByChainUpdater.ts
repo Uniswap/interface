@@ -1,6 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useIsAvalancheEnabled } from 'featureFlags/flags/avalanche'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
@@ -32,7 +31,6 @@ export default function RadialGradientByChainUpdater(): null {
   const { chainId } = useWeb3React()
   const [darkMode] = useDarkModeManager()
   const isNftPage = useIsNftPage()
-  const isAvalancheEnabled = useIsAvalancheEnabled()
 
   // manage background color
   useEffect(() => {
@@ -99,9 +97,6 @@ export default function RadialGradientByChainUpdater(): null {
         break
       }
       case ChainId.AVALANCHE: {
-        if (!isAvalancheEnabled) {
-          break
-        }
         setBackground(backgroundResetStyles)
         const avaxLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(255, 251, 242, 0.8) 0%, rgba(255, 244, 249, 0.6958) 50.52%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
