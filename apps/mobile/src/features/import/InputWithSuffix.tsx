@@ -128,7 +128,7 @@ function Inputs({
           justifyContent="center"
           lineHeight={inputFontSize}
           maxFontSizeMultiplier={inputMaxFontSizeMultiplier}
-          multiline={false}
+          multiline={true}
           px="none"
           py="none"
           scrollEnabled={false}
