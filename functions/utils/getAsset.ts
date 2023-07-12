@@ -17,9 +17,9 @@ export default async function getAsset(collectionAddress: string, tokenId: strin
     return undefined
   }
   const formattedAsset = {
-    name: asset.name ? asset.name : asset.collection?.name + ' #' + asset.tokenId,
+    title: asset.name ? asset.name : asset.collection?.name + ' #' + asset.tokenId,
     image: asset.image?.url,
-    uniswapUrl: url,
+    url,
   }
   return formattedAsset
 }

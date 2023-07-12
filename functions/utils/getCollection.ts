@@ -14,10 +14,9 @@ export default async function getCollection(collectionAddress: string, url: stri
     return undefined
   }
   const formattedAsset = {
-    name: collection.name,
+    title: collection.name + ' on Uniswap',
     image: collection.image?.url,
-    uniswapUrl: url,
-    isVerified: collection.isVerified,
+    url,
   }
   return formattedAsset
 }

@@ -15,11 +15,9 @@ export default async function getToken(networkName: string, tokenAddress: string
     return undefined
   }
   const formattedAsset = {
-    name: asset.name,
-    network: networkName,
+    title: 'Get ' + asset.symbol + ' on Uniswap',
     image: asset.project?.logoUrl,
-    uniswapUrl: url,
-    symbol: asset.symbol,
+    url,
   }
   return formattedAsset
 }
