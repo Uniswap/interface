@@ -2,7 +2,7 @@ import { useDappContext } from 'src/background/features/dapp/hooks'
 import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
 import { disconnectAction, saveChainAction } from 'src/background/features/dappRequests/saga'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
-import { Circle, getToken, Icons, Image, Popover, Text, XStack, YStack } from 'ui/src'
+import { Circle, getTokenValue, Icons, Image, Popover, Text, XStack, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
@@ -80,7 +80,7 @@ export function SwitchNetworksModal(): JSX.Element {
       <Popover.Close asChild>
         <Button borderRadius="$rounded32" theme="secondary" onPress={onDisconnect}>
           <XStack alignItems="center" gap="$spacing8" justifyContent="center">
-            <Icons.Power color="$textPrimary" size={getToken('$icon.16')} />
+            <Icons.Power color="$textPrimary" size={getTokenValue('$icon.16')} />
             {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}{' '}
             <Text color="$textPrimary" variant="subheadSmall">
               Disconnect

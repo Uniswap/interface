@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { ColorTokens, getToken, Icons } from 'ui/src'
+import { ColorTokens, getTokenValue, Icons } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 
@@ -25,7 +25,7 @@ export function HideContentShield({
       opacity={visibility ? 0 : 1}
       position="absolute"
       width="100%">
-      <Icons.EyeOff color="$textSecondary" size={getToken('$icon.64')} />
+      <Icons.EyeOff color="$textSecondary" size={getTokenValue('$icon.64')} />
       <Button
         backgroundColor="$background3"
         borderRadius="$rounded12"

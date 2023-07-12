@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
-import { Circle, getToken, Icons, Stack, XStack } from 'ui/src'
+import { Circle, getTokenValue, Icons, Stack, XStack } from 'ui/src'
 
 type OnboardingStepsProps = {
   methodRoute?: string
@@ -41,8 +41,8 @@ function StepCircle({ route }: { route: string }): JSX.Element {
   const active = pathname === route
 
   if (!active) {
-    return <Circle backgroundColor="$background3" size={getToken('$icon.8')} />
+    return <Circle backgroundColor="$background3" size={getTokenValue('$icon.8')} />
   }
 
-  return <Icons.Sparkle color="$textPrimary" size={getToken('$icon.16')} />
+  return <Icons.Sparkle color="$textPrimary" size={getTokenValue('$icon.16')} />
 }

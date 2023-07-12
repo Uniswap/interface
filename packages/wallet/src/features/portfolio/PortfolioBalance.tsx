@@ -1,4 +1,4 @@
-import { ColorTokens, getToken, Icons, validToken } from 'ui/src'
+import { ColorTokens, getTokenValue, Icons, validToken } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { opacify } from 'ui/src/theme/color/utils'
@@ -81,21 +81,26 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
             {/* TODO(EXT-210): fix up passing of Icon to reuse color prop and constant icon size etc
              */}
             <TempFakeButton
-              Icon={<Icons.CoinConvert color={CTA_COLORS.PINK} size={getToken('$icon.24')} />}
+              Icon={<Icons.CoinConvert color={CTA_COLORS.PINK} size={getTokenValue('$icon.24')} />}
               backgroundColor={validToken(CTA_COLORS_SOFT.PINK)}
               color={validToken(CTA_COLORS.PINK)}
               label="Swap"
             />
             <TempFakeButton
               Icon={
-                <Icons.SendRoundedAirplane color={CTA_COLORS.GREEN} size={getToken('$icon.24')} />
+                <Icons.SendRoundedAirplane
+                  color={CTA_COLORS.GREEN}
+                  size={getTokenValue('$icon.24')}
+                />
               }
               backgroundColor={validToken(CTA_COLORS_SOFT.GREEN)}
               color={validToken(CTA_COLORS.GREEN)}
               label="Send"
             />
             <TempFakeButton
-              Icon={<Icons.ReceiveDots color={CTA_COLORS.YELLOW} size={getToken('$icon.24')} />}
+              Icon={
+                <Icons.ReceiveDots color={CTA_COLORS.YELLOW} size={getTokenValue('$icon.24')} />
+              }
               backgroundColor={validToken(CTA_COLORS_SOFT.YELLOW)}
               color={validToken(CTA_COLORS.YELLOW)}
               label="Receive"
