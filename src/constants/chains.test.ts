@@ -3,26 +3,27 @@ import { ChainId } from '@uniswap/sdk-core'
 import { getChainPriority } from './chains'
 
 // Define an array of test cases with chainId and expected priority
-const testCases: { chainId: ChainId; expectedPriority: number }[] = [
-  { chainId: ChainId.MAINNET, expectedPriority: 0 },
-  { chainId: ChainId.GOERLI, expectedPriority: 0 },
-  { chainId: ChainId.SEPOLIA, expectedPriority: 0 },
-  { chainId: ChainId.POLYGON, expectedPriority: 1 },
-  { chainId: ChainId.POLYGON_MUMBAI, expectedPriority: 1 },
-  { chainId: ChainId.ARBITRUM_ONE, expectedPriority: 2 },
-  { chainId: ChainId.ARBITRUM_GOERLI, expectedPriority: 2 },
-  { chainId: ChainId.OPTIMISM, expectedPriority: 3 },
-  { chainId: ChainId.OPTIMISM_GOERLI, expectedPriority: 3 },
-  { chainId: ChainId.BNB, expectedPriority: 4 },
-  { chainId: ChainId.AVALANCHE, expectedPriority: 5 },
-  { chainId: ChainId.CELO, expectedPriority: 6 },
-  { chainId: ChainId.CELO_ALFAJORES, expectedPriority: 6 },
+const chainPriorityTestCases: [ChainId, number][] = [
+  [ChainId.MAINNET, 0],
+  [ChainId.GOERLI, 0],
+  [ChainId.SEPOLIA, 0],
+  [ChainId.POLYGON, 1],
+  [ChainId.POLYGON_MUMBAI, 1],
+  [ChainId.ARBITRUM_ONE, 2],
+  [ChainId.ARBITRUM_GOERLI, 2],
+  [ChainId.OPTIMISM, 3],
+  [ChainId.OPTIMISM_GOERLI, 3],
+  [ChainId.BNB, 4],
+  [ChainId.AVALANCHE, 5],
+  [ChainId.CELO, 6],
+  [ChainId.CELO_ALFAJORES, 6],
 ]
 
-// Run the tests
-testCases.forEach(({ chainId, expectedPriority }) => {
-  test(`getChainPriority - ${chainId}`, () => {
+// Run the tests using test.each
+test.each(chainPriorityTestCases)(
+  'getChainPriority returns expected priority for a given ChainId',
+  (chainId: ChainId, expectedPriority: number) => {
     const priority = getChainPriority(chainId)
     expect(priority).toBe(expectedPriority)
-  })
-})
+  }
+)
