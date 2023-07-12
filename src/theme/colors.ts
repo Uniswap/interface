@@ -132,7 +132,7 @@ const commonTheme = {
   promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
 
   hoverState: opacify(24, colors.blue200),
-  hoverDefault: opacify(8, colors.gray300),
+  hoverDefault: opacify(8, colors.green300),
 }
 
 export const darkTheme = {
@@ -140,19 +140,19 @@ export const darkTheme = {
 
   userThemeColor: colors.magentaVibrant,
 
-  background: colors.gray800,
-  backgroundBackdrop: colors.gray950,
-  backgroundSurface: colors.gold400,
-  backgroundModule: colors.gray800,
-  backgroundInteractive: colors.gray700,
+  background: colors.green800,
+  backgroundBackdrop: colors.green950,
+  backgroundSurface: colors.green900,
+  backgroundModule: colors.green800,
+  backgroundInteractive: colors.green700,
   backgroundFloating: opacify(12, colors.black),
-  backgroundOutline: opacify(24, colors.gray300),
-  backgroundScrim: opacify(72, colors.gold400),
-  backgroundScrolledSurface: opacify(72, colors.gold400),
+  backgroundOutline: opacify(24, colors.green300),
+  backgroundScrim: opacify(72, colors.green900),
+  backgroundScrolledSurface: opacify(72, colors.green900),
 
   textPrimary: colors.white,
-  textSecondary: colors.gray300,
-  textTertiary: colors.gray500,
+  textSecondary: colors.green300,
+  textTertiary: colors.green500,
 
   accentAction: colors.blue400,
   accentActive: colors.blue400,
@@ -167,9 +167,9 @@ export const darkTheme = {
   accentWarningSoft: opacify(24, colors.gold200),
   accentFailureSoft: opacify(12, colors.red300),
 
-  accentTextDarkPrimary: opacify(80, colors.gold400),
-  accentTextDarkSecondary: opacify(60, colors.gold400),
-  accentTextDarkTertiary: opacify(24, colors.gold400),
+  accentTextDarkPrimary: opacify(80, colors.green900),
+  accentTextDarkSecondary: opacify(60, colors.green900),
+  accentTextDarkTertiary: opacify(24, colors.green900),
 
   accentTextLightPrimary: colors.green50,
   accentTextLightSecondary: opacify(72, colors.green50),
@@ -180,8 +180,8 @@ export const darkTheme = {
 
   networkDefaultShadow: `0px 40px 120px ${opacify(16, colors.green400)}`,
 
-  stateOverlayHover: opacify(8, colors.gray300),
-  stateOverlayPressed: opacify(24, colors.gray200),
+  stateOverlayHover: opacify(8, colors.green300),
+  stateOverlayPressed: opacify(24, colors.green200),
 
   searchBackground: `rgba(255,255,255,0.07)`,
   searchOutline: `rgba(255,255,255,0.07)`,
