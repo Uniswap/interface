@@ -4,7 +4,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { impactAsync } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import {
   cancelAnimation,
@@ -62,6 +62,7 @@ export const NavBar = (): JSX.Element => {
   const insets = useSafeAreaInsets()
   const theme = useAppTheme()
   const isDarkMode = useIsDarkMode()
+  const screenHeight = Dimensions.get('screen').height
 
   const BUTTONS_OFFSET =
     useResponsiveProp({ xs: theme.spacing.spacing24, sm: theme.spacing.none }) ?? theme.spacing.none
@@ -70,7 +71,7 @@ export const NavBar = (): JSX.Element => {
     <>
       <Box pointerEvents="none" style={StyleSheet.absoluteFill}>
         <GradientBackground overflow="hidden">
-          <Svg height="100%" opacity={isDarkMode ? '1' : '0.3'} width="100%">
+          <Svg height={screenHeight} opacity={isDarkMode ? '1' : '0.3'} width="100%">
             <Defs>
               <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
                 <Stop offset="0" stopColor={theme.colors.black} stopOpacity="0" />
