@@ -8,10 +8,11 @@ const QUICKNODE_RPC_URL = process.env.REACT_APP_BNB_RPC_URL
 if (typeof QUICKNODE_RPC_URL === 'undefined') {
   throw new Error(`REACT_APP_BNB_RPC_URL must be a defined environment variable`)
 }
-const HARMONY_RPC_URL = process.env.HARMONY_RPC_URL
+/*const HARMONY_RPC_URL = process.env.HARMONY_RPC_URL
 if (typeof HARMONY_RPC_URL === 'undefined') {
   throw new Error(`HARMONY_RPC_URL must be a defined environment variable`)
 }
+*/
 /**
  * Fallback JSON-RPC endpoints.
  * These are used if the integrator does not provide an endpoint, or if the endpoint does not work.
@@ -113,6 +114,7 @@ export const FALLBACK_URLS = {
     'https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc',
   ],
   [ChainId.HARMONY]: [
+    // "Safe" URLs
     'https://api.harmony.one',
     'https://api.s0.t.hmny.io'
   ],
