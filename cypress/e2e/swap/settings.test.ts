@@ -8,7 +8,7 @@ describe('Swap settings', () => {
     cy.get(getTestSelector('open-settings-dialog-button')).click()
     cy.contains('Max slippage').should('exist')
     cy.contains('Transaction deadline').should('exist')
-    cy.contains('Uniswap X').should('exist')
+    cy.contains('UniswapX').should('exist')
     cy.contains('Local routing').should('exist')
     cy.get(getTestSelector('open-settings-dialog-button')).click()
     cy.contains('Settings').should('not.exist')

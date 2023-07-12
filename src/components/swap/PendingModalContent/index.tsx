@@ -191,8 +191,7 @@ function getContent(args: ContentArgs): PendingModalStep {
         href = getExplorerLink(chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)
       } else if (swapPending && trade?.fillType === TradeFillType.UniswapX) {
         labelText = t`Learn more about swapping with UniswapX`
-        // TODO(UniswapX): add actual help center url
-        href = 'https://google.com'
+        href = 'https://support.uniswap.org/hc/en-us/articles/17515415311501'
       } else if (swapPending) {
         labelText = t`Proceed in your wallet`
       }

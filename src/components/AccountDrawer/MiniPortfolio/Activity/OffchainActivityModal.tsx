@@ -134,7 +134,7 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
           <Column>
             {amounts && <TradeSummary trade={amounts} />}
             <ThemedText.Caption paddingTop="48px" textAlign="center">
-              <ExternalLink href="https://google.com">{t`Learn more about swapping with UniswapX`}</ExternalLink>
+              <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">{t`Learn more about swapping with UniswapX`}</ExternalLink>
             </ThemedText.Caption>
           </Column>
         </ContentContainer>
@@ -168,7 +168,9 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
           <ThemedText.SubHeaderLarge>{t`Swap expired`}</ThemedText.SubHeaderLarge>
           <DescriptionText>
             {t`Your swap expired before it could be filled. Try again or`}{' '}
-            <LearnMoreLink href="https://google.com">{t` learn more`}.</LearnMoreLink>
+            <LearnMoreLink href="https://support.uniswap.org/hc/en-us/articles/17515426867213">
+              {t` learn more`}.
+            </LearnMoreLink>
           </DescriptionText>
         </ContentContainer>
       )
@@ -179,7 +181,9 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
           <ThemedText.SubHeaderLarge>{t`Error`}</ThemedText.SubHeaderLarge>
           <ThemedText.LabelSmall textAlign="center">
             {t`Your swap couldn't be filled at this time. Try again or `}{' '}
-            <LearnMoreLink href="https://google.com">{t` learn more`}.</LearnMoreLink>
+            <LearnMoreLink href="https://support.uniswap.org/hc/en-us/articles/17515489874189">
+              {t` learn more`}.
+            </LearnMoreLink>
           </ThemedText.LabelSmall>
         </ContentContainer>
       )
