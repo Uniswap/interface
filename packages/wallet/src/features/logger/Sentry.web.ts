@@ -1,4 +1,3 @@
-import * as SentryRN from '@sentry/react-native'
 import { CaptureContext, SeverityLevel } from '@sentry/types'
 
 import { ISentry } from './Sentry'
@@ -10,7 +9,7 @@ import { ISentry } from './Sentry'
  * @param context Context from where this method is called
  */
 export function captureException(errorMessage: string, captureContext?: CaptureContext): void {
-  SentryRN.captureException(errorMessage, captureContext)
+  console.warn(errorMessage, captureContext)
 }
 
 /**
@@ -28,11 +27,7 @@ export function captureMessage(
   message: string,
   ...extraArgs: unknown[]
 ): void {
-  SentryRN.captureMessage(message, {
-    level,
-    tags: { mobileContext: context },
-    ...(extraArgs ? { extra: { data: extraArgs } } : {}),
-  })
+  console.log(context, message, ...extraArgs)
 }
 
 export const Sentry: ISentry = {
