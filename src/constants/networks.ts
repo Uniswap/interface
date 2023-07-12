@@ -113,7 +113,13 @@ export const FALLBACK_URLS = {
     'https://endpoints.omniatech.io/v1/avax/mainnet/public',
     'https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc',
   ],
-  [ChainId.BASE_GOERLI]: ['https://goerli.base.org'],
+  [ChainId.BASE_GOERLI]: [
+    QUICKNODE_BASE_GOERLI_RPC_URL,
+    'https://goerli.base.org',
+    // Use some free-tier subscriptions as fallbacks.
+    'https://base-goerli.blastapi.io/b5a802d8-151d-4443-90a7-699108dc4e01',
+    'https://svc.blockdaemon.com/base/testnet/native?apiKey=zpka_1334e7c450464d06b6e33a972a7a4e57_75320f43',
+  ],
 }
 
 /**
@@ -146,5 +152,5 @@ export const RPC_URLS = {
   [ChainId.CELO_ALFAJORES]: FALLBACK_URLS[ChainId.CELO_ALFAJORES],
   [ChainId.BNB]: [QUICKNODE_BNB_RPC_URL, ...FALLBACK_URLS[ChainId.BNB]],
   [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.AVALANCHE]],
-  [ChainId.BASE_GOERLI]: [QUICKNODE_BASE_GOERLI_RPC_URL, ...FALLBACK_URLS[ChainId.BASE_GOERLI]],
+  [ChainId.BASE_GOERLI]: [`https://base-goerli.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.BASE_GOERLI]],
 }
