@@ -108,7 +108,7 @@ const OptInContents = ({ swapInfo, isSmall }: { swapInfo: SwapInfo; isSmall: boo
           <SwapMustacheShadow />
           <Row justify="space-between" align="center" flexWrap="wrap">
             <Text fontSize={14} fontWeight={400} lineHeight="20px">
-              <Trans>Try gasless swaps with the</Trans>
+              <Trans>Try gas free swaps with the</Trans>
               <br />
               <UniswapXBrandMark fontWeight="bold" style={{ transform: `translateY(1px)`, margin: '0 2px' }} />{' '}
               <Trans>Beta</Trans>
@@ -144,13 +144,13 @@ const OptInContents = ({ swapInfo, isSmall }: { swapInfo: SwapInfo; isSmall: boo
             <Trans>Beta</Trans>
             <ul style={{ margin: '5px 0 12px 24px', lineHeight: '24px', padding: 0 }}>
               <li>
-                <Trans>Gasless swaps ($0.00 network fee)</Trans>
+                <Trans>Gas free swaps</Trans>
+              </li>
+              <li>
+                <Trans>MEV protection</Trans>
               </li>
               <li>
                 <Trans>Better prices and more liquidity</Trans>
-              </li>
-              <li>
-                <Trans>Frontrunning protection</Trans>
               </li>
             </ul>
           </Text>
@@ -168,7 +168,7 @@ const OptInContents = ({ swapInfo, isSmall }: { swapInfo: SwapInfo; isSmall: boo
         </UniswapXRouterLabel>
 
         <ThemedText.BodySecondary style={{ marginTop: 8 }} fontSize={14}>
-          <Trans>You can turn it off anytime in settings</Trans>
+          <Trans>You can turn it off at anytime in settings</Trans>
         </ThemedText.BodySecondary>
       </UniswapXOptInPopover>
     </>

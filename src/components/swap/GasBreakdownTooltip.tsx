@@ -70,8 +70,11 @@ export function GasBreakdownTooltip({
       )}
       {isUniswapXTrade(trade) && !hideUniswapXDescription ? (
         <ThemedText.Caption color="textSecondary">
-          <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient> aggregates onchain and offchain orders for better
-          prices and lower network fees.
+          <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient> aggregates liquidity sources for better prices and
+          gas free swaps.{' '}
+          <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
+            <InlineLink>Learn more</InlineLink>
+          </ExternalLink>
         </ThemedText.Caption>
       ) : (
         <ThemedText.Caption color="textSecondary">
