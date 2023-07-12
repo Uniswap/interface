@@ -141,7 +141,7 @@ export const darkTheme = {
   userThemeColor: colors.magentaVibrant,
 
   background: colors.green800,
-  backgroundBackdrop: colors.green950,
+  backgroundBackdrop: colors.green900,
   backgroundSurface: colors.green900,
   backgroundModule: colors.green800,
   backgroundInteractive: colors.green700,
@@ -151,8 +151,8 @@ export const darkTheme = {
   backgroundScrolledSurface: opacify(72, colors.green900),
 
   textPrimary: colors.white,
-  textSecondary: colors.green300,
-  textTertiary: colors.green500,
+  textSecondary: colors.green100,
+  textTertiary: colors.green300,
 
   accentAction: colors.green400,
   accentActive: colors.green400,
