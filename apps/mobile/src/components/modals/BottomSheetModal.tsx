@@ -41,6 +41,7 @@ type Props = PropsWithChildren<{
 
 const BACKDROP_APPEARS_ON_INDEX = 0
 const DISAPPEARS_ON_INDEX = -1
+const DRAG_ACTIVATION_OFFSET = 25
 
 const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
   return (
@@ -175,6 +176,7 @@ export function BottomSheetModal({
       {...background}
       {...backdrop}
       ref={modalRef}
+      activeOffsetY={DRAG_ACTIVATION_OFFSET}
       backgroundStyle={{
         backgroundColor: backgroundColorValue,
       }}
@@ -236,6 +238,7 @@ export function BottomSheetDetachedModal({
   return (
     <BaseModal
       ref={modalRef}
+      activeOffsetY={DRAG_ACTIVATION_OFFSET}
       backdropComponent={Backdrop}
       backgroundStyle={{
         backgroundColor: backgroundColor ?? theme.colors.background0,
