@@ -18,9 +18,21 @@ export const beforeSend: Required<ClientOptions>['beforeSend'] = (event: ErrorEv
     return null
   }
 
+  renameNonErrorMessages(event, hint)
   updateRequestUrl(event)
 
   return event
+}
+
+// If the error is not an instance of Error, it may be an object with a message property.
+// In those cases, we rename the message property so that they're grouped properly in Sentry.
+function renameNonErrorMessages(event: ErrorEvent, hint: EventHint) {
+  if (!(hint.originalException instanceof Error)) {
+    const message = (hint.originalException as any)?.message
+    if (message) {
+      event.message = message
+    }
+  }
 }
 
 /** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */

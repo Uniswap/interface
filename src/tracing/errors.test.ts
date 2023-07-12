@@ -45,6 +45,20 @@ describe('beforeSend', () => {
     })
   })
 
+  describe('renameNonErrorMessage', () => {
+    test('should rename the error message', () => {
+      const event = {} as ErrorEvent
+
+      const hint = {
+        originalException: {
+          message: 'User rejected the transaction',
+        },
+      }
+
+      beforeSend(event, hint)
+      expect(event.message).toBe('User rejected the transaction')
+    })
+  })
   it('propagates an error', () => {
     expect(beforeSend(ERROR, {})).toBe(ERROR)
   })
