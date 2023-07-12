@@ -117,7 +117,7 @@ export const FALLBACK_URLS = {
   [ChainId.HARMONY]: [
     // "Safe" URLs
     'https://api.harmony.one',
-    'https://api.s0.t.hmny.io'
+    'https://api.s0.t.hmny.io',
   ],
 }
 
