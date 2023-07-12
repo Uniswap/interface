@@ -109,6 +109,8 @@ export function ActivityTab({ account }: { account: string }) {
     fetchPolicy: 'cache-first',
   })
 
+  console.log('history', loading, data)
+
   // We only refetch remote activity if the user renavigates to the activity tab by changing tabs or opening the drawer
   useEffect(() => {
     const currentTime = Date.now()

@@ -269,8 +269,9 @@ export function ReduceLeverageModalFooter({
           position?.isToken0,
           formattedSlippage,
           inputReduceAmount
-        ).then((hash: any) => {
-          addTransaction(hash, {
+        ).then((response: any) => {
+          // console.log('reduceResponse', response.hash, response)
+          addTransaction(response, {
             type: TransactionType.REDUCE_LEVERAGE,
             reduceAmount: inputReduceAmount ?? "",
             pnl: Number(transactionInfo.pnl),
@@ -283,7 +284,7 @@ export function ReduceLeverageModalFooter({
             quoteBaseSymbol: transactionInfo.quoteBaseSymbol,
             timestamp: moment().format('YYYY-MM-DD')
           })
-          setTxHash(hash)
+          setTxHash(response.hash)
           setAttemptingTxn(false)
         }).catch((err: any) => {
           setAttemptingTxn(false)
@@ -293,12 +294,15 @@ export function ReduceLeverageModalFooter({
     }
     return () => { }
   }, [
-    leverageManagerAddress, slippage, tokenId, trader, position, reduceAmount,
+    slippage,  position, reduceAmount,
     token0,
     token1,
     inputIsToken0,
     transactionInfo,
-    leverageManagerContract
+    leverageManagerContract,
+    addTransaction,
+    setTxHash,
+    setAttemptingTxn
   ])
 
   const disabled = !!userError || !transactionInfo

@@ -1,8 +1,28 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { formatNumber } from '@uniswap/conedison/format'
+import { NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber as BN } from "bignumber.js"
+import AnimatedDropdown from 'components/AnimatedDropdown'
+import Card, { DarkCard, OutlineCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import Loader from 'components/Icons/LoadingSpinner'
+import { LoadingRows } from 'components/Loader/styled'
+import { LoadingOpacityContainer } from 'components/Loader/styled'
+import { Input as NumericalInput } from 'components/NumericalInput'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
+import { useCurrency, useToken } from 'hooks/Tokens'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { useBorrowManagerContract, useLiquidityManagerContract } from 'hooks/useContract'
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
+import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import {
   formatPercentInBasisPointsNumber,
   formatPercentNumber,
@@ -11,59 +31,26 @@ import {
   getDurationUntilTimestampSeconds,
   getTokenAddress,
 } from 'lib/utils/analytics'
+import { Checkbox } from 'nft/components/layout/Checkbox'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { ChevronDown, Info } from 'react-feather'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
-import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
-import { computeRealizedPriceImpact } from 'utils/prices'
-
-import { ButtonError, ButtonPrimary, ButtonSecondary } from '../Button'
-import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
-import { ResponsiveTooltipContainer, SwapCallbackError, TruncatedText } from './styleds'
-import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
-import { ModalInputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import Card, { DarkCard, LightCard, OutlineCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
-import { Checkbox } from 'nft/components/layout/Checkbox'
-import { HideSmall, Separator, ThemedText } from 'theme'
-import { SmallMaxButton } from 'pages/RemoveLiquidity/styled'
-import Slider from 'components/Slider'
-import styled, { keyframes, useTheme } from 'styled-components'
-
-import { ChevronDown, Info } from 'react-feather'
-import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
-import AnimatedDropdown from 'components/AnimatedDropdown'
-import useDebounce from 'hooks/useDebounce'
-import { useBorrowManagerContract, useLeverageManagerContract, useLiquidityManagerContract } from 'hooks/useContract'
-import { useSingleCallResult } from 'lib/hooks/multicall'
-import { BigNumber as BN } from "bignumber.js"
-import TradePrice from './TradePrice'
-import { useCurrency, useToken } from 'hooks/Tokens'
-import { formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
-import { NumberType } from '@uniswap/conedison/format'
-import { useLimitlessPositionFromTokenId } from 'hooks/useV3Positions'
-import { LoadingRows } from 'components/Loader/styled'
-import { Flash_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
-import { truncateSync } from 'fs'
-import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
-import Loader from 'components/Icons/LoadingSpinner'
-import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
-import { Input as NumericalInput } from 'components/NumericalInput'
-import { LimitlessPositionDetails } from 'types/leveragePosition'
-import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { TradeState } from 'state/routing/types'
-import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { BorrowCreationDetails } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
-import { getPremiumRate } from 'hooks/addPremium'
-import { useWeb3React } from '@web3-react/core'
-import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
+import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
+import styled, { keyframes, useTheme } from 'styled-components/macro'
+import { HideSmall, Separator, ThemedText } from 'theme'
+import { LimitlessPositionDetails } from 'types/leveragePosition'
 import { currencyId } from 'utils/currencyId'
-import { usePool } from 'hooks/usePools'
+import { computeRealizedPriceImpact } from 'utils/prices'
+
+import { ButtonError, ButtonPrimary } from '../Button'
+import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { MouseoverValueLabel, ValueLabel } from './AdvancedSwapDetails'
+import { SwapCallbackError, TruncatedText } from './styleds'
+import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 
 const StyledNumericalInput = styled(NumericalInput)`
   width: 70%;
@@ -424,18 +411,18 @@ function useDerivedBorrowReduceCollateralInfo(
     }
 
     laggedfxn()
-  }, [borrowManagerContract, trader, tokenId, recieveCollateral, reduceAmount])
+  }, [position, setState, borrowManagerContract, trader, tokenId, recieveCollateral, reduceAmount])
 
   const transactionInfo = useMemo(() => {
     if (contractResult) {
       const { reducePositionResult } = contractResult
       console.log("reducePositionResult", reducePositionResult)
-      let token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-      let token1Amount = new BN(reducePositionResult[1].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-      let pnl = new BN(reducePositionResult[2].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-      let returnedAmount = new BN(reducePositionResult[3].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-      let unusedPremium = new BN(reducePositionResult[4].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-      let premium = new BN(reducePositionResult[5].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const token1Amount = new BN(reducePositionResult[1].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const pnl = new BN(reducePositionResult[2].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const returnedAmount = new BN(reducePositionResult[3].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const unusedPremium = new BN(reducePositionResult[4].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const premium = new BN(reducePositionResult[5].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
 
       return {
         token0Amount,
@@ -448,8 +435,7 @@ function useDerivedBorrowReduceCollateralInfo(
     }
     return undefined
   }, [
-    contractResult,
-    relevantTokenBalances
+    contractResult
   ])
 
   const userError = useMemo(() => {
@@ -551,17 +537,17 @@ function useDerivedBorrowReduceDebtInfo(
     }
 
     laggedfxn()
-  }, [borrowManagerContract, trader, tokenId, recieveCollateral, reduceAmount])
+  }, [borrowManagerContract, trader, tokenId, recieveCollateral, reduceAmount, position, setState])
 
   const transactionInfo = useMemo(() => {
     if (contractResult) {
       const { reducePositionResult } = contractResult
-      let token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-      let token1Amount = new BN(reducePositionResult[1].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-      let pnl = new BN(reducePositionResult[2].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-      let returnedAmount = new BN(reducePositionResult[3].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-      let unusedPremium = new BN(reducePositionResult[4].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-      let premium = new BN(reducePositionResult[5].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const token0Amount = new BN(reducePositionResult[0].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const token1Amount = new BN(reducePositionResult[1].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const pnl = new BN(reducePositionResult[2].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const returnedAmount = new BN(reducePositionResult[3].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const unusedPremium = new BN(reducePositionResult[4].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
+      const premium = new BN(reducePositionResult[5].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
       console.log("premium: ", premium)
       return {
         token0Amount,
@@ -595,7 +581,7 @@ function useDerivedBorrowReduceDebtInfo(
     // }
 
     return error
-  }, [relevantTokenBalances, position, reduceAmount])
+  }, [position, reduceAmount])
 
   return {
     transactionInfo,
@@ -697,7 +683,7 @@ function useDerivedAddLeveragePremiumInfo(
     }
 
     !inputError && laggedfxn()
-  }, [liquidityManagerContract, trader, tokenId, isToken0, approvalState, inputError])
+  }, [liquidityManagerContract, trader, tokenId, isToken0, approvalState, inputError, setState])
 
   const info = useMemo(() => {
     if (contractResult) {
@@ -711,7 +697,7 @@ function useDerivedAddLeveragePremiumInfo(
       return undefined
     }
   }, [
-    contractResult, approvalState
+    contractResult
   ])
 
   return { tradeInfo: info, inputError }
@@ -750,7 +736,7 @@ function useDerivedAddBorrowPremiumInfo(
   )
 
   const inputError = useMemo(() => {
-    if (position && premium) {
+    if (position && premium && currency1 && currency0) {
       const isToken0 = position.isToken0
       const token0Balance = relevantTokenBalances[0]
       const token1Balance = relevantTokenBalances[1]
@@ -768,7 +754,7 @@ function useDerivedAddBorrowPremiumInfo(
       return inputError
     }
     return undefined
-  }, [relevantTokenBalances, account, position, approvalState])
+  }, [relevantTokenBalances, position, premium, currency0, currency1])
 
 
   useEffect(() => {
@@ -796,7 +782,7 @@ function useDerivedAddBorrowPremiumInfo(
     }
 
     !inputError && laggedfxn()
-  }, [liquidityManagerContract, trader, tokenId, isToken0, approvalState, inputError])
+  }, [liquidityManagerContract, trader, tokenId, isToken0, approvalState, inputError, setState])
 
   const info = useMemo(() => {
     // console.log("addPosition2:", contractResult)
@@ -813,7 +799,7 @@ function useDerivedAddBorrowPremiumInfo(
       return undefined
     }
   }, [
-    contractResult, approvalState
+    contractResult
   ])
 
   return {
@@ -865,14 +851,14 @@ export function AddPremiumLeverageModalFooter({
     } catch (err) {
       console.log("approveLeverageManager err: ", err)
     }
-  }, [position, approveLeverageManager]) // add input to deps.
+  }, [approveLeverageManager]) // add input to deps.
 
   const loading = derivedState === DerivedInfoState.LOADING
   const valid = derivedState === DerivedInfoState.VALID
 
   useEffect(() => {
     (!tradeInfo || !!inputError || leverageApprovalState !== ApprovalState.APPROVED) && showDetails && setShowDetails(false)
-  }, [leverageApprovalState, tradeInfo, inputError])
+  }, [leverageApprovalState, tradeInfo, inputError, showDetails])
 
   const premiumSymbol = inputIsToken0 ? token0?.symbol : token1?.symbol
   // console.log("lmt", inputError, leverageApprovalState, tradeInfo)
@@ -881,7 +867,7 @@ export function AddPremiumLeverageModalFooter({
       <Card padding="0" marginTop="0" marginBottom="10px">
         <MouseoverValueLabel
           value={premium}
-          label={"Expected Premium Payment"}
+          label="Expected Premium Payment"
           description="expected premium payment"
           syncing={false}
           appendSymbol={position?.isToken0 ? token1?.symbol : token0?.symbol}
@@ -1041,7 +1027,7 @@ export function AddPremiumLeverageModalFooter({
           id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
         >
           {
-            !!inputError ? (
+            inputError ? (
               inputError
             ) : derivedState !== DerivedInfoState.VALID ? (
               <Trans>
@@ -1118,8 +1104,8 @@ export function AddPremiumBorrowModalFooter({
   return (
     <AutoRow>
       <ValueLabel
-        label={"Premium Payment"}
-        description={"Premium Payment Amount"}
+        label="Premium Payment"
+        description="Premium Payment Amount"
         value={premium}
         syncing={false}
         symbolAppend={position?.isToken0 ? token1?.symbol : token0?.symbol} />
@@ -1223,7 +1209,7 @@ export function AddPremiumBorrowModalFooter({
           disabled={!!inputError || approvalState === ApprovalState.PENDING}
           style={{ gap: 14 }}
         >
-          {!!inputError ? (
+          {inputError ? (
             <Trans>
               {inputError}
             </Trans>
@@ -1258,7 +1244,7 @@ export function AddPremiumBorrowModalFooter({
           style={{ margin: '10px 0 0 0' }}
           id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
         >
-          {!!inputError ? (
+          {inputError ? (
             inputError
           ) : tradeInfo ? (
             <Text fontSize={20} fontWeight={500}>
@@ -1688,8 +1674,7 @@ export function BorrowReduceCollateralModalFooter({
         </Wrapper>
       </TransactionDetails>
 
-      {(
-        <ButtonError
+      <ButtonError
           onClick={handleReducePosition}
           disabled={!!userError || !transactionInfo}
           style={{ margin: '10px 0 0 0' }}
@@ -1707,8 +1692,6 @@ export function BorrowReduceCollateralModalFooter({
             </Text>
           )}
         </ButtonError>
-      )
-      }
     </AutoRow>
   )
 }

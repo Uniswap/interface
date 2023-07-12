@@ -216,7 +216,7 @@ export const PoolDataSection = ({
 		}
 	}, [lastUpdate, uniswapPoolAddress, uniswapPoolExists, pool, limitlessPoolAddress, token0Contract, token1Contract, token0, token1])
 
-	console.log("stats: ", token0?.symbol, token1?.symbol, stats)
+	// console.log("stats: ", token0?.symbol, token1?.symbol, stats)
 
 	// useEffect(() => {
 	// 	async function fetch() {

@@ -1,28 +1,20 @@
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber as BN } from "bignumber.js";
+import { Contract } from "ethers"
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useMemo } from 'react'
+import { TradeState } from 'state/routing/types'
+import { BorrowCreationDetails } from 'state/swap/hooks'
 
+import BorrowManagerData from "../perpspotContracts/BorrowManager.json"
+import LeverageManagerData from "../perpspotContracts/LeverageManager.json"
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { TransactionType } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from './useUniversalRouter'
-import { Contract } from "ethers"
-import { useWeb3React } from '@web3-react/core'
-import { defaultAbiCoder } from '@ethersproject/abi'
-import { getCreate2Address } from '@ethersproject/address'
-import { keccak256 } from '@ethersproject/solidity'
-import LeverageManagerData from "../perpspotContracts/LeverageManager.json"
-import BorrowManagerData from "../perpspotContracts/BorrowManager.json"
-import { BigNumber as BN } from "bignumber.js";
-
-import { arrayify } from 'ethers/lib/utils'
-import { useBorrowManagerContract } from './useContract'
-import { tree } from 'd3'
-import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
-import { BorrowCreationDetails } from 'state/swap/hooks'
-import { TradeState } from 'state/routing/types'
 
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
@@ -105,17 +97,17 @@ export function useAddLeveragePositionCallback(
   if (!provider) throw new Error('missing provider')
 
   let isLong = true
-  let decimals = trade?.inputAmount.currency.decimals ?? 18
+  const decimals = trade?.inputAmount.currency.decimals ?? 18
   if (trade?.inputAmount.currency.isToken && trade?.outputAmount.currency.isToken) {
     if (trade.inputAmount.currency.sortsBefore(trade.outputAmount.currency)) {
       isLong = false
     }
   }
 
-  let input = new BN(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
-  let borrowedAmount = new BN(trade?.inputAmount.toExact() ?? 0).multipliedBy(Number(leverageFactor) - 1 ?? "0").shiftedBy(decimals).toFixed(0)
+  const input = new BN(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
+  const borrowedAmount = new BN(trade?.inputAmount.toExact() ?? 0).multipliedBy(Number(leverageFactor) - 1 ?? "0").shiftedBy(decimals).toFixed(0)
   const leverageManagerContract = new Contract(leverageManagerAddress, LeverageManagerData.abi, provider.getSigner())
-  let slippage = new BN(1 + Number(allowedSlippage.toFixed(6)) / 100).shiftedBy(decimals).toFixed(0)
+  const slippage = new BN(1 + Number(allowedSlippage.toFixed(6)) / 100).shiftedBy(decimals).toFixed(0)
   // console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)
   return {
     callback: (): any => {
@@ -125,6 +117,7 @@ export function useAddLeveragePositionCallback(
         borrowedAmount,
         isLong
       ).then((response: any) => {
+        // console.log('leverageResponse', response.hash, response)
         addTransaction(
           response,
           {
@@ -160,7 +153,7 @@ export function useAddBorrowPositionCallback(
   if (!chainId) throw new Error('missing chainId')
   if (!provider) throw new Error('missing provider')
 
-  let decimals = inputCurrency?.decimals ?? 18
+  const decimals = inputCurrency?.decimals ?? 18
 
   // borrowBelow is true if input currency is token0.
   let borrowBelow = true
@@ -195,7 +188,6 @@ export function useAddBorrowPositionCallback(
             inputCurrencyId: currencyId(inputCurrency),
             outputCurrencyId: currencyId(outputCurrency)
           }
-
         )
         return response.hash
       })

@@ -1,14 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber as BN } from "bignumber.js"
+import { BORROW_MANAGER_FACTORY_ADDRESSES, LEVERAGE_MANAGER_FACTORY_ADDRESSES, LIQUIDITY_MANAGER_FACTORY_ADDRESSES } from 'constants/addresses'
 import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
+import { LimitlessPositionDetails } from 'types/leveragePosition'
 import { PositionDetails } from 'types/position'
 
-import { useGlobalStorageContract, useLeverageManagerContract, usePoolContract, useV3NFTPositionManagerContract } from './useContract'
-import { LimitlessPositionDetails } from 'types/leveragePosition'
-import { BigNumber as BN } from "bignumber.js"
-import { computeBorrowManagerAddress, computeLeverageManagerAddress, computeLiquidityManagerAddress, usePool } from './usePools'
-import { BORROW_MANAGER_FACTORY_ADDRESSES, LEVERAGE_MANAGER_FACTORY_ADDRESSES, LIQUIDITY_MANAGER_FACTORY_ADDRESSES } from 'constants/addresses'
-import { useWeb3React } from '@web3-react/core'
+import { useGlobalStorageContract, useV3NFTPositionManagerContract } from './useContract'
+import { computeBorrowManagerAddress, computeLeverageManagerAddress, computeLiquidityManagerAddress } from './usePools'
 
 
 interface UseV3PositionsResults {
@@ -25,7 +25,7 @@ export function useLimitlessPositionFromKeys(account: string | undefined, manage
     }
     return undefined
   }
-  , [positions, manager, isToken0])
+  , [positions, manager, isToken0, isBorrow])
   return {loading, position}
 }
 
@@ -58,14 +58,14 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
   const someTokenIdsLoading = useMemo(() => tokenIdResults.some(({ loading }) => loading), [tokenIdResults])
 
   const tokenIds = useMemo(() => {
-    if (account && !someTokenIdsLoading && tokenIdResults.length > 0) {
+    if (account && !someTokenIdsLoading) {
       return tokenIdResults
         .map(({ result }) => result)
         .filter((result): result is CallStateResult => !!result)
         .map((result) => BigNumber.from(result[0]))
     }
     return undefined
-  }, [account, tokenIdResults])
+  }, [account, tokenIdResults, someTokenIdsLoading])
 
   const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
   //console.log("inputs: ", inputs)
@@ -78,7 +78,7 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
 
   const positions = useMemo(() => {
     if (!loading && !error && tokenIds) {
-      let allPositions =  results.map((call, i ) => {
+      const allPositions =  results.map((call, i ) => {
         const tokenId = tokenIds[i]
         const result = call.result as CallStateResult
         const key = result.key
@@ -122,17 +122,17 @@ export function useLimitlessPositions(account: string | undefined): {loading: bo
         }
       })
 
-      let activePositions = allPositions.filter((position) => {
+      const activePositions = allPositions.filter((position) => {
         return Number(position.openTime) !== 0
       }) 
       return activePositions
     }
     return undefined
-  }, [results, tokenIds])
+  }, [results, tokenIds, chainId, error, loading])
 
   return {
-    loading: loading,
-    positions: positions
+    loading,
+    positions
   }
 }
 
