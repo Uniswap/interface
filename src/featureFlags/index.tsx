@@ -11,7 +11,7 @@ export enum FeatureFlag {
   fiatOnRampButtonOnSwap = 'fiat_on_ramp_button_on_swap_page',
   detailsV2 = 'details_v2',
   debounceSwapQuote = 'debounce_swap_quote',
-  uniswapXEnabled = 'gouda_enabled',
+  uniswapXEnabled = 'uniswapx_enabled',
   routingAPIPrice = 'routing_api_price',
 }
 
