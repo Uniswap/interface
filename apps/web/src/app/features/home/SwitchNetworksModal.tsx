@@ -29,7 +29,7 @@ export function SwitchNetworksModal(): JSX.Element {
       backgroundColor="$background0"
       borderRadius="$rounded12"
       gap="$spacing8"
-      minWidth={220}>
+      width={260}>
       <YStack
         borderBottomColor="$backgroundOutline"
         borderBottomWidth={1}

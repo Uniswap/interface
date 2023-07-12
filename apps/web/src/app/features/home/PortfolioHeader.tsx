@@ -48,7 +48,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
       </Flex>
       <XStack alignItems="center" gap="$spacing16" justifyContent="space-around">
         {dappConnected ? (
-          <Popover>
+          <Popover placement="left-start">
             <Popover.Trigger
               onTouchEnd={(): void => setUpdateConnectionStatus(!updateConnectionStatus)}>
               <Icons.Globe
@@ -57,7 +57,11 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
                 width={iconSizes.icon20}
               />
             </Popover.Trigger>
-            <Popover.Content borderRadius="$rounded12">
+            <Popover.Content
+              borderColor="$background3"
+              borderRadius="$rounded12"
+              borderWidth={1}
+              paddingLeft="$spacing4">
               <SwitchNetworksModal />
             </Popover.Content>
           </Popover>

@@ -56,17 +56,23 @@ export const TokenBalanceItem = memo(
               src={currencyInfo.logoUrl ?? ''}
               width={iconSizes.icon36}
             />
-            <XStack alignItems="center" flexGrow={1} gap="$none" justifyContent="space-between">
-              <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
-                {currency.symbol}
-              </Text>
-              <YStack alignItems="flex-end" flexGrow={1} justifyContent="flex-end">
+            <XStack alignItems="center" flexGrow={1} gap="$none">
+              <Flex flexGrow={1}>
                 <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
-                  {formatUSDPrice(balanceUSD)}
+                  {currency.name ?? currency.symbol}
                 </Text>
-                <Text color="$textTertiary" numberOfLines={1} variant="subheadSmall">
-                  {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
+              </Flex>
+              <YStack alignItems="flex-end" justifyContent="flex-end">
+                <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
+                  {portfolioBalance.balanceUSD === 0
+                    ? 'N/A'
+                    : formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
                 </Text>
+                <Flex maxWidth={100}>
+                  <Text color="$textTertiary" numberOfLines={1} variant="subheadSmall">
+                    {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
+                  </Text>
+                </Flex>
               </YStack>
             </XStack>
           </Flex>
