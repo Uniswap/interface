@@ -163,7 +163,7 @@ export function NFTItemScreen({
                     borderRadius="rounded8"
                     maxHeight={darkTheme.iconSizes.icon40}
                     maxWidth={darkTheme.iconSizes.icon40}
-                    ml="spacing4"
+                    ml="spacing16"
                     overflow="hidden">
                     <NFTViewer autoplay uri={asset.image.url} />
                   </Box>
@@ -179,7 +179,6 @@ export function NFTItemScreen({
                   alignItems="center"
                   height={darkTheme.iconSizes.icon40}
                   justifyContent="center"
-                  mr="spacing4"
                   width={darkTheme.iconSizes.icon40}>
                   {menuActions.length > 0 ? (
                     onlyShare ? (
