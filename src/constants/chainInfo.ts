@@ -259,8 +259,8 @@ const CHAIN_INFO: ChainInfoMap = {
     squareLogoUrl: harmonySquareLogoUrl,
     nativeCurrency: { name: 'Harmony', symbol: 'ONE', decimals: 18 },
     defaultListUrl: HARMONY_TOKEN_LIST,
-    color: darkTheme.chain_56,
-    backgroundColor: darkTheme.chain_56_background,
+    color: darkTheme.chain_1666600000,
+    backgroundColor: darkTheme.chain_1666600000_background,
   },
 } as const
 
