@@ -110,7 +110,7 @@ export default function RadialGradientByChainUpdater(): null {
         const harmonyLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(219, 219, 219, 0.8) 0%, rgba(255, 244, 249, 0.6958) 50.52%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
         const harmonyDarkGradient =
-          'radial-gradient(100% 100% at 50% 0%, #46faeb 0%, #46fa7c 20%, #053117 100%), #051f0b'
+          'radial-gradient(100% 100% at 50% 0%, rgba(70, 250, 208, 0.8) 0%, rgba(61, 224, 110, 0.68) 10%, rgba(5, 49, 23, 0) 100%), #051f0b'
         backgroundRadialGradientElement.style.background = darkMode ? harmonyDarkGradient : harmonyLightGradient
         break
       }
