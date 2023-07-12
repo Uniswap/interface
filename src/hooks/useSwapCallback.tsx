@@ -15,8 +15,7 @@ import {
 } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import useTransactionDeadline from './useTransactionDeadline'
-// TODO (UniswapX): make this named export
-import useUniswapXSwapCallback from './useUniswapXSwapCallback'
+import { useUniswapXSwapCallback } from './useUniswapXSwapCallback'
 import { useUniversalRouterSwapCallback } from './useUniversalRouter'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>

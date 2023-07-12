@@ -20,7 +20,7 @@ type DutchAuctionOrderResponse = DutchAuctionOrderError | DutchAuctionOrderSucce
 const isErrorResponse = (res: Response, order: DutchAuctionOrderResponse): order is DutchAuctionOrderError =>
   res.status < 200 || res.status > 202
 
-export default function useUniswapXSwapCallback({
+export function useUniswapXSwapCallback({
   trade,
   allowedSlippage,
   fiatValues,

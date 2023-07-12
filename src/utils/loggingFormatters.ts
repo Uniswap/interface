@@ -85,8 +85,8 @@ export const formatSwapButtonClickEventProperties = ({
   fiatValueOutput,
 }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: isClassicTrade(trade) ? trade.gasUseEstimateUSD : undefined,
-  // TODO(UniswapX): Update to track orderHash when order is UniswapX
   transaction_hash: swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined,
+  order_hash: swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : undefined,
   transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_address: trade ? getTokenAddress(trade.inputAmount.currency) : undefined,
   token_out_address: trade ? getTokenAddress(trade.outputAmount.currency) : undefined,
