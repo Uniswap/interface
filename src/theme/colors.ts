@@ -167,9 +167,9 @@ export const darkTheme = {
   accentWarningSoft: opacify(24, colors.gold200),
   accentFailureSoft: opacify(12, colors.red300),
 
-  accentTextDarkPrimary: opacify(80, colors.gray900),
-  accentTextDarkSecondary: opacify(60, colors.gray900),
-  accentTextDarkTertiary: opacify(24, colors.gray900),
+  accentTextDarkPrimary: opacify(80, colors.gold400),
+  accentTextDarkSecondary: opacify(60, colors.gold400),
+  accentTextDarkTertiary: opacify(24, colors.gold400),
 
   accentTextLightPrimary: colors.green50,
   accentTextLightSecondary: opacify(72, colors.green50),
