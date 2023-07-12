@@ -5,7 +5,7 @@
     "minor": 0,
     "patch": 0
   },
-  "logoURI": "https://assets.coingecko.com/coins/images/4344/small/Y88JAze.png",
+  "logoURI": "https://harmony.one/logo",
   "keywords": [
     "harmony",
     "tokens"
@@ -18,7 +18,7 @@
       "symbol": "WONE",
       "name": "Wrapped ONE",
       "decimals": 18,
-      "logoURI": "https://assets.coingecko.com/coins/images/4344/small/Y88JAze.png"
+      "logoURI": "https://harmony.one/logo"
     },
     {
       "chainId": 1666600000,
