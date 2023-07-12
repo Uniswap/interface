@@ -1,3 +1,4 @@
+//We set a 50 second timeout on all tests as global-setup doesn't always wait for the proxy to be ready before running tests
 const tokens = [
   {
     address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',

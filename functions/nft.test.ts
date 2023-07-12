@@ -1,3 +1,4 @@
+//We set a 50 second timeout on all tests as global-setup doesn't always wait for the proxy to be ready before running tests
 const assets = [
   {
     address: '0xed5af388653567af2f388e6224dc7c4b3241c544',
