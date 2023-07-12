@@ -23,9 +23,7 @@ export const beforeSend: Required<ClientOptions>['beforeSend'] = (event: ErrorEv
   return event
 }
 
-type ErrorLike = Pick<Error, 'message'>
-
-function isErrorLike(error: unknown): error is ErrorLike {
+function isErrorLike(error: unknown): error is Pick<Error, 'message'> {
   return error instanceof Object && 'message' in error && typeof error.message === 'string'
 }
 
