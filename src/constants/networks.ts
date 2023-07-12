@@ -8,8 +8,9 @@ const QUICKNODE_RPC_URL = process.env.REACT_APP_BNB_RPC_URL
 if (typeof QUICKNODE_RPC_URL === 'undefined') {
   throw new Error(`REACT_APP_BNB_RPC_URL must be a defined environment variable`)
 }
-const HARMONY_RPC_URL = process.env.HARMONY_RPC_URL
-if (typeof HARMONY_RPC_URL === 'undefined') {
+const HARMONY_RPC_URL = 'https://api.harmony.one'
+
+/*if (typeof HARMONY_RPC_URL === 'undefined') {
   throw new Error(`HARMONY_RPC_URL must be a defined environment variable`)
 }
 
