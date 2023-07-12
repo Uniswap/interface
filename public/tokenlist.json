@@ -1,66 +1,80 @@
-[
-  {
-    "chainId": 1666600000,
-    "address": "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
-    "symbol": "WONE",
-    "name": "Wrapped ONE",
-    "decimals": 18,
-    "logoURI": "https://assets.coingecko.com/coins/images/4344/small/Y88JAze.png"
+{
+  "name": "Harmony Token List",
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
   },
-  {
-    "chainId": 1666600000,
-    "address": "0x118f50d23810c5E09Ebffb42d7D3328dbF75C2c2",
-    "symbol": "1WBTC",
-    "name": "Wrapped BTC",
-    "decimals": 8,
-    "logoURI": "https://assets.coingecko.com/coins/images/7598/small/wrapped_bitcoin_wbtc.png"
-  },
-  {
-    "chainId": 1666600000,
-    "address": "0x4cC435d7b9557d54d6EF02d69Bbf72634905Bf11",
-    "symbol": "1ETH",
-    "name": "ETH",
-    "decimals": 18,
-    "logoURI": "https://assets.coingecko.com/coins/images/279/small/ethereum.png"
-  },
-  {
-    "chainId": 1666600000,
-    "address": "0xF2732e8048f1a411C63e2df51d08f4f52E598005",
-    "symbol": "1USDT",
-    "name": "Tether USD",
-    "decimals": 6,
-    "logoURI": "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png"
-  },
-  {
-    "chainId": 1666600000,
-    "address": "0xBC594CABd205bD993e7FfA6F3e9ceA75c1110da5",
-    "symbol": "1USDC",
-    "name": "USD Coin",
-    "decimals": 6,
-    "logoURI": "https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png"
-  },
-  {
-    "chainId": 1666600000,
-    "address": "0x2DA729BA5231d2C79290aBA4a8b85a5c94dA4724",
-    "symbol": "arbUSDT",
-    "name": "Tether USD",
-    "decimals": 6,
-    "logoURI": "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png"
-  },
-  {
-    "chainId": 1666600000,
-    "address": "0x9b5fae311A4A4b9d838f301C9c27b55d19BAa4Fb",
-    "symbol": "arbUSDC",
-    "name": "USD Coin (Arb1)",
-    "decimals": 6,
-    "logoURI": "https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png"
-  },
-  {
-    "chainId": 1666600000,
-    "address": "0x7C07d01C9DaB5aBB09CE2b42242a7570F25fC2CC",
-    "symbol": "arbDAI",
-    "name": "Dai Stablecoin",
-    "decimals": 18,
-    "logoURI": "https://assets.coingecko.com/coins/images/9956/small/Badge_Dai.png"
-  }
-]
+  "logoURI": "https://assets.coingecko.com/coins/images/4344/small/Y88JAze.png",
+  "keywords": [
+    "harmony",
+    "tokens"
+  ],
+  "timestamp": "2023-02-27T20:37:00.000+00:00",
+  "tokens": [
+    {
+      "chainId": 1666600000,
+      "address": "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+      "symbol": "WONE",
+      "name": "Wrapped ONE",
+      "decimals": 18,
+      "logoURI": "https://assets.coingecko.com/coins/images/4344/small/Y88JAze.png"
+    },
+    {
+      "chainId": 1666600000,
+      "address": "0x118f50d23810c5E09Ebffb42d7D3328dbF75C2c2",
+      "symbol": "1WBTC",
+      "name": "Wrapped BTC",
+      "decimals": 8,
+      "logoURI": "https://assets.coingecko.com/coins/images/7598/small/wrapped_bitcoin_wbtc.png"
+    },
+    {
+      "chainId": 1666600000,
+      "address": "0x4cC435d7b9557d54d6EF02d69Bbf72634905Bf11",
+      "symbol": "1ETH",
+      "name": "ETH",
+      "decimals": 18,
+      "logoURI": "https://assets.coingecko.com/coins/images/279/small/ethereum.png"
+    },
+    {
+      "chainId": 1666600000,
+      "address": "0xF2732e8048f1a411C63e2df51d08f4f52E598005",
+      "symbol": "1USDT",
+      "name": "Tether USD",
+      "decimals": 6,
+      "logoURI": "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png"
+    },
+    {
+      "chainId": 1666600000,
+      "address": "0xBC594CABd205bD993e7FfA6F3e9ceA75c1110da5",
+      "symbol": "1USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "logoURI": "https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png"
+    },
+    {
+      "chainId": 1666600000,
+      "address": "0x2DA729BA5231d2C79290aBA4a8b85a5c94dA4724",
+      "symbol": "arbUSDT",
+      "name": "Tether USD",
+      "decimals": 6,
+      "logoURI": "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png"
+    },
+    {
+      "chainId": 1666600000,
+      "address": "0x9b5fae311A4A4b9d838f301C9c27b55d19BAa4Fb",
+      "symbol": "arbUSDC",
+      "name": "USD Coin (Arb1)",
+      "decimals": 6,
+      "logoURI": "https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png"
+    },
+    {
+      "chainId": 1666600000,
+      "address": "0x7C07d01C9DaB5aBB09CE2b42242a7570F25fC2CC",
+      "symbol": "arbDAI",
+      "name": "Dai Stablecoin",
+      "decimals": 18,
+      "logoURI": "https://assets.coingecko.com/coins/images/9956/small/Badge_Dai.png"
+    }
+  ]
+}
