@@ -617,7 +617,7 @@ const InputText = styled.div`
 
 
 /* Loaded State: row component with token information */
-export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
+ const RawLoadedRow = (props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
   // const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
   const { position } = props
@@ -641,24 +641,27 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     return [`${Math.abs(hours)}h ${Math.abs(minutes)}m`, isNegative]
   }, [position, now])
 
-  const quoteBaseSymbol = useMemo(() => {
-    if (token0 && token1 && pool?.token0Price) {
-      if (pool.token0Price.greaterThan(1)) {
-        return `${token0.symbol}/${token1.symbol}`
-      } else {
-        return `${token1.symbol}/${token0.symbol}`
-      }
-    }
-    return ''
-  }, [pool, token1, token0])
+  // const quoteBaseSymbol = useMemo(() => {
+  //   if (token0 && token1 && pool?.token0Price) {
+  //     if (pool.token0Price.greaterThan(1)) {
+  //       return `${token0.symbol}/${token1.symbol}`
+  //     } else {
+  //       return `${token1.symbol}/${token0.symbol}`
+  //     }
+  //   }
+  //   return ''
+  // }, [pool, token1, token0])
 
   const ltv = useMemo(() => {
-    const collateralIsToken0 = position.isToken0; // position.isToken0 === position.borrowBelow
+    if (pool?.token0Price && pool?.token1Price) {
+      const collateralIsToken0 = position.isToken0; // position.isToken0 === position.borrowBelow
       const price = collateralIsToken0 ? pool?.token0Price.toFixed(DEFAULT_ERC20_DECIMALS) : pool?.token1Price.toFixed(DEFAULT_ERC20_DECIMALS);
       const ltv = new BN(position.totalDebtInput).div(
-        new BN(position.initialCollateral).multipliedBy(new BN(price ?? "0"))
+        new BN(position.initialCollateral).multipliedBy(new BN(price))
       )
-    return ltv.toNumber();
+      return ltv.toNumber();
+    }
+    return 0;
 
   }, [position, pool])
 
@@ -747,6 +750,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
       </StyledLoadedRow>
     </div>
   )
-})
+}
+export const LoadedRow = forwardRef(RawLoadedRow);
 
 
