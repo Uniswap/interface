@@ -14,7 +14,7 @@ export default function useSelectChain() {
   const dispatch = useAppDispatch()
   const { connector } = useWeb3React()
   const switchChain = useSwitchChain()
-  const [, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   return useCallback(
     async (targetChain: ChainId) => {
@@ -23,7 +23,10 @@ export default function useSelectChain() {
       const connection = getConnection(connector)
 
       try {
-        setSearchParams({ chain: '' })
+        if (searchParams.has('chain')) {
+          searchParams.delete('chain')
+          setSearchParams(searchParams)
+        }
         await switchChain(connector, targetChain)
         if (isSupportedChain(targetChain)) setSearchParams({ chain: CHAIN_IDS_TO_NAMES[targetChain] })
       } catch (error) {
@@ -33,6 +36,6 @@ export default function useSelectChain() {
         }
       }
     },
-    [connector, dispatch, setSearchParams, switchChain]
+    [connector, dispatch, searchParams, setSearchParams, switchChain]
   )
 }
