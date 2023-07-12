@@ -463,31 +463,30 @@ export function Swap({
     tradeToConfirm,
   ])
 
-  const handleOnWrap = useCallback(() => {
+  const handleOnWrap = useCallback(async () => {
     if (!onWrap) return
-    onWrap()
-      .then((hash) => {
-        setSwapState((currentState) => ({
-          ...currentState,
-          swapError: undefined,
-          txHash: hash,
-        }))
-        onUserInput(Field.INPUT, '')
-      })
-      .catch((error) => {
-        if (!didUserReject(error)) {
-          sendAnalyticsEvent(SwapEventName.SWAP_ERROR, {
-            wrapType,
-            input: currencies[Field.INPUT],
-            output: currencies[Field.OUTPUT],
-          })
-        }
-        setSwapState((currentState) => ({
-          ...currentState,
-          swapError: error,
-          txHash: undefined,
-        }))
-      })
+    try {
+      const txHash = await onWrap()
+      setSwapState((currentState) => ({
+        ...currentState,
+        swapError: undefined,
+        txHash,
+      }))
+      onUserInput(Field.INPUT, '')
+    } catch (error) {
+      if (!didUserReject(error)) {
+        sendAnalyticsEvent(SwapEventName.SWAP_ERROR, {
+          wrapType,
+          input: currencies[Field.INPUT],
+          output: currencies[Field.OUTPUT],
+        })
+      }
+      setSwapState((currentState) => ({
+        ...currentState,
+        swapError: error,
+        txHash: undefined,
+      }))
+    }
   }, [currencies, onUserInput, onWrap, wrapType])
 
   // errors
