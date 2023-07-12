@@ -105,11 +105,20 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? avaxDarkGradient : avaxLightGradient
         break
       }
+      case ChainId.HARMONY: {
+        setBackground(backgroundResetStyles)
+        const harmonyLightGradient =
+          'radial-gradient(100% 100% at 50% 0%, rgba(219, 219, 219, 0.8) 0%, rgba(255, 244, 249, 0.6958) 50.52%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
+        const harmonyDarkGradient =
+          'radial-gradient(100% 100% at 50% 0%, rgba(46, 62, 54, 0.8) 0%, rgba(31, 45, 33, 0.6958) 50.52%, rgba(36, 40, 31, 0) 100%), #0D0E0E'
+        backgroundRadialGradientElement.style.background = darkMode ? harmonyDarkGradient : harmonyLightGradient
+        break
+      }
       default: {
         setBackground(initialStyles)
         const defaultLightGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
-        const defaultDarkGradient = 'linear-gradient(180deg, #202738 0%, #070816 100%)'
+          'radial-gradient(100% 100% at 50% 0%, rgba(184, 255, 208, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
+        const defaultDarkGradient = 'linear-gradient(180deg, #20382a 0%, #07160b 100%)'
         backgroundRadialGradientElement.style.background = darkMode ? defaultDarkGradient : defaultLightGradient
       }
     }
