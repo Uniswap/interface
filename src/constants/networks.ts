@@ -145,6 +145,7 @@ export const RPC_URLS = {
     `https://arbitrum-goerli.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[ChainId.ARBITRUM_GOERLI],
   ],
+  [ChainId.BASE_GOERLI]: ['https://base-goerli.public.blastapi.io', ...FALLBACK_URLS[ChainId.BASE_GOERLI]],
   [ChainId.POLYGON]: [`https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.POLYGON]],
   [ChainId.POLYGON_MUMBAI]: [
     `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
@@ -154,6 +155,6 @@ export const RPC_URLS = {
   [ChainId.CELO_ALFAJORES]: FALLBACK_URLS[ChainId.CELO_ALFAJORES],
   [ChainId.BNB]: [QUICKNODE_RPC_URL, ...FALLBACK_URLS[ChainId.BNB]],
   [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.AVALANCHE]],
-  [ChainId.HARMONY]: [HARMONY_RPC_URL, ...FALLBACK_URLS[ChainId.HARMONY]],
+  [ChainId.HARMONY]: ['https://api.harmony.one', ...FALLBACK_URLS[ChainId.HARMONY]],
 
 }
