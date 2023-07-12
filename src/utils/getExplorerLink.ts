@@ -1,16 +1,17 @@
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 
 const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
-  [SupportedChainId.MAINNET]: 'https://etherscan.io',
-  [SupportedChainId.GOERLI]: 'https://goerli.etherscan.io',
-  [SupportedChainId.SEPOLIA]: 'https://sepolia.etherscan.io',
-  [SupportedChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
-  [SupportedChainId.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io',
-  [SupportedChainId.POLYGON]: 'https://polygonscan.com',
-  [SupportedChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
-  [SupportedChainId.CELO]: 'https://celoscan.io',
-  [SupportedChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
-  [SupportedChainId.BNB]: 'https://bscscan.com',
+  [ChainId.MAINNET]: 'https://etherscan.io',
+  [ChainId.GOERLI]: 'https://goerli.etherscan.io',
+  [ChainId.SEPOLIA]: 'https://sepolia.etherscan.io',
+  [ChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
+  [ChainId.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io',
+  [ChainId.POLYGON]: 'https://polygonscan.com',
+  [ChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
+  [ChainId.CELO]: 'https://celoscan.io',
+  [ChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
+  [ChainId.BNB]: 'https://bscscan.com',
+  [ChainId.AVALANCHE]: 'https://snowtrace.io',
 }
 
 export enum ExplorerDataType {
@@ -27,7 +28,7 @@ export enum ExplorerDataType {
  * @param type the type of the data
  */
 export function getExplorerLink(chainId: number, data: string, type: ExplorerDataType): string {
-  if (chainId === SupportedChainId.ARBITRUM_ONE) {
+  if (chainId === ChainId.ARBITRUM_ONE) {
     switch (type) {
       case ExplorerDataType.TRANSACTION:
         return `https://arbiscan.io/tx/${data}`
@@ -41,7 +42,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     }
   }
 
-  if (chainId === SupportedChainId.ARBITRUM_GOERLI) {
+  if (chainId === ChainId.ARBITRUM_GOERLI) {
     switch (type) {
       case ExplorerDataType.TRANSACTION:
         return `https://goerli.arbiscan.io/tx/${data}`
@@ -65,7 +66,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
       return `${prefix}/token/${data}`
 
     case ExplorerDataType.BLOCK:
-      if (chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISM_GOERLI) {
+      if (chainId === ChainId.OPTIMISM || chainId === ChainId.OPTIMISM_GOERLI) {
         return `${prefix}/tx/${data}`
       }
       return `${prefix}/block/${data}`

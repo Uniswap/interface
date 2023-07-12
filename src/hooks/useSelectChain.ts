@@ -1,7 +1,7 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getConnection } from 'connection'
 import { didUserReject } from 'connection/utils'
-import { SupportedChainId } from 'constants/chains'
 import { useCallback } from 'react'
 import { addPopup } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
@@ -14,7 +14,7 @@ export default function useSelectChain() {
   const switchChain = useSwitchChain()
 
   return useCallback(
-    async (targetChain: SupportedChainId) => {
+    async (targetChain: ChainId) => {
       if (!connector) return
 
       const connection = getConnection(connector)

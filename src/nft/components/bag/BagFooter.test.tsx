@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
-import { CurrencyAmount, Percent, SupportedChainId } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { nativeOnChain } from 'constants/tokens'
 import { useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
@@ -86,7 +86,7 @@ describe('BagFooter.tsx', () => {
       allowedSlippage: new Percent(10, 100),
     })
     mocked(usePayWithAnyTokenSwap).mockReturnValue()
-    mocked(useCurrency).mockReturnValue(nativeOnChain(SupportedChainId.MAINNET))
+    mocked(useCurrency).mockReturnValue(nativeOnChain(ChainId.MAINNET))
     mocked(useTokenInput).mockReturnValue({
       inputCurrency: undefined,
       setInputCurrency: () => undefined,

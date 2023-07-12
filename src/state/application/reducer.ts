@@ -1,5 +1,5 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 
 export type PopupContent =
@@ -9,7 +9,7 @@ export type PopupContent =
       }
     }
   | {
-      failedSwitchNetwork: SupportedChainId
+      failedSwitchNetwork: ChainId
     }
 
 export enum ApplicationModal {

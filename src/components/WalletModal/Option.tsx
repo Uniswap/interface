@@ -1,23 +1,13 @@
-import { t, Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { useAccountDrawer } from 'components/AccountDrawer'
-import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
-import { walletConnectV1Connection, walletConnectV2Connection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
-import { Connection, ConnectionType } from 'connection/types'
-import { useWalletConnectFallback } from 'featureFlags/flags/walletConnectPopover'
-import { useWalletConnectV2AsDefault } from 'featureFlags/flags/walletConnectV2'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { MouseEvent, useEffect, useRef, useState } from 'react'
-import { MoreHorizontal } from 'react-feather'
+import { Connection } from 'connection/types'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import { Z_INDEX } from 'theme/zIndex'
 
 import NewBadge from './NewBadge'
 
@@ -67,41 +57,7 @@ const IconWrapper = styled.div`
     align-items: flex-end;
   `};
 `
-const PopoverContent = styled(ThemeButton)`
-  background: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: 12px;
-  cursor: pointer;
-  display: flex;
-  max-width: 240px;
-  padding: 16px;
-  position: absolute;
-  right: 12px;
-  top: 52px;
-  z-index: ${Z_INDEX.popover};
-`
-const TOGGLE_SIZE = 24
-const FallbackPopoverToggle = styled.button`
-  align-items: center;
-  background-color: transparent;
-  border: none;
-  color: ${({ theme }) => theme.textTertiary};
-  cursor: pointer;
-  display: flex;
-  height: ${TOGGLE_SIZE}px;
-  justify-content: center;
-  margin: 0;
-  max-width: 48px;
-  padding: 0;
-  position: absolute;
-  right: 16px;
-  top: calc(50% - ${TOGGLE_SIZE / 2}px);
-  width: ${TOGGLE_SIZE}px;
 
-  &:hover {
-    opacity: 0.6;
-  }
-`
 const Wrapper = styled.div<{ disabled: boolean }>`
   align-items: stretch;
   display: flex;
@@ -121,90 +77,18 @@ const Wrapper = styled.div<{ disabled: boolean }>`
   }
 `
 
-const WCv1Icon = styled.img`
-  height: 20px !important;
-  width: 20px !important;
-`
-const PopoverBodyText = styled(ThemedText.BodyPrimary)`
-  margin-bottom: 4px !important;
-  text-align: left;
-`
-const PopoverCaption = styled(ThemedText.Caption)`
-  text-align: left;
-`
-
-interface PopupButtonContentProps {
-  connection: Connection
-  isDarkMode: boolean
-  show: boolean
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void
-  onClose: () => void
-}
-function PopupButtonContent({ connection, isDarkMode, show, onClick, onClose }: PopupButtonContentProps) {
-  const popoverElement = useRef<HTMLButtonElement>(null)
-
-  useOnClickOutside(popoverElement, onClose)
-
-  const walletConnectV2AsDefault = useWalletConnectV2AsDefault()
-
-  if (!show) return null
-  return (
-    <PopoverContent onClick={onClick} ref={popoverElement} size={ButtonSize.small} emphasis={ButtonEmphasis.medium}>
-      <IconWrapper>
-        <WCv1Icon src={connection.getIcon?.(isDarkMode)} alt={connection.getName()} />
-      </IconWrapper>
-      <div>
-        <PopoverBodyText>
-          <Trans>Connect with {walletConnectV2AsDefault ? t`v1` : t`v2`}</Trans>
-        </PopoverBodyText>
-        <PopoverCaption color="textSecondary">
-          {walletConnectV2AsDefault
-            ? t`Support for v1 will be discontinued June 28.`
-            : t`Under development and unsupported by most wallets`}
-        </PopoverCaption>
-      </div>
-    </PopoverContent>
-  )
-}
-
 interface OptionProps {
   connection: Connection
 }
 export default function Option({ connection }: OptionProps) {
   const { activationState, tryActivation } = useActivationState()
-  const [wCPopoverOpen, setWCPopoverOpen] = useState(false)
-  const [accountDrawerOpen, toggleAccountDrawerOpen] = useAccountDrawer()
+  const toggleAccountDrawer = useToggleAccountDrawer()
   const { chainId } = useWeb3React()
-  const activate = () => tryActivation(connection, toggleAccountDrawerOpen, chainId)
-
-  useEffect(() => {
-    if (!accountDrawerOpen) setWCPopoverOpen(false)
-  }, [accountDrawerOpen])
+  const activate = () => tryActivation(connection, toggleAccountDrawer, chainId)
 
   const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
   const isCurrentOptionPending = isSomeOptionPending && activationState.connection.type === connection.type
   const isDarkMode = useIsDarkMode()
-
-  const walletConnectV2AsDefault = useWalletConnectV2AsDefault()
-  const shouldUseWalletConnectFallback = useWalletConnectFallback()
-
-  const handleClickConnectViaPopover = (e: MouseEvent<HTMLButtonElement>) => {
-    const connector = walletConnectV2AsDefault ? walletConnectV1Connection : walletConnectV2Connection
-
-    e.stopPropagation()
-    tryActivation(connector, () => {
-      setWCPopoverOpen(false)
-      toggleAccountDrawerOpen()
-    })
-  }
-  const handleClickOpenPopover = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    setWCPopoverOpen(true)
-  }
-
-  const isWalletConnect =
-    connection.type === ConnectionType.WALLET_CONNECT || connection.type === ConnectionType.WALLET_CONNECT_V2
-  const showExtraMenuToggle = isWalletConnect && !isCurrentOptionPending && shouldUseWalletConnectFallback
 
   return (
     <Wrapper disabled={isSomeOptionPending}>
@@ -230,21 +114,6 @@ export default function Option({ connection }: OptionProps) {
           {isCurrentOptionPending && <Loader />}
         </OptionCardClickable>
       </TraceEvent>
-
-      {showExtraMenuToggle && (
-        <>
-          <FallbackPopoverToggle onClick={handleClickOpenPopover} onMouseDown={handleClickOpenPopover}>
-            <MoreHorizontal />
-          </FallbackPopoverToggle>
-          <PopupButtonContent
-            connection={connection}
-            isDarkMode={isDarkMode}
-            show={wCPopoverOpen}
-            onClick={handleClickConnectViaPopover}
-            onClose={() => setWCPopoverOpen(false)}
-          />
-        </>
-      )}
     </Wrapper>
   )
 }

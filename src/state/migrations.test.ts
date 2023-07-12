@@ -49,22 +49,6 @@ const defaultState = {
   multicall: {
     callResults: {},
   },
-  routingApi: {
-    config: {
-      focused: true,
-      keepUnusedDataFor: 60,
-      middlewareRegistered: true,
-      online: true,
-      reducerPath: 'routingApi',
-      refetchOnFocus: false,
-      refetchOnMountOrArgChange: false,
-      refetchOnReconnect: false,
-    },
-    mutations: {},
-    provided: {},
-    queries: {},
-    subscriptions: {},
-  },
   routingApiV2: {
     config: {
       focused: true,

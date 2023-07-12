@@ -1,6 +1,6 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { ConnectionType } from 'connection/types'
-import { SupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import multicall from 'lib/state/multicall'
 import { CombinedState } from 'redux'
@@ -18,8 +18,7 @@ import { MintState } from './mint/reducer'
 import { Field as FieldV3 } from './mint/v3/actions'
 import { FullRange, MintState as MintV3State } from './mint/v3/reducer'
 import { AppState } from './reducer'
-import { RouterPreference, routingApi } from './routing/slice'
-import { routingApiV2 } from './routing/v2Slice'
+import { RouterPreference, routingApiV2 } from './routing/slice'
 import { TransactionState } from './transactions/reducer'
 import { TransactionDetails } from './transactions/types'
 import { UserState } from './user/reducer'
@@ -58,14 +57,12 @@ type ExpectedAppState = CombinedState<{
   burnV3: BurnV3State
   multicall: ReturnType<typeof multicall.reducer>
   logs: LogsState
-  [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
   [routingApiV2.reducerPath]: ReturnType<typeof routingApiV2.reducer>
 }>
 
 assert<Equals<AppState, ExpectedAppState>>()
 
 interface ExpectedUserState {
-  buyFiatFlowCompleted?: boolean
   selectedWallet?: ConnectionType
   lastUpdateVersionTimestamp?: number
   userLocale: SupportedLocale | null
@@ -125,7 +122,7 @@ assert<Equals<ApplicationState, ExpectedApplicationState>>()
 
 interface ExpectedWalletState {
   connectedWallets: Wallet[]
-  switchingChain: SupportedChainId | false
+  switchingChain: ChainId | false
 }
 
 assert<Equals<WalletState, ExpectedWalletState>>()

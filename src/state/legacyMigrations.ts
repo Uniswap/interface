@@ -1,4 +1,3 @@
-import { ConnectionType } from 'connection/types'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 
 import { RouterPreference } from './routing/slice'
@@ -31,9 +30,12 @@ export function legacyTransactionMigrations(state: any): TransactionState {
 export function legacyUserMigrations(state: any): UserState {
   // Make a copy of the object so we can mutate it.
   const result = JSON.parse(JSON.stringify(state))
-  // If `selectedWallet` is ConnectionType.UNI_WALLET (deprecated) switch it to ConnectionType.UNISWAP_WALLET
-  if (result.selectedWallet === 'UNIWALLET') {
-    result.selectedWallet = ConnectionType.UNISWAP_WALLET
+  // If `selectedWallet` is a WalletConnect v1 wallet, reset to default.
+  if (state.selectedWallet) {
+    const selectedWallet = state.selectedWallet as string
+    if (selectedWallet === 'UNIWALLET' || selectedWallet === 'UNISWAP_WALLET' || selectedWallet === 'WALLET_CONNECT') {
+      delete state.selectedWallet
+    }
   }
 
   // If `userSlippageTolerance` is not present or its value is invalid, reset to default

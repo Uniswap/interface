@@ -1,6 +1,6 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { SupportedChainId } from 'constants/chains'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import { createDeferredPromise } from 'test-utils/promise'
@@ -67,11 +67,11 @@ it('Should call activate function on a connection', async () => {
 
   let activationCall: Promise<void> = new Promise(jest.fn())
   act(() => {
-    activationCall = result.current.tryActivation(mockConnection, onSuccess, SupportedChainId.OPTIMISM)
+    activationCall = result.current.tryActivation(mockConnection, onSuccess, ChainId.OPTIMISM)
   })
 
   expect(result.current.activationState).toEqual({ status: ActivationStatus.PENDING, connection: mockConnection })
-  expect(mockConnection.overrideActivate).toHaveBeenCalledWith(SupportedChainId.OPTIMISM)
+  expect(mockConnection.overrideActivate).toHaveBeenCalledWith(ChainId.OPTIMISM)
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(console.debug).toHaveBeenLastCalledWith(`Connection activating: ${mockConnection.getName()}`)
   expect(onSuccess).toHaveBeenCalledTimes(0)
@@ -240,10 +240,10 @@ describe('Should gracefully handle intentional user-rejection errors', () => {
     const wcConnection = createMockConnection(
       jest
         .fn()
-        .mockImplementationOnce(() => Promise.reject(ErrorCode.WC_MODAL_CLOSED))
+        .mockImplementationOnce(() => Promise.reject(ErrorCode.WC_V2_MODAL_CLOSED))
         .mockImplementationOnce(() => Promise.resolve),
       jest.fn(),
-      ConnectionType.WALLET_CONNECT
+      ConnectionType.WALLET_CONNECT_V2
     )
 
     const onSuccess = jest.fn()
