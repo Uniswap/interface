@@ -142,13 +142,13 @@ export const darkTheme = {
 
   background: colors.gray800,
   backgroundBackdrop: colors.gray950,
-  backgroundSurface: colors.gray900,
+  backgroundSurface: colors.gold400,
   backgroundModule: colors.gray800,
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
   backgroundOutline: opacify(24, colors.gray300),
-  backgroundScrim: opacify(72, colors.gray900),
-  backgroundScrolledSurface: opacify(72, colors.gray900),
+  backgroundScrim: opacify(72, colors.gold400),
+  backgroundScrolledSurface: opacify(72, colors.gold400),
 
   textPrimary: colors.white,
   textSecondary: colors.gray300,
