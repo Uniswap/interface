@@ -126,12 +126,12 @@ const commonTheme = {
   chain_42161_background: colors.blue900,
   chain_56_background: colors.networkBsc,
   chain_1666600000_background: colors.green400,
-  promotional: colors.magenta300,
+  promotional: colors.greenVibrant,
 
   brandedGradient: 'linear-gradient(139.57deg, #a8ff79 4.35%, #b8ffbc 96.44%);',
-  promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
+  promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #1b8efa 100%);',
 
-  hoverState: opacify(24, colors.blue200),
+  hoverState: opacify(24, colors.green200),
   hoverDefault: opacify(8, colors.green300),
 }
 
@@ -154,15 +154,15 @@ export const darkTheme = {
   textSecondary: colors.green300,
   textTertiary: colors.green500,
 
-  accentAction: colors.blue400,
-  accentActive: colors.blue400,
+  accentAction: colors.green400,
+  accentActive: colors.green400,
   accentSuccess: colors.green200,
   accentWarning: colors.gold200,
   accentFailure: colors.red300,
   accentCritical: colors.red300,
 
-  accentActionSoft: opacify(24, colors.blue400),
-  accentActiveSoft: opacify(24, colors.blue400),
+  accentActionSoft: opacify(24, colors.green400),
+  accentActiveSoft: opacify(24, colors.green400),
   accentSuccessSoft: opacify(24, colors.green400),
   accentWarningSoft: opacify(24, colors.gold200),
   accentFailureSoft: opacify(12, colors.red300),
@@ -207,14 +207,14 @@ export const lightTheme: Theme = {
   textTertiary: colors.gray300,
 
   accentAction: colors.pink400,
-  accentActive: colors.blue400,
+  accentActive: colors.green400,
   accentSuccess: colors.green300,
   accentWarning: colors.gold400,
   accentFailure: colors.red400,
   accentCritical: colors.red400,
 
   accentActionSoft: opacify(12, colors.pink400),
-  accentActiveSoft: opacify(24, colors.blue400),
+  accentActiveSoft: opacify(24, colors.green400),
   accentSuccessSoft: opacify(24, colors.green300),
   accentWarningSoft: opacify(24, colors.gold400),
   accentFailureSoft: opacify(12, colors.red400),
