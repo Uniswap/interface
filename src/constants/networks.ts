@@ -119,9 +119,9 @@ export const FALLBACK_URLS = {
     'https://api.harmony.one',
     'https://api.s0.t.hmny.io',
   ],
-  [ChainId.BASE_GOERLI]: {
-    'https://base-goerli.public.blastapi.io	'
-  }
+  [ChainId.BASE_GOERLI]: [
+    'https://base-goerli.public.blastapi.io'
+  ]
 }
 
 /**
