@@ -12,7 +12,7 @@ type SVGProps = React.SVGProps<SVGSVGElement> & {
 }
 
 export const UniIcon = (props: SVGProps) => (
-  <svg viewBox="0 0 45 45" {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="45" {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       fillRule="evenodd"
       clipRule="evenodd"
