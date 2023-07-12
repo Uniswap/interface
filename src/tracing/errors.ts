@@ -44,7 +44,7 @@ function updateRequestUrl(event: ErrorEvent) {
 
 // TODO(WEB-2400): Refactor to use a config instead of returning true for each condition.
 function shouldRejectError(error: EventHint['originalException']) {
-  if (error instanceof Error) {
+  if ('message' in error) {
     // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
     // If block number polling, it should not be considered an exception.
     if (isEthersRequestError(error)) {
@@ -93,7 +93,7 @@ function shouldRejectError(error: EventHint['originalException']) {
     }
 
     // These are caused by user navigation away from the page before a request has finished.
-    if (error instanceof DOMException && error.name === 'AbortError') return true
+    if (error instanceof DOMException && error?.name === 'AbortError') return true
   }
 
   return false
