@@ -26,9 +26,10 @@ export async function focusOrCreateOnboardingTab(): Promise<void> {
   const windowId = tabs[0]?.windowId
 
   if (tabIndex && windowId) {
-    chrome.tabs.highlight({ windowId, tabs: tabIndex })
+    await chrome.tabs.highlight({ windowId, tabs: tabIndex })
+    await chrome.windows.update(windowId, { focused: true })
     return
   }
 
-  chrome.tabs.create({ url: 'index.html#/onboarding' })
+  await chrome.tabs.create({ url: 'index.html#/onboarding' })
 }
