@@ -246,11 +246,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(
           ListEmptyComponent={
             // initial loading
             isNonPollingRequestInFlight(networkStatus) ? (
-              <View
-                style={[
-                  containerProps?.loadingContainerStyle,
-                  { paddingHorizontal: theme.spacing.spacing12 },
-                ]}>
+              <View style={{ paddingHorizontal: theme.spacing.spacing12 }}>
                 <Loader.NFT repeat={6} />
               </View>
             ) : // no response and we're not loading already
