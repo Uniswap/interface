@@ -69,6 +69,7 @@ export const TokenBalanceList = ({ owner }: TokenBalanceListProps): JSX.Element 
       {listItems?.map((balance: PortfolioBalance) => {
         return (
           <TokenBalanceItem
+            key={balance.currencyInfo.currencyId}
             // TODO: before passing down loading, add subtle animation on refresh of data, and make loaders take up same space as final objects
             // loading={loading}
             portfolioBalance={balance}

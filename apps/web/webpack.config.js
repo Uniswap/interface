@@ -91,7 +91,8 @@ const {
       dir: 'dev',
       devServer: {
         // watchFiles: ['src/**/*', 'webpack.config.js'],
-        host: 'localhost',
+        allowedHosts: 'all',
+        host: '127.0.0.1',
         port: 9997,
         server: fs.existsSync('localhost.pem')
           ? {
@@ -112,7 +113,11 @@ const {
           reconnect: false,
           overlay: {
             errors: true,
-            warnings: false,
+            warnings: false,  
+            // disable resize observer error
+            // NOTE: ideally would use the function format (error) => boolean
+            //       however, I was not able to get past CSP with that solution
+            runtimeErrors: false 
           },
         },
         devMiddleware: {
