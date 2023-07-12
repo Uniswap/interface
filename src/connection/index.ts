@@ -16,7 +16,6 @@ import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
 import { getInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
-import { UniwalletConnect, WalletConnectV1 } from './WalletConnect'
 import { UniwalletConnect as UniwalletWCV2Connect, WalletConnectV2 } from './WalletConnectV2'
 
 function onError(error: Error) {
@@ -70,18 +69,6 @@ export const gnosisSafeConnection: Connection = {
   shouldDisplay: () => false,
 }
 
-const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnectV1>(
-  (actions) => new WalletConnectV1({ actions, onError })
-)
-export const walletConnectV1Connection: Connection = {
-  getName: () => 'WalletConnect',
-  connector: web3WalletConnect,
-  hooks: web3WalletConnectHooks,
-  type: ConnectionType.WALLET_CONNECT,
-  getIcon: () => WALLET_CONNECT_ICON,
-  shouldDisplay: () => !getIsInjectedMobileBrowser(),
-}
-
 export const walletConnectV2Connection: Connection = new (class implements Connection {
   private initializer = (actions: Actions, defaultChainId = ChainId.MAINNET) =>
     new WalletConnectV2({ actions, defaultChainId, onError })
@@ -104,19 +91,6 @@ export const walletConnectV2Connection: Connection = new (class implements Conne
     return this._connector[1]
   }
 })()
-
-const [web3UniwalletConnect, web3UniwalletConnectHooks] = initializeConnector<UniwalletConnect>(
-  (actions) => new UniwalletConnect({ actions, onError })
-)
-export const uniwalletConnectConnection: Connection = {
-  getName: () => 'Uniswap Wallet',
-  connector: web3UniwalletConnect,
-  hooks: web3UniwalletConnectHooks,
-  type: ConnectionType.UNISWAP_WALLET,
-  getIcon: () => UNIWALLET_ICON,
-  shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonIOSPhone),
-  isNew: true,
-}
 
 const [web3WCV2UniwalletConnect, web3WCV2UniwalletConnectHooks] = initializeConnector<UniwalletWCV2Connect>(
   (actions) => new UniwalletWCV2Connect({ actions, onError })
@@ -164,11 +138,9 @@ const coinbaseWalletConnection: Connection = {
 
 export function getConnections() {
   return [
-    uniwalletConnectConnection,
     uniwalletWCV2ConnectConnection,
     injectedConnection,
     walletConnectV2Connection,
-    walletConnectV1Connection,
     coinbaseWalletConnection,
     gnosisSafeConnection,
     networkConnection,
@@ -188,13 +160,8 @@ export function getConnection(c: Connector | ConnectionType) {
         return injectedConnection
       case ConnectionType.COINBASE_WALLET:
         return coinbaseWalletConnection
-      case ConnectionType.WALLET_CONNECT:
-        return walletConnectV1Connection
       case ConnectionType.WALLET_CONNECT_V2:
         return walletConnectV2Connection
-      case ConnectionType.UNIWALLET:
-      case ConnectionType.UNISWAP_WALLET:
-        return uniwalletConnectConnection
       case ConnectionType.UNISWAP_WALLET_V2:
         return uniwalletWCV2ConnectConnection
       case ConnectionType.NETWORK:

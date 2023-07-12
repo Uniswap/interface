@@ -1,11 +1,11 @@
 import { t } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { WalletConnect } from '@web3-react/walletconnect-v2'
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
+import { WalletConnectV2 } from 'connection/WalletConnectV2'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS, UniWalletSupportedChains } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -38,8 +38,8 @@ function useWalletSupportedChains(): ChainId[] {
 
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
-      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnect).provider?.session)
-    case ConnectionType.UNISWAP_WALLET:
+      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
+    case ConnectionType.UNISWAP_WALLET_V2:
       return UniWalletSupportedChains
     default:
       return NETWORK_SELECTOR_CHAINS

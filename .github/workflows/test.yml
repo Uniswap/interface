@@ -144,6 +144,7 @@ jobs:
           wait-on: 'http://localhost:3000'
           browser: electron
           group: e2e
+          spec: ${{ github.ref_name == 'releases/staging' && 'cypress/{e2e,staging}/**/*.test.ts' || 'cypress/e2e/**/*.test.ts' }}
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -178,7 +179,7 @@ jobs:
             github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: context.payload.head_commit.sha,
+              sha: context.sha,
               state: 'pending',
               context: 'Test / promotion',
               description: 'Running tests...',
@@ -196,7 +197,7 @@ jobs:
             github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: context.payload.head_commit.sha,
+              sha: context.sha,
               state: ${{ env.STATUS }} ? 'success' : 'failure',
               context: 'Test / promotion',
               description: ${{ env.STATUS }} ? 'All tests passed' : 'One or more tests failed and are blocking promotion',
