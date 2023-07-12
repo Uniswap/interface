@@ -104,3 +104,18 @@ export function fromMoonpayNetwork(moonpayNetwork: string | undefined): ChainId 
       throw new Error(`Moonpay network "${moonpayNetwork}" can not be mapped`)
   }
 }
+
+export function fromUniswapWebAppLink(network: string): ChainId | null {
+  switch (network) {
+    case Chain.Ethereum.toLowerCase():
+      return ChainId.Mainnet
+    case Chain.Arbitrum.toLowerCase():
+      return ChainId.ArbitrumOne
+    case Chain.Optimism.toLowerCase():
+      return ChainId.Optimism
+    case Chain.Polygon.toLowerCase():
+      return ChainId.Polygon
+    default:
+      throw new Error(`Network "${network}" can not be mapped`)
+  }
+}

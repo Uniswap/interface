@@ -20,7 +20,7 @@ import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
-import { useNFTMenu } from 'src/features/nfts/hooks'
+import { GQLNftAsset, useNFTMenu } from 'src/features/nfts/hooks'
 import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackground'
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
 import { NFTTraitList } from 'src/features/nfts/item/traits'
@@ -53,7 +53,9 @@ const MAX_NFT_IMAGE_HEIGHT = 375
 
 export function NFTItemScreen({
   route: {
-    params: { owner, address, tokenId, isSpam },
+    // ownerFromProps needed here, when nftBalances GQL query returns a user NFT,
+    // but nftAssets query for this NFT returns ownerAddress === null,
+    params: { owner: ownerFromProps, address, tokenId, isSpam },
   },
 }: AppStackScreenProp<Screens.NFTItem>): JSX.Element {
   const { t } = useTranslation()
@@ -79,6 +81,7 @@ export function NFTItemScreen({
     pollInterval: PollingInterval.Slow,
   })
   const asset = data?.nftAssets?.edges[0]?.node
+  const owner = (ownerFromProps || asset?.ownerAddress) ?? undefined
 
   const lastSaleData = data?.nftActivity?.edges[0]?.node
   const listingPrice = asset?.listings?.edges?.[0]?.node?.price
@@ -92,13 +95,16 @@ export function NFTItemScreen({
   }
 
   // Disable navigation to profile if user owns NFT or invalid owner
-  const disableProfileNavigation =
-    areAddressesEqual(owner, activeAccountAddress) || !isAddress(owner)
+  const disableProfileNavigation = Boolean(
+    owner && (areAddressesEqual(owner, activeAccountAddress) || !isAddress(owner))
+  )
 
   const onPressOwner = (): void => {
-    navigation.navigate(Screens.ExternalProfile, {
-      address: owner,
-    })
+    if (owner) {
+      navigation.navigate(Screens.ExternalProfile, {
+        address: owner,
+      })
+    }
   }
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
@@ -111,13 +117,6 @@ export function NFTItemScreen({
     [address, asset?.collection?.name, owner, tokenId]
   )
 
-  const { menuActions, onContextMenuPress, onlyShare } = useNFTMenu({
-    contractAddress: asset?.nftContract?.address,
-    tokenId: asset?.tokenId,
-    owner,
-    showNotification: true,
-    isSpam,
-  })
   const { colorLight, colorDark } = useNearestThemeColorFromImageUri(asset?.image?.url)
   // check if colorLight passes contrast against card bg color, if not use fallback
   const accentTextColor = useMemo(() => {
@@ -140,6 +139,11 @@ export function NFTItemScreen({
       })
     )
   }
+
+  const rightElement = useMemo(
+    () => <RightElement asset={asset} isSpam={isSpam} owner={owner} />,
+    [asset, isSpam, owner]
+  )
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -174,36 +178,7 @@ export function NFTItemScreen({
                 )
               }
               renderedInModal={inModal}
-              rightElement={
-                <Box
-                  alignItems="center"
-                  height={darkTheme.iconSizes.icon40}
-                  justifyContent="center"
-                  width={darkTheme.iconSizes.icon40}>
-                  {menuActions.length > 0 ? (
-                    onlyShare ? (
-                      <TouchableOpacity onPress={menuActions[0]?.onPress}>
-                        <ShareIcon
-                          color={darkTheme.colors.textPrimary}
-                          height={iconSizes.icon24}
-                          width={iconSizes.icon24}
-                        />
-                      </TouchableOpacity>
-                    ) : (
-                      <ContextMenu
-                        dropdownMenuMode
-                        actions={menuActions}
-                        onPress={onContextMenuPress}>
-                        <EllipsisIcon
-                          color={darkTheme.colors.textPrimary}
-                          height={iconSizes.icon16}
-                          width={iconSizes.icon16}
-                        />
-                      </ContextMenu>
-                    )
-                  ) : undefined}
-                </Box>
-              }>
+              rightElement={rightElement}>
               {/* Content wrapper */}
               <Flex
                 backgroundColor="none"
@@ -320,21 +295,23 @@ export function NFTItemScreen({
                     />
                   ) : null}
 
-                  <AssetMetadata
-                    title={t('Owned by')}
-                    valueComponent={
-                      <TouchableArea disabled={disableProfileNavigation} onPress={onPressOwner}>
-                        <AddressDisplay
-                          address={owner}
-                          hideAddressInSubtitle={true}
-                          horizontalGap="spacing4"
-                          size={darkTheme.iconSizes.icon20}
-                          textColor="textPrimary"
-                          variant="buttonLabelSmall"
-                        />
-                      </TouchableArea>
-                    }
-                  />
+                  {owner && (
+                    <AssetMetadata
+                      title={t('Owned by')}
+                      valueComponent={
+                        <TouchableArea disabled={disableProfileNavigation} onPress={onPressOwner}>
+                          <AddressDisplay
+                            address={owner}
+                            hideAddressInSubtitle={true}
+                            horizontalGap="spacing4"
+                            size={darkTheme.iconSizes.icon20}
+                            textColor="textPrimary"
+                            variant="buttonLabelSmall"
+                          />
+                        </TouchableArea>
+                      }
+                    />
+                  )}
                 </Flex>
 
                 {/* Traits */}
@@ -371,5 +348,51 @@ function AssetMetadata({
       </Flex>
       <Box maxWidth="60%">{valueComponent}</Box>
     </Flex>
+  )
+}
+
+function RightElement({
+  asset,
+  owner,
+  isSpam,
+}: {
+  asset: GQLNftAsset
+  owner?: string
+  isSpam?: boolean
+}): JSX.Element {
+  const { menuActions, onContextMenuPress, onlyShare } = useNFTMenu({
+    contractAddress: asset?.nftContract?.address,
+    tokenId: asset?.tokenId,
+    owner,
+    showNotification: true,
+    isSpam,
+  })
+
+  return (
+    <Box
+      alignItems="center"
+      height={darkTheme.iconSizes.icon40}
+      justifyContent="center"
+      width={darkTheme.iconSizes.icon40}>
+      {menuActions.length > 0 ? (
+        onlyShare ? (
+          <TouchableOpacity onPress={menuActions[0]?.onPress}>
+            <ShareIcon
+              color={darkTheme.colors.textPrimary}
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
+            />
+          </TouchableOpacity>
+        ) : (
+          <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
+            <EllipsisIcon
+              color={darkTheme.colors.textPrimary}
+              height={iconSizes.icon16}
+              width={iconSizes.icon16}
+            />
+          </ContextMenu>
+        )
+      ) : undefined}
+    </Box>
   )
 }

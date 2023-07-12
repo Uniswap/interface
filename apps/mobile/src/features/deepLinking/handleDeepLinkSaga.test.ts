@@ -1,14 +1,20 @@
 import { expectSaga } from 'redux-saga-test-plan'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import {
   handleDeepLink,
+  handleUniswapAppDeepLink,
   handleWalletConnectDeepLink,
   parseAndValidateUserAddress,
+  UNISWAP_APP_HOSTNAME,
 } from 'src/features/deepLinking/handleDeepLinkSaga'
+
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
+import { Screens } from 'src/screens/Screens'
 import { account } from 'src/test/fixtures'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
 
 const swapUrl = `https://uniswap.org/app?screen=swap&userAddress=${account.address}`
 const transactionUrl = `https://uniswap.org/app?screen=transaction&userAddress=${account.address}`
@@ -140,6 +146,154 @@ describe(handleDeepLink, () => {
         },
       })
 
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles Share NFT Item Universal Link', () => {
+    const hash = `#/nfts/asset/${SAMPLE_SEED_ADDRESS_1}/123`
+    return expectSaga(handleDeepLink, {
+      payload: {
+        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        coldStart: false,
+      },
+      type: '',
+    })
+      .withState({
+        wallet: {
+          accounts: {
+            [account.address]: account,
+          },
+          activeAccountAddress: account.address,
+        },
+      })
+      .call(handleUniswapAppDeepLink, hash)
+      .call(navigate, Screens.NFTItem, {
+        address: `${SAMPLE_SEED_ADDRESS_1}`,
+        tokenId: '123',
+        isSpam: false,
+      })
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles Share NFT Collection Universal Link', () => {
+    const hash = `#/nfts/collection/${SAMPLE_SEED_ADDRESS_1}`
+    return expectSaga(handleDeepLink, {
+      payload: {
+        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        coldStart: false,
+      },
+      type: '',
+    })
+      .withState({
+        wallet: {
+          accounts: {
+            [account.address]: account,
+          },
+          activeAccountAddress: account.address,
+        },
+      })
+      .call(handleUniswapAppDeepLink, hash)
+      .call(navigate, Screens.NFTCollection, {
+        collectionAddress: `${SAMPLE_SEED_ADDRESS_1}`,
+      })
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles Share Token Item Universal Link', () => {
+    const hash = `#/tokens/ethereum/${SAMPLE_SEED_ADDRESS_1}`
+    return expectSaga(handleDeepLink, {
+      payload: {
+        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        coldStart: false,
+      },
+      type: '',
+    })
+      .withState({
+        wallet: {
+          accounts: {
+            [account.address]: account,
+          },
+          activeAccountAddress: account.address,
+        },
+      })
+      .call(handleUniswapAppDeepLink, hash)
+      .call(navigate, Screens.TokenDetails, {
+        currencyId: `1-${SAMPLE_SEED_ADDRESS_1}`,
+      })
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles Share currently active Account Address Universal Link', () => {
+    const hash = `#/address/${account.address}`
+    return expectSaga(handleDeepLink, {
+      payload: {
+        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        coldStart: false,
+      },
+      type: '',
+    })
+      .withState({
+        wallet: {
+          accounts: {
+            [account.address]: account,
+          },
+          activeAccountAddress: account.address,
+        },
+      })
+      .call(handleUniswapAppDeepLink, hash)
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles Share already added Account Address Universal Link', () => {
+    const hash = `#/address/${SAMPLE_SEED_ADDRESS_2}`
+    return expectSaga(handleDeepLink, {
+      payload: {
+        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        coldStart: false,
+      },
+      type: '',
+    })
+      .withState({
+        wallet: {
+          accounts: {
+            [account.address]: account,
+            [SAMPLE_SEED_ADDRESS_2]: account,
+          },
+          activeAccountAddress: account.address,
+        },
+      })
+      .call(handleUniswapAppDeepLink, hash)
+      .put(setAccountAsActive(SAMPLE_SEED_ADDRESS_2))
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles Share external Account Address Universal Link', () => {
+    const hash = `#/address/${SAMPLE_SEED_ADDRESS_2}`
+    return expectSaga(handleDeepLink, {
+      payload: {
+        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        coldStart: false,
+      },
+      type: '',
+    })
+      .withState({
+        wallet: {
+          accounts: {
+            [account.address]: account,
+          },
+          activeAccountAddress: account.address,
+        },
+      })
+      .call(handleUniswapAppDeepLink, hash)
+      .call(navigate, Screens.ExternalProfile, {
+        address: `${SAMPLE_SEED_ADDRESS_2}`,
+      })
       .returns(undefined)
       .silentRun()
   })

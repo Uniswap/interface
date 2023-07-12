@@ -69,6 +69,7 @@ query NFTItemScreen(
     edges {
       node {
         id
+        ownerAddress
         collection {
           id
           collectionId

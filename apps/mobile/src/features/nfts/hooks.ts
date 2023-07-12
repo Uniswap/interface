@@ -54,7 +54,7 @@ export function useNFT(
 interface NFTMenuParams {
   tokenId?: string
   contractAddress?: Address
-  owner: Address
+  owner?: Address
   showNotification?: boolean
   isSpam?: boolean
 }
@@ -92,12 +92,14 @@ export function useNFTMenu({
   const dispatch = useAppDispatch()
 
   const accounts = useAccounts()
-  const isLocalAccount = !!accounts[owner]
+  const isLocalAccount = owner && !!accounts[owner]
 
   const isAddressAndTokenOk = contractAddress && tokenId
   const nftsData = useAppSelector(selectNftsData)
   const hidden =
-    isAddressAndTokenOk && shouldHideNft({ nftsData, owner, contractAddress, tokenId, isSpam })
+    owner &&
+    isAddressAndTokenOk &&
+    shouldHideNft({ nftsData, owner, contractAddress, tokenId, isSpam })
 
   const menuActions = useMemo(
     () =>

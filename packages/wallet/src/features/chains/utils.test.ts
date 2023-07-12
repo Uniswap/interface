@@ -5,12 +5,13 @@ import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   fromGraphQLChain,
   fromMoonpayNetwork,
+  fromUniswapWebAppLink,
   getPollingIntervalByBlocktime,
   isTestnet,
   parseActiveChains,
   toGraphQLChain,
   toSupportedChainId,
-} from './utils'
+} from 'wallet/src/features/chains/utils'
 
 describe(toSupportedChainId, () => {
   it('handles undefined input', () => {
@@ -100,5 +101,18 @@ describe(getPollingIntervalByBlocktime, () => {
 
   it('returns the correct value for L2', () => {
     expect(getPollingIntervalByBlocktime(ChainId.Polygon)).toEqual(PollingInterval.LightningMcQueen)
+  })
+})
+
+describe(fromUniswapWebAppLink, () => {
+  it('handles supported chain', () => {
+    expect(fromUniswapWebAppLink(Chain.Ethereum.toLowerCase())).toEqual(ChainId.Mainnet)
+    expect(fromUniswapWebAppLink(Chain.Arbitrum.toLowerCase())).toEqual(ChainId.ArbitrumOne)
+    expect(fromUniswapWebAppLink(Chain.Optimism.toLowerCase())).toEqual(ChainId.Optimism)
+    expect(fromUniswapWebAppLink(Chain.Polygon.toLowerCase())).toEqual(ChainId.Polygon)
+  })
+
+  it('handle unsupported chain', () => {
+    expect(() => fromUniswapWebAppLink('unkwnown')).toThrow('Network "unkwnown" can not be mapped')
   })
 })
