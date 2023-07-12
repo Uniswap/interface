@@ -33,7 +33,14 @@ export default function TradePrice({ price }: TradePriceProps) {
   const { baseCurrency, quoteCurrency } = price
   const { data: usdPrice } = useUSDPrice(tryParseCurrencyAmount('1', showInverted ? baseCurrency : quoteCurrency))
 
-  const formattedPrice = formatPrice(showInverted ? price : price.invert(), NumberType.TokenTx)
+  let formattedPrice: string
+  try {
+    formattedPrice = showInverted
+      ? formatPrice(price, NumberType.TokenTx)
+      : formatPrice(price.invert(), NumberType.TokenTx)
+  } catch (error) {
+    formattedPrice = '0'
+  }
 
   const label = showInverted ? `${price.quoteCurrency?.symbol}` : `${price.baseCurrency?.symbol} `
   const labelInverted = showInverted ? `${price.baseCurrency?.symbol} ` : `${price.quoteCurrency?.symbol}`
