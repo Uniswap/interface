@@ -1,5 +1,6 @@
 import { REHYDRATE } from 'redux-persist'
-import { call, cancel, cancelled, delay, fork, put, take } from 'typed-redux-saga'
+import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
+import { call, cancel, cancelled, delay, fork, put, select, take } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { lockWallet, unlockWallet } from 'wallet/src/features/wallet/slice'
 import serializeError from 'wallet/src/utils/serializeError'
@@ -23,13 +24,19 @@ export function* keepAliveSaga() {
   // Wait for rehydration so we can override previous auth state, and ensure wallet is locked on startup.
   yield* take(REHYDRATE)
   yield* put(lockWallet())
+
+  const isOnboarded = yield* select(isOnboardedSelector)
+
   while (
+    // fullscreen onboarding flow requires service worker
+    // TODO(EXT-267): kill service worker on onboarding flow end
+    !isOnboarded ||
     // Watch for wallet to be unlocked
-    yield* take(
+    (yield* take(
       // could be any action type dispatched by store
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (action: any) => action.type === unlockWallet.type
-    )
+    ))
   ) {
     // start keep alive task in the background
     const keepAliveTask = yield* fork(keepAliveLoop)

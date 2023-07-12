@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useReducer, useState } from 'react'
+import { useCallback, useMemo, useReducer, useRef, useState } from 'react'
+import { TextInput } from 'react-native'
 import { useNavigate } from 'react-router-dom'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
 import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
@@ -18,6 +19,7 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
     useOnboardingContext()
   const [completedTests, markTestCompleted] = useReducer((v: number) => v + 1, 0)
   const [userWordInput, setUserWordInput] = useState<string>('')
+  const inputRef = useRef<TextInput>(null)
 
   const isLastTest = useCallback(
     (): boolean => completedTests === numberOfTests - 1,
@@ -50,6 +52,8 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
     } else if (validWord) {
       markTestCompleted()
       setUserWordInput('')
+      // Wait until the next tick to focus the input, otherwise the state update interferes with the focus event.
+      setTimeout(() => inputRef.current?.focus(), 1)
     } else {
       // TODO error state / notify user in some way, not yet designed
     }
@@ -79,6 +83,7 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
           {String(nextWordNumber).padStart(2, '0')}
         </Text>
         <OnboardingInput
+          ref={inputRef}
           centered
           placeholderText=""
           value={userWordInput}
