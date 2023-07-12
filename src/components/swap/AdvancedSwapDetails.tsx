@@ -564,7 +564,7 @@ export function ValueLabel({
               <TruncatedText width={width}>
                 {typeof value === 'number'
                   ? `${(value.toString())}`
-                  : '- '}
+                  : '0'}
               </TruncatedText>
               {symbolAppend}
             </RowFixed>

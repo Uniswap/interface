@@ -4,27 +4,24 @@ import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/anal
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
-import Card, { OutlineCard } from 'components/Card'
+import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
-import Tooltip, { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useEffect, useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade, LeverageTradeState, TradeState } from 'state/routing/types'
-import styled, { keyframes, useTheme } from 'styled-components/macro'
-import { HideSmall, ThemedText } from 'theme'
-
-import { AdvancedSwapDetails, AdvancedLeverageSwapDetails, AdvancedBorrowSwapDetails } from './AdvancedSwapDetails'
-import GasEstimateBadge from './GasEstimateBadge'
-import { ResponsiveTooltipContainer } from './styleds'
-import SwapRoute from './SwapRoute'
-import TradePrice from './TradePrice'
 import { BorrowCreationDetails, LeverageTrade, useSwapState } from 'state/swap/hooks'
+import styled, { keyframes, useTheme } from 'styled-components/macro'
+import { ThemedText } from 'theme'
+
+import { AdvancedBorrowSwapDetails,AdvancedLeverageSwapDetails, AdvancedSwapDetails } from './AdvancedSwapDetails'
+import GasEstimateBadge from './GasEstimateBadge'
 // import { useCurrency } from 'hooks/Tokens'
 // import { Field } from 'state/swap/actions'
 import GasEstimateTooltip from './GasEstimateTooltip'
+import TradePrice from './TradePrice'
 
 const Wrapper = styled(Row)`
   width: 100%;
@@ -136,7 +133,7 @@ interface BorrowDetailsDropdownProps {
 export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage, leverageTrade, leverageState,leverageInputError }: SwapDetailsInlineProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
-  const [showDetails, setShowDetails] = useState(true)
+  const [showDetails, setShowDetails] = useState(false)
   const { leverage } = useSwapState()
 
   // useEffect(() => {
@@ -152,7 +149,9 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
     if (leverageState !== LeverageTradeState.VALID) {
       leverage && showDetails// && setShowDetails(false) 
     }
-  }, [leverageState, leverage])
+  }, [leverageState, leverage, showDetails])
+
+  // console.log('swapDetailsDropdown', showDetails)
 
   // console.log('leverageState', leverageState)
 
