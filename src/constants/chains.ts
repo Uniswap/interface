@@ -17,6 +17,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.BNB]: 'bnb',
   [ChainId.AVALANCHE]: 'avalanche',
   [ChainId.HARMONY]: 'harmony',
+  [ChainId.BASE_GOERLI]: 'base_goerli',
 } as const
 
 export function isSupportedChain(chainId: number | null | undefined | ChainId): chainId is SupportedChainsType {
@@ -57,6 +58,7 @@ export const TESTNET_CHAIN_IDS = [
   ChainId.POLYGON_MUMBAI,
   ChainId.ARBITRUM_GOERLI,
   ChainId.OPTIMISM_GOERLI,
+  ChainId.BASE_GOERLI,
   ChainId.CELO_ALFAJORES,
 ] as const
 

@@ -10,7 +10,7 @@ if (typeof QUICKNODE_RPC_URL === 'undefined') {
 }
 const HARMONY_RPC_URL = 'https://api.harmony.one'
 
-/*if (typeof HARMONY_RPC_URL === 'undefined') {
+if (typeof HARMONY_RPC_URL === 'undefined') {
   throw new Error(`HARMONY_RPC_URL must be a defined environment variable`)
 }
 
@@ -119,6 +119,9 @@ export const FALLBACK_URLS = {
     'https://api.harmony.one',
     'https://api.s0.t.hmny.io',
   ],
+  [ChainId.BASE_GOERLI]: {
+    'https://base-goerli.public.blastapi.io	'
+  }
 }
 
 /**
