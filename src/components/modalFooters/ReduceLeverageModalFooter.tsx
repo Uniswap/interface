@@ -493,7 +493,7 @@ export function ReduceLeverageModalFooter({
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             <TruncatedText>
                               {
-                                `${formatNumber(Number(transactionInfo?.unusedPremium), NumberType.SwapTradeAmount)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${formatNumber(Number(transactionInfo.unusedPremium), NumberType.SwapTradeAmount)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                               }
                             </TruncatedText>
                           </ThemedText.DeprecatedBlack>
@@ -542,12 +542,12 @@ export function ReduceLeverageModalFooter({
                             <TruncatedText>
 
                               {
-                                `${formatNumber(Number(transactionInfo?.pnl), NumberType.SwapTradeAmount)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                                `${formatNumber(Number(transactionInfo.pnl), NumberType.SwapTradeAmount)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
 
                               }
                             </TruncatedText>
                           <DeltaText delta={Number(100 * (Math.round(Number(transactionInfo?.pnl) * 1000) / 1000) / (Number(initCollateral)))}>
-                            {formatNumber(100 * Number(transactionInfo?.pnl) / (Number(initCollateral)), NumberType.SwapTradeAmount)} %
+                            {formatNumber(100 * Number(transactionInfo.pnl) / (Number(initCollateral)), NumberType.SwapTradeAmount)} %
                           </DeltaText>
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>

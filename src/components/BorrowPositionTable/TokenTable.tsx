@@ -1,15 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
-import { validateUrlChainParam } from 'graphql/data/util'
+import { PAGE_SIZE } from 'graphql/data/TopTokens'
 import { ReactNode } from 'react'
-import { AlertTriangle } from 'react-feather'
-import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { LimitlessPositionDetails } from 'types/leveragePosition'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from './constants'
 import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
-import { LimitlessPositionDetails } from 'types/leveragePosition'
-import { ThemedText } from 'theme'
 
 const GridContainer = styled.div`
   display: flex;
@@ -80,7 +76,7 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
 }
 
 export default function PositionsTable({positions, loading}: {positions?: LimitlessPositionDetails[], loading: boolean}) {
-  const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
+  // const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   // const { tokens, tokenSortRank, loadingTokens, sparklines } = useTopTokens(chainName)
 
   /* loading and error state */

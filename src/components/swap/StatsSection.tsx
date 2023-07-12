@@ -139,7 +139,7 @@ export default function StatsSection(props: StatsSectionProps) {
                     {arrow}
                   </ArrowCell>
                   <DeltaText delta={Number(stats?.delta)}>
-                    {stats?.delta ? formatNumber(stats?.delta, NumberType.SwapTradeAmount) : "-"}%
+                    {stats?.delta ? formatNumber(stats.delta, NumberType.SwapTradeAmount) : "-"}%
                   </DeltaText>
                 </AutoRow>
               </StatPrice>

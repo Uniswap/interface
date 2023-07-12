@@ -1,22 +1,28 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { InterfaceEventName } from '@uniswap/analytics-events'
-import { formatNumber, formatPrice, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
-import { ParentSize } from '@visx/responsive'
-import SparklineChart from 'components/Charts/SparklineChart'
-import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
+import { useWeb3React } from '@web3-react/core'
+import { BigNumber as BN } from "bignumber.js"
+import { EditCell, UnderlineText } from 'components/BorrowPositionTable/TokenRow'
+import { AutoColumn } from 'components/Column'
+import Row, { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import ReducePositionModal, { AddLeveragePremiumModal } from 'components/swap/LMTModals'
+import { DeltaText, getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, validateUrlChainParam } from 'graphql/data/util'
+import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
+import { useCurrency } from 'hooks/Tokens'
+import { usePool } from 'hooks/usePools'
 import { useAtomValue } from 'jotai/utils'
+import { formatSymbol } from 'lib/utils/formatSymbol'
+import moment from "moment"
+import { ReduceButton, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 import { ForwardedRef, forwardRef, useMemo, useState } from 'react'
 import { CSSProperties, ReactNode } from 'react'
-import { ArrowDown, ArrowUp, Edit3, Info } from 'react-feather'
-import { Link, useParams } from 'react-router-dom'
-import styled, { css, useTheme } from 'styled-components/macro'
+import { Edit3, Info } from 'react-feather'
+import { Link } from 'react-router-dom'
+import { Box } from 'rebass'
+import styled, { css } from 'styled-components/macro'
 import { ClickableStyle, ThemedText } from 'theme'
-import moment from "moment"
-import { BigNumber as BN } from "bignumber.js"
+import { LimitlessPositionDetails } from 'types/leveragePosition'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -27,30 +33,9 @@ import {
 import { LoadingBubble } from './loading'
 import {
   filterStringAtom,
-  filterTimeAtom,
   PositionSortMethod,
-  sortAscendingAtom,
-  sortMethodAtom,
   useSetSortMethod,
 } from './state'
-import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { useCurrency } from 'hooks/Tokens'
-import Row, { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import { LimitlessPositionDetails } from 'types/leveragePosition'
-import { AutoColumn } from 'components/Column'
-import ReducePositionModal, { AddLeveragePremiumModal } from 'components/swap/LMTModals'
-import { useWeb3React } from '@web3-react/core'
-import { SmallButtonPrimary } from 'components/Button'
-import { ReduceButton, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
-import { MaxButton } from 'pages/Pool/styleds'
-import { usePool } from 'hooks/usePools'
-import { Fraction, Price } from '@uniswap/sdk-core'
-import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
-import { formatSymbol } from 'lib/utils/formatSymbol'
-import { TruncatedText } from 'components/swap/styleds'
-import { EditCell, UnderlineText } from 'components/BorrowPositionTable/TokenRow'
-import { Box } from 'rebass'
 
 const Cell = styled.div`
   display: flex;
@@ -479,7 +464,7 @@ function PositionRow({
     </ActionsContainer>
   ): (
     (
-      <MouseoverTooltip text={"(reduce): reduce position, (pay): pay premium"} placement="right">
+      <MouseoverTooltip text="(reduce): reduce position, (pay): pay premium" placement="right">
         <InfoIconContainer>
           <Info size={14} />
         </InfoIconContainer>
@@ -651,15 +636,15 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
       token0 &&
       token1
     ) {
-      let curPrice = position.isToken0 ? new BN(pool.token1Price.toFixed(DEFAULT_ERC20_DECIMALS))
+      const curPrice = position.isToken0 ? new BN(pool.token1Price.toFixed(DEFAULT_ERC20_DECIMALS))
       : new BN(pool.token0Price.toFixed(DEFAULT_ERC20_DECIMALS))
      
       // entryPrice if isToken0, output is in token0. so entry price would be in input token / output token
-      let _entryPrice = new BN(position.initialCollateral).plus(position.totalDebtInput).dividedBy(position.totalPosition)
+      const _entryPrice = new BN(position.initialCollateral).plus(position.totalDebtInput).dividedBy(position.totalPosition)
 
       // token0Price => token1 / token0, token1Price => token0 / token1.
       // total position is in output token
-      let _pnl = position.isToken0 ? (
+      const _pnl = position.isToken0 ? (
         // token0Price => input / output, token1Price => output / input
         // entry price => input / output -> token1 / token0. 
         // total position -> output -> token0
@@ -715,7 +700,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
       
       return position.unusedPremium * (timeLeft.asSeconds() / 86400) < 0 ? 0 : position.unusedPremium * (timeLeft.asSeconds() / 86400);
     }
-    return undefined
+    return 0
   }, [position, now])
 
   // const token0Quote = useMemo(() => {

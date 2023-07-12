@@ -13,7 +13,6 @@ import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import Loader from 'components/Icons/LoadingSpinner'
 import { LoadingRows } from 'components/Loader/styled'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
-import { Input as NumericalInput } from 'components/NumericalInput'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { useCurrency, useToken } from 'hooks/Tokens'
@@ -52,14 +51,14 @@ import { MouseoverValueLabel, ValueLabel } from './AdvancedSwapDetails'
 import { SwapCallbackError, TruncatedText } from './styleds'
 import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 
-const StyledNumericalInput = styled(NumericalInput)`
-  width: 70%;
-  text-align: left;
-  padding: 10px;
-  background-color: ${({ theme }) => theme.backgroundFloating};
-  border-radius: 10px;
-  font-size: 20px;
-`
+// const StyledNumericalInput = styled(NumericalInput)`
+//   width: 70%;
+//   text-align: left;
+//   padding: 10px;
+//   background-color: ${({ theme }) => theme.backgroundFloating};
+//   border-radius: 10px;
+//   font-size: 20px;
+// `
 
 
 interface AnalyticsEventProps {
@@ -491,13 +490,13 @@ function useDerivedBorrowReduceDebtInfo(
     reducePositionResult: any
   }>()
 
-  const { account } = useWeb3React()
-  const currency0 = useCurrency(position?.token0Address)
-  const currency1 = useCurrency(position?.token1Address)
-  const relevantTokenBalances = useCurrencyBalances(
-    account ?? undefined,
-    useMemo(() => [currency0 ?? undefined, currency1 ?? undefined], [currency0, currency1])
-  )
+  // const { account } = useWeb3React()
+  // const currency0 = useCurrency(position?.token0Address)
+  // const currency1 = useCurrency(position?.token1Address)
+  // const relevantTokenBalances = useCurrencyBalances(
+  //   account ?? undefined,
+  //   useMemo(() => [currency0 ?? undefined, currency1 ?? undefined], [currency0, currency1])
+  // )
 
   // console.log('useDerivedBorrowReduceDebtInfo', position, position?.borrowManagerAddress, borrowManagerContract)
 
@@ -548,7 +547,7 @@ function useDerivedBorrowReduceDebtInfo(
       const returnedAmount = new BN(reducePositionResult[3].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
       const unusedPremium = new BN(reducePositionResult[4].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
       const premium = new BN(reducePositionResult[5].toString()).shiftedBy(-DEFAULT_ERC20_DECIMALS).toFixed(DEFAULT_ERC20_DECIMALS)
-      console.log("premium: ", premium)
+      // console.log("premium: ", premium)
       return {
         token0Amount,
         token1Amount,
@@ -581,7 +580,7 @@ function useDerivedBorrowReduceDebtInfo(
     // }
 
     return error
-  }, [position, reduceAmount])
+  }, [reduceAmount])
 
   return {
     transactionInfo,
@@ -910,7 +909,7 @@ export function AddPremiumLeverageModalFooter({
               </RowFixed>
               <RowFixed>
                 <RotatingArrow
-                  stroke={true ? theme.textTertiary : theme.deprecated_bg3}
+                  stroke={theme.textTertiary}
                   open={Boolean(showDetails)}
                 />
               </RowFixed>
@@ -1146,7 +1145,7 @@ export function AddPremiumBorrowModalFooter({
               </RowFixed>
               <RowFixed>
                 <RotatingArrow
-                  stroke={true ? theme.textTertiary : theme.deprecated_bg3}
+                  stroke={theme.textTertiary}
                   open={Boolean(showDetails)}
                 />
               </RowFixed>
@@ -1441,7 +1440,7 @@ export function BorrowReduceCollateralModalFooter({
 
   useEffect(() => {
     (!transactionInfo || !!userError) && showDetails && setShowDetails(false)
-  }, [transactionInfo, userError])
+  }, [transactionInfo, userError, showDetails])
 
   const disabled = !transactionInfo || !!userError
 
@@ -1722,7 +1721,6 @@ export function BorrowReduceDebtModalFooter({
   const inputIsToken0 = position?.isToken0
 
   const handleReducePosition = useMemo(() => {
-    // console.log('wtf???', borrowManagerContract, position, Number(reduceAmount), Number(position?.initialCollateral))
     if (
       borrowManagerContract && position && Number(reduceAmount) > 0 && Number(reduceAmount) <= Number(position.totalDebtInput) &&
       token0 && token1
@@ -1753,7 +1751,7 @@ export function BorrowReduceDebtModalFooter({
       }
     }
     return () => { }
-  }, [recieveCollateral, tokenId, trader, position, reduceAmount, token0, token1])
+  }, [recieveCollateral, borrowManagerContract, addTransaction, inputIsToken0, setTxHash, setAttemptingTxn, position, reduceAmount, token0, token1])
 
   const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
   const [showDetails, setShowDetails] = useState(false)

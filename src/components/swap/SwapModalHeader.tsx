@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
+import { formatNumber,NumberType } from '@uniswap/conedison/format'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
@@ -8,6 +9,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
+import { BorrowCreationDetails, LeverageTrade } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { ThemedText } from '../../theme'
@@ -20,12 +22,8 @@ import { FiatValue } from '../CurrencyInputPanel/FiatValue'
 import CurrencyLogo from '../Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
-import { AdvancedBorrowSwapDetails, AdvancedLeverageSwapDetails, AdvancedSwapDetails, ValueLabel } from './AdvancedSwapDetails'
+import { AdvancedBorrowSwapDetails, AdvancedLeverageSwapDetails, AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
-import { BorrowCreationDetails, LeverageTrade, useSwapState } from 'state/swap/hooks'
-import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
-import { NumberType, formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
-import { BigNumber as BN } from "bignumber.js"
 
 const ArrowWrapper = styled.div`
   padding: 4px;
@@ -480,12 +478,12 @@ export function LeverageModalHeader({
                 fontWeight={500}
                 color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.textSecondary : theme.textSecondary}
               >
-                {leverageTrade?.inputAmount?.toSignificant(18)} (+ {formatNumber(leverageTrade?.quotedPremium, NumberType.SwapTradeAmount)})
+                {leverageTrade?.inputAmount?.toSignificant(18)} (+ {leverageTrade ? formatNumber(leverageTrade.quotedPremium, NumberType.SwapTradeAmount) : "0"})
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">
               <Text fontSize={12} fontWeight={300} marginRight="2px">
-                {"Payment"}
+                Payment
               </Text>
               <CurrencyLogo currency={trade.inputAmount.currency} size="20px" style={{ marginRight: '12px' }} />
               <Text fontSize={20} fontWeight={500}>
@@ -511,7 +509,7 @@ export function LeverageModalHeader({
             </RowFixed>
             <RowFixed gap="0px">
               <Text fontSize={12} fontWeight={300} marginRight="2px">
-                {"Total Input"}
+                Total Input
               </Text>
               <CurrencyLogo currency={trade.inputAmount.currency} size="20px" style={{ marginRight: '12px' }} />
               <Text fontSize={20} fontWeight={500}>
@@ -537,7 +535,7 @@ export function LeverageModalHeader({
             </RowFixed>
             <RowFixed gap="0px">
               <Text fontSize={12} fontWeight={300} marginRight="2px">
-                {"Total Output"}
+                Total Output
               </Text>
               <CurrencyLogo currency={trade.outputAmount.currency} size="20px" style={{ marginRight: '12px' }} />
               <Text fontSize={20} fontWeight={500}>
@@ -644,7 +642,7 @@ export function BorrowModalHeader({
           </RowFixed>
           <RowFixed gap="0px">
             <Text fontSize={12} fontWeight={300} marginRight="2px">
-              {"Total Collateral"}
+              Total Collateral
             </Text>
             <CurrencyLogo currency={outputCurrency} size="20px" style={{ marginRight: '12px' }} />
             <Text fontSize={20} fontWeight={500}>
@@ -670,7 +668,7 @@ export function BorrowModalHeader({
         <RowBetween align="flex-end">
           <RowFixed gap="0px">
             <Text fontSize={12} fontWeight={300} marginRight="2px">
-              {"Premium"}
+              Premium
             </Text>
             <CurrencyLogo currency={outputCurrency} size="20px" style={{ marginRight: '12px' }} />
             <Text fontSize={20} fontWeight={500}>
@@ -701,7 +699,7 @@ export function BorrowModalHeader({
           </RowFixed>
           <RowFixed gap="0px">
             <Text fontSize={12} fontWeight={300} marginRight="2px">
-              {"Total Borrowed"}
+              Total Borrowed
             </Text>
             <CurrencyLogo currency={outputCurrency} size="20px" style={{ marginRight: '12px' }} />
             <Text fontSize={20} fontWeight={500}>
