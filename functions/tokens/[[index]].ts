@@ -4,8 +4,11 @@ import getToken from '../utils/getToken'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const { index } = params
-  const networkName = String(index[0]).toUpperCase()
-  let tokenAddress = String(index[1])
+  const networkName = index[0]?.toString().toUpperCase()
+  let tokenAddress = index[1]?.toString()
+  if (!tokenAddress) {
+    return next()
+  }
   tokenAddress =
     tokenAddress !== 'undefined' && tokenAddress === 'NATIVE'
       ? '0x0000000000000000000000000000000000000000'
