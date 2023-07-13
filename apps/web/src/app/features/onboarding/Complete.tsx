@@ -46,7 +46,8 @@ export function Complete(): JSX.Element {
     throw new Error('No address found')
   }
 
-  const [isPinned, setIsPinned] = useState<null | boolean>(null)
+  // We set the initial state to true to avoid the message flickering when the component remounts
+  const [isPinned, setIsPinned] = useState<boolean>(true)
 
   useEffect(() => {
     const isExtensionPinned = async (): Promise<void> => {
