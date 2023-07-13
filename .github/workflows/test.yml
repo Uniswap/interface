@@ -86,7 +86,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: yarn cloud:test
+      - run: yarn test:cloud
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
         with:
