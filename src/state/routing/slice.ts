@@ -16,6 +16,11 @@ import {
 } from './types'
 import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
 
+const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
+if (UNISWAP_API_URL === undefined) {
+  throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
+}
+
 export enum RouterPreference {
   X = 'uniswapx',
   API = 'api',
@@ -95,7 +100,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
 export const routingApiV2 = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.uniswap.org/v2/',
+    baseUrl: UNISWAP_API_URL,
   }),
   endpoints: (build) => ({
     getQuote: build.query<TradeResult, GetQuoteArgs>({
