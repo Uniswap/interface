@@ -5,14 +5,14 @@ import { UniswapXOrderDetails } from 'state/signatures/types'
 
 import { OrderQueryResponse, UniswapXBackendOrder } from './types'
 
-const UNISWAPX_API_URL = process.env.REACT_APP_UNISWAPX_API_URL
-if (UNISWAPX_API_URL === undefined) {
-  throw new Error(`REACT_APP_UNISWAPX_API_URL must be a defined environment variable`)
+const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
+if (UNISWAP_API_URL === undefined) {
+  throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
 }
 
 function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]) {
   const orderHashes = orders.map((order) => order.orderHash).join(',')
-  return global.fetch(`${UNISWAPX_API_URL}/orders?swapper=${account}&orderHashes=${orderHashes}`)
+  return global.fetch(`${UNISWAP_API_URL}/orders?swapper=${account}&orderHashes=${orderHashes}`)
 }
 
 const OFF_CHAIN_ORDER_STATUS_POLLING = 2000 // every 2 seconds

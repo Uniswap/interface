@@ -20,6 +20,11 @@ type DutchAuctionOrderResponse = DutchAuctionOrderError | DutchAuctionOrderSucce
 const isErrorResponse = (res: Response, order: DutchAuctionOrderResponse): order is DutchAuctionOrderError =>
   res.status < 200 || res.status > 202
 
+const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
+if (UNISWAP_API_URL === undefined) {
+  throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
+}
+
 export function useUniswapXSwapCallback({
   trade,
   allowedSlippage,
@@ -86,8 +91,7 @@ export function useUniswapXSwapCallback({
           ...analyticsContext,
         })
 
-        // TODO(UniswapX): Update with final URL
-        const res = await fetch('https://***REMOVED***.execute-api.us-east-2.amazonaws.com/prod/dutch-auction/order', {
+        const res = await fetch(`${UNISWAP_API_URL}/order`, {
           method: 'POST',
           body: JSON.stringify({
             encodedOrder: updatedOrder.serialize(),
