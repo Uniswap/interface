@@ -139,6 +139,6 @@ describe('network switching from URL param', () => {
     switchChain('Ethereum')
     cy.wait('@wallet_switchEthereumChain')
     waitsForActiveChain('Ethereum')
-    cy.url().contains('chain=polygon').should('not.exist')
+    cy.url().should('not.contain', 'chain=polygon')
   })
 })
