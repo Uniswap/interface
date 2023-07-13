@@ -19,9 +19,8 @@ const chainPriorityTestCases: [ChainId, number][] = [
   [ChainId.CELO_ALFAJORES, 6],
 ]
 
-// Run the tests using test.each
 test.each(chainPriorityTestCases)(
-  'getChainPriority returns expected priority for a given ChainId',
+  'getChainPriority returns expected priority for a given ChainId %O',
   (chainId: ChainId, expectedPriority: number) => {
     const priority = getChainPriority(chainId)
     expect(priority).toBe(expectedPriority)
