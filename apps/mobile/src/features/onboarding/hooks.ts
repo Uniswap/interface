@@ -6,6 +6,7 @@ import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { useTrace } from 'src/features/telemetry/hooks'
 import { Screens } from 'src/screens/Screens'
+import { Account, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
   pendingAccountActions,
   PendingAccountActions,
@@ -24,6 +25,7 @@ export function useCompleteOnboardingCallback(
 ): () => void {
   const dispatch = useAppDispatch()
   const pendingAccounts = usePendingAccounts()
+  const pendingWalletAddresses = Object.keys(pendingAccounts)
   const parentTrace = useTrace()
   const navigation = useOnboardingStackNavigation()
 
@@ -34,8 +36,11 @@ export function useCompleteOnboardingCallback(
         : MobileEventName.OnboardingCompleted,
       {
         wallet_type: importType,
-        accounts_imported_count: Object.entries(pendingAccounts).length,
-        wallets_imported: Object.keys(pendingAccounts),
+        accounts_imported_count: pendingWalletAddresses.length,
+        wallets_imported: pendingWalletAddresses,
+        cloud_backup_used: Object.values(pendingAccounts).some((acc: Account) =>
+          acc.backups?.includes(BackupType.Cloud)
+        ),
         ...parentTrace,
       }
     )

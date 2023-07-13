@@ -61,6 +61,13 @@ export type SearchResultContextProperties = {
   isHistory?: boolean
 }
 
+type OnboardingCompletedProps = {
+  wallet_type: ImportType
+  accounts_imported_count: number
+  wallets_imported: string[]
+  cloud_backup_used: boolean
+}
+
 export type EventProperties = {
   [MobileEventName.BalancesReport]: {
     total_balances_usd: number
@@ -95,11 +102,7 @@ export type EventProperties = {
   [MobileEventName.NetworkFilterSelected]: BaseEventProperty & {
     chain: ChainId | 'All'
   }
-  [MobileEventName.OnboardingCompleted]: {
-    wallet_type: ImportType
-    accounts_imported_count: number
-    wallets_imported: string[]
-  } & BaseEventProperty
+  [MobileEventName.OnboardingCompleted]: OnboardingCompletedProps & BaseEventProperty
   [MobileEventName.PerformanceReport]: RenderPassReport
   [MobileEventName.PerformanceGraphql]: {
     dataSize: number
@@ -120,11 +123,7 @@ export type EventProperties = {
     SearchResultContextProperties & {
       field: CurrencyField
     }
-  [MobileEventName.WalletAdded]: {
-    wallet_type: ImportType
-    accounts_imported_count: number
-    wallets_imported: string[]
-  } & BaseEventProperty
+  [MobileEventName.WalletAdded]: OnboardingCompletedProps & BaseEventProperty
   [MobileEventName.WalletConnectSheetCompleted]: {
     request_type: WCEventType
     eth_method?: EthMethod
