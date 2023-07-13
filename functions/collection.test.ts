@@ -29,9 +29,7 @@ test.each(collections)('should inject metadata for valid collections', async (co
   expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
   expect(body).toContain(`<meta property="og:type" content="website"/>`)
   expect(body).toContain(`<meta property="og:url" content="${url}"/>`)
-  expect(body).toContain(
-    `<meta property="og:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`
-  )
+  expect(body).toContain(`<meta property="og:image:alt" content="${collection.collectionName} on Uniswap"/>`)
   expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
   expect(body).toContain(`<meta property="twitter:title" content="${collection.collectionName} on Uniswap"/>`)
   expect(body).toContain(`<meta property="twitter:image" content="${collection.image}"/>`)
