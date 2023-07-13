@@ -3,20 +3,20 @@
 exports[`disable nft on searchbar dropdown should not render popular nft collections 1`] = `
 <div>
   <div
-    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_overflow_hidden_default__rgw6ez7m3 SearchBar_searchBarDropdownNft__1fbf9szd SearchBar_baseSearchNftStyle__1fbf9sz2 SearchBar_baseSearchStyle__1fbf9sz1 SearchBar__1fbf9sz0 sprinkles_paddingTop_12_sm__rgw6ez2ov sprinkles_paddingBottom_12_sm__rgw6ez28d sprinkles_width_viewWidth_sm__rgw6ez17p sprinkles_borderStyle_solid_default__rgw6ez7ab sprinkles_borderWidth_1px_default__rgw6ez7jr sprinkles_borderColor_searchOutline_default__rgw6ez51v SearchBar__1fbf9szc sprinkles_borderBottomLeftRadius_12_default__rgw6ez7g7 sprinkles_borderBottomRightRadius_12_default__rgw6ez7hr sprinkles_height_viewHeight_sm__rgw6ez1ej sprinkles_height_auto_md__rgw6ez1ew sprinkles_backgroundColor_backgroundSurface_default__rgw6ez6cj SearchBar__1fbf9sze sprinkles_overflowY_auto_default__rgw6ez7nn"
+    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_overflow_hidden_default__y03vrm7m3 SearchBar_searchBarDropdownNft__1x5at7ad SearchBar_baseSearchNftStyle__1x5at7a2 SearchBar_baseSearchStyle__1x5at7a1 SearchBar__1x5at7a0 sprinkles_paddingTop_12_sm__y03vrm2ov sprinkles_paddingBottom_12_sm__y03vrm28d sprinkles_width_viewWidth_sm__y03vrm17p sprinkles_borderStyle_solid_default__y03vrm7ab sprinkles_borderWidth_1px_default__y03vrm7jr sprinkles_borderColor_searchOutline_default__y03vrm51v SearchBar__1x5at7ac sprinkles_borderBottomLeftRadius_12_default__y03vrm7g7 sprinkles_borderBottomRightRadius_12_default__y03vrm7hr sprinkles_height_viewHeight_sm__y03vrm1ej sprinkles_height_auto_md__y03vrm1ew sprinkles_backgroundColor_backgroundSurface_default__y03vrm6cj SearchBar__1x5at7ae sprinkles_overflowY_auto_default__y03vrm7nn"
   >
     <div
-      class="reset_base__1klryar0 sprinkles_opacity_1_sm__rgw6ez4b7 sprinkles_transition_125_default__rgw6ez7oj"
+      class="reset_base__1v77x6v0 sprinkles_opacity_1_sm__y03vrm4b7 sprinkles_transition_125_default__y03vrm7oj"
     >
       <div
-        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_20_sm__rgw6ez3u7"
+        class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_20_sm__y03vrm3u7"
       >
         <div
-          class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_12_sm__rgw6ez3tj"
+          class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_12_sm__y03vrm3tj"
           data-cy="searchbar-dropdown"
         >
           <div
-            class="reset_base__1klryar0 sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_4_sm__rgw6ez2o7 sprinkles_paddingBottom_4_sm__rgw6ez27p sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_gap_8_sm__rgw6ez3t7 sprinkles_color_gray300_default__rgw6ez4k1 common__127l8hd4 sprinkles_fontWeight_medium_sm__rgw6ezcv sprinkles_fontSize_14_sm__rgw6ezav sprinkles_lineHeight_14_sm__rgw6ezdv"
+            class="reset_base__1v77x6v0 sprinkles_paddingLeft_16_sm__y03vrm2e7 sprinkles_paddingRight_16_sm__y03vrm2jp sprinkles_paddingTop_4_sm__y03vrm2o7 sprinkles_paddingBottom_4_sm__y03vrm27p sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_gap_8_sm__y03vrm3t7 sprinkles_color_gray300_default__y03vrm4k1 common__rrxlba4 sprinkles_fontWeight_medium_sm__y03vrmcv sprinkles_fontSize_14_sm__y03vrmav sprinkles_lineHeight_14_sm__y03vrmdv"
             style="line-height: 20px;"
           >
             <svg
@@ -28,85 +28,85 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
             >
               <path
                 d="M17.5 5.8335H18.25C18.25 5.41928 17.9142 5.0835 17.5 5.0835V5.8335ZM11.0227 12.4307L10.4876 12.9562C10.6286 13.0998 10.8214 13.1807 11.0227 13.1807C11.224 13.1807 11.4169 13.0998 11.5579 12.9562L11.0227 12.4307ZM7.61364 8.9585L8.14881 8.43305C8.00778 8.28941 7.81493 8.2085 7.61364 8.2085C7.41234 8.2085 7.21949 8.28941 7.07846 8.43305L7.61364 8.9585ZM1.96483 13.6414C1.67463 13.937 1.67899 14.4118 1.97456 14.702C2.27013 14.9922 2.74498 14.9878 3.03517 14.6923L1.96483 13.6414ZM13.4091 5.0835C12.9949 5.0835 12.6591 5.41928 12.6591 5.8335C12.6591 6.24771 12.9949 6.5835 13.4091 6.5835V5.0835ZM16.75 10.0002C16.75 10.4144 17.0858 10.7502 17.5 10.7502C17.9142 10.7502 18.25 10.4144 18.25 10.0002H16.75ZM16.9648 5.30805L10.4876 11.9053L11.5579 12.9562L18.0352 6.35894L16.9648 5.30805ZM11.5579 11.9053L8.14881 8.43305L7.07846 9.48394L10.4876 12.9562L11.5579 11.9053ZM7.07846 8.43305L1.96483 13.6414L3.03517 14.6923L8.14881 9.48394L7.07846 8.43305ZM13.4091 6.5835H17.5V5.0835H13.4091V6.5835ZM16.75 5.8335V10.0002H18.25V5.8335H16.75Z"
-                fill="var(--color-gray300__rgw6ez1g)"
+                fill="var(--color-gray300__y03vrm1g)"
               />
             </svg>
             <div
-              class="reset_base__1klryar0"
+              class="reset_base__1v77x6v0"
             >
               Popular tokens
             </div>
           </div>
           <div
-            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_12_sm__rgw6ez3tj"
+            class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_12_sm__y03vrm3tj"
           >
             <div
-              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_8_sm__rgw6ez2oj sprinkles_paddingBottom_8_sm__rgw6ez281 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j sprinkles_cursor_pointer_default__rgw6ez79z"
+              class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j SearchBar_suggestionRow__1x5at7ag SearchBar__1x5at7af sprinkles_paddingLeft_16_sm__y03vrm2e7 sprinkles_paddingRight_16_sm__y03vrm2jp sprinkles_paddingTop_8_sm__y03vrm2oj sprinkles_paddingBottom_8_sm__y03vrm281 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j sprinkles_cursor_pointer_default__y03vrm79z"
             >
               <div
-                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_width_full_sm__rgw6ez16v"
+                class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_width_full_sm__y03vrm16v"
               >
                 <div
-                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez137 sprinkles_height_36_sm__rgw6ez1a7 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_marginRight_8_sm__rgw6ezr1 SearchBar__1fbf9szp sprinkles_background_backgroundModule_default__rgw6ez4p1 sprinkles_flexShrink_0_sm__rgw6ez3xv"
+                  class="reset_base__1v77x6v0 SearchBar_imageHolder__1x5at7aq SearchBar__1x5at7ah sprinkles_width_36_sm__y03vrm137 sprinkles_height_36_sm__y03vrm1a7 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_marginRight_8_sm__y03vrmr1 SearchBar__1x5at7ap sprinkles_background_backgroundModule_default__y03vrm4p1 sprinkles_flexShrink_0_sm__y03vrm3xv"
                 />
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_4_sm__rgw6ez3sv sprinkles_width_full_sm__rgw6ez16v"
+                  class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_4_sm__y03vrm3sv sprinkles_width_full_sm__y03vrm16v"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_background_backgroundModule_default__y03vrm4p1"
                       style="width: 180px;"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_120_sm__rgw6ez15j sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_120_sm__y03vrm15j sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                 </div>
               </div>
             </div>
             <div
-              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_8_sm__rgw6ez2oj sprinkles_paddingBottom_8_sm__rgw6ez281 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j sprinkles_cursor_pointer_default__rgw6ez79z"
+              class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j SearchBar_suggestionRow__1x5at7ag SearchBar__1x5at7af sprinkles_paddingLeft_16_sm__y03vrm2e7 sprinkles_paddingRight_16_sm__y03vrm2jp sprinkles_paddingTop_8_sm__y03vrm2oj sprinkles_paddingBottom_8_sm__y03vrm281 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j sprinkles_cursor_pointer_default__y03vrm79z"
             >
               <div
-                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_width_full_sm__rgw6ez16v"
+                class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_width_full_sm__y03vrm16v"
               >
                 <div
-                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez137 sprinkles_height_36_sm__rgw6ez1a7 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_marginRight_8_sm__rgw6ezr1 SearchBar__1fbf9szp sprinkles_background_backgroundModule_default__rgw6ez4p1 sprinkles_flexShrink_0_sm__rgw6ez3xv"
+                  class="reset_base__1v77x6v0 SearchBar_imageHolder__1x5at7aq SearchBar__1x5at7ah sprinkles_width_36_sm__y03vrm137 sprinkles_height_36_sm__y03vrm1a7 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_marginRight_8_sm__y03vrmr1 SearchBar__1x5at7ap sprinkles_background_backgroundModule_default__y03vrm4p1 sprinkles_flexShrink_0_sm__y03vrm3xv"
                 />
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_4_sm__rgw6ez3sv sprinkles_width_full_sm__rgw6ez16v"
+                  class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_4_sm__y03vrm3sv sprinkles_width_full_sm__y03vrm16v"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_background_backgroundModule_default__y03vrm4p1"
                       style="width: 180px;"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_120_sm__rgw6ez15j sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_120_sm__y03vrm15j sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                 </div>
@@ -123,20 +123,20 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
 exports[`disable nft on searchbar dropdown should render popular nft collections 1`] = `
 <div>
   <div
-    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_overflow_hidden_default__rgw6ez7m3 SearchBar_searchBarDropdownNft__1fbf9szd SearchBar_baseSearchNftStyle__1fbf9sz2 SearchBar_baseSearchStyle__1fbf9sz1 SearchBar__1fbf9sz0 sprinkles_paddingTop_12_sm__rgw6ez2ov sprinkles_paddingBottom_12_sm__rgw6ez28d sprinkles_width_viewWidth_sm__rgw6ez17p sprinkles_borderStyle_solid_default__rgw6ez7ab sprinkles_borderWidth_1px_default__rgw6ez7jr sprinkles_borderColor_searchOutline_default__rgw6ez51v SearchBar__1fbf9szc sprinkles_borderBottomLeftRadius_12_default__rgw6ez7g7 sprinkles_borderBottomRightRadius_12_default__rgw6ez7hr sprinkles_height_viewHeight_sm__rgw6ez1ej sprinkles_height_auto_md__rgw6ez1ew sprinkles_backgroundColor_backgroundSurface_default__rgw6ez6cj SearchBar__1fbf9sze sprinkles_overflowY_auto_default__rgw6ez7nn"
+    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_overflow_hidden_default__y03vrm7m3 SearchBar_searchBarDropdownNft__1x5at7ad SearchBar_baseSearchNftStyle__1x5at7a2 SearchBar_baseSearchStyle__1x5at7a1 SearchBar__1x5at7a0 sprinkles_paddingTop_12_sm__y03vrm2ov sprinkles_paddingBottom_12_sm__y03vrm28d sprinkles_width_viewWidth_sm__y03vrm17p sprinkles_borderStyle_solid_default__y03vrm7ab sprinkles_borderWidth_1px_default__y03vrm7jr sprinkles_borderColor_searchOutline_default__y03vrm51v SearchBar__1x5at7ac sprinkles_borderBottomLeftRadius_12_default__y03vrm7g7 sprinkles_borderBottomRightRadius_12_default__y03vrm7hr sprinkles_height_viewHeight_sm__y03vrm1ej sprinkles_height_auto_md__y03vrm1ew sprinkles_backgroundColor_backgroundSurface_default__y03vrm6cj SearchBar__1x5at7ae sprinkles_overflowY_auto_default__y03vrm7nn"
   >
     <div
-      class="reset_base__1klryar0 sprinkles_opacity_1_sm__rgw6ez4b7 sprinkles_transition_125_default__rgw6ez7oj"
+      class="reset_base__1v77x6v0 sprinkles_opacity_1_sm__y03vrm4b7 sprinkles_transition_125_default__y03vrm7oj"
     >
       <div
-        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_20_sm__rgw6ez3u7"
+        class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_20_sm__y03vrm3u7"
       >
         <div
-          class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_12_sm__rgw6ez3tj"
+          class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_12_sm__y03vrm3tj"
           data-cy="searchbar-dropdown"
         >
           <div
-            class="reset_base__1klryar0 sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_4_sm__rgw6ez2o7 sprinkles_paddingBottom_4_sm__rgw6ez27p sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_gap_8_sm__rgw6ez3t7 sprinkles_color_gray300_default__rgw6ez4k1 common__127l8hd4 sprinkles_fontWeight_medium_sm__rgw6ezcv sprinkles_fontSize_14_sm__rgw6ezav sprinkles_lineHeight_14_sm__rgw6ezdv"
+            class="reset_base__1v77x6v0 sprinkles_paddingLeft_16_sm__y03vrm2e7 sprinkles_paddingRight_16_sm__y03vrm2jp sprinkles_paddingTop_4_sm__y03vrm2o7 sprinkles_paddingBottom_4_sm__y03vrm27p sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_gap_8_sm__y03vrm3t7 sprinkles_color_gray300_default__y03vrm4k1 common__rrxlba4 sprinkles_fontWeight_medium_sm__y03vrmcv sprinkles_fontSize_14_sm__y03vrmav sprinkles_lineHeight_14_sm__y03vrmdv"
             style="line-height: 20px;"
           >
             <svg
@@ -148,85 +148,85 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
             >
               <path
                 d="M17.5 5.8335H18.25C18.25 5.41928 17.9142 5.0835 17.5 5.0835V5.8335ZM11.0227 12.4307L10.4876 12.9562C10.6286 13.0998 10.8214 13.1807 11.0227 13.1807C11.224 13.1807 11.4169 13.0998 11.5579 12.9562L11.0227 12.4307ZM7.61364 8.9585L8.14881 8.43305C8.00778 8.28941 7.81493 8.2085 7.61364 8.2085C7.41234 8.2085 7.21949 8.28941 7.07846 8.43305L7.61364 8.9585ZM1.96483 13.6414C1.67463 13.937 1.67899 14.4118 1.97456 14.702C2.27013 14.9922 2.74498 14.9878 3.03517 14.6923L1.96483 13.6414ZM13.4091 5.0835C12.9949 5.0835 12.6591 5.41928 12.6591 5.8335C12.6591 6.24771 12.9949 6.5835 13.4091 6.5835V5.0835ZM16.75 10.0002C16.75 10.4144 17.0858 10.7502 17.5 10.7502C17.9142 10.7502 18.25 10.4144 18.25 10.0002H16.75ZM16.9648 5.30805L10.4876 11.9053L11.5579 12.9562L18.0352 6.35894L16.9648 5.30805ZM11.5579 11.9053L8.14881 8.43305L7.07846 9.48394L10.4876 12.9562L11.5579 11.9053ZM7.07846 8.43305L1.96483 13.6414L3.03517 14.6923L8.14881 9.48394L7.07846 8.43305ZM13.4091 6.5835H17.5V5.0835H13.4091V6.5835ZM16.75 5.8335V10.0002H18.25V5.8335H16.75Z"
-                fill="var(--color-gray300__rgw6ez1g)"
+                fill="var(--color-gray300__y03vrm1g)"
               />
             </svg>
             <div
-              class="reset_base__1klryar0"
+              class="reset_base__1v77x6v0"
             >
               Popular tokens
             </div>
           </div>
           <div
-            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_12_sm__rgw6ez3tj"
+            class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_12_sm__y03vrm3tj"
           >
             <div
-              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_8_sm__rgw6ez2oj sprinkles_paddingBottom_8_sm__rgw6ez281 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j sprinkles_cursor_pointer_default__rgw6ez79z"
+              class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j SearchBar_suggestionRow__1x5at7ag SearchBar__1x5at7af sprinkles_paddingLeft_16_sm__y03vrm2e7 sprinkles_paddingRight_16_sm__y03vrm2jp sprinkles_paddingTop_8_sm__y03vrm2oj sprinkles_paddingBottom_8_sm__y03vrm281 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j sprinkles_cursor_pointer_default__y03vrm79z"
             >
               <div
-                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_width_full_sm__rgw6ez16v"
+                class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_width_full_sm__y03vrm16v"
               >
                 <div
-                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez137 sprinkles_height_36_sm__rgw6ez1a7 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_marginRight_8_sm__rgw6ezr1 SearchBar__1fbf9szp sprinkles_background_backgroundModule_default__rgw6ez4p1 sprinkles_flexShrink_0_sm__rgw6ez3xv"
+                  class="reset_base__1v77x6v0 SearchBar_imageHolder__1x5at7aq SearchBar__1x5at7ah sprinkles_width_36_sm__y03vrm137 sprinkles_height_36_sm__y03vrm1a7 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_marginRight_8_sm__y03vrmr1 SearchBar__1x5at7ap sprinkles_background_backgroundModule_default__y03vrm4p1 sprinkles_flexShrink_0_sm__y03vrm3xv"
                 />
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_4_sm__rgw6ez3sv sprinkles_width_full_sm__rgw6ez16v"
+                  class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_4_sm__y03vrm3sv sprinkles_width_full_sm__y03vrm16v"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_background_backgroundModule_default__y03vrm4p1"
                       style="width: 180px;"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_120_sm__rgw6ez15j sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_120_sm__y03vrm15j sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                 </div>
               </div>
             </div>
             <div
-              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_8_sm__rgw6ez2oj sprinkles_paddingBottom_8_sm__rgw6ez281 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j sprinkles_cursor_pointer_default__rgw6ez79z"
+              class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j SearchBar_suggestionRow__1x5at7ag SearchBar__1x5at7af sprinkles_paddingLeft_16_sm__y03vrm2e7 sprinkles_paddingRight_16_sm__y03vrm2jp sprinkles_paddingTop_8_sm__y03vrm2oj sprinkles_paddingBottom_8_sm__y03vrm281 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j sprinkles_cursor_pointer_default__y03vrm79z"
             >
               <div
-                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_width_full_sm__rgw6ez16v"
+                class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_width_full_sm__y03vrm16v"
               >
                 <div
-                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez137 sprinkles_height_36_sm__rgw6ez1a7 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_marginRight_8_sm__rgw6ezr1 SearchBar__1fbf9szp sprinkles_background_backgroundModule_default__rgw6ez4p1 sprinkles_flexShrink_0_sm__rgw6ez3xv"
+                  class="reset_base__1v77x6v0 SearchBar_imageHolder__1x5at7aq SearchBar__1x5at7ah sprinkles_width_36_sm__y03vrm137 sprinkles_height_36_sm__y03vrm1a7 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_marginRight_8_sm__y03vrmr1 SearchBar__1x5at7ap sprinkles_background_backgroundModule_default__y03vrm4p1 sprinkles_flexShrink_0_sm__y03vrm3xv"
                 />
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_4_sm__rgw6ez3sv sprinkles_width_full_sm__rgw6ez16v"
+                  class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_4_sm__y03vrm3sv sprinkles_width_full_sm__y03vrm16v"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_background_backgroundModule_default__y03vrm4p1"
                       style="width: 180px;"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_120_sm__rgw6ez15j sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_120_sm__y03vrm15j sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                 </div>
@@ -235,11 +235,11 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
           </div>
         </div>
         <div
-          class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_12_sm__rgw6ez3tj"
+          class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_12_sm__y03vrm3tj"
           data-cy="searchbar-dropdown"
         >
           <div
-            class="reset_base__1klryar0 sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_4_sm__rgw6ez2o7 sprinkles_paddingBottom_4_sm__rgw6ez27p sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_gap_8_sm__rgw6ez3t7 sprinkles_color_gray300_default__rgw6ez4k1 common__127l8hd4 sprinkles_fontWeight_medium_sm__rgw6ezcv sprinkles_fontSize_14_sm__rgw6ezav sprinkles_lineHeight_14_sm__rgw6ezdv"
+            class="reset_base__1v77x6v0 sprinkles_paddingLeft_16_sm__y03vrm2e7 sprinkles_paddingRight_16_sm__y03vrm2jp sprinkles_paddingTop_4_sm__y03vrm2o7 sprinkles_paddingBottom_4_sm__y03vrm27p sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_gap_8_sm__y03vrm3t7 sprinkles_color_gray300_default__y03vrm4k1 common__rrxlba4 sprinkles_fontWeight_medium_sm__y03vrmcv sprinkles_fontSize_14_sm__y03vrmav sprinkles_lineHeight_14_sm__y03vrmdv"
             style="line-height: 20px;"
           >
             <svg
@@ -251,85 +251,85 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
             >
               <path
                 d="M17.5 5.8335H18.25C18.25 5.41928 17.9142 5.0835 17.5 5.0835V5.8335ZM11.0227 12.4307L10.4876 12.9562C10.6286 13.0998 10.8214 13.1807 11.0227 13.1807C11.224 13.1807 11.4169 13.0998 11.5579 12.9562L11.0227 12.4307ZM7.61364 8.9585L8.14881 8.43305C8.00778 8.28941 7.81493 8.2085 7.61364 8.2085C7.41234 8.2085 7.21949 8.28941 7.07846 8.43305L7.61364 8.9585ZM1.96483 13.6414C1.67463 13.937 1.67899 14.4118 1.97456 14.702C2.27013 14.9922 2.74498 14.9878 3.03517 14.6923L1.96483 13.6414ZM13.4091 5.0835C12.9949 5.0835 12.6591 5.41928 12.6591 5.8335C12.6591 6.24771 12.9949 6.5835 13.4091 6.5835V5.0835ZM16.75 10.0002C16.75 10.4144 17.0858 10.7502 17.5 10.7502C17.9142 10.7502 18.25 10.4144 18.25 10.0002H16.75ZM16.9648 5.30805L10.4876 11.9053L11.5579 12.9562L18.0352 6.35894L16.9648 5.30805ZM11.5579 11.9053L8.14881 8.43305L7.07846 9.48394L10.4876 12.9562L11.5579 11.9053ZM7.07846 8.43305L1.96483 13.6414L3.03517 14.6923L8.14881 9.48394L7.07846 8.43305ZM13.4091 6.5835H17.5V5.0835H13.4091V6.5835ZM16.75 5.8335V10.0002H18.25V5.8335H16.75Z"
-                fill="var(--color-gray300__rgw6ez1g)"
+                fill="var(--color-gray300__y03vrm1g)"
               />
             </svg>
             <div
-              class="reset_base__1klryar0"
+              class="reset_base__1v77x6v0"
             >
               Popular NFT collections
             </div>
           </div>
           <div
-            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_12_sm__rgw6ez3tj"
+            class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_12_sm__y03vrm3tj"
           >
             <div
-              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_8_sm__rgw6ez2oj sprinkles_paddingBottom_8_sm__rgw6ez281 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j sprinkles_cursor_pointer_default__rgw6ez79z"
+              class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j SearchBar_suggestionRow__1x5at7ag SearchBar__1x5at7af sprinkles_paddingLeft_16_sm__y03vrm2e7 sprinkles_paddingRight_16_sm__y03vrm2jp sprinkles_paddingTop_8_sm__y03vrm2oj sprinkles_paddingBottom_8_sm__y03vrm281 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j sprinkles_cursor_pointer_default__y03vrm79z"
             >
               <div
-                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_width_full_sm__rgw6ez16v"
+                class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_width_full_sm__y03vrm16v"
               >
                 <div
-                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez137 sprinkles_height_36_sm__rgw6ez1a7 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_marginRight_8_sm__rgw6ezr1 SearchBar__1fbf9szp sprinkles_background_backgroundModule_default__rgw6ez4p1 sprinkles_flexShrink_0_sm__rgw6ez3xv"
+                  class="reset_base__1v77x6v0 SearchBar_imageHolder__1x5at7aq SearchBar__1x5at7ah sprinkles_width_36_sm__y03vrm137 sprinkles_height_36_sm__y03vrm1a7 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_marginRight_8_sm__y03vrmr1 SearchBar__1x5at7ap sprinkles_background_backgroundModule_default__y03vrm4p1 sprinkles_flexShrink_0_sm__y03vrm3xv"
                 />
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_4_sm__rgw6ez3sv sprinkles_width_full_sm__rgw6ez16v"
+                  class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_4_sm__y03vrm3sv sprinkles_width_full_sm__y03vrm16v"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_background_backgroundModule_default__y03vrm4p1"
                       style="width: 180px;"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_120_sm__rgw6ez15j sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_120_sm__y03vrm15j sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                 </div>
               </div>
             </div>
             <div
-              class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_8_sm__rgw6ez2oj sprinkles_paddingBottom_8_sm__rgw6ez281 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j sprinkles_cursor_pointer_default__rgw6ez79z"
+              class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j SearchBar_suggestionRow__1x5at7ag SearchBar__1x5at7af sprinkles_paddingLeft_16_sm__y03vrm2e7 sprinkles_paddingRight_16_sm__y03vrm2jp sprinkles_paddingTop_8_sm__y03vrm2oj sprinkles_paddingBottom_8_sm__y03vrm281 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j sprinkles_cursor_pointer_default__y03vrm79z"
             >
               <div
-                class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_width_full_sm__rgw6ez16v"
+                class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_width_full_sm__y03vrm16v"
               >
                 <div
-                  class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez137 sprinkles_height_36_sm__rgw6ez1a7 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_marginRight_8_sm__rgw6ezr1 SearchBar__1fbf9szp sprinkles_background_backgroundModule_default__rgw6ez4p1 sprinkles_flexShrink_0_sm__rgw6ez3xv"
+                  class="reset_base__1v77x6v0 SearchBar_imageHolder__1x5at7aq SearchBar__1x5at7ah sprinkles_width_36_sm__y03vrm137 sprinkles_height_36_sm__y03vrm1a7 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_marginRight_8_sm__y03vrmr1 SearchBar__1x5at7ap sprinkles_background_backgroundModule_default__y03vrm4p1 sprinkles_flexShrink_0_sm__y03vrm3xv"
                 />
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_4_sm__rgw6ez3sv sprinkles_width_full_sm__rgw6ez16v"
+                  class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_column_sm__y03vrm477 sprinkles_gap_4_sm__y03vrm3sv sprinkles_width_full_sm__y03vrm16v"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_background_backgroundModule_default__y03vrm4p1"
                       style="width: 180px;"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_20_sm__rgw6ez19d sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_20_sm__y03vrm19d sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_justifyContent_space-between_sm__rgw6ez48j"
+                    class="reset_base__1v77x6v0 sprinkles_display_flex_sm__y03vrm44v sprinkles_flexDirection_row_sm__y03vrm471 sprinkles_alignItems_center_sm__y03vrm3j sprinkles_justifyContent_space-between_sm__y03vrm48j"
                   >
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_120_sm__rgw6ez15j sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_120_sm__y03vrm15j sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez7cj sprinkles_height_16_sm__rgw6ez191 sprinkles_width_48_sm__rgw6ez13v sprinkles_background_backgroundModule_default__rgw6ez4p1"
+                      class="reset_base__1v77x6v0 sprinkles_borderRadius_round_default__y03vrm7cj sprinkles_height_16_sm__y03vrm191 sprinkles_width_48_sm__y03vrm13v sprinkles_background_backgroundModule_default__y03vrm4p1"
                     />
                   </div>
                 </div>

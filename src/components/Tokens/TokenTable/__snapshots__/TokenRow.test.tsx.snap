@@ -88,7 +88,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 .c1:hover {
-  background-color: #98A1C014;
+  background-color: #40B66B14;
   border-radius: 0px 0px 8px 8px;
 }
 
