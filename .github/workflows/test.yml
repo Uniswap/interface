@@ -80,6 +80,19 @@ jobs:
         with:
           name: Unit tests
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+  
+  cloud-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn cloud:test
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Cloud tests
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+        
 
   build-e2e:
     runs-on: ubuntu-latest
