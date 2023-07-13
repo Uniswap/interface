@@ -33,9 +33,7 @@ test.each(collections)('should inject metadata for valid collections', async (co
   expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
   expect(body).toContain(`<meta property="twitter:title" content="${collection.collectionName} on Uniswap"/>`)
   expect(body).toContain(`<meta property="twitter:image" content="${collection.image}"/>`)
-  expect(body).toContain(
-    `<meta property="twitter:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`
-  )
+  expect(body).toContain(`<meta property="twitter:image:alt" content="${collection.collectionName} on Uniswap"/>`)
 })
 
 const invalidCollections = [

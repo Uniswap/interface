@@ -36,9 +36,7 @@ test.each(assets)('should inject metadata for valid assets', async (nft) => {
   expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
   expect(body).toContain(`<meta property="twitter:title" content="${nft.collectionName} #${nft.assetId}"/>`)
   expect(body).toContain(`<meta property="twitter:image" content="${nft.image}"/>`)
-  expect(body).toContain(
-    `<meta property="twitter:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`
-  )
+  expect(body).toContain(`<meta property="twitter:image:alt" content="${nft.collectionName} #${nft.assetId}"/>`)
 })
 
 const invalidAssets = [

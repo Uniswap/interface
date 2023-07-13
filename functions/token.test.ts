@@ -48,9 +48,7 @@ test.each(tokens)('should inject metadata for valid tokens', async (token) => {
   expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
   expect(body).toContain(`<meta property="twitter:title" content="Get ${token.symbol} on Uniswap"/>`)
   expect(body).toContain(`<meta property="twitter:image" content="${token.image}"/>`)
-  expect(body).toContain(
-    `<meta property="twitter:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`
-  )
+  expect(body).toContain(`<meta property="twitter:image:alt" content="Get ${token.symbol} on Uniswap"/>`)
 })
 
 const invalidTokens = [
