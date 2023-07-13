@@ -1,15 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
+import { SendSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SendSummaryItem'
 import {
   SendTokenTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import SendSummaryItem from './SendSummaryItem'
 
 const meta: Meta<typeof SendSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -119,36 +120,42 @@ export const Send: StoryObj = {
   render: () => (
     <>
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSendTx,
           status: TransactionStatus.Pending,
         }}
       />
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSendTx,
           status: TransactionStatus.Cancelling,
         }}
       />
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSendTx,
           status: TransactionStatus.Cancelled,
         }}
       />
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSendTx,
           status: TransactionStatus.Failed,
         }}
       />
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSendTx,
           status: TransactionStatus.Success,
         }}
       />
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSendTx,
           chainId: ChainId.Optimism,
@@ -163,36 +170,42 @@ export const NFTSend: StoryObj = {
   render: () => (
     <>
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSendTx,
           status: TransactionStatus.Pending,
         }}
       />
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSendTx,
           status: TransactionStatus.Cancelling,
         }}
       />
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSendTx,
           status: TransactionStatus.Cancelled,
         }}
       />
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSendTx,
           status: TransactionStatus.Failed,
         }}
       />
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSendTx,
           status: TransactionStatus.Success,
         }}
       />
       <SendSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSendTx,
           chainId: ChainId.Optimism,

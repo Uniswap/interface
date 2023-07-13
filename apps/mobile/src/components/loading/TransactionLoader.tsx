@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { TXN_HISTORY_ICON_SIZE } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
+import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 
 interface TransactionLoaderProps {
   opacity: number

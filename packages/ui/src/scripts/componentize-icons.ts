@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console */
+/* eslint-disable no-useless-escape */
 import camelcase from 'camelcase'
 import { load } from 'cheerio'
 import { ESLint } from 'eslint'
@@ -8,33 +11,54 @@ import path, { join } from 'path'
 // @ts-ignore
 import uppercamelcase from 'uppercamelcase'
 
+interface SVGDirectorySourceAndOutput {
+  input: string
+  output: string
+}
+
 async function run(): Promise<void> {
   const srcDir = join(__dirname, '..')
   const assetsDir = join(srcDir, 'assets')
-  const iconsDir = join(assetsDir, 'icons')
-  const outDir = join(srcDir, 'components', 'icons')
 
+  const svgDirPairs: SVGDirectorySourceAndOutput[] = [
+    {
+      input: join(assetsDir, 'icons'),
+      output: join(srcDir, 'components', 'icons'),
+    },
+    {
+      input: join(assetsDir, 'logos', 'svg'),
+      output: join(srcDir, 'components', 'logos'),
+    },
+  ]
+
+  for (const dirPair of svgDirPairs) {
+    await generateSVGComponents(dirPair)
+  }
+}
+
+async function generateSVGComponents(directoryPair: SVGDirectorySourceAndOutput): Promise<void> {
   let indexFile = ``
 
-  await ensureDir(outDir)
+  await ensureDir(directoryPair.output)
 
-  const iconFileNames = (await readdir(iconsDir)).filter((name) => name.endsWith('.svg'))
+  const fileNames = (await readdir(directoryPair.input)).filter((name) => name.endsWith('.svg'))
 
-  for (const iconFileName of iconFileNames) {
+  for (const svgFileName of fileNames) {
     try {
-      const iconPath = join(iconsDir, iconFileName)
+      const iconPath = join(directoryPair.input, svgFileName)
       const svg = await readFile(iconPath, 'utf-8')
-      const id = path.basename(iconFileName, '.svg')
+      const id = path.basename(svgFileName, '.svg')
       const $ = load(svg, {
         xmlMode: true,
       })
       const cname = uppercamelcase(id)
       const fileName = `${cname}.tsx`
-      const outPath = path.join(outDir, fileName)
+      const outPath = path.join(directoryPair.output, fileName)
 
       // Because CSS does not exist on Native platforms
       // We need to duplicate the styles applied to the
       // SVG to its children
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const svgAttribs = $('svg')[0]!.attribs
       delete svgAttribs.xmlns
       const attribsOfInterest: Record<string, any> = {}
@@ -55,7 +79,7 @@ async function run(): Promise<void> {
         }
       })
 
-      $('*').each((index, el: any) => {
+      $('*').each((_, el: any) => {
         Object.keys(el.attribs).forEach((x) => {
           if (x.includes('-')) {
             $(el).attr(camelcase(x), el.attribs[x]).removeAttr(x)
@@ -209,26 +233,22 @@ export const ${cname} = memo<IconProps>(Icon)
       if (formatted) {
         element = formatted
       } else {
-        // eslint-disable-next-line no-console
-        console.warn(`not linted ${iconFileName}`)
+        console.warn(`not linted ${svgFileName}`)
       }
 
       await writeFile(outPath, element, 'utf-8')
 
       indexFile += `\nexport * from './${fileName.replace('.tsx', '')}'`
 
-      // eslint-disable-next-line no-console
-      console.log(`🦄 ${iconFileName}`)
+      console.log(`🦄 ${svgFileName}`)
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(`Error converting icon: ${iconFileName}: ${(err as any).message}`)
+      console.log(`Error converting icon: ${svgFileName}: ${(err as any).message}`)
     }
   }
 
   const formattedIndex = await eslintFormat(indexFile)
-  await writeFile(join(outDir, 'index.ts'), formattedIndex, 'utf-8')
+  await writeFile(join(directoryPair.output, 'index.ts'), formattedIndex, 'utf-8')
 
-  // eslint-disable-next-line no-console
   console.log(
     `⚠️ Warning: The CameraScan icon needs manual removing strokeWidth="10", we could automate...`
   )

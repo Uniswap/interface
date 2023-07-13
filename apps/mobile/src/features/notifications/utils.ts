@@ -18,9 +18,9 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
+import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
-import { formatCurrencyAmount, formatUSDPrice } from 'wallet/src/utils/format'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { formatUSDPrice } from 'wallet/src/utils/format'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
   const { event, dappName, chainId } = appNotification
@@ -50,20 +50,20 @@ export const formApproveNotificationTitle = (
   tokenAddress: Address,
   spender: Address
 ): string => {
-  const currencySymbol = getCurrencySymbol(currency, tokenAddress)
+  const currencyDisplayText = getCurrencyDisplayText(currency, tokenAddress)
   const address = shortenAddress(spender)
   return txStatus === TransactionStatus.Success
     ? i18n.t('Approved {{currencySymbol}} for use with {{address}}.', {
-        currencySymbol,
+        currencySymbol: currencyDisplayText,
         address,
       })
     : txStatus === TransactionStatus.Cancelled
     ? i18n.t('Canceled {{currencySymbol}} approve.', {
-        currencySymbol,
+        currencySymbol: currencyDisplayText,
         address,
       })
     : i18n.t('Failed to approve {{currencySymbol}} for use with {{address}}.', {
-        currencySymbol,
+        currencySymbol: currencyDisplayText,
         address,
       })
 }
@@ -78,8 +78,11 @@ export const formSwapNotificationTitle = (
   inputCurrencyAmountRaw: string,
   outputCurrencyAmountRaw: string
 ): string => {
-  const inputCurrencySymbol = getCurrencySymbol(inputCurrency, currencyIdToAddress(inputCurrencyId))
-  const outputCurrencySymbol = getCurrencySymbol(
+  const inputCurrencySymbol = getCurrencyDisplayText(
+    inputCurrency,
+    currencyIdToAddress(inputCurrencyId)
+  )
+  const outputCurrencySymbol = getCurrencyDisplayText(
     outputCurrency,
     currencyIdToAddress(outputCurrencyId)
   )
@@ -166,7 +169,7 @@ export const formTransferCurrencyNotificationTitle = (
   currencyAmountRaw: string,
   senderOrRecipient: string
 ): string => {
-  const currencySymbol = getCurrencySymbol(currency, tokenAddress)
+  const currencySymbol = getCurrencyDisplayText(currency, tokenAddress)
   const amount = getFormattedCurrencyAmount(currency, currencyAmountRaw)
   const shortenedAddressOrENS = getShortenedAddressOrEns(senderOrRecipient)
   return formTransferTxTitle(txType, txStatus, `${amount}${currencySymbol}`, shortenedAddressOrENS)
@@ -280,25 +283,6 @@ export const createBalanceUpdate = ({
   }
 }
 
-export const getFormattedCurrencyAmount = (
-  currency: Maybe<Currency>,
-  currencyAmountRaw: string,
-  isApproximateAmount = false
-): string => {
-  if (!currency) return ''
-
-  const currencyAmount = getCurrencyAmount({
-    value: currencyAmountRaw,
-    valueType: ValueType.Raw,
-    currency,
-  })
-
-  if (!currencyAmount) return ''
-
-  const formattedAmount = formatCurrencyAmount(currencyAmount)
-  return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
-}
-
 const getUSDValue = (
   spotPrice: SpotPrice | undefined,
   currencyAmountRaw: string,
@@ -309,17 +293,6 @@ const getUSDValue = (
 
   const usdValue = (Number(currencyAmountRaw) / 10 ** currency.decimals) * price
   return formatUSDPrice(usdValue)
-}
-
-export const getCurrencySymbol = (
-  currency: Maybe<Currency>,
-  tokenAddressString: Address | undefined
-): string | undefined => {
-  return currency?.symbol
-    ? currency.symbol
-    : tokenAddressString && getValidAddress(tokenAddressString, true)
-    ? shortenAddress(tokenAddressString)
-    : tokenAddressString
 }
 
 const getShortenedAddressOrEns = (addressOrENS: string): string => {

@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { ChainId } from 'wallet/src/constants/chains'
+import { NFTApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
 import {
   NFTApproveTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import NFTApproveSummaryItem from './NFTApproveSummaryItem'
 
 const meta: Meta<typeof NFTApproveSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -41,24 +42,28 @@ export const NFTApprove: StoryObj = {
   render: () => (
     <>
       <NFTApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveTx,
           status: TransactionStatus.Pending,
         }}
       />
       <NFTApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveTx,
           status: TransactionStatus.Failed,
         }}
       />
       <NFTApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveTx,
           status: TransactionStatus.Success,
         }}
       />
       <NFTApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveTx,
           chainId: ChainId.Optimism,

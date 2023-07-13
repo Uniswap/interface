@@ -8,7 +8,6 @@ import { NativeModules, StatusBar } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { AppModals } from 'src/app/modals/AppModals'
@@ -37,6 +36,7 @@ import { useTrmQuery } from 'wallet/src/features/trm/api'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { SharedProvider } from 'wallet/src/provider'
 
 // Keep the splash screen visible while we fetch resources until one of our landing pages loads
 SplashScreen.preventAutoHideAsync()
@@ -112,7 +112,7 @@ function App(): JSX.Element | null {
       <StrictMode>
         <StatsigProvider {...statSigOptions}>
           <SafeAreaProvider>
-            <Provider store={store}>
+            <SharedProvider reduxStore={store}>
               <ApolloProvider client={client}>
                 <PersistGate loading={null} persistor={persistor}>
                   <DynamicThemeProvider>
@@ -138,7 +138,7 @@ function App(): JSX.Element | null {
                   </DynamicThemeProvider>
                 </PersistGate>
               </ApolloProvider>
-            </Provider>
+            </SharedProvider>
           </SafeAreaProvider>
         </StatsigProvider>
       </StrictMode>

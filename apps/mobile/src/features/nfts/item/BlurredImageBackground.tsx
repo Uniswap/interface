@@ -2,8 +2,8 @@ import { BlurView } from '@react-native-community/blur'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
-import { NFTViewer } from 'src/components/images/NFTViewer'
 import { AnimatedFlex, Box } from 'src/components/layout'
+import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
 /**
  * Renders a blurred image background combined with a color overlay for a given image uri.

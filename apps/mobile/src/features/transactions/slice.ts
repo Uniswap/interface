@@ -12,11 +12,11 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { assert } from 'wallet/src/utils/validation'
 
-export interface TransactionState {
+export interface TransactionStateMap {
   [address: Address]: ChainIdToTxIdToDetails
 }
 
-export const initialTransactionsState: TransactionState = {}
+export const initialTransactionsState: TransactionStateMap = {}
 
 const slice = createSlice({
   name: 'transactions',

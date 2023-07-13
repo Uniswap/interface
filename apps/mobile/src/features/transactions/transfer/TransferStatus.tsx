@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { goBack } from 'src/app/navigation/rootNavigation'
 import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {
   TransactionDetails,
   TransactionStatus,

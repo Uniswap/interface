@@ -4,8 +4,6 @@ import {
   buildReceiveNotification,
   createBalanceUpdate,
   formSwapNotificationTitle,
-  getCurrencySymbol,
-  getFormattedCurrencyAmount,
 } from 'src/features/notifications/utils'
 import { account } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -21,7 +19,7 @@ import {
 import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
 describe(formSwapNotificationTitle, () => {
-  it('formats succesful swap title', () => {
+  it('formats successful swap title', () => {
     expect(
       formSwapNotificationTitle(
         TransactionStatus.Success,
@@ -146,36 +144,6 @@ describe(createBalanceUpdate, () => {
   })
 })
 
-describe(getFormattedCurrencyAmount, () => {
-  it('formats valid amount', () => {
-    expect(getFormattedCurrencyAmount(DAI, '1000000000000000000')).toEqual('1.00 ')
-  })
-
-  it('handles invalid Currency', () => {
-    expect(getFormattedCurrencyAmount(undefined, '1')).toEqual('')
-    expect(getFormattedCurrencyAmount(null, '1')).toEqual('')
-  })
-
-  it('handles error', () => {
-    // invalid raw amount will throw error
-    expect(getFormattedCurrencyAmount(USDC, '0.1')).toEqual('')
-  })
-})
-
-describe(getCurrencySymbol, () => {
-  it('Returns symbol for token', () => {
-    expect(getCurrencySymbol(DAI, DAI.address)).toEqual('DAI')
-  })
-
-  it('handles undefined currency with address', () => {
-    expect(getCurrencySymbol(undefined, DAI.address)).toEqual('0x6B17...1d0F')
-  })
-
-  it('handles undefined address with currency', () => {
-    expect(getCurrencySymbol(DAI, undefined)).toEqual('DAI')
-  })
-})
-
 const receiveCurrencyTypeInfo: ReceiveTokenTransactionInfo = {
   type: TransactionType.Receive,
   assetType: AssetType.Currency,
@@ -193,7 +161,7 @@ const receiveNftTypeInfo: ReceiveTokenTransactionInfo = {
 }
 
 describe(buildReceiveNotification, () => {
-  it('returns undefined if not succesful status', () => {
+  it('returns undefined if not successful status', () => {
     const { payload: testTransaction } = createFinalizedTxAction(receiveCurrencyTypeInfo)
     testTransaction.status = TransactionStatus.Failed // overwite status to incorrect status
 

@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 export type BaseDerivedInfo<TInput = CurrencyInfo> = {
   currencies: {

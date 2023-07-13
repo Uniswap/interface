@@ -11,12 +11,14 @@ import { useDerivedSwapInfo, useSwapTxAndGasInfo } from 'src/features/transactio
 import { useSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
 import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
 import {
-  CurrencyField,
   initialState as emptyState,
-  TransactionState,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
 
 interface SwapFormProps {
   prefilledState?: TransactionState

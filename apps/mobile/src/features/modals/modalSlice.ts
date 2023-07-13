@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { MobileState } from 'src/app/reducer'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { ModalName } from 'src/features/telemetry/constants'
-import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
 import { getKeys } from 'src/utils/objects'
+import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 
 export interface AppModalState<T> {
   isOpen: boolean

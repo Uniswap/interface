@@ -1,15 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
+import { ReceiveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ReceiveSummaryItem'
 import {
   ReceiveTokenTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import ReceiveSummaryItem from './ReceiveSummaryItem'
 
 const meta: Meta<typeof ReceiveSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -123,12 +124,14 @@ export const Receive: StoryObj = {
   render: () => (
     <>
       <ReceiveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseReceiveTx,
           status: TransactionStatus.Success,
         }}
       />
       <ReceiveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseReceiveTx,
           chainId: ChainId.Optimism,
@@ -143,12 +146,14 @@ export const NFTReceive: StoryObj = {
   render: () => (
     <>
       <ReceiveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTReceiveTx,
           status: TransactionStatus.Success,
         }}
       />
       <ReceiveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTReceiveTx,
           chainId: ChainId.Optimism,

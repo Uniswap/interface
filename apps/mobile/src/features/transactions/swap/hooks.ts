@@ -8,9 +8,10 @@ import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { providers } from 'ethers'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnyAction } from 'redux'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { selectTransactions } from 'src/features/transactions/selectors'
 import { getBaseTradeAnalyticsProperties } from 'src/features/transactions/swap/analytics'
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
 import {
@@ -25,13 +26,12 @@ import {
   WrapType,
 } from 'src/features/transactions/swap/wrapSaga'
 import {
-  CurrencyField,
-  TransactionState,
   updateExactAmountToken,
   updateExactAmountUSD,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { toStringish } from 'src/utils/number'
+import { flattenObjectOfObjects } from 'src/utils/objects'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20 } from 'wallet/src/abis/types'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -55,6 +55,11 @@ import {
   useSetTradeSlippage,
   useTrade,
 } from 'wallet/src/features/transactions/swap/useTrade'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
+import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import {
   useActiveAccount,
@@ -765,4 +770,14 @@ export function useShowSwapNetworkNotification(chainId?: ChainId): void {
       pushNotification({ type: AppNotificationType.SwapNetwork, chainId, hideDelay: 2000 })
     )
   }, [chainId, prevChainId, appDispatch])
+}
+
+export function useMostRecentSwapTx(address: Address): TransactionDetails | undefined {
+  const transactions = useAppSelector(selectTransactions)
+  const addressTransactions = transactions[address]
+  if (addressTransactions) {
+    return flattenObjectOfObjects(addressTransactions)
+      .filter((tx) => tx.typeInfo.type === TransactionType.Swap)
+      .sort((a, b) => b.addedTime - a.addedTime)[0]
+  }
 }

@@ -4,8 +4,8 @@ import { TraceProps } from 'src/components/telemetry/Trace'
 import { TraceEventProps } from 'src/components/telemetry/TraceEvent'
 import { ImportType } from 'src/features/onboarding/utils'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { ChainId } from 'wallet/src/constants/chains'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { EthMethod, WCEventType, WCRequestOutcome } from 'wallet/src/features/walletConnect/types'
 
 type BaseEventProperty = Partial<TraceEventProps & TraceProps> | undefined

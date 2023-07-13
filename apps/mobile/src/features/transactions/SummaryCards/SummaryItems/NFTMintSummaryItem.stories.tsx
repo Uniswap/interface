@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
+import { NFTMintSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
 import {
   NFTMintTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import NFTMintSummaryItem from './NFTMintSummaryItem'
 
 const meta: Meta<typeof NFTMintSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -37,30 +38,35 @@ export const NFTMint: StoryObj = {
   render: () => (
     <>
       <NFTMintSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTMintTx,
           status: TransactionStatus.Pending,
         }}
       />
       <NFTMintSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTMintTx,
           status: TransactionStatus.Cancelling,
         }}
       />
       <NFTMintSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTMintTx,
           status: TransactionStatus.Cancelled,
         }}
       />
       <NFTMintSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTMintTx,
           status: TransactionStatus.Failed,
         }}
       />
       <NFTMintSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTMintTx,
           status: TransactionStatus.Success,

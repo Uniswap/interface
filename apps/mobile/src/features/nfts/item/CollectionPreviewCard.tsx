@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
-import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -12,12 +11,13 @@ import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { imageSizes } from 'ui/src/theme/imageSizes'
 import { Currency, NftItemScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
 export type Collection = NonNullable<
   NonNullable<NonNullable<NftItemScreenQuery['nftAssets']>>['edges'][0]
 >['node']['collection']
 
-interface CollectionPreviewcardProps {
+interface CollectionPreviewCardProps {
   collection: Maybe<Collection>
   onPress: () => void
   loading: boolean
@@ -26,12 +26,12 @@ export function CollectionPreviewCard({
   collection,
   onPress,
   loading,
-}: CollectionPreviewcardProps): JSX.Element {
+}: CollectionPreviewCardProps): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
 
   if (loading || !collection) {
-    return <Loader.Box borderRadius="rounded16" height={theme.spacing.spacing60} />
+    return <Loader.Box borderRadius="$rounded16" height={theme.spacing.spacing60} />
   }
 
   return (

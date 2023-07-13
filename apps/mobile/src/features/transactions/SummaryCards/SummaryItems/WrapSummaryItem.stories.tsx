@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
+import { WrapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WrapSummaryItem'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
   WrapTransactionInfo,
 } from 'wallet/src/features/transactions/types'
-import WrapSummaryItem from './WrapSummaryItem'
 
 const meta: Meta<typeof WrapSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -106,30 +107,35 @@ export const Wrap: StoryObj = {
   render: () => (
     <>
       <WrapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseWrapTx,
           status: TransactionStatus.Pending,
         }}
       />
       <WrapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseWrapTx,
           status: TransactionStatus.Cancelling,
         }}
       />
       <WrapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseWrapTx,
           status: TransactionStatus.Cancelled,
         }}
       />
       <WrapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseWrapTx,
           status: TransactionStatus.Failed,
         }}
       />
       <WrapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseWrapTx,
           status: TransactionStatus.Success,
@@ -143,30 +149,35 @@ export const Unwrap: StoryObj = {
   render: () => (
     <>
       <WrapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnwrapTx,
           status: TransactionStatus.Pending,
         }}
       />
       <WrapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnwrapTx,
           status: TransactionStatus.Cancelling,
         }}
       />
       <WrapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnwrapTx,
           status: TransactionStatus.Cancelled,
         }}
       />
       <WrapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnwrapTx,
           status: TransactionStatus.Failed,
         }}
       />
       <WrapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnwrapTx,
           status: TransactionStatus.Success,

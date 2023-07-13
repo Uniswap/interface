@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { TradeType } from '@uniswap/sdk-core'
 import React from 'react'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
+import { SwapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SwapSummaryItem'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -11,7 +13,6 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
-import SwapSummaryItem from './SwapSummaryItem'
 
 const meta: Meta<typeof SwapSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -112,36 +113,42 @@ export const Swap: StoryObj = {
   render: () => (
     <>
       <SwapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSwapTx,
           status: TransactionStatus.Pending,
         }}
       />
       <SwapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSwapTx,
           status: TransactionStatus.Cancelling,
         }}
       />
       <SwapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSwapTx,
           status: TransactionStatus.Cancelled,
         }}
       />
       <SwapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSwapTx,
           status: TransactionStatus.Failed,
         }}
       />
       <SwapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSwapTx,
           status: TransactionStatus.Success,
         }}
       />
       <SwapSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSwapTx,
           chainId: ChainId.Optimism,

@@ -1,15 +1,14 @@
-import { useTheme } from '@shopify/restyle'
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { CurrencyLogo } from 'src/components/CurrencyLogo'
-import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
-import { ImageUri } from 'src/components/images/ImageUri'
-import { Box, Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
+import { Box } from 'src/components/layout'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
+import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
+import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { DappInfo } from 'wallet/src/features/walletConnect/types'
 
 export function DappHeaderIcon({
@@ -50,34 +49,6 @@ export function DappHeaderIcon({
         </Box>
       )}
     </Box>
-  )
-}
-
-export function DappIconPlaceholder({
-  name,
-  iconSize,
-}: {
-  name: string
-  iconSize: number
-}): JSX.Element {
-  const theme = useTheme()
-
-  return (
-    <Flex
-      centered
-      row
-      backgroundColor="background3"
-      borderRadius="roundedFull"
-      flex={1}
-      height={iconSize}
-      width={iconSize}>
-      <Text
-        color="textSecondary"
-        textAlign="center"
-        variant={iconSize >= theme.iconSizes.icon40 ? 'subheadLarge' : 'bodySmall'}>
-        {name.length > 0 ? name.charAt(0) : ' '}
-      </Text>
-    </Flex>
   )
 }
 

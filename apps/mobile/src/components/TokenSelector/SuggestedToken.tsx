@@ -2,7 +2,6 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Pill } from 'src/components/text/Pill'
 import {
   OnSelectCurrency,
@@ -10,6 +9,7 @@ import {
 } from 'src/components/TokenSelector/TokenSelectorList'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 
 function _SuggestedToken({
   onSelectCurrency,

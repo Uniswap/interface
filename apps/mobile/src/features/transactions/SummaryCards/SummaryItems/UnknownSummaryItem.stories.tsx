@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { ChainId } from 'wallet/src/constants/chains'
+import { UnknownSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/UnknownSummaryItem'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
   UnknownTransactionInfo,
 } from 'wallet/src/features/transactions/types'
-import UnknownSummaryItem from './UnknownSummaryItem'
 
 const meta: Meta<typeof UnknownSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -31,24 +32,28 @@ export const Unknown: StoryObj = {
   render: () => (
     <>
       <UnknownSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnknownTx,
           status: TransactionStatus.Pending,
         }}
       />
       <UnknownSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnknownTx,
           status: TransactionStatus.Failed,
         }}
       />
       <UnknownSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnknownTx,
           status: TransactionStatus.Success,
         }}
       />
       <UnknownSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnknownTx,
           chainId: ChainId.Optimism,

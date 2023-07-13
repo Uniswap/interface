@@ -37,12 +37,12 @@ import {
   getReviewActionName,
   isWrapAction,
 } from 'src/features/transactions/swap/utils'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info.svg'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { formatCurrencyAmount, formatPrice, NumberType } from 'wallet/src/utils/format'
 

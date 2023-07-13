@@ -3,7 +3,6 @@ import { WarningLabel } from 'src/components/modals/WarningModal/types'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { getSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { isOffline } from 'src/features/transactions/utils'
 import {
   daiCurrencyInfo,
@@ -15,6 +14,7 @@ import {
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 

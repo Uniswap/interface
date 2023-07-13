@@ -5,19 +5,19 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { ImageUri } from 'src/components/images/ImageUri'
-import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import { useExtractedColors } from 'src/utils/colors'
+import { Logos } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
-import EthereumLogo from 'ui/src/assets/logos/ethereum.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
 import { NftCollectionScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { ImageUri } from 'wallet/src/features/images/ImageUri'
+import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { formatNumber, NumberType } from 'wallet/src/utils/format'
 
 const PROFILE_IMAGE_SIZE = 72
@@ -188,7 +188,7 @@ export function NFTCollectionHeader({
                   )} `}
                 </Text>
                 {collectionStats?.floorPrice?.value !== undefined ? (
-                  <EthereumLogo color={theme.colors.textPrimary} />
+                  <Logos.Ethereum color={theme.colors.textPrimary} />
                 ) : null}
               </Flex>
             </Flex>
@@ -204,7 +204,7 @@ export function NFTCollectionHeader({
                   )}`}
                 </Text>
                 {collectionStats?.totalVolume?.value !== undefined ? (
-                  <EthereumLogo color={theme.colors.textPrimary} />
+                  <Logos.Ethereum color={theme.colors.textPrimary} />
                 ) : null}
               </Flex>
             </Flex>

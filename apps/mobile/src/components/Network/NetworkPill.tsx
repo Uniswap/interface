@@ -1,8 +1,8 @@
 import React, { ComponentProps } from 'react'
-import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Pill } from 'src/components/text/Pill'
 import { useNetworkColors } from 'src/utils/colors'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 export type NetworkPillProps = {

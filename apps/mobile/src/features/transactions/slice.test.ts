@@ -7,7 +7,7 @@ import {
   replaceTransaction,
   resetTransactions,
   transactionReducer,
-  TransactionState,
+  TransactionStateMap,
   updateTransaction,
 } from 'src/features/transactions/slice'
 import { finalizedTxAction } from 'src/test/fixtures'
@@ -36,7 +36,7 @@ const approveTxRequest: TransactionOptions = {
 }
 
 describe('transaction reducer', () => {
-  let store: Store<TransactionState>
+  let store: Store<TransactionStateMap>
 
   beforeEach(() => {
     store = createStore(transactionReducer, initialTransactionsState)

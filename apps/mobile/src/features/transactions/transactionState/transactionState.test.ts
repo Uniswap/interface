@@ -4,10 +4,12 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import {
   CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
+import {
   initialState,
   selectCurrency,
   switchCurrencySides,
-  TransactionState,
   transactionStateReducer,
   updateExactAmountToken,
   updateExactAmountUSD,

@@ -4,7 +4,6 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
-import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import {
@@ -17,6 +16,7 @@ import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
 type NFTCollectionItemProps = {
   collection: NFTCollectionSearchResult

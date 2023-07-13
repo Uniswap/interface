@@ -10,9 +10,9 @@ import {
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { isOffline } from 'src/features/transactions/utils'
 import { API_RATE_LIMIT_ERROR, SWAP_NO_ROUTE_ERROR } from 'wallet/src/features/routing/api'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { formatPriceImpact } from 'wallet/src/utils/format'
 import { useMemoCompare } from 'wallet/src/utils/hooks'
 

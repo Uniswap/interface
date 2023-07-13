@@ -599,8 +599,14 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 {
                   "alignItems": "center",
                   "display": "flex",
+                  "flexBasis": "auto",
+                  "flexDirection": "column",
+                  "flexShrink": 0,
                   "height": 40,
                   "justifyContent": "center",
+                  "minHeight": 0,
+                  "minWidth": 0,
+                  "position": "relative",
                   "width": 40,
                 },
               ]
@@ -803,8 +809,14 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 {
                   "alignItems": "center",
                   "display": "flex",
+                  "flexBasis": "auto",
+                  "flexDirection": "column",
+                  "flexShrink": 0,
                   "height": 40,
                   "justifyContent": "center",
+                  "minHeight": 0,
+                  "minWidth": 0,
+                  "position": "relative",
                   "width": 40,
                 },
               ]

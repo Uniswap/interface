@@ -4,10 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutAnimation, StyleSheet, VirtualizedList } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import {
-  NetworkLogo,
-  SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,
-} from 'src/components/CurrencyLogo/NetworkLogo'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
@@ -17,6 +13,10 @@ import { ModalName } from 'src/features/telemetry/constants'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { colors } from 'ui/src/theme/color'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import {
+  NetworkLogo,
+  SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,
+} from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useActiveChainIds } from 'wallet/src/features/chains/hooks'
 

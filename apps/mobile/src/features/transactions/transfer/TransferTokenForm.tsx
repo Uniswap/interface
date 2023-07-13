@@ -26,10 +26,7 @@ import {
   useTokenSelectorActionHandlers,
 } from 'src/features/transactions/hooks'
 import { useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
-import {
-  CurrencyField,
-  transactionStateActions,
-} from 'src/features/transactions/transactionState/transactionState'
+import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import {
   DerivedTransferInfo,
   useOnToggleShowRecipientSelector,
@@ -40,6 +37,7 @@ import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { usePrevious } from 'wallet/src/utils/hooks'
 

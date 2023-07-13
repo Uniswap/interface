@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import React from 'react'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
+import { ApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
 import {
   ApproveTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import ApproveSummaryItem from './ApproveSummaryItem'
 
 const meta: Meta<typeof ApproveSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -119,42 +119,49 @@ export const Approve: StoryObj = {
   render: () => (
     <>
       <ApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveTx,
           status: TransactionStatus.Pending,
         }}
       />
       <ApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveTx,
           status: TransactionStatus.Failed,
         }}
       />
       <ApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveTx,
           status: TransactionStatus.Success,
         }}
       />
       <ApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveUnlimitedTx,
           status: TransactionStatus.Pending,
         }}
       />
       <ApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveUnlimitedTx,
           status: TransactionStatus.Failed,
         }}
       />
       <ApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveUnlimitedTx,
           status: TransactionStatus.Success,
         }}
       />
       <ApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveUnlimitedTx,
           chainId: ChainId.Optimism,
@@ -169,24 +176,28 @@ export const Revoke: StoryObj = {
   render: () => (
     <>
       <ApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseRevokeTx,
           status: TransactionStatus.Pending,
         }}
       />
       <ApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseRevokeTx,
           status: TransactionStatus.Failed,
         }}
       />
       <ApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseRevokeTx,
           status: TransactionStatus.Success,
         }}
       />
       <ApproveSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseRevokeTx,
           chainId: ChainId.Optimism,

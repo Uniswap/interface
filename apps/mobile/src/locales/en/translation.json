@@ -562,5 +562,6 @@
   "Hide unknown tokens": "Hide unknown tokens",
   "Security": "Security",
   "Remove": "Remove",
-  "Unknown token": "Unknown token"
+  "Unknown token": "Unknown token",
+  "Invalid word: {{word}}": "Invalid word: {{word}}"
 }

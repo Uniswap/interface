@@ -7,12 +7,12 @@ import { Box } from 'src/components/layout'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
+import { Logos } from 'ui/src'
 import {
   FOR_CONNECTING_BACKGROUND_DARK,
   FOR_CONNECTING_BACKGROUND_LIGHT,
   UNISWAP_LOGO_LARGE,
 } from 'ui/src/assets'
-import MoonpayLogo from 'ui/src/assets/logos/moonpay.svg'
 import { theme } from 'ui/src/theme/restyle/theme'
 
 const ICON_SIZE = 90
@@ -44,7 +44,7 @@ export function FiatOnRampConnectingView({
             <Image source={UNISWAP_LOGO_LARGE} style={styles.uniswapLogo} />
           </Box>
           <Box alignItems="center" justifyContent="center" style={styles.moonpayLogoWrapper}>
-            <MoonpayLogo height={ICON_SIZE} width={ICON_SIZE} />
+            <Logos.Moonpay height={ICON_SIZE} width={ICON_SIZE} />
           </Box>
         </Flex>
         <Flex centered gap="spacing8">

@@ -1,13 +1,10 @@
 /* eslint-disable complexity */
-import { ResponsiveValue } from '@shopify/restyle'
-import dayjs from 'dayjs'
 import { providers } from 'ethers'
-import { default as React, memo, useEffect, useMemo, useState } from 'react'
+import { default as React, memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box } from 'src/components/layout'
-import { Flex } from 'src/components/layout/Flex'
+import { Box, Flex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
@@ -16,47 +13,26 @@ import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import { cancelTransaction } from 'src/features/transactions/slice'
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
-import { getTransactionSummaryTitle } from 'src/features/transactions/SummaryCards/utils'
 import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
-import { iconSizes } from 'ui/src/theme/iconSizes'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import {
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+  getTransactionSummaryTitle,
+  TXN_HISTORY_ICON_SIZE,
+  TXN_STATUS_ICON_SIZE,
+  useFormattedTime,
+} from 'wallet/src/features/transactions/SummaryCards/utils'
+import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
-import { useInterval } from 'wallet/src/utils/timing'
 
-export const TXN_HISTORY_ICON_SIZE = iconSizes.icon40
 const LOADING_SPINNER_SIZE = 20
-
-export interface TransactionSummaryLayoutProps {
-  transaction: TransactionDetails
-  title?: string
-  caption: string
-  bg?: ResponsiveValue<keyof Theme['colors'], Theme>
-  icon?: JSX.Element
-  onRetry?: () => void
-}
-
-function useForceUpdateEveryMinute(): number {
-  const [unixTime, setUnixTime] = useState(Date.now())
-  useInterval(() => {
-    setUnixTime(Date.now())
-  }, ONE_MINUTE_MS)
-  return unixTime
-}
 
 function TransactionSummaryLayout({
   transaction,
   title,
   caption,
-  bg,
   icon,
   onRetry,
 }: TransactionSummaryLayoutProps): JSX.Element {
@@ -116,22 +92,8 @@ function TransactionSummaryLayout({
     }
   }
 
-  // we need to update formattedAddedTime every minute as it can be relative
-  const unixTime = useForceUpdateEveryMinute()
+  const formattedAddedTime = useFormattedTime(transaction.addedTime)
 
-  const formattedAddedTime = useMemo(() => {
-    const wrappedAddedTime = dayjs(transaction.addedTime)
-    return dayjs().isBefore(wrappedAddedTime.add(59, 'minute'), 'minute')
-      ? // We do not use dayjs.duration() as it uses Math.round under the hood,
-        // so for the first 30s it would show 0 minutes
-        `${Math.ceil(dayjs().diff(wrappedAddedTime) / ONE_MINUTE_MS)}m` // within an hour
-      : dayjs().isBefore(wrappedAddedTime.add(24, 'hour'))
-      ? wrappedAddedTime.format('h:mma') // within last 24 hours
-      : wrappedAddedTime.format('MMM D') // current year
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transaction.addedTime, unixTime])
-
-  const statusIconSize = theme.iconSizes.icon16
   const statusIconFill = theme.colors.background0
 
   const rightBlock = inCancelling ? (
@@ -139,16 +101,16 @@ function TransactionSummaryLayout({
       color={theme.colors.accentCritical}
       fill={statusIconFill}
       fillOpacity={1}
-      height={statusIconSize}
-      width={statusIconSize}
+      height={TXN_STATUS_ICON_SIZE}
+      width={TXN_STATUS_ICON_SIZE}
     />
   ) : status === TransactionStatus.Failed ? (
     <Box alignItems="flex-end" flexGrow={1} justifyContent="space-between">
       <AlertTriangle
         color={theme.colors.accentWarning}
         fill={statusIconFill}
-        height={statusIconSize}
-        width={statusIconSize}
+        height={TXN_STATUS_ICON_SIZE}
+        width={TXN_STATUS_ICON_SIZE}
       />
     </Box>
   ) : (
@@ -160,7 +122,7 @@ function TransactionSummaryLayout({
   return (
     <>
       <TouchableArea mb="spacing24" overflow="hidden" onPress={onPress}>
-        <Flex grow row bg={bg ?? 'background0'} gap="spacing12">
+        <Flex grow row bg="background0" gap="spacing12">
           {icon && (
             <Flex centered width={TXN_HISTORY_ICON_SIZE}>
               {icon}

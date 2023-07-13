@@ -7,10 +7,10 @@ import {
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
 import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function useTransactionGasWarning(

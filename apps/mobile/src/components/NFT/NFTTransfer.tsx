@@ -1,8 +1,8 @@
 import React from 'react'
-import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
+import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
 export function NFTTransfer({
   asset,

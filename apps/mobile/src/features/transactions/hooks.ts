@@ -17,15 +17,15 @@ import {
   createSwapFormFromTxDetails,
   createWrapFormFromTxDetails,
 } from 'src/features/transactions/swap/createSwapFormFromTxDetails'
-import {
-  CurrencyField,
-  TransactionState,
-  transactionStateActions,
-} from 'src/features/transactions/transactionState/transactionState'
+import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import { theme } from 'ui/src/theme/restyle/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
 import {
   TransactionDetails,
   TransactionStatus,

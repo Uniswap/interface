@@ -3,26 +3,10 @@ import { shallowEqual } from 'react-redux'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
-
-export enum CurrencyField {
-  INPUT = 'input',
-  OUTPUT = 'output',
-}
-
-export interface TransactionState {
-  txId?: string
-  [CurrencyField.INPUT]: TradeableAsset | null
-  [CurrencyField.OUTPUT]: TradeableAsset | null
-  exactCurrencyField: CurrencyField
-  exactAmountToken: string
-  exactAmountUSD?: string
-  focusOnCurrencyField?: CurrencyField | null
-  recipient?: string
-  isUSDInput?: boolean
-  selectingCurrencyField?: CurrencyField
-  showRecipientSelector?: boolean
-  customSlippageTolerance?: number
-}
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
 
 const ETH_TRADEABLE_ASSET: TradeableAsset = {
   address: NATIVE_ADDRESS,

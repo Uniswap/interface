@@ -15,8 +15,8 @@ import { TokenSelectorSendList } from 'src/components/TokenSelector/TokenSelecto
 import { TokenSelectorSwapInputList } from 'src/components/TokenSelector/TokenSelectorSwapInputList'
 import { TokenSelectorSwapOutputList } from 'src/components/TokenSelector/TokenSelectorSwapOutputList'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { ChainId } from 'wallet/src/constants/chains'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 export enum TokenSelectorVariation {
   // used for Send flow, only show currencies with a balance

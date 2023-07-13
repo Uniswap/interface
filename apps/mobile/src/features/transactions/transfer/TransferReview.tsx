@@ -6,13 +6,13 @@ import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import {
   DerivedTransferInfo,
   useTransferERC20Callback,
   useTransferNFTCallback,
 } from 'src/features/transactions/transfer/hooks'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { currencyAddress } from 'wallet/src/utils/currencyId'

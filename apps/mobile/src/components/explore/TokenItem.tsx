@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
@@ -21,12 +20,13 @@ import {
   ModalName,
   SectionName,
 } from 'src/features/telemetry/constants'
+import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
+import { ChainId } from 'wallet/src/constants/chains'
+import { AssetType } from 'wallet/src/entities/assets'
 import {
   CurrencyField,
   TransactionState,
-} from 'src/features/transactions/transactionState/transactionState'
-import { ChainId } from 'wallet/src/constants/chains'
-import { AssetType } from 'wallet/src/entities/assets'
+} from 'wallet/src/features/transactions/transactionState/types'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 import {
   buildCurrencyId,

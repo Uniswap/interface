@@ -34,7 +34,7 @@ export function HomeScreen(): JSX.Element {
             onValueChange={(v: string): void => {
               setSelectedTab(HomeTabs[v as keyof typeof HomeTabs])
             }}>
-            <YStack flexGrow={1}>
+            <YStack width="100%">
               <Flex flex={1} marginHorizontal="$spacing12" marginTop="$spacing16">
                 <Tabs.List unstyled>
                   <Tabs.Tab unstyled backgroundColor={undefined} value={HomeTabs.Tokens}>

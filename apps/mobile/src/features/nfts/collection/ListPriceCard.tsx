@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import EthereumLogo from 'ui/src/assets/logos/ethereum.svg'
+import { Logos } from 'ui/src'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
 import { Amount } from 'wallet/src/data/__generated__/types-and-hooks'
 import { formatNumber, NumberType } from 'wallet/src/utils/format'
@@ -49,7 +49,7 @@ export function PriceAmount({
   return (
     <Flex centered row gap={gap} overflow="hidden">
       {!isUSD && (
-        <EthereumLogo
+        <Logos.Ethereum
           color={theme.colors[iconColor || 'textPrimary']}
           height={theme.iconSizes[iconSize]}
           width={theme.iconSizes[iconSize]}

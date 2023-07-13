@@ -1,10 +1,10 @@
 import React from 'react'
 import 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Flex } from 'src/components/layout'
 import { Box, BoxProps } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
+import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 export type NetworkLogosProps = { chains: ChainId[]; showFirstChainLabel?: boolean } & BoxProps

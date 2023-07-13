@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { ChainId } from 'wallet/src/constants/chains'
+import { WCSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WCSummaryItem'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
   WCConfirmInfo,
 } from 'wallet/src/features/transactions/types'
-import WCSummaryItem from './WCSummaryItem'
 
 const meta: Meta<typeof WCSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -39,24 +40,28 @@ export const WalletConnect: StoryObj = {
   render: () => (
     <>
       <WCSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnknownItem,
           status: TransactionStatus.Pending,
         }}
       />
       <WCSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnknownItem,
           status: TransactionStatus.Failed,
         }}
       />
       <WCSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnknownItem,
           status: TransactionStatus.Success,
         }}
       />
       <WCSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnknownItem,
           chainId: ChainId.Optimism,

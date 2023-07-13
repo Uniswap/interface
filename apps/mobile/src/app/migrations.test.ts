@@ -62,7 +62,7 @@ import { initialModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { initialTelemetryState } from 'src/features/telemetry/slice'
 import { initialTokensState } from 'src/features/tokens/tokensSlice'
-import { initialTransactionsState, TransactionState } from 'src/features/transactions/slice'
+import { initialTransactionsState, TransactionStateMap } from 'src/features/transactions/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test/fixtures'
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
@@ -675,7 +675,7 @@ describe('Redux state migrations', () => {
     const RINKEBY = 4 as ChainId
     const KOVAN = 42 as ChainId
 
-    const transactions: TransactionState = {
+    const transactions: TransactionStateMap = {
       [TEST_ADDRESS]: {
         [ChainId.Mainnet]: {
           '0': txDetails0,

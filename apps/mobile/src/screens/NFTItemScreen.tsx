@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
@@ -44,6 +43,7 @@ import {
   NftItemScreenQuery,
   useNftItemScreenQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -251,7 +251,8 @@ export function NFTItemScreen({
                     <Box mt="spacing12">
                       <Loader.Box
                         height={darkTheme.textVariants.bodySmall.lineHeight}
-                        mb="spacing4"
+                        // TODO EXT-259 make work with shortcut props like "mb", etc
+                        marginBottom="$spacing4"
                         repeat={3}
                       />
                     </Box>

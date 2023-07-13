@@ -4,10 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { GQLNftAsset, useNFT } from 'src/features/nfts/hooks'
 import {
-  CurrencyField,
   selectRecipient,
   toggleShowRecipientSelector,
-  TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { transferTokenActions } from 'src/features/transactions/transfer/transferTokenSaga'
@@ -20,6 +18,10 @@ import {
   useOnChainNativeCurrencyBalance,
 } from 'wallet/src/features/portfolio/api'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
 import { useProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'

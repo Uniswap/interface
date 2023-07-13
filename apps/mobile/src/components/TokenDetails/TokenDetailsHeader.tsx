@@ -1,11 +1,11 @@
 import React from 'react'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { flex } from 'ui/src/theme/restyle/flex'
 import { theme } from 'ui/src/theme/restyle/theme'
+import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel, TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 

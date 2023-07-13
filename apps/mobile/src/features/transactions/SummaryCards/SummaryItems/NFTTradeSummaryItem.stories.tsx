@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { ChainId } from 'wallet/src/constants/chains'
+import { NFTTradeSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
 import {
   NFTTradeTransactionInfo,
   NFTTradeType,
@@ -9,7 +11,6 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
-import NFTTradeSummaryItem from './NFTTradeSummaryItem'
 
 const meta: Meta<typeof NFTTradeSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -51,30 +52,35 @@ export const NFTBuy: StoryObj = {
   render: () => (
     <>
       <NFTTradeSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTBuyTx,
           status: TransactionStatus.Pending,
         }}
       />
       <NFTTradeSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTBuyTx,
           status: TransactionStatus.Cancelling,
         }}
       />
       <NFTTradeSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTBuyTx,
           status: TransactionStatus.Cancelled,
         }}
       />
       <NFTTradeSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTBuyTx,
           status: TransactionStatus.Failed,
         }}
       />
       <NFTTradeSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTBuyTx,
           status: TransactionStatus.Success,
@@ -88,30 +94,35 @@ export const NFTSell: StoryObj = {
   render: () => (
     <>
       <NFTTradeSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSellTx,
           status: TransactionStatus.Pending,
         }}
       />
       <NFTTradeSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSellTx,
           status: TransactionStatus.Cancelling,
         }}
       />
       <NFTTradeSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSellTx,
           status: TransactionStatus.Cancelled,
         }}
       />
       <NFTTradeSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSellTx,
           status: TransactionStatus.Failed,
         }}
       />
       <NFTTradeSummaryItem
+        layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSellTx,
           status: TransactionStatus.Success,

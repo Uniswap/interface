@@ -1,5 +1,7 @@
 import React, { memo } from 'react'
+import { getToken } from 'ui/src'
 import { Flex } from 'ui/src/components/layout'
+import { BoxLoader } from 'ui/src/components/loading/BoxLoader'
 import { Shimmer } from 'ui/src/components/loading/Shimmer'
 import { TransactionLoader } from './TransactionLoader'
 
@@ -17,6 +19,15 @@ export const Transaction = memo(({ repeat = 1 }: { repeat?: number }): JSX.Eleme
   )
 })
 
+function Image(): JSX.Element {
+  return (
+    <Shimmer>
+      <BoxLoader aspectRatio={1} borderRadius={getToken('$none', 'radius')} />
+    </Shimmer>
+  )
+}
+
 export const Loader = {
+  Image,
   Transaction,
 }

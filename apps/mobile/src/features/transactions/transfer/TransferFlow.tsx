@@ -10,14 +10,16 @@ import {
 import { useTokenSelectorActionHandlers } from 'src/features/transactions/hooks'
 import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
 import {
-  CurrencyField,
   initialState as emptyState,
-  TransactionState,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
 import {
   useDerivedTransferInfo,
   useOnSelectRecipient,

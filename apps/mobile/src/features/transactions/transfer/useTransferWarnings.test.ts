@@ -1,7 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningLabel } from 'src/components/modals/WarningModal/types'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { getTransferWarnings } from 'src/features/transactions/transfer/useTransferWarnings'
 import { isOffline } from 'src/features/transactions/utils'
@@ -9,6 +8,7 @@ import { networkDown, networkUnknown, networkUp, uniCurrencyInfo } from 'src/tes
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 

@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list'
-import React, { createElement, forwardRef, useMemo } from 'react'
+import React, { forwardRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RefreshControl } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -16,28 +16,18 @@ import { Text } from 'src/components/Text'
 import { GQLQueries } from 'src/data/queries'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useMergeLocalAndRemoteTransactions } from 'src/features/transactions/hooks'
-import ApproveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
-import FiatPurchaseSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/FiatPurchaseSummaryItem'
-import NFTApproveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
-import NFTMintSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
-import NFTTradeSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
-import ReceiveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/ReceiveSummaryItem'
-import SendSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/SendSummaryItem'
-import SwapSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/SwapSummaryItem'
-import UnknownSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/UnknownSummaryItem'
-import WCSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/WCSummaryItem'
-import WrapSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/WrapSummaryItem'
+import {
+  useCreateSwapFormState,
+  useMergeLocalAndRemoteTransactions,
+} from 'src/features/transactions/hooks'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
+import { useMostRecentSwapTx } from 'src/features/transactions/swap/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
-import {
-  getActivityItemType,
-  isLoadingItem,
-  isSectionHeader,
-  LoadingItem,
-  SectionHeader,
-} from 'wallet/src/features/activity/utils'
-import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
+import { getActivityItemType } from 'wallet/src/features/activity/utils'
+import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
+import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
+import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import {
   useActiveAccountWithThrow,
   useSelectAccountHideSpamTokens,
@@ -54,63 +44,6 @@ const SectionTitle = ({ title }: { title: string }): JSX.Element => (
     </Text>
   </Box>
 )
-
-const renderActivityItem = ({
-  item,
-}: {
-  item: TransactionDetails | SectionHeader | LoadingItem
-}): JSX.Element => {
-  // if it's a loading item, render the loading placeholder
-  if (isLoadingItem(item)) {
-    return <Loader.Transaction />
-  }
-  // if it's a section header, render it differently
-  if (isSectionHeader(item)) {
-    return <SectionTitle title={item.title} />
-  }
-  // item is a transaction
-  let SummaryItem
-  switch (item.typeInfo.type) {
-    case TransactionType.Approve:
-      SummaryItem = ApproveSummaryItem
-      break
-    case TransactionType.NFTApprove:
-      SummaryItem = NFTApproveSummaryItem
-      break
-    case TransactionType.Swap:
-      SummaryItem = SwapSummaryItem
-      break
-    case TransactionType.NFTTrade:
-      SummaryItem = NFTTradeSummaryItem
-      break
-    case TransactionType.Send:
-      SummaryItem = SendSummaryItem
-      break
-    case TransactionType.Receive:
-      SummaryItem = ReceiveSummaryItem
-      break
-    case TransactionType.NFTMint:
-      SummaryItem = NFTMintSummaryItem
-      break
-    case TransactionType.Wrap:
-      SummaryItem = WrapSummaryItem
-      break
-    case TransactionType.WCConfirm:
-      SummaryItem = WCSummaryItem
-      break
-    case TransactionType.FiatPurchase:
-      SummaryItem = FiatPurchaseSummaryItem
-      break
-    default:
-      SummaryItem = UnknownSummaryItem
-  }
-  return createElement(
-    SummaryItem as React.FunctionComponent<{ transaction: TransactionDetails }>,
-    {
-      transaction: item,
-    }
-  )
-}
 
 export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
   (
@@ -137,6 +70,27 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
     // Hide all spam transactions if active wallet has enabled setting.
     const activeAccount = useActiveAccountWithThrow()
     const hideSpamTokens = useSelectAccountHideSpamTokens(activeAccount.address)
+
+    const swapCallbacks: SwapSummaryCallbacks = useMemo(() => {
+      return {
+        getLatestSwapTransaction: useMostRecentSwapTx,
+        getSwapFormTransactionState: useCreateSwapFormState,
+        onRetryGenerator: (swapFormState: TransactionState | undefined) => {
+          return () => {
+            dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+          }
+        },
+      }
+    }, [dispatch])
+
+    const renderActivityItem = useMemo(() => {
+      return generateActivityItemRenderer(
+        TransactionSummaryLayout,
+        <Loader.Transaction />,
+        SectionTitle,
+        swapCallbacks
+      )
+    }, [swapCallbacks])
 
     const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } =
       useFormattedTransactionDataForActivity(
