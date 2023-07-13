@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { CHAIN_IDS_TO_NAMES } from 'constants/chains'
 import { ParsedQs } from 'qs'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import useParsedQueryString from './useParsedQueryString'
@@ -21,8 +21,9 @@ function getParsedChainId(parsedQs?: ParsedQs) {
 }
 
 export default function useSyncChainQuery() {
-  const { chainId, isActive } = useWeb3React()
+  const { chainId, isActive, account } = useWeb3React()
   const parsedQs = useParsedQueryString()
+  const chainIdRef = useRef(chainId)
 
   const urlChainId = getParsedChainId(parsedQs)
 
@@ -31,8 +32,19 @@ export default function useSyncChainQuery() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
-    if (isActive && urlChainId && chainId !== urlChainId) {
+    // Change a user's chain on pageload of the connected chainId does not match the query param chain
+    if (isActive && urlChainId && chainIdRef.current === chainId && chainId !== urlChainId) {
       selectChain(urlChainId)
     }
-  }, [urlChainId, selectChain, searchParams, setSearchParams, isActive, chainId])
+    // If a user has a connected wallet and has manually changed their chain, delete the chain query param
+    else if (account && urlChainId && chainIdRef.current !== chainId && chainId !== urlChainId) {
+      searchParams.delete('chain')
+      setSearchParams(searchParams)
+    }
+
+    // If a user has a connected wallet and the chainId matches the query param chain, update the chainIdRef
+    if (account && chainId === urlChainId) {
+      chainIdRef.current = urlChainId
+    }
+  }, [urlChainId, selectChain, searchParams, isActive, chainId, account, setSearchParams])
 }
