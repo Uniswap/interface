@@ -383,6 +383,8 @@ function ComingSoonText({ chainId }: { chainId: ChainId }) {
       return <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
     case ChainId.AVALANCHE:
       return <Trans>Coming soon: search and explore tokens on Avalanche Chain</Trans>
+    case ChainId.HARMONY:
+      return <Trans>Coming soon: search and explore tokens on Harmony Chain</Trans>
     default:
       return null
   }
