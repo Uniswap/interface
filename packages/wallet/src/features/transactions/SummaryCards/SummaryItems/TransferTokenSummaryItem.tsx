@@ -89,11 +89,13 @@ export function TransferTokenSummaryItem({
   }
 
   let caption = ''
-  // TODO EXT-260: Add dynamic translation in wallet package
+  // TODO EXT-260: Add dynamic translation for web to be able to share translation
   if (transactionType === TransactionType.Send) {
-    caption = t('{{what}} to {{recipient}}', { recipient: personDisplayName, ...translateOptions })
+    caption = `${translateOptions.what} to ${personDisplayName}`
+    // caption = t('{{what}} to {{recipient}}', { recipient: personDisplayName, ...translateOptions })
   } else {
-    caption = t('{{what}} from {{sender}}', { sender: personDisplayName, ...translateOptions })
+    caption = `${translateOptions.what} to ${personDisplayName}`
+    // caption = t('{{what}} from {{sender}}', { sender: personDisplayName, ...translateOptions })
   }
 
   return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {

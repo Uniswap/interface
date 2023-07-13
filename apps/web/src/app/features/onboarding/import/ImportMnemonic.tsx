@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
 import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
@@ -18,15 +19,21 @@ import {
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
-import { validateMnemonic } from 'wallet/src/utils/mnemonics'
+import { translateMnemonicErrorMessage, validateMnemonic } from 'wallet/src/utils/mnemonics'
 
 export function ImportMnemonic(): JSX.Element {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
   const [mnemonic, setMnemonic] = useState('')
   const { password } = useOnboardingContext()
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
+
+  const onChangeText = useCallback((text: string) => {
+    setErrorMessage(undefined)
+    setMnemonic(text)
+  }, [])
 
   useEffect(() => {
     // Delete any pending accounts before entering flow.
@@ -35,11 +42,12 @@ export function ImportMnemonic(): JSX.Element {
 
   // Add all accounts from mnemonic.
   const onSubmit = useCallback(() => {
-    const { validMnemonic, error } = validateMnemonic(mnemonic)
+    const { validMnemonic, error, invalidWord } = validateMnemonic(mnemonic)
 
     if (error) {
-      // TODO: better error handling
-      setErrorMessage(`Invalid recovery phrase: ${error}`)
+      setErrorMessage(
+        `Invalid recovery phrase: ${translateMnemonicErrorMessage(error, invalidWord, t)}`
+      )
       return
     }
 
@@ -56,7 +64,7 @@ export function ImportMnemonic(): JSX.Element {
       `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Select}`,
       { replace: true }
     )
-  }, [mnemonic, navigate, dispatch, password])
+  }, [mnemonic, dispatch, password, navigate, t])
 
   return (
     <OnboardingScreen
@@ -79,7 +87,7 @@ export function ImportMnemonic(): JSX.Element {
       <OnboardingInput
         placeholderText="Recovery phrase (12 words)"
         value={mnemonic}
-        onChangeText={setMnemonic}
+        onChangeText={onChangeText}
         onSubmit={onSubmit}
       />
     </OnboardingScreen>

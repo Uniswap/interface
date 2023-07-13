@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePasswordInput } from 'src/app/features/lockScreen/Locked'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
@@ -28,32 +28,43 @@ export function Password({
   const [passwordError, setPasswordError] = useState<string | undefined>(undefined)
   const { setPassword } = useOnboardingContext()
 
-  const passwordInputProps = usePasswordInput()
+  const { value: enteredPassword, onChangeText: onChangePasswordText } = usePasswordInput()
 
-  const enteredPassword = passwordInputProps.value
+  const onChangeText = useCallback(
+    (text: string) => {
+      setPasswordError(undefined)
+      if (onChangePasswordText) {
+        onChangePasswordText(text)
+      }
+    },
+    [onChangePasswordText]
+  )
 
   const onSubmit = async (): Promise<void> => {
     const passwordValidationResult = validatePassword(enteredPassword)
-    if (passwordValidationResult.valid) {
-      setPassword(enteredPassword)
-      setPasswordError(undefined)
 
-      // in import flow, we create the account later in the flow
-      // in create flow, we need to create it here
-      if (createAccountOnNext) {
-        await dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
-        await dispatch(
-          createAccountActions.trigger({
-            validatedPassword: enteredPassword,
-            skipSetAsActive: true,
-          })
-        )
-      }
-
-      navigate(nextPath, { replace: true })
-    } else {
+    if (!passwordValidationResult.valid) {
       setPasswordError(passwordValidationResult.validationErrorString)
+      return
     }
+
+    // Password is valid, use and continue
+    setPassword(enteredPassword)
+    setPasswordError(undefined)
+
+    // in import flow, we create the account later in the flow
+    // in create flow, we need to create it here
+    if (createAccountOnNext) {
+      await dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
+      await dispatch(
+        createAccountActions.trigger({
+          validatedPassword: enteredPassword,
+          skipSetAsActive: true,
+        })
+      )
+    }
+
+    navigate(nextPath, { replace: true })
   }
 
   return (
@@ -64,7 +75,7 @@ export function Password({
         </Circle>
       }
       inputError={passwordError}
-      nextButtonEnabled={!!passwordInputProps.value && !passwordError}
+      nextButtonEnabled={!!enteredPassword && !passwordError}
       nextButtonText="Continue"
       subtitle="You'll need this to unlock your wallet"
       title="First, set a password"
@@ -73,11 +84,9 @@ export function Password({
       <OnboardingInput
         hideInput
         placeholderText="New password"
-        onChangeText={(): void => {
-          setPasswordError(undefined)
-        }}
+        value={enteredPassword}
+        onChangeText={onChangeText}
         onSubmit={onSubmit}
-        {...passwordInputProps}
       />
     </OnboardingScreen>
   )

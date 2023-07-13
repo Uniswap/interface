@@ -10,6 +10,7 @@ export enum MnemonicValidationError {
   InvalidPhrase = 'InvalidPhrase',
 }
 
+// TODO EXT-260: Add dynamic translation for web to be able to share translation
 export function translateMnemonicErrorMessage(
   error: MnemonicValidationError,
   invalidWord: string | undefined,
@@ -19,7 +20,8 @@ export function translateMnemonicErrorMessage(
     case MnemonicValidationError.InvalidPhrase:
       return t('Invalid phrase')
     case MnemonicValidationError.InvalidWord:
-      return t('Invalid word: {{word}}', { word: invalidWord })
+      return `Invalid word: ${invalidWord}`
+    // return t('Invalid word: {{word}}', { word: invalidWord })
     case MnemonicValidationError.TooManyWords:
     case MnemonicValidationError.NotEnoughWords:
       return t('Recovery phrase must be 12-24 words')

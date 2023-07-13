@@ -144,6 +144,7 @@ function getTransactionTypeVerbs(
   }
 }
 
+// TODO EXT-260: Add dynamic translation for web to be able to share translation
 export function getTransactionSummaryTitle(
   tx: TransactionDetails,
   t: AppTFunction
@@ -153,11 +154,14 @@ export function getTransactionSummaryTitle(
     case TransactionStatus.Pending:
       return inProgress
     case TransactionStatus.Cancelling:
-      return t('Cancelling {{action}}', { action })
+      // return t('Cancelling {{action}}', { action })
+      return `Cancelling ${action}`
     case TransactionStatus.Cancelled:
-      return t('Cancelled {{action}}', { action })
+      // return t('Cancelled {{action}}', { action })
+      return `Cancelled ${action}`
     case TransactionStatus.Failed:
-      return t('Failed to {{action}}', { action })
+      // return t('Failed to {{action}}', { action })
+      return `Failed to ${action}`
     case TransactionStatus.Success:
       return completed
     default:
