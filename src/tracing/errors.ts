@@ -23,8 +23,14 @@ export const beforeSend: Required<ClientOptions>['beforeSend'] = (event: ErrorEv
   return event
 }
 
-function isErrorLike(error: unknown): error is Pick<Error, 'message'> {
-  return error instanceof Object && 'message' in error && typeof error.message === 'string'
+type ErrorLike = Partial<Error> & Required<Pick<Error, 'message'>>
+function isErrorLike(error: unknown): error is ErrorLike {
+  return error instanceof Object && 'message' in error && typeof (error as Partial<ErrorLike>)?.message === 'string'
+}
+
+/** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
+function isEthersRequestErrorLike(error: ErrorLike): error is ErrorLike & { requestBody: string } {
+  return 'requestBody' in error && typeof (error as Record<'requestBody', unknown>).requestBody === 'string'
 }
 
 // Since the interface currently uses HashRouter, URLs will have a # before the path.
@@ -45,9 +51,12 @@ function updateRequestUrl(event: ErrorEvent) {
 function shouldRejectError(error: EventHint['originalException']) {
   // Some libraries throw ErrorLike objects ({ code, message, stack }) instead of true Errors.
   if (isErrorLike(error)) {
-    // Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
-    // These are caused by user navigation away from the page before a request has finished.
-    if (error instanceof DOMException && error?.name === 'AbortError') return true
+    if (isEthersRequestErrorLike(error)) {
+      const method = JSON.parse(error.requestBody).method
+      // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
+      // If block number polling, it should not be considered an exception.
+      if (method === 'eth_blockNumber') return true
+    }
 
     // If the error is based on a user rejecting, it should not be considered an exception.
     // TODO(WEB-2398): we should catch these errors and handle them gracefully instead.
@@ -90,13 +99,9 @@ function shouldRejectError(error: EventHint['originalException']) {
       if (error.stack.match(/OneKey/i)) return true
     }
 
-    // ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}) includes requestBody.
-    if ('requestBody' in error && typeof error.requestBody === 'string') {
-      const method = JSON.parse(error.requestBody).method
-      // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
-      // If block number polling, it should not be considered an exception.
-      if (method === 'eth_blockNumber') return true
-    }
+    // Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
+    // These are caused by user navigation away from the page before a request has finished.
+    if (error instanceof DOMException && error?.name === 'AbortError') return true
   }
 
   return false
