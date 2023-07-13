@@ -88,7 +88,7 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
         />
       </svg>
       <div
-        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_semibold_sm__rgw6ezd1 sprinkles_fontSize_28_sm__rgw6ezbj sprinkles_lineHeight_36_sm__rgw6ezep css-rjqmed"
+        class="c1 c2 common__rrxlba1 sprinkles_fontWeight_semibold_sm__y03vrmd1 sprinkles_fontSize_28_sm__y03vrmbj sprinkles_lineHeight_36_sm__y03vrmep css-rjqmed"
       >
         No NFTs yet
       </div>
@@ -128,7 +128,7 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
         />
       </svg>
       <div
-        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_semibold_sm__rgw6ezd1 sprinkles_fontSize_28_sm__rgw6ezbj sprinkles_lineHeight_36_sm__rgw6ezep css-rjqmed"
+        class="c1 c2 common__rrxlba1 sprinkles_fontWeight_semibold_sm__y03vrmd1 sprinkles_fontSize_28_sm__y03vrmbj sprinkles_lineHeight_36_sm__y03vrmep css-rjqmed"
       >
         No tokens yet
       </div>
@@ -174,7 +174,7 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
         />
       </svg>
       <div
-        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_semibold_sm__rgw6ezd1 sprinkles_fontSize_28_sm__rgw6ezbj sprinkles_lineHeight_36_sm__rgw6ezep css-rjqmed"
+        class="c1 c2 common__rrxlba1 sprinkles_fontWeight_semibold_sm__y03vrmd1 sprinkles_fontSize_28_sm__y03vrmbj sprinkles_lineHeight_36_sm__y03vrmep css-rjqmed"
       >
         No activity yet
       </div>
@@ -209,7 +209,7 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
         />
       </svg>
       <div
-        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_semibold_sm__rgw6ezd1 sprinkles_fontSize_28_sm__rgw6ezbj sprinkles_lineHeight_36_sm__rgw6ezep css-rjqmed"
+        class="c1 c2 common__rrxlba1 sprinkles_fontWeight_semibold_sm__y03vrmd1 sprinkles_fontSize_28_sm__y03vrmbj sprinkles_lineHeight_36_sm__y03vrmep css-rjqmed"
       >
         No pools yet
       </div>
