@@ -5,8 +5,8 @@ import { CyHttpMessages } from 'cypress/types/net-stubbing'
 beforeEach(() => {
   // Many API calls enforce that requests come from our app, so we must mock Origin and Referer.
   cy.intercept('*', (req) => {
-    req.headers['referer'] = 'https://app.uniswap.org'
-    req.headers['origin'] = 'https://app.uniswap.org'
+    req.headers['referer'] = 'https://swap.thinkincoin.com'
+    req.headers['origin'] = 'https://swap.thinkincoin.com'
   })
 
   // Infura uses a test endpoint, which allow-lists http://localhost:3000 instead.
