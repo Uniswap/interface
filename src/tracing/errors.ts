@@ -70,6 +70,7 @@ function shouldRejectError(error: EventHint['originalException']) {
     // Therefore, this can be ignored.
     if (error.message.match(/Unexpected token '<'/)) return true
 
+    // Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
     // For example, if a user runs an eval statement in console this error would still get thrown.
     // TODO(WEB-2348): We should extend this to filter out any type of CSP error.
     if (error.message.match(/'unsafe-eval'.*content security policy/i)) return true
@@ -99,7 +100,6 @@ function shouldRejectError(error: EventHint['originalException']) {
       if (error.stack.match(/OneKey/i)) return true
     }
 
-    // Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
     // These are caused by user navigation away from the page before a request has finished.
     if (error instanceof DOMException && error?.name === 'AbortError') return true
   }
