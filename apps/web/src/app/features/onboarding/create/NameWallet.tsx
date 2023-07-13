@@ -4,6 +4,11 @@ import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingCont
 import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { UniconWithLockIcon } from 'src/app/features/onboarding/UniconWithLockIcon'
+import {
+  CreateOnboardingRoutes,
+  OnboardingRoutes,
+  TopLevelRoutes,
+} from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
 import {
   EditAccountAction,
@@ -46,7 +51,7 @@ export function NameWallet({ nextPath }: { nextPath: string }): JSX.Element {
     await dispatch(setAccountsNonPending([pendingAddress]))
     await dispatch(setAccountAsActive(pendingAddress))
 
-    navigate(nextPath)
+    navigate(nextPath, { replace: true })
   }
 
   return (
@@ -56,6 +61,14 @@ export function NameWallet({ nextPath }: { nextPath: string }): JSX.Element {
       nextButtonText="Finish"
       subtitle="This nickname is only visible to you"
       title="Give your wallet a name"
+      onBack={(): void =>
+        navigate(
+          `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.ViewMnemonic}`,
+          {
+            replace: true,
+          }
+        )
+      }
       onSubmit={onSubmit}>
       <OnboardingInput
         placeholderText={defaultName}

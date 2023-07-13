@@ -50,7 +50,9 @@ export function IntroScreen(): JSX.Element {
           flexGrow={1}
           theme="primary"
           onPress={(): void =>
-            navigate(`${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Password}`)
+            navigate(`${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Password}`, {
+              replace: true,
+            })
           }>
           {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}
           <Text color="$white" variant="buttonLabelMedium">
@@ -61,7 +63,9 @@ export function IntroScreen(): JSX.Element {
           flexGrow={1}
           theme="secondary"
           onPress={(): void =>
-            navigate(`${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Password}`)
+            navigate(`${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Password}`, {
+              replace: true,
+            })
           }>
           {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}
           <Text color="$textPrimary" variant="buttonLabelMedium">

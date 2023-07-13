@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom'
 import { OnboardingInputError } from 'src/app/features/onboarding/OnboardingInputError'
 import { Icons, Stack, Text, XStack, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
@@ -8,28 +7,29 @@ export const ONBOARDING_CONTENT_WIDTH = 450
 
 type OnboardingScreenProps = {
   Icon?: JSX.Element
-  title: string | JSX.Element
-  subtitle: string
-  warningSubtitle?: string
-  onSubmit: () => void
+  children?: JSX.Element
   inputError?: string
   nextButtonEnabled: boolean
   nextButtonText: string
-  children?: JSX.Element
+  onBack?: () => void
+  onSubmit: () => void
+  subtitle: string
+  title: string | JSX.Element
+  warningSubtitle?: string
 }
 
-export const OnboardingScreen = ({
+export function OnboardingScreen({
   Icon,
-  title,
-  subtitle,
-  warningSubtitle,
-  onSubmit,
+  children,
   inputError,
   nextButtonEnabled,
   nextButtonText = 'Next',
-  children,
-}: OnboardingScreenProps): JSX.Element => {
-  const navigate = useNavigate()
+  onBack,
+  onSubmit,
+  subtitle,
+  title,
+  warningSubtitle,
+}: OnboardingScreenProps): JSX.Element {
   return (
     <Stack alignItems="center" gap="$spacing36" width={ONBOARDING_CONTENT_WIDTH}>
       <YStack alignItems="center" gap="$spacing32">
@@ -55,13 +55,15 @@ export const OnboardingScreen = ({
         {inputError && <OnboardingInputError error={inputError} />}
       </YStack>
       <XStack gap="$spacing12" width="100%">
-        <Button
-          backgroundColor="$background2"
-          flexShrink={1}
-          padding="$spacing16"
-          onPress={(): void => navigate(-1)}>
-          <Icons.BackArrow color="$textSecondary" size={iconSizes.icon24} />
-        </Button>
+        {onBack && (
+          <Button
+            backgroundColor="$background2"
+            flexShrink={1}
+            padding="$spacing16"
+            onPress={onBack}>
+            <Icons.BackArrow color="$textSecondary" size={iconSizes.icon24} />
+          </Button>
+        )}
         <Button
           backgroundColor={nextButtonEnabled ? '$magentaVibrant' : '$background3'}
           disabled={!nextButtonEnabled}

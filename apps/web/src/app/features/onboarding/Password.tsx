@@ -4,6 +4,7 @@ import { usePasswordInput } from 'src/app/features/lockScreen/Locked'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
 import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
+import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
 import { Circle, Icons } from 'ui/src'
 import { iconSizes } from 'ui/src/theme/iconSizes'
@@ -49,7 +50,7 @@ export function Password({
         )
       }
 
-      navigate(nextPath)
+      navigate(nextPath, { replace: true })
     } else {
       setPasswordError(passwordValidationResult.validationErrorString)
     }
@@ -67,6 +68,7 @@ export function Password({
       nextButtonText="Continue"
       subtitle="You'll need this to unlock your wallet"
       title="First, set a password"
+      onBack={(): void => navigate(`/${TopLevelRoutes.Onboarding}`, { replace: true })}
       onSubmit={onSubmit}>
       <OnboardingInput
         hideInput

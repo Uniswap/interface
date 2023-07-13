@@ -166,7 +166,8 @@ export function SelectWallets(): JSX.Element {
     })
     dispatch(pendingAccountActions.trigger(PendingAccountActions.Activate))
     navigate(
-      `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Complete}`
+      `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Complete}`,
+      { replace: true }
     )
   }, [addresses, navigate, selectedAddresses, dispatch, pendingAccounts])
 
@@ -220,6 +221,14 @@ export function SelectWallets(): JSX.Element {
       nextButtonText="Continue"
       subtitle={subtitle}
       title={title}
+      onBack={(): void =>
+        navigate(
+          `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Mnemonic}`,
+          {
+            replace: true,
+          }
+        )
+      }
       onSubmit={onSubmit}>
       <ScrollView height={180} showsVerticalScrollIndicator={false} width="100%">
         {showError ? (

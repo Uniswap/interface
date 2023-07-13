@@ -47,7 +47,8 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
     const validWord = userWordInput === createdMnemonic[nextWordIndex]
     if (validWord && isLastTest()) {
       navigate(
-        `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Naming}`
+        `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Naming}`,
+        { replace: true }
       )
     } else if (validWord) {
       markTestCompleted()
@@ -72,6 +73,14 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
             word of your recovery phrase?
           </Text>
         </Stack>
+      }
+      onBack={(): void =>
+        navigate(
+          `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.ViewMnemonic}`,
+          {
+            replace: true,
+          }
+        )
       }
       onSubmit={onNext}>
       <XStack position="relative" width="100%">

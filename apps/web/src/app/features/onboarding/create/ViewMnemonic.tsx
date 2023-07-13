@@ -59,7 +59,8 @@ export function ViewMnemonic(): JSX.Element {
   const onSubmit = (): void => {
     if (createdAddress) {
       navigate(
-        `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.TestMnemonic}`
+        `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.TestMnemonic}`,
+        { replace: true }
       )
     }
   }
@@ -78,6 +79,11 @@ export function ViewMnemonic(): JSX.Element {
       subtitle="This is the only way you can restore your wallet."
       title="Write down your recovery phrase"
       warningSubtitle="Do not view or share with anyone"
+      onBack={(): void =>
+        navigate(`/${TopLevelRoutes.Onboarding}`, {
+          replace: true,
+        })
+      }
       onSubmit={onSubmit}>
       <Flex margin="$spacing16" onHoverOut={(): void => setShowPhrase(false)}>
         <YStack
