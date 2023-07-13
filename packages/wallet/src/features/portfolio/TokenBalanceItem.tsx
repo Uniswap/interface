@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Image, XStack, YStack } from 'ui/src'
+import { Image, Stack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme/iconSizes'
@@ -27,8 +27,8 @@ export const TokenBalanceItem = memo(
 
     return (
       <Flex
+        row
         alignItems="flex-start"
-        flexDirection="row"
         justifyContent="space-between"
         minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
         paddingHorizontal="$spacing16"
@@ -41,40 +41,36 @@ export const TokenBalanceItem = memo(
             borderRadius="$rounded16"
             paddingHorizontal="$spacing16"
             paddingVertical="$spacing12"
-            width="100%"
           />
         ) : (
-          <Flex
-            alignItems="center"
-            flexDirection="row"
-            flexShrink={1}
-            gap="$spacing12"
-            overflow="hidden"
-            width="100%">
+          <Flex row alignItems="center" gap="$spacing12" width="100%">
+            {/* Currency logo */}
             <Image
               height={iconSizes.icon36}
               src={currencyInfo.logoUrl ?? ''}
               width={iconSizes.icon36}
             />
-            <XStack alignItems="center" flexGrow={1} gap="$none">
-              <Flex flexGrow={1}>
-                <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
-                  {currency.name ?? currency.symbol}
+
+            {/* Currency name */}
+            <Stack flex={1.5} flexBasis={0}>
+              <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
+                {currency.name ?? currency.symbol}
+              </Text>
+            </Stack>
+
+            {/* Portfolio balance */}
+            <YStack alignItems="flex-end" flex={1} justifyContent="flex-end" width={0}>
+              <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
+                {portfolioBalance.balanceUSD === 0
+                  ? 'N/A'
+                  : formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
+              </Text>
+              <Flex maxWidth={100}>
+                <Text color="$textTertiary" numberOfLines={1} variant="subheadSmall">
+                  {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
                 </Text>
               </Flex>
-              <YStack alignItems="flex-end" justifyContent="flex-end">
-                <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
-                  {portfolioBalance.balanceUSD === 0
-                    ? 'N/A'
-                    : formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
-                </Text>
-                <Flex maxWidth={100}>
-                  <Text color="$textTertiary" numberOfLines={1} variant="subheadSmall">
-                    {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
-                  </Text>
-                </Flex>
-              </YStack>
-            </XStack>
+            </YStack>
           </Flex>
         )}
       </Flex>
