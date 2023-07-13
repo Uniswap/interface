@@ -1,11 +1,12 @@
 import TokenLogoLookupTable from 'constants/TokenLogoLookupTable'
-import { isCelo, nativeOnChain } from 'constants/tokens'
+import { isCelo, isHarmony, nativeOnChain } from 'constants/tokens'
 import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
 import celoLogo from '../assets/svg/celo_logo.svg'
+import harmonyLogo from "../assets/images/harmonyLogo.png"
 import { checkWarning } from '../constants/tokenSafety'
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
@@ -46,6 +47,9 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
 
   if (chainId && isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
     return celoLogo
+  }
+  if (chainId && isHarmony(chainId) && address === nativeOnChain(chainId).wrapped.address) {
+    return harmonyLogo
   }
 
   if (checksummedAddress) {

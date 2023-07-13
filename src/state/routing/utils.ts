@@ -5,7 +5,7 @@ import { Pair, Route as V2Route } from '@thinkincoin-libs/uniswap-v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { asSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
-import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
+import { isAvalanche, isBsc, isMatic, isHarmony nativeOnChain } from 'constants/tokens'
 
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
 import {
@@ -182,6 +182,7 @@ export function currencyAddressForSwapQuote(currency: Currency): string {
     if (isMatic(currency.chainId)) return SwapRouterNativeAssets.MATIC
     if (isBsc(currency.chainId)) return SwapRouterNativeAssets.BNB
     if (isAvalanche(currency.chainId)) return SwapRouterNativeAssets.AVAX
+    if (isHarmony(currency.chainId)) return SwapRouterNativeAssets.ONE
     return SwapRouterNativeAssets.ETH
   }
 

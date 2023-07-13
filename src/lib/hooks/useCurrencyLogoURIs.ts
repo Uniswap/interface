@@ -8,9 +8,10 @@ import AvaxLogo from '../../assets/svg/avax_logo.svg'
 import BnbLogo from '../../assets/svg/bnb-logo.svg'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import { isCelo, NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
+import HarmonyLogo from '../../assets/images/hrmonyLogo.png'
+import { isCelo, isHarmony, NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'smartchain' | 'celo' | 'avalanchec'
+type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'smartchain' | 'celo' | 'avalanchec' | 'harmony'
 
 export function chainIdToNetworkName(networkId: ChainId): Network {
   switch (networkId) {
@@ -28,6 +29,8 @@ export function chainIdToNetworkName(networkId: ChainId): Network {
       return 'celo'
     case ChainId.AVALANCHE:
       return 'avalanchec'
+    case ChainId.HARMONY:
+      return 'harmony'
     default:
       return 'ethereum'
   }
@@ -45,6 +48,8 @@ export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
       return CeloLogo
     case ChainId.AVALANCHE:
       return AvaxLogo
+    case ChainId.HARMONY:
+      return HarmonyLogo
     default:
       return EthereumLogo
   }
@@ -55,6 +60,9 @@ function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): s
   const networksWithUrls = [ChainId.ARBITRUM_ONE, ChainId.MAINNET, ChainId.OPTIMISM, ChainId.BNB, ChainId.AVALANCHE]
   if (isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
     return CeloLogo
+  }
+  if (isHarmony(chainId) && address === nativeOnChain(chainId).wrapped.address) {
+    return HarmonyLogo
   }
 
   if (networksWithUrls.includes(chainId)) {
