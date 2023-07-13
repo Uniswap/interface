@@ -6,7 +6,7 @@ import { useSingleContractWithCallData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import { ClassicTrade, InterfaceTrade, TradeState } from 'state/routing/types'
 
-import { isCelo } from '../constants/tokens'
+import { isCelo, isHarmony } from '../constants/tokens'
 import { useAllV3Routes } from './useAllV3Routes'
 import { useQuoter } from './useContract'
 
@@ -19,6 +19,7 @@ const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
   [ChainId.POLYGON_MUMBAI]: 40_000_000,
   [ChainId.BNB]: 50_000_000,
   [ChainId.AVALANCHE]: 50_000_000,
+  [ChainId.HARMONY]: 5_000_000,
 }
 
 const DEFAULT_GAS_QUOTE = 2_000_000
