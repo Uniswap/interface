@@ -9,11 +9,11 @@
     "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
     "types": ["jest", "node"],
     "jsx": "react",
-    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "src"],
   "include": ["**/*.ts"],
   "watchOptions": {
-    "excludeDirectories": ["node_modules"]
+    "excludeDirectories": ["node_modules", "src"]
   }
 }

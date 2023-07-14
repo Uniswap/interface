@@ -1,4 +1,6 @@
 /* eslint-disable import/no-unused-modules */
+import { PagesFunction } from '@cloudflare/workers-types'
+
 import { MetaTagInjector } from '../components/metaTagInjector'
 import getToken from '../utils/getToken'
 

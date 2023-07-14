@@ -20032,10 +20032,10 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript@^4.4.3:
-  version "4.5.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.5.tgz#d8c953832d28924a9e3d37c73d729c846c5896f3"
-  integrity sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==
+typescript@^5.2.0-dev.20230714:
+  version "5.2.0-dev.20230714"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.2.0-dev.20230714.tgz#89572ae6baa2b32bb3173c848f1eb3f945e2a18e"
+  integrity sha512-BZAU6XIqRwO7gRelEoc6iunX6belf+IGyqA79LQqldafiBahXQKYTeyW8V0/ABk7/FpWWk4qRIDDCy8DKWo4XQ==
 
 typical@^2.6.0, typical@^2.6.1:
   version "2.6.1"

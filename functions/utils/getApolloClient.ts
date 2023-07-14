@@ -1,5 +1,5 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client'
 const GRAPHQL_ENDPOINT = 'https://api.uniswap.org/v1/graphql'
+import { ApolloClient, InMemoryCache } from '@apollo/client'
 
 export const getApolloClient = () => {
   return new ApolloClient({

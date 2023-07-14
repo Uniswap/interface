@@ -1,3 +1,5 @@
+import { Element } from '@cloudflare/workers-types'
+
 type MetaTagInjectorInput = {
   title: any
   image: any
@@ -7,7 +9,7 @@ type MetaTagInjectorInput = {
 export class MetaTagInjector {
   constructor(private input: MetaTagInjectorInput) {}
 
-  element(element) {
+  element(element: Element) {
     //Open Graph Tags
     element.append(`<meta property="og:title" content="${this.input.title}"/>`, {
       html: true,
