@@ -35,4 +35,7 @@ describe('#getExplorerLink', () => {
       'https://snowtrace.io/address/abc'
     )
   })
+  it('bnb chain', () => {
+    expect(getExplorerLink(ChainId.HARMONY, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://explorer.harmony.one/address/abc')
+  })
 })

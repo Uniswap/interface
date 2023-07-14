@@ -28,5 +28,9 @@ describe('Routing', () => {
       const symbols = COMMON_BASES[ChainId.BNB].map((coin) => coin.symbol)
       expect(symbols).toEqual(['BNB', 'DAI', 'USDC', 'USDT', 'ETH', 'BTCB', 'BUSD'])
     })
+    it('contains all coins for harmony', () => {
+      const symbols = COMMON_BASES[ChainId.HARMONY].map((coin) => coin.symbol)
+      expect(symbols).toEqual(['ONE', 'USDC', 'USDT', 'ETH', 'BTC', 'BUSD'])
+    })
   })
 })
