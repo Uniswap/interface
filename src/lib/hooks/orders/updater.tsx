@@ -43,7 +43,6 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
         pendingOrders.forEach((pendingOrder) => {
           const updatedOrder = orderStatuses.orders.find((order) => order.orderHash === pendingOrder.orderHash)
           if (updatedOrder) {
-            // TODO(WEB-1646): update to include onchain settled order amounts
             onOrderUpdate(pendingOrder, updatedOrder)
           }
         })

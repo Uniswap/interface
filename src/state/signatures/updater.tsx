@@ -37,14 +37,14 @@ export default function Updater() {
 
       if (update.orderStatus === UniswapXOrderStatus.FILLED && update.txHash) {
         updatedOrder.txHash = update.txHash
-        // Updates the order to contain the settled/on-chain output amount, replacing the original estimated amount
+        // Updates the order to contain the settled/on-chain output amount
         if (updatedOrder.swapInfo.tradeType === TradeType.EXACT_INPUT) {
           updatedOrder.swapInfo = {
             ...updatedOrder.swapInfo,
             settledOutputCurrencyAmountRaw: update.settledAmounts?.[0]?.amountOut,
           }
         }
-        // Updates redux state after fetching the transaction receipt
+        // Wait to update a filled order until the on-chain tx is available.
         provider?.getTransactionReceipt(update.txHash).then((receipt) => {
           dispatch(
             addTransaction({

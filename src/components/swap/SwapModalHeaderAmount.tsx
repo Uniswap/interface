@@ -37,7 +37,7 @@ interface AmountProps {
   field: Field
   tooltipText?: ReactNode
   label: ReactNode
-  amount?: CurrencyAmount<Currency>
+  amount: CurrencyAmount<Currency>
   usdAmount?: number
   // The currency used here can be different than the currency denoted in the `amount` prop
   // For UniswapX ETH input trades, the trade object will have WETH as the amount.currency, but
