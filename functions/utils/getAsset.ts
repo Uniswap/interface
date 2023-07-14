@@ -1,8 +1,7 @@
 import { AssetDocument } from '../../src/graphql/data/__generated__/types-and-hooks'
-import { getApolloClient } from './getApolloClient'
+import client from '../client'
 
 export default async function getAsset(collectionAddress: string, tokenId: string, url: string) {
-  const client = getApolloClient()
   const { data } = await client.query({
     query: AssetDocument,
     variables: {
@@ -17,7 +16,11 @@ export default async function getAsset(collectionAddress: string, tokenId: strin
     return undefined
   }
   const formattedAsset = {
-    title: asset.name ? asset.name : asset.collection?.name + ' #' + asset.tokenId,
+    title: asset.name
+      ? asset.name
+      : asset.collection?.name
+      ? asset.collection.name + ' #' + asset.tokenId
+      : 'Asset #' + asset.tokenId,
     image: asset.image?.url,
     url,
   }

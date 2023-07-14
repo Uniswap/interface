@@ -1,8 +1,7 @@
 import { TokenDocument } from '../../src/graphql/data/__generated__/types-and-hooks'
-import { getApolloClient } from './getApolloClient'
+import client from '../client'
 
 export default async function getToken(networkName: string, tokenAddress: string, url: string) {
-  const client = getApolloClient()
   const { data } = await client.query({
     query: TokenDocument,
     variables: {

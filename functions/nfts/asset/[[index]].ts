@@ -6,8 +6,8 @@ import getAsset from '../../utils/getAsset'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const { index } = params
-  const collectionAddress = String(index[0])
-  const tokenId = String(index[1])
+  const collectionAddress = index[0]?.toString()
+  const tokenId = index[1]?.toString()
   const assetPromise = getAsset(collectionAddress, tokenId, request.url)
   const resPromise = next()
   try {

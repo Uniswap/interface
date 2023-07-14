@@ -6,7 +6,7 @@ import getCollection from '../../utils/getCollection'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const { index } = params
-  const collectionAddress = String(index)
+  const collectionAddress = index?.toString()
   const collectionPromise = getCollection(collectionAddress, request.url)
   const resPromise = next()
   try {

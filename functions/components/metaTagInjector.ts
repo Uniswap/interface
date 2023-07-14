@@ -1,52 +1,43 @@
 import { Element } from '@cloudflare/workers-types'
 
 type MetaTagInjectorInput = {
-  title: any
-  image: any
-  url: any
+  title: string
+  image?: string
+  url: string
 }
 
+/**
+ * Wrapper class for Cloudflare's HTMLRewriter {@link https://developers.cloudflare.com/workers/runtime-apis/html-rewriter}
+ * to inject meta tags into the <head> of an HTML document.
+ */
 export class MetaTagInjector {
   constructor(private input: MetaTagInjectorInput) {}
 
+  append(element: Element, property: string, content: string) {
+    element.append(`<meta property="${property}" content="${content}"/>`, { html: true })
+  }
+
+  /**
+   * Event handler for ElementHandler {@link https://developers.cloudflare.com/workers/runtime-apis/html-rewriter/#element-handlers}
+   */
   element(element: Element) {
     //Open Graph Tags
-    element.append(`<meta property="og:title" content="${this.input.title}"/>`, {
-      html: true,
-    })
-    element.append(`<meta property="og:image" content="${this.input.image}"/>`, {
-      html: true,
-    })
-    element.append(`<meta property="og:image:width" content="1200"/>`, {
-      html: true,
-    })
-    element.append(`<meta property="og:image:height" content="630"/>`, {
-      html: true,
-    })
-    element.append('<meta property="og:type" content="website"/>', {
-      html: true,
-    })
-    element.append(`<meta property="og:url" content="${this.input.url}"/>`, {
-      html: true,
-    })
-    element.append(`<meta property="og:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`, {
-      html: true,
-    })
+    this.append(element, 'og:title', this.input.title)
+    if (this.input.image) {
+      this.append(element, 'og:image', this.input.image)
+      this.append(element, 'og:image:width', '1200')
+      this.append(element, 'og:image:height', '630')
+      this.append(element, 'og:image:alt', this.input.title)
+    }
+    this.append(element, 'og:type', 'website')
+    this.append(element, 'og:url', this.input.url)
+
     //Twitter Tags
-    element.append(`<meta property="twitter:card" content="summary_large_image"/>`, {
-      html: true,
-    })
-    element.append(`<meta property="twitter:title" content="${this.input.title}"/>`, {
-      html: true,
-    })
-    element.append(`<meta property="twitter:image" content="${this.input.image}"/>`, {
-      html: true,
-    })
-    element.append(
-      `<meta property="twitter:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`,
-      {
-        html: true,
-      }
-    )
+    this.append(element, 'twitter:card', 'summary_large_image')
+    this.append(element, 'twitter:title', this.input.title)
+    if (this.input.image) {
+      this.append(element, 'twitter:image', this.input.image)
+    }
+    this.append(element, 'twitter:image:alt', this.input.title)
   }
 }
