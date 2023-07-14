@@ -211,7 +211,7 @@ export async function transformRoutesToTrade(
   const usdCostPerGas = gasUseEstimateUSD && gasUseEstimate ? gasUseEstimateUSD / gasUseEstimate : undefined
 
   const approveInfo = await getApproveInfo(account, currencyIn, amount, usdCostPerGas)
-  let uniswapXGasUseEstimateUSD: number | undefined
+
   const classicTrade = new ClassicTrade({
     v2Routes:
       routes
@@ -248,7 +248,9 @@ export async function transformRoutesToTrade(
     quoteMethod,
   })
 
-  if (isUniswapXBetter) {
+  // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
+  // even if it is the better quote.
+  if (isUniswapXBetter && args.routerPreference === RouterPreference.X) {
     const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
     const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)
 
@@ -267,20 +269,13 @@ export async function transformRoutesToTrade(
       slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
     })
 
-    uniswapXGasUseEstimateUSD = uniswapXTrade.totalGasUseEstimateUSD
-
-    // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
-    // even if it is the better quote.
-    if (args.routerPreference === RouterPreference.X) {
-      return {
-        state: QuoteState.SUCCESS,
-        trade: uniswapXTrade,
-      }
+    return {
+      state: QuoteState.SUCCESS,
+      trade: uniswapXTrade,
     }
   }
 
-  // Return uniswapXGasUseEstimateUSD as a reference price just for opt-in period
-  return { state: QuoteState.SUCCESS, trade: classicTrade, uniswapXGasUseEstimateUSD }
+  return { state: QuoteState.SUCCESS, trade: classicTrade }
 }
 
 function parseToken({ address, chainId, decimals, symbol }: ClassicQuoteData['route'][0][0]['tokenIn']): Token {

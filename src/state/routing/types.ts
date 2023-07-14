@@ -253,13 +253,10 @@ export type TradeResult =
   | {
       state: QuoteState.NOT_FOUND
       trade?: undefined
-      uniswapXGasUseEstimateUSD?: undefined
     }
   | {
       state: QuoteState.SUCCESS
       trade: InterfaceTrade
-      // TODO(UniswapX): We can remove this return value after opt-in period
-      uniswapXGasUseEstimateUSD?: number
     }
 
 export enum PoolType {

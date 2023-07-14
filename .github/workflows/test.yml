@@ -18,8 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
@@ -37,8 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
@@ -70,8 +66,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
@@ -94,8 +88,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
@@ -126,8 +118,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - uses: ./.github/actions/cache-on-main
         with:
           path: /root/.cache/Cypress
