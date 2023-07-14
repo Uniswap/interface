@@ -58,7 +58,7 @@ function sendSwapPressAnalyticsEvent(): void {
   })
 }
 
-export const NavBar = (): JSX.Element => {
+export function NavBar(): JSX.Element {
   const insets = useSafeAreaInsets()
   const theme = useAppTheme()
   const isDarkMode = useIsDarkMode()
@@ -117,7 +117,7 @@ type SwapTabBarButtonProps = {
   activeScale?: number
 }
 
-const SwapFAB = memo(({ activeScale = 0.96 }: SwapTabBarButtonProps) => {
+const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonProps) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 

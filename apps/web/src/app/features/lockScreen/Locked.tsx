@@ -26,7 +26,7 @@ export function usePasswordInput(
   }
 }
 
-function Locked(): JSX.Element {
+export function Locked(): JSX.Element {
   const dispatch = useAppDispatch()
   const passwordInputProps = usePasswordInput()
 
@@ -100,5 +100,3 @@ function Locked(): JSX.Element {
     </Stack>
   )
 }
-
-export default Locked

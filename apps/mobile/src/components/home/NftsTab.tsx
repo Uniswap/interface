@@ -131,174 +131,166 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
   )
 }
 
-export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(
-  (
-    {
-      owner,
-      containerProps,
-      scrollHandler,
-      headerHeight,
-      isExternalProfile = false,
-      refreshing,
-      onRefresh,
-    },
-    ref
-  ) => {
-    const { t } = useTranslation()
-    const theme = useAppTheme()
-    const dispatch = useAppDispatch()
-    const insets = useSafeAreaInsets()
+export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTab(
+  {
+    owner,
+    containerProps,
+    scrollHandler,
+    headerHeight,
+    isExternalProfile = false,
+    refreshing,
+    onRefresh,
+  },
+  ref
+) {
+  const { t } = useTranslation()
+  const theme = useAppTheme()
+  const dispatch = useAppDispatch()
+  const insets = useSafeAreaInsets()
 
-    const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
+  const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
 
-    const { onContentSizeChange, footerHeight, setFooterHeight } = useAdaptiveFooterHeight({
-      headerHeight,
-    })
+  const { onContentSizeChange, footerHeight, setFooterHeight } = useAdaptiveFooterHeight({
+    headerHeight,
+  })
 
-    const { data, fetchMore, refetch, networkStatus } = useNftsTabQuery({
-      variables: { ownerAddress: owner, first: 30, filter: { filterSpam: false } },
-      notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
-      errorPolicy: 'all', // Suppress non-null image.url fields from backend
-    })
+  const { data, fetchMore, refetch, networkStatus } = useNftsTabQuery({
+    variables: { ownerAddress: owner, first: 30, filter: { filterSpam: false } },
+    notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
+    errorPolicy: 'all', // Suppress non-null image.url fields from backend
+  })
 
-    const nftDataItems = formatNftItems(data)
-    const shouldAddInLoadingItem =
-      networkStatus === NetworkStatus.fetchMore && nftDataItems && nftDataItems.length % 2 === 1
+  const nftDataItems = formatNftItems(data)
+  const shouldAddInLoadingItem =
+    networkStatus === NetworkStatus.fetchMore && nftDataItems && nftDataItems.length % 2 === 1
 
-    const onListEndReached = useCallback(() => {
-      if (!data?.nftBalances?.pageInfo?.hasNextPage) return
+  const onListEndReached = useCallback(() => {
+    if (!data?.nftBalances?.pageInfo?.hasNextPage) return
 
-      fetchMore({
-        variables: {
-          first: 30,
-          after: data?.nftBalances?.pageInfo?.endCursor,
-        },
-      })
-    }, [
-      data?.nftBalances?.pageInfo?.endCursor,
-      data?.nftBalances?.pageInfo?.hasNextPage,
-      fetchMore,
-    ])
-
-    const onPressScan = (): void => {
-      // in case we received a pending session from a previous scan after closing modal
-      dispatch(removePendingSession())
-      dispatch(
-        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
-      )
-    }
-
-    const { nfts, numHidden } = useGroupNftsByVisibility(nftDataItems, hiddenNftsExpanded, owner)
-
-    const onHiddenRowPressed = useCallback((): void => {
-      if (hiddenNftsExpanded) {
-        setFooterHeight(dimensions.fullHeight)
-      }
-      setHiddenNftsExpanded(!hiddenNftsExpanded)
-    }, [hiddenNftsExpanded, setFooterHeight])
-
-    useEffect(() => {
-      if (numHidden === 0 && hiddenNftsExpanded) {
-        setHiddenNftsExpanded(false)
-      }
-    }, [hiddenNftsExpanded, numHidden])
-
-    const renderItem = useCallback(
-      ({ item }: ListRenderItemInfo<string | NFTItem>) => {
-        if (typeof item !== 'string') {
-          return <NftView item={item} owner={owner} />
-        }
-        switch (item) {
-          case LOADING_ITEM:
-            return <Loader.NFT />
-          case EMPTY_NFT_ITEM:
-            return null
-          case HIDDEN_NFTS_ROW_LEFT_ITEM:
-            return <HiddenNftsRowLeft numHidden={numHidden} />
-          case HIDDEN_NFTS_ROW_RIGHT_ITEM:
-            return (
-              <HiddenNftsRowRight isExpanded={hiddenNftsExpanded} onPress={onHiddenRowPressed} />
-            )
-          default:
-            return null
-        }
+    fetchMore({
+      variables: {
+        first: 30,
+        after: data?.nftBalances?.pageInfo?.endCursor,
       },
-      [hiddenNftsExpanded, numHidden, onHiddenRowPressed, owner]
-    )
+    })
+  }, [data?.nftBalances?.pageInfo?.endCursor, data?.nftBalances?.pageInfo?.hasNextPage, fetchMore])
 
-    const refreshControl = useMemo(() => {
-      return (
-        <RefreshControl
-          progressViewOffset={insets.top}
-          refreshing={refreshing ?? false}
-          tintColor={theme.colors.textTertiary}
-          onRefresh={onRefresh}
-        />
-      )
-    }, [refreshing, onRefresh, theme.colors.textTertiary, insets.top])
-
-    const onRetry = useCallback(() => refetch(), [refetch])
-
-    return (
-      <Flex grow px="spacing12">
-        <AnimatedFlashList
-          ref={ref}
-          ListEmptyComponent={
-            // initial loading
-            isNonPollingRequestInFlight(networkStatus) ? (
-              <View style={{ paddingHorizontal: theme.spacing.spacing12 }}>
-                <Loader.NFT repeat={6} />
-              </View>
-            ) : // no response and we're not loading already
-            isError(networkStatus, !!data) ? (
-              <Flex grow style={containerProps?.emptyContainerStyle}>
-                <BaseCard.ErrorState
-                  description={t('Something went wrong.')}
-                  retryButtonLabel={t('Retry')}
-                  title={t('Couldn’t load NFTs')}
-                  onRetry={onRetry}
-                />
-              </Flex>
-            ) : (
-              // empty view
-              <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
-                <BaseCard.EmptyState
-                  buttonLabel={isExternalProfile ? undefined : t('Receive NFTs')}
-                  description={
-                    isExternalProfile
-                      ? t('When this wallet buys or receives NFTs, they’ll appear here.')
-                      : t('Transfer NFTs from another wallet to get started.')
-                  }
-                  icon={<NoNFTsIcon color={theme.colors.textSecondary} />}
-                  title={t('No NFTs yet')}
-                  onPress={onPressScan}
-                />
-              </Box>
-            )
-          }
-          // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
-          ListFooterComponent={
-            <>
-              {networkStatus === NetworkStatus.fetchMore && <Loader.NFT repeat={4} />}
-              <Box height={footerHeight} />
-            </>
-          }
-          data={shouldAddInLoadingItem ? [...nfts, LOADING_ITEM] : nfts}
-          estimatedItemSize={ESTIMATED_ITEM_SIZE}
-          keyExtractor={keyExtractor}
-          numColumns={2}
-          refreshControl={refreshControl}
-          refreshing={refreshing}
-          renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
-          onContentSizeChange={onContentSizeChange}
-          onEndReached={onListEndReached}
-          onEndReachedThreshold={PREFETCH_ITEMS_THRESHOLD}
-          onRefresh={onRefresh}
-          onScroll={scrollHandler}
-          {...containerProps}
-        />
-      </Flex>
+  const onPressScan = (): void => {
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
     )
   }
-)
+
+  const { nfts, numHidden } = useGroupNftsByVisibility(nftDataItems, hiddenNftsExpanded, owner)
+
+  const onHiddenRowPressed = useCallback((): void => {
+    if (hiddenNftsExpanded) {
+      setFooterHeight(dimensions.fullHeight)
+    }
+    setHiddenNftsExpanded(!hiddenNftsExpanded)
+  }, [hiddenNftsExpanded, setFooterHeight])
+
+  useEffect(() => {
+    if (numHidden === 0 && hiddenNftsExpanded) {
+      setHiddenNftsExpanded(false)
+    }
+  }, [hiddenNftsExpanded, numHidden])
+
+  const renderItem = useCallback(
+    ({ item }: ListRenderItemInfo<string | NFTItem>) => {
+      if (typeof item !== 'string') {
+        return <NftView item={item} owner={owner} />
+      }
+      switch (item) {
+        case LOADING_ITEM:
+          return <Loader.NFT />
+        case EMPTY_NFT_ITEM:
+          return null
+        case HIDDEN_NFTS_ROW_LEFT_ITEM:
+          return <HiddenNftsRowLeft numHidden={numHidden} />
+        case HIDDEN_NFTS_ROW_RIGHT_ITEM:
+          return <HiddenNftsRowRight isExpanded={hiddenNftsExpanded} onPress={onHiddenRowPressed} />
+        default:
+          return null
+      }
+    },
+    [hiddenNftsExpanded, numHidden, onHiddenRowPressed, owner]
+  )
+
+  const refreshControl = useMemo(() => {
+    return (
+      <RefreshControl
+        progressViewOffset={insets.top}
+        refreshing={refreshing ?? false}
+        tintColor={theme.colors.textTertiary}
+        onRefresh={onRefresh}
+      />
+    )
+  }, [refreshing, onRefresh, theme.colors.textTertiary, insets.top])
+
+  const onRetry = useCallback(() => refetch(), [refetch])
+
+  return (
+    <Flex grow px="spacing12">
+      <AnimatedFlashList
+        ref={ref}
+        ListEmptyComponent={
+          // initial loading
+          isNonPollingRequestInFlight(networkStatus) ? (
+            <View style={{ paddingHorizontal: theme.spacing.spacing12 }}>
+              <Loader.NFT repeat={6} />
+            </View>
+          ) : // no response and we're not loading already
+          isError(networkStatus, !!data) ? (
+            <Flex grow style={containerProps?.emptyContainerStyle}>
+              <BaseCard.ErrorState
+                description={t('Something went wrong.')}
+                retryButtonLabel={t('Retry')}
+                title={t('Couldn’t load NFTs')}
+                onRetry={onRetry}
+              />
+            </Flex>
+          ) : (
+            // empty view
+            <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
+              <BaseCard.EmptyState
+                buttonLabel={isExternalProfile ? undefined : t('Receive NFTs')}
+                description={
+                  isExternalProfile
+                    ? t('When this wallet buys or receives NFTs, they’ll appear here.')
+                    : t('Transfer NFTs from another wallet to get started.')
+                }
+                icon={<NoNFTsIcon color={theme.colors.textSecondary} />}
+                title={t('No NFTs yet')}
+                onPress={onPressScan}
+              />
+            </Box>
+          )
+        }
+        // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
+        ListFooterComponent={
+          <>
+            {networkStatus === NetworkStatus.fetchMore && <Loader.NFT repeat={4} />}
+            <Box height={footerHeight} />
+          </>
+        }
+        data={shouldAddInLoadingItem ? [...nfts, LOADING_ITEM] : nfts}
+        estimatedItemSize={ESTIMATED_ITEM_SIZE}
+        keyExtractor={keyExtractor}
+        numColumns={2}
+        refreshControl={refreshControl}
+        refreshing={refreshing}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+        onContentSizeChange={onContentSizeChange}
+        onEndReached={onListEndReached}
+        onEndReachedThreshold={PREFETCH_ITEMS_THRESHOLD}
+        onRefresh={onRefresh}
+        onScroll={scrollHandler}
+        {...containerProps}
+      />
+    </Flex>
+  )
+})

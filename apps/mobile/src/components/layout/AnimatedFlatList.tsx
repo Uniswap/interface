@@ -49,7 +49,10 @@ interface ReanimatedFlatlistProps<T> extends FlatListProps<T> {
  * TODO: [MOB-207] remove this and use Animated.FlatList directly when can use refs with it. Also type the generic T properly for FlatList and dont use `any`
  */
 export const AnimatedFlatList = forwardRef<Animated.FlatList<any>, ReanimatedFlatlistProps<any>>(
-  ({ itemLayoutAnimation, FlatListComponent = ReanimatedFlatList, ...restProps }, ref) => {
+  function _AnimatedFlatList(
+    { itemLayoutAnimation, FlatListComponent = ReanimatedFlatList, ...restProps },
+    ref
+  ) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const cellRenderer = React.useMemo(() => createCellRenderer(itemLayoutAnimation), [])
     return <FlatListComponent ref={ref} {...restProps} CellRendererComponent={cellRenderer} />
@@ -63,11 +66,13 @@ export const AnimatedFlatList = forwardRef<Animated.FlatList<any>, ReanimatedFla
 export const AnimatedBottomSheetFlatList = forwardRef<
   Animated.FlatList<any>,
   ReanimatedFlatlistProps<any>
->((props, ref) => (
-  <AnimatedFlatList
-    sentry-label="AnimatedBottomSheetFlatList"
-    {...props}
-    ref={ref}
-    FlatListComponent={ReanimatedBottomSheetFlatList}
-  />
-))
+>(function _AnimatedBottomSheetFlatList(props, ref) {
+  return (
+    <AnimatedFlatList
+      sentry-label="AnimatedBottomSheetFlatList"
+      {...props}
+      ref={ref}
+      FlatListComponent={ReanimatedBottomSheetFlatList}
+    />
+  )
+})

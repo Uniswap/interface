@@ -11,7 +11,7 @@ type VirtualizedListProps = PropsWithChildren<Partial<ComponentProps<typeof Anim
 /** Dummy component wrapping `FlatList` to behave like a ScrollView */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const VirtualizedList = React.forwardRef<any, VirtualizedListProps>(
-  ({ children, renderedInModal, ...props }: VirtualizedListProps, ref) => {
+  function _VirtualizedList({ children, renderedInModal, ...props }: VirtualizedListProps, ref) {
     const List = renderedInModal ? AnimatedBottomSheetFlatList : AnimatedFlatList
     return (
       <List

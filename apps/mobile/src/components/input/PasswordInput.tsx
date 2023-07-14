@@ -7,7 +7,10 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 
-export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>((props, ref) => {
+export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(function _PasswordInput(
+  props,
+  ref
+) {
   const theme = useAppTheme()
   const [showPassword, setShowPassword] = useState(false)
 

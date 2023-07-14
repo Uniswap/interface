@@ -41,7 +41,7 @@ export function generateActivityItemRenderer(
   sectionHeaderElement: React.FunctionComponent<{ title: string }>,
   swapCallbacks?: SwapSummaryCallbacks
 ): ActivityItemRenderer {
-  return ({ item }: { item: ActivityItem }): JSX.Element => {
+  return function ActivityItemComponent({ item }: { item: ActivityItem }): JSX.Element {
     // if it's a loading item, render the loading placeholder
     if (isLoadingItem(item)) {
       return loadingItem

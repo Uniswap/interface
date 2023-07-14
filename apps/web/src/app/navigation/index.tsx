@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Outlet } from 'react-router-dom'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
-import Locked from 'src/app/features/lockScreen/Locked'
+import { Locked } from 'src/app/features/lockScreen/Locked'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { DappRequestContent } from 'src/background/features/dappRequests/DappRequestContent'
 import { useAppSelector } from 'src/background/store'

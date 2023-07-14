@@ -58,7 +58,11 @@ interface TokenItemProps {
   metadataDisplayType?: TokenMetadataDisplayType
 }
 
-export const TokenItem = memo(({ tokenItemData, index, metadataDisplayType }: TokenItemProps) => {
+export const TokenItem = memo(function _TokenItem({
+  tokenItemData,
+  index,
+  metadataDisplayType,
+}: TokenItemProps) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()

@@ -19,18 +19,20 @@ function renderOptionItem(
   label: string,
   textColorOverride?: keyof Theme['colors']
 ): () => JSX.Element {
-  return (): JSX.Element => (
-    <>
-      <Separator />
-      <Text
-        color={textColorOverride ?? 'textPrimary'}
-        p="spacing16"
-        textAlign="center"
-        variant="bodyLarge">
-        {label}
-      </Text>
-    </>
-  )
+  return function OptionItem(): JSX.Element {
+    return (
+      <>
+        <Separator />
+        <Text
+          color={textColorOverride ?? 'textPrimary'}
+          p="spacing16"
+          textAlign="center"
+          variant="bodyLarge">
+          {label}
+        </Text>
+      </>
+    )
+  }
 }
 
 interface TransactionActionModalProps {

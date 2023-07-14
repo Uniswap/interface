@@ -27,7 +27,7 @@ exports[`ActivityTab renders without error 1`] = `
       ListEmptyComponent={null}
       ListFooterComponent={
         <React.Fragment>
-          <Memo
+          <Memo(_Transaction)
             repeat={4}
           />
           <ForwardRef
@@ -134,7 +134,7 @@ exports[`ActivityTab renders without error 1`] = `
           "props": {
             "ListEmptyComponent": null,
             "ListFooterComponent": <React.Fragment>
-              <Memo
+              <Memo(_Transaction)
                 repeat={4}
               />
               <ForwardRef
@@ -308,7 +308,7 @@ exports[`ActivityTab renders without error 2`] = `
           <EmptyState
             buttonLabel="Receive tokens or NFTs"
             description="When you approve, trade, or transfer tokens or NFTs, your transactions will appear here."
-            icon={<Memo />}
+            icon={<Memo(_NoTransactions) />}
             onPress={[Function]}
             title="No activity yet"
           />
@@ -476,7 +476,7 @@ exports[`ActivityTab renders without error 2`] = `
               <EmptyState
                 buttonLabel="Receive tokens or NFTs"
                 description="When you approve, trade, or transfer tokens or NFTs, your transactions will appear here."
-                icon={<Memo />}
+                icon={<Memo(_NoTransactions) />}
                 onPress={[Function]}
                 title="No activity yet"
               />

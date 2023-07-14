@@ -25,7 +25,7 @@ type CarouselProps = {
   slides: JSX.Element[]
 } & Pick<ComponentProps<typeof Animated.FlatList>, 'scrollEnabled'>
 
-export const Carousel = ({ slides, ...flatListProps }: CarouselProps): JSX.Element => {
+export function Carousel({ slides, ...flatListProps }: CarouselProps): JSX.Element {
   const scroll = useSharedValue(0)
   const myRef = useRef<Animated.FlatList<unknown>>(null)
 

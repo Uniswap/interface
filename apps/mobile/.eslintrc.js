@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: ['custom'],
-   parserOptions: {
+  parserOptions: {
     project: 'tsconfig.json',
     tsconfigRootDir: __dirname,
     ecmaFeatures: {

@@ -17,7 +17,7 @@ type OnboardingContextState = {
  */
 export const OnboardingContext = createContext<OnboardingContextState | undefined>(undefined)
 
-export const OnboardingContextProvider = ({ children }: { children: ReactNode }): JSX.Element => {
+export function OnboardingContextProvider({ children }: { children: ReactNode }): JSX.Element {
   const [password, setPassword] = useState<string | undefined>(undefined)
   const [pendingAddress, setPendingAddress] = useState<string | undefined>(undefined)
   const [pendingMnemonic, setPendingMnemonic] = useState<string[] | undefined>(undefined)

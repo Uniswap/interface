@@ -37,7 +37,7 @@ const ESTIMATED_TOKEN_ITEM_HEIGHT = 64
 // accept any ref
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps>(
-  (
+  function _TokenBalanceList(
     {
       owner,
       empty,
@@ -50,7 +50,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
       onRefresh,
     },
     ref
-  ) => {
+  ) {
     const { t } = useTranslation()
     const theme = useAppTheme()
     const insets = useSafeAreaInsets()

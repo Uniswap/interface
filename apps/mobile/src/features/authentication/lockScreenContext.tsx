@@ -21,9 +21,7 @@ const lockScreenContextValue: LockScreenContextValue = {
 
 const LockScreenContext = createContext<LockScreenContextValue>(lockScreenContextValue)
 
-export const LockScreenContextProvider = ({
-  children,
-}: PropsWithChildren<unknown>): JSX.Element => {
+export function LockScreenContextProvider({ children }: PropsWithChildren<unknown>): JSX.Element {
   const { requiredForAppAccess } = useBiometricAppSettings()
   const [isVisible, setIsVisible] = useState(requiredForAppAccess)
   const [animation, setAnimation] = useState<AnimationType>('none')

@@ -1,5 +1,4 @@
 import { createElement, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -32,7 +31,6 @@ export function TransferTokenSummaryItem({
     typeInfo: ReceiveTokenTransactionInfo | SendTokenTransactionInfo
   }
 }): JSX.Element {
-  const { t } = useTranslation()
   const currencyInfo = useCurrencyInfo(
     transaction.typeInfo.assetType === AssetType.Currency
       ? buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)

@@ -13,7 +13,7 @@ interface OnboardingInputProps {
 }
 
 export const OnboardingInput = forwardRef<GetRef<typeof Input>, OnboardingInputProps>(
-  (
+  function _OnboardingInput(
     {
       hideInput = false,
       onChangeText,
@@ -23,7 +23,7 @@ export const OnboardingInput = forwardRef<GetRef<typeof Input>, OnboardingInputP
       ...rest
     }: OnboardingInputProps,
     ref
-  ): JSX.Element => {
+  ): JSX.Element {
     return (
       <Input
         ref={ref}

@@ -94,6 +94,7 @@ module.exports = {
     // 'import/no-duplicates': 'error',
     // 'import/no-default-export': 'warn',
     // 'react/jsx-uses-react': 'off',
+    'react/display-name': 'error',
     'react/react-in-jsx-scope': 'off',
     'no-restricted-imports': [
       2,

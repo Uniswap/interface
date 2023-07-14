@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   extends: ['custom'],
   ignorePatterns: ['node_modules', 'dist', '.turbo', 'build', '.eslintrc.js', 'webpack.config.js', 'webpack.dev.config.js', 'manifest.json'],
-   parserOptions: {
+  parserOptions: {
     project: 'tsconfig.json',
     tsconfigRootDir: __dirname,
     ecmaFeatures: {

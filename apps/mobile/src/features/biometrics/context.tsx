@@ -13,7 +13,7 @@ const biomericContextValue: BiometricContextValue = {
 
 const BiometricContext = createContext<BiometricContextValue>(biomericContextValue)
 
-export const BiometricContextProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
+export function BiometricContextProvider({ children }: PropsWithChildren<unknown>): JSX.Element {
   // global authenticationStatus
   const [status, setStatus] = useState<Maybe<BiometricAuthenticationStatus>>()
   const setAuthenticationStatus = (value: Maybe<BiometricAuthenticationStatus>): void => {

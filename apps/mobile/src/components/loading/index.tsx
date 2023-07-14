@@ -45,7 +45,11 @@ function Token({ repeat = 1 }: { repeat?: number }): JSX.Element {
   )
 }
 
-export const Transaction = memo(({ repeat = 1 }: { repeat?: number }): JSX.Element => {
+export const Transaction = memo(function _Transaction({
+  repeat = 1,
+}: {
+  repeat?: number
+}): JSX.Element {
   return (
     <Shimmer>
       <Flex>

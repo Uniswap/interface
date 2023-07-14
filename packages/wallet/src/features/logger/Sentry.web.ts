@@ -9,6 +9,7 @@ import { ISentry } from './Sentry'
  * @param context Context from where this method is called
  */
 export function captureException(errorMessage: string, captureContext?: CaptureContext): void {
+  // eslint-disable-next-line no-console
   console.warn(errorMessage, captureContext)
 }
 
@@ -27,6 +28,7 @@ export function captureMessage(
   message: string,
   ...extraArgs: unknown[]
 ): void {
+  // eslint-disable-next-line no-console
   console.log(context, message, ...extraArgs)
 }
 

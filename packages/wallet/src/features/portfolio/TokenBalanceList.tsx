@@ -11,7 +11,7 @@ type TokenBalanceListProps = {
   owner: Address
 }
 
-export const TokenBalanceList = ({ owner }: TokenBalanceListProps): JSX.Element => {
+export function TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element {
   const { data, loading } = useSortedPortfolioBalances(
     owner,
     /*shouldPoll=*/ true,

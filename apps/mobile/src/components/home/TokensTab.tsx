@@ -20,7 +20,7 @@ export const TOKENS_TAB_DATA_DEPENDENCIES = [GQLQueries.PortfolioBalances]
 // ignore ref type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const TokensTab = forwardRef<FlashList<any>, TabProps & { isExternalProfile?: boolean }>(
-  (
+  function _TokensTab(
     {
       owner,
       containerProps,
@@ -31,7 +31,7 @@ export const TokensTab = forwardRef<FlashList<any>, TabProps & { isExternalProfi
       refreshing,
     },
     ref
-  ) => {
+  ) {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
