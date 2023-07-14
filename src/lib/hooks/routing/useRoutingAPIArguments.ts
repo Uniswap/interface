@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useRoutingAPIForPrice } from 'featureFlags/flags/priceRoutingApi'
 import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
+import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
@@ -26,6 +27,7 @@ export function useRoutingAPIArguments({
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
 }): GetQuoteArgs | undefined {
   const uniswapXEnabled = useUniswapXEnabled()
+  const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
   const isRoutingAPIPrice = useRoutingAPIForPrice()
 
   return useMemo(
@@ -48,7 +50,18 @@ export function useRoutingAPIArguments({
             isRoutingAPIPrice,
             needsWrapIfUniswapX: tokenIn.isNative,
             uniswapXEnabled,
+            uniswapXForceSyntheticQuotes,
           },
-    [account, amount, routerPreference, tokenIn, tokenOut, tradeType, uniswapXEnabled, isRoutingAPIPrice]
+    [
+      account,
+      amount,
+      routerPreference,
+      tokenIn,
+      tokenOut,
+      tradeType,
+      uniswapXEnabled,
+      isRoutingAPIPrice,
+      uniswapXForceSyntheticQuotes,
+    ]
   )
 }

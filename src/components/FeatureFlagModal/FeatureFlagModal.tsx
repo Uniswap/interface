@@ -3,6 +3,7 @@ import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetail
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
+import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -217,9 +218,15 @@ export default function FeatureFlagModal() {
       />
       <FeatureFlagOption
         variant={BaseVariant}
+        value={useUniswapXSyntheticQuoteFlag()}
+        featureFlag={FeatureFlag.uniswapXSyntheticQuote}
+        label="Force synthetic quotes for UniswapX"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
         value={useRoutingAPIForPriceFlag()}
         featureFlag={FeatureFlag.routingAPIPrice}
-        label="Use the URA or routing-api for price fetches"
+        label="Use the routing-api v2 for price fetches"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
