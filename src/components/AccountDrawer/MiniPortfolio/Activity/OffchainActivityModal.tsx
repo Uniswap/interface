@@ -183,6 +183,7 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
             <Trans>Swap expired</Trans>
           </ThemedText.SubHeaderLarge>
           <DescriptionText>
+            {/* TODO: Improve translation grammar by not having to break up the string */}
             <Trans>Your swap expired before it could be filled. Try again or</Trans>{' '}
             <LearnMoreLink href="https://support.uniswap.org/hc/en-us/articles/17515426867213">
               <Trans>learn more.</Trans>
@@ -198,6 +199,7 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
             <Trans>Error</Trans>
           </ThemedText.SubHeaderLarge>
           <ThemedText.LabelSmall textAlign="center">
+            {/* TODO: Improve translation grammar by not having to break up the string */}
             <Trans>Your swap couldn&apos;t be filled at this time. Try again or </Trans>{' '}
             <LearnMoreLink href="https://support.uniswap.org/hc/en-us/articles/17515489874189">
               <Trans>learn more.</Trans>
