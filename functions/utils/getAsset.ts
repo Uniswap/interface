@@ -1,7 +1,8 @@
 import { AssetDocument } from '../../src/graphql/data/__generated__/types-and-hooks'
-import client from '../client'
+import { getApolloClient } from './getApolloClient'
 
 export default async function getAsset(collectionAddress: string, tokenId: string, url: string) {
+  const client = await getApolloClient()
   const { data } = await client.query({
     query: AssetDocument,
     variables: {
