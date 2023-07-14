@@ -1,10 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
+import ms from 'ms.macro'
 import { useEffect } from 'react'
 import { isFinalizedOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 
 import { OrderQueryResponse, UniswapXBackendOrder } from './types'
-import ms from 'ms.macro'
 
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
 if (UNISWAP_API_URL === undefined) {
@@ -28,7 +28,7 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
 
   useEffect(() => {
     const interval = setInterval(getOrderStatuses, OFF_CHAIN_ORDER_STATUS_POLLING)
-    
+
     async function getOrderStatuses() {
       if (!account || pendingOrders.length === 0) return
 
@@ -53,7 +53,7 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
         console.error('Error fetching order statuses', e)
       }
     }
-  
+
     return () => clearInterval(interval)
   }, [account, onOrderUpdate, pendingOrders])
 
