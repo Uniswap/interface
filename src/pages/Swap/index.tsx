@@ -302,8 +302,8 @@ export function Swap({
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [
       tradeState === TradeState.NO_ROUTE_FOUND,
-      TradeState.LOADING === tradeState,
-      TradeState.LOADING === tradeState && Boolean(trade),
+      tradeState === TradeState.LOADING,
+      tradeState === TradeState.LOADING && Boolean(trade),
     ],
     [trade, tradeState]
   )
