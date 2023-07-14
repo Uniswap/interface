@@ -51,6 +51,7 @@ export interface GetQuoteArgs {
   tradeType: TradeType
   needsWrapIfUniswapX: boolean
   uniswapXEnabled: boolean
+  uniswapXForceSyntheticQuotes: boolean
   isRoutingAPIPrice?: boolean
 }
 
@@ -62,13 +63,14 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const { account, tradeType, tokenOutAddress, tokenInChainId } = args
+  const { account, tradeType, tokenOutAddress, tokenInChainId, uniswapXForceSyntheticQuotes } = args
 
   const uniswapx = {
-    swapper: account,
+    useSyntheticQuotes: uniswapXForceSyntheticQuotes,
     // Protocol supports swap+send to different destination address, but
     // for now recipient === swapper
     recipient: account,
+    swapper: account,
     routingType: URAQuoteType.DUTCH_LIMIT,
   }
 
