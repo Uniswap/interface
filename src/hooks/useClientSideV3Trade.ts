@@ -147,6 +147,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
         ],
         tradeType,
         quoteMethod: QuoteMethod.CLIENT_SIDE,
+        // When using SOR, we don't have gas values from routing-api, so we can't calculate approve gas info
         approveInfo: { needsApprove: false },
       }),
     }

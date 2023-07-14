@@ -4,7 +4,7 @@ import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
 import { useMemo } from 'react'
 import { RouterPreference } from 'state/routing/slice'
-import { ClassicTrade, InterfaceTrade, TradeState } from 'state/routing/types'
+import { ClassicTrade, InterfaceTrade, QuoteMethod, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
 
