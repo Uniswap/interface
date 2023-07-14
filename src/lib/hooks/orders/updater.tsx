@@ -27,8 +27,6 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
   const { account } = useWeb3React()
 
   useEffect(() => {
-    const interval = setInterval(getOrderStatuses, OFF_CHAIN_ORDER_STATUS_POLLING)
-
     async function getOrderStatuses() {
       if (!account || pendingOrders.length === 0) return
 
@@ -54,6 +52,7 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
       }
     }
 
+    const interval = setInterval(getOrderStatuses, OFF_CHAIN_ORDER_STATUS_POLLING)
     return () => clearInterval(interval)
   }, [account, onOrderUpdate, pendingOrders])
 
