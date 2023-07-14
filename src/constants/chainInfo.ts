@@ -263,7 +263,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.harmony.one/',
     explorer: 'https://explorer.harmony.one/',
     infoLink: 'https://info.thinkincoin.com/#/',
-    label: 'Harmony Network',
+    label: 'Harmony ONE',
     logoUrl: harmonyLogo,
     circleLogoUrl: harmonyCircleLogoUrl,
     squareLogoUrl: harmonySquareLogoUrl,
