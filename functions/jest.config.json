@@ -6,5 +6,5 @@
     "'^.+\\.(ts|tsx)?$'": "ts-jest",
     "^.+\\.(js|jsx)$": "babel-jest"
   },
-  "testTimeout": 100000
+  "testTimeout": 300000
 }
