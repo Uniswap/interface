@@ -5,26 +5,29 @@ import { UniswapXBackendOrder, UniswapXOrderStatus } from 'lib/hooks/orders/type
 import OrderUpdater from 'lib/hooks/orders/updater'
 import { useCallback, useMemo } from 'react'
 import { PopupType } from 'state/application/reducer'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useAppDispatch } from 'state/hooks'
 import { addTransaction } from 'state/transactions/reducer'
 import { toSerializableReceipt } from 'state/transactions/updater'
 import { isL2ChainId } from 'utils/chains'
 
 import { useAddPopup } from '../application/hooks'
+import { useAllSignatures } from './hooks'
 import { updateSignature } from './reducer'
 import { SignatureType, UniswapXOrderDetails } from './types'
-import { useAllSignatures } from './hooks'
 
 export default function Updater() {
   const { provider } = useWeb3React()
   const addPopup = useAddPopup()
   const signatures = useAllSignatures()
 
-  const pendingOrders = useMemo(() => Object.values(signatures).filter(
-      (signature) =>
-        signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === UniswapXOrderStatus.OPEN
-    ) as UniswapXOrderDetails[]
-  , [signatures])
+  const pendingOrders = useMemo(
+    () =>
+      Object.values(signatures).filter(
+        (signature) =>
+          signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === UniswapXOrderStatus.OPEN
+      ) as UniswapXOrderDetails[],
+    [signatures]
+  )
 
   const dispatch = useAppDispatch()
 
