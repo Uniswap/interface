@@ -14,12 +14,12 @@ export function SwitchNetworksModal(): JSX.Element {
   const activeWalletAddress = useActiveAccountAddressWithThrow()
   const activeChain = useAppSelector(selectChainByDappAndWallet(activeWalletAddress, dappUrl))
 
-  const onNetworkClicked = (chainId: ChainId): void => {
-    dispatch(saveChainAction({ chainId }))
+  const onNetworkClicked = async (chainId: ChainId): Promise<void> => {
+    await dispatch(saveChainAction({ chainId }))
   }
 
-  const onDisconnect = (): void => {
-    dispatch(disconnectAction())
+  const onDisconnect = async (): Promise<void> => {
+    await dispatch(disconnectAction())
   }
 
   return (
@@ -49,7 +49,7 @@ export function SwitchNetworksModal(): JSX.Element {
             key={chain}
             flex={1}
             justifyContent="space-between"
-            onPress={(): void => onNetworkClicked(chain)}>
+            onPress={async (): Promise<void> => onNetworkClicked(chain)}>
             <XStack alignItems="center" flexGrow={1} justifyContent="flex-start">
               <XStack alignItems="center" gap="$spacing12" paddingRight="$spacing8">
                 <Image

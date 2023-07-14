@@ -57,7 +57,11 @@ describe(AccountList, () => {
         )
       )
     ).toBeDefined()
-    fireEvent.press(screen.getByTestId(`account_item/${account.address}`), ON_PRESS_EVENT_PAYLOAD)
+
+    await fireEvent.press(
+      screen.getByTestId(`account_item/${account.address}`),
+      ON_PRESS_EVENT_PAYLOAD
+    )
 
     expect(onPressSpy).toHaveBeenCalledTimes(1)
   })

@@ -110,6 +110,7 @@ jest.mock('react-native-onesignal', () => {
     promptForPushNotificationsWithUserResponse: jest.fn(),
     setNotificationWillShowInForegroundHandler: jest.fn(),
     setNotificationOpenedHandler: jest.fn(),
+    getDeviceState: () => ({ userId: 'dummyUserId' }),
   }
 })
 

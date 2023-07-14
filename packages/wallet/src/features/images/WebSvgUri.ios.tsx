@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { Platform, StyleSheet } from 'react-native'
 import WebView from 'react-native-webview'
 import { Box } from 'ui/src/components/layout'
@@ -6,6 +6,7 @@ import { Loader } from 'ui/src/components/loading'
 import { fetchSVG } from 'wallet/src/features/images/utils'
 import { SvgUriProps } from 'wallet/src/features/images/WebSvgUri'
 import { logger } from 'wallet/src/features/logger/logger'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 
 const heightUnits = Platform.OS === 'ios' ? 'vh' : '%'
 
@@ -43,40 +44,27 @@ const getHTML = (svgContent: string): string => `
 
 /* Re-implementation of `react-native-svg#SvgUri` that has better SVG support (animations, text, etc.) */
 export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Element {
-  const [svgContent, setSvgContent] = useState<string | null>(null)
-  const [aspectRatio, setDimensions] = useState<number | null>(null)
-
-  useEffect(() => {
+  const fetchSvgData = useCallback(async () => {
     const controller = new AbortController()
     const signal = controller.signal
 
-    async function fetchSvg(): Promise<void> {
-      try {
-        const { content, aspectRatio: _aspectRatio } = await fetchSVG(uri, autoplay, signal)
-
-        setSvgContent(content)
-        setDimensions(_aspectRatio)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        if (Object.prototype.hasOwnProperty.call(err, 'name') && err.name === 'AbortError') {
-          return // expect AbortError on unmount
-        }
-        logger.error('Failed to fetch remote SVG content', {
-          tags: { file: 'WebSvgUri', function: 'fetchSvg' },
-        })
+    try {
+      return await fetchSVG(uri, autoplay, signal)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      if (Object.prototype.hasOwnProperty.call(err, 'name') && err.name === 'AbortError') {
+        return // expect AbortError on unmount
       }
-    }
-
-    fetchSvg()
-
-    return () => {
-      // abort fetch on unmount
-      controller.abort()
+      logger.error('Failed to fetch remote SVG content', {
+        tags: { file: 'WebSvgUri', function: 'fetchSvg' },
+      })
     }
   }, [autoplay, uri])
 
-  if (svgContent && aspectRatio) {
-    const html = getHTML(svgContent)
+  const svgData = useAsyncData(fetchSvgData).data
+
+  if (svgData?.content && svgData?.aspectRatio) {
+    const html = getHTML(svgData.content)
 
     return (
       <Box maxHeight={maxHeight ?? '100%'}>
@@ -92,7 +80,7 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Elemen
           style={[
             webviewStyle.fullSize,
             {
-              aspectRatio,
+              aspectRatio: svgData.aspectRatio,
             },
           ]}
           useWebKit={false}

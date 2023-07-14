@@ -232,9 +232,9 @@ export function useFiatOnRampSupportedTokens(): {
     data: supportedTokens,
     isLoading: isEligibleLoading || supportedTokensLoading,
     isError: isFiatBuyAllowedQueryError || supportedTokensQueryError,
-    refetch: (): void => {
-      isFiatBuyAllowedQueryRefetch()
-      supportedTokensQueryRefetch()
+    refetch: async (): Promise<void> => {
+      await isFiatBuyAllowedQueryRefetch()
+      await supportedTokensQueryRefetch()
     },
   }
 }

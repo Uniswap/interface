@@ -223,10 +223,10 @@ export function TransactionReview({
             label={actionButtonProps.label}
             name={actionButtonProps.name}
             size={ButtonSize.Large}
-            onPress={(): void => {
-              notificationAsync()
+            onPress={async (): Promise<void> => {
+              await notificationAsync()
               if (requiredForTransactions) {
-                actionButtonTrigger()
+                await actionButtonTrigger()
               } else {
                 actionButtonProps.onPress()
               }

@@ -1,3 +1,4 @@
+import { impactAsync } from 'expo-haptics'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
@@ -17,16 +18,17 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
 
-  const onPressCopyAddress = useCallback(() => {
+  const onPressCopyAddress = useCallback(async () => {
     if (!address) return
+    await impactAsync()
+    await setClipboard(address)
     dispatch(
       pushNotification({ type: AppNotificationType.Copied, copyType: CopyNotificationType.Address })
     )
-    setClipboard(address)
   }, [address, dispatch])
 
-  const openExplorerLink = useCallback(() => {
-    openUri(getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS))
+  const openExplorerLink = useCallback(async () => {
+    await openUri(getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS))
   }, [address])
 
   const menuActions = useMemo(
@@ -49,8 +51,8 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     <ContextMenu
       actions={menuActions}
       dropdownMenuMode={true}
-      onPress={(e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): void => {
-        menuActions[e.nativeEvent.index]?.action()
+      onPress={async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
+        await menuActions[e.nativeEvent.index]?.action()
       }}>
       <TouchableArea
         backgroundColor="textOnDimTertiary"

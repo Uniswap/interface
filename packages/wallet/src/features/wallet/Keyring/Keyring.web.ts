@@ -74,12 +74,12 @@ export class WebKeyring implements IKeyring {
       return false
     }
 
-    this.session.setItem(passwordKey, password)
+    await this.session.setItem(passwordKey, password)
     return true
   }
 
   async lock(): Promise<boolean> {
-    this.session.removeItem(passwordKey) // Clear password
+    await this.session.removeItem(passwordKey) // Clear password
     return true
   }
 

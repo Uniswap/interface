@@ -36,7 +36,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
   const onScanCode = async (uri: string): Promise<void> => {
     // don't scan any QR codes if there is an error popup open or camera is frozen
     if (hasScanError || shouldFreezeCamera) return
-    selectionAsync()
+    await selectionAsync()
     const supportedURI = await getSupportedURI(uri)
     if (supportedURI?.type === URIType.Address) {
       setShouldFreezeCamera(true)

@@ -1,3 +1,4 @@
+import { impactAsync } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
@@ -77,8 +78,9 @@ export function AccountCardItem({
     )
   }, [address, avatar, isViewOnly])
 
-  const onPressCopyAddress = (): void => {
-    setClipboard(address)
+  const onPressCopyAddress = async (): Promise<void> => {
+    await impactAsync()
+    await setClipboard(address)
     dispatch(
       pushNotification({
         type: AppNotificationType.Copied,
@@ -105,11 +107,11 @@ export function AccountCardItem({
   return (
     <ContextMenu
       actions={menuActions}
-      onPress={(e): void => {
+      onPress={async (e): Promise<void> => {
         // Emitted index based on order of menu action array
         // Copy address
         if (e.nativeEvent.index === 0) {
-          onPressCopyAddress()
+          await onPressCopyAddress()
         }
         // Navigate to settings
         if (e.nativeEvent.index === 1) {

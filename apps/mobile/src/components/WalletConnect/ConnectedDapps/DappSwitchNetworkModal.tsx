@@ -31,9 +31,9 @@ export function DappSwitchNetworkModal({
   const address = useActiveAccountAddressWithThrow()
 
   const onPress = useCallback(
-    (chainId: ChainId | null) => {
+    async (chainId: ChainId | null) => {
       if (!chainId) return
-      selectionAsync()
+      await selectionAsync()
       changeChainId(selectedSession.id, chainId)
       onClose()
     },
@@ -50,8 +50,8 @@ export function DappSwitchNetworkModal({
       networkOptions.concat([
         {
           key: ElementName.Disconnect,
-          onPress: (): void => {
-            notificationAsync()
+          onPress: async (): Promise<void> => {
+            await notificationAsync()
             dispatch(removeSession({ account: address, sessionId: selectedSession.id }))
             // Allow session removal action to complete before disconnecting from app, for immediate UI feedback
             setImmediate(() => disconnectFromApp(selectedSession.id))

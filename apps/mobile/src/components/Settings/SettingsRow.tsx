@@ -43,11 +43,11 @@ export function SettingsRow({
   navigation,
   theme,
 }: SettingsRowProps): JSX.Element {
-  const handleRow = (): void => {
+  const handleRow = async (): Promise<void> => {
     if (screen) {
       navigation.navigate(screen, screenProps)
     } else if (externalLink) {
-      openUri(externalLink)
+      await openUri(externalLink)
     }
   }
   return (

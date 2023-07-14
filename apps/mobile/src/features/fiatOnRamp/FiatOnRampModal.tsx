@@ -127,9 +127,9 @@ export function FiatOnRampModal(): JSX.Element {
   })
 
   useTimeout(
-    () => {
+    async () => {
       if (fiatOnRampHostUrl) {
-        openUri(fiatOnRampHostUrl)
+        await openUri(fiatOnRampHostUrl)
         dispatchAddTransaction()
         onClose()
       }
@@ -301,11 +301,11 @@ export function FiatOnRampModal(): JSX.Element {
                 eligible={eligible}
                 isLoading={isLoading}
                 properties={{ externalTransactionId }}
-                onPress={(): void => {
+                onPress={async (): Promise<void> => {
                   if (eligible) {
                     setShowConnectingToMoonpayScreen(true)
                   } else {
-                    openUri(MOONPAY_UNSUPPORTED_REGION_HELP_URL)
+                    await openUri(MOONPAY_UNSUPPORTED_REGION_HELP_URL)
                   }
                 }}
               />

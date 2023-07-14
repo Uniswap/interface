@@ -1,6 +1,6 @@
 import { ApolloClient, from, NormalizedCacheObject } from '@apollo/client'
 import { MMKVWrapper } from 'apollo3-cache-persist'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { MMKV } from 'react-native-mmkv'
 import { initAndPersistCache } from 'src/data/cache'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
@@ -12,6 +12,7 @@ import {
   getRestLink,
 } from 'wallet/src/data/links'
 import { isNonJestDev } from 'wallet/src/utils/environment'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 
 export let apolloClient: ApolloClient<NormalizedCacheObject> | null = null
 
@@ -25,41 +26,39 @@ if (isNonJestDev()) {
 export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> | undefined => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
 
-  useEffect(() => {
-    async function init(): Promise<void> {
-      const storage = new MMKVWrapper(mmkv)
-      const cache = await initAndPersistCache(storage)
+  const init = useCallback(async () => {
+    const storage = new MMKVWrapper(mmkv)
+    const cache = await initAndPersistCache(storage)
 
-      const newClient = new ApolloClient({
-        link: from([
-          getErrorLink(),
-          // requires typing outside of wallet package
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          getPerformanceLink((args: any) =>
-            sendAnalyticsEvent(MobileEventName.PerformanceGraphql, args)
-          ),
-          getRestLink(),
-          getGraphqlHttpLink(),
-        ]),
-        cache,
-        defaultOptions: {
-          watchQuery: {
-            // NOTE: when polling is enabled, if there is cached data, the first request is skipped.
-            // `cache-and-network` ensures we send a request on first query, keeping queries
-            // across the app in sync.
-            fetchPolicy: 'cache-and-network',
-            // ensures query is returning data even if some fields errored out
-            errorPolicy: 'all',
-          },
+    const newClient = new ApolloClient({
+      link: from([
+        getErrorLink(),
+        // requires typing outside of wallet package
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getPerformanceLink((args: any) =>
+          sendAnalyticsEvent(MobileEventName.PerformanceGraphql, args)
+        ),
+        getRestLink(),
+        getGraphqlHttpLink(),
+      ]),
+      cache,
+      defaultOptions: {
+        watchQuery: {
+          // NOTE: when polling is enabled, if there is cached data, the first request is skipped.
+          // `cache-and-network` ensures we send a request on first query, keeping queries
+          // across the app in sync.
+          fetchPolicy: 'cache-and-network',
+          // ensures query is returning data even if some fields errored out
+          errorPolicy: 'all',
         },
-      })
+      },
+    })
 
-      apolloClient = newClient
-      setClient(newClient)
-    }
-
-    init()
+    apolloClient = newClient
+    setClient(newClient)
   }, [])
+
+  useAsyncData(init)
 
   useEffect(() => {
     if (isNonJestDev()) {

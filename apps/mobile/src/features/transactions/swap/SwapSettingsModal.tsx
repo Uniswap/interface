@@ -83,8 +83,8 @@ export default function SwapSettingsModal({
     transform: [{ translateX: inputShakeX.value }],
   }))
 
-  const onPressLearnMore = (): void => {
-    openUri(SWAP_SLIPPAGE_HELP_PAGE_URL)
+  const onPressLearnMore = async (): Promise<void> => {
+    await openUri(SWAP_SLIPPAGE_HELP_PAGE_URL)
   }
 
   const onPressAutoSlippage = (): void => {
@@ -95,7 +95,7 @@ export default function SwapSettingsModal({
   }
 
   const onChangeSlippageInput = useCallback(
-    (value: string): void => {
+    async (value: string): Promise<void> => {
       setAutoSlippageEnabled(false)
       setInputWarning(undefined)
 
@@ -144,7 +144,7 @@ export default function SwapSettingsModal({
             inputShakeX.value = 0
           }
         )
-        impactAsync()
+        await impactAsync()
         return
       }
 

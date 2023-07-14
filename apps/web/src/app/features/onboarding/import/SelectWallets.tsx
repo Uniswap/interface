@@ -68,9 +68,9 @@ export function SelectWallets(): JSX.Element {
     skip: isImportingAccounts,
   })
 
-  const onRetry = useCallback(() => {
+  const onRetry = useCallback(async () => {
     setIsForcedLoading(true)
-    refetch()
+    await refetch()
   }, [refetch])
 
   const allAddressBalances = data?.portfolios
@@ -136,11 +136,11 @@ export function SelectWallets(): JSX.Element {
   }, [initialShownAccounts, isImportingAccounts, loading, selectedAddresses.length])
 
   const isFirstAccountActive = useRef(false) // to keep track of first account activated from the selected accounts
-  const onSubmit = useCallback(() => {
-    addresses.forEach((address) => {
+  const onSubmit = useCallback(async () => {
+    addresses.forEach(async (address) => {
       // Remove unselected accounts from store.
       if (!selectedAddresses.includes(address)) {
-        dispatch(
+        await dispatch(
           editAccountActions.trigger({
             type: EditAccountAction.Remove,
             address,
@@ -149,12 +149,12 @@ export function SelectWallets(): JSX.Element {
         )
       } else {
         if (!isFirstAccountActive.current) {
-          dispatch(setAccountAsActive(address))
+          await dispatch(setAccountAsActive(address))
           isFirstAccountActive.current = true
         }
         const account = pendingAccounts[address]
         if (account && !account.name && account.type !== AccountType.Readonly) {
-          dispatch(
+          await dispatch(
             editAccountActions.trigger({
               type: EditAccountAction.Rename,
               address,
@@ -164,7 +164,8 @@ export function SelectWallets(): JSX.Element {
         }
       }
     })
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.Activate))
+
+    await dispatch(pendingAccountActions.trigger(PendingAccountActions.Activate))
     navigate(
       `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Complete}`,
       { replace: true }

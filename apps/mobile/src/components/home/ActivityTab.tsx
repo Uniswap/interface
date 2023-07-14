@@ -33,7 +33,7 @@ import {
   useSelectAccountHideSpamTokens,
 } from 'wallet/src/features/wallet/hooks'
 
-export const ACTVITIY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
+export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
 
 const ESTIMATED_ITEM_SIZE = 92
 

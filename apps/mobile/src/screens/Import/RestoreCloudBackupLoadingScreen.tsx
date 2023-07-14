@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -17,6 +17,7 @@ import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import { logger } from 'wallet/src/features/logger/logger'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 import { useTimeout } from 'wallet/src/utils/timing'
 
@@ -35,7 +36,7 @@ export function RestoreCloudBackupLoadingScreen({
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
-  const entryPoint = params?.entryPoint
+  const entryPoint = params.entryPoint
 
   const [isLoading, setIsLoading] = useState(true)
   const backups = useCloudBackups()
@@ -43,31 +44,23 @@ export function RestoreCloudBackupLoadingScreen({
   useAddBackButton(navigation)
 
   // Starts query for iCloud backup files, backup files found are streamed into Redux
-  useEffect(() => {
-    const timer = fetchICloudBackupsWithTimeout()
-
-    return () => {
-      stopFetchingICloudBackups()
-      clearTimeout(timer)
-    }
-  }, [])
-
-  const fetchICloudBackupsWithTimeout = (): NodeJS.Timeout => {
+  const fetchICloudBackupsWithTimeout = useCallback(async () => {
     // Show loading state for max 10s, then show no backups found
     setIsLoading(true)
-    startFetchingICloudBackups()
+    await startFetchingICloudBackups()
 
-    return setTimeout(() => {
+    setTimeout(async () => {
       logger.debug(
         'RestoreCloudBackupLoadingScreen',
         'fetchICloudBackupsWithTimeout',
         `Timed out fetching iCloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
       )
       setIsLoading(false)
-      stopFetchingICloudBackups()
+      await stopFetchingICloudBackups()
     }, MAX_LOADING_TIMEOUT_MS)
-  }
+  }, [])
 
+  useAsyncData(fetchICloudBackupsWithTimeout)
   // After finding backups, show loading state for minimum 1s to prevent screen changing too quickly
   useTimeout(
     backups.length > 0

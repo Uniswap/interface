@@ -1,4 +1,3 @@
-import { useDappContext } from 'src/background/features/dapp/hooks'
 import { SignMessageRequest } from 'src/background/features/dappRequests/dappRequestTypes'
 import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
 import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
@@ -12,8 +11,6 @@ export const SignMessageDetails = ({
   activeAccount: Account
   request: DappRequestStoreItem
 }): JSX.Element => {
-  const { dappName, dappUrl } = useDappContext()
-
   const signMessageRequest = request.dappRequest as SignMessageRequest
   if (!signMessageRequest) {
     throw new Error('No sign message request')

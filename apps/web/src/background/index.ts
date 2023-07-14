@@ -14,7 +14,7 @@ import { initializeStore, WebState } from './store'
 // reset to false, as expected, whenever the service worker wakes up from idle.
 let isInitialized = false
 
-/** Main entrypoint for intiializing the app. */
+/** Main entrypoint for intializing the app. */
 const initApp = async ({
   openOnboardingIfNotOnboarded = false,
 }: {
@@ -37,34 +37,34 @@ const initApp = async ({
   notifyStoreInitialized()
 
   if (openOnboardingIfNotOnboarded) {
-    maybeOpenOnboarding(store.getState() as unknown as WebState)
+    await maybeOpenOnboarding(store.getState() as unknown as WebState)
   }
 }
 
 // onInstalled is triggered when the extension is installed or updated. We want to
 // open full screen onboarding when the extension is installed so this listener handles that.
-chrome.runtime.onInstalled.addListener(() => {
-  initApp({ openOnboardingIfNotOnboarded: true })
+chrome.runtime.onInstalled.addListener(async () => {
+  await initApp({ openOnboardingIfNotOnboarded: true })
 })
 
 // Listen to incoming connections from content scripts or popup.
 // Triggers whenever extension "wakes up" from idle.
 // With Manifest V3, we must reinitialize the store from storage each time.
-chrome.runtime.onConnect.addListener((port) => {
+chrome.runtime.onConnect.addListener(async (port) => {
   if (port.name !== PortName.Popup && port.name !== PortName.ContentScript) {
     // ignore requests not from known ports
     return
   }
 
   // The popup will handle opening the onboarding page if needed, so we do not need to open it here.
-  initApp({})
+  await initApp({})
 })
 
-function maybeOpenOnboarding(state: WebState): void {
+async function maybeOpenOnboarding(state: WebState): Promise<void> {
   const isOnboarded = isOnboardedSelector(state)
 
   if (!isOnboarded) {
-    focusOrCreateOnboardingTab()
+    await focusOrCreateOnboardingTab()
   }
 }
 

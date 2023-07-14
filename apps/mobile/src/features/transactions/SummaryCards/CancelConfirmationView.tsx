@@ -50,10 +50,10 @@ export function CancelConfirmationView({
   const { trigger: actionButtonTrigger } = useBiometricPrompt(onCancelConfirm)
   const { requiredForTransactions } = useBiometricAppSettings()
 
-  const onPressCancel = useCallback(() => {
-    notificationAsync()
+  const onPressCancel = useCallback(async () => {
+    await notificationAsync()
     if (requiredForTransactions) {
-      actionButtonTrigger()
+      await actionButtonTrigger()
     } else {
       onCancelConfirm()
     }

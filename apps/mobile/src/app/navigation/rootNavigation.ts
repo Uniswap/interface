@@ -18,9 +18,9 @@ function isNavigationRefReady(): boolean {
   return true
 }
 
-export async function navigate<RouteName extends keyof RootParamList>(
+export function navigate<RouteName extends keyof RootParamList>(
   ...args: RootNavigationArgs<RouteName>
-): Promise<void> {
+): void {
   const [routeName, params] = args
   if (!isNavigationRefReady()) {
     return
@@ -31,7 +31,7 @@ export async function navigate<RouteName extends keyof RootParamList>(
   navigationRef.navigate(routeName as never, params as never)
 }
 
-export async function goBack(): Promise<void> {
+export function goBack(): void {
   if (!isNavigationRefReady()) {
     return
   }
@@ -39,9 +39,9 @@ export async function goBack(): Promise<void> {
   if (navigationRef.canGoBack()) navigationRef.goBack()
 }
 
-export async function dispatchNavigationAction(
+export function dispatchNavigationAction(
   action: NavigationAction | ((state: NavigationState) => NavigationAction)
-): Promise<void> {
+): void {
   if (!isNavigationRefReady()) {
     return
   }

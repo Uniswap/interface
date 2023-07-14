@@ -105,8 +105,8 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   const walletsLoading = ensLoading || loadingIsSmartContractAddress
 
-  const onRetry = useCallback(() => {
-    refetch()
+  const onRetry = useCallback(async () => {
+    await refetch()
   }, [refetch])
 
   const hasENSResult = ensName && ensAddress

@@ -116,8 +116,8 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   const hasAllData = !!data?.topTokens
   const error = usePersistedError(requestLoading, requestError)
 
-  const onRetry = useCallback(() => {
-    refetch()
+  const onRetry = useCallback(async () => {
+    await refetch()
   }, [refetch])
 
   // Use showLoading for showing full screen loading state

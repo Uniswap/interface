@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { monitoredSagas } from 'src/background/saga'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 import { SagaState, SagaStatus } from 'wallet/src/utils/saga'
 
 // Convenience hook to get the status + error of an active saga
@@ -20,18 +21,20 @@ export function useSagaStatus(
     throw new Error(`No saga found, is sagaName valid? Name: ${sagaName}`)
   }
 
-  const { status, error } = sagaState
+  const { status } = sagaState
 
-  useEffect(() => {
+  const resetSaga = useCallback(async () => {
     if (status === SagaStatus.Success) {
-      if (resetSagaOnSuccess) dispatch(saga.actions.reset())
+      if (resetSagaOnSuccess) await dispatch(saga.actions.reset())
       onSuccess?.()
     }
-  }, [saga, status, error, onSuccess, resetSagaOnSuccess, dispatch])
+  }, [saga, status, onSuccess, resetSagaOnSuccess, dispatch])
+
+  useAsyncData(resetSaga)
 
   useEffect(() => {
     return () => {
-      if (resetSagaOnSuccess) dispatch(saga.actions.reset())
+      if (resetSagaOnSuccess) dispatch(saga.actions.reset()).catch(() => undefined)
     }
   }, [saga, resetSagaOnSuccess, dispatch])
 

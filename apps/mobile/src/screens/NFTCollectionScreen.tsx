@@ -93,9 +93,9 @@ export function NFTCollectionScreen({
       ? LOADING_BUFFER_AMOUNT + (3 - ((collectionItems ?? []).length % 3))
       : undefined
 
-  const onListEndReached = useCallback(() => {
+  const onListEndReached = useCallback(async () => {
     if (!data?.nftAssets?.pageInfo?.hasNextPage) return
-    fetchMore({
+    await fetchMore({
       variables: {
         first: ASSET_FETCH_PAGE_SIZE,
         after: data?.nftAssets?.pageInfo?.endCursor,

@@ -30,9 +30,9 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props): JSX.Element
     setShowSeedPhraseViewWarningModal(false)
   }
 
-  const onConfirmWarning = (): void => {
+  const onConfirmWarning = async (): Promise<void> => {
     if (biometricAuthRequiredForAppAccess || biometricAuthRequiredForTransactions) {
-      biometricTrigger()
+      await biometricTrigger()
     } else {
       onShowSeedPhraseConfirmed()
     }

@@ -84,9 +84,9 @@ function TransactionSummaryLayout({
     }
   }, [status])
 
-  const onPress = (): void => {
+  const onPress = async (): Promise<void> => {
     if (readonly) {
-      openTransactionLink(hash, chainId)
+      await openTransactionLink(hash, chainId)
     } else {
       setShowActionsModal(true)
     }

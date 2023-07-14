@@ -58,7 +58,7 @@ export function TouchableArea({
   const scale = useSharedValue(1)
 
   const onPressHandler = useCallback(
-    (event: GestureResponderEvent) => {
+    async (event: GestureResponderEvent) => {
       if (!onPress) return
 
       const { pageX, pageY } = event.nativeEvent
@@ -77,7 +77,7 @@ export function TouchableArea({
       }
 
       if (hapticFeedback) {
-        impactAsync(hapticStyle)
+        await impactAsync(hapticStyle)
       }
 
       onPress(event)

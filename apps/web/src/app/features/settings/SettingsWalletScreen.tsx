@@ -30,8 +30,8 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
   const account = useAccount(address)
   const displayName = useDisplayName(address)?.name
 
-  const handleSpamTokensToggle = (): void => {
-    dispatch(
+  const handleSpamTokensToggle = async (): Promise<void> => {
+    await dispatch(
       editAccountActions.trigger({
         type: EditAccountAction.ToggleShowSpamTokens,
         address,

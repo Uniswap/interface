@@ -33,7 +33,7 @@ export async function openRequestsWindow(
     .getCurrent()
     .then((window) => window.width ?? DEFAULT_WINDOW_WIDTH)
 
-  chrome.windows.create({
+  await chrome.windows.create({
     ...windowParams,
     left: currentWindowWidth - 425,
     url: REQUESTS_WINDOW_URL,
@@ -77,7 +77,7 @@ export async function maybeOpenRequestsWindow(
     return openDockedWindow()
   }
 
-  chrome.windows.getAll((windows) => {
+  chrome.windows.getAll(async (windows) => {
     const requestsWindowFound = windows.find((window) => {
       if (window.tabs && window.tabs.length > 0) {
         return window.tabs[0]?.url?.includes(REQUESTS_WINDOW_URL)
@@ -85,7 +85,7 @@ export async function maybeOpenRequestsWindow(
     })
     if (requestsWindowFound) return
 
-    openRequestsWindow()
+    await openRequestsWindow()
   })
 }
 

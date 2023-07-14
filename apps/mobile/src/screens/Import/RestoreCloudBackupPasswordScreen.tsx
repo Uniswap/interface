@@ -107,10 +107,10 @@ export function RestoreCloudBackupPasswordScreen({
 
   useAddBackButton(navigation)
 
-  const onPasswordSubmit = (): void => {
+  const onPasswordSubmit = async (): Promise<void> => {
     if (isLockedOut || enteredPassword.length === 0) return
 
-    // Atttempt to restore backup with encrypted mnemonic using password
+    // Attempt to restore backup with encrypted mnemonic using password
     async function checkCorrectPassword(): Promise<void> {
       try {
         await restoreMnemonicFromICloud(params.mnemonicId, enteredPassword)
@@ -135,13 +135,9 @@ export function RestoreCloudBackupPasswordScreen({
       }
     }
 
-    checkCorrectPassword()
+    await checkCorrectPassword()
     setEnteredPassword('')
     Keyboard.dismiss()
-  }
-
-  const onContinuePress = (): void => {
-    onPasswordSubmit()
   }
 
   return (
@@ -169,7 +165,7 @@ export function RestoreCloudBackupPasswordScreen({
         disabled={!enteredPassword || isLockedOut}
         label={t('Continue')}
         name={ElementName.Submit}
-        onPress={onContinuePress}
+        onPress={onPasswordSubmit}
       />
     </OnboardingScreen>
   )

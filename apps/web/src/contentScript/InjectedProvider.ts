@@ -144,7 +144,7 @@ export class InjectedProvider extends EventEmitter {
    * Initialize a listener for messages posted from the Uniswap Wallet extension.
    */
   initExtensionToDappOneWayListener = (): void => {
-    const handleDappRequest = (event: MessageEvent<BaseExtensionRequest>): void => {
+    const handleDappRequest = async (event: MessageEvent<BaseExtensionRequest>): Promise<void> => {
       const messageData = event.data
       switch (messageData?.type) {
         case ExtensionRequestType.SwitchChain: {
@@ -156,7 +156,7 @@ export class InjectedProvider extends EventEmitter {
           break
         }
         case ExtensionRequestType.Disconnect: {
-          this.handleDisconnectAccount()
+          await this.handleDisconnectAccount()
         }
       }
     }

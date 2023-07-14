@@ -1,7 +1,7 @@
 import MaskedView from '@react-native-masked-view/masked-view'
 import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner'
 import { PermissionStatus } from 'expo-modules-core'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet, ViewStyle } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -18,6 +18,7 @@ import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 
 type QRCodeScannerProps = {
   onScanCode: (data: string) => void
@@ -61,13 +62,11 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   }
 
   // Check for camera permissions, handle cases where not granted or undetermined
-  useEffect(() => {
-    const getPermissionStatuses = async (): Promise<void> => {
+  const getPermissionStatuses = useCallback(async (): Promise<void> => {
+    if (permissionStatus === PermissionStatus.UNDETERMINED) {
       await requestPermissionResponse()
     }
-    if (permissionStatus === PermissionStatus.UNDETERMINED) {
-      getPermissionStatuses()
-    }
+
     if (permissionStatus === PermissionStatus.DENIED) {
       Alert.alert(
         t('Camera is disabled'),
@@ -81,6 +80,8 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       )
     }
   }, [permissionStatus, requestPermissionResponse, t])
+
+  useAsyncData(getPermissionStatuses)
 
   useEffect(() => {
     if (!data) return

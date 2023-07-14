@@ -94,12 +94,12 @@ export function ImportMethodScreenNew({ navigation, route: { params } }: Props):
     })
   }
 
-  const handleOnPress = (nav: OnboardingScreens, importType: ImportType): void => {
+  const handleOnPress = async (nav: OnboardingScreens, importType: ImportType): Promise<void> => {
     // Delete any pending accounts before entering flow.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
 
     if (importType === ImportType.Restore) {
-      handleOnPressRestoreBackup()
+      await handleOnPressRestoreBackup()
       return
     }
 
@@ -127,7 +127,7 @@ export function ImportMethodScreenNew({ navigation, route: { params } }: Props):
             icon={icon(theme)}
             name={name}
             title={title(t)}
-            onPress={(): void => handleOnPress(nav, importType)}
+            onPress={(): Promise<void> => handleOnPress(nav, importType)}
           />
         ))}
       </Flex>
@@ -138,7 +138,7 @@ export function ImportMethodScreenNew({ navigation, route: { params } }: Props):
           <Text
             color="accentAction"
             variant="buttonLabelMedium"
-            onPress={(): void =>
+            onPress={(): Promise<void> =>
               handleOnPress(OnboardingScreens.RestoreCloudBackup, ImportType.Restore)
             }>
             {t('Restore from iCloud')}

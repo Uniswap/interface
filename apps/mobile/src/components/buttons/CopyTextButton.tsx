@@ -27,8 +27,8 @@ export function CopyTextButton({ copyText }: Props): JSX.Element {
     <CheckCircle color={theme.colors.accentSuccess} height={ICON_SIZE} width={ICON_SIZE} />
   )
 
-  const onPress = (): void => {
-    if (copyText) setClipboard(copyText)
+  const onPress = async (): Promise<void> => {
+    if (copyText) await setClipboard(copyText)
     setIsCopied(true)
   }
 

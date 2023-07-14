@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
@@ -19,6 +19,7 @@ import {
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 import { translateMnemonicErrorMessage, validateMnemonic } from 'wallet/src/utils/mnemonics'
 
 export function ImportMnemonic(): JSX.Element {
@@ -35,13 +36,15 @@ export function ImportMnemonic(): JSX.Element {
     setMnemonic(text)
   }, [])
 
-  useEffect(() => {
+  const deletePendingAccounts = useCallback(async () => {
     // Delete any pending accounts before entering flow.
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
+    await dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
   }, [dispatch])
 
+  useAsyncData(deletePendingAccounts)
+
   // Add all accounts from mnemonic.
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
     const { validMnemonic, error, invalidWord } = validateMnemonic(mnemonic)
 
     if (error) {
@@ -51,7 +54,7 @@ export function ImportMnemonic(): JSX.Element {
       return
     }
 
-    dispatch(
+    await dispatch(
       importAccountActions.trigger({
         type: ImportAccountType.Mnemonic,
         validatedMnemonic: validMnemonic,

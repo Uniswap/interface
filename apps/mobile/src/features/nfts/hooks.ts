@@ -169,8 +169,8 @@ export function useNFTMenu({
   )
 
   const onContextMenuPress = useCallback(
-    (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): void => {
-      menuActions[e.nativeEvent.index]?.onPress?.()
+    async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
+      await menuActions[e.nativeEvent.index]?.onPress?.()
     },
     [menuActions]
   )

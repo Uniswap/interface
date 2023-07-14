@@ -67,7 +67,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     errorText = t('Address does not exist')
   }
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
     if (isValid && value) {
       if (resolvedAddress) {
         dispatch(
@@ -88,7 +88,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
         screen: OnboardingScreens.WatchWallet,
         element: ElementName.Continue,
       })
-      onCompleteOnboarding()
+      await onCompleteOnboarding()
     }
   }, [dispatch, isValid, normalizedValue, onCompleteOnboarding, resolvedAddress, value])
 

@@ -164,10 +164,10 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
   const shouldAddInLoadingItem =
     networkStatus === NetworkStatus.fetchMore && nftDataItems && nftDataItems.length % 2 === 1
 
-  const onListEndReached = useCallback(() => {
+  const onListEndReached = useCallback(async () => {
     if (!data?.nftBalances?.pageInfo?.hasNextPage) return
 
-    fetchMore({
+    await fetchMore({
       variables: {
         first: 30,
         after: data?.nftBalances?.pageInfo?.endCursor,

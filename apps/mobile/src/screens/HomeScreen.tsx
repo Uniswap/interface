@@ -22,7 +22,7 @@ import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { ActivityTab, ACTVITIY_TAB_DATA_DEPENDENCIES } from 'src/components/home/ActivityTab'
+import { ActivityTab, ACTIVITY_TAB_DATA_DEPENDENCIES } from 'src/components/home/ActivityTab'
 import { NftsTab, NFTS_TAB_DATA_DEPENDENCIES } from 'src/components/home/NftsTab'
 import { TokensTab, TOKENS_TAB_DATA_DEPENDENCIES } from 'src/components/home/TokensTab'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
@@ -334,8 +334,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
                   },
                 ]}
                 tabStyle={style}
-                onTabPress={(): void => {
-                  impactAsync()
+                onTabPress={async (): Promise<void> => {
+                  await impactAsync()
                 }}
               />
             </Box>
@@ -357,13 +357,13 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const [refreshing, setRefreshing] = useState(false)
 
-  const onRefreshHomeData = useCallback(() => {
+  const onRefreshHomeData = useCallback(async () => {
     setRefreshing(true)
-    apolloClient?.refetchQueries({
+    await apolloClient?.refetchQueries({
       include: [
         ...TOKENS_TAB_DATA_DEPENDENCIES,
         ...NFTS_TAB_DATA_DEPENDENCIES,
-        ...ACTVITIY_TAB_DATA_DEPENDENCIES,
+        ...ACTIVITY_TAB_DATA_DEPENDENCIES,
       ],
     })
     // Artificially delay 0.5 second to show the refresh animation

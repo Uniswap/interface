@@ -11,14 +11,17 @@ export const resources = {
 
 export const defaultNS = 'translation'
 
-i18n.use(initReactI18next).init({
-  defaultNS,
-  lng: 'en',
-  resources,
-  interpolation: {
-    escapeValue: false, // react already safes from xss
-  },
-})
+i18n
+  .use(initReactI18next)
+  .init({
+    defaultNS,
+    lng: 'en',
+    resources,
+    interpolation: {
+      escapeValue: false, // react already safes from xss
+    },
+  })
+  .catch(() => undefined)
 
 /*
 type DefaultLocale = typeof en
@@ -50,8 +53,8 @@ type RecursiveKeyOfHandleValue<
 export const t = (key: TxKeyPath) => (key ? i18n.t(key) : undefined)
 */
 
-export const changeLanguage = (str: string): Promise<TFunction> => {
-  return i18n.changeLanguage(str)
+export const changeLanguage = async (str: string): Promise<TFunction> => {
+  return await i18n.changeLanguage(str)
 }
 
 export default i18n

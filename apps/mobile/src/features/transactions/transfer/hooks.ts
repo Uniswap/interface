@@ -1,6 +1,6 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { GQLNftAsset, useNFT } from 'src/features/nfts/hooks'
 import {
@@ -26,6 +26,7 @@ import { useProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 
 export type DerivedTransferInfo = BaseDerivedInfo<CurrencyInfo | GQLNftAsset> & {
   currencyTypes: { [CurrencyField.INPUT]?: AssetType }
@@ -223,22 +224,17 @@ export function useIsSmartContractAddress(
   isSmartContractAddress: boolean
 } {
   const provider = useProvider(chainId)
-  const [state, setState] = useState<{ loading: boolean; isSmartContractAddress: boolean }>({
-    loading: true,
-    isSmartContractAddress: false,
-  })
 
-  useEffect(() => {
-    if (!address) return setState({ loading: false, isSmartContractAddress: false })
-    setState((s) => ({ ...s, loading: true }))
-    provider?.getCode(address).then((code: string) => {
-      // provider.getCode(address) will return a hex string if code is deployed at that address = it's a smart contract
-      // returning just 0x means there's no code and it's not a smart contract
-      const isSmartContractAddress = code !== '0x'
-      setState({ loading: false, isSmartContractAddress })
-    })
-  }, [address, provider])
-  return state
+  const fetchIsSmartContractAddress = useCallback(async () => {
+    if (!address) return false
+    const code = await provider?.getCode(address)
+    // provider.getCode(address) will return a hex string if a smart contract is deployed at that address
+    // returning just 0x means there's no code and it's not a smart contract
+    return code !== '0x'
+  }, [provider, address])
+
+  const { data, isLoading } = useAsyncData(fetchIsSmartContractAddress)
+  return { isSmartContractAddress: !!data, loading: isLoading }
 }
 
 export function useOnToggleShowRecipientSelector(dispatch: React.Dispatch<AnyAction>): () => void {

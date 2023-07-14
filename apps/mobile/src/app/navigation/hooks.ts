@@ -11,15 +11,15 @@ import { useTransactionListLazyQuery } from 'wallet/src/data/__generated__/types
  * Preloads query needed to render transaction list.
  */
 export function useEagerActivityNavigation(): {
-  preload: (address: string) => void
+  preload: (address: string) => Promise<void>
   navigate: () => void
 } {
   const navigation = useAppStackNavigation()
   const [load] = useTransactionListLazyQuery()
 
   const preload = useCallback(
-    (address: string) => {
-      load({
+    async (address: string) => {
+      await load({
         variables: {
           address,
         },
@@ -41,7 +41,7 @@ export function useEagerActivityNavigation(): {
  * Preloads query needed to render transaction list.
  */
 export function useEagerExternalProfileNavigation(): {
-  preload: (address: string) => void
+  preload: (address: string) => Promise<void>
   navigate: (address: string) => void
 } {
   const navigation = useExploreStackNavigation()
@@ -49,8 +49,8 @@ export function useEagerExternalProfileNavigation(): {
   const [load] = useTransactionListLazyQuery()
 
   const preload = useCallback(
-    (address: string) => {
-      load({ variables: { address } })
+    async (address: string) => {
+      await load({ variables: { address } })
     },
     [load]
   )
@@ -66,14 +66,14 @@ export function useEagerExternalProfileNavigation(): {
 }
 
 export function useEagerExternalProfileRootNavigation(): {
-  preload: (address: string) => void
-  navigate: (address: string, callback: () => void) => void
+  preload: (address: string) => Promise<void>
+  navigate: (address: string, callback: () => void) => Promise<void>
 } {
   const [load] = useTransactionListLazyQuery()
 
   const preload = useCallback(
-    (address: string) => {
-      load({
+    async (address: string) => {
+      await load({
         variables: {
           address,
         },
@@ -82,10 +82,9 @@ export function useEagerExternalProfileRootNavigation(): {
     [load]
   )
 
-  const navigate = useCallback((address: string, callback?: () => void) => {
-    rootNavigate(Screens.ExternalProfile, { address }).then(() => {
-      callback?.()
-    })
+  const navigate = useCallback(async (address: string, callback?: () => void) => {
+    await rootNavigate(Screens.ExternalProfile, { address })
+    callback?.()
   }, [])
 
   return { preload, navigate }

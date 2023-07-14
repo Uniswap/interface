@@ -37,5 +37,6 @@ i18nBase
       escapeValue: false, // not needed for react as it escapes by default
     },
   })
+  .catch(() => undefined)
 
 export const i18n = i18nBase // Just aliasing for named export

@@ -10,8 +10,8 @@ const mockStore = async ({ data }: { data: Record<string, string> }): Promise<vo
 const PASSWORD_KEY = '.password.'
 
 describe(WebKeyring, () => {
-  beforeEach(() => {
-    chrome.storage.local.clear()
+  beforeEach(async () => {
+    await chrome.storage.local.clear()
   })
 
   describe('getMnemonicIds', () => {

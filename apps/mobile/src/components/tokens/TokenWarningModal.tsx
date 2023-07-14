@@ -73,8 +73,8 @@ export default function TokenWarningModal({
 
   const closeButtonText = hideAcceptButton ? t('Close') : t('Back')
 
-  const onPressLearnMore = (): void => {
-    openUri(TOKEN_WARNING_HELP_PAGE_URL)
+  const onPressLearnMore = async (): Promise<void> => {
+    await openUri(TOKEN_WARNING_HELP_PAGE_URL)
   }
 
   const showWarningIcon =

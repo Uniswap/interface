@@ -54,8 +54,8 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
 
   const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
 
-  const onPress = (): void => {
-    preload(address)
+  const onPress = async (): Promise<void> => {
+    await preload(address)
     navigate(address)
     if (searchContext) {
       sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {

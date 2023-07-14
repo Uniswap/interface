@@ -85,36 +85,43 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
 
     return [
       {
-        onValueChange: (newRequiredForAppAccessValue): void => {
+        onValueChange: async (newRequiredForAppAccessValue): Promise<void> => {
           if (!newRequiredForAppAccessValue && !requiredForTransactions) {
             setShowUnsafeWarningModal(true)
             setUnsafeWarningModalType(BiometricSettingType.RequiredForAppAccess)
             return
           }
-          osBiometricAuthEnabled
-            ? trigger({
-                biometricAppSettingType: BiometricSettingType.RequiredForAppAccess,
-                newValue: newRequiredForAppAccessValue,
-              })
-            : handleFaceIdTurnedOff()
+
+          if (osBiometricAuthEnabled) {
+            await trigger({
+              biometricAppSettingType: BiometricSettingType.RequiredForAppAccess,
+              newValue: newRequiredForAppAccessValue,
+            })
+            return
+          }
+
+          handleFaceIdTurnedOff()
         },
         value: requiredForAppAccess,
         text: t('App access'),
         subText: t('Require {{authenticationTypeName}} ID to open app', { authenticationTypeName }),
       },
       {
-        onValueChange: (newRequiredForTransactionsValue): void => {
+        onValueChange: async (newRequiredForTransactionsValue): Promise<void> => {
           if (!newRequiredForTransactionsValue && !requiredForAppAccess) {
             setShowUnsafeWarningModal(true)
             setUnsafeWarningModalType(BiometricSettingType.RequiredForTransactions)
             return
           }
-          osBiometricAuthEnabled
-            ? trigger({
-                biometricAppSettingType: BiometricSettingType.RequiredForTransactions,
-                newValue: newRequiredForTransactionsValue,
-              })
-            : handleFaceIdTurnedOff()
+
+          if (osBiometricAuthEnabled) {
+            await trigger({
+              biometricAppSettingType: BiometricSettingType.RequiredForTransactions,
+              newValue: newRequiredForTransactionsValue,
+            })
+          }
+
+          handleFaceIdTurnedOff()
         },
         value: requiredForTransactions,
         text: t('Transactions'),
@@ -160,8 +167,8 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
         <BiometricAuthWarningModal
           isTouchIdDevice={touchId}
           onClose={onCloseModal}
-          onConfirm={(): void => {
-            trigger({
+          onConfirm={async (): Promise<void> => {
+            await trigger({
               biometricAppSettingType: unsafeWarningModalType,
               // flip the bit
               newValue: !(unsafeWarningModalType === BiometricSettingType.RequiredForAppAccess

@@ -103,8 +103,8 @@ export function useFormattedTransactionDataForActivity(
     ]
   }, [showLoading, hasTransactions, pending, last24hTransactionList, priorByMonthTransactionList])
 
-  const onRetry = useCallback(() => {
-    refetch({
+  const onRetry = useCallback(async () => {
+    await refetch({
       address,
     })
   }, [address, refetch])

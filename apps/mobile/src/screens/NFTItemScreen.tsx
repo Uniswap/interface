@@ -130,8 +130,8 @@ export function NFTItemScreen({
   }, [colorLight])
 
   const onLongPressNFTImage = async (): Promise<void> => {
-    setClipboardImage(asset?.image?.url)
-    impactAsync()
+    await setClipboardImage(asset?.image?.url)
+    await impactAsync()
     dispatch(
       pushNotification({
         type: AppNotificationType.Copied,

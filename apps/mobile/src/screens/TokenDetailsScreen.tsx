@@ -115,8 +115,8 @@ export function TokenDetailsScreen({
     returnPartialData: true,
   })
 
-  const retry = useCallback(() => {
-    refetch(currencyIdToContractInput(_currencyId))
+  const retry = useCallback(async () => {
+    await refetch(currencyIdToContractInput(_currencyId))
   }, [_currencyId, refetch])
 
   const isLoading = !data && isNonPollingRequestInFlight(networkStatus)

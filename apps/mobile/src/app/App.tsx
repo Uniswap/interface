@@ -3,7 +3,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { StrictMode, useCallback, useEffect, useState } from 'react'
+import { default as React, StrictMode, useCallback, useEffect } from 'react'
 import { NativeModules, StatusBar } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -37,9 +37,10 @@ import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { SharedProvider } from 'wallet/src/provider'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 
 // Keep the splash screen visible while we fetch resources until one of our landing pages loads
-SplashScreen.preventAutoHideAsync()
+SplashScreen.preventAutoHideAsync().catch(() => undefined)
 
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
@@ -73,19 +74,17 @@ initAppsFlyer()
 
 function App(): JSX.Element | null {
   const client = usePersistedApolloClient()
-  const [deviceId, setDeviceId] = useState<string | null>(null)
 
   // We want to ensure deviceID is used as the identifier to link with analytics
-  useEffect(() => {
-    async function fetchAndSetDeviceId(): Promise<void> {
-      const uniqueId = await getUniqueId()
-      setDeviceId(uniqueId)
-      Sentry.setUser({
-        id: uniqueId,
-      })
-    }
-    fetchAndSetDeviceId()
+  const fetchAndSetDeviceId = useCallback(async () => {
+    const uniqueId = await getUniqueId()
+    Sentry.setUser({
+      id: uniqueId,
+    })
+    return uniqueId
   }, [])
+
+  const deviceId = useAsyncData(fetchAndSetDeviceId).data
 
   const onReportPrepared = useCallback((report: RenderPassReport) => {
     sendAnalyticsEvent(MobileEventName.PerformanceReport, report)

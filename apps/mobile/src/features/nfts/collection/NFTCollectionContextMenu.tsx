@@ -14,8 +14,7 @@ import serializeError from 'wallet/src/utils/serializeError'
 
 type MenuOption = {
   title: string
-  action: () => void
-  systemIcon: string
+  action: () => Promise<void>
 }
 
 const ICON_SIZE = FixedTheme.iconSizes.icon16
@@ -38,14 +37,14 @@ export function NFTCollectionContextMenu({
   const homepageUrl = data?.homepageUrl
   const shareURL = getUniswapCollectionUrl(collectionAddress)
 
-  const onSocialPress = (): void => {
+  const onSocialPress = async (): Promise<void> => {
     if (!twitterURL) return
-    openUri(twitterURL)
+    await openUri(twitterURL)
   }
 
-  const openExplorerLink = (): void => {
+  const openExplorerLink = async (): Promise<void> => {
     if (!homepageUrl) return
-    openUri(homepageUrl)
+    await openUri(homepageUrl)
   }
 
   const onSharePress = useCallback(async () => {
@@ -65,11 +64,7 @@ export function NFTCollectionContextMenu({
     }
   }, [shareURL])
 
-  const menuActions: {
-    title: string
-    action: () => void
-    systemIcon: string
-  }[] = [
+  const menuActions: MenuOption[] = [
     twitterURL
       ? {
           title: 'Twitter',
@@ -99,8 +94,8 @@ export function NFTCollectionContextMenu({
     <ContextMenu
       actions={menuActions}
       dropdownMenuMode={true}
-      onPress={(e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): void => {
-        menuActions[e.nativeEvent.index]?.action()
+      onPress={async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
+        await menuActions[e.nativeEvent.index]?.action()
       }}>
       <TouchableArea
         hapticFeedback

@@ -1,6 +1,5 @@
 import { MockedResponse } from '@apollo/client/testing'
 import { faker } from '@faker-js/faker'
-import { waitFor } from '@testing-library/react-native'
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
 import React from 'react'
@@ -143,14 +142,9 @@ describe(TransactionHistoryUpdater, () => {
       preloadedState: reduxState,
     })
 
-    expect(
-      await tree.findByTestId(`AddressTransactionHistoryUpdater/${account.address}`)
-    ).toBeDefined()
-    await waitFor(() =>
-      expect(
-        Object.keys(tree.store.getState().notifications.notificationStatus).length
-      ).toBeGreaterThan(0)
-    )
+    const element = await tree.findByTestId(`AddressTransactionHistoryUpdater/${account.address}`)
+    expect(element).toBeDefined()
+
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
     expect(notificationStatusState[account.address]).toBeTruthy()
     expect(notificationStatusState[account2.address]).toBeTruthy()
@@ -174,9 +168,9 @@ describe(TransactionHistoryUpdater, () => {
       preloadedState: reduxState,
     })
 
-    expect(
-      await tree.findByTestId(`AddressTransactionHistoryUpdater/${account.address}`)
-    ).toBeDefined()
+    const element = await tree.findByTestId(`AddressTransactionHistoryUpdater/${account.address}`)
+    expect(element).toBeDefined()
+
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
     expect(notificationStatusState[account.address]).toBeFalsy()
     expect(notificationStatusState[account2.address]).toBeFalsy()
@@ -200,9 +194,9 @@ describe(TransactionHistoryUpdater, () => {
       preloadedState: reduxState,
     })
 
-    expect(
-      await tree.findByTestId(`AddressTransactionHistoryUpdater/${account.address}`)
-    ).toBeDefined()
+    const element = await tree.findByTestId(`AddressTransactionHistoryUpdater/${account.address}`)
+    expect(element).toBeDefined()
+
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
     expect(notificationStatusState[account.address]).toBeFalsy()
     expect(notificationStatusState[account2.address]).toBeFalsy()

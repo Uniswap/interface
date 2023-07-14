@@ -22,9 +22,9 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
 
   const { address } = etherscanResult
 
-  const onPressViewEtherscan = (): void => {
+  const onPressViewEtherscan = async (): Promise<void> => {
     const explorerLink = getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS)
-    openUri(explorerLink)
+    await openUri(explorerLink)
     dispatch(
       addToSearchHistory({
         searchResult: etherscanResult,

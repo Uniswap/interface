@@ -13,13 +13,13 @@ logger.debug('content_window', 'init', 'initial load')
 const App = lazy(() => import('src/app/App'))
 
 chrome.runtime.connect({ name: PortName.Popup })
-chrome.runtime.onMessage.addListener((req) => {
+chrome.runtime.onMessage.addListener(async (req) => {
   if (req.type === 'STORE_INITIALIZED') {
-    initContentWindow()
+    await initContentWindow()
   }
 })
 
-function initContentWindow(): void {
+async function initContentWindow(): Promise<void> {
   const store = new Store<WebState>({ portName: PortName.Store })
   // https://github.com/tshaddix/webext-redux/issues/286#issuecomment-1347985776
   Object.assign(store, {
@@ -28,14 +28,14 @@ function initContentWindow(): void {
     subscribe: store.subscribe.bind(store),
   })
 
-  store.ready().then(() => {
-    const container = window.document.querySelector('#root')
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const root = createRoot(container!)
-    root.render(
-      <React.StrictMode>
-        <App store={store} />
-      </React.StrictMode>
-    )
-  })
+  await store.ready()
+
+  const container = window.document.querySelector('#root')
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const root = createRoot(container!)
+  root.render(
+    <React.StrictMode>
+      <App store={store} />
+    </React.StrictMode>
+  )
 }

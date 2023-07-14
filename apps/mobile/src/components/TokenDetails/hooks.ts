@@ -57,8 +57,8 @@ export function useTokenDetailsNavigation(): {
   const navigation = useAppStackNavigation()
   const [load] = useTokenDetailsScreenLazyQuery()
 
-  const preload = (currencyId: CurrencyId): void => {
-    load({
+  const preload = async (currencyId: CurrencyId): Promise<void> => {
+    await load({
       variables: currencyIdToContractInput(currencyId),
     })
   }

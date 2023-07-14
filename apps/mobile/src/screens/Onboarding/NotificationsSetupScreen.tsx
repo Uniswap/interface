@@ -84,23 +84,19 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     }
   }, [navigation, params, renderBackButton])
 
-  const navigateToNextScreen = (): void => {
+  const navigateToNextScreen = useCallback(async () => {
     // Skip security setup if already enabled or already imported seed phrase
     if (
       isBiometricAuthEnabled ||
-      (params?.entryPoint === OnboardingEntryPoint.Sidebar && hasSeedPhrase)
+      (params.entryPoint === OnboardingEntryPoint.Sidebar && hasSeedPhrase)
     ) {
-      onCompleteOnboarding()
+      await onCompleteOnboarding()
     } else {
       navigation.navigate({ name: OnboardingScreens.Security, params, merge: true })
     }
-  }
+  }, [hasSeedPhrase, isBiometricAuthEnabled, navigation, onCompleteOnboarding, params])
 
-  const onPressNext = (): void => {
-    navigateToNextScreen()
-  }
-
-  const onPressEnableNotifications = (): void => {
+  const onPressEnableNotifications = useCallback(async () => {
     promptPushPermission(() => {
       addresses.forEach((address) => {
         dispatch(
@@ -113,8 +109,8 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
       })
     }, showNotificationSettingsAlert)
 
-    navigateToNextScreen()
-  }
+    await navigateToNextScreen()
+  }, [addresses, dispatch, navigateToNextScreen])
 
   return (
     <OnboardingScreen
@@ -127,7 +123,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
         <TouchableArea
           eventName={SharedEventName.ELEMENT_CLICKED}
           name={ElementName.Skip}
-          onPress={onPressNext}>
+          onPress={navigateToNextScreen}>
           <Text color="magentaVibrant" textAlign="center" variant="buttonLabelMedium">
             {t('Maybe later')}
           </Text>

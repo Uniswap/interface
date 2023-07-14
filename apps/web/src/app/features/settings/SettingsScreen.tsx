@@ -26,8 +26,8 @@ export function SettingsScreen(): JSX.Element {
   const showAllWalletsButton = allAccountsSorted.length > DEFAULT_ACCOUNTS_TO_DISPLAY
   const [showAll, setShowAll] = useState(false)
 
-  const onPressLockWallet = (): void => {
-    dispatch(authActions.trigger({ type: AuthActionType.Lock }))
+  const onPressLockWallet = async (): Promise<void> => {
+    await dispatch(authActions.trigger({ type: AuthActionType.Lock }))
   }
 
   return (

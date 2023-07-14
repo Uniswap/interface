@@ -62,7 +62,7 @@ export function WalletConnectModal({
     async (uri: string) => {
       // don't scan any QR codes if there is an error popup open or camera is frozen
       if (!activeAddress || hasScanError || shouldFreezeCamera) return
-      selectionAsync()
+      await selectionAsync()
 
       const supportedURI = await getSupportedURI(uri)
       if (!supportedURI) {
@@ -86,8 +86,8 @@ export function WalletConnectModal({
       }
 
       if (supportedURI.type === URIType.Address) {
-        preload(supportedURI.value)
-        navigate(supportedURI.value, onClose)
+        await preload(supportedURI.value)
+        await navigate(supportedURI.value, onClose)
         return
       }
 

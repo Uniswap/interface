@@ -76,7 +76,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
-  const entryPoint = params?.entryPoint
+  const entryPoint = params.entryPoint
 
   useAddBackButton(navigation)
 
@@ -104,11 +104,11 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
     })
   }
 
-  const handleOnPress = (
+  const handleOnPress = async (
     nav: OnboardingScreens,
     importType: ImportType,
     elementName: ElementName
-  ): void => {
+  ): Promise<void> => {
     // Delete any pending accounts before entering flow.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
     if (importType === ImportType.CreateNew) {
@@ -116,7 +116,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
     }
 
     if (importType === ImportType.Restore) {
-      handleOnPressRestoreBackup()
+      await handleOnPressRestoreBackup()
       return
     }
 
@@ -147,7 +147,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
             icon={icon(theme)}
             name={name}
             title={title(t)}
-            onPress={(): void => handleOnPress(nav, importType, name)}
+            onPress={(): Promise<void> => handleOnPress(nav, importType, name)}
           />
         ))}
       </Flex>
@@ -155,7 +155,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         <Text
           color="accentAction"
           variant="buttonLabelMedium"
-          onPress={(): void =>
+          onPress={(): Promise<void> =>
             handleOnPress(
               OnboardingScreens.RestoreCloudBackup,
               ImportType.Restore,

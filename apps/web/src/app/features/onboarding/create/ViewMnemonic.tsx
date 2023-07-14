@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HideContentShield } from 'src/app/components/hideContent/HideContentShield'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
@@ -14,6 +14,7 @@ import { Flex } from 'ui/src/components/layout/Flex'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 
 const ROW_SIZE = 3
 const NUM_ROWS = 4
@@ -40,21 +41,19 @@ export function ViewMnemonic(): JSX.Element {
 
   const pendingAccountAddress = Object.values(usePendingAccounts())?.[0]?.address
 
-  useEffect(() => {
-    // TODO: potentially do this in the createAccountOnNext function of Password.tsx and set mnemonic as onboarding context value instead of in a useEffect on this page
-
-    // retrieve mnemonic and split by space to get array of words
-    async function splitMnemonicIntoWordArray(): Promise<void> {
-      if (!pendingAccountAddress) {
-        return
-      }
-
-      setCreatedAddress(pendingAccountAddress)
-      const mnemonicString = await Keyring.retrieveMnemonicUnlocked(pendingAccountAddress)
-      setCreatedMnemonic(mnemonicString?.split(' '))
+  // TODO: potentially do this in the createAccountOnNext function of Password.tsx and set mnemonic as onboarding context value instead of in a useEffect on this page
+  // retrieve mnemonic and split by space to get array of words
+  const splitMnemonicIntoWordArray = useCallback(async () => {
+    if (!pendingAccountAddress) {
+      return
     }
-    splitMnemonicIntoWordArray()
+
+    setCreatedAddress(pendingAccountAddress)
+    const mnemonicString = await Keyring.retrieveMnemonicUnlocked(pendingAccountAddress)
+    setCreatedMnemonic(mnemonicString?.split(' '))
   }, [pendingAccountAddress, setCreatedAddress, setCreatedMnemonic])
+
+  useAsyncData(splitMnemonicIntoWordArray)
 
   const onSubmit = (): void => {
     if (createdAddress) {

@@ -31,10 +31,10 @@ export function AccountHeader(): JSX.Element {
     navigate(Screens.SettingsStack, { screen: Screens.Settings })
   }
 
-  const onPressCopyAddress = (): void => {
+  const onPressCopyAddress = async (): Promise<void> => {
     if (activeAddress) {
-      impactAsync()
-      setClipboard(activeAddress)
+      await impactAsync()
+      await setClipboard(activeAddress)
       dispatch(
         pushNotification({
           type: AppNotificationType.Copied,
@@ -60,10 +60,10 @@ export function AccountHeader(): JSX.Element {
         mr="spacing12"
         name={ElementName.Manage}
         testID={ElementName.Manage}
-        onLongPress={(): void => {
-          onPressCopyAddress()
+        onLongPress={async (): Promise<void> => {
+          await onPressCopyAddress()
           if (isDevBuild()) {
-            selectionAsync()
+            await selectionAsync()
             dispatch(openModal({ name: ModalName.Experiments }))
           }
         }}

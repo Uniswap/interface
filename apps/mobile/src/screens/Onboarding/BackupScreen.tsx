@@ -2,7 +2,7 @@ import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -29,6 +29,7 @@ import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 
 type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
@@ -39,15 +40,8 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const { t } = useTranslation()
   const theme = useAppTheme()
   const { navigate } = useOnboardingStackNavigation()
-  const [iCloudAvailable, setICloudAvailable] = useState<boolean>()
 
-  useEffect(() => {
-    async function checkICloudAvailable(): Promise<void> {
-      const available = await isICloudAvailable()
-      setICloudAvailable(available)
-    }
-    checkICloudAvailable()
-  }, [])
+  const { data: iCloudAvailable } = useAsyncData(isICloudAvailable)
 
   const activeAccountBackups = useActiveAccount()?.backups
 

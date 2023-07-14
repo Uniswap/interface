@@ -5,7 +5,7 @@ import { DEFAULT_DELAY, useDebounceWithStatus } from 'wallet/src/utils/timing'
 jest.useFakeTimers()
 
 describe('useDebounceWithStatus', () => {
-  it('correctly delays updating the value', () => {
+  it('correctly delays updating the value', async () => {
     let value = 'first'
     const { result, rerender } = renderHook(() => useDebounceWithStatus(value))
 
@@ -15,14 +15,14 @@ describe('useDebounceWithStatus', () => {
     rerender()
     expect(result.current[0]).toEqual('first')
 
-    act(() => {
+    await act(() => {
       jest.advanceTimersByTime(DEFAULT_DELAY)
     })
     rerender()
     expect(result.current[0]).toEqual('second')
   })
 
-  it('correctly returns debounce state', () => {
+  it('correctly returns debounce state', async () => {
     let value = 'first'
     const { result, rerender } = renderHook(() => useDebounceWithStatus(value))
 
@@ -32,13 +32,13 @@ describe('useDebounceWithStatus', () => {
     rerender()
     expect(result.current[1]).toEqual(true)
 
-    act(() => {
+    await act(() => {
       jest.advanceTimersByTime(DEFAULT_DELAY / 2)
     })
     rerender()
     expect(result.current[1]).toEqual(true)
 
-    act(() => {
+    await act(() => {
       jest.advanceTimersByTime(DEFAULT_DELAY / 2)
     })
     rerender()

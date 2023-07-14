@@ -2,8 +2,8 @@ import { getSdkError } from '@walletconnect/utils'
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
-import ContextMenu from 'react-native-context-menu-view'
+import { NativeSyntheticEvent, StyleSheet } from 'react-native'
+import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -86,15 +86,14 @@ export function DappConnectionItem({
 
   const menuActions = [{ title: t('Disconnect'), systemIcon: 'trash', destructive: true }]
 
+  const onPress = async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
+    if (e.nativeEvent.index === 0) {
+      await onDisconnect()
+    }
+  }
+
   return (
-    <ContextMenu
-      actions={menuActions}
-      style={styles.container}
-      onPress={(e): void => {
-        if (e.nativeEvent.index === 0) {
-          onDisconnect()
-        }
-      }}>
+    <ContextMenu actions={menuActions} style={styles.container} onPress={onPress}>
       <Flex
         grow
         bg="background2"

@@ -2,7 +2,7 @@ import { GQLQueries } from 'src/data/queries'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { delay } from 'typed-redux-saga'
+import { call, delay } from 'typed-redux-saga'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   PortfolioBalancesDocument,
@@ -31,9 +31,11 @@ export function* refetchGQLQueries(transaction: TransactionDetails) {
 
   // when there is a new local tx wait 1s then proactively refresh portfolio and activity queries
   yield* delay(REFETCH_INTERVAL)
-  apolloClient?.refetchQueries({
-    include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
-  })
+  if (apolloClient) {
+    yield* call([apolloClient, apolloClient.refetchQueries], {
+      include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+    })
+  }
 
   if (!currencyIdToStartingBalance) return
 
@@ -44,9 +46,12 @@ export function* refetchGQLQueries(transaction: TransactionDetails) {
     if (checkIfBalancesUpdated(currencyIdToStartingBalance, currencyIdToUpdatedBalance)) break
 
     yield* delay(REFETCH_INTERVAL)
-    apolloClient?.refetchQueries({
-      include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
-    })
+
+    if (apolloClient) {
+      yield* call([apolloClient, apolloClient.refetchQueries], {
+        include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+      })
+    }
 
     freshnessLag += REFETCH_INTERVAL
   }

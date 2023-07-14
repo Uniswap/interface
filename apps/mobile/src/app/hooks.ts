@@ -1,7 +1,5 @@
 import { ThunkDispatch } from '@reduxjs/toolkit'
 import { useTheme } from '@shopify/restyle'
-import { useEffect, useState } from 'react'
-import { AccessibilityInfo } from 'react-native'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch } from 'src/app/store'
 import { SagaGenerator, select } from 'typed-redux-saga'
@@ -20,31 +18,4 @@ export const useAppTheme = (): Theme => useTheme<Theme>()
 export function* appSelect<T>(fn: (state: MobileState) => T): SagaGenerator<T> {
   const state = yield* select(fn)
   return state
-}
-
-interface AccessibilitySettings {
-  reduceMotionEnabled: boolean
-}
-
-export function useAccessibilityInfo(): AccessibilitySettings {
-  const [reduceMotionEnabled, setReduceMotionEnabled] = useState(false)
-
-  useEffect(() => {
-    const reduceMotionChangedSubscription = AccessibilityInfo.addEventListener(
-      'reduceMotionChanged',
-      (isReduceMotionEnabled) => {
-        setReduceMotionEnabled(isReduceMotionEnabled)
-      }
-    )
-
-    AccessibilityInfo.isReduceMotionEnabled().then((isReduceMotionEnabled) => {
-      setReduceMotionEnabled(isReduceMotionEnabled)
-    })
-
-    return () => {
-      reduceMotionChangedSubscription.remove()
-    }
-  }, [])
-
-  return { reduceMotionEnabled }
 }

@@ -99,7 +99,7 @@ export function LongText(props: LongTextProps): JSX.Element {
             }}
             onLinkPress={(url): false => {
               // add our own custom link handler since it has security checks that only open http/https links
-              openUri(url)
+              openUri(url).catch(() => undefined)
               return false
             }}
             // HACK: children prop no in TS definition

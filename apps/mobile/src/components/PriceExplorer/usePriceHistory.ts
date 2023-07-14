@@ -73,8 +73,8 @@ export function useTokenPriceHistory(
     return formatted
   }, [priceHistory, spot?.value])
 
-  const retry = useCallback(() => {
-    refetch({ contract: currencyIdToContractInput(currencyId) })
+  const retry = useCallback(async () => {
+    await refetch({ contract: currencyIdToContractInput(currencyId) })
   }, [refetch, currencyId])
 
   return useMemo(

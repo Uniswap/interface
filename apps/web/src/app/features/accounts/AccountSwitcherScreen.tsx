@@ -35,15 +35,15 @@ export function AccountSwitcherScreen(): JSX.Element {
 
   const { glow } = useUniconColors(activeAddress)
 
-  const onClose = useCallback((): void => {
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateAndSelect))
+  const onClose = useCallback(async (): Promise<void> => {
+    await dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateAndSelect))
     navigate(-1)
   }, [navigate, dispatch])
 
   useSagaStatus(createAccountSagaName, onClose)
 
-  const onCreateWallet = (): void => {
-    dispatch(createAccountActions.trigger())
+  const onCreateWallet = async (): Promise<void> => {
+    await dispatch(createAccountActions.trigger())
   }
   const uniconAccentColor = adjustColor(glow, -100)
 
@@ -81,8 +81,8 @@ export function AccountSwitcherScreen(): JSX.Element {
                 accentColor={validToken(glow)}
                 address={address}
                 selected={activeAddress === address}
-                onAccountSelect={(): void => {
-                  dispatch(setAccountAsActive(address))
+                onAccountSelect={async (): Promise<void> => {
+                  await dispatch(setAccountAsActive(address))
                   navigate(-1)
                 }}
               />

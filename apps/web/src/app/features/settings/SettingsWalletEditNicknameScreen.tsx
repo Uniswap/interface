@@ -29,8 +29,8 @@ function EditNicknameScreenContent({ address }: { address: Address }): JSX.Eleme
   const [nicknameField, setNicknameField] = useState<string>('')
   const [showNicknamePlaceholder, setShowNicknamePlaceholder] = useState(true)
 
-  const handleNicknameUpdate = (): void => {
-    dispatch(
+  const handleNicknameUpdate = async (): Promise<void> => {
+    await dispatch(
       editAccountActions.trigger({
         type: EditAccountAction.Rename,
         address,

@@ -28,8 +28,8 @@ export function AccountItem({
   const { show: showToast } = useToastController()
   const displayName = useDisplayName(address)?.name
 
-  const copyAddress = (e: GestureResponderEvent): void => {
-    navigator.clipboard.writeText(address)
+  const copyAddress = async (e: GestureResponderEvent): Promise<void> => {
+    await navigator.clipboard.writeText(address)
     showToast('Copied to clipboard', {
       native: false,
       duration: 3000,

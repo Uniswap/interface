@@ -58,9 +58,9 @@ export default function WarningModal({
   const { requiredForTransactions } = useBiometricAppSettings()
   const { trigger } = useBiometricPrompt(onConfirm)
 
-  const onPressConfirm = (): void => {
+  const onPressConfirm = async (): Promise<void> => {
     if (requiredForTransactions && useBiometric) {
-      trigger()
+      await trigger()
     } else {
       onConfirm?.()
     }

@@ -48,11 +48,11 @@ export function SettingsCloudBackupStatus({
   )
 
   const [showBackupDeleteWarning, setShowBackupDeleteWarning] = useState(false)
-  const onConfirmDeleteBackup = (): void => {
+  const onConfirmDeleteBackup = async (): Promise<void> => {
     if (requiredForTransactions) {
-      biometricTrigger()
+      await biometricTrigger()
     } else {
-      deleteBackup()
+      await deleteBackup()
     }
   }
 

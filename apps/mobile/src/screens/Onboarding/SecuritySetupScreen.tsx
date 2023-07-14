@@ -43,14 +43,14 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params.entryPoint, params.importType)
 
-  const onPressNext = useCallback(() => {
+  const onPressNext = useCallback(async () => {
     setShowWarningModal(false)
-    onCompleteOnboarding()
+    await onCompleteOnboarding()
   }, [onCompleteOnboarding])
 
-  const onMaybeLaterPressed = useCallback(() => {
+  const onMaybeLaterPressed = useCallback(async () => {
     if (params?.importType === ImportType.Watch) {
-      onPressNext()
+      await onPressNext()
     } else {
       setShowWarningModal(true)
     }
@@ -76,7 +76,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
 
     if (biometricAuthenticationSuccessful(authStatus)) {
       dispatch(setRequiredForTransactions(true))
-      onPressNext()
+      await onPressNext()
     }
   }, [t, authenticationTypeName, dispatch, onPressNext])
 

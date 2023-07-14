@@ -68,8 +68,8 @@ export function PendingNotificationBadge({
       <TouchableArea
         position="relative"
         onPress={activeAccountAddress ? navigate : (): void => undefined}
-        onPressIn={(): void | null =>
-          activeAccountAddress ? preload(activeAccountAddress) : null
+        onPressIn={async (): Promise<void | null> =>
+          activeAccountAddress ? await preload(activeAccountAddress) : null
         }>
         <Box
           alignItems="center"

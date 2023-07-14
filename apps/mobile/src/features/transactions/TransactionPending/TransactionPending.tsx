@@ -34,9 +34,9 @@ export function TransactionPending({
 }: TransactionStatusProps): JSX.Element {
   const { t } = useTranslation()
 
-  const onPressViewTransaction = (): void => {
+  const onPressViewTransaction = async (): Promise<void> => {
     if (transaction) {
-      openTransactionLink(transaction.hash, transaction.chainId)
+      await openTransactionLink(transaction.hash, transaction.chainId)
     }
   }
 

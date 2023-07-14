@@ -58,7 +58,7 @@ function createWalletConnectChannel(
   wcEventEmitter: NativeEventEmitter
 ): EventChannel<Action<unknown>> {
   return eventChannel<Action>((emit) => {
-    const sessionConnectedHandler = (req: SessionConnectedEvent): void => {
+    const sessionConnectedHandler = async (req: SessionConnectedEvent): Promise<void> => {
       emit(
         addSession({
           wcSession: { id: req.session_id, dapp: req.dapp, version: '1' },
@@ -79,7 +79,7 @@ function createWalletConnectChannel(
             hideDelay: 3 * ONE_SECOND_MS,
           })
         )
-        registerWcPushNotifications({
+        await registerWcPushNotifications({
           bridge: req.bridge_url,
           topic: req.client_id,
           address: req.account,
@@ -109,7 +109,7 @@ function createWalletConnectChannel(
       )
     }
 
-    const sessionDisconnectedHandler = (req: SessionDisconnectedEvent): void => {
+    const sessionDisconnectedHandler = async (req: SessionDisconnectedEvent): Promise<void> => {
       emit(removeSession({ sessionId: req.session_id, account: req.account }))
       emit(
         pushNotification({
@@ -122,7 +122,7 @@ function createWalletConnectChannel(
           hideDelay: 3 * ONE_SECOND_MS,
         })
       )
-      deregisterWcPushNotifications({
+      await deregisterWcPushNotifications({
         topic: req.client_id,
       })
     }

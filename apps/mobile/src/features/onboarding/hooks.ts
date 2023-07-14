@@ -22,14 +22,14 @@ import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 export function useCompleteOnboardingCallback(
   entryPoint: OnboardingEntryPoint,
   importType: ImportType
-): () => void {
+): () => Promise<void> {
   const dispatch = useAppDispatch()
   const pendingAccounts = usePendingAccounts()
   const pendingWalletAddresses = Object.keys(pendingAccounts)
   const parentTrace = useTrace()
   const navigation = useOnboardingStackNavigation()
 
-  return () => {
+  return async () => {
     sendAnalyticsEvent(
       entryPoint === OnboardingEntryPoint.Sidebar
         ? MobileEventName.WalletAdded
@@ -44,11 +44,6 @@ export function useCompleteOnboardingCallback(
         ...parentTrace,
       }
     )
-
-    if (entryPoint === OnboardingEntryPoint.FreshInstallOrReplace) {
-      appsFlyer.logEvent('onboarding_complete', { importType })
-    }
-
     // Remove pending flag from all new accounts.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.Activate))
 
@@ -56,6 +51,10 @@ export function useCompleteOnboardingCallback(
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
     if (entryPoint === OnboardingEntryPoint.Sidebar) {
       navigation.navigate(Screens.Home)
+    }
+
+    if (entryPoint === OnboardingEntryPoint.FreshInstallOrReplace) {
+      await appsFlyer.logEvent('onboarding_complete', { importType })
     }
   }
 }

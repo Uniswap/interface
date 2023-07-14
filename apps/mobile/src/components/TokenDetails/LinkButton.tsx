@@ -43,8 +43,8 @@ export function LinkButton({
     sm: 'buttonLabelSmall',
   })
 
-  const copyValue = (): void => {
-    setClipboard(value)
+  const copyValue = async (): Promise<void> => {
+    await setClipboard(value)
     dispatch(
       pushNotification({
         type: AppNotificationType.Copied,
@@ -53,8 +53,12 @@ export function LinkButton({
     )
   }
 
-  const openLink = (): void => {
-    openUri(value, openExternalBrowser, isSafeUri)
+  const onPress = async (): Promise<void> => {
+    if (buttonType === LinkButtonType.Link) {
+      await openUri(value, openExternalBrowser, isSafeUri)
+    } else {
+      await copyValue()
+    }
   }
 
   return (
@@ -66,13 +70,7 @@ export function LinkButton({
       name={element}
       paddingHorizontal="spacing12"
       paddingVertical="spacing8"
-      onPress={(): void => {
-        if (buttonType === LinkButtonType.Link) {
-          openLink()
-        } else {
-          copyValue()
-        }
-      }}>
+      onPress={onPress}>
       <Flex centered row gap="spacing8">
         {Icon && (
           <Icon

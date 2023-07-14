@@ -156,7 +156,7 @@ import {
   Ellipse,
   G,
   LinearGradient,
-  RadialGradient, 
+  RadialGradient,
   Line,
   Path,
   Polygon,
@@ -179,7 +179,7 @@ const Icon = forwardRef<Svg, IconProps>((props, ref) => {
     ...restProps,
   } = props
   const theme = useTheme()
-  
+
   const size =
     getTokenValue(
       // @ts-expect-error it falls back to undefined
@@ -194,9 +194,9 @@ const Icon = forwardRef<Svg, IconProps>((props, ref) => {
       'size'
     ) ?? strokeWidthProp
 
-  const color = 
+  const color =
     // @ts-expect-error its fine to access colorProp undefined
-    theme[colorProp]?.get() 
+    theme[colorProp]?.get()
     ?? colorProp ?? theme.color.get()
 
   const svgProps = {
@@ -264,4 +264,4 @@ async function eslintFormat(inSource: string): Promise<string | undefined> {
   return out?.[0]?.output
 }
 
-run()
+run().catch(() => undefined)

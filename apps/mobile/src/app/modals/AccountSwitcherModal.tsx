@@ -126,7 +126,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     (address: Address) => {
       onClose()
       // allow close modal logic to finish in JS thread before `setAccountAsActive` logic kicks in
-      setImmediate(() => dispatch(setAccountAsActive(address)))
+      setImmediate(() => {
+        dispatch(setAccountAsActive(address))
+      })
     },
     [dispatch, onClose]
   )

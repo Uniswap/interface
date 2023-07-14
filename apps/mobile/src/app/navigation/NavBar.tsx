@@ -127,15 +127,15 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress)
 
-  const onPress = useCallback(() => {
-    impactAsync()
-
+  const onPress = useCallback(async () => {
     dispatch(
       openModal({
         name: ModalName.Swap,
         initialState: prepareSwapFormState({ inputCurrencyId }),
       })
     )
+
+    await impactAsync()
   }, [dispatch, inputCurrencyId])
 
   const scale = useSharedValue(1)

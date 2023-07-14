@@ -98,8 +98,8 @@ export default function TransactionActionsModal({
       ? [
           {
             key: ElementName.Copy,
-            onPress: (): void => {
-              setClipboard(transactionId)
+            onPress: async (): Promise<void> => {
+              await setClipboard(transactionId)
               dispatch(
                 pushNotification({
                   type: AppNotificationType.Copied,
@@ -121,11 +121,11 @@ export default function TransactionActionsModal({
       ...maybeCopyTransactionIdOption,
       {
         key: ElementName.GetHelp,
-        onPress: (): void => {
+        onPress: async (): Promise<void> => {
           if (isFiatOnRampTransaction) {
-            openMoonpayHelpLink()
+            await openMoonpayHelpLink()
           } else {
-            openUniswapHelpLink()
+            await openUniswapHelpLink()
           }
 
           handleClose()

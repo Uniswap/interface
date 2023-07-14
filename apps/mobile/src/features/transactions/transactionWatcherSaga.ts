@@ -326,7 +326,7 @@ function* finalizeTransaction(
     const hasDoneASwap = yield* select(selectHasDoneASwap)
     if (!hasDoneASwap) {
       // Only log event if it's a user's first ever swap
-      appsFlyer.logEvent('swap_completed', {})
+      yield* call([appsFlyer, appsFlyer.logEvent], 'swap_completed', {})
     }
   }
 }

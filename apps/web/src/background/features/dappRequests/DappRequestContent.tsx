@@ -29,17 +29,17 @@ export function DappRequestContent(): JSX.Element {
     throw new Error('No active account')
   }
 
-  const onConfirm = (requestToConfirm: DappRequestStoreItem): void => {
+  const onConfirm = async (requestToConfirm: DappRequestStoreItem): Promise<void> => {
     const shouldCloseWindow = pendingRequests.length <= 1
-    dispatch(confirmRequest(requestToConfirm))
+    await dispatch(confirmRequest(requestToConfirm))
     if (shouldCloseWindow) {
       window.close()
     }
   }
 
-  const onCancel = (requestToCancel: DappRequestStoreItem): void => {
+  const onCancel = async (requestToCancel: DappRequestStoreItem): Promise<void> => {
     const shouldCloseWindow = pendingRequests.length <= 1
-    dispatch(rejectRequest(requestToCancel))
+    await dispatch(rejectRequest(requestToCancel))
     if (shouldCloseWindow) {
       window.close()
     }
@@ -115,14 +115,14 @@ export function DappRequestContent(): JSX.Element {
           buttonSize={ButtonSize.Medium}
           flex={1}
           theme="secondary"
-          onPress={(): void => onCancel(request)}>
+          onPress={async (): Promise<void> => await onCancel(request)}>
           Cancel
         </Button>
         <Button
           buttonSize={ButtonSize.Medium}
           flex={1}
           theme="primary"
-          onPress={(): void => onConfirm(request)}>
+          onPress={async (): Promise<void> => await onConfirm(request)}>
           Approve
         </Button>
       </XStack>

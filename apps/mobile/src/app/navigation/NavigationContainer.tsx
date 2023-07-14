@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/native'
 import { AnyAction } from '@reduxjs/toolkit'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { Dispatch, FC, PropsWithChildren, useEffect, useState } from 'react'
+import React, { Dispatch, FC, PropsWithChildren, useCallback, useState } from 'react'
 import { Linking } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { RootParamList } from 'src/app/navigation/types'
@@ -15,6 +15,7 @@ import { DeepLink, openDeepLink } from 'src/features/deepLinking/handleDeepLinkS
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { getEventParams } from 'src/features/telemetry/utils'
 import { AppScreen } from 'src/screens/Screens'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 
 interface Props {
   onReady: (navigationRef: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>) => void
@@ -78,17 +79,22 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
   )
 }
 
-export const useManageDeepLinks = (dispatch: Dispatch<AnyAction | AnyAction>): void =>
-  useEffect(() => {
+export const useManageDeepLinks = (dispatch: Dispatch<AnyAction | AnyAction>): void => {
+  const manageDeepLinks = useCallback(async () => {
     const handleDeepLink = (payload: DeepLink): void => dispatch(openDeepLink(payload))
+
     const urlListener = Linking.addEventListener('url', (event: { url: string }) =>
       handleDeepLink({ url: event.url, coldStart: false })
     )
+
     const handleDeepLinkColdStart = async (): Promise<void> => {
       const url = await Linking.getInitialURL()
       if (url) handleDeepLink({ url, coldStart: true })
     }
 
-    handleDeepLinkColdStart()
+    await handleDeepLinkColdStart()
     return urlListener.remove
   }, [dispatch])
+
+  useAsyncData(manageDeepLinks)
+}

@@ -32,8 +32,8 @@ export function Locked(): JSX.Element {
 
   const { status, error } = useSagaStatus(authSagaName, undefined, false)
 
-  const onPress = (): void => {
-    dispatch(
+  const onPress = async (): Promise<void> => {
+    await dispatch(
       authActions.trigger({
         type: AuthActionType.Unlock,
         password: passwordInputProps.value,

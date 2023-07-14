@@ -106,9 +106,9 @@ export function NetworkFilter({
   const [showEllipsisIcon, setShowEllipsisIcon] = useState(showEllipsisInitially ?? false)
 
   const onPress = useCallback(
-    (chainId: ChainId | null) => {
+    async (chainId: ChainId | null) => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-      selectionAsync()
+      await selectionAsync()
       setShowModal(false)
       if (showEllipsisIcon && chainId !== selectedChain) {
         setShowEllipsisIcon(false)

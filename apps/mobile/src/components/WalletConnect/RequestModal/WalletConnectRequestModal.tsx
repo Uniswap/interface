@@ -166,11 +166,11 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
    */
   const rejectOnCloseRef = useRef(true)
 
-  const onReject = (): void => {
+  const onReject = async (): Promise<void> => {
     if (request.version === '1') {
       rejectRequest(request.internalId)
     } else {
-      wcWeb3Wallet.respondSessionRequest({
+      await wcWeb3Wallet.respondSessionRequest({
         topic: request.sessionId,
         response: {
           id: Number(request.internalId),
@@ -259,9 +259,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     return null
   }
 
-  const handleClose = (): void => {
+  const handleClose = async (): Promise<void> => {
     if (rejectOnCloseRef.current) {
-      onReject()
+      await onReject()
     } else {
       onClose()
     }
@@ -354,11 +354,11 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
               name={ElementName.Confirm}
               size={ButtonSize.Medium}
-              onPress={(): void => {
+              onPress={async (): Promise<void> => {
                 if (requiredForTransactions) {
-                  actionButtonTrigger()
+                  await actionButtonTrigger()
                 } else {
-                  onConfirm()
+                  await onConfirm()
                 }
               }}
             />

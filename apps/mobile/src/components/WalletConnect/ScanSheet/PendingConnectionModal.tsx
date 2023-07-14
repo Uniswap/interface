@@ -260,7 +260,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
           })
         )
       } else {
-        wcWeb3Wallet.rejectSession({
+        await wcWeb3Wallet.rejectSession({
           id: Number(pendingSession.id),
           reason: getSdkError('USER_REJECTED'),
         })

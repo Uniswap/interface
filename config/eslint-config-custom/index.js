@@ -55,6 +55,7 @@ module.exports = {
     'object-shorthand': 'error',
     // https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope
     'no-shadow': 'off',
+    '@typescript-eslint/no-floating-promises': 'error',
     '@typescript-eslint/no-shadow': 'error',
     // use throughtout the app when importing devtools, or in test files
     '@typescript-eslint/no-var-requires': 'off',
@@ -89,7 +90,6 @@ module.exports = {
     'jest/no-conditional-expect': 'off',
     'jest/no-disabled-tests': 'off',
     // TODO consider enabling these:
-    // '@typescript-eslint/no-floating-promises': 'error',
     // 'import/no-self-import': 'error',
     // 'import/no-duplicates': 'error',
     // 'import/no-default-export': 'warn',

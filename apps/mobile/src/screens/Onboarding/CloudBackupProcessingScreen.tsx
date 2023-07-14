@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useReducer } from 'react'
+import React, { useCallback, useEffect, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -17,6 +17,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 import serializeError from 'wallet/src/utils/serializeError'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 import { promiseMinDelay } from 'wallet/src/utils/timing'
@@ -58,53 +59,47 @@ export function CloudBackupProcessingScreen({
   }, [activeAccount?.backups, entryPoint, importType, navigation])
 
   // Handle backup to Cloud when screen appears
-  useEffect(() => {
+  const backup = useCallback(async () => {
     if (!activeAccount?.address) return
+    try {
+      // Ensure processing state is shown for at least 1s
+      await promiseMinDelay(backupMnemonicToICloud(activeAccount.address, password), ONE_SECOND_MS)
 
-    const backup = async (): Promise<void> => {
-      try {
-        // Ensure processing state is shown for at least 1s
-        await promiseMinDelay(
-          backupMnemonicToICloud(activeAccount.address, password),
-          ONE_SECOND_MS
-        )
-
-        dispatch(
-          editAccountActions.trigger({
-            type: EditAccountAction.AddBackupMethod,
-            address: activeAccount.address,
-            backupMethod: BackupType.Cloud,
-          })
-        )
-      } catch (error) {
-        logger.error('Unable to backup to iCloud', {
-          tags: {
-            file: 'CloudBackupProcessingScreen',
-            function: 'onPressNext',
-            error: serializeError(error),
-          },
+      dispatch(
+        editAccountActions.trigger({
+          type: EditAccountAction.AddBackupMethod,
+          address: activeAccount.address,
+          backupMethod: BackupType.Cloud,
         })
+      )
+    } catch (error) {
+      logger.error('Unable to backup to iCloud', {
+        tags: {
+          file: 'CloudBackupProcessingScreen',
+          function: 'onPressNext',
+          error: serializeError(error),
+        },
+      })
 
-        Alert.alert(
-          t('iCloud error'),
-          t(
-            'Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.'
-          ),
-          [
-            {
-              text: t('OK'),
-              style: 'default',
-              onPress: (): void => {
-                navigation.goBack()
-              },
+      Alert.alert(
+        t('iCloud error'),
+        t(
+          'Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.'
+        ),
+        [
+          {
+            text: t('OK'),
+            style: 'default',
+            onPress: (): void => {
+              navigation.goBack()
             },
-          ]
-        )
-      }
+          },
+        ]
+      )
     }
-
-    backup()
   }, [activeAccount?.address, dispatch, password, t, navigation])
+
+  useAsyncData(backup)
 
   return (
     <Screen>

@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient'
-import { ComponentProps, default as React, useEffect, useMemo } from 'react'
+import { ComponentProps, default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -14,6 +14,7 @@ import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useAccountListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 
 // Most screens can fit more but this is set conservatively
 const MIN_ACCOUNTS_TO_ENABLE_SCROLL = 5
@@ -53,14 +54,16 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
   })
 
   // Only poll account total values when the account list is visible
-  useEffect(() => {
+  const controlPolling = useCallback(async () => {
     if (isVisible) {
-      refetch()
+      await refetch()
       startPolling(PollingInterval.Fast)
     } else {
       stopPolling()
     }
   }, [isVisible, refetch, startPolling, stopPolling])
+
+  useAsyncData(controlPolling)
 
   const isPortfolioValueLoading = isNonPollingRequestInFlight(networkStatus)
 

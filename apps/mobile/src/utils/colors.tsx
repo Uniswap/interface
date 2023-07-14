@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import ImageColors from 'react-native-image-colors'
 import { useAppTheme } from 'src/app/hooks'
 import { colors as GlobalColors } from 'ui/src/theme/color'
 import { GlobalPalette } from 'ui/src/theme/color/types'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useAsyncData } from 'wallet/src/utils/hooks'
 import { assert } from 'wallet/src/utils/validation'
 import { hex } from 'wcag-contrast'
 
@@ -84,39 +85,35 @@ export function useExtractedColors(
   imageUrl: Maybe<string>,
   fallback: keyof Theme['colors'] = 'magentaVibrant',
   cache = true
-): { colors: Nullable<ExtractedColors>; colorsLoading: boolean } {
-  const [colors, setColors] = useState<Nullable<ExtractedColors>>(null)
-  const [colorsLoading, setColorsLoading] = useState(true)
-
-  useEffect(() => {
+): { colors?: ExtractedColors; colorsLoading: boolean } {
+  const getImageColors = useCallback(async () => {
     if (!imageUrl) return
 
-    setColorsLoading(true)
-
-    ImageColors.getColors(imageUrl, {
+    const imageColors = await ImageColors.getColors(imageUrl, {
       key: imageUrl,
       ...(fallback && { fallback }),
       ...(cache && { cache }),
-    }).then((result) => {
-      switch (result.platform) {
-        case 'android':
-          setColors({
-            primary: result.dominant,
-            base: result.average,
-            detail: result.vibrant,
-          })
-          break
-        case 'ios':
-          setColors({
-            primary: result.primary,
-            secondary: result.secondary,
-            base: result.background,
-            detail: result.detail,
-          })
-      }
     })
-    setColorsLoading(false)
+
+    if (imageColors.platform === 'android') {
+      return {
+        primary: imageColors.dominant,
+        base: imageColors.average,
+        detail: imageColors.vibrant,
+      }
+    }
+
+    if (imageColors.platform === 'ios') {
+      return {
+        primary: imageColors.primary,
+        secondary: imageColors.secondary,
+        base: imageColors.background,
+        detail: imageColors.detail,
+      }
+    }
   }, [imageUrl, fallback, cache])
+
+  const { data: colors, isLoading: colorsLoading } = useAsyncData(getImageColors)
 
   return { colors, colorsLoading }
 }

@@ -27,12 +27,12 @@ export function useRefetchQueries(): (
   const client = useApolloClient()
 
   return useCallback(
-    (
+    async (
       include: Parameters<
         ApolloClient<NormalizedCacheObject>['refetchQueries']
       >[0]['include'] = 'active'
     ) => {
-      client?.refetchQueries({ include })
+      await client?.refetchQueries({ include })
     },
     [client]
   )

@@ -158,9 +158,7 @@ const TextLoaderWrapper = ({
  * @param loadingPlaceholderText - The text that the loader's size will be derived from. Pick something that's close to the same length as the final text is expected to be, e.g. if it's a ticker symbol, "XXX" might be a good placeholder text. This prop is optional and defaults to "$00.00".
  */
 export const Text = ({
-  animated,
   loading = false,
-  maxFontSizeMultiplier,
   allowFontScaling,
   loadingPlaceholderText = '$00.00',
   ...rest

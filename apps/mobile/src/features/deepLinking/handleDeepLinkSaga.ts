@@ -185,7 +185,7 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
 
   if (parseUri(wcUri).version === 2) {
     try {
-      pairWithWalletConnectURI(wcUri)
+      yield* call(pairWithWalletConnectURI, wcUri)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (errorMessage: any) {
       Alert.alert(

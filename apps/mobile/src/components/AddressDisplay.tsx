@@ -1,3 +1,4 @@
+import { impactAsync } from 'expo-haptics'
 import { default as React, PropsWithChildren, useMemo } from 'react'
 import { FlexAlignType } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -81,15 +82,16 @@ export function AddressDisplay({
 
   const showAddressAsSubtitle = !hideAddressInSubtitle && displayName?.type !== 'address'
 
-  const onPressCopyAddress = (): void => {
+  const onPressCopyAddress = async (): Promise<void> => {
     if (!address) return
+    await impactAsync()
+    await setClipboard(address)
     dispatch(
       pushNotification({
         type: AppNotificationType.Copied,
         copyType: CopyNotificationType.Address,
       })
     )
-    setClipboard(address)
   }
 
   // Extract sizes so copy icon can match font variants

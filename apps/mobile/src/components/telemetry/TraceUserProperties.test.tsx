@@ -47,7 +47,7 @@ describe('TraceUserProperties', () => {
     jest.clearAllMocks()
   })
 
-  it('sets user properties with active account', () => {
+  it('sets user properties with active account', async () => {
     mockFn(versionUtils, 'getFullAppVersion', '1.0.0.345')
     // Hooks mocks
     const mockedUsedColorScheme = useColorScheme as jest.Mock
@@ -81,7 +81,7 @@ describe('TraceUserProperties', () => {
 
     // Execute useEffects
     // https://reactjs.org/docs/test-renderer.html#testrendereract
-    act(() => {
+    await act(() => {
       renderer.create(<TraceUserProperties />)
     })
 
@@ -110,7 +110,7 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledTimes(13)
   })
 
-  it('sets user properties without active account', () => {
+  it('sets user properties without active account', async () => {
     mockFn(versionUtils, 'getFullAppVersion', '1.0.0.345')
     // Hooks mocks
     const mockedUsedColorScheme = useColorScheme as jest.Mock
@@ -132,7 +132,7 @@ describe('TraceUserProperties', () => {
     const mocked = mockFn(telemetry, 'setUserProperty', undefined)
 
     // Execute useEffects
-    act(() => {
+    await act(() => {
       renderer.create(<TraceUserProperties />)
     })
 

@@ -65,8 +65,8 @@ export function QRAnimation({
   const { t } = useTranslation()
   const video = useRef<Video>(null)
 
-  const playEtchingAfterSlideIn = (): void => {
-    video.current?.playAsync()
+  const playEtchingAfterSlideIn = async (): Promise<void> => {
+    await video.current?.playAsync()
   }
 
   const isDarkMode = useIsDarkMode()

@@ -18,25 +18,19 @@ export function useSelectAddressHasNotifications(address: Address | null): boole
 export function useNotificationOSPermissionsEnabled(): NotificationPermission {
   const [notificationPermissionsEnabled, setNotificationPermissionsEnabled] =
     useState<NotificationPermission>(NotificationPermission.Loading)
+
+  const checkNotificationPermissions = async (): Promise<void> => {
+    const { status } = await checkNotifications()
+    const permission =
+      status === 'granted' ? NotificationPermission.Enabled : NotificationPermission.Disabled
+    setNotificationPermissionsEnabled(permission)
+  }
+
   useFocusEffect(() => {
-    const checkNotificationPermissions = async (): Promise<void> => {
-      const { status } = await checkNotifications()
-      const permission =
-        status === 'granted' ? NotificationPermission.Enabled : NotificationPermission.Disabled
-      setNotificationPermissionsEnabled(permission)
-    }
-    checkNotificationPermissions()
+    checkNotificationPermissions().catch(() => undefined)
   })
 
-  useAppStateTrigger('background', 'active', () => {
-    const checkNotificationPermissions = async (): Promise<void> => {
-      const { status } = await checkNotifications()
-      const permission =
-        status === 'granted' ? NotificationPermission.Enabled : NotificationPermission.Disabled
-      setNotificationPermissionsEnabled(permission)
-    }
-    checkNotificationPermissions()
-  })
+  useAppStateTrigger('background', 'active', checkNotificationPermissions)
 
   return notificationPermissionsEnabled
 }

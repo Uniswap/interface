@@ -135,7 +135,7 @@ export function* getAccount(requestId: string, senderTabId: number) {
   yield* call(sendMessageToSpecificTab, response, senderTabId)
 }
 
-function handleTransactionResponse(
+async function handleTransactionResponse(
   transactionResponse: ethers.providers.TransactionResponse,
   provider: Provider,
   requestId: string,
@@ -146,7 +146,7 @@ function handleTransactionResponse(
     transaction: transactionResponse,
     requestId,
   }
-  onTransactionSentToChain(transactionResponse, provider)
+  await onTransactionSentToChain(transactionResponse, provider)
   sendMessageToSpecificTab(response, senderTabId)
 }
 
@@ -165,55 +165,55 @@ export async function signAndSendTransaction(
   return transactionResponse
 }
 
-function onTransactionSentToChain(
+async function onTransactionSentToChain(
   transactionResponse: TransactionResponse,
   provider: Provider
-): void {
+): Promise<void> {
   // Update chrome icon
-  chrome.action.setIcon({
+  await chrome.action.setIcon({
     path: PENDING_IMAGE_PATH,
   })
 
   // Listen for transaction receipt
-  provider?.waitForTransaction(transactionResponse.hash, 1).then((receipt) => {
-    if (receipt.status === 1) {
-      // TODO: Clean up chrome notifications
-      chrome.action.setIcon({
-        path: SUCCESS_IMAGE_PATH,
-      })
+  const receipt = await provider.waitForTransaction(transactionResponse.hash, 1)
 
-      // Send chrome notification that transaction was successful
-      chrome.notifications.create({
-        type: 'basic',
-        iconUrl: 'assets/success.png',
-        title: 'Transaction successful',
-        message: `Transaction ${transactionResponse.hash} was successful`,
-      })
-    } else {
-      chrome.action.setIcon({
-        path: FAIL_IMAGE_PATH,
-      })
-      // Send chrome notification that transaction failed
-      chrome.notifications.create({
-        type: 'basic',
-        iconUrl: FAIL_IMAGE_PATH,
-        title: 'Transaction failed',
-        message: `Transaction ${transactionResponse.hash} failed`,
-        buttons: [
-          {
-            title: 'Retry',
-          },
-        ],
-      })
-    }
+  if (receipt.status === 1) {
+    // TODO: Clean up chrome notifications
+    await chrome.action.setIcon({
+      path: SUCCESS_IMAGE_PATH,
+    })
 
-    // Reset chrome icon after 15 seconds regardless of success/failure
-    setTimeout(() => {
-      chrome.action.setIcon({
-        path: DEFAULT_IMAGE_PATH,
-      })
-    }, 15000)
-  })
+    // Send chrome notification that transaction was successful
+    chrome.notifications.create({
+      type: 'basic',
+      iconUrl: 'assets/success.png',
+      title: 'Transaction successful',
+      message: `Transaction ${transactionResponse.hash} was successful`,
+    })
+  } else {
+    await chrome.action.setIcon({
+      path: FAIL_IMAGE_PATH,
+    })
+    // Send chrome notification that transaction failed
+    chrome.notifications.create({
+      type: 'basic',
+      iconUrl: FAIL_IMAGE_PATH,
+      title: 'Transaction failed',
+      message: `Transaction ${transactionResponse.hash} failed`,
+      buttons: [
+        {
+          title: 'Retry',
+        },
+      ],
+    })
+  }
+
+  // Reset chrome icon after 15 seconds regardless of success/failure
+  setTimeout(async () => {
+    await chrome.action.setIcon({
+      path: DEFAULT_IMAGE_PATH,
+    })
+  }, 15000)
 }
 
 // TODO: Update this when we have proper active accounts

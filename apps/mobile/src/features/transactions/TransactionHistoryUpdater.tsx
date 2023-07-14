@@ -157,11 +157,11 @@ function AddressTransactionHistoryUpdater({
           )
         }
 
-        apolloClient?.refetchQueries({
+        await apolloClient?.refetchQueries({
           include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
         })
       }
-    })
+    }).catch(() => undefined)
   }, [
     activeAccountAddress,
     activities,

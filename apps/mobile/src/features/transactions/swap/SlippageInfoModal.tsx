@@ -33,8 +33,8 @@ export default function SlippageInfoModal({
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const onPressLearnMore = (): void => {
-    openUri(SWAP_SLIPPAGE_HELP_PAGE_URL)
+  const onPressLearnMore = async (): Promise<void> => {
+    await openUri(SWAP_SLIPPAGE_HELP_PAGE_URL)
   }
 
   const { slippageTolerance, tradeType } = trade

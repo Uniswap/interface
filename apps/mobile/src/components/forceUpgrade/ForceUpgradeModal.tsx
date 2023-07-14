@@ -49,8 +49,8 @@ export function ForceUpgradeModal(): JSX.Element {
     setIsVisible(status !== UpgradeStatus.NotRequired)
   }, [])
 
-  const onPressConfirm = (): void => {
-    openUri(APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
+  const onPressConfirm = async (): Promise<void> => {
+    await openUri(APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
   }
 
   const onClose = (): void => {

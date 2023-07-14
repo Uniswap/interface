@@ -85,8 +85,8 @@ export async function openMoonpayHelpLink(): Promise<void> {
   return openUri('https://support.moonpay.com/')
 }
 
-export function openSettings(): void {
-  Linking.openSettings()
+export async function openSettings(): Promise<void> {
+  await Linking.openSettings()
 }
 
 export enum ExplorerDataType {

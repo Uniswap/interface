@@ -66,14 +66,14 @@ export const NOTIFICATION_ICON_SIZE = iconSizes.icon36
 const useNavigateToProfileTab = (
   address: string | undefined
 ): {
-  onPressIn: () => void
+  onPressIn: () => Promise<void>
   onPress: () => void
 } => {
   const { preload, navigate } = useEagerActivityNavigation()
 
-  const onPressIn = (): void => {
+  const onPressIn = async (): Promise<void> => {
     if (!address) return
-    preload(address)
+    await preload(address)
   }
 
   const onPress = (): void => {

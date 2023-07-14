@@ -42,7 +42,7 @@ export function useAsyncData<T>(asyncCallback: () => Promise<T> | undefined): {
       })
     }
 
-    runCallback()
+    runCallback().catch(() => undefined)
   }, [asyncCallback])
 
   return useMemo(() => {

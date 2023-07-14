@@ -74,11 +74,11 @@ const _Button = ({
     iconSize,
   } = getButtonProperties(emphasis, size)
 
-  const onPressHandler = (): void => {
+  const onPressHandler = async (): Promise<void> => {
     if (!onPress) return
 
     if (hapticFeedback) {
-      impactAsync(hapticStyle)
+      await impactAsync(hapticStyle)
     }
     onPress()
   }

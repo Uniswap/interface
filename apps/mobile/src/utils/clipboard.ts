@@ -2,9 +2,9 @@ import * as Clipboard from 'expo-clipboard'
 import { logger } from 'wallet/src/features/logger/logger'
 import serializeError from 'wallet/src/utils/serializeError'
 
-export function setClipboard(value: string): void {
+export async function setClipboard(value: string): Promise<void> {
   try {
-    Clipboard.setStringAsync(value)
+    await Clipboard.setStringAsync(value)
   } catch (error) {
     logger.error('Unable to set clipboard value', {
       tags: {
@@ -50,7 +50,7 @@ export async function setClipboardImage(imageUrl: string | undefined): Promise<v
 
     // if valid result, copy to clipboard
     if (formattedEncoding) {
-      Clipboard.setImageAsync(formattedEncoding)
+      await Clipboard.setImageAsync(formattedEncoding)
     }
   } catch (error) {
     logger.error('Unable to set clipboard image', {
