@@ -495,17 +495,6 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Signature to activity - returns undefined if not UniswapX order', () => {
-    expect(
-      signatureToActivity(
-        {
-          type: SignatureType.PLACEHOLDER,
-        } as SignatureDetails,
-        {}
-      )
-    ).toBeUndefined()
-  })
-
   it('Signature to activity - returns undefined if is on chain order', () => {
     expect(
       signatureToActivity(
