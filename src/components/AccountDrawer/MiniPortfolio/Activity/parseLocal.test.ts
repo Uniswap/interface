@@ -12,7 +12,9 @@ import {
 } from 'state/transactions/types'
 import { renderHook } from 'test-utils/render'
 
-import { transactionToActivity, useLocalActivities } from './parseLocal'
+import { UniswapXOrderStatus } from '../../../../lib/hooks/orders/types'
+import { SignatureDetails, SignatureType } from '../../../../state/signatures/types'
+import { signatureToActivity, transactionToActivity, useLocalActivities } from './parseLocal'
 
 function mockSwapInfo(
   type: MockTradeType,
@@ -491,5 +493,27 @@ describe('parseLocalActivity', () => {
       status: MockTxStatus.Confirmed,
       from: mockAccount2,
     })
+  })
+
+  it('Signature to activity - returns undefined if is on chain order', () => {
+    expect(
+      signatureToActivity(
+        {
+          type: SignatureType.SIGN_UNISWAPX_ORDER,
+          status: UniswapXOrderStatus.FILLED,
+        } as SignatureDetails,
+        {}
+      )
+    ).toBeUndefined()
+
+    expect(
+      signatureToActivity(
+        {
+          type: SignatureType.SIGN_UNISWAPX_ORDER,
+          status: UniswapXOrderStatus.CANCELLED,
+        } as SignatureDetails,
+        {}
+      )
+    ).toBeUndefined()
   })
 })
