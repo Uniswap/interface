@@ -48,6 +48,7 @@ export interface UserState {
   timestamp: number
   URLWarningVisible: boolean
   hideUniswapWalletBanner: boolean
+  disabledUniswapX?: boolean
   // undefined means has not gone through A/B split yet
   showSurveyPopup?: boolean
 }
@@ -59,7 +60,7 @@ function pairKey(token0Address: string, token1Address: string) {
 export const initialState: UserState = {
   selectedWallet: undefined,
   userLocale: null,
-  userRouterPreference: RouterPreference.AUTO,
+  userRouterPreference: RouterPreference.API,
   userHideClosedPositions: false,
   userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,
@@ -99,6 +100,9 @@ const userSlice = createSlice({
     },
     updateHideUniswapWalletBanner(state, action) {
       state.hideUniswapWalletBanner = action.payload.hideUniswapWalletBanner
+    },
+    updateDisabledUniswapX(state, action) {
+      state.disabledUniswapX = action.payload.disabledUniswapX
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -167,7 +171,26 @@ const userSlice = createSlice({
 
       // If `userRouterPreference` is not present, reset to default
       if (typeof state.userRouterPreference !== 'string') {
-        state.userRouterPreference = RouterPreference.AUTO
+        state.userRouterPreference = RouterPreference.API
+      }
+
+      // If `userRouterPreference` is `AUTO`, migrate to `API`
+      if ((state.userRouterPreference as string) === 'auto') {
+        state.userRouterPreference = RouterPreference.API
+      }
+
+      //If `buyFiatFlowCompleted` is present, delete it using filtering
+      if ('buyFiatFlowCompleted' in state) {
+        //ignoring due to type errors occuring since we now remove this state
+        //@ts-ignore
+        delete state.buyFiatFlowCompleted
+      }
+
+      // If `buyFiatFlowCompleted` is present, delete it using filtering
+      if ('buyFiatFlowCompleted' in state) {
+        //ignoring due to type errors occuring since we now remove this state
+        //@ts-ignore
+        delete state.buyFiatFlowCompleted
       }
 
       //If `buyFiatFlowCompleted` is present, delete it using filtering
@@ -192,5 +215,6 @@ export const {
   updateUserLocale,
   updateUserSlippageTolerance,
   updateHideUniswapWalletBanner,
+  updateDisabledUniswapX,
 } = userSlice.actions
 export default userSlice.reducer
