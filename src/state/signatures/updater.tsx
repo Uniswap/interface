@@ -13,19 +13,18 @@ import { isL2ChainId } from 'utils/chains'
 import { useAddPopup } from '../application/hooks'
 import { updateSignature } from './reducer'
 import { SignatureType, UniswapXOrderDetails } from './types'
+import { useAllSignatures } from './hooks'
 
 export default function Updater() {
-  const { account, provider } = useWeb3React()
+  const { provider } = useWeb3React()
   const addPopup = useAddPopup()
-  const signatures = useAppSelector((state) => state.signatures)
+  const signatures = useAllSignatures()
 
-  const pendingOrders = useMemo(() => {
-    if (!account || !signatures[account]) return []
-    return Object.values(signatures[account]).filter(
+  const pendingOrders = useMemo(() => Object.values(signatures).filter(
       (signature) =>
         signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === UniswapXOrderStatus.OPEN
     ) as UniswapXOrderDetails[]
-  }, [account, signatures])
+  , [signatures])
 
   const dispatch = useAppDispatch()
 
