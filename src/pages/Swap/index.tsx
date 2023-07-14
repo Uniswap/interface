@@ -264,7 +264,7 @@ export function Swap({
 
   const swapInfo = useDerivedSwapInfo(state, chainId)
   const {
-    trade: { state: tradeState, trade, method },
+    trade: { state: tradeState, trade },
     allowedSlippage,
     autoSlippage,
     currencyBalances,
