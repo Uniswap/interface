@@ -25,6 +25,9 @@ const APPROVAL_WINDOW_PARAMS: WindowParams = {
   left: 1800,
 }
 
+// save request window id to be able to identify it later
+let requestWindowId: number | undefined
+
 export async function openRequestsWindow(
   windowParams: WindowParams = APPROVAL_WINDOW_PARAMS
 ): Promise<void> {
@@ -33,11 +36,13 @@ export async function openRequestsWindow(
     .getCurrent()
     .then((window) => window.width ?? DEFAULT_WINDOW_WIDTH)
 
-  await chrome.windows.create({
+  const { id } = await chrome.windows.create({
     ...windowParams,
     left: currentWindowWidth - 425,
     url: REQUESTS_WINDOW_URL,
   })
+
+  requestWindowId = id
 }
 
 /** Opens extension in a docked window (injected in dapp) */
@@ -77,16 +82,19 @@ export async function maybeOpenRequestsWindow(
     return openDockedWindow()
   }
 
-  chrome.windows.getAll(async (windows) => {
-    const requestsWindowFound = windows.find((window) => {
-      if (window.tabs && window.tabs.length > 0) {
-        return window.tabs[0]?.url?.includes(REQUESTS_WINDOW_URL)
-      }
-    })
-    if (requestsWindowFound) return
+  const windows = await chrome.windows.getAll()
+  const requestsWindowFound = windows.find((window) => window.id === requestWindowId)
 
-    await openRequestsWindow()
-  })
+  if (requestsWindowFound) {
+    logger.warn(
+      'dappRequests/utils',
+      'maybeOpenRequestsWindow',
+      'Requests window already opened. Skipping.'
+    )
+    return
+  }
+
+  await openRequestsWindow()
 }
 
 export function extractBaseUrl(url?: string): string | undefined {
