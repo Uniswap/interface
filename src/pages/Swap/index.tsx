@@ -509,7 +509,7 @@ export function Swap({
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
-  const inputCurrency = currencies[Field.INPUT]
+  const inputCurrency = currencies[Field.INPUT] ?? undefined
   const switchChain = useSwitchChain()
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const showOptInSmall = !useScreenSize().navSearchInputVisible
@@ -525,7 +525,7 @@ export function Swap({
         showCancel={true}
       />
       <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
-      {trade && inputCurrency && showConfirm && (
+      {trade && showConfirm && (
         <ConfirmSwapModal
           trade={trade}
           inputCurrency={inputCurrency}
