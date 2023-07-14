@@ -12,6 +12,6 @@
     "module": "NodeNext",
     "skipLibCheck": true
   },
-  "exclude": ["../node_modules", "../src", "utils/getAsset.ts", "utils/getCollection.ts", "utils/getToken.ts", "client.ts"],
   "include": ["**/*.ts"],
+  "exclude": ["node_modules", "src"],
 }
