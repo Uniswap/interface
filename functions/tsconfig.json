@@ -3,13 +3,14 @@
     "esModuleInterop": true,
     "incremental": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "moduleResolution": "node",
+    "module": "esnext",
     "noEmit": true,
     "strict": true,
-    "target": "ES6",
+    "target": "ESNext",
     "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
-    "types": ["jest", "node"],
+    "types": ["jest", "node", "@cloudflare/workers-types"],
     "jsx": "react",
-    "module": "NodeNext",
     "skipLibCheck": true,
     "baseUrl": "functions"
   },

@@ -69,7 +69,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.7",
-    "@cloudflare/workers-types": "^4.20230518.0",
+    "@cloudflare/workers-types": "^4.20230710.1",
     "@craco/craco": "^7.1.0",
     "@ethersproject/experimental": "^5.4.0",
     "@lingui/cli": "^3.9.0",
