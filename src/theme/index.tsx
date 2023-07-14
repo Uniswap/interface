@@ -101,7 +101,9 @@ function getSettings(darkMode: boolean) {
 }
 
 // eslint-disable-next-line import/no-unused-modules -- used in styled.d.ts
-export function getTheme(darkMode: boolean) {
+export function getTheme() {
+  const darkMode = false;
+
   return {
     darkMode,
     ...(darkMode ? darkTheme : lightTheme),

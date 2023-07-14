@@ -127,17 +127,21 @@ export default function SwapBuyFiatButton() {
       placement="bottom"
       disabled={fiatOnRampsUnavailableTooltipDisabled}
     >
-      <TraceEvent
+      {/* <TraceEvent
         events={[BrowserEvent.onClick]}
         name={SharedEventName.ELEMENT_CLICKED}
         element={InterfaceElementName.FIAT_ON_RAMP_BUY_BUTTON}
         properties={{ account_connected: !!account }}
-      >
-        <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
-          <Trans>Buy</Trans>
+      > */}
+        {/* <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
+          <Trans>Bridge</Trans>
           {!buyFiatFlowCompleted && <Dot data-testid="buy-fiat-flow-incomplete-indicator" />}
         </StyledTextButton>
-      </TraceEvent>
+      </TraceEvent> */}
+
+      <ExternalLink href='http://bridge.harmony.one'>
+        <Trans>Bridge</Trans>
+      </ExternalLink>
     </MouseoverTooltip>
   )
 }

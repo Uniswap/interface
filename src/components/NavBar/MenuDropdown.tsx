@@ -150,7 +150,7 @@ export const MenuDropdown = () => {
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 </Box>
-                <Box onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON)}>
+                {/* <Box onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON)}>
                   <PrimaryMenuRow close={toggleOpen}>
                     <Icon>
                       <AppleLogo width="24px" height="24px" fill={theme.textPrimary} />
@@ -175,7 +175,7 @@ export const MenuDropdown = () => {
                   <PrimaryMenuRow.Text>
                     <Trans>View more analytics</Trans>
                   </PrimaryMenuRow.Text>
-                </PrimaryMenuRow>
+                </PrimaryMenuRow> */}
               </Column>
               <Separator />
               <Box
@@ -184,6 +184,7 @@ export const MenuDropdown = () => {
                 flexWrap="wrap"
                 alignItems={{ sm: 'center', md: 'flex-start' }}
                 paddingX="8"
+                style={{ width: '270px' }}
               >
                 <SecondaryLinkedText href="https://help.uniswap.org/en/">
                   <Trans>Help center</Trans> ↗
@@ -191,6 +192,11 @@ export const MenuDropdown = () => {
                 <SecondaryLinkedText href="https://docs.uniswap.org/">
                   <Trans>Documentation</Trans> ↗
                 </SecondaryLinkedText>
+                
+                <SecondaryLinkedText href="https://harmony.one/buy">
+                  <Trans>Buy ONE</Trans> ↗
+                </SecondaryLinkedText>
+
                 <SecondaryLinkedText href="https://uniswap.canny.io/feature-requests">
                   <Trans>Feedback</Trans> ↗
                 </SecondaryLinkedText>

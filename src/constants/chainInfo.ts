@@ -233,7 +233,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Harmony',
     nativeCurrency: { name: 'Harmony', symbol: 'ONE', decimals: 18 },
-    color: darkTheme.chain_1,
+    // color: darkTheme.chain_1,
     logoUrl: harmonyLogo,
     defaultListUrl: HARMONY_MAINNET_LIST,
   },

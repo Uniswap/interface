@@ -93,7 +93,7 @@ export default function UniswapWalletBanner() {
 
   const screenSize = useScreenSize()
 
-  if (isMobileSafari) return null
+  return null;
 
   return (
     <PopupContainer show={shouldDisplay}>

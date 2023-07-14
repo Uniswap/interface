@@ -7,7 +7,7 @@ import { useUserLocaleManager } from 'state/user/hooks'
 dynamicActivate(initialLocale)
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const locale = useActiveLocale()
+  const locale = 'en-US'; // useActiveLocale()
   const [, setUserLocale] = useUserLocaleManager()
 
   const onActivate = useCallback(
