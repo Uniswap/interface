@@ -4,6 +4,7 @@ import { isFinalizedOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 
 import { OrderQueryResponse, UniswapXBackendOrder } from './types'
+import ms from 'ms.macro'
 
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
 if (UNISWAP_API_URL === undefined) {
@@ -15,7 +16,7 @@ function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]) {
   return global.fetch(`${UNISWAP_API_URL}/orders?swapper=${account}&orderHashes=${orderHashes}`)
 }
 
-const OFF_CHAIN_ORDER_STATUS_POLLING = 2000 // every 2 seconds
+const OFF_CHAIN_ORDER_STATUS_POLLING = ms`2s` // every 2 seconds
 
 interface UpdaterProps {
   pendingOrders: UniswapXOrderDetails[]
