@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ReactComponent as ErrorContent } from 'assets/svg/uniswapx_error.svg'
 import Column, { AutoColumn } from 'components/Column'
@@ -130,11 +130,15 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
       return (
         <ContentContainer>
           <Loader />
-          <ThemedText.SubHeaderLarge>{t`Swapping`}</ThemedText.SubHeaderLarge>
+          <ThemedText.SubHeaderLarge>
+            <Trans>Swapping</Trans>
+          </ThemedText.SubHeaderLarge>
           <Column>
             {amounts && <TradeSummary trade={amounts} />}
             <ThemedText.Caption paddingTop="48px" textAlign="center">
-              <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">{t`Learn more about swapping with UniswapX`}</ExternalLink>
+              <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
+                <Trans>Learn more about swapping with UniswapX</Trans>
+              </ExternalLink>
             </ThemedText.Caption>
           </Column>
         </ContentContainer>
@@ -144,11 +148,17 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
       return (
         <ContentContainer>
           <Success />
-          <ThemedText.SubHeaderLarge>{t`Swapped`}</ThemedText.SubHeaderLarge>
+          <ThemedText.SubHeaderLarge>
+            <Trans>Swapped</Trans>
+          </ThemedText.SubHeaderLarge>
           <Column>
             {amounts && <TradeSummary trade={amounts} />}
             <ThemedText.Caption paddingTop="48px" textAlign="center">
-              {explorerLink && <ExternalLink href={explorerLink}>{t`View on Explorer`}</ExternalLink>}
+              {explorerLink && (
+                <ExternalLink href={explorerLink}>
+                  <Trans>View on Explorer</Trans>
+                </ExternalLink>
+              )}
             </ThemedText.Caption>
           </Column>
         </ContentContainer>
@@ -157,19 +167,25 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
       return (
         <ContentContainer>
           <ErrorContent />
-          <ThemedText.SubHeaderLarge>{t`Cancelled`}</ThemedText.SubHeaderLarge>
-          <ThemedText.LabelSmall textAlign="center">{t`This order was cancelled`}</ThemedText.LabelSmall>
+          <ThemedText.SubHeaderLarge>
+            <Trans>Cancelled</Trans>
+          </ThemedText.SubHeaderLarge>
+          <ThemedText.LabelSmall textAlign="center">
+            <Trans>This order was cancelled</Trans>
+          </ThemedText.LabelSmall>
         </ContentContainer>
       )
     case UniswapXOrderStatus.EXPIRED:
       return (
         <ContentContainer>
           <ErrorContent />
-          <ThemedText.SubHeaderLarge>{t`Swap expired`}</ThemedText.SubHeaderLarge>
+          <ThemedText.SubHeaderLarge>
+            <Trans>Swap expired</Trans>
+          </ThemedText.SubHeaderLarge>
           <DescriptionText>
-            {t`Your swap expired before it could be filled. Try again or`}{' '}
+            <Trans>Your swap expired before it could be filled. Try again or</Trans>{' '}
             <LearnMoreLink href="https://support.uniswap.org/hc/en-us/articles/17515426867213">
-              {t` learn more`}.
+              <Trans>learn more.</Trans>
             </LearnMoreLink>
           </DescriptionText>
         </ContentContainer>
@@ -178,11 +194,13 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
       return (
         <ContentContainer>
           <ErrorContent />
-          <ThemedText.SubHeaderLarge>{t`Error`}</ThemedText.SubHeaderLarge>
+          <ThemedText.SubHeaderLarge>
+            <Trans>Error</Trans>
+          </ThemedText.SubHeaderLarge>
           <ThemedText.LabelSmall textAlign="center">
-            {t`Your swap couldn't be filled at this time. Try again or `}{' '}
+            <Trans>Your swap couldn&apos;t be filled at this time. Try again or </Trans>{' '}
             <LearnMoreLink href="https://support.uniswap.org/hc/en-us/articles/17515489874189">
-              {t` learn more`}.
+              <Trans>learn more.</Trans>
             </LearnMoreLink>
           </ThemedText.LabelSmall>
         </ContentContainer>
@@ -191,7 +209,9 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
       return (
         <ContentContainer>
           <ErrorContent />
-          <ThemedText.SubHeaderLarge>{t`Insufficient funds for swap`}</ThemedText.SubHeaderLarge>
+          <ThemedText.SubHeaderLarge>
+            <Trans>Insufficient funds for swap</Trans>
+          </ThemedText.SubHeaderLarge>
           <ThemedText.LabelSmall textAlign="center">{t`You didn't have enough ${
             amounts?.inputAmount.currency.symbol ?? amounts?.inputAmount.currency.name ?? t`of the input token`
           } to complete this swap.`}</ThemedText.LabelSmall>
