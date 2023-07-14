@@ -24,6 +24,7 @@ function getBlocksPerFetchForChainId(chainId: number | undefined): number {
     case ChainId.BNB:
     case ChainId.CELO:
     case ChainId.CELO_ALFAJORES:
+    case ChainId.HARMONY:
       return 5
     default:
       return 1
