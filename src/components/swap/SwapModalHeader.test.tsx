@@ -13,11 +13,7 @@ import SwapModalHeader from './SwapModalHeader'
 describe('SwapModalHeader.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {
     const { asFragment } = render(
-      <SwapModalHeader
-        inputCurrency={TEST_TRADE_EXACT_INPUT.inputAmount.currency}
-        trade={TEST_TRADE_EXACT_INPUT}
-        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-      />
+      <SwapModalHeader trade={TEST_TRADE_EXACT_INPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
@@ -55,11 +51,7 @@ describe('SwapModalHeader.tsx', () => {
 
   it('test trade exact output, no recipient', () => {
     const { asFragment } = render(
-      <SwapModalHeader
-        inputCurrency={TEST_TRADE_EXACT_OUTPUT.inputAmount.currency}
-        trade={TEST_TRADE_EXACT_OUTPUT}
-        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-      />
+      <SwapModalHeader trade={TEST_TRADE_EXACT_OUTPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Input is estimated. You will sell at most/i)).toBeInTheDocument()

@@ -23,7 +23,7 @@ export default function SwapModalHeader({
   allowedSlippage,
 }: {
   trade: InterfaceTrade
-  inputCurrency: Currency
+  inputCurrency?: Currency
   allowedSlippage: Percent
 }) {
   const fiatValueInput = useUSDPrice(trade.inputAmount)
@@ -36,7 +36,7 @@ export default function SwapModalHeader({
           field={Field.INPUT}
           label={<Trans>You pay</Trans>}
           amount={trade.inputAmount}
-          currency={inputCurrency}
+          currency={inputCurrency ?? trade.inputAmount.currency}
           usdAmount={fiatValueInput.data}
         />
         <SwapModalHeaderAmount
