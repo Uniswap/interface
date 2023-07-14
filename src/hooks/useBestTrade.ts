@@ -55,6 +55,7 @@ export function useBestTrade(
 ): {
   state: TradeState
   trade?: InterfaceTrade
+  method?: QuoteMethod
 } {
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
