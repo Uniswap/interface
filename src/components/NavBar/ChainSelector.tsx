@@ -8,6 +8,7 @@ import { ConnectionType } from 'connection/types'
 import { WalletConnectV2 } from 'connection/WalletConnectV2'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS, UniWalletSupportedChains } from 'constants/chains'
+import { useIsAvalancheEnabled } from 'featureFlags/flags/avalanche'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -50,6 +51,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const { chainId } = useWeb3React()
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const isMobile = useIsMobile()
+  const isAvalancheEnabled = useIsAvalancheEnabled()
 
   const theme = useTheme()
 
@@ -58,7 +60,8 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const [supportedChains, unsupportedChains] = useMemo(() => {
     const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter(
-      (chain: number) => showTestnets || !TESTNET_CHAIN_IDS.includes(chain)
+      (chain: number) =>
+        (showTestnets || !TESTNET_CHAIN_IDS.includes(chain)) && (isAvalancheEnabled || chain !== ChainId.AVALANCHE)
     ).reduce(
       (acc, chain) => {
         if (walletSupportsChain.includes(chain)) {
@@ -71,7 +74,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
       { supported: [], unsupported: [] } as Record<string, ChainId[]>
     )
     return [supported, unsupported]
-  }, [showTestnets, walletSupportsChain])
+  }, [isAvalancheEnabled, showTestnets, walletSupportsChain])
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -98,7 +101,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     return null
   }
 
-  const isSupported = !!info
+  const isSupported = !!info && (isAvalancheEnabled || chainId !== ChainId.AVALANCHE)
 
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>

@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
+import { useIsAvalancheEnabled } from 'featureFlags/flags/avalanche'
 import { ArrowUpRight } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall } from 'theme'
@@ -159,13 +160,14 @@ function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertCh
 export function NetworkAlert() {
   const { chainId } = useWeb3React()
   const [darkMode] = useDarkModeManager()
+  const isAvalancheEnabled = useIsAvalancheEnabled()
 
   if (!shouldShowAlert(chainId)) {
     return null
   }
 
   const chainInfo = getChainInfo(chainId)
-  if (!chainInfo) return null
+  if (!chainInfo || (!isAvalancheEnabled && chainId === ChainId.AVALANCHE)) return null
 
   const { label, logoUrl, bridge } = chainInfo
   const textColor = TEXT_COLORS[chainId]
