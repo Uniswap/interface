@@ -55,8 +55,8 @@ jobs:
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-tsc-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-tsc-
+          key: ${{ runner.os }}-cloud-tsc-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-cloud-tsc-
       - run: yarn tsc -p functions/tsconfig.json
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
@@ -98,6 +98,7 @@ jobs:
           name: Unit tests
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
   
+  # TODO: Setup CodeCOV
   cloud-tests:
     runs-on: ubuntu-latest
     steps:
@@ -106,14 +107,9 @@ jobs:
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-jest-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-jest-
+          key: ${{ runner.os }}-cloud-jest-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-cloud-jest-
       - run: yarn test:cloud --coverage --maxWorkers=100%
-      - uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
-          flags: cloud-tests
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
         with:

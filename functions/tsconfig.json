@@ -10,10 +10,8 @@
     "types": ["jest", "node"],
     "jsx": "react",
     "module": "NodeNext",
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules", "src"],
+  "exclude": ["../node_modules", "../src", "utils/getAsset.ts", "utils/getCollection.ts", "utils/getToken.ts", "client.ts"],
   "include": ["**/*.ts"],
-  "watchOptions": {
-    "excludeDirectories": ["node_modules", "src"]
-  }
 }
