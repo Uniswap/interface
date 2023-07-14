@@ -10,8 +10,9 @@
     "types": ["jest", "node"],
     "jsx": "react",
     "module": "NodeNext",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": "functions"
   },
+  "exclude": ["../node_modules", "../src"],
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "src"],
 }
