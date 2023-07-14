@@ -91,25 +91,29 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
         </AnimatedFlex>
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
           <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
-            <Flex alignItems="flex-end" gap="spacing4" pl="spacing8">
-              <Text
-                color={isWarmLoading ? 'textSecondary' : 'textPrimary'}
-                numberOfLines={1}
-                variant="bodyLarge">
-                {portfolioBalance.balanceUSD === 0
-                  ? t('N/A')
-                  : formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
-              </Text>
-              <Text color="textSecondary">
-                <RelativeChange
-                  alignRight
-                  change={relativeChange24 ?? undefined}
-                  negativeChangeColor={isWarmLoading ? 'textSecondary' : 'accentCritical'}
-                  positiveChangeColor={isWarmLoading ? 'textSecondary' : 'accentSuccess'}
-                  variant="subheadSmall"
-                />
-              </Text>
-            </Flex>
+            {!portfolioBalance.balanceUSD ? (
+              <Flex centered flex={1}>
+                <Text color="textSecondary">{t('NA')}</Text>
+              </Flex>
+            ) : (
+              <Flex alignItems="flex-end" gap="spacing4" pl="spacing8">
+                <Text
+                  color={isWarmLoading ? 'textSecondary' : 'textPrimary'}
+                  numberOfLines={1}
+                  variant="bodyLarge">
+                  {formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
+                </Text>
+                <Text color="textSecondary">
+                  <RelativeChange
+                    alignRight
+                    change={relativeChange24 ?? undefined}
+                    negativeChangeColor={isWarmLoading ? 'textSecondary' : 'accentCritical'}
+                    positiveChangeColor={isWarmLoading ? 'textSecondary' : 'accentSuccess'}
+                    variant="subheadSmall"
+                  />
+                </Text>
+              </Flex>
+            )}
           </WarmLoadingShimmer>
         </AnimatedFlex>
       </TouchableArea>
