@@ -4,7 +4,6 @@ import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from '.
 
 export enum SignatureType {
   SIGN_UNISWAPX_ORDER = 'signUniswapXOrder',
-  PLACEHOLDER = 'placeholder',
 }
 
 interface BaseSignatureFields {
@@ -24,9 +23,4 @@ export interface UniswapXOrderDetails extends BaseSignatureFields {
   txHash?: string
 }
 
-// Used to enforce discriminating the SignatureDetails union until we have more than one SignatureDetails implementation
-interface PlaceholderSignatureDetails extends BaseSignatureFields {
-  type: SignatureType.PLACEHOLDER
-}
-
-export type SignatureDetails = UniswapXOrderDetails | PlaceholderSignatureDetails
+export type SignatureDetails = UniswapXOrderDetails
