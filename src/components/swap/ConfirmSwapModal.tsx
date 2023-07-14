@@ -281,7 +281,7 @@ export default function ConfirmSwapModal({
   fiatValueOutput,
 }: {
   trade: InterfaceTrade
-  inputCurrency: Currency
+  inputCurrency?: Currency
   originalTrade?: InterfaceTrade
   swapResult?: SwapResult
   allowedSlippage: Percent
