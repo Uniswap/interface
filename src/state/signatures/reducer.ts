@@ -31,6 +31,5 @@ const signatureSlice = createSlice({
   },
 })
 
-// eslint-disable-next-line import/no-unused-modules
 export const { addSignature, updateSignature, removeSignature } = signatureSlice.actions
 export default signatureSlice.reducer
