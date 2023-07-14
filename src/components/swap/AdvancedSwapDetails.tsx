@@ -62,9 +62,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             }
           >
             <ThemedText.BodySmall color="textSecondary">
-              <Trans>
-                Network <Plural value={txCount} one="fee" other="fees" />
-              </Trans>
+              <Plural value={txCount} one="Network fee" other="Network fees" />
             </ThemedText.BodySmall>
           </MouseoverTooltip>
           <MouseoverTooltip

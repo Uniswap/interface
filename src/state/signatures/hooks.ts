@@ -8,10 +8,6 @@ import { useAppSelector } from 'state/hooks'
 import { addSignature } from './reducer'
 import { SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
-function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrderDetails {
-  return signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === UniswapXOrderStatus.OPEN
-}
-
 export function usePendingOrders(): UniswapXOrderDetails[] {
   const { account } = useWeb3React()
   const signatures = useAppSelector((state) => state.signatures)
@@ -69,6 +65,10 @@ export function isFinalizedOrder(orderStatus: UniswapXOrderStatus) {
 
 export function isOnChainOrder(orderStatus: UniswapXOrderStatus) {
   return orderStatus === UniswapXOrderStatus.FILLED || orderStatus === UniswapXOrderStatus.CANCELLED
+}
+
+function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrderDetails {
+  return signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === UniswapXOrderStatus.OPEN
 }
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
