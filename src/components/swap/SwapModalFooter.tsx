@@ -106,9 +106,7 @@ export default function SwapModalFooter({
               }
             >
               <Label cursor="help">
-                <Trans>
-                  Network <Plural value={txCount} one="fee" other="fees" />
-                </Trans>
+                <Plural value={txCount} one="Network fee" other="Network fees" />
               </Label>
             </MouseoverTooltip>
             <MouseoverTooltip placement="right" size={TooltipSize.Small} text={<GasBreakdownTooltip trade={trade} />}>
