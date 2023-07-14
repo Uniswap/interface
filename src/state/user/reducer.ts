@@ -186,6 +186,13 @@ const userSlice = createSlice({
         delete state.buyFiatFlowCompleted
       }
 
+      // If `buyFiatFlowCompleted` is present, delete it using filtering
+      if ('buyFiatFlowCompleted' in state) {
+        //ignoring due to type errors occuring since we now remove this state
+        //@ts-ignore
+        delete state.buyFiatFlowCompleted
+      }
+
       state.lastUpdateVersionTimestamp = currentTimestamp()
     })
   },
