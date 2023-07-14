@@ -16,7 +16,7 @@ import { darkTheme } from 'theme/colors'
 import harmonyLogo from 'assets/svg/harmony_logo.svg'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { ARBITRUM_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
+import { ARBITRUM_LIST, CELO_LIST, HARMONY_MAINNET_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms`12s`
 
@@ -235,6 +235,7 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Harmony', symbol: 'ONE', decimals: 18 },
     color: darkTheme.chain_1,
     logoUrl: harmonyLogo,
+    defaultListUrl: HARMONY_MAINNET_LIST,
   },
 }
 

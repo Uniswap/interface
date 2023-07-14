@@ -55,6 +55,9 @@ import {
   ETH_HARMONY,
   USDT_HARMONY,
   USDC_HARMONY,
+  ARB_USDC_HARMONY,
+  ARB_USDT_HARMONY,
+  ARB_DAI_HARMONY
 } from './tokens'
 
 type ChainTokenList = {
@@ -161,7 +164,10 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC_HARMONY,
     ETH_HARMONY,
     USDT_HARMONY,
-    USDC_HARMONY
+    USDC_HARMONY,
+    ARB_USDC_HARMONY,
+    ARB_USDT_HARMONY,
+    ARB_DAI_HARMONY
   ],
 
   [SupportedChainId.ARBITRUM_ONE]: [

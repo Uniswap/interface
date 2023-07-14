@@ -204,7 +204,8 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  <Route path="/" element={<Landing />} />
+                  {/* <Route path="/" element={<Landing />} /> */}
+                  <Route path="/" element={<Swap />} />
 
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />

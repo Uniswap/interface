@@ -79,6 +79,30 @@ export const USDC_HARMONY = new Token(
   'USD Coin'
 )
 
+export const ARB_USDC_HARMONY = new Token(
+  SupportedChainId.HARMONY,
+  '0x9b5fae311A4A4b9d838f301C9c27b55d19BAa4Fb',
+  6,
+  'arbUSDC',
+  'USD Coin (Arb1)'
+)
+
+export const ARB_USDT_HARMONY = new Token(
+  SupportedChainId.HARMONY,
+  '0x2DA729BA5231d2C79290aBA4a8b85a5c94dA4724',
+  6,
+  'arbUSDT',
+  'Tether USD'
+)
+
+export const ARB_DAI_HARMONY = new Token(
+  SupportedChainId.HARMONY,
+  '0x7C07d01C9DaB5aBB09CE2b42242a7570F25fC2CC',
+  18,
+  'arbDAI',
+  'Dai Stablecoin'
+)
+
 export const USDC_ARBITRUM = new Token(
   SupportedChainId.ARBITRUM_ONE,
   '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',

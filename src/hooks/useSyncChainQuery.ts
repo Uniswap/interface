@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_IDS_TO_NAMES } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import { ParsedQs } from 'qs'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
@@ -25,8 +25,8 @@ export default function useSyncChainQuery() {
   const { chainId, isActive } = useWeb3React()
   const parsedQs = useParsedQueryString()
 
-  const urlChainId = getParsedChainId(parsedQs)
-  const previousUrlChainId = usePrevious(urlChainId)
+  const urlChainId = SupportedChainId.HARMONY; // getParsedChainId(parsedQs)
+  const previousUrlChainId = SupportedChainId.HARMONY; // usePrevious(urlChainId)
 
   const selectChain = useSelectChain()
 
@@ -40,12 +40,12 @@ export default function useSyncChainQuery() {
 
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId && isActive
+  const chainQueryManuallyUpdated = /*urlChainId && urlChainId !== previousUrlChainId &&*/ isActive
 
   return useEffect(() => {
     if (chainQueryManuallyUpdated) {
       // If the query param changed, and the chain didn't change, then activate the new chain
-      selectChain(urlChainId)
+      selectChain(SupportedChainId.HARMONY)
       searchParams.delete('chain')
       setSearchParams(searchParams)
     }

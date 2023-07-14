@@ -266,13 +266,13 @@ export const SearchBarDropdown = ({
           <Column gap="20">
             {showCollectionsFirst ? (
               <>
-                {collectionSearchResults}
+                {/* {collectionSearchResults} */}
                 {tokenSearchResults}
               </>
             ) : (
               <>
                 {tokenSearchResults}
-                {collectionSearchResults}
+                {/* {collectionSearchResults} */}
               </>
             )}
           </Column>
@@ -311,7 +311,7 @@ export const SearchBarDropdown = ({
                 isLoading={!trendingTokenData}
               />
             )}
-            {!isTokenPage && (
+            {/* {!isTokenPage && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
@@ -326,7 +326,7 @@ export const SearchBarDropdown = ({
                 headerIcon={<TrendingArrow />}
                 isLoading={trendingCollectionsAreLoading}
               />
-            )}
+            )} */}
           </Column>
         )
 

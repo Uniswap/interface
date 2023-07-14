@@ -100,11 +100,12 @@ const Navbar = ({ blur }: { blur: boolean }) => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <UniIcon
+              <img
                 width="48"
                 height="48"
-                data-testid="uniswap-logo"
+                data-testid="harmony-logo"
                 className={styles.logo}
+                src='/harmony.png'
                 onClick={() => {
                   navigate({
                     pathname: '/',

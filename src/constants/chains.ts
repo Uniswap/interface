@@ -7,6 +7,8 @@
  * Because this is not explicitly derived from @uniswap/sdk-core, there is a unit test to enforce conformance.
  */
 export enum SupportedChainId {
+  HARMONY = 1666600000,
+
   MAINNET = 1,
   GOERLI = 5,
   SEPOLIA = 11155111,
@@ -24,8 +26,6 @@ export enum SupportedChainId {
   CELO_ALFAJORES = 44787,
 
   BNB = 56,
-
-  HARMONY = 1666600000
 }
 
 export const UniWalletSupportedChains = [

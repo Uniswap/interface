@@ -41,8 +41,12 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
 
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
   const checksummedAddress = isAddress(address)
+
   if (checksummedAddress) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
+    // return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
+    const uris = TokenLogoLookupTable.getIcons(address, chainId) ?? [];
+
+    return uris[0]
   } else {
     return undefined
   }
@@ -54,7 +58,9 @@ export default function useAssetLogoSource(
   isNative?: boolean,
   backupImg?: string | null
 ): [string | undefined, () => void] {
-  const hasWarning = Boolean(address && checkWarning(address))
+
+  const hasWarning = false; // Boolean(address && checkWarning(address))
+
   const [current, setCurrent] = useState<string | undefined>(
     hasWarning ? undefined : getInitialUrl(address, chainId, isNative)
   )
