@@ -7,7 +7,7 @@ export enum UniswapXOrderStatus {
   INSUFFICIENT_FUNDS = 'insufficient-funds',
 }
 
-interface UniswapXBackendOrderFields {
+interface BaseUniswapXBackendOrder {
   orderStatus: UniswapXOrderStatus
   orderHash: string
   offerer: string
@@ -28,7 +28,7 @@ interface UniswapXBackendOrderFields {
   ]
 }
 
-interface NonfilledUniswapXBackendOrder extends UniswapXBackendOrderFields {
+interface NonfilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
   orderStatus:
     | UniswapXOrderStatus.OPEN
     | UniswapXOrderStatus.EXPIRED
@@ -37,7 +37,7 @@ interface NonfilledUniswapXBackendOrder extends UniswapXBackendOrderFields {
     | UniswapXOrderStatus.INSUFFICIENT_FUNDS
 }
 
-interface FilledUniswapXBackendOrder extends UniswapXBackendOrderFields {
+interface FilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
   orderStatus: UniswapXOrderStatus.FILLED
   txHash: string
   settledAmounts: [
