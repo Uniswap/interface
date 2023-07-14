@@ -12,6 +12,7 @@ export enum FeatureFlag {
   detailsV2 = 'details_v2',
   debounceSwapQuote = 'debounce_swap_quote',
   uniswapXEnabled = 'uniswapx_enabled',
+  uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
   routingAPIPrice = 'routing_api_price',
 }
 
