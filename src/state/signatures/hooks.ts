@@ -59,10 +59,6 @@ export function useAddOrder() {
   )
 }
 
-function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrderDetails {
-  return signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === UniswapXOrderStatus.OPEN
-}
-
 export function isFinalizedOrder(orderStatus: UniswapXOrderStatus) {
   return orderStatus !== UniswapXOrderStatus.OPEN
 }
