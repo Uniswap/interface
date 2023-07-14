@@ -1,8 +1,9 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { AutoColumn } from 'components/Column'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row from 'components/Row'
+import { ReactNode } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components/macro'
@@ -17,7 +18,7 @@ const InlineLink = styled(ThemedText.Caption)`
   display: inline;
   cursor: pointer;
   &:hover {
-    opacity: 0.8;
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 `
 
@@ -25,12 +26,18 @@ const InlineUniswapXGradient = styled(UniswapXGradient)`
   display: inline;
 `
 
-const GasCostItem = ({ title, amount, itemValue }: { title: string; itemValue?: React.ReactNode; amount?: number }) => {
+const GasCostItem = ({
+  title,
+  amount,
+  itemValue,
+}: {
+  title: ReactNode
+  itemValue?: React.ReactNode
+  amount?: number
+}) => {
   return (
     <Row justify="space-between">
-      <ThemedText.SubHeaderSmall>
-        <Trans>{title}</Trans>
-      </ThemedText.SubHeaderSmall>
+      <ThemedText.SubHeaderSmall>{title}</ThemedText.SubHeaderSmall>
       <ThemedText.SubHeaderSmall color="textPrimary">
         {itemValue ?? formatNumber(amount, NumberType.FiatGasPrice)}
       </ThemedText.SubHeaderSmall>
@@ -56,13 +63,16 @@ export function GasBreakdownTooltip({
       {(wrapEstimate || approvalEstimate) && !hideFees && (
         <>
           <AutoColumn gap="sm">
-            {wrapEstimate && <GasCostItem title={t`Wrap ETH`} amount={wrapEstimate} />}
+            {wrapEstimate && <GasCostItem title={<Trans>Wrap ETH</Trans>} amount={wrapEstimate} />}
             {approvalEstimate && (
-              <GasCostItem title={t`Allow ${trade.inputAmount.currency.symbol} (one time)`} amount={approvalEstimate} />
+              <GasCostItem
+                title={<Trans>Allow {trade.inputAmount.currency.symbol} (one time)</Trans>}
+                amount={approvalEstimate}
+              />
             )}
-            {swapEstimate && <GasCostItem title={t`Swap`} amount={swapEstimate} />}
+            {swapEstimate && <GasCostItem title={<Trans>Swap</Trans>} amount={swapEstimate} />}
             {isUniswapXTrade(trade) && (
-              <GasCostItem title={t`Swap`} itemValue={<UniswapXRouterLabel>$0</UniswapXRouterLabel>} />
+              <GasCostItem title={<Trans>Swap</Trans>} itemValue={<UniswapXRouterLabel>$0</UniswapXRouterLabel>} />
             )}
           </AutoColumn>
           <Divider />
@@ -70,17 +80,23 @@ export function GasBreakdownTooltip({
       )}
       {isUniswapXTrade(trade) && !hideUniswapXDescription ? (
         <ThemedText.Caption color="textSecondary">
-          <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient> aggregates liquidity sources for better prices and
-          gas free swaps.{' '}
+          <Trans>
+            <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient> aggregates liquidity sources for better prices and
+            gas free swaps.
+          </Trans>{' '}
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
-            <InlineLink>Learn more</InlineLink>
+            <InlineLink>
+              <Trans>Learn more</Trans>
+            </InlineLink>
           </ExternalLink>
         </ThemedText.Caption>
       ) : (
         <ThemedText.Caption color="textSecondary">
-          Network Fees are paid to the Ethereum network to secure transactions.{' '}
+          <Trans>Network Fees are paid to the Ethereum network to secure transactions.</Trans>{' '}
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
-            <InlineLink>Learn more</InlineLink>
+            <InlineLink>
+              <Trans>Learn more</Trans>
+            </InlineLink>
           </ExternalLink>
         </ThemedText.Caption>
       )}

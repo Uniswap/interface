@@ -71,6 +71,10 @@ export function isOnChainOrder(orderStatus: UniswapXOrderStatus) {
   return orderStatus === UniswapXOrderStatus.FILLED || orderStatus === UniswapXOrderStatus.CANCELLED
 }
 
+function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrderDetails {
+  return signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === UniswapXOrderStatus.OPEN
+}
+
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
   const { account } = useWeb3React()
 
