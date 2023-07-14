@@ -18,8 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
@@ -37,8 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
@@ -56,8 +52,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - run: yarn yarn-deduplicate --strategy=highest --list --fail
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
@@ -70,8 +64,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
@@ -94,8 +86,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
@@ -126,8 +116,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       - uses: ./.github/actions/cache-on-main
         with:
           path: /root/.cache/Cypress
