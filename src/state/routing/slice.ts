@@ -8,6 +8,7 @@ import { trace } from 'tracing/trace'
 
 import {
   QuoteMethod,
+  QuoteState,
   RoutingConfig,
   SwapRouterNativeAssets,
   TradeResult,
@@ -53,11 +54,6 @@ export interface GetQuoteArgs {
   isRoutingAPIPrice?: boolean
 }
 
-enum QuoteState {
-  SUCCESS = 'Success',
-  NOT_FOUND = 'Not found',
-}
-
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 
 // routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
@@ -97,7 +93,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   return [uniswapx, classic]
 }
 
-export const routingApiV2 = createApi({
+export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
     baseUrl: UNISWAP_API_URL,
@@ -206,4 +202,4 @@ export const routingApiV2 = createApi({
   }),
 })
 
-export const { useGetQuoteQuery } = routingApiV2
+export const { useGetQuoteQuery } = routingApi
