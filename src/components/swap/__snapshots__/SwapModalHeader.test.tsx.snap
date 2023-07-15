@@ -252,7 +252,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
   color: #0D111C;
 }
 
-.c12 {
+.c13 {
   width: 100%;
   height: 1px;
   border-width: 0;
@@ -296,7 +296,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
   grid-row-gap: 8px;
 }
 
-.c11 {
+.c12 {
   --size: 36px;
   border-radius: 100px;
   color: #0D111C;
@@ -307,6 +307,14 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
   line-height: 36px;
   text-align: center;
   width: 36px;
+}
+
+.c11 {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: radial-gradient(white 60%,#ffffff00 calc(70% + 1px));
+  box-shadow: 0 0 1px white;
 }
 
 .c10 {
@@ -328,7 +336,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
   margin-right: 8px;
 }
 
-.c13 {
+.c14 {
   margin: 16px 2px 24px 2px;
 }
 
@@ -378,11 +386,11 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
         <div
           class="c10"
         >
-          <div
+          <img
+            alt="ETH logo"
             class="c11"
-          >
-            ETH
-          </div>
+            src="ethereum-logo.png"
+          />
         </div>
       </div>
       <div
@@ -422,7 +430,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
           class="c10"
         >
           <div
-            class="c11"
+            class="c12"
           >
             DEF
           </div>
@@ -430,7 +438,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
       </div>
     </div>
     <div
-      class="c12 c13"
+      class="c13 c14"
     />
   </div>
 </DocumentFragment>
