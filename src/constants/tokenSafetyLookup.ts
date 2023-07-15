@@ -1,4 +1,5 @@
 import { TokenInfo } from '@uniswap/token-lists'
+import { ListsState } from 'state/lists/reducer'
 
 import store from '../state'
 import { UNI_EXTENDED_LIST, UNI_LIST, UNSUPPORTED_LIST_URLS } from './lists'
@@ -19,16 +20,16 @@ class TokenSafetyLookupTable {
   dict: { [key: string]: TOKEN_LIST_TYPES } = {}
 
   // TODO(WEB-2488): Index lookups by chainId
-  update() {
+  update(lists: ListsState) {
     this.initialized = true
 
     // Initialize extended tokens first
-    store.getState().lists.byUrl[UNI_EXTENDED_LIST].current?.tokens.forEach((token) => {
+    lists.byUrl[UNI_EXTENDED_LIST].current?.tokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_EXTENDED
     })
 
     // Initialize default tokens second, so that any tokens on both default and extended will display as default (no warning)
-    store.getState().lists.byUrl[UNI_LIST].current?.tokens.forEach((token) => {
+    lists.byUrl[UNI_LIST].current?.tokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_DEFAULT
     })
 
@@ -38,7 +39,7 @@ class TokenSafetyLookupTable {
     })
 
     // Initialize blocked tokens from all urls included
-    UNSUPPORTED_LIST_URLS.map((url) => store.getState().lists.byUrl[url].current?.tokens)
+    UNSUPPORTED_LIST_URLS.map((url) => lists.byUrl[url].current?.tokens)
       .filter((x): x is TokenInfo[] => !!x)
       .flat(1)
       .forEach((token) => {
@@ -47,7 +48,7 @@ class TokenSafetyLookupTable {
   }
 
   checkToken(address: string, chainId?: number | null) {
-    if (!this.initialized) this.update()
+    if (!this.initialized) this.update(store.getState().lists)
 
     if (address === NATIVE_CHAIN_ID.toLowerCase()) {
       return TOKEN_LIST_TYPES.UNI_DEFAULT
