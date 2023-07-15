@@ -290,7 +290,8 @@ function getLogoSrcs(changes: TransactionChanges): string[] {
 }
 
 function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity | undefined {
-  // We currently only support displaying pending activity sent from the current client, so we hide pending activty fetched remotely
+  // We currently only have a polling mechanism for locally-sent pending orders, so we hide remote pending orders since they won't update upon completion
+  // TODO(WEB-2487): Add polling mechanism for remote orders to allow displaying remote pending orders
   if (details.orderStatus === SwapOrderStatus.Open) return undefined
 
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, orderStatus } = details
