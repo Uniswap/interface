@@ -3,7 +3,6 @@ import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 
 import { ZERO_ADDRESS } from './misc'
-import { COMMON_BASES } from './routing'
 import { NATIVE_CHAIN_ID } from './tokens'
 import TokenSafetyLookupTable, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
 
@@ -89,11 +88,7 @@ export function checkWarning(tokenAddress: string, chainId?: number | null) {
   if (tokenAddress === NATIVE_CHAIN_ID || tokenAddress === ZERO_ADDRESS) {
     return null
   }
-  // TODO(WEB-2488): Move this check into the TokenSafetyLookupTable
-  if (chainId && COMMON_BASES[chainId].some((base) => tokenAddress === base.wrapped.address)) {
-    return null
-  }
-  switch (TokenSafetyLookupTable.checkToken(tokenAddress.toLowerCase())) {
+  switch (TokenSafetyLookupTable.checkToken(tokenAddress.toLowerCase(), chainId)) {
     case TOKEN_LIST_TYPES.UNI_DEFAULT:
       return null
     case TOKEN_LIST_TYPES.UNI_EXTENDED:

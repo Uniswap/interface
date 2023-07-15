@@ -2,6 +2,7 @@ import { TokenInfo } from '@uniswap/token-lists'
 
 import store from '../state'
 import { UNI_EXTENDED_LIST, UNI_LIST, UNSUPPORTED_LIST_URLS } from './lists'
+import { COMMON_BASES } from './routing'
 import brokenTokenList from './tokenLists/broken.tokenlist.json'
 import { NATIVE_CHAIN_ID } from './tokens'
 
@@ -14,14 +15,13 @@ export enum TOKEN_LIST_TYPES {
 }
 
 class TokenSafetyLookupTable {
+  initialized = false
   dict: { [key: string]: TOKEN_LIST_TYPES } = {}
-
-  constructor() {
-    this.update()
-  }
 
   // TODO(WEB-2488): Index lookups by chainId
   update() {
+    this.initialized = true
+
     // Initialize extended tokens first
     store.getState().lists.byUrl[UNI_EXTENDED_LIST].current?.tokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_EXTENDED
@@ -46,11 +46,16 @@ class TokenSafetyLookupTable {
       })
   }
 
-  checkToken(address: string) {
+  checkToken(address: string, chainId?: number | null) {
+    if (!this.initialized) this.update()
+
     if (address === NATIVE_CHAIN_ID.toLowerCase()) {
       return TOKEN_LIST_TYPES.UNI_DEFAULT
+    } else if (chainId && COMMON_BASES[chainId]?.some((base) => address === base.wrapped.address.toLowerCase())) {
+      return TOKEN_LIST_TYPES.UNI_DEFAULT
+    } else {
+      return this.dict[address] ?? TOKEN_LIST_TYPES.UNKNOWN
     }
-    return this.dict[address] ?? TOKEN_LIST_TYPES.UNKNOWN
   }
 }
 
