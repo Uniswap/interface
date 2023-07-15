@@ -1,7 +1,7 @@
 import { createStore, Store } from 'redux'
 
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
-import TokenSafetyLookupTable from '../../constants/TokenSafetyLookupTable'
+import tokenSafetyLookup from '../../constants/tokenSafetyLookup'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
 import reducer, { ListsState } from './reducer'
@@ -81,14 +81,14 @@ describe('list reducer', () => {
 
     describe('fulfilled', () => {
       beforeEach(() => {
-        jest.spyOn(TokenSafetyLookupTable, 'update')
+        jest.spyOn(tokenSafetyLookup, 'update')
       })
 
       it('saves the list', () => {
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
-        expect(TokenSafetyLookupTable.update).toHaveBeenCalled()
+        expect(tokenSafetyLookup.update).toHaveBeenCalled()
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -106,11 +106,11 @@ describe('list reducer', () => {
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
-        expect(TokenSafetyLookupTable.update).toHaveBeenCalled()
+        expect(tokenSafetyLookup.update).toHaveBeenCalled()
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
-        expect(TokenSafetyLookupTable.update).toHaveBeenCalledTimes(1) // should not be called again
+        expect(tokenSafetyLookup.update).toHaveBeenCalledTimes(1) // should not be called again
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -128,11 +128,11 @@ describe('list reducer', () => {
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
-        expect(TokenSafetyLookupTable.update).toHaveBeenCalled()
+        expect(tokenSafetyLookup.update).toHaveBeenCalled()
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: PATCHED_STUB_LIST, requestId: 'request-id', url: 'fake-url' })
         )
-        expect(TokenSafetyLookupTable.update).toHaveBeenCalledTimes(1) // should not be called again
+        expect(tokenSafetyLookup.update).toHaveBeenCalledTimes(1) // should not be called again
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -149,11 +149,11 @@ describe('list reducer', () => {
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
-        expect(TokenSafetyLookupTable.update).toHaveBeenCalled()
+        expect(tokenSafetyLookup.update).toHaveBeenCalled()
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: MINOR_UPDATED_STUB_LIST, requestId: 'request-id', url: 'fake-url' })
         )
-        expect(TokenSafetyLookupTable.update).toHaveBeenCalledTimes(1) // should not be called again
+        expect(tokenSafetyLookup.update).toHaveBeenCalledTimes(1) // should not be called again
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -170,11 +170,11 @@ describe('list reducer', () => {
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
-        expect(TokenSafetyLookupTable.update).toHaveBeenCalled()
+        expect(tokenSafetyLookup.update).toHaveBeenCalled()
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: MAJOR_UPDATED_STUB_LIST, requestId: 'request-id', url: 'fake-url' })
         )
-        expect(TokenSafetyLookupTable.update).toHaveBeenCalledTimes(1) // should not be called again
+        expect(tokenSafetyLookup.update).toHaveBeenCalledTimes(1) // should not be called again
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {

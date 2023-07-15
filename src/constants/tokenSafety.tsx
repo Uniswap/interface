@@ -4,7 +4,7 @@ import { SearchToken } from 'graphql/data/SearchTokens'
 
 import { ZERO_ADDRESS } from './misc'
 import { NATIVE_CHAIN_ID } from './tokens'
-import TokenSafetyLookupTable, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
+import tokenSafetyLookup, { TOKEN_LIST_TYPES } from './tokenSafetyLookup'
 
 export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
 
@@ -88,7 +88,7 @@ export function checkWarning(tokenAddress: string, chainId?: number | null) {
   if (tokenAddress === NATIVE_CHAIN_ID || tokenAddress === ZERO_ADDRESS) {
     return null
   }
-  switch (TokenSafetyLookupTable.checkToken(tokenAddress.toLowerCase(), chainId)) {
+  switch (tokenSafetyLookup.checkToken(tokenAddress.toLowerCase(), chainId)) {
     case TOKEN_LIST_TYPES.UNI_DEFAULT:
       return null
     case TOKEN_LIST_TYPES.UNI_EXTENDED:
