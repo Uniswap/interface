@@ -38,7 +38,12 @@ function prioritizeLogoSources(uris: string[]) {
   return coingeckoUrl ? [...preferredUris, coingeckoUrl] : preferredUris
 }
 
-function getInitialUrl(address?: string | null, chainId?: number | null, isNative?: boolean) {
+function getInitialUrl(
+  address?: string | null,
+  chainId?: number | null,
+  isNative?: boolean,
+  backupImg?: string | null
+) {
   if (chainId && isNative) return getNativeLogoURI(chainId)
 
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
@@ -51,7 +56,7 @@ function getInitialUrl(address?: string | null, chainId?: number | null, isNativ
   if (checksummedAddress) {
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
   } else {
-    return undefined
+    return backupImg ?? undefined
   }
 }
 
@@ -63,7 +68,7 @@ export default function useAssetLogoSource(
 ): [string | undefined, () => void] {
   const showLogo = Boolean((address && checkWarning(address, chainId) === null) || isNative)
   const [current, setCurrent] = useState<string | undefined>(
-    showLogo ? getInitialUrl(address, chainId, isNative) : undefined
+    showLogo ? getInitialUrl(address, chainId, isNative, backupImg) : undefined
   )
   const [fallbackSrcs, setFallbackSrcs] = useState<string[] | undefined>(undefined)
 
