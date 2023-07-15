@@ -154,7 +154,7 @@ export const RPC_URLS = {
   [ChainId.CELO]: FALLBACK_URLS[ChainId.CELO],
   [ChainId.CELO_ALFAJORES]: FALLBACK_URLS[ChainId.CELO_ALFAJORES],
   [ChainId.BNB]: [QUICKNODE_RPC_URL, ...FALLBACK_URLS[ChainId.BNB]],
-  [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS],
+  [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.AVALANCHE]],
   [ChainId.HARMONY]: ['https://api.harmony.one', ...FALLBACK_URLS[ChainId.HARMONY]],
 
 }
