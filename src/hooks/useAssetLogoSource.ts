@@ -1,4 +1,4 @@
-import TokenLogoLookupTable from 'constants/TokenLogoLookupTable'
+import tokenLogoLookup from 'constants/tokenLogoLookup'
 import { isCelo, nativeOnChain } from 'constants/tokens'
 import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
@@ -84,7 +84,7 @@ export default function useAssetLogoSource(
     }
     // Parses and stores logo sources from tokenlists if assets repo url fails
     if (!fallbackSrcs) {
-      const uris = TokenLogoLookupTable.getIcons(address, chainId) ?? []
+      const uris = tokenLogoLookup.getIcons(address, chainId) ?? []
       if (backupImg) uris.push(backupImg)
       const tokenListIcons = prioritizeLogoSources(parseLogoSources(uris))
 
