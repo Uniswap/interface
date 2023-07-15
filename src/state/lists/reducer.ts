@@ -77,8 +77,8 @@ export default createReducer(initialState, (builder) =>
           loadingRequestId: null,
           error: null,
         }
+        TokenSafetyLookupTable.update()
       }
-      TokenSafetyLookupTable.update()
     })
     .addCase(fetchTokenList.rejected, (state, { payload: { url, requestId, errorMessage } }) => {
       if (state.byUrl[url]?.loadingRequestId !== requestId) {
