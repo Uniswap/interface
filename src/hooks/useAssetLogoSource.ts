@@ -61,17 +61,17 @@ export default function useAssetLogoSource(
   isNative?: boolean,
   backupImg?: string | null
 ): [string | undefined, () => void] {
-  const hasWarning = Boolean(address && checkWarning(address))
+  const showLogo = Boolean((address && checkWarning(address, chainId) === null) || isNative)
   const [current, setCurrent] = useState<string | undefined>(
-    hasWarning ? undefined : getInitialUrl(address, chainId, isNative)
+    showLogo ? getInitialUrl(address, chainId, isNative) : undefined
   )
   const [fallbackSrcs, setFallbackSrcs] = useState<string[] | undefined>(undefined)
 
   useEffect(() => {
-    if (hasWarning) return
+    if (!showLogo) return
     setCurrent(getInitialUrl(address, chainId, isNative))
     setFallbackSrcs(undefined)
-  }, [hasWarning, address, chainId, isNative])
+  }, [address, chainId, isNative, showLogo])
 
   const nextSrc = useCallback(() => {
     if (current) {

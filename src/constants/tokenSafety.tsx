@@ -3,8 +3,9 @@ import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 
 import { ZERO_ADDRESS } from './misc'
+import { COMMON_BASES } from './routing'
 import { NATIVE_CHAIN_ID } from './tokens'
-import WarningCache, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
+import TokenSafetyLookupTable, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
 
 export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
 
@@ -84,11 +85,15 @@ export const NotFoundWarning: Warning = {
   canProceed: false,
 }
 
-export function checkWarning(tokenAddress: string) {
+export function checkWarning(tokenAddress: string, chainId?: number | null) {
   if (tokenAddress === NATIVE_CHAIN_ID || tokenAddress === ZERO_ADDRESS) {
     return null
   }
-  switch (WarningCache.checkToken(tokenAddress.toLowerCase())) {
+  // TODO(WEB-2488): Move this check into the TokenSafetyLookupTable
+  if (chainId && COMMON_BASES[chainId].some((base) => tokenAddress === base.wrapped.address)) {
+    return null
+  }
+  switch (TokenSafetyLookupTable.checkToken(tokenAddress.toLowerCase())) {
     case TOKEN_LIST_TYPES.UNI_DEFAULT:
       return null
     case TOKEN_LIST_TYPES.UNI_EXTENDED:
