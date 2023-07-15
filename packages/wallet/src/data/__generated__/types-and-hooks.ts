@@ -1090,7 +1090,7 @@ export type AccountListQueryVariables = Exact<{
 }>;
 
 
-export type AccountListQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null };
+export type AccountListQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, ownerAddress: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null };
 
 export type SearchPopularNftCollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1353,6 +1353,7 @@ export const AccountListDocument = gql`
     query AccountList($addresses: [String!]!) {
   portfolios(ownerAddresses: $addresses) {
     id
+    ownerAddress
     tokensTotalDenominatedValue {
       id
       value

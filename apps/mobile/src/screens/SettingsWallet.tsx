@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList, useSettingsStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
@@ -14,10 +14,6 @@ import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
-import { WarningSeverity } from 'src/components/modals/WarningModal/types'
-import WarningModal, {
-  captionForAccountRemovalWarning,
-} from 'src/components/modals/WarningModal/WarningModal'
 import {
   SettingsRow,
   SettingsSection,
@@ -25,6 +21,7 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
+import { openModal } from 'src/features/modals/modalSlice'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
@@ -50,7 +47,6 @@ import {
   useSelectAccountHideSpamTokens,
   useSelectAccountNotificationSetting,
 } from 'wallet/src/features/wallet/hooks'
-import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { Screens } from './Screens'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
@@ -64,17 +60,11 @@ export function SettingsWallet({
   const { t } = useTranslation()
   const theme = useTheme()
   const addressToAccount = useAccounts()
-  const mnemonicWallets = useAppSelector(selectSortedSignerMnemonicAccounts)
   const currentAccount = addressToAccount[address]
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useSettingsStackNavigation()
 
   const hasICloudBackup = currentAccount?.backups?.includes(BackupType.Cloud)
-
-  // Should not show remove option if we have only one account remaining, or only one seed phrase wallet remaining
-  const shouldHideRemoveOption =
-    Object.values(addressToAccount).length === 1 ||
-    (mnemonicWallets.length === 1 && currentAccount?.type === AccountType.SignerMnemonic)
 
   const hideSmallBalances = useSelectAccountHideSmallBalances(address)
   const hideSpamTokens = useSelectAccountHideSpamTokens(address)
@@ -83,6 +73,13 @@ export function SettingsWallet({
   const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(
     notificationsEnabledOnFirebase
   )
+
+  useEffect(() => {
+    // If the user deletes the account while on this screen, go back
+    if (!currentAccount) {
+      navigation.goBack()
+    }
+  }, [currentAccount, navigation])
 
   // Need to trigger a state update when the user backgrounds the app to enable notifications and then returns to this screen
   useFocusEffect(
@@ -95,12 +92,6 @@ export function SettingsWallet({
       [notificationOSPermission, notificationsEnabledOnFirebase]
     )
   )
-
-  const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
-  // cleanup modal on exit
-  useEffect(() => {
-    return () => setShowRemoveWalletModal(false)
-  }, [])
 
   const onChangeNotificationSettings = (enabled: boolean): void => {
     if (notificationOSPermission === NotificationPermission.Enabled) {
@@ -124,21 +115,6 @@ export function SettingsWallet({
         setNotificationSwitchEnabled(enabled)
       }, showNotificationSettingsAlert)
     }
-  }
-
-  const removeWallet = (): void => {
-    dispatch(
-      editAccountActions.trigger({
-        type: EditAccountAction.Remove,
-        address,
-        notificationsEnabled: !!addressToAccount[address]?.pushNotificationsEnabled,
-      })
-    )
-    navigation.goBack()
-  }
-
-  const cancelWalletRemove = (): void => {
-    setShowRemoveWalletModal(false)
   }
 
   const toggleHideSmallBalances = (): void => {
@@ -246,6 +222,15 @@ export function SettingsWallet({
     return <SettingsRow key={item.screen} navigation={navigation} page={item} theme={theme} />
   }
 
+  const onRemoveWallet = (): void => {
+    dispatch(
+      openModal({
+        name: ModalName.RemoveWallet,
+        initialState: { address },
+      })
+    )
+  }
+
   return (
     <Screen>
       <BackHeader alignment="center" mx="spacing16" pt="spacing16">
@@ -278,28 +263,12 @@ export function SettingsWallet({
             stickySectionHeadersEnabled={false}
           />
         </Box>
-        {!shouldHideRemoveOption && (
-          <Button
-            emphasis={ButtonEmphasis.Detrimental}
-            label={t('Remove wallet')}
-            name={ElementName.Remove}
-            onPress={(): void => setShowRemoveWalletModal(true)}
-          />
-        )}
-
-        {showRemoveWalletModal && !!currentAccount && (
-          <WarningModal
-            useBiometric
-            caption={captionForAccountRemovalWarning(currentAccount.type, t)}
-            closeText={t('Cancel')}
-            confirmText={t('Remove')}
-            modalName={ModalName.RemoveWallet}
-            severity={WarningSeverity.High}
-            title={t('Are you sure?')}
-            onClose={cancelWalletRemove}
-            onConfirm={removeWallet}
-          />
-        )}
+        <Button
+          emphasis={ButtonEmphasis.Detrimental}
+          label={t('Remove wallet')}
+          name={ElementName.Remove}
+          onPress={onRemoveWallet}
+        />
       </Flex>
     </Screen>
   )

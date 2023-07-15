@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { MobileState } from 'src/app/reducer'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModal'
 import { ModalName } from 'src/features/telemetry/constants'
 import { getKeys } from 'src/utils/objects'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
@@ -18,10 +19,16 @@ type ExploreModalParams = { name: ModalName.Explore; initialState?: undefined }
 
 type FiatOnRampModalParams = { name: ModalName.FiatOnRamp; initialState?: undefined }
 
+type RemoveWalletModalParams = {
+  name: ModalName.RemoveWallet
+  initialState?: RemoveWalletModalState
+}
+
 type WalletConnectModalParams = {
   name: ModalName.WalletConnectScan
   initialState: ScannerModalState
 }
+
 type SwapModalParams = { name: ModalName.Swap; initialState?: TransactionState }
 
 type SendModalParams = { name: ModalName.Send; initialState?: TransactionState }
@@ -31,6 +38,7 @@ export type OpenModalParams =
   | ExperimentsModalParams
   | ExploreModalParams
   | FiatOnRampModalParams
+  | RemoveWalletModalParams
   | SendModalParams
   | SwapModalParams
   | WalletConnectModalParams
@@ -40,6 +48,7 @@ export interface ModalsState {
   [ModalName.Experiments]: AppModalState<undefined>
   [ModalName.Explore]: AppModalState<undefined>
   [ModalName.FiatOnRamp]: AppModalState<undefined>
+  [ModalName.RemoveWallet]: AppModalState<RemoveWalletModalState>
   [ModalName.Send]: AppModalState<TransactionState>
   [ModalName.Swap]: AppModalState<TransactionState>
   [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
@@ -71,6 +80,10 @@ export const initialModalState: ModalsState = {
     initialState: undefined,
   },
   [ModalName.AccountSwitcher]: {
+    isOpen: false,
+    initialState: undefined,
+  },
+  [ModalName.RemoveWallet]: {
     isOpen: false,
     initialState: undefined,
   },

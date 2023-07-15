@@ -3,6 +3,7 @@ import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hook
 import {
   Account,
   AccountType,
+  ReadOnlyAccount,
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
 import { TokensOrderBy } from 'wallet/src/features/wallet/types'
@@ -10,58 +11,65 @@ import type { RootState } from 'wallet/src/state'
 
 const DEFAULT_TOKENS_ORDER_BY = TokenSortableField.Volume
 
+function isPending(account: Account): boolean {
+  return account.pending ?? false
+}
+
 export const selectAccounts = (state: RootState): Record<string, Account> => state.wallet.accounts
 
-// Sorted by signer accounts, then view-only accounts
-export const selectAllAccountsSorted = createSelector(selectAccounts, (accountsMap) => {
-  const accounts = Object.values(accountsMap)
-  const _mnemonicWallets = accounts
-    .filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic)
-    .sort((a, b) => {
-      return a.derivationIndex - b.derivationIndex
-    })
-  const _viewOnlyWallets = accounts
-    .filter((a) => a.type === AccountType.Readonly)
-    .sort((a, b) => {
-      return a.timeImportedMs - b.timeImportedMs
-    })
-  return [..._mnemonicWallets, ..._viewOnlyWallets]
-})
-
 export const selectNonPendingAccounts = createSelector(selectAccounts, (accounts) =>
-  Object.fromEntries(Object.entries(accounts).filter((a) => !a[1].pending))
+  Object.fromEntries(Object.entries(accounts).filter((a) => !isPending(a[1])))
 )
 
 export const selectPendingAccounts = createSelector(selectAccounts, (accounts) =>
-  Object.fromEntries(Object.entries(accounts).filter((a) => a[1].pending))
+  Object.fromEntries(Object.entries(accounts).filter((a) => isPending(a[1])))
 )
 
-export const selectSignerAccounts = createSelector(selectAccounts, (accounts) =>
-  Object.values(accounts).filter((a) => a.type !== AccountType.Readonly)
+export const selectSignerMnemonicAccounts = createSelector(selectAccounts, (accounts) =>
+  Object.values(accounts).filter(
+    (a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic
+  )
 )
 
-export const selectNonPendingSignerAccounts = createSelector(selectAccounts, (accounts) =>
-  Object.values(accounts).filter((a) => a.type !== AccountType.Readonly && !a.pending)
+export const selectNonPendingSignerMnemonicAccounts = createSelector(
+  selectSignerMnemonicAccounts,
+  (accounts) => Object.values(accounts).filter((a) => !isPending(a))
 )
 
-export const selectViewOnlyAccounts = createSelector(selectAccounts, (accounts) =>
-  Object.values(accounts).filter((a) => a.type === AccountType.Readonly && !a.pending)
-)
-
-export const selectSortedSignerMnemonicAccounts = createSelector(selectAccounts, (accounts) =>
-  Object.values(accounts)
-    .filter((account) => account.type === AccountType.SignerMnemonic)
-    .sort(
+export const selectSortedSignerMnemonicAccounts = createSelector(
+  selectSignerMnemonicAccounts,
+  (accounts) =>
+    accounts.sort(
       (a, b) =>
         (a as SignerMnemonicAccount).derivationIndex - (b as SignerMnemonicAccount).derivationIndex
     )
-    .map((account) => account as SignerMnemonicAccount)
 )
 
 export const selectSignerMnemonicAccountExists = createSelector(
   selectNonPendingAccounts,
   (accounts) =>
     Object.values(accounts).findIndex((value) => value.type === AccountType.SignerMnemonic) >= 0
+)
+
+export const selectViewOnlyAccounts = createSelector(selectAccounts, (accounts) =>
+  Object.values(accounts).filter((a): a is ReadOnlyAccount => a.type === AccountType.Readonly)
+)
+
+export const selectNonPendingViewOnlyAccounts = createSelector(selectViewOnlyAccounts, (accounts) =>
+  accounts.filter((a) => !isPending(a))
+)
+
+export const selectSortedViewOnlyAccounts = createSelector(selectViewOnlyAccounts, (accounts) =>
+  accounts.sort((a, b) => a.timeImportedMs - b.timeImportedMs)
+)
+
+// Sorted signer accounts, then sorted view-only accounts
+export const selectAllAccountsSorted = createSelector(
+  selectSortedSignerMnemonicAccounts,
+  selectSortedViewOnlyAccounts,
+  (signerMnemonicAccounts, viewOnlyAccounts) => {
+    return [...signerMnemonicAccounts, ...viewOnlyAccounts]
+  }
 )
 
 export const selectActiveAccountAddress = (state: RootState): string | null =>

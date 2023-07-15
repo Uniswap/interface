@@ -42,6 +42,11 @@ exports[`AccountList renders without error 1`] = `
               "systemIcon": "gearshape",
               "title": "Wallet settings",
             },
+            {
+              "destructive": true,
+              "systemIcon": "trash",
+              "title": "Remove wallet",
+            },
           ]
         }
         onPress={[Function]}

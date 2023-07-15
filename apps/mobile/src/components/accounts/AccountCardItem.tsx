@@ -9,7 +9,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { Text } from 'src/components/Text'
-import { closeModal } from 'src/features/modals/modalSlice'
+import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
@@ -97,10 +97,21 @@ export function AccountCardItem({
     })
   }
 
+  const onPressRemoveWallet = (): void => {
+    dispatch(closeModal({ name: ModalName.AccountSwitcher }))
+    dispatch(
+      openModal({
+        name: ModalName.RemoveWallet,
+        initialState: { address },
+      })
+    )
+  }
+
   const menuActions = useMemo(() => {
     return [
       { title: t('Copy wallet address'), systemIcon: 'doc.on.doc' },
       { title: t('Wallet settings'), systemIcon: 'gearshape' },
+      { title: t('Remove wallet'), systemIcon: 'trash', destructive: true },
     ]
   }, [t])
 
@@ -116,6 +127,10 @@ export function AccountCardItem({
         // Navigate to settings
         if (e.nativeEvent.index === 1) {
           onPressWalletSettings()
+        }
+        // Remove wallet
+        if (e.nativeEvent.index === 2) {
+          onPressRemoveWallet()
         }
       }}>
       <TouchableArea

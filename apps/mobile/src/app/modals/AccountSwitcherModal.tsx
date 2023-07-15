@@ -1,66 +1,33 @@
-import { CommonActions } from '@react-navigation/core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-gesture-handler'
 import { Action } from 'redux'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import { dispatchNavigationAction, navigate } from 'src/app/navigation/rootNavigation'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
-import { Delay } from 'src/components/layout/Delayed'
 import { Screen } from 'src/components/layout/Screen'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import RemoveSeedPhraseWarningModal from 'src/components/modals/WarningModal/RemoveSeedPhraseWarningModal'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
-import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
+import { closeModal, openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import PlusIcon from 'ui/src/assets/icons/plus.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
-import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import {
-  useAccounts,
-  useActiveAccount,
-  useNativeAccountExists,
-} from 'wallet/src/features/wallet/hooks'
-import {
-  removeAccounts,
-  setAccountAsActive,
-  setFinishedOnboarding,
-} from 'wallet/src/features/wallet/slice'
-
-// This fast-forwards user to the same app state as if
-// they have pressed "Get Started" on Landing and should now see import method view
-function navigateToImportMethod(): void {
-  dispatchNavigationAction((state) => {
-    const routes = [
-      ...state.routes,
-      {
-        name: OnboardingScreens.ImportMethod,
-        params: {
-          entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-          importType: ImportType.NotYetSelected,
-        },
-      },
-    ]
-    return CommonActions.reset({
-      ...state,
-      routes,
-      index: routes.length - 1,
-    })
-  })
-}
+import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
+import { selectAllAccountsSorted } from 'wallet/src/features/wallet/selectors'
+import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
 export function AccountSwitcherModal(): JSX.Element {
   const dispatch = useAppDispatch()
@@ -91,36 +58,14 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const activeAccount = useActiveAccount()
-  const addressToAccount = useAccounts()
+  const activeAccountAddress = useActiveAccountAddress()
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
   const modalState = useAppSelector(selectModalState(ModalName.AccountSwitcher))
 
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
-  const [showReplaceSeedPhraseModal, setShowReplaceSeedPhraseModal] = useState(false)
-  const associatedAccounts = useMemo(
-    () => Object.values(addressToAccount).filter((a) => a.type === AccountType.SignerMnemonic),
-    [addressToAccount]
-  )
 
-  const accountsData = useMemo(() => {
-    const accounts = Object.values(addressToAccount)
-    const _mnemonicWallets = accounts
-      .filter((a) => a.type === AccountType.SignerMnemonic)
-      .sort((a, b) => {
-        return (
-          (a as SignerMnemonicAccount).derivationIndex -
-          (b as SignerMnemonicAccount).derivationIndex
-        )
-      })
-    const _viewOnlyWallets = accounts
-      .filter((a) => a.type === AccountType.Readonly)
-      .sort((a, b) => {
-        return a.timeImportedMs - b.timeImportedMs
-      })
-    return [..._mnemonicWallets, ..._viewOnlyWallets]
-  }, [addressToAccount])
+  const accounts = useAppSelector(selectAllAccountsSorted)
 
   const onPressAccount = useCallback(
     (address: Address) => {
@@ -132,31 +77,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     },
     [dispatch, onClose]
   )
-
-  const onRemoveWallet = useCallback((): void => {
-    onClose()
-    // Need this timeout because AccountSwitcher takes a long time to trigger closeModal,
-    // which we want to happen before the remove logic
-    setTimeout(() => {
-      if (Object.keys(addressToAccount).length === associatedAccounts.length) {
-        // user has no accounts left, so we bring onboarding back
-        dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
-        // setImmediate, because first we need onboarding stack to be mounted
-        setImmediate(navigateToImportMethod)
-      } else {
-        // user has view-only accounts left
-        navigate(Screens.OnboardingStack, {
-          screen: OnboardingScreens.ImportMethod,
-          params: {
-            importType: ImportType.NotYetSelected,
-            entryPoint: OnboardingEntryPoint.Sidebar,
-          },
-        })
-      }
-      const accountsToRemove = removeAccounts(associatedAccounts.map((account) => account.address))
-      dispatch(accountsToRemove)
-    }, Delay.Short)
-  }, [addressToAccount, associatedAccounts, dispatch, onClose])
 
   const onPressAddWallet = (): void => {
     setShowAddWalletModal(true)
@@ -196,16 +116,18 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     const onPressImportWallet = (): void => {
-      if (hasImportedSeedPhrase) {
-        // Show warning modal that the only way to reimport seed phrase is to uninstall and reinstall app
-        setShowReplaceSeedPhraseModal(true)
-        return
+      if (hasImportedSeedPhrase && activeAccountAddress) {
+        dispatch(
+          openModal({
+            name: ModalName.RemoveWallet,
+          })
+        )
+      } else {
+        navigate(Screens.OnboardingStack, {
+          screen: OnboardingScreens.SeedPhraseInput,
+          params: { importType: ImportType.SeedPhrase, entryPoint: OnboardingEntryPoint.Sidebar },
+        })
       }
-
-      navigate(Screens.OnboardingStack, {
-        screen: OnboardingScreens.SeedPhraseInput,
-        params: { importType: ImportType.SeedPhrase, entryPoint: OnboardingEntryPoint.Sidebar },
-      })
 
       setShowAddWalletModal(false)
       onClose()
@@ -291,9 +213,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     return options
-  }, [dispatch, hasImportedSeedPhrase, onClose, t])
+  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, t])
 
-  if (!activeAccount?.address) {
+  if (!activeAccountAddress) {
     return null
   }
 
@@ -308,7 +230,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           </Text>
         </Box>
       </Flex>
-      <AccountList accounts={accountsData} isVisible={modalState.isOpen} onPress={onPressAccount} />
+      <AccountList accounts={accounts} isVisible={modalState.isOpen} onPress={onPressAccount} />
       <TouchableArea hapticFeedback my="spacing24" onPress={onPressAddWallet}>
         <Flex row alignItems="center" ml="spacing24">
           <Box
@@ -335,13 +257,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         options={addWalletOptions}
         onClose={onCloseAddWallet}
       />
-      {showReplaceSeedPhraseModal && (
-        <RemoveSeedPhraseWarningModal
-          associatedAccounts={associatedAccounts}
-          onClose={(): void => setShowReplaceSeedPhraseModal(false)}
-          onRemoveWallet={onRemoveWallet}
-        />
-      )}
     </Flex>
   )
 }

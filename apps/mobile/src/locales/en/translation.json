@@ -103,14 +103,16 @@
   "Blocked address": "Blocked address",
   "Network connection error": "Network connection error",
   "You may have lost internet connection or the network may be down. Please check your internet connection and try again.": "You may have lost internet connection or the network may be down. Please check your internet connection and try again.",
-  "You’re removing your <1>recovery phrase</1>": "You’re removing your <1>recovery phrase</1>",
+  "You're removing your <1>recovery phrase</1>": "You're removing your <1>recovery phrase</1>",
+  "You're removing <1>{{wallet}}</1>": "You're removing <1>{{wallet}}</1>",
   "You can only store one recovery phrase at a time. To continue importing a new one, you’ll need to remove your current recovery phrase and any associated wallets from this device.": "You can only store one recovery phrase at a time. To continue importing a new one, you’ll need to remove your current recovery phrase and any associated wallets from this device.",
+  "It shares the same recovery phrase as <2>{{wallets}}</2>. Your recovery phrase will remain stored until you delete all remaining wallets.": "It shares the same recovery phrase as <2>{{wallets}}</2>. Your recovery phrase will remain stored until you delete all remaining wallets.",
+  "You can always add back view-only wallets by entering the wallet's address.": "You can always add back view-only wallets by entering the wallet's address.",
   "Make sure you’ve written down your recovery phrase or backed it up on iCloud. <2>You will not be able to access your funds otherwise.</2>": "Make sure you’ve written down your recovery phrase or backed it up on iCloud. <2>You will not be able to access your funds otherwise.</2>",
+  "This will remove your wallet from this device along with your recovery phrase.": "This will remove your wallet from this device along with your recovery phrase.",
   "Continue": "Continue",
   "<0>I backed up my recovery phrase</0><1>I understand that Uniswap Labs can’t help me recover my wallets if I failed to do so</1>": "<0>I backed up my recovery phrase</0><1>I understand that Uniswap Labs can’t help me recover my wallets if I failed to do so</1>",
   "Remove wallet": "Remove wallet",
-  "This action will remove this view-only wallet from appearing in your app.": "This action will remove this view-only wallet from appearing in your app.",
-  "This action will only remove your wallet from appearing in Uniswap Wallet. Your recovery phrase will remain stored until you delete the app.": "This action will only remove your wallet from appearing in Uniswap Wallet. Your recovery phrase will remain stored until you delete the app.",
   "Network fee": "Network fee",
   "All networks": "All networks",
   "Hidden ({{numHidden}})": "Hidden ({{numHidden}})",
@@ -520,5 +522,6 @@
   "Hide unknown tokens": "Hide unknown tokens",
   "Security": "Security",
   "Remove": "Remove",
-  "Unknown token": "Unknown token"
+  "Unknown token": "Unknown token",
+  "and": "and"
 }

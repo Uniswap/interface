@@ -15,7 +15,8 @@ import { useAsyncData } from 'wallet/src/utils/hooks'
  * @returns trigger Trigger the OS biometric flow and invokes successCallback on success.
  */
 export function useBiometricPrompt<T = undefined>(
-  successCallback?: (params?: T) => void
+  successCallback?: (params?: T) => void,
+  failureCallback?: () => void
 ): {
   trigger: (params?: T) => Promise<void>
 } {
@@ -32,6 +33,8 @@ export function useBiometricPrompt<T = undefined>(
       biometricAuthenticationDisabledByOS(authStatus)
     ) {
       successCallback?.(params)
+    } else {
+      failureCallback?.()
     }
   }
 

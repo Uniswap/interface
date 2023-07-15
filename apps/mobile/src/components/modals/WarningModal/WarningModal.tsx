@@ -8,9 +8,7 @@ import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import { AppTFunction } from 'ui/src/i18n/types'
 import { opacify } from 'ui/src/theme/color/utils'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 
 export type WarningModalProps = {
   onClose?: () => void
@@ -26,17 +24,6 @@ export type WarningModalProps = {
   isDismissible?: boolean
   hideHandlebar?: boolean
   icon?: ReactNode
-}
-
-export function captionForAccountRemovalWarning(accountType: AccountType, t: AppTFunction): string {
-  switch (accountType) {
-    case AccountType.Readonly:
-      return t('This action will remove this view-only wallet from appearing in your app.')
-    case AccountType.SignerMnemonic:
-      return t(
-        'This action will only remove your wallet from appearing in Uniswap Wallet. Your recovery phrase will remain stored until you delete the app.'
-      )
-  }
 }
 
 export default function WarningModal({
