@@ -81,7 +81,7 @@ describe('list reducer', () => {
 
     describe('fulfilled', () => {
       beforeEach(() => {
-        jest.spyOn(tokenSafetyLookup, 'update')
+        jest.spyOn(tokenSafetyLookup, 'update').mockReturnValue(undefined)
       })
 
       it('saves the list', () => {
