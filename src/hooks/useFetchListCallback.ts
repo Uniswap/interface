@@ -2,6 +2,7 @@ import { nanoid } from '@reduxjs/toolkit'
 import { ChainId } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { RPC_PROVIDERS } from 'constants/providers'
+import TokenSafetyLookupTable from 'constants/TokenSafetyLookupTable'
 import getTokenList from 'lib/hooks/useTokenList/fetchTokenList'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useCallback } from 'react'
@@ -23,6 +24,7 @@ export function useFetchListCallback(): (listUrl: string, skipValidation?: boole
       )
         .then((tokenList) => {
           dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
+          TokenSafetyLookupTable.update()
           return tokenList
         })
         .catch((error) => {

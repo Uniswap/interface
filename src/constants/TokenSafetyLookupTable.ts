@@ -14,24 +14,27 @@ export enum TOKEN_LIST_TYPES {
 }
 
 class TokenSafetyLookupTable {
-  dict: { [key: string]: TOKEN_LIST_TYPES } | null = null
+  dict: { [key: string]: TOKEN_LIST_TYPES } = {}
 
-  createMap() {
-    const dict: { [key: string]: TOKEN_LIST_TYPES } = {}
+  constructor() {
+    this.update()
+  }
 
+  // TODO(WEB-2488): Index lookups by chainId
+  update() {
     // Initialize extended tokens first
     store.getState().lists.byUrl[UNI_EXTENDED_LIST].current?.tokens.forEach((token) => {
-      dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_EXTENDED
+      this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_EXTENDED
     })
 
     // Initialize default tokens second, so that any tokens on both default and extended will display as default (no warning)
     store.getState().lists.byUrl[UNI_LIST].current?.tokens.forEach((token) => {
-      dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_DEFAULT
+      this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_DEFAULT
     })
 
     // TODO: Figure out if this list is still relevant
     brokenTokenList.tokens.forEach((token) => {
-      dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BROKEN
+      this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BROKEN
     })
 
     // Initialize blocked tokens from all urls included
@@ -39,15 +42,11 @@ class TokenSafetyLookupTable {
       .filter((x): x is TokenInfo[] => !!x)
       .flat(1)
       .forEach((token) => {
-        dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BLOCKED
+        this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BLOCKED
       })
-    return dict
   }
 
   checkToken(address: string) {
-    if (!this.dict) {
-      this.dict = this.createMap()
-    }
     if (address === NATIVE_CHAIN_ID.toLowerCase()) {
       return TOKEN_LIST_TYPES.UNI_DEFAULT
     }
