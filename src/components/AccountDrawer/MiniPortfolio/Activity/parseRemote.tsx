@@ -12,6 +12,7 @@ import {
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
   SwapOrderDetailsPartsFragment,
+  SwapOrderStatus,
   TokenApprovalPartsFragment,
   TokenAssetPartsFragment,
   TokenTransferPartsFragment,
@@ -289,6 +290,9 @@ function getLogoSrcs(changes: TransactionChanges): string[] {
 }
 
 function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity | undefined {
+  // We currently only support displaying pending activity sent from the current client, so we hide pending activty fetched remotely
+  if (details.orderStatus === SwapOrderStatus.Open) return undefined
+
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, orderStatus } = details
   const uniswapXOrderStatus = OrderStatusTable[orderStatus]
   const { status, statusMessage, title } = OrderTextTable[uniswapXOrderStatus]
