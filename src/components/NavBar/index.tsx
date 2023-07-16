@@ -105,7 +105,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                 height="48"
                 data-testid="harmony-logo"
                 className={styles.logo}
-                src='/harmony.png'
+                src='/favicon8.png'
                 onClick={() => {
                   navigate({
                     pathname: '/',
