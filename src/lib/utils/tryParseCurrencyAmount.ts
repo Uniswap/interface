@@ -1,5 +1,5 @@
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount } from '@thinkincoin-libs/sdk-core'
+import { Currency, CurrencyAmount } from '@thinkincoin/sdk-core'
 import JSBI from 'jsbi'
 
 /**

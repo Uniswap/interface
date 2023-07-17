@@ -3,7 +3,7 @@ import {
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDRESSES,
   Token,
-} from '@thinkincoin-libs/sdk-core'
+} from '@thinkincoin/sdk-core'
 import { AddressMap } from '@uniswap/smart-order-router'
 import MulticallJSON from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import NFTPositionManagerJSON from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'

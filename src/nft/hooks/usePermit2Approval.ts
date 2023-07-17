@@ -1,6 +1,6 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { ChainId, CurrencyAmount, Token } from '@thinkincoin-libs/sdk-core'
+import { ChainId, CurrencyAmount, Token } from '@thinkincoin/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@thinkincoin/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { isSupportedChain } from 'constants/chains'

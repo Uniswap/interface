@@ -1,4 +1,4 @@
-import { Currency } from '@thinkincoin-libs/sdk-core'
+import { Currency } from '@thinkincoin/sdk-core'
 
 export function currencyId(currency: Currency): string {
   if (currency.isNative) return 'ETH'

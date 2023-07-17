@@ -1,4 +1,4 @@
-import { Token } from '@thinkincoin-libs/sdk-core'
+import { Token } from '@thinkincoin/sdk-core'
 
 import { tryParsePrice } from './utils'
 

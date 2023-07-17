@@ -1,4 +1,4 @@
-import { ChainId } from '@thinkincoin-libs/sdk-core'
+import { ChainId } from '@thinkincoin/sdk-core'
 
 /* eslint-env node */
 require('dotenv').config()

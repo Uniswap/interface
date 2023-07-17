@@ -15,7 +15,7 @@ import {
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
   Token,
-} from '@thinkincoin-libs/sdk-core'
+} from '@thinkincoin/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'

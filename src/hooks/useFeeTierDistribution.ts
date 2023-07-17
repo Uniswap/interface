@@ -1,4 +1,4 @@
-import { Currency, Token } from '@thinkincoin-libs/sdk-core'
+import { Currency, Token } from '@thinkincoin/sdk-core'
 import { FeeAmount } from '@thinkincoin-libs/uniswap-v3-sdk'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'

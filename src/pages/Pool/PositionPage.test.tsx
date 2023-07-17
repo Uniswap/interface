@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { CurrencyAmount, WETH9 } from '@thinkincoin-libs/sdk-core'
+import { CurrencyAmount, WETH9 } from '@thinkincoin/sdk-core'
 import { FeeAmount, Pool } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'

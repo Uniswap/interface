@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@thinkincoin-libs/sdk-core'
+import { ChainId, Currency } from '@thinkincoin/sdk-core'
 import { AssetActivityPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 
 type Receipt = AssetActivityPartsFragment['transaction']

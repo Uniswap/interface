@@ -1,4 +1,4 @@
-import { NativeCurrency, Token } from '@thinkincoin-libs/sdk-core'
+import { NativeCurrency, Token } from '@thinkincoin/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 
 import { isAddress } from '../../../utils'

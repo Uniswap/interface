@@ -1,4 +1,4 @@
-import { Currency } from '@thinkincoin-libs/sdk-core'
+import { Currency } from '@thinkincoin/sdk-core'
 import { useMemo } from 'react'
 
 import { useUnsupportedTokens } from './Tokens'

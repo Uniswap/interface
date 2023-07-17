@@ -1,4 +1,4 @@
-import { ChainId } from '@thinkincoin-libs/sdk-core'
+import { ChainId } from '@thinkincoin/sdk-core'
 import bnbCircleLogoUrl from 'assets/images/bnbCircle.svg'
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'

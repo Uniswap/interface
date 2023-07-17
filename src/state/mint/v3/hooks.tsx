@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Price, Rounding, Token } from '@thinkincoin-libs/sdk-core'
+import { Currency, CurrencyAmount, Price, Rounding, Token } from '@thinkincoin/sdk-core'
 import {
   encodeSqrtRatioX96,
   FeeAmount,

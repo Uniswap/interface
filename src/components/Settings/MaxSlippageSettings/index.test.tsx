@@ -1,4 +1,4 @@
-import { Percent } from '@thinkincoin-libs/sdk-core'
+import { Percent } from '@thinkincoin/sdk-core'
 import store from 'state'
 import { updateUserSlippageTolerance } from 'state/user/reducer'
 import { SlippageTolerance } from 'state/user/types'

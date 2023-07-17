@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react'
-import { CurrencyAmount, TradeType } from '@thinkincoin-libs/sdk-core'
+import { CurrencyAmount, TradeType } from '@thinkincoin/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { RouterPreference } from 'state/routing/slice'
 import { TradeState } from 'state/routing/types'

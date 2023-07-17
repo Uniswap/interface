@@ -10,7 +10,7 @@ import {
   SwapEventName,
 } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
-import { ChainId, Currency, CurrencyAmount, Percent, Token } from '@thinkincoin-libs/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, Token } from '@thinkincoin/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@thinkincoin/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'

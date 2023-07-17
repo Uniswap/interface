@@ -1,5 +1,5 @@
 import { Protocol } from '@thinkincoin/router-sdk'
-import { Currency, Percent } from '@thinkincoin-libs/sdk-core'
+import { Currency, Percent } from '@thinkincoin/sdk-core'
 import { FeeAmount } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'
 import { render } from 'test-utils/render'

@@ -1,4 +1,4 @@
-import { CurrencyAmount, Price } from '@thinkincoin-libs/sdk-core'
+import { CurrencyAmount, Price } from '@thinkincoin/sdk-core'
 import { renBTC, USDC_MAINNET } from 'constants/tokens'
 
 import { currencyAmountToPreciseFloat, formatTransactionAmount, priceToPreciseFloat } from './formatNumbers'

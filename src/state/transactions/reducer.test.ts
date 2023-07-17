@@ -1,4 +1,4 @@
-import { ChainId } from '@thinkincoin-libs/sdk-core'
+import { ChainId } from '@thinkincoin/sdk-core'
 import { createStore, Store } from 'redux'
 
 import { updateVersion } from '../global/actions'

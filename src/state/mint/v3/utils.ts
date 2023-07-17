@@ -1,4 +1,4 @@
-import { Price, Token } from '@thinkincoin-libs/sdk-core'
+import { Price, Token } from '@thinkincoin/sdk-core'
 import {
   encodeSqrtRatioX96,
   FeeAmount,

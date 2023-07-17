@@ -1,4 +1,4 @@
-import { ChainId } from '@thinkincoin-libs/sdk-core'
+import { ChainId } from '@thinkincoin/sdk-core'
 
 import { Chain } from './__generated__/types-and-hooks'
 import { isSupportedGQLChain, supportedChainIdFromGQLChain } from './util'

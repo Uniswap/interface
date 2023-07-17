@@ -1,4 +1,4 @@
-import { ChainId, Token, TradeType as MockTradeType } from '@thinkincoin-libs/sdk-core'
+import { ChainId, Token, TradeType as MockTradeType } from '@thinkincoin/sdk-core'
 import { PERMIT2_ADDRESS } from '@thinkincoin/universal-router-sdk'
 import { DAI as MockDAI, nativeOnChain, USDC_MAINNET as MockUSDC_MAINNET, USDT as MockUSDT } from 'constants/tokens'
 import { TransactionStatus as MockTxStatus } from 'graphql/data/__generated__/types-and-hooks'

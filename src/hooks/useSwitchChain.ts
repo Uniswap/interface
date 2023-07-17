@@ -1,4 +1,4 @@
-import { ChainId, SupportedChainsType } from '@thinkincoin-libs/sdk-core'
+import { ChainId, SupportedChainsType } from '@thinkincoin/sdk-core'
 import { Connector } from '@web3-react/types'
 import { networkConnection, uniwalletWCV2ConnectConnection, walletConnectV2Connection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'

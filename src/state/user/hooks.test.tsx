@@ -1,5 +1,5 @@
 import { act } from '@testing-library/react'
-import { Percent } from '@thinkincoin-libs/sdk-core'
+import { Percent } from '@thinkincoin/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'
 import { RouterPreference } from 'state/routing/slice'

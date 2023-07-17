@@ -1,4 +1,4 @@
-import { Currency } from '@thinkincoin-libs/sdk-core'
+import { Currency } from '@thinkincoin/sdk-core'
 import { FeeAmount } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { TickProcessed, usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import { useCallback, useMemo } from 'react'

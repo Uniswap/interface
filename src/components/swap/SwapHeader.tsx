@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Percent } from '@thinkincoin-libs/sdk-core'
+import { Percent } from '@thinkincoin/sdk-core'
 import { useFiatOnRampButtonEnabled } from 'featureFlags/flags/fiatOnRampButton'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'

@@ -1,5 +1,5 @@
 import { Protocol } from '@thinkincoin/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@thinkincoin-libs/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@thinkincoin/sdk-core'
 import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
 import { Pool } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { QuoteResult, QuoteState } from 'state/routing/types'

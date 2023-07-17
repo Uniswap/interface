@@ -1,5 +1,5 @@
 import { Interface } from '@ethersproject/abi'
-import { Currency, CurrencyAmount, V2_FACTORY_ADDRESSES } from '@thinkincoin-libs/sdk-core'
+import { Currency, CurrencyAmount, V2_FACTORY_ADDRESSES } from '@thinkincoin/sdk-core'
 import IUniswapV2PairJSON from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { computePairAddress, Pair } from '@thinkincoin-libs/uniswap-v2-sdk'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'

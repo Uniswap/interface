@@ -1,5 +1,5 @@
 import { MixedRoute, partitionMixedRouteByProtocol, Protocol, Trade } from '@thinkincoin/router-sdk'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@thinkincoin-libs/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@thinkincoin/sdk-core'
 import { Pair } from '@thinkincoin-libs/uniswap-v2-sdk'
 import { Pool } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { useWeb3React } from '@web3-react/core'

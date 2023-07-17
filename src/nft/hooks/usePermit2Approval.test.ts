@@ -1,4 +1,4 @@
-import { CurrencyAmount } from '@thinkincoin-libs/sdk-core'
+import { CurrencyAmount } from '@thinkincoin/sdk-core'
 import { USDC_MAINNET } from '@uniswap/smart-order-router'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@thinkincoin/universal-router-sdk'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'

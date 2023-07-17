@@ -1,5 +1,5 @@
 import { IRoute, Protocol } from '@thinkincoin/router-sdk'
-import { Currency, CurrencyAmount } from '@thinkincoin-libs/sdk-core'
+import { Currency, CurrencyAmount } from '@thinkincoin/sdk-core'
 import { Pair } from '@thinkincoin-libs/uniswap-v2-sdk'
 import { Pool } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { TokenAmountInput, TokenTradeRouteInput, TradePoolInput } from 'graphql/data/__generated__/types-and-hooks'

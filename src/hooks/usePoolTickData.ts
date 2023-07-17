@@ -1,4 +1,4 @@
-import { ChainId, Currency, V3_CORE_FACTORY_ADDRESSES } from '@thinkincoin-libs/sdk-core'
+import { ChainId, Currency, V3_CORE_FACTORY_ADDRESSES } from '@thinkincoin/sdk-core'
 import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { ZERO_ADDRESS } from 'constants/misc'

@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, WETH9 } from '@thinkincoin-libs/sdk-core'
+import { ChainId, WETH9 } from '@thinkincoin/sdk-core'
 import { FeeAmount, Pool, Position } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
 import { mocked } from 'test-utils/mocked'

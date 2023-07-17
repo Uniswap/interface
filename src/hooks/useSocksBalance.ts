@@ -1,4 +1,4 @@
-import { ChainId, SOCKS_CONTROLLER_ADDRESSES, Token } from '@thinkincoin-libs/sdk-core'
+import { ChainId, SOCKS_CONTROLLER_ADDRESSES, Token } from '@thinkincoin/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useMemo } from 'react'
 import { useTokenBalance } from 'state/connection/hooks'

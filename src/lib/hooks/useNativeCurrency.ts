@@ -1,4 +1,4 @@
-import { ChainId, NativeCurrency, Token } from '@thinkincoin-libs/sdk-core'
+import { ChainId, NativeCurrency, Token } from '@thinkincoin/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 import { useMemo } from 'react'
 

@@ -1,5 +1,5 @@
 import { Trade } from '@thinkincoin/router-sdk'
-import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@thinkincoin-libs/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@thinkincoin/sdk-core'
 import { Pair } from '@thinkincoin-libs/uniswap-v2-sdk'
 import { FeeAmount } from '@thinkincoin-libs/uniswap-v3-sdk'
 import JSBI from 'jsbi'

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Price } from '@thinkincoin-libs/sdk-core'
+import { Currency, CurrencyAmount, Price } from '@thinkincoin/sdk-core'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 
 interface FormatLocaleNumberArgs {

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent } from '@thinkincoin-libs/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@thinkincoin/sdk-core'
 import { Position } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToken } from 'hooks/Tokens'

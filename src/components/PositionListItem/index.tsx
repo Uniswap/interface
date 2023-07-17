@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
-import { Percent, Price, Token } from '@thinkincoin-libs/sdk-core'
+import { Percent, Price, Token } from '@thinkincoin/sdk-core'
 import { Position } from '@thinkincoin-libs/uniswap-v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'

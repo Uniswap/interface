@@ -1,4 +1,4 @@
-import { ChainId as MockChainId } from '@thinkincoin-libs/sdk-core'
+import { ChainId as MockChainId } from '@thinkincoin/sdk-core'
 import {
   DAI as MockDAI,
   USDC_MAINNET as MockUSDC_MAINNET,

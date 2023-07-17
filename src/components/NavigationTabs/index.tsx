@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Percent } from '@thinkincoin-libs/sdk-core'
+import { Percent } from '@thinkincoin/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'

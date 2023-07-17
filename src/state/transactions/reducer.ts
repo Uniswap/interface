@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ChainId } from '@thinkincoin-libs/sdk-core'
+import { ChainId } from '@thinkincoin/sdk-core'
 
 import { updateVersion } from '../global/actions'
 import { TransactionDetails, TransactionInfo } from './types'

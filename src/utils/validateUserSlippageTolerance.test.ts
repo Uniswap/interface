@@ -1,4 +1,4 @@
-import { Percent } from '@thinkincoin-libs/sdk-core'
+import { Percent } from '@thinkincoin/sdk-core'
 
 import validateUserSlippageTolerance, {
   MAXIMUM_RECOMMENDED_SLIPPAGE,

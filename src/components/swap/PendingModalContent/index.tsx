@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro'
-import { Currency } from '@thinkincoin-libs/sdk-core'
-import { ChainId } from '@thinkincoin-libs/sdk-core'
+import { Currency } from '@thinkincoin/sdk-core'
+import { ChainId } from '@thinkincoin/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ColumnCenter } from 'components/Column'
 import Column from 'components/Column'

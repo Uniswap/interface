@@ -1,4 +1,4 @@
-import { CurrencyAmount, Percent, Token } from '@thinkincoin-libs/sdk-core'
+import { CurrencyAmount, Percent, Token } from '@thinkincoin/sdk-core'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 

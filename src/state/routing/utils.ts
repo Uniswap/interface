@@ -1,5 +1,5 @@
 import { MixedRouteSDK } from '@thinkincoin/router-sdk'
-import { ChainId, Currency, CurrencyAmount, Token, TradeType } from '@thinkincoin-libs/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token, TradeType } from '@thinkincoin/sdk-core'
 import { AlphaRouter } from '@uniswap/smart-order-router'
 import { Pair, Route as V2Route } from '@thinkincoin-libs/uniswap-v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@thinkincoin-libs/uniswap-v3-sdk'

@@ -1,3 +1,3 @@
-import { Token } from '@thinkincoin-libs/sdk-core'
+import { Token } from '@thinkincoin/sdk-core'
 
 export class UserAddedToken extends Token {}

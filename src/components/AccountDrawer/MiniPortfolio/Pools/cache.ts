@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@thinkincoin-libs/sdk-core'
+import { ChainId, Token } from '@thinkincoin/sdk-core'
 import { Pool, Position } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { useAllTokensMultichain } from 'hooks/Tokens'
 import { atom, useAtom } from 'jotai'

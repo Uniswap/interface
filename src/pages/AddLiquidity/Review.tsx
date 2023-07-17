@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Price } from '@thinkincoin-libs/sdk-core'
+import { Currency, CurrencyAmount, Price } from '@thinkincoin/sdk-core'
 import { Position } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { AutoColumn } from 'components/Column'
 import { PositionPreview } from 'components/PositionPreview'

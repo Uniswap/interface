@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token } from '@thinkincoin-libs/sdk-core'
+import { ChainId, Currency, Token } from '@thinkincoin/sdk-core'
 import { FeeAmount, Pool } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useMemo } from 'react'

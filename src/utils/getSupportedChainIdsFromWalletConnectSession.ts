@@ -1,4 +1,4 @@
-import { SupportedChainsType } from '@thinkincoin-libs/sdk-core'
+import { SupportedChainsType } from '@thinkincoin/sdk-core'
 import type { SessionTypes } from '@walletconnect/types'
 
 // Helper function to extract chainId from string in format 'eip155:{chainId}'

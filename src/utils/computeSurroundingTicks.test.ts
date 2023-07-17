@@ -1,4 +1,4 @@
-import { Token } from '@thinkincoin-libs/sdk-core'
+import { Token } from '@thinkincoin/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { TickData } from 'graphql/thegraph/AllV3TicksQuery'
 import { TickProcessed } from 'hooks/usePoolTickData'

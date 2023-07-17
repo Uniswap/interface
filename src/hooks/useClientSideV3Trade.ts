@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@thinkincoin-libs/sdk-core'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@thinkincoin/sdk-core'
 import { Route, SwapQuoter } from '@thinkincoin-libs/uniswap-v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'

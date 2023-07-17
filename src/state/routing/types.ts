@@ -1,5 +1,5 @@
 import { MixedRouteSDK, Trade } from '@thinkincoin/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@thinkincoin-libs/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@thinkincoin/sdk-core'
 import { Route as V2Route } from '@thinkincoin-libs/uniswap-v2-sdk'
 import { Route as V3Route } from '@thinkincoin-libs/uniswap-v3-sdk'
 
