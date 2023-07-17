@@ -1,81 +1,84 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
-import Radio from 'components/Radio'
+import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import { RowBetween, RowFixed } from 'components/Row'
 import Toggle from 'components/Toggle'
+import { isUniswapXSupportedChain } from 'constants/chains'
+import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
+import { useAppDispatch } from 'state/hooks'
 import { RouterPreference } from 'state/routing/slice'
 import { useRouterPreference } from 'state/user/hooks'
+import { updateDisabledUniswapX } from 'state/user/reducer'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { Divider, ExternalLink, ThemedText } from 'theme'
 
-const Preference = styled(Radio)`
-  background-color: ${({ theme }) => theme.backgroundModule};
-  padding: 12px 16px;
-`
-
-const PreferencesContainer = styled(Column)`
-  gap: 1.5px;
-  border-radius: 12px;
-  overflow: hidden;
+const InlineLink = styled(ThemedText.Caption)`
+  color: ${({ theme }) => theme.accentAction};
+  display: inline;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
 `
 
 export default function RouterPreferenceSettings() {
+  const { chainId } = useWeb3React()
   const [routerPreference, setRouterPreference] = useRouterPreference()
-
-  const isAutoRoutingActive = routerPreference === RouterPreference.AUTO
+  const uniswapXEnabled = useUniswapXEnabled() && chainId && isUniswapXSupportedChain(chainId)
+  const dispatch = useAppDispatch()
 
   return (
-    <Column gap="md">
+    <>
+      {uniswapXEnabled && (
+        <>
+          <RowBetween gap="sm">
+            <RowFixed>
+              <Column gap="xs">
+                <ThemedText.BodySecondary>
+                  <UniswapXBrandMark />
+                </ThemedText.BodySecondary>
+                <ThemedText.Caption color="textSecondary">
+                  <Trans>When available, aggregates liquidity sources for better prices and gas free swaps.</Trans>{' '}
+                  <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
+                    <InlineLink>Learn more</InlineLink>
+                  </ExternalLink>
+                </ThemedText.Caption>
+              </Column>
+            </RowFixed>
+            <Toggle
+              id="toggle-uniswap-x-button"
+              isActive={routerPreference === RouterPreference.X}
+              toggle={() => {
+                if (routerPreference === RouterPreference.X) {
+                  // We need to remember if a user disables Uniswap X, so we don't show the opt-in flow again.
+                  dispatch(updateDisabledUniswapX({ disabledUniswapX: true }))
+                }
+                setRouterPreference(routerPreference === RouterPreference.X ? RouterPreference.API : RouterPreference.X)
+              }}
+            />
+          </RowBetween>
+          <Divider />
+        </>
+      )}
       <RowBetween gap="sm">
         <RowFixed>
           <Column gap="xs">
             <ThemedText.BodySecondary>
-              <Trans>Auto Router API</Trans>
+              <Trans>Local routing</Trans>
             </ThemedText.BodySecondary>
-            <ThemedText.Caption color="textSecondary">
-              <Trans>Use the Uniswap Labs API to get faster quotes.</Trans>
-            </ThemedText.Caption>
           </Column>
         </RowFixed>
         <Toggle
-          id="toggle-optimized-router-button"
-          isActive={isAutoRoutingActive}
-          toggle={() => setRouterPreference(isAutoRoutingActive ? RouterPreference.API : RouterPreference.AUTO)}
+          id="toggle-local-routing-button"
+          isActive={routerPreference === RouterPreference.CLIENT}
+          toggle={() =>
+            setRouterPreference(
+              routerPreference === RouterPreference.CLIENT ? RouterPreference.API : RouterPreference.CLIENT
+            )
+          }
         />
       </RowBetween>
-      {!isAutoRoutingActive && (
-        <PreferencesContainer>
-          <Preference
-            isActive={routerPreference === RouterPreference.API}
-            toggle={() => setRouterPreference(RouterPreference.API)}
-          >
-            <Column gap="xs">
-              <ThemedText.BodyPrimary>
-                <Trans>Uniswap API</Trans>
-              </ThemedText.BodyPrimary>
-              <ThemedText.Caption color="textSecondary">
-                <Trans>Finds the best route on the Uniswap Protocol using the Uniswap Labs Routing API.</Trans>
-              </ThemedText.Caption>
-            </Column>
-          </Preference>
-          <Preference
-            isActive={routerPreference === RouterPreference.CLIENT}
-            toggle={() => setRouterPreference(RouterPreference.CLIENT)}
-          >
-            <Column gap="xs">
-              <ThemedText.BodyPrimary>
-                <Trans>Uniswap client</Trans>
-              </ThemedText.BodyPrimary>
-              <ThemedText.Caption color="textSecondary">
-                <Trans>
-                  Finds the best route on the Uniswap Protocol through your browser. May result in high latency and
-                  prices.
-                </Trans>
-              </ThemedText.Caption>
-            </Column>
-          </Preference>
-        </PreferencesContainer>
-      )}
-    </Column>
+    </>
   )
 }

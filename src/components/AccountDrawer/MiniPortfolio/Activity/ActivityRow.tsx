@@ -3,8 +3,10 @@ import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/an
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
+import Row from 'components/Row'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import useENSName from 'hooks/useENSName'
+import { useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
@@ -12,6 +14,7 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow from '../PortfolioRow'
+import { useOpenOffchainActivityModal } from './OffchainActivityModal'
 import { useTimeSince } from './parseRemote'
 import { Activity } from './types'
 
@@ -26,15 +29,35 @@ const StyledTimestamp = styled(ThemedText.Caption)`
   font-feature-settings: 'tnum' on, 'lnum' on, 'ss02' on;
 `
 
-export function ActivityRow({
-  activity: { chainId, status, title, descriptor, logos, otherAccount, currencies, timestamp, hash },
-}: {
-  activity: Activity
-}) {
-  const { ENSName } = useENSName(otherAccount)
+function StatusIndicator({ activity: { status, timestamp } }: { activity: Activity }) {
   const timeSince = useTimeSince(timestamp)
 
+  switch (status) {
+    case TransactionStatus.Pending:
+      return <LoaderV2 />
+    case TransactionStatus.Confirmed:
+      return <StyledTimestamp>{timeSince}</StyledTimestamp>
+    case TransactionStatus.Failed:
+      return <AlertTriangleFilled />
+  }
+}
+
+export function ActivityRow({ activity }: { activity: Activity }) {
+  const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc, offchainOrderStatus } =
+    activity
+  const openOffchainActivityModal = useOpenOffchainActivityModal()
+
+  const { ENSName } = useENSName(otherAccount)
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
+
+  const onClick = useCallback(() => {
+    if (offchainOrderStatus) {
+      openOffchainActivityModal({ orderHash: hash, status: offchainOrderStatus })
+      return
+    }
+
+    window.open(getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION), '_blank')
+  }, [offchainOrderStatus, chainId, hash, openOffchainActivityModal])
 
   return (
     <TraceEvent
@@ -49,23 +72,20 @@ export function ActivityRow({
             <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
           </Column>
         }
-        title={<ThemedText.SubHeader>{title}</ThemedText.SubHeader>}
+        title={
+          <Row gap="4px">
+            {prefixIconSrc && <img height="14px" width="14px" src={prefixIconSrc} alt="" />}
+            <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
+          </Row>
+        }
         descriptor={
           <ActivityRowDescriptor color="textSecondary">
             {descriptor}
             {ENSName ?? shortenAddress(otherAccount)}
           </ActivityRowDescriptor>
         }
-        right={
-          status === TransactionStatus.Pending ? (
-            <LoaderV2 />
-          ) : status === TransactionStatus.Confirmed ? (
-            <StyledTimestamp>{timeSince}</StyledTimestamp>
-          ) : (
-            <AlertTriangleFilled />
-          )
-        }
-        onClick={() => window.open(explorerUrl, '_blank')}
+        right={<StatusIndicator activity={activity} />}
+        onClick={onClick}
       />
     </TraceEvent>
   )
