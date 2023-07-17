@@ -93,9 +93,15 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
         </div>
       </div>
       <div
-        class="c7 css-zhpkf8"
+        class="c5"
       >
-        ~$1.00
+        <div>
+          <div
+            class="c7 css-zhpkf8"
+          >
+            ~$1.00
+          </div>
+        </div>
       </div>
     </div>
     <div

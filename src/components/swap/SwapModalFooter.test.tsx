@@ -9,7 +9,7 @@ describe('SwapModalFooter.tsx', () => {
       <SwapModalFooter
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-        hash={undefined}
+        swapResult={undefined}
         onConfirm={jest.fn()}
         swapErrorMessage={undefined}
         disabledConfirm={false}
@@ -45,7 +45,7 @@ describe('SwapModalFooter.tsx', () => {
       <SwapModalFooter
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-        hash={undefined}
+        swapResult={undefined}
         onConfirm={jest.fn()}
         swapErrorMessage={undefined}
         disabledConfirm={false}
@@ -73,7 +73,7 @@ describe('SwapModalFooter.tsx', () => {
       <SwapModalFooter
         trade={TEST_TRADE_EXACT_OUTPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-        hash={undefined}
+        swapResult={undefined}
         onConfirm={jest.fn()}
         swapErrorMessage={undefined}
         disabledConfirm={false}

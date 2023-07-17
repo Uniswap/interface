@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useSingleContractWithCallData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
-import { ClassicTrade, InterfaceTrade, TradeState } from 'state/routing/types'
+import { ClassicTrade, InterfaceTrade, QuoteMethod, TradeState } from 'state/routing/types'
 
 import { isCelo } from '../constants/tokens'
 import { useAllV3Routes } from './useAllV3Routes'
@@ -23,6 +23,7 @@ const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
 
 const DEFAULT_GAS_QUOTE = 2_000_000
 
+// TODO (UniswapX or in general): Deprecate this?
 /**
  * Returns the best v3 trade for a desired swap
  * @param tradeType whether the swap is an exact in/out
@@ -145,6 +146,9 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
           },
         ],
         tradeType,
+        quoteMethod: QuoteMethod.CLIENT_SIDE,
+        // When using SOR, we don't have gas values from routing-api, so we can't calculate approve gas info
+        approveInfo: { needsApprove: false },
       }),
     }
   }, [amountSpecified, currenciesAreTheSame, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])
