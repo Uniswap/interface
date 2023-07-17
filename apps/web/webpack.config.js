@@ -91,7 +91,6 @@ const {
       dir: 'dev',
       devServer: {
         // watchFiles: ['src/**/*', 'webpack.config.js'],
-        allowedHosts: 'all',
         host: '127.0.0.1',
         port: 9997,
         server: fs.existsSync('localhost.pem')
