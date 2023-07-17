@@ -5222,9 +5222,9 @@
     ethers "^5.3.1"
     tiny-invariant "^1.3.1"
 
-"@thinkincoin/sdk-core@^4.0.2":
+"@thinkincoin/sdk-core@^1.0.0":
   version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@thinkincoin/sdk-core/-/sdk-core-4.0.2.tgz#60916f07838b25a268f79e2cf9e482dd39298a3c"
+  resolved "https://registry.yarnpkg.com/@thinkincoin/sdk-core/-/sdk-core-1.0.0.tgz#60916f07838b25a268f79e2cf9e482dd39298a3c"
   integrity sha512-OOq4yEkDkKB07NDY3Ok/i/HhtHvhP3RNm1Lel/kYRZKHmjt6SY3+wSVEI4ij8U/3WR2pUj8LFvEEM7Ih6/WsOA==
   dependencies:
     "@ethersproject/address" "^5.0.2"
@@ -5253,7 +5253,7 @@
   dependencies:
     "@ethersproject/address" "^5.0.0"
     "@ethersproject/solidity" "^5.0.0"
-    "@thinkincoin/sdk-core" "^4.0.2"
+    "@thinkincoin/sdk-core" "^1.0.0"
     "@uniswap/v2-sdk" "^3.0.1"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
@@ -5265,7 +5265,7 @@
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
-    "@thinkincoin/sdk-core" "^4.0.2"
+    "@thinkincoin/sdk-core" "^1.0.0"
     "@uniswap/swap-router-contracts" "^1.2.1"
     "@uniswap/v3-periphery" "^1.1.1"
     "@uniswap/v3-staker" "1.0.0"
@@ -5278,7 +5278,7 @@
   integrity sha512-6VUJ7rImhANHraNOnKtzcGDmLTuNppAlw6F5LCFZdg8p+syVq6U18nP6D1TeowCHv0r/paiehtDtdLVw0WCCsw==
   dependencies:
     "@ethersproject/abi" "^5.5.0"
-    "@thinkincoin/sdk-core" "^4.0.2"
+    "@thinkincoin/sdk-core" "^1.0.0"
     "@thinkincoin-libs/swap-router-contracts" "1.0.1"
     "@thinkincoin-libs/uniswap-v2-sdk" "^3.0.8"
     "@thinkincoin-libs/uniswap-v3-sdk" "^3.9.7"
@@ -5289,7 +5289,7 @@
   integrity sha512-8nc6NZRfk7FbMJ1ri5E8jNoqVt/oJm73bDLBJvs7jH0blV4k1D1dBY7cdM8PeiH5kvi5tkgeU477V0DPRqdT9g==
   dependencies:
     "@thinkincoin-libs/permit2-sdk" "^1.2.0"
-    "@thinkincoin/sdk-core" "^4.0.2"
+    "@thinkincoin/sdk-core" "^1.0.0"
     "@thinkincoin-libs/uniswap-v2-sdk" "^3.0.8"
     "@thinkincoin-libs/uniswap-v3-sdk" "^3.9.7"
     "@thinkincoin/router-sdk" "^1.4.1"
