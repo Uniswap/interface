@@ -4,6 +4,13 @@ This repository contains code for the Uniswap Wallet and is in transition to a m
 
 ## Quickstart
 
+### Prerequisites
+
+You must first read and follow the instructions of the individual apps in this repository before being able to run them:
+
+- [Mobile](apps/mobile/README.md)
+- [Web](apps/web/README.md)
+
 ### Installation
 
 ```bash
