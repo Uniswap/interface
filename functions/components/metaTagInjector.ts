@@ -35,7 +35,7 @@ export class MetaTagInjector {
     this.append(element, 'twitter:title', this.input.title)
     if (this.input.image) {
       this.append(element, 'twitter:image', this.input.image)
+      this.append(element, 'twitter:image:alt', this.input.title)
     }
-    this.append(element, 'twitter:image:alt', this.input.title)
   }
 }
