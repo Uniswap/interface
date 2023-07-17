@@ -1,5 +1,6 @@
 import { t } from '@lingui/macro'
-import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { SwapOrderStatus, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { TransactionType } from 'state/transactions/types'
 
 // use even number because rows are in groups of 2
@@ -159,6 +160,38 @@ export function getActivityTitle(type: TransactionType, status: TransactionStatu
   return TransactionTitleTable[type][status]
 }
 
+const SwapTitleTable = TransactionTitleTable[TransactionType.SWAP]
+export const OrderTextTable: {
+  [status in UniswapXOrderStatus]: { title: string; status: TransactionStatus; statusMessage?: string }
+} = {
+  [UniswapXOrderStatus.OPEN]: {
+    title: SwapTitleTable.PENDING,
+    status: TransactionStatus.Pending,
+  },
+  [UniswapXOrderStatus.FILLED]: {
+    title: SwapTitleTable.CONFIRMED,
+    status: TransactionStatus.Confirmed,
+  },
+  [UniswapXOrderStatus.EXPIRED]: {
+    title: t`Swap expired`,
+    statusMessage: t`Your swap could not be fulfilled at this time. Please try again.`,
+    status: TransactionStatus.Failed,
+  },
+  [UniswapXOrderStatus.ERROR]: {
+    title: SwapTitleTable.FAILED,
+    status: TransactionStatus.Failed,
+  },
+  [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
+    title: SwapTitleTable.FAILED,
+    statusMessage: t`Your account had insufficent funds to complete this swap.`,
+    status: TransactionStatus.Failed,
+  },
+  [UniswapXOrderStatus.CANCELLED]: {
+    title: t`Swap cancelled`,
+    status: TransactionStatus.Failed,
+  },
+}
+
 // Non-exhaustive list of addresses Moonpay uses when sending purchased tokens
 export const MOONPAY_SENDER_ADDRESSES = [
   '0x8216874887415e2650d12d53ff53516f04a74fd7',
@@ -166,3 +199,11 @@ export const MOONPAY_SENDER_ADDRESSES = [
   '0xb287eac48ab21c5fb1d3723830d60b4c797555b0',
   '0xd108fd0e8c8e71552a167e7a44ff1d345d233ba6',
 ]
+
+// Converts GQL backend orderStatus enum to the enum used by the frontend and UniswapX backend
+export const OrderStatusTable: { [key in SwapOrderStatus]: UniswapXOrderStatus } = {
+  [SwapOrderStatus.Open]: UniswapXOrderStatus.OPEN,
+  [SwapOrderStatus.Expired]: UniswapXOrderStatus.EXPIRED,
+  [SwapOrderStatus.Error]: UniswapXOrderStatus.ERROR,
+  [SwapOrderStatus.InsufficientFunds]: UniswapXOrderStatus.INSUFFICIENT_FUNDS,
+}
