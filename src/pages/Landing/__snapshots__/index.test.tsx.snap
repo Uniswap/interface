@@ -698,16 +698,11 @@ exports[`disable nft on landing page does not render nft information and card 1`
 }
 
 .c29 {
-  --size: 24px;
-  border-radius: 100px;
-  color: #0D111C;
-  background-color: #E8ECFB;
-  font-size: calc(var(--size) / 3);
-  font-weight: 500;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
   width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(white 60%,#ffffff00 calc(70% + 1px));
+  box-shadow: 0 0 1px white;
 }
 
 .c28 {
@@ -1780,11 +1775,11 @@ exports[`disable nft on landing page does not render nft information and card 1`
                                 class="c28"
                                 style="margin-right: 2px;"
                               >
-                                <div
+                                <img
+                                  alt="ETH logo"
                                   class="c29"
-                                >
-                                  ETH
-                                </div>
+                                  src="ethereum-logo.png"
+                                />
                               </div>
                               <span
                                 class="c30 token-symbol-container"
@@ -3197,16 +3192,11 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
 }
 
 .c29 {
-  --size: 24px;
-  border-radius: 100px;
-  color: #0D111C;
-  background-color: #E8ECFB;
-  font-size: calc(var(--size) / 3);
-  font-weight: 500;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
   width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(white 60%,#ffffff00 calc(70% + 1px));
+  box-shadow: 0 0 1px white;
 }
 
 .c28 {
@@ -4291,11 +4281,11 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
                                 class="c28"
                                 style="margin-right: 2px;"
                               >
-                                <div
+                                <img
+                                  alt="ETH logo"
                                   class="c29"
-                                >
-                                  ETH
-                                </div>
+                                  src="ethereum-logo.png"
+                                />
                               </div>
                               <span
                                 class="c30 token-symbol-container"

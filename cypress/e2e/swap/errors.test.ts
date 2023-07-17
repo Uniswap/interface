@@ -41,7 +41,7 @@ describe('Swap errors', () => {
       cy.get('#swap-button').click()
       cy.contains('Confirm swap').click()
       cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-      cy.contains('Transaction submitted')
+      cy.contains('Swap submitted')
       cy.get(getTestSelector('confirmation-close-icon')).click()
       cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
@@ -89,7 +89,7 @@ describe('Swap errors', () => {
         cy.get('#swap-button').click()
         cy.contains('Confirm swap').click()
         cy.wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-        cy.contains('Transaction submitted')
+        cy.contains('Swap submitted')
         cy.get(getTestSelector('confirmation-close-icon')).click()
       }
       cy.get(getTestSelector('web3-status-connected')).should('contain', '2 Pending')

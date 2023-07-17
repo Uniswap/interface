@@ -69,9 +69,9 @@ describe('Swap', () => {
         cy.contains('Review swap')
         cy.contains('Confirm swap').click()
         cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-        cy.contains('Transaction submitted')
+        cy.contains('Swap submitted')
         cy.get(getTestSelector('confirmation-close-icon')).click()
-        cy.contains('Transaction submitted').should('not.exist')
+        cy.contains('Swap submitted').should('not.exist')
         cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
         // Mine transaction

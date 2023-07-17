@@ -3,9 +3,12 @@ import { t } from '@lingui/macro'
 import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from '@uniswap/smart-order-router'
+import UniswapXBolt from 'assets/svg/bolt.svg'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap, useAllTokensMultichain } from 'hooks/Tokens'
 import { useMemo } from 'react'
+import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
+import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
 import {
   AddLiquidityV2PoolTransactionInfo,
@@ -22,7 +25,7 @@ import {
   WrapTransactionInfo,
 } from 'state/transactions/types'
 
-import { getActivityTitle } from '../constants'
+import { getActivityTitle, OrderTextTable } from '../constants'
 import { Activity, ActivityMap } from './types'
 
 function getCurrency(currencyId: string, chainId: ChainId, tokens: ChainTokenMap): Currency | undefined {
@@ -52,12 +55,13 @@ function parseSwap(
   const tokenOut = getCurrency(swap.outputCurrencyId, chainId, tokens)
   const [inputRaw, outputRaw] =
     swap.tradeType === TradeType.EXACT_INPUT
-      ? [swap.inputCurrencyAmountRaw, swap.expectedOutputCurrencyAmountRaw]
+      ? [swap.inputCurrencyAmountRaw, swap.settledOutputCurrencyAmountRaw ?? swap.expectedOutputCurrencyAmountRaw]
       : [swap.expectedInputCurrencyAmountRaw, swap.outputCurrencyAmountRaw]
 
   return {
     descriptor: buildCurrencyDescriptor(tokenIn, inputRaw, tokenOut, outputRaw),
     currencies: [tokenIn, tokenOut],
+    prefixIconSrc: swap.isUniswapXOrder ? UniswapXBolt : undefined,
   }
 }
 
@@ -134,7 +138,7 @@ function parseMigrateCreateV3(
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
 
-export function parseLocalActivity(
+export function transactionToActivity(
   details: TransactionDetails,
   chainId: ChainId,
   tokens: ChainTokenMap
@@ -146,22 +150,13 @@ export function parseLocalActivity(
       ? TransactionStatus.Confirmed
       : TransactionStatus.Failed
 
-    const receipt = details.receipt
-      ? {
-          id: details.receipt.transactionHash,
-          ...details.receipt,
-          ...details,
-          status,
-        }
-      : undefined
-
     const defaultFields = {
       hash: details.hash,
       chainId,
       title: getActivityTitle(details.info.type, status),
       status,
       timestamp: (details.confirmedTime ?? details.addedTime) / 1000,
-      receipt,
+      from: details.from,
       nonce: details.nonce,
     }
 
@@ -192,17 +187,53 @@ export function parseLocalActivity(
   }
 }
 
+export function signatureToActivity(signature: SignatureDetails, tokens: ChainTokenMap): Activity | undefined {
+  switch (signature.type) {
+    case SignatureType.SIGN_UNISWAPX_ORDER: {
+      // Only returns Activity items for orders that don't have an on-chain counterpart
+      if (isOnChainOrder(signature.status)) return undefined
+
+      const { title, statusMessage, status } = OrderTextTable[signature.status]
+
+      return {
+        hash: signature.orderHash,
+        chainId: signature.chainId,
+        title,
+        status,
+        offchainOrderStatus: signature.status,
+        timestamp: signature.addedTime / 1000,
+        from: signature.offerer,
+        statusMessage,
+        prefixIconSrc: UniswapXBolt,
+        ...parseSwap(signature.swapInfo, signature.chainId, tokens),
+      }
+    }
+    default:
+      return undefined
+  }
+}
+
 export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions()
+  const allSignatures = useAllSignatures()
   const tokens = useAllTokensMultichain()
 
   return useMemo(() => {
-    const activityByHash: ActivityMap = {}
+    const activityMap: ActivityMap = {}
     for (const [transaction, chainId] of allTransactions) {
       if (transaction.from !== account) continue
 
-      activityByHash[transaction.hash] = parseLocalActivity(transaction, chainId, tokens)
+      const activity = transactionToActivity(transaction, chainId, tokens)
+      if (activity) activityMap[transaction.hash] = activity
     }
-    return activityByHash
-  }, [account, allTransactions, tokens])
+
+    for (const signature of Object.values(allSignatures)) {
+      if (signature.offerer !== account) continue
+
+      const activity = signatureToActivity(signature, tokens)
+      if (activity) activityMap[signature.id] = activity
+    }
+
+    return activityMap
+  }, [account, allSignatures, allTransactions, tokens])
 }
