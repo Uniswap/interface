@@ -167,7 +167,7 @@
     "@sentry/react": "^7.58.1",
     "@sentry/tracing": "^7.58.1",
     "@sentry/types": "^7.58.1",
-    "@sentry-internal/tracing": "7.58.1"
+    "@sentry-internal/tracing": "7.58.1",
     "@thinkincoin-libs/harmony-token-list": "^1.0.3",
     "@thinkincoin/sdk-core": "^1.0.0",
     "@thinkincoin-libs/uniswap-v2-sdk": "^3.0.9",
