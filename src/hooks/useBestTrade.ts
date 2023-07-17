@@ -3,7 +3,8 @@ import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
 import { useMemo } from 'react'
-import { InterfaceTrade, QuoteMethod, TradeState } from 'state/routing/types'
+import { RouterPreference } from 'state/routing/slice'
+import { ClassicTrade, InterfaceTrade, QuoteMethod, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
 
@@ -18,6 +19,27 @@ const DEBOUNCE_TIME = 350
 // Temporary until we remove the feature flag.
 const DEBOUNCE_TIME_INCREASED = 650
 
+export function useBestTrade(
+  tradeType: TradeType,
+  amountSpecified?: CurrencyAmount<Currency>,
+  otherCurrency?: Currency,
+  routerPreferenceOverride?: RouterPreference.X,
+  account?: string
+): {
+  state: TradeState
+  trade?: InterfaceTrade
+}
+
+export function useBestTrade(
+  tradeType: TradeType,
+  amountSpecified?: CurrencyAmount<Currency>,
+  otherCurrency?: Currency,
+  routerPreferenceOverride?: RouterPreference.API | RouterPreference.CLIENT,
+  account?: string
+): {
+  state: TradeState
+  trade?: ClassicTrade
+}
 /**
  * Returns the best v2+v3 trade for a desired swap.
  * @param tradeType whether the swap is an exact in/out
@@ -27,7 +49,9 @@ const DEBOUNCE_TIME_INCREASED = 650
 export function useBestTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
-  otherCurrency?: Currency
+  otherCurrency?: Currency,
+  routerPreferenceOverride?: RouterPreference,
+  account?: string
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -59,8 +83,9 @@ export function useBestTrade(
     tradeType,
     amountSpecified ? debouncedAmount : undefined,
     debouncedOtherCurrency,
-    routerPreference,
-    !(autoRouterSupported && shouldGetTrade) // skip fetching
+    routerPreferenceOverride ?? routerPreference,
+    !(autoRouterSupported && shouldGetTrade), // skip fetching
+    account
   )
 
   const inDebounce =

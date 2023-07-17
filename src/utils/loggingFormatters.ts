@@ -1,5 +1,6 @@
 import { SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
+import { SwapResult } from 'hooks/useSwapCallback'
 import {
   formatPercentInBasisPointsNumber,
   formatPercentNumber,
@@ -8,12 +9,15 @@ import {
   getDurationUntilTimestampSeconds,
   getTokenAddress,
 } from 'lib/utils/analytics'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { isClassicTrade } from 'state/routing/utils'
 
 import { RoutingDiagramEntry } from './getRoutingDiagramEntries'
 import { computeRealizedPriceImpact } from './prices'
 
-const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
+const formatRoutesEventProperties = (routes?: RoutingDiagramEntry[]) => {
+  if (!routes) return {}
+
   const routesEventProperties: Record<string, any[]> = {
     routes_percentages: [],
     routes_protocols: [],
@@ -57,20 +61,20 @@ export const formatSwapPriceUpdatedEventProperties = (
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade
-  hash?: string
+  swapResult?: SwapResult
   allowedSlippage: Percent
   transactionDeadlineSecondsSinceEpoch?: number
   isAutoSlippage: boolean
   isAutoRouterApi: boolean
   swapQuoteReceivedDate?: Date
-  routes: RoutingDiagramEntry[]
+  routes?: RoutingDiagramEntry[]
   fiatValueInput?: number
   fiatValueOutput?: number
 }
 
 export const formatSwapButtonClickEventProperties = ({
   trade,
-  hash,
+  swapResult,
   allowedSlippage,
   transactionDeadlineSecondsSinceEpoch,
   isAutoSlippage,
@@ -80,8 +84,9 @@ export const formatSwapButtonClickEventProperties = ({
   fiatValueInput,
   fiatValueOutput,
 }: AnalyticsEventProps) => ({
-  estimated_network_fee_usd: trade.gasUseEstimateUSD,
-  transaction_hash: hash,
+  estimated_network_fee_usd: isClassicTrade(trade) ? trade.gasUseEstimateUSD : undefined,
+  transaction_hash: swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined,
+  order_hash: swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : undefined,
   transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_address: trade ? getTokenAddress(trade.inputAmount.currency) : undefined,
   token_out_address: trade ? getTokenAddress(trade.outputAmount.currency) : undefined,
@@ -91,7 +96,9 @@ export const formatSwapButtonClickEventProperties = ({
   token_out_amount: trade ? formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals) : undefined,
   token_in_amount_usd: fiatValueInput,
   token_out_amount_usd: fiatValueOutput,
-  price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
+  price_impact_basis_points: isClassicTrade(trade)
+    ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade))
+    : undefined,
   allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
@@ -102,6 +109,6 @@ export const formatSwapButtonClickEventProperties = ({
   duration_from_first_quote_to_swap_submission_milliseconds: swapQuoteReceivedDate
     ? getDurationFromDateMilliseconds(swapQuoteReceivedDate)
     : undefined,
-  swap_quote_block_number: trade.blockNumber,
+  swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
   ...formatRoutesEventProperties(routes),
 })
