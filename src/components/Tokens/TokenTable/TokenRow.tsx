@@ -21,6 +21,7 @@ import {
   MAX_WIDTH_MEDIA_BREAKPOINT,
   MEDIUM_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
+  XSMALL_MEDIA_BREAKPOINT,
 } from '../constants'
 import { LoadingBubble } from '../loading'
 import {
@@ -163,6 +164,13 @@ const NameCell = styled(Cell)`
   padding: 0px 8px;
   min-width: 240px;
   gap: 8px;
+
+  @media only screen and (max-width: ${XSMALL_MEDIA_BREAKPOINT}) {
+    min-width: unset;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0px;
+  }
 `
 const PriceCell = styled(DataCell)`
   padding-right: 8px;
