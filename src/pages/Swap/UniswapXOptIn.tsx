@@ -111,40 +111,38 @@ const OptInContents = ({
 
   const containerRef = useRef<HTMLDivElement>()
 
-  const wrapTrace = (children: JSX.Element) => {
+  if (isSmall) {
     return (
       <Trace
-        shouldLogImpression={isVisible}
+        shouldLogImpression
         name="UniswapX Opt In Impression"
         properties={trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : undefined}
       >
-        {children}
+        <SwapOptInSmallContainer ref={containerRef as any} visible={isVisible} shouldAnimate={shouldAnimate}>
+          <SwapMustache>
+            <UniswapXShine />
+            <SwapMustacheShadow />
+            <Row justify="space-between" align="center" flexWrap="wrap">
+              <Text fontSize={14} fontWeight={400} lineHeight="20px">
+                <Trans>Try gas free swaps with the</Trans>
+                <br />
+                <UniswapXBrandMark fontWeight="bold" style={{ transform: `translateY(1px)`, margin: '0 2px' }} />{' '}
+                <Trans>Beta</Trans>
+              </Text>
+              {tryItNowElement}
+            </Row>
+          </SwapMustache>
+        </SwapOptInSmallContainer>
       </Trace>
     )
   }
 
-  if (isSmall) {
-    return wrapTrace(
-      <SwapOptInSmallContainer ref={containerRef as any} visible={isVisible} shouldAnimate={shouldAnimate}>
-        <SwapMustache>
-          <UniswapXShine />
-          <SwapMustacheShadow />
-          <Row justify="space-between" align="center" flexWrap="wrap">
-            <Text fontSize={14} fontWeight={400} lineHeight="20px">
-              <Trans>Try gas free swaps with the</Trans>
-              <br />
-              <UniswapXBrandMark fontWeight="bold" style={{ transform: `translateY(1px)`, margin: '0 2px' }} />{' '}
-              <Trans>Beta</Trans>
-            </Text>
-            {tryItNowElement}
-          </Row>
-        </SwapMustache>
-      </SwapOptInSmallContainer>
-    )
-  }
-
-  return wrapTrace(
-    <>
+  return (
+    <Trace
+      shouldLogImpression
+      name="UniswapX Opt In Impression"
+      properties={trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : undefined}
+    >
       {/* first popover: intro */}
       <UniswapXOptInPopover shiny visible={isVisible && !showYoureIn}>
         <CloseIcon
@@ -194,7 +192,7 @@ const OptInContents = ({
           <Trans>You can turn it off at anytime in settings</Trans>
         </ThemedText.BodySecondary>
       </UniswapXOptInPopover>
-    </>
+    </Trace>
   )
 }
 
