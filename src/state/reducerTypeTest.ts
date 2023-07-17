@@ -18,7 +18,8 @@ import { MintState } from './mint/reducer'
 import { Field as FieldV3 } from './mint/v3/actions'
 import { FullRange, MintState as MintV3State } from './mint/v3/reducer'
 import { AppState } from './reducer'
-import { RouterPreference, routingApiV2 } from './routing/slice'
+import { RouterPreference, routingApi } from './routing/slice'
+import { SignatureState } from './signatures/reducer'
 import { TransactionState } from './transactions/reducer'
 import { TransactionDetails } from './transactions/types'
 import { UserState } from './user/reducer'
@@ -48,6 +49,7 @@ import { Wallet } from './wallets/types'
 type ExpectedAppState = CombinedState<{
   user: UserState
   transactions: TransactionState
+  signatures: SignatureState
   lists: ListsState
   application: ApplicationState
   wallets: WalletState
@@ -57,7 +59,7 @@ type ExpectedAppState = CombinedState<{
   burnV3: BurnV3State
   multicall: ReturnType<typeof multicall.reducer>
   logs: LogsState
-  [routingApiV2.reducerPath]: ReturnType<typeof routingApiV2.reducer>
+  [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
 }>
 
 assert<Equals<AppState, ExpectedAppState>>()
@@ -85,6 +87,7 @@ interface ExpectedUserState {
   URLWarningVisible: boolean
   hideUniswapWalletBanner: boolean
   showSurveyPopup?: boolean
+  disabledUniswapX?: boolean
 }
 
 assert<Equals<UserState, ExpectedUserState>>()

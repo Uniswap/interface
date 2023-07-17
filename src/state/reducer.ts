@@ -11,7 +11,8 @@ import logs from './logs/slice'
 import { customCreateMigrate, migrations } from './migrations'
 import mint from './mint/reducer'
 import mintV3 from './mint/v3/reducer'
-import { routingApiV2 } from './routing/slice'
+import { routingApi } from './routing/slice'
+import signatures from './signatures/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
 import wallets from './wallets/reducer'
@@ -19,6 +20,7 @@ import wallets from './wallets/reducer'
 const persistedReducers = {
   user,
   transactions,
+  signatures,
   lists,
 }
 
@@ -32,7 +34,7 @@ const appReducer = combineReducers({
   burnV3,
   multicall: multicall.reducer,
   logs,
-  [routingApiV2.reducerPath]: routingApiV2.reducer,
+  [routingApi.reducerPath]: routingApi.reducer,
 })
 
 export type AppState = ReturnType<typeof appReducer>

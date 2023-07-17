@@ -7,7 +7,13 @@ import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { WalletConnectV2 } from 'connection/WalletConnectV2'
 import { getChainInfo } from 'constants/chainInfo'
-import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS, UniWalletSupportedChains } from 'constants/chains'
+import {
+  getChainPriority,
+  L1_CHAIN_IDS,
+  L2_CHAIN_IDS,
+  TESTNET_CHAIN_IDS,
+  UniWalletSupportedChains,
+} from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -59,17 +65,19 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const [supportedChains, unsupportedChains] = useMemo(() => {
     const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter(
       (chain: number) => showTestnets || !TESTNET_CHAIN_IDS.includes(chain)
-    ).reduce(
-      (acc, chain) => {
-        if (walletSupportsChain.includes(chain)) {
-          acc.supported.push(chain)
-        } else {
-          acc.unsupported.push(chain)
-        }
-        return acc
-      },
-      { supported: [], unsupported: [] } as Record<string, ChainId[]>
     )
+      .sort((a, b) => getChainPriority(a) - getChainPriority(b))
+      .reduce(
+        (acc, chain) => {
+          if (walletSupportsChain.includes(chain)) {
+            acc.supported.push(chain)
+          } else {
+            acc.unsupported.push(chain)
+          }
+          return acc
+        },
+        { supported: [], unsupported: [] } as Record<string, ChainId[]>
+      )
     return [supported, unsupported]
   }, [showTestnets, walletSupportsChain])
 
