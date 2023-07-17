@@ -175,6 +175,7 @@ export function Swap({
   onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
   disableTokenInputs?: boolean
 }) {
+  const horse_neigh = new Audio('sounds/horse_neigh.mp3')
   const { account, chainId: connectedChainId, connector } = useWeb3React()
   const trace = useTrace()
 
@@ -710,6 +711,7 @@ export function Swap({
             >
               <ButtonError
                 onClick={() => {
+                  horse_neigh.play()
                   showPriceImpactWarning ? setShowPriceImpactModal(true) : handleContinueToReview()
                 }}
                 id="swap-button"
