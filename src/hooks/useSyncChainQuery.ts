@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_IDS_TO_NAMES } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
 import { ParsedQs } from 'qs'
 import { useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
@@ -37,9 +37,14 @@ export default function useSyncChainQuery() {
       selectChain(urlChainId)
     }
     // If a user has a connected wallet and has manually changed their chain, delete the old chain query param
-    else if (account && urlChainId && chainIdRef.current !== chainId && chainId !== urlChainId) {
-      searchParams.delete('chain')
-      setSearchParams(searchParams)
+    else if (account && chainIdRef.current !== chainId && chainId !== urlChainId) {
+      if (isSupportedChain(chainId)) {
+        searchParams.set('chain', CHAIN_IDS_TO_NAMES[chainId])
+        setSearchParams(searchParams)
+      } else {
+        searchParams.delete('chain')
+        setSearchParams(searchParams)
+      }
     }
 
     // If a user has a connected wallet and the chainId matches the query param chain, update the chainIdRef
