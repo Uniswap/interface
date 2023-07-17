@@ -5,7 +5,7 @@ import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
 import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
 import avaxLogo from 'assets/svg/avax_logo.svg'
 import avaxSquareLogo from 'assets/svg/avax_square_logo.svg'
-import baseGoerliLogo from 'assets/svg/base_blue.svg'
+import baseLogo from 'assets/svg/base_blue.svg'
 import bnbSquareLogoUrl from 'assets/svg/bnb_square_logo.svg'
 import bnbLogo from 'assets/svg/bnb-logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
@@ -242,6 +242,21 @@ const CHAIN_INFO: ChainInfoMap = {
     color: darkTheme.chain_43114,
     backgroundColor: darkTheme.chain_43114_background,
   },
+  [ChainId.BASE]: {
+    networkType: NetworkType.L2,
+    blockWaitMsBeforeWarning: ms`25m`,
+    bridge: 'https://bridge.base.org/deposit',
+    defaultListUrl: BASE_LIST,
+    docs: 'https://docs.base.org',
+    explorer: 'https://goerli.basescan.org/',
+    infoLink: 'https://info.uniswap.org/#/base/', // base testnet not supported
+    label: 'Base',
+    logoUrl: baseLogo,
+    statusPage: 'https://status.base.org/',
+    circleLogoUrl: baseLogo,
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    color: darkTheme.chain_84531,
+  },
   [ChainId.BASE_GOERLI]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`25m`,
@@ -251,9 +266,9 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://goerli.basescan.org/',
     infoLink: 'https://info.uniswap.org/#/base/', // base testnet not supported
     label: 'Base Goerli',
-    logoUrl: baseGoerliLogo,
+    logoUrl: baseLogo,
     statusPage: 'https://status.base.org/',
-    circleLogoUrl: baseGoerliLogo,
+    circleLogoUrl: baseLogo,
     nativeCurrency: { name: 'Base Goerli Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_84531,
   },
