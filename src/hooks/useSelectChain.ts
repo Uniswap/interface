@@ -14,7 +14,7 @@ export default function useSelectChain() {
   const dispatch = useAppDispatch()
   const { connector } = useWeb3React()
   const switchChain = useSwitchChain()
-  const [, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   return useCallback(
     async (targetChain: ChainId) => {
@@ -24,7 +24,10 @@ export default function useSelectChain() {
 
       try {
         await switchChain(connector, targetChain)
-        if (isSupportedChain(targetChain)) setSearchParams({ chain: CHAIN_IDS_TO_NAMES[targetChain] })
+        if (isSupportedChain(targetChain)) {
+          searchParams.set('chain', CHAIN_IDS_TO_NAMES[targetChain])
+          setSearchParams(searchParams)
+        }
       } catch (error) {
         if (!didUserReject(connection, error) && error.code !== -32002 /* request already pending */) {
           console.error('Failed to switch networks', error)
@@ -32,6 +35,6 @@ export default function useSelectChain() {
         }
       }
     },
-    [connector, dispatch, setSearchParams, switchChain]
+    [connector, dispatch, searchParams, setSearchParams, switchChain]
   )
 }
