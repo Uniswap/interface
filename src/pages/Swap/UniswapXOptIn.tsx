@@ -30,6 +30,7 @@ import { ThemedText } from 'theme'
 export const UniswapXOptIn = (props: { swapInfo: SwapInfo; isSmall: boolean }) => {
   const {
     trade: { trade },
+    allowedSlippage,
   } = props.swapInfo
   const userDisabledUniswapX = useUserDisabledUniswapX()
   const isOnClassic = Boolean(trade && isClassicTrade(trade) && trade.isUniswapXBetter && !userDisabledUniswapX)
@@ -44,7 +45,15 @@ export const UniswapXOptIn = (props: { swapInfo: SwapInfo; isSmall: boolean }) =
     return null
   }
 
-  return <OptInContents isOnClassic={isOnClassic} {...props} />
+  return (
+    <Trace
+      shouldLogImpression
+      name="UniswapX Opt In Impression"
+      properties={trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : undefined}
+    >
+      <OptInContents isOnClassic={isOnClassic} {...props} />
+    </Trace>
+  )
 }
 
 const OptInContents = ({
@@ -113,36 +122,26 @@ const OptInContents = ({
 
   if (isSmall) {
     return (
-      <Trace
-        shouldLogImpression
-        name="UniswapX Opt In Impression"
-        properties={trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : undefined}
-      >
-        <SwapOptInSmallContainer ref={containerRef as any} visible={isVisible} shouldAnimate={shouldAnimate}>
-          <SwapMustache>
-            <UniswapXShine />
-            <SwapMustacheShadow />
-            <Row justify="space-between" align="center" flexWrap="wrap">
-              <Text fontSize={14} fontWeight={400} lineHeight="20px">
-                <Trans>Try gas free swaps with the</Trans>
-                <br />
-                <UniswapXBrandMark fontWeight="bold" style={{ transform: `translateY(1px)`, margin: '0 2px' }} />{' '}
-                <Trans>Beta</Trans>
-              </Text>
-              {tryItNowElement}
-            </Row>
-          </SwapMustache>
-        </SwapOptInSmallContainer>
-      </Trace>
+      <SwapOptInSmallContainer ref={containerRef as any} visible={isVisible} shouldAnimate={shouldAnimate}>
+        <SwapMustache>
+          <UniswapXShine />
+          <SwapMustacheShadow />
+          <Row justify="space-between" align="center" flexWrap="wrap">
+            <Text fontSize={14} fontWeight={400} lineHeight="20px">
+              <Trans>Try gas free swaps with the</Trans>
+              <br />
+              <UniswapXBrandMark fontWeight="bold" style={{ transform: `translateY(1px)`, margin: '0 2px' }} />{' '}
+              <Trans>Beta</Trans>
+            </Text>
+            {tryItNowElement}
+          </Row>
+        </SwapMustache>
+      </SwapOptInSmallContainer>
     )
   }
 
   return (
-    <Trace
-      shouldLogImpression
-      name="UniswapX Opt In Impression"
-      properties={trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : undefined}
-    >
+    <>
       {/* first popover: intro */}
       <UniswapXOptInPopover shiny visible={isVisible && !showYoureIn}>
         <CloseIcon
@@ -192,7 +191,7 @@ const OptInContents = ({
           <Trans>You can turn it off at anytime in settings</Trans>
         </ThemedText.BodySecondary>
       </UniswapXOptInPopover>
-    </Trace>
+    </>
   )
 }
 
