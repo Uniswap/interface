@@ -68,9 +68,6 @@ export function useUniversalRouterSwapCallback(
           inputTokenPermit: options.permit,
           fee: options.feeOptions,
         })
-
-        console.log(22, options, data);
-
         const tx = {
           from: account,
           to: UNIVERSAL_ROUTER_ADDRESS(chainId),
