@@ -59,7 +59,13 @@ module.exports = {
 
   // An array of globs that describe where to look for source files
   // relative to the location of the configuration file
-  input: ['src/**/*.tsx', 'src/**/*.ts'],
+  // TODO EXT-260: Add dynamic translation in wallet package
+  input: [
+    'src/**/*.tsx',
+    'src/**/*.ts',
+    '../../packages/wallet/src/**/*.ts',
+    '../../packages/wallet/src/**/*.tsx',
+  ],
 
   // Whether or not to sort the catalog. Can also be a [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)
   sort: false,
