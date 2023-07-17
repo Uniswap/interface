@@ -165,7 +165,7 @@
     "@reach/portal": "^0.10.3",
     "@reduxjs/toolkit": "^1.6.1",
     "@sentry/react": "^7.58.1",
-    "@sentry/tracing": "^7.59.0",
+    "@sentry/tracing": "^7.58.1",
     "@sentry/types": "^7.58.1",
     "@thinkincoin-libs/harmony-token-list": "^1.0.3",
     "@thinkincoin/sdk-core": "^1.0.0",
