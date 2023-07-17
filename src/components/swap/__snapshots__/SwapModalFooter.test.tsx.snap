@@ -110,9 +110,15 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
           </div>
         </div>
         <div
-          class="c2 c6 css-zhpkf8"
+          class="c7"
         >
-          ~$1.00
+          <div>
+            <div
+              class="c2 c6 css-zhpkf8"
+            >
+              $1.00
+            </div>
+          </div>
         </div>
       </div>
     </div>
