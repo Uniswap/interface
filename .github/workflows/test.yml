@@ -9,6 +9,7 @@ on:
   push:
     branches:
       - main
+      - releases/staging
   pull_request:
 
 jobs:
@@ -17,12 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: eslint-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-eslint-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-eslint-
       - run: yarn lint
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
@@ -35,12 +35,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: tsc-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-tsc-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-tsc-
       - run: yarn typecheck
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
@@ -65,12 +64,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: jest-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-jest-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-jest-
       - run: yarn test --coverage --maxWorkers=100%
       - uses: codecov/codecov-action@v3
         with:
@@ -88,12 +86,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: build-e2e-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: node_modules/.cache
-          key: ${{ runner.os }}-build-e2e-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-build-e2e-${{ hashFiles('**/yarn.lock') }}-
+          key: ${{ runner.os }}-build-e2e-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-build-e2e-
       - run: yarn build:e2e
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
@@ -112,7 +109,6 @@ jobs:
   cypress-test-matrix:
     needs: [build-e2e, cypress-rerun]
     runs-on: ubuntu-latest
-    container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
     strategy:
       fail-fast: false
       matrix:
@@ -120,8 +116,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: cypress-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: /root/.cache/Cypress
           key: ${{ runner.os }}-cypress-${{ hashFiles('**/node_modules/cypress/package.json') }}
@@ -134,8 +129,7 @@ jobs:
           name: build-e2e
           path: build
 
-      - uses: actions/cache@v3
-        id: hardhat-cache
+      - uses: ./.github/actions/cache-on-main
         with:
           path: cache
           key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
@@ -148,8 +142,9 @@ jobs:
           parallel: true
           start: yarn serve
           wait-on: 'http://localhost:3000'
-          browser: chrome
+          browser: electron
           group: e2e
+          spec: ${{ github.ref_name == 'releases/staging' && 'cypress/{e2e,staging}/**/*.test.ts' || 'cypress/e2e/**/*.test.ts' }}
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -173,3 +168,45 @@ jobs:
         with:
           name: Cypress tests
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+
+  pre:
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6.4.1
+        with:
+          script: |
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: 'pending',
+              context: 'Test / promotion',
+              description: 'Running tests...',
+              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.runId
+            })
+
+  post:
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
+    needs: [pre, lint, typecheck, deps-tests, unit-tests, cypress-test-matrix]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6.4.1
+        with:
+          script: |
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: ${{ env.STATUS }} ? 'success' : 'failure',
+              context: 'Test / promotion',
+              description: ${{ env.STATUS }} ? 'All tests passed' : 'One or more tests failed and are blocking promotion',
+              target_url: 'https://github.com/Uniswap/interface/actions/runs/' + context.runId
+            })
+        env:
+          STATUS: |
+            ${{ needs.lint.result == 'success' }} &&
+            ${{ needs.typecheck.result == 'success' }} &&
+            ${{ needs.deps-tests.result == 'success' }} &&
+            ${{ needs.unit-tests.result == 'success' }} &&
+            ${{ needs.cypress-test-matrix.result == 'success' }}

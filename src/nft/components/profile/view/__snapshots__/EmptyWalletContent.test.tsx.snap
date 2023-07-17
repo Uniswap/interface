@@ -189,7 +189,7 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
     >
       <svg
         fill="none"
-        height="85"
+        height="97"
         viewBox="0 0 81 85"
         width="81"
         xmlns="http://www.w3.org/2000/svg"

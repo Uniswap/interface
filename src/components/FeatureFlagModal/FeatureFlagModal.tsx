@@ -2,8 +2,8 @@ import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'fe
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
-import { useWalletConnectV2Flag } from 'featureFlags/flags/walletConnectV2'
+import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
+import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -211,22 +211,22 @@ export default function FeatureFlagModal() {
         label="Use the new details page for nfts"
       />
       <FeatureFlagOption
-        variant={UnifiedRouterVariant}
-        value={useRoutingAPIV2Flag()}
-        featureFlag={FeatureFlag.uraEnabled}
-        label="Enable the Unified Routing API"
+        variant={UniswapXVariant}
+        value={useUniswapXFlag()}
+        featureFlag={FeatureFlag.uniswapXEnabled}
+        label="Enable UniswapX"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useUniswapXSyntheticQuoteFlag()}
+        featureFlag={FeatureFlag.uniswapXSyntheticQuote}
+        label="Force synthetic quotes for UniswapX"
       />
       <FeatureFlagOption
         variant={BaseVariant}
         value={useRoutingAPIForPriceFlag()}
         featureFlag={FeatureFlag.routingAPIPrice}
-        label="Use the URA or routing-api for price fetches"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useWalletConnectV2Flag()}
-        featureFlag={FeatureFlag.walletConnectV2}
-        label="Uses WalletConnect V2 as default wallet connect connection"
+        label="Use the routing-api v2 for price fetches"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

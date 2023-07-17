@@ -1,10 +1,11 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
+import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
-import { PortfolioBalancesQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
+import { PortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
@@ -30,11 +31,7 @@ export default function Tokens({ account }: { account: string }) {
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
-  const { data } = usePortfolioBalancesQuery({
-    variables: { ownerAddress: account },
-    fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
-    errorPolicy: 'all',
-  })
+  const { data } = useCachedPortfolioBalancesQuery({ account })
 
   const visibleTokens = useMemo(() => {
     return !hideSmallBalances
@@ -103,6 +100,13 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
   }, [navigate, token, toggleWalletDrawer])
 
   const currency = gqlToCurrency(token)
+  if (!currency) {
+    logSentryErrorForUnsupportedChain({
+      extras: { token },
+      errorMessage: 'Token from unsupported chain received from Mini Portfolio Token Balance Query',
+    })
+    return null
+  }
   return (
     <TraceEvent
       events={[BrowserEvent.onClick]}

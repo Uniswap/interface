@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
+import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -13,7 +15,6 @@ import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
@@ -264,45 +265,46 @@ export default function SwapCurrencyInputPanel({
               $loading={loading}
             />
           )}
-
-          <CurrencySelect
-            disabled={!chainAllowed || disabled}
-            visible={currency !== undefined}
-            selected={!!currency}
-            hideInput={hideInput}
-            className="open-currency-select-button"
-            onClick={() => {
-              if (onCurrencySelect) {
-                setModalOpen(true)
-              }
-            }}
-          >
-            <Aligner>
-              <RowFixed>
-                {pair ? (
-                  <span style={{ marginRight: '0.5rem' }}>
-                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
-                  </span>
-                ) : currency ? (
-                  <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size="24px" />
-                ) : null}
-                {pair ? (
-                  <StyledTokenName className="pair-name-container">
-                    {pair?.token0.symbol}:{pair?.token1.symbol}
-                  </StyledTokenName>
-                ) : (
-                  <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
-                    {(currency && currency.symbol && currency.symbol.length > 20
-                      ? currency.symbol.slice(0, 4) +
-                        '...' +
-                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || <Trans>Select token</Trans>}
-                  </StyledTokenName>
-                )}
-              </RowFixed>
-              {onCurrencySelect && <StyledDropDown selected={!!currency} />}
-            </Aligner>
-          </CurrencySelect>
+          <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen}>
+            <CurrencySelect
+              disabled={!chainAllowed || disabled}
+              visible={currency !== undefined}
+              selected={!!currency}
+              hideInput={hideInput}
+              className="open-currency-select-button"
+              onClick={() => {
+                if (onCurrencySelect) {
+                  setModalOpen(true)
+                }
+              }}
+            >
+              <Aligner>
+                <RowFixed>
+                  {pair ? (
+                    <span style={{ marginRight: '0.5rem' }}>
+                      <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                    </span>
+                  ) : currency ? (
+                    <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size="24px" />
+                  ) : null}
+                  {pair ? (
+                    <StyledTokenName className="pair-name-container">
+                      {pair?.token0.symbol}:{pair?.token1.symbol}
+                    </StyledTokenName>
+                  ) : (
+                    <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                      {(currency && currency.symbol && currency.symbol.length > 20
+                        ? currency.symbol.slice(0, 4) +
+                          '...' +
+                          currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                        : currency?.symbol) || <Trans>Select token</Trans>}
+                    </StyledTokenName>
+                  )}
+                </RowFixed>
+                {onCurrencySelect && <StyledDropDown selected={!!currency} />}
+              </Aligner>
+            </CurrencySelect>
+          </PrefetchBalancesWrapper>
         </InputRow>
         {Boolean(!hideInput && !hideBalance) && (
           <FiatRow>
@@ -323,7 +325,7 @@ export default function SwapCurrencyInputPanel({
                       renderBalance ? (
                         renderBalance(selectedCurrencyBalance)
                       ) : (
-                        <Trans>Balance: {formatCurrencyAmount(selectedCurrencyBalance, 4)}</Trans>
+                        <Trans>Balance: {formatCurrencyAmount(selectedCurrencyBalance, NumberType.TokenNonTx)}</Trans>
                       )
                     ) : null}
                   </ThemedText.DeprecatedBody>

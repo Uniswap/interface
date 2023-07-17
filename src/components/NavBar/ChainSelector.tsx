@@ -1,15 +1,16 @@
 import { t } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { WalletConnect } from '@web3-react/walletconnect-v2'
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
+import { WalletConnectV2 } from 'connection/WalletConnectV2'
 import { getChainInfo } from 'constants/chainInfo'
 import {
+  getChainPriority,
   L1_CHAIN_IDS,
   L2_CHAIN_IDS,
-  SupportedChainId,
   TESTNET_CHAIN_IDS,
   UniWalletSupportedChains,
 } from 'constants/chains'
@@ -36,15 +37,15 @@ interface ChainSelectorProps {
   leftAlign?: boolean
 }
 
-function useWalletSupportedChains(): SupportedChainId[] {
+function useWalletSupportedChains(): ChainId[] {
   const { connector } = useWeb3React()
 
   const connectionType = getConnection(connector).type
 
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
-      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnect).provider?.session)
-    case ConnectionType.UNISWAP_WALLET:
+      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
+    case ConnectionType.UNISWAP_WALLET_V2:
       return UniWalletSupportedChains
     default:
       return NETWORK_SELECTOR_CHAINS
@@ -61,13 +62,24 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const showTestnets = useAtomValue(showTestnetsAtom)
   const walletSupportsChain = useWalletSupportedChains()
 
-  const chains = useMemo(
-    () =>
-      NETWORK_SELECTOR_CHAINS.filter((chain) => showTestnets || !TESTNET_CHAIN_IDS.has(chain)).sort((a) =>
-        walletSupportsChain.includes(a) ? -1 : 1
-      ),
-    [showTestnets, walletSupportsChain]
-  )
+  const [supportedChains, unsupportedChains] = useMemo(() => {
+    const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter(
+      (chain: number) => showTestnets || !TESTNET_CHAIN_IDS.includes(chain)
+    )
+      .sort((a, b) => getChainPriority(a) - getChainPriority(b))
+      .reduce(
+        (acc, chain) => {
+          if (walletSupportsChain.includes(chain)) {
+            acc.supported.push(chain)
+          } else {
+            acc.unsupported.push(chain)
+          }
+          return acc
+        },
+        { supported: [], unsupported: [] } as Record<string, ChainId[]>
+      )
+    return [supported, unsupported]
+  }, [showTestnets, walletSupportsChain])
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -78,10 +90,10 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const selectChain = useSelectChain()
   useSyncChainQuery()
 
-  const [pendingChainId, setPendingChainId] = useState<SupportedChainId | undefined>(undefined)
+  const [pendingChainId, setPendingChainId] = useState<ChainId | undefined>(undefined)
 
   const onSelectChain = useCallback(
-    async (targetChainId: SupportedChainId) => {
+    async (targetChainId: ChainId) => {
       setPendingChainId(targetChainId)
       await selectChain(targetChainId)
       setPendingChainId(undefined)
@@ -99,13 +111,22 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
       <Column paddingX="8" data-testid="chain-selector-options">
-        {chains.map((selectorChain: SupportedChainId) => (
+        {supportedChains.map((selectorChain) => (
           <ChainSelectorRow
             disabled={!walletSupportsChain.includes(selectorChain)}
             onSelectChain={onSelectChain}
             targetChain={selectorChain}
             key={selectorChain}
             isPending={selectorChain === pendingChainId}
+          />
+        ))}
+        {unsupportedChains.map((selectorChain) => (
+          <ChainSelectorRow
+            disabled
+            onSelectChain={() => undefined}
+            targetChain={selectorChain}
+            key={selectorChain}
+            isPending={false}
           />
         ))}
       </Column>

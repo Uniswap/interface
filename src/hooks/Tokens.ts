@@ -1,7 +1,6 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_INACTIVE_LIST_URLS, DEFAULT_LIST_OF_LISTS } from 'constants/lists'
 import { useCurrencyFromMap, useTokenFromMapOrNetwork } from 'lib/hooks/useCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
@@ -18,7 +17,7 @@ import { useUnsupportedTokenList } from './../state/lists/hooks'
 type Maybe<T> = T | null | undefined
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<SupportedChainId>): { [address: string]: Token } {
+function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<ChainId>): { [address: string]: Token } {
   return useMemo(() => {
     if (!chainId) return {}
 
@@ -65,7 +64,7 @@ export function useAllTokensMultichain(): ChainTokenMap {
 }
 
 /** Returns all tokens from the default list + user added tokens */
-export function useDefaultActiveTokens(chainId: Maybe<SupportedChainId>): { [address: string]: Token } {
+export function useDefaultActiveTokens(chainId: Maybe<ChainId>): { [address: string]: Token } {
   const defaultListTokens = useCombinedActiveList()
   const tokensFromMap = useTokensFromMap(defaultListTokens, chainId)
   const userAddedTokens = useUserAddedTokens()
@@ -87,7 +86,7 @@ export function useDefaultActiveTokens(chainId: Maybe<SupportedChainId>): { [add
 }
 
 type BridgeInfo = Record<
-  SupportedChainId,
+  ChainId,
   {
     tokenAddress: string
     originBridgeAddress: string
@@ -124,13 +123,13 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
       const bridgeInfo = tokenInfo.extensions?.bridgeInfo as unknown as BridgeInfo
       if (
         bridgeInfo &&
-        bridgeInfo[SupportedChainId.MAINNET] &&
-        bridgeInfo[SupportedChainId.MAINNET].tokenAddress &&
-        unsupportedSet.has(bridgeInfo[SupportedChainId.MAINNET].tokenAddress)
+        bridgeInfo[ChainId.MAINNET] &&
+        bridgeInfo[ChainId.MAINNET].tokenAddress &&
+        unsupportedSet.has(bridgeInfo[ChainId.MAINNET].tokenAddress)
       ) {
-        const address = bridgeInfo[SupportedChainId.MAINNET].tokenAddress
+        const address = bridgeInfo[ChainId.MAINNET].tokenAddress
         // don't rely on decimals--it's possible that a token could be bridged w/ different decimals on the L2
-        return { ...acc, [address]: new Token(SupportedChainId.MAINNET, address, tokenInfo.decimals) }
+        return { ...acc, [address]: new Token(ChainId.MAINNET, address, tokenInfo.decimals) }
       }
       return acc
     }, {})
@@ -191,7 +190,7 @@ export function useToken(tokenAddress?: string | null): Token | null | undefined
   return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 
-export function useCurrency(currencyId: Maybe<string>, chainId?: SupportedChainId): Currency | null | undefined {
+export function useCurrency(currencyId: Maybe<string>, chainId?: ChainId): Currency | null | undefined {
   const { chainId: connectedChainId } = useWeb3React()
   const tokens = useDefaultActiveTokens(chainId ?? connectedChainId)
   return useCurrencyFromMap(tokens, chainId ?? connectedChainId, currencyId)
