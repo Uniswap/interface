@@ -1,9 +1,12 @@
-import { namedIconSizes, Text, validToken } from 'ui/src'
+import { Text } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 
 interface TransactionLoaderProps {
   opacity: number
 }
+
+export const TXN_HISTORY_LOADER_ICON_SIZE = iconSizes.icon40
 
 export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Element {
   return (
@@ -26,8 +29,8 @@ export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Elem
             centered
             bg="$background3"
             borderRadius="$roundedFull"
-            height={validToken(namedIconSizes.transactionHistory)}
-            width={validToken(namedIconSizes.transactionHistory)}
+            height={TXN_HISTORY_LOADER_ICON_SIZE}
+            width={TXN_HISTORY_LOADER_ICON_SIZE}
           />
           <Flex shrink gap="$none">
             <Flex row alignItems="center" gap="$spacing4">

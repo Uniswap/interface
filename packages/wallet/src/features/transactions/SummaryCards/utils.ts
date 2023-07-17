@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { createElement, useMemo, useState } from 'react'
+import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src/components/loading/TransactionLoader'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import {
@@ -29,7 +30,7 @@ import { WCSummaryItem } from './SummaryItems/WCSummaryItem'
 import { WrapSummaryItem } from './SummaryItems/WrapSummaryItem'
 import { SummaryItemProps, SwapSummaryCallbacks, TransactionSummaryLayoutProps } from './types'
 
-export const TXN_HISTORY_ICON_SIZE = iconSizes.icon40
+export const TXN_HISTORY_ICON_SIZE = TXN_HISTORY_LOADER_ICON_SIZE
 export const TXN_STATUS_ICON_SIZE = iconSizes.icon16
 
 export type ActivityItem = TransactionDetails | SectionHeader | LoadingItem

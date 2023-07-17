@@ -6,5 +6,4 @@ export * as Icons from './components/icons'
 export * as Logos from './components/logos'
 export * from './lib'
 export { config } from './tamagui.config'
-export { namedIconSizes } from './theme/iconSizes'
 export { Text }
