@@ -1,14 +1,14 @@
 import { Token } from '@pollum-io/sdk-core'
 import { AddressMap } from '@pollum-io/smart-order-router'
-import { abi as MulticallABI } from '@pollum-io/v3-periphery/artifacts/contracts/lens/PegasysInterfaceMulticall.sol/PegasysInterfaceMulticall.json'
-import { abi as NFTPositionManagerABI } from '@pollum-io/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
+import MulticallABI from '@pollum-io/v3-periphery/artifacts/contracts/lens/PegasysInterfaceMulticall.sol/PegasysInterfaceMulticall.json'
+import NFTPositionManagerABI from '@pollum-io/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { useWeb3React } from '@web3-react/core'
 import { MULTICALL_ADDRESS, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDRESSES } from 'constants/addresses'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { BaseContract } from 'ethers/lib/ethers'
 import { ContractInput, useUniswapPricesQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { toContractInput } from 'graphql/data/util'
+import { toContractInput } from 'graphql/utils/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, PegasysInterfaceMulticall } from 'types/v3'
@@ -43,11 +43,11 @@ function useContractMultichain<T extends BaseContract>(
 }
 
 export function useV3ManagerContracts(chainIds: SupportedChainId[]): ContractMap<NonfungiblePositionManager> {
-  return useContractMultichain<NonfungiblePositionManager>(V3NFT_ADDRESSES, NFTPositionManagerABI, chainIds)
+  return useContractMultichain<NonfungiblePositionManager>(V3NFT_ADDRESSES, NFTPositionManagerABI.abi, chainIds)
 }
 
 export function useInterfaceMulticallContracts(chainIds: SupportedChainId[]): ContractMap<PegasysInterfaceMulticall> {
-  return useContractMultichain<PegasysInterfaceMulticall>(MULTICALL_ADDRESS, MulticallABI, chainIds)
+  return useContractMultichain<PegasysInterfaceMulticall>(MULTICALL_ADDRESS, MulticallABI.abi, chainIds)
 }
 
 type PriceMap = { [key: CurrencyKey]: number | undefined }

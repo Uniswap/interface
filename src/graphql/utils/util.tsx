@@ -1,12 +1,11 @@
-import { QueryResult } from '@apollo/client'
 import { Currency } from '@pollum-io/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import ms from 'ms.macro'
-import { useEffect } from 'react'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
-import { Chain, ContractInput, HistoryDuration } from './__generated__/types-and-hooks'
+import { Chain, ContractInput } from './types'
 
 export enum PollingInterval {
   Slow = ms`5m`,
@@ -16,18 +15,17 @@ export enum PollingInterval {
 }
 
 // Polls a query only when the current component is mounted, as useQuery's pollInterval prop will continue to poll after unmount
-export function usePollQueryWhileMounted<T, K>(queryResult: QueryResult<T, K>, interval: PollingInterval) {
-  const { startPolling, stopPolling } = queryResult
+// export function usePollQueryWhileMounted<T, K>(queryResult: QueryResult<T, K>, interval: PollingInterval) {
+//   const { startPolling, stopPolling } = queryResult
 
-  useEffect(() => {
-    startPolling(interval)
-    return stopPolling
-  }, [interval, startPolling, stopPolling])
-  return queryResult
-}
+//   useEffect(() => {
+//     startPolling(interval)
+//     return stopPolling
+//   }, [interval, startPolling, stopPolling])
+//   return queryResult
+// }
 
 export enum TimePeriod {
-  // HOUR,
   DAY,
   WEEK,
   MONTH,
@@ -36,8 +34,6 @@ export enum TimePeriod {
 
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
-    // case TimePeriod.HOUR:
-    //   return HistoryDuration.Hour
     case TimePeriod.DAY:
       return HistoryDuration.Day
     case TimePeriod.WEEK:
@@ -51,9 +47,9 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
 
 export type PricePoint = { timestamp: number; value: number }
 
-export function isPricePoint(p: PricePoint | null): p is PricePoint {
-  return p !== null
-}
+// export function isPricePoint(p: PricePoint | null): p is PricePoint {
+//   return p !== null
+// }
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.ROLLUX]: 'ROLLUX' as Chain,
@@ -124,25 +120,25 @@ export function getTokenDetailsURL({
   return `/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
-export function unwrapToken<
-  T extends {
-    address?: string | null | undefined
-  } | null
->(chainId: number, token: T): T {
-  if (!token?.address) return token
+// export function unwrapToken<
+//   T extends {
+//     address?: string | null | undefined
+//   } | null
+// >(chainId: number, token: T): T {
+//   if (!token?.address) return token
 
-  const address = token.address.toLowerCase()
-  const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
-  if (address !== nativeAddress) return token
+//   const address = token.address.toLowerCase()
+//   const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+//   if (address !== nativeAddress) return token
 
-  const nativeToken = nativeOnChain(chainId)
-  return {
-    ...token,
-    ...nativeToken,
-    address: NATIVE_CHAIN_ID,
-    extensions: undefined, // prevents marking cross-chain wrapped tokens as native
-  }
-}
+//   const nativeToken = nativeOnChain(chainId)
+//   return {
+//     ...token,
+//     ...nativeToken,
+//     address: NATIVE_CHAIN_ID,
+//     extensions: undefined, // prevents marking cross-chain wrapped tokens as native
+//   }
+// }
 
 export function unwrapTokenRollux<
   T extends {

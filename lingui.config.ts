@@ -52,7 +52,6 @@ const linguiConfig = {
   rootDir: '.',
   runtimeConfigModule: ['@lingui/core', 'i18n'],
   sourceLocale: 'en-US',
-  pseudoLocale: 'pseudo',
 }
 
 export default linguiConfig

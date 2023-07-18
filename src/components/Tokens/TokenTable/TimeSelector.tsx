@@ -1,4 +1,4 @@
-import { TimePeriod } from 'graphql/data/util'
+import { TimePeriod } from 'graphql/utils/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useAtom } from 'jotai'
 import { useRef } from 'react'

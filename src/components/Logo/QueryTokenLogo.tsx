@@ -3,13 +3,12 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { TokenQueryData } from 'graphql/data/Token'
-import { TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { TokenData } from 'graphql/tokens/TokenData'
+import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/utils/util'
 
 import AssetLogo, { AssetLogoBaseProps } from './AssetLogo'
 
-function getChainId(token?: TopToken | TokenQueryData | SearchToken | TokenData): SupportedChainId | undefined {
+function getChainId(token?: TokenQueryData | SearchToken | TokenData): SupportedChainId | undefined {
   if (token && 'chain' in token) {
     return token?.chain ? CHAIN_NAME_TO_CHAIN_ID[token?.chain] : undefined
   } else {
@@ -17,7 +16,7 @@ function getChainId(token?: TopToken | TokenQueryData | SearchToken | TokenData)
   }
 }
 
-function isNativeToken(token?: TopToken | TokenQueryData | SearchToken | TokenData): boolean {
+function isNativeToken(token?: TokenQueryData | SearchToken | TokenData): boolean {
   if (token && 'address' in token && 'standard' in token) {
     return !token?.address || token?.standard === TokenStandard.Native || token?.address === NATIVE_CHAIN_ID
   } else {

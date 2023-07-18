@@ -1,4 +1,4 @@
-import { TimePeriod } from 'graphql/data/util'
+import { TimePeriod } from 'graphql/utils/util'
 import { atom, useAtom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
 import { useCallback } from 'react'
