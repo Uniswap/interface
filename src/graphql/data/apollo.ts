@@ -8,10 +8,11 @@ if (!GRAPHQL_URL) {
 
 export const apolloClient = new ApolloClient({
   connectToDevTools: true,
-  uri: GRAPHQL_URL,
+  uri: 'https://2hm3d6i3bfb43hcx33dk56mfey.appsync-api.us-east-1.amazonaws.com/graphql',
   headers: {
     'Content-Type': 'application/json',
     Origin: 'https://app.uniswap.org',
+    'x-api-key': 'da2-pl5x75xr7rhwfezyhmmzemkz7u', // not a prod key
   },
   cache: new InMemoryCache({
     typePolicies: {

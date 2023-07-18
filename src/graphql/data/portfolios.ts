@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 gql`
   query PortfolioBalances($ownerAddress: String!, $chains: [Chain!]!) {
-    portfolios(ownerAddresses: [$ownerAddress], chains: $chains) {
+    portfolios(ownerAddresses: [$ownerAddress], chains: $chains, _fs: "DATASOURCE:LEGACY") {
       id
       tokensTotalDenominatedValue {
         id
