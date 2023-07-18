@@ -10,7 +10,9 @@ const thegraphConfig = require('../graphql.thegraph.config')
 const exec = promisify(child_process.exec)
 
 function fetchSchema(url, outputFile) {
-  exec(`yarn --silent get-graphql-schema --h Origin=https://app.uniswap.org ${url}`)
+  exec(
+    `yarn --silent get-graphql-schema --h Origin=https://app.uniswap.org --h x-api-key=da2-pl5x75xr7rhwfezyhmmzemkz7u ${url}`
+  )
     .then(({ stderr, stdout }) => {
       if (stderr) {
         throw new Error(stderr)
