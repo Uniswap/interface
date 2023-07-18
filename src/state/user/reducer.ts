@@ -48,6 +48,7 @@ export interface UserState {
   timestamp: number
   URLWarningVisible: boolean
   hideUniswapWalletBanner: boolean
+  disabledUniswapX?: boolean
   // undefined means has not gone through A/B split yet
   showSurveyPopup?: boolean
 }
@@ -59,7 +60,7 @@ function pairKey(token0Address: string, token1Address: string) {
 export const initialState: UserState = {
   selectedWallet: undefined,
   userLocale: null,
-  userRouterPreference: RouterPreference.AUTO,
+  userRouterPreference: RouterPreference.API,
   userHideClosedPositions: false,
   userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,
@@ -100,6 +101,9 @@ const userSlice = createSlice({
     updateHideUniswapWalletBanner(state, action) {
       state.hideUniswapWalletBanner = action.payload.hideUniswapWalletBanner
     },
+    updateDisabledUniswapX(state, action) {
+      state.disabledUniswapX = action.payload.disabledUniswapX
+    },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
         state.tokens = {}
@@ -125,9 +129,16 @@ const userSlice = createSlice({
     // for all existing users with a previous version of the state in their localStorage.
     // In order to avoid this, we need to set a default value for each new property manually during hydration.
     builder.addCase(updateVersion, (state) => {
-      // If `selectedWallet` is ConnectionType.UNI_WALLET (deprecated) switch it to ConnectionType.UNISWAP_WALLET
-      if (state.selectedWallet === 'UNIWALLET') {
-        state.selectedWallet = ConnectionType.UNISWAP_WALLET
+      // If `selectedWallet` is a WalletConnect v1 wallet, reset to default.
+      if (state.selectedWallet) {
+        const selectedWallet = state.selectedWallet as string
+        if (
+          selectedWallet === 'UNIWALLET' ||
+          selectedWallet === 'UNISWAP_WALLET' ||
+          selectedWallet === 'WALLET_CONNECT'
+        ) {
+          delete state.selectedWallet
+        }
       }
 
       // If `userSlippageTolerance` is not present or its value is invalid, reset to default
@@ -160,7 +171,26 @@ const userSlice = createSlice({
 
       // If `userRouterPreference` is not present, reset to default
       if (typeof state.userRouterPreference !== 'string') {
-        state.userRouterPreference = RouterPreference.AUTO
+        state.userRouterPreference = RouterPreference.API
+      }
+
+      // If `userRouterPreference` is `AUTO`, migrate to `API`
+      if ((state.userRouterPreference as string) === 'auto') {
+        state.userRouterPreference = RouterPreference.API
+      }
+
+      //If `buyFiatFlowCompleted` is present, delete it using filtering
+      if ('buyFiatFlowCompleted' in state) {
+        //ignoring due to type errors occuring since we now remove this state
+        //@ts-ignore
+        delete state.buyFiatFlowCompleted
+      }
+
+      // If `buyFiatFlowCompleted` is present, delete it using filtering
+      if ('buyFiatFlowCompleted' in state) {
+        //ignoring due to type errors occuring since we now remove this state
+        //@ts-ignore
+        delete state.buyFiatFlowCompleted
       }
 
       //If `buyFiatFlowCompleted` is present, delete it using filtering
@@ -185,5 +215,6 @@ export const {
   updateUserLocale,
   updateUserSlippageTolerance,
   updateHideUniswapWalletBanner,
+  updateDisabledUniswapX,
 } = userSlice.actions
 export default userSlice.reducer

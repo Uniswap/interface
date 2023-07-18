@@ -1,15 +1,11 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { SupportedChainId } from 'constants/chains'
 
 export enum ConnectionType {
-  UNISWAP_WALLET = 'UNISWAP_WALLET',
   UNISWAP_WALLET_V2 = 'UNISWAP_WALLET_V2',
-  /** @deprecated - Use {@link UNISWAP_WALLET} instead. */
-  UNIWALLET = 'UNIWALLET',
   INJECTED = 'INJECTED',
   COINBASE_WALLET = 'COINBASE_WALLET',
-  WALLET_CONNECT = 'WALLET_CONNECT',
   WALLET_CONNECT_V2 = 'WALLET_CONNECT_V2',
   NETWORK = 'NETWORK',
   GNOSIS_SAFE = 'GNOSIS_SAFE',
@@ -22,6 +18,5 @@ export interface Connection {
   type: ConnectionType
   getIcon?(isDarkMode: boolean): string
   shouldDisplay(): boolean
-  overrideActivate?: (chainId?: SupportedChainId) => boolean
-  isNew?: boolean
+  overrideActivate?: (chainId?: ChainId) => boolean
 }

@@ -6,5 +6,5 @@ import reducer from './reducer'
 type GetState<T> = T extends Reducer<infer State> ? State : never
 
 export type AppState = {
-  [K in keyof typeof reducer]: GetState<typeof reducer[K]>
+  [K in keyof typeof reducer]: GetState<(typeof reducer)[K]>
 }

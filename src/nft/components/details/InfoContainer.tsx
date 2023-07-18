@@ -57,7 +57,7 @@ const ContentContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-top: none;
   border-radius: 0px 0px 16px 16px;
-  background-color: ${({ theme }) => theme.backgroundSurface}; ;
+  background-color: ${({ theme }) => theme.backgroundSurface};
 `
 
 const InfoContainer = ({

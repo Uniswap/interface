@@ -3,17 +3,40 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { sendTiming } from 'components/analytics'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
-import { useRoutingAPIV2Enabled } from 'featureFlags/flags/unifiedRouter'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
-import { useGetQuoteQuery as useGetQuoteQueryV2 } from 'state/routing/v2Slice'
+import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
+import { useGetQuoteQuery } from 'state/routing/slice'
 
-import { InterfaceTrade, QuoteMethod, QuoteState, TradeState } from './types'
+import { ClassicTrade, InterfaceTrade, QuoteMethod, QuoteState, TradeState } from './types'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
+
+export function useRoutingAPITrade<TTradeType extends TradeType>(
+  tradeType: TTradeType,
+  amountSpecified: CurrencyAmount<Currency> | undefined,
+  otherCurrency: Currency | undefined,
+  routerPreference: typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
+  skipFetch?: boolean,
+  account?: string
+): {
+  state: TradeState
+  trade?: ClassicTrade
+}
+
+export function useRoutingAPITrade<TTradeType extends TradeType>(
+  tradeType: TTradeType,
+  amountSpecified: CurrencyAmount<Currency> | undefined,
+  otherCurrency: Currency | undefined,
+  routerPreference: RouterPreference,
+  skipFetch?: boolean,
+  account?: string
+): {
+  state: TradeState
+  trade?: InterfaceTrade
+}
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
@@ -26,7 +49,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
-  skipFetch = false
+  skipFetch = false,
+  account?: string
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -41,6 +65,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   )
 
   const queryArgs = useRoutingAPIArguments({
+    account,
     tokenIn: currencyIn,
     tokenOut: currencyOut,
     amount: skipFetch ? undefined : amountSpecified,
@@ -48,34 +73,17 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     routerPreference,
   })
 
-  const shouldUseRoutingApiV2 = useRoutingAPIV2Enabled()
-
   const {
-    isError: isLegacyAPIError,
-    data: legacyAPITradeResult,
-    currentData: currentLegacyAPITradeResult,
-  } = useGetQuoteQuery(shouldUseRoutingApiV2 ? skipToken : queryArgs ?? skipToken, {
+    isError,
+    data: tradeResult,
+    error,
+    currentData: currentTradeResult,
+  } = useGetQuoteQuery(queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })
-
-  const {
-    isError: isV2APIError,
-    data: v2TradeResult,
-    currentData: currentV2TradeResult,
-  } = useGetQuoteQueryV2(!shouldUseRoutingApiV2 ? skipToken : queryArgs ?? skipToken, {
-    // Price-fetching is informational and costly, so it's done less frequently.
-    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
-    // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
-    refetchOnMountOrArgChange: 2 * 60,
-  })
-
-  const [tradeResult, currentTradeResult, isError] = shouldUseRoutingApiV2
-    ? [v2TradeResult, currentV2TradeResult, isV2APIError]
-    : [legacyAPITradeResult, currentLegacyAPITradeResult, isLegacyAPIError]
-
   const isCurrent = currentTradeResult === tradeResult
 
   return useMemo(() => {
@@ -83,7 +91,11 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       // If we don't want to fetch new trades, but have valid inputs, return the stale trade.
       return { state: TradeState.STALE, trade: tradeResult?.trade }
     } else if (!amountSpecified || isError || !queryArgs) {
-      return { state: TradeState.INVALID, trade: undefined }
+      return {
+        state: TradeState.INVALID,
+        trade: undefined,
+        error: JSON.stringify(error),
+      }
     } else if (tradeResult?.state === QuoteState.NOT_FOUND && isCurrent) {
       return TRADE_NOT_FOUND
     } else if (!tradeResult?.trade) {
@@ -93,19 +105,9 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: isCurrent ? TradeState.VALID : TradeState.LOADING,
         trade: tradeResult.trade,
-        method: tradeResult?.method,
       }
     }
-  }, [
-    amountSpecified,
-    isCurrent,
-    isError,
-    queryArgs,
-    skipFetch,
-    tradeResult?.state,
-    tradeResult?.trade,
-    tradeResult?.method,
-  ])
+  }, [amountSpecified, error, isCurrent, isError, queryArgs, skipFetch, tradeResult?.state, tradeResult?.trade])
 }
 
 // only want to enable this when app hook called

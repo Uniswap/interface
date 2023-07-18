@@ -1,4 +1,4 @@
-import { SupportedChainId, Token, TradeType as MockTradeType } from '@uniswap/sdk-core'
+import { ChainId, Token, TradeType as MockTradeType } from '@uniswap/sdk-core'
 import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
 import { DAI as MockDAI, nativeOnChain, USDC_MAINNET as MockUSDC_MAINNET, USDT as MockUSDT } from 'constants/tokens'
 import { TransactionStatus as MockTxStatus } from 'graphql/data/__generated__/types-and-hooks'
@@ -12,7 +12,9 @@ import {
 } from 'state/transactions/types'
 import { renderHook } from 'test-utils/render'
 
-import { parseLocalActivity, useLocalActivities } from './parseLocal'
+import { UniswapXOrderStatus } from '../../../../lib/hooks/orders/types'
+import { SignatureDetails, SignatureType } from '../../../../state/signatures/types'
+import { signatureToActivity, transactionToActivity, useLocalActivities } from './parseLocal'
 
 function mockSwapInfo(
   type: MockTradeType,
@@ -30,6 +32,7 @@ function mockSwapInfo(
       outputCurrencyId: outputCurrency.address,
       expectedOutputCurrencyAmountRaw: outputCurrencyAmountRaw,
       minimumOutputCurrencyAmountRaw: outputCurrencyAmountRaw,
+      isUniswapXOrder: false,
     }
   } else {
     return {
@@ -40,13 +43,14 @@ function mockSwapInfo(
       maximumInputCurrencyAmountRaw: inputCurrencyAmountRaw,
       outputCurrencyId: outputCurrency.address,
       outputCurrencyAmountRaw,
+      isUniswapXOrder: false,
     }
   }
 }
 
 const mockAccount1 = '0x000000000000000000000000000000000000000001'
 const mockAccount2 = '0x000000000000000000000000000000000000000002'
-const mockChainId = SupportedChainId.MAINNET
+const mockChainId = ChainId.MAINNET
 const mockSpenderAddress = PERMIT2_ADDRESS[mockChainId]
 const mockCurrencyAmountRaw = '1000000000000000000'
 const mockCurrencyAmountRawUSDC = '1000000'
@@ -246,27 +250,13 @@ describe('parseLocalActivity', () => {
         status: 1,
       },
     } as TransactionDetails
-    const chainId = SupportedChainId.MAINNET
-    expect(parseLocalActivity(details, chainId, mockTokenAddressMap)).toEqual({
+    const chainId = ChainId.MAINNET
+    expect(transactionToActivity(details, chainId, mockTokenAddressMap)).toEqual({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
       hash: undefined,
-      receipt: {
-        id: '0x123',
-        info: {
-          type: 1,
-          tradeType: MockTradeType.EXACT_INPUT,
-          inputCurrencyId: MockUSDC_MAINNET.address,
-          inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-          outputCurrencyId: MockDAI.address,
-          expectedOutputCurrencyAmountRaw: mockCurrencyAmountRaw,
-          minimumOutputCurrencyAmountRaw: mockCurrencyAmountRaw,
-        },
-        receipt: { status: 1, transactionHash: '0x123' },
-        status: 'CONFIRMED',
-        transactionHash: '0x123',
-      },
+      from: undefined,
       status: 'CONFIRMED',
       timestamp: NaN,
       title: 'Swapped',
@@ -287,8 +277,8 @@ describe('parseLocalActivity', () => {
         status: 1,
       },
     } as TransactionDetails
-    const chainId = SupportedChainId.MAINNET
-    expect(parseLocalActivity(details, chainId, mockTokenAddressMap)).toMatchObject({
+    const chainId = ChainId.MAINNET
+    expect(transactionToActivity(details, chainId, mockTokenAddressMap)).toMatchObject({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
@@ -311,9 +301,9 @@ describe('parseLocalActivity', () => {
         status: 1,
       },
     } as TransactionDetails
-    const chainId = SupportedChainId.MAINNET
+    const chainId = ChainId.MAINNET
     const tokens = {} as ChainTokenMap
-    expect(parseLocalActivity(details, chainId, tokens)).toMatchObject({
+    expect(transactionToActivity(details, chainId, tokens)).toMatchObject({
       chainId: 1,
       currencies: [undefined, undefined],
       descriptor: 'Unknown for Unknown',
@@ -349,10 +339,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} for 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -367,10 +354,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} for 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -385,10 +369,7 @@ describe('parseLocalActivity', () => {
       descriptor: MockDAI.symbol,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -402,10 +383,6 @@ describe('parseLocalActivity', () => {
       descriptor: MockUSDT.symbol,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
     })
   })
 
@@ -422,10 +399,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${native.symbol} for 1.00 ${native.wrapped.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -442,10 +416,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${native.wrapped.symbol} for 1.00 ${native.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -460,10 +431,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -478,10 +446,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -496,10 +461,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -514,10 +476,7 @@ describe('parseLocalActivity', () => {
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
   })
 
@@ -532,10 +491,29 @@ describe('parseLocalActivity', () => {
       descriptor: `${MockUSDC_MAINNET.symbol} and ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
-      receipt: {
-        id: hash,
-        status: MockTxStatus.Confirmed,
-      },
+      from: mockAccount2,
     })
+  })
+
+  it('Signature to activity - returns undefined if is on chain order', () => {
+    expect(
+      signatureToActivity(
+        {
+          type: SignatureType.SIGN_UNISWAPX_ORDER,
+          status: UniswapXOrderStatus.FILLED,
+        } as SignatureDetails,
+        {}
+      )
+    ).toBeUndefined()
+
+    expect(
+      signatureToActivity(
+        {
+          type: SignatureType.SIGN_UNISWAPX_ORDER,
+          status: UniswapXOrderStatus.CANCELLED,
+        } as SignatureDetails,
+        {}
+      )
+    ).toBeUndefined()
   })
 })

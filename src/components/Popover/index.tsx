@@ -20,7 +20,7 @@ const ReferenceElement = styled.div`
   height: inherit;
 `
 
-const Arrow = styled.div`
+export const Arrow = styled.div`
   width: 8px;
   height: 8px;
   z-index: 9998;
