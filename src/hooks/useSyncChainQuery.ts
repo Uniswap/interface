@@ -43,7 +43,6 @@ export default function useSyncChainQuery() {
   useEffect(() => {
     // Change a user's chain on pageload if the connected chainId does not match the query param chain
     if (isActive && urlChainId && chainIdRef.current === chainId && chainId !== urlChainId) {
-      console.log(urlChainId, chainId, chainIdRef.current)
       selectChain(urlChainId)
     }
     // If a user has a connected wallet and has manually changed their chain, delete the old chain query param
