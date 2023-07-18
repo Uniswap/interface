@@ -1,0 +1,403 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should inject metadata for valid collections 1`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+
+    <!--
+      . will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="./images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="./images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#FC72FF" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+      
+    />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="./manifest.json" />
+
+    <link rel="preconnect" href="https://www.google-analytics.com/" />
+
+    <link rel="preload" href="./fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <style>
+      * {
+        font-family: 'Inter', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Inter custom';
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Regular';
+        src: url(./fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2-variations'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Inter custom', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-variant: none;
+        font-smooth: always;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+        }
+      }
+    </style>
+  <script defer src="./static/js/bundle.js"></script><meta property="og:title" content="Azuki on Uniswap"/><meta property="og:image" content="https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?w=500&auto=format"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Azuki on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c544"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Azuki on Uniswap"/><meta property="twitter:image" content="https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?w=500&auto=format"/><meta property="twitter:image:alt" content="Azuki on Uniswap"/></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
+
+exports[`should inject metadata for valid collections 2`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+
+    <!--
+      . will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="./images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="./images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#FC72FF" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+      
+    />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="./manifest.json" />
+
+    <link rel="preconnect" href="https://www.google-analytics.com/" />
+
+    <link rel="preload" href="./fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <style>
+      * {
+        font-family: 'Inter', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Inter custom';
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Regular';
+        src: url(./fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2-variations'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Inter custom', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-variant: none;
+        font-smooth: always;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+        }
+      }
+    </style>
+  <script defer src="./static/js/bundle.js"></script><meta property="og:title" content="Bored Ape Yacht Club on Uniswap"/><meta property="og:image" content="https://i.seadn.io/gae/Ju9CkWtV-1Okvf45wo8UctR-M9He2PjILP0oOvxE89AyiPPGtrR3gysu1Zgy0hjd2xKIgjJJtWIc0ybj4Vd7wv8t3pxDGHoJBzDB?w=500&auto=format"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Bored Ape Yacht Club on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/collection/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Bored Ape Yacht Club on Uniswap"/><meta property="twitter:image" content="https://i.seadn.io/gae/Ju9CkWtV-1Okvf45wo8UctR-M9He2PjILP0oOvxE89AyiPPGtrR3gysu1Zgy0hjd2xKIgjJJtWIc0ybj4Vd7wv8t3pxDGHoJBzDB?w=500&auto=format"/><meta property="twitter:image:alt" content="Bored Ape Yacht Club on Uniswap"/></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
+
+exports[`should inject metadata for valid collections 3`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+
+    <!--
+      . will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="./images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="./images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#FC72FF" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+      
+    />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="./manifest.json" />
+
+    <link rel="preconnect" href="https://www.google-analytics.com/" />
+
+    <link rel="preload" href="./fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <style>
+      * {
+        font-family: 'Inter', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Inter custom';
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Regular';
+        src: url(./fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2-variations'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Inter custom', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-variant: none;
+        font-smooth: always;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+        }
+      }
+    </style>
+  <script defer src="./static/js/bundle.js"></script><meta property="og:title" content="CLONE X - X TAKASHI MURAKAMI on Uniswap"/><meta property="og:image" content="https://i.seadn.io/gae/XN0XuD8Uh3jyRWNtPTFeXJg_ht8m5ofDx6aHklOiy4amhFuWUa0JaR6It49AH8tlnYS386Q0TW_-Lmedn0UET_ko1a3CbJGeu5iHMg?w=500&auto=format"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="CLONE X - X TAKASHI MURAKAMI on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/collection/0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="CLONE X - X TAKASHI MURAKAMI on Uniswap"/><meta property="twitter:image" content="https://i.seadn.io/gae/XN0XuD8Uh3jyRWNtPTFeXJg_ht8m5ofDx6aHklOiy4amhFuWUa0JaR6It49AH8tlnYS386Q0TW_-Lmedn0UET_ko1a3CbJGeu5iHMg?w=500&auto=format"/><meta property="twitter:image:alt" content="CLONE X - X TAKASHI MURAKAMI on Uniswap"/></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;

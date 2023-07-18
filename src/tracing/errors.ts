@@ -18,26 +18,30 @@ export const beforeSend: Required<ClientOptions>['beforeSend'] = (event: ErrorEv
     return null
   }
 
-  renameNonErrorMessages(event, hint)
+  renameErrorLikeEvents(event, hint.originalException)
   updateRequestUrl(event)
 
   return event
 }
 
-// If the error is not an instance of Error, it may be an object with a message property.
-// In those cases, we rename the message property so that they're grouped properly in Sentry.
-function renameNonErrorMessages(event: ErrorEvent, hint: EventHint) {
-  if (!(hint.originalException instanceof Error)) {
-    const message = (hint.originalException as any)?.message
-    if (message) {
-      event.message = message
-    }
+/**
+ * Renames the event's message property so that it is grouped properly in Sentry if the original exception is not an
+ * Error but is still an object with a message property.
+ */
+function renameErrorLikeEvents(event: ErrorEvent, error: EventHint['originalException']) {
+  if (isErrorLike(error) && !(error instanceof Error)) {
+    event.message = error.message
   }
 }
 
+type ErrorLike = Partial<Error> & Required<Pick<Error, 'message'>>
+function isErrorLike(error: unknown): error is ErrorLike {
+  return error instanceof Object && 'message' in error && typeof (error as Partial<ErrorLike>)?.message === 'string'
+}
+
 /** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
-function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
-  return 'requestBody' in error && typeof (error as unknown as Record<'requestBody', unknown>).requestBody === 'string'
+function isEthersRequestErrorLike(error: ErrorLike): error is ErrorLike & { requestBody: string } {
+  return 'requestBody' in error && typeof (error as Record<'requestBody', unknown>).requestBody === 'string'
 }
 
 // Since the interface currently uses HashRouter, URLs will have a # before the path.
@@ -56,11 +60,12 @@ function updateRequestUrl(event: ErrorEvent) {
 
 // TODO(WEB-2400): Refactor to use a config instead of returning true for each condition.
 function shouldRejectError(error: EventHint['originalException']) {
-  if (error instanceof Error) {
-    // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
-    // If block number polling, it should not be considered an exception.
-    if (isEthersRequestError(error)) {
+  // Some libraries throw ErrorLike objects ({ code, message, stack }) instead of true Errors.
+  if (isErrorLike(error)) {
+    if (isEthersRequestErrorLike(error)) {
       const method = JSON.parse(error.requestBody).method
+      // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
+      // If block number polling, it should not be considered an exception.
       if (method === 'eth_blockNumber') return true
     }
 
@@ -75,14 +80,6 @@ function shouldRejectError(error: EventHint['originalException']) {
     // Usually, it's the result of a 499 exception right before it, which should be handled.
     // Therefore, this can be ignored.
     if (error.message.match(/Unexpected token '<'/)) return true
-
-    // Errors coming from a browser extension can be ignored. These errors are usually caused by extensions injecting
-    // scripts into the page, which we cannot control.
-    if (error.stack?.match(/-extension:\/\//i)) return true
-
-    // Errors coming from OneKey (a desktop wallet) can be ignored for now.
-    // These errors are either application-specific, or they will be thrown separately outside of OneKey.
-    if (error.stack?.match(/OneKey/i)) return true
 
     // Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
     // For example, if a user runs an eval statement in console this error would still get thrown.
@@ -104,8 +101,18 @@ function shouldRejectError(error: EventHint['originalException']) {
       return true
     }
 
+    if ('stack' in error && typeof error.stack === 'string') {
+      // Errors coming from a browser extension can be ignored. These errors are usually caused by extensions injecting
+      // scripts into the page, which we cannot control.
+      if (error.stack.match(/-extension:\/\//i)) return true
+
+      // Errors coming from OneKey (a desktop wallet) can be ignored for now.
+      // These errors are either application-specific, or they will be thrown separately outside of OneKey.
+      if (error.stack.match(/OneKey/i)) return true
+    }
+
     // These are caused by user navigation away from the page before a request has finished.
-    if (error instanceof DOMException && error.name === 'AbortError') return true
+    if (error instanceof DOMException && error?.name === 'AbortError') return true
   }
 
   return false
