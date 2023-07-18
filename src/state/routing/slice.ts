@@ -1,31 +1,29 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { TradeType } from '@uniswap/sdk-core'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId, TradeType } from '@uniswap/sdk-core'
+import { isUniswapXSupportedChain } from 'constants/chains'
 import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import { trace } from 'tracing/trace'
 
-import { QuoteMethod, QuoteReponse, QuoteState, TradeResult } from './types'
+import {
+  QuoteMethod,
+  QuoteState,
+  RoutingConfig,
+  SwapRouterNativeAssets,
+  TradeResult,
+  URAQuoteResponse,
+  URAQuoteType,
+} from './types'
 import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } from './utils'
 
-export interface GetQuoteArgs {
-  tokenInAddress: string
-  tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
-  tokenOutAddress: string
-  tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
-  amount: string
-  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-  tradeType: TradeType
-  isRoutingAPIPrice?: boolean
+const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
+if (UNISWAP_API_URL === undefined) {
+  throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
 }
 
 export enum RouterPreference {
-  AUTO = 'auto',
+  X = 'uniswapx',
   API = 'api',
   CLIENT = 'client',
 }
@@ -38,22 +36,75 @@ const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
 }
 
-// routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
-const CLASSIC_SWAP_QUERY_PARAMS = {
-  ...CLIENT_PARAMS,
-  routingType: 'CLASSIC',
+export interface GetQuoteArgs {
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  amount: string
+  account?: string
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+  tradeType: TradeType
+  needsWrapIfUniswapX: boolean
+  uniswapXEnabled: boolean
+  uniswapXForceSyntheticQuotes: boolean
+  isRoutingAPIPrice?: boolean
 }
 
-export const routingApiV2 = createApi({
-  reducerPath: 'routingApiV2',
+const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
+
+// routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
+const DEFAULT_QUERY_PARAMS = {
+  protocols,
+}
+
+function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
+  const { account, tradeType, tokenOutAddress, tokenInChainId, uniswapXForceSyntheticQuotes } = args
+
+  const uniswapx = {
+    useSyntheticQuotes: uniswapXForceSyntheticQuotes,
+    // Protocol supports swap+send to different destination address, but
+    // for now recipient === swapper
+    recipient: account,
+    swapper: account,
+    routingType: URAQuoteType.DUTCH_LIMIT,
+  }
+
+  const classic = {
+    ...DEFAULT_QUERY_PARAMS,
+    routingType: URAQuoteType.CLASSIC,
+  }
+
+  const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
+
+  // UniswapX doesn't support native out, exact-out, or non-mainnet trades (yet),
+  // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
+  if (
+    !args.uniswapXEnabled ||
+    tokenOutIsNative ||
+    tradeType === TradeType.EXACT_OUTPUT ||
+    !isUniswapXSupportedChain(tokenInChainId)
+  ) {
+    return [classic]
+  }
+
+  return [uniswapx, classic]
+}
+
+export const routingApi = createApi({
+  reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.uniswap.org/v2/',
+    baseUrl: UNISWAP_API_URL,
   }),
   endpoints: (build) => ({
     getQuote: build.query<TradeResult, GetQuoteArgs>({
       async onQueryStarted(args: GetQuoteArgs, { queryFulfilled }) {
         trace(
-          'quote-v2',
+          'quote',
           async ({ setTraceError, setTraceStatus }) => {
             try {
               await queryFulfilled
@@ -73,16 +124,14 @@ export const routingApiV2 = createApi({
             data: {
               ...args,
               isPrice: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE,
-              isAutoRouter:
-                args.routerPreference === RouterPreference.AUTO || args.routerPreference === RouterPreference.API,
+              isAutoRouter: args.routerPreference === RouterPreference.API,
             },
           }
         )
       },
-      async queryFn(args: GetQuoteArgs, _api, _extraOptions, fetch) {
-        let fellBack = false
+      async queryFn(args, _api, _extraOptions, fetch) {
+        const fellBack = false
         if (shouldUseAPIRouter(args)) {
-          fellBack = true
           try {
             const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
@@ -94,7 +143,7 @@ export const routingApiV2 = createApi({
               tokenOut: tokenOutAddress,
               amount,
               type,
-              configs: [CLASSIC_SWAP_QUERY_PARAMS],
+              configs: getRoutingAPIConfig(args),
             }
 
             const response = await fetch({
@@ -119,13 +168,15 @@ export const routingApiV2 = createApi({
               }
             }
 
-            const quoteData = response.data as QuoteReponse
-            const tradeResult = transformRoutesToTrade(args, quoteData.quote)
+            const uraQuoteResponse = response.data as URAQuoteResponse
+            const tradeResult = await transformRoutesToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
 
-            return { data: { ...tradeResult, method: QuoteMethod.ROUTING_API } }
+            return { data: tradeResult }
           } catch (error: any) {
             console.warn(
-              `GetQuote failed on API v2, falling back to client: ${error?.message ?? error?.detail ?? error}`
+              `GetQuote failed on Unified Routing API, falling back to client: ${
+                error?.message ?? error?.detail ?? error
+              }`
             )
           }
         }
@@ -134,7 +185,9 @@ export const routingApiV2 = createApi({
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
-            return { data: { ...transformRoutesToTrade(args, quoteResult.data), method } }
+            return {
+              data: await transformRoutesToTrade(args, quoteResult.data, method),
+            }
           } else {
             return { data: quoteResult }
           }
@@ -144,8 +197,11 @@ export const routingApiV2 = createApi({
         }
       },
       keepUnusedDataFor: ms`10s`,
+      extraOptions: {
+        maxRetries: 0,
+      },
     }),
   }),
 })
 
-export const { useGetQuoteQuery } = routingApiV2
+export const { useGetQuoteQuery } = routingApi

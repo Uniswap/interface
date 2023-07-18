@@ -40,16 +40,11 @@ runs:
       run: yarn contracts
       shell: bash
 
-    # GraphQL is generated from schema. The schema is always fetched, but if unchanged, graphql does not need to be re-generated.
-    - run: yarn graphql:fetch
-      shell: bash
-    - uses: actions/cache@v3
-      id: graphql-cache
-      with:
-        path: src/graphql/**/__generated__
-        key: ${{ runner.os }}-graphql-${{ hashFiles('src/graphql/**/schema.graphql') }}
-    - if: steps.graphql-cache.outputs.cache-hit != 'true'
-      run: yarn graphql:generate
+    # GraphQL is generated from schema and client-side graphql queries. The schema is always fetched and changes to
+    # client-side queries are hard to detect, so it is always re-generated.
+    # TODO(WEB-2498): Cache based on both fetched schema and client-side graphql queries.
+    # This will require some processing: cp all literal graphql tags into a separate file and hash it?
+    - run: yarn graphql
       shell: bash
 
     # Messages are extracted from source.

@@ -19,16 +19,11 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 .c8 {
-  --size: 24px;
-  border-radius: 100px;
-  color: #0D111C;
-  background-color: #E8ECFB;
-  font-size: calc(var(--size) / 3);
-  font-weight: 500;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
   width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(white 60%,#ffffff00 calc(70% + 1px));
+  box-shadow: 0 0 1px white;
 }
 
 .c7 {
@@ -351,11 +346,11 @@ exports[`LoadedRow.tsx renders a row 1`] = `
             <div
               class="c7"
             >
-              <div
+              <img
+                alt="USDC logo"
                 class="c8"
-              >
-                USD
-              </div>
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
               <div
                 class="c9"
               />

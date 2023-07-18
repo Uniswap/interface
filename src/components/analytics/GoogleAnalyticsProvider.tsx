@@ -1,4 +1,7 @@
-import ReactGA from 'react-ga4'
+/* eslint-disable no-unused-vars */
+
+// TODO(WEB-2166): Delete this file when we remove Google Analytics completely.
+
 import { GaOptions, InitOptions, UaEventOptions } from 'react-ga4/types/ga4'
 
 /**
@@ -6,7 +9,7 @@ import { GaOptions, InitOptions, UaEventOptions } from 'react-ga4/types/ga4'
  */
 export default class GoogleAnalyticsProvider {
   public sendEvent(event: string | UaEventOptions, params?: any) {
-    ReactGA.event(event, params)
+    // ReactGA.event(event, params)
   }
 
   public initialize(
@@ -19,11 +22,11 @@ export default class GoogleAnalyticsProvider {
       gtagOptions?: any
     }
   ) {
-    ReactGA.initialize(GA_MEASUREMENT_ID, options)
+    // ReactGA.initialize(GA_MEASUREMENT_ID, options)
   }
 
   public set(fieldsObject: any) {
-    ReactGA.set(fieldsObject)
+    // ReactGA.set(fieldsObject)
   }
 
   public outboundLink(
@@ -34,18 +37,18 @@ export default class GoogleAnalyticsProvider {
     },
     hitCallback: () => unknown
   ) {
-    ReactGA.outboundLink({ label }, hitCallback)
+    // ReactGA.outboundLink({ label }, hitCallback)
   }
 
   public pageview(path?: string, _?: string[], title?: string) {
-    ReactGA.pageview(path, _, title)
+    // ReactGA.pageview(path, _, title)
   }
 
   public ga(...args: any[]) {
-    ReactGA.ga(...args)
+    // ReactGA.ga(...args)
   }
 
   public gaCommandSendTiming(timingCategory: any, timingVar: any, timingValue: any, timingLabel: any) {
-    ReactGA._gaCommandSendTiming(timingCategory, timingVar, timingValue, timingLabel)
+    // ReactGA._gaCommandSendTiming(timingCategory, timingVar, timingValue, timingLabel)
   }
 }
