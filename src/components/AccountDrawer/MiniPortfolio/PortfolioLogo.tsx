@@ -68,7 +68,7 @@ const SquareChainLogo = styled.img`
 
 const L2LogoContainer = styled.div<{ $backgroundColor?: string }>`
   background-color: ${({ $backgroundColor }) => $backgroundColor};
-  border-radius: 2px;
+  border-radius: 6px;
   height: 16px;
   left: 60%;
   position: absolute;

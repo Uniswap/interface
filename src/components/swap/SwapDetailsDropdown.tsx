@@ -138,7 +138,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
               </ThemedText.DeprecatedMain>
             ) : null}
           </RowFixed>
-          <RowFixed>
+          <RowFixed gap="xs">
             {!showDetails && <GasEstimateTooltip trade={trade} loading={syncing || loading} />}
             <RotatingArrow
               stroke={trade ? theme.textTertiary : theme.deprecated_bg3}

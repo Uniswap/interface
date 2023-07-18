@@ -29,19 +29,19 @@ export const ThemedText = {
     return <TextWrapper fontWeight={485} fontSize={14} color="textPrimary" {...props} />
   },
   HeadlineSmall(props: TextProps) {
-    return <TextWrapper fontWeight={535} fontSize={20} lineHeight="28px" color="textPrimary" {...props} />
+    return <TextWrapper fontWeight={485} fontSize={20} lineHeight="28px" color="textPrimary" {...props} />
   },
   HeadlineMedium(props: TextProps) {
-    return <TextWrapper fontWeight={535} fontSize={28} color="textPrimary" {...props} />
+    return <TextWrapper fontWeight={485} fontSize={28} color="textPrimary" {...props} />
   },
   HeadlineLarge(props: TextProps) {
-    return <TextWrapper fontWeight={535} fontSize={36} lineHeight="44px" color="textPrimary" {...props} />
+    return <TextWrapper fontWeight={485} fontSize={36} lineHeight="44px" color="textPrimary" {...props} />
   },
   LargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={485} fontSize={36} color="textPrimary" {...props} />
   },
   Hero(props: TextProps) {
-    return <TextWrapper fontWeight={535} fontSize={48} color="textPrimary" {...props} />
+    return <TextWrapper fontWeight={485} fontSize={48} color="textPrimary" {...props} />
   },
   LabelSmall(props: TextProps) {
     return <TextWrapper fontWeight={485} fontSize={14} color="textSecondary" {...props} />

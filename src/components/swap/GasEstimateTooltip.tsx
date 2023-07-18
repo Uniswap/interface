@@ -20,7 +20,7 @@ const StyledGasIcon = styled(GasIcon)`
 
   // We apply the following to all children of the SVG in order to override the default color
   & > * {
-    stroke: ${({ theme }) => theme.textTertiary};
+    stroke: ${({ theme }) => theme.textSecondary};
   }
 `
 
