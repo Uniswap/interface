@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
 import { ParsedQs } from 'qs'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import useParsedQueryString from './useParsedQueryString'
@@ -26,7 +26,7 @@ export default function useSyncChainQuery() {
   const chainIdRef = useRef(chainId)
   const accountRef = useRef(account)
 
-  useMemo(() => {
+  useEffect(() => {
     // Update chainIdRef when the account is retrieved from Web3React
     if (account && account !== accountRef.current) {
       chainIdRef.current = chainId
