@@ -1,19 +1,20 @@
 /* eslint-disable import/no-unused-modules */
-import { MetaTagInjector } from '../../components/assetInjector'
+import { MetaTagInjector } from '../../components/metaTagInjector'
 import getAsset from '../../utils/getAsset'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
+  const { index } = params
+  const collectionAddress = index[0]?.toString()
+  const tokenId = index[1]?.toString()
+  const assetPromise = getAsset(collectionAddress, tokenId, request.url)
+  const resPromise = next()
   try {
-    const { index } = params
-    const collectionAddress = String(index[0])
-    const tokenId = String(index[1])
-    const data = await getAsset(collectionAddress, tokenId, request.url)
+    const [data, res] = await Promise.all([assetPromise, resPromise])
     if (!data) {
-      return await next()
+      return resPromise
     }
-    return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(await next())
+    return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(res)
   } catch (e) {
-    console.log(e)
-    return await next()
+    return resPromise
   }
 }

@@ -58,7 +58,7 @@ describe('Swap', () => {
         // Select USDC
         cy.get('#swap-currency-output .open-currency-select-button').click()
         cy.get(getTestSelector('token-search-input')).type(USDC_MAINNET.address)
-        cy.contains('USDC').click()
+        cy.get(getTestSelector('common-base-USDC')).click()
 
         // Enter amount to swap
         cy.get('#swap-currency-output .token-amount-input').type('1').should('have.value', '1')
@@ -69,9 +69,9 @@ describe('Swap', () => {
         cy.contains('Review swap')
         cy.contains('Confirm swap').click()
         cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-        cy.contains('Transaction submitted')
+        cy.contains('Swap submitted')
         cy.get(getTestSelector('confirmation-close-icon')).click()
-        cy.contains('Transaction submitted').should('not.exist')
+        cy.contains('Swap submitted').should('not.exist')
         cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
         // Mine transaction

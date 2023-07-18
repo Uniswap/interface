@@ -3,7 +3,7 @@ import { useAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
-import { TransactionStatus, useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { TransactionStatus, useActivityQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { PollingInterval } from 'graphql/data/util'
 import { atom, useAtom } from 'jotai'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
@@ -91,7 +91,7 @@ function wasTxCancelled(localActivity: Activity, remoteMap: ActivityMap, account
     if (!remoteTx) return false
 
     // Cancellations are only possible when both nonce and tx.from are the same
-    if (remoteTx.nonce === localActivity.nonce && remoteTx.receipt?.from.toLowerCase() === account.toLowerCase()) {
+    if (remoteTx.nonce === localActivity.nonce && remoteTx.from.toLowerCase() === account.toLowerCase()) {
       // If the remote tx has a different hash than the local tx, the local tx was cancelled
       return remoteTx.hash.toLowerCase() !== localActivity.hash.toLowerCase()
     }
@@ -126,11 +126,7 @@ export function ActivityTab({ account }: { account: string }) {
 
   const localMap = useLocalActivities(account)
 
-  const { data, loading, refetch } = useTransactionListQuery({
-    variables: { account },
-    errorPolicy: 'all',
-    fetchPolicy: 'cache-first',
-  })
+  const { data, loading, refetch } = useActivityQuery({ variables: { account } })
 
   // We only refetch remote activity if the user renavigates to the activity tab by changing tabs or opening the drawer
   useEffect(() => {
