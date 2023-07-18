@@ -109,6 +109,8 @@ export const FALLBACK_URLS = {
     'https://endpoints.omniatech.io/v1/avax/mainnet/public',
     'https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc',
   ],
+  [ChainId.BASE]: [],
+  [ChainId.BASE_GOERLI]: [],
 }
 
 /**
@@ -141,4 +143,6 @@ export const RPC_URLS = {
   [ChainId.CELO_ALFAJORES]: FALLBACK_URLS[ChainId.CELO_ALFAJORES],
   [ChainId.BNB]: [QUICKNODE_RPC_URL, ...FALLBACK_URLS[ChainId.BNB]],
   [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.AVALANCHE]],
+  [ChainId.BASE]: [],
+  [ChainId.BASE_GOERLI]: [],
 }
