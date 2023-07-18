@@ -98,6 +98,7 @@ type IconWithTextProps = (IconButtonProps | IconLinkProps) & {
   onConfirm?: () => void
   onShowConfirm?: (on: boolean) => void
   dismissOnHoverOut?: boolean
+  dismissOnHoverDurationMs?: number
 }
 
 const TextWrapper = styled.div`
@@ -125,6 +126,7 @@ export const IconWithConfirmTextButton = ({
   onShowConfirm,
   onClick,
   dismissOnHoverOut,
+  dismissOnHoverDurationMs = 500,
   ...rest
 }: IconWithTextProps) => {
   const [showText, setShowTextWithoutCallback] = useState(false)
@@ -216,7 +218,7 @@ export const IconWithConfirmTextButton = ({
         onMouseLeave() {
           mouseLeaveTimeout.current = setTimeout(() => {
             setShowText(false)
-          }, 500)
+          }, dismissOnHoverDurationMs)
         },
         onMouseEnter() {
           if (mouseLeaveTimeout.current) {
