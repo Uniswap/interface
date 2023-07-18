@@ -251,7 +251,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
     min-width: unset;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 0px;
+    padding: 0;
   }
 }
 
