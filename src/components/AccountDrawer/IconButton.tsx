@@ -109,6 +109,8 @@ const TextWrapper = styled.div`
 
 const TextHide = styled.div`
   overflow: hidden;
+  transition: width ease-in-out ${({ theme }) => theme.transition.duration.fast},
+    max-width ease-in-out ${({ theme }) => theme.transition.duration.fast};
 `
 
 /**
@@ -140,12 +142,12 @@ export const IconWithConfirmTextButton = ({
 
   const dimensionsRef = useRef({
     frame: 0,
-    hidden: 0,
+    innerText: 0,
   })
   const dimensions = (() => {
     // once opened, we avoid updating it to prevent constant resize loop
     if (!showText) {
-      dimensionsRef.current = { frame: frameObserver.width || 0, hidden: hiddenObserver.width || 0 }
+      dimensionsRef.current = { frame: frameObserver.width || 0, innerText: hiddenObserver.width || 0 }
     }
     return dimensionsRef.current
   })()
@@ -185,7 +187,7 @@ export const IconWithConfirmTextButton = ({
   }, [frame, setShowText, showText])
 
   const xPad = showText ? 8 : 0
-  const width = showText ? dimensions.frame + dimensions.hidden + xPad : 32
+  const width = showText ? dimensions.frame + dimensions.innerText + xPad : 32
   const mouseLeaveTimeout = useRef<NodeJS.Timeout>()
 
   return (
@@ -231,8 +233,11 @@ export const IconWithConfirmTextButton = ({
         {/* this outer div is so we can cut it off but keep the inner text width full-width so we can measure it */}
         <TextHide
           style={{
-            maxWidth: showText ? dimensions.hidden : 0,
-            minWidth: showText ? dimensions.hidden : 0,
+            maxWidth: showText ? dimensions.innerText : 0,
+            width: showText ? dimensions.innerText : 0,
+            // this negative transform offsets for the shift it does due to being 0 width
+            transform: showText ? undefined : `translateX(-8px)`,
+            minWidth: showText ? dimensions.innerText : 0,
           }}
         >
           <TextWrapper ref={hiddenObserver.ref}>{text}</TextWrapper>
