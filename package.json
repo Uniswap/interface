@@ -68,6 +68,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.22.7",
     "@cloudflare/workers-types": "^4.20230518.0",
     "@craco/craco": "^7.1.0",
