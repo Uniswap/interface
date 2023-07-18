@@ -16,6 +16,8 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
   [ChainId.BNB]: 'bnb',
   [ChainId.AVALANCHE]: 'avalanche',
+  [ChainId.BASE]: 'base',
+  [ChainId.BASE_GOERLI]: 'base_goerli',
 } as const
 
 export function isSupportedChain(chainId: number | null | undefined | ChainId): chainId is SupportedChainsType {
