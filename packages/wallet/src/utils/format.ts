@@ -289,7 +289,7 @@ export function formatCurrencyAmount(
   type: NumberType = NumberType.TokenNonTx,
   placeholder?: string
 ): string {
-  return formatNumber(amount ? parseFloat(amount.toSignificant()) : undefined, type, placeholder)
+  return formatNumber(amount ? parseFloat(amount.toFixed()) : undefined, type, placeholder)
 }
 
 export function formatPriceImpact(priceImpact: Percent | undefined): string {
