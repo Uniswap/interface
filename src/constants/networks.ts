@@ -106,15 +106,17 @@ export const FALLBACK_URLS = {
     'https://avalanche-c-chain.publicnode.com',
   ],
   [ChainId.BASE]: [
+    // "Safe" URLs
     'https://developer-access-mainnet.base.org',
+    // "Fallback" URLs
     'https://base-mainnet.blastapi.io/b5a802d8-151d-4443-90a7-699108dc4e01',
     'https://svc.blockdaemon.com/base/mainnet/native?apiKey=zpka_1334e7c450464d06b6e33a972a7a4e57_75320f43',
   ],
   [ChainId.BASE_GOERLI]: [
+    // "Safe" URLs
     'https://goerli.base.org',
-    // Use some free-tier subscriptions as fallbacks.
+    // "Fallback" URLs: free-tier subscriptions
     'https://base-goerli.blastapi.io/b5a802d8-151d-4443-90a7-699108dc4e01',
-    'https://svc.blockdaemon.com/base/testnet/native?apiKey=zpka_1334e7c450464d06b6e33a972a7a4e57_75320f43',
   ],
 }
 
