@@ -5,7 +5,7 @@ type MetaTagInjectorInput = {
 }
 
 /**
- * Wrapper class for Cloudflare's HTMLRewriter {@link https://developers.cloudflare.com/workers/runtime-apis/html-rewriter}
+ * Listener class for Cloudflare's HTMLRewriter {@link https://developers.cloudflare.com/workers/runtime-apis/html-rewriter}
  * to inject meta tags into the <head> of an HTML document.
  */
 export class MetaTagInjector {
