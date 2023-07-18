@@ -178,7 +178,7 @@
     "@uniswap/sdk-core": "^4.0.3",
     "@uniswap/smart-order-router": "3.13.7",
     "@uniswap/token-lists": "^1.0.0-beta.33",
-    "@uniswap/uniswapx-sdk": "file:../uniswapx-sdk/uniswap-uniswapx-sdk-v1.0.0.tgz",
+    "@uniswap/uniswapx-sdk": "^1.0.1",
     "@uniswap/universal-router-sdk": "^1.5.4",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
