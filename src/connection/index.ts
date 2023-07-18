@@ -17,7 +17,6 @@ import { useCallback } from 'react'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 import { UniwalletConnect as UniwalletWCV2Connect, WalletConnectV2 } from './WalletConnectV2'
 
-
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
@@ -27,29 +26,6 @@ import { UniwalletConnect } from './WalletConnect'
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
 }
-
-// export const walletConnectConnection: any = new (class implements Connection {
-//   private initializer = (actions: any, defaultChainId = SupportedChainId.HARMONY) =>
-//     new WalletConnectV2({ actions, defaultChainId, onError })
-
-//   type = ConnectionType.WALLET_CONNECT
-//   getName = () => 'WalletConnect'
-//   getIcon = () => WALLET_CONNECT_ICON
-//   shouldDisplay = () => !getIsInjectedMobileBrowser()
-
-//   private _connector = initializeConnector<WalletConnectV2>(this.initializer)
-//   overrideActivate = (chainId?: SupportedChainId) => {
-//     // Always re-create the connector, so that the chainId is updated.
-//     this._connector = initializeConnector((actions) => this.initializer(actions, chainId))
-//     return false
-//   }
-//   get connector() {
-//     return this._connector[0]
-//   }
-//   get hooks() {
-//     return this._connector[1]
-//   }
-// })()
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
   (actions) => new Network({ actions, urlMap: RPC_PROVIDERS, defaultChainId: 1 })
