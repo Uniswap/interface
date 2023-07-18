@@ -20,8 +20,10 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.BASE_GOERLI]: 'base_goerli',
 } as const
 
+const NOT_YET_UX_SUPPORTED_CHAIN_IDS = [ChainId.BASE, ChainId.BASE_GOERLI] as const
+
 export function isSupportedChain(chainId: number | null | undefined | ChainId): chainId is SupportedChainsType {
-  return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) !== -1
+  return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) !== -1 && NOT_YET_UX_SUPPORTED_CHAIN_IDS.indexOf(chainId) === -1
 }
 
 export function asSupportedChain(chainId: number | null | undefined | ChainId): SupportedChainsType | undefined {
