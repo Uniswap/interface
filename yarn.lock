@@ -6297,19 +6297,7 @@
     "@uniswap/v2-sdk" "^3.2.0"
     "@uniswap/v3-sdk" "^3.10.0"
 
-"@uniswap/sdk-core@^3.0.1":
-  version "3.2.6"
-  resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.2.6.tgz#1a652516fab0c6bc1420c2226648da967a10f52a"
-  integrity sha512-MvH/3G0W0sM2g7XjaUy9qU7IabxL/KQp/ucU0AQGpVxiTaAhmVRtsjkkv9UDyzpIXVrmevl4kRgV7KKE29UuXA==
-  dependencies:
-    "@ethersproject/address" "^5.0.2"
-    big.js "^5.2.2"
-    decimal.js-light "^2.5.0"
-    jsbi "^3.1.4"
-    tiny-invariant "^1.1.0"
-    toformat "^2.0.0"
-
-"@uniswap/sdk-core@^4", "@uniswap/sdk-core@^4.0.0", "@uniswap/sdk-core@^4.0.2", "@uniswap/sdk-core@^4.0.3":
+"@uniswap/sdk-core@>= 3", "@uniswap/sdk-core@^4", "@uniswap/sdk-core@^4.0.0", "@uniswap/sdk-core@^4.0.2", "@uniswap/sdk-core@^4.0.3":
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-4.0.6.tgz#7b6d562f54293bbe0a9d101fb84e619db325f7b6"
   integrity sha512-6GzCVfnOiJtvo91zlF/VjnC2OEbBRThVclzrh7+Zmo8dBovXwSlXwqn3RkSWACn/XEOzAKH70TficfOWm6mWJA==
@@ -6387,7 +6375,7 @@
     "@uniswap/sdk-core" "^4.0.3"
     ethers "^5.7.0"
 
-"@uniswap/universal-router-sdk@^1.3.8", "@uniswap/universal-router-sdk@^1.5.4":
+"@uniswap/universal-router-sdk@^1.5.4":
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.5.4.tgz#9eb2a578b12fdc38ca18300ff708b3d4a86297c8"
   integrity sha512-9vbB1AFFW3QeZWjtRFE0PVnMa2L+yjJpbU9EqCaEAYdR3+T4zx8fuml+84XUQzjKTp1cnndwusc1Mm+g0/Djpg==
@@ -9702,14 +9690,14 @@ cwd@^0.10.0:
     find-pkg "^0.1.2"
     fs-exists-sync "^0.1.0"
 
-cypress-hardhat@^2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-2.4.2.tgz#61f1b6f9a6be188a5aba4610541e5effd9b53fa7"
-  integrity sha512-Y7vLkQt/Zumfnzy6MQNM4FVLcrTwbo5jW2QqgtX6x2ExzBewF5eO72rtKutbLI0pX53Hyhw3j8yK5KlNIiolQg==
+cypress-hardhat@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-2.5.0.tgz#db00ad115d170a2d33ce8d92a54a9a339e695a40"
+  integrity sha512-wzhKgtwAFhSFa1nx2tXMAZU6+dtKaf2oo3047CcFPkLNDClrdE0Y72No+Kn3U+7xvq606tH7hwn/SPcuVCBjwQ==
   dependencies:
     "@uniswap/permit2-sdk" "^1.2.0"
-    "@uniswap/sdk-core" "^3.0.1"
-    "@uniswap/universal-router-sdk" "^1.3.8"
+    "@uniswap/sdk-core" ">= 3"
+    "@uniswap/universal-router-sdk" "^1.5.4"
 
 cypress@*, cypress@12.12.0:
   version "12.12.0"
