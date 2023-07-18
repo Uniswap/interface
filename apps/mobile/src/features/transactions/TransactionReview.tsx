@@ -221,8 +221,8 @@ export function TransactionReview({
             fill
             disabled={actionButtonProps.disabled}
             label={actionButtonProps.label}
-            name={actionButtonProps.name}
             size={ButtonSize.Large}
+            testID={actionButtonProps.name}
             onPress={async (): Promise<void> => {
               await notificationAsync()
               if (requiredForTransactions) {

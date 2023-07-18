@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { ITraceContext, TraceContext } from 'src/components/telemetry/Trace'
+import { ITraceContext, TraceContext } from 'src/components/telemetry/TraceContext'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import {

@@ -16,7 +16,7 @@ import {
   LABEL_WIDTH,
   TIME_RANGES,
 } from 'src/components/PriceExplorer/constants'
-import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 
@@ -82,7 +82,7 @@ export function TimeRangeGroup({
       </View>
       {TIME_RANGES.map(([duration, label, element], index) => {
         return (
-          <TracePressEvent key={label} element={element}>
+          <Trace key={label} logPress element={element}>
             <TouchableArea
               p="spacing4"
               width={BUTTON_WIDTH}
@@ -101,7 +101,7 @@ export function TimeRangeGroup({
                 transition={transition}
               />
             </TouchableArea>
-          </TracePressEvent>
+          </Trace>
         )
       })}
     </Box>

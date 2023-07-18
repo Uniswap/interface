@@ -3,7 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { maxAmountSpend } from 'src/utils/balance'
@@ -38,12 +38,12 @@ export function MaxAmountButton({
   }
 
   return (
-    <TracePressEvent element={ElementName.SetMax}>
+    <Trace logPress element={ElementName.SetMax}>
       <TouchableArea disabled={disableMaxButton} style={style} onPress={onPress}>
         <Text color={disableMaxButton ? 'textTertiary' : 'magentaVibrant'} variant="subheadSmall">
           {t('Max')}
         </Text>
       </TouchableArea>
-    </TracePressEvent>
+    </Trace>
   )
 }

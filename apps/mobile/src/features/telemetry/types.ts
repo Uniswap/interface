@@ -1,14 +1,13 @@
 import { RenderPassReport } from '@shopify/react-native-performance'
 import { MoonpayEventName, SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { TraceProps } from 'src/components/telemetry/Trace'
-import { TraceEventProps } from 'src/components/telemetry/TraceEvent'
 import { ImportType } from 'src/features/onboarding/utils'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { EthMethod, WCEventType, WCRequestOutcome } from 'wallet/src/features/walletConnect/types'
 
-type BaseEventProperty = Partial<TraceEventProps & TraceProps> | undefined
+type BaseEventProperty = Partial<TraceProps> | undefined
 
 export type SwapTradeBaseProperties = {
   allowed_slippage_basis_points?: number
@@ -157,9 +156,7 @@ export type EventProperties = {
   [SwapEventName.SWAP_TRANSACTION_FAILED]: SwapTransactionResultProperties
 }
 
-export type TelemetryEventProps = {
-  // Left this one as name as it's being used all over the app already
-  name?: TraceEventProps['elementName']
-} & Partial<Pick<TraceEventProps, 'eventName' | 'events' | 'properties'>>
-
-export type TelemetryTraceProps = Omit<TraceProps, 'logImpression' | 'startMark' | 'endMark'>
+export type TelemetryTraceProps = Omit<
+  TraceProps,
+  'logImpression' | 'logPress' | 'startMark' | 'endMark'
+>

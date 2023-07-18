@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
@@ -9,6 +8,7 @@ import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -54,14 +54,14 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
       <Flex grow height="auto">
         <Flex gap={outerGap} justifyContent="flex-end">
           <Flex mx="spacing16">
-            <Button
-              hapticFeedback
-              eventName={SharedEventName.ELEMENT_CLICKED}
-              label={t('Get started')}
-              name={ElementName.GetStarted}
-              size={buttonSize}
-              onPress={onPressGetStarted}
-            />
+            <Trace logPress element={ElementName.GetStarted}>
+              <Button
+                hapticFeedback
+                label={t('Get started')}
+                size={buttonSize}
+                onPress={onPressGetStarted}
+              />
+            </Trace>
           </Flex>
           <Box mx="spacing24" pb={pb}>
             <Text color="textTertiary" mx="spacing4" textAlign="center" variant="buttonLabelMicro">

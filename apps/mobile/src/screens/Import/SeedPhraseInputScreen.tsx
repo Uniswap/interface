@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
@@ -8,6 +7,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { RECOVERY_PHRASE_HELP_URL } from 'src/constants/urls'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
@@ -133,22 +133,19 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           onChange={onChange}
         />
         <Flex centered>
-          <TouchableArea
-            eventName={SharedEventName.ELEMENT_CLICKED}
-            name={ElementName.RecoveryHelpButton}
-            onPress={onPressRecoveryHelpButton}>
-            <Text color="accentAction" variant={subtitleSize}>
-              {t('How do I find my recovery phrase?')}
-            </Text>
-          </TouchableArea>
+          <Trace logPress element={ElementName.RecoveryHelpButton}>
+            <TouchableArea onPress={onPressRecoveryHelpButton}>
+              <Text color="accentAction" variant={subtitleSize}>
+                {t('How do I find my recovery phrase?')}
+              </Text>
+            </TouchableArea>
+          </Trace>
         </Flex>
       </Flex>
-      <Button
-        disabled={!!errorMessage || !value}
-        label={t('Continue')}
-        name={ElementName.Next}
-        onPress={onSubmit}
-      />
+
+      <Trace logPress element={ElementName.Next}>
+        <Button disabled={!!errorMessage || !value} label={t('Continue')} onPress={onSubmit} />
+      </Trace>
     </SafeKeyboardOnboardingScreen>
   )
 }

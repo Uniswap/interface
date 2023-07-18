@@ -210,7 +210,6 @@ function OptionCard({
       borderRadius="rounded16"
       borderWidth={1}
       disabled={disabled}
-      name={name}
       opacity={opacity}
       px="spacing16"
       py={verticalPadding}

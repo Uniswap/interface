@@ -103,7 +103,7 @@ export default function WarningModal({
               fill
               emphasis={alertColor.buttonEmphasis}
               label={confirmText}
-              name={ElementName.Confirm}
+              testID={ElementName.Confirm}
               onPress={onPressConfirm}
             />
           )}

@@ -9,7 +9,6 @@ import {
   useValue,
 } from '@shopify/react-native-skia'
 import { useResponsiveProp } from '@shopify/restyle'
-import { SharedEventName } from '@uniswap/analytics-events'
 import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -31,6 +30,7 @@ import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradi
 import { Arrow } from 'src/components/icons/Arrow'
 import { Box, Flex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
@@ -307,31 +307,31 @@ export function QRAnimation({
           </Animated.View>
         </Flex>
         <Animated.View entering={letsGoButtonFadeIn}>
-          <Button
-            CustomIcon={
-              <Flex grow row alignItems="center" justifyContent="space-between">
-                <Flex row alignItems="center" gap="spacing8">
-                  <Box
-                    borderRadius="roundedFull"
-                    padding="spacing8"
-                    style={{ backgroundColor: opacify(10, theme.colors.white) }}>
-                    <LockIcon
-                      color={theme.colors.white}
-                      height={theme.iconSizes.icon16}
-                      width={theme.iconSizes.icon16}
-                    />
-                  </Box>
-                  <Text color="white" variant="buttonLabelMedium">
-                    {t('Let’s keep it safe')}
-                  </Text>
+          <Trace logPress element={ElementName.Next}>
+            <Button
+              CustomIcon={
+                <Flex grow row alignItems="center" justifyContent="space-between">
+                  <Flex row alignItems="center" gap="spacing8">
+                    <Box
+                      borderRadius="roundedFull"
+                      padding="spacing8"
+                      style={{ backgroundColor: opacify(10, theme.colors.white) }}>
+                      <LockIcon
+                        color={theme.colors.white}
+                        height={theme.iconSizes.icon16}
+                        width={theme.iconSizes.icon16}
+                      />
+                    </Box>
+                    <Text color="white" variant="buttonLabelMedium">
+                      {t('Let’s keep it safe')}
+                    </Text>
+                  </Flex>
+                  <Arrow color={theme.colors.white} direction="e" size={theme.iconSizes.icon24} />
                 </Flex>
-                <Arrow color={theme.colors.white} direction="e" size={theme.iconSizes.icon24} />
-              </Flex>
-            }
-            eventName={SharedEventName.ELEMENT_CLICKED}
-            name={ElementName.Next}
-            onPress={onPressNext}
-          />
+              }
+              onPress={onPressNext}
+            />
+          </Trace>
         </Animated.View>
       </Flex>
     </>

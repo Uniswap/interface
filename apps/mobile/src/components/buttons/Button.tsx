@@ -3,11 +3,10 @@ import React, { memo } from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { withAnimated } from 'src/components/animated'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { getButtonProperties } from 'src/components/buttons/utils'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { TelemetryEventProps } from 'src/features/telemetry/types'
 
 export enum ButtonSize {
   Small = 'small',
@@ -39,7 +38,7 @@ type ButtonProps = {
   onPress?: () => void
   onPressIn?: () => void
   onLongPress?: () => void
-} & TelemetryEventProps
+}
 
 const _Button = ({
   CustomIcon,
@@ -47,19 +46,16 @@ const _Button = ({
   allowFontScaling,
   disabled = false,
   emphasis = ButtonEmphasis.Primary,
-  eventName,
-  events,
   fill,
+  testID,
   hapticFeedback = true,
-  properties,
   hapticStyle,
   label,
-  name,
   onLongPress,
   onPress,
   onPressIn,
   size = ButtonSize.Medium,
-}: ButtonProps): JSX.Element => {
+}: ButtonProps & Pick<BaseButtonProps, 'testID'>): JSX.Element => {
   const theme = useAppTheme()
 
   const {
@@ -102,13 +98,9 @@ const _Button = ({
       borderRadius={borderRadius}
       borderWidth={1}
       disabled={disabled}
-      eventName={eventName}
-      events={events}
       flex={fill ? 1 : undefined}
-      name={name}
       opacity={!disabled ? 1 : 0.4}
-      properties={properties}
-      testID={name}
+      testID={testID}
       onLongPress={onLongPress}
       onPress={onPressHandler}
       onPressIn={onPressIn}>

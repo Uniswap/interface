@@ -529,7 +529,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       "opacity": 1,
                     }
                   }
-                  testID="recovery-help-button"
                 >
                   <Text
                     allowFontScaling={true}
@@ -598,7 +597,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   "opacity": 0.4,
                 }
               }
-              testID="next"
             >
               <View
                 sentry-label="Flex"

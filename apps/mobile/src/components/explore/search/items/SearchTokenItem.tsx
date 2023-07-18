@@ -65,7 +65,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
     <TouchableArea
       hapticFeedback
       hapticStyle={ImpactFeedbackStyle.Light}
-      name={ElementName.SearchTokenItem}
+      testID={ElementName.SearchTokenItem}
       onPress={onPress}>
       <Flex row alignItems="center" gap="spacing12" px="spacing8" py="spacing12">
         <TokenLogo chainId={chainId} symbol={symbol} url={logoUrl ?? undefined} />

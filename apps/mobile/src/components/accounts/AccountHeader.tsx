@@ -58,7 +58,6 @@ export function AccountHeader(): JSX.Element {
         flexDirection="row"
         hapticStyle={ImpactFeedbackStyle.Medium}
         mr="spacing12"
-        name={ElementName.Manage}
         testID={ElementName.Manage}
         onLongPress={async (): Promise<void> => {
           await onPressCopyAddress()

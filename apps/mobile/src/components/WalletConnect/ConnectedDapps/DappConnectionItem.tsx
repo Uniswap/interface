@@ -149,6 +149,7 @@ export function DappConnectionItem({
           <TouchableArea
             hapticFeedback
             hapticStyle={ImpactFeedbackStyle.Medium}
+            testID={ElementName.WCDappSwitchNetwork}
             onPress={(): void => onPressChangeNetwork(session)}>
             <NetworkLogos
               showFirstChainLabel
@@ -178,9 +179,7 @@ function ChangeNetworkButton({
   const supportedChainId = toSupportedChainId(session.dapp.chain_id)
 
   return (
-    <TouchableArea
-      name={ElementName.WCDappSwitchNetwork}
-      onPress={(): void => onPressChangeNetwork(session)}>
+    <TouchableArea onPress={(): void => onPressChangeNetwork(session)}>
       <Flex
         row
         shrink

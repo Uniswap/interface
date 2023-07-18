@@ -40,6 +40,7 @@ import {
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { Trace } from 'src/components/telemetry/Trace'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { Text } from 'src/components/Text'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
@@ -543,31 +544,31 @@ function ActionButton({
 }): JSX.Element {
   const theme = useAppTheme()
   return (
-    <TouchableArea
-      hapticFeedback
-      backgroundColor="backgroundActionButton"
-      borderRadius="roundedFull"
-      eventName={eventName}
-      flex={flex}
-      name={name}
-      px="spacing12"
-      py="spacing16"
-      shadowColor="white"
-      shadowOffset={SHADOW_OFFSET_SMALL}
-      shadowOpacity={0.1}
-      shadowRadius={6}
-      onPress={onPress}>
-      <Flex centered row gap="none">
-        <Icon
-          color={theme.colors.magentaVibrant}
-          height={theme.iconSizes.icon20}
-          strokeWidth={2}
-          width={theme.iconSizes.icon20}
-        />
-        <Text color="accentAction" marginLeft="spacing8" variant="buttonLabelMedium">
-          {label}
-        </Text>
-      </Flex>
-    </TouchableArea>
+    <Trace logPress element={name} pressEvent={eventName}>
+      <TouchableArea
+        hapticFeedback
+        backgroundColor="backgroundActionButton"
+        borderRadius="roundedFull"
+        flex={flex}
+        px="spacing12"
+        py="spacing16"
+        shadowColor="white"
+        shadowOffset={SHADOW_OFFSET_SMALL}
+        shadowOpacity={0.1}
+        shadowRadius={6}
+        onPress={onPress}>
+        <Flex centered row gap="none">
+          <Icon
+            color={theme.colors.magentaVibrant}
+            height={theme.iconSizes.icon20}
+            strokeWidth={2}
+            width={theme.iconSizes.icon20}
+          />
+          <Text color="accentAction" marginLeft="spacing8" variant="buttonLabelMedium">
+            {label}
+          </Text>
+        </Flex>
+      </TouchableArea>
+    </Trace>
   )
 }

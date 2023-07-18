@@ -136,7 +136,7 @@ export function SettingsCloudBackupScreen({
                 <Button
                   fill
                   label={t('Back up')}
-                  name={ElementName.Confirm}
+                  testID={ElementName.Confirm}
                   onPress={(): void => setShowCloudBackupInfoModal(false)}
                 />
               </Flex>

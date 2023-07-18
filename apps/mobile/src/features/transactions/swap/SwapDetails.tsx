@@ -6,7 +6,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout/Flex'
 import { Warning } from 'src/components/modals/WarningModal/types'
-import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
@@ -91,7 +91,7 @@ export function SwapDetails({
               </TouchableOpacity>
             </Flex>
             <Flex centered row gap="none">
-              <TracePressEvent element={ElementName.AcceptNewRate}>
+              <Trace logPress element={ElementName.AcceptNewRate}>
                 <TouchableArea
                   backgroundColor="accentActive"
                   borderRadius="rounded8"
@@ -102,7 +102,7 @@ export function SwapDetails({
                     {t('Accept')}
                   </Text>
                 </TouchableArea>
-              </TracePressEvent>
+              </Trace>
             </Flex>
           </Flex>
         ) : null

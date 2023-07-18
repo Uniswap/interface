@@ -1,10 +1,10 @@
 import { useResponsiveProp } from '@shopify/restyle'
-import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
@@ -62,34 +62,35 @@ export function LinkButton({
   }
 
   return (
-    <TouchableArea
-      hapticFeedback
-      backgroundColor="background2"
-      borderRadius="rounded20"
-      eventName={SharedEventName.ELEMENT_CLICKED}
-      name={element}
-      paddingHorizontal="spacing12"
-      paddingVertical="spacing8"
-      onPress={onPress}>
-      <Flex centered row gap="spacing8">
-        {Icon && (
-          <Icon
-            color={theme.colors.textPrimary}
-            height={theme.iconSizes.icon16}
-            width={theme.iconSizes.icon16}
-          />
-        )}
-        <Text color="textPrimary" variant={fontSize}>
-          {label}
-        </Text>
-        {buttonType === LinkButtonType.Copy && (
-          <CopyIcon
-            color={theme.colors.textSecondary}
-            height={theme.iconSizes.icon16}
-            width={theme.iconSizes.icon16}
-          />
-        )}
-      </Flex>
-    </TouchableArea>
+    <Trace logPress element={element}>
+      <TouchableArea
+        hapticFeedback
+        backgroundColor="background2"
+        borderRadius="rounded20"
+        paddingHorizontal="spacing12"
+        paddingVertical="spacing8"
+        testID={element}
+        onPress={onPress}>
+        <Flex centered row gap="spacing8">
+          {Icon && (
+            <Icon
+              color={theme.colors.textPrimary}
+              height={theme.iconSizes.icon16}
+              width={theme.iconSizes.icon16}
+            />
+          )}
+          <Text color="textPrimary" variant={fontSize}>
+            {label}
+          </Text>
+          {buttonType === LinkButtonType.Copy && (
+            <CopyIcon
+              color={theme.colors.textSecondary}
+              height={theme.iconSizes.icon16}
+              width={theme.iconSizes.icon16}
+            />
+          )}
+        </Flex>
+      </TouchableArea>
+    </Trace>
   )
 }

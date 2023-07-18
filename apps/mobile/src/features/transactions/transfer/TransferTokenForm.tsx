@@ -366,8 +366,8 @@ export function TransferTokenForm({
           <Button
             disabled={actionButtonDisabled}
             label={t('Review transfer')}
-            name={ElementName.ReviewTransfer}
             size={ButtonSize.Large}
+            testID={ElementName.ReviewTransfer}
             onPress={onPressReview}
           />
         </AnimatedFlex>

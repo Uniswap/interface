@@ -6,13 +6,13 @@ import { Box } from 'src/components/layout'
 
 type SwapArrowButtonProps = Pick<
   ComponentProps<typeof TouchableArea>,
-  'disabled' | 'name' | 'onPress' | 'borderColor' | 'bg'
+  'disabled' | 'testID' | 'onPress' | 'borderColor' | 'bg'
 > & { size?: number }
 
 export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
   const theme = useAppTheme()
   const {
-    name,
+    testID,
     onPress,
     disabled,
     bg = 'background1',
@@ -31,9 +31,8 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
         borderWidth={4}
         disabled={disabled}
         justifyContent="center"
-        // border width applies inside the element so add more padding to account for it
-        name={name}
         p="spacing8"
+        testID={testID}
         onPress={onPress}
         {...rest}>
         {/* hack to add 2px more padding without adjusting design system values */}
@@ -42,6 +41,6 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
         </Box>
       </TouchableArea>
     ),
-    [bg, disabled, name, onPress, rest, theme.colors.textSecondary, size]
+    [bg, disabled, onPress, testID, rest, theme.colors.textSecondary, size]
   )
 }

@@ -97,7 +97,7 @@ export function CloudBackupPasswordScreen({ navigation, route: { params } }: Pro
       <Button
         disabled={isButtonDisabled}
         label={t('Continue')}
-        name={ElementName.Next}
+        testID={ElementName.Next}
         onPress={onPressNext}
       />
     </SafeKeyboardOnboardingScreen>

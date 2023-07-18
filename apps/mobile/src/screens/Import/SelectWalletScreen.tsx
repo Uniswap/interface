@@ -268,7 +268,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
               isImportingAccounts || isLoading || !!showError || selectedAddresses.length === 0
             }
             label={t('Continue')}
-            name={ElementName.Next}
+            testID={ElementName.Next}
             onPress={onSubmit}
           />
         </Box>

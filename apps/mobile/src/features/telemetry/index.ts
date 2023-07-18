@@ -48,8 +48,6 @@ export async function initAnalytics(): Promise<void> {
   }
 }
 
-//#region ------------------------------ Amplitude ------------------------------
-
 /**
  * Sends an event to Amplitude.
  */
@@ -86,5 +84,3 @@ export function setUserProperty(property: UserPropertyName, value: ValidProperty
   }
   identify(new Identify().set(property, value))
 }
-
-//#endregion

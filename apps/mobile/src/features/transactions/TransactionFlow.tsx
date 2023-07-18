@@ -294,7 +294,7 @@ function HeaderContent({
         {step === TransactionStep.FORM && isSwap && !isViewOnlyWallet ? (
           <TouchableArea
             hapticFeedback
-            name={ElementName.SwapSettings}
+            testID={ElementName.SwapSettings}
             onPress={onPressSwapSettings}>
             <Flex
               centered

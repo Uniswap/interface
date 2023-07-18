@@ -266,7 +266,7 @@ export function SettingsWallet({
         <Button
           emphasis={ButtonEmphasis.Detrimental}
           label={t('Remove wallet')}
-          name={ElementName.Remove}
+          testID={ElementName.Remove}
           onPress={onRemoveWallet}
         />
       </Flex>

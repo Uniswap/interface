@@ -1,7 +1,6 @@
 import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
-import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
@@ -16,6 +15,7 @@ import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { EducationContentType } from 'src/components/education'
 import { Flex } from 'src/components/layout'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -125,16 +125,16 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
           <OptionCard
             blurb={t('Safe, simple, and all you need to save is your password.')}
             disabled={hasCloudBackup}
+            elementName={ElementName.AddiCloudBackup}
             icon={<CloudIcon color={theme.colors.magentaVibrant} height={theme.iconSizes.icon16} />}
-            name={ElementName.AddiCloudBackup}
             title={t('Backup with iCloud')}
             onPress={onPressICloudBackup}
           />
           <OptionCard
             blurb={t("Top-notch security with no third parties. You're in control.")}
             disabled={hasManualBackup}
+            elementName={ElementName.AddManualBackup}
             icon={<PaperIcon color={theme.colors.magentaVibrant} height={theme.iconSizes.icon16} />}
-            name={ElementName.AddManualBackup}
             title={t('Backup with recovery phrase')}
             onPress={onPressManualBackup}
           />
@@ -153,21 +153,21 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
             </Flex>
           </TouchableArea>
           {showSkipOption && (
-            <Button
-              emphasis={ButtonEmphasis.Tertiary}
-              eventName={SharedEventName.ELEMENT_CLICKED}
-              label={t('I already backed up')}
-              name={ElementName.Next}
-              onPress={onPressNext}
-            />
+            <Trace logPress element={ElementName.Next}>
+              <Button
+                emphasis={ButtonEmphasis.Tertiary}
+                label={t('I already backed up')}
+                onPress={onPressNext}
+              />
+            </Trace>
           )}
-          <Button
-            disabled={disabled}
-            eventName={SharedEventName.ELEMENT_CLICKED}
-            label={disabled ? t('Select backup to continue') : t('Continue')}
-            name={ElementName.Next}
-            onPress={onPressContinue}
-          />
+          <Trace logPress element={ElementName.Next}>
+            <Button
+              disabled={disabled}
+              label={disabled ? t('Select backup to continue') : t('Continue')}
+              onPress={onPressContinue}
+            />
+          </Trace>
         </Flex>
       </Flex>
     </OnboardingScreen>

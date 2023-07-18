@@ -16,7 +16,6 @@ import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { Trace } from 'src/components/telemetry/Trace'
-import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
 import { Text } from 'src/components/Text'
 import { TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
@@ -267,13 +266,13 @@ function _SwapForm({
                   ) / 2
                 }
                 position="absolute">
-                <TracePressEvent element={ElementName.SwitchCurrenciesButton}>
+                <Trace logPress element={ElementName.SwitchCurrenciesButton}>
                   <SwapArrowButton
                     bg="background2"
                     size={SWAP_DIRECTION_BUTTON_SIZE}
                     onPress={onSwitchCurrencies}
                   />
-                </TracePressEvent>
+                </Trace>
               </Box>
             </Box>
           </Box>
@@ -428,8 +427,8 @@ function _SwapForm({
           <Button
             disabled={actionButtonDisabled}
             label={getReviewActionName(t, wrapType)}
-            name={ElementName.ReviewSwap}
             size={ButtonSize.Large}
+            testID={ElementName.ReviewSwap}
             onPress={onReview}
           />
         </AnimatedFlex>

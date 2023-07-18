@@ -100,7 +100,7 @@ export function CloudBackupPasswordConfirmScreen({
       <Button
         disabled={isButtonDisabled}
         label={t('Continue')}
-        name={ElementName.Next}
+        testID={ElementName.Next}
         onPress={onPressNext}
       />
     </SafeKeyboardOnboardingScreen>

@@ -26,7 +26,7 @@ export function FavoriteHeaderRow({
         {isEditing ? editingTitle : title}
       </Text>
       {!isEditing ? (
-        <TouchableArea hapticFeedback name={ElementName.Edit} onPress={onPress}>
+        <TouchableArea hapticFeedback testID={ElementName.Edit} onPress={onPress}>
           <TripleDots
             color={theme.colors.textSecondary}
             height={theme.iconSizes.icon20}

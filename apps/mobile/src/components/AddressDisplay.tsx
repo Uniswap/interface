@@ -45,11 +45,7 @@ function CopyButtonWrapper({
 }: PropsWithChildren<CopyButtonWrapperProps>): JSX.Element {
   if (onPress)
     return (
-      <TouchableArea
-        hapticFeedback
-        name={ElementName.Copy}
-        testID={ElementName.Copy}
-        onPress={onPress}>
+      <TouchableArea hapticFeedback testID={ElementName.Copy} onPress={onPress}>
         {children}
       </TouchableArea>
     )

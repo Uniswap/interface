@@ -23,6 +23,7 @@ import { Box } from 'src/components/layout'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { Pill } from 'src/components/text/Pill'
 import { FiatOnRampTokenSelector } from 'src/components/TokenSelector/FiatOnRampTokenSelector'
@@ -350,25 +351,32 @@ function MoonpayCtaButton({
   const theme = useAppTheme()
   const { t } = useTranslation()
   return (
-    <Button
-      CustomIcon={
-        isLoading ? (
-          <SpinningLoader color="textOnBrightPrimary" />
-        ) : !eligible ? (
-          <InformationIcon color={theme.colors.textPrimary} width={theme.iconSizes.icon20} />
-        ) : undefined
-      }
-      disabled={disabled}
-      emphasis={!isLoading && !eligible ? ButtonEmphasis.Secondary : ButtonEmphasis.Primary}
-      eventName={MobileEventName.FiatOnRampWidgetOpened}
-      label={
-        isLoading ? undefined : eligible ? t('Continue to checkout') : t('Not supported in region')
-      }
-      name={ElementName.FiatOnRampWidgetButton}
-      properties={properties}
-      size={ButtonSize.Large}
-      onPress={onPress}
-    />
+    <Trace
+      logPress
+      element={ElementName.FiatOnRampWidgetButton}
+      pressEvent={MobileEventName.FiatOnRampWidgetOpened}
+      properties={properties}>
+      <Button
+        CustomIcon={
+          isLoading ? (
+            <SpinningLoader color="textOnBrightPrimary" />
+          ) : !eligible ? (
+            <InformationIcon color={theme.colors.textPrimary} width={theme.iconSizes.icon20} />
+          ) : undefined
+        }
+        disabled={disabled}
+        emphasis={!isLoading && !eligible ? ButtonEmphasis.Secondary : ButtonEmphasis.Primary}
+        label={
+          isLoading
+            ? undefined
+            : eligible
+            ? t('Continue to checkout')
+            : t('Not supported in region')
+        }
+        size={ButtonSize.Large}
+        onPress={onPress}
+      />
+    </Trace>
   )
 }
 
@@ -419,7 +427,7 @@ function SelectTokenButton({
     <TouchableArea
       hapticFeedback
       borderRadius="roundedFull"
-      name={ElementName.TokenSelectorToggle}
+      testID={ElementName.TokenSelectorToggle}
       onPress={onPress}>
       <Flex centered row flexDirection="row" gap="spacing4" p="spacing4">
         {loading ? (

@@ -75,7 +75,7 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props): JSX.Element
             <Button
               emphasis={ButtonEmphasis.Secondary}
               label={t('Hide recovery phrase')}
-              name={ElementName.Next}
+              testID={ElementName.Next}
               onPress={(): void => {
                 setShowSeedPhrase(false)
               }}

@@ -114,7 +114,7 @@ const SwitchNetworkRow = ({ selectedChainId, setModalState }: SwitchNetworkProps
   }, [setModalState])
 
   return (
-    <TouchableArea m="none" name={ElementName.WCDappSwitchNetwork} p="none" onPress={onPress}>
+    <TouchableArea m="none" p="none" testID={ElementName.WCDappSwitchNetwork} onPress={onPress}>
       <Flex
         row
         shrink
@@ -172,8 +172,8 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
     <TouchableArea
       disabled={!accountIsSwitchable}
       m="none"
-      name={ElementName.WCDappSwitchAccount}
       p="spacing12"
+      testID={ElementName.WCDappSwitchAccount}
       onPress={onPress}>
       <AccountDetails address={activeAddress} chevron={accountIsSwitchable} />
     </TouchableArea>

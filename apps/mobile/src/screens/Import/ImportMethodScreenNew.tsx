@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { SharedEventName } from '@uniswap/analytics-events'
 import { TFunction } from 'i18next'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +7,7 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -124,17 +124,15 @@ export function ImportMethodScreenNew({ navigation, route: { params } }: Props):
             hapticFeedback
             badgeText={badgeText?.(t)}
             blurb={blurb(t)}
+            elementName={name}
             icon={icon(theme)}
-            name={name}
             title={title(t)}
             onPress={(): Promise<void> => handleOnPress(nav, importType)}
           />
         ))}
       </Flex>
-      <Flex alignItems="center" mb="spacing12">
-        <TouchableArea
-          eventName={SharedEventName.ELEMENT_CLICKED}
-          name={ElementName.OnboardingImportBackup}>
+      <Trace logPress element={ElementName.OnboardingImportBackup}>
+        <TouchableArea alignItems="center" mb="spacing12">
           <Text
             color="accentAction"
             variant="buttonLabelMedium"
@@ -144,7 +142,7 @@ export function ImportMethodScreenNew({ navigation, route: { params } }: Props):
             {t('Restore from iCloud')}
           </Text>
         </TouchableArea>
-      </Flex>
+      </Trace>
     </OnboardingScreen>
   )
 }

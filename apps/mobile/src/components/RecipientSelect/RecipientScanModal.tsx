@@ -85,10 +85,10 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
           borderColor={isDarkMode ? 'none' : 'backgroundOutline'}
           borderRadius="roundedFull"
           borderWidth={1}
-          name={ElementName.QRCodeModalToggle}
           p="spacing16"
           paddingEnd="spacing24"
           style={{ backgroundColor: theme.colors.backgroundOverlay }}
+          testID={ElementName.QRCodeModalToggle}
           onPress={onPressBottomToggle}>
           <Flex row alignItems="center" gap="spacing12">
             {currentScreenState === ScannerModalState.ScanQr ? (

@@ -68,7 +68,7 @@ export function SearchNFTCollectionItem({
     <TouchableArea
       hapticFeedback
       hapticStyle={ImpactFeedbackStyle.Light}
-      name={ElementName.SearchNFTCollectionItem}
+      testID={ElementName.SearchNFTCollectionItem}
       onPress={onPress}>
       <Flex
         row

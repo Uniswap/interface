@@ -682,7 +682,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   "opacity": 0.4,
                 }
               }
-              testID="next"
             >
               <View
                 sentry-label="Flex"
@@ -1419,7 +1418,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   "opacity": 1,
                 }
               }
-              testID="next"
             >
               <View
                 sentry-label="Flex"

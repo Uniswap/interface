@@ -115,7 +115,7 @@ export function SettingsCloudBackupStatus({
         <Button
           emphasis={ButtonEmphasis.Detrimental}
           label={t('Delete iCloud backup')}
-          name={ElementName.Remove}
+          testID={ElementName.Remove}
           onPress={(): void => {
             setShowBackupDeleteWarning(true)
           }}

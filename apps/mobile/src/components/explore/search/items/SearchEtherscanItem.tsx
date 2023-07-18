@@ -36,7 +36,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
     <TouchableArea
       hapticFeedback
       hapticStyle={ImpactFeedbackStyle.Light}
-      name={ElementName.SearchEtherscanItem}
+      testID={ElementName.SearchEtherscanItem}
       onPress={onPressViewEtherscan}>
       <Flex
         row

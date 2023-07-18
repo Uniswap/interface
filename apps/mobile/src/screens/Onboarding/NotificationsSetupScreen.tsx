@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Image, StyleSheet } from 'react-native'
@@ -10,6 +9,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
@@ -120,20 +120,16 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
         <NotificationsBackgroundImage />
       </Flex>
       <Flex gap="spacing24">
-        <TouchableArea
-          eventName={SharedEventName.ELEMENT_CLICKED}
-          name={ElementName.Skip}
-          onPress={navigateToNextScreen}>
-          <Text color="magentaVibrant" textAlign="center" variant="buttonLabelMedium">
-            {t('Maybe later')}
-          </Text>
-        </TouchableArea>
-        <Button
-          eventName={SharedEventName.ELEMENT_CLICKED}
-          label={t('Turn on notifications')}
-          name={ElementName.Enable}
-          onPress={onPressEnableNotifications}
-        />
+        <Trace logPress element={ElementName.Skip}>
+          <TouchableArea onPress={navigateToNextScreen}>
+            <Text color="magentaVibrant" textAlign="center" variant="buttonLabelMedium">
+              {t('Maybe later')}
+            </Text>
+          </TouchableArea>
+        </Trace>
+        <Trace logPress element={ElementName.Enable}>
+          <Button label={t('Turn on notifications')} onPress={onPressEnableNotifications} />
+        </Trace>
       </Flex>
     </OnboardingScreen>
   )

@@ -161,7 +161,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
       <Button
         disabled={!isValid}
         label={t('Continue')}
-        name={ElementName.Next}
+        testID={ElementName.Next}
         onPress={onSubmit}
       />
     </SafeKeyboardOnboardingScreen>

@@ -10,9 +10,6 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 import { withAnimated } from 'src/components/animated'
-import { TraceEvent } from 'src/components/telemetry/TraceEvent'
-import { ReactNativeEvent } from 'src/features/telemetry/constants'
-import { TelemetryEventProps } from 'src/features/telemetry/types'
 import { defaultHitslopInset } from 'ui/src/theme/restyle/sizing'
 import { Theme } from 'ui/src/theme/restyle/theme'
 
@@ -27,7 +24,7 @@ export type BaseButtonProps = PropsWithChildren<
     hapticFeedback?: boolean
     hapticStyle?: ImpactFeedbackStyle
     scaleTo?: number
-  } & TelemetryEventProps
+  }
 >
 
 /**
@@ -43,10 +40,7 @@ export function TouchableArea({
   scaleTo,
   onPress,
   children,
-  name: elementName,
-  eventName,
-  events,
-  properties,
+  testID,
   activeOpacity = 0.75,
   ...rest
 }: BaseButtonProps): JSX.Element {
@@ -107,7 +101,7 @@ export function TouchableArea({
     onPressOut: onPressOutHandler,
     activeOpacity,
     hitSlop: defaultHitslopInset,
-    testID: elementName,
+    testID,
     ...rest,
   }
 
@@ -117,24 +111,10 @@ export function TouchableArea({
     }
   })
 
-  if (!eventName) {
-    return (
-      <AnimatedTouchableBox style={scaleTo ? animatedStyle : undefined} {...baseProps}>
-        {children}
-      </AnimatedTouchableBox>
-    )
-  }
-
   return (
-    <TraceEvent
-      elementName={elementName}
-      eventName={eventName}
-      events={[ReactNativeEvent.OnPress, ...(events || [])]}
-      properties={properties}>
-      <AnimatedTouchableBox {...baseProps} style={scaleTo ? animatedStyle : undefined}>
-        {children}
-      </AnimatedTouchableBox>
-    </TraceEvent>
+    <AnimatedTouchableBox {...baseProps} style={scaleTo ? animatedStyle : undefined}>
+      {children}
+    </AnimatedTouchableBox>
   )
 }
 

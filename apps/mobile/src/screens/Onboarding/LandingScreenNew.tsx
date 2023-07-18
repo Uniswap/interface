@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
@@ -10,6 +9,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -67,24 +67,21 @@ export function LandingScreenNew({ navigation }: Props): JSX.Element {
       </Flex>
       <Flex grow height="auto">
         <Flex grow gap={outerGap} justifyContent="flex-end" mx="spacing16">
-          <Button
-            hapticFeedback
-            eventName={SharedEventName.ELEMENT_CLICKED}
-            label={t('Create a new wallet')}
-            name={ElementName.CreateAccount}
-            size={buttonSize}
-            onPress={onPressCreateWallet}
-          />
-          <TouchableArea
-            hapticFeedback
-            alignItems="center"
-            eventName={SharedEventName.ELEMENT_CLICKED}
-            name={ElementName.ImportAccount}
-            onPress={onPressImportWallet}>
-            <Text color="magentaVibrant" variant="buttonLabelLarge">
-              {t('Import or watch a wallet')}
-            </Text>
-          </TouchableArea>
+          <Trace logPress element={ElementName.CreateAccount}>
+            <Button
+              hapticFeedback
+              label={t('Create a new wallet')}
+              size={buttonSize}
+              onPress={onPressCreateWallet}
+            />
+          </Trace>
+          <Trace logPress element={ElementName.ImportAccount}>
+            <TouchableArea hapticFeedback alignItems="center" onPress={onPressImportWallet}>
+              <Text color="magentaVibrant" variant="buttonLabelLarge">
+                {t('Import or watch a wallet')}
+              </Text>
+            </TouchableArea>
+          </Trace>
           <Box mx="spacing24" pb={pb}>
             <Text color="textTertiary" mx="spacing4" textAlign="center" variant="buttonLabelMicro">
               <Trans t={t}>

@@ -137,7 +137,7 @@ export function CloudBackupSetPassword({
       <Button
         disabled={isButtonDisabled}
         label={doneButtonText}
-        name={ElementName.Next}
+        testID={ElementName.Next}
         onPress={onPressNext}
       />
     </>

@@ -231,16 +231,3 @@ export enum AuthMethod {
   TouchId = 'TouchId',
   // alphabetize additional values.
 }
-
-/**
- * Known components' events that trigger callbacks.
- *
- * e.g OnFocus, OnLongPress, OnSubmit, etc.
- *
- * @example
- *  <TraceEvent events={[ReactNativeEvent.onPress]} element={name}>
- */
-export enum ReactNativeEvent {
-  OnPress = 'onPress',
-  // alphabetize additional values.
-}

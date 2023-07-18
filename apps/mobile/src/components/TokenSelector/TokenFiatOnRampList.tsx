@@ -180,7 +180,7 @@ function Header({ onBack }: { onBack: () => void }): JSX.Element {
   const { t } = useTranslation()
   return (
     <Flex row justifyContent="space-between" my="spacing16">
-      <TouchableArea name={ElementName.Back} testID={ElementName.Back} onPress={onBack}>
+      <TouchableArea testID={ElementName.Back} onPress={onBack}>
         <Chevron color={theme.colors.textPrimary} />
       </TouchableArea>
       <Text variant="bodyLarge">{t('Select a token to buy')}</Text>

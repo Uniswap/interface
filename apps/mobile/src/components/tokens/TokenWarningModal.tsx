@@ -139,7 +139,7 @@ export default function TokenWarningModal({
             fill
             emphasis={ButtonEmphasis.Tertiary}
             label={closeButtonText}
-            name={ElementName.Cancel}
+            testID={ElementName.Cancel}
             onPress={onClose}
           />
           {!hideAcceptButton && (
@@ -147,7 +147,7 @@ export default function TokenWarningModal({
               fill
               emphasis={getButtonEmphasis(safetyLevel)}
               label={showWarningIcon ? t('I understand') : t('Continue')}
-              name={ElementName.TokenWarningAccept}
+              testID={ElementName.TokenWarningAccept}
               onPress={onAccept}
             />
           )}

@@ -143,8 +143,8 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               borderColor="backgroundOutline"
               borderRadius="rounded20"
               borderWidth={1}
-              name={ElementName.Favorite}
               padding="spacing12"
+              testID={ElementName.Favorite}
               onPress={onPressFavorite}>
               <DynamicHeartIcon isFavorited={isFavorited} size={iconSizes.icon20} />
             </TouchableArea>
@@ -155,8 +155,8 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               borderColor="backgroundOutline"
               borderRadius="rounded20"
               borderWidth={1}
-              name={ElementName.Send}
               padding="spacing12"
+              testID={ElementName.Send}
               onPress={onPressSend}>
               <Flex row alignItems="center" gap="spacing8">
                 <SendIcon

@@ -344,16 +344,16 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               fill
               emphasis={ButtonEmphasis.Tertiary}
               label={t('Cancel')}
-              name={ElementName.Cancel}
               size={ButtonSize.Medium}
+              testID={ElementName.Cancel}
               onPress={onReject}
             />
             <Button
               fill
               disabled={!confirmEnabled}
               label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
-              name={ElementName.Confirm}
               size={ButtonSize.Medium}
+              testID={ElementName.Confirm}
               onPress={async (): Promise<void> => {
                 if (requiredForTransactions) {
                   await actionButtonTrigger()

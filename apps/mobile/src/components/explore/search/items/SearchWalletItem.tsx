@@ -14,7 +14,7 @@ import { addToSearchHistory, WalletSearchResult } from 'src/features/explore/sea
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import { getCompletedENSName } from 'wallet/src/features/ens/useENS'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
@@ -88,7 +88,6 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
       <TouchableArea
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
-        name={ElementName.SearchWalletItem}
         testID={`wallet-item-${address}`}
         onPress={onPress}>
         <Flex row alignItems="center" gap="spacing12" px="spacing8" py="spacing12">

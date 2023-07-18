@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import { SharedEventName } from '@uniswap/analytics-events'
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
@@ -10,6 +9,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { AnimatedButton, Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
@@ -102,12 +102,9 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
         )}
       </Box>
       <Flex justifyContent="flex-end">
-        <Button
-          eventName={SharedEventName.ELEMENT_CLICKED}
-          label={t('Create Wallet')}
-          name={ElementName.Continue}
-          onPress={onPressNext}
-        />
+        <Trace logPress element={ElementName.Continue}>
+          <Button label={t('Create Wallet')} onPress={onPressNext} />
+        </Trace>
       </Flex>
     </OnboardingScreen>
   )

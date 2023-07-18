@@ -3,7 +3,6 @@ import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
-import { ElementName } from 'src/features/telemetry/constants'
 import { Theme } from 'ui/src/theme/restyle/theme'
 
 type Props = {
@@ -29,7 +28,7 @@ export function BackButton({
         navigation.goBack()
       }
   return (
-    <TouchableArea testID="buttons/back-button" onPress={goBack} {...rest} name={ElementName.Back}>
+    <TouchableArea testID="buttons/back-button" onPress={goBack} {...rest}>
       <BackButtonView color={color} showButtonLabel={showButtonLabel} size={size} />
     </TouchableArea>
   )

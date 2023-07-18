@@ -120,7 +120,7 @@ export function CancelConfirmationView({
           disabled={transactionDetails.status !== TransactionStatus.Pending}
           emphasis={ButtonEmphasis.Detrimental}
           label={t('Confirm')}
-          name={ElementName.Cancel}
+          testID={ElementName.Cancel}
           onPress={onPressCancel}
         />
       </Flex>

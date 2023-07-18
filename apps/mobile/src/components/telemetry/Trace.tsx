@@ -1,38 +1,23 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { createContext, memo, PropsWithChildren, useEffect, useMemo, useRef } from 'react'
+import React, { memo, PropsWithChildren, ReactNode, useEffect, useMemo, useRef } from 'react'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
+import { shouldLogScreen } from 'src/components/telemetry/direct'
+import { ITraceContext, TraceContext } from 'src/components/telemetry/TraceContext'
+import { getEventHandlers } from 'src/components/telemetry/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import {
-  ElementName,
-  ManualPageViewScreen,
-  MarkNames,
-  ModalName,
-  SectionName,
-} from 'src/features/telemetry/constants'
+import { MarkNames, MobileEventName } from 'src/features/telemetry/constants'
 import { useTrace } from 'src/features/telemetry/hooks'
-import { AppScreen, Screens } from 'src/screens/Screens'
 import { logger } from 'wallet/src/features/logger/logger'
 
-export interface ITraceContext {
-  screen?: AppScreen | ManualPageViewScreen
-
-  // Enclosed section name. Can be as wide or narrow as necessary to
-  // provide telemetry context.
-  section?: SectionName
-
-  modal?: ModalName
-
-  element?: ElementName
-
-  // Keeps track of start time for given marks
-  marks?: Record<MarkNames, number>
-}
-
-export const TraceContext = createContext<ITraceContext>({})
-
 export type TraceProps = {
-  logImpression?: boolean // whether to log impression on mount
+  // whether to log impression on mount
+  logImpression?: boolean
+
+  // whether to log a press on a click within the area
+  logPress?: boolean
+  // event to log if logging an event other than the default for press
+  pressEvent?: MobileEventName
 
   // verifies an impression has come from that page directly to override the direct only skip list
   directFromPage?: boolean
@@ -47,27 +32,11 @@ export type TraceProps = {
   endMark?: MarkNames
 } & ITraceContext
 
-/**
- * Telemetry instrumentation component that combines parent telemetry context
- * with its own context to provide children a richer telemetry context (eg Screen, Section, Modal, Element)
- *
- * Optionally can also log an “impression” event to analytics
- * (eg: Page Viewed, Modal Opened type of events that indicate the User has seen this component).
- *
- * Marks: inspired by Web Performance API
- * @example
- *  // Track start timestamp with a mark
- *  <Trace startMark={Marks.Rehydration}>
- *    ...
- *    // Log end timestamp for that mark
- *    <Trace endMark={Marks.Rehydration}>
- *      ...
- *    </Trace>
- * </Trace>
- */
 function _Trace({
   children,
   logImpression,
+  pressEvent,
+  logPress,
   directFromPage,
   screen,
   section,
@@ -136,13 +105,39 @@ function _Trace({
     return <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
   }
 
+  const modifiedChildren = logPress ? (
+    <TraceContext.Consumer>
+      {(consumedProps): ReactNode =>
+        React.Children.map(children, (child) => {
+          if (!React.isValidElement(child)) {
+            return child
+          }
+
+          // For each child, augment event handlers defined in `actionProps`  with event tracing
+          return React.cloneElement(
+            child,
+            getEventHandlers(
+              child,
+              consumedProps,
+              pressEvent ?? SharedEventName.ELEMENT_CLICKED,
+              element,
+              properties
+            )
+          )
+        })
+      }
+    </TraceContext.Consumer>
+  ) : (
+    children
+  )
+
   return (
     <NavAwareTrace
       combinedProps={combinedProps}
       directFromPage={directFromPage}
       logImpression={logImpression}
       properties={properties}>
-      <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
+      <TraceContext.Provider value={combinedProps}>{modifiedChildren}</TraceContext.Provider>
     </NavAwareTrace>
   )
 }
@@ -159,8 +154,7 @@ function NavAwareTrace({
   children,
   properties,
 }: { combinedProps: ITraceContext } & PropsWithChildren<NavAwareTraceProps>): JSX.Element {
-  // this still doesn't captures navigating back from modals
-  // analysis will need to be done on the backend to determine the last screen impression
+  // Note: this does not register impressions when going back to a page from a modal
   useFocusEffect(
     React.useCallback(() => {
       if (logImpression) {
@@ -176,17 +170,3 @@ function NavAwareTrace({
 }
 
 export const Trace = memo(_Trace)
-
-export const DIRECT_LOG_ONLY_SCREENS: (AppScreen | ManualPageViewScreen)[] = [
-  Screens.TokenDetails,
-  Screens.ExternalProfile,
-  Screens.NFTItem,
-  Screens.NFTCollection,
-]
-
-function shouldLogScreen(
-  directFromPage: boolean | undefined,
-  screen: AppScreen | ManualPageViewScreen | undefined
-): boolean {
-  return directFromPage || screen === undefined || !DIRECT_LOG_ONLY_SCREENS.includes(screen)
-}

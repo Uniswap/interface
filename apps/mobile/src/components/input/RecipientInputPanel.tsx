@@ -27,8 +27,8 @@ export function RecipientInputPanel({
 
   return (
     <TouchableArea
-      name={ElementName.SelectRecipient}
       p="spacing16"
+      testID={ElementName.SelectRecipient}
       onPress={onToggleShowRecipientSelector}>
       <Flex gap="spacing8">
         <Flex centered row gap="spacing4">

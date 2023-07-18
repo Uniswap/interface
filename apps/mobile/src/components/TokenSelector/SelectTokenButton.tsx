@@ -5,7 +5,6 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { ElementName } from 'src/features/telemetry/constants'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { Theme } from 'ui/src/theme/restyle/theme'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -30,7 +29,6 @@ export function SelectTokenButton({
       hapticFeedback
       bg={selectedCurrencyInfo ? 'background3' : 'magentaVibrant'}
       borderRadius="roundedFull"
-      name={ElementName.TokenSelectorToggle}
       testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
       onPress={onPress}>
       {selectedCurrencyInfo ? (

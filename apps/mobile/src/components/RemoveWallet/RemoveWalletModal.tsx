@@ -171,7 +171,7 @@ export function RemoveWalletModal(): JSX.Element | null {
               CustomIcon={inProgress ? <SpinningLoader color={iconColorLabel} /> : undefined}
               emphasis={actionButtonEmphasis}
               label={inProgress ? undefined : actionButtonLabel}
-              name={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
+              testID={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
               onPress={onPress}
             />
           </Flex>

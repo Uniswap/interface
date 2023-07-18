@@ -52,7 +52,7 @@ export function RemoveLastMnemonicWalletFooter({
           disabled={!checkBoxAccepted}
           emphasis={ButtonEmphasis.Detrimental}
           label={!inProgress ? t('Remove wallet') : undefined}
-          name={ElementName.Confirm}
+          testID={ElementName.Confirm}
           onPress={onPress}
         />
       </Flex>

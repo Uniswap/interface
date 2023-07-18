@@ -124,15 +124,15 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
               fill
               emphasis={ButtonEmphasis.Tertiary}
               label={t('Cancel')}
-              name={ElementName.Cancel}
               size={ButtonSize.Medium}
+              testID={ElementName.Cancel}
               onPress={onReject}
             />
             <Button
               fill
               label={t('Connect')}
-              name={ElementName.Confirm}
               size={ButtonSize.Medium}
+              testID={ElementName.Confirm}
               onPress={onConfirm}
             />
           </Flex>

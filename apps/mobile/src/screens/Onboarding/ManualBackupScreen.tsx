@@ -143,7 +143,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               )}
             </Flex>
             <Flex grow justifyContent="flex-end">
-              <Button label={t('Continue')} name={ElementName.Next} onPress={nextView} />
+              <Button label={t('Continue')} testID={ElementName.Next} onPress={nextView} />
             </Flex>
           </Flex>
           {!seedWarningAcknowledged && (
@@ -164,7 +164,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             <Button
               disabled={!continueButtonEnabled}
               label={t('Continue')}
-              name={ElementName.Continue}
+              testID={ElementName.Continue}
               onPress={onValidationSuccessful}
             />
           </Flex>

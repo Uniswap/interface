@@ -67,7 +67,7 @@ export function TransactionPending({
           onPress={onPressViewTransaction}
         />
       ) : null}
-      <Button label={t('Close')} name={ElementName.OK} onPress={onNext} />
+      <Button label={t('Close')} testID={ElementName.OK} onPress={onNext} />
     </AnimatedFlex>
   )
 }

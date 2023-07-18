@@ -25,7 +25,7 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element 
   const theme = useAppTheme()
 
   return (
-    <TouchableArea hapticFeedback name={ElementName.SelectRecipient} onPress={onPress}>
+    <TouchableArea hapticFeedback testID={ElementName.SelectRecipient} onPress={onPress}>
       <ScanQRIcon
         color={theme.colors.textSecondary}
         height={theme.iconSizes.icon20}

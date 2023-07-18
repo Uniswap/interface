@@ -164,7 +164,7 @@ export function RestoreCloudBackupPasswordScreen({
       <Button
         disabled={!enteredPassword || isLockedOut}
         label={t('Continue')}
-        name={ElementName.Submit}
+        testID={ElementName.Submit}
         onPress={onPasswordSubmit}
       />
     </OnboardingScreen>
