@@ -266,6 +266,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               onShowConfirm={setShowDisconnectConfirm}
               Icon={LogOutCentered}
               text="Disconnect"
+              dismissOnHoverOut
             />
           </TraceEvent>
         </IconContainer>

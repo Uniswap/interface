@@ -17,7 +17,7 @@ export const IconHoverText = styled.span`
   left: 10px;
 `
 
-const widthTransition = `width ease-in 80ms`
+const widthTransition = `width ease-in-out 125ms` // theme.duration.fast
 
 const IconStyles = css`
   background-color: ${({ theme }) => theme.backgroundInteractive};
@@ -96,6 +96,7 @@ type IconWithTextProps = (IconButtonProps | IconLinkProps) & {
   text: string
   onConfirm?: () => void
   onShowConfirm?: (on: boolean) => void
+  dismissOnHoverOut?: boolean
 }
 
 const TextWrapper = styled.div`
@@ -120,9 +121,11 @@ export const IconWithConfirmTextButton = ({
   onConfirm,
   onShowConfirm,
   onClick,
+  dismissOnHoverOut,
   ...rest
 }: IconWithTextProps) => {
   const [showText, setShowTextWithoutCallback] = useState(false)
+  const [frame, setFrame] = useState<HTMLElement | null>()
   const frameObserver = useResizeObserver<HTMLElement>()
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
@@ -148,29 +151,48 @@ export const IconWithConfirmTextButton = ({
 
   // keyboard action to cancel
   useEffect(() => {
-    if (!showText) return
-    const isClient = typeof window !== 'undefined'
-    if (!isClient) return
-    if (!showText) return
-    const keyHandler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setShowText(false)
-        e.preventDefault()
-        e.stopPropagation()
+    if (typeof window === 'undefined') return
+    if (!showText || !frame) return
+
+    const closeAndPrevent = (e: Event) => {
+      setShowText(false)
+      e.preventDefault()
+      e.stopPropagation()
+    }
+
+    const clickHandler = (e: MouseEvent) => {
+      const { target } = e
+      const shouldClose = !(target instanceof HTMLElement) || !frame.contains(target)
+      if (shouldClose) {
+        closeAndPrevent(e)
       }
     }
+
+    const keyHandler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeAndPrevent(e)
+      }
+    }
+
+    window.addEventListener('click', clickHandler, { capture: true })
     window.addEventListener('keydown', keyHandler, { capture: true })
+
     return () => {
+      window.removeEventListener('click', clickHandler, { capture: true })
       window.removeEventListener('keydown', keyHandler, { capture: true })
     }
-  }, [setShowText, showText])
+  }, [frame, setShowText, showText])
 
   const xPad = showText ? 12 : 0
   const width = showText ? dimensions.frame + dimensions.hidden + xPad : 32
+  const mouseLeaveTimeout = useRef<NodeJS.Timeout>()
 
   return (
     <IconBlock
-      ref={frameObserver.ref}
+      ref={(node) => {
+        frameObserver.ref(node)
+        setFrame(node)
+      }}
       {...rest}
       style={{
         width,
@@ -187,6 +209,18 @@ export const IconWithConfirmTextButton = ({
           setShowText(!showText)
         }
       }}
+      {...(dismissOnHoverOut && {
+        onMouseLeave() {
+          mouseLeaveTimeout.current = setTimeout(() => {
+            setShowText(false)
+          }, 500)
+        },
+        onMouseEnter() {
+          if (mouseLeaveTimeout.current) {
+            clearTimeout(mouseLeaveTimeout.current)
+          }
+        },
+      })}
     >
       <Row height="100%" gap="xs">
         <IconWrapper>
