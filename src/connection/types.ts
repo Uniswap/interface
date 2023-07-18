@@ -19,5 +19,4 @@ export interface Connection {
   getIcon?(isDarkMode: boolean): string
   shouldDisplay(): boolean
   overrideActivate?: (chainId?: ChainId) => boolean
-  isNew?: boolean
 }

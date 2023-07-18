@@ -1,12 +1,11 @@
 import { useWeb3React } from '@web3-react/core'
-import { usePortfolioBalancesLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { usePortfolioBalancesLazyQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import usePrevious from 'hooks/usePrevious'
-import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
+import { atom, useAtom } from 'jotai'
+import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
 import { useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
-
-import { useAccountDrawer } from '.'
 
 const isTxPending = (tx: TransactionDetails) => !tx.receipt
 function wasPending(previousTxs: { [hash: string]: TransactionDetails | undefined }, current: TransactionDetails) {
@@ -36,36 +35,50 @@ function useHasUpdatedTx(account: string | undefined) {
   }, [account, currentChainTxs, previousPendingTxs])
 }
 
+export function useCachedPortfolioBalancesQuery({ account }: { account?: string }) {
+  return usePortfolioBalancesQuery({
+    skip: !account,
+    variables: { ownerAddress: account ?? '', chains: GQL_MAINNET_CHAINS },
+    fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
+    errorPolicy: 'all',
+  })
+}
+
+const hasUnfetchedBalancesAtom = atom<boolean>(true)
+
 /* Prefetches & caches portfolio balances when the wrapped component is hovered or the user completes a transaction */
-export default function PrefetchBalancesWrapper({ children }: PropsWithChildren) {
+export default function PrefetchBalancesWrapper({
+  children,
+  shouldFetchOnAccountUpdate,
+}: PropsWithChildren<{ shouldFetchOnAccountUpdate: boolean }>) {
   const { account } = useWeb3React()
   const [prefetchPortfolioBalances] = usePortfolioBalancesLazyQuery()
-  const [drawerOpen] = useAccountDrawer()
 
-  const [hasUnfetchedBalances, setHasUnfetchedBalances] = useState(true)
+  // Use an atom to track unfetched state to avoid duplicating fetches if this component appears multiple times on the page.
+  const [hasUnfetchedBalances, setHasUnfetchedBalances] = useAtom(hasUnfetchedBalancesAtom)
   const fetchBalances = useCallback(() => {
     if (account) {
       prefetchPortfolioBalances({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS } })
       setHasUnfetchedBalances(false)
     }
-  }, [account, prefetchPortfolioBalances])
+  }, [account, prefetchPortfolioBalances, setHasUnfetchedBalances])
 
   const prevAccount = usePrevious(account)
 
-  // TODO(cartcrom): add delay for refetching on optimism, as there is high latency in new balances being available
   const hasUpdatedTx = useHasUpdatedTx(account)
   // Listens for account changes & recently updated transactions to keep portfolio balances fresh in apollo cache
   useEffect(() => {
     const accountChanged = prevAccount !== undefined && prevAccount !== account
     if (hasUpdatedTx || accountChanged) {
-      // If the drawer is open, fetch balances immediately, else set a flag to fetch on next hover
-      if (drawerOpen) {
+      // The parent configures whether these conditions should trigger an immediate fetch,
+      // if not, we set a flag to fetch on next hover.
+      if (shouldFetchOnAccountUpdate) {
         fetchBalances()
       } else {
         setHasUnfetchedBalances(true)
       }
     }
-  }, [account, prevAccount, drawerOpen, fetchBalances, hasUpdatedTx])
+  }, [account, prevAccount, shouldFetchOnAccountUpdate, fetchBalances, hasUpdatedTx, setHasUnfetchedBalances])
 
   const onHover = useCallback(() => {
     if (hasUnfetchedBalances) fetchBalances()
