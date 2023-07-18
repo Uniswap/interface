@@ -26,6 +26,9 @@ Testing is done utilizing a custom jest environment as well as Cloudflare's loca
 
 Functions will be deployed to Cloudlfare where they will be ran automatically when the appropriate route is hit. 
 
+## Miscellaneous
+- Caching: In order to speed up webpage requests, repeated GraphQL queries will be saved and pulled using Cloudflare's Cache API.
+
 ## Scripts
 
 - `yarn start:cloud` (NODE_OPTIONS=--dns-result-order=ipv4first PORT=3001 npx wrangler pages dev --node-compat --proxy=3001 --port=3000 -- yarn start), script to start local wrangler environment
@@ -38,10 +41,10 @@ Functions will be deployed to Cloudlfare where they will be ran automatically wh
 - `yarn test:cloud` (NODE_OPTIONS=--experimental-vm-modules yarn jest functions  --watch --config=functions/jest.config.json), script to test cloud functions with jest
   - `NODE_OPTIONS=--experimental-vm-modules`: support for ES Modules and Web Assembly
   - `--config=functions/jest.config.json`: specifying which config file to use
-  - `--watch`: specifies to only test tests in `/functions`
 
   ## Additional Documents
   - [Open Graph Protocol](https://ogp.me/)
   - [Open Graph Image Generation](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation)
   - [Cloudflare Workers](https://developers.cloudflare.com/workers/)
   - [HTML Rewriter](https://developers.cloudflare.com/workers/runtime-apis/html-rewriter/)
+  - [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/)
