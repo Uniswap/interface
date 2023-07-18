@@ -65,8 +65,8 @@ const BannerMainArea = styled.div`
 
 const HeaderContainer = styled.div`
   display: flex;
-  max-width: 500px;
-  font-weight: 500;
+  max-width: 535px;
+  font-weight: 535;
   font-size: 72px;
   line-height: 88px;
   align-self: center;

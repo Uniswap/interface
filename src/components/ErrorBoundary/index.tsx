@@ -42,7 +42,7 @@ const StretchedRow = styled.div`
 `
 
 const Code = styled.code`
-  font-weight: 300;
+  font-weight: 485;
   font-size: 12px;
   line-height: 16px;
   word-wrap: break-word;

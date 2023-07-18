@@ -87,7 +87,7 @@ const PageWrapper = styled.div`
 `
 
 const BadgeText = styled.div`
-  font-weight: 500;
+  font-weight: 535;
   font-size: 14px;
 `
 
@@ -106,7 +106,7 @@ const ExtentsText = styled.span`
   font-size: 14px;
   text-align: center;
   margin-right: 4px;
-  font-weight: 500;
+  font-weight: 535;
 `
 
 const HoverText = styled(ThemedText.DeprecatedMain)`
@@ -753,11 +753,11 @@ function PositionPageContent() {
                         <Trans>Liquidity</Trans>
                       </Label>
                       {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
-                        <ThemedText.DeprecatedLargeHeader fontSize="36px" fontWeight={500}>
+                        <ThemedText.DeprecatedLargeHeader fontSize="36px" fontWeight={535}>
                           <Trans>${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}</Trans>
                         </ThemedText.DeprecatedLargeHeader>
                       ) : (
-                        <ThemedText.DeprecatedLargeHeader color={theme.textPrimary} fontSize="36px" fontWeight={500}>
+                        <ThemedText.DeprecatedLargeHeader color={theme.textPrimary} fontSize="36px" fontWeight={535}>
                           <Trans>$-</Trans>
                         </ThemedText.DeprecatedLargeHeader>
                       )}
@@ -810,7 +810,7 @@ function PositionPageContent() {
                             <ThemedText.DeprecatedLargeHeader
                               color={theme.accentSuccess}
                               fontSize="36px"
-                              fontWeight={500}
+                              fontWeight={535}
                             >
                               <Trans>${fiatValueOfFees.toFixed(2, { groupSeparator: ',' })}</Trans>
                             </ThemedText.DeprecatedLargeHeader>
@@ -818,7 +818,7 @@ function PositionPageContent() {
                             <ThemedText.DeprecatedLargeHeader
                               color={theme.textPrimary}
                               fontSize="36px"
-                              fontWeight={500}
+                              fontWeight={535}
                             >
                               <Trans>$-</Trans>
                             </ThemedText.DeprecatedLargeHeader>

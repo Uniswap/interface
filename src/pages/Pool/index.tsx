@@ -34,7 +34,7 @@ const PageWrapper = styled(AutoColumn)`
   `};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    max-width: 500px;
+    max-width: 535px;
   `};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
@@ -82,7 +82,7 @@ const PoolMenuItem = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  font-weight: 500;
+  font-weight: 535;
 `
 const MoreOptionsButton = styled(ButtonGray)`
   border-radius: 12px;

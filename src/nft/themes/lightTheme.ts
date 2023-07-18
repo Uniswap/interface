@@ -2,33 +2,33 @@ import { Theme, vars } from 'nft/css/sprinkles.css'
 
 export const lightTheme: Theme = {
   colors: {
-    accentFailure: vars.color.red400,
+    accentFailure: vars.color.critical,
     accentFailureSoft: 'rgba(250, 43, 57, 0.12)',
-    accentAction: vars.color.pink400,
-    accentActionSoft: vars.color.accentActionSoft,
-    accentSuccess: vars.color.green300,
+    accentAction: vars.color.accent1_light,
+    accentActionSoft: vars.color.accent1_light,
+    accentSuccess: vars.color.success,
 
     explicitWhite: '#FFFFFF',
 
     backgroundFloating: '#00000000',
-    backgroundInteractive: vars.color.gray50,
-    backgroundModule: vars.color.gray50,
-    backgroundOutline: vars.color.gray100,
-    backgroundSurface: '#FFFFFF',
-    backgroundBackdrop: '#FFF',
+    backgroundInteractive: vars.color.surface3_light,
+    backgroundModule: vars.color.surface3_light,
+    backgroundOutline: vars.color.surface3_light,
+    backgroundSurface: vars.color.surface1_light,
+    backgroundBackdrop: vars.color.surface2_light,
 
     modalBackdrop: 'rgba(0, 0, 0, 0.3)',
 
     searchBackground: `rgba(255,255,255,0.4)`,
     searchOutline: `rgba(0,0,0,0.1)`,
     stateOverlayHover: `rgba(153,161,189,0.08)`,
-    green: vars.color.green400,
+    green: vars.color.success,
     gold: vars.color.gold400,
     violet: vars.color.violet400,
 
-    textPrimary: vars.color.gray900,
-    textSecondary: vars.color.gray500,
-    textTertiary: vars.color.gray300,
+    textPrimary: vars.color.neutral1_light,
+    textSecondary: vars.color.neutral2_light,
+    textTertiary: vars.color.neutral3_light,
 
     dropShadow: `0px 4px 16px rgba(251, 17, 142, 0.4)`,
   },

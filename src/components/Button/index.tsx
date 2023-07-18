@@ -33,9 +33,9 @@ type BaseButtonProps = {
 export const BaseButton = styled(RebassButton)<BaseButtonProps>`
   padding: ${({ padding }) => padding ?? '16px'};
   width: ${({ width }) => width ?? '100%'};
-  font-weight: 500;
+  font-weight: 535;
   text-align: center;
-  border-radius: ${({ $borderRadius }) => $borderRadius ?? '20px'};
+  border-radius: ${({ $borderRadius }) => $borderRadius ?? '16px'};
   outline: none;
   border: 1px solid transparent;
   color: ${({ theme }) => theme.textPrimary};
@@ -69,9 +69,9 @@ export const BaseButton = styled(RebassButton)<BaseButtonProps>`
 export const ButtonPrimary = styled(BaseButton)`
   background-color: ${({ theme }) => theme.accentAction};
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 535;
   padding: 16px;
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ theme }) => theme.white};
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.accentAction)};
     background-color: ${({ theme }) => darken(0.05, theme.accentAction)};
@@ -107,7 +107,7 @@ const BaseButtonLight = styled(BaseButton)`
   background-color: ${({ theme }) => theme.accentActionSoft};
   color: ${({ theme }) => theme.accentAction};
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 535;
 
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && theme.accentActionSoft};
@@ -149,7 +149,7 @@ export const ButtonGray = styled(BaseButton)`
   background-color: ${({ theme }) => theme.deprecated_bg1};
   color: ${({ theme }) => theme.textSecondary};
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 535;
 
   &:hover {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.backgroundInteractive)};
@@ -487,7 +487,7 @@ const BaseThemeButton = styled.button<BaseThemeButtonProps>`
   display: flex;
   flex-direction: row;
   font-size: ${pickThemeButtonFontSize};
-  font-weight: 600;
+  font-weight: 535;
   gap: 12px;
   justify-content: center;
   line-height: ${pickThemeButtonLineHeight};

@@ -48,7 +48,7 @@ const InfoContainer = styled(ColumnCenter)`
 `
 
 const StyledHeadlineText = styled.div`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 20px;
   line-height: 28px;
   text-align: center;
@@ -60,7 +60,7 @@ const StyledHeadlineText = styled.div`
   }
 `
 const StyledSubheaderText = styled.div`
-  font-weight: 500;
+  font-weight: 535;
   font-size: 14px;
   line-height: 20px;
   text-align: center;

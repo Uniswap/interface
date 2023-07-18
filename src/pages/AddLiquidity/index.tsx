@@ -539,7 +539,7 @@ function AddLiquidity() {
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >
-          <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
+          <Text fontWeight={535}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
         </ButtonError>
       </AutoColumn>
     )
@@ -591,7 +591,7 @@ function AddLiquidity() {
               )}
               bottomContent={() => (
                 <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
-                  <Text fontWeight={500} fontSize={20}>
+                  <Text fontWeight={535} fontSize={20}>
                     <Trans>Add</Trans>
                   </Text>
                 </ButtonPrimary>
@@ -757,7 +757,7 @@ function AddLiquidity() {
                             <AutoRow gap="4px" justify="center" style={{ marginTop: '0.5rem' }}>
                               <Trans>
                                 <ThemedText.DeprecatedMain
-                                  fontWeight={500}
+                                  fontWeight={535}
                                   textAlign="center"
                                   fontSize={12}
                                   color="text1"
@@ -765,7 +765,7 @@ function AddLiquidity() {
                                   Current Price:
                                 </ThemedText.DeprecatedMain>
                                 <ThemedText.DeprecatedBody
-                                  fontWeight={500}
+                                  fontWeight={535}
                                   textAlign="center"
                                   fontSize={12}
                                   color="text1"

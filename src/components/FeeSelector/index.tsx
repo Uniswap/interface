@@ -152,7 +152,7 @@ export default function FeeSelector({
                   <ThemedText.DeprecatedLabel>
                     <Trans>Fee tier</Trans>
                   </ThemedText.DeprecatedLabel>
-                  <ThemedText.DeprecatedMain fontWeight={400} fontSize="12px" textAlign="left">
+                  <ThemedText.DeprecatedMain fontWeight={485} fontSize="12px" textAlign="left">
                     <Trans>The % you will earn in fees.</Trans>
                   </ThemedText.DeprecatedMain>
                 </>

@@ -85,7 +85,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
-              <ThemedText.DeprecatedMediumHeader fontWeight={500}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={535}>
                 {voteOption === VoteOption.Against ? (
                   <Trans>Vote against proposal {proposalId}</Trans>
                 ) : voteOption === VoteOption.For ? (

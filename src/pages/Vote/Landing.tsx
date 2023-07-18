@@ -77,7 +77,7 @@ const ProposalNumber = styled.span`
 `
 
 const ProposalTitle = styled.span`
-  font-weight: 600;
+  font-weight: 535;
   flex: 1;
   max-width: 420px;
   white-space: initial;
@@ -159,7 +159,7 @@ export default function Landing() {
               <CardSection>
                 <AutoColumn gap="md">
                   <RowBetween>
-                    <ThemedText.DeprecatedWhite fontWeight={600}>
+                    <ThemedText.DeprecatedWhite fontWeight={535}>
                       <Trans>Uniswap Governance</Trans>
                     </ThemedText.DeprecatedWhite>
                   </RowBetween>
@@ -206,7 +206,7 @@ export default function Landing() {
                     <Trans>Unlock Voting</Trans>
                   </ButtonPrimary>
                 ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
-                  <ThemedText.DeprecatedBody fontWeight={500} mr="6px">
+                  <ThemedText.DeprecatedBody fontWeight={535} mr="6px">
                     <Trans>
                       <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
                     </Trans>
@@ -215,7 +215,7 @@ export default function Landing() {
                   userDelegatee &&
                   userDelegatee !== ZERO_ADDRESS &&
                   JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
-                  <ThemedText.DeprecatedBody fontWeight={500} mr="6px">
+                  <ThemedText.DeprecatedBody fontWeight={535} mr="6px">
                     <Trans>
                       <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
                     </Trans>
@@ -238,7 +238,7 @@ export default function Landing() {
                 <div />
                 {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
                   <RowFixed>
-                    <ThemedText.DeprecatedBody fontWeight={500} mr="4px">
+                    <ThemedText.DeprecatedBody fontWeight={535} mr="4px">
                       <Trans>Delegated to:</Trans>
                     </ThemedText.DeprecatedBody>
                     <AddressButton>

@@ -48,7 +48,7 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{
   will-change: transform;
   border-radius: 8px;
   justify-content: center;
-  font-weight: 600 !important;
+  font-weight: 535 !important;
   line-height: 16px;
   visibility: hidden;
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
@@ -246,7 +246,7 @@ const PrimaryInfoContainer = styled(ThemedText.BodySmall)`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-weight: 600 !important;
+  font-weight: 535 !important;
   line-height: 20px;
 `
 

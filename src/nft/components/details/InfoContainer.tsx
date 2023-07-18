@@ -34,7 +34,7 @@ const PrimaryHeader = styled.span`
   align-items: center;
   gap: 16px;
   color: ${({ theme }) => theme.textPrimary};
-  font-weight: 500;
+  font-weight: 535;
   line-height: 28px;
   font-size: 20px;
 `

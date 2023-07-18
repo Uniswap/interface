@@ -59,7 +59,7 @@ const WarningMessage = styled(Row)<{ $color: string }>`
   width: max-content;
   position: absolute;
   right: 0;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 10px;
   line-height: 12px;
   color: ${({ $color }) => $color};

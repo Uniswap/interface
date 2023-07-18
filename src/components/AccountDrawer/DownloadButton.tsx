@@ -18,7 +18,7 @@ const StyledButton = styled.button<{ padded?: boolean; branded?: boolean }>`
   background: ${({ theme, branded }) => (branded ? theme.promotionalGradient : theme.backgroundInteractive)};
   border-radius: 12px;
 
-  font-weight: 600;
+  font-weight: 535;
   font-size: 14px;
   line-height: 16px;
   color: ${({ theme, branded }) => (branded ? theme.accentTextLightPrimary : theme.textPrimary)};

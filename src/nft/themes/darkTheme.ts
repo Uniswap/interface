@@ -2,23 +2,23 @@ import { Theme, vars } from 'nft/css/sprinkles.css'
 
 export const darkTheme: Theme = {
   colors: {
-    accentFailure: vars.color.red300,
+    accentFailure: vars.color.critical,
     accentFailureSoft: 'rgba(253, 118, 107, 0.12)',
-    accentAction: vars.color.blue400,
+    accentAction: vars.color.accent1_dark,
     accentActionSoft: 'rgba(76, 130, 251, 0.24)',
-    accentSuccess: vars.color.green200,
+    accentSuccess: vars.color.success,
 
     explicitWhite: '#FFFFFF',
-    green: vars.color.green200,
+    green: vars.color.success,
     gold: vars.color.gold200,
     violet: vars.color.violet200,
 
     backgroundFloating: '0000000C',
-    backgroundInteractive: vars.color.gray700,
-    backgroundModule: vars.color.gray800,
-    backgroundOutline: vars.color.backgroundInteractive,
-    backgroundSurface: vars.color.gray900,
-    backgroundBackdrop: vars.color.gray950,
+    backgroundInteractive: vars.color.surface4_dark,
+    backgroundModule: vars.color.surface4_dark,
+    backgroundOutline: vars.color.surface4_dark,
+    backgroundSurface: vars.color.surface2_dark,
+    backgroundBackdrop: vars.color.surface3_dark,
 
     modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
 
@@ -26,9 +26,9 @@ export const darkTheme: Theme = {
     searchOutline: `rgba(255,255,255,0.07)`,
     stateOverlayHover: `rgba(153,161,189,0.08)`,
 
-    textPrimary: '#FFFFFF',
-    textSecondary: vars.color.gray300,
-    textTertiary: vars.color.gray500,
+    textPrimary: vars.color.neutral1_dark,
+    textSecondary: vars.color.neutral2_dark,
+    textTertiary: vars.color.neutral3_dark,
 
     dropShadow: `0px 4px 16px rgba(76, 130, 251, 0.4)`,
   },

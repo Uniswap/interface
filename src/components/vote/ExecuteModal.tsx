@@ -81,7 +81,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
-              <ThemedText.DeprecatedMediumHeader fontWeight={500}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={535}>
                 <Trans>Execute Proposal {proposalId}</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />

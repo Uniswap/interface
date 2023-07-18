@@ -27,7 +27,7 @@ const ContentWrapper = styled(Column)`
 `
 const ActionSelectorHeader = styled.div`
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 535;
   color: ${({ theme }) => theme.textSecondary};
 `
 
@@ -102,7 +102,7 @@ export function ProposalActionSelectorModal({
       <ContentWrapper>
         <PaddedColumn gap="16px">
           <RowBetween>
-            <Text fontWeight={500} fontSize={16}>
+            <Text fontWeight={535} fontSize={16}>
               <Trans>Select an action</Trans>
             </Text>
             <CloseIcon onClick={onDismiss} />
@@ -111,14 +111,14 @@ export function ProposalActionSelectorModal({
         <Separator />
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.TRANSFER_TOKEN)}>
           <Column>
-            <Text fontWeight={500}>
+            <Text fontWeight={535}>
               <Trans>Transfer Token</Trans>
             </Text>
           </Column>
         </MenuItem>
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.APPROVE_TOKEN)}>
           <Column>
-            <Text fontWeight={500}>
+            <Text fontWeight={535}>
               <Trans>Approve Token</Trans>
             </Text>
           </Column>

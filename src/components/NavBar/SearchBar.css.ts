@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
+import { subhead, subheadSmall } from 'nft/css/common.css'
 
 import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
@@ -91,8 +91,8 @@ export const nftSearchBar = style([
 export const searchBarInput = style([
   sprinkles({
     padding: '0',
-    fontWeight: 'normal',
     fontSize: '16',
+    fontWeight: 'book',
     color: { default: 'textPrimary', placeholder: 'textSecondary' },
     border: 'none',
     background: 'none',
@@ -172,7 +172,7 @@ export const primaryText = style([
 ])
 
 export const secondaryText = style([
-  buttonTextSmall,
+  subheadSmall,
   sprinkles({
     color: 'textSecondary',
   }),

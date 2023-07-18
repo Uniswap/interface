@@ -66,7 +66,7 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
     case BadgeVariant.WARNING_OUTLINE:
       return theme.accentWarning
     default:
-      return readableColor(theme.backgroundInteractive)
+      return readableColor(theme.backgroundModule)
   }
 }
 
@@ -79,7 +79,7 @@ const Badge = styled.div<PropsWithChildren<BadgeProps>>`
   display: inline-flex;
   padding: 4px 6px;
   justify-content: center;
-  font-weight: 500;
+  font-weight: 535;
 `
 
 export default Badge

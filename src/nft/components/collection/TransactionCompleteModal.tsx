@@ -212,7 +212,7 @@ const TxCompleteModal = () => {
                       <p className={styles.subtitle}>Instant Refund</p>
                       <p className={styles.interStd}>
                         Uniswap returned{' '}
-                        <span style={{ fontWeight: '700' }}>{formatEthPrice(totalRefundValue.toString())} ETH</span>{' '}
+                        <span style={{ fontWeight: '535' }}>{formatEthPrice(totalRefundValue.toString())} ETH</span>{' '}
                         back to your wallet for unavailable items.
                       </p>
                       <Box

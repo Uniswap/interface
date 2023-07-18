@@ -55,12 +55,19 @@ const SearchBarDropdownSection = ({
   eventProperties,
 }: SearchBarDropdownSectionProps) => {
   return (
-    <Column gap="12" data-cy="searchbar-dropdown">
-      <Row paddingX="16" paddingY="4" gap="8" color="gray300" className={subheadSmall} style={{ lineHeight: '20px' }}>
+    <Column gap="4" data-cy="searchbar-dropdown">
+      <Row
+        paddingX="16"
+        paddingY="4"
+        gap="8"
+        color="textSecondary"
+        className={subheadSmall}
+        style={{ lineHeight: '20px' }}
+      >
         {headerIcon ? headerIcon : null}
         <Box>{header}</Box>
       </Row>
-      <Column gap="12">
+      <Column gap="4">
         {suggestions.map((suggestion, index) =>
           isLoading || !suggestion ? (
             <SkeletonRow key={index} />
@@ -266,7 +273,7 @@ export const SearchBarDropdown = ({
       const currentState = () =>
         hasInput ? (
           // Empty or Up to 8 combined tokens and nfts
-          <Column gap="20">
+          <Column gap="12">
             {showCollectionsFirst ? (
               <>
                 {collectionSearchResults}
@@ -281,7 +288,7 @@ export const SearchBarDropdown = ({
           </Column>
         ) : (
           // Recent Searches, Trending Tokens, Trending Collections
-          <Column gap="20">
+          <Column gap="12">
             {shortenedHistory.length > 0 && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
@@ -367,7 +374,7 @@ export const SearchBarDropdown = ({
         {showChainComingSoonBadge && (
           <ChainComingSoonBadge>
             <ChainLogo src={logoUri} />
-            <ThemedText.BodySmall color="textSecondary" fontSize="14px" fontWeight="400" lineHeight="20px">
+            <ThemedText.BodySmall color="textSecondary" fontSize="14px" fontWeight="485" lineHeight="20px">
               <ComingSoonText chainId={chainId} />
             </ThemedText.BodySmall>
           </ChainComingSoonBadge>

@@ -28,7 +28,7 @@ const ContainerRow = styled.div<{ error: boolean }>`
   border-radius: 1.25rem;
   border: 1px solid ${({ error, theme }) => (error ? theme.accentFailure : theme.backgroundInteractive)};
   transition: border-color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')},
-    color 500ms ${({ error }) => (error ? 'step-end' : 'step-start')};
+    color 535ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   background-color: ${({ theme }) => theme.deprecated_bg1};
 `
 
@@ -48,10 +48,10 @@ const Input = styled.input<{ error?: boolean }>`
   color: ${({ error, theme }) => (error ? theme.accentFailure : theme.textPrimary)};
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 500;
+  font-weight: 535;
   width: 100%;
   ::placeholder {
-    color: ${({ theme }) => theme.deprecated_text4};
+    color: ${({ theme }) => theme.textTertiary};
   }
   padding: 0px;
   -webkit-appearance: textfield;
@@ -66,7 +66,7 @@ const Input = styled.input<{ error?: boolean }>`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.deprecated_text4};
+    color: ${({ theme }) => theme.textTertiary};
   }
 `
 
@@ -109,7 +109,7 @@ export default function AddressInputPanel({
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
-              <ThemedText.DeprecatedBlack color={theme.textSecondary} fontWeight={500} fontSize={14}>
+              <ThemedText.DeprecatedBlack color={theme.textSecondary} fontWeight={535} fontSize={14}>
                 {label ?? <Trans>Recipient</Trans>}
               </ThemedText.DeprecatedBlack>
               {address && chainId && (

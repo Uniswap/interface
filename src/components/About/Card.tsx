@@ -54,7 +54,7 @@ const TitleRow = styled.div`
 const CardTitle = styled.div`
   font-size: 20px;
   line-height: 28px;
-  font-weight: 600;
+  font-weight: 535;
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
     font-size: 28px;
@@ -89,7 +89,7 @@ const CardDescription = styled.div<{ type: CardType }>`
 
 const CardCTA = styled(CardDescription)`
   color: ${({ theme }) => theme.accentAction};
-  font-weight: 500;
+  font-weight: 535;
   margin: 24px 0 0;
   cursor: pointer;
 

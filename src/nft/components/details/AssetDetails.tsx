@@ -127,7 +127,7 @@ const FilterBox = styled.div<{ backgroundColor: string }>`
   box-sizing: border-box;
   background-color: ${({ backgroundColor }) => backgroundColor};
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 535;
   line-height: 14px;
   color: ${({ theme }) => theme.textPrimary};
   padding: 8px 16px;

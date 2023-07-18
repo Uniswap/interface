@@ -29,7 +29,7 @@ const StyledBubble = styled(Row)`
 `
 
 const StyledLabelMedium = styled.div`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   line-height: 20px;
   color: ${({ theme }) => theme.textPrimary};

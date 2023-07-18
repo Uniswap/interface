@@ -56,14 +56,14 @@ const ContentName = styled(ThemedText.SubHeaderSmall)`
 `
 
 const ProceedText = styled.span`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 12px;
   line-height: 16px;
   color: ${({ theme }) => theme.textSecondary};
 `
 
 const FailedText = styled.span`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 10px;
   line-height: 12px;
   color: ${({ theme }) => theme.accentCritical};
@@ -91,7 +91,7 @@ const failedButtonStyle = css`
   cursor: pointer;
   padding: 8px 0px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 14px;
   line-height: 16px;
   border-radius: 12px;

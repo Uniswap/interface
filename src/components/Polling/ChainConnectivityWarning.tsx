@@ -9,7 +9,7 @@ import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 const BodyRow = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 435;
   font-size: 14px;
   line-height: 20px;
 `
@@ -28,7 +28,7 @@ const TitleRow = styled.div`
 `
 const TitleText = styled.div`
   color: ${({ theme }) => theme.textPrimary};
-  font-weight: 500;
+  font-weight: 535;
   font-size: 16px;
   line-height: 24px;
   margin: 0px 12px;

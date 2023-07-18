@@ -32,7 +32,7 @@ const StyledHistoryLink = styled(HistoryLink)<{ flex?: string }>`
 `
 
 const ActiveText = styled.div`
-  font-weight: 500;
+  font-weight: 535;
   font-size: 20px;
 `
 
@@ -97,7 +97,7 @@ export function AddRemoveTabs({
           <StyledArrowLeft stroke={theme.textSecondary} />
         </StyledHistoryLink>
         <ThemedText.DeprecatedMediumHeader
-          fontWeight={500}
+          fontWeight={535}
           fontSize={20}
           style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
         >

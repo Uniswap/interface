@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   display: flex;
   flex-direction: row;
-  font-weight: 500;
+  font-weight: 535;
   font-size: 14px;
   height: fit-content;
   justify-content: space-between;
@@ -74,7 +74,7 @@ const SwapButton = styled(StyledInternalLink)`
   flex: 1 1 auto;
   padding: 12px 16px;
   font-size: 1em;
-  font-weight: 600;
+  font-weight: 535;
   height: 44px;
   justify-content: center;
   margin: auto;

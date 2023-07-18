@@ -33,7 +33,7 @@ const DropdownPrompt = styled(Row)`
   gap: 4px;
   background-color: ${({ theme }) => theme.backgroundInteractive};
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 14px;
   line-height: 16px;
   border-radius: 8px;

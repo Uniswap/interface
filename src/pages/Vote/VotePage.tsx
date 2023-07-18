@@ -402,14 +402,14 @@ export default function VotePage() {
                 <CardSection>
                   <AutoColumn gap="md">
                     <WrapSmall>
-                      <ThemedText.DeprecatedBlack fontWeight={600}>
+                      <ThemedText.DeprecatedBlack fontWeight={535}>
                         <Trans>For</Trans>
                       </ThemedText.DeprecatedBlack>
                       {proposalData && (
-                        <ThemedText.DeprecatedBlack fontWeight={600}>
+                        <ThemedText.DeprecatedBlack fontWeight={535}>
                           {proposalData.forCount.toFixed(0, { groupSeparator: ',' })}
                           {quorumAmount && (
-                            <span style={{ fontWeight: 400 }}>{` / ${quorumAmount.toExact({
+                            <span style={{ fontWeight: 485 }}>{` / ${quorumAmount.toExact({
                               groupSeparator: ',',
                             })}`}</span>
                           )}
@@ -431,11 +431,11 @@ export default function VotePage() {
                 <CardSection>
                   <AutoColumn gap="md">
                     <WrapSmall>
-                      <ThemedText.DeprecatedBlack fontWeight={600}>
+                      <ThemedText.DeprecatedBlack fontWeight={535}>
                         <Trans>Against</Trans>
                       </ThemedText.DeprecatedBlack>
                       {proposalData && (
-                        <ThemedText.DeprecatedBlack fontWeight={600}>
+                        <ThemedText.DeprecatedBlack fontWeight={535}>
                           {proposalData.againstCount.toFixed(0, { groupSeparator: ',' })}
                         </ThemedText.DeprecatedBlack>
                       )}
@@ -453,7 +453,7 @@ export default function VotePage() {
               </StyledDataCard>
             </CardWrapper>
             <AutoColumn gap="md">
-              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={535}>
                 <Trans>Details</Trans>
               </ThemedText.DeprecatedMediumHeader>
               {proposalData?.details?.map((d, i) => {
@@ -474,7 +474,7 @@ export default function VotePage() {
               })}
             </AutoColumn>
             <AutoColumn gap="md">
-              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={535}>
                 <Trans>Description</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <MarkDownWrapper>
@@ -487,7 +487,7 @@ export default function VotePage() {
               </MarkDownWrapper>
             </AutoColumn>
             <AutoColumn gap="md">
-              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={535}>
                 <Trans>Proposer</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <ProposerAddressLink

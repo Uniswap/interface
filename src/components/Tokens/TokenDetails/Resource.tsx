@@ -5,7 +5,7 @@ import { ExternalLink } from 'theme'
 const ResourceLink = styled(ExternalLink)`
   display: flex;
   color: ${({ theme }) => theme.accentAction};
-  font-weight: 500;
+  font-weight: 535;
   font-size: 14px;
   line-height: 20px;
   gap: 4px;

@@ -30,7 +30,7 @@ const ListPriceRowContainer = styled(Row)`
   gap: 6px;
   color: ${({ theme }) => theme.accentTextLightPrimary};
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 535;
   line-height: 16px;
   text-shadow: 1px 1px 3px rgba(51, 53, 72, 0.54);
 `
@@ -107,7 +107,7 @@ const RarityInfo = styled(ThemedText.Caption)`
   background: ${({ theme }) => theme.backgroundInteractive};
   padding: 4px 6px;
   border-radius: 4px;
-  font-weight: 700 !important;
+  font-weight: 535 !important;
   line-height: 12px;
   text-align: right;
   cursor: pointer;

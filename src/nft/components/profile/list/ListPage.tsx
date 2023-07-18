@@ -71,13 +71,13 @@ const TitleWrapper = styled(Row)`
   margin-bottom: 12px;
   white-space: nowrap;
   width: min-content;
-  font-weight: 500;
+  font-weight: 535;
   font-size: 20px;
   line-height: 28px;
 
   @media screen and (min-width: ${BREAKPOINTS.xs}px) {
     margin-bottom: 0px;
-    font-weight: 500;
+    font-weight: 535;
     font-size: 28px;
     line-height: 36px;
   }
@@ -170,7 +170,7 @@ const ProceedsWrapper = styled(Row)`
 `
 
 const EthValueWrapper = styled.span<{ totalEthListingValue: boolean }>`
-  font-weight: 500;
+  font-weight: 535;
   font-size: 20px;
   line-height: 28px;
   color: ${({ theme, totalEthListingValue }) => (totalEthListingValue ? theme.textPrimary : theme.textSecondary)};

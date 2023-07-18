@@ -96,7 +96,7 @@ export const addressHash = style([
   sprinkles({
     color: 'textSecondary',
     fontSize: '10',
-    fontWeight: 'normal',
+    fontWeight: 'book',
     marginTop: '4',
   }),
   {
@@ -440,7 +440,7 @@ export const unavailableAssetPreview = style([
 export const unavailableText = style([
   sprinkles({
     color: 'textSecondary',
-    fontWeight: 'normal',
+    fontWeight: 'book',
     fontSize: '14',
     paddingTop: '8',
     paddingBottom: '8',
@@ -454,7 +454,7 @@ export const unavailableText = style([
 
 export const unavailableItems = style([
   sprinkles({
-    fontWeight: 'normal',
+    fontWeight: 'book',
     fontSize: '12',
     display: 'flex',
   }),

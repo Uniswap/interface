@@ -74,7 +74,7 @@ const ContinueButton = styled.div`
   border-radius: 12px;
   text-align: center;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 535;
   line-height: 20px;
   cursor: pointer;
   transition: ${({ theme }) => theme.transition.duration.medium};

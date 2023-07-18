@@ -33,7 +33,7 @@ const KeyShortCut = styled.div`
   height: 20px;
   border-radius: 4px;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 535;
   line-height: 16px;
   display: flex;
   align-items: center;

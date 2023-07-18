@@ -95,7 +95,7 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
   padding: 0 0 40px;
   max-width: min(720px, 90%);
-  min-height: 500px;
+  min-height: 535px;
   z-index: ${Z_INDEX.under_dropdown};
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
   height: ${({ theme }) => `calc(100vh - ${theme.navHeight + theme.mobileBottomBarHeight}px)`};
@@ -109,7 +109,7 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
   color: transparent;
   font-size: 36px;
   line-height: 44px;
-  font-weight: 700;
+  font-weight: 535;
   text-align: center;
   margin: 0 0 24px;
   ${({ isDarkMode }) =>
@@ -138,9 +138,9 @@ const SubText = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   font-size: 16px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: 535;
   text-align: center;
-  max-width: 600px;
+  max-width: 535px;
   margin: 0 0 32px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
@@ -173,7 +173,7 @@ const ButtonCTA = styled(LandingButton)`
 const ButtonCTAText = styled.p`
   margin: 0px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 535;
   white-space: nowrap;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
@@ -192,7 +192,7 @@ const LearnMoreContainer = styled.div`
   color: ${({ theme }) => theme.textTertiary};
   cursor: pointer;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 535;
   margin: 36px 0;
   display: flex;
   visibility: hidden;
@@ -222,7 +222,7 @@ const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
   ${({ isDarkMode }) =>
     isDarkMode
       ? css`
-          background: linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #050026 99.85%);
+          background: linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #053526 99.85%);
         `
       : css`
           background: linear-gradient(179.82deg, rgba(255, 255, 255, 0) 0.16%, #eaeaea 99.85%);
@@ -360,9 +360,9 @@ export default function Landing() {
               <SubTextContainer>
                 <SubText>
                   {shouldDisableNFTRoutes ? (
-                    <Trans>Buy, sell, and explore tokens</Trans>
+                    <Trans>Buy, sell, and manage tokens</Trans>
                   ) : (
-                    <Trans>Buy, sell, and explore tokens and NFTs</Trans>
+                    <Trans>Buy, sell, and manage tokens and NFTs</Trans>
                   )}
                 </SubText>
               </SubTextContainer>
@@ -379,14 +379,6 @@ export default function Landing() {
                   </ButtonCTA>
                 </TraceEvent>
               </ActionsContainer>
-              <LearnMoreContainer
-                onClick={() => {
-                  cardsRef?.current?.scrollIntoView({ behavior: 'smooth' })
-                }}
-              >
-                <Trans>Learn more</Trans>
-                <LearnMoreArrow />
-              </LearnMoreContainer>
 
               <DownloadWalletLink href="https://wallet.uniswap.org/">
                 <AppleLogo width="20" height="20" />
@@ -421,11 +413,12 @@ export default function Landing() {
 const DownloadWalletLink = styled.a`
   display: inline-flex;
   gap: 8px;
+  margin-top: 24px;
   color: ${({ theme }) => theme.textSecondary};
   text-decoration: none;
   font-size: 16px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: 535;
   text-align: center;
 
   :hover {

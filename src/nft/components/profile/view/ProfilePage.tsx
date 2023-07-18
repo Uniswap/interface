@@ -37,7 +37,7 @@ const ProfilePageColumn = styled(Column)`
 
 const ProfileHeader = styled.div`
   font-size: 28px;
-  font-weight: 500;
+  font-weight: 535;
   line-height: 38px;
   padding-bottom: 16px;
   margin-bottom: 8px;
@@ -96,7 +96,7 @@ export const ProfilePage = () => {
     isSuccess,
   } = useInfiniteQuery(['ownerCollections', { address }], getOwnerCollections, {
     getNextPageParam: (lastGroup) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
-    refetchInterval: 15000,
+    refetchInterval: 15350,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,

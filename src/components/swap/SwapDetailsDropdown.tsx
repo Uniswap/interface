@@ -33,7 +33,7 @@ const StyledPolling = styled.div`
   height: 16px;
   width: 16px;
   margin-right: 2px;
-  margin-left: 10px;
+  margin-left: 2px;
   align-items: center;
   color: ${({ theme }) => theme.textPrimary};
   transition: 250ms ease color;

@@ -47,7 +47,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
           <WarningIcon size={48} />
         </IconContainer>
         <ColumnCenter gap="sm">
-          <ThemedText.HeadlineSmall fontWeight={500}>
+          <ThemedText.HeadlineSmall fontWeight={535}>
             <Trans>Warning</Trans>
           </ThemedText.HeadlineSmall>
           <ThemedText.BodyPrimary lineHeight="24px" textAlign="center">

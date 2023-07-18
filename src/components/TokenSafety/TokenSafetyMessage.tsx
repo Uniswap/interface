@@ -17,12 +17,12 @@ const Label = styled.div<{ color: string; backgroundColor: string }>`
 
 const TitleRow = styled.div`
   align-items: center;
-  font-weight: 700;
+  font-weight: 535;
   display: inline-flex;
 `
 
 const Title = styled(Text)`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   line-height: 24px;
   margin-left: 7px;
@@ -38,7 +38,7 @@ const DetailsRow = styled.div`
 const StyledLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.accentAction};
 
-  font-weight: 700;
+  font-weight: 535;
 `
 
 type TokenSafetyMessageProps = {

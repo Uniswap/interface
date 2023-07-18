@@ -81,7 +81,7 @@ const Success = styled(AnimatedEntranceConfirmationIcon)`
 `
 
 const LearnMoreLink = styled(ExternalLink)`
-  font-weight: 600;
+  font-weight: 536;
 `
 const DescriptionText = styled(ThemedText.LabelMicro)`
   text-align: center;

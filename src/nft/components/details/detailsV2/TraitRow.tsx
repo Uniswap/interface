@@ -15,7 +15,7 @@ const TraitRowLink = styled(Link)`
 const SubheaderTiny = styled.div<{ $color?: string }>`
   font-size: 10px;
   line-height: 16px;
-  font-weight: 600;
+  font-weight: 535;
   color: ${({ theme, $color }) => ($color ? $color : theme.textSecondary)};
 `
 

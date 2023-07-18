@@ -13,7 +13,7 @@ export default function UniswapXBrandMark({ fontWeight, ...props }: UniswapXBran
       <ThemedText.BodySecondary
         fontSize="inherit"
         {...(fontWeight === 'bold' && {
-          fontWeight: '500',
+          fontWeight: '535',
         })}
       >
         <Trans>UniswapX</Trans>

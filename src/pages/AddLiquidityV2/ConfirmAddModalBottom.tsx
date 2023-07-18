@@ -69,7 +69,7 @@ export function ConfirmAddModalBottom({
         </ThemedText.DeprecatedBody>
       </RowBetween>
       <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
-        <Text fontWeight={500} fontSize={20}>
+        <Text fontWeight={535} fontSize={20}>
           {noLiquidity ? <Trans>Create Pool & Supply</Trans> : <Trans>Confirm Supply</Trans>}
         </Text>
       </ButtonPrimary>

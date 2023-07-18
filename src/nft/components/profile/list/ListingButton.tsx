@@ -12,7 +12,7 @@ import { findListingIssues } from './utils'
 const StyledListingButton = styled(BaseButton)<{ showResolveIssues: boolean; missingPrices: boolean }>`
   background: ${({ showResolveIssues, theme }) => (showResolveIssues ? theme.accentFailure : theme.accentAction)};
   color: ${({ theme }) => theme.accentTextLightPrimary};
-  font-weight: 600;
+  font-weight: 535;
   font-size: 20px;
   line-height: 24px;
   padding: 16px;

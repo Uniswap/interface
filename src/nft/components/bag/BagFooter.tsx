@@ -104,7 +104,7 @@ const ActionButton = styled.button<{ $backgroundColor: string; $color: string }>
   display: flex;
   background: ${({ $backgroundColor }) => $backgroundColor};
   color: ${({ $color }) => $color};
-  font-weight: 600;
+  font-weight: 535;
   line-height: 24px;
   font-size: 16px;
   gap: 16px;
@@ -140,7 +140,7 @@ const PriceImpactRow = styled(Row)`
 
 const ValueText = styled(ThemedText.BodyPrimary)`
   line-height: 20px;
-  font-weight: 500;
+  font-weight: 535;
   overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -193,7 +193,7 @@ const InputCurrencyValue = ({
 }) => {
   if (!usingPayWithAnyToken) {
     return (
-      <ThemedText.BodyPrimary lineHeight="20px" fontWeight="500">
+      <ThemedText.BodyPrimary lineHeight="20px" fontWeight="535">
         {formatWeiToDecimal(totalEthPrice.toString())}
         &nbsp;{activeCurrency?.symbol ?? 'ETH'}
       </ThemedText.BodyPrimary>
@@ -202,7 +202,7 @@ const InputCurrencyValue = ({
 
   if (tradeState === TradeState.LOADING && !trade) {
     return (
-      <ThemedText.BodyPrimary color="textTertiary" lineHeight="20px" fontWeight="500">
+      <ThemedText.BodyPrimary color="textTertiary" lineHeight="20px" fontWeight="535">
         <Trans>Fetching price...</Trans>
       </ThemedText.BodyPrimary>
     )
@@ -477,7 +477,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
                     }}
                   >
                     <CurrencyLogo currency={activeCurrency} size="24px" />
-                    <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
+                    <ThemedText.HeadlineSmall fontWeight={535} lineHeight="24px">
                       {activeCurrency?.symbol}
                     </ThemedText.HeadlineSmall>
                     <ChevronDown size={20} color={theme.textSecondary} />

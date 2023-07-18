@@ -140,7 +140,7 @@ const DiscoveryContainer = styled.div`
 
 const OwnerText = styled.a`
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 535;
   line-height: 20px;
   color: ${({ theme }) => theme.textSecondary};
   text-decoration: none;
@@ -166,7 +166,7 @@ const AssetHeader = styled.div`
   display: -webkit-box;
   align-items: center;
   font-size: 28px;
-  font-weight: 500;
+  font-weight: 535;
   line-height: 36px;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -182,7 +182,7 @@ const CollectionNameContainer = styled.div`
 
 const CollectionHeader = styled.span`
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 435;
   line-height: 24px;
   color: ${({ theme }) => theme.textPrimary};
   text-decoration: none;

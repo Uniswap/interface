@@ -29,7 +29,8 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${flexColumnNoWrap};
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.backgroundInteractive)};
+  background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.backgroundModule)};
+
   z-index: 1;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   transition: height 1s ease;
@@ -41,7 +42,7 @@ const FixedContainer = styled.div`
   height: 100%;
   position: absolute;
   border-radius: 20px;
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.backgroundModule};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,8 +51,8 @@ const FixedContainer = styled.div`
 
 const Container = styled.div<{ hideInput: boolean; disabled: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  border: 1px solid ${({ theme }) => theme.backgroundSurface};
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.backgroundModule};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   ${({ theme, hideInput, disabled }) =>
     !disabled &&
@@ -81,7 +82,7 @@ const CurrencySelect = styled(ButtonGray)<{
   user-select: none;
   border: none;
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 535;
   height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.4rem')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   padding: 0 8px;
@@ -150,7 +151,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   color: ${({ theme }) => theme.accentAction};
   cursor: pointer;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 535;
   margin-left: 0.25rem;
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   padding: 4px 6px;
@@ -298,7 +299,7 @@ export default function CurrencyInputPanel({
                   <ThemedText.DeprecatedBody
                     onClick={onMax}
                     color={theme.textTertiary}
-                    fontWeight={500}
+                    fontWeight={535}
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >

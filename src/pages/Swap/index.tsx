@@ -76,12 +76,12 @@ export const ArrowContainer = styled.div`
 const SwapSection = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.backgroundModule};
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 16px;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   line-height: 20px;
-  font-weight: 500;
+  font-weight: 535;
 
   &:before {
     box-sizing: border-box;
@@ -687,7 +687,7 @@ export function Swap({
               properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
-              <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
+              <ButtonLight onClick={toggleWalletDrawer} fontWeight={535}>
                 <Trans>Connect Wallet</Trans>
               </ButtonLight>
             </TraceEvent>
@@ -709,12 +709,7 @@ export function Swap({
               Connect to {getChainInfo(chainId)?.label}
             </ButtonPrimary>
           ) : showWrap ? (
-            <ButtonPrimary
-              disabled={Boolean(wrapInputError)}
-              onClick={handleOnWrap}
-              fontWeight={600}
-              data-testid="wrap-button"
-            >
+            <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={handleOnWrap} data-testid="wrap-button">
               {wrapInputError ? (
                 <WrapErrorText wrapInputError={wrapInputError} />
               ) : wrapType === WrapType.WRAP ? (
@@ -744,7 +739,7 @@ export function Swap({
                 disabled={!getIsValidSwapQuote(trade, tradeState, swapInputError)}
                 error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
               >
-                <Text fontSize={20} fontWeight={600}>
+                <Text fontSize={20}>
                   {swapInputError ? (
                     swapInputError
                   ) : routeIsSyncing || routeIsLoading ? (

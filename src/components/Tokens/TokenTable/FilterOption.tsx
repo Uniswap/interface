@@ -8,7 +8,7 @@ const FilterOption = styled.button<{ active: boolean; highlight?: boolean }>`
   border-radius: 12px;
   font-size: 16px;
   line-height: 24px;
-  font-weight: 600;
+  font-weight: 535;
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
   border: none;
   outline: ${({ theme, active, highlight }) => (active && highlight ? `1px solid ${theme.accentAction}` : 'none')};

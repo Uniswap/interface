@@ -32,7 +32,7 @@ const TimeButton = styled.button<{ active: boolean }>`
   align-items: center;
   justify-content: center;
   background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : 'transparent')};
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   padding: 6px 12px;
   border-radius: 12px;

@@ -31,7 +31,7 @@ const LinkRow = styled(Link)`
   color: ${({ theme }) => theme.textPrimary};
   padding: 16px;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 535;
 
   & > div:not(:first-child) {
     text-align: center;

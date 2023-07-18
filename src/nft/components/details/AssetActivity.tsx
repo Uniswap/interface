@@ -21,7 +21,7 @@ const TR = styled.tr`
 
 const TH = styled.th`
   color: ${({ theme }) => theme.textSecondary};
-  font-weight: 600;
+  font-weight: 535;
   font-size: 14px;
   line-height: 20px;
   width: 20%;

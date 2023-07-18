@@ -33,7 +33,7 @@ const GridItemContainer = styled(Link)`
 
 const TraitType = styled.div`
   color: ${({ theme }) => theme.textSecondary};
-  font-weight: 600;
+  font-weight: 535;
   font-size: 10px;
   line-height: 12px;
   white-space: nowrap;

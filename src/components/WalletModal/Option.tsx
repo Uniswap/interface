@@ -35,7 +35,7 @@ const HeaderText = styled.div`
   justify-content: center;
   color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.accentAction : ({ theme }) => theme.textPrimary)};
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 535;
   padding: 0 8px;
 `
 const IconWrapper = styled.div`

@@ -39,7 +39,7 @@ const NoTokenDisplay = styled.div`
   height: 60px;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 535;
   align-items: center;
   padding: 0px 28px;
   gap: 8px;

@@ -51,7 +51,7 @@ export const headerRow = style([
     paddingBottom: '8',
     color: 'textSecondary',
     fontSize: '12',
-    fontWeight: 'semibold',
+    fontWeight: 'medium',
     paddingX: '16',
   }),
   {
@@ -69,7 +69,7 @@ export const detailsName = style([
   body,
   sprinkles({
     marginBottom: '6',
-    fontWeight: 'normal',
+    fontWeight: 'book',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
@@ -182,7 +182,7 @@ export const rarityInfo = style([
     color: 'textPrimary',
     background: 'backgroundInteractive',
     fontSize: '10',
-    fontWeight: 'semibold',
+    fontWeight: 'medium',
     paddingX: '4',
     cursor: 'pointer',
   }),

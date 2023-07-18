@@ -10,7 +10,7 @@ export const MissingImageLogo = styled.div<{ size?: string }>`
   color: ${({ theme }) => theme.textPrimary};
   background-color: ${({ theme }) => theme.backgroundInteractive};
   font-size: calc(var(--size) / 3);
-  font-weight: 500;
+  font-weight: 535;
   height: ${({ size }) => size ?? '24px'};
   line-height: ${({ size }) => size ?? '24px'};
   text-align: center;

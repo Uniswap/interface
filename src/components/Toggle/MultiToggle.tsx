@@ -23,7 +23,7 @@ export const ToggleElement = styled.span<{ isActive?: boolean; fontSize?: string
   background: ${({ theme, isActive }) => (isActive ? theme.backgroundSurface : 'none')};
   color: ${({ theme, isActive }) => (isActive ? theme.textPrimary : theme.textTertiary)};
   font-size: ${({ fontSize }) => fontSize ?? '1rem'};
-  font-weight: 500;
+  font-weight: 535;
   white-space: nowrap;
   :hover {
     user-select: initial;

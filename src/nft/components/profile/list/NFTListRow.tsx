@@ -70,7 +70,7 @@ const TokenInfoWrapper = styled(Column)`
 `
 
 const TokenName = styled.div`
-  font-weight: 500;
+  font-weight: 535;
   font-size: 16px;
   line-height: 24px;
   ${HideTextOverflow}

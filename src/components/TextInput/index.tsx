@@ -12,7 +12,7 @@ const Input = styled.input<{ error?: boolean; fontSize?: string }>`
   color: ${({ error, theme }) => (error ? theme.accentFailure : theme.textPrimary)};
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 500;
+  font-weight: 535;
   width: 100%;
   padding: 0px;
   -webkit-appearance: textfield;
@@ -27,7 +27,7 @@ const Input = styled.input<{ error?: boolean; fontSize?: string }>`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.deprecated_text4};
+    color: ${({ theme }) => theme.textTertiary};
   }
 `
 
@@ -43,7 +43,7 @@ const TextAreaInput = styled.textarea<{ error?: boolean; fontSize?: string }>`
   color: ${({ error, theme }) => (error ? theme.accentFailure : theme.textPrimary)};
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 500;
+  font-weight: 535;
   width: 100%;
   line-height: 1.2;
   padding: 0px;
@@ -127,7 +127,7 @@ export const ResizingTextArea = memo(
 
     return (
       <TextAreaInput
-        style={{ height: 'auto', minHeight: '500px' }}
+        style={{ height: 'auto', minHeight: '535px' }}
         className={className}
         autoComplete="off"
         autoCorrect="off"

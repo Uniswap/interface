@@ -26,11 +26,14 @@ export const PageWrapper = styled.div`
 export const SwapWrapper = styled.main<{ chainId?: number }>`
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
-  border-radius: 16px;
+  border-radius: 24px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
   padding-top: 12px;
-  box-shadow: ${({ chainId }) => !!chainId && chainId === ChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
+  box-shadow: ${({ chainId, theme }) =>
+    !!chainId && chainId === ChainId.BNB
+      ? '0px 40px 120px 0px #f0b90b29'
+      : `0px 0px 10px 0px rgba(252, 114, 255, 0.04), 0px 40px 120px 0px rgba(252, 114, 255, 0.12);`};
   z-index: ${Z_INDEX.default};
   transition: transform 250ms ease;
 
@@ -42,7 +45,7 @@ export const SwapWrapper = styled.main<{ chainId?: number }>`
 export const UniswapPopoverContainer = styled.div`
   padding: 18px;
   color: ${({ theme }) => theme.textPrimary};
-  font-weight: 400;
+  font-weight: 435;
   font-size: 12px;
   line-height: 16px;
   word-break: break-word;
@@ -151,7 +154,7 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   margin-bottom: -18px;
   margin-left: auto;
   margin-right: auto;
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.backgroundModule};
   border: 4px solid;
   border-color: ${({ theme }) => theme.backgroundSurface};
 
@@ -203,7 +206,7 @@ const SwapCallbackErrorInner = styled.div`
   p {
     padding: 0;
     margin: 0;
-    font-weight: 500;
+    font-weight: 535;
   }
 `
 

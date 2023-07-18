@@ -26,7 +26,8 @@ const SearchInput = styled.input`
   border: 1.5px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
   width: min(200px, 100%);
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 435;
   padding-left: 40px;
   color: ${({ theme }) => theme.textSecondary};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
@@ -38,7 +39,8 @@ const SearchInput = styled.input`
   :focus {
     outline: none;
     background-color: ${({ theme }) => theme.backgroundSurface};
-    border-color: ${({ theme }) => theme.accentActionSoft};
+    border-color: ${({ theme }) => theme.accentAction};
+    color: ${({ theme }) => theme.textPrimary};
   }
 
   ::placeholder {

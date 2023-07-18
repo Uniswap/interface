@@ -3,7 +3,7 @@ import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 
 const StyledLink = styled(ExternalLink)`
-  font-weight: 600;
+  font-weight: 535;
   color: ${({ theme }) => theme.textSecondary};
 `
 

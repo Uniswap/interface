@@ -55,7 +55,7 @@ const ShareAction = styled.div`
   padding: 8px;
   border-radius: 8px;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 435;
   gap: 12px;
   height: 40px;
   color: ${({ theme }) => theme.textPrimary};

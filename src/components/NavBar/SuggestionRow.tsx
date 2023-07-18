@@ -30,8 +30,8 @@ const PriceChangeContainer = styled.div`
 `
 
 const ArrowCell = styled.span`
-  padding-top: 5px;
-  padding-right: 3px;
+  padding-top: 4px;
+  padding-right: 2px;
 `
 
 interface CollectionRowProps {
@@ -156,7 +156,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
-  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 18)
+  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 16)
 
   return (
     <Link

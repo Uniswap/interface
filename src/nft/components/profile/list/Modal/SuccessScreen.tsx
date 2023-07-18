@@ -40,7 +40,7 @@ const buttonStyle = css`
   cursor: pointer;
   padding: 12px 0px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   line-height: 20px;
   border-radius: 12px;

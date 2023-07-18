@@ -88,7 +88,7 @@ const LinkGroup = styled.div`
 const LinkGroupTitle = styled.span`
   font-size: 16px;
   line-height: 20px;
-  font-weight: 700;
+  font-weight: 535;
 `
 
 const ExternalTextLink = styled(ExternalLink)`

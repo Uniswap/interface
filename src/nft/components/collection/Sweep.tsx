@@ -72,7 +72,7 @@ const InputContainer = styled.input`
   border-radius: 8px;
   padding: 6px 8px;
   font-size: 16px;
-  font-weight: 400px;
+  font-weight: 435px;
   line-height: 20px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
@@ -101,7 +101,7 @@ const ToggleSwitch = styled.div<{ active: boolean }>`
   border-radius: 8px;
   background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : `none`)};
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 535;
   line-height: 16px;
 `
 

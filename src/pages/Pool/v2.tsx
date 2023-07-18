@@ -151,7 +151,7 @@ export default function Pool() {
             <CardSection>
               <AutoColumn gap="md">
                 <RowBetween>
-                  <ThemedText.DeprecatedWhite fontWeight={600}>
+                  <ThemedText.DeprecatedWhite fontWeight={535}>
                     <Trans>Liquidity provider rewards</Trans>
                   </ThemedText.DeprecatedWhite>
                 </RowBetween>
@@ -202,12 +202,12 @@ export default function Pool() {
                       <Trans>Create a pair</Trans>
                     </ResponsiveButtonSecondary>
                     <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pools/v2/find" padding="6px 8px">
-                      <Text fontWeight={500} fontSize={16}>
+                      <Text fontWeight={535} fontSize={16}>
                         <Trans>Import Pool</Trans>
                       </Text>
                     </ResponsiveButtonPrimary>
                     <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/v2/ETH" padding="6px 8px">
-                      <Text fontWeight={500} fontSize={16}>
+                      <Text fontWeight={535} fontSize={16}>
                         <Trans>Add V2 Liquidity</Trans>
                       </Text>
                     </ResponsiveButtonPrimary>

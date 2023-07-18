@@ -62,7 +62,7 @@ const StyledImage = styled.img`
 `
 
 const USDCLabel = styled.div`
-  font-weight: 700;
+  font-weight: 535;
   font-size: 36px;
   line-height: 44px;
   margin-top: 8px;
@@ -84,7 +84,7 @@ const RewardsDetailsContainer = styled.div`
 
 const CurrencyText = styled.span`
   color: white;
-  font-weight: 500;
+  font-weight: 535;
   font-size: 12px;
   line-height: 14.5px;
 `
@@ -99,7 +99,7 @@ const ClaimContainer = styled.div`
 `
 
 const SuccessText = styled.div`
-  font-weight: 400;
+  font-weight: 435;
   font-size: 16px;
   line-height: 24px;
   margin-top: 24px;
@@ -129,7 +129,7 @@ const SyledCloseIcon = styled(CloseIcon)`
 const Error = styled.div`
   display: flex;
   color: ${({ theme }) => theme.accentCritical};
-  font-weight: 500;
+  font-weight: 535;
   line-height: 24px;
   border-radius: 16px;
   padding: 12px 20px;
@@ -161,7 +161,7 @@ const RewardsInformationText = styled.span`
 `
 
 const MainHeader = styled.span`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   line-height: 20px;
   color: ${({ theme }) => theme.white};
@@ -198,7 +198,7 @@ const AirdropModal = () => {
     setError(true)
     setTimeout(() => {
       setError(false)
-    }, 5000)
+    }, 5350)
   }
 
   useEffect(() => {

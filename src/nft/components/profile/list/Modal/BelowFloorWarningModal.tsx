@@ -51,14 +51,14 @@ const HazardIconWrap = styled.div`
 `
 
 const ContinueButton = styled(ButtonPrimary)`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 20px;
   line-height: 24px;
   margin-top: 12px;
 `
 
 const EditListings = styled.span`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   line-height: 20px;
   color: ${({ theme }) => theme.accentAction};

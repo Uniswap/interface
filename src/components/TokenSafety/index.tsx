@@ -55,13 +55,13 @@ const InfoText = styled(Text)`
 const StyledButton = styled(ButtonPrimary)`
   margin-top: 24px;
   width: 100%;
-  font-weight: 600;
+  font-weight: 535;
 `
 
 const StyledCancelButton = styled(ButtonText)`
   margin-top: 16px;
   color: ${({ theme }) => theme.textSecondary};
-  font-weight: 600;
+  font-weight: 535;
   font-size: 14px;
 `
 
@@ -192,7 +192,7 @@ function ExplorerView({ token }: { token: Token }) {
 const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.accentAction};
   stroke: currentColor;
-  font-weight: 600;
+  font-weight: 535;
 `
 
 export interface TokenSafetyProps {

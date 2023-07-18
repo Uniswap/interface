@@ -6,7 +6,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   color: ${({ error, theme }) => (error ? theme.accentFailure : theme.textPrimary)};
   width: 0;
   position: relative;
-  font-weight: 400;
+  font-weight: 435;
   outline: none;
   border: none;
   flex: 1 1 auto;

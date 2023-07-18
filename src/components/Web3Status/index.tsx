@@ -33,7 +33,7 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   ${flexRowNoWrap};
   width: 100%;
   align-items: center;
-  padding: 0.5rem;
+  padding: 0.5rem 0.25rem;
   border-radius: ${FULL_BORDER_RADIUS}px;
   cursor: pointer;
   user-select: none;
@@ -74,7 +74,6 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
   background-color: ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
   color: ${({ pending, theme }) => (pending ? theme.white : theme.textPrimary)};
-  font-weight: 500;
   border: ${({ isClaimAvailable }) => isClaimAvailable && `1px solid ${colors.purple300}`};
   :hover,
   :focus {
@@ -109,10 +108,10 @@ const Text = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin: 0 0.5rem 0 0.25rem;
+  margin: 0 0.25rem 0 0.25rem;
   font-size: 1rem;
   width: fit-content;
-  font-weight: 500;
+  font-weight: 485;
 `
 
 // we want the latest one to come first, so return negative if a is after b
@@ -126,7 +125,7 @@ const StyledConnectButton = styled.button`
   border-top-left-radius: ${FULL_BORDER_RADIUS}px;
   border-bottom-left-radius: ${FULL_BORDER_RADIUS}px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   padding: 10px 12px;
   color: inherit;

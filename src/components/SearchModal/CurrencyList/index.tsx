@@ -42,7 +42,6 @@ const StyledBalanceText = styled(Text)`
 `
 
 const CurrencyName = styled(Text)`
-  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -166,9 +165,9 @@ export function CurrencyRow({
               <TokenSafetyIcon warning={warning} />
             </WarningContainer>
           </Row>
-          <ThemedText.DeprecatedDarkGray ml="0px" fontSize="12px" fontWeight={300}>
+          <ThemedText.BodySecondary ml="0px" fontSize="12px" fontWeight={485}>
             {currency.symbol}
-          </ThemedText.DeprecatedDarkGray>
+          </ThemedText.BodySecondary>
         </AutoColumn>
         <Column>
           <RowFixed style={{ justifySelf: 'flex-end' }}>

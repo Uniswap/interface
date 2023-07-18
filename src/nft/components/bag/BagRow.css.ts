@@ -72,7 +72,7 @@ export const bagRowPrice = style([
   sprinkles({
     gap: '4',
     fontSize: '16',
-    fontWeight: 'semibold',
+    fontWeight: 'medium',
     flexShrink: '0',
   }),
   {

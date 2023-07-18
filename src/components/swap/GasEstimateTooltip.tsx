@@ -16,7 +16,7 @@ import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 
 const StyledGasIcon = styled(GasIcon)`
-  height: 18px;
+  height: 16px;
 
   // We apply the following to all children of the SVG in order to override the default color
   & > * {

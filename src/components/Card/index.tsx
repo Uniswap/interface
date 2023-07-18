@@ -27,13 +27,14 @@ export const DarkCard = styled(Card)`
 `
 
 export const OutlineCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.backgroundModule};
 `
 
 export const YellowCard = styled(Card)`
   background-color: rgba(243, 132, 30, 0.05);
   color: ${({ theme }) => theme.deprecated_yellow3};
-  font-weight: 500;
+  font-weight: 535;
 `
 
 export const BlueCard = styled(Card)`

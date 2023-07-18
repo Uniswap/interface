@@ -3,6 +3,8 @@ import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
+import { ReactComponent as ArrowChangeDown } from 'assets/svg/arrow-change-down.svg'
+import { ReactComponent as ArrowChangeUp } from 'assets/svg/arrow-change-up.svg'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -11,7 +13,7 @@ import { getTokenDetailsURL, supportedChainIdFromGQLChain, validateUrlChainParam
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
-import { ArrowDown, ArrowUp, Info } from 'react-feather'
+import { Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
@@ -235,7 +237,7 @@ const TokenInfoCell = styled(Cell)`
     flex-direction: column;
     gap: 0px;
     width: max-content;
-    font-weight: 500;
+    font-weight: 535;
   }
 `
 const TokenName = styled.div`
@@ -245,7 +247,7 @@ const TokenName = styled.div`
   max-width: 100%;
 `
 const TokenSymbol = styled(Cell)`
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.textSecondary};
   text-transform: uppercase;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -316,9 +318,9 @@ function HeaderCell({
       {sortMethod === category && (
         <>
           {sortAscending ? (
-            <ArrowUp size={20} strokeWidth={1.8} color={theme.accentActive} />
+            <ArrowChangeUp width={16} color={theme.textSecondary} />
           ) : (
-            <ArrowDown size={20} strokeWidth={1.8} color={theme.accentActive} />
+            <ArrowChangeDown width={16} color={theme.textSecondary} />
           )}
         </>
       )}

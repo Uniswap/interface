@@ -45,7 +45,7 @@ const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   background-color: transparent;
   text-align: center;
   width: 100%;
-  font-weight: 500;
+  font-weight: 535;
   padding: 0 10px;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
@@ -60,7 +60,7 @@ const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
 const InputTitle = styled(ThemedText.DeprecatedSmall)`
   color: ${({ theme }) => theme.textSecondary};
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 535;
 `
 
 const ButtonLabel = styled(ThemedText.DeprecatedWhite)<{ disabled: boolean }>`

@@ -41,7 +41,7 @@ const Nav = styled(AutoRow)`
 
 const NavItem = styled(ThemedText.SubHeader)<{ active?: boolean }>`
   align-items: center;
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textTertiary)};
+  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
   cursor: pointer;
   display: flex;
   justify-content: space-between;

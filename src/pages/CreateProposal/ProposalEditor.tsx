@@ -7,7 +7,7 @@ import styled from 'styled-components/macro'
 
 const ProposalEditorHeader = styled(Text)`
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 535;
   color: ${({ theme }) => theme.textSecondary};
 `
 

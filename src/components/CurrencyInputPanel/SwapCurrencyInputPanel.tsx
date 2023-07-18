@@ -71,7 +71,7 @@ const CurrencySelect = styled(ButtonGray)<{
   user-select: none;
   border: none;
   font-size: 24px;
-  font-weight: 400;
+  font-weight: 485;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   padding: ${({ selected }) => (selected ? '4px 8px 4px 4px' : '6px 6px 6px 8px')};
   gap: 8px;
@@ -153,7 +153,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 535;
 `
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
@@ -162,7 +162,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   color: ${({ theme }) => theme.accentAction};
   cursor: pointer;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 535;
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   padding: 4px 6px;
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
@@ -180,8 +180,7 @@ const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
   ${loadingOpacityMixin};
   text-align: left;
   font-size: 36px;
-  line-height: 44px;
-  font-variant: small-caps;
+  font-weight: 485;
 `
 
 interface SwapCurrencyInputPanelProps {
@@ -317,7 +316,7 @@ export default function SwapCurrencyInputPanel({
                   <ThemedText.DeprecatedBody
                     data-testid="balance-text"
                     color={theme.textSecondary}
-                    fontWeight={400}
+                    fontWeight={485}
                     fontSize={14}
                     style={{ display: 'inline' }}
                   >

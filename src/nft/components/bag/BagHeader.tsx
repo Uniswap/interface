@@ -8,7 +8,7 @@ import { ButtonText, ThemedText } from 'theme'
 const ClearButton = styled(ButtonText)`
   color: ${({ theme }) => theme.textSecondary};
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 14px;
   line-height: 16px;
 

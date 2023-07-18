@@ -78,7 +78,7 @@ const StyledMenuContent = styled.div`
   gap: 8px;
   align-items: center;
   border: none;
-  font-weight: 600;
+  font-weight: 535;
   vertical-align: middle;
 `
 const Chevron = styled.span<{ open: boolean }>`

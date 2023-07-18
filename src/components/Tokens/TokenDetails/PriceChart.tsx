@@ -5,6 +5,8 @@ import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
+import { ReactComponent as ArrowChangeDown } from 'assets/svg/arrow-change-down.svg'
+import { ReactComponent as ArrowChangeUp } from 'assets/svg/arrow-change-up.svg'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
@@ -12,7 +14,7 @@ import { PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
+import { TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
@@ -34,10 +36,10 @@ export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   return [min, max]
 }
 
-const StyledUpArrow = styled(ArrowUpRight)`
+const StyledUpArrow = styled(ArrowChangeUp)`
   color: ${({ theme }) => theme.accentSuccess};
 `
-const StyledDownArrow = styled(ArrowDownRight)`
+const StyledDownArrow = styled(ArrowChangeDown)`
   color: ${({ theme }) => theme.accentFailure};
 `
 
@@ -45,14 +47,14 @@ function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
 
-export function getDeltaArrow(delta: number | null | undefined, iconSize = 20) {
+export function getDeltaArrow(delta: number | null | undefined, iconSize = 16) {
   // Null-check not including zero
   if (delta === null || delta === undefined) {
     return null
   } else if (Math.sign(delta) < 0) {
-    return <StyledDownArrow size={iconSize} key="arrow-down" aria-label="down" />
+    return <StyledDownArrow width={iconSize} height={iconSize} key="arrow-down" aria-label="down" />
   }
-  return <StyledUpArrow size={iconSize} key="arrow-up" aria-label="up" />
+  return <StyledUpArrow width={iconSize} height={iconSize} key="arrow-up" aria-label="up" />
 }
 
 export function formatDelta(delta: number | null | undefined) {
@@ -77,6 +79,7 @@ const ChartHeader = styled.div`
 export const TokenPrice = styled.span`
   font-size: 36px;
   line-height: 44px;
+  font-weight: 485;
 `
 const MissingPrice = styled(TokenPrice)`
   font-size: 24px;
@@ -421,7 +424,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
 const StyledMissingChart = styled.svg`
   text {
     font-size: 12px;
-    font-weight: 400;
+    font-weight: 435;
   }
 `
 const chartBottomPadding = 15

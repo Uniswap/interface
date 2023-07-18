@@ -57,7 +57,7 @@ const ToggleButton = styled.button`
 `
 
 const Header = styled(Row)`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
   margin-bottom: 8px;
@@ -71,7 +71,7 @@ const FlagGroupName = styled.span`
   font-size: 20px;
   line-height: 24px;
   color: ${({ theme }) => theme.textPrimary};
-  font-weight: 600;
+  font-weight: 535;
 `
 const FlagDescription = styled.span`
   font-size: 12px;
@@ -84,7 +84,7 @@ const FlagVariantSelection = styled.select`
   border-radius: 12px;
   padding: 8px;
   background: ${({ theme }) => theme.backgroundInteractive};
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   border: none;
   color: ${({ theme }) => theme.textPrimary};
@@ -105,7 +105,7 @@ const SaveButton = styled.button`
   border-radius: 12px;
   padding: 8px;
   background: ${({ theme }) => theme.backgroundInteractive};
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   border: none;
   color: ${({ theme }) => theme.textPrimary};

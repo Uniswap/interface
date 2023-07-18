@@ -84,7 +84,7 @@ export default function CommonBases({
                 data-testid={`common-base-${currency.symbol}`}
               >
                 <CurrencyLogoFromList currency={currency} />
-                <Text fontWeight={500} fontSize={16}>
+                <Text fontWeight={535} fontSize={16}>
                   {currency.symbol}
                 </Text>
               </BaseWrapper>
