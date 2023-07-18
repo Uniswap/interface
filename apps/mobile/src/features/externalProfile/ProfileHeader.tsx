@@ -7,19 +7,18 @@ import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
+import { FavoriteButton } from 'src/components/buttons/FavoriteButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useExtractedColors } from 'src/utils/colors'
-import HeartIcon from 'ui/src/assets/icons/heart.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
@@ -144,9 +143,12 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               borderRadius="rounded20"
               borderWidth={1}
               padding="spacing12"
-              testID={ElementName.Favorite}
-              onPress={onPressFavorite}>
-              <DynamicHeartIcon isFavorited={isFavorited} size={iconSizes.icon20} />
+              testID={ElementName.Favorite}>
+              <FavoriteButton
+                isFavorited={isFavorited}
+                size={iconSizes.icon20}
+                onPress={onPressFavorite}
+              />
             </TouchableArea>
             <TouchableArea
               hapticFeedback
@@ -174,19 +176,6 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
       </Flex>
     </Flex>
   )
-}
-
-interface HeartIconProps {
-  isFavorited: boolean
-  size: number
-}
-
-export const DynamicHeartIcon = ({ isFavorited, size }: HeartIconProps): JSX.Element => {
-  const theme = useAppTheme()
-  const isDarkMode = useIsDarkMode()
-  const unfilledColor = isDarkMode ? theme.colors.textTertiary : theme.colors.backgroundOutline
-  const color = isFavorited ? theme.colors.accentAction : unfilledColor
-  return <HeartIcon color={color} height={size} width={size} />
 }
 
 function _HeaderRadial({ color }: { color: string }): JSX.Element {
