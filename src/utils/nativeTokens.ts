@@ -10,6 +10,7 @@ export function getNativeTokenDBAddress(chain: Chain): string | undefined {
   switch (chain) {
     case Chain.Celo:
     case Chain.Polygon:
+    case Chain.Harmony:  
       return nativeOnChain(pageChainId).wrapped.address
     case Chain.Ethereum:
     case Chain.Arbitrum:
