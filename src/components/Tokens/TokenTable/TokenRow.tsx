@@ -169,7 +169,7 @@ const NameCell = styled(Cell)`
     min-width: unset;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 0px;
+    padding: 0;
   }
 `
 const PriceCell = styled(DataCell)`
