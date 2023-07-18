@@ -91,6 +91,38 @@ export function isPolygonChain(chainId: number): chainId is ChainId.POLYGON | Ch
   return chainId === ChainId.POLYGON || chainId === ChainId.POLYGON_MUMBAI
 }
 
+/**
+ * Get the priority of a chainId based on its relevance to the user.
+ * @param {ChainId} chainId - The chainId to determine the priority for.
+ * @returns {number} The priority of the chainId, the lower the priority, the earlier it should be displayed, with base of MAINNET=0.
+ */
+export function getChainPriority(chainId: ChainId): number {
+  switch (chainId) {
+    case ChainId.MAINNET:
+    case ChainId.GOERLI:
+    case ChainId.SEPOLIA:
+      return 0
+    case ChainId.POLYGON:
+    case ChainId.POLYGON_MUMBAI:
+      return 1
+    case ChainId.ARBITRUM_ONE:
+    case ChainId.ARBITRUM_GOERLI:
+      return 2
+    case ChainId.OPTIMISM:
+    case ChainId.OPTIMISM_GOERLI:
+      return 3
+    case ChainId.BNB:
+      return 4
+    case ChainId.AVALANCHE:
+      return 5
+    case ChainId.CELO:
+    case ChainId.CELO_ALFAJORES:
+      return 6
+    default:
+      return 7
+  }
+}
+
 export function isUniswapXSupportedChain(chainId: number) {
   return chainId === ChainId.MAINNET
 }

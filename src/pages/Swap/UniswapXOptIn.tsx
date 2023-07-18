@@ -30,6 +30,7 @@ import { ThemedText } from 'theme'
 export const UniswapXOptIn = (props: { swapInfo: SwapInfo; isSmall: boolean }) => {
   const {
     trade: { trade },
+    allowedSlippage,
   } = props.swapInfo
   const userDisabledUniswapX = useUserDisabledUniswapX()
   const isOnClassic = Boolean(trade && isClassicTrade(trade) && trade.isUniswapXBetter && !userDisabledUniswapX)
@@ -44,7 +45,15 @@ export const UniswapXOptIn = (props: { swapInfo: SwapInfo; isSmall: boolean }) =
     return null
   }
 
-  return <OptInContents isOnClassic={isOnClassic} {...props} />
+  return (
+    <Trace
+      shouldLogImpression
+      name="UniswapX Opt In Impression"
+      properties={trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : undefined}
+    >
+      <OptInContents isOnClassic={isOnClassic} {...props} />
+    </Trace>
+  )
 }
 
 const OptInContents = ({
@@ -63,15 +72,10 @@ const OptInContents = ({
   const [, setRouterPreference] = useRouterPreference()
   const dispatch = useAppDispatch()
   const [showYoureIn, setShowYoureIn] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
+  const isVisible = isOnClassic
 
   // adding this as we need to mount and then set shouldAnimate = true after it mounts to avoid a flicker on initial mount
   const [shouldAnimate, setShouldAnimate] = useState(false)
-
-  // delayed a second to allow mount animation
-  useEffect(() => {
-    setIsVisible(Boolean(trade && isOnClassic))
-  }, [isOnClassic, trade])
 
   useEffect(() => {
     if (!isVisible || shouldAnimate) return
@@ -111,20 +115,8 @@ const OptInContents = ({
 
   const containerRef = useRef<HTMLDivElement>()
 
-  const wrapTrace = (children: JSX.Element) => {
-    return (
-      <Trace
-        shouldLogImpression={isVisible}
-        name="UniswapX Opt In Impression"
-        properties={trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : undefined}
-      >
-        {children}
-      </Trace>
-    )
-  }
-
   if (isSmall) {
-    return wrapTrace(
+    return (
       <SwapOptInSmallContainer ref={containerRef as any} visible={isVisible} shouldAnimate={shouldAnimate}>
         <SwapMustache>
           <UniswapXShine />
@@ -143,7 +135,7 @@ const OptInContents = ({
     )
   }
 
-  return wrapTrace(
+  return (
     <>
       {/* first popover: intro */}
       <UniswapXOptInPopover shiny visible={isVisible && !showYoureIn}>

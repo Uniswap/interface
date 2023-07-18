@@ -141,18 +141,23 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
         execute:
           sufficientBalance && inputAmount
             ? async () => {
-                const txReceipt = await wethContract.withdraw(`0x${inputAmount.quotient.toString(16)}`)
-                addTransaction(txReceipt, {
-                  type: TransactionType.WRAP,
-                  unwrapped: true,
-                  currencyAmountRaw: inputAmount?.quotient.toString(),
-                  chainId,
-                })
-                sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
-                  ...eventProperties,
-                  type: WrapType.UNWRAP,
-                })
-                return txReceipt.hash
+                try {
+                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.quotient.toString(16)}`)
+                  addTransaction(txReceipt, {
+                    type: TransactionType.WRAP,
+                    unwrapped: true,
+                    currencyAmountRaw: inputAmount?.quotient.toString(),
+                    chainId,
+                  })
+                  sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
+                    ...eventProperties,
+                    type: WrapType.UNWRAP,
+                  })
+                  return txReceipt.hash
+                } catch (error) {
+                  console.error('Could not withdraw', error)
+                  throw error
+                }
               }
             : undefined,
         inputError: sufficientBalance
