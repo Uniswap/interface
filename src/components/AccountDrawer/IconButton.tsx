@@ -1,6 +1,6 @@
 import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { Icon } from 'react-feather'
-import styled, { css } from 'styled-components/macro'
+import styled, { css, DefaultTheme } from 'styled-components/macro'
 import useResizeObserver from 'use-resize-observer'
 
 import Row from '../Row'
@@ -17,11 +17,11 @@ export const IconHoverText = styled.span`
   left: 10px;
 `
 
-const widthTransition = `width ease-in-out 125ms` // theme.duration.fast
+const getWidthTransition = ({ theme }: { theme: DefaultTheme }) => `width ease-in-out ${theme.transition.duration.fast}`
 
-const IconStyles = css`
+const IconStyles = css<{ hideHorizontal?: boolean }>`
   background-color: ${({ theme }) => theme.backgroundInteractive};
-  transition: ${widthTransition};
+  transition: ${getWidthTransition};
   border-radius: 12px;
   display: flex;
   padding: 0;
@@ -29,7 +29,7 @@ const IconStyles = css`
   position: relative;
   overflow: hidden;
   height: 32px;
-  width: 32px;
+  width: ${({ hideHorizontal }) => (hideHorizontal ? '0px' : '32px')};
   color: ${({ theme }) => theme.textPrimary};
   :hover {
     background-color: ${({ theme }) => theme.hoverState};
@@ -37,7 +37,7 @@ const IconStyles = css`
       theme: {
         transition: { duration, timing },
       },
-    }) => `${duration.fast} background-color ${timing.in}, ${widthTransition}`};
+    }) => `${duration.fast} background-color ${timing.in}, ${getWidthTransition}`};
 
     ${IconHoverText} {
       opacity: 1;
@@ -45,7 +45,7 @@ const IconStyles = css`
   }
   :active {
     background-color: ${({ theme }) => theme.backgroundSurface};
-    transition: background-color 50ms linear, ${widthTransition};
+    transition: background-color 50ms linear, ${getWidthTransition};
   }
 `
 
@@ -67,6 +67,7 @@ const IconWrapper = styled.span`
 `
 interface BaseProps {
   Icon: Icon
+  hideHorizontal?: boolean
   children?: React.ReactNode
 }
 
@@ -183,7 +184,7 @@ export const IconWithConfirmTextButton = ({
     }
   }, [frame, setShowText, showText])
 
-  const xPad = showText ? 12 : 0
+  const xPad = showText ? 8 : 0
   const width = showText ? dimensions.frame + dimensions.hidden + xPad : 32
   const mouseLeaveTimeout = useRef<NodeJS.Timeout>()
 
