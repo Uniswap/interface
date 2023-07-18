@@ -18,7 +18,8 @@ import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 export default function Web3Provider({ children }: { children: ReactNode }) {
   useEagerlyConnect()
   const connections = useOrderedConnections()
-  const connectors: [Connector, Web3ReactHooks][] = connections.map(({ hooks, connector }) => [connector, hooks])
+
+  const connectors: [Connector, Web3ReactHooks][] = connections.filter(c => !!c).map(({ hooks, connector }) => [connector, hooks])
 
   const key = useMemo(() => connections.map((connection) => connection.getName()).join('-'), [connections])
 

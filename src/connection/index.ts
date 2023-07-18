@@ -15,16 +15,41 @@ import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import { SupportedChainId } from 'constants/chains'
 import { useCallback } from 'react'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
+import { UniwalletConnect as UniwalletWCV2Connect, WalletConnectV2 } from './WalletConnectV2'
+
 
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 import { Connection, ConnectionType } from './types'
 import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
-import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
+import { UniwalletConnect } from './WalletConnect'
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
 }
+
+// export const walletConnectConnection: any = new (class implements Connection {
+//   private initializer = (actions: any, defaultChainId = SupportedChainId.HARMONY) =>
+//     new WalletConnectV2({ actions, defaultChainId, onError })
+
+//   type = ConnectionType.WALLET_CONNECT
+//   getName = () => 'WalletConnect'
+//   getIcon = () => WALLET_CONNECT_ICON
+//   shouldDisplay = () => !getIsInjectedMobileBrowser()
+
+//   private _connector = initializeConnector<WalletConnectV2>(this.initializer)
+//   overrideActivate = (chainId?: SupportedChainId) => {
+//     // Always re-create the connector, so that the chainId is updated.
+//     this._connector = initializeConnector((actions) => this.initializer(actions, chainId))
+//     return false
+//   }
+//   get connector() {
+//     return this._connector[0]
+//   }
+//   get hooks() {
+//     return this._connector[1]
+//   }
+// })()
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
   (actions) => new Network({ actions, urlMap: RPC_PROVIDERS, defaultChainId: 1 })
@@ -75,9 +100,11 @@ export const gnosisSafeConnection: Connection = {
   shouldDisplay: () => false,
 }
 
-const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnectPopup>(
-  (actions) => new WalletConnectPopup({ actions, onError })
+const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnectV2>(
+  (actions: any, defaultChainId = SupportedChainId.HARMONY) =>
+       new WalletConnectV2({ actions, defaultChainId, onError })
 )
+
 export const walletConnectConnection: Connection = {
   getName: () => 'WalletConnect',
   connector: web3WalletConnect,

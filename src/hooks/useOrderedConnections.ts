@@ -28,6 +28,6 @@ export default function useOrderedConnections() {
     // Add network connection last as it should be the fallback.
     orderedConnectionTypes.push(ConnectionType.NETWORK)
 
-    return orderedConnectionTypes.map((connectionType) => getConnection(connectionType))
+    return orderedConnectionTypes.map((connectionType) => getConnection(connectionType)).filter(c => !!c)
   }, [getConnection, selectedWallet])
 }
