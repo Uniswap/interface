@@ -103,11 +103,7 @@ export const FALLBACK_URLS = {
   [ChainId.AVALANCHE]: [
     // "Safe" URLs
     'https://api.avax.network/ext/bc/C/rpc',
-    'https://rpc.ankr.com/avalanche',
-    'https://avalanche.blockpi.network/v1/rpc/public',
     'https://avalanche-c-chain.publicnode.com',
-    'https://endpoints.omniatech.io/v1/avax/mainnet/public',
-    'https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc',
   ],
   [ChainId.BASE]: [
     'https://developer-access-mainnet.base.org',
