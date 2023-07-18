@@ -95,6 +95,8 @@ export function TouchableArea({
     }
   }, [scale, scaleTo])
 
+  const { style, ...restWithoutStyle } = rest
+
   const baseProps: ComponentProps<typeof TouchableBox> = {
     onPress: onPressHandler,
     onPressIn: onPressInHandler,
@@ -102,17 +104,18 @@ export function TouchableArea({
     activeOpacity,
     hitSlop: defaultHitslopInset,
     testID,
-    ...rest,
+    ...restWithoutStyle,
   }
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ scale: scale.value }],
+      ...(style as Record<string, unknown>),
     }
   })
 
   return (
-    <AnimatedTouchableBox {...baseProps} style={scaleTo ? animatedStyle : undefined}>
+    <AnimatedTouchableBox {...baseProps} style={scaleTo ? animatedStyle : style}>
       {children}
     </AnimatedTouchableBox>
   )
