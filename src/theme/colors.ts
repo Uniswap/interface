@@ -149,7 +149,8 @@ const commonTheme = {
   promotional: colors.magenta300,
 
   brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
-  promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
+  promotionalGradient: colors.accent1_light,
+  // promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
 
   hoverState: opacify(24, colors.gray300),
   hoverDefault: opacify(8, colors.gray300),
