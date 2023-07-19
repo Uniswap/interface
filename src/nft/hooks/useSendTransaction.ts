@@ -3,8 +3,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { hexStripZeros } from '@ethersproject/bytes'
 import { ContractReceipt } from '@ethersproject/contracts'
 import type { JsonRpcSigner } from '@ethersproject/providers'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
+import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
@@ -54,7 +54,7 @@ export const useSendTransaction = create<TxState>()(
           set({ state: TxStateType.Confirming })
           set({ txHash: res.hash })
           set({ purchasedWithErc20 })
-          sendAnalyticsEvent(NFTEventName.NFT_BUY_BAG_SIGNED, { transaction_hash: res.hash })
+          sendOptOutAnalyticsEvent(NFTEventName.NFT_BUY_BAG_SIGNED, { transaction_hash: res.hash })
 
           const txReceipt = await res.wait()
 

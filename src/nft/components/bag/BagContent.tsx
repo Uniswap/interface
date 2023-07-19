@@ -1,6 +1,5 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
-import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
+import { sendOptOutAnalyticsEvent, TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
 import { Column } from 'nft/components/Flex'
 import { useBag, useIsMobile } from 'nft/hooks'
@@ -47,7 +46,7 @@ export const BagContent = () => {
     const hasAssets = itemsInBag.length > 0
 
     if (hasAssetsInReview)
-      sendAnalyticsEvent(NFTEventName.NFT_BUY_BAG_CHANGED, {
+      sendOptOutAnalyticsEvent(NFTEventName.NFT_BUY_BAG_CHANGED, {
         usd_value: fetchedPriceData,
         bag_quantity: itemsInBag,
         ...formatAssetEventProperties(priceChangedAssets),

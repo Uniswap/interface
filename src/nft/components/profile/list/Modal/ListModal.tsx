@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
-import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
+import { sendOptOutAnalyticsEvent, TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -95,7 +95,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
       await signListingRow(listing, signer, provider, getLooksRareNonce, setLooksRareNonce, setListingStatusAndCallback)
     }
 
-    sendAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
+    sendOptOutAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
       list_quantity: listings.length,
       usd_value: usdcAmount,

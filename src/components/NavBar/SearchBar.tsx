@@ -1,10 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { useTrace } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
-import { TraceAnalytics, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendOptOutAnalyticsEvent, TraceAnalytics, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
@@ -193,7 +193,9 @@ export const SearchBar = () => {
                 !isOpen && toggleOpen()
                 setSearchValue(event.target.value)
               }}
-              onBlur={() => sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
+              onBlur={() =>
+                sendOptOutAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
+              }
               className={`${styles.searchBarInput} ${styles.searchContentLeftAlign}`}
               value={searchValue}
               ref={inputRef}

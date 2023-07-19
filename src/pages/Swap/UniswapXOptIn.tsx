@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
+import { sendOptOutAnalyticsEvent, TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import Column from 'components/Column'
 import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import { Arrow } from 'components/Popover'
@@ -100,7 +99,7 @@ const OptInContents = ({
         }, 200)
 
         if (!trade) return
-        sendAnalyticsEvent('UniswapX Opt In Toggled', {
+        sendOptOutAnalyticsEvent('UniswapX Opt In Toggled', {
           ...formatCommonPropertiesForTrade(trade, allowedSlippage),
           new_preference: RouterPreference.X,
         })
@@ -144,7 +143,7 @@ const OptInContents = ({
           size={18}
           onClick={() => {
             if (!trade) return
-            sendAnalyticsEvent('UniswapX Opt In Toggled', {
+            sendOptOutAnalyticsEvent('UniswapX Opt In Toggled', {
               ...formatCommonPropertiesForTrade(trade, allowedSlippage),
               new_preference: RouterPreference.API,
             })

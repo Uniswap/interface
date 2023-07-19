@@ -4,8 +4,8 @@ import { atomWithStorage } from 'jotai/utils'
 
 import { SettingsToggle } from './SettingsToggle'
 
-// eslint-disable-next-line import/no-unused-modules
-export const analyticsOptOutToggle = atomWithStorage<boolean>('optOutOfAnalytics', true)
+export const analyticsOptOutAtomName = 'optOutOfAnalytics'
+export const analyticsOptOutToggle = atomWithStorage<boolean>(analyticsOptOutAtomName, true)
 
 export function AnalyticsToggle() {
   const [allowAnalytics, updateAllowAnalytics] = useAtom(analyticsOptOutToggle)

@@ -1,6 +1,6 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { ChainId } from '@uniswap/sdk-core'
 import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
+import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'
 import { isIOS } from 'utils/userAgent'
@@ -58,7 +58,7 @@ export class WalletConnectV2 extends WalletConnect {
   }
 
   activate(chainId?: number) {
-    sendAnalyticsEvent(this.ANALYTICS_EVENT)
+    sendOptOutAnalyticsEvent(this.ANALYTICS_EVENT)
     return super.activate(chainId)
   }
 }

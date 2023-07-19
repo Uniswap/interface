@@ -1,7 +1,7 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatUSDPrice } from '@uniswap/conedison/format'
 import clsx from 'clsx'
+import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
@@ -60,7 +60,7 @@ export const CollectionRow = ({
   const handleClick = useCallback(() => {
     addRecentlySearchedAsset({ ...collection, isNft: true, chain: Chain.Ethereum })
     toggleOpen()
-    sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+    sendOptOutAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addRecentlySearchedAsset, collection, toggleOpen, eventProperties])
 
   useEffect(() => {
@@ -137,7 +137,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     address && addRecentlySearchedAsset({ address, chain: token.chain })
 
     toggleOpen()
-    sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+    sendOptOutAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
   const tokenDetailsPath = getTokenDetailsURL(token)

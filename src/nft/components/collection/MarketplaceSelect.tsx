@@ -1,6 +1,6 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
 import clsx from 'clsx'
+import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { Column, Row } from 'nft/components/Flex'
@@ -86,7 +86,7 @@ const MarketplaceItem = ({
       removeMarket(value)
       setCheckboxSelected(false)
     }
-    sendAnalyticsEvent(NFTEventName.NFT_FILTER_SELECTED, { filter_type: NFTFilterTypes.MARKETPLACE })
+    sendOptOutAnalyticsEvent(NFTEventName.NFT_FILTER_SELECTED, { filter_type: NFTFilterTypes.MARKETPLACE })
   }
 
   const checkbox = (

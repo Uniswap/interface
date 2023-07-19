@@ -1,9 +1,10 @@
 import { act, render } from '@testing-library/react'
-import { sendAnalyticsEvent, user } from '@uniswap/analytics'
+import { user } from '@uniswap/analytics'
 import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { initializeConnector, MockEIP1193Provider } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { Provider as EIP1193Provider } from '@web3-react/types'
+import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { getConnection } from 'connection'
 import { Connection, ConnectionType } from 'connection/types'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
@@ -16,7 +17,7 @@ import { mocked } from 'test-utils/mocked'
 import Web3Provider from '.'
 
 jest.mock('@uniswap/analytics', () => ({
-  sendAnalyticsEvent: jest.fn(),
+  sendOptOutAnalyticsEvent: jest.fn(),
   user: { set: jest.fn(), postInsert: jest.fn() },
 }))
 jest.mock('connection', () => {
@@ -89,18 +90,18 @@ describe('Web3Provider', () => {
       })
 
       // Assert
-      expect(sendAnalyticsEvent).toHaveBeenCalledTimes(1)
-      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+      expect(sendOptOutAnalyticsEvent).toHaveBeenCalledTimes(1)
+      expect(sendOptOutAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: '0x0000000000000000000000000000000000000000',
         wallet_type: 'test',
         is_reconnect: false,
         peer_wallet_agent: '(Injected)',
       })
-      expect(first(mocked(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
+      expect(first(mocked(sendOptOutAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
         last(mocked(user.set).mock.invocationCallOrder)
       )
-      expect(first(mocked(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
+      expect(first(mocked(sendOptOutAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
         last(mocked(user.postInsert).mock.invocationCallOrder)
       )
     })
@@ -125,8 +126,8 @@ describe('Web3Provider', () => {
       })
 
       // Assert
-      expect(sendAnalyticsEvent).toHaveBeenCalledTimes(3)
-      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+      expect(sendOptOutAnalyticsEvent).toHaveBeenCalledTimes(3)
+      expect(sendOptOutAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: '0x0000000000000000000000000000000000000000',
         wallet_type: 'test',

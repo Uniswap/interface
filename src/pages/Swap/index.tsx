@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { useTrace } from '@uniswap/analytics'
 import {
   BrowserEvent,
   InterfaceElementName,
@@ -15,7 +15,7 @@ import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import AddressInputPanel from 'components/AddressInputPanel'
-import { TraceAnalytics, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendOptOutAnalyticsEvent, TraceAnalytics, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -448,7 +448,7 @@ export function Swap({
       onUserInput(Field.INPUT, '')
     } catch (error) {
       if (!didUserReject(error)) {
-        sendAnalyticsEvent(SwapEventName.SWAP_ERROR, {
+        sendOptOutAnalyticsEvent(SwapEventName.SWAP_ERROR, {
           wrapType,
           input: currencies[Field.INPUT],
           output: currencies[Field.OUTPUT],
@@ -527,7 +527,7 @@ export function Swap({
 
     const now = new Date()
     setSwapQuoteReceivedDate(now)
-    sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
+    sendOptOutAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
       ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, now),
       ...trace,
     })

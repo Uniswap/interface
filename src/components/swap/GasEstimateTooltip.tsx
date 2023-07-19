@@ -1,7 +1,7 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
+import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row, { RowFixed } from 'components/Row'
@@ -36,7 +36,7 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
       size={TooltipSize.Small}
       text={<GasBreakdownTooltip trade={trade} />}
       onOpen={() => {
-        sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
+        sendOptOutAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
           element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
         })
       }}

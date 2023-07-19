@@ -1,5 +1,5 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { MoonpayEventName } from '@uniswap/analytics-events'
+import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -53,7 +53,7 @@ export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () =>
       setLoading(true)
       try {
         const result = await getMoonpayAvailability()
-        sendAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, { success: result })
+        sendOptOutAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, { success: result })
         if (stale) return
         dispatch(setFiatOnrampAvailability(result))
         if (result && callback) {

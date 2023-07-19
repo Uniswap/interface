@@ -1,7 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
+import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from 'nft/components/card/icons'
 import { useBag } from 'nft/hooks'
@@ -58,7 +59,7 @@ export const CollectionAsset = ({
       if (!bagExpanded && !isMobile && !bagManuallyClosed) {
         setBagExpanded({ bagExpanded: true })
       }
-      sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, {
+      sendOptOutAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, {
         collection_address: asset.address,
         token_id: asset.tokenId,
         token_type: asset.tokenType,

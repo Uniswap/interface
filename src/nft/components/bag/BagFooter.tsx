@@ -1,12 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendOptOutAnalyticsEvent, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -473,7 +472,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
                     onClick={() => {
                       if (!bagIsLocked) {
                         setTokenSelectorOpen(true)
-                        sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
+                        sendOptOutAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
                       }
                     }}
                   >
@@ -533,7 +532,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         onCurrencySelect={(currency: Currency) => {
           setInputCurrency(currency.isNative ? undefined : currency)
           if (currency.isToken) {
-            sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTED, {
+            sendOptOutAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTED, {
               token_address: currency.address,
               token_symbol: currency.symbol,
             })

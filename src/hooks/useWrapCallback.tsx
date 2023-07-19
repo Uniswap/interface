@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -104,7 +104,7 @@ export default function useWrapCallback(
                   network.chainId !== chainId ||
                   wethContract.address !== WRAPPED_NATIVE_CURRENCY[network.chainId]?.address
                 ) {
-                  sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_INVALIDATED, {
+                  sendOptOutAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_INVALIDATED, {
                     ...eventProperties,
                     contract_address: wethContract.address,
                     contract_chain_id: network.chainId,
@@ -122,7 +122,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                   currencyAmountRaw: inputAmount?.quotient.toString(),
                   chainId,
                 })
-                sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
+                sendOptOutAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                   ...eventProperties,
                   type: WrapType.WRAP,
                 })
@@ -149,7 +149,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     currencyAmountRaw: inputAmount?.quotient.toString(),
                     chainId,
                   })
-                  sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
+                  sendOptOutAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                     ...eventProperties,
                     type: WrapType.UNWRAP,
                   })

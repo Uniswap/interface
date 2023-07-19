@@ -1,6 +1,7 @@
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { useTrace } from '@uniswap/analytics'
 import { InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
+import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { Box } from 'nft/components/Box'
@@ -65,7 +66,7 @@ export function NFT({
         isDisabled={false}
         onCardClick={navigateToNFTDetails}
         sendAnalyticsEvent={() =>
-          sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+          sendOptOutAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
             element: InterfaceElementName.MINI_PORTFOLIO_NFT_ITEM,
             collection_name: asset.collection?.name,
             collection_address: asset.collection?.address,
