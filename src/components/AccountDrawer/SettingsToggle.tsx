@@ -1,23 +1,36 @@
+import Column from 'components/Column'
 import Row from 'components/Row'
 import Toggle from 'components/Toggle'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+
+const StyledColumn = styled(Column)`
+  width: 100%;
+`
 
 interface SettingsToggleProps {
   title: string
+  description?: string
   isActive: boolean
   toggle: () => void
 }
 
-// eslint-disable-next-line import/no-unused-modules
-export function SettingsToggle({ title, isActive, toggle }: SettingsToggleProps) {
+export function SettingsToggle({ title, description, isActive, toggle }: SettingsToggleProps) {
   return (
     <Row align="center">
-      <Row width="50%">
-        <ThemedText.SubHeaderSmall color="primary">{title}</ThemedText.SubHeaderSmall>
-      </Row>
-      <Row width="50%" justify="flex-end">
-        <Toggle isActive={isActive} toggle={toggle} />
-      </Row>
+      <StyledColumn>
+        <Row>
+          <ThemedText.SubHeaderSmall color="textPrimary">{title}</ThemedText.SubHeaderSmall>
+        </Row>
+        {description && (
+          <Row>
+            <ThemedText.Caption color="textSecondary" lineHeight="16px">
+              {description}
+            </ThemedText.Caption>
+          </Row>
+        )}
+      </StyledColumn>
+      <Toggle isActive={isActive} toggle={toggle} />
     </Row>
   )
 }
