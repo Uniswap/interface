@@ -1,7 +1,7 @@
-import { getDeviceId, user } from '@uniswap/analytics'
+import { getDeviceId, sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { sendOptOutAnalyticsEvent, TraceAnalytics } from 'components/analytics/TraceAnalytics'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
@@ -147,11 +147,11 @@ export default function App() {
     const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
 
     const pageLoadProperties = { service_worker: serviceWorkerProperty }
-    sendOptOutAnalyticsEvent(SharedEventName.APP_LOADED, pageLoadProperties)
+    sendAnalyticsEvent(SharedEventName.APP_LOADED, pageLoadProperties)
     const sendWebVital =
       (metric: string) =>
       ({ delta }: Metric) =>
-        sendOptOutAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
+        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
     getCLS(sendWebVital('cumulative_layout_shift'))
     getFCP(sendWebVital('first_contentful_paint_ms'))
     getFID(sendWebVital('first_input_delay_ms'))
