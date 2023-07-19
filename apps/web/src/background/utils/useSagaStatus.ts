@@ -24,18 +24,14 @@ export function useSagaStatus(
 
   useEffect(() => {
     if (status === SagaStatus.Success) {
-      // TODO: fix this.
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      if (resetSagaOnSuccess) dispatch(saga.actions.reset())
+      if (resetSagaOnSuccess) dispatch(saga.actions.reset()).catch(() => undefined)
       onSuccess?.()
     }
   }, [saga, status, error, onSuccess, resetSagaOnSuccess, dispatch])
 
   useEffect(() => {
     return () => {
-      // TODO: fix this.
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      if (resetSagaOnSuccess) dispatch(saga.actions.reset())
+      if (resetSagaOnSuccess) dispatch(saga.actions.reset()).catch(() => undefined)
     }
   }, [saga, resetSagaOnSuccess, dispatch])
 

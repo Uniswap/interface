@@ -74,7 +74,9 @@ export function RemoveWalletModal(): JSX.Element | null {
         },
       })
     }
-    const accountsToRemove = isReplacing ? associatedAccounts.map((acc) => acc.address) : [address]
+    const accountsToRemove = isReplacing
+      ? associatedAccounts.map((acc) => acc.address as string)
+      : [address]
     dispatch(removeAccounts(accountsToRemove))
     onClose()
     setInProgress(false)
