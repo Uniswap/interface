@@ -128,6 +128,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           errorMessage={errorMessage}
           placeholderLabel={t('recovery phrase')}
           showSuccess={showSuccess}
+          textAlign="center" // Fixes iOS text input issue where right align trims trailing whitespace
           value={value}
           onBlur={onBlur}
           onChange={onChange}

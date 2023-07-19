@@ -33,6 +33,7 @@ interface Props {
   beforePasteButtonPress?: () => void
   afterPasteButtonPress?: () => void
   blurOnSubmit?: boolean
+  textAlign?: 'left' | 'right' | 'center'
 }
 
 export function GenericImportForm({
@@ -50,6 +51,7 @@ export function GenericImportForm({
   beforePasteButtonPress,
   afterPasteButtonPress,
   blurOnSubmit,
+  textAlign,
   inputAlignment = 'center',
 }: Props): JSX.Element {
   const { t } = useTranslation()
@@ -111,6 +113,7 @@ export function GenericImportForm({
             inputMaxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
             inputSuffix={inputSuffix}
             layout={layout}
+            textAlign={textAlign}
             textInputRef={textInputRef}
             theme={theme}
             value={value}

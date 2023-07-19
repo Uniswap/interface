@@ -20,6 +20,7 @@ interface Props {
   inputFontSize: number
   inputMaxFontSizeMultiplier: number
   inputSuffix?: string
+  textAlign?: 'left' | 'right' | 'center'
   textInputRef: React.RefObject<NativeTextInput>
   layout?: LayoutRectangle | null
   onBlur?: () => void
@@ -49,6 +50,7 @@ function Inputs({
   inputAlignment,
   inputFontSize,
   inputMaxFontSizeMultiplier,
+  textAlign,
   textInputRef,
   layerType,
   ...inputProps
@@ -85,7 +87,9 @@ function Inputs({
           px="none"
           py="none"
           scrollEnabled={false}
-          textAlign={isMultiline ? 'right' : inputAlignment === 'flex-start' ? 'left' : 'center'}
+          textAlign={
+            textAlign ?? isMultiline ? 'right' : inputAlignment === 'flex-start' ? 'left' : 'center'
+          }
           textAlignVertical="bottom"
           value={value}
           width="100%"
@@ -110,7 +114,7 @@ function Inputs({
           selectionColor={theme.colors.textPrimary}
           spellCheck={false}
           testID="import_account_form/input"
-          textAlign={inputAlignment !== 'center' || value ? 'right' : 'left'}
+          textAlign={textAlign ?? (inputAlignment !== 'center' || value ? 'right' : 'left')}
           textAlignVertical="bottom"
           value={value}
           width={value ? 'auto' : (layout?.width || 0) + theme.spacing.spacing8}
