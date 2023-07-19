@@ -72,15 +72,10 @@ const OptInContents = ({
   const [, setRouterPreference] = useRouterPreference()
   const dispatch = useAppDispatch()
   const [showYoureIn, setShowYoureIn] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
+  const isVisible = isOnClassic
 
   // adding this as we need to mount and then set shouldAnimate = true after it mounts to avoid a flicker on initial mount
   const [shouldAnimate, setShouldAnimate] = useState(false)
-
-  // delayed a second to allow mount animation
-  useEffect(() => {
-    setIsVisible(Boolean(trade && isOnClassic))
-  }, [isOnClassic, trade])
 
   useEffect(() => {
     if (!isVisible || shouldAnimate) return

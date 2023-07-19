@@ -248,8 +248,8 @@ const CHAIN_INFO: ChainInfoMap = {
     bridge: 'https://bridge.base.org/deposit',
     defaultListUrl: BASE_LIST,
     docs: 'https://docs.base.org',
-    explorer: 'https://goerli.basescan.org/',
-    infoLink: 'https://info.uniswap.org/#/base/', // base testnet not supported
+    explorer: 'https://basescan.org/',
+    infoLink: 'https://info.uniswap.org/#/base/',
     label: 'Base',
     logoUrl: baseLogo,
     statusPage: 'https://status.base.org/',
@@ -260,7 +260,7 @@ const CHAIN_INFO: ChainInfoMap = {
   [ChainId.BASE_GOERLI]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`25m`,
-    bridge: 'https://bridge.base.org/deposit',
+    bridge: 'https://goerli-bridge.base.org/deposit',
     defaultListUrl: BASE_LIST,
     docs: 'https://docs.base.org',
     explorer: 'https://goerli.basescan.org/',

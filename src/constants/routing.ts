@@ -188,6 +188,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_AVALANCHE,
     WETH_AVALANCHE,
   ],
+  // TODO (BASE): add common bases for base mainnet and testnet
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

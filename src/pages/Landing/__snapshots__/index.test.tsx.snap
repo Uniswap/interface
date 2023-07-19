@@ -1761,38 +1761,40 @@ exports[`disable nft on landing page does not render nft information and card 1`
                         type="text"
                         value=""
                       />
-                      <button
-                        class="c23 c24 c25 c26 open-currency-select-button"
-                      >
-                        <span
-                          class="c27"
+                      <div>
+                        <button
+                          class="c23 c24 c25 c26 open-currency-select-button"
                         >
-                          <div
-                            class="c6 c7 c10"
+                          <span
+                            class="c27"
                           >
                             <div
-                              class="c28"
-                              style="margin-right: 2px;"
+                              class="c6 c7 c10"
                             >
-                              <img
-                                alt="ETH logo"
-                                class="c29"
-                                src="ethereum-logo.png"
-                              />
+                              <div
+                                class="c28"
+                                style="margin-right: 2px;"
+                              >
+                                <img
+                                  alt="ETH logo"
+                                  class="c29"
+                                  src="ethereum-logo.png"
+                                />
+                              </div>
+                              <span
+                                class="c30 token-symbol-container"
+                              >
+                                ETH
+                              </span>
                             </div>
-                            <span
-                              class="c30 token-symbol-container"
+                            <svg
+                              class="c31"
                             >
-                              ETH
-                            </span>
-                          </div>
-                          <svg
-                            class="c31"
-                          >
-                            dropdown.svg
-                          </svg>
-                        </span>
-                      </button>
+                              dropdown.svg
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
                     </div>
                     <div
                       class="c32 c33"
@@ -1872,28 +1874,30 @@ exports[`disable nft on landing page does not render nft information and card 1`
                           type="text"
                           value=""
                         />
-                        <button
-                          class="c23 c24 c25 c39 open-currency-select-button"
-                        >
-                          <span
-                            class="c27"
+                        <div>
+                          <button
+                            class="c23 c24 c25 c39 open-currency-select-button"
                           >
-                            <div
-                              class="c6 c7 c10"
+                            <span
+                              class="c27"
                             >
-                              <span
-                                class="c30 token-symbol-container"
+                              <div
+                                class="c6 c7 c10"
                               >
-                                Select token
-                              </span>
-                            </div>
-                            <svg
-                              class="c40"
-                            >
-                              dropdown.svg
-                            </svg>
-                          </span>
-                        </button>
+                                <span
+                                  class="c30 token-symbol-container"
+                                >
+                                  Select token
+                                </span>
+                              </div>
+                              <svg
+                                class="c40"
+                              >
+                                dropdown.svg
+                              </svg>
+                            </span>
+                          </button>
+                        </div>
                       </div>
                       <div
                         class="c32 c33"
@@ -4263,38 +4267,40 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
                         type="text"
                         value=""
                       />
-                      <button
-                        class="c23 c24 c25 c26 open-currency-select-button"
-                      >
-                        <span
-                          class="c27"
+                      <div>
+                        <button
+                          class="c23 c24 c25 c26 open-currency-select-button"
                         >
-                          <div
-                            class="c6 c7 c10"
+                          <span
+                            class="c27"
                           >
                             <div
-                              class="c28"
-                              style="margin-right: 2px;"
+                              class="c6 c7 c10"
                             >
-                              <img
-                                alt="ETH logo"
-                                class="c29"
-                                src="ethereum-logo.png"
-                              />
+                              <div
+                                class="c28"
+                                style="margin-right: 2px;"
+                              >
+                                <img
+                                  alt="ETH logo"
+                                  class="c29"
+                                  src="ethereum-logo.png"
+                                />
+                              </div>
+                              <span
+                                class="c30 token-symbol-container"
+                              >
+                                ETH
+                              </span>
                             </div>
-                            <span
-                              class="c30 token-symbol-container"
+                            <svg
+                              class="c31"
                             >
-                              ETH
-                            </span>
-                          </div>
-                          <svg
-                            class="c31"
-                          >
-                            dropdown.svg
-                          </svg>
-                        </span>
-                      </button>
+                              dropdown.svg
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
                     </div>
                     <div
                       class="c32 c33"
@@ -4374,28 +4380,30 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
                           type="text"
                           value=""
                         />
-                        <button
-                          class="c23 c24 c25 c39 open-currency-select-button"
-                        >
-                          <span
-                            class="c27"
+                        <div>
+                          <button
+                            class="c23 c24 c25 c39 open-currency-select-button"
                           >
-                            <div
-                              class="c6 c7 c10"
+                            <span
+                              class="c27"
                             >
-                              <span
-                                class="c30 token-symbol-container"
+                              <div
+                                class="c6 c7 c10"
                               >
-                                Select token
-                              </span>
-                            </div>
-                            <svg
-                              class="c40"
-                            >
-                              dropdown.svg
-                            </svg>
-                          </span>
-                        </button>
+                                <span
+                                  class="c30 token-symbol-container"
+                                >
+                                  Select token
+                                </span>
+                              </div>
+                              <svg
+                                class="c40"
+                              >
+                                dropdown.svg
+                              </svg>
+                            </span>
+                          </button>
+                        </div>
                       </div>
                       <div
                         class="c32 c33"

@@ -20,8 +20,11 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.BASE_GOERLI]: 'base_goerli',
 } as const
 
+// Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.
+const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = []
+
 export function isSupportedChain(chainId: number | null | undefined | ChainId): chainId is SupportedChainsType {
-  return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) !== -1
+  return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) !== -1 && NOT_YET_UX_SUPPORTED_CHAIN_IDS.indexOf(chainId) === -1
 }
 
 export function asSupportedChain(chainId: number | null | undefined | ChainId): SupportedChainsType | undefined {
