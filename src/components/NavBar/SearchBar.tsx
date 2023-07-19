@@ -1,9 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import { TraceAnalytics, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
@@ -141,7 +142,7 @@ export const SearchBar = () => {
   }, [handleKeyPress, inputRef])
 
   return (
-    <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
+    <TraceAnalytics section={InterfaceSectionName.NAVBAR_SEARCH}>
       <Column
         data-cy="search-bar"
         position={{ sm: 'fixed', md: 'absolute' }}
@@ -178,7 +179,7 @@ export const SearchBar = () => {
               <ChevronLeftIcon />
             </Box>
           </Box>
-          <TraceEvent
+          <TraceAnalyticsEvent
             events={[BrowserEvent.onFocus]}
             name={InterfaceEventName.NAVBAR_SEARCH_SELECTED}
             element={InterfaceElementName.NAVBAR_SEARCH_INPUT}
@@ -198,7 +199,7 @@ export const SearchBar = () => {
               ref={inputRef}
               width="full"
             />
-          </TraceEvent>
+          </TraceAnalyticsEvent>
           {!isOpen && <KeyShortCut>/</KeyShortCut>}
         </Row>
         <Column overflow="hidden" className={clsx(isOpen ? styles.visible : styles.hidden)}>
@@ -219,6 +220,6 @@ export const SearchBar = () => {
           <NavMagnifyingGlassIcon />
         </NavIcon>
       )}
-    </Trace>
+    </TraceAnalytics>
   )
 }

@@ -1,10 +1,10 @@
 import { t } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
+import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
@@ -144,7 +144,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   )
 
   return (
-    <TraceEvent
+    <TraceAnalyticsEvent
       events={[BrowserEvent.onClick]}
       name={SharedEventName.ELEMENT_CLICKED}
       element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW}
@@ -188,6 +188,6 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
           </>
         }
       />
-    </TraceEvent>
+    </TraceAnalyticsEvent>
   )
 }

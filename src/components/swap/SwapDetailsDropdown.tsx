@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent, useTrace } from '@uniswap/analytics'
+import { useTrace } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
+import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
@@ -104,7 +105,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
 
   return (
     <Wrapper>
-      <TraceEvent
+      <TraceAnalyticsEvent
         events={[BrowserEvent.onClick]}
         name={SwapEventName.SWAP_DETAILS_EXPANDED}
         element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
@@ -146,7 +147,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
             />
           </RowFixed>
         </StyledHeaderRow>
-      </TraceEvent>
+      </TraceAnalyticsEvent>
       {trade && (
         <AnimatedDropdown open={showDetails}>
           <SwapDetailsWrapper data-testid="advanced-swap-details">

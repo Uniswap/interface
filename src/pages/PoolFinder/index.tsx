@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
@@ -97,7 +97,7 @@ export default function PoolFinder() {
   )
 
   return (
-    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+    <TraceAnalytics page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <AppBody>
           <FindPoolTabs origin={query.get('origin') ?? '/pools'} />
@@ -232,6 +232,6 @@ export default function PoolFinder() {
         </AppBody>
         <SwitchLocaleLink />
       </>
-    </Trace>
+    </TraceAnalytics>
   )
 }

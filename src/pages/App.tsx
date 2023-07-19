@@ -1,6 +1,7 @@
-import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
+import { getDeviceId, sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
@@ -188,7 +189,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
-      <Trace page={currentPage}>
+      <TraceAnalytics page={currentPage}>
         <StatsigProvider
           user={statsigUser}
           // TODO: replace with proxy and cycle key
@@ -322,7 +323,7 @@ export default function App() {
             <PageTabs />
           </MobileBottomBar>
         </StatsigProvider>
-      </Trace>
+      </TraceAnalytics>
     </ErrorBoundary>
   )
 }

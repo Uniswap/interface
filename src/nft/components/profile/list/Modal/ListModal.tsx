@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -122,7 +123,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
 
   return (
     <Portal>
-      <Trace modal={InterfaceModalName.NFT_LISTING}>
+      <TraceAnalytics modal={InterfaceModalName.NFT_LISTING}>
         <ListModalWrapper>
           {allListingsApproved ? (
             <SuccessScreen overlayClick={closeModalOnClick} />
@@ -149,7 +150,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
             </>
           )}
         </ListModalWrapper>
-      </Trace>
+      </TraceAnalytics>
       <Overlay onClick={closeModalOnClick} />
     </Portal>
   )

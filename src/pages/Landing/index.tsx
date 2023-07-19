@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
+import { TraceAnalytics, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { BaseButton } from 'components/Button'
 import { AppleLogo } from 'components/Logo/AppleLogo'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
@@ -330,10 +330,10 @@ export default function Landing() {
   )
 
   return (
-    <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
+    <TraceAnalytics page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
       <PageContainer data-testid="landing-page">
         <LandingSwapContainer>
-          <TraceEvent
+          <TraceAnalyticsEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
@@ -341,7 +341,7 @@ export default function Landing() {
             <Link to="/swap">
               <LandingSwap />
             </Link>
-          </TraceEvent>
+          </TraceAnalyticsEvent>
         </LandingSwapContainer>
         {showContent && (
           <>
@@ -367,7 +367,7 @@ export default function Landing() {
                 </SubText>
               </SubTextContainer>
               <ActionsContainer>
-                <TraceEvent
+                <TraceAnalyticsEvent
                   events={[BrowserEvent.onClick]}
                   name={SharedEventName.ELEMENT_CLICKED}
                   element={InterfaceElementName.CONTINUE_BUTTON}
@@ -377,7 +377,7 @@ export default function Landing() {
                       <Trans>Get started</Trans>
                     </ButtonCTAText>
                   </ButtonCTA>
-                </TraceEvent>
+                </TraceAnalyticsEvent>
               </ActionsContainer>
               <LearnMoreContainer
                 onClick={() => {
@@ -414,7 +414,7 @@ export default function Landing() {
           </>
         )}
       </PageContainer>
-    </Trace>
+    </TraceAnalytics>
   )
 }
 

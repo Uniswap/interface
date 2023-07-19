@@ -1,7 +1,7 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
+import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import { PortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
@@ -108,7 +108,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
     return null
   }
   return (
-    <TraceEvent
+    <TraceAnalyticsEvent
       events={[BrowserEvent.onClick]}
       name={SharedEventName.ELEMENT_CLICKED}
       element={InterfaceElementName.MINI_PORTFOLIO_TOKEN_ROW}
@@ -137,6 +137,6 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
           )
         }
       />
-    </TraceEvent>
+    </TraceAnalyticsEvent>
   )
 }

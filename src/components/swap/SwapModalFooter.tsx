@@ -1,9 +1,9 @@
 import { Plural, Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { formatNumber, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import Column from 'components/Column'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -177,7 +177,7 @@ export default function SwapModalFooter({
         </SwapShowAcceptChanges>
       ) : (
         <AutoRow>
-          <TraceEvent
+          <TraceAnalyticsEvent
             events={[BrowserEvent.onClick]}
             element={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             name={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
@@ -205,7 +205,7 @@ export default function SwapModalFooter({
                 <Trans>Confirm swap</Trans>
               </ThemedText.HeadlineSmall>
             </ConfirmButton>
-          </TraceEvent>
+          </TraceAnalyticsEvent>
 
           {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
         </AutoRow>

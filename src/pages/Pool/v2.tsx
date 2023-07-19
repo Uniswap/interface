@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import { UNSUPPORTED_V2POOL_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
@@ -142,7 +142,7 @@ export default function Pool() {
   })
 
   return (
-    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+    <TraceAnalytics page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <PageWrapper>
           <VoteCard>
@@ -284,6 +284,6 @@ export default function Pool() {
         </PageWrapper>
         <SwitchLocaleLink />
       </>
-    </Trace>
+    </TraceAnalytics>
   )
 }

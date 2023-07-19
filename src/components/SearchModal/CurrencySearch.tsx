@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import { sendEvent } from 'components/analytics'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -231,7 +231,7 @@ export function CurrencySearch({
 
   return (
     <ContentWrapper>
-      <Trace
+      <TraceAnalytics
         name={InterfaceEventName.TOKEN_SELECTOR_OPENED}
         modal={InterfaceModalName.TOKEN_SELECTOR}
         shouldLogImpression
@@ -312,7 +312,7 @@ export function CurrencySearch({
             </ThemedText.DeprecatedMain>
           </Column>
         )}
-      </Trace>
+      </TraceAnalytics>
     </ContentWrapper>
   )
 }

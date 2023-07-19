@@ -1,5 +1,6 @@
-import { sendAnalyticsEvent, Trace } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
 import { Column } from 'nft/components/Flex'
 import { useBag, useIsMobile } from 'nft/hooks'
@@ -66,7 +67,7 @@ export const BagContent = () => {
     <>
       <Column display={priceChangedAssets.length > 0 || unavailableAssets.length > 0 ? 'flex' : 'none'}>
         {unavailableAssets.length > 0 && (
-          <Trace
+          <TraceAnalytics
             name={NFTEventName.NFT_BUY_BAG_CHANGED}
             properties={{
               usd_value: fetchedPriceData,
@@ -83,7 +84,7 @@ export const BagContent = () => {
               setDidOpenUnavailableAssets={setDidOpenUnavailableAssets}
               isMobile={isMobile}
             />
-          </Trace>
+          </TraceAnalytics>
         )}
         {priceChangedAssets.map((asset, index) => (
           <PriceChangeBagRow

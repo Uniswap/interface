@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import Column from 'components/Column'
 import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import { Arrow } from 'components/Popover'
@@ -46,13 +47,13 @@ export const UniswapXOptIn = (props: { swapInfo: SwapInfo; isSmall: boolean }) =
   }
 
   return (
-    <Trace
+    <TraceAnalytics
       shouldLogImpression
       name="UniswapX Opt In Impression"
       properties={trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : undefined}
     >
       <OptInContents isOnClassic={isOnClassic} {...props} />
-    </Trace>
+    </TraceAnalytics>
   )
 }
 

@@ -1,13 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
@@ -637,7 +637,7 @@ function PositionPageContent() {
       <div />
     </LoadingRows>
   ) : (
-    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+    <TraceAnalytics page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <PageWrapper>
           <TransactionConfirmationModal
@@ -1004,6 +1004,6 @@ function PositionPageContent() {
         </PageWrapper>
         <SwitchLocaleLink />
       </>
-    </Trace>
+    </TraceAnalytics>
   )
 }

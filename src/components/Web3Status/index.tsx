@@ -1,9 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
 import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
+import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import { getConnection } from 'connection'
@@ -160,7 +161,7 @@ function Web3StatusInner() {
 
   if (account) {
     return (
-      <TraceEvent
+      <TraceAnalyticsEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.MINI_PORTFOLIO_TOGGLED}
         properties={{ type: 'open' }}
@@ -188,11 +189,11 @@ function Web3StatusInner() {
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>
-      </TraceEvent>
+      </TraceAnalyticsEvent>
     )
   } else {
     return (
-      <TraceEvent
+      <TraceAnalyticsEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
@@ -206,7 +207,7 @@ function Web3StatusInner() {
             <Trans>Connect</Trans>
           </StyledConnectButton>
         </Web3StatusConnectWrapper>
-      </TraceEvent>
+      </TraceAnalyticsEvent>
     )
   }
 }

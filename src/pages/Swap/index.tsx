@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import {
   BrowserEvent,
   InterfaceElementName,
@@ -15,6 +15,7 @@ import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import AddressInputPanel from 'components/AddressInputPanel'
+import { TraceAnalytics, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -138,7 +139,7 @@ export default function SwapPage({ className }: { className?: string }) {
   const location = useLocation()
 
   return (
-    <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
+    <TraceAnalytics page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <PageWrapper>
         <Swap
           className={className}
@@ -151,7 +152,7 @@ export default function SwapPage({ className }: { className?: string }) {
         <NetworkAlert />
       </PageWrapper>
       {location.pathname === '/swap' && <SwitchLocaleLink />}
-    </Trace>
+    </TraceAnalytics>
   )
 }
 
@@ -583,7 +584,7 @@ export function Swap({
 
       <div style={{ display: 'relative' }}>
         <SwapSection>
-          <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
+          <TraceAnalytics section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
             <SwapCurrencyInputPanel
               label={
                 independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
@@ -601,10 +602,10 @@ export function Swap({
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
             />
-          </Trace>
+          </TraceAnalytics>
         </SwapSection>
         <ArrowWrapper clickable={isSupportedChain(chainId)}>
-          <TraceEvent
+          <TraceAnalyticsEvent
             events={[BrowserEvent.onClick]}
             name={SwapEventName.SWAP_TOKENS_REVERSED}
             element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
@@ -621,13 +622,13 @@ export function Swap({
                 color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.textPrimary : theme.textTertiary}
               />
             </ArrowContainer>
-          </TraceEvent>
+          </TraceAnalyticsEvent>
         </ArrowWrapper>
       </div>
       <AutoColumn gap="xs">
         <div>
           <OutputSwapSection>
-            <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
+            <TraceAnalytics section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
               <SwapCurrencyInputPanel
                 value={formattedAmounts[Field.OUTPUT]}
                 disabled={disableTokenInputs}
@@ -644,7 +645,7 @@ export function Swap({
                 id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                 loading={independentField === Field.INPUT && routeIsSyncing}
               />
-            </Trace>
+            </TraceAnalytics>
             {recipient !== null && !showWrap ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
@@ -681,7 +682,7 @@ export function Swap({
               <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
             </ButtonPrimary>
           ) : !account ? (
-            <TraceEvent
+            <TraceAnalyticsEvent
               events={[BrowserEvent.onClick]}
               name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
               properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
@@ -690,7 +691,7 @@ export function Swap({
               <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
                 <Trans>Connect Wallet</Trans>
               </ButtonLight>
-            </TraceEvent>
+            </TraceAnalyticsEvent>
           ) : chainId && chainId !== connectedChainId ? (
             <ButtonPrimary
               onClick={async () => {
@@ -730,7 +731,7 @@ export function Swap({
               </ThemedText.DeprecatedMain>
             </GrayCard>
           ) : (
-            <TraceEvent
+            <TraceAnalyticsEvent
               events={[BrowserEvent.onClick]}
               name={SharedEventName.ELEMENT_CLICKED}
               element={InterfaceElementName.SWAP_BUTTON}
@@ -756,7 +757,7 @@ export function Swap({
                   )}
                 </Text>
               </ButtonError>
-            </TraceEvent>
+            </TraceAnalyticsEvent>
           )}
         </div>
       </AutoColumn>

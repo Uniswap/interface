@@ -1,5 +1,5 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ExternalLink, StyledRouterLink } from 'theme'
@@ -119,7 +119,7 @@ const LogoSectionContent = () => {
         <SocialLink href="https://discord.gg/FCfyBSbCU5" target="_blank" rel="noopener noreferrer">
           <DiscordIcon size={32} />
         </SocialLink>
-        <TraceEvent
+        <TraceAnalyticsEvent
           events={[BrowserEvent.onClick]}
           name={SharedEventName.ELEMENT_CLICKED}
           element={InterfaceElementName.TWITTER_LINK}
@@ -127,7 +127,7 @@ const LogoSectionContent = () => {
           <SocialLink href="https://twitter.com/uniswap" target="_blank" rel="noopener noreferrer">
             <TwitterIcon size={32} />
           </SocialLink>
-        </TraceEvent>
+        </TraceAnalyticsEvent>
         <SocialLink href="https://github.com/Uniswap" target="_blank" rel="noopener noreferrer">
           <GithubIcon size={32} />
         </SocialLink>
@@ -161,24 +161,24 @@ export const AboutFooter = () => {
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Company</LinkGroupTitle>
-          <TraceEvent
+          <TraceAnalyticsEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.CAREERS_LINK}
           >
             <ExternalTextLink href="https://boards.greenhouse.io/uniswaplabs">Careers</ExternalTextLink>
-          </TraceEvent>
-          <TraceEvent
+          </TraceAnalyticsEvent>
+          <TraceAnalyticsEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.BLOG_LINK}
           >
             <ExternalTextLink href="https://uniswap.org/blog">Blog</ExternalTextLink>
-          </TraceEvent>
+          </TraceAnalyticsEvent>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Get Help</LinkGroupTitle>
-          <TraceEvent
+          <TraceAnalyticsEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.SUPPORT_LINK}
@@ -190,14 +190,14 @@ export const AboutFooter = () => {
             >
               Contact Us
             </ExternalTextLink>
-          </TraceEvent>
-          <TraceEvent
+          </TraceAnalyticsEvent>
+          <TraceAnalyticsEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.SUPPORT_LINK}
           >
             <ExternalTextLink href="https://support.uniswap.org/hc/en-us">Help Center</ExternalTextLink>
-          </TraceEvent>
+          </TraceAnalyticsEvent>
         </LinkGroup>
       </FooterLinks>
 

@@ -1,6 +1,6 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
+import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'
@@ -68,7 +68,7 @@ export default function CommonBases({
           const isSelected = selectedCurrency?.equals(currency)
 
           return (
-            <TraceEvent
+            <TraceAnalyticsEvent
               events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
               name={InterfaceEventName.TOKEN_SELECTED}
               properties={formatAnalyticsEventProperties(currency, searchQuery, isAddressSearch)}
@@ -88,7 +88,7 @@ export default function CommonBases({
                   {currency.symbol}
                 </Text>
               </BaseWrapper>
-            </TraceEvent>
+            </TraceAnalyticsEvent>
           )
         })}
       </AutoRow>

@@ -1,5 +1,5 @@
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import { useDetailsV2Enabled } from 'featureFlags/flags/nftDetails'
 import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
@@ -46,7 +46,7 @@ const AssetPage = () => {
   if (loading && !detailsV2Enabled) return <AssetDetailsLoading />
   return (
     <>
-      <Trace
+      <TraceAnalytics
         page={InterfacePageName.NFT_DETAILS_PAGE}
         properties={{ collection_address: contractAddress, token_id: tokenId }}
         shouldLogImpression
@@ -63,7 +63,7 @@ const AssetPage = () => {
             </AssetContainer>
           )
         ) : null}
-      </Trace>
+      </TraceAnalytics>
     </>
   )
 }

@@ -1,8 +1,9 @@
 import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Trace, useTrace } from '@uniswap/analytics'
+import { useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
@@ -110,7 +111,7 @@ const TxCompleteModal = () => {
           <Box className={styles.modalContainer} onClick={closeTxCompleteScreen}>
             {/* Successfully purchased NFTs */}
             {showPurchasedModal && (
-              <Trace
+              <TraceAnalytics
                 name={NFTEventName.NFT_BUY_BAG_SUCCEEDED}
                 properties={{
                   buy_quantity: nftsPurchased.length,
@@ -184,13 +185,13 @@ const TxCompleteModal = () => {
                     </a>
                   </Box>
                 </Box>
-              </Trace>
+              </TraceAnalytics>
             )}
             {/* NFTs that were not purchased ie Refunds */}
             {showRefundModal &&
               /* Showing both purchases & refunds */
               (showPurchasedModal ? (
-                <Trace
+                <TraceAnalytics
                   name={NFTEventName.NFT_BUY_BAG_REFUNDED}
                   properties={{
                     buy_quantity: nftsPurchased.length,
@@ -263,10 +264,10 @@ const TxCompleteModal = () => {
                     </Box>
                     <Box className={styles.refundOverflowFade} />
                   </Box>
-                </Trace>
+                </TraceAnalytics>
               ) : (
                 // Only showing when all assets are unavailable
-                <Trace
+                <TraceAnalytics
                   name={NFTEventName.NFT_BUY_BAG_REFUNDED}
                   properties={{
                     buy_quantity: 0,
@@ -379,7 +380,7 @@ const TxCompleteModal = () => {
                       Return to Marketplace
                     </Box>
                   </Box>
-                </Trace>
+                </TraceAnalytics>
               ))}
           </Box>
         </Portal>

@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -271,7 +271,7 @@ export default function VotePage() {
   }
 
   return (
-    <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
+    <TraceAnalytics page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
       <>
         <PageWrapper gap="lg" justify="center">
           <VoteModal
@@ -504,6 +504,6 @@ export default function VotePage() {
         </PageWrapper>
         <SwitchLocaleLink />
       </>
-    </Trace>
+    </TraceAnalytics>
   )
 }

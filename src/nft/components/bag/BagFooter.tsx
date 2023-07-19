@@ -1,11 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
+import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -505,7 +506,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
             usingPayWithAnyToken={usingPayWithAnyToken}
           />
         </FooterHeader>
-        <TraceEvent
+        <TraceAnalyticsEvent
           events={[BrowserEvent.onClick]}
           name={NFTEventName.NFT_BUY_BAG_PAY}
           element={InterfaceElementName.NFT_BUY_BAG_PAY_BUTTON}
@@ -524,7 +525,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
             {isPending && <Loader size="20px" stroke="white" />}
             {buttonText}
           </ActionButton>
-        </TraceEvent>
+        </TraceAnalyticsEvent>
       </Footer>
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}

@@ -1,5 +1,5 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
@@ -60,7 +60,7 @@ export function ActivityRow({ activity }: { activity: Activity }) {
   }, [offchainOrderStatus, chainId, hash, openOffchainActivityModal])
 
   return (
-    <TraceEvent
+    <TraceAnalyticsEvent
       events={[BrowserEvent.onClick]}
       name={SharedEventName.ELEMENT_CLICKED}
       element={InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_ROW}
@@ -87,6 +87,6 @@ export function ActivityRow({ activity }: { activity: Activity }) {
         right={<StatusIndicator activity={activity} />}
         onClick={onClick}
       />
-    </TraceEvent>
+    </TraceAnalyticsEvent>
   )
 }

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import {
   InterfaceEventName,
   InterfaceModalName,
@@ -9,6 +9,7 @@ import {
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
@@ -414,7 +415,7 @@ export default function ConfirmSwapModal({
   }
 
   return (
-    <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
+    <TraceAnalytics modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
         {approvalError || swapFailed ? (
           <ErrorModalContent
@@ -431,6 +432,6 @@ export default function ConfirmSwapModal({
           />
         )}
       </Modal>
-    </Trace>
+    </TraceAnalytics>
   )
 }

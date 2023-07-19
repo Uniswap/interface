@@ -1,6 +1,6 @@
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
@@ -179,7 +179,7 @@ const Collection = () => {
 
   return (
     <>
-      <Trace
+      <TraceAnalytics
         page={InterfacePageName.NFT_COLLECTION_PAGE}
         properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}
         shouldLogImpression
@@ -259,7 +259,7 @@ const Collection = () => {
             <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
           )}
         </AnimatedCollectionContainer>
-      </Trace>
+      </TraceAnalytics>
       <MobileHoverBag />
     </>
   )

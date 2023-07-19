@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
+import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -330,7 +330,7 @@ export default function SwapCurrencyInputPanel({
                     ) : null}
                   </ThemedText.DeprecatedBody>
                   {showMaxButton && selectedCurrencyBalance ? (
-                    <TraceEvent
+                    <TraceAnalyticsEvent
                       events={[BrowserEvent.onClick]}
                       name={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
                       element={InterfaceElementName.MAX_TOKEN_AMOUNT_BUTTON}
@@ -338,7 +338,7 @@ export default function SwapCurrencyInputPanel({
                       <StyledBalanceMax onClick={onMax}>
                         <Trans>Max</Trans>
                       </StyledBalanceMax>
-                    </TraceEvent>
+                    </TraceAnalyticsEvent>
                   ) : null}
                 </RowFixed>
               ) : (
