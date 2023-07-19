@@ -12,14 +12,12 @@ import {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
-  withSequence,
-  withSpring,
-  WithSpringConfig,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { pulseAnimation } from 'src/components/buttons/utils'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -39,17 +37,6 @@ export const NAV_BAR_HEIGHT_SM = 72
 
 export const SWAP_BUTTON_HEIGHT = 56
 const SWAP_BUTTON_SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 4 }
-
-function pulseAnimation(
-  activeScale: number,
-  spingAnimationConfig: WithSpringConfig = { damping: 1, stiffness: 200 }
-): number {
-  'worklet'
-  return withSequence(
-    withSpring(activeScale, spingAnimationConfig),
-    withSpring(1, spingAnimationConfig)
-  )
-}
 
 function sendSwapPressAnalyticsEvent(): void {
   sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {

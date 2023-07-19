@@ -6,8 +6,12 @@ import { impactAsync } from 'expo-haptics'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
+import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import Animated, {
+  cancelAnimation,
   interpolateColor,
+  runOnJS,
+  useAnimatedGestureHandler,
   useAnimatedRef,
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -22,10 +26,11 @@ import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { pulseAnimation } from 'src/components/buttons/utils'
 import { ActivityTab, ACTIVITY_TAB_DATA_DEPENDENCIES } from 'src/components/home/ActivityTab'
 import { NftsTab, NFTS_TAB_DATA_DEPENDENCIES } from 'src/components/home/NftsTab'
 import { TokensTab, TOKENS_TAB_DATA_DEPENDENCIES } from 'src/components/home/TokensTab'
-import { AnimatedBox, Box, Flex } from 'src/components/layout'
+import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { Delay, Delayed } from 'src/components/layout/Delayed'
 import { Screen } from 'src/components/layout/Screen'
@@ -534,6 +539,7 @@ function ActionButton({
   Icon,
   onPress,
   flex,
+  activeScale = 0.96,
 }: {
   eventName?: MobileEventName
   name: ElementName
@@ -541,33 +547,50 @@ function ActionButton({
   Icon: React.FC<SvgProps>
   onPress: () => void
   flex: number
+  activeScale?: number
 }): JSX.Element {
   const theme = useAppTheme()
+  const scale = useSharedValue(1)
+  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])
+
+  const onGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
+    onStart: () => {
+      cancelAnimation(scale)
+      scale.value = pulseAnimation(activeScale)
+    },
+    onEnd: () => {
+      runOnJS(onPress)()
+    },
+  })
+
   return (
     <Trace logPress element={name} pressEvent={eventName}>
-      <TouchableArea
-        hapticFeedback
-        backgroundColor="backgroundActionButton"
-        borderRadius="roundedFull"
-        flex={flex}
-        px="spacing12"
-        py="spacing16"
-        shadowColor="white"
-        shadowOffset={SHADOW_OFFSET_SMALL}
-        shadowOpacity={0.1}
-        shadowRadius={6}
-        onPress={onPress}>
-        <Flex centered row gap="none">
-          <Icon
-            color={theme.colors.magentaVibrant}
-            height={theme.iconSizes.icon20}
-            strokeWidth={2}
-            width={theme.iconSizes.icon20}
-          />
-          <Text color="accentAction" marginLeft="spacing8" variant="buttonLabelMedium">
-            {label}
-          </Text>
-        </Flex>
+      <TouchableArea hapticFeedback flex={flex} onPress={onPress}>
+        <TapGestureHandler onGestureEvent={onGestureEvent}>
+          <AnimatedFlex
+            centered
+            row
+            backgroundColor="backgroundActionButton"
+            borderRadius="roundedFull"
+            gap="none"
+            px="spacing12"
+            py="spacing16"
+            shadowColor="white"
+            shadowOffset={SHADOW_OFFSET_SMALL}
+            shadowOpacity={0.1}
+            shadowRadius={6}
+            style={animatedStyle}>
+            <Icon
+              color={theme.colors.magentaVibrant}
+              height={theme.iconSizes.icon20}
+              strokeWidth={2}
+              width={theme.iconSizes.icon20}
+            />
+            <Text color="accentAction" marginLeft="spacing8" variant="buttonLabelMedium">
+              {label}
+            </Text>
+          </AnimatedFlex>
+        </TapGestureHandler>
       </TouchableArea>
     </Trace>
   )

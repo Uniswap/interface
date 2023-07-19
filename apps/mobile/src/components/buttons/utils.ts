@@ -1,3 +1,4 @@
+import { withSequence, withSpring, WithSpringConfig } from 'react-native-reanimated'
 import { ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { Theme } from 'ui/src/theme/restyle/theme'
 
@@ -140,4 +141,15 @@ export function getButtonProperties(
     iconPadding,
     iconSize,
   }
+}
+
+export function pulseAnimation(
+  activeScale: number,
+  spingAnimationConfig: WithSpringConfig = { damping: 1, stiffness: 200 }
+): number {
+  'worklet'
+  return withSequence(
+    withSpring(activeScale, spingAnimationConfig),
+    withSpring(1, spingAnimationConfig)
+  )
 }
