@@ -319,7 +319,7 @@ export default function AddLiquidity({
       </ButtonLight>
     ) : (
       <AutoColumn gap={'md'}>
-        {(approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING) && isValid && (
+        {(approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING) && !withdrawKROM && isValid && (
           <RowBetween>
             {showApprovalA ? (
               <ButtonPrimary onClick={approveACallback} disabled={approvalA === ApprovalState.PENDING} width={'100%'}>
@@ -339,7 +339,10 @@ export default function AddLiquidity({
           onClick={() => {
             setShowConfirm(true)
           }}
-          disabled={!isValid || (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled)}
+          disabled={
+            !isValid ||
+            (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled && !withdrawKROM)
+          }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A]}
         >
           <Text fontWeight={400}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
