@@ -85,4 +85,4 @@ test('api should not return a valid response', async () => {
     const res = await fetch(req)
     expect([404, 500]).toContain(res.status)
   }
-}, 50000)
+})
