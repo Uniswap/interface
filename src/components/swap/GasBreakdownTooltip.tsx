@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
+import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row from 'components/Row'
@@ -8,6 +9,8 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components/macro'
 import { Divider, ExternalLink, ThemedText } from 'theme'
+
+import { getChainInfo } from '../../constants/chainInfo'
 
 const Container = styled(AutoColumn)`
   padding: 4px;
@@ -54,10 +57,15 @@ export function GasBreakdownTooltip({
   hideFees?: boolean
   hideUniswapXDescription?: boolean
 }) {
+  const { chainId } = useWeb3React()
+
   const swapEstimate = isClassicTrade(trade) ? trade.gasUseEstimateUSD : undefined
   const approvalEstimate = trade.approveInfo.needsApprove ? trade.approveInfo.approveGasEstimateUSD : undefined
   const wrapEstimate =
     isUniswapXTrade(trade) && trade.wrapInfo.needsWrap ? trade.wrapInfo.wrapGasEstimateUSD : undefined
+
+  const chainInfo = getChainInfo(chainId)
+
   return (
     <Container gap="md">
       {(wrapEstimate || approvalEstimate) && !hideFees && (
@@ -83,7 +91,7 @@ export function GasBreakdownTooltip({
           <Trans>
             <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient> aggregates liquidity sources for better prices and
             gas free swaps.
-          </Trans>{' '}
+          </Trans>
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
             <InlineLink>
               <Trans>Learn more</Trans>
@@ -92,7 +100,7 @@ export function GasBreakdownTooltip({
         </ThemedText.Caption>
       ) : (
         <ThemedText.Caption color="textSecondary">
-          <Trans>Network Fees are paid to the Ethereum network to secure transactions.</Trans>{' '}
+          <Trans>Network Fees are paid to the {chainInfo?.label ?? ''} network to secure transactions.</Trans>{' '}
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
             <InlineLink>
               <Trans>Learn more</Trans>
