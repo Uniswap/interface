@@ -91,7 +91,7 @@ export function GasBreakdownTooltip({
           <Trans>
             <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient> aggregates liquidity sources for better prices and
             gas free swaps.
-          </Trans>
+          </Trans>{' '}
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
             <InlineLink>
               <Trans>Learn more</Trans>
