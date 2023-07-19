@@ -64,7 +64,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
             {formattedAmount} {currency?.symbol}
           </ResponsiveHeadline>
           {usdAmount && (
-            <ThemedText.BodySmall color="textTertiary">
+            <ThemedText.BodySmall color="textSecondary">
               {formatNumber(usdAmount, NumberType.FiatTokenQuantity)}
             </ThemedText.BodySmall>
           )}

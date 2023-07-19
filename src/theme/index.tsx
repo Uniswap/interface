@@ -89,7 +89,7 @@ function getSettings(darkMode: boolean) {
 
     navHeight: navDimensions.height,
     navVerticalPad: navDimensions.verticalPad,
-    mobileBottomBarHeight: 52,
+    mobileBottomBarHeight: 48,
     maxWidth: MAX_CONTENT_WIDTH,
 
     // deprecated - please use hardcoded exported values instead of

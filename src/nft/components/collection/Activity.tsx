@@ -3,7 +3,7 @@ import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { themeVars, vars } from 'nft/css/sprinkles.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile } from 'nft/hooks'
 import { ActivityEvent, ActivityEventType } from 'nft/types'
 import { fetchPrice } from 'nft/utils/fetchPrice'
@@ -24,8 +24,9 @@ enum ColumnHeaders {
   To = 'To',
 }
 
-const FilterBox = styled.div<{ backgroundColor: string }>`
+const FilterBox = styled.div<{ backgroundColor: string; color: string }>`
   display: flex;
+  color: ${({ color }) => color};
   background: ${({ backgroundColor }) => backgroundColor};
   ${OpacityHoverState};
 `
@@ -99,12 +100,12 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
       const isActive = activeFilters[eventType]
-      const activeBackgroundColor = isDarkMode ? vars.color.gray500 : vars.color.gray200
 
       return (
         <FilterBox
           className={styles.filter}
-          backgroundColor={isActive ? activeBackgroundColor : themeVars.colors.backgroundInteractive}
+          backgroundColor={isActive ? themeVars.colors.accentActionSoft : themeVars.colors.backgroundSurface}
+          color={isActive ? themeVars.colors.accentAction : themeVars.colors.textPrimary}
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}

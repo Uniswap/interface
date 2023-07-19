@@ -23,8 +23,9 @@ export const CollectionSearch = () => {
       maxWidth="332"
       minWidth="0"
       fontSize="16"
+      fontWeight="book"
       height="44"
-      color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
+      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
       value={searchByNameText}
       placeholder={iscollectionStatsLoading ? '' : 'Search by name'}
       className={clsx(iscollectionStatsLoading && styles.filterButtonLoading)}

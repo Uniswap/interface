@@ -33,7 +33,6 @@ export const FilterButton = ({
       width={isMobile ? '44' : 'auto'}
       height="44"
       whiteSpace="nowrap"
-      color="white"
       data-testid="nft-filter"
     >
       <FilterIcon />

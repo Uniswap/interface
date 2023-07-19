@@ -41,8 +41,8 @@ export default function RadialGradientByChainUpdater(): null {
     if (isNftPage) {
       setBackground(initialStyles)
       backgroundRadialGradientElement.style.background = darkMode
-        ? darkTheme.backgroundBackdrop
-        : lightTheme.backgroundBackdrop
+        ? darkTheme.backgroundSurface
+        : lightTheme.backgroundSurface
       return
     }
 

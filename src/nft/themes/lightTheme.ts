@@ -5,17 +5,17 @@ export const lightTheme: Theme = {
     accentFailure: vars.color.critical,
     accentFailureSoft: 'rgba(250, 43, 57, 0.12)',
     accentAction: vars.color.accent1_light,
-    accentActionSoft: vars.color.accent1_light,
+    accentActionSoft: vars.color.accent2_light,
     accentSuccess: vars.color.success,
 
     explicitWhite: '#FFFFFF',
 
-    backgroundFloating: '#00000000',
-    backgroundInteractive: vars.color.surface3_light,
-    backgroundModule: vars.color.surface3_light,
-    backgroundOutline: vars.color.surface3_light,
+    backgroundBackdrop: vars.color.surface1_light,
     backgroundSurface: vars.color.surface1_light,
-    backgroundBackdrop: vars.color.surface2_light,
+    backgroundModule: vars.color.surface2_light,
+    backgroundFloating: vars.color.surface3_light,
+    backgroundInteractive: vars.color.surface3_light,
+    backgroundOutline: vars.color.surface3_light,
 
     modalBackdrop: 'rgba(0, 0, 0, 0.3)',
 

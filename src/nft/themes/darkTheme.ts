@@ -5,7 +5,7 @@ export const darkTheme: Theme = {
     accentFailure: vars.color.critical,
     accentFailureSoft: 'rgba(253, 118, 107, 0.12)',
     accentAction: vars.color.accent1_dark,
-    accentActionSoft: 'rgba(76, 130, 251, 0.24)',
+    accentActionSoft: vars.color.accent2_dark,
     accentSuccess: vars.color.success,
 
     explicitWhite: '#FFFFFF',
@@ -13,12 +13,12 @@ export const darkTheme: Theme = {
     gold: vars.color.gold200,
     violet: vars.color.violet200,
 
-    backgroundFloating: '0000000C',
-    backgroundInteractive: vars.color.surface4_dark,
-    backgroundModule: vars.color.surface4_dark,
-    backgroundOutline: vars.color.surface4_dark,
-    backgroundSurface: vars.color.surface2_dark,
-    backgroundBackdrop: vars.color.surface3_dark,
+    backgroundBackdrop: vars.color.surface1_dark,
+    backgroundSurface: vars.color.surface1_dark,
+    backgroundModule: vars.color.surface2_dark,
+    backgroundFloating: vars.color.surface3_dark,
+    backgroundInteractive: vars.color.surface3_dark,
+    backgroundOutline: vars.color.surface3_dark,
 
     modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
 
