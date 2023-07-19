@@ -17,6 +17,7 @@ import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButton'
 import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
+import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import Trace from 'src/components/Trace/Trace'
@@ -341,15 +342,16 @@ function TokenDetails({
               <BaseCard.InlineErrorState onRetry={retry} />
             </AnimatedBox>
           ) : null}
-          <Flex gap="spacing24">
+          <Flex gap="spacing24" mb="spacing8">
             <TokenBalances
               currentChainBalance={currentChainBalance}
               otherChainBalances={otherChainBalances}
               onPressSend={onPressSend}
             />
-            <Box mb="spacing8" mx="spacing16">
-              <TokenDetailsStats currencyId={_currencyId} data={data} tokenColor={tokenColor} />
+            <Box mx="spacing16">
+              <TokenDetailsStats data={data} tokenColor={tokenColor} />
             </Box>
+            <TokenDetailsLinks currencyId={_currencyId} data={data} />
           </Flex>
         </Flex>
       </HeaderScrollScreen>

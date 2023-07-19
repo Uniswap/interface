@@ -1,22 +1,12 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { EtherscanIcon } from 'src/components/icons/EtherscanIcon'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
-import { ElementName } from 'src/features/telemetry/constants'
-import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
 import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
-import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
-import AddressIcon from 'ui/src/assets/icons/sticky-note-text-square.svg'
-import TwitterIcon from 'ui/src/assets/icons/twitter.svg'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
-import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 import { formatNumber, NumberType } from 'wallet/src/utils/format'
-import { LinkButton, LinkButtonType } from './LinkButton'
 
 function StatsRow({
   label,
@@ -93,11 +83,9 @@ export function TokenDetailsMarketData({
 }
 
 export function TokenDetailsStats({
-  currencyId,
   data,
   tokenColor,
 }: {
-  currencyId: string
   data: TokenDetailsScreenQuery | undefined
   tokenColor?: Maybe<string>
 }): JSX.Element {
@@ -108,11 +96,6 @@ export function TokenDetailsStats({
   const tokenProjectData = tokenData?.project
 
   const marketData = tokenProjectData?.markets ? tokenProjectData.markets[0] : null
-
-  const chainId = currencyIdToChain(currencyId)
-  const address = currencyIdToAddress(currencyId)
-
-  const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
 
   return (
     <Flex gap="spacing24">
@@ -145,49 +128,6 @@ export function TokenDetailsStats({
           tokenColor={tokenColor}
           volume={tokenData?.market?.volume?.value}
         />
-      </Flex>
-      <Flex gap="spacing8">
-        <Text color="textTertiary" variant="subheadSmall">
-          {t('Links')}
-        </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Flex row gap="spacing8">
-            {tokenData?.address && (
-              <LinkButton
-                Icon={AddressIcon}
-                buttonType={LinkButtonType.Copy}
-                element={ElementName.TokenAddress}
-                label={sanitizeAddressText(shortenAddress(tokenData?.address)) ?? ''}
-                value={tokenData?.address}
-              />
-            )}
-            {tokenProjectData?.homepageUrl && (
-              <LinkButton
-                Icon={GlobeIcon}
-                buttonType={LinkButtonType.Link}
-                element={ElementName.TokenLinkWebsite}
-                label={t('Website')}
-                value={tokenProjectData.homepageUrl}
-              />
-            )}
-            {tokenProjectData?.twitterName && (
-              <LinkButton
-                Icon={TwitterIcon}
-                buttonType={LinkButtonType.Link}
-                element={ElementName.TokenLinkTwitter}
-                label={t('Twitter')}
-                value={getTwitterLink(tokenProjectData.twitterName)}
-              />
-            )}
-            <LinkButton
-              Icon={EtherscanIcon}
-              buttonType={LinkButtonType.Link}
-              element={ElementName.TokenLinkEtherscan}
-              label={t('Etherscan')}
-              value={explorerLink}
-            />
-          </Flex>
-        </ScrollView>
       </Flex>
     </Flex>
   )
