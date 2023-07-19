@@ -64,8 +64,11 @@ export type ExtractedColors = {
 }
 
 const specialCaseTokenColors: { [key: string]: string } = {
-  // WBTC
+  // old WBTC
   'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png':
+    '#F09241',
+  // new WBTC
+  'https://assets.coingecko.com/coins/images/7598/large/wrapped_bitcoin_wbtc.png?1548822744':
     '#F09241',
 
   // DAI
