@@ -1,8 +1,8 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { getChainInfo } from 'constants/chainInfo'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
-import React from 'react'
-import styled, { css } from 'styled-components/macro'
+import React, { useState } from 'react'
+import styled from 'styled-components/macro'
 
 export const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};
@@ -17,17 +17,22 @@ export const MissingImageLogo = styled.div<{ size?: string }>`
   width: ${({ size }) => size ?? '24px'};
 `
 
-export const LogoImage = styled.img<{ size: string; useBG?: boolean }>`
+export const LogoImage = styled.img<{ size: string; imgLoading?: boolean }>`
+  visibility: ${({ imgLoading }) => (imgLoading ? 'hidden' : 'visible')};
+  opacity: ${({ imgLoading }) => (imgLoading ? 0 : 1)};
+  transition: opacity ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: 50%;
+`
 
-  ${({ useBG }) =>
-    useBG &&
-    css`
-      background: radial-gradient(white 60%, #ffffff00 calc(70% + 1px));
-      box-shadow: 0 0 1px white;
-    `}
+const LogoImageWrapper = styled.div<{ size: string; useBG?: boolean }>`
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
+  background: ${({ theme, useBG }) => (useBG ? theme.backgroundInteractive : 'none')};
+  transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
 `
 
 export type AssetLogoBaseProps = {
@@ -77,11 +82,22 @@ export default function AssetLogo({
 
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
+  const [imgLoaded, setImgLoaded] = useState(false)
 
   return (
     <LogoContainer style={style}>
       {src ? (
-        <LogoImage {...imageProps} src={src} onError={nextSrc} useBG={true} />
+        <LogoImageWrapper size={size} useBG={!imgLoaded}>
+          <LogoImage
+            {...imageProps}
+            src={src}
+            onLoad={() => {
+              setImgLoaded(true)
+            }}
+            onError={nextSrc}
+            imgLoading={!imgLoaded}
+          />
+        </LogoImageWrapper>
       ) : (
         <MissingImageLogo size={size}>
           {/* use only first 3 characters of Symbol for design reasons */}
