@@ -35,6 +35,7 @@ export default async function getAsset(collectionAddress: string, tokenId: strin
     title,
     image,
     url,
+    ogImage: asset.image?.url,
   }
   return formattedAsset
 }

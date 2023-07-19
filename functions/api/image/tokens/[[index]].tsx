@@ -23,7 +23,7 @@ export async function onRequestGet({ params, request }) {
       return new Response('Token not found', { status: 404 })
     }
 
-    const palette = await getColor(data.image)
+    const palette = await getColor(data.ogImage)
     const networkLogo = getNetworkLogoUrl(networkName)
 
     const words = data.name.split(' ')
@@ -63,7 +63,7 @@ export async function onRequestGet({ params, request }) {
                 color: 'white',
               }}
             >
-              <img src={data.image} width="144px">
+              <img src={data.ogImage} width="144px">
                 {networkLogo != '' && (
                   <img
                     src={networkLogo}

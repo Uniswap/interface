@@ -16,7 +16,7 @@ export async function onRequestGet({ params, request }) {
     if (!data) {
       return new Response('Collection not found', { status: 404 })
     }
-    const palette = await getColor(data.image)
+    const palette = await getColor(data.ogImage)
     const words = data.name.split(' ')
 
     return new ImageResponse(
@@ -47,7 +47,7 @@ export async function onRequestGet({ params, request }) {
               }}
             >
               <img
-                src={data.image}
+                src={data.ogImage}
                 alt={data.name}
                 width="500px"
                 height="500px"

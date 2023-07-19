@@ -30,7 +30,7 @@ export async function onRequestGet({ params, request }) {
             height: '630px',
           }}
         >
-          <img src={data.image} alt={data.name} width="1200px" />
+          <img src={data.ogImage} alt={data.title} width="1200px" />
           <div
             style={{
               position: 'absolute',

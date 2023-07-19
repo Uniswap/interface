@@ -32,6 +32,9 @@ export default async function getToken(networkName: string, tokenAddress: string
     title,
     image,
     url,
+    symbol: asset.symbol,
+    ogImage: asset.project?.logoUrl,
+    name: asset.name,
   }
   return formattedAsset
 }
