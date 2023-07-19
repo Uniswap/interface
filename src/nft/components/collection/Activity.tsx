@@ -10,7 +10,6 @@ import { fetchPrice } from 'nft/utils/fetchPrice'
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components/macro'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import * as styles from './Activity.css'
 import { AddressCell, BuyCell, EventCell, ItemCell, PriceCell } from './ActivityCells'
@@ -24,10 +23,11 @@ enum ColumnHeaders {
   To = 'To',
 }
 
-const FilterBox = styled.div<{ backgroundColor: string; color: string }>`
+const FilterBox = styled.div<{ backgroundColor: string; color: string; border: string }>`
   display: flex;
   color: ${({ color }) => color};
   background: ${({ backgroundColor }) => backgroundColor};
+  border: ${({ border }) => border};
   ${OpacityHoverState};
 `
 
@@ -89,7 +89,6 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
   const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
-  const isDarkMode = useIsDarkMode()
 
   useEffect(() => {
     fetchPrice().then((price) => {
@@ -104,15 +103,16 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
       return (
         <FilterBox
           className={styles.filter}
-          backgroundColor={isActive ? themeVars.colors.accentActionSoft : themeVars.colors.backgroundSurface}
-          color={isActive ? themeVars.colors.accentAction : themeVars.colors.textPrimary}
+          backgroundColor={isActive ? themeVars.colors.backgroundInteractive : themeVars.colors.backgroundModule}
+          color={isActive ? themeVars.colors.textPrimary : themeVars.colors.textPrimary}
+          border={`1px solid ${isActive ? themeVars.colors.backgroundOutline : themeVars.colors.backgroundModule}`}
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
         </FilterBox>
       )
     },
-    [activeFilters, isDarkMode]
+    [activeFilters]
   )
 
   return (

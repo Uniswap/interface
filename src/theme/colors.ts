@@ -103,9 +103,9 @@ export const colors = {
   neutral3_dark: '#5E5E5E',
   surface1_dark: '#131313',
   surface2_dark: '#1B1B1B',
-  surface3_dark: '#FFFFFF12',
-  surface4_dark: '#FFFFFF20',
-  surface5_dark: '#00000004',
+  surface3_dark: '#ffffff1f',
+  surface4_dark: '#ffffff33',
+  surface5_dark: '#0000000a',
   accent1_dark: '#FC72FF',
   accent2_dark: '#311C31',
   neutral1_light: '#222222',
@@ -113,9 +113,9 @@ export const colors = {
   neutral3_light: '#CECECE',
   surface1_light: '#FFFFFF',
   surface2_light: '#F9F9F9',
-  surface3_light: '#22222212',
-  surface4_light: '#FFFFFF64',
-  surface5_light: '#00000004',
+  surface3_light: '#2222220d',
+  surface4_light: '#ffffffa3',
+  surface5_light: '#0000000a',
   accent1_light: '#FC72FF',
   accent2_light: '#FFEFFF',
   success: '#40B66B',
@@ -205,7 +205,7 @@ export const darkTheme = {
 
   searchBackground: `rgba(255,255,255,0.07)`,
   searchOutline: `rgba(255,255,255,0.07)`,
-  hoverState: colors.surface3_dark,
+  hoverState: colors.surface4_dark,
 }
 
 export const lightTheme: Theme = {
@@ -214,7 +214,7 @@ export const lightTheme: Theme = {
   userThemeColor: colors.accent1_light,
 
   background: colors.white, //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
-  backgroundBackdrop: colors.surface2_light,
+  backgroundBackdrop: colors.surface1_light,
   backgroundSurface: colors.surface1_light,
   backgroundModule: colors.surface2_light,
   backgroundInteractive: colors.surface3_light,
@@ -260,5 +260,5 @@ export const lightTheme: Theme = {
 
   searchBackground: opacify(4, colors.white),
   searchOutline: opacify(1, colors.black),
-  hoverState: colors.surface3_light,
+  hoverState: colors.surface4_light,
 }

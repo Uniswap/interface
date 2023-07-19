@@ -31,6 +31,7 @@ export const lightTheme: Theme = {
     textTertiary: vars.color.neutral3_light,
 
     dropShadow: `0px 4px 16px rgba(251, 17, 142, 0.4)`,
+    hoverState: vars.color.surface4_light,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

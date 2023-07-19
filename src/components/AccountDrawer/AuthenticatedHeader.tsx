@@ -4,6 +4,8 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ReactComponent as Power } from 'assets/svg/power.svg'
+import { ReactComponent as Settings } from 'assets/svg/settings.svg'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { AutoRow, RowBetween } from 'components/Row'
@@ -16,7 +18,7 @@ import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hoo
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
-import { CreditCard, IconProps, Info, LogOut, Settings } from 'react-feather'
+import { CreditCard, IconProps, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -160,10 +162,6 @@ export function PortfolioArrow({ change, ...rest }: { change: number } & IconPro
   )
 }
 
-const LogOutCentered = styled(LogOut)`
-  transform: translateX(2px);
-`
-
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { connector, ENSName } = useWeb3React()
   const dispatch = useAppDispatch()
@@ -268,7 +266,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               data-testid="wallet-disconnect"
               onConfirm={disconnect}
               onShowConfirm={setShowDisconnectConfirm}
-              Icon={LogOutCentered}
+              Icon={Power}
               text="Disconnect"
             />
           </TraceEvent>

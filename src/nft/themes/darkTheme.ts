@@ -31,6 +31,7 @@ export const darkTheme: Theme = {
     textTertiary: vars.color.neutral3_dark,
 
     dropShadow: `0px 4px 16px rgba(76, 130, 251, 0.4)`,
+    hoverState: vars.color.surface4_dark,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

@@ -12,15 +12,15 @@ import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
+import { ReactComponent as GasIcon } from '../../assets/svg/gas-icon.svg'
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 
 const StyledGasIcon = styled(GasIcon)`
   height: 16px;
-
+  width: 16px;
   // We apply the following to all children of the SVG in order to override the default color
   & > * {
-    stroke: ${({ theme }) => theme.textSecondary};
+    fill: ${({ theme }) => theme.textSecondary};
   }
 `
 

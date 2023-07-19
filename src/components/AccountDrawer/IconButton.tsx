@@ -20,7 +20,7 @@ export const IconHoverText = styled.span`
 const widthTransition = `width ease-in 80ms`
 
 const IconStyles = css`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   transition: ${widthTransition};
   border-radius: 12px;
   display: flex;
@@ -30,9 +30,12 @@ const IconStyles = css`
   overflow: hidden;
   height: 32px;
   width: 32px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.textSecondary};
+  > * {
+    fill: ${({ theme }) => theme.textSecondary};
+  }
   :hover {
-    background-color: ${({ theme }) => theme.hoverState};
+    background-color: ${({ theme }) => theme.backgroundModule};
     transition: ${({
       theme: {
         transition: { duration, timing },
@@ -60,10 +63,12 @@ const IconBlockButton = styled.button`
 `
 
 const IconWrapper = styled.span`
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   margin: auto;
   display: flex;
+  align-items: center;
+  justify-content: center;
 `
 interface BaseProps {
   Icon: Icon
@@ -87,7 +92,7 @@ const IconBlock = forwardRef<HTMLAnchorElement | HTMLDivElement, IconBlockProps>
 const IconButton = ({ Icon, ...rest }: IconButtonProps | IconLinkProps) => (
   <IconBlock {...rest}>
     <IconWrapper>
-      <Icon strokeWidth={1.5} size={16} />
+      <Icon size={24} />
     </IconWrapper>
   </IconBlock>
 )
@@ -103,6 +108,8 @@ const TextWrapper = styled.div`
   flex-shrink: 0;
   overflow: hidden;
   min-width: min-content;
+  padding-right: 8px;
+  font-weight: 485;
 `
 
 const TextHide = styled.div`
@@ -174,7 +181,7 @@ export const IconWithConfirmTextButton = ({
       {...rest}
       style={{
         width,
-        paddingLeft: xPad,
+        paddingLeft: xPad / 2,
         paddingRight: xPad,
       }}
       // @ts-ignore MouseEvent is valid, its a subset of the two mouse events,
@@ -188,9 +195,9 @@ export const IconWithConfirmTextButton = ({
         }
       }}
     >
-      <Row height="100%" gap="xs">
+      <Row height="100%" gap={showText ? 'xs' : 'none'}>
         <IconWrapper>
-          <Icon strokeWidth={1.5} size={16} />
+          <Icon width={24} height={24} />
         </IconWrapper>
 
         {/* this outer div is so we can cut it off but keep the inner text width full-width so we can measure it */}

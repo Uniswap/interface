@@ -15,7 +15,7 @@ export const logoContainer = style([
 export const logo = style([
   sprinkles({
     display: 'block',
-    color: 'textPrimary',
+    color: 'accentAction',
   }),
 ])
 
@@ -92,6 +92,6 @@ export const activeMenuItem = style([
   baseMenuItem,
   sprinkles({
     color: 'textPrimary',
-    background: 'backgroundFloating',
+    background: 'none',
   }),
 ])

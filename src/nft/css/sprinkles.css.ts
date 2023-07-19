@@ -33,6 +33,7 @@ const themeContractValues = {
     textTertiary: '',
 
     dropShadow: '',
+    hoverState: '',
   },
 
   shadows: {
@@ -215,8 +216,8 @@ export const vars = createGlobalTheme(':root', {
     neutral3_dark: '#5E5E5E',
     surface1_dark: '#131313',
     surface2_dark: '#1B1B1B',
-    surface3_dark: '#FFFFFF12',
-    surface4_dark: '#FFFFFF20',
+    surface3_dark: '#FFFFFF1f',
+    surface4_dark: '#FFFFFF33',
     surface5_dark: '#00000004',
     accent1_dark: '#FC72FF',
     accent2_dark: '#311C31',
@@ -225,9 +226,9 @@ export const vars = createGlobalTheme(':root', {
     neutral3_light: '#CECECE',
     surface1_light: '#FFFFFF',
     surface2_light: '#F9F9F9',
-    surface3_light: '#22222205',
-    surface4_light: '#00000004',
-    surface5_light: '#5B5B5B',
+    surface3_light: '#2222220d',
+    surface4_light: '#ffffffa3',
+    surface5_light: '#0000000a',
     accent1_light: '#FC72FF',
     accent2_light: '#FFEFFF',
     success: '#40B66B',
