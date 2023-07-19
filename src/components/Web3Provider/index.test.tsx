@@ -17,6 +17,9 @@ import { mocked } from 'test-utils/mocked'
 import Web3Provider from '.'
 
 jest.mock('@uniswap/analytics', () => ({
+  user: { set: jest.fn(), postInsert: jest.fn() },
+}))
+jest.mock('components/analytics/TraceAnalytics', () => ({
   sendOptOutAnalyticsEvent: jest.fn(),
   user: { set: jest.fn(), postInsert: jest.fn() },
 }))
