@@ -23,10 +23,10 @@ TraceAnalyticsEvent.displayName = 'TraceAnalyticsEvent'
 
 export const sendOptOutAnalyticsEvent: typeof sendAnalyticsEvent = (event, properties) => {
   const value = localStorage.getItem(analyticsOptOutAtomName)
-  let canSendAnalytics = false
+  let canSendAnalytics = true
 
-  if (typeof value === 'string' && JSON.parse(value) === true) {
-    canSendAnalytics = true
+  if (typeof value === 'string' && JSON.parse(value) === false) {
+    canSendAnalytics = false
   }
 
   if (canSendAnalytics) {
