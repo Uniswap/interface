@@ -6,7 +6,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
 import celoLogo from '../assets/svg/celo_logo.svg'
-import { checkWarning } from '../constants/tokenSafety'
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
@@ -66,17 +65,13 @@ export default function useAssetLogoSource(
   isNative?: boolean,
   backupImg?: string | null
 ): [string | undefined, () => void] {
-  const showLogo = Boolean((address && checkWarning(address, chainId) === null) || isNative)
-  const [current, setCurrent] = useState<string | undefined>(
-    showLogo ? getInitialUrl(address, chainId, isNative, backupImg) : undefined
-  )
+  const [current, setCurrent] = useState<string | undefined>(getInitialUrl(address, chainId, isNative, backupImg))
   const [fallbackSrcs, setFallbackSrcs] = useState<string[] | undefined>(undefined)
 
   useEffect(() => {
-    if (!showLogo) return
     setCurrent(getInitialUrl(address, chainId, isNative))
     setFallbackSrcs(undefined)
-  }, [address, chainId, isNative, showLogo])
+  }, [address, chainId, isNative])
 
   const nextSrc = useCallback(() => {
     if (current) {
