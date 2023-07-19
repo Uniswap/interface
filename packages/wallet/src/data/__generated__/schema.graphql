@@ -2,6 +2,28 @@
 directive @defer on FIELD
 
 """
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
+"""
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
+
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""
 Tells the service this field/object has access authorized by an API key.
 """
 directive @aws_api_key on OBJECT | FIELD_DEFINITION
@@ -15,36 +37,14 @@ directive @aws_subscribe(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
-"""
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by sigv4 signing.
 """
 directive @aws_iam on OBJECT | FIELD_DEFINITION
 
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
-
 """
-Tells the service this field/object has access authorized by an OIDC token.
+Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by a Cognito User Pools token.
@@ -652,13 +652,12 @@ type Portfolio {
 }
 
 type Query {
-  tokens(contracts: [ContractInput!]!): [Token]
-  token(chain: Chain!, address: String): Token
+  tokens(contracts: [ContractInput!]!, _fs: String): [Token]
+  token(chain: Chain!, address: String, _fs: String): Token
   ensEntry(ensDomainName: String!, chain: Chain!): EnsEntry
-  tokenProjects(contracts: [ContractInput!]!): [TokenProject]
+  tokenProjects(contracts: [ContractInput!]!, _fs: String): [TokenProject]
   searchTokens(searchQuery: String!): [Token]
-  portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!]): [Portfolio]
-  nftCollectionsById(collectionIds: [String]): [NftCollection]
+  portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!], _fs: String): [Portfolio]
   topTokens(chain: Chain, page: Int, pageSize: Int, orderBy: TokenSortableField): [Token]
   topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, after: String, first: Int, cursor: String, limit: Int, _fs: String): NftCollectionConnection
   nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, after: String, first: Int, before: String, last: Int, _fs: String): NftAssetConnection
@@ -709,7 +708,7 @@ type Token implements IContract {
   decimals: Int
   name: String
   symbol: String
-  project: TokenProject
+  project(_fs: String): TokenProject
   market(currency: Currency): TokenMarket
 }
 
@@ -791,9 +790,6 @@ type TokenProjectMarket {
   priceHistory(duration: HistoryDuration!, _fs: String): [TimestampedAmount]
   pricePercentChange(duration: HistoryDuration!, _fs: String): Amount
   priceHighLow(duration: HistoryDuration!, highLow: HighLow!, _fs: String): Amount
-  volume(duration: HistoryDuration!): Amount @deprecated(reason: "Use TokenMarket.volume for Uniswap volume")
-  volume24h: Amount @deprecated(reason: "Use TokenMarket.volume with duration DAY for Uniswap volume")
-  fullyDilutedMarketCap: Amount @deprecated(reason: "Use marketCap")
 }
 
 enum TokenSortableField {
