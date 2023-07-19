@@ -11,11 +11,12 @@ const StyledColumn = styled(Column)`
 interface SettingsToggleProps {
   title: string
   description?: string
+  dataid?: string
   isActive: boolean
   toggle: () => void
 }
 
-export function SettingsToggle({ title, description, isActive, toggle }: SettingsToggleProps) {
+export function SettingsToggle({ title, description, dataid, isActive, toggle }: SettingsToggleProps) {
   return (
     <Row align="center">
       <StyledColumn>
@@ -30,7 +31,7 @@ export function SettingsToggle({ title, description, isActive, toggle }: Setting
           </Row>
         )}
       </StyledColumn>
-      <Toggle isActive={isActive} toggle={toggle} />
+      <Toggle id={dataid} isActive={isActive} toggle={toggle} />
     </Row>
   )
 }
