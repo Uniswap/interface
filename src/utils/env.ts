@@ -23,6 +23,14 @@ export function isAppUniswapStagingOrg({ hostname }: { hostname: string }): bool
   return hostname === 'app.uniswap-staging.org'
 }
 
+export function isBrowserRouterEnabled(): boolean {
+  return (
+    isAppUniswapOrg(window.location) ||
+    isAppUniswapStagingOrg(window.location) ||
+    window.location.hostname === 'localhost'
+  )
+}
+
 export function isSentryEnabled(): boolean {
   // Disable in e2e test environments
   if (isStagingEnv() && !isAppUniswapStagingOrg(window.location)) return false
