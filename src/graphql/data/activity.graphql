@@ -36,7 +36,7 @@ fragment TokenAssetParts on Token {
   decimals
   chain
   standard
-  project {
+  project(_fs: "DATASOURCE:LEGACY") {
     id
     isSpam
     logo {

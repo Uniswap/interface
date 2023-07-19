@@ -13,7 +13,7 @@ import { supportedChainIdFromGQLChain } from './util'
 //     TokenProjectMarket is aggregated market data (aggregated over multiple dexes and centralized exchanges) that we get from coingecko.
 gql`
   query Token($chain: Chain!, $address: String = null) {
-    token(chain: $chain, address: $address) {
+    token(chain: $chain, address: $address, _fs: "DATASOURCE:LEGACY") {
       id
       decimals
       name
@@ -47,7 +47,7 @@ gql`
           value
         }
       }
-      project {
+      project(_fs: "DATASOURCE:LEGACY") {
         id
         description
         homepageUrl

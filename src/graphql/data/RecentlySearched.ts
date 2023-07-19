@@ -24,7 +24,7 @@ gql`
         }
       }
     }
-    tokens(contracts: $contracts) {
+    tokens(contracts: $contracts, _fs: "DATASOURCE:LEGACY") {
       id
       decimals
       name
@@ -49,7 +49,7 @@ gql`
           currency
         }
       }
-      project {
+      project(_fs: "DATASOURCE:LEGACY") {
         id
         logoUrl
         safetyLevel

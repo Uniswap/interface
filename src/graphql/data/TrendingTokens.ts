@@ -31,7 +31,7 @@ gql`
           currency
         }
       }
-      project {
+      project(_fs: "DATASOURCE:LEGACY") {
         id
         logoUrl
         safetyLevel
