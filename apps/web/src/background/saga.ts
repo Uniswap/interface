@@ -3,6 +3,7 @@ import {
   dappRequestWatcher,
   extensionRequestWatcher,
 } from 'src/background/features/dappRequests/saga'
+import { navigationSaga } from 'src/background/utils/navigationSaga'
 import { spawn } from 'typed-redux-saga'
 import { authActions, authReducer, authSaga, authSagaName } from 'wallet/src/features/auth/saga'
 import { initProviders } from 'wallet/src/features/providers'
@@ -62,6 +63,7 @@ const sagasInitializedOnStartup = [
   extensionRequestWatcher,
   initProviders,
   keepAliveSaga,
+  navigationSaga,
   pendingAccountSaga,
 ] as const
 

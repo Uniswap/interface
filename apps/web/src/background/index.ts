@@ -37,7 +37,10 @@ const initApp = async ({
   notifyStoreInitialized()
 
   if (openOnboardingIfNotOnboarded) {
-    await maybeOpenOnboarding(store.getState() as unknown as WebState)
+    await maybeOpenOnboarding({
+      state: store.getState() as unknown as WebState,
+      dispatch: store.dispatch,
+    })
   }
 }
 
@@ -60,11 +63,17 @@ chrome.runtime.onConnect.addListener(async (port) => {
   await initApp({})
 })
 
-async function maybeOpenOnboarding(state: WebState): Promise<void> {
+async function maybeOpenOnboarding({
+  state,
+  dispatch,
+}: {
+  state: WebState
+  dispatch: Dispatch<AnyAction>
+}): Promise<void> {
   const isOnboarded = isOnboardedSelector(state)
 
   if (!isOnboarded) {
-    await focusOrCreateOnboardingTab()
+    await focusOrCreateOnboardingTab({ dispatch })
   }
 }
 

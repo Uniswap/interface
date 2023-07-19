@@ -4,7 +4,7 @@ import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import { Locked } from 'src/app/features/lockScreen/Locked'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { DappRequestContent } from 'src/background/features/dappRequests/DappRequestContent'
-import { useAppSelector } from 'src/background/store'
+import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
 import { YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
@@ -50,16 +50,17 @@ export function WebNavigation(): JSX.Element {
 function LoggedOut(): JSX.Element {
   const isOnboarded = useAppSelector(isOnboardedSelector)
   const didOpenOnboarding = useRef(false)
+  const dispatch = useAppDispatch()
 
   const handleOnboarding = useCallback(async () => {
     if (!isOnboarded && !didOpenOnboarding.current) {
       // We keep track of this to avoid opening the onboarding page multiple times if this component remounts.
       didOpenOnboarding.current = true
-      await focusOrCreateOnboardingTab()
+      await focusOrCreateOnboardingTab({ dispatch })
       // Automatically close the pop up after focusing on the onboarding tab.
       window.close()
     }
-  }, [isOnboarded])
+  }, [dispatch, isOnboarded])
 
   useAsyncData(handleOnboarding)
 

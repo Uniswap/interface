@@ -1,4 +1,7 @@
 import { matchPath, To, useLocation, useNavigate } from 'react-router-dom'
+import { AnyAction, Dispatch } from 'redux'
+import { useAppDispatch } from 'src/background/store'
+import { openTab } from 'src/background/utils/navigationSaga'
 
 export function useRouteMatch(pathToMatch: string): boolean {
   const { pathname } = useLocation()
@@ -17,7 +20,11 @@ export const useExtensionNavigation = (): {
   return { navigateTo, navigateBack }
 }
 
-export async function focusOrCreateOnboardingTab(): Promise<void> {
+export async function focusOrCreateOnboardingTab({
+  dispatch,
+}: {
+  dispatch: Dispatch<AnyAction> | ReturnType<typeof useAppDispatch>
+}): Promise<void> {
   const extension = await chrome.management.getSelf()
 
   const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/*` })
@@ -31,5 +38,5 @@ export async function focusOrCreateOnboardingTab(): Promise<void> {
     return
   }
 
-  await chrome.tabs.create({ url: 'index.html#/onboarding' })
+  await dispatch(openTab({ url: 'index.html#/onboarding' }))
 }

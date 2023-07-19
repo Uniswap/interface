@@ -1,23 +1,24 @@
 import { REHYDRATE } from 'redux-persist'
-import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
-import { call, cancel, cancelled, delay, fork, put, select, take } from 'typed-redux-saga'
+import { WebState } from 'src/background/store'
+import { openTab } from 'src/background/utils/navigationSaga'
+import { call, delay, put, select, take } from 'typed-redux-saga'
 import { logger } from 'wallet/src/features/logger/logger'
 import { lockWallet, unlockWallet } from 'wallet/src/features/wallet/slice'
 import serializeError from 'wallet/src/utils/serializeError'
 
-const KEEP_ALIVE_INTERVAL_MS = 5000 // * 60 * 1000 // 5 minutes
+const KEEP_ALIVE_INTERVAL_MS = 1000 * 60 * 5 // 5 minutes
 const KEEP_ALIVE_PING = { content: 'keep_alive_ping' }
 const KEEP_ALIVE_PORT_NAME = 'keep_alive'
-const KEEP_ALIVE_START_DELAY_MS = 4 * 1000 // 4 seconds
+const KEEP_ALIVE_START_DELAY_MS = 1000 * 4 // 4 seconds
 
 let alivePort: Nullable<chrome.runtime.Port> = null
 let lastCall = Date.now()
 
 /**
- * Keeps service worker proess alive without external intervention (i.e. does not need
- * external pages/popup/options.etc. opened).
+ * Keeps service worker process alive without external intervention while the wallet is unlocked
+ * or extension pages are open.
  *
- * @ref see ``doWork()` for implementation details.
+ * @ref see `doWork()` for implementation details.
  */
 export function* keepAliveSaga() {
   // When browser is restarted, previous state may still be unlocked although password does not exist in memory.
@@ -25,62 +26,41 @@ export function* keepAliveSaga() {
   yield* take(REHYDRATE)
   yield* put(lockWallet())
 
-  const isOnboarded = yield* select(isOnboardedSelector)
-
-  while (
-    // fullscreen onboarding flow requires service worker
-    // TODO(EXT-267): kill service worker on onboarding flow end
-    !isOnboarded ||
-    // Watch for wallet to be unlocked
-    (yield* take(
-      // could be any action type dispatched by store
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (action: any) => action.type === unlockWallet.type
-    ))
-  ) {
-    // start keep alive task in the background
-    const keepAliveTask = yield* fork(keepAliveLoop)
-
-    // Watch for wallet to be locked
-    yield* take(
-      // could be any action type dispatched by store
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (action: any) => action.type === lockWallet.type
-    )
-
-    // after wallet is locked, cancel background keep alive task
-    // (will cause forked keepAliveLoop task to jump to finally block)
-    yield* cancel(keepAliveTask)
-  }
-}
-
-/**
- * Worker function
- * Performs "work" in the background to keep service worker alive.
- * Canceling task will trigger finally block with cleanup operations.
- */
-function* keepAliveLoop() {
-  logger.debug('keepalive', 'keepAliveLoop', 'started')
-
-  // delay work until app is liekly done rendering new auth state
+  // Delay work until app is likely done rendering new auth state.
   yield* delay(KEEP_ALIVE_START_DELAY_MS)
 
-  while (true) {
-    try {
-      yield* call(doWork)
-      yield* delay(KEEP_ALIVE_INTERVAL_MS)
-      yield* call(logTime)
-    } finally {
-      if (yield* cancelled()) {
-        yield* call(stopKeepAliveLoop)
-      }
+  // Whenever one of these actions is dispatched, we'll resume the keepalive work.
+  // We'll watch for the wallet to be unlocked or extension pages to be opened.
+  const wakeUpActions: string[] = [unlockWallet.type, openTab.type]
+
+  let shouldKeepAlive = yield* call(checkShouldKeepAlive)
+
+  while (
+    shouldKeepAlive ||
+    // Wait for one of the `wakeUpActions` to be dispatched.
+    (yield* take((action: { type: string }) => wakeUpActions.includes(action.type)))
+  ) {
+    logger.debug('keepAliveLoop', 'loop', 'continuing keep alive')
+
+    yield* call(doWork)
+    yield* call(logTime)
+    yield* delay(KEEP_ALIVE_INTERVAL_MS)
+
+    shouldKeepAlive = yield* call(checkShouldKeepAlive)
+
+    if (!shouldKeepAlive) {
+      logger.debug('keepAliveLoop', 'stop', 'stopping keep alive')
     }
   }
 }
 
-function stopKeepAliveLoop(): void {
-  logger.debug('keepalive', 'stop', 'stopping keep alive')
-  // no-op
+function* checkShouldKeepAlive() {
+  const isUnlocked = yield* select((state: WebState) => state.wallet.isUnlocked)
+  if (isUnlocked) {
+    return true
+  }
+  const areExtensionPagesOpen = yield* call(checkIfExtensionPagesAreOpen)
+  return areExtensionPagesOpen
 }
 
 /**
@@ -149,4 +129,10 @@ function logTime(): void {
   const now = Date.now()
   logger.debug('keepalive', 'startKeepAlive', 'time elapsed: ', now - lastCall)
   lastCall = Date.now()
+}
+
+async function checkIfExtensionPagesAreOpen(): Promise<boolean> {
+  const extension = await chrome.management.getSelf()
+  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/*` })
+  return tabs.length > 0
 }
