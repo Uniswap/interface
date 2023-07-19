@@ -6,7 +6,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-export function TradeSummary({ trade }: { trade: InterfaceTrade }) {
+export function TradeSummary({ trade }: { trade: Pick<InterfaceTrade, 'inputAmount' | 'outputAmount'> }) {
   const theme = useTheme()
   return (
     <Row gap="sm" justify="center" align="center">

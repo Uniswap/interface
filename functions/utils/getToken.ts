@@ -1,12 +1,17 @@
 import { TokenDocument } from '../../src/graphql/data/__generated__/types-and-hooks'
-import { getApolloClient } from './getApolloClient'
+import client from '../client'
+
+function formatTitleName(symbol: string, name: string) {
+  if (symbol) {
+    return 'Get ' + symbol + ' on Uniswap'
+  }
+  if (name) {
+    return 'Get ' + name + ' on Uniswap'
+  }
+  return 'View Token on Uniswap'
+}
 
 export default async function getToken(networkName: string, tokenAddress: string, url: string) {
-  const lowerNetworkName = networkName.toLowerCase()
-  const tokenAddressRef = tokenAddress === '0x0000000000000000000000000000000000000000' ? 'NATIVE' : tokenAddress
-  const origin = new URL(url).origin
-  const imageUrl = origin + '/api/image/tokens/' + lowerNetworkName + '/' + tokenAddressRef
-  const client = getApolloClient()
   const { data } = await client.query({
     query: TokenDocument,
     variables: {
@@ -18,13 +23,11 @@ export default async function getToken(networkName: string, tokenAddress: string
   if (!asset) {
     return undefined
   }
+  const title = formatTitleName(asset.symbol, asset.name)
   const formattedAsset = {
-    name: asset.name,
-    network: networkName,
-    price: asset.market?.price?.value ? asset.market.price.value : 0,
-    image: imageUrl,
-    uniswapUrl: url,
-    symbol: asset.symbol,
+    title,
+    image: asset.project?.logoUrl,
+    url,
   }
   return formattedAsset
 }

@@ -6,6 +6,7 @@ import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from 'h
 import { useRevokeTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
 import useInterval from 'lib/hooks/useInterval'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { TradeFillType } from 'state/routing/types'
 import { useHasPendingApproval, useHasPendingRevocation, useTransactionAdder } from 'state/transactions/hooks'
 
 enum ApprovalState {
@@ -43,7 +44,11 @@ export type Allowance =
     }
   | AllowanceRequired
 
-export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spender?: string): Allowance {
+export default function usePermit2Allowance(
+  amount?: CurrencyAmount<Token>,
+  spender?: string,
+  tradeFillType?: TradeFillType
+): Allowance {
   const { account } = useWeb3React()
   const token = amount?.currency
 
@@ -100,7 +105,10 @@ export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spen
   }, [amount, now, permitAllowance, permitExpiration])
 
   const shouldRequestApproval = !(isApproved || isApprovalLoading)
-  const shouldRequestSignature = !(isPermitted || isSigned)
+
+  // UniswapX trades do not need a permit signature step in between because the swap step _is_ the permit signature
+  const shouldRequestSignature = tradeFillType !== TradeFillType.UniswapX && !(isPermitted || isSigned)
+
   const addTransaction = useTransactionAdder()
   const approveAndPermit = useCallback(async () => {
     if (shouldRequestApproval) {

@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import { OffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import UniwalletModal from 'components/AccountDrawer/UniwalletModal'
 import UniswapWalletBanner from 'components/Banner/UniswapWalletBanner'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
@@ -28,6 +29,7 @@ export default function TopLevelModals() {
       <Bag />
       <UniwalletModal />
       <UniswapWalletBanner />
+      <OffchainActivityModal />
       <TransactionCompleteModal />
       <AirdropModal />
       <FiatOnrampModal />

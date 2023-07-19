@@ -14,6 +14,7 @@ import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
 import { useCallback, useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
+import { usePendingOrders } from 'state/signatures/hooks'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
@@ -151,9 +152,11 @@ function Web3StatusInner() {
     return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
   }, [allTransactions])
 
-  const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
+  const pendingOrders = usePendingOrders()
 
-  const hasPendingTransactions = !!pending.length
+  const pendingTxs = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
+
+  const hasPendingActivity = !!pendingTxs.length || !!pendingOrders.length
 
   if (account) {
     return (
@@ -166,16 +169,16 @@ function Web3StatusInner() {
           disabled={Boolean(switchingChain)}
           data-testid="web3-status-connected"
           onClick={handleWalletDropdownClick}
-          pending={hasPendingTransactions}
+          pending={hasPendingActivity}
           isClaimAvailable={isClaimAvailable}
         >
-          {!hasPendingTransactions && (
-            <StatusIcon size={24} account={account} connection={connection} showMiniIcons={false} />
+          {!hasPendingActivity && (
+            <StatusIcon account={account} size={24} connection={connection} showMiniIcons={false} />
           )}
-          {hasPendingTransactions ? (
+          {hasPendingActivity ? (
             <RowBetween>
               <Text>
-                <Trans>{pending?.length} Pending</Trans>
+                <Trans>{pendingTxs.length + pendingOrders.length} Pending</Trans>
               </Text>{' '}
               <Loader stroke="white" />
             </RowBetween>
@@ -209,8 +212,9 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
+  const [isDrawerOpen] = useAccountDrawer()
   return (
-    <PrefetchBalancesWrapper>
+    <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={isDrawerOpen}>
       <Web3StatusInner />
       <Portal>
         <PortfolioDrawer />

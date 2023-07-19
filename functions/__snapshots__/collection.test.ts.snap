@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should inject metadata for valid nfts 1`] = `
+exports[`should inject metadata for valid collections 1`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
