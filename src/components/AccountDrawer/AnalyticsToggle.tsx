@@ -1,11 +1,8 @@
 import { t } from '@lingui/macro'
+import { analyticsOptOutToggle } from 'components/analytics/TraceAnalytics'
 import { useAtom } from 'jotai'
-import { atomWithStorage } from 'jotai/utils'
 
 import { SettingsToggle } from './SettingsToggle'
-
-export const analyticsOptOutAtomName = 'optOutOfAnalytics'
-export const analyticsOptOutToggle = atomWithStorage<boolean>(analyticsOptOutAtomName, true)
 
 export function AnalyticsToggle() {
   const [allowAnalytics, updateAllowAnalytics] = useAtom(analyticsOptOutToggle)

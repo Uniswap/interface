@@ -1,7 +1,9 @@
 import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
-import { analyticsOptOutAtomName, analyticsOptOutToggle } from 'components/AccountDrawer/AnalyticsToggle'
-import { useAtomValue } from 'jotai/utils'
+import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { memo } from 'react'
+
+const analyticsOptOutAtomName = 'optOutOfAnalytics'
+export const analyticsOptOutToggle = atomWithStorage<boolean>(analyticsOptOutAtomName, true)
 
 export const TraceAnalytics = memo((props: React.ComponentProps<typeof Trace>) => {
   const allowAnalytics = useAtomValue(analyticsOptOutToggle)
