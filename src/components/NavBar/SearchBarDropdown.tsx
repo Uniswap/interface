@@ -286,77 +286,73 @@ function SearchBarDropdownContents({
       <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
     )
 
-  return (
-    <>
-      {hasInput ? (
-        // Empty or Up to 8 combined tokens and nfts
-        <Column gap="20">
-          {showCollectionsFirst ? (
-            <>
-              {collectionSearchResults}
-              {tokenSearchResults}
-            </>
-          ) : (
-            <>
-              {tokenSearchResults}
-              {collectionSearchResults}
-            </>
-          )}
-        </Column>
+  return hasInput ? (
+    // Empty or Up to 8 combined tokens and nfts
+    <Column gap="20">
+      {showCollectionsFirst ? (
+        <>
+          {collectionSearchResults}
+          {tokenSearchResults}
+        </>
       ) : (
-        // Recent Searches, Trending Tokens, Trending Collections
-        <Column gap="20">
-          {shortenedHistory.length > 0 && (
-            <SearchBarDropdownSection
-              hoveredIndex={hoveredIndex}
-              startingIndex={0}
-              setHoveredIndex={setHoveredIndex}
-              toggleOpen={toggleOpen}
-              suggestions={shortenedHistory}
-              eventProperties={{
-                suggestion_type: NavBarSearchTypes.RECENT_SEARCH,
-                ...eventProperties,
-              }}
-              header={<Trans>Recent searches</Trans>}
-              headerIcon={<ClockIcon />}
-              isLoading={!searchHistory}
-            />
-          )}
-          {!isNFTPage && (
-            <SearchBarDropdownSection
-              hoveredIndex={hoveredIndex}
-              startingIndex={shortenedHistory.length}
-              setHoveredIndex={setHoveredIndex}
-              toggleOpen={toggleOpen}
-              suggestions={trendingTokens}
-              eventProperties={{
-                suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
-                ...eventProperties,
-              }}
-              header={<Trans>Popular tokens</Trans>}
-              headerIcon={<TrendingArrow />}
-              isLoading={!trendingTokenData}
-            />
-          )}
-          {Boolean(!isTokenPage && !shouldDisableNFTRoutes) && (
-            <SearchBarDropdownSection
-              hoveredIndex={hoveredIndex}
-              startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
-              setHoveredIndex={setHoveredIndex}
-              toggleOpen={toggleOpen}
-              suggestions={formattedTrendingCollections as unknown as GenieCollection[]}
-              eventProperties={{
-                suggestion_type: NavBarSearchTypes.COLLECTION_TRENDING,
-                ...eventProperties,
-              }}
-              header={<Trans>Popular NFT collections</Trans>}
-              headerIcon={<TrendingArrow />}
-              isLoading={trendingCollectionsAreLoading}
-            />
-          )}
-        </Column>
+        <>
+          {tokenSearchResults}
+          {collectionSearchResults}
+        </>
       )}
-    </>
+    </Column>
+  ) : (
+    // Recent Searches, Trending Tokens, Trending Collections
+    <Column gap="20">
+      {shortenedHistory.length > 0 && (
+        <SearchBarDropdownSection
+          hoveredIndex={hoveredIndex}
+          startingIndex={0}
+          setHoveredIndex={setHoveredIndex}
+          toggleOpen={toggleOpen}
+          suggestions={shortenedHistory}
+          eventProperties={{
+            suggestion_type: NavBarSearchTypes.RECENT_SEARCH,
+            ...eventProperties,
+          }}
+          header={<Trans>Recent searches</Trans>}
+          headerIcon={<ClockIcon />}
+          isLoading={!searchHistory}
+        />
+      )}
+      {!isNFTPage && (
+        <SearchBarDropdownSection
+          hoveredIndex={hoveredIndex}
+          startingIndex={shortenedHistory.length}
+          setHoveredIndex={setHoveredIndex}
+          toggleOpen={toggleOpen}
+          suggestions={trendingTokens}
+          eventProperties={{
+            suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
+            ...eventProperties,
+          }}
+          header={<Trans>Popular tokens</Trans>}
+          headerIcon={<TrendingArrow />}
+          isLoading={!trendingTokenData}
+        />
+      )}
+      {Boolean(!isTokenPage && !shouldDisableNFTRoutes) && (
+        <SearchBarDropdownSection
+          hoveredIndex={hoveredIndex}
+          startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
+          setHoveredIndex={setHoveredIndex}
+          toggleOpen={toggleOpen}
+          suggestions={formattedTrendingCollections as unknown as GenieCollection[]}
+          eventProperties={{
+            suggestion_type: NavBarSearchTypes.COLLECTION_TRENDING,
+            ...eventProperties,
+          }}
+          header={<Trans>Popular NFT collections</Trans>}
+          headerIcon={<TrendingArrow />}
+          isLoading={trendingCollectionsAreLoading}
+        />
+      )}
+    </Column>
   )
 }
 
