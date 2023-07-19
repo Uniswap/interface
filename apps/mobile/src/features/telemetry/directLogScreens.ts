@@ -1,7 +1,6 @@
-import { ManualPageViewScreen } from 'src/features/telemetry/constants'
-import { AppScreen, Screens } from 'src/screens/Screens'
+import { Screens } from 'src/screens/Screens'
 
-export const DIRECT_LOG_ONLY_SCREENS: (AppScreen | ManualPageViewScreen)[] = [
+export const DIRECT_LOG_ONLY_SCREENS: string[] = [
   Screens.TokenDetails,
   Screens.ExternalProfile,
   Screens.NFTItem,
@@ -10,7 +9,7 @@ export const DIRECT_LOG_ONLY_SCREENS: (AppScreen | ManualPageViewScreen)[] = [
 
 export function shouldLogScreen(
   directFromPage: boolean | undefined,
-  screen: AppScreen | ManualPageViewScreen | undefined
+  screen: string | undefined
 ): boolean {
   return directFromPage || screen === undefined || !DIRECT_LOG_ONLY_SCREENS.includes(screen)
 }

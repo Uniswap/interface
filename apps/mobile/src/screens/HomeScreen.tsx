@@ -45,9 +45,9 @@ import {
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { Trace } from 'src/components/telemetry/Trace'
-import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { Text } from 'src/components/Text'
+import Trace from 'src/components/Trace/Trace'
+import TraceTabView from 'src/components/Trace/TraceTabView'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { openModal } from 'src/features/modals/modalSlice'

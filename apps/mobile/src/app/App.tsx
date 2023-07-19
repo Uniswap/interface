@@ -11,12 +11,13 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { AppModals } from 'src/app/modals/AppModals'
+import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { AppStackNavigator } from 'src/app/navigation/navigation'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
-import { Trace } from 'src/components/telemetry/Trace'
-import { TraceUserProperties } from 'src/components/telemetry/TraceUserProperties'
+import Trace from 'src/components/Trace/Trace'
+import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { usePersistedApolloClient } from 'src/data/usePersistedApolloClient'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
@@ -26,12 +27,14 @@ import { NotificationToastWrapper } from 'src/features/notifications/Notificatio
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
+import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import { DynamicThemeProvider } from 'src/theme/DynamicThemeProvider'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
 import { flex } from 'ui/src/theme/restyle/flex'
 import { config } from 'wallet/src/config'
+import { AnalyticsNavigationContextProvider } from 'wallet/src/features/telemetry/trace/AnalyticsNavigationContext'
 import { useTrmQuery } from 'wallet/src/features/trm/api'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
@@ -112,31 +115,35 @@ function App(): JSX.Element | null {
         <StatsigProvider {...statSigOptions}>
           <SafeAreaProvider>
             <SharedProvider reduxStore={store}>
-              <ApolloProvider client={client}>
-                <PersistGate loading={null} persistor={persistor}>
-                  <DynamicThemeProvider>
-                    <ErrorBoundary>
-                      <GestureHandlerRootView style={flex.fill}>
-                        <WalletContextProvider>
-                          <BiometricContextProvider>
-                            <LockScreenContextProvider>
-                              <Sentry.TouchEventBoundary>
-                                <DataUpdaters />
-                                <BottomSheetModalProvider>
-                                  <AppModals />
-                                  <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                    <AppInner />
-                                  </PerformanceProfiler>
-                                </BottomSheetModalProvider>
-                              </Sentry.TouchEventBoundary>
-                            </LockScreenContextProvider>
-                          </BiometricContextProvider>
-                        </WalletContextProvider>
-                      </GestureHandlerRootView>
-                    </ErrorBoundary>
-                  </DynamicThemeProvider>
-                </PersistGate>
-              </ApolloProvider>
+              <AnalyticsNavigationContextProvider
+                shouldLogScreen={shouldLogScreen}
+                useIsPartOfNavigationTree={useIsPartOfNavigationTree}>
+                <ApolloProvider client={client}>
+                  <PersistGate loading={null} persistor={persistor}>
+                    <DynamicThemeProvider>
+                      <ErrorBoundary>
+                        <GestureHandlerRootView style={flex.fill}>
+                          <WalletContextProvider>
+                            <BiometricContextProvider>
+                              <LockScreenContextProvider>
+                                <Sentry.TouchEventBoundary>
+                                  <DataUpdaters />
+                                  <BottomSheetModalProvider>
+                                    <AppModals />
+                                    <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                      <AppInner />
+                                    </PerformanceProfiler>
+                                  </BottomSheetModalProvider>
+                                </Sentry.TouchEventBoundary>
+                              </LockScreenContextProvider>
+                            </BiometricContextProvider>
+                          </WalletContextProvider>
+                        </GestureHandlerRootView>
+                      </ErrorBoundary>
+                    </DynamicThemeProvider>
+                  </PersistGate>
+                </ApolloProvider>
+              </AnalyticsNavigationContextProvider>
             </SharedProvider>
           </SafeAreaProvider>
         </StatsigProvider>

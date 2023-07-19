@@ -4,8 +4,8 @@ import { useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { useTrace } from 'src/features/telemetry/hooks'
 import { Screens } from 'src/screens/Screens'
+import { useTrace } from 'wallet/src/features/telemetry/trace/TraceContext'
 import { Account, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
   pendingAccountActions,

@@ -1,9 +1,7 @@
-import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
-import { ITraceContext } from 'src/components/telemetry/TraceContext'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
+import { analytics } from 'wallet/src/features/telemetry/analytics/analytics'
+import { ITraceContext } from 'wallet/src/features/telemetry/trace/TraceContext'
 
 const EVENTS_HANDLED = ['onPress']
 
@@ -14,8 +12,8 @@ const EVENTS_HANDLED = ['onPress']
 export function getEventHandlers(
   child: React.ReactElement,
   consumedProps: ITraceContext,
-  eventName: MobileEventName | SharedEventName.ELEMENT_CLICKED,
-  elementName?: ElementName,
+  eventName: string,
+  element?: string,
   properties?: Record<string, unknown>
 ): Partial<Record<string, (e: NativeSyntheticEvent<NativeTouchEvent>) => void>> {
   const eventHandlers: Partial<
@@ -27,20 +25,14 @@ export function getEventHandlers(
       child.props[event].apply(child, [eventHandlerArgs])
 
       // augment handler with analytics logging
-      // NOTE: on type error, ensure `EventProperties` contains a record for new `EventName`
-      sendAnalyticsEvent(eventName, {
+      analytics.sendEvent(eventName, {
+        element,
         ...consumedProps,
         ...properties,
-        /**
-         * For consistency in amplitude, we want all event elements to be labeled with field name 'element'.
-         * This ensures that behavior from 'Trace' component is the same as the approach we use in declarative logging.
-         *
-         * Examples: <TraceEvent elementName={elementName} ... /> will match sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {element: ElementName.Swap} ...)
-         */
-        element: elementName,
       })
     }
   }
+
   // return a spreadable event handler object
   return eventHandlers
 }

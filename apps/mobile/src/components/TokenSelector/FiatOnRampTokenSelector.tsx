@@ -1,8 +1,8 @@
 import React, { memo } from 'react'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AnimatedFlex } from 'src/components/layout'
-import { Trace } from 'src/components/telemetry/Trace'
 import { TokenFiatOnRampList } from 'src/components/TokenSelector/TokenFiatOnRampList'
+import Trace from 'src/components/Trace/Trace'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 

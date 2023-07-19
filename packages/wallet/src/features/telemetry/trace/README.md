@@ -39,18 +39,3 @@ If you would like to log a different event than the default event, pass the cust
   {children}
 </Trace>
 ```
-
-## Marks
-
-Marks are implemented as inspired by the Web Performance API:
-
-```typescript
-// Track start timestamp with a mark
-<Trace startMark={Marks.Rehydration}>
-  ...
-  // Log end timestamp for that mark
-  <Trace endMark={Marks.Rehydration}>
-    ...
-  </Trace>
-</Trace>
-```

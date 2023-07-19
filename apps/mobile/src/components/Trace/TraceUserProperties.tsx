@@ -4,10 +4,10 @@ import {
   useBiometricAppSettings,
   useDeviceSupportsBiometricAuth,
 } from 'src/features/biometrics/hooks'
-import { flushAnalyticsEvents, setUserProperty } from 'src/features/telemetry'
-import { UserPropertyName } from 'src/features/telemetry/constants'
-import { getAuthMethod } from 'src/features/telemetry/utils'
+import { setUserProperty } from 'src/features/telemetry'
+import { getAuthMethod, UserPropertyName } from 'src/features/telemetry/constants'
 import { getFullAppVersion } from 'src/utils/version'
+import { analytics } from 'wallet/src/features/telemetry/analytics/analytics'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
   useActiveAccount,
@@ -27,7 +27,7 @@ export function TraceUserProperties(): null {
   useEffect(() => {
     setUserProperty(UserPropertyName.AppVersion, getFullAppVersion())
     return () => {
-      flushAnalyticsEvents()
+      analytics.flushEvents()
     }
   }, [])
 

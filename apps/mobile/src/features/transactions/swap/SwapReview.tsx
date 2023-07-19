@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
-import { Trace } from 'src/components/telemetry/Trace'
+import Trace from 'src/components/Trace/Trace'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,

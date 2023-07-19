@@ -12,10 +12,9 @@ import { Keyboard, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import { HandleBar } from 'src/components/modals/HandleBar'
-import { Trace } from 'src/components/telemetry/Trace'
+import Trace from 'src/components/Trace/Trace'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
-import { TelemetryTraceProps } from 'src/features/telemetry/types'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
@@ -36,8 +35,7 @@ type Props = PropsWithChildren<{
   hideKeyboardOnDismiss?: boolean
   // extend the sheet to its maximum snap point when keyboard is visible
   extendOnKeyboardVisible?: boolean
-}> &
-  TelemetryTraceProps
+}>
 
 const BACKDROP_APPEARS_ON_INDEX = 0
 const DISAPPEARS_ON_INDEX = -1
@@ -60,7 +58,6 @@ const FULL_HEIGHT = 0.91
 export function BottomSheetModal({
   children,
   name,
-  properties,
   onClose,
   snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
   stackBehavior = 'push',
@@ -190,7 +187,7 @@ export function BottomSheetModal({
       topInset={renderBehindInset ? undefined : insets.top}
       onAnimate={onAnimate}
       onDismiss={onClose}>
-      <Trace logImpression modal={name} properties={properties}>
+      <Trace logImpression modal={name}>
         <BottomSheetView
           style={[
             { height: fullScreen ? fullScreenContentHeight : undefined },

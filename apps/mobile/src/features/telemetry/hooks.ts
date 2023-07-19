@@ -1,6 +1,5 @@
-import { useContext, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { ITraceContext, TraceContext } from 'src/components/telemetry/TraceContext'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import {
@@ -11,11 +10,6 @@ import { recordBalancesReport, shouldReportBalances } from 'src/features/telemet
 import { useAccountListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-
-export function useTrace(trace?: ITraceContext): ITraceContext {
-  const parentTrace = useContext(TraceContext)
-  return useMemo(() => ({ ...parentTrace, ...trace }), [parentTrace, trace])
-}
 
 export function useLastBalancesReporter(): () => void {
   const dispatch = useAppDispatch()
