@@ -4,13 +4,12 @@ import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row from 'components/Row'
+import { getChainInfo } from 'constants/chainInfo'
 import { ReactNode } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components/macro'
 import { Divider, ExternalLink, ThemedText } from 'theme'
-
-import { getChainInfo } from '../../constants/chainInfo'
 
 const Container = styled(AutoColumn)`
   padding: 4px;
