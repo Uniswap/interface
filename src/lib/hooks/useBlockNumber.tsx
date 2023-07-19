@@ -1,4 +1,6 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { RPC_PROVIDERS } from 'constants/providers'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
@@ -7,6 +9,7 @@ const BlockNumberContext = createContext<
   | {
       value?: number
       fastForward(block: number): void
+      ethValue?: number
     }
   | typeof MISSING_PROVIDER
 >(MISSING_PROVIDER)
@@ -28,9 +31,14 @@ export function useFastForwardBlockNumber(): (block: number) => void {
   return useBlockNumberContext().fastForward
 }
 
+export function useEthBlockNumber(): number | undefined {
+  return useBlockNumberContext().ethValue
+}
+
 export function BlockNumberProvider({ children }: { children: ReactNode }) {
   const { chainId: activeChainId, provider } = useWeb3React()
   const [{ chainId, block }, setChainBlock] = useState<{ chainId?: number; block?: number }>({ chainId: activeChainId })
+  const [ethBlockNumber, setEthBlockNumber] = useState<number | undefined>(undefined)
 
   const onBlock = useCallback(
     (block: number) => {
@@ -63,6 +71,12 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
           console.error(`Failed to get block number for chainId ${activeChainId}`, error)
         })
 
+      if (activeChainId === ChainId.MAINNET) {
+        setEthBlockNumber(block)
+      } else {
+        RPC_PROVIDERS[ChainId.MAINNET].getBlockNumber().then(setEthBlockNumber)
+      }
+
       provider.on('block', onBlock)
       return () => {
         stale = true
@@ -81,6 +95,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
           setChainBlock({ chainId: activeChainId, block: update })
         }
       },
+      ethValue: chainId === ChainId.MAINNET ? block : ethBlockNumber,
     }),
     [activeChainId, block, chainId]
   )

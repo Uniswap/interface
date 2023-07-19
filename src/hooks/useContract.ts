@@ -1,6 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
+  ChainId,
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
@@ -28,6 +29,7 @@ import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
 import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
+import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, QuoterV2, TickLens, UniswapInterfaceMulticall } from 'types/v3'
@@ -66,6 +68,36 @@ export function useContract<T extends Contract = Contract>(
   }, [addressOrAddressMap, ABI, provider, chainId, withSignerIfPossible, account]) as T
 }
 
+function useEthOnlyContract<T extends Contract = Contract>(
+  addressOrAddressMap: string | { [chainId: number]: string } | undefined,
+  ABI: any,
+  withSignerIfPossible = true
+): T | null {
+  const { provider, account, chainId } = useWeb3React()
+  return useMemo(() => {
+    if (!addressOrAddressMap || !ABI || !provider || !chainId) return null
+    let address: string | undefined
+    if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap
+    else address = addressOrAddressMap[ChainId.MAINNET]
+    if (!address) return null
+    try {
+      if (chainId === ChainId.MAINNET) {
+        return getContract(address, ABI, provider, withSignerIfPossible && account ? account : undefined)
+      } else {
+        return getContract(
+          address,
+          ABI,
+          RPC_PROVIDERS[ChainId.MAINNET],
+          withSignerIfPossible && account ? account : undefined
+        )
+      }
+    } catch (error) {
+      console.error('Failed to get contract', error)
+      return null
+    }
+  }, [addressOrAddressMap, ABI, provider, chainId, withSignerIfPossible, account]) as T
+}
+
 export function useV2MigratorContract() {
   return useContract<V3Migrator>(V3_MIGRATOR_ADDRESSES, V2MigratorABI, true)
 }
@@ -96,11 +128,11 @@ export function useArgentWalletDetectorContract() {
 }
 
 export function useENSRegistrarContract(withSignerIfPossible?: boolean) {
-  return useContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES, ENS_ABI, withSignerIfPossible)
+  return useEthOnlyContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES, ENS_ABI, withSignerIfPossible)
 }
 
 export function useENSResolverContract(address: string | undefined, withSignerIfPossible?: boolean) {
-  return useContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI, withSignerIfPossible)
+  return useEthOnlyContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI, withSignerIfPossible)
 }
 
 export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
@@ -121,6 +153,14 @@ export function useV2RouterContract(): Contract | null {
 
 export function useInterfaceMulticall() {
   return useContract<UniswapInterfaceMulticall>(MULTICALL_ADDRESSES, MulticallABI, false) as UniswapInterfaceMulticall
+}
+
+export function useEthOnlyInterfaceMulticall() {
+  return useEthOnlyContract<UniswapInterfaceMulticall>(
+    MULTICALL_ADDRESSES,
+    MulticallABI,
+    false
+  ) as UniswapInterfaceMulticall
 }
 
 export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {

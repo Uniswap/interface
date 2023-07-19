@@ -1,5 +1,5 @@
 import { namehash } from '@ethersproject/hash'
-import { useSingleCallResult } from 'lib/hooks/multicall'
+import { NEVER_RELOAD, useEthSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 
 import { isAddress } from '../utils'
@@ -19,13 +19,13 @@ export default function useENSName(address?: string): { ENSName: string | null; 
     return [namehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)]
   }, [debouncedAddress])
   const registrarContract = useENSRegistrarContract(false)
-  const resolverAddress = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument)
+  const resolverAddress = useEthSingleCallResult(registrarContract, 'resolver', ensNodeArgument, NEVER_RELOAD)
   const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
     resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined,
     false
   )
-  const nameCallRes = useSingleCallResult(resolverContract, 'name', ensNodeArgument)
+  const nameCallRes = useEthSingleCallResult(resolverContract, 'name', ensNodeArgument, NEVER_RELOAD)
   const name = nameCallRes.result?.[0]
 
   // ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy
