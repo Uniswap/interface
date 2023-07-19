@@ -12,6 +12,10 @@ function formatTitleName(symbol: string, name: string) {
 }
 
 export default async function getToken(networkName: string, tokenAddress: string, url: string) {
+  const lowerNetworkName = networkName.toLowerCase()
+  const tokenAddressRef = tokenAddress === '0x0000000000000000000000000000000000000000' ? 'NATIVE' : tokenAddress
+  const origin = new URL(url).origin
+  const image = origin + '/api/image/tokens/' + lowerNetworkName + '/' + tokenAddressRef
   const { data } = await client.query({
     query: TokenDocument,
     variables: {
@@ -26,7 +30,7 @@ export default async function getToken(networkName: string, tokenAddress: string
   const title = formatTitleName(asset.symbol, asset.name)
   const formattedAsset = {
     title,
-    image: asset.project?.logoUrl,
+    image,
     url,
   }
   return formattedAsset
