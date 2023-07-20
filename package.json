@@ -69,7 +69,7 @@
     "@babel/preset-env": "^7.22.9",
     "@craco/craco": "^7.1.0",
     "@ethersproject/experimental": "^5.4.0",
-    "@lingui/cli": "^3.17.2",
+    "@lingui/cli": "^3.9.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.1",
     "@testing-library/user-event": "^14.4.3",
