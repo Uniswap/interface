@@ -67,7 +67,7 @@ module.exports = {
             paths: [
               {
                 name: '@uniswap/analytics',
-                message: ' not important @uniswap/analytics directly. Use analytics instead.',
+                message: 'Do not important @uniswap/analytics directly. Use analytics instead.',
               },
             ],
           },
