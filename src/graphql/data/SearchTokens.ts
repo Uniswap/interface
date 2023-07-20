@@ -8,7 +8,7 @@ import { chainIdToBackendName } from './util'
 
 gql`
   query SearchTokens($searchQuery: String!) {
-    searchTokens(searchQuery: $searchQuery) {
+    searchTokens(searchQuery: $searchQuery, _fs: "DATASOURCE:LEGACY") {
       id
       decimals
       name
