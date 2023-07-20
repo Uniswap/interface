@@ -44,9 +44,7 @@ export function DownloadButton({
   const onButtonClick = useCallback(() => {
     // handles any actions required by the parent, i.e. cancelling wallet connection attempt or dismissing an ad
     onClick?.()
-    openDownloadApp({
-      element,
-    })
+    openDownloadApp({ element })
   }, [element, onClick])
 
   return (
