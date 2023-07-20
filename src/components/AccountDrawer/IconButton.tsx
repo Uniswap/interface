@@ -3,6 +3,7 @@ import { Icon } from 'react-feather'
 import styled, { css, DefaultTheme } from 'styled-components/macro'
 import useResizeObserver from 'use-resize-observer'
 
+import { TRANSITION_DURATIONS } from '../../theme/styles'
 import Row from '../Row'
 
 export const IconHoverText = styled.span`
@@ -17,7 +18,8 @@ export const IconHoverText = styled.span`
   left: 10px;
 `
 
-const getWidthTransition = ({ theme }: { theme: DefaultTheme }) => `width ease-in-out ${theme.transition.duration.fast}`
+const getWidthTransition = ({ theme }: { theme: DefaultTheme }) =>
+  `width ${theme.transition.timing.inOut} ${theme.transition.duration.fast}`
 
 const IconStyles = css<{ hideHorizontal?: boolean }>`
   background-color: ${({ theme }) => theme.backgroundInteractive};
@@ -45,7 +47,7 @@ const IconStyles = css<{ hideHorizontal?: boolean }>`
   }
   :active {
     background-color: ${({ theme }) => theme.backgroundSurface};
-    transition: background-color 50ms linear, ${getWidthTransition};
+    transition: background-color ${({ theme }) => theme.transition.duration.fast} linear, ${getWidthTransition};
   }
 `
 
@@ -110,8 +112,8 @@ const TextWrapper = styled.div`
 
 const TextHide = styled.div`
   overflow: hidden;
-  transition: width ease-in-out ${({ theme }) => theme.transition.duration.fast},
-    max-width ease-in-out ${({ theme }) => theme.transition.duration.fast};
+  transition: width ${({ theme }) => theme.transition.timing.inOut} ${({ theme }) => theme.transition.duration.fast},
+    max-width ${({ theme }) => theme.transition.timing.inOut} ${({ theme }) => theme.transition.duration.fast};
 `
 
 /**
@@ -126,7 +128,7 @@ export const IconWithConfirmTextButton = ({
   onShowConfirm,
   onClick,
   dismissOnHoverOut,
-  dismissOnHoverDurationMs = 500,
+  dismissOnHoverDurationMs = TRANSITION_DURATIONS.slow,
   ...rest
 }: IconWithTextProps) => {
   const [showText, setShowTextWithoutCallback] = useState(false)
