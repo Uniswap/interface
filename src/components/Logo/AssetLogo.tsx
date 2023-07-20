@@ -17,19 +17,19 @@ export const MissingImageLogo = styled.div<{ size?: string }>`
   width: ${({ size }) => size ?? '24px'};
 `
 
-export const LogoImage = styled.img<{ size: string; imgLoading?: boolean }>`
-  visibility: ${({ imgLoading }) => (imgLoading ? 'hidden' : 'visible')};
-  opacity: ${({ imgLoading }) => (imgLoading ? 0 : 1)};
+export const LogoImage = styled.img<{ size: string; imgLoaded?: boolean }>`
+  visibility: ${({ imgLoaded }) => (imgLoaded ? 'visible' : 'hidden')};
+  opacity: ${({ imgLoaded }) => (imgLoaded ? 1 : 0)};
   transition: opacity ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: 50%;
 `
 
-const LogoImageWrapper = styled.div<{ size: string; useBG?: boolean }>`
+const LogoImageWrapper = styled.div<{ size: string; imgLoaded?: boolean }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  background: ${({ theme, useBG }) => (useBG ? theme.backgroundInteractive : 'none')};
+  background: ${({ theme, imgLoaded }) => (imgLoaded ? 'none' : theme.backgroundInteractive)};
   transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
   box-shadow: 0 0 1px white;
   border-radius: 50%;
@@ -75,11 +75,6 @@ export default function AssetLogo({
   style,
   hideL2Icon = false,
 }: AssetLogoProps) {
-  const imageProps = {
-    alt: `${symbol ?? 'token'} logo`,
-    size,
-  }
-
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const [imgLoaded, setImgLoaded] = useState(false)
@@ -87,15 +82,14 @@ export default function AssetLogo({
   return (
     <LogoContainer style={style}>
       {src ? (
-        <LogoImageWrapper size={size} useBG={!imgLoaded}>
+        <LogoImageWrapper size={size} imgLoaded={imgLoaded}>
           <LogoImage
-            {...imageProps}
             src={src}
-            onLoad={() => {
-              setImgLoaded(true)
-            }}
+            alt={`${symbol ?? 'token'} logo`}
+            size={size}
+            onLoad={() => void setImgLoaded(true)}
             onError={nextSrc}
-            imgLoading={!imgLoaded}
+            imgLoaded={imgLoaded}
           />
         </LogoImageWrapper>
       ) : (
