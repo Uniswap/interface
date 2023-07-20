@@ -5796,7 +5796,7 @@
   resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.8.0.tgz#60fcfa1475780350a719510ccee1f6a49f8c5cf8"
   integrity sha512-EeC37bbrd4sJnqW3TxNhExdWUBvzyJDhbTXcbDzFdBh/bg5sOCu1NbYJEnrjwBHEfewc9nF2OjEzejJFyJUx9A==
 
-"@uniswap/eslint-config@^1.1.1":
+"@uniswap/eslint-config@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@uniswap/eslint-config/-/eslint-config-1.2.0.tgz#1d9565c5ae5982fc0e3585b272e15b89b64b2db0"
   integrity sha512-hxCmKRbCckQql+/ZKiZBpIm7btexTZ2SRq3lcg3MHDB3VurdIycKSIBGSyxJxAryMC2b83/SubiZ8wNCjP55sQ==
@@ -10737,7 +10737,7 @@ eslint-plugin-flowtype@^8.0.3:
     lodash "^4.17.21"
     string-natural-compare "^3.0.1"
 
-eslint-plugin-import@^2.25.3, eslint-plugin-import@^2.26.0:
+eslint-plugin-import@^2.25.3, eslint-plugin-import@^2.26.0, eslint-plugin-import@^2.27.5:
   version "2.27.5"
   resolved "https://registry.yarnpkg.com/eslint-plugin-import/-/eslint-plugin-import-2.27.5.tgz#876a6d03f52608a3e5bb439c2550588e51dd6c65"
   integrity sha512-LmEt3GVofgiGuiE+ORpnvP+kAm3h6MLZJ4Q5HCyHADofsb4VzXFsRiWj3c0OFiV+3DWFh0qg3v9gcPlfc3zRow==
