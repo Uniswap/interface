@@ -175,7 +175,7 @@ const CHAIN_INFO: ChainInfoMap = {
   [ChainId.POLYGON_MUMBAI]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://wallet.polygon.technology/bridge',
+    bridge: 'https://wallet.polygon.technology/polygon/bridge/deposit',
     docs: 'https://polygon.io/',
     explorer: 'https://mumbai.polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
