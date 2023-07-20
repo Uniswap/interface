@@ -18,7 +18,6 @@ export const MissingImageLogo = styled.div<{ size?: string }>`
 `
 
 const LogoImage = styled.img<{ size: string; imgLoaded?: boolean }>`
-  visibility: ${({ imgLoaded }) => (imgLoaded ? 'visible' : 'hidden')};
   opacity: ${({ imgLoaded }) => (imgLoaded ? 1 : 0)};
   transition: opacity ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
   width: ${({ size }) => size};
