@@ -435,6 +435,33 @@ export function Swap({
       })
   }, [swapCallback, stablecoinPriceImpact])
 
+  const handleOnWrap = useCallback(async () => {
+    if (!onWrap) return
+    try {
+      const txHash = await onWrap()
+      setSwapState((currentState) => ({
+        ...currentState,
+        swapError: undefined,
+        txHash,
+      }))
+      onUserInput(Field.INPUT, '')
+    } catch (error) {
+      if (!didUserReject(error)) {
+        sendAnalyticsEvent(SwapEventName.SWAP_ERROR, {
+          wrapType,
+          input: currencies[Field.INPUT],
+          output: currencies[Field.OUTPUT],
+        })
+      }
+      console.error('Could not wrap/unwrap', error)
+      setSwapState((currentState) => ({
+        ...currentState,
+        swapError: error,
+        txHash: undefined,
+      }))
+    }
+  }, [currencies, onUserInput, onWrap, wrapType])
+
   // errors
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
 
@@ -684,7 +711,7 @@ export function Swap({
           ) : showWrap ? (
             <ButtonPrimary
               disabled={Boolean(wrapInputError)}
-              onClick={() => onWrap?.().catch((e) => console.error('Could not wrap/unwrap', e))}
+              onClick={handleOnWrap}
               fontWeight={600}
               data-testid="wrap-button"
             >
