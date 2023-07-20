@@ -349,16 +349,10 @@ export const NavMagnifyingGlassIcon = () => (
 export const BagIcon = (props: SVGProps) => (
   <svg fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" {...props}>
     <path
-      d="M19.2893 5H4.5115C3.34557 5 2.40039 5.89543 2.40039 7V21C2.40039 22.1046 3.34557 23 4.5115 23H19.2893C20.4552 23 21.4004 22.1046 21.4004 21V7C21.4004 5.89543 20.4552 5 19.2893 5Z"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M9 5L9 4.25C9 3.45435 9.31607 2.69129 9.87868 2.12868C10.4413 1.56607 11.2044 1.25 12 1.25C12.7957 1.25 13.5587 1.56607 14.1213 2.12868C14.6839 2.69129 15 3.45435 15 4.25L15 5"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M9.25 8H7.75V6.5C7.75 4.16 9.66 2.25 12 2.25C14.34 2.25 16.25 4.16 16.25 6.5V8H14.75V6.5C14.75 4.98 13.52 3.75 12 3.75C10.48 3.75 9.25 4.98 9.25 6.5V8ZM18.5 8H16.25V11C16.25 11.41 15.91 11.75 15.5 11.75C15.09 11.75 14.75 11.41 14.75 11V8H9.25V11C9.25 11.41 8.91 11.75 8.5 11.75C8.09 11.75 7.75 11.41 7.75 11V8H5.5C4.67 8 4 8.67 4 9.5V18C4 20 5 21 7 21H17C19 21 20 20 20 18V9.5C20 8.67 19.33 8 18.5 8Z"
+      fill="currentColor"
     />
   </svg>
 )
