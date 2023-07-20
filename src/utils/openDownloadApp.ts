@@ -29,9 +29,9 @@ const defaultDownloadAppOptions = {
 
 export function openDownloadApp(options: OpenDownloadAppOptions = defaultDownloadAppOptions) {
   if (isIOS) {
-    openAppStore({ element: options?.element, urlParamString: options.appStoreParams })
+    openAppStore({ element: options?.element, urlParamString: options?.appStoreParams })
   } else {
-    openWalletMicrosite({ element: options?.element, urlParamString: options.appStoreParams })
+    openWalletMicrosite({ element: options?.element, urlParamString: options?.microSiteParams })
   }
 }
 
