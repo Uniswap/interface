@@ -698,7 +698,6 @@ exports[`disable nft on landing page does not render nft information and card 1`
 }
 
 .c30 {
-  visibility: hidden;
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -2022,7 +2021,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
       </div>
       <a
         class="9 c59"
-        href="https://wallet.uniswap.org/"
+        href="https://wallet.uniswap.org/?utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1"
       >
         <svg
           height="20"
@@ -3208,7 +3207,6 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
 }
 
 .c30 {
-  visibility: hidden;
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -4544,7 +4542,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
       </div>
       <a
         class="9 c59"
-        href="https://wallet.uniswap.org/"
+        href="https://wallet.uniswap.org/?utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1"
       >
         <svg
           height="20"
