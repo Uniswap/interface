@@ -31,7 +31,7 @@ export const ProposalActionDetail = ({
 }: {
   className?: string
   proposalAction: ProposalAction
-  currency: Currency | undefined
+  currency?: Currency
   amount: string
   toAddress: string
   onCurrencySelect: (currency: Currency) => void

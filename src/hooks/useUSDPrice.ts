@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): {
-  data: number | undefined
+  data?: number
   isLoading: boolean
 } {
   const currency = currencyAmount?.currency

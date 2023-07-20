@@ -64,7 +64,7 @@ export function formatDelta(delta: number | null | undefined) {
   return formattedDelta
 }
 
-export const DeltaText = styled.span<{ delta: number | undefined }>`
+export const DeltaText = styled.span<{ delta?: number }>`
   color: ${({ theme, delta }) =>
     delta !== undefined ? (Math.sign(delta) < 0 ? theme.accentFailure : theme.accentSuccess) : theme.textPrimary};
 `
@@ -126,7 +126,7 @@ const timeOptionsHeight = 44
 interface PriceChartProps {
   width: number
   height: number
-  prices: PricePoint[] | undefined | null
+  prices?: PricePoint[] | null
   timePeriod: TimePeriod
 }
 
@@ -256,11 +256,9 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
-  /*
-   * Default curve doesn't look good for the HOUR chart.
-   * Higher values make the curve more rigid, lower values smooth the curve but make it less "sticky" to real data points,
-   * making it unacceptable for shorter durations / smaller variances.
-   */
+  // Default curve doesn't look good for the HOUR chart.
+  // Higher values make the curve more rigid, lower values smooth the curve but make it less "sticky" to real data points,
+  // making it unacceptable for shorter durations / smaller variances.
   // const curveTension = timePeriod === TimePeriod.HOUR ? 1 : 0.9
   const curveTension = 0.9
 

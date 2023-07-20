@@ -361,7 +361,7 @@ export function useUserDelegatee(): string {
 }
 
 // gets the users current votes
-export function useUserVotes(): { loading: boolean; votes: CurrencyAmount<Token> | undefined } {
+export function useUserVotes(): { loading: boolean; votes?: CurrencyAmount<Token> } {
   const { account, chainId } = useWeb3React()
   const uniContract = useUniContract()
 

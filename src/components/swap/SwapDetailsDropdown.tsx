@@ -105,7 +105,7 @@ const Spinner = styled.div`
 `
 
 interface SwapDetailsInlineProps {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade?: InterfaceTrade<Currency, Currency, TradeType>
   syncing: boolean
   loading: boolean
   allowedSlippage: Percent

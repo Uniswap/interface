@@ -267,10 +267,10 @@ export default function Swap({ className }: { className?: string }) {
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
-    tradeToConfirm: Trade<Currency, Currency, TradeType> | undefined
+    tradeToConfirm?: Trade<Currency, Currency, TradeType>
     attemptingTxn: boolean
-    swapErrorMessage: string | undefined
-    txHash: string | undefined
+    swapErrorMessage?: string
+    txHash?: string
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,

@@ -142,7 +142,7 @@ export function getTokenDetailsURL({
 
 export function unwrapTokenRollux<
   T extends {
-    id?: string | null | undefined
+    id?: string | null
   } | null
 >(chainId: number, token: T): T {
   if (!token?.id) return token

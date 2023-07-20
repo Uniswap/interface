@@ -1,18 +1,16 @@
-/*
- * Generates an SVG path for the east brush handle.
- * Apply `scale(-1, 1)` to generate west brush handle.
- *
- *    |```````\
- *    |  | |  |
- *    |______/
- *    |
- *    |
- *    |
- *    |
- *    |
- *
- * https://medium.com/@dennismphil/one-side-rounded-rectangle-using-svg-fb31cf318d90
- */
+// Generates an SVG path for the east brush handle.
+// Apply `scale(-1, 1)` to generate west brush handle.
+//
+//    |```````\
+//    |  | |  |
+//    |______/
+//    |
+//    |
+//    |
+//    |
+//    |
+//
+// https://medium.com/@dennismphil/one-side-rounded-rectangle-using-svg-fb31cf318d90
 export const brushHandlePath = (height: number) =>
   [
     // handle

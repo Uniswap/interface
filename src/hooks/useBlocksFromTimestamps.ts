@@ -28,12 +28,10 @@ export function useBlocksFromTimestamps(
   timestamps: number[],
   blockClientOverride?: ApolloClient<NormalizedCacheObject>
 ): {
-  blocks:
-    | {
-        timestamp: string
-        number: any
-      }[]
-    | undefined
+  blocks?: {
+    timestamp: string
+    number: any
+  }[]
   error: boolean
 } {
   const [blocks, setBlocks] = useState<any>()

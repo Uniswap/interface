@@ -3,7 +3,7 @@ import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 
 interface FormatLocaleNumberArgs {
   number: CurrencyAmount<Currency> | Price<Currency, Currency> | number
-  locale: string | null | undefined
+  locale?: string | null
   options?: Intl.NumberFormatOptions
   sigFigs?: number
   fixedDecimals?: number

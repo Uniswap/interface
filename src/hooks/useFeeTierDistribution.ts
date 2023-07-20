@@ -13,7 +13,7 @@ const MAX_DATA_BLOCK_AGE = 20
 interface FeeTierDistribution {
   isLoading: boolean
   isError: boolean
-  largestUsageFeeTier?: FeeAmount | undefined
+  largestUsageFeeTier?: FeeAmount
 
   // distributions as percentages of overall liquidity
   distributions?: Record<FeeAmount, number | undefined>

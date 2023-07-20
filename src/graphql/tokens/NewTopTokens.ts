@@ -54,7 +54,7 @@ interface TokensResponse {
 export function useNewTopTokens(): {
   loading: boolean
   error: boolean
-  tokens: Tokens | undefined
+  tokens?: Tokens
 } {
   const { loading, error, data } = useQuery<TokensResponse>(TOP_TOKENS, { client: apolloClient })
 

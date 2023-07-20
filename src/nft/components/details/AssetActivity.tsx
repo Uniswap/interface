@@ -148,7 +148,7 @@ export const LoadingAssetActivity = ({ rowCount }: { rowCount: number }) => {
   )
 }
 
-const AssetActivity = ({ events }: { events: ActivityEvent[] | undefined }) => {
+const AssetActivity = ({ events }: { events?: ActivityEvent[] }) => {
   const isNftGraphqlEnabled = useNftGraphqlEnabled()
   return (
     <ActivityTable>

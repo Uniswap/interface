@@ -72,7 +72,7 @@ const Link = styled(NativeLink)`
 `
 
 type TokenDetailsProps = {
-  urlAddress: string | undefined
+  urlAddress?: string
   chain: Chain
   tokenData: TokenData
   onChangeTimePeriod: OnChangeTimePeriod

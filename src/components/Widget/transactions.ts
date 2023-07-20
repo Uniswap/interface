@@ -29,9 +29,9 @@ import { computeRealizedPriceImpact } from 'utils/prices'
 
 interface AnalyticsEventProps {
   trade: Trade<Currency, Currency, TradeType>
-  gasUsed: string | undefined
-  blockNumber: number | undefined
-  hash: string | undefined
+  gasUsed?: string
+  blockNumber?: number
+  hash?: string
   allowedSlippage: Percent
   succeeded: boolean
 }

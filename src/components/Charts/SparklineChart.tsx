@@ -25,7 +25,7 @@ interface SparklineChartProps {
   width: number
   height: number
   tokenData: TokenData
-  pricePercentChange: number | undefined | null
+  pricePercentChange?: number | null
 }
 
 function _SparklineChart({ width, height, tokenData, pricePercentChange }: SparklineChartProps) {

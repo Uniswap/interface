@@ -7,12 +7,12 @@ function isEthersRequestError(error: Error): error is Error & { requestBody: str
 }
 
 export function beforeSend(event: ErrorEvent, hint: EventHint) {
-  /*
-   * Since the interface currently uses HashRouter, URLs will have a # before the path.
-   * This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
-   * Instead, this logic removes the # part of the URL.
-   * See https://romain-clement.net/articles/sentry-url-fragments/#url-fragments
-   **/
+  //
+  // Since the interface currently uses HashRouter, URLs will have a # before the path.
+  // This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
+  // Instead, this logic removes the # part of the URL.
+  // See https://romain-clement.net/articles/sentry-url-fragments/#url-fragments
+  //
   if (event.request?.url) {
     event.request.url = event.request.url.replace('/#', '')
   }
@@ -40,11 +40,9 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     // If the error is based on a user rejecting, it should not be considered an exception.
     if (didUserReject(error)) return null
 
-    /*
-     * This is caused by HTML being returned for a chunk from Cloudflare.
-     * Usually, it's the result of a 499 exception right before it, which should be handled.
-     * Therefore, this can be ignored.
-     */
+    // This is caused by HTML being returned for a chunk from Cloudflare.
+    // Usually, it's the result of a 499 exception right before it, which should be handled.
+    // Therefore, this can be ignored.
     if (error.message.match(/Unexpected token '<'/)) return null
   }
 

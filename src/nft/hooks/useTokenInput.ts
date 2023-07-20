@@ -4,10 +4,10 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 interface TokenInputState {
-  inputCurrency: Currency | undefined
+  inputCurrency?: Currency
   setInputCurrency: (currency: Currency | undefined) => void
   clearInputCurrency: () => void
-  tokenTradeInput: TokenTradeInput | undefined
+  tokenTradeInput?: TokenTradeInput
   setTokenTradeInput: (tokenTradeInput: TokenTradeInput | undefined) => void
 }
 
