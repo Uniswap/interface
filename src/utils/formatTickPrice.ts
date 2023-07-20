@@ -4,7 +4,7 @@ import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Bound } from '../state/mint/v3/actions'
 
 interface FormatTickPriceArgs {
-  price: Price<Token, Token> | undefined
+  price?: Price<Token, Token>
   atLimit: { [bound in Bound]?: boolean | undefined }
   direction: Bound
   placeholder?: string

@@ -2,8 +2,8 @@ import { gql, useQuery } from '@apollo/client'
 import { SupportedChainId } from '@pollum-io/widgets'
 import { useMemo } from 'react'
 
-import { unwrapTokenRollux } from '../data/util'
 import { apolloClient } from '../thegraph/apollo'
+import { unwrapTokenRollux } from '../utils/util'
 
 // eslint-disable-next-line import/no-unused-modules
 export const TOP_TOKENS = gql`
@@ -54,7 +54,7 @@ interface TokensResponse {
 export function useNewTopTokens(): {
   loading: boolean
   error: boolean
-  tokens: Tokens | undefined
+  tokens?: Tokens
 } {
   const { loading, error, data } = useQuery<TokensResponse>(TOP_TOKENS, { client: apolloClient })
 

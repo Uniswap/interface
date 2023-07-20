@@ -8,8 +8,8 @@ import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/st
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
-import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
-import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
+import GOVERNANCE_ABI from '@uniswap/governance/build/GovernorAlpha.json'
+import UNI_ABI from '@uniswap/governance/build/Uni.json'
 import { useWeb3React } from '@web3-react/core'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import {
@@ -99,7 +99,7 @@ export enum ProposalState {
   EXECUTED,
 }
 
-const GovernanceInterface = new Interface(GOVERNANCE_ABI)
+const GovernanceInterface = new Interface(GOVERNANCE_ABI.abi)
 
 // get count of all proposals made in the latest governor contract
 function useProposalCount(contract: Contract | null): number | undefined {
@@ -361,7 +361,7 @@ export function useUserDelegatee(): string {
 }
 
 // gets the users current votes
-export function useUserVotes(): { loading: boolean; votes: CurrencyAmount<Token> | undefined } {
+export function useUserVotes(): { loading: boolean; votes?: CurrencyAmount<Token> } {
   const { account, chainId } = useWeb3React()
   const uniContract = useUniContract()
 

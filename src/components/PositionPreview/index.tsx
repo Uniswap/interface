@@ -27,7 +27,7 @@ export const PositionPreview = ({
   position: Position
   title?: ReactNode
   inRange: boolean
-  baseCurrencyDefault?: Currency | undefined
+  baseCurrencyDefault?: Currency
   ticksAtLimit: { [bound: string]: boolean | undefined }
 }) => {
   const theme = useTheme()

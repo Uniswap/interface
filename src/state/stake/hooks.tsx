@@ -1,5 +1,5 @@
 import { Interface } from '@ethersproject/abi'
-import { abi as STAKING_REWARDS_ABI } from '@pollum-io/pegasys-protocol/artifacts/contracts/earn/StakingRewards.sol/StakingRewards.json'
+import STAKING_REWARDS_ABI from '@pollum-io/pegasys-protocol/artifacts/contracts/earn/StakingRewards.sol/StakingRewards.json'
 import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
 import { Pair } from '@pollum-io/v1-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -10,7 +10,7 @@ import { useMemo } from 'react'
 
 import { UNI } from '../../constants/tokens'
 
-const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
+const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI.abi)
 
 export const STAKING_GENESIS = 1600387200
 
@@ -57,7 +57,7 @@ interface StakingInfo {
   // equivalent to percent of total supply * reward rate
   rewardRate: CurrencyAmount<Token>
   // when the period ends
-  periodFinish: Date | undefined
+  periodFinish?: Date
   // if pool is active
   active: boolean
   // calculates a hypothetical amount of token distributed to the active account per second.

@@ -12,5 +12,14 @@
   },
   "files.eol": "\n",
   "eslint.enable": true,
-  "eslint.debug": true
+  "eslint.debug": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
 }

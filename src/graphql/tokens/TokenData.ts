@@ -90,7 +90,7 @@ interface TokenDataResponse {
 export function useFetchedTokenData(tokenAddresses: string[]): {
   loading: boolean
   error: boolean
-  data: TokenData[] | undefined
+  data?: TokenData[]
 } {
   // get blocks from historic timestamps
   const [t24, t48, tWeek] = useDeltaTimestamps()

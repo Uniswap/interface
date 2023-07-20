@@ -25,7 +25,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   routerPreference: RouterPreference
 ): {
   state: TradeState
-  trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
+  trade?: InterfaceTrade<Currency, Currency, TTradeType>
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>

@@ -205,9 +205,9 @@ const InputCurrencyValue = ({
 }: {
   usingPayWithAnyToken: boolean
   totalEthPrice: BigNumber
-  activeCurrency: Currency | undefined | null
+  activeCurrency?: Currency | null
   tradeState: TradeState
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+  trade?: InterfaceTrade<Currency, Currency, TradeType>
 }) => {
   if (!usingPayWithAnyToken) {
     return (
@@ -240,7 +240,7 @@ const FiatValue = ({
   usingPayWithAnyToken,
 }: {
   usdcValue: CurrencyAmount<Token> | null
-  priceImpact: PriceImpact | undefined
+  priceImpact?: PriceImpact
   tradeState: TradeState
   usingPayWithAnyToken: boolean
 }) => {

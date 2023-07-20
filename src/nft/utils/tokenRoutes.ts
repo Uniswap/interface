@@ -109,9 +109,9 @@ function buildTradeRouteInput(swap: Swap): TokenTradeRouteInput {
 }
 
 export function buildAllTradeRouteInputs(trade: InterfaceTrade<Currency, Currency, TradeType>): {
-  mixedTokenTradeRouteInputs: TokenTradeRouteInput[] | undefined
-  v2TokenTradeRouteInputs: TokenTradeRouteInput[] | undefined
-  v3TokenTradeRouteInputs: TokenTradeRouteInput[] | undefined
+  mixedTokenTradeRouteInputs?: TokenTradeRouteInput[]
+  v2TokenTradeRouteInputs?: TokenTradeRouteInput[]
+  v3TokenTradeRouteInputs?: TokenTradeRouteInput[]
 } {
   const mixedTokenTradeRouteInputs: TokenTradeRouteInput[] = []
   const v2TokenTradeRouteInputs: TokenTradeRouteInput[] = []

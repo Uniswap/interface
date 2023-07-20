@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import { TokenQuery } from './__generated__/types-and-hooks'
-import { CHAIN_NAME_TO_CHAIN_ID } from './util'
+import { CHAIN_NAME_TO_CHAIN_ID } from '../utils/util'
 
 /*
 The difference between Token and TokenProject:

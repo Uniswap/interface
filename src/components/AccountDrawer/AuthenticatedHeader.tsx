@@ -1,5 +1,6 @@
 import { Token } from '@pollum-io/sdk-core'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
+// import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { LoadingBubble } from 'components/Tokens/loading'

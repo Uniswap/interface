@@ -3,7 +3,7 @@ import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain } from 'graphql/data/Token'
-import { fromGraphQLChain } from 'graphql/data/util'
+import { fromGraphQLChain } from 'graphql/utils/util'
 
 export type CurrencyKey = string
 

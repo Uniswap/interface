@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import { useMemo } from 'react'
 
 import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
-import { chainIdToBackendName } from './util'
+import { chainIdToBackendName } from '../utils/util'
 
 gql`
   query SearchTokens($searchQuery: String!) {

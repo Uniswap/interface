@@ -17,8 +17,8 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/Token'
-import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { TokenData } from 'graphql/tokens/TokenData'
+import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/utils/util'
 import Swap from 'pages/Swap'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -72,7 +72,7 @@ const Link = styled(NativeLink)`
 `
 
 type TokenDetailsProps = {
-  urlAddress: string | undefined
+  urlAddress?: string
   chain: Chain
   tokenData: TokenData
   onChangeTimePeriod: OnChangeTimePeriod

@@ -1,8 +1,8 @@
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
 import { useFetchedTokenData } from 'graphql/tokens/TokenData'
+import { TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/utils/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useMemo } from 'react'
@@ -20,8 +20,8 @@ export default function TokenDetailsPage() {
   const isNative = tokenAddress === NATIVE_CHAIN_ID
   const [timePeriod, setTimePeriod] = useAtom(pageTimePeriodAtom)
   const [detailedTokenAddress] = useMemo(
-    /* tokenAddress will always be defined in the path for for this page to render, but useParams will always
-      return optional arguments; nullish coalescing operator is present here to appease typechecker */
+    // tokenAddress will always be defined in the path for for this page to render, but useParams will always
+    // return optional arguments; nullish coalescing operator is present here to appease typechecker
     () => [isNative ? getNativeTokenDBAddress(chain) : tokenAddress ?? '', toHistoryDuration(timePeriod)],
     [chain, isNative, timePeriod, tokenAddress]
   )

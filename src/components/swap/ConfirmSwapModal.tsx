@@ -29,17 +29,17 @@ export default function ConfirmSwapModal({
   fiatValueOutput,
 }: {
   isOpen: boolean
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
-  originalTrade: Trade<Currency, Currency, TradeType> | undefined
+  trade?: InterfaceTrade<Currency, Currency, TradeType>
+  originalTrade?: Trade<Currency, Currency, TradeType>
   attemptingTxn: boolean
-  txHash: string | undefined
+  txHash?: string
   recipient: string | null
   allowedSlippage: Percent
   onAcceptChanges: () => void
   onConfirm: () => void
-  swapErrorMessage: ReactNode | undefined
+  swapErrorMessage?: ReactNode
   onDismiss: () => void
-  swapQuoteReceivedDate: Date | undefined
+  swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {

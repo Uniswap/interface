@@ -5,7 +5,6 @@
 /src/types/v3
 /src/abis/types
 /src/locales/**/*.js
-/src/locales/**/en-US.po
 /src/locales/**/pseudo.po
 
 # generated graphql types

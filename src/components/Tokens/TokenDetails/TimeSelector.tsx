@@ -1,4 +1,4 @@
-import { TimePeriod } from 'graphql/data/util'
+import { TimePeriod } from 'graphql/utils/util'
 import { startTransition, useState } from 'react'
 import styled from 'styled-components/macro'
 

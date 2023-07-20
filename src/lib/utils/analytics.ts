@@ -41,7 +41,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   txHash,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType> | Trade<Currency, Currency, TradeType>
-  fiatValues: { amountIn: number | undefined; amountOut: number | undefined }
+  fiatValues: { amountIn?: number; amountOut?: number }
   txHash: string
 }) => ({
   transaction_hash: txHash,
