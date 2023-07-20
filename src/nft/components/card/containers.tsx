@@ -107,7 +107,6 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
   border-radius: ${BORDER_RADIUS}px;
   background-color: ${({ theme }) => theme.backgroundSurface};
   overflow: hidden;
-  box-shadow: 0px 0px 8px rgba(51, 53, 72, 0.04), 1px 2px 4px rgba(51, 53, 72, 0.12);
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   isolation: isolate;
