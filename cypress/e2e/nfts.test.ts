@@ -13,7 +13,7 @@ describe('Testing nfts', () => {
   })
 
   it('should load pudgy penguin collection page', () => {
-    cy.visit(`/#/nfts/collection/${PUDGY_COLLECTION_ADDRESS}`)
+    cy.visit(`/nfts/collection/${PUDGY_COLLECTION_ADDRESS}`)
     cy.get(getTestSelector('nft-collection-asset')).should('exist')
     cy.get(getTestSelector('nft-collection-filter-buy-now')).should('not.exist')
     cy.get(getTestSelector('nft-filter')).first().click()
@@ -21,13 +21,13 @@ describe('Testing nfts', () => {
   })
 
   it('should be able to navigate to activity', () => {
-    cy.visit(`/#/nfts/collection/${PUDGY_COLLECTION_ADDRESS}`)
+    cy.visit(`/nfts/collection/${PUDGY_COLLECTION_ADDRESS}`)
     cy.get(getTestSelector('nft-activity')).first().click()
     cy.get(getTestSelector('nft-activity-row')).should('exist')
   })
 
   it('should go to the details page', () => {
-    cy.visit(`/#/nfts/collection/${PUDGY_COLLECTION_ADDRESS}`)
+    cy.visit(`/nfts/collection/${PUDGY_COLLECTION_ADDRESS}`)
     cy.get(getTestSelector('nft-filter')).first().click()
     cy.get(getTestSelector('nft-collection-filter-buy-now')).click()
     cy.get(getTestSelector('nft-collection-asset')).first().click()
@@ -38,7 +38,7 @@ describe('Testing nfts', () => {
   })
 
   it('should toggle buy now on details page', () => {
-    cy.visit(`#/nfts/asset/${BONSAI_COLLECTION_ADDRESS}/7580`)
+    cy.visit(`/nfts/asset/${BONSAI_COLLECTION_ADDRESS}/7580`)
     cy.get(getTestSelector('nft-details-description-text')).should('exist')
     cy.get(getTestSelector('nft-details-description')).click()
     cy.get(getTestSelector('nft-details-description-text')).should('not.exist')
