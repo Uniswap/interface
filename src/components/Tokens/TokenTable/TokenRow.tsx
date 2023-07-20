@@ -5,6 +5,7 @@ import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/for
 import { ParentSize } from '@visx/responsive'
 import { ReactComponent as ArrowChangeDown } from 'assets/svg/arrow-change-down.svg'
 import { ReactComponent as ArrowChangeUp } from 'assets/svg/arrow-change-up.svg'
+import { ReactComponent as Info } from 'assets/svg/info.svg'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -13,7 +14,6 @@ import { getTokenDetailsURL, supportedChainIdFromGQLChain, validateUrlChainParam
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
-import { Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
@@ -281,6 +281,7 @@ export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
 `
 
 const InfoIconContainer = styled.div`
+  width: 20px;
   margin-left: 2px;
   display: flex;
   align-items: center;
@@ -328,7 +329,7 @@ function HeaderCell({
       {description && (
         <MouseoverTooltip text={description} placement="right">
           <InfoIconContainer>
-            <Info size={14} />
+            <Info />
           </InfoIconContainer>
         </MouseoverTooltip>
       )}

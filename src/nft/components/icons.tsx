@@ -306,13 +306,10 @@ export const ApprovedCheckmarkIcon = (props: SVGProps) => (
 )
 
 export const FilterIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="1 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
-      d="M18.3332 2.5H1.6665L8.33317 10.3833V15.8333L11.6665 17.5V10.3833L18.3332 2.5Z"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      fill="currentColor"
+      d="M5.5 3H18.5C19.328 3 20 3.672 20 4.5V6.75699C20 7.15499 19.842 7.53599 19.561 7.81799L14.4399 12.939C14.1589 13.22 14.001 13.602 14.001 14V21L10.001 18V14C10.001 13.602 9.84302 13.221 9.56202 12.939L4.44104 7.81799C4.16004 7.53699 4.00196 7.15499 4.00196 6.75699V4.5C3.99996 3.672 4.672 3 5.5 3Z"
     />
   </svg>
 )
