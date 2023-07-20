@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
+import { Trace } from 'analytics'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
@@ -75,7 +75,7 @@ const Tokens = () => {
   }, [location, resetFilterString])
 
   return (
-    <TraceAnalytics page={InterfacePageName.TOKENS_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.TOKENS_PAGE} shouldLogImpression>
       <ExploreContainer>
         <TitleContainer>
           <MouseoverTooltip
@@ -98,7 +98,7 @@ const Tokens = () => {
         </FiltersWrapper>
         <TokenTable />
       </ExploreContainer>
-    </TraceAnalytics>
+    </Trace>
   )
 }
 

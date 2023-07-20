@@ -3,9 +3,9 @@ import { t, Trans } from '@lingui/macro'
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { Trace } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import { sendEvent } from 'components/analytics'
-import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -231,7 +231,7 @@ export function CurrencySearch({
 
   return (
     <ContentWrapper>
-      <TraceAnalytics
+      <Trace
         name={InterfaceEventName.TOKEN_SELECTOR_OPENED}
         modal={InterfaceModalName.TOKEN_SELECTOR}
         shouldLogImpression
@@ -312,7 +312,7 @@ export function CurrencySearch({
             </ThemedText.DeprecatedMain>
           </Column>
         )}
-      </TraceAnalytics>
+      </Trace>
     </ContentWrapper>
   )
 }

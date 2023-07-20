@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { Trace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import { ButtonPrimary } from 'components/Button'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
@@ -81,7 +81,7 @@ const ProfileContent = () => {
   const isListingNfts = sellPageState === ProfilePageStateType.LISTING
 
   return (
-    <TraceAnalytics page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
       <ProfilePageWrapper>
         {account ? (
           <LoadedAccountPage cartExpanded={cartExpanded} isListingNfts={isListingNfts}>
@@ -100,7 +100,7 @@ const ProfileContent = () => {
           </Center>
         )}
       </ProfilePageWrapper>
-    </TraceAnalytics>
+    </Trace>
   )
 }
 

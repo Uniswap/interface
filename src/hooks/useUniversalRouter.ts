@@ -6,7 +6,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendAnalyticsEvent } from 'analytics'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
@@ -90,7 +90,7 @@ export function useUniversalRouterSwapCallback(
           .getSigner()
           .sendTransaction({ ...tx, gasLimit })
           .then((response) => {
-            sendOptOutAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
+            sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
               ...formatSwapSignedAnalyticsEventProperties({
                 trade,
                 allowedSlippage: options.slippageTolerance,
@@ -100,7 +100,7 @@ export function useUniversalRouterSwapCallback(
               ...analyticsContext,
             })
             if (tx.data !== response.data) {
-              sendOptOutAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
+              sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
                 txHash: response.hash,
                 ...analyticsContext,
               })

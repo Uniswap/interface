@@ -3,7 +3,7 @@ import { useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
-import { sendOptOutAnalyticsEvent, TraceAnalytics } from 'components/analytics/TraceAnalytics'
+import { sendAnalyticsEvent, Trace } from 'analytics'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -95,7 +95,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
       await signListingRow(listing, signer, provider, getLooksRareNonce, setLooksRareNonce, setListingStatusAndCallback)
     }
 
-    sendOptOutAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
+    sendAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
       list_quantity: listings.length,
       usd_value: usdcAmount,
@@ -123,7 +123,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
 
   return (
     <Portal>
-      <TraceAnalytics modal={InterfaceModalName.NFT_LISTING}>
+      <Trace modal={InterfaceModalName.NFT_LISTING}>
         <ListModalWrapper>
           {allListingsApproved ? (
             <SuccessScreen overlayClick={closeModalOnClick} />
@@ -150,7 +150,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
             </>
           )}
         </ListModalWrapper>
-      </TraceAnalytics>
+      </Trace>
       <Overlay onClick={closeModalOnClick} />
     </Portal>
   )

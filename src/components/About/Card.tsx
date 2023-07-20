@@ -1,5 +1,5 @@
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { TraceEvent } from 'analytics'
 import { Link } from 'react-router-dom'
 import styled, { DefaultTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -123,7 +123,7 @@ const Card = ({
 }) => {
   const isDarkMode = useIsDarkMode()
   return (
-    <TraceAnalyticsEvent events={[BrowserEvent.onClick]} name={SharedEventName.ELEMENT_CLICKED} element={elementName}>
+    <TraceEvent events={[BrowserEvent.onClick]} name={SharedEventName.ELEMENT_CLICKED} element={elementName}>
       <StyledCard
         as={external ? 'a' : Link}
         to={external ? undefined : to}
@@ -143,7 +143,7 @@ const Card = ({
           <CardCTA type={type}>{cta}</CardCTA>
         </CardDescription>
       </StyledCard>
-    </TraceAnalyticsEvent>
+    </TraceEvent>
   )
 }
 

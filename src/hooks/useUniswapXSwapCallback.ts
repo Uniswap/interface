@@ -4,7 +4,7 @@ import { signTypedData } from '@uniswap/conedison/provider/signing'
 import { Percent } from '@uniswap/sdk-core'
 import { DutchOrder, DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendAnalyticsEvent } from 'analytics'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
@@ -83,7 +83,7 @@ export function useUniswapXSwapCallback({
 
         const { signature, updatedOrder } = await signDutchOrder()
 
-        sendOptOutAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
+        sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
           ...formatSwapSignedAnalyticsEventProperties({
             trade,
             allowedSlippage,

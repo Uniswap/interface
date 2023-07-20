@@ -1,5 +1,5 @@
 import { InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
-import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendAnalyticsEvent } from 'analytics'
 import { PropsWithChildren, useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
@@ -39,12 +39,12 @@ const openAppStore = () => {
   window.open(APP_STORE_LINK, /* target = */ 'uniswap_wallet_appstore')
 }
 export const openWalletMicrosite = () => {
-  sendOptOutAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED)
+  sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED)
   window.open(MICROSITE_LINK, /* target = */ 'uniswap_wallet_microsite')
 }
 
 export function openDownloadApp(element: InterfaceElementName) {
-  sendOptOutAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element })
+  sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element })
   if (isIOS) openAppStore()
   else openWalletMicrosite()
 }

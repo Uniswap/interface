@@ -1,5 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
+import { Trace } from 'analytics'
 import Banner from 'nft/components/explore/Banner'
 import TrendingCollections from 'nft/components/explore/TrendingCollections'
 import { useBag } from 'nft/hooks'
@@ -30,12 +30,12 @@ const NftExplore = () => {
 
   return (
     <>
-      <TraceAnalytics page={InterfacePageName.NFT_EXPLORE_PAGE} shouldLogImpression>
+      <Trace page={InterfacePageName.NFT_EXPLORE_PAGE} shouldLogImpression>
         <ExploreContainer>
           <Banner />
           <TrendingCollections />
         </ExploreContainer>
-      </TraceAnalytics>
+      </Trace>
     </>
   )
 }

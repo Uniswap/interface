@@ -1,6 +1,6 @@
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { TraceEvent } from 'analytics'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useIsMobile } from 'nft/hooks'
@@ -187,7 +187,7 @@ export function Table<D extends Record<string, unknown>>({
             prepareRow(row)
 
             return (
-              <TraceAnalyticsEvent
+              <TraceEvent
                 events={[BrowserEvent.onClick]}
                 name={NFTEventName.NFT_TRENDING_ROW_SELECTED}
                 properties={{ collection_address: row.original.collection.address, chain_id: chainId }}
@@ -226,7 +226,7 @@ export function Table<D extends Record<string, unknown>>({
                     )
                   })}
                 </StyledRow>
-              </TraceAnalyticsEvent>
+              </TraceEvent>
             )
           })}
         </tbody>

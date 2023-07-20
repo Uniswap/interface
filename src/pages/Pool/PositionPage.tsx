@@ -6,8 +6,8 @@ import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { Trace } from 'analytics'
 import { sendEvent } from 'components/analytics'
-import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
@@ -637,7 +637,7 @@ function PositionPageContent() {
       <div />
     </LoadingRows>
   ) : (
-    <TraceAnalytics page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <PageWrapper>
           <TransactionConfirmationModal
@@ -1004,6 +1004,6 @@ function PositionPageContent() {
         </PageWrapper>
         <SwitchLocaleLink />
       </>
-    </TraceAnalytics>
+    </Trace>
   )
 }

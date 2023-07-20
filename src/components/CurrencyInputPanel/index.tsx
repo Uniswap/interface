@@ -3,7 +3,7 @@ import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/anal
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { TraceEvent } from 'analytics'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import { isSupportedChain } from 'constants/chains'
@@ -311,7 +311,7 @@ export default function CurrencyInputPanel({
                     ) : null}
                   </ThemedText.DeprecatedBody>
                   {showMaxButton && selectedCurrencyBalance ? (
-                    <TraceAnalyticsEvent
+                    <TraceEvent
                       events={[BrowserEvent.onClick]}
                       name={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
                       element={InterfaceElementName.MAX_TOKEN_AMOUNT_BUTTON}
@@ -319,7 +319,7 @@ export default function CurrencyInputPanel({
                       <StyledBalanceMax onClick={onMax}>
                         <Trans>MAX</Trans>
                       </StyledBalanceMax>
-                    </TraceAnalyticsEvent>
+                    </TraceEvent>
                   ) : null}
                 </RowFixed>
               ) : (

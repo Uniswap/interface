@@ -1,5 +1,5 @@
 import { BrowserEvent, InterfaceEventName } from '@uniswap/analytics-events'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { TraceEvent } from 'analytics'
 import { ScrollBarStyles } from 'components/Common'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { atom } from 'jotai'
@@ -200,7 +200,7 @@ function AccountDrawer() {
   return (
     <Container>
       {walletDrawerOpen && (
-        <TraceAnalyticsEvent
+        <TraceEvent
           events={[BrowserEvent.onClick]}
           name={InterfaceEventName.MINI_PORTFOLIO_TOGGLED}
           properties={{ type: 'close' }}
@@ -208,7 +208,7 @@ function AccountDrawer() {
           <CloseDrawer onClick={toggleWalletDrawer} data-testid="close-account-drawer">
             <CloseIcon />
           </CloseDrawer>
-        </TraceAnalyticsEvent>
+        </TraceEvent>
       )}
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
       <AccountDrawerWrapper open={walletDrawerOpen}>

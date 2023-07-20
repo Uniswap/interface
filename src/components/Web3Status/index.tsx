@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
 import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
-import { sendOptOutAnalyticsEvent, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import { getConnection } from 'connection'
@@ -140,7 +140,7 @@ function Web3StatusInner() {
 
   const [, toggleAccountDrawer] = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
-    sendOptOutAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
+    sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
     toggleAccountDrawer()
   }, [toggleAccountDrawer])
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
@@ -160,7 +160,7 @@ function Web3StatusInner() {
 
   if (account) {
     return (
-      <TraceAnalyticsEvent
+      <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.MINI_PORTFOLIO_TOGGLED}
         properties={{ type: 'open' }}
@@ -188,11 +188,11 @@ function Web3StatusInner() {
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>
-      </TraceAnalyticsEvent>
+      </TraceEvent>
     )
   } else {
     return (
-      <TraceAnalyticsEvent
+      <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
@@ -206,7 +206,7 @@ function Web3StatusInner() {
             <Trans>Connect</Trans>
           </StyledConnectButton>
         </Web3StatusConnectWrapper>
-      </TraceAnalyticsEvent>
+      </TraceEvent>
     )
   }
 }

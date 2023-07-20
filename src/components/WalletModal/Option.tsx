@@ -1,7 +1,7 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection } from 'connection/types'
@@ -90,7 +90,7 @@ export default function Option({ connection }: OptionProps) {
 
   return (
     <Wrapper disabled={isSomeOptionPending}>
-      <TraceAnalyticsEvent
+      <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.WALLET_SELECTED}
         properties={{ wallet_type: connection.getName() }}
@@ -110,7 +110,7 @@ export default function Option({ connection }: OptionProps) {
           </OptionCardLeft>
           {isCurrentOptionPending && <Loader />}
         </OptionCardClickable>
-      </TraceAnalyticsEvent>
+      </TraceEvent>
     </Wrapper>
   )
 }

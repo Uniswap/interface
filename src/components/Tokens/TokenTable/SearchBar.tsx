@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { TraceEvent } from 'analytics'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import useDebounce from 'hooks/useDebounce'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
@@ -78,7 +78,7 @@ export default function SearchBar() {
     <SearchBarContainer>
       <Trans
         render={({ translation }) => (
-          <TraceAnalyticsEvent
+          <TraceEvent
             events={[BrowserEvent.onFocus]}
             name={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
             element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
@@ -92,7 +92,7 @@ export default function SearchBar() {
               value={localFilterString}
               onChange={({ target: { value } }) => setLocalFilterString(value)}
             />
-          </TraceAnalyticsEvent>
+          </TraceEvent>
         )}
       >
         Filter tokens

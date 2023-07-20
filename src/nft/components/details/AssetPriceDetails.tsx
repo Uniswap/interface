@@ -1,7 +1,7 @@
 import { useTrace } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendAnalyticsEvent } from 'analytics'
 import { OpacityHoverState } from 'components/Common'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
@@ -227,7 +227,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
     resetSellAssets()
     navigate('/nfts/profile')
     selectSellAsset(asset)
-    sendOptOutAnalyticsEvent(NFTEventName.NFT_SELL_ITEM_ADDED, {
+    sendAnalyticsEvent(NFTEventName.NFT_SELL_ITEM_ADDED, {
       collection_address: asset.asset_contract.address,
       token_id: asset.tokenId,
       ...trace,

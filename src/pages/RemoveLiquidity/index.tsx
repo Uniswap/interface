@@ -5,9 +5,9 @@ import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { isSupportedChain } from 'constants/chains'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
@@ -635,7 +635,7 @@ function RemoveLiquidity() {
             )}
             <div style={{ position: 'relative' }}>
               {!account ? (
-                <TraceAnalyticsEvent
+                <TraceEvent
                   events={[BrowserEvent.onClick]}
                   name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
                   properties={{ received_swap_quote: false }}
@@ -644,7 +644,7 @@ function RemoveLiquidity() {
                   <ButtonLight onClick={toggleWalletDrawer}>
                     <Trans>Connect Wallet</Trans>
                   </ButtonLight>
-                </TraceAnalyticsEvent>
+                </TraceEvent>
               ) : (
                 <RowBetween>
                   <ButtonConfirmed

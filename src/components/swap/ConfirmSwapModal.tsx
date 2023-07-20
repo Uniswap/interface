@@ -9,7 +9,7 @@ import {
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendOptOutAnalyticsEvent, TraceAnalytics } from 'components/analytics/TraceAnalytics'
+import { sendAnalyticsEvent, Trace } from 'analytics'
 import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
@@ -144,7 +144,7 @@ function useConfirmModalState({
               // After the wrap has succeeded, reset the input currency to be WETH
               // because the trade will be on WETH -> token
               onCurrencySelection(Field.INPUT, trade.inputAmount.currency)
-              sendOptOutAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
+              sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                 chain_id: chainId,
                 token_symbol: maximumAmountIn?.currency.symbol,
                 token_address: maximumAmountIn?.currency.address,
@@ -165,7 +165,7 @@ function useConfirmModalState({
           allowance
             .approve()
             .then(() => {
-              sendOptOutAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
+              sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
                 chain_id: chainId,
                 token_symbol: maximumAmountIn?.currency.symbol,
                 token_address: maximumAmountIn?.currency.address,
@@ -332,7 +332,7 @@ export default function ConfirmSwapModal({
   const onModalDismiss = useCallback(() => {
     if (showAcceptChanges) {
       // If the user dismissed the modal while showing the price update, log the event as rejected.
-      sendOptOutAnalyticsEvent(
+      sendAnalyticsEvent(
         SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
         formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
       )
@@ -415,7 +415,7 @@ export default function ConfirmSwapModal({
   }
 
   return (
-    <TraceAnalytics modal={InterfaceModalName.CONFIRM_SWAP}>
+    <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <Modal isOpen $scrollOverlay onDismiss={onModalDismiss} maxHeight={90}>
         {approvalError || swapFailed ? (
           <ErrorModalContent
@@ -432,6 +432,6 @@ export default function ConfirmSwapModal({
           />
         )}
       </Modal>
-    </TraceAnalytics>
+    </Trace>
   )
 }

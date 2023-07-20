@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import clsx from 'clsx'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { OpacityHoverState } from 'components/Common'
 import { parseEther } from 'ethers/lib/utils'
 import { NftAssetTraitInput, NftMarketplace, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
@@ -493,7 +493,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       >
         <ActionsContainer>
           <ActionsSubContainer>
-            <TraceAnalyticsEvent
+            <TraceEvent
               events={[BrowserEvent.onClick]}
               element={InterfaceElementName.NFT_FILTER_BUTTON}
               name={NFTEventName.NFT_FILTER_OPENED}
@@ -509,7 +509,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                   setFiltersExpanded(!isFiltersExpanded)
                 }}
               />
-            </TraceAnalyticsEvent>
+            </TraceEvent>
             <SortDropdownContainer isFiltersExpanded={isFiltersExpanded}>
               <SortDropdown dropDownOptions={sortDropDownOptions} />
             </SortDropdownContainer>

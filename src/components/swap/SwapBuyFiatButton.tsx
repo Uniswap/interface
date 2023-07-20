@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { useAccountDrawer } from 'components/AccountDrawer'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
@@ -101,7 +101,7 @@ export default function SwapBuyFiatButton() {
       text={
         <div data-testid="fiat-on-ramp-unavailable-tooltip">
           <Trans>Crypto purchases are not available in your region. </Trans>
-          <TraceAnalyticsEvent
+          <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.FIAT_ON_RAMP_LEARN_MORE_LINK}
@@ -109,13 +109,13 @@ export default function SwapBuyFiatButton() {
             <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
               <Trans>Learn more</Trans>
             </ExternalLink>
-          </TraceAnalyticsEvent>
+          </TraceEvent>
         </div>
       }
       placement="bottom"
       disabled={fiatOnRampsUnavailableTooltipDisabled}
     >
-      <TraceAnalyticsEvent
+      <TraceEvent
         events={[BrowserEvent.onClick]}
         name={SharedEventName.ELEMENT_CLICKED}
         element={InterfaceElementName.FIAT_ON_RAMP_BUY_BUTTON}
@@ -124,7 +124,7 @@ export default function SwapBuyFiatButton() {
         <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
           <Trans>Buy</Trans>
         </StyledTextButton>
-      </TraceAnalyticsEvent>
+      </TraceEvent>
     </MouseoverTooltip>
   )
 }

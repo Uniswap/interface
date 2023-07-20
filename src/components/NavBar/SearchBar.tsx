@@ -3,8 +3,8 @@ import { t } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, Trace, TraceEvent } from 'analytics'
 import clsx from 'clsx'
-import { sendOptOutAnalyticsEvent, TraceAnalytics, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
@@ -142,7 +142,7 @@ export const SearchBar = () => {
   }, [handleKeyPress, inputRef])
 
   return (
-    <TraceAnalytics section={InterfaceSectionName.NAVBAR_SEARCH}>
+    <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
       <Column
         data-cy="search-bar"
         position={{ sm: 'fixed', md: 'absolute' }}
@@ -179,7 +179,7 @@ export const SearchBar = () => {
               <ChevronLeftIcon />
             </Box>
           </Box>
-          <TraceAnalyticsEvent
+          <TraceEvent
             events={[BrowserEvent.onFocus]}
             name={InterfaceEventName.NAVBAR_SEARCH_SELECTED}
             element={InterfaceElementName.NAVBAR_SEARCH_INPUT}
@@ -193,15 +193,13 @@ export const SearchBar = () => {
                 !isOpen && toggleOpen()
                 setSearchValue(event.target.value)
               }}
-              onBlur={() =>
-                sendOptOutAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
-              }
+              onBlur={() => sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
               className={`${styles.searchBarInput} ${styles.searchContentLeftAlign}`}
               value={searchValue}
               ref={inputRef}
               width="full"
             />
-          </TraceAnalyticsEvent>
+          </TraceEvent>
           {!isOpen && <KeyShortCut>/</KeyShortCut>}
         </Row>
         <Column overflow="hidden" className={clsx(isOpen ? styles.visible : styles.hidden)}>
@@ -222,6 +220,6 @@ export const SearchBar = () => {
           <NavMagnifyingGlassIcon />
         </NavIcon>
       )}
-    </TraceAnalytics>
+    </Trace>
   )
 }

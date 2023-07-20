@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
-import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendAnalyticsEvent } from 'analytics'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { detailsHref } from 'nft/components/card/utils'
 import { VerifiedIcon } from 'nft/components/icons'
@@ -45,7 +45,7 @@ export const ViewMyNftsAsset = ({
       removeSellAsset(asset)
     } else {
       selectSellAsset(asset)
-      sendOptOutAnalyticsEvent(NFTEventName.NFT_SELL_ITEM_ADDED, {
+      sendAnalyticsEvent(NFTEventName.NFT_SELL_ITEM_ADDED, {
         collection_address: asset.asset_contract.address,
         token_id: asset.tokenId,
         ...trace,

@@ -4,8 +4,8 @@ import { t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { sendOptOutAnalyticsEvent, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -472,7 +472,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
                     onClick={() => {
                       if (!bagIsLocked) {
                         setTokenSelectorOpen(true)
-                        sendOptOutAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
+                        sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
                       }
                     }}
                   >
@@ -505,7 +505,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
             usingPayWithAnyToken={usingPayWithAnyToken}
           />
         </FooterHeader>
-        <TraceAnalyticsEvent
+        <TraceEvent
           events={[BrowserEvent.onClick]}
           name={NFTEventName.NFT_BUY_BAG_PAY}
           element={InterfaceElementName.NFT_BUY_BAG_PAY_BUTTON}
@@ -524,7 +524,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
             {isPending && <Loader size="20px" stroke="white" />}
             {buttonText}
           </ActionButton>
-        </TraceAnalyticsEvent>
+        </TraceEvent>
       </Footer>
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}
@@ -532,7 +532,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         onCurrencySelect={(currency: Currency) => {
           setInputCurrency(currency.isNative ? undefined : currency)
           if (currency.isToken) {
-            sendOptOutAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTED, {
+            sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTED, {
               token_address: currency.address,
               token_symbol: currency.symbol,
             })

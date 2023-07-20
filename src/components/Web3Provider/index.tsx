@@ -3,7 +3,7 @@ import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from
 import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendAnalyticsEvent } from 'analytics'
 import { getConnection } from 'connection'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
@@ -80,7 +80,7 @@ function Updater() {
       }
       user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
 
-      sendOptOutAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+      sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account,
         wallet_type: walletType,

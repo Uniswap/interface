@@ -5,10 +5,10 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import { sendEvent } from 'components/analytics'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
@@ -478,7 +478,7 @@ function AddLiquidity() {
         </ThemedText.DeprecatedMain>
       </ButtonPrimary>
     ) : !account ? (
-      <TraceAnalyticsEvent
+      <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
         properties={{ received_swap_quote: false }}
@@ -487,7 +487,7 @@ function AddLiquidity() {
         <ButtonLight onClick={toggleWalletDrawer} $borderRadius="12px" padding="12px">
           <Trans>Connect Wallet</Trans>
         </ButtonLight>
-      </TraceAnalyticsEvent>
+      </TraceEvent>
     ) : (
       <AutoColumn gap="md">
         {(approvalA === ApprovalState.NOT_APPROVED ||

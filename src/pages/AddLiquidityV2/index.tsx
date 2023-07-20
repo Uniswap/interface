@@ -4,9 +4,9 @@ import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
-import { TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useCallback, useState } from 'react'
@@ -433,7 +433,7 @@ export default function AddLiquidity() {
                 </ThemedText.DeprecatedMain>
               </ButtonPrimary>
             ) : !account ? (
-              <TraceAnalyticsEvent
+              <TraceEvent
                 events={[BrowserEvent.onClick]}
                 name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
                 properties={{ received_swap_quote: false }}
@@ -442,7 +442,7 @@ export default function AddLiquidity() {
                 <ButtonLight onClick={toggleWalletDrawer}>
                   <Trans>Connect Wallet</Trans>
                 </ButtonLight>
-              </TraceAnalyticsEvent>
+              </TraceEvent>
             ) : (
               <AutoColumn gap="md">
                 {(approvalA === ApprovalState.NOT_APPROVED ||

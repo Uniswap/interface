@@ -3,7 +3,7 @@ import { useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
-import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendAnalyticsEvent } from 'analytics'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
@@ -232,7 +232,7 @@ export const ListPage = () => {
 
   const startListingFlow = async () => {
     if (!signer) return
-    sendOptOutAnalyticsEvent(NFTEventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
+    sendAnalyticsEvent(NFTEventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
     const signerAddress = await signer.getAddress()
     const nonce = await looksRareNonceFetcher(signerAddress)
     setLooksRareNonce(nonce ?? 0)

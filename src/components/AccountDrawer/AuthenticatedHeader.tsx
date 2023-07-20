@@ -3,7 +3,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendOptOutAnalyticsEvent, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -199,7 +199,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
     toggleWalletDrawer()
-    sendOptOutAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
+    sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
     openFiatOnrampModal()
   }, [openFiatOnrampModal, toggleWalletDrawer])
 
@@ -255,7 +255,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           {!showDisconnectConfirm && (
             <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings} />
           )}
-          <TraceAnalyticsEvent
+          <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
@@ -267,7 +267,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               Icon={LogOutCentered}
               text="Disconnect"
             />
-          </TraceAnalyticsEvent>
+          </TraceEvent>
         </IconContainer>
       </HeaderWrapper>
       <PortfolioDrawerContainer>

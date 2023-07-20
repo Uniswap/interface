@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { analyticsOptOutToggle } from 'components/analytics/TraceAnalytics'
+import { analyticsOptOutToggle } from 'analytics'
 import { useAtom } from 'jotai'
 
 import { SettingsToggle } from './SettingsToggle'

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { TraceAnalytics } from 'components/analytics/TraceAnalytics'
+import { Trace } from 'analytics'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
@@ -190,7 +190,7 @@ export default function TokenDetails({
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
   }
   return (
-    <TraceAnalytics
+    <Trace
       page={InterfacePageName.TOKEN_DETAILS_PAGE}
       properties={{ tokenAddress: address, tokenName: detailedToken?.name }}
       shouldLogImpression
@@ -264,6 +264,6 @@ export default function TokenDetails({
           showCancel={true}
         />
       </TokenDetailsLayout>
-    </TraceAnalytics>
+    </Trace>
   )
 }

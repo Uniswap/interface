@@ -3,7 +3,7 @@ import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { formatCurrencyAmount, formatNumber, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendOptOutAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { sendAnalyticsEvent } from 'analytics'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -151,7 +151,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             size={TooltipSize.Large}
             text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
             onOpen={() => {
-              sendOptOutAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
+              sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
                 element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
               })
             }}
@@ -164,7 +164,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             text={<GasBreakdownTooltip trade={trade} hideFees />}
             placement="right"
             onOpen={() => {
-              sendOptOutAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
+              sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
                 element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
               })
             }}

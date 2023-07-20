@@ -13,9 +13,9 @@ import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { ChainId, Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, Trace, TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import AddressInputPanel from 'components/AddressInputPanel'
-import { sendOptOutAnalyticsEvent, TraceAnalytics, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -139,7 +139,7 @@ export default function SwapPage({ className }: { className?: string }) {
   const location = useLocation()
 
   return (
-    <TraceAnalytics page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <PageWrapper>
         <Swap
           className={className}
@@ -152,7 +152,7 @@ export default function SwapPage({ className }: { className?: string }) {
         <NetworkAlert />
       </PageWrapper>
       {location.pathname === '/swap' && <SwitchLocaleLink />}
-    </TraceAnalytics>
+    </Trace>
   )
 }
 
@@ -448,7 +448,7 @@ export function Swap({
       onUserInput(Field.INPUT, '')
     } catch (error) {
       if (!didUserReject(error)) {
-        sendOptOutAnalyticsEvent(SwapEventName.SWAP_ERROR, {
+        sendAnalyticsEvent(SwapEventName.SWAP_ERROR, {
           wrapType,
           input: currencies[Field.INPUT],
           output: currencies[Field.OUTPUT],
@@ -527,7 +527,7 @@ export function Swap({
 
     const now = new Date()
     setSwapQuoteReceivedDate(now)
-    sendOptOutAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
+    sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
       ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, now),
       ...trace,
     })
@@ -584,7 +584,7 @@ export function Swap({
 
       <div style={{ display: 'relative' }}>
         <SwapSection>
-          <TraceAnalytics section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
+          <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
             <SwapCurrencyInputPanel
               label={
                 independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
@@ -602,10 +602,10 @@ export function Swap({
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
             />
-          </TraceAnalytics>
+          </Trace>
         </SwapSection>
         <ArrowWrapper clickable={isSupportedChain(chainId)}>
-          <TraceAnalyticsEvent
+          <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SwapEventName.SWAP_TOKENS_REVERSED}
             element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
@@ -622,13 +622,13 @@ export function Swap({
                 color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.textPrimary : theme.textTertiary}
               />
             </ArrowContainer>
-          </TraceAnalyticsEvent>
+          </TraceEvent>
         </ArrowWrapper>
       </div>
       <AutoColumn gap="xs">
         <div>
           <OutputSwapSection>
-            <TraceAnalytics section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
+            <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
               <SwapCurrencyInputPanel
                 value={formattedAmounts[Field.OUTPUT]}
                 disabled={disableTokenInputs}
@@ -645,7 +645,7 @@ export function Swap({
                 id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                 loading={independentField === Field.INPUT && routeIsSyncing}
               />
-            </TraceAnalytics>
+            </Trace>
             {recipient !== null && !showWrap ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
@@ -682,7 +682,7 @@ export function Swap({
               <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
             </ButtonPrimary>
           ) : !account ? (
-            <TraceAnalyticsEvent
+            <TraceEvent
               events={[BrowserEvent.onClick]}
               name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
               properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
@@ -691,7 +691,7 @@ export function Swap({
               <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
                 <Trans>Connect Wallet</Trans>
               </ButtonLight>
-            </TraceAnalyticsEvent>
+            </TraceEvent>
           ) : chainId && chainId !== connectedChainId ? (
             <ButtonPrimary
               onClick={async () => {
@@ -731,7 +731,7 @@ export function Swap({
               </ThemedText.DeprecatedMain>
             </GrayCard>
           ) : (
-            <TraceAnalyticsEvent
+            <TraceEvent
               events={[BrowserEvent.onClick]}
               name={SharedEventName.ELEMENT_CLICKED}
               element={InterfaceElementName.SWAP_BUTTON}
@@ -757,7 +757,7 @@ export function Swap({
                   )}
                 </Text>
               </ButtonError>
-            </TraceAnalyticsEvent>
+            </TraceEvent>
           )}
         </div>
       </AutoColumn>

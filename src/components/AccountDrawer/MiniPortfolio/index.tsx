@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
-import { TraceAnalytics, TraceAnalyticsEvent } from 'components/analytics/TraceAnalytics'
+import { Trace, TraceEvent } from 'analytics'
 import Column from 'components/Column'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { AutoRow } from 'components/Row'
@@ -110,7 +110,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
   }, [currentKey, hasPendingTransactions])
 
   return (
-    <TraceAnalytics section={InterfaceSectionName.MINI_PORTFOLIO}>
+    <Trace section={InterfaceSectionName.MINI_PORTFOLIO}>
       <Wrapper>
         <Nav data-testid="mini-portfolio-navbar">
           {Pages.map(({ title, loggingElementName, key }, index) => {
@@ -122,7 +122,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
               if (key === 'activity') setActivityUnread(false)
             }
             return (
-              <TraceAnalyticsEvent
+              <TraceEvent
                 events={[BrowserEvent.onClick]}
                 name={SharedEventName.NAVBAR_CLICKED}
                 element={loggingElementName}
@@ -143,7 +143,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
                     </>
                   )}
                 </NavItem>
-              </TraceAnalyticsEvent>
+              </TraceEvent>
             )
           })}
         </Nav>
@@ -151,6 +151,6 @@ export default function MiniPortfolio({ account }: { account: string }) {
           <Page account={account} />
         </PageWrapper>
       </Wrapper>
-    </TraceAnalytics>
+    </Trace>
   )
 }
