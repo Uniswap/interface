@@ -19,6 +19,7 @@ function getCacheDirectory(cacheName) {
   // Include the trailing slash to denote that this is a directory.
   return `${path.join(__dirname, 'node_modules/.cache/', cacheName)}/`
 }
+
 module.exports = {
   babel: {
     plugins: [
