@@ -15,7 +15,7 @@ export const Trace = memo((props: React.ComponentProps<typeof AnalyticsTrace>) =
   return <AnalyticsTrace {...props} shouldLogImpression={allowAnalytics} />
 })
 
-Trace.displayName = 'TraceAnalytics'
+Trace.displayName = 'Trace'
 
 export const TraceEvent = memo((props: React.ComponentProps<typeof AnalyticsEvent>) => {
   const allowAnalytics = useAtomValue(analyticsOptOutToggle)
@@ -23,7 +23,7 @@ export const TraceEvent = memo((props: React.ComponentProps<typeof AnalyticsEven
   return <AnalyticsEvent {...props} shouldLogImpression={allowAnalytics} />
 })
 
-TraceEvent.displayName = 'TraceAnalyticsEvent'
+TraceEvent.displayName = 'TraceEvent'
 
 export const sendAnalyticsEvent: typeof sendAnalyticsTraceEvent = (event, properties) => {
   const value = localStorage.getItem(analyticsOptOutAtomName)
@@ -37,3 +37,5 @@ export const sendAnalyticsEvent: typeof sendAnalyticsTraceEvent = (event, proper
     sendAnalyticsTraceEvent(event, properties)
   }
 }
+
+export { getDeviceId, initializeAnalytics, OriginApplication, user, useTrace } from '@uniswap/analytics'
