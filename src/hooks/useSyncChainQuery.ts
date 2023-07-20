@@ -45,7 +45,7 @@ export default function useSyncChainQuery() {
     if (isActive && urlChainId && chainIdRef.current === chainId && chainId !== urlChainId) {
       selectChain(urlChainId)
     }
-    // If a user has a connected wallet and has manually changed their chain, delete the old chain query param
+    // If a user has a connected wallet and has manually changed their chain, update the query parameter if it's supported
     else if (account && chainIdRef.current !== chainId && chainId !== urlChainId) {
       if (isSupportedChain(chainId)) {
         searchParams.set('chain', CHAIN_IDS_TO_NAMES[chainId])
