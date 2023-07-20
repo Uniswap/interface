@@ -2006,7 +2006,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
       </div>
       <a
         class="9 c58"
-        href="https://wallet.uniswap.org/"
+        href="https://wallet.uniswap.org/?utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1"
       >
         <svg
           height="20"
@@ -4512,7 +4512,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
       </div>
       <a
         class="9 c58"
-        href="https://wallet.uniswap.org/"
+        href="https://wallet.uniswap.org/?utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1"
       >
         <svg
           height="20"
