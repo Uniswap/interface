@@ -1,5 +1,5 @@
 import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
-import { abi as IPegasysV3PoolStateABI } from '@pollum-io/v3-core/artifacts/contracts/interfaces/pool/IPegasysV3PoolState.sol/IPegasysV3PoolState.json'
+import IPegasysV3PoolStateABI from '@pollum-io/v3-core/artifacts/contracts/interfaces/pool/IPegasysV3PoolState.sol/IPegasysV3PoolState.json'
 import { computePoolAddress, Pool, Position } from '@pollum-io/v3-sdk'
 import { V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
@@ -50,7 +50,7 @@ const DEFAULT_CHAINS = [
   // SupportedChainId.CELO,
 ]
 
-type UseMultiChainPositionsData = { positions: PositionInfo[] | undefined; loading: boolean }
+type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean }
 
 /**
  * Returns all positions for a given account on multiple chains.
@@ -119,7 +119,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
   // Combines PositionDetails with Pool data to build our return type
   const fetchPositionInfo = useCallback(
     async (positionDetails: PositionDetails[], chainId: SupportedChainId, multicall: PegasysInterfaceMulticall) => {
-      const poolInterface = new Interface(IPegasysV3PoolStateABI) as PegasysV3PoolInterface
+      const poolInterface = new Interface(IPegasysV3PoolStateABI.abi) as PegasysV3PoolInterface
       const tokens = await getTokens(
         positionDetails.flatMap((details) => [details.token0, details.token1]),
         chainId

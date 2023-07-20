@@ -10,9 +10,9 @@ export function useDensityChartData({
   currencyB,
   feeAmount,
 }: {
-  currencyA: Currency | undefined
-  currencyB: Currency | undefined
-  feeAmount: FeeAmount | undefined
+  currencyA?: Currency
+  currencyB?: Currency
+  feeAmount?: FeeAmount
 }) {
   const { isLoading, error, data } = usePoolActiveLiquidity(currencyA, currencyB, feeAmount)
 

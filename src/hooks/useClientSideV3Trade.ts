@@ -32,7 +32,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: TradeState; trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined } {
+): { state: TradeState; trade?: InterfaceTrade<Currency, Currency, TTradeType> } {
   const [currencyIn, currencyOut] =
     tradeType === TradeType.EXACT_INPUT
       ? [amountSpecified?.currency, otherCurrency]

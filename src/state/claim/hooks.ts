@@ -1,6 +1,6 @@
 import type { TransactionResponse } from '@ethersproject/providers'
 import { CurrencyAmount, Token } from '@pollum-io/sdk-core'
-import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
+import MERKLE_DISTRIBUTOR_ABI from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { useWeb3React } from '@web3-react/core'
 import { MERKLE_DISTRIBUTOR_ADDRESS } from 'constants/addresses'
 import JSBI from 'jsbi'
@@ -15,7 +15,7 @@ import { useTransactionAdder } from '../transactions/hooks'
 import { TransactionType } from '../transactions/types'
 
 function useMerkleDistributorContract() {
-  return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)
+  return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI.abi, true)
 }
 
 interface UserClaimData {

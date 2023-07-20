@@ -79,10 +79,10 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
 export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
-  parsedAmount: CurrencyAmount<Currency> | undefined
+  parsedAmount?: CurrencyAmount<Currency>
   inputError?: ReactNode
   trade: {
-    trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+    trade?: InterfaceTrade<Currency, Currency, TradeType>
     state: TradeState
   }
   allowedSlippage: Percent

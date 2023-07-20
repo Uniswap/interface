@@ -14,9 +14,9 @@ export function useRoutingAPIArguments({
   tradeType,
   routerPreference,
 }: {
-  tokenIn: Currency | undefined
-  tokenOut: Currency | undefined
-  amount: CurrencyAmount<Currency> | undefined
+  tokenIn?: Currency
+  tokenOut?: Currency
+  amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference
 }) {

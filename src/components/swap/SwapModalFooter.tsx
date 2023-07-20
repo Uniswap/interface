@@ -13,12 +13,12 @@ import { RoutingDiagramEntry } from './SwapRoute'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
-  hash: string | undefined
+  hash?: string
   allowedSlippage: Percent
-  transactionDeadlineSecondsSinceEpoch: number | undefined
+  transactionDeadlineSecondsSinceEpoch?: number
   isAutoSlippage: boolean
   isAutoRouterApi: boolean
-  swapQuoteReceivedDate: Date | undefined
+  swapQuoteReceivedDate?: Date
   routes: RoutingDiagramEntry[]
   fiatValueInput?: number
   fiatValueOutput?: number
@@ -58,12 +58,12 @@ export default function SwapModalFooter({
   disabledConfirm,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
-  hash: string | undefined
+  hash?: string
   allowedSlippage: Percent
   onConfirm: () => void
-  swapErrorMessage: ReactNode | undefined
+  swapErrorMessage?: ReactNode
   disabledConfirm: boolean
-  swapQuoteReceivedDate: Date | undefined
+  swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {

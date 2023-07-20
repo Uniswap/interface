@@ -37,7 +37,7 @@ export default function GasEstimateBadge({
   showRoute,
   disableHover,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined | null // dollar amount in active chain's stablecoin
+  trade?: InterfaceTrade<Currency, Currency, TradeType> | null // dollar amount in active chain's stablecoin
   loading: boolean
   showRoute?: boolean // show route instead of gas estimation summary
   disableHover?: boolean

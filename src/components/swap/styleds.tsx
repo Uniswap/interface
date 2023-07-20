@@ -24,7 +24,7 @@ export const PageWrapper = styled.div<{ isOnSwapPage?: boolean }>`
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
+export const SwapWrapper = styled.main<{ chainId?: number }>`
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 30px;

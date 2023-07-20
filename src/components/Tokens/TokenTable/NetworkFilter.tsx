@@ -1,6 +1,6 @@
 import { getChainInfo } from 'constants/chainInfo'
 import { Chain } from 'graphql/data/Token'
-import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
+import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/utils/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'

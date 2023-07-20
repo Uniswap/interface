@@ -24,7 +24,7 @@ export const priceToPreciseFloat = (price: Price<Currency, Currency> | undefined
 }
 
 interface FormatDollarArgs {
-  num: number | undefined | null
+  num?: number | null
   isPrice?: boolean
   lessPreciseStablecoinValues?: boolean
   digits?: number

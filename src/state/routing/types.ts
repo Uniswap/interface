@@ -81,8 +81,8 @@ export class InterfaceTrade<
     blockNumber,
     ...routes
   }: {
-    gasUseEstimateUSD?: CurrencyAmount<Token> | undefined | null
-    blockNumber?: string | null | undefined
+    gasUseEstimateUSD?: CurrencyAmount<Token> | null
+    blockNumber?: string | null
     v1Routes: {
       routev1: V2Route<TInput, TOutput>
       inputAmount: CurrencyAmount<TInput>
