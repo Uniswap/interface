@@ -6,7 +6,9 @@ import { logger } from 'wallet/src/features/logger/logger'
 import { lockWallet, unlockWallet } from 'wallet/src/features/wallet/slice'
 import serializeError from 'wallet/src/utils/serializeError'
 
-const KEEP_ALIVE_INTERVAL_MS = 1000 * 60 * 5 // 5 minutes
+// The service worker will be shut down if there is no activity for 30 seconds.
+// https://developer.chrome.com/docs/extensions/mv3/service_workers/service-worker-lifecycle/#idle-shutdown
+const KEEP_ALIVE_INTERVAL_MS = 1000 * 15 // 15 seconds
 const KEEP_ALIVE_PING = { content: 'keep_alive_ping' }
 const KEEP_ALIVE_PORT_NAME = 'keep_alive'
 const KEEP_ALIVE_START_DELAY_MS = 1000 * 4 // 4 seconds
@@ -40,16 +42,14 @@ export function* keepAliveSaga() {
     // Wait for one of the `wakeUpActions` to be dispatched.
     (yield* take((action: { type: string }) => wakeUpActions.includes(action.type)))
   ) {
-    logger.debug('keepAliveLoop', 'loop', 'continuing keep alive')
-
-    yield* call(doWork)
     yield* call(logTime)
+    yield* call(doWork)
     yield* delay(KEEP_ALIVE_INTERVAL_MS)
 
     shouldKeepAlive = yield* call(checkShouldKeepAlive)
 
     if (!shouldKeepAlive) {
-      logger.debug('keepAliveLoop', 'stop', 'stopping keep alive')
+      logger.debug('keepAlive', 'stop', 'stopping keep alive')
     }
   }
 }
@@ -127,7 +127,7 @@ function doWork(): void {
 
 function logTime(): void {
   const now = Date.now()
-  logger.debug('keepalive', 'startKeepAlive', 'time elapsed: ', now - lastCall)
+  logger.debug('keepAlive', 'continue', 'time elapsed: ', now - lastCall)
   lastCall = Date.now()
 }
 
