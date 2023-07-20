@@ -46,6 +46,7 @@ notes.txt
 
 package-lock.json
 
+cypress/downloads
 cypress/videos
 cypress/screenshots
 
