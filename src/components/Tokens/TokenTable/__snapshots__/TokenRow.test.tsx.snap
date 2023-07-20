@@ -19,7 +19,6 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 .c9 {
-  visibility: hidden;
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;

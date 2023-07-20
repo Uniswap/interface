@@ -79,7 +79,6 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c12 {
-  visibility: hidden;
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -312,7 +311,6 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
 }
 
 .c12 {
-  visibility: hidden;
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -545,7 +543,6 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 }
 
 .c12 {
-  visibility: hidden;
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
