@@ -27,6 +27,7 @@ export function isBrowserRouterEnabled(): boolean {
   return (
     isAppUniswapOrg(window.location) ||
     isAppUniswapStagingOrg(window.location) ||
+    window.location.hostname.includes('uniswap.vercel.app') ||
     window.location.hostname === 'localhost'
   )
 }
