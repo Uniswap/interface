@@ -30,7 +30,7 @@ describe('Service Worker', () => {
   after(unregisterServiceWorker)
 
   beforeEach(() => {
-    cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
+    cy.intercept('https://api.thinkincoin.com/v2/httpapi', (req) => {
       const body = JSON.stringify(req.body)
       const serviceWorkerStatus = body.match(/"service_worker":"(\w+)"/)?.[1]
       if (serviceWorkerStatus) {
