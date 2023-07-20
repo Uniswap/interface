@@ -1,6 +1,7 @@
 import { WatchQueryFetchPolicy } from '@apollo/client'
 import gql from 'graphql-tag'
 import { ActivityEvent } from 'nft/types'
+import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
 
 import { NftActivityFilterInput, useNftActivityQuery } from '../__generated__/types-and-hooks'
@@ -120,7 +121,7 @@ export function useNftActivity(filter: NftActivityFilterInput, first?: number, f
           toAddress: activity.toAddress,
           transactionHash: activity.transactionHash,
           orderStatus: activity.orderStatus,
-          price: activity.price?.value.toString(),
+          price: wrapScientificNotation(activity.price?.value ?? 0),
           symbol: asset?.collection?.image?.url,
           quantity: activity.quantity,
           url: activity.url,

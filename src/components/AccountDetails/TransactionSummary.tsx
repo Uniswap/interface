@@ -283,7 +283,7 @@ function SwapSummary({ info }: { info: ExactInputSwapTransactionInfo | ExactOutp
         />{' '}
         for{' '}
         <FormattedCurrencyAmountManaged
-          rawAmount={info.expectedOutputCurrencyAmountRaw}
+          rawAmount={info.settledOutputCurrencyAmountRaw ?? info.expectedOutputCurrencyAmountRaw}
           currencyId={info.outputCurrencyId}
           sigFigs={6}
         />

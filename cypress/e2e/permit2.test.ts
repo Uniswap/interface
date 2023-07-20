@@ -28,21 +28,32 @@ describe('Permit2', () => {
     // check token approval
     cy.hardhat()
       .then(({ approval, wallet }) => approval.getTokenAllowanceForPermit2({ owner: wallet, token: inputToken }))
-      .should('deep.equal', MaxUint256)
+      .then((allowance) => {
+        Cypress.log({ name: `Token allowace: ${allowance.toString()}` })
+        cy.wrap(allowance).should('deep.equal', MaxUint256)
+      })
   }
 
   /** Asserts the universal router has a max permit2 approval for spend of the input token on-chain. */
   function expectPermit2AllowanceForUniversalRouterToBeMax(inputToken: Token) {
     cy.hardhat()
-      .then((hardhat) => hardhat.approval.getPermit2Allowance({ owner: hardhat.wallet, token: inputToken }))
+      .then(({ approval, wallet }) => approval.getPermit2Allowance({ owner: wallet, token: inputToken }))
       .then((allowance) => {
-        cy.wrap(MaxUint160.eq(allowance.amount)).should('eq', true)
+        Cypress.log({ name: `Permit2 allowace: ${allowance.amount.toString()}` })
+        cy.wrap(allowance.amount).should('deep.equal', MaxUint160)
         // Asserts that the on-chain expiration is in 30 days, within a tolerance of 40 seconds.
         const THIRTY_DAYS_SECONDS = 2_592_000
         const expected = Math.floor(Date.now() / 1000 + THIRTY_DAYS_SECONDS)
         cy.wrap(allowance.expiration).should('be.closeTo', expected, 40)
       })
   }
+
+  beforeEach(() =>
+    cy.hardhat().then(async (hardhat) => {
+      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(DAI, 1e18))
+      await hardhat.mine()
+    })
+  )
 
   describe('approval process (with intermediate screens)', () => {
     // Turn off automine so that intermediate screens are available to assert on.

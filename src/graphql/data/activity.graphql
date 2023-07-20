@@ -102,13 +102,44 @@ fragment TransactionParts on Transaction {
   nonce
 }
 
+fragment TransactionDetailsParts on TransactionDetails {
+  id
+  type
+  from
+  to
+  hash
+  nonce
+  status
+}
+
+fragment SwapOrderDetailsParts on SwapOrderDetails {
+  id
+  offerer
+  hash
+  orderStatus: status
+  inputToken {
+    ...TokenAssetParts
+  }
+  inputTokenQuantity
+  outputToken {
+    ...TokenAssetParts
+  }
+  outputTokenQuantity
+}
+
 fragment AssetActivityParts on AssetActivity {
   id
   timestamp
   type
   chain
-  transaction {
-    ...TransactionParts
+  details {
+    __typename
+    ... on TransactionDetails {
+      ...TransactionDetailsParts
+    }
+    ... on SwapOrderDetails {
+      ...SwapOrderDetailsParts
+    }
   }
   assetChanges {
     __typename
@@ -130,10 +161,11 @@ fragment AssetActivityParts on AssetActivity {
   }
 }
 
-query TransactionList($account: String!) {
+# TODO(UniswapX): return to a pagesize of 50 pre-launch
+query Activity($account: String!) {
   portfolios(ownerAddresses: [$account]) {
     id
-    assetActivities(pageSize: 50, page: 1) {
+    assetActivities(pageSize: 100, page: 1, includeOffChain: true) {
       ...AssetActivityParts
     }
   }
