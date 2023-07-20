@@ -8,13 +8,13 @@ import {
   track,
 } from '@amplitude/analytics-react-native'
 import { Payload, Response, Transport } from '@amplitude/analytics-types'
+import { OriginApplication } from '@uniswap/analytics'
 import DeviceInfo, { getUniqueId } from 'react-native-device-info'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { logger } from 'wallet/src/features/logger/logger'
 import serializeError from 'wallet/src/utils/serializeError'
 import { Analytics, UserPropertyValue } from './analytics'
 
-const MOBILE_ORIGIN_APPLICATION = 'mobile-analytics-uniswap'
 const DUMMY_KEY = '00000000000000000000000000000000'
 
 export const analytics: Analytics = {
@@ -95,7 +95,7 @@ class ApplicationTransport extends BaseTransport implements Transport {
   async send(_serverUrl: string, payload: Payload): Promise<Response | null> {
     const request: RequestInit = {
       headers: {
-        'x-origin-application': MOBILE_ORIGIN_APPLICATION,
+        'x-origin-application': OriginApplication.MOBILE,
         'Content-Type': 'application/json',
         Accept: '*/*',
         Origin: uniswapUrls.apiBaseUrl,

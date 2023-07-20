@@ -12,6 +12,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@amplitude/analytics-browser@npm:^1.5.8":
+  version: 1.12.1
+  resolution: "@amplitude/analytics-browser@npm:1.12.1"
+  dependencies:
+    "@amplitude/analytics-client-common": ^1.1.1
+    "@amplitude/analytics-core": ^1.2.1
+    "@amplitude/analytics-types": ^1.3.1
+    "@amplitude/plugin-page-view-tracking-browser": ^1.0.7
+    "@amplitude/plugin-web-attribution-browser": ^1.0.7
+    "@amplitude/ua-parser-js": ^0.7.31
+    tslib: ^2.4.1
+  checksum: 74bce3fc3d258162fce62b1e49e8f96e3e7fa598590e201a9c42683026fdf2d54497ed027b4af00e3eb749829f444103633a188100d19b12a7edfe9509826d74
+  languageName: node
+  linkType: hard
+
 "@amplitude/analytics-client-common@npm:^0.3.5":
   version: 0.3.5
   resolution: "@amplitude/analytics-client-common@npm:0.3.5"
@@ -21,6 +36,18 @@ __metadata:
     "@amplitude/analytics-types": ^0.12.0
     tslib: ^2.3.1
   checksum: 8b8a04eeaa61c8df8a699263a4c2618d777377319fb051c86363f5d18d22e27bb1508d6d9892628b0b6b9e7d3a48753bce14b108b617abfc18ee65a071fa30d3
+  languageName: node
+  linkType: hard
+
+"@amplitude/analytics-client-common@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@amplitude/analytics-client-common@npm:1.1.1"
+  dependencies:
+    "@amplitude/analytics-connector": ^1.4.5
+    "@amplitude/analytics-core": ^1.2.1
+    "@amplitude/analytics-types": ^1.3.1
+    tslib: ^2.4.1
+  checksum: e5e76a36d842923a7e230c89d8f96e81a0f71f61c3dad2a2806e17c5eadb8647f334ab5505956d9542dc4eb0986e73e9769df74b508548c8ca4d0855d3a23a2e
   languageName: node
   linkType: hard
 
@@ -59,6 +86,16 @@ __metadata:
     "@amplitude/analytics-types": ^0.14.0
     tslib: ^2.3.1
   checksum: be98d2614bbb22dfae03dfc4f79766ffb71c9f6b0b2fe88ea1b3ea4beae0f69f4d3add0a1dd6f0658300e14ca7d61d45d42f356653c19ba7cf87bcc9443cb7f1
+  languageName: node
+  linkType: hard
+
+"@amplitude/analytics-core@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "@amplitude/analytics-core@npm:1.2.1"
+  dependencies:
+    "@amplitude/analytics-types": ^1.3.1
+    tslib: ^2.4.1
+  checksum: 23c36ce92a35d9ad0500ed0d0cb0c243676d7ecf0aa96f2cd90522c9374d7c4857ab7bc018b5f81ab274e2390350ede0da4207154f36b8a13e4ba017b37156d3
   languageName: node
   linkType: hard
 
@@ -111,6 +148,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@amplitude/analytics-types@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "@amplitude/analytics-types@npm:1.3.1"
+  checksum: b27c01fe9b0a5898cbd4a6b4976caa35758e533eaa85d4ec7fbfed87f888dbb425f83397c85301e0679af3ccf89d34c4659d24ae2bb38171806c1431cd44d1a3
+  languageName: node
+  linkType: hard
+
 "@amplitude/experiment-react-native-client@npm:1.0.0":
   version: 1.0.0
   resolution: "@amplitude/experiment-react-native-client@npm:1.0.0"
@@ -133,6 +177,29 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 7b81a44d8a1dc383b6c032839f26f42ebdf9c7c70df5f1c5da89d67e85bc9682c26e3c45f72e4957966f6b55715c0e0d09893315e87d5d188d7dba743c1419be
+  languageName: node
+  linkType: hard
+
+"@amplitude/plugin-page-view-tracking-browser@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "@amplitude/plugin-page-view-tracking-browser@npm:1.0.7"
+  dependencies:
+    "@amplitude/analytics-client-common": ^1.1.1
+    "@amplitude/analytics-types": ^1.3.1
+    tslib: ^2.4.1
+  checksum: d07663bfd0c304c5175e83c9e4ca28910333268dc5818797a91f976538ba3297a4dda70d0583e1b4f20480ae0dbc0f4f07cdec2f5afb3e093d452baefd8033df
+  languageName: node
+  linkType: hard
+
+"@amplitude/plugin-web-attribution-browser@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "@amplitude/plugin-web-attribution-browser@npm:1.0.7"
+  dependencies:
+    "@amplitude/analytics-client-common": ^1.1.1
+    "@amplitude/analytics-core": ^1.2.1
+    "@amplitude/analytics-types": ^1.3.1
+    tslib: ^2.4.1
+  checksum: 04ce646ec6ad7d7710aa89c20d3829ad3207db07ed82c11407f6f20e38dc551c0280e2b71573a34beefd559742d6b8974a4806d7a45d88dfbf4879b709909ede
   languageName: node
   linkType: hard
 
@@ -11706,6 +11773,17 @@ __metadata:
   version: 2.12.0
   resolution: "@uniswap/analytics-events@npm:2.12.0"
   checksum: df96fc2ab59c933b01ebb719c2069b776eceb94f8ddfb94970827d40ad29cb05140f869f9ec3e028fa2b5c78ade382ba1a922551222d73e7a544a4167a9334ca
+  languageName: node
+  linkType: hard
+
+"@uniswap/analytics@npm:1.4.0":
+  version: 1.4.0
+  resolution: "@uniswap/analytics@npm:1.4.0"
+  dependencies:
+    "@amplitude/analytics-browser": ^1.5.8
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  checksum: 23c2b6ef86d92dfeefab29d8fa708815f86c206cf9e9c4de1bff3b5c9e88c83feeaf3f9cab985c5e7795b40898246dcd658f6a6a096535ee557ae3bb745ce21f
   languageName: node
   linkType: hard
 
@@ -38009,6 +38087,7 @@ __metadata:
     "@types/react": ^18.0.15
     "@types/redux-logger": 3.0.9
     "@types/sinon-chrome": 2.2.11
+    "@uniswap/analytics": 1.4.0
     "@uniswap/sdk-core": 3.2.2
     apollo-link-rest: 0.9.0
     dayjs: 1.11.7
