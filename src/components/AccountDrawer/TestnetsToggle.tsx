@@ -14,9 +14,7 @@ export function TestnetsToggle() {
       title={t`Show testnets`}
       dataid="testnets-toggle"
       isActive={showTestnets}
-      toggle={() => {
-        updateShowTestnets(!showTestnets)
-      }}
+      toggle={() => void updateShowTestnets((value) => !value)}
     />
   )
 }

@@ -12,9 +12,7 @@ export function AnalyticsToggle() {
       title={t`Allow analytics`}
       description={t`We use anonymized data to enhance your experience with Uniswap Labs products.`}
       isActive={allowAnalytics}
-      toggle={() => {
-        updateAllowAnalytics(!allowAnalytics)
-      }}
+      toggle={() => void updateAllowAnalytics((value) => !value)}
     />
   )
 }
