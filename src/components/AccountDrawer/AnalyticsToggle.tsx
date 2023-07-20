@@ -1,11 +1,11 @@
 import { t } from '@lingui/macro'
-import { analyticsOptOutToggle } from 'analytics'
+import { allowAnalyticsAtom } from 'analytics'
 import { useAtom } from 'jotai'
 
 import { SettingsToggle } from './SettingsToggle'
 
 export function AnalyticsToggle() {
-  const [allowAnalytics, updateAllowAnalytics] = useAtom(analyticsOptOutToggle)
+  const [allowAnalytics, updateAllowAnalytics] = useAtom(allowAnalyticsAtom)
 
   return (
     <SettingsToggle

@@ -16,9 +16,6 @@ import { mocked } from 'test-utils/mocked'
 import Web3Provider from '.'
 
 jest.mock('analytics', () => ({
-  user: { set: jest.fn(), postInsert: jest.fn() },
-}))
-jest.mock('analytics', () => ({
   sendAnalyticsEvent: jest.fn(),
   user: { set: jest.fn(), postInsert: jest.fn() },
 }))
