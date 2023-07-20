@@ -109,7 +109,7 @@ export default function RadialGradientByChainUpdater(): null {
       case ChainId.BASE_GOERLI: {
         setBackground(backgroundResetStyles)
         const baseLightGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(10, 41, 75, 0.7) 0%, rgba(0, 82, 255, .1) 40%, rgba(0, 82, 255, 0) 100%), rgb(13, 14, 14)'
+          'style="width: 100vw; height: 100vh; transform: unset; background: radial-gradient(100% 100% at 50% 0%, rgba(0, 82, 255, 0.20) 0%, rgba(0, 82, 255, 0.08) 40.0%, rgba(252, 255, 82, 0.00) 100%), rgb(255, 255, 255);"'
         const baseDarkGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(10, 41, 75, 0.7) 0%, rgba(0, 82, 255, .1) 40%, rgba(0, 82, 255, 0) 100%), rgb(13, 14, 14)'
         backgroundRadialGradientElement.style.background = darkMode ? baseDarkGradient : baseLightGradient
