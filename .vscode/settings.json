@@ -49,7 +49,8 @@
   "javascript.format.enable": false,
   "jest.jestCommandLine": "yarn mobile test",
   "search.exclude": {
-    "**/node_modules": false
+    "**/node_modules": false,
+    "apps/web/dev/**": true,
   },
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "node_modules/typescript/lib",
