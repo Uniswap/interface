@@ -34,6 +34,10 @@ function meetsThreshold(tokenBalance: TokenBalance, hideSmallBalances: boolean) 
   return !hideSmallBalances || value > HIDE_SMALL_USD_BALANCES_THRESHOLD
 }
 
+function hasSwappedBefore() {
+  return true
+}
+
 export default function Tokens({ account }: { account: string }) {
   const toggleWalletDrawer = useToggleAccountDrawer()
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
@@ -51,8 +55,10 @@ export default function Tokens({ account }: { account: string }) {
 
     for (const tokenBalance of tokenBalances) {
       if (
+        // if below $1, hide by default
         !meetsThreshold(tokenBalance, hideSmallBalances) ||
-        tokenBalance.tokenProjectMarket?.tokenProject?.spamCode === 1
+        // if its a spam token and you haven't swapped it before, hide it by default
+        (tokenBalance.tokenProjectMarket?.tokenProject?.spamCode === 1 && !hasSwappedBefore())
       ) {
         hidden.push(tokenBalance)
       } else {
