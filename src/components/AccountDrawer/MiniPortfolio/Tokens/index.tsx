@@ -23,7 +23,14 @@ import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../Portfol
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
 function meetsThreshold(tokenBalance: TokenBalance, hideSmallBalances: boolean) {
-  return !hideSmallBalances || (tokenBalance.denominatedValue?.value ?? 0) > HIDE_SMALL_USD_BALANCES_THRESHOLD
+  const value = tokenBalance.denominatedValue?.value
+
+  // we don't hide tokens with no price
+  if (typeof value !== 'number') {
+    return true
+  }
+
+  return !hideSmallBalances || value > HIDE_SMALL_USD_BALANCES_THRESHOLD
 }
 
 export default function Tokens({ account }: { account: string }) {
@@ -33,27 +40,33 @@ export default function Tokens({ account }: { account: string }) {
 
   const { data } = useCachedPortfolioBalancesQuery({ account })
 
-  const visibleTokens = useMemo(() => {
-    return !hideSmallBalances
-      ? data?.portfolios?.[0].tokenBalances ?? []
-      : data?.portfolios?.[0].tokenBalances?.filter((tokenBalance) =>
-          meetsThreshold(tokenBalance, hideSmallBalances)
-        ) ?? []
-  }, [data?.portfolios, hideSmallBalances])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const tokenBalances = data?.portfolios?.[0].tokenBalances ?? []
+  type TokenBalance = (typeof tokenBalances)[0]
 
-  const hiddenTokens = useMemo(() => {
-    return !hideSmallBalances
-      ? []
-      : data?.portfolios?.[0].tokenBalances?.filter(
-          (tokenBalance) => !meetsThreshold(tokenBalance, hideSmallBalances)
-        ) ?? []
-  }, [data?.portfolios, hideSmallBalances])
+  const [visibleTokens, hiddenTokens] = useMemo(() => {
+    const visible: TokenBalance[] = []
+    const hidden: TokenBalance[] = []
+
+    for (const tokenBalance of tokenBalances) {
+      if (
+        !meetsThreshold(tokenBalance, hideSmallBalances) ||
+        tokenBalance.tokenProjectMarket?.tokenProject?.spamCode === 1
+      ) {
+        hidden.push(tokenBalance)
+      } else {
+        visible.push(tokenBalance)
+      }
+    }
+
+    return [visible, hidden]
+  }, [hideSmallBalances, tokenBalances])
 
   if (!data) {
     return <PortfolioSkeleton />
   }
 
-  if (data?.portfolios?.[0].tokenBalances?.length === 0) {
+  if (tokenBalances.length === 0) {
     // TODO: consider launching moonpay here instead of just closing the drawer
     return <EmptyWalletModule type="token" onNavigateClick={toggleWalletDrawer} />
   }

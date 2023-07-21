@@ -35,6 +35,7 @@ gql`
           tokenProject {
             id
             logoUrl
+            spamCode
           }
         }
         token {
