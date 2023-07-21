@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { AnyAction, combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
@@ -56,22 +57,26 @@ export type AppSelector<T> = (state: WebState) => T
 export const useAppDispatch = (): ((action: AnyAction) => Promise<AnyAction | undefined>) => {
   const appDispatch = useDispatch()
 
-  const wrappedAppDispatch = (action: AnyAction): Promise<AnyAction | undefined> => {
-    try {
-      // webext-redux wraps dispatch in a promise
-      return Promise.resolve(appDispatch(action))
-    } catch (e) {
-      logger.error('Dispatch error', {
-        tags: {
-          file: 'store',
-          function: 'appDispatch',
-          message: serializeError(e),
-        },
-      })
+  // We need `useCallback` here to make sure we don't trigger unnecessary re-renders by returning a new `dispatch` object every time.
+  const wrappedAppDispatch = useCallback(
+    (action: AnyAction): Promise<AnyAction | undefined> => {
+      try {
+        // webext-redux wraps dispatch in a promise
+        return Promise.resolve(appDispatch(action))
+      } catch (e) {
+        logger.error('Dispatch error', {
+          tags: {
+            file: 'store',
+            function: 'appDispatch',
+            message: serializeError(e),
+          },
+        })
 
-      return Promise.resolve(undefined)
-    }
-  }
+        return Promise.resolve(undefined)
+      }
+    },
+    [appDispatch]
+  )
 
   return wrappedAppDispatch
 }
