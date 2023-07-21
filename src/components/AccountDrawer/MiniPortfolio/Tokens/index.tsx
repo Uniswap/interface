@@ -25,7 +25,8 @@ const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 function meetsThreshold(tokenBalance: TokenBalance, hideSmallBalances: boolean) {
   const value = tokenBalance.denominatedValue?.value
 
-  // we don't hide tokens with no price
+  // we no longer hide tokens with no price
+  // https://linear.app/uniswap/issue/WEB-1940/[mp]-update-how-we-handle-what-goes-in-hidden-token-section-of-mini
   if (typeof value !== 'number') {
     return true
   }
