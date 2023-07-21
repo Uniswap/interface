@@ -1,5 +1,5 @@
-import { sendAnalyticsEvent, Trace } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent, Trace } from 'analytics'
 import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
 import { Column } from 'nft/components/Flex'
 import { useBag, useIsMobile } from 'nft/hooks'

@@ -1,5 +1,5 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent } from 'analytics'
 import { isIOS } from 'utils/userAgent'
 
 const APP_STORE_LINK = 'https://apps.apple.com/app/apple-store/id6443944476'
