@@ -1,24 +1,16 @@
-import {
-  flush,
-  Identify,
-  identify,
-  init,
-  setDeviceId,
-  track,
-} from '@amplitude/analytics-react-native'
-import { OriginApplication } from '@uniswap/analytics'
-import DeviceInfo, { getUniqueId } from 'react-native-device-info'
+import { flush, Identify, identify, init, track } from '@amplitude/analytics-browser'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import {
-  AMPLITUDE_NATIVE_TRACKING_OPTIONS,
   AMPLITUDE_SHARED_TRACKING_OPTIONS,
   DUMMY_KEY,
 } from 'wallet/src/features/telemetry/analytics/constants'
-import { generateErrorLoggers } from 'wallet/src/features/telemetry/analytics/logging'
+import { generateErrorLoggers as generateAnalyticsLoggers } from 'wallet/src/features/telemetry/analytics/logging'
 import { Analytics, UserPropertyValue } from './analytics'
 import { ApplicationTransport } from './ApplicationTransport'
 
-const errorLoggers = generateErrorLoggers('telemetry/analytics.native')
+const EXTENSION_ORIGIN_APPLICATION = 'extension'
+
+const loggers = generateAnalyticsLoggers('telemetry/analytics.web')
 
 export const analytics: Analytics = {
   async init(): Promise<void> {
@@ -29,32 +21,26 @@ export const analytics: Analytics = {
         {
           transportProvider: new ApplicationTransport(
             uniswapUrls.amplitudeProxyUrl,
-            OriginApplication.MOBILE,
-            uniswapUrls.apiBaseUrl,
-            DeviceInfo.getBundleId()
+            EXTENSION_ORIGIN_APPLICATION
           ), // Used to support custom reverse proxy header
           // Disable tracking of private user information by Amplitude
-          trackingOptions: {
-            ...AMPLITUDE_SHARED_TRACKING_OPTIONS,
-            ...AMPLITUDE_NATIVE_TRACKING_OPTIONS,
-          },
+          trackingOptions: AMPLITUDE_SHARED_TRACKING_OPTIONS,
         }
       )
-      setDeviceId(await getUniqueId()) // Ensure we're using the same deviceId across Amplitude and Statsig
     } catch (error) {
-      errorLoggers.init(error)
+      loggers.init(error)
     }
   },
   sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
-    errorLoggers.sendEvent(eventName, eventProperties)
+    loggers.sendEvent(eventName, eventProperties)
     track(eventName, eventProperties)
   },
   flushEvents(): void {
-    errorLoggers.flushEvents()
+    loggers.flushEvents()
     flush()
   },
   setUserProperty(property: string, value: UserPropertyValue): void {
-    errorLoggers.setUserProperty(property, value)
+    loggers.setUserProperty(property, value)
     identify(new Identify().set(property, value))
   },
 }

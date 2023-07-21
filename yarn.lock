@@ -11769,10 +11769,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/analytics-events@npm:2.12.0":
-  version: 2.12.0
-  resolution: "@uniswap/analytics-events@npm:2.12.0"
-  checksum: df96fc2ab59c933b01ebb719c2069b776eceb94f8ddfb94970827d40ad29cb05140f869f9ec3e028fa2b5c78ade382ba1a922551222d73e7a544a4167a9334ca
+"@uniswap/analytics-events@npm:2.14.0":
+  version: 2.14.0
+  resolution: "@uniswap/analytics-events@npm:2.14.0"
+  checksum: 68e1de82ed62a275e3727e6170b6a9e29da83bf609cbc111893ef5b044aeae9f535da6a5f5062d9d31ad34a3dbbaff7157c38b3f4c0c153d3403a7850ad6947b
   languageName: node
   linkType: hard
 
@@ -11867,7 +11867,7 @@ __metadata:
     "@types/react-native": 0.70.6
     "@types/uuid": 9.0.1
     "@types/wcag-contrast": 3.0.0
-    "@uniswap/analytics-events": 2.12.0
+    "@uniswap/analytics-events": 2.14.0
     "@uniswap/ethers-rs-mobile": 0.0.1
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.4.0
@@ -12171,6 +12171,7 @@ __metadata:
     "@types/react": ^18.0.15
     "@types/react-dom": ^18.0.0
     "@types/uuid": 9.0.1
+    "@uniswap/analytics-events": 2.14.0
     burnt: 0.11.4
     clean-webpack-plugin: ^4.0.0
     copy-webpack-plugin: ^11.0.0

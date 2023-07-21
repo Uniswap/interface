@@ -34,15 +34,9 @@ export function getEventParams(
 }
 
 /**
- * Event names that can occur in this application
- *
- * Subject to change as new features are added and new events are defined and logged.
+ * Event names that occur in this specific application
  */
 export enum MobileEventName {
-  // keep these alphabetized or else you will go to JAIL!
-
-  // some of these values are Title Cased to match shared repo event format:
-  // https://github.com/Uniswap/analytics-events/blob/main/src/primitives.ts
   BalancesReport = 'Balances Report',
   DeepLinkOpened = 'Deep Link Opened',
   ExploreFilterSelected = 'Explore Filter Selected',
@@ -50,7 +44,6 @@ export enum MobileEventName {
   ExploreSearchCancel = 'Explore Search Cancel',
   ExploreTokenItemSelected = 'Explore Token Item Selected',
   FavoriteItem = 'Favorite Item',
-  // General fiat onramp events like in-app buttons and modals
   FiatOnRampBannerPressed = 'Fiat OnRamp Banner Pressed',
   FiatOnRampQuickActionButtonPressed = 'Fiat OnRamp QuickAction Button Pressed',
   FiatOnRampAmountEntered = 'Fiat OnRamp Amount Entered',
@@ -65,13 +58,11 @@ export enum MobileEventName {
   TokenSelected = 'Token Selected',
   WalletAdded = 'Wallet Added',
   WalletConnectSheetCompleted = 'Wallet Connect Sheet Completed',
+  // alphabetize additional values.
 }
 
 /**
- * Known sections to provide telemetry context.
- * Can help disambiguate low-level elements that may share a name.
- * For example, a `back` button in a modal will have the same
- * `elementName`, but a different `section`.
+ * Possible names for the section property in TraceContext
  */
 export const enum SectionName {
   CurrencyInputPanel = 'currency-input-panel',
@@ -97,7 +88,9 @@ export const enum SectionName {
   // alphabetize additional values.
 }
 
-/** Known modals for telemetry purposes. */
+/**
+ * Possible names for the modal property in TraceContext
+ */
 export const enum ModalName {
   AccountEdit = 'account-edit-modal',
   AccountSwitcher = 'account-switcher-modal',
@@ -148,10 +141,8 @@ export const enum ManualPageViewScreen {
 }
 
 /**
- * Known element names for telemetry purposes.
- * Use to identify low-level components given a TraceContext
+ * Possible names for the element property in TraceContext
  */
-
 export const enum ElementName {
   AcceptNewRate = 'accept-new-rate',
   AccountCard = 'account-card',
@@ -239,10 +230,10 @@ export const enum ElementName {
   // alphabetize additional values.
 }
 
-export const enum MarkNames {}
-
+/**
+ * User properties tied to user rather than events
+ */
 export enum UserPropertyName {
-  AppearanceSetting = 'appearance_setting',
   ActiveWalletAddress = 'active_wallet_address',
   ActiveWalletType = 'active_wallet_type',
   AppOpenAuthMethod = 'app_open_auth_method',
@@ -259,7 +250,6 @@ export enum UserPropertyName {
   // alphabetize additional values.
 }
 
-// could add PIN in the future
 export enum AuthMethod {
   FaceId = 'FaceId',
   None = 'None',

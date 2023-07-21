@@ -65,7 +65,7 @@ type OnboardingCompletedProps = {
   cloud_backup_used: boolean
 }
 
-export type EventProperties = {
+export type MobileEventProperties = {
   [MobileEventName.BalancesReport]: {
     total_balances_usd: number
     wallets: string[]

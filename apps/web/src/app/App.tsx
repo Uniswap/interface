@@ -1,10 +1,13 @@
 import './App.css'
 
 import { ToastProvider, ToastViewport } from '@tamagui/toast'
+import { useEffect } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 import { GraphqlProvider } from 'src/app/apollo'
 import { ErrorBoundary } from 'src/app/components/ErrorBoundary'
 import { BottomToast } from 'src/app/components/toast/BottomToast'
+import Trace from 'src/app/components/Trace/Trace'
+import { TraceUserProperties } from 'src/app/components/Trace/TraceUserProperties'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
 import { Complete } from 'src/app/features/onboarding/Complete'
 import { NameWallet } from 'src/app/features/onboarding/create/NameWallet'
@@ -21,6 +24,8 @@ import { SettingsScreenWrapper } from 'src/app/features/settings/SettingsScreenW
 import { SettingsViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsViewRecoveryPhraseScreen'
 import { SettingsWalletEditNicknameScreen } from 'src/app/features/settings/SettingsWalletEditNicknameScreen'
 import { SettingsWalletScreen } from 'src/app/features/settings/SettingsWalletScreen'
+import { sendAnalyticsEvent } from 'src/app/features/telemetry'
+import { ExtensionEventName } from 'src/app/features/telemetry/constants'
 import {
   AppRoutes,
   CreateOnboardingRoutes,
@@ -32,6 +37,7 @@ import {
   SettingsWalletRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
+import { analytics } from 'wallet/src/features/telemetry/analytics/analytics'
 import { SharedProvider } from 'wallet/src/provider'
 import { Store } from 'webext-redux'
 import { MainContent, WebNavigation } from './navigation'
@@ -165,17 +171,29 @@ const router = createHashRouter([
 ])
 
 function App({ store }: { store: Store }): JSX.Element {
+  // initialize analytics on load
+  useEffect(() => {
+    async function initAndLogLoad(): Promise<void> {
+      await analytics.init()
+      sendAnalyticsEvent(ExtensionEventName.ExtensionLoad)
+    }
+    initAndLogLoad().catch(() => undefined)
+  }, [])
+
   return (
-    <SharedProvider reduxStore={store}>
-      <GraphqlProvider>
-        <ToastProvider>
-          <RouterProvider router={router} />
-          <ToastViewport bottom={0} flexDirection="column" left={0} name="popup" right={0} />
-          <ToastViewport left={0} name="onboarding" right={0} top={0} />
-          <BottomToast />
-        </ToastProvider>
-      </GraphqlProvider>
-    </SharedProvider>
+    <Trace>
+      <SharedProvider reduxStore={store}>
+        <GraphqlProvider>
+          <TraceUserProperties />
+          <ToastProvider>
+            <RouterProvider router={router} />
+            <ToastViewport bottom={0} flexDirection="column" left={0} name="popup" right={0} />
+            <ToastViewport left={0} name="onboarding" right={0} top={0} />
+            <BottomToast />
+          </ToastProvider>
+        </GraphqlProvider>
+      </SharedProvider>
+    </Trace>
   )
 }
 
