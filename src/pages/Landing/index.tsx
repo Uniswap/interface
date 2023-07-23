@@ -321,7 +321,6 @@ export default function Landing() {
 
   const queryParams = parse(useLocation().search, { ignoreQueryPrefix: true })
   if (selectedWallet && !queryParams.intro) {
-    console.log('ZZMP', 'redirect')
     return <RedirectPathToSwapOnly />
   }
 
