@@ -205,6 +205,13 @@ android {
 
         }
     }
+
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+         kotlinCompilerExtensionVersion = "1.1.1"
+    }
 }
 
 dependencies {
@@ -212,10 +219,10 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
-    //kotlin
-    implementation 'androidx.core:core-ktx:$'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+    implementation "androidx.compose.foundation:foundation:$compose"
+    implementation "androidx.compose.material:material:$compose"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

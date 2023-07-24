@@ -6,13 +6,18 @@ import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ReactShadowNode
 import com.facebook.react.uimanager.ViewManager
+import com.uniswap.onboarding.MnemonicDisplayViewManager
+import com.uniswap.onboarding.MnemonicTestViewManager
 
 class UniswapPackage : ReactPackage {
     override fun createViewManagers(
         reactContext: ReactApplicationContext
-    ): MutableList<ViewManager<View, ReactShadowNode<*>>> = mutableListOf()
+    ): List<ViewManager<out View, out ReactShadowNode<*>>> = listOf(
+      MnemonicDisplayViewManager(),
+      MnemonicTestViewManager(),
+    )
 
     override fun createNativeModules(
         reactContext: ReactApplicationContext
-    ): MutableList<NativeModule> = listOf(ThemeModule(reactContext)).toMutableList()
+    ): List<NativeModule> = listOf(ThemeModule(reactContext))
 }
