@@ -1,6 +1,6 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useIsMobile } from 'nft/hooks'

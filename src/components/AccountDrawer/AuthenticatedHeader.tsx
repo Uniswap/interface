@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -104,7 +104,7 @@ const StatusWrapper = styled.div`
   display: inline-block;
   width: 70%;
   max-width: 70%;
-  padding-right: 14px;
+  padding-right: 8px;
   display: inline-flex;
 `
 
@@ -252,9 +252,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           )}
         </StatusWrapper>
         <IconContainer>
-          {!showDisconnectConfirm && (
-            <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings} />
-          )}
+          <IconButton
+            hideHorizontal={showDisconnectConfirm}
+            data-testid="wallet-settings"
+            onClick={openSettings}
+            Icon={Settings}
+          />
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
@@ -266,6 +269,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               onShowConfirm={setShowDisconnectConfirm}
               Icon={LogOutCentered}
               text="Disconnect"
+              dismissOnHoverOut
             />
           </TraceEvent>
         </IconContainer>
