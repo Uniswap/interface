@@ -14,6 +14,7 @@
     "deploy:ios:local:dev": "yarn prepare-for-pr && fastlane ios buildAndShip --env dev",
     "deploy:ios:local:beta": "yarn prepare-for-pr && fastlane ios buildAndShip --env beta",
     "deploy:ios:local:prod": "yarn prepare-for-pr && fastlane ios buildAndShip --env prod",
+    "env:android:keystore:download": "bash ./scripts/downloadAndroidKeystore.sh",
     "env:fastlane:download": "bash ./scripts/downloadFastlaneEnv.sh",
     "env:fastlane:upload": "bash ./scripts/uploadFastlaneEnv.sh",
     "env:local:download": "bash ../../scripts/downloadEnvLocal.sh mobile-local-envs ../../.env.defaults.local",
