@@ -1,21 +1,25 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent } from 'react-native'
+import { NativeSyntheticEvent, Share } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { selectTokensVisibility } from 'src/features/favorites/selectors'
 import { toggleTokenVisibility, TokenVisibility } from 'src/features/favorites/slice'
 import { useSelectLocalTxCurrencyIds } from 'src/features/transactions/hooks'
+import { getTokenUrl } from 'src/utils/linking'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { logger } from 'wallet/src/features/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+
 import {
   useActiveAccountAddressWithThrow,
   useSelectAccountHideSmallBalances,
   useSelectAccountHideSpamTokens,
 } from 'wallet/src/features/wallet/hooks'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
+import serializeError from 'wallet/src/utils/serializeError'
 import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 interface TokenMenuParams {
@@ -131,6 +135,44 @@ export function useTokenContextMenu({
 
   const activeAccountHoldsToken = accountHoldsToken || Boolean(balancesById?.[currencyId])
 
+  const onPressShare = useCallback(async () => {
+    const tokenUrl = getTokenUrl(currencyId)
+    if (!tokenUrl) return
+    try {
+      await Share.share({
+        message: tokenUrl,
+      })
+    } catch (error) {
+      logger.error('Unable to share Token url', {
+        tags: {
+          file: 'balances/hooks.ts',
+          function: 'onPressShare',
+          error: serializeError(error),
+        },
+      })
+    }
+  }, [currencyId])
+
+  const onPressHiddenStatus = useCallback(() => {
+    dispatch(
+      toggleTokenVisibility({
+        accountAddress: activeAccountAddress,
+        currencyId: currencyId.toLowerCase(),
+        currentlyVisible: !isHidden,
+      })
+    )
+    if (tokenSymbolForNotification) {
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.AssetVisibility,
+          visible: !isHidden,
+          hideDelay: 2 * ONE_SECOND_MS,
+          assetName: tokenSymbolForNotification,
+        })
+      )
+    }
+  }, [activeAccountAddress, currencyId, dispatch, isHidden, tokenSymbolForNotification])
+
   const menuActions = useMemo(
     () => [
       ...(activeAccountHoldsToken
@@ -139,43 +181,22 @@ export function useTokenContextMenu({
               title: isHidden ? t('Unhide Token') : t('Hide Token'),
               systemIcon: isHidden ? 'eye' : 'eye.slash',
               destructive: !isHidden,
-              onPress: (): void => {
-                dispatch(
-                  toggleTokenVisibility({
-                    accountAddress: activeAccountAddress,
-                    currencyId: currencyId.toLowerCase(),
-                    currentlyVisible: !isHidden,
-                  })
-                )
-                if (tokenSymbolForNotification) {
-                  dispatch(
-                    pushNotification({
-                      type: AppNotificationType.AssetVisibility,
-                      visible: !isHidden,
-                      hideDelay: 2 * ONE_SECOND_MS,
-                      assetName: tokenSymbolForNotification,
-                    })
-                  )
-                }
-              },
+              onPress: onPressHiddenStatus,
             },
           ]
         : []),
+      {
+        title: t('Share'),
+        systemIcon: 'square.and.arrow.up',
+        onPress: onPressShare,
+      },
     ],
-    [
-      activeAccountHoldsToken,
-      isHidden,
-      t,
-      dispatch,
-      activeAccountAddress,
-      currencyId,
-      tokenSymbolForNotification,
-    ]
+    [activeAccountHoldsToken, isHidden, t, onPressHiddenStatus, onPressShare]
   )
 
   const onContextMenuPress = useCallback(
-    (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): void => {
-      menuActions[e.nativeEvent.index]?.onPress?.()
+    async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
+      await menuActions[e.nativeEvent.index]?.onPress?.()
     },
     [menuActions]
   )

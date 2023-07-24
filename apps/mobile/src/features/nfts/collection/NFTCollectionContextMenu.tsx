@@ -7,7 +7,7 @@ import { TripleDot } from 'src/components/icons/TripleDot'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { NFTCollectionData } from 'src/features/nfts/collection/NFTCollectionHeader'
-import { getTwitterLink, getUniswapCollectionUrl, openUri } from 'src/utils/linking'
+import { getNftCollectionUrl, getTwitterLink, openUri } from 'src/utils/linking'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
 import { logger } from 'wallet/src/features/logger/logger'
 import serializeError from 'wallet/src/utils/serializeError'
@@ -35,7 +35,7 @@ export function NFTCollectionContextMenu({
 
   const twitterURL = data?.twitterName ? getTwitterLink(data.twitterName) : undefined
   const homepageUrl = data?.homepageUrl
-  const shareURL = getUniswapCollectionUrl(collectionAddress)
+  const shareURL = getNftCollectionUrl(collectionAddress)
 
   const onSocialPress = async (): Promise<void> => {
     if (!twitterURL) return
@@ -54,7 +54,7 @@ export function NFTCollectionContextMenu({
         message: shareURL,
       })
     } catch (error) {
-      logger.error('Unable to share NFT URL', {
+      logger.error('Unable to share NFT Collection url', {
         tags: {
           file: 'NFTCollectionContextMenu',
           function: 'onSharePress',

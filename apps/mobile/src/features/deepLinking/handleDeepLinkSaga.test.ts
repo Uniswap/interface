@@ -1,18 +1,18 @@
 import { expectSaga } from 'redux-saga-test-plan'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import {
   handleDeepLink,
   handleUniswapAppDeepLink,
   handleWalletConnectDeepLink,
   parseAndValidateUserAddress,
-  UNISWAP_APP_HOSTNAME,
 } from 'src/features/deepLinking/handleDeepLinkSaga'
 
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
+import { openModal } from 'src/features/modals/modalSlice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
+import { MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { account } from 'src/test/fixtures'
+import { UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
 
@@ -168,11 +168,19 @@ describe(handleDeepLink, () => {
         },
       })
       .call(handleUniswapAppDeepLink, hash)
-      .call(navigate, Screens.NFTItem, {
-        address: `${SAMPLE_SEED_ADDRESS_1}`,
-        tokenId: '123',
-        isSpam: false,
-      })
+      .put(
+        openModal({
+          name: ModalName.Explore,
+          initialState: {
+            screen: Screens.NFTItem,
+            params: {
+              address: SAMPLE_SEED_ADDRESS_1,
+              tokenId: '123',
+              isSpam: false,
+            },
+          },
+        })
+      )
       .returns(undefined)
       .silentRun()
   })
@@ -195,9 +203,17 @@ describe(handleDeepLink, () => {
         },
       })
       .call(handleUniswapAppDeepLink, hash)
-      .call(navigate, Screens.NFTCollection, {
-        collectionAddress: `${SAMPLE_SEED_ADDRESS_1}`,
-      })
+      .put(
+        openModal({
+          name: ModalName.Explore,
+          initialState: {
+            screen: Screens.NFTCollection,
+            params: {
+              collectionAddress: SAMPLE_SEED_ADDRESS_1,
+            },
+          },
+        })
+      )
       .returns(undefined)
       .silentRun()
   })
@@ -220,9 +236,17 @@ describe(handleDeepLink, () => {
         },
       })
       .call(handleUniswapAppDeepLink, hash)
-      .call(navigate, Screens.TokenDetails, {
-        currencyId: `1-${SAMPLE_SEED_ADDRESS_1}`,
-      })
+      .put(
+        openModal({
+          name: ModalName.Explore,
+          initialState: {
+            screen: Screens.TokenDetails,
+            params: {
+              currencyId: `1-${SAMPLE_SEED_ADDRESS_1}`,
+            },
+          },
+        })
+      )
       .returns(undefined)
       .silentRun()
   })
@@ -291,9 +315,17 @@ describe(handleDeepLink, () => {
         },
       })
       .call(handleUniswapAppDeepLink, hash)
-      .call(navigate, Screens.ExternalProfile, {
-        address: `${SAMPLE_SEED_ADDRESS_2}`,
-      })
+      .put(
+        openModal({
+          name: ModalName.Explore,
+          initialState: {
+            screen: Screens.ExternalProfile,
+            params: {
+              address: SAMPLE_SEED_ADDRESS_2,
+            },
+          },
+        })
+      )
       .returns(undefined)
       .silentRun()
   })

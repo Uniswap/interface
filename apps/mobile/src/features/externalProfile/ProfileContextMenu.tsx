@@ -1,17 +1,20 @@
 import { impactAsync } from 'expo-haptics'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent } from 'react-native'
+import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TripleDot } from 'src/components/icons/TripleDot'
 import { Flex } from 'src/components/layout/Flex'
 import { setClipboard } from 'src/utils/clipboard'
-import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
+import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'src/utils/linking'
 import { ChainId } from 'wallet/src/constants/chains'
+import { logger } from 'wallet/src/features/logger/logger'
+
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export function ProfileContextMenu({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
@@ -31,6 +34,23 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     await openUri(getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS))
   }, [address])
 
+  const onPressShare = useCallback(async () => {
+    if (!address) return
+    try {
+      await Share.share({
+        message: getProfileUrl(address),
+      })
+    } catch (error) {
+      logger.error('Unable to share Account url', {
+        tags: {
+          file: 'ProfileContextMenu',
+          function: 'onPressShare',
+          error: serializeError(error),
+        },
+      })
+    }
+  }, [address])
+
   const menuActions = useMemo(
     () => [
       {
@@ -43,8 +63,13 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         action: onPressCopyAddress,
         systemIcon: 'square.on.square',
       },
+      {
+        title: t('Share'),
+        action: onPressShare,
+        systemIcon: 'square.and.arrow.up',
+      },
     ],
-    [onPressCopyAddress, openExplorerLink, t]
+    [onPressCopyAddress, onPressShare, openExplorerLink, t]
   )
 
   return (

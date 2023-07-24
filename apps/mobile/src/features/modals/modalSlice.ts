@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { ExploreModalState } from 'src/app/modals/ExploreModal'
 import { MobileState } from 'src/app/reducer'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModal'
@@ -15,7 +16,10 @@ type AccountSwitcherModalParams = { name: ModalName.AccountSwitcher; initialStat
 
 type ExperimentsModalParams = { name: ModalName.Experiments; initialState?: undefined }
 
-type ExploreModalParams = { name: ModalName.Explore; initialState?: undefined }
+type ExploreModalParams = {
+  name: ModalName.Explore
+  initialState?: ExploreModalState
+}
 
 type FiatOnRampModalParams = { name: ModalName.FiatOnRamp; initialState?: undefined }
 
@@ -46,7 +50,7 @@ export type OpenModalParams =
 export interface ModalsState {
   [ModalName.AccountSwitcher]: AppModalState<undefined>
   [ModalName.Experiments]: AppModalState<undefined>
-  [ModalName.Explore]: AppModalState<undefined>
+  [ModalName.Explore]: AppModalState<ExploreModalState>
   [ModalName.FiatOnRamp]: AppModalState<undefined>
   [ModalName.RemoveWallet]: AppModalState<RemoveWalletModalState>
   [ModalName.Send]: AppModalState<TransactionState>

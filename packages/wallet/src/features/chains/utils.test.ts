@@ -11,6 +11,7 @@ import {
   parseActiveChains,
   toGraphQLChain,
   toSupportedChainId,
+  toUniswapWebAppLink,
 } from 'wallet/src/features/chains/utils'
 
 describe(toSupportedChainId, () => {
@@ -110,6 +111,19 @@ describe(fromUniswapWebAppLink, () => {
     expect(fromUniswapWebAppLink(Chain.Arbitrum.toLowerCase())).toEqual(ChainId.ArbitrumOne)
     expect(fromUniswapWebAppLink(Chain.Optimism.toLowerCase())).toEqual(ChainId.Optimism)
     expect(fromUniswapWebAppLink(Chain.Polygon.toLowerCase())).toEqual(ChainId.Polygon)
+  })
+
+  it('handle unsupported chain', () => {
+    expect(() => fromUniswapWebAppLink('unkwnown')).toThrow('Network "unkwnown" can not be mapped')
+  })
+})
+
+describe(toUniswapWebAppLink, () => {
+  it('handles supported chain', () => {
+    expect(toUniswapWebAppLink(ChainId.Mainnet)).toEqual(Chain.Ethereum.toLowerCase())
+    expect(toUniswapWebAppLink(ChainId.ArbitrumOne)).toEqual(Chain.Arbitrum.toLowerCase())
+    expect(toUniswapWebAppLink(ChainId.Optimism)).toEqual(Chain.Optimism.toLowerCase())
+    expect(toUniswapWebAppLink(ChainId.Polygon)).toEqual(Chain.Polygon.toLowerCase())
   })
 
   it('handle unsupported chain', () => {

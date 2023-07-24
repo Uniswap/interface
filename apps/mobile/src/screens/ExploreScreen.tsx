@@ -1,9 +1,11 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useAppSelector } from 'src/app/hooks'
+import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
@@ -13,14 +15,27 @@ import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
+import { selectModalState } from 'src/features/modals/modalSlice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { SectionName } from 'src/features/telemetry/constants'
+import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'ui/src/theme/restyle/flex'
 import { Theme } from 'ui/src/theme/restyle/theme'
 import { useDebounce } from 'wallet/src/utils/timing'
 
 export function ExploreScreen(): JSX.Element {
+  const modalInitialState = useAppSelector(selectModalState(ModalName.Explore)).initialState
+  const navigation = useExploreStackNavigation()
+
+  // The ExploreStack is not directly accessible from outside
+  // (e.g., navigating from Home to NFTItem within ExploreStack), due to its mount within BottomSheetModal.
+  // To bypass this limitation, we use an initialState to define a specific screen within ExploreStack.
+  useEffect(() => {
+    if (modalInitialState) {
+      navigation.navigate(modalInitialState.screen, modalInitialState.params)
+    }
+  }, [modalInitialState, navigation])
+
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 

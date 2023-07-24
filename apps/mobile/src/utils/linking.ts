@@ -3,10 +3,13 @@ import { Linking } from 'react-native'
 import { theme } from 'ui/src/theme/restyle/theme'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { uniswapUrls } from 'wallet/src/constants/urls'
+import { toUniswapWebAppLink } from 'wallet/src/features/chains/utils'
 import { logger } from 'wallet/src/features/logger/logger'
 import { FiatPurchaseTransactionInfo } from 'wallet/src/features/transactions/types'
+import { currencyIdToChain, currencyIdToGraphQLAddress } from 'wallet/src/utils/currencyId'
 import serializeError from 'wallet/src/utils/serializeError'
 
+export const UNISWAP_APP_NATIVE_TOKEN = 'NATIVE'
 const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
 
 /**
@@ -131,9 +134,34 @@ export function getExplorerLink(
   }
 }
 
-export function getUniswapCollectionUrl(contractAddress: Maybe<string>): string | undefined {
+export function getNftCollectionUrl(contractAddress: Maybe<string>): string | undefined {
   if (!contractAddress) return undefined
-  return `${uniswapUrls.nftUrl}/collection/${contractAddress}`
+  return `${uniswapUrls.appUrl}/nfts/collection/${contractAddress}`
+}
+
+export function getNftUrl(contractAddress: string, tokenId: string): string {
+  return `${uniswapUrls.appUrl}/nfts/asset/${contractAddress}/${tokenId}`
+}
+
+export function getProfileUrl(walletAddress: string): string {
+  return `${uniswapUrls.appUrl}/address/${walletAddress}`
+}
+
+export function getTokenUrl(currencyId: string): string | undefined {
+  const chainId = currencyIdToChain(currencyId)
+  if (!chainId) return
+  const network = toUniswapWebAppLink(chainId)
+  try {
+    let tokenAddress = currencyIdToGraphQLAddress(currencyId)
+    // in case it's a native token
+    if (tokenAddress === null) {
+      // this is how web app handles native tokens
+      tokenAddress = UNISWAP_APP_NATIVE_TOKEN
+    }
+    return `${uniswapUrls.appUrl}/tokens/${network}/${tokenAddress}`
+  } catch (_) {
+    return
+  }
 }
 
 export function getTwitterLink(twitterName: string): string {
