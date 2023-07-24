@@ -688,10 +688,7 @@ function AddLiquidity() {
 
               {!hasExistingPosition && (
                 <>
-                  <DynamicSection
-                    gap="md"
-                    disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}
-                  >
+                  <DynamicSection gap="md" disabled={!feeAmount || invalidPool}>
                     <StackedContainer>
                       <StackedItem>
                         <AutoColumn gap="md">
@@ -873,7 +870,7 @@ function AddLiquidity() {
                 </>
               )}
               <div>
-                <DynamicSection disabled={invalidPool || invalidRange}>
+                <DynamicSection disabled={invalidPool || invalidRange || (noLiquidity && !startPriceTypedValue)}>
                   <AutoColumn gap="md">
                     <ThemedText.DeprecatedLabel>
                       {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit Amounts</Trans>}
