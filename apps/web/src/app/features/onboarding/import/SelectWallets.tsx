@@ -231,7 +231,7 @@ export function SelectWallets(): JSX.Element {
         )
       }
       onSubmit={onSubmit}>
-      <ScrollView height={180} showsVerticalScrollIndicator={false} width="100%">
+      <ScrollView maxHeight="55vh" showsVerticalScrollIndicator={false} width="100%">
         {showError ? (
           <Stack gap="$spacing24" p="$spacing12" width="100%">
             <Text color="$accentCritical" textAlign="center" variant="buttonLabelMedium">
