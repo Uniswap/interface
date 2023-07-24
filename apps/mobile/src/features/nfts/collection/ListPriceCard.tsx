@@ -20,14 +20,20 @@ interface ListPriceProps extends BoxProps {
 
 export function ListPriceBadge(props: ListPriceProps): JSX.Element {
   return (
-    <Box alignItems="center" {...props}>
-      <BlurView
-        blurAmount={20}
-        blurType="light"
-        reducedTransparencyFallbackColor="black"
-        style={Styles.blurView}>
-        <Flex bg="black" bottom={0} left={0} opacity={0.25} position="absolute" right={0} top={0} />
-        <PriceAmount {...props} />
+    <Box alignItems="center" style={styles.blurWrapper} {...props}>
+      <BlurView blurAmount={20} blurType="light" reducedTransparencyFallbackColor="black">
+        <Box style={styles.blurView}>
+          <Flex
+            bg="black"
+            bottom={0}
+            left={0}
+            opacity={0.25}
+            position="absolute"
+            right={0}
+            top={0}
+          />
+          <PriceAmount {...props} />
+        </Box>
       </BlurView>
     </Box>
   )
@@ -62,11 +68,16 @@ export function PriceAmount({
   )
 }
 
-const Styles = StyleSheet.create({
+const styles = StyleSheet.create({
   blurView: {
-    borderRadius: FixedTheme.borderRadii.rounded16,
-    overflow: 'hidden',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
     paddingHorizontal: FixedTheme.spacing.spacing8,
     paddingVertical: FixedTheme.spacing.spacing2,
+  },
+  blurWrapper: {
+    borderRadius: FixedTheme.borderRadii.rounded16,
+    overflow: 'hidden',
   },
 })
