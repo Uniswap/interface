@@ -35,7 +35,9 @@ function meetsThreshold(tokenBalance: TokenBalance, hideSmallBalances: boolean) 
 }
 
 function hasSwappedBefore() {
-  return true
+  // TODO we need some way to reference if its swapped before?
+  // simplest is to accept we only cross reference the most recent 100 transactions like in activity feed
+  return false
 }
 
 export default function Tokens({ account }: { account: string }) {
