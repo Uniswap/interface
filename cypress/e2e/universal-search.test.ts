@@ -41,11 +41,8 @@ describe('Universal search bar', () => {
     // Search a different token by name.
     getSearchBar().type('eth')
 
-    // Validate ETH result now exists.
-    cy.get('[data-cy="searchbar-token-row-ETH"]')
-
-    // Hit enter
-    getSearchBar().type('{enter}')
+    // Validate ETH result now exists and click it.
+    cy.get('[data-cy="searchbar-token-row-ETH"]').click()
 
     // Validate we went to ethereum address
     cy.url().should('contain', 'tokens/ethereum/NATIVE')
