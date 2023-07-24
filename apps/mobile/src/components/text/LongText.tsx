@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
 import Markdown from 'react-native-markdown-display'
 import { useAppTheme } from 'src/app/hooks'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { openUri } from 'src/utils/linking'
 import { Theme } from 'ui/src/theme/restyle/theme'
@@ -70,21 +70,14 @@ export function LongText(props: LongTextProps): JSX.Element {
 
   return (
     <Flex gap={gap}>
-      <Text
-        numberOfLines={expanded ? undefined : initialDisplayedLines}
+      <Box
         style={
-          renderAsMarkdown
-            ? {
-                color,
-                height: !textLengthExceedsLimit || expanded ? 'auto' : maxVisibleHeight,
-                overflow: 'hidden',
-              }
-            : { color }
+          renderAsMarkdown && {
+            height: !textLengthExceedsLimit || expanded ? 'auto' : maxVisibleHeight,
+            overflow: 'hidden',
+          }
         }
-        variant={variant}
-        onLayout={onLayout}
-        onTextLayout={onTextLayout}
-        {...rest}>
+        onLayout={onLayout}>
         {renderAsMarkdown ? (
           <Markdown
             style={{
@@ -106,9 +99,16 @@ export function LongText(props: LongTextProps): JSX.Element {
             {...{ children: text }}
           />
         ) : (
-          text
+          <Text
+            numberOfLines={expanded ? undefined : initialDisplayedLines}
+            style={{ color }}
+            variant={variant}
+            onTextLayout={onTextLayout}
+            {...rest}>
+            text
+          </Text>
         )}
-      </Text>
+      </Box>
 
       {/* Text is removed vs hidden using opacity to ensure spacing after the element is consistent in all cases.
       This will cause mild thrash as data loads into a page but will ensure consistent spacing */}

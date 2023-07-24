@@ -14,28 +14,38 @@ exports[`renders a LongText 1`] = `
     ]
   }
 >
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    numberOfLines={3}
+  <View
     onLayout={[Function]}
-    onTextLayout={[Function]}
     style={
       [
         {
-          "color": "#0E1524",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
-          "fontSize": 15,
-          "lineHeight": 20,
-        },
-        {
-          "color": "#0E1524",
         },
       ]
     }
   >
-    Some very long text
-  </Text>
+    <Text
+      allowFontScaling={true}
+      maxFontSizeMultiplier={1.4}
+      numberOfLines={3}
+      onTextLayout={[Function]}
+      style={
+        [
+          {
+            "color": "#0E1524",
+            "display": "flex",
+            "fontFamily": "Inter-Regular",
+            "fontSize": 15,
+            "lineHeight": 20,
+          },
+          {
+            "color": "#0E1524",
+          },
+        ]
+      }
+    >
+      text
+    </Text>
+  </View>
 </View>
 `;
