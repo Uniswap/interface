@@ -92,7 +92,7 @@ const Container = styled.div`
   z-index: ${Z_INDEX.fixed};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    top: 100%;
+    top: 100vh;
     left: 0;
     right: 0;
     width: 100%;
