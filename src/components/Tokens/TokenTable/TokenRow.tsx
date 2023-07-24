@@ -294,7 +294,7 @@ export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
 `;
 
 const InfoIconContainer = styled.div`
-  width: 20px;
+  width: 16px;
   margin-left: 2px;
   display: flex;
   align-items: center;
@@ -349,7 +349,7 @@ function HeaderCell({
       {description && (
         <MouseoverTooltip text={description} placement="right">
           <InfoIconContainer>
-            <Info />
+            <Info width={"16px"} height={"16px"} />
           </InfoIconContainer>
         </MouseoverTooltip>
       )}

@@ -62,9 +62,9 @@ exports[`Wallet Option renders default state 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  color: #0D111C;
+  color: #222222;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 535;
   padding: 0 8px;
 }
 
@@ -87,7 +87,7 @@ exports[`Wallet Option renders default state 1`] = `
 }
 
 .c2 img {
-  border: 1px solid #D2D9EE;
+  border: 1px solid #22222212;
   border-radius: 12px;
 }
 

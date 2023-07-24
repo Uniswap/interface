@@ -27,11 +27,11 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c6 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c8 {
-  color: #0D111C;
+  color: #222222;
 }
 
 .c13 {
@@ -39,7 +39,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   height: 1px;
   border-width: 0;
   margin: 0;
-  background-color: #D2D9EE;
+  background-color: #22222212;
 }
 
 .c2 {
@@ -90,7 +90,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 .c11 {
   width: 36px;
   height: 36px;
-  background: #E8ECFB;
+  background: #22222212;
   -webkit-transition: background-color 250ms ease-in;
   transition: background-color 250ms ease-in;
   box-shadow: 0 0 1px white;
@@ -112,7 +112,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 
 .c9 {
   cursor: help;
-  color: #7780A0;
+  color: #7D7D7D;
   margin-right: 8px;
 }
 
@@ -137,14 +137,14 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
           class="c5"
         >
           <div
-            class="c6 css-1jljtub"
+            class="c6 css-1urox24"
           >
             <div
               class="c7"
             >
               <div>
                 <div
-                  class="c8 c9 css-zhpkf8"
+                  class="c8 c9 css-142zc9n"
                   cursor="help"
                 >
                   You pay
@@ -156,7 +156,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             class="c5"
           >
             <div
-              class="c8 css-z2fexy"
+              class="c8 css-1geukv8"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
@@ -184,14 +184,14 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
           class="c5"
         >
           <div
-            class="c6 css-1jljtub"
+            class="c6 css-1urox24"
           >
             <div
               class="c7"
             >
               <div>
                 <div
-                  class="c8 c9 css-zhpkf8"
+                  class="c8 c9 css-142zc9n"
                   cursor="help"
                 >
                   You receive
@@ -203,7 +203,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             class="c5"
           >
             <div
-              class="c8 css-z2fexy"
+              class="c8 css-1geukv8"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
@@ -259,11 +259,11 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
 }
 
 .c6 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c8 {
-  color: #0D111C;
+  color: #222222;
 }
 
 .c13 {
@@ -271,7 +271,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
   height: 1px;
   border-width: 0;
   margin: 0;
-  background-color: #D2D9EE;
+  background-color: #22222212;
 }
 
 .c2 {
@@ -322,7 +322,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
 .c11 {
   width: 36px;
   height: 36px;
-  background: #E8ECFB;
+  background: #22222212;
   -webkit-transition: background-color 250ms ease-in;
   transition: background-color 250ms ease-in;
   box-shadow: 0 0 1px white;
@@ -344,7 +344,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
 
 .c9 {
   cursor: help;
-  color: #7780A0;
+  color: #7D7D7D;
   margin-right: 8px;
 }
 
@@ -369,14 +369,14 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
           class="c5"
         >
           <div
-            class="c6 css-1jljtub"
+            class="c6 css-1urox24"
           >
             <div
               class="c7"
             >
               <div>
                 <div
-                  class="c8 c9 css-zhpkf8"
+                  class="c8 c9 css-142zc9n"
                   cursor="help"
                 >
                   You pay
@@ -388,7 +388,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
             class="c5"
           >
             <div
-              class="c8 css-z2fexy"
+              class="c8 css-1geukv8"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ETH
@@ -416,14 +416,14 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
           class="c5"
         >
           <div
-            class="c6 css-1jljtub"
+            class="c6 css-1urox24"
           >
             <div
               class="c7"
             >
               <div>
                 <div
-                  class="c8 c9 css-zhpkf8"
+                  class="c8 c9 css-142zc9n"
                   cursor="help"
                 >
                   You receive
@@ -435,7 +435,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
             class="c5"
           >
             <div
-              class="c8 css-z2fexy"
+              class="c8 css-1geukv8"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
@@ -491,11 +491,11 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 }
 
 .c6 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c8 {
-  color: #0D111C;
+  color: #222222;
 }
 
 .c13 {
@@ -503,7 +503,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   height: 1px;
   border-width: 0;
   margin: 0;
-  background-color: #D2D9EE;
+  background-color: #22222212;
 }
 
 .c2 {
@@ -554,7 +554,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 .c11 {
   width: 36px;
   height: 36px;
-  background: #E8ECFB;
+  background: #22222212;
   -webkit-transition: background-color 250ms ease-in;
   transition: background-color 250ms ease-in;
   box-shadow: 0 0 1px white;
@@ -576,7 +576,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 
 .c9 {
   cursor: help;
-  color: #7780A0;
+  color: #7D7D7D;
   margin-right: 8px;
 }
 
@@ -601,14 +601,14 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
           class="c5"
         >
           <div
-            class="c6 css-1jljtub"
+            class="c6 css-1urox24"
           >
             <div
               class="c7"
             >
               <div>
                 <div
-                  class="c8 c9 css-zhpkf8"
+                  class="c8 c9 css-142zc9n"
                   cursor="help"
                 >
                   You pay
@@ -620,7 +620,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             class="c5"
           >
             <div
-              class="c8 css-z2fexy"
+              class="c8 css-1geukv8"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
@@ -648,14 +648,14 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
           class="c5"
         >
           <div
-            class="c6 css-1jljtub"
+            class="c6 css-1urox24"
           >
             <div
               class="c7"
             >
               <div>
                 <div
-                  class="c8 c9 css-zhpkf8"
+                  class="c8 c9 css-142zc9n"
                   cursor="help"
                 >
                   You receive
@@ -667,7 +667,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             class="c5"
           >
             <div
-              class="c8 css-z2fexy"
+              class="c8 css-1geukv8"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 GHI

@@ -29,7 +29,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
 }
 
 .c4 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c0 {
@@ -118,7 +118,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
         class="c3"
       >
         <div
-          class="c4 css-1aekuku"
+          class="c4 css-142zc9n"
         >
           Price
         </div>
@@ -127,7 +127,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
         class="c5"
       >
         <div
-          class="c4 css-1aekuku"
+          class="c4 css-142zc9n"
         >
           Expires in
         </div>
@@ -190,11 +190,11 @@ exports[`data page listings table content loads with a given asset 1`] = `
 }
 
 .c15 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c10 {
-  color: #0D111C;
+  color: #222222;
 }
 
 .c5 {
@@ -203,8 +203,8 @@ exports[`data page listings table content loads with a given asset 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FB118E;
-  stroke: #FB118E;
+  color: #FC72FF;
+  stroke: #FC72FF;
   font-weight: 500;
 }
 
@@ -228,10 +228,10 @@ exports[`data page listings table content loads with a given asset 1`] = `
   -moz-scrollbar-width: thin;
   -ms-scrollbar-width: thin;
   scrollbar-width: thin;
-  -webkit-scrollbar-color: #D2D9EE transparent;
-  -moz-scrollbar-color: #D2D9EE transparent;
-  -ms-scrollbar-color: #D2D9EE transparent;
-  scrollbar-color: #D2D9EE transparent;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
   height: 100%;
 }
 
@@ -242,12 +242,12 @@ exports[`data page listings table content loads with a given asset 1`] = `
 }
 
 .c1::-webkit-scrollbar-thumb {
-  background: #D2D9EE;
+  background: #22222212;
   border-radius: 8px;
 }
 
 .c2 {
-  border-bottom: 1px solid #D2D9EE;
+  border-bottom: 1px solid #22222212;
 }
 
 .c2:last-child {
@@ -317,7 +317,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
 }
 
 .c11 {
-  color: #7780A0;
+  color: #7D7D7D;
   line-height: 20px;
 }
 
@@ -447,12 +447,12 @@ exports[`data page listings table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 100M
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -462,7 +462,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
             class="c12"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -474,7 +474,7 @@ exports[`data page listings table content loads with a given asset 1`] = `
               class="c14"
             >
               <div
-                class="c15 css-18hn7mq"
+                class="c15 css-142zc9n"
               >
                 Add to Bag
               </div>
@@ -516,7 +516,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
 }
 
 .c4 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c0 {
@@ -624,7 +624,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
         class="c3"
       >
         <div
-          class="c4 css-1aekuku"
+          class="c4 css-142zc9n"
         >
           Price
         </div>
@@ -633,7 +633,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
         class="c5"
       >
         <div
-          class="c4 css-1aekuku"
+          class="c4 css-142zc9n"
         >
           From
         </div>
@@ -642,7 +642,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
         class="c6"
       >
         <div
-          class="c4 css-1aekuku"
+          class="c4 css-142zc9n"
         >
           Expires in
         </div>
@@ -705,11 +705,11 @@ exports[`data page offers table content loads with a given asset 1`] = `
 }
 
 .c16 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c10 {
-  color: #0D111C;
+  color: #222222;
 }
 
 .c5 {
@@ -718,8 +718,8 @@ exports[`data page offers table content loads with a given asset 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FB118E;
-  stroke: #FB118E;
+  color: #FC72FF;
+  stroke: #FC72FF;
   font-weight: 500;
 }
 
@@ -743,10 +743,10 @@ exports[`data page offers table content loads with a given asset 1`] = `
   -moz-scrollbar-width: thin;
   -ms-scrollbar-width: thin;
   scrollbar-width: thin;
-  -webkit-scrollbar-color: #D2D9EE transparent;
-  -moz-scrollbar-color: #D2D9EE transparent;
-  -ms-scrollbar-color: #D2D9EE transparent;
-  scrollbar-color: #D2D9EE transparent;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
   height: 100%;
 }
 
@@ -757,12 +757,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
 }
 
 .c1::-webkit-scrollbar-thumb {
-  background: #D2D9EE;
+  background: #22222212;
   border-radius: 8px;
 }
 
 .c2 {
-  border-bottom: 1px solid #D2D9EE;
+  border-bottom: 1px solid #22222212;
 }
 
 .c2:last-child {
@@ -845,7 +845,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
 }
 
 .c11 {
-  color: #7780A0;
+  color: #7D7D7D;
   line-height: 20px;
 }
 
@@ -981,12 +981,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 123.456
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -1002,7 +1002,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               target="_blank"
             >
               <div
-                class="c10 css-18hn7mq"
+                class="c10 css-142zc9n"
               >
                 0x79ea...6D42
               </div>
@@ -1012,7 +1012,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
             class="c13"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -1024,7 +1024,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c15"
             >
               <div
-                class="c16 css-18hn7mq"
+                class="c16 css-142zc9n"
               >
                 Accept
               </div>
@@ -1109,12 +1109,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 123.456
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -1130,7 +1130,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               target="_blank"
             >
               <div
-                class="c10 css-18hn7mq"
+                class="c10 css-142zc9n"
               >
                 0x79ea...6D42
               </div>
@@ -1140,7 +1140,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
             class="c13"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -1152,7 +1152,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c15"
             >
               <div
-                class="c16 css-18hn7mq"
+                class="c16 css-142zc9n"
               >
                 Accept
               </div>
@@ -1237,12 +1237,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 123.456
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -1258,7 +1258,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               target="_blank"
             >
               <div
-                class="c10 css-18hn7mq"
+                class="c10 css-142zc9n"
               >
                 0x79ea...6D42
               </div>
@@ -1268,7 +1268,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
             class="c13"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -1280,7 +1280,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c15"
             >
               <div
-                class="c16 css-18hn7mq"
+                class="c16 css-142zc9n"
               >
                 Accept
               </div>
@@ -1365,12 +1365,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 123.456
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -1386,7 +1386,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               target="_blank"
             >
               <div
-                class="c10 css-18hn7mq"
+                class="c10 css-142zc9n"
               >
                 0x79ea...6D42
               </div>
@@ -1396,7 +1396,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
             class="c13"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -1408,7 +1408,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c15"
             >
               <div
-                class="c16 css-18hn7mq"
+                class="c16 css-142zc9n"
               >
                 Accept
               </div>
@@ -1493,12 +1493,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 123.456
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -1514,7 +1514,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               target="_blank"
             >
               <div
-                class="c10 css-18hn7mq"
+                class="c10 css-142zc9n"
               >
                 0x79ea...6D42
               </div>
@@ -1524,7 +1524,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
             class="c13"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -1536,7 +1536,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c15"
             >
               <div
-                class="c16 css-18hn7mq"
+                class="c16 css-142zc9n"
               >
                 Accept
               </div>
@@ -1621,12 +1621,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 123.456
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -1642,7 +1642,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               target="_blank"
             >
               <div
-                class="c10 css-18hn7mq"
+                class="c10 css-142zc9n"
               >
                 0x79ea...6D42
               </div>
@@ -1652,7 +1652,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
             class="c13"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -1664,7 +1664,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c15"
             >
               <div
-                class="c16 css-18hn7mq"
+                class="c16 css-142zc9n"
               >
                 Accept
               </div>
@@ -1749,12 +1749,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 123.456
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -1770,7 +1770,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               target="_blank"
             >
               <div
-                class="c10 css-18hn7mq"
+                class="c10 css-142zc9n"
               >
                 0x79ea...6D42
               </div>
@@ -1780,7 +1780,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
             class="c13"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -1792,7 +1792,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c15"
             >
               <div
-                class="c16 css-18hn7mq"
+                class="c16 css-142zc9n"
               >
                 Accept
               </div>
@@ -1877,12 +1877,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 123.456
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -1898,7 +1898,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               target="_blank"
             >
               <div
-                class="c10 css-18hn7mq"
+                class="c10 css-142zc9n"
               >
                 0x79ea...6D42
               </div>
@@ -1908,7 +1908,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
             class="c13"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -1920,7 +1920,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c15"
             >
               <div
-                class="c16 css-18hn7mq"
+                class="c16 css-142zc9n"
               >
                 Accept
               </div>
@@ -2005,12 +2005,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 123.456
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -2026,7 +2026,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               target="_blank"
             >
               <div
-                class="c10 css-18hn7mq"
+                class="c10 css-142zc9n"
               >
                 0x79ea...6D42
               </div>
@@ -2036,7 +2036,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
             class="c13"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -2048,7 +2048,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c15"
             >
               <div
-                class="c16 css-18hn7mq"
+                class="c16 css-142zc9n"
               >
                 Accept
               </div>
@@ -2133,12 +2133,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 123.456
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -2154,7 +2154,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               target="_blank"
             >
               <div
-                class="c10 css-18hn7mq"
+                class="c10 css-142zc9n"
               >
                 0x79ea...6D42
               </div>
@@ -2164,7 +2164,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
             class="c13"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -2176,7 +2176,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c15"
             >
               <div
-                class="c16 css-18hn7mq"
+                class="c16 css-142zc9n"
               >
                 Accept
               </div>
@@ -2261,12 +2261,12 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c8 c9"
             >
               <div
-                class="c10 css-1adn0z6"
+                class="c10 css-92o2pi"
               >
                 123.456
               </div>
               <div
-                class="c10 c11 css-zhpkf8"
+                class="c10 c11 css-142zc9n"
               >
                 -
               </div>
@@ -2282,7 +2282,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               target="_blank"
             >
               <div
-                class="c10 css-18hn7mq"
+                class="c10 css-142zc9n"
               >
                 0x79ea...6D42
               </div>
@@ -2292,7 +2292,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
             class="c13"
           >
             <div
-              class="c10 css-18hn7mq"
+              class="c10 css-142zc9n"
             >
               5 months
             </div>
@@ -2304,7 +2304,7 @@ exports[`data page offers table content loads with a given asset 1`] = `
               class="c15"
             >
               <div
-                class="c16 css-18hn7mq"
+                class="c16 css-142zc9n"
               >
                 Accept
               </div>

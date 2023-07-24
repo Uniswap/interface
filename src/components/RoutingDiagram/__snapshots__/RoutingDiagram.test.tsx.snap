@@ -66,7 +66,7 @@ exports[`renders multi route 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background: #E8ECFB;
+  background: #22222212;
   border: unset;
   border-radius: 0.5rem;
   color: #000;
@@ -79,7 +79,7 @@ exports[`renders multi route 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  font-weight: 500;
+  font-weight: 535;
 }
 
 .c0 {
@@ -128,11 +128,11 @@ exports[`renders multi route 1`] = `
 }
 
 .c6 path {
-  stroke: #98A1C0;
+  stroke: #22222212;
 }
 
 .c8 {
-  background-color: #E8ECFB;
+  background-color: #22222212;
   border-radius: 8px;
   display: grid;
   font-size: 12px;
@@ -147,9 +147,9 @@ exports[`renders multi route 1`] = `
 }
 
 .c9 {
-  background-color: #B8C0DC;
+  background-color: #F9F9F9;
   border-radius: 4px;
-  color: #7780A0;
+  color: #7D7D7D;
   font-size: 10px;
   padding: 2px 4px;
   z-index: 1021;
@@ -185,13 +185,13 @@ exports[`renders multi route 1`] = `
             class="c7 c9"
           >
             <div
-              class="c10 css-15li2d9"
+              class="c10 css-1m65e73"
             >
               V2
             </div>
           </div>
           <div
-            class="c10 css-1aekuku"
+            class="c10 css-142zc9n"
             style="min-width: auto;"
           >
             75%
@@ -230,13 +230,13 @@ exports[`renders multi route 1`] = `
             class="c7 c9"
           >
             <div
-              class="c10 css-15li2d9"
+              class="c10 css-1m65e73"
             >
               V3
             </div>
           </div>
           <div
-            class="c10 css-1aekuku"
+            class="c10 css-142zc9n"
             style="min-width: auto;"
           >
             25%
@@ -322,7 +322,7 @@ exports[`renders single route 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background: #E8ECFB;
+  background: #22222212;
   border: unset;
   border-radius: 0.5rem;
   color: #000;
@@ -335,7 +335,7 @@ exports[`renders single route 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  font-weight: 500;
+  font-weight: 535;
 }
 
 .c0 {
@@ -384,11 +384,11 @@ exports[`renders single route 1`] = `
 }
 
 .c6 path {
-  stroke: #98A1C0;
+  stroke: #22222212;
 }
 
 .c8 {
-  background-color: #E8ECFB;
+  background-color: #22222212;
   border-radius: 8px;
   display: grid;
   font-size: 12px;
@@ -403,9 +403,9 @@ exports[`renders single route 1`] = `
 }
 
 .c9 {
-  background-color: #B8C0DC;
+  background-color: #F9F9F9;
   border-radius: 4px;
-  color: #7780A0;
+  color: #7D7D7D;
   font-size: 10px;
   padding: 2px 4px;
   z-index: 1021;
@@ -441,13 +441,13 @@ exports[`renders single route 1`] = `
             class="c7 c9"
           >
             <div
-              class="c10 css-15li2d9"
+              class="c10 css-1m65e73"
             >
               V3
             </div>
           </div>
           <div
-            class="c10 css-1aekuku"
+            class="c10 css-142zc9n"
             style="min-width: auto;"
           >
             100%

@@ -44,11 +44,11 @@ exports[`data page trait component does not load with asset with no traits 1`] =
 }
 
 .c4 {
-  color: #0D111C;
+  color: #222222;
 }
 
 .c9 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c7 {
@@ -67,7 +67,7 @@ exports[`data page trait component does not load with asset with no traits 1`] =
 
 .c0 {
   background: #FFFFFF;
-  border: 1px solid #D2D9EE;
+  border: 1px solid #22222212;
   border-radius: 16px;
   padding: 16px 20px;
   width: 100%;
@@ -81,11 +81,11 @@ exports[`data page trait component does not load with asset with no traits 1`] =
   width: 100;
   margin-bottom: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #D2D9EE;
+  border-bottom: 1px solid #22222212;
 }
 
 .c5 {
-  color: #0D111C;
+  color: #222222;
   line-height: 24px;
   cursor: default;
 }
@@ -100,7 +100,7 @@ exports[`data page trait component does not load with asset with no traits 1`] =
   display: -ms-flexbox;
   display: flex;
   line-height: 20px;
-  color: #7780A0;
+  color: #7D7D7D;
   -webkit-flex: 3;
   -ms-flex: 3;
   flex: 3;
@@ -112,7 +112,7 @@ exports[`data page trait component does not load with asset with no traits 1`] =
   display: -ms-flexbox;
   display: flex;
   line-height: 20px;
-  color: #7780A0;
+  color: #7D7D7D;
   -webkit-flex: 2;
   -ms-flex: 2;
   flex: 2;
@@ -124,7 +124,7 @@ exports[`data page trait component does not load with asset with no traits 1`] =
   display: -ms-flexbox;
   display: flex;
   line-height: 20px;
-  color: #7780A0;
+  color: #7D7D7D;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -136,7 +136,7 @@ exports[`data page trait component does not load with asset with no traits 1`] =
   display: -ms-flexbox;
   display: flex;
   line-height: 20px;
-  color: #7780A0;
+  color: #7D7D7D;
   -webkit-flex: 1.5;
   -ms-flex: 1.5;
   flex: 1.5;
@@ -159,10 +159,10 @@ exports[`data page trait component does not load with asset with no traits 1`] =
   -moz-scrollbar-width: thin;
   -ms-scrollbar-width: thin;
   scrollbar-width: thin;
-  -webkit-scrollbar-color: #D2D9EE transparent;
-  -moz-scrollbar-color: #D2D9EE transparent;
-  -ms-scrollbar-color: #D2D9EE transparent;
-  scrollbar-color: #D2D9EE transparent;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
   height: 100%;
 }
 
@@ -173,7 +173,7 @@ exports[`data page trait component does not load with asset with no traits 1`] =
 }
 
 .c15::-webkit-scrollbar-thumb {
-  background: #D2D9EE;
+  background: #22222212;
   border-radius: 8px;
 }
 
@@ -217,7 +217,7 @@ exports[`data page trait component does not load with asset with no traits 1`] =
       class="c1 c2 c3"
     >
       <div
-        class="c4 c5 css-rjqmed"
+        class="c4 c5 css-n8z49y"
       >
         <div
           class="c1 c6"
@@ -233,22 +233,22 @@ exports[`data page trait component does not load with asset with no traits 1`] =
         class="c1 c2 c8"
       >
         <div
-          class="c9 c10 css-1aekuku"
+          class="c9 c10 css-142zc9n"
         >
           Trait
         </div>
         <div
-          class="c9 c11 css-1aekuku"
+          class="c9 c11 css-142zc9n"
         >
           Floor price
         </div>
         <div
-          class="c9 c12 css-1aekuku"
+          class="c9 c12 css-142zc9n"
         >
           Quantity
         </div>
         <div
-          class="c9 c13 css-1aekuku"
+          class="c9 c13 css-142zc9n"
         >
           Rarity
         </div>
