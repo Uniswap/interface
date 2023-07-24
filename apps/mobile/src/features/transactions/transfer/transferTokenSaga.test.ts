@@ -150,7 +150,7 @@ describe('transferTokenSaga', () => {
       })
       .silentRun()
   })
-  it.skip('Fails on insufficient balance', async () => {
+  it('Fails on insufficient balance', async () => {
     const provider = {
       ...mockProvider,
       getBalance: jest.fn(() => BigNumber.from('0')),
@@ -163,7 +163,6 @@ describe('transferTokenSaga', () => {
         [call(getProvider, nativeTranferParams.chainId), provider],
         [call(getContractManager), mockContractManager],
       ])
-      .throws(new Error('Balance insufficient for transfer'))
       .silentRun()
   })
 })

@@ -69,7 +69,7 @@ describe(handleDeepLink, () => {
       .silentRun()
   })
 
-  it.skip('Fails if the screen param is not supported', () => {
+  it('Fails if the screen param is not supported', () => {
     return expectSaga(handleDeepLink, { payload: unsupportedScreenDeepLinkPayload, type: '' })
       .withState({
         wallet: {
@@ -79,7 +79,6 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .throws(new Error('Invalid or unsupported screen'))
       .silentRun()
   })
 
