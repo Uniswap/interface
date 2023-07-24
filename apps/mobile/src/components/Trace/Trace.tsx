@@ -26,7 +26,7 @@ type MobileTraceProps = MobileTraceContext &
   MobileTracePropsOverrides
 
 function _Trace({ children, ...rest }: PropsWithChildren<MobileTraceProps>): JSX.Element {
-  return <UntypedTrace properties={rest}>{children}</UntypedTrace>
+  return <UntypedTrace {...rest}>{children}</UntypedTrace>
 }
 
 const Trace = memo(_Trace)

@@ -8,7 +8,7 @@ import {
 } from 'src/app/features/telemetry/constants'
 import { Trace as UntypedTrace, TraceProps } from 'wallet/src/features/telemetry/trace/Trace'
 
-// Mobile specific version of ITraceContext
+// Extension specific version of ITraceContext
 interface ExtensionTraceContext {
   screen?: ScreenName
   section?: SectionName
@@ -25,7 +25,7 @@ type ExtensionTraceProps = ExtensionTraceContext &
   ExtensionTracePropsOverrides
 
 function _Trace({ children, ...rest }: PropsWithChildren<ExtensionTraceProps>): JSX.Element {
-  return <UntypedTrace properties={rest}>{children}</UntypedTrace>
+  return <UntypedTrace {...rest}>{children}</UntypedTrace>
 }
 
 const Trace = memo(_Trace)
