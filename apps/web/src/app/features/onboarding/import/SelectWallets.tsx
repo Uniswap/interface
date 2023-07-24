@@ -165,12 +165,9 @@ export function SelectWallets(): JSX.Element {
       }
     })
 
+    // Activating an account will automatically redirect to `/onboarding/complete` thanks to `OnboardingWrapper`.
     await dispatch(pendingAccountActions.trigger(PendingAccountActions.Activate))
-    navigate(
-      `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Complete}`,
-      { replace: true }
-    )
-  }, [addresses, navigate, selectedAddresses, dispatch, pendingAccounts])
+  }, [addresses, selectedAddresses, dispatch, pendingAccounts])
 
   // Force a fixed duration loading state for smoother transition (as we show different UI for 1 vs multiple wallets)
   const [isForcedLoading, setIsForcedLoading] = useState(true)

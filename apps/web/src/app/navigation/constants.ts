@@ -6,6 +6,7 @@ export enum TopLevelRoutes {
 export enum OnboardingRoutes {
   Import = 'import',
   Create = 'create',
+  Complete = 'complete',
 }
 
 export enum CreateOnboardingRoutes {
@@ -13,7 +14,6 @@ export enum CreateOnboardingRoutes {
   ViewMnemonic = 'mnemonic',
   TestMnemonic = 'testMnemonic',
   Naming = 'naming',
-  Complete = 'complete',
 }
 
 export enum ImportOnboardingRoutes {
@@ -21,7 +21,6 @@ export enum ImportOnboardingRoutes {
   Mnemonic = 'mnemonic',
   Select = 'select',
   Backup = 'backup',
-  Complete = 'complete',
 }
 
 // in order, so they can be mapped through for progress indicators
@@ -30,13 +29,11 @@ export const createOnboardingSteps = [
   CreateOnboardingRoutes.ViewMnemonic,
   CreateOnboardingRoutes.TestMnemonic,
   CreateOnboardingRoutes.Naming,
-  CreateOnboardingRoutes.Complete,
 ]
 export const importOnboardingSteps = [
   ImportOnboardingRoutes.Password,
   ImportOnboardingRoutes.Mnemonic,
   ImportOnboardingRoutes.Select,
-  ImportOnboardingRoutes.Complete,
 ]
 
 export enum AppRoutes {

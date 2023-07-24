@@ -53,6 +53,10 @@ const router = createHashRouter([
         element: <IntroScreen />,
       },
       {
+        path: OnboardingRoutes.Complete,
+        element: <Complete />,
+      },
+      {
         path: OnboardingRoutes.Create,
         element: (
           <OnboardingStepWrapper
@@ -80,15 +84,7 @@ const router = createHashRouter([
           },
           {
             path: CreateOnboardingRoutes.Naming,
-            element: (
-              <NameWallet
-                nextPath={`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Complete}`}
-              />
-            ),
-          },
-          {
-            path: CreateOnboardingRoutes.Complete,
-            element: <Complete />,
+            element: <NameWallet />,
           },
         ],
       },
@@ -116,10 +112,6 @@ const router = createHashRouter([
           {
             path: ImportOnboardingRoutes.Select,
             element: <SelectWallets />,
-          },
-          {
-            path: ImportOnboardingRoutes.Complete,
-            element: <Complete />,
           },
         ],
       },

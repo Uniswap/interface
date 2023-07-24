@@ -18,7 +18,7 @@ import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { setAccountAsActive, setAccountsNonPending } from 'wallet/src/features/wallet/slice'
 
-export function NameWallet({ nextPath }: { nextPath: string }): JSX.Element {
+export function NameWallet(): JSX.Element {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
@@ -48,10 +48,11 @@ export function NameWallet({ nextPath }: { nextPath: string }): JSX.Element {
         newName: walletName || defaultName,
       })
     )
-    await dispatch(setAccountsNonPending([pendingAddress]))
-    await dispatch(setAccountAsActive(pendingAddress))
 
-    navigate(nextPath, { replace: true })
+    await dispatch(setAccountsNonPending([pendingAddress]))
+
+    // Activating an account will automatically redirect to `/onboarding/complete` thanks to `OnboardingWrapper`.
+    await dispatch(setAccountAsActive(pendingAddress))
   }
 
   return (

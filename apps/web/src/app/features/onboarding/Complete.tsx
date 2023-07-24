@@ -65,7 +65,7 @@ export function Complete(): JSX.Element {
   }, [])
 
   return (
-    <>
+    <Stack alignItems="center" flexGrow={1} justifyContent="center" width="100%">
       <Stack alignItems="center" width={ONBOARDING_CONTENT_WIDTH}>
         <YStack gap="$spacing12">
           <YStack alignItems="center" gap="$spacing12">
@@ -220,7 +220,7 @@ export function Complete(): JSX.Element {
           </Toast.Title>
         </Toast>
       )}
-    </>
+    </Stack>
   )
 }
 
