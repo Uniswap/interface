@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 import { parseEther } from 'ethers/lib/utils'
