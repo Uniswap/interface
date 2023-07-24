@@ -8,6 +8,8 @@ import {
 import { formatNumber, NumberType } from "@uniswap/conedison/format";
 import { CurrencyAmount, Token } from "@uniswap/sdk-core";
 import { useWeb3React } from "@web3-react/core";
+import { ReactComponent as Power } from "assets/svg/power.svg";
+import { ReactComponent as Settings } from "assets/svg/settings.svg";
 import { sendAnalyticsEvent, TraceEvent } from "analytics";
 import {
   ButtonEmphasis,

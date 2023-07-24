@@ -1,5 +1,6 @@
 import { NFTEventName } from "@uniswap/analytics-events";
 import { useWeb3React } from "@web3-react/core";
+import { ReactComponent as Upload } from "assets/svg/share.svg";
 import { sendAnalyticsEvent, useTrace } from "analytics";
 import { OpacityHoverState } from "components/Common";
 import { useNftBalance } from "graphql/data/nft/NftBalance";
