@@ -6385,10 +6385,10 @@
     "@uniswap/sdk-core" "^4.0.3"
     ethers "^5.7.0"
 
-"@uniswap/universal-router-sdk@^1.5.4":
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.5.4.tgz#9eb2a578b12fdc38ca18300ff708b3d4a86297c8"
-  integrity sha512-9vbB1AFFW3QeZWjtRFE0PVnMa2L+yjJpbU9EqCaEAYdR3+T4zx8fuml+84XUQzjKTp1cnndwusc1Mm+g0/Djpg==
+"@uniswap/universal-router-sdk@^1.5.4", "@uniswap/universal-router-sdk@^1.5.6":
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.5.6.tgz#274a6ac5df032c34544005fe329aa9e2aac9ade6"
+  integrity sha512-ZD27U+kugMRJRVEX0oWZsRCw1n5vBN3I17Q22IWE+w/WhOJSppUr6PLo9u4HRdqXTZET7gubnlRc0LOAEkkSkQ==
   dependencies:
     "@uniswap/permit2-sdk" "^1.2.0"
     "@uniswap/router-sdk" "^1.6.0"
