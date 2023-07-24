@@ -105,7 +105,7 @@ export function LongText(props: LongTextProps): JSX.Element {
             variant={variant}
             onTextLayout={onTextLayout}
             {...rest}>
-            text
+            {text}
           </Text>
         )}
       </Box>

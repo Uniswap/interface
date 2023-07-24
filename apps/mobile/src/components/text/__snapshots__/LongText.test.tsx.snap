@@ -44,7 +44,7 @@ exports[`renders a LongText 1`] = `
         ]
       }
     >
-      text
+      Some very long text
     </Text>
   </View>
 </View>
