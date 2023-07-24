@@ -13,6 +13,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
 import { useSingleCallResult } from 'lib/hooks/multicall'
+import { BodyWrapper } from 'pages/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -68,7 +69,6 @@ import {
   CurrencyDropdown,
   DynamicSection,
   MediumOnly,
-  PageWrapper,
   ResponsiveTwoColumns,
   ScrollablePage,
   StackedContainer,
@@ -603,7 +603,7 @@ function AddLiquidity() {
           )}
           pendingText={pendingText}
         />
-        <PageWrapper wide={!hasExistingPosition}>
+        <BodyWrapper style={{ padding: hasExistingPosition ? '10px' : 0, maxWidth: '640px' }}>
           <AddRemoveTabs
             creating={false}
             adding={true}
@@ -909,7 +909,7 @@ function AddLiquidity() {
               <Buttons />
             </ResponsiveTwoColumns>
           </Wrapper>
-        </PageWrapper>
+        </BodyWrapper>
         {showOwnershipWarning && <OwnershipWarning ownerAddress={owner} />}
         {addIsUnsupported && (
           <UnsupportedCurrencyFooter

@@ -1,18 +1,12 @@
-import { AutoColumn } from "components/Column";
-import CurrencyInputPanel from "components/CurrencyInputPanel";
-import Input from "components/NumericalInput";
-import { BodyWrapper } from "pages/AppBody";
-import styled from "styled-components/macro";
-
-export const PageWrapper = styled(BodyWrapper)<{ wide: boolean }>`
-  padding: ${({ wide }) => (wide ? "10px" : "0")};
-  max-width: 640px;
-`;
+import { AutoColumn } from 'components/Column'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import Input from 'components/NumericalInput'
+import styled from 'styled-components/macro'
 
 export const Wrapper = styled.div`
   position: relative;
   padding: 26px 16px;
-`;
+`
 
 export const ScrollablePage = styled.div`
   padding: 20px 8px 0px;
@@ -24,32 +18,30 @@ export const ScrollablePage = styled.div`
     margin: 0 auto;
   `};
 
-  @media only screen and (max-width: ${({ theme }) =>
-      `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding: 48px 8px 0px;
   }
 
-  @media only screen and (max-width: ${({ theme }) =>
-      `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     padding-top: 20px;
   }
-`;
+`
 
 export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
-  opacity: ${({ disabled }) => (disabled ? "0.2" : "1")};
-  pointer-events: ${({ disabled }) => (disabled ? "none" : "initial")};
-`;
+  opacity: ${({ disabled }) => (disabled ? '0.2' : '1')};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')};
+`
 
 export const CurrencyDropdown = styled(CurrencyInputPanel)`
   width: 48.5%;
-`;
+`
 
 export const StyledInput = styled(Input)`
   background-color: ${({ theme }) => theme.backgroundSurface};
   text-align: left;
   font-size: 18px;
   width: 100%;
-`;
+`
 
 /* two-column layout where DepositAmount is moved at the very end on mobile. */
 export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
@@ -62,40 +54,21 @@ export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     margin-top: 0;
   `};
-`;
-
-export const RightContainer = styled(AutoColumn)`
-  grid-row: 1 / 3;
-  grid-column: 2;
-  height: fit-content;
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-  grid-row: 2 / 3;
-  grid-column: 1;
-  `};
-`;
+`
 
 export const StackedContainer = styled.div`
   display: grid;
-`;
+`
 
 export const StackedItem = styled.div<{ zIndex?: number }>`
   grid-column: 1;
   grid-row: 1;
   height: 100%;
   z-index: ${({ zIndex }) => zIndex};
-`;
+`
 
 export const MediumOnly = styled.div`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     display: none;
   `};
-`;
-
-export const HideMedium = styled.div`
-  display: none;
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-    display: block;
-  `};
-`;
+`
