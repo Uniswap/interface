@@ -3,6 +3,7 @@ import { formatEther, parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
@@ -16,7 +17,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import { useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
 import { useCurrency } from 'hooks/Tokens'
-import { AllowanceState } from 'hooks/usePermit2Allowance'
+import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
@@ -26,7 +27,6 @@ import { useBagTotalEthPrice } from 'nft/hooks/useBagTotalEthPrice'
 import useDerivedPayWithAnyTokenSwapInfo from 'nft/hooks/useDerivedPayWithAnyTokenSwapInfo'
 import { useFetchAssets } from 'nft/hooks/useFetchAssets'
 import usePayWithAnyTokenSwap from 'nft/hooks/usePayWithAnyTokenSwap'
-import usePermit2Approval from 'nft/hooks/usePermit2Approval'
 import { PriceImpact, usePriceImpact } from 'nft/hooks/usePriceImpact'
 import { useSubscribeTransactionState } from 'nft/hooks/useSubscribeTransactionState'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
@@ -35,7 +35,7 @@ import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { InterfaceTrade, TradeFillType, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { shallow } from 'zustand/shallow'
@@ -262,6 +262,17 @@ const PENDING_BAG_STATUSES = [
   BagStatus.PROCESSING_TRANSACTION,
 ]
 
+function getURAddress(chainId?: number, nftURAddress?: string) {
+  if (!chainId) return
+
+  // if mainnet and on NFT flow, use the contract address returned by GQL
+  if (chainId === ChainId.MAINNET) {
+    return nftURAddress ?? UNIVERSAL_ROUTER_ADDRESS(chainId)
+  }
+
+  return isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+}
+
 interface BagFooterProps {
   setModalIsOpen: (open: boolean) => void
   eventProperties: Record<string, unknown>
@@ -312,10 +323,10 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     maximumAmountIn,
     allowedSlippage,
   } = useDerivedPayWithAnyTokenSwapInfo(usingPayWithAnyToken ? inputCurrency : undefined, parsedOutputAmount)
-  const { allowance, isAllowancePending, isApprovalLoading, updateAllowance } = usePermit2Approval(
-    trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined,
+  const allowance = usePermit2Allowance(
     maximumAmountIn,
-    universalRouterAddress
+    getURAddress(chainId, universalRouterAddress),
+    TradeFillType.Classic
   )
   const loadingAllowance = allowance.state === AllowanceState.LOADING || universalRouterAddressIsLoading
   usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
@@ -401,14 +412,15 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
       return getBuyButtonStateData(BuyButtonStates.FETCHING_TOKEN_ROUTE, theme)
     }
 
-    if (allowance.state === AllowanceState.REQUIRED || loadingAllowance) {
-      const handleClick = () => updateAllowance()
+    const allowanceRequired = allowance.state === AllowanceState.REQUIRED
+    if (allowanceRequired || loadingAllowance) {
+      const handleClick = () => allowanceRequired && allowance.approveAndPermit()
 
       if (loadingAllowance) {
         return getBuyButtonStateData(BuyButtonStates.LOADING_ALLOWANCE, theme, handleClick)
-      } else if (isAllowancePending) {
+      } else if (allowanceRequired && allowance.isApprovalPending) {
         return getBuyButtonStateData(BuyButtonStates.IN_WALLET_ALLOWANCE_APPROVAL, theme, handleClick)
-      } else if (isApprovalLoading) {
+      } else if (allowanceRequired && allowance.isApprovalLoading) {
         return getBuyButtonStateData(BuyButtonStates.PROCESSING_APPROVAL, theme, handleClick)
       }
 
@@ -437,8 +449,8 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     bagStatus,
     usingPayWithAnyToken,
     tradeState,
-    allowance.state,
     loadingAllowance,
+    allowance,
     priceImpact,
     theme,
     fetchAssets,
@@ -446,9 +458,6 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     connector,
     toggleWalletDrawer,
     setBagExpanded,
-    isAllowancePending,
-    isApprovalLoading,
-    updateAllowance,
   ])
 
   const traceEventProperties = {
