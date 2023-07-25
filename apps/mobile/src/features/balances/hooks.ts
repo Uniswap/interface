@@ -34,8 +34,6 @@ interface TokenMenuParams {
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
-export const HIDDEN_TOKEN_BALANCES_ROW = 'HIDDEN_TOKEN_BALANCES_ROW'
-
 /**
  * Checks if a token balance should be hidden.
  *
@@ -208,7 +206,6 @@ export function useTokenContextMenu({
  * Custom hook to group Token Balances fetched from API to visible and hidden.
  *
  * @param balancesById - An object where keys are token ids and values are the corresponding balances. May be undefined.
- * @param expandHiddenTokens - Boolean flag to indicate if hidden tokens should be expanded.
  * @param owner - The owner address for which token balances are managed.
  *
  * @returns {object} An object containing two fields:
@@ -220,20 +217,18 @@ export function useTokenContextMenu({
  */
 export function useTokenBalancesGroupedByVisibility({
   balancesById,
-  expandHiddenTokens,
 }: {
   balancesById?: Record<string, PortfolioBalance>
-  expandHiddenTokens: boolean
 }): {
-  tokens: Array<PortfolioBalance | string>
-  numHidden: number
+  shownTokens: Array<PortfolioBalance | string> | undefined
+  hiddenTokens: Array<PortfolioBalance | string> | undefined
 } {
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const { hideSmallBalances, hideSpamTokens, accountTokensVisibility, sentOrSwappedLocally } =
     useAccountTokensVisibilitySettings(activeAccountAddress)
 
   return useMemo(() => {
-    if (!balancesById) return { tokens: [], numHidden: 0 }
+    if (!balancesById) return { shownTokens: undefined, hiddenTokens: undefined }
 
     const { shown, hidden } = Object.values(balancesById).reduce<{
       shown: PortfolioBalance[]
@@ -260,16 +255,12 @@ export function useTokenBalancesGroupedByVisibility({
       { shown: [], hidden: [] }
     )
     return {
-      tokens: [
-        ...shown,
-        ...(hidden.length ? [HIDDEN_TOKEN_BALANCES_ROW] : []),
-        ...(expandHiddenTokens ? hidden : []),
-      ],
+      shownTokens: shown.length ? shown : undefined,
+      hiddenTokens: hidden.length ? hidden : undefined,
       numHidden: hidden.length,
     }
   }, [
     balancesById,
-    expandHiddenTokens,
     accountTokensVisibility,
     sentOrSwappedLocally,
     hideSpamTokens,

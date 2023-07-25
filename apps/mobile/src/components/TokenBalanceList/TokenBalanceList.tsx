@@ -14,10 +14,7 @@ import { TabProps, TAB_VIEW_SCROLL_THROTTLE } from 'src/components/layout/TabHel
 import { Loader } from 'src/components/loading'
 import { HiddenTokensRow } from 'src/components/TokenBalanceList/HiddenTokensRow'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
-import {
-  HIDDEN_TOKEN_BALANCES_ROW,
-  useTokenBalancesGroupedByVisibility,
-} from 'src/features/balances/hooks'
+import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { zIndices } from 'ui/src/theme/zIndices'
@@ -32,7 +29,10 @@ type TokenBalanceListProps = TabProps & {
   isExternalProfile?: boolean
 }
 
+type Row = string | PortfolioBalance
+
 const ESTIMATED_TOKEN_ITEM_HEIGHT = 64
+const HIDDEN_TOKEN_BALANCES_ROW = 'HIDDEN_TOKEN_BALANCES_ROW'
 
 // accept any ref
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,28 +82,21 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
     })
 
     const [isWarmLoading, setIsWarmLoading] = useState(false)
-    const [hiddenTokensExpanded, setHiddenTokensExpanded] = useState(false)
 
     // re-order token balances to visible and hidden
-    const { tokens, numHidden } = useTokenBalancesGroupedByVisibility({
+    const { shownTokens, hiddenTokens } = useTokenBalancesGroupedByVisibility({
       balancesById,
-      expandHiddenTokens: hiddenTokensExpanded,
     })
+    const shouldShowHiddenTokens = !shownTokens?.length && !!hiddenTokens?.length
+    const [hiddenTokensExpanded, setHiddenTokensExpanded] = useState(shouldShowHiddenTokens)
 
-    useEffect(() => {
-      if (numHidden === 0 && hiddenTokensExpanded) {
-        setHiddenTokensExpanded(false)
-      }
-      // all tokens are hidden
-      if (
-        balancesById &&
-        Object.keys(balancesById).length === numHidden &&
-        !hiddenTokensExpanded &&
-        numHidden !== 0 // only expand if we have hidden tokens
-      ) {
-        setHiddenTokensExpanded(true)
-      }
-    }, [balancesById, hiddenTokensExpanded, numHidden])
+    const data = useMemo<Row[]>(() => {
+      return [
+        ...(shownTokens ?? []),
+        ...(hiddenTokens?.length ? [HIDDEN_TOKEN_BALANCES_ROW] : []),
+        ...(hiddenTokensExpanded && hiddenTokens ? hiddenTokens : []),
+      ]
+    }, [shownTokens, hiddenTokens, hiddenTokensExpanded])
 
     useEffect(() => {
       if (!!balancesById && isWarmLoadingStatus(networkStatus) && !isExternalProfile) {
@@ -170,7 +163,8 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
                 </AnimatedBox>
               ) : null
             }
-            data={tokens}
+            data={data}
+            disableAutoLayout={true}
             estimatedItemSize={ESTIMATED_TOKEN_ITEM_HEIGHT}
             keyExtractor={key}
             refreshControl={refreshControl}
@@ -180,7 +174,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
                 return (
                   <HiddenTokensRow
                     isExpanded={hiddenTokensExpanded}
-                    numHidden={numHidden}
+                    numHidden={hiddenTokens?.length ?? 0}
                     onPress={(): void => {
                       if (hiddenTokensExpanded) {
                         setFooterHeight(dimensions.fullHeight)

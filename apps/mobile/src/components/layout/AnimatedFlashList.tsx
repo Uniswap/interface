@@ -14,8 +14,11 @@ export const AnimatedFlashList = forwardRef<
   // Need to extend manually Pick props from FlashListProps (if not included in FlatListProps)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   FlatListProps<any> &
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Pick<FlashListProps<any>, 'estimatedItemSize' | 'estimatedListSize' | 'getItemType'>
+    Pick<
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      FlashListProps<any>,
+      'disableAutoLayout' | 'estimatedItemSize' | 'estimatedListSize' | 'getItemType'
+    >
 >(function _AnimatedFlashList({ ...restProps }, ref) {
   return <ReanimatedFlashList ref={ref} sentry-label="ReanimatedFlashList" {...restProps} />
 })
