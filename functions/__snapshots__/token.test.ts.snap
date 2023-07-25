@@ -1,0 +1,671 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should inject metadata for valid tokens 1`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+
+    <!--
+      . will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="./images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="./images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#FC72FF" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+      
+    />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="./manifest.json" />
+
+    <link rel="preconnect" href="https://www.google-analytics.com/" />
+
+    <link rel="preload" href="./fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <style>
+      * {
+        font-family: 'Inter', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Inter custom';
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Regular';
+        src: url(./fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2-variations'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Inter custom', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-variant: none;
+        font-smooth: always;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+        }
+      }
+    </style>
+  <script defer src="./static/js/bundle.js"></script><meta property="og:title" content="Get USDC on Uniswap"/><meta property="og:image" content="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get USDC on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get USDC on Uniswap"/><meta property="twitter:image" content="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"/><meta property="twitter:image:alt" content="Get USDC on Uniswap"/></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
+
+exports[`should inject metadata for valid tokens 2`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+
+    <!--
+      . will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="./images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="./images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#FC72FF" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+      
+    />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="./manifest.json" />
+
+    <link rel="preconnect" href="https://www.google-analytics.com/" />
+
+    <link rel="preload" href="./fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <style>
+      * {
+        font-family: 'Inter', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Inter custom';
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Regular';
+        src: url(./fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2-variations'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Inter custom', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-variant: none;
+        font-smooth: always;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+        }
+      }
+    </style>
+  <script defer src="./static/js/bundle.js"></script><meta property="og:title" content="Get ETH on Uniswap"/><meta property="og:image" content="https://token-icons.s3.amazonaws.com/eth.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get ETH on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/tokens/ethereum/NATIVE"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get ETH on Uniswap"/><meta property="twitter:image" content="https://token-icons.s3.amazonaws.com/eth.png"/><meta property="twitter:image:alt" content="Get ETH on Uniswap"/></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
+
+exports[`should inject metadata for valid tokens 3`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+
+    <!--
+      . will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="./images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="./images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#FC72FF" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+      
+    />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="./manifest.json" />
+
+    <link rel="preconnect" href="https://www.google-analytics.com/" />
+
+    <link rel="preload" href="./fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <style>
+      * {
+        font-family: 'Inter', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Inter custom';
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Regular';
+        src: url(./fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2-variations'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Inter custom', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-variant: none;
+        font-smooth: always;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+        }
+      }
+    </style>
+  <script defer src="./static/js/bundle.js"></script><meta property="og:title" content="Get MATIC on Uniswap"/><meta property="og:image" content="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0/logo.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get MATIC on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/tokens/polygon/NATIVE"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get MATIC on Uniswap"/><meta property="twitter:image" content="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0/logo.png"/><meta property="twitter:image:alt" content="Get MATIC on Uniswap"/></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
+
+exports[`should inject metadata for valid tokens 4`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+
+    <!--
+      . will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="./images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="./images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#FC72FF" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+      
+    />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="./manifest.json" />
+
+    <link rel="preconnect" href="https://www.google-analytics.com/" />
+
+    <link rel="preload" href="./fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <style>
+      * {
+        font-family: 'Inter', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Inter custom';
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Regular';
+        src: url(./fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2-variations'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Inter custom', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-variant: none;
+        font-smooth: always;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+        }
+      }
+    </style>
+  <script defer src="./static/js/bundle.js"></script><meta property="og:title" content="Get FUC on Uniswap"/><meta property="og:image" content="https://assets.coingecko.com/coins/images/30081/large/fuc.png?1683016112"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get FUC on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/tokens/arbitrum/0x1f52145666c862ed3e2f1da213d479e61b2892af"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get FUC on Uniswap"/><meta property="twitter:image" content="https://assets.coingecko.com/coins/images/30081/large/fuc.png?1683016112"/><meta property="twitter:image:alt" content="Get FUC on Uniswap"/></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
+
+exports[`should inject metadata for valid tokens 5`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+
+    <!--
+      . will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="./images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="./images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#FC72FF" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+      
+    />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="./manifest.json" />
+
+    <link rel="preconnect" href="https://www.google-analytics.com/" />
+
+    <link rel="preload" href="./fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+
+    <style>
+      * {
+        font-family: 'Inter', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Inter custom';
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Regular';
+        src: url(./fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2-variations'),
+          url(./fonts/Inter-roman.var.woff2) format('woff2');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Inter custom', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-variant: none;
+        font-smooth: always;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+        }
+      }
+    </style>
+  <script defer src="./static/js/bundle.js"></script><meta property="og:title" content="Get PEPE on Uniswap"/><meta property="og:image" content="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6982508145454Ce325dDbE47a25d4ec3d2311933/logo.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get PEPE on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get PEPE on Uniswap"/><meta property="twitter:image" content="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6982508145454Ce325dDbE47a25d4ec3d2311933/logo.png"/><meta property="twitter:image:alt" content="Get PEPE on Uniswap"/></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
