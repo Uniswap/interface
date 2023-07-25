@@ -46,3 +46,5 @@ function getUniswapAmplitudeProxyUrl(): string {
 export const TOKEN_WARNING_HELP_PAGE_URL = `${uniswapUrls.helpUrl}/hc/en-us/articles/8723118437133-What-are-token-warnings-`
 
 export const SWAP_SLIPPAGE_HELP_PAGE_URL = `${uniswapUrls.helpUrl}/hc/en-us/articles/8643879653261-What-is-Price-Slippage-`
+
+export const SUPPORTED_NETWORKS_PAGE_URL = `${uniswapUrls.helpUrl}/hc/en-us/articles/14569415293325`

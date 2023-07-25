@@ -196,7 +196,7 @@ export function WalletConnectModal({
             <WalletQRCode address={activeAddress} />
           </Trace>
         )}
-        <Flex centered mb="spacing36" mt="spacing16" mx="spacing16">
+        <Flex centered mb="spacing48" mt="spacing16" mx="spacing16">
           <TouchableArea
             hapticFeedback
             borderColor={isDarkMode ? 'none' : 'backgroundOutline'}
