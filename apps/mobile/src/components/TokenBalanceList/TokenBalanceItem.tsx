@@ -93,7 +93,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
             {!portfolioBalance.balanceUSD ? (
               <Flex centered flex={1}>
-                <Text color="textSecondary">{t('NA')}</Text>
+                <Text color="textSecondary">{t('N/A')}</Text>
               </Flex>
             ) : (
               <Flex alignItems="flex-end" gap="spacing4" pl="spacing8">
