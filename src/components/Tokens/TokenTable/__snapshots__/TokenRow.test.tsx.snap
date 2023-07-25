@@ -246,12 +246,9 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   }
 }
 
-@media only screen and (max-width:360px) {
+@media only screen and (max-width:396px) {
   .c4 {
-    min-width: unset;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 0;
+    min-width: 200px;
   }
 }
 
