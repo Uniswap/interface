@@ -151,7 +151,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
           onClick={() => setIsOpen(!isOpen)}
         >
           {!isSupported ? (
-            <AlertTriangle size={20} color={theme.neutral2} />
+            <AlertTriangle size={24} color={theme.neutral2} />
           ) : (
             <img src={info.logoUrl} alt={info.label} className={styles.Image} data-testid="chain-selector-logo" />
           )}

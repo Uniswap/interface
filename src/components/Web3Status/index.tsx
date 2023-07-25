@@ -77,7 +77,8 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
   border: ${({ isClaimAvailable }) => isClaimAvailable && `1px solid ${colors.purple300}`};
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.surface2)};
+    border: 1px solid ${({ theme }) => theme.surface2};
+    background-color: ${({ pending, theme }) => (pending ? theme.accent2 : theme.surface2)};
 
     :focus {
       border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.accent1) : darken(0.1, theme.surface3))};

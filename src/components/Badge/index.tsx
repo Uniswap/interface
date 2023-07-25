@@ -38,7 +38,7 @@ function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTh
     case BadgeVariant.WARNING_OUTLINE:
       return 'transparent'
     default:
-      return theme.surface3
+      return theme.surface2
   }
 }
 
