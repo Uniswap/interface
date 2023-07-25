@@ -21,16 +21,21 @@ export function PoolPriceBar({
   price?: Price<Currency, Currency>
 }) {
   const theme = useTheme()
-  const canInvertPrice = Boolean(
-    price && price.baseCurrency && price.quoteCurrency && !price.baseCurrency.equals(price.quoteCurrency)
-  )
-  const invertedPrice = canInvertPrice ? price?.invert()?.toSignificant(6) : undefined
+
+  let invertedPrice: string | undefined
+  try {
+    invertedPrice = price?.invert()?.toSignificant(6)
+  } catch (error) {
+    invertedPrice = undefined
+  }
 
   return (
     <AutoColumn gap="md">
       <AutoRow justify="space-around" gap="4px">
         <AutoColumn justify="center">
-          <ThemedText.DeprecatedBlack>{price?.toSignificant(6) ?? '-'}</ThemedText.DeprecatedBlack>
+          <ThemedText.DeprecatedBlack data-testid="currency-b-price">
+            {price?.toSignificant(6) ?? '-'}
+          </ThemedText.DeprecatedBlack>
           <Text fontWeight={500} fontSize={14} color={theme.textSecondary} pt={1}>
             <Trans>
               {currencies[Field.CURRENCY_B]?.symbol} per {currencies[Field.CURRENCY_A]?.symbol}
@@ -38,7 +43,7 @@ export function PoolPriceBar({
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <ThemedText.DeprecatedBlack>{invertedPrice ?? '-'}</ThemedText.DeprecatedBlack>
+          <ThemedText.DeprecatedBlack data-testid="currency-a-price">{invertedPrice ?? '-'}</ThemedText.DeprecatedBlack>
           <Text fontWeight={500} fontSize={14} color={theme.textSecondary} pt={1}>
             <Trans>
               {currencies[Field.CURRENCY_A]?.symbol} per {currencies[Field.CURRENCY_B]?.symbol}

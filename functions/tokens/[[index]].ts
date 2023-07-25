@@ -2,14 +2,17 @@
 import { MetaTagInjector } from '../components/metaTagInjector'
 import getToken from '../utils/getToken'
 
+const convertTokenAddress = (tokenAddress: string) => {
+  return tokenAddress && tokenAddress === 'NATIVE' ? '0x0000000000000000000000000000000000000000' : tokenAddress
+}
+
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const { index } = params
-  const networkName = String(index[0]).toUpperCase()
-  let tokenAddress = String(index[1])
-  tokenAddress =
-    tokenAddress !== 'undefined' && tokenAddress === 'NATIVE'
-      ? '0x0000000000000000000000000000000000000000'
-      : tokenAddress
+  const networkName = index[0]?.toString().toUpperCase()
+  const tokenAddress = convertTokenAddress(index[1]?.toString())
+  if (!tokenAddress) {
+    return next()
+  }
   const tokenPromise = getToken(networkName, tokenAddress, request.url)
   const resPromise = next()
   try {

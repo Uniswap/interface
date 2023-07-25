@@ -1,4 +1,3 @@
-//We set a 50 second timeout on all tests as global-setup doesn't always wait for the proxy to be ready before running tests
 const assets = [
   {
     address: '0xed5af388653567af2f388e6224dc7c4b3241c544',
@@ -23,30 +22,22 @@ const assets = [
   },
 ]
 
-test.each(assets)(
-  'should inject metadata for valid assets',
-  async (nft) => {
-    const url = 'http://127.0.0.1:3000/nfts/asset/' + nft.address + '/' + nft.assetId
-    const body = await fetch(new Request(url)).then((res) => res.text())
-    expect(body).toMatchSnapshot()
-    expect(body).toContain(`<meta property="og:title" content="${nft.collectionName} #${nft.assetId}"/>`)
-    expect(body).toContain(`<meta property="og:image" content="${nft.image}"/>`)
-    expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
-    expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
-    expect(body).toContain(`<meta property="og:type" content="website"/>`)
-    expect(body).toContain(`<meta property="og:url" content="${url}"/>`)
-    expect(body).toContain(
-      `<meta property="og:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`
-    )
-    expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
-    expect(body).toContain(`<meta property="twitter:title" content="${nft.collectionName} #${nft.assetId}"/>`)
-    expect(body).toContain(`<meta property="twitter:image" content="${nft.image}"/>`)
-    expect(body).toContain(
-      `<meta property="twitter:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`
-    )
-  },
-  50000
-)
+test.each(assets)('should inject metadata for valid assets', async (nft) => {
+  const url = 'http://127.0.0.1:3000/nfts/asset/' + nft.address + '/' + nft.assetId
+  const body = await fetch(new Request(url)).then((res) => res.text())
+  expect(body).toMatchSnapshot()
+  expect(body).toContain(`<meta property="og:title" content="${nft.collectionName} #${nft.assetId}"/>`)
+  expect(body).toContain(`<meta property="og:image" content="${nft.image}"/>`)
+  expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
+  expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
+  expect(body).toContain(`<meta property="og:type" content="website"/>`)
+  expect(body).toContain(`<meta property="og:url" content="${url}"/>`)
+  expect(body).toContain(`<meta property="og:image:alt" content="${nft.collectionName} #${nft.assetId}"/>`)
+  expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
+  expect(body).toContain(`<meta property="twitter:title" content="${nft.collectionName} #${nft.assetId}"/>`)
+  expect(body).toContain(`<meta property="twitter:image" content="${nft.image}"/>`)
+  expect(body).toContain(`<meta property="twitter:image:alt" content="${nft.collectionName} #${nft.assetId}"/>`)
+})
 
 const invalidAssets = [
   'http://127.0.0.1:3000/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/100000',
@@ -57,21 +48,17 @@ const invalidAssets = [
   'http://127.0.0.1:3000/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544//2550',
 ]
 
-test.each(invalidAssets)(
-  'should not inject metadata for invalid calls',
-  async (url) => {
-    const body = await fetch(new Request(url)).then((res) => res.text())
-    expect(body).not.toContain('og:title')
-    expect(body).not.toContain('og:image')
-    expect(body).not.toContain('og:image:width')
-    expect(body).not.toContain('og:image:height')
-    expect(body).not.toContain('og:type')
-    expect(body).not.toContain('og:url')
-    expect(body).not.toContain('og:image:alt')
-    expect(body).not.toContain('twitter:card')
-    expect(body).not.toContain('twitter:title')
-    expect(body).not.toContain('twitter:image')
-    expect(body).not.toContain('twitter:image:alt')
-  },
-  50000
-)
+test.each(invalidAssets)('should not inject metadata for invalid asset calls', async (url) => {
+  const body = await fetch(new Request(url)).then((res) => res.text())
+  expect(body).not.toContain('og:title')
+  expect(body).not.toContain('og:image')
+  expect(body).not.toContain('og:image:width')
+  expect(body).not.toContain('og:image:height')
+  expect(body).not.toContain('og:type')
+  expect(body).not.toContain('og:url')
+  expect(body).not.toContain('og:image:alt')
+  expect(body).not.toContain('twitter:card')
+  expect(body).not.toContain('twitter:title')
+  expect(body).not.toContain('twitter:image')
+  expect(body).not.toContain('twitter:image:alt')
+})
