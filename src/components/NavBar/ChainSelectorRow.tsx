@@ -39,6 +39,7 @@ const Label = styled.div`
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
+  font-weight: 485;
 `
 
 const Status = styled.div`

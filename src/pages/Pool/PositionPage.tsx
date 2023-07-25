@@ -111,7 +111,7 @@ const ExtentsText = styled.span`
 
 const HoverText = styled(ThemedText.DeprecatedMain)`
   text-decoration: none;
-  color: ${({ theme }) => theme.neutral3};
+  color: ${({ theme }) => theme.neutral2};
   :hover {
     color: ${({ theme }) => theme.neutral1};
     text-decoration: none;
@@ -666,7 +666,7 @@ function PositionPageContent() {
                 </HoverText>
               </Link>
               <ResponsiveRow>
-                <RowFixed>
+                <RowFixed style={{ flexWrap: 'wrap', gap: '8px' }}>
                   <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
                   <ThemedText.DeprecatedLabel fontSize="24px" mr="10px">
                     &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
@@ -706,7 +706,6 @@ function PositionPageContent() {
                   </ActionButtonResponsiveRow>
                 )}
               </ResponsiveRow>
-              <RowBetween></RowBetween>
             </AutoColumn>
             <ResponsiveRow align="flex-start">
               <HideSmall
@@ -807,11 +806,7 @@ function PositionPageContent() {
                             <Trans>Unclaimed fees</Trans>
                           </Label>
                           {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
-                            <ThemedText.DeprecatedLargeHeader
-                              color={theme.success}
-                              fontSize="36px"
-                              fontWeight={535}
-                            >
+                            <ThemedText.DeprecatedLargeHeader color={theme.success} fontSize="36px" fontWeight={535}>
                               <Trans>${fiatValueOfFees.toFixed(2, { groupSeparator: ',' })}</Trans>
                             </ThemedText.DeprecatedLargeHeader>
                           ) : (

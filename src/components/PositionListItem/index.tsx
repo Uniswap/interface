@@ -65,22 +65,23 @@ const RangeLineItem = styled(DataLineItem)`
 const DoubleArrow = styled.span`
   font-size: 12px;
   margin: 0 2px;
-  color: ${({ theme }) => theme.neutral3};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 const RangeText = styled(ThemedText.Caption)`
-  font-size: 12px !important;
+  font-size: 14px !important;
   word-break: break-word;
   padding: 0.25rem 0.25rem;
   border-radius: 8px;
 `
 
 const FeeTierText = styled(ThemedText.UtilityBadge)`
-  font-size: 10px !important;
-  margin-left: 14px !important;
+  font-size: 16px !important;
+  margin-left: 8px !important;
+  color: ${({ theme }) => theme.neutral3};
 `
 const ExtentsText = styled(ThemedText.Caption)`
-  color: ${({ theme }) => theme.neutral3};
+  color: ${({ theme }) => theme.neutral2};
   display: inline-block;
   line-height: 16px;
   margin-right: 4px !important;
@@ -221,9 +222,6 @@ export default function PositionListItem({
       {priceLower && priceUpper ? (
         <RangeLineItem>
           <RangeText>
-            <ExtentsText>
-              <Trans>Min: </Trans>
-            </ExtentsText>
             <Trans>
               <span>
                 {formatTickPrice({
@@ -232,7 +230,7 @@ export default function PositionListItem({
                   direction: Bound.LOWER,
                 })}{' '}
               </span>
-              <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
+              {/* <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} /> */}
             </Trans>
           </RangeText>{' '}
           <HideSmall>
@@ -242,9 +240,6 @@ export default function PositionListItem({
             <DoubleArrow>↔</DoubleArrow>{' '}
           </SmallOnly>
           <RangeText>
-            <ExtentsText>
-              <Trans>Max:</Trans>
-            </ExtentsText>
             <Trans>
               <span>
                 {formatTickPrice({
@@ -253,8 +248,10 @@ export default function PositionListItem({
                   direction: Bound.UPPER,
                 })}{' '}
               </span>
-              <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
-              <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+              <ExtentsText>
+                <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
+                <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+              </ExtentsText>
             </Trans>
           </RangeText>
         </RangeLineItem>

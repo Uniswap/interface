@@ -1,5 +1,7 @@
 import { formatEther } from '@ethersproject/units'
-import { SquareArrowDownIcon, SquareArrowUpIcon, VerifiedIcon } from 'nft/components/icons'
+import { ReactComponent as ArrowChangeDown } from 'assets/svg/arrow-change-down.svg'
+import { ReactComponent as ArrowChangeUp } from 'assets/svg/arrow-change-up.svg'
+import { VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
 import { ethNumberStandardFormatter, volumeFormatter } from 'nft/utils'
@@ -161,9 +163,9 @@ export const ChangeCell = ({ change, children }: { children?: ReactNode; change?
   return (
     <ChangeCellContainer change={change ?? 0}>
       {!change || change > 0 ? (
-        <SquareArrowUpIcon width="20px" height="20px" />
+        <ArrowChangeUp width="16px" height="16px" />
       ) : (
-        <SquareArrowDownIcon width="20px" height="20px" />
+        <ArrowChangeDown width="16px" height="16px" />
       )}
       <TextComponent color="currentColor">{children || `${change ? Math.abs(Math.round(change)) : 0}%`}</TextComponent>
     </ChangeCellContainer>

@@ -11,7 +11,7 @@ export default Card
 
 export const LightCard = styled(Card)`
   border: 1px solid ${({ theme }) => theme.surface3};
-  background-color: ${({ theme }) => theme.surface1};
+  background-color: ${({ theme }) => theme.surface2};
 `
 
 export const GrayCard = styled(Card)`
@@ -23,7 +23,7 @@ export const DarkGrayCard = styled(Card)`
 `
 
 export const DarkCard = styled(Card)`
-  background-color: ${({ theme }) => theme.surface1};
+  background-color: ${({ theme }) => theme.surface2};
 `
 
 export const OutlineCard = styled(Card)`

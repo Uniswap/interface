@@ -23,7 +23,7 @@ const SegmentWrapper = styled(AutoRow)<{ active?: boolean }>`
   ${({ theme, active }) =>
     active &&
     css`
-      background-color: ${theme.accent1};
+      background-color: ${theme.accent2};
       color: ${({ theme }) => theme.accent1};
     `};
 

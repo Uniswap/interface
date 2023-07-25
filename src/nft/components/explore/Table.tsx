@@ -1,6 +1,8 @@
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
+import { ReactComponent as ArrowChangeDown } from 'assets/svg/arrow-change-down.svg'
+import { ReactComponent as ArrowChangeUp } from 'assets/svg/arrow-change-up.svg'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useIsMobile } from 'nft/hooks'
@@ -12,7 +14,6 @@ import { GlowEffect, ThemedText } from 'theme'
 
 import { Box } from '../../components/Box'
 import { CollectionTableColumn } from '../../types'
-import { ArrowRightIcon } from '../icons'
 import { ColumnHeaders } from './CollectionTable'
 import * as styles from './Explore.css'
 
@@ -35,7 +36,7 @@ const RankCellContainer = styled.div`
 const StyledRow = styled.tr`
   cursor: pointer;
   :hover {
-    background: ${({ theme }) => theme.deprecated_stateOverlayHover};
+    background: ${({ theme }) => theme.surface3};
   }
   :active {
     background: ${({ theme }) => theme.deprecated_stateOverlayPressed};
@@ -165,9 +166,9 @@ export function Table<D extends Record<string, unknown>>({
                     <Box as="span" color="accent1" position="relative">
                       {column.isSorted ? (
                         column.isSortedDesc ? (
-                          <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />
+                          <ArrowChangeUp width="16px" height="16px" style={{ position: 'absolute' }} />
                         ) : (
-                          <ArrowRightIcon style={{ transform: 'rotate(-90deg)', position: 'absolute' }} />
+                          <ArrowChangeDown width="16px" height="16px" style={{ position: 'absolute' }} />
                         )
                       ) : (
                         ''
@@ -262,9 +263,9 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
                     <Box as="span" color="accent1" position="relative">
                       {column.isSorted ? (
                         column.isSortedDesc ? (
-                          <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />
+                          <ArrowChangeUp width="16px" height="16px" style={{ position: 'absolute' }} />
                         ) : (
-                          <ArrowRightIcon style={{ transform: 'rotate(-90deg)', position: 'absolute' }} />
+                          <ArrowChangeDown width="16px" height="16px" style={{ position: 'absolute' }} />
                         )
                       ) : (
                         ''

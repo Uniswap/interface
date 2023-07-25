@@ -8,7 +8,6 @@ import { PositionDetails } from 'types/position'
 const DesktopHeader = styled.div`
   display: none;
   font-size: 14px;
-  font-weight: 535;
   padding: 16px;
   border-bottom: 1px solid ${({ theme }) => theme.surface3};
 
@@ -56,7 +55,8 @@ const ToggleLabel = styled.button`
   background-color: transparent;
   border: none;
   color: ${({ theme }) => theme.accent1};
-  font-size: 1rem;
+  font-size: 14px;
+  font-weight: 485;
 `
 
 type PositionListProps = React.PropsWithChildren<{

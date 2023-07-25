@@ -319,9 +319,9 @@ function HeaderCell({
       {sortMethod === category && (
         <>
           {sortAscending ? (
-            <ArrowChangeUp width={16} color={theme.neutral2} />
+            <ArrowChangeUp width={16} height={16} color={theme.neutral2} />
           ) : (
-            <ArrowChangeDown width={16} color={theme.neutral2} />
+            <ArrowChangeDown width={16} height={16} color={theme.neutral2} />
           )}
         </>
       )}
