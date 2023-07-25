@@ -14,14 +14,13 @@ import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { ClickableStyle } from 'theme'
+import { BREAKPOINTS, ClickableStyle } from 'theme'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
   MAX_WIDTH_MEDIA_BREAKPOINT,
   MEDIUM_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
-  XSMALL_MEDIA_BREAKPOINT,
 } from '../constants'
 import { LoadingBubble } from '../loading'
 import {
@@ -165,11 +164,8 @@ const NameCell = styled(Cell)`
   min-width: 240px;
   gap: 8px;
 
-  @media only screen and (max-width: ${XSMALL_MEDIA_BREAKPOINT}) {
-    min-width: unset;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 0;
+  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
+    min-width: 200px;
   }
 `
 const PriceCell = styled(DataCell)`
