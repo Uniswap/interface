@@ -1,19 +1,21 @@
-import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { Plural, Trans } from '@lingui/macro'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { formatCurrencyAmount, formatNumber, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade } from 'state/routing/types'
-import formatPriceImpact from 'utils/formatPriceImpact'
+import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 
 import { Separator, ThemedText } from '../../theme'
 import Column from '../Column'
+import RouterLabel from '../RouterLabel'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip, TooltipSize } from '../Tooltip'
-import RouterLabel from './RouterLabel'
+import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 import SwapRoute from './SwapRoute'
 
 interface AdvancedSwapDetailsProps {
@@ -43,11 +45,14 @@ function TextWithLoadingPlaceholder({
 export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
+  const txCount = getTransactionCount(trade)
+
+  const supportsGasEstimate = chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
 
   return (
     <Column gap="md">
       <Separator />
-      {!trade.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
+      {supportsGasEstimate && (
         <RowBetween>
           <MouseoverTooltip
             text={
@@ -57,24 +62,37 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             }
           >
             <ThemedText.BodySmall color="textSecondary">
-              <Trans>Network fee</Trans>
+              <Plural value={txCount} one="Network fee" other="Network fees" />
+            </ThemedText.BodySmall>
+          </MouseoverTooltip>
+          <MouseoverTooltip
+            placement="right"
+            size={TooltipSize.Small}
+            text={<GasBreakdownTooltip trade={trade} hideUniswapXDescription />}
+          >
+            <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+              <ThemedText.BodySmall>
+                {`${trade.totalGasUseEstimateUSD ? '~' : ''}${formatNumber(
+                  trade.totalGasUseEstimateUSD,
+                  NumberType.FiatGasPrice
+                )}`}
+              </ThemedText.BodySmall>
+            </TextWithLoadingPlaceholder>
+          </MouseoverTooltip>
+        </RowBetween>
+      )}
+      {isClassicTrade(trade) && (
+        <RowBetween>
+          <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
+            <ThemedText.BodySmall color="textSecondary">
+              <Trans>Price Impact</Trans>
             </ThemedText.BodySmall>
           </MouseoverTooltip>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            <ThemedText.BodySmall>~${trade.gasUseEstimateUSD}</ThemedText.BodySmall>
+            <ThemedText.BodySmall>{formatPriceImpact(trade.priceImpact)}</ThemedText.BodySmall>
           </TextWithLoadingPlaceholder>
         </RowBetween>
       )}
-      <RowBetween>
-        <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
-          <ThemedText.BodySmall color="textSecondary">
-            <Trans>Price Impact</Trans>
-          </ThemedText.BodySmall>
-        </MouseoverTooltip>
-        <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-          <ThemedText.BodySmall>{formatPriceImpact(trade.priceImpact)}</ThemedText.BodySmall>
-        </TextWithLoadingPlaceholder>
-      </RowBetween>
       <RowBetween>
         <RowFixed>
           <MouseoverTooltip
@@ -93,7 +111,9 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <ThemedText.BodySmall>
             {trade.tradeType === TradeType.EXACT_INPUT
-              ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
+              ? `${formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), NumberType.SwapTradeAmount)} ${
+                  trade.outputAmount.currency.symbol
+                }`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
@@ -115,7 +135,9 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <ThemedText.BodySmall>
-            {`${trade.outputAmount.toSignificant(6)} ${trade.outputAmount.currency.symbol}`}
+            {`${formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount)} ${
+              trade.outputAmount.currency.symbol
+            }`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
       </RowBetween>
@@ -124,17 +146,32 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <ThemedText.BodySmall color="textSecondary">
           <Trans>Order routing</Trans>
         </ThemedText.BodySmall>
-        <MouseoverTooltip
-          size={TooltipSize.Large}
-          text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
-          onOpen={() => {
-            sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
-              element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
-            })
-          }}
-        >
-          <RouterLabel />
-        </MouseoverTooltip>
+        {isClassicTrade(trade) ? (
+          <MouseoverTooltip
+            size={TooltipSize.Large}
+            text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
+            onOpen={() => {
+              sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
+                element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
+              })
+            }}
+          >
+            <RouterLabel trade={trade} />
+          </MouseoverTooltip>
+        ) : (
+          <MouseoverTooltip
+            size={TooltipSize.Small}
+            text={<GasBreakdownTooltip trade={trade} hideFees />}
+            placement="right"
+            onOpen={() => {
+              sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
+                element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
+              })
+            }}
+          >
+            <RouterLabel trade={trade} />
+          </MouseoverTooltip>
+        )}
       </RowBetween>
     </Column>
   )

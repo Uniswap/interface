@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Icons/LoadingSpinner'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { CheckMarkIcon } from 'nft/components/icons'
 import styled, { useTheme } from 'styled-components/macro'
 
@@ -18,7 +18,7 @@ const Container = styled.button<{ disabled: boolean }>`
   display: grid;
   grid-template-columns: min-content 1fr min-content;
   justify-content: space-between;
-  line-height: 24px;
+  line-height: 20px;
   opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
   padding: 10px 8px;
   text-align: left;
@@ -63,7 +63,7 @@ const Logo = styled.img`
 `
 interface ChainSelectorRowProps {
   disabled?: boolean
-  targetChain: SupportedChainId
+  targetChain: ChainId
   onSelectChain: (targetChain: number) => void
   isPending: boolean
 }
@@ -80,7 +80,6 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
       onClick={() => {
         if (!disabled) onSelectChain(targetChain)
       }}
-      data-testid={`chain-selector-option-${label.toLowerCase()}`}
     >
       <Logo src={logoUrl} alt={label} />
       <Label>{label}</Label>

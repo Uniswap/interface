@@ -1,9 +1,9 @@
-import { SupportedChainId, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, WETH9 } from '@uniswap/sdk-core'
 
-import { UNI } from '../../src/constants/tokens'
+import { ARB, UNI } from '../../src/constants/tokens'
 import { getTestSelector } from '../utils'
 
-const UNI_MAINNET = UNI[SupportedChainId.MAINNET]
+const UNI_MAINNET = UNI[ChainId.MAINNET]
 
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 
@@ -115,7 +115,7 @@ describe('Token details', () => {
       cy.url().should('not.include', `${UNI_MAINNET.address}`)
     })
 
-    it.only('should not share swap state with the main swap page', () => {
+    it('should not share swap state with the main swap page', () => {
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
       cy.get(`#swap-currency-input .open-currency-select-button`).click()
       cy.contains('WETH').click()
@@ -149,8 +149,9 @@ describe('Token details', () => {
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
       cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')
-      cy.get(getTestSelector('token-table-row-ARB')).click()
+      cy.get(getTestSelector(`token-table-row-${ARB.address.toLowerCase()}`)).click()
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'ARB')
+      cy.get(getTestSelector('open-settings-dialog-button')).should('be.disabled')
       cy.contains('Connect to Arbitrum').should('exist')
     })
   })

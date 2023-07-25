@@ -9,6 +9,7 @@ export default defineConfig({
   chromeWebSecurity: false,
   experimentalMemoryManagement: true, // better memory management, see https://github.com/cypress-io/cypress/pull/25462
   retries: { runMode: 2 },
+  videoCompression: false,
   e2e: {
     async setupNodeEvents(on, config) {
       await setupHardhatEvents(on, config)
@@ -24,14 +25,9 @@ export default defineConfig({
         }
       })
 
-      return {
-        ...config,
-        // Only enable Chrome.
-        // Electron (the default) has issues injecting window.ethereum before pageload, so it is not viable.
-        browsers: config.browsers.filter(({ name }) => name === 'chrome'),
-      }
+      return config
     },
     baseUrl: 'http://localhost:3000',
-    specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
+    specPattern: 'cypress/{e2e,staging}/**/*.test.ts',
   },
 })

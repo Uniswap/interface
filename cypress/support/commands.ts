@@ -2,7 +2,7 @@ import 'cypress-hardhat/lib/browser'
 
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 
-import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
+import { FeatureFlag } from '../../src/featureFlags'
 import { UserState } from '../../src/state/user/reducer'
 import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
 import { injected } from './ethereum'
@@ -58,7 +58,7 @@ Cypress.Commands.overwrite(
             // Set initial user state.
             win.localStorage.setItem(
               'redux_localstorage_simple_user', // storage key for the user reducer using 'redux-localstorage-simple'
-              JSON.stringify(options?.userState ?? CONNECTED_WALLET_USER_STATE)
+              JSON.stringify({ ...CONNECTED_WALLET_USER_STATE, ...(options?.userState ?? {}) })
             )
 
             // Set feature flags, if configured.

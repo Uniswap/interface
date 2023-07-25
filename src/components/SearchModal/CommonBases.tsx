@@ -1,11 +1,10 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
+import { TraceEvent } from 'analytics'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'
-import { COMMON_BASES, COMMON_BASES_V2 } from 'constants/routing'
-import { useNativeUSDCArbitrumEnabled } from 'featureFlags/flags/nativeUsdcArbitrum'
+import { COMMON_BASES } from 'constants/routing'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { Text } from 'rebass'
@@ -60,9 +59,7 @@ export default function CommonBases({
   searchQuery: string
   isAddressSearch: string | false
 }) {
-  const nativeUsdcArbitrumEnabled = useNativeUSDCArbitrumEnabled()
-  const commonBases = nativeUsdcArbitrumEnabled ? COMMON_BASES_V2 : COMMON_BASES
-  const bases = chainId !== undefined ? commonBases[chainId] ?? [] : []
+  const bases = chainId !== undefined ? COMMON_BASES[chainId] ?? [] : []
 
   return bases.length > 0 ? (
     <MobileWrapper gap="md">
@@ -84,6 +81,7 @@ export default function CommonBases({
                 onClick={() => !isSelected && onSelect(currency)}
                 disable={isSelected}
                 key={currencyId(currency)}
+                data-testid={`common-base-${currency.symbol}`}
               >
                 <CurrencyLogoFromList currency={currency} />
                 <Text fontWeight={500} fontSize={16}>

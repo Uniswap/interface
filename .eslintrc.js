@@ -13,7 +13,6 @@ module.exports = {
       files: ['**/*'],
       rules: {
         'multiline-comment-style': ['error', 'separate-lines'],
-        'rulesdir/enforce-retry-on-import': 'error',
         'rulesdir/no-undefined-or': 'error',
       },
     },
@@ -52,6 +51,23 @@ module.exports = {
                 name: 'zustand',
                 importNames: ['default'],
                 message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      files: ['**/*.ts', '**/*.tsx'],
+      excludedFiles: ['src/analytics/*'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: '@uniswap/analytics',
+                message: `Do not import from '@uniswap/analytics' directly. Use 'analytics' instead.`,
               },
             ],
           },

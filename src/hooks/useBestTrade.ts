@@ -3,7 +3,8 @@ import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
 import { useMemo } from 'react'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { RouterPreference } from 'state/routing/slice'
+import { ClassicTrade, InterfaceTrade, QuoteMethod, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
 
@@ -18,6 +19,27 @@ const DEBOUNCE_TIME = 350
 // Temporary until we remove the feature flag.
 const DEBOUNCE_TIME_INCREASED = 650
 
+export function useBestTrade(
+  tradeType: TradeType,
+  amountSpecified?: CurrencyAmount<Currency>,
+  otherCurrency?: Currency,
+  routerPreferenceOverride?: RouterPreference.X,
+  account?: string
+): {
+  state: TradeState
+  trade?: InterfaceTrade
+}
+
+export function useBestTrade(
+  tradeType: TradeType,
+  amountSpecified?: CurrencyAmount<Currency>,
+  otherCurrency?: Currency,
+  routerPreferenceOverride?: RouterPreference.API | RouterPreference.CLIENT,
+  account?: string
+): {
+  state: TradeState
+  trade?: ClassicTrade
+}
 /**
  * Returns the best v2+v3 trade for a desired swap.
  * @param tradeType whether the swap is an exact in/out
@@ -27,18 +49,22 @@ const DEBOUNCE_TIME_INCREASED = 650
 export function useBestTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
-  otherCurrency?: Currency
+  otherCurrency?: Currency,
+  routerPreferenceOverride?: RouterPreference,
+  account?: string
 ): {
   state: TradeState
   trade?: InterfaceTrade
+  method?: QuoteMethod
 } {
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
 
+  const debouncedSwapQuoteFlagEnabled = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
-    useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME
+    debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME
   )
 
   const isAWrapTransaction = useMemo(() => {
@@ -55,12 +81,16 @@ export function useBestTrade(
   const [routerPreference] = useRouterPreference()
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
-    autoRouterSupported && shouldGetTrade ? debouncedAmount : undefined,
+    amountSpecified ? debouncedAmount : undefined,
     debouncedOtherCurrency,
-    routerPreference
+    routerPreferenceOverride ?? routerPreference,
+    !(autoRouterSupported && shouldGetTrade), // skip fetching
+    account
   )
 
-  const isLoading = routingAPITrade.state === TradeState.LOADING
+  const inDebounce =
+    (!debouncedAmount && Boolean(amountSpecified)) || (!debouncedOtherCurrency && Boolean(otherCurrency))
+  const isLoading = routingAPITrade.state === TradeState.LOADING || inDebounce
   const useFallback = (!autoRouterSupported || routingAPITrade.state === TradeState.NO_ROUTE_FOUND) && shouldGetTrade
 
   // only use client side router if routing api trade failed or is not supported

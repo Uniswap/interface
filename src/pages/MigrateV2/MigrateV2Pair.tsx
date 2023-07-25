@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
@@ -38,7 +38,6 @@ import { AutoColumn } from '../../components/Column'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import CurrencyLogo from '../../components/Logo/CurrencyLogo'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useToken } from '../../hooks/Tokens'
 import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
@@ -729,7 +728,7 @@ export default function MigrateV2Pair() {
           <ThemedText.DeprecatedMediumHeader>
             <Trans>Migrate V2 Liquidity</Trans>
           </ThemedText.DeprecatedMediumHeader>
-          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} />
+          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={chainId} />
         </AutoRow>
 
         {!account ? (

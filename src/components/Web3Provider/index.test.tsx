@@ -1,10 +1,10 @@
 import { act, render } from '@testing-library/react'
-import { sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { initializeConnector, MockEIP1193Provider } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 import { Provider as EIP1193Provider } from '@web3-react/types'
-import { useGetConnection } from 'connection'
+import { sendAnalyticsEvent, user } from 'analytics'
+import { getConnection } from 'connection'
 import { Connection, ConnectionType } from 'connection/types'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
@@ -15,13 +15,13 @@ import { mocked } from 'test-utils/mocked'
 
 import Web3Provider from '.'
 
-jest.mock('@uniswap/analytics', () => ({
+jest.mock('analytics', () => ({
   sendAnalyticsEvent: jest.fn(),
   user: { set: jest.fn(), postInsert: jest.fn() },
 }))
 jest.mock('connection', () => {
   const { ConnectionType } = jest.requireActual('connection')
-  return { ConnectionType, useGetConnection: jest.fn() }
+  return { ConnectionType, getConnection: jest.fn() }
 })
 jest.mock('hooks/useEagerlyConnect', () => jest.fn())
 jest.mock('hooks/useOrderedConnections', () => jest.fn())
@@ -72,7 +72,7 @@ describe('Web3Provider', () => {
 
   describe('analytics', () => {
     beforeEach(() => {
-      mocked(useGetConnection).mockReturnValue(jest.fn().mockReturnValue(connection))
+      mocked(getConnection).mockReturnValue(connection)
     })
 
     it('sends event when the active account changes', async () => {

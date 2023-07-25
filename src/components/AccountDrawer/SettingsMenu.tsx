@@ -8,9 +8,11 @@ import styled, { useTheme } from 'styled-components/macro'
 import { ClickableStyle, ThemedText } from 'theme'
 import ThemeToggle from 'theme/components/ThemeToggle'
 
+import { AnalyticsToggle } from './AnalyticsToggle'
 import { GitVersionRow } from './GitVersionRow'
 import { SlideOutMenu } from './SlideOutMenu'
 import { SmallBalanceToggle } from './SmallBalanceToggle'
+import { TestnetsToggle } from './TestnetsToggle'
 
 const InternalLinkMenuItem = styled(Link)`
   ${ClickableStyle}
@@ -44,13 +46,11 @@ const SectionTitle = styled(ThemedText.SubHeader)`
   padding-bottom: 24px;
 `
 
-const ThemeToggleContainer = styled.div`
-  margin: 0 0 6px;
-`
-
-const BalanceToggleContainer = styled.div`
-  padding: 16px 0;
-  margin-bottom: 26px;
+const ToggleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
 `
 
 export default function SettingsMenu({ onClose }: { onClose: () => void }) {
@@ -61,12 +61,12 @@ export default function SettingsMenu({ onClose }: { onClose: () => void }) {
       <SectionTitle>
         <Trans>Preferences</Trans>
       </SectionTitle>
-      <ThemeToggleContainer>
+      <ToggleWrapper>
         <ThemeToggle />
-      </ThemeToggleContainer>
-      <BalanceToggleContainer>
         <SmallBalanceToggle />
-      </BalanceToggleContainer>
+        <AnalyticsToggle />
+        <TestnetsToggle />
+      </ToggleWrapper>
 
       <SectionTitle data-testid="wallet-header">
         <Trans>Language</Trans>
