@@ -9,7 +9,7 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const assetPromise = getAsset(collectionAddress, tokenId, request.url)
   const resPromise = next()
   try {
-    const cache = caches.default
+    const cache = await caches.open('assets-cache')
     const response = await cache.match(request.url)
     if (response) {
       const data = JSON.parse(await response.text())

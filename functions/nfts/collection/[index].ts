@@ -8,7 +8,7 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const collectionPromise = getCollection(collectionAddress, request.url)
   const resPromise = next()
   try {
-    const cache = caches.default
+    const cache = await caches.open('collections-cache')
     const response = await cache.match(request.url)
     if (response) {
       const data = JSON.parse(await response.text())

@@ -16,7 +16,7 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const tokenPromise = getToken(networkName, tokenAddress, request.url)
   const resPromise = next()
   try {
-    const cache = caches.default
+    const cache = await caches.open('tokens-cache')
     const response = await cache.match(request.url)
     if (response) {
       const data = JSON.parse(await response.text())
