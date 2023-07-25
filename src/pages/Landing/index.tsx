@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
+import { Trace, TraceEvent } from 'analytics'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
@@ -21,6 +21,7 @@ import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
+import { getDownloadAppLinkProps } from 'utils/openDownloadApp'
 
 const PageContainer = styled.div`
   position: absolute;
@@ -388,7 +389,13 @@ export default function Landing() {
                 <LearnMoreArrow />
               </LearnMoreContainer>
 
-              <DownloadWalletLink href="https://wallet.uniswap.org/">
+              <DownloadWalletLink
+                {...getDownloadAppLinkProps({
+                  // landing page specific tracking params
+                  microSiteParams: `utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
+                  appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
+                })}
+              >
                 <AppleLogo width="20" height="20" />
                 Download the Uniswap Wallet for iOS
               </DownloadWalletLink>

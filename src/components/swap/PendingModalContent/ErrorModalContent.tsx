@@ -13,6 +13,7 @@ export enum PendingModalError {
   TOKEN_APPROVAL_ERROR,
   PERMIT_ERROR,
   CONFIRMATION_ERROR,
+  WRAP_ERROR,
 }
 
 interface ErrorModalContentProps {
@@ -44,6 +45,10 @@ function getErrorContent(errorType: PendingModalError) {
     case PendingModalError.CONFIRMATION_ERROR:
       return {
         title: <Trans>Swap failed</Trans>,
+      }
+    case PendingModalError.WRAP_ERROR:
+      return {
+        title: <Trans>Wrap failed</Trans>,
       }
   }
 }

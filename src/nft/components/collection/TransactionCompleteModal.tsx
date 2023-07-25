@@ -1,7 +1,7 @@
 import { formatEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Trace, useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
+import { Trace, useTrace } from 'analytics'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 import { Box } from 'nft/components/Box'

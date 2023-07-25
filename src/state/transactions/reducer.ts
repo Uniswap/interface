@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { ChainId } from '@uniswap/sdk-core'
 
 import { updateVersion } from '../global/actions'
-import { TransactionDetails, TransactionInfo } from './types'
+import { SerializableTransactionReceipt, TransactionDetails, TransactionInfo } from './types'
 
 // TODO(WEB-2053): update this to be a map of account -> chainId -> txHash -> TransactionDetails
 // to simplify usage, once we're able to invalidate localstorage
@@ -17,8 +17,9 @@ interface AddTransactionPayload {
   from: string
   hash: string
   info: TransactionInfo
-  nonce: number
+  nonce?: number
   deadline?: number
+  receipt?: SerializableTransactionReceipt
 }
 
 export const initialState: TransactionState = {}
@@ -29,13 +30,13 @@ const transactionSlice = createSlice({
   reducers: {
     addTransaction(
       transactions,
-      { payload: { chainId, from, hash, info, nonce, deadline } }: { payload: AddTransactionPayload }
+      { payload: { chainId, from, hash, info, nonce, deadline, receipt } }: { payload: AddTransactionPayload }
     ) {
       if (transactions[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
       }
       const txs = transactions[chainId] ?? {}
-      txs[hash] = { hash, info, from, addedTime: Date.now(), nonce, deadline }
+      txs[hash] = { hash, info, from, addedTime: Date.now(), nonce, deadline, receipt }
       transactions[chainId] = txs
     },
     clearAllTransactions(transactions, { payload: { chainId } }) {

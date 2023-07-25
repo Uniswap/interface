@@ -85,7 +85,7 @@ export function useStablecoinValue(currencyAmount: CurrencyAmount<Currency> | un
  * @param fiatValue string representation of a USD amount
  * @returns CurrencyAmount where currency is stablecoin on active chain
  */
-export function useStablecoinAmountFromFiatValue(fiatValue: string | null | undefined) {
+export function useStablecoinAmountFromFiatValue(fiatValue: number | null | undefined) {
   const { chainId } = useWeb3React()
   const stablecoin = chainId ? STABLECOIN_AMOUNT_OUT[chainId]?.currency : undefined
 
@@ -95,7 +95,7 @@ export function useStablecoinAmountFromFiatValue(fiatValue: string | null | unde
     }
 
     // trim for decimal precision when parsing
-    const parsedForDecimals = parseFloat(fiatValue).toFixed(stablecoin.decimals).toString()
+    const parsedForDecimals = fiatValue.toFixed(stablecoin.decimals).toString()
     try {
       // parse USD string into CurrencyAmount based on stablecoin decimals
       return tryParseCurrencyAmount(parsedForDecimals, stablecoin)

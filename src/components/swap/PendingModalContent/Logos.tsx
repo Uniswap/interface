@@ -59,7 +59,7 @@ const FadeWrapper = styled.div<{ $scale: boolean }>`
   }
 `
 
-function FadePresence({
+export function FadePresence({
   children,
   className,
   $scale = false,
