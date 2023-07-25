@@ -66,7 +66,7 @@ exports[`renders multi route 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background: #22222212;
+  background: #F9F9F9;
   border: unset;
   border-radius: 0.5rem;
   color: #000;
@@ -132,7 +132,7 @@ exports[`renders multi route 1`] = `
 }
 
 .c8 {
-  background-color: #22222212;
+  background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
   font-size: 12px;
@@ -322,7 +322,7 @@ exports[`renders single route 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background: #22222212;
+  background: #F9F9F9;
   border: unset;
   border-radius: 0.5rem;
   color: #000;
@@ -388,7 +388,7 @@ exports[`renders single route 1`] = `
 }
 
 .c8 {
-  background-color: #22222212;
+  background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
   font-size: 12px;
