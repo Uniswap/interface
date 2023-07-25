@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import useBlockNumber, { useEthBlockNumber } from 'lib/hooks/useBlockNumber'
+import useBlockNumber, { useMainnetBlockNumber } from 'lib/hooks/useBlockNumber'
 import multicall from 'lib/state/multicall'
 import { SkipFirst } from 'types/tuple'
 
@@ -23,9 +23,9 @@ export function useSingleCallResult(...args: SkipFirstTwoParams<typeof multicall
   return multicall.hooks.useSingleCallResult(chainId, latestBlock, ...args)
 }
 
-export function useEthSingleCallResult(...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleCallResult>) {
-  const { latestEthBlock } = useCallContext()
-  return multicall.hooks.useSingleCallResult(ChainId.MAINNET, latestEthBlock, ...args)
+export function useMainnetSingleCallResult(...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleCallResult>) {
+  const latestMainnetBlock = useMainnetBlockNumber()
+  return multicall.hooks.useSingleCallResult(ChainId.MAINNET, latestMainnetBlock, ...args)
 }
 
 export function useSingleContractMultipleData(
@@ -45,6 +45,5 @@ export function useSingleContractWithCallData(
 function useCallContext() {
   const { chainId } = useWeb3React()
   const latestBlock = useBlockNumber()
-  const latestEthBlock = useEthBlockNumber()
-  return { chainId, latestBlock, latestEthBlock }
+  return { chainId, latestBlock }
 }

@@ -68,34 +68,21 @@ export function useContract<T extends Contract = Contract>(
   }, [addressOrAddressMap, ABI, provider, chainId, withSignerIfPossible, account]) as T
 }
 
-function useEthOnlyContract<T extends Contract = Contract>(
-  addressOrAddressMap: string | { [chainId: number]: string } | undefined,
-  ABI: any,
-  withSignerIfPossible = true
-): T | null {
-  const { provider, account, chainId } = useWeb3React()
+function useMainnetContract<T extends Contract = Contract>(address: string | undefined, ABI: any): T | null {
+  const { chainId } = useWeb3React()
+  const isMainnet = chainId === ChainId.MAINNET
+  const contract = useContract(isMainnet ? address : undefined, ABI, false)
   return useMemo(() => {
-    if (!addressOrAddressMap || !ABI || !provider || !chainId) return null
-    let address: string | undefined
-    if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap
-    else address = addressOrAddressMap[ChainId.MAINNET]
+    if (isMainnet) return contract
     if (!address) return null
+    const provider = RPC_PROVIDERS[ChainId.MAINNET]
     try {
-      if (chainId === ChainId.MAINNET) {
-        return getContract(address, ABI, provider, withSignerIfPossible && account ? account : undefined)
-      } else {
-        return getContract(
-          address,
-          ABI,
-          RPC_PROVIDERS[ChainId.MAINNET],
-          withSignerIfPossible && account ? account : undefined
-        )
-      }
+      return getContract(address, ABI, provider)
     } catch (error) {
-      console.error('Failed to get contract', error)
+      console.error('Failed to get mainnet contract', error)
       return null
     }
-  }, [addressOrAddressMap, ABI, provider, chainId, withSignerIfPossible, account]) as T
+  }, [address, ABI, contract, isMainnet]) as T
 }
 
 export function useV2MigratorContract() {
@@ -127,12 +114,12 @@ export function useArgentWalletDetectorContract() {
   return useContract<ArgentWalletDetector>(ARGENT_WALLET_DETECTOR_ADDRESS, ARGENT_WALLET_DETECTOR_ABI, false)
 }
 
-export function useENSRegistrarContract(withSignerIfPossible?: boolean) {
-  return useEthOnlyContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES, ENS_ABI, withSignerIfPossible)
+export function useENSRegistrarContract() {
+  return useMainnetContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES[ChainId.MAINNET], ENS_ABI)
 }
 
-export function useENSResolverContract(address: string | undefined, withSignerIfPossible?: boolean) {
-  return useEthOnlyContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI, withSignerIfPossible)
+export function useENSResolverContract(address: string | undefined) {
+  return useMainnetContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI)
 }
 
 export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
@@ -155,11 +142,10 @@ export function useInterfaceMulticall() {
   return useContract<UniswapInterfaceMulticall>(MULTICALL_ADDRESSES, MulticallABI, false) as UniswapInterfaceMulticall
 }
 
-export function useEthOnlyInterfaceMulticall() {
-  return useEthOnlyContract<UniswapInterfaceMulticall>(
-    MULTICALL_ADDRESSES,
-    MulticallABI,
-    false
+export function useMainnetInterfaceMulticall() {
+  return useMainnetContract<UniswapInterfaceMulticall>(
+    MULTICALL_ADDRESSES[ChainId.MAINNET],
+    MulticallABI
   ) as UniswapInterfaceMulticall
 }
 

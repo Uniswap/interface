@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { hexZeroPad } from '@ethersproject/bytes'
 import { namehash } from '@ethersproject/hash'
 import { useWeb3React } from '@web3-react/core'
-import { NEVER_RELOAD, useEthSingleCallResult } from 'lib/hooks/multicall'
+import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -49,14 +49,13 @@ export default function useENSAvatar(
 function useAvatarFromNode(node?: string): { avatar?: string; loading: boolean } {
   const nodeArgument = useMemo(() => [node], [node])
   const textArgument = useMemo(() => [node, 'avatar'], [node])
-  const registrarContract = useENSRegistrarContract(false)
-  const resolverAddress = useEthSingleCallResult(registrarContract, 'resolver', nodeArgument, NEVER_RELOAD)
+  const registrarContract = useENSRegistrarContract()
+  const resolverAddress = useMainnetSingleCallResult(registrarContract, 'resolver', nodeArgument, NEVER_RELOAD)
   const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
-    resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined,
-    false
+    resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined
   )
-  const avatar = useEthSingleCallResult(resolverContract, 'text', textArgument, NEVER_RELOAD)
+  const avatar = useMainnetSingleCallResult(resolverContract, 'text', textArgument, NEVER_RELOAD)
 
   return useMemo(
     () => ({
@@ -113,8 +112,8 @@ function useERC721Uri(
   const idArgument = useMemo(() => [id], [id])
   const { account } = useWeb3React()
   const contract = useERC721Contract(contractAddress)
-  const owner = useEthSingleCallResult(contract, 'ownerOf', idArgument, NEVER_RELOAD)
-  const uri = useEthSingleCallResult(contract, 'tokenURI', idArgument, NEVER_RELOAD)
+  const owner = useMainnetSingleCallResult(contract, 'ownerOf', idArgument, NEVER_RELOAD)
+  const uri = useMainnetSingleCallResult(contract, 'tokenURI', idArgument, NEVER_RELOAD)
   return useMemo(
     () => ({
       uri: !enforceOwnership || account === owner.result?.[0] ? uri.result?.[0] : undefined,
@@ -133,8 +132,8 @@ function useERC1155Uri(
   const idArgument = useMemo(() => [id], [id])
   const accountArgument = useMemo(() => [account || '', id], [account, id])
   const contract = useERC1155Contract(contractAddress)
-  const balance = useEthSingleCallResult(contract, 'balanceOf', accountArgument, NEVER_RELOAD)
-  const uri = useEthSingleCallResult(contract, 'uri', idArgument, NEVER_RELOAD)
+  const balance = useMainnetSingleCallResult(contract, 'balanceOf', accountArgument, NEVER_RELOAD)
+  const uri = useMainnetSingleCallResult(contract, 'uri', idArgument, NEVER_RELOAD)
   return useMemo(() => {
     try {
       // ERC-1155 allows a generic {id} in the URL, so prepare to replace if relevant,

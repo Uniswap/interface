@@ -1,8 +1,8 @@
 import { createMulticall, ListenerOptions } from '@uniswap/redux-multicall'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useEthOnlyInterfaceMulticall, useInterfaceMulticall } from 'hooks/useContract'
-import useBlockNumber, { useEthBlockNumber } from 'lib/hooks/useBlockNumber'
+import { useInterfaceMulticall, useMainnetInterfaceMulticall } from 'hooks/useContract'
+import useBlockNumber, { useMainnetBlockNumber } from 'lib/hooks/useBlockNumber'
 import { useMemo } from 'react'
 
 const multicall = createMulticall()
@@ -33,16 +33,16 @@ function getBlocksPerFetchForChainId(chainId: number | undefined): number {
 export function MulticallUpdater() {
   const { chainId } = useWeb3React()
   const latestBlockNumber = useBlockNumber()
-  const latestEthBlockNumber = useEthBlockNumber()
+  const latestMainnetBlockNumber = useMainnetBlockNumber()
   const contract = useInterfaceMulticall()
-  const ethContract = useEthOnlyInterfaceMulticall()
+  const mainnetContract = useMainnetInterfaceMulticall()
   const listenerOptions: ListenerOptions = useMemo(
     () => ({
       blocksPerFetch: getBlocksPerFetchForChainId(chainId),
     }),
     [chainId]
   )
-  const ethListener: ListenerOptions = useMemo(
+  const mainnetListener: ListenerOptions = useMemo(
     () => ({
       blocksPerFetch: getBlocksPerFetchForChainId(ChainId.MAINNET),
     }),
@@ -53,9 +53,9 @@ export function MulticallUpdater() {
     <>
       <multicall.Updater
         chainId={ChainId.MAINNET}
-        latestBlockNumber={latestEthBlockNumber}
-        contract={ethContract}
-        listenerOptions={ethListener}
+        latestBlockNumber={latestMainnetBlockNumber}
+        contract={mainnetContract}
+        listenerOptions={mainnetListener}
       />
       {chainId !== ChainId.MAINNET && (
         <multicall.Updater

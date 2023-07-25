@@ -9,7 +9,7 @@ const BlockNumberContext = createContext<
   | {
       value?: number
       fastForward(block: number): void
-      ethValue?: number
+      mainnetValue?: number
     }
   | typeof MISSING_PROVIDER
 >(MISSING_PROVIDER)
@@ -31,27 +31,41 @@ export function useFastForwardBlockNumber(): (block: number) => void {
   return useBlockNumberContext().fastForward
 }
 
-export function useEthBlockNumber(): number | undefined {
-  return useBlockNumberContext().ethValue
+export function useMainnetBlockNumber(): number | undefined {
+  return useBlockNumberContext().mainnetValue
 }
 
 export function BlockNumberProvider({ children }: { children: ReactNode }) {
   const { chainId: activeChainId, provider } = useWeb3React()
-  const [{ chainId, block }, setChainBlock] = useState<{ chainId?: number; block?: number }>({ chainId: activeChainId })
-  const [ethBlockNumber, setEthBlockNumber] = useState<number | undefined>(undefined)
+  const [{ chainId, block, mainnetBlock }, setChainBlock] = useState<{
+    chainId?: number
+    block?: number
+    mainnetBlock?: number
+  }>({
+    chainId: activeChainId,
+  })
 
   const onBlock = useCallback(
     (block: number) => {
       setChainBlock((chainBlock) => {
         if (chainBlock.chainId === activeChainId) {
           if (!chainBlock.block || chainBlock.block < block) {
-            return { chainId: activeChainId, block }
+            return { chainId: activeChainId, block, mainnetBlock: chainBlock.mainnetBlock }
           }
         }
         return chainBlock
       })
     },
     [activeChainId, setChainBlock]
+  )
+
+  const onMainnetBlock = useCallback(
+    (block: number) => {
+      setChainBlock((chainBlock) => {
+        return { ...chainBlock, mainnetBlock: block }
+      })
+    },
+    [setChainBlock]
   )
 
   const windowVisible = useIsWindowVisible()
@@ -70,13 +84,11 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
         .catch((error) => {
           console.error(`Failed to get block number for chainId ${activeChainId}`, error)
         })
-
-      if (activeChainId === ChainId.MAINNET) {
-        setEthBlockNumber(block)
-      } else {
-        RPC_PROVIDERS[ChainId.MAINNET].getBlockNumber().then(setEthBlockNumber)
+      if (mainnetBlock === undefined) {
+        RPC_PROVIDERS[ChainId.MAINNET].getBlockNumber().then((block) => {
+          if (!stale) onMainnetBlock(block)
+        })
       }
-
       provider.on('block', onBlock)
       return () => {
         stale = true
@@ -85,7 +97,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     }
 
     return void 0
-  }, [activeChainId, provider, onBlock, setChainBlock, windowVisible])
+  }, [activeChainId, provider, onBlock, setChainBlock, windowVisible, block, mainnetBlock, onMainnetBlock])
 
   const value = useMemo(
     () => ({
@@ -95,9 +107,9 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
           setChainBlock({ chainId: activeChainId, block: update })
         }
       },
-      ethValue: chainId === ChainId.MAINNET ? block : ethBlockNumber,
+      mainnetValue: chainId === ChainId.MAINNET ? block : mainnetBlock,
     }),
-    [activeChainId, block, chainId]
+    [activeChainId, block, chainId, mainnetBlock]
   )
   return <BlockNumberContext.Provider value={value}>{children}</BlockNumberContext.Provider>
 }
