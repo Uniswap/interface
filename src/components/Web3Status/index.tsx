@@ -154,7 +154,7 @@ function Web3StatusInner() {
 
   const pendingOrders = usePendingOrders()
 
-  const pendingTxs = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
+  const pendingTxs = sortedRecentTransactions.filter((tx) => !tx.receipt && !tx.cancelled).map((tx) => tx.hash)
 
   const hasPendingActivity = !!pendingTxs.length || !!pendingOrders.length
 

@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { addTransaction, removeTransaction } from './reducer'
+import { addTransaction, cancelTransaction, removeTransaction } from './reducer'
 import { TransactionDetails, TransactionInfo, TransactionType } from './types'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
@@ -44,6 +44,20 @@ export function useTransactionRemover() {
       dispatch(removeTransaction({ hash, chainId }))
     },
     [account, chainId, dispatch]
+  )
+}
+
+export function useTransactionCanceller() {
+  const { account } = useWeb3React()
+  const dispatch = useAppDispatch()
+
+  return useCallback(
+    (hash: string, chainId: number, cancelHash: string) => {
+      if (!account) return
+
+      dispatch(cancelTransaction({ hash, chainId, cancelHash }))
+    },
+    [account, dispatch]
   )
 }
 
@@ -126,6 +140,6 @@ export function useHasPendingRevocation(token?: Token, spender?: string): boolea
 export function useHasPendingTransactions() {
   const allTransactions = useAllTransactions()
   return useMemo(() => {
-    return Object.values(allTransactions).filter((tx) => !tx.receipt).length > 0
+    return Object.values(allTransactions).filter((tx) => !tx.receipt && !tx.cancelled).length > 0
   }, [allTransactions])
 }

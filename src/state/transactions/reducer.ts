@@ -67,6 +67,16 @@ const transactionSlice = createSlice({
       tx.receipt = receipt
       tx.confirmedTime = Date.now()
     },
+    cancelTransaction(transactions, { payload: { hash, chainId, cancelHash } }) {
+      const tx = transactions[chainId]?.[hash]
+
+      if (tx) {
+        delete transactions[chainId]?.[hash]
+        tx.hash = cancelHash
+        tx.cancelled = true
+        transactions[chainId][cancelHash] = tx
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(updateVersion, (transactions) => {
@@ -84,6 +94,12 @@ const transactionSlice = createSlice({
   },
 })
 
-export const { addTransaction, clearAllTransactions, checkedTransaction, finalizeTransaction, removeTransaction } =
-  transactionSlice.actions
+export const {
+  addTransaction,
+  clearAllTransactions,
+  checkedTransaction,
+  finalizeTransaction,
+  removeTransaction,
+  cancelTransaction,
+} = transactionSlice.actions
 export default transactionSlice.reducer

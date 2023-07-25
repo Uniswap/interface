@@ -139,6 +139,35 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
   },
 }
 
+export const CancelledTransactionTitleTable: { [key in TransactionType]: string } = {
+  [TransactionType.SWAP]: t`Cancelled swap`,
+  [TransactionType.WRAP]: t`Cancelled wrap`,
+  [TransactionType.ADD_LIQUIDITY_V3_POOL]: t`Cancelled add liquidity`,
+  [TransactionType.REMOVE_LIQUIDITY_V3]: t`Cancelled remove liquidity`,
+  [TransactionType.CREATE_V3_POOL]: t`Cancelled create pool`,
+  [TransactionType.COLLECT_FEES]: t`Cancelled collect fees`,
+  [TransactionType.APPROVAL]: t`Cancelled approval`,
+  [TransactionType.CLAIM]: t`Cancelled claim`,
+  [TransactionType.BUY]: t`Cancelled buy`,
+  [TransactionType.SEND]: t`Cancelled send`,
+  [TransactionType.RECEIVE]: t`Cancelled receive`,
+  [TransactionType.MINT]: t`Cancelled mint`,
+  [TransactionType.BURN]: t`Cancelled burn`,
+  [TransactionType.VOTE]: t`Cancelled vote`,
+  [TransactionType.QUEUE]: t`Cancelled queue`,
+  [TransactionType.EXECUTE]: t`Cancelled execute`,
+  [TransactionType.BORROW]: t`Cancelled borrow`,
+  [TransactionType.REPAY]: t`Cancelled repay`,
+  [TransactionType.DEPLOY]: t`Cancelled deploy`,
+  [TransactionType.CANCEL]: t`Cancelled cancel`,
+  [TransactionType.DELEGATE]: t`Cancelled delegate`,
+  [TransactionType.DEPOSIT_LIQUIDITY_STAKING]: t`Cancelled deposit`,
+  [TransactionType.WITHDRAW_LIQUIDITY_STAKING]: t`Cancelled withdraw`,
+  [TransactionType.ADD_LIQUIDITY_V2_POOL]: t`Cancelled add V2 liquidity`,
+  [TransactionType.MIGRATE_LIQUIDITY_V3]: t`Cancelled migrate liquidity`,
+  [TransactionType.SUBMIT_PROPOSAL]: t`Cancelled submit proposal`,
+}
+
 const AlternateTransactionTitleTable: { [key in TransactionType]?: { [state in TransactionStatus]: string } } = {
   [TransactionType.WRAP]: {
     [TransactionStatus.Pending]: t`Unwrapping`,

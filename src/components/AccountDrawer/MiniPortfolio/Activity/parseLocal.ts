@@ -25,7 +25,7 @@ import {
   WrapTransactionInfo,
 } from 'state/transactions/types'
 
-import { getActivityTitle, OrderTextTable } from '../constants'
+import { CancelledTransactionTitleTable, getActivityTitle, OrderTextTable } from '../constants'
 import { Activity, ActivityMap } from './types'
 
 function getCurrency(currencyId: string, chainId: ChainId, tokens: ChainTokenMap): Currency | undefined {
@@ -158,6 +158,7 @@ export function transactionToActivity(
       timestamp: (details.confirmedTime ?? details.addedTime) / 1000,
       from: details.from,
       nonce: details.nonce,
+      cancelled: details.cancelled,
     }
 
     let additionalFields: Partial<Activity> = {}
@@ -180,7 +181,14 @@ export function transactionToActivity(
       additionalFields = parseMigrateCreateV3(info, chainId, tokens)
     }
 
-    return { ...defaultFields, ...additionalFields }
+    const activity = { ...defaultFields, ...additionalFields }
+
+    if (details.cancelled) {
+      activity.title = CancelledTransactionTitleTable[details.info.type]
+      activity.status = TransactionStatus.Confirmed
+    }
+
+    return activity
   } catch (error) {
     console.debug(`Failed to parse transaction ${details.hash}`, error)
     return undefined
