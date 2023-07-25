@@ -44,7 +44,7 @@ const invalidCollections = [
 ]
 
 test.each(invalidCollections)(
-  'should not inject metadata for invalid urls',
+  'should not inject metadata for invalid collection urls',
   async (url) => {
     const body = await fetch(new Request(url)).then((res) => res.text())
     expect(body).not.toContain('og:title')

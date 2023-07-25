@@ -22,7 +22,7 @@ exports[`should inject metadata for valid collections 1`] = `
     <meta
       http-equiv="Content-Security-Policy"
       
-        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+        content="script-src 'self' 'unsafe-inline'"
       
     />
 
@@ -37,8 +37,6 @@ exports[`should inject metadata for valid collections 1`] = `
       See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="./manifest.json" />
-
-    <link rel="preconnect" href="https://www.google-analytics.com/" />
 
     <link rel="preload" href="./fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
 
@@ -156,7 +154,7 @@ exports[`should inject metadata for valid collections 2`] = `
     <meta
       http-equiv="Content-Security-Policy"
       
-        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+        content="script-src 'self' 'unsafe-inline'"
       
     />
 
@@ -171,8 +169,6 @@ exports[`should inject metadata for valid collections 2`] = `
       See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="./manifest.json" />
-
-    <link rel="preconnect" href="https://www.google-analytics.com/" />
 
     <link rel="preload" href="./fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
 
@@ -290,7 +286,7 @@ exports[`should inject metadata for valid collections 3`] = `
     <meta
       http-equiv="Content-Security-Policy"
       
-        content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
+        content="script-src 'self' 'unsafe-inline'"
       
     />
 
@@ -305,8 +301,6 @@ exports[`should inject metadata for valid collections 3`] = `
       See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="./manifest.json" />
-
-    <link rel="preconnect" href="https://www.google-analytics.com/" />
 
     <link rel="preload" href="./fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
 
