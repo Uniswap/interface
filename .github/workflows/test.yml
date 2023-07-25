@@ -179,14 +179,14 @@ jobs:
           path: node_modules/.cache
           key: ${{ runner.os }}-cloud-tsc-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-cloud-tsc-
-      - run: yarn tsc -p functions/tsconfig.json
+      - run: yarn typecheck:cloud
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
         with:
-          name: Typecheck cloud
+          name: Cloud typecheck
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
-  # TODO: Setup CodeCOV
+  # TODO(WEB-2537): Setup CodeCOV
   cloud-tests:
     runs-on: ubuntu-latest
     steps:
