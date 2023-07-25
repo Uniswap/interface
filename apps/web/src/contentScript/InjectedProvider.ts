@@ -35,9 +35,9 @@ import { v4 as uuidv4 } from 'uuid'
 import { chainIdtoHexadecimalString } from 'wallet/src/features/chains/utils'
 import { logger } from 'wallet/src/features/logger/logger'
 import serializeError from 'wallet/src/utils/serializeError'
+import { ONE_HOUR_MS } from 'wallet/src/utils/time'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
-const TIMEOUT_MS = 30000
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
 interface RequestArguments {
@@ -588,13 +588,15 @@ function adaptTransactionForEthers(transaction: any): any {
  */
 function sendRequestAsync<T extends BaseDappResponse>(
   request: BaseDappRequest,
-  responseType: T['type']
+  responseType: T['type'],
+  timeoutMs = ONE_HOUR_MS
 ): Promise<T> {
   return new Promise((resolve, reject) => {
+    // TOOD(EXT-276): improve transaction timeout logic
     const timeout = setTimeout(() => {
       window.removeEventListener('message', handleDappRequest)
       reject('Request timed out')
-    }, TIMEOUT_MS)
+    }, timeoutMs)
 
     const handleDappRequest = (event: MessageEvent<any>): void => {
       const messageData = event.data
