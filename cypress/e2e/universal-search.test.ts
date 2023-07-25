@@ -25,31 +25,42 @@ describe('Universal search bar', () => {
     cy.location('hash').should('equal', '#/tokens/ethereum/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984')
   })
 
-  it('should go to the selected result when recent results are shown', () => {
-    // Search for uni token by name.
-    getSearchBar().type('uni')
-    cy.get('[data-cy="searchbar-token-row-UNI"]')
+  it(
+    'should go to the selected result when recent results are shown',
+    // this test is experiencing flake despite being correct, i can see the right value in DOM
+    // but for some reason cypress doesn't find it, so adding retries for now :/
+    {
+      retries: {
+        runMode: 3,
+        openMode: 3,
+      },
+    },
+    () => {
+      // Search for uni token by name.
+      getSearchBar().type('uni')
+      cy.get('[data-cy="searchbar-token-row-UNI"]')
 
-    // Clear search
-    getSearchBar().clear()
+      // Clear search
+      getSearchBar().clear()
 
-    // Close search
-    getSearchBar().type('{esc}')
+      // Close search
+      getSearchBar().type('{esc}')
 
-    openSearch()
+      openSearch()
 
-    // Search a different token by name.
-    getSearchBar().type('eth')
+      // Search a different token by name.
+      getSearchBar().type('eth')
 
-    // Validate ETH result now exists.
-    cy.get('[data-cy="searchbar-token-row-ETH"]')
+      // Validate ETH result now exists.
+      cy.get('[data-cy="searchbar-token-row-ETH"]')
 
-    // Hit enter
-    getSearchBar().type('{enter}')
+      // Hit enter
+      getSearchBar().type('{enter}')
 
-    // Validate we went to ethereum address
-    cy.url().should('contain', 'tokens/ethereum/NATIVE')
-  })
+      // Validate we went to ethereum address
+      cy.url().should('contain', 'tokens/ethereum/NATIVE')
+    }
+  )
 
   it.skip('should show recent tokens and popular tokens with empty search term', () => {
     cy.get('[data-cy="magnifying-icon"]')
