@@ -3,7 +3,6 @@ import { formatEther, parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
@@ -15,7 +14,7 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
-import { useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
+import { getURAddress, useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
 import { useCurrency } from 'hooks/Tokens'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
@@ -262,17 +261,6 @@ const PENDING_BAG_STATUSES = [
   BagStatus.PROCESSING_TRANSACTION,
 ]
 
-function getURAddress(chainId?: number, nftURAddress?: string) {
-  if (!chainId) return
-
-  // if mainnet and on NFT flow, use the contract address returned by GQL
-  if (chainId === ChainId.MAINNET) {
-    return nftURAddress ?? UNIVERSAL_ROUTER_ADDRESS(chainId)
-  }
-
-  return isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
-}
-
 interface BagFooterProps {
   setModalIsOpen: (open: boolean) => void
   eventProperties: Record<string, unknown>
@@ -413,18 +401,20 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     }
 
     const allowanceRequired = allowance.state === AllowanceState.REQUIRED
-    if (allowanceRequired || loadingAllowance) {
-      const handleClick = () => allowanceRequired && allowance.approveAndPermit()
+    const handleClick = () => allowanceRequired && allowance.approveAndPermit()
 
-      if (loadingAllowance) {
-        return getBuyButtonStateData(BuyButtonStates.LOADING_ALLOWANCE, theme, handleClick)
-      } else if (allowanceRequired && allowance.isApprovalPending) {
+    if (loadingAllowance) {
+      return getBuyButtonStateData(BuyButtonStates.LOADING_ALLOWANCE, theme, handleClick)
+    }
+
+    if (allowanceRequired) {
+      if (allowance.isApprovalPending) {
         return getBuyButtonStateData(BuyButtonStates.IN_WALLET_ALLOWANCE_APPROVAL, theme, handleClick)
-      } else if (allowanceRequired && allowance.isApprovalLoading) {
+      } else if (allowance.isApprovalLoading) {
         return getBuyButtonStateData(BuyButtonStates.PROCESSING_APPROVAL, theme, handleClick)
+      } else {
+        return getBuyButtonStateData(BuyButtonStates.REQUIRE_APPROVAL, theme, handleClick)
       }
-
-      return getBuyButtonStateData(BuyButtonStates.REQUIRE_APPROVAL, theme, handleClick)
     }
 
     if (bagStatus === BagStatus.CONFIRM_QUOTE) {
