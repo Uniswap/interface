@@ -1,4 +1,4 @@
-import { TransactionStatus, useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { TransactionStatus, useActivityQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useEffect, useMemo } from 'react'
 import { useTransactionCanceller } from 'state/transactions/hooks'
 
@@ -17,7 +17,7 @@ function findCancelTx(localActivity: Activity, remoteMap: ActivityMap, account: 
     // A pending tx is 'cancelled' when another tx with the same account & nonce but different hash makes it on chain
     if (
       remoteTx.nonce === localActivity.nonce &&
-      remoteTx.receipt?.from.toLowerCase() === account.toLowerCase() &&
+      remoteTx.from.toLowerCase() === account.toLowerCase() &&
       remoteTx.hash.toLowerCase() !== localActivity.hash.toLowerCase()
     ) {
       return remoteTx.hash
@@ -48,7 +48,7 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
 }
 
 export function useAllActivities(account: string) {
-  const { data, loading, refetch } = useTransactionListQuery({
+  const { data, loading, refetch } = useActivityQuery({
     variables: { account },
     errorPolicy: 'all',
     fetchPolicy: 'cache-first',
