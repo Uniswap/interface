@@ -75,24 +75,16 @@ const SecondaryLinkedText = ({
   onClick?: () => void
   children: ReactNode
 }) => {
-  if (href) {
-    return (
-      <Box
-        as="a"
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`${styles.SecondaryText} ${bodySmall}`}
-        onClick={onClick}
-        cursor="pointer"
-      >
-        {children}
-      </Box>
-    )
-  }
-
   return (
-    <Box className={`${styles.SecondaryText} ${bodySmall}`} onClick={onClick} cursor="pointer">
+    <Box
+      as={href ? 'a' : 'div'}
+      href={href ?? undefined}
+      target={href ? '_blank' : undefined}
+      rel={href ? 'noopener noreferrer' : undefined}
+      className={`${styles.SecondaryText} ${bodySmall}`}
+      onClick={onClick}
+      cursor="pointer"
+    >
       {children}
     </Box>
   )
