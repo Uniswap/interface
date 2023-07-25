@@ -56,8 +56,9 @@ const Web3StatusConnectWrapper = styled.div`
 
   color: ${({ theme }) => theme.accent1};
   :hover {
-    color: ${({ theme }) => theme.accent2};
+    color: ${({ theme }) => theme.accent1};
     stroke: ${({ theme }) => theme.accent2};
+    background-color: ${({ theme }) => darken(0.015, theme.accent2)};
   }
 
   transition: ${({
