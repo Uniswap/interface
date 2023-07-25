@@ -13,6 +13,7 @@ import {
   makeSelectLocalTxCurrencyIds,
   makeSelectTransaction,
 } from 'src/features/transactions/selectors'
+import { updateTransaction } from 'src/features/transactions/slice'
 import {
   createSwapFormFromTxDetails,
   createWrapFormFromTxDetails,
@@ -32,6 +33,7 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAppDispatch } from 'wallet/src/state'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 export function usePendingTransactions(
@@ -271,27 +273,37 @@ export function useMergeLocalAndRemoteTransactions(
   address: string,
   remoteTransactions: TransactionDetails[] | undefined
 ): TransactionDetails[] | undefined {
+  const dispatch = useAppDispatch()
   const localTransactions = useSelectAddressTransactions(address)
 
-  // Merge local and remote txns into array of single type.
+  // Merge local and remote txns into one array.
   const combinedTransactionList = useMemo((): TransactionDetails[] | undefined => {
     if (!address) return
+    if (!remoteTransactions) return localTransactions
+    if (!localTransactions) return remoteTransactions
 
-    const localHashes: Set<string> = new Set()
-    localTransactions?.forEach((t: { hash: string }) => localHashes.add(t.hash))
+    const localTxMap: Map<string, TransactionDetails> = new Map()
+    localTransactions.forEach((tx) => localTxMap.set(tx.hash, tx))
 
-    const deDupedRemoteTxs = (remoteTransactions ?? []).reduce(
-      (accum: TransactionDetails[], txn) => {
-        if (!localHashes.has(txn.hash)) accum.push(txn) // dedupe
-        return accum
-      },
-      []
-    )
+    // Filter out remote txns that are already included in the local store.
+    const deDupedRemoteTxs = remoteTransactions.filter((remoteTxn) => {
+      const dupeLocalTx = localTxMap.get(remoteTxn.hash)
+      if (!dupeLocalTx) return true
 
-    return [...(localTransactions ?? []), ...deDupedRemoteTxs].sort((a, b) =>
+      // If the tx exists both locally and remotely, then use the status of the remote tx as the source
+      // of truth to avoid infinite pending states and filter the remote tx from the combined list
+      if (dupeLocalTx.status !== remoteTxn.status) {
+        dupeLocalTx.status = remoteTxn.status
+        dispatch(updateTransaction(dupeLocalTx))
+      }
+
+      return false
+    })
+
+    return [...localTransactions, ...deDupedRemoteTxs].sort((a, b) =>
       a.addedTime > b.addedTime ? -1 : 1
     )
-  }, [address, localTransactions, remoteTransactions])
+  }, [dispatch, address, localTransactions, remoteTransactions])
 
   return combinedTransactionList
 }
