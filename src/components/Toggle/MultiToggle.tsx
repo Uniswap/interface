@@ -5,7 +5,7 @@ export const ToggleWrapper = styled.button<{ width?: string }>`
   align-items: center;
   width: ${({ width }) => width ?? '100%'};
   padding: 1px;
-  background: ${({ theme }) => theme.surface1};
+  background: ${({ theme }) => theme.surface2};
   border-radius: 8px;
   border: ${({ theme }) => '1px solid ' + theme.surface3};
   cursor: pointer;

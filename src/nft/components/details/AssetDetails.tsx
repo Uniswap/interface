@@ -129,6 +129,7 @@ const FilterBox = styled.div<{ backgroundColor: string }>`
   font-size: 14px;
   font-weight: 535;
   line-height: 14px;
+  border: 1px solid ${({ theme }) => theme.surface3};
   color: ${({ theme }) => theme.neutral1};
   padding: 8px 16px;
   border-radius: 12px;
@@ -292,7 +293,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       return (
         <FilterBox
           backgroundColor={
-            isActive ? (isDarkMode ? vars.color.gray500 : vars.color.gray200) : themeVars.colors.surface3
+            isActive ? (isDarkMode ? vars.color.surface1 : vars.color.surface1) : themeVars.colors.surface3
           }
           onClick={() => filtersDispatch({ eventType })}
         >

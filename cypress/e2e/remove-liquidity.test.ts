@@ -1,4 +1,4 @@
-describe('Remove Liquidity', () => {
+describe('Remove liquidity', () => {
   it('eth remove', () => {
     cy.visit('/remove/v2/ETH/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'ETH')

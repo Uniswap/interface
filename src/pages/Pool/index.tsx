@@ -90,6 +90,7 @@ const MoreOptionsButton = styled(ButtonGray)`
   padding: 6px 8px;
   width: 100%;
   background-color: ${({ theme }) => theme.surface1};
+  border: 1px solid ${({ theme }) => theme.surface3};
   margin-right: 8px;
 `
 
@@ -283,7 +284,7 @@ export default function Pool() {
                   />
                 )}
                 <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
-                  + <Trans>New Position</Trans>
+                  + <Trans>New position</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>

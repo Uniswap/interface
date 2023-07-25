@@ -3,6 +3,7 @@ import { t } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
+import { ReactComponent as SearchIcon } from 'assets/svg/search.svg'
 import clsx from 'clsx'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
@@ -20,7 +21,7 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useSt
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
+import { ChevronLeftIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
@@ -172,7 +173,7 @@ export const SearchBar = () => {
         >
           <Box className={styles.searchContentLeftAlign}>
             <Box display={{ sm: 'none', md: 'flex' }}>
-              <MagnifyingGlassIcon />
+              <SearchIcon width="20px" height="20px" />
             </Box>
             <Box display={{ sm: 'flex', md: 'none' }} color="neutral3" onClick={toggleOpen}>
               <ChevronLeftIcon />

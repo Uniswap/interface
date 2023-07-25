@@ -16,7 +16,7 @@ export const loadingBlock = style([
   {
     animation: `${loadingAnimation} 1.5s infinite`,
     animationFillMode: 'both',
-    background: `linear-gradient(to left, #7C85A24D 25%, ${darken(0.8, '#7C85A24D')} 50%, #7C85A24D 75%)`,
+    background: `linear-gradient(to left, #2222220d 25%, ${darken(0.8, '#2222220d')} 50%, #2222220d 75%)`,
     backgroundSize: '400%',
     willChange: 'background-position',
   },

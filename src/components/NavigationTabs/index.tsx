@@ -104,9 +104,9 @@ export function AddRemoveTabs({
           {creating ? (
             <Trans>Create a pair</Trans>
           ) : adding ? (
-            <Trans>Add Liquidity</Trans>
+            <Trans>Add liquidity</Trans>
           ) : (
-            <Trans>Remove Liquidity</Trans>
+            <Trans>Remove liquidity</Trans>
           )}
         </ThemedText.DeprecatedMediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
@@ -123,7 +123,7 @@ export function CreateProposalTabs() {
         <HistoryLink to="/vote">
           <StyledArrowLeft />
         </HistoryLink>
-        <ActiveText style={{ marginLeft: 'auto', marginRight: 'auto' }}>Create Proposal</ActiveText>
+        <ActiveText style={{ marginLeft: 'auto', marginRight: 'auto' }}>Create proposal</ActiveText>
       </Row>
     </Tabs>
   )

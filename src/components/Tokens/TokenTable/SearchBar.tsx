@@ -23,7 +23,7 @@ const SearchInput = styled.input`
   background-position: 12px center;
   background-color: ${({ theme }) => theme.surface1};
   border-radius: 12px;
-  border: 1.5px solid ${({ theme }) => theme.surface3};
+  border: 1px solid ${({ theme }) => theme.surface3};
   height: 100%;
   width: min(200px, 100%);
   font-size: 16px;

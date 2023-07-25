@@ -92,6 +92,7 @@ const DeltaContainer = styled.div`
   display: flex;
   align-items: center;
   margin-top: 4px;
+  color: ${({ theme }) => theme.neutral2};
 `
 export const ArrowCell = styled.div`
   padding-right: 3px;

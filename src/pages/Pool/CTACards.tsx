@@ -24,7 +24,7 @@ const CTA = styled(ExternalLink)`
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.surface2};
+  border: 1px solid ${({ theme }) => theme.surface3};
 
   * {
     color: ${({ theme }) => theme.neutral1};

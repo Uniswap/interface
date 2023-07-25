@@ -700,7 +700,7 @@ function PositionPageContent() {
                         width="fit-content"
                         $borderRadius="12px"
                       >
-                        <Trans>Remove Liquidity</Trans>
+                        <Trans>Remove liquidity</Trans>
                       </SmallButtonPrimary>
                     ) : null}
                   </ActionButtonResponsiveRow>
