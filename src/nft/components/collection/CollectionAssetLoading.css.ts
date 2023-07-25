@@ -7,7 +7,7 @@ export const collectionAssetLoading = style([
   sprinkles({
     borderRadius: '12',
     paddingBottom: '12',
-    backgroundColor: 'backgroundSurface',
+    backgroundColor: 'surface1',
   }),
 ])
 

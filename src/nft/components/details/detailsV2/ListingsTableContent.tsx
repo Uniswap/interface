@@ -17,7 +17,7 @@ export const ListingsTableContent = ({ asset }: { asset: GenieAsset }) => {
     <ContentRow
       key={'offer_' + index}
       content={offer}
-      buttonCTA={isMobile ? <AddToBagIcon color={theme.textSecondary} /> : <Trans>Add to Bag</Trans>}
+      buttonCTA={isMobile ? <AddToBagIcon color={theme.neutral2} /> : <Trans>Add to Bag</Trans>}
       is1155={asset.tokenType === NftStandard.Erc1155}
     />
   ))

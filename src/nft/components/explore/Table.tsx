@@ -35,10 +35,10 @@ const RankCellContainer = styled.div`
 const StyledRow = styled.tr`
   cursor: pointer;
   :hover {
-    background: ${({ theme }) => theme.stateOverlayHover};
+    background: ${({ theme }) => theme.deprecated_stateOverlayHover};
   }
   :active {
-    background: ${({ theme }) => theme.stateOverlayPressed};
+    background: ${({ theme }) => theme.deprecated_stateOverlayPressed};
   }
 `
 
@@ -162,7 +162,7 @@ export function Table<D extends Record<string, unknown>>({
                     disabled={column.disableSortBy}
                     key={index}
                   >
-                    <Box as="span" color="accentAction" position="relative">
+                    <Box as="span" color="accent1" position="relative">
                       {column.isSorted ? (
                         column.isSortedDesc ? (
                           <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />
@@ -259,7 +259,7 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
                     disabled={index === 0}
                     key={index}
                   >
-                    <Box as="span" color="accentAction" position="relative">
+                    <Box as="span" color="accent1" position="relative">
                       {column.isSorted ? (
                         column.isSortedDesc ? (
                           <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />

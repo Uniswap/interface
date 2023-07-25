@@ -101,7 +101,7 @@ export default function Pools({ account }: { account: string }) {
 
 const ActiveDot = styled.span<{ closed: boolean; outOfRange: boolean }>`
   background-color: ${({ theme, closed, outOfRange }) =>
-    closed ? theme.textSecondary : outOfRange ? theme.accentWarning : theme.accentSuccess};
+    closed ? theme.neutral2 : outOfRange ? theme.deprecated_accentWarning : theme.success};
   border-radius: 50%;
   height: 8px;
   width: 8px;
@@ -180,7 +180,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
             </MouseoverTooltip>
 
             <Row justify="flex-end">
-              <ThemedText.Caption color="textSecondary">
+              <ThemedText.Caption color="neutral2">
                 {closed ? t`Closed` : inRange ? t`In range` : t`Out of range`}
               </ThemedText.Caption>
               <ActiveDot closed={closed} outOfRange={!inRange} />

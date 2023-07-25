@@ -14,7 +14,7 @@ const Container = styled(AutoColumn)`
 `
 
 const InlineLink = styled(ThemedText.Caption)`
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
   display: inline;
   cursor: pointer;
   &:hover {
@@ -38,7 +38,7 @@ const GasCostItem = ({
   return (
     <Row justify="space-between">
       <ThemedText.SubHeaderSmall>{title}</ThemedText.SubHeaderSmall>
-      <ThemedText.SubHeaderSmall color="textPrimary">
+      <ThemedText.SubHeaderSmall color="neutral1">
         {itemValue ?? formatNumber(amount, NumberType.FiatGasPrice)}
       </ThemedText.SubHeaderSmall>
     </Row>
@@ -79,7 +79,7 @@ export function GasBreakdownTooltip({
         </>
       )}
       {isUniswapXTrade(trade) && !hideUniswapXDescription ? (
-        <ThemedText.Caption color="textSecondary">
+        <ThemedText.Caption color="neutral2">
           <Trans>
             <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient> aggregates liquidity sources for better prices and
             gas free swaps.
@@ -91,7 +91,7 @@ export function GasBreakdownTooltip({
           </ExternalLink>
         </ThemedText.Caption>
       ) : (
-        <ThemedText.Caption color="textSecondary">
+        <ThemedText.Caption color="neutral2">
           <Trans>Network Fees are paid to the Ethereum network to secure transactions.</Trans>{' '}
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
             <InlineLink>

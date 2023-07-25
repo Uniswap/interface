@@ -94,20 +94,20 @@ const LinkGroupTitle = styled.span`
 const ExternalTextLink = styled(ExternalLink)`
   font-size: 16px;
   line-height: 20px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const TextLink = styled(StyledRouterLink)`
   font-size: 16px;
   line-height: 20px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const Copyright = styled.span`
   font-size: 16px;
   line-height: 20px;
   margin: 1rem 0 0 0;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
 `
 
 const LogoSectionContent = () => {

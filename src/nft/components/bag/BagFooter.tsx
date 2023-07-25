@@ -47,8 +47,8 @@ const FooterContainer = styled.div`
 `
 
 const Footer = styled.div`
-  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
-  color: ${({ theme }) => theme.textPrimary};
+  border-top: 1px solid ${({ theme }) => theme.surface3};
+  color: ${({ theme }) => theme.neutral1};
   display: flex;
   flex-direction: column;
   margin: 0px 16px 8px;
@@ -202,14 +202,14 @@ const InputCurrencyValue = ({
 
   if (tradeState === TradeState.LOADING && !trade) {
     return (
-      <ThemedText.BodyPrimary color="textTertiary" lineHeight="20px" fontWeight="535">
+      <ThemedText.BodyPrimary color="neutral3" lineHeight="20px" fontWeight="535">
         <Trans>Fetching price...</Trans>
       </ThemedText.BodyPrimary>
     )
   }
 
   return (
-    <ValueText color={tradeState === TradeState.LOADING ? 'textTertiary' : 'textPrimary'}>
+    <ValueText color={tradeState === TradeState.LOADING ? 'neutral3' : 'neutral1'}>
       {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
     </ValueText>
   )
@@ -248,7 +248,7 @@ const FiatValue = ({
           </MouseoverTooltip>
         </>
       )}
-      <ThemedText.BodySmall color="textTertiary" lineHeight="20px">
+      <ThemedText.BodySmall color="neutral3" lineHeight="20px">
         {`${ethNumberStandardFormatter(usdcValue?.toExact(), true)}`}
       </ThemedText.BodySmall>
     </PriceImpactContainer>
@@ -480,7 +480,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
                     <ThemedText.HeadlineSmall fontWeight={535} lineHeight="24px">
                       {activeCurrency?.symbol}
                     </ThemedText.HeadlineSmall>
-                    <ChevronDown size={20} color={theme.textSecondary} />
+                    <ChevronDown size={20} color={theme.neutral2} />
                   </CurrencyInput>
                 </>
               )}

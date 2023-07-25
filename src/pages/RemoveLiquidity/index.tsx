@@ -314,7 +314,7 @@ function RemoveLiquidity() {
           </RowFixed>
         </RowBetween>
         <RowFixed>
-          <Plus size="16" color={theme.textSecondary} />
+          <Plus size="16" color={theme.neutral2} />
         </RowFixed>
         <RowBetween align="flex-end">
           <Text fontSize={24} fontWeight={535}>
@@ -328,7 +328,7 @@ function RemoveLiquidity() {
           </RowFixed>
         </RowBetween>
 
-        <ThemedText.DeprecatedItalic fontSize={12} color={theme.textSecondary} textAlign="left" padding="12px 0 0 0">
+        <ThemedText.DeprecatedItalic fontSize={12} color={theme.neutral2} textAlign="left" padding="12px 0 0 0">
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
@@ -342,7 +342,7 @@ function RemoveLiquidity() {
     return (
       <>
         <RowBetween>
-          <Text color={theme.textSecondary} fontWeight={535} fontSize={16}>
+          <Text color={theme.neutral2} fontWeight={535} fontSize={16}>
             <Trans>
               UNI {currencyA?.symbol}/{currencyB?.symbol} Burned
             </Trans>
@@ -357,16 +357,16 @@ function RemoveLiquidity() {
         {pair && (
           <>
             <RowBetween>
-              <Text color={theme.textSecondary} fontWeight={535} fontSize={16}>
+              <Text color={theme.neutral2} fontWeight={535} fontSize={16}>
                 <Trans>Price</Trans>
               </Text>
-              <Text fontWeight={535} fontSize={16} color={theme.textPrimary}>
+              <Text fontWeight={535} fontSize={16} color={theme.neutral1}>
                 1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
               </Text>
             </RowBetween>
             <RowBetween>
               <div />
-              <Text fontWeight={535} fontSize={16} color={theme.textPrimary}>
+              <Text fontWeight={535} fontSize={16} color={theme.neutral1}>
                 1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}
               </Text>
             </RowBetween>
@@ -462,7 +462,7 @@ function RemoveLiquidity() {
           <AutoColumn gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={485} color="accentAction">
+                <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
                   <Trans>
                     <b>Tip:</b> Removing pool tokens converts your position back into underlying tokens at the current
                     rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
@@ -514,7 +514,7 @@ function RemoveLiquidity() {
             {!showDetailed && (
               <>
                 <ColumnCenter>
-                  <ArrowDown size="16" color={theme.textSecondary} />
+                  <ArrowDown size="16" color={theme.neutral2} />
                 </ColumnCenter>
                 <LightCard>
                   <AutoColumn gap="10px">
@@ -588,7 +588,7 @@ function RemoveLiquidity() {
                   id="liquidity-amount"
                 />
                 <ColumnCenter>
-                  <ArrowDown size="16" color={theme.textSecondary} />
+                  <ArrowDown size="16" color={theme.neutral2} />
                 </ColumnCenter>
                 <CurrencyInputPanel
                   hideBalance={true}
@@ -602,7 +602,7 @@ function RemoveLiquidity() {
                   id="remove-liquidity-tokena"
                 />
                 <ColumnCenter>
-                  <Plus size="16" color={theme.textSecondary} />
+                  <Plus size="16" color={theme.neutral2} />
                 </ColumnCenter>
                 <CurrencyInputPanel
                   hideBalance={true}

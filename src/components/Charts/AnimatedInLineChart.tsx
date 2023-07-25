@@ -57,7 +57,7 @@ function AnimatedInLineChart<T>({
     }
   })
   const theme = useTheme()
-  const lineColor = color ?? theme.accentAction
+  const lineColor = color ?? theme.accent1
 
   return (
     <Group top={marginTop}>

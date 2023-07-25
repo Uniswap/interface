@@ -11,7 +11,7 @@ const Icon = styled(Settings)`
   height: 24px;
   width: 24px;
   > * {
-    fill: ${({ theme }) => theme.textSecondary};
+    fill: ${({ theme }) => theme.neutral2};
   }
 `
 
@@ -37,11 +37,11 @@ const IconContainer = styled(Row)`
 
 const IconContainerWithSlippage = styled(IconContainer)<{ displayWarning?: boolean }>`
   div {
-    color: ${({ theme, displayWarning }) => (displayWarning ? theme.accentWarning : theme.textSecondary)};
+    color: ${({ theme, displayWarning }) => (displayWarning ? theme.deprecated_accentWarning : theme.neutral2)};
   }
 
   background-color: ${({ theme, displayWarning }) =>
-    displayWarning ? theme.accentWarningSoft : theme.backgroundModule};
+    displayWarning ? theme.deprecated_accentWarningSoft : theme.surface2};
 `
 
 const ButtonContent = () => {

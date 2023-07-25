@@ -13,7 +13,7 @@ const ButtonContainer = styled(Row)`
 `
 
 const ExpandIcon = styled(ChevronDown)<{ $isOpen: boolean }>`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   transform: ${({ $isOpen }) => ($isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform ${({ theme }) => theme.transition.duration.medium};
 `

@@ -22,7 +22,7 @@ export const baseActivitySwitcherToggle = style([
 export const activitySwitcherToggle = style([
   baseActivitySwitcherToggle,
   sprinkles({
-    color: 'textSecondary',
+    color: 'neutral2',
   }),
 ])
 

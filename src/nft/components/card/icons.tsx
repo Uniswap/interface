@@ -19,7 +19,7 @@ const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`
   width: ${({ isText }) => (isText ? 'auto' : '32px')};
   padding: ${({ isText }) => (isText ? '0px 8px' : '0px')};
   background: rgba(93, 103, 133, 0.24);
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
   justify-content: center;
   align-items: center;
   border-radius: 32px;
@@ -28,7 +28,7 @@ const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`
 
 const ListPriceRowContainer = styled(Row)`
   gap: 6px;
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
   font-size: 14px;
   font-weight: 535;
   line-height: 16px;
@@ -85,7 +85,7 @@ export const MarketplaceContainer = ({
 const SuspiciousIcon = styled(AlertTriangle)`
   width: 16px;
   height: 16px;
-  color: ${({ theme }) => theme.accentFailure};
+  color: ${({ theme }) => theme.critical};
 `
 
 interface RankingProps {
@@ -103,8 +103,8 @@ const RarityText = styled(ThemedText.BodySmall)`
 
 const RarityInfo = styled(ThemedText.Caption)`
   flex-shrink: 0;
-  color: ${({ theme }) => theme.textSecondary};
-  background: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.neutral2};
+  background: ${({ theme }) => theme.surface3};
   padding: 4px 6px;
   border-radius: 4px;
   font-weight: 535 !important;

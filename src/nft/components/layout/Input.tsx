@@ -7,14 +7,14 @@ export const Input = forwardRef<HTMLInputElement, BoxProps>((props, ref) => (
   <Box
     ref={ref}
     as="input"
-    borderColor={{ default: 'backgroundOutline', focus: 'textTertiary' }}
+    borderColor={{ default: 'surface3', focus: 'neutral3' }}
     borderWidth="1px"
     borderStyle="solid"
     borderRadius="12"
     padding="12"
     fontSize="14"
     fontWeight="book"
-    color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+    color={{ placeholder: 'neutral2', default: 'neutral1' }}
     backgroundColor="transparent"
     {...props}
   />
@@ -30,8 +30,8 @@ export const NumericInput = forwardRef<HTMLInputElement, BoxProps>((props, ref) 
       inputMode="decimal"
       autoComplete="off"
       type="text"
-      borderColor={{ default: 'backgroundOutline', focus: 'textSecondary' }}
-      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+      borderColor={{ default: 'surface3', focus: 'neutral2' }}
+      color={{ placeholder: 'neutral2', default: 'neutral1' }}
       onInput={(v: FormEvent<HTMLInputElement>) => {
         if (v.currentTarget.value === '.') {
           v.currentTarget.value = '0.'

@@ -25,8 +25,8 @@ const DetailsFooter = styled.div<{ show: boolean }>`
   max-width: 400px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  color: ${({ theme }) => theme.textSecondary};
-  background-color: ${({ theme }) => theme.deprecated_advancedBG};
+  color: ${({ theme }) => theme.neutral2};
+  background-color: ${({ theme }) => theme.background};
   z-index: ${Z_INDEX.deprecated_zero};
 
   transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(-100%)')};

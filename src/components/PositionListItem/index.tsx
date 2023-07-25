@@ -28,7 +28,7 @@ const LinkRow = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   padding: 16px;
   text-decoration: none;
   font-weight: 535;
@@ -37,7 +37,7 @@ const LinkRow = styled(Link)`
     text-align: center;
   }
   :hover {
-    background-color: ${({ theme }) => theme.hoverDefault};
+    background-color: ${({ theme }) => theme.deprecated_hoverDefault};
   }
 
   @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
@@ -65,7 +65,7 @@ const RangeLineItem = styled(DataLineItem)`
 const DoubleArrow = styled.span`
   font-size: 12px;
   margin: 0 2px;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
 `
 
 const RangeText = styled(ThemedText.Caption)`
@@ -80,7 +80,7 @@ const FeeTierText = styled(ThemedText.UtilityBadge)`
   margin-left: 14px !important;
 `
 const ExtentsText = styled(ThemedText.Caption)`
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
   display: inline-block;
   line-height: 16px;
   margin-right: 4px !important;

@@ -11,7 +11,7 @@ import React from 'react'
 import { Loader } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 const UnknownContract = styled(UnknownStatus)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const DoubleLogoContainer = styled.div`
@@ -80,7 +80,7 @@ const L2LogoContainer = styled.div<{ $backgroundColor?: string }>`
   left: 60%;
   position: absolute;
   top: 60%;
-  outline: 2px solid ${({ theme }) => theme.backgroundSurface};
+  outline: 2px solid ${({ theme }) => theme.surface1};
   width: 16px;
   display: flex;
   align-items: center;
@@ -147,7 +147,7 @@ export function PortfolioLogo({
 
   const L2Logo =
     chainId !== ChainId.MAINNET && chainLogo ? (
-      <L2LogoContainer $backgroundColor={squareLogoUrl ? theme.backgroundSurface : theme.textPrimary}>
+      <L2LogoContainer $backgroundColor={squareLogoUrl ? theme.surface1 : theme.neutral1}>
         {squareLogoUrl ? (
           <SquareChainLogo src={chainLogo} alt="chainLogo" />
         ) : (

@@ -50,7 +50,7 @@ const StyledXButton = styled(X)`
   cursor: pointer;
   justify-self: flex-end;
 
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   ${OpacityHoverState};
 `
 

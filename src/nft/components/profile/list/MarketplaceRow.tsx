@@ -65,7 +65,7 @@ const MarketIcon = styled.div<{ index: number }>`
   border-radius: 4px;
   z-index: ${({ index }) => 2 - index};
   margin-left: ${({ index }) => `${index === 0 ? 0 : -8}px`};
-  outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
+  outline: 1px solid ${({ theme }) => theme.surface3};
 `
 
 const ExpandMarketIconWrapper = styled.div`
@@ -182,12 +182,12 @@ export const MarketplaceRow = ({
   return (
     <Row onMouseEnter={toggleMarketRowHovered} onMouseLeave={toggleMarketRowHovered}>
       <FloorPriceInfo>
-        <ThemedText.BodyPrimary color="textSecondary" lineHeight="24px">
+        <ThemedText.BodyPrimary color="neutral2" lineHeight="24px">
           {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
         </ThemedText.BodyPrimary>
       </FloorPriceInfo>
       <LastPriceInfo>
-        <ThemedText.BodyPrimary color="textSecondary" lineHeight="24px">
+        <ThemedText.BodyPrimary color="neutral2" lineHeight="24px">
           {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
         </ThemedText.BodyPrimary>
       </LastPriceInfo>
@@ -233,7 +233,7 @@ export const MarketplaceRow = ({
           placement="left"
         >
           <FeeWrapper>
-            <ThemedText.BodyPrimary color="textSecondary">
+            <ThemedText.BodyPrimary color="neutral2">
               {fees > 0 ? `${fees.toFixed(2)}${selectedMarkets.length > 1 ? t`% max` : '%'}` : '--%'}
             </ThemedText.BodyPrimary>
           </FeeWrapper>
@@ -257,13 +257,11 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
 
   return (
     <Row width="100%" justify="flex-end">
-      <ThemedText.BodyPrimary lineHeight="24px" color={ethPrice ? 'textPrimary' : 'textSecondary'} textAlign="right">
+      <ThemedText.BodyPrimary lineHeight="24px" color={ethPrice ? 'neutral1' : 'neutral2'} textAlign="right">
         {ethPrice !== 0 ? (
           <Column>
             <span>{formatEth(ethPrice)} ETH</span>
-            <ThemedText.BodyPrimary color="textSecondary">
-              {formatUsdPrice(ethPrice * ethConversion)}
-            </ThemedText.BodyPrimary>
+            <ThemedText.BodyPrimary color="neutral2">{formatUsdPrice(ethPrice * ethConversion)}</ThemedText.BodyPrimary>
           </Column>
         ) : (
           '- ETH'

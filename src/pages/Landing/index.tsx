@@ -161,7 +161,7 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
 `;
 
 const SubText = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 16px;
   line-height: 24px;
   font-weight: 535;
@@ -216,7 +216,7 @@ const ActionsContainer = styled.span`
 
 const LearnMoreContainer = styled.div`
   align-items: center;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
   cursor: pointer;
   font-size: 20px;
   font-weight: 535;
@@ -326,7 +326,7 @@ const LinkCss = css`
 const LandingSwap = styled(Swap)`
   ${SwapCss}
   &:hover {
-    border: 1px solid ${({ theme }) => theme.accentAction};
+    border: 1px solid ${({ theme }) => theme.accent1};
   }
 `;
 
@@ -475,7 +475,7 @@ const DownloadWalletLink = styled.a`
   display: inline-flex;
   gap: 8px;
   margin-top: 24px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   text-decoration: none;
   font-size: 16px;
   line-height: 24px;
@@ -483,6 +483,6 @@ const DownloadWalletLink = styled.a`
   text-align: center;
 
   :hover {
-    color: ${({ theme }) => theme.textTertiary};
+    color: ${({ theme }) => theme.neutral3};
   }
 `;

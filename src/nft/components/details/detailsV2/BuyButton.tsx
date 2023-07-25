@@ -21,7 +21,7 @@ const StyledBuyButton = styled(ButtonPrimary)`
 `
 
 const Price = styled.div`
-  color: ${({ theme }) => theme.accentTextLightSecondary};
+  color: ${({ theme }) => theme.white};
 `
 
 export const BuyButton = ({ asset, onDataPage }: { asset: GenieAsset; onDataPage?: boolean }) => {

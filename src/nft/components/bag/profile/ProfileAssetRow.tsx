@@ -27,7 +27,7 @@ const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
         {isMobile && <RemoveAssetButton onClick={handleRemoveAsset} />}
         <img src={asset.smallImageUrl} alt={asset.name} className={styles.bagRowImage} />
       </Box>
-      <Column overflow="hidden" width="full" color="textPrimary">
+      <Column overflow="hidden" width="full" color="neutral1">
         <Row overflow="hidden" width="full" justifyContent="space-between" whiteSpace="nowrap" gap="16">
           <Box className={styles.assetName}>{asset.name || `#${asset.tokenId}`}</Box>
         </Row>

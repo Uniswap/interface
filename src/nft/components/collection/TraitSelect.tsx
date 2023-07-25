@@ -104,7 +104,7 @@ const TraitItem = ({
           : trait.trait_value}
       </Box>
       <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="textSecondary" minWidth="8" paddingTop="2" paddingRight="12" position="relative">
+        <Box as="span" color="neutral2" minWidth="8" paddingTop="2" paddingRight="12" position="relative">
           {!showFullTraitName && trait.trait_count}
         </Box>
       </Checkbox>

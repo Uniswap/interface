@@ -21,13 +21,13 @@ const MarketplaceRowWrapper = styled(Row)`
   justify-content: space-between;
   padding: 0px 16px;
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
+    background-color: ${({ theme }) => theme.surface3};
   }
   border-radius: 12px;
 `
 
 const FeeText = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 interface MarketplaceRowProps {
@@ -73,7 +73,7 @@ const HeaderButtonWrap = styled(Row)`
   border-radius: 12px;
   width: 180px;
   justify-content: space-between;
-  background: ${({ theme }) => theme.backgroundInteractive};
+  background: ${({ theme }) => theme.surface3};
   cursor: pointer;
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};
@@ -91,7 +91,7 @@ const MarketIcon = styled.div<{ index: number; totalSelected: number }>`
   height: 20px;
   width: 20px;
   margin-right: 8px;
-  outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
+  outline: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 4px;
   z-index: ${({ index, totalSelected }) => totalSelected - index};
   margin-left: ${({ index }) => `${index === 0 ? 0 : -18}px`};
@@ -100,7 +100,7 @@ const MarketIcon = styled.div<{ index: number; totalSelected: number }>`
 const Chevron = styled(ChevronUpIcon)<{ isOpen: boolean }>`
   height: 20px;
   width: 20px;
-  fill: ${({ theme }) => theme.textPrimary};
+  fill: ${({ theme }) => theme.neutral1};
   transition: ${({
     theme: {
       transition: { duration },
@@ -117,7 +117,7 @@ const ModalWrapper = styled.div`
 
 const DropdownWrapper = styled(Column)<{ isOpen: boolean }>`
   padding: 16px 0px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
   position: absolute;
   top: 52px;
@@ -125,8 +125,8 @@ const DropdownWrapper = styled(Column)<{ isOpen: boolean }>`
   border-radius: 12px;
   gap: 12px;
   z-index: ${Z_INDEX.modalBackdrop};
-  box-shadow: ${({ theme }) => theme.deepShadow};
-  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
+  border: 0.5px solid ${({ theme }) => theme.surface3};
 `
 
 export const SelectMarketplacesDropdown = ({
@@ -157,7 +157,7 @@ export const SelectMarketplacesDropdown = ({
           {dropdownDisplayText}
         </HeaderButtonContentWrapper>
 
-        <Chevron isOpen={isOpen} secondaryColor={themeVars.colors.textPrimary} />
+        <Chevron isOpen={isOpen} secondaryColor={themeVars.colors.neutral1} />
       </HeaderButtonWrap>
       <DropdownWrapper isOpen={isOpen}>
         {ListingMarkets.map((market) => {

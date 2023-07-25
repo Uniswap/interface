@@ -61,7 +61,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               </Trans>
             }
           >
-            <ThemedText.BodySmall color="textSecondary">
+            <ThemedText.BodySmall color="neutral2">
               <Plural value={txCount} one="Network fee" other="Network fees" />
             </ThemedText.BodySmall>
           </MouseoverTooltip>
@@ -84,7 +84,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
       {isClassicTrade(trade) && (
         <RowBetween>
           <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
-            <ThemedText.BodySmall color="textSecondary">
+            <ThemedText.BodySmall color="neutral2">
               <Trans>Price Impact</Trans>
             </ThemedText.BodySmall>
           </MouseoverTooltip>
@@ -103,7 +103,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               </Trans>
             }
           >
-            <ThemedText.BodySmall color="textSecondary">
+            <ThemedText.BodySmall color="neutral2">
               {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum output</Trans> : <Trans>Maximum input</Trans>}
             </ThemedText.BodySmall>
           </MouseoverTooltip>
@@ -128,7 +128,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               </Trans>
             }
           >
-            <ThemedText.BodySmall color="textSecondary">
+            <ThemedText.BodySmall color="neutral2">
               <Trans>Expected output</Trans>
             </ThemedText.BodySmall>
           </MouseoverTooltip>
@@ -143,7 +143,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
       </RowBetween>
       <Separator />
       <RowBetween>
-        <ThemedText.BodySmall color="textSecondary">
+        <ThemedText.BodySmall color="neutral2">
           <Trans>Order routing</Trans>
         </ThemedText.BodySmall>
         {isClassicTrade(trade) ? (

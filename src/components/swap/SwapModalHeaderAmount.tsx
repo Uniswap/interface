@@ -15,7 +15,7 @@ const MAX_AMOUNT_STR_LENGTH = 9
 
 export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   margin-right: 8px;
 `
 
@@ -64,7 +64,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
             {formattedAmount} {currency?.symbol}
           </ResponsiveHeadline>
           {usdAmount && (
-            <ThemedText.BodySmall color="textSecondary">
+            <ThemedText.BodySmall color="neutral2">
               {formatNumber(usdAmount, NumberType.FiatTokenQuantity)}
             </ThemedText.BodySmall>
           )}

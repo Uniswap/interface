@@ -14,11 +14,11 @@ const TabsRow = styled(Row)`
   width: 100;
   margin-bottom: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.surface3};
 `
 
 const Tab = styled(ThemedText.SubHeader)<{ isActive: boolean; numTabs: number }>`
-  color: ${({ theme, isActive }) => (isActive ? theme.textPrimary : theme.textTertiary)};
+  color: ${({ theme, isActive }) => (isActive ? theme.neutral1 : theme.neutral3)};
   line-height: 24px;
   cursor: ${({ numTabs }) => (numTabs > 1 ? 'pointer' : 'default')};
 
@@ -28,10 +28,10 @@ const Tab = styled(ThemedText.SubHeader)<{ isActive: boolean; numTabs: number }>
 `
 
 const TabNumBubble = styled(ThemedText.UtilityBadge)`
-  background: ${({ theme }) => theme.backgroundOutline};
+  background: ${({ theme }) => theme.surface3};
   border-radius: 4px;
   padding: 2px 4px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   line-height: 12px;
 `
 

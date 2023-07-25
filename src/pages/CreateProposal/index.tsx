@@ -246,7 +246,7 @@ ${bodyValue}
           <CreateProposalWrapper>
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={485} color="accentAction">
+                <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
                   <Trans>
                     <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
                     cannot be modified after submission, so please verify all information before submitting. The voting

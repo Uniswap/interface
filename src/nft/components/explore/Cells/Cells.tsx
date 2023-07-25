@@ -31,7 +31,7 @@ const TruncatedSubHeader = styled(ThemedText.SubHeader)`
   text-overflow: ellipsis;
 `
 const TruncatedSubHeaderSmall = styled(ThemedText.SubHeaderSmall)`
-  color: ${({ theme }) => `${theme.textPrimary}`};
+  color: ${({ theme }) => `${theme.neutral1}`};
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -41,7 +41,7 @@ const RoundedImage = styled.div<{ src?: string }>`
   height: 36px;
   width: 36px;
   border-radius: 36px;
-  background: ${({ src, theme }) => (src ? `url(${src})` : theme.backgroundModule)};
+  background: ${({ src, theme }) => (src ? `url(${src})` : theme.surface2)};
   background-size: cover;
   background-position: center;
   flex-shrink: 0;
@@ -49,7 +49,7 @@ const RoundedImage = styled.div<{ src?: string }>`
 
 const ChangeCellContainer = styled.div<{ change: number }>`
   display: flex;
-  color: ${({ theme, change }) => (change >= 0 ? theme.accentSuccess : theme.accentFailure)};
+  color: ${({ theme, change }) => (change >= 0 ? theme.success : theme.critical)};
   justify-content: flex-end;
   align-items: center;
   gap: 2px;

@@ -238,7 +238,7 @@ exports[`Header loads with asset with a sell order 1`] = `
 }
 
 .c15 {
-  color: #222222b8;
+  color: #FFFFFF;
 }
 
 .c2 {

@@ -32,7 +32,7 @@ const Body = styled.div`
 
 const ClaimButton = styled(ThemeButton)`
   width: 100%;
-  background-color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.accent1};
   border-radius: 12px;
   color: ${({ theme }) => theme.white};
 `
@@ -128,7 +128,7 @@ const SyledCloseIcon = styled(CloseIcon)`
 
 const Error = styled.div`
   display: flex;
-  color: ${({ theme }) => theme.accentCritical};
+  color: ${({ theme }) => theme.critical};
   font-weight: 535;
   line-height: 24px;
   border-radius: 16px;
@@ -156,7 +156,7 @@ const RewardsInformationText = styled.span`
   display: inline-block;
   font-size: 14px;
   line-height: 20px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   margin-bottom: 28px;
 `
 

@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
 
 const RarityBar = styled.div<{ $color?: string }>`
-  background: ${({ $color, theme }) => $color ?? theme.backgroundOutline};
+  background: ${({ $color, theme }) => $color ?? theme.surface3};
   width: 2px;
   height: 10px;
   border-radius: 2px;
@@ -25,6 +25,7 @@ enum RarityLevel {
   ExtremelyRare = 'Extremely Rare',
 }
 
+// COLORS NEED UPDATING
 const RarityLevels: { [key in RarityLevel]: RarityValue } = {
   [RarityLevel.VeryCommon]: {
     threshold: 0.8,
@@ -33,7 +34,7 @@ const RarityLevels: { [key in RarityLevel]: RarityValue } = {
   },
   [RarityLevel.Common]: {
     threshold: 0.6,
-    color: colors.green300,
+    color: colors.success,
     caption: <Trans>Common</Trans>,
   },
   [RarityLevel.Rare]: {

@@ -11,7 +11,7 @@ import SwapBuyFiatButton from './SwapBuyFiatButton'
 
 const StyledSwapHeader = styled(RowBetween)`
   margin-bottom: 10px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const HeaderButtonContainer = styled(RowFixed)`

@@ -7,8 +7,8 @@ import styled from 'styled-components/macro'
 export const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};
   border-radius: 100px;
-  color: ${({ theme }) => theme.textPrimary};
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.neutral1};
+  background-color: ${({ theme }) => theme.surface3};
   font-size: calc(var(--size) / 3);
   font-weight: 535;
   height: ${({ size }) => size ?? '24px'};
@@ -28,7 +28,7 @@ const LogoImage = styled.img<{ size: string; imgLoaded?: boolean }>`
 const LogoImageWrapper = styled.div<{ size: string; imgLoaded?: boolean }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  background: ${({ theme, imgLoaded }) => (imgLoaded ? 'none' : theme.backgroundInteractive)};
+  background: ${({ theme, imgLoaded }) => (imgLoaded ? 'none' : theme.surface3)};
   transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
   box-shadow: 0 0 1px white;
   border-radius: 50%;

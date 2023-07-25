@@ -2,8 +2,8 @@ import styled, { css } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
 
 export const containerStyles = css`
-  background: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  background: ${({ theme }) => theme.surface1};
+  border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 16px;
   padding: 16px 20px;
   width: 100%;
@@ -27,7 +27,7 @@ export const Scrim = styled.div<{ isBottom?: boolean }>`
       `};
 
   background: ${({ theme }) =>
-    `linear-gradient(180deg, ${opacify(0, theme.backgroundSurface)} 0%, ${theme.backgroundSurface} 100%)`};
+    `linear-gradient(180deg, ${opacify(0, theme.surface1)} 0%, ${theme.surface1} 100%)`};
   display: flex;
 `
 

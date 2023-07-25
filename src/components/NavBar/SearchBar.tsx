@@ -26,8 +26,8 @@ import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
 
 const KeyShortCut = styled.div`
-  background-color: ${({ theme }) => theme.hoverState};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface3};
+  color: ${({ theme }) => theme.neutral2};
   padding: 0px 8px;
   width: 20px;
   height: 20px;
@@ -166,7 +166,7 @@ export const SearchBar = () => {
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
           borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '1px'}
-          backgroundColor={isOpen ? 'backgroundSurface' : 'searchBackground'}
+          backgroundColor={isOpen ? 'surface1' : 'surface2'}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
@@ -174,7 +174,7 @@ export const SearchBar = () => {
             <Box display={{ sm: 'none', md: 'flex' }}>
               <MagnifyingGlassIcon />
             </Box>
-            <Box display={{ sm: 'flex', md: 'none' }} color="textTertiary" onClick={toggleOpen}>
+            <Box display={{ sm: 'flex', md: 'none' }} color="neutral3" onClick={toggleOpen}>
               <ChevronLeftIcon />
             </Box>
           </Box>

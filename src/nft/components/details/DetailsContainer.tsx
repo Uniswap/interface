@@ -22,13 +22,13 @@ const Details = styled.div`
 `
 
 const Header = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   line-height: 20px;
 `
 
 const Body = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 14px;
   line-height: 20px;
   margin-top: 8px;
@@ -44,7 +44,7 @@ const Center = styled.span`
 `
 
 const CreatorLink = styled.a`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   text-decoration: none;
 
   ${OpacityHoverState}

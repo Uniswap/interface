@@ -17,14 +17,14 @@ import { TestnetsToggle } from './TestnetsToggle'
 const InternalLinkMenuItem = styled(Link)`
   ${ClickableStyle}
   flex: 1;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 12px 0;
   justify-content: space-between;
   text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isActive: boolean }) {
@@ -36,13 +36,13 @@ function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isAct
   return (
     <InternalLinkMenuItem onClick={onClick} to={to}>
       <ThemedText.BodySmall data-testid="wallet-language-item">{LOCALE_LABEL[locale]}</ThemedText.BodySmall>
-      {isActive && <Check color={theme.accentActive} opacity={1} size={20} />}
+      {isActive && <Check color={theme.accent1} opacity={1} size={20} />}
     </InternalLinkMenuItem>
   )
 }
 
 const SectionTitle = styled(ThemedText.SubHeader)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   padding-bottom: 24px;
 `
 

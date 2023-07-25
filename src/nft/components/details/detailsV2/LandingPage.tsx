@@ -52,7 +52,7 @@ const StyledHeadlineText = styled.div`
   font-size: 20px;
   line-height: 28px;
   text-align: center;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     line-height: 44px;
@@ -64,7 +64,7 @@ const StyledSubheaderText = styled.div`
   font-size: 14px;
   line-height: 20px;
   text-align: center;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     line-height: 24px;

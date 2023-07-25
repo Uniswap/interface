@@ -67,6 +67,11 @@ const fonts = {
   code: 'courier, courier new, serif',
 }
 
+const fontWeight = {
+  book: 485,
+  medium: 535,
+}
+
 const gapValues = {
   xs: '4px',
   sm: '8px',
@@ -80,6 +85,7 @@ function getSettings(darkMode: boolean) {
   return {
     grids: gapValues,
     fonts,
+    fontWeight,
 
     // shadows
     shadow1: darkMode ? '#000' : '#2F80ED',
@@ -118,7 +124,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
 export const ThemedGlobalStyle = createGlobalStyle`
   html {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     background-color: ${({ theme }) => theme.background} !important;
   }
 
@@ -127,7 +133,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: ${({ theme }) => theme.accentAction}; 
+    color: ${({ theme }) => theme.accent1}; 
   }
 
   :root {

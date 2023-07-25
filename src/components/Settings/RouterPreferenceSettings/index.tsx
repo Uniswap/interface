@@ -14,7 +14,7 @@ import styled from 'styled-components/macro'
 import { Divider, ExternalLink, ThemedText } from 'theme'
 
 const InlineLink = styled(ThemedText.Caption)`
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
   display: inline;
   cursor: pointer;
   &:hover {
@@ -38,7 +38,7 @@ export default function RouterPreferenceSettings() {
                 <ThemedText.BodySecondary>
                   <UniswapXBrandMark />
                 </ThemedText.BodySecondary>
-                <ThemedText.Caption color="textSecondary">
+                <ThemedText.Caption color="neutral2">
                   <Trans>When available, aggregates liquidity sources for better prices and gas free swaps.</Trans>{' '}
                   <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
                     <InlineLink>Learn more</InlineLink>

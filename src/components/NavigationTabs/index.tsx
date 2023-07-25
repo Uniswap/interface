@@ -37,7 +37,7 @@ const ActiveText = styled.div`
 `
 
 const StyledArrowLeft = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 export function FindPoolTabs({ origin }: { origin: string }) {
@@ -94,7 +94,7 @@ export function AddRemoveTabs({
           }}
           flex={children ? '1' : undefined}
         >
-          <StyledArrowLeft stroke={theme.textSecondary} />
+          <StyledArrowLeft stroke={theme.neutral2} />
         </StyledHistoryLink>
         <ThemedText.DeprecatedMediumHeader
           fontWeight={535}

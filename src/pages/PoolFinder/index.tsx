@@ -104,7 +104,7 @@ export default function PoolFinder() {
           <AutoColumn style={{ padding: '1rem' }} gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={485} color="accentAction">
+                <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
                   <Trans>
                     <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
                   </Trans>

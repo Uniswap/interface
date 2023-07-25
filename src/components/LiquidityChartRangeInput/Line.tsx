@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 const StyledLine = styled.line`
   opacity: 0.5;
   stroke-width: 2;
-  stroke: ${({ theme }) => theme.textPrimary};
+  stroke: ${({ theme }) => theme.neutral1};
   fill: none;
 `
 

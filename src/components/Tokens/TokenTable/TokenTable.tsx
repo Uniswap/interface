@@ -13,14 +13,14 @@ const GridContainer = styled.div`
   display: flex;
   flex-direction: column;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
 
   margin-left: auto;
   margin-right: auto;
   border-radius: 12px;
   justify-content: center;
   align-items: center;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
 `
 
 const TokenDataContainer = styled.div`
@@ -36,7 +36,7 @@ const NoTokenDisplay = styled.div`
   justify-content: center;
   width: 100%;
   height: 60px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 16px;
   font-weight: 535;
   align-items: center;

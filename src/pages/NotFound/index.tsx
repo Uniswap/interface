@@ -51,7 +51,7 @@ export default function NotFound() {
         <Header>
           <Container>
             <Title>404</Title>
-            <Paragraph color="textSecondary">
+            <Paragraph color="neutral2">
               <Trans>Page not found!</Trans>
             </Paragraph>
           </Container>

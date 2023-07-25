@@ -6,8 +6,8 @@ import { ChartEntry } from './types'
 
 const Path = styled.path<{ fill?: string }>`
   opacity: 0.5;
-  stroke: ${({ fill, theme }) => fill ?? theme.accentAction};
-  fill: ${({ fill, theme }) => fill ?? theme.accentAction};
+  stroke: ${({ fill, theme }) => fill ?? theme.accent1};
+  fill: ${({ fill, theme }) => fill ?? theme.accent1};
 `
 
 export const Area = ({

@@ -21,11 +21,11 @@ export function SettingsToggle({ title, description, dataid, isActive, toggle }:
     <Row align="center">
       <StyledColumn>
         <Row>
-          <ThemedText.SubHeaderSmall color="textPrimary">{title}</ThemedText.SubHeaderSmall>
+          <ThemedText.SubHeaderSmall color="neutral1">{title}</ThemedText.SubHeaderSmall>
         </Row>
         {description && (
           <Row>
-            <ThemedText.Caption color="textSecondary" lineHeight="16px">
+            <ThemedText.Caption color="neutral2" lineHeight="16px">
               {description}
             </ThemedText.Caption>
           </Row>

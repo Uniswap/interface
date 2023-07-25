@@ -1,5 +1,4 @@
 // Based mostly on https://github.com/Uniswap/interface/blob/main/src/theme/index.tsx
-import { opacify } from './utils'
 
 export const colors = {
   white: '#FFFFFF',
@@ -120,6 +119,7 @@ export const colors = {
   accent2_light: '#FFEFFF',
   success: '#40B66B',
   critical: '#FF5F52',
+  scrim: 'rgba(0, 0, 0, 0.60)',
 }
 
 type Theme = typeof darkTheme
@@ -150,117 +150,49 @@ const commonTheme = {
 
   brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
   promotionalGradient: colors.accent1_light,
-
-  // promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
-
-  hoverState: opacify(24, colors.gray300),
-  hoverDefault: opacify(8, colors.gray300),
 }
 
 export const darkTheme = {
   ...commonTheme,
 
-  userThemeColor: colors.accent1_dark,
-
   background: colors.black,
-  backgroundBackdrop: colors.surface1_dark,
-  backgroundSurface: colors.surface1_dark,
-  backgroundModule: colors.surface2_dark,
-  backgroundInteractive: colors.surface3_dark,
-  backgroundFloating: colors.surface3_dark,
-  backgroundOutline: colors.surface3_dark,
-  backgroundScrim: opacify(72, '#131313'),
-  backgroundScrolledSurface: opacify(72, '#131313'),
 
-  textPrimary: colors.neutral1_dark,
-  textSecondary: colors.neutral2_dark,
-  textTertiary: colors.neutral3_dark,
+  neutral1: colors.neutral1_dark,
+  neutral2: colors.neutral2_dark,
+  neutral3: colors.neutral3_dark,
 
-  accentAction: colors.accent1_dark,
-  accentActive: colors.accent1_dark,
-  accentSuccess: colors.success,
-  accentWarning: colors.gold200,
-  accentFailure: colors.critical,
-  accentCritical: colors.critical,
+  surface1: colors.surface1_dark,
+  surface2: colors.surface2_dark,
+  surface3: colors.surface3_dark,
+  surface4: colors.surface4_dark,
+  surface5: colors.surface5_dark,
 
-  accentActionSoft: colors.accent2_dark,
-  accentActiveSoft: colors.accent2_dark,
-  accentSuccessSoft: opacify(24, colors.success),
-  accentWarningSoft: opacify(24, colors.gold200),
-  accentFailureSoft: opacify(24, colors.critical),
-
-  accentTextDarkPrimary: opacify(80, colors.neutral1_dark),
-  accentTextDarkSecondary: opacify(60, colors.neutral1_dark),
-  accentTextDarkTertiary: opacify(24, colors.neutral1_dark),
-
-  accentTextLightPrimary: colors.neutral1_light,
-  accentTextLightSecondary: opacify(72, colors.neutral1_light),
-  accentTextLightTertiary: opacify(12, colors.neutral1_light),
-
-  deepShadow: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);',
-  shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
-
-  networkDefaultShadow: `0px 40px 120px ${opacify(16, colors.accent1_dark)}`,
-
-  stateOverlayHover: opacify(8, colors.gray300),
-  stateOverlayPressed: opacify(24, colors.gray200),
-
-  searchBackground: `rgba(255,255,255,0.07)`,
-  searchOutline: `rgba(255,255,255,0.07)`,
-  hoverState: colors.surface3_dark,
+  accent1: colors.accent1_dark,
+  accent2: colors.accent2_dark,
+  success: colors.success,
+  critical: colors.critical,
+  scrim: colors.scrim,
 }
 
 export const lightTheme: Theme = {
   ...commonTheme,
 
-  userThemeColor: colors.accent1_light,
+  background: colors.white,
 
-  background: colors.white, //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
-  backgroundBackdrop: colors.surface2_light,
-  backgroundSurface: colors.surface1_light,
-  backgroundModule: colors.surface2_light,
-  backgroundInteractive: colors.surface3_light,
-  backgroundFloating: colors.surface3_light,
-  backgroundOutline: colors.surface3_light,
-  backgroundScrim: opacify(60, colors.gray900),
-  backgroundScrolledSurface: opacify(72, colors.white),
+  neutral1: colors.neutral1_light,
+  neutral2: colors.neutral2_light,
+  neutral3: colors.neutral3_light,
 
-  textPrimary: colors.neutral1_light,
-  textSecondary: colors.neutral2_light,
-  textTertiary: colors.neutral3_light,
+  surface1: colors.surface1_light,
+  surface2: colors.surface2_light,
+  surface3: colors.surface3_light,
+  surface4: colors.surface4_light,
+  surface5: colors.surface5_light,
 
-  accentAction: colors.accent1_dark,
-  accentActive: colors.accent1_dark,
-  accentSuccess: colors.success,
-  accentWarning: colors.gold200,
-  accentFailure: colors.critical,
-  accentCritical: colors.critical,
+  accent1: colors.accent1_light,
+  accent2: colors.accent2_light,
 
-  accentActionSoft: colors.accent2_light,
-  accentActiveSoft: colors.accent2_light,
-  accentSuccessSoft: opacify(24, colors.success),
-  accentWarningSoft: opacify(24, colors.gold200),
-  accentFailureSoft: opacify(12, colors.critical),
-
-  accentTextDarkPrimary: opacify(80, colors.neutral1_dark),
-  accentTextDarkSecondary: opacify(60, colors.neutral1_dark),
-  accentTextDarkTertiary: opacify(24, colors.neutral1_dark),
-
-  accentTextLightPrimary: colors.gray50,
-  accentTextLightSecondary: opacify(72, colors.neutral1_light),
-  accentTextLightTertiary: opacify(12, colors.neutral1_light),
-
-  deepShadow:
-    '8px 12px 20px rgba(51, 53, 72, 0.04), 4px 6px 12px rgba(51, 53, 72, 0.02), 4px 4px 8px rgba(51, 53, 72, 0.04);',
-  shallowShadow:
-    '6px 6px 10px rgba(51, 53, 72, 0.01), 2px 2px 6px rgba(51, 53, 72, 0.02), 1px 2px 2px rgba(51, 53, 72, 0.02);',
-
-  networkDefaultShadow: `0px 40px 120px ${opacify(12, colors.accent1_light)}`,
-
-  stateOverlayHover: opacify(8, colors.gray300),
-  stateOverlayPressed: opacify(24, colors.gray200),
-
-  searchBackground: opacify(4, colors.white),
-  searchOutline: opacify(1, colors.black),
-  hoverState: colors.surface3_light,
+  success: colors.success,
+  critical: colors.critical,
+  scrim: colors.scrim,
 }

@@ -7,12 +7,12 @@ import { ThemedText } from 'theme'
 
 const DropdownWrapper = styled(Column)<{ $width: number }>`
   gap: 4px;
-  background: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.surface1};
   padding: 8px;
   width: ${({ $width }) => $width}px;
   border-radius: 12px;
-  box-shadow: ${({ theme }) => theme.deepShadow};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
+  border: 1px solid ${({ theme }) => theme.surface3};
 `
 
 const DropdownRow = styled(Row)`
@@ -22,7 +22,7 @@ const DropdownRow = styled(Row)`
   border-radius: 12px;
 
   &:hover {
-    background: ${({ theme }) => theme.backgroundInteractive};
+    background: ${({ theme }) => theme.surface3};
   }
 `
 
@@ -38,7 +38,7 @@ export const Dropdown = ({ dropDownOptions, width }: DropdownArgs) => {
       {dropDownOptions.map((option) => (
         <DropdownRow key={option.displayText} onClick={option.onClick}>
           <ThemedText.BodyPrimary lineHeight="24px">{option.displayText}</ThemedText.BodyPrimary>
-          {option.isSelected && <Check height={20} width={20} color={theme.accentAction} />}
+          {option.isSelected && <Check height={20} width={20} color={theme.accent1} />}
         </DropdownRow>
       ))}
     </DropdownWrapper>

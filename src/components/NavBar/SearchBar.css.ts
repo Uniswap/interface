@@ -15,7 +15,7 @@ const baseSearchStyle = style([
     width: { sm: 'viewWidth' },
     borderStyle: 'solid',
     borderWidth: '1px',
-    borderColor: 'searchOutline',
+    borderColor: 'surface3',
   }),
   {
     backdropFilter: 'blur(60px)',
@@ -72,7 +72,7 @@ export const searchBarContainerDisableBlur = style({
 export const searchBar = style([
   baseSearchStyle,
   sprinkles({
-    color: 'textSecondary',
+    color: 'neutral2',
     paddingX: '16',
   }),
 ])
@@ -80,7 +80,7 @@ export const searchBar = style([
 export const nftSearchBar = style([
   baseSearchNftStyle,
   sprinkles({
-    color: 'textSecondary',
+    color: 'neutral2',
     paddingX: '16',
   }),
   {
@@ -93,7 +93,7 @@ export const searchBarInput = style([
     padding: '0',
     fontSize: '16',
     fontWeight: 'book',
-    color: { default: 'textPrimary', placeholder: 'textSecondary' },
+    color: { default: 'neutral1', placeholder: 'neutral2' },
     border: 'none',
     background: 'none',
     lineHeight: '24',
@@ -107,7 +107,7 @@ export const searchBarDropdownNft = style([
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
     height: { sm: 'viewHeight', md: 'auto' },
-    backgroundColor: 'backgroundSurface',
+    backgroundColor: 'surface1',
   }),
   {
     backdropFilter: 'blur(60px)',
@@ -164,7 +164,7 @@ export const primaryText = style([
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    color: 'textPrimary',
+    color: 'neutral1',
   }),
   {
     lineHeight: '24px',
@@ -174,7 +174,7 @@ export const primaryText = style([
 export const secondaryText = style([
   subheadSmall,
   sprinkles({
-    color: 'textSecondary',
+    color: 'neutral2',
   }),
   {
     lineHeight: '20px',
@@ -184,7 +184,7 @@ export const secondaryText = style([
 export const imageHolder = style([
   suggestionImage,
   sprinkles({
-    background: 'backgroundModule',
+    background: 'surface2',
     flexShrink: '0',
   }),
 ])
@@ -197,7 +197,7 @@ export const suggestionIcon = sprinkles({
 export const sectionHeader = style([
   subheadSmall,
   sprinkles({
-    color: 'textSecondary',
+    color: 'neutral2',
   }),
   {
     lineHeight: '20px',

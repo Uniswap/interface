@@ -2,36 +2,30 @@ import { Theme, vars } from 'nft/css/sprinkles.css'
 
 export const darkTheme: Theme = {
   colors: {
-    accentFailure: vars.color.critical,
-    accentFailureSoft: 'rgba(253, 118, 107, 0.12)',
-    accentAction: vars.color.accent1_dark,
-    accentActionSoft: vars.color.accent2_dark,
-    accentSuccess: vars.color.success,
+    neutral1: vars.color.neutral1_dark,
+    neutral2: vars.color.neutral2_dark,
+    neutral3: vars.color.neutral3_dark,
+    surface1: vars.color.surface1_dark,
+    surface2: vars.color.surface2_dark,
+    surface3: vars.color.surface3_dark,
+    surface4: vars.color.surface4_dark,
+    surface5: vars.color.surface5_dark,
+    accent1: vars.color.accent1_dark,
+    accent2: vars.color.accent2_dark,
+    scrim: 'rgba(0, 0, 0, 0.60)',
 
-    explicitWhite: '#FFFFFF',
-    green: vars.color.success,
-    gold: vars.color.gold200,
-    violet: vars.color.violet200,
+    success: vars.color.success,
+    critical: vars.color.critical,
 
-    backgroundBackdrop: vars.color.surface1_dark,
-    backgroundSurface: vars.color.surface1_dark,
-    backgroundModule: vars.color.surface2_dark,
-    backgroundFloating: vars.color.surface3_dark,
-    backgroundInteractive: vars.color.surface3_dark,
-    backgroundOutline: vars.color.surface3_dark,
+    white: '#FFFFFF',
 
-    modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
-
-    searchBackground: `rgba(255,255,255,0.07)`,
-    searchOutline: `rgba(255,255,255,0.07)`,
-    stateOverlayHover: `rgba(153,161,189,0.08)`,
-
-    textPrimary: vars.color.neutral1_dark,
-    textSecondary: vars.color.neutral2_dark,
-    textTertiary: vars.color.neutral3_dark,
-
+    //OLD NAMES
+    deprecated_accentFailureSoft: 'rgba(253, 118, 107, 0.12)',
+    deprecated_gold: vars.color.gold200,
+    deprecated_violet: vars.color.violet200,
+    deprecated_modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
+    deprecated_stateOverlayHover: `rgba(153,161,189,0.08)`,
     dropShadow: `0px 4px 16px rgba(76, 130, 251, 0.4)`,
-    hoverState: vars.color.surface4_dark,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

@@ -22,7 +22,7 @@ const TableHeaderRowContainer = styled.div<{ userCanScroll: boolean }>`
 `
 
 const TableRowContainer = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.surface3};
 
   &:last-child {
     border-bottom: none;

@@ -90,7 +90,7 @@ function NFTDetails({ asset }: { asset: WalletAsset }) {
         {asset.collectionIsVerified && <Verified />}
       </Row>
       <FloorPrice>
-        <ThemedText.Caption color="textSecondary">
+        <ThemedText.Caption color="neutral2">
           {asset.floorPrice ? `${floorFormatter(asset.floorPrice)} ETH` : ' '}
         </ThemedText.Caption>
       </FloorPrice>

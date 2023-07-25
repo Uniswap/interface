@@ -65,7 +65,7 @@ export const table = style([
     borderSpacing: '0px 40px',
   },
   sprinkles({
-    background: 'backgroundSurface',
+    background: 'surface1',
     width: 'full',
     borderRadius: '12',
     borderStyle: 'none',
@@ -74,7 +74,7 @@ export const table = style([
 
 export const thead = sprinkles({
   marginRight: '12',
-  borderColor: 'backgroundInteractive',
+  borderColor: 'surface3',
   borderWidth: '1px',
   borderBottomStyle: 'solid',
 })
@@ -89,7 +89,7 @@ export const th = style([
     },
   },
   sprinkles({
-    color: { default: 'textSecondary' },
+    color: { default: 'neutral2' },
     paddingTop: '12',
     paddingBottom: '12',
   }),

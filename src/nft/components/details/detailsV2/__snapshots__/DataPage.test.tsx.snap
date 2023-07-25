@@ -558,7 +558,7 @@ exports[`data page loads with header showing 1`] = `
             </div>
           </div>
           <div
-            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez45p sprinkles_flexDirection_row_sm__rgw6ez47v sprinkles_alignItems_center_sm__rgw6ez47 c27"
+            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez45j sprinkles_flexDirection_row_sm__rgw6ez47p sprinkles_alignItems_center_sm__rgw6ez41 c27"
           >
             <span>
               Activity Content
@@ -1159,7 +1159,7 @@ exports[`data page loads without header showing 1`] = `
             </div>
           </div>
           <div
-            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez45p sprinkles_flexDirection_row_sm__rgw6ez47v sprinkles_alignItems_center_sm__rgw6ez47 c27"
+            class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez45j sprinkles_flexDirection_row_sm__rgw6ez47p sprinkles_alignItems_center_sm__rgw6ez41 c27"
           >
             <span>
               Activity Content

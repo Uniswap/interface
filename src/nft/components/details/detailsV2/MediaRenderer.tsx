@@ -101,8 +101,8 @@ const EmbeddedMediaPlayer = ({ asset, onError }: { asset: GenieAsset; onError: (
 
 const ContentNotAvailable = styled(ThemedText.BodySmall)`
   display: flex;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface1};
+  color: ${({ theme }) => theme.neutral2};
   align-items: center;
   justify-content: center;
 

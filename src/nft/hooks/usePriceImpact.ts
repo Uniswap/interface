@@ -22,9 +22,9 @@ export function usePriceImpact(trade?: ClassicTrade): PriceImpact | undefined {
     const priceImpactWarning = marketPriceImpact ? getPriceImpactWarning(marketPriceImpact) : undefined
     const warningColor =
       priceImpactWarning === 'error'
-        ? theme.accentCritical
+        ? theme.critical
         : priceImpactWarning === 'warning'
-        ? theme.accentWarning
+        ? theme.deprecated_accentWarning
         : undefined
 
     return marketPriceImpact && priceImpactWarning && warningColor
@@ -36,7 +36,7 @@ export function usePriceImpact(trade?: ClassicTrade): PriceImpact | undefined {
           displayPercentage: () => toHumanReadablePercent(marketPriceImpact),
         }
       : undefined
-  }, [theme.accentCritical, theme.accentWarning, trade])
+  }, [theme.critical, theme.deprecated_accentWarning, trade])
 }
 
 function toHumanReadablePercent(priceImpact: Percent): string {

@@ -22,22 +22,22 @@ const SwitcherWrapper = styled(Row)`
   width: 92px;
   justify-content: space-between;
   user-select: none;
-  background: ${({ theme }) => theme.backgroundInteractive};
+  background: ${({ theme }) => theme.surface3};
   ${OpacityHoverState}
 `
 
 const Chevron = styled(ChevronDown)<{ $isOpen: boolean }>`
   height: 16px;
   width: 16px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   transform: ${({ $isOpen }) => ($isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform ${({ theme }) => theme.transition.duration.fast};
 `
 
 const TimeDropdownMenu = styled(Column)`
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  box-shadow: ${({ theme }) => theme.deepShadow};
-  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface1};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
+  border: 0.5px solid ${({ theme }) => theme.surface3};
   border-radius: 12px;
   padding: 10px 8px;
   gap: 8px;
@@ -57,7 +57,7 @@ const DropdownContent = styled(Row)`
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme }) => theme.stateOverlayHover};
+    background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
   }
 `
 
@@ -93,7 +93,7 @@ export const TimePeriodSwitcher = ({
   return (
     <SwitcherAndDropdownWrapper ref={menuRef}>
       <SwitcherWrapper onClick={toggleIsOpen} data-testid="activity-time-period-switcher">
-        <ThemedText.LabelSmall lineHeight="16px" color="textPrimary">
+        <ThemedText.LabelSmall lineHeight="16px" color="neutral1">
           {supportedTimePeriodsData[activeTimePeriod]}
         </ThemedText.LabelSmall>
         <Chevron $isOpen={isOpen} />
@@ -109,7 +109,7 @@ export const TimePeriodSwitcher = ({
               }}
             >
               <ThemedText.BodyPrimary lineHeight="24px">{supportedTimePeriodsData[timePeriod]}</ThemedText.BodyPrimary>
-              <Check size="16px" color={theme.accentActive} opacity={activeTimePeriod === timePeriod ? 1 : 0} />
+              <Check size="16px" color={theme.accent1} opacity={activeTimePeriod === timePeriod ? 1 : 0} />
             </DropdownContent>
           ))}
         </TimeDropdownMenu>

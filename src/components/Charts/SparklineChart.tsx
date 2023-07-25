@@ -58,7 +58,7 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange, sparkli
       getY={(p: PricePoint) => rdScale(p.value)}
       curve={curveCardinal.tension(curveTension)}
       marginTop={5}
-      color={pricePercentChange && pricePercentChange < 0 ? theme.accentFailure : theme.accentSuccess}
+      color={pricePercentChange && pricePercentChange < 0 ? theme.critical : theme.success}
       strokeWidth={1.5}
       width={width}
       height={height}

@@ -46,11 +46,11 @@ export function getBuyButtonStateData(
     buttonText: <Trans>Something went wrong</Trans>,
     disabled: true,
     warningText: undefined,
-    warningTextColor: theme.accentWarning,
+    warningTextColor: theme.deprecated_accentWarning,
     helperText: undefined,
-    helperTextColor: theme.textSecondary,
-    buttonColor: theme.accentAction,
-    buttonTextColor: theme.accentTextLightPrimary,
+    helperTextColor: theme.neutral2,
+    buttonColor: theme.accent1,
+    buttonTextColor: theme.deprecated_accentTextLightPrimary,
   }
 
   const buyButtonStateData: Record<BuyButtonStates, BuyButtonStateData> = {
@@ -95,8 +95,8 @@ export function getBuyButtonStateData(
     [BuyButtonStates.NO_TOKEN_ROUTE_FOUND]: {
       ...defaultBuyButtonState,
       buttonText: <Trans>Insufficient liquidity</Trans>,
-      buttonColor: theme.backgroundInteractive,
-      buttonTextColor: theme.textPrimary,
+      buttonColor: theme.surface3,
+      buttonTextColor: theme.neutral1,
       helperText: <Trans>Insufficient pool liquidity to complete transaction</Trans>,
     },
     [BuyButtonStates.LOADING_ALLOWANCE]: {
@@ -122,7 +122,7 @@ export function getBuyButtonStateData(
       ...defaultBuyButtonState,
       handleClick: handleClickOverride ?? (() => undefined),
       disabled: false,
-      warningTextColor: theme.accentAction,
+      warningTextColor: theme.accent1,
       warningText: <Trans>Price updated</Trans>,
       buttonText: <Trans>Pay</Trans>,
     },

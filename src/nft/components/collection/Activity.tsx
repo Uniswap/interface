@@ -103,9 +103,9 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
       return (
         <FilterBox
           className={styles.filter}
-          backgroundColor={isActive ? themeVars.colors.backgroundInteractive : themeVars.colors.backgroundModule}
-          color={isActive ? themeVars.colors.textPrimary : themeVars.colors.textPrimary}
-          border={`1px solid ${isActive ? themeVars.colors.backgroundOutline : themeVars.colors.backgroundModule}`}
+          backgroundColor={isActive ? themeVars.colors.surface3 : themeVars.colors.surface2}
+          color={isActive ? themeVars.colors.neutral1 : themeVars.colors.neutral1}
+          border={`1px solid ${isActive ? themeVars.colors.surface3 : themeVars.colors.surface2}`}
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}

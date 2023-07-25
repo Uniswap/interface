@@ -18,7 +18,7 @@ export const StyledSVG = styled.svg<{ size: string; stroke?: string; fill?: stri
   width: ${({ size }) => size};
   path {
     stroke: ${({ stroke }) => stroke};
-    background: ${({ theme }) => theme.textSecondary};
+    background: ${({ theme }) => theme.neutral2};
     fill: ${({ fill }) => fill};
   }
 `

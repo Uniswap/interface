@@ -20,7 +20,7 @@ const RoyaltyContainer = styled(Column)`
 const iconStyles = css`
   width: 16px;
   height: 16px;
-  outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
+  outline: 1px solid ${({ theme }) => theme.surface3};
   margin-right: 8px;
 `
 
@@ -37,14 +37,14 @@ const CollectionIcon = styled.img`
 
 const FeePercent = styled(ThemedText.Caption)`
   line-height: 16px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   white-space: nowrap;
 `
 
 const MaxFeeContainer = styled(Row)`
   justify-content: space-between;
   padding-top: 12px;
-  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-top: 1px solid ${({ theme }) => theme.surface3};
 `
 
 export const RoyaltyTooltip = ({
@@ -84,7 +84,7 @@ export const RoyaltyTooltip = ({
         <ThemedText.Caption lineHeight="16px">
           <Trans>Max fees</Trans>
         </ThemedText.Caption>
-        <ThemedText.Caption lineHeight="16px" color={fees ? 'textPrimary' : 'textSecondary'}>
+        <ThemedText.Caption lineHeight="16px" color={fees ? 'neutral1' : 'neutral2'}>
           {fees ? formatEth(fees) : '-'} ETH
         </ThemedText.Caption>
       </MaxFeeContainer>

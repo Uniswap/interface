@@ -44,8 +44,8 @@ const StepCircle = styled.div<{ active: boolean }>`
   height: 10px;
   width: 10px;
   border-radius: 50%;
-  background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.textTertiary)};
-  outline: 3px solid ${({ theme, active }) => (active ? theme.accentActionSoft : theme.accentTextLightTertiary)};
+  background-color: ${({ theme, active }) => (active ? theme.accent1 : theme.neutral3)};
+  outline: 3px solid ${({ theme, active }) => (active ? theme.accent2 : theme.deprecated_accentTextLightPrimary)};
   transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `
 
@@ -200,7 +200,7 @@ function getContent(args: ContentArgs): PendingModalStep {
         title: swapPending ? t`Swap submitted` : swapConfirmed ? t`Success` : t`Confirm Swap`,
         subtitle: trade ? <TradeSummary trade={trade} /> : null,
         label: href ? (
-          <ExternalLink href={href} color="textSecondary">
+          <ExternalLink href={href} color="neutral2">
             {labelText}
           </ExternalLink>
         ) : (
@@ -326,7 +326,7 @@ export function PendingModalContent({
           })}
         </AnimationWrapper>
         <Row justify="center" marginTop="32px" minHeight="24px">
-          <ThemedText.Caption color="textSecondary">{label}</ThemedText.Caption>
+          <ThemedText.Caption color="neutral2">{label}</ThemedText.Caption>
         </Row>
       </HeaderContainer>
       {button && <Row justify="center">{button}</Row>}

@@ -36,7 +36,7 @@ const ActionButton = styled.div`
 `
 
 const USDPrice = styled(ThemedText.BodySmall)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   line-height: 20px;
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
@@ -59,7 +59,7 @@ const PriceCell = ({ price }: { price: number }) => {
   const usdValue = useStablecoinValue(parsedAmount)
   return (
     <Row gap="8px">
-      <ThemedText.LabelSmall color="textPrimary" lineHeight="16px">
+      <ThemedText.LabelSmall color="neutral1" lineHeight="16px">
         {formatEth(price)}
       </ThemedText.LabelSmall>
       <USDPrice>{formatCurrencyAmount(usdValue, NumberType.FiatTokenPrice)}</USDPrice>
@@ -77,26 +77,26 @@ export const HeaderRow = ({ type, is1155 }: { type: TableTabsKeys; is1155?: bool
     <Row gap="12px" padding="6px 6px 6px 0px">
       <HomeSearchIcon />
       <TableCell $flex={reducedPriceWidth ? 1 : 1.75}>
-        <ThemedText.SubHeaderSmall color="textSecondary">
+        <ThemedText.SubHeaderSmall color="neutral2">
           <Trans>Price</Trans>
         </ThemedText.SubHeaderSmall>
       </TableCell>
       {is1155 && (
         <TableCell $flex={0.5}>
-          <ThemedText.SubHeaderSmall color="textSecondary">
+          <ThemedText.SubHeaderSmall color="neutral2">
             <Trans>Quantity</Trans>
           </ThemedText.SubHeaderSmall>
         </TableCell>
       )}
       {(type === TableTabsKeys.Offers || is1155) && (
         <TableCell hideOnSmall={true}>
-          <ThemedText.SubHeaderSmall color="textSecondary">
+          <ThemedText.SubHeaderSmall color="neutral2">
             {type === TableTabsKeys.Offers ? <Trans>From</Trans> : <Trans>Seller</Trans>}
           </ThemedText.SubHeaderSmall>
         </TableCell>
       )}
       <TableCell $justifyContent="flex-end">
-        <ThemedText.SubHeaderSmall color="textSecondary">
+        <ThemedText.SubHeaderSmall color="neutral2">
           <Trans>Expires in</Trans>
         </ThemedText.SubHeaderSmall>
       </TableCell>
@@ -131,24 +131,22 @@ export const ContentRow = ({
       )}
       {is1155 && (
         <TableCell $flex={0.5} $justifyContent="center">
-          <ThemedText.SubHeaderSmall color="textPrimary">{content.quantity}</ThemedText.SubHeaderSmall>
+          <ThemedText.SubHeaderSmall color="neutral1">{content.quantity}</ThemedText.SubHeaderSmall>
         </TableCell>
       )}
       {(!isSellOrder || is1155) && (
         <TableCell hideOnSmall={true}>
           <Link href={`https://etherscan.io/address/${content.maker}`}>
-            <ThemedText.LabelSmall color="textPrimary">{shortenAddress(content.maker)}</ThemedText.LabelSmall>
+            <ThemedText.LabelSmall color="neutral1">{shortenAddress(content.maker)}</ThemedText.LabelSmall>
           </Link>
         </TableCell>
       )}
       <TableCell $justifyContent="flex-end">
-        <ThemedText.LabelSmall color="textPrimary">
-          {date ? timeUntil(date) : <Trans>Never</Trans>}
-        </ThemedText.LabelSmall>
+        <ThemedText.LabelSmall color="neutral1">{date ? timeUntil(date) : <Trans>Never</Trans>}</ThemedText.LabelSmall>
       </TableCell>
       <TableCell $flex={isMobile ? 0.25 : 1} $justifyContent="center">
         <ActionButton>
-          <ThemedText.LabelSmall color="textSecondary">{buttonCTA}</ThemedText.LabelSmall>
+          <ThemedText.LabelSmall color="neutral2">{buttonCTA}</ThemedText.LabelSmall>
         </ActionButton>
       </TableCell>
     </Row>

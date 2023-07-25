@@ -3,13 +3,13 @@ import { loadingAsset } from 'nft/css/loading.css'
 import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const filterButton = sprinkles({
-  backgroundColor: 'accentActionSoft',
-  color: 'accentAction',
+  backgroundColor: 'accent2',
+  color: 'accent1',
 })
 
 export const filterButtonExpanded = style({
-  background: vars.color.backgroundInteractive,
-  color: themeVars.colors.textPrimary,
+  background: vars.color.surface3,
+  color: themeVars.colors.neutral1,
 })
 
 export const filterButtonLoading = style([

@@ -10,7 +10,7 @@ export const ChainSelector = style([
     height: '40',
     cursor: 'pointer',
     border: 'none',
-    color: 'textPrimary',
+    color: 'neutral1',
     background: 'none',
   }),
 ])

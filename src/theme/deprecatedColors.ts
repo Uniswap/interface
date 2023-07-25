@@ -3,31 +3,6 @@ import { opacify } from './utils'
 
 function getDeprecatedTheme(darkMode: boolean) {
   return {
-    // text
-    deprecated_text4: darkMode ? colors.neutral2_dark : colors.neutral2_light,
-
-    // backgrounds / grays
-
-    // we could move this to `background`, but gray50 is a bit different from #FAFAFA
-    deprecated_bg1: darkMode ? colors.surface1_dark : colors.surface1_light,
-
-    deprecated_bg3: darkMode ? colors.surface2_dark : colors.surface2_light,
-    deprecated_bg4: darkMode ? colors.surface3_dark : colors.surface3_light,
-    deprecated_bg5: darkMode ? colors.surface4_dark : colors.surface4_light,
-
-    //specialty colors
-    deprecated_advancedBG: darkMode ? opacify(10, colors.black) : opacify(60, colors.white),
-
-    //primary colors
-    deprecated_primary2: darkMode ? colors.accent1_dark : colors.accent1_light,
-    deprecated_primary3: darkMode ? colors.accent1_dark : colors.accent1_light,
-    deprecated_primary4: darkMode ? colors.accent2_dark : colors.accent2_light,
-    deprecated_primary5: darkMode ? colors.accent2_dark : colors.accent2_light,
-
-    // secondary colors
-    deprecated_secondary2: darkMode ? opacify(25, colors.surface1_dark) : colors.surface2_light,
-    deprecated_secondary3: darkMode ? opacify(25, colors.surface1_dark) : colors.surface2_light,
-
     // other
     deprecated_yellow1: colors.yellow400,
     deprecated_yellow2: colors.yellow500,
@@ -35,6 +10,30 @@ function getDeprecatedTheme(darkMode: boolean) {
 
     // dont wanna forget these blue yet
     deprecated_blue4: darkMode ? '#153d6f70' : '#C4D9F8',
+
+    deprecated_backgroundScrolledSurface: darkMode ? opacify(72, colors.white) : opacify(72, '#131313'),
+
+    deprecated_accentWarning: colors.gold200,
+
+    deprecated_accentWarningSoft: opacify(24, colors.gold200),
+    deprecated_accentFailureSoft: opacify(12, colors.critical),
+
+    deprecated_accentTextLightPrimary: colors.gray50,
+    deprecated_deepShadow: darkMode
+      ? '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);'
+      : '8px 12px 20px rgba(51, 53, 72, 0.04), 4px 6px 12px rgba(51, 53, 72, 0.02), 4px 4px 8px rgba(51, 53, 72, 0.04);',
+    deprecated_shallowShadow: darkMode
+      ? '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);'
+      : '6px 6px 10px rgba(51, 53, 72, 0.01), 2px 2px 6px rgba(51, 53, 72, 0.02), 1px 2px 2px rgba(51, 53, 72, 0.02);',
+
+    deprecated_networkDefaultShadow: darkMode
+      ? `0px 40px 120px ${opacify(16, colors.accent1_dark)}`
+      : `0px 40px 120px ${opacify(12, colors.accent1_light)}`,
+
+    deprecated_stateOverlayHover: opacify(8, colors.gray300),
+    deprecated_stateOverlayPressed: opacify(24, colors.gray200),
+    deprecated_hoverState: opacify(24, colors.gray300),
+    deprecated_hoverDefault: opacify(8, colors.gray300),
   }
 }
 

@@ -15,12 +15,12 @@ const WarningIconStyle = css<{ size?: string }>`
 
 const WarningIcon = styled(AlertTriangle)`
   ${WarningIconStyle};
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
 `
 
 export const BlockedIcon = styled(Slash)`
   ${WarningIconStyle}
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 export default function TokenSafetyIcon({ warning }: { warning: Warning | null }) {

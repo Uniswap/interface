@@ -30,7 +30,7 @@ const EmptyWalletSubtitle = styled(ThemedText.BodySmall)`
 `
 
 const ActionButton = styled.button`
-  background-color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.accent1};
   padding: 10px 24px;
   color: ${({ theme }) => theme.white};
   width: min-content;
@@ -103,7 +103,7 @@ const EmptyWalletContent = ({ type = 'nft', onNavigateClick }: EmptyWalletConten
     <>
       {content.icon}
       <EmptyWalletText className={headlineMedium}>{content.title}</EmptyWalletText>
-      <EmptyWalletSubtitle color="textSecondary">{content.subtitle}</EmptyWalletSubtitle>
+      <EmptyWalletSubtitle color="neutral2">{content.subtitle}</EmptyWalletSubtitle>
       {content.actionText && (
         <ActionButton data-testid="nft-explore-nfts-button" onClick={actionButtonClick}>
           {content.actionText}

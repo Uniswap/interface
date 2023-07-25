@@ -63,13 +63,13 @@ export const SortDropdown = ({
         fontSize="14"
         borderRadius="12"
         borderStyle={isOpen && !mini ? 'solid' : 'none'}
-        background={mini ? 'none' : 'backgroundInteractive'}
-        borderColor="backgroundOutline"
+        background={mini ? 'none' : 'surface3'}
+        borderColor="surface3"
         borderWidth="1px"
         borderBottomLeftRadius={isOpen ? '0' : undefined}
         borderBottomRightRadius={isOpen ? '0' : undefined}
         padding={inFilters ? '12' : mini ? '0' : '8'}
-        color="textPrimary"
+        color="neutral1"
         whiteSpace="nowrap"
         display="flex"
         justifyContent="space-between"
@@ -81,7 +81,7 @@ export const SortDropdown = ({
       >
         {!isCollectionStatsLoading && (
           <>
-            <Box display="flex" alignItems="center" color="textPrimary">
+            <Box display="flex" alignItems="center" color="neutral1">
               {!isOpen && reversable && (
                 <Row
                   onClick={(e) => {
@@ -111,14 +111,14 @@ export const SortDropdown = ({
               <Box
                 marginLeft={reversable ? '4' : '0'}
                 marginRight={mini ? '2' : '0'}
-                color="textPrimary"
+                color="neutral1"
                 className={buttonTextMedium}
               >
                 {mini ? miniPrompt : isOpen ? 'Sort by' : dropDownOptions[selectedIndex].displayText}
               </Box>
             </Box>
             <ChevronUpIcon
-              secondaryColor={mini ? themeVars.colors.textPrimary : undefined}
+              secondaryColor={mini ? themeVars.colors.neutral1 : undefined}
               secondaryWidth={mini ? '20' : undefined}
               secondaryHeight={mini ? '20' : undefined}
               style={{
@@ -135,9 +135,9 @@ export const SortDropdown = ({
         right={inFilters ? '16' : 'auto'}
         paddingBottom="8"
         fontSize="14"
-        background="backgroundModule"
+        background="surface2"
         borderStyle="solid"
-        borderColor="backgroundOutline"
+        borderColor="surface3"
         borderWidth="1px"
         borderRadius="8"
         borderTopLeftRadius={mini ? undefined : '0'}
@@ -207,10 +207,10 @@ const DropDownItem = ({
       paddingRight={mini ? '20' : '0'}
       width="full"
       background={{
-        default: 'backgroundModule',
-        hover: 'backgroundInteractive',
+        default: 'surface2',
+        hover: 'surface3',
       }}
-      color="textPrimary"
+      color="neutral1"
       onClick={onClick}
       cursor="pointer"
     >

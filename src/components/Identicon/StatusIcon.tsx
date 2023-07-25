@@ -35,9 +35,9 @@ const MiniIconContainer = styled.div<{ side: 'left' | 'right' }>`
   bottom: -4px;
   ${({ side }) => `${side === 'left' ? 'left' : 'right'}: -4px;`}
   border-radius: 50%;
-  outline: 2px solid ${({ theme }) => theme.backgroundSurface};
+  outline: 2px solid ${({ theme }) => theme.surface1};
   outline-offset: -0.1px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   overflow: hidden;
   @supports (overflow: clip) {
     overflow: clip;

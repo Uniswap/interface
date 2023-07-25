@@ -20,7 +20,7 @@ export const OffersTableContent = ({ asset }: { asset: GenieAsset }) => {
     <ContentRow
       key={'offer_' + index}
       content={offer}
-      buttonCTA={isMobile ? <Check color={theme.textSecondary} height="20px" width="20px" /> : <Trans>Accept</Trans>}
+      buttonCTA={isMobile ? <Check color={theme.neutral2} height="20px" width="20px" /> : <Trans>Accept</Trans>}
       is1155={asset.tokenType === NftStandard.Erc1155}
     />
   ))

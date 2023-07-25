@@ -75,10 +75,10 @@ export const ArrowContainer = styled.div`
 
 const SwapSection = styled.div`
   position: relative;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 16px;
   padding: 16px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   line-height: 20px;
   font-weight: 535;
@@ -96,20 +96,20 @@ const SwapSection = styled.div`
     height: 100%;
     pointer-events: none;
     content: '';
-    border: 1px solid ${({ theme }) => theme.backgroundModule};
+    border: 1px solid ${({ theme }) => theme.surface2};
   }
 
   &:hover:before {
-    border-color: ${({ theme }) => theme.stateOverlayHover};
+    border-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
   }
 
   &:focus-within:before {
-    border-color: ${({ theme }) => theme.stateOverlayPressed};
+    border-color: ${({ theme }) => theme.deprecated_stateOverlayPressed};
   }
 `
 
 const OutputSwapSection = styled(SwapSection)`
-  border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
+  border-bottom: ${({ theme }) => `1px solid ${theme.surface1}`};
 `
 
 function getIsValidSwapQuote(
@@ -614,11 +614,11 @@ export function Swap({
               onClick={() => {
                 !disableTokenInputs && onSwitchTokens()
               }}
-              color={theme.textPrimary}
+              color={theme.neutral1}
             >
               <ArrowDown
                 size="16"
-                color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.textPrimary : theme.textTertiary}
+                color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.neutral1 : theme.neutral3}
               />
             </ArrowContainer>
           </TraceEvent>
@@ -649,7 +649,7 @@ export function Swap({
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                   <ArrowWrapper clickable={false}>
-                    <ArrowDown size="16" color={theme.textSecondary} />
+                    <ArrowDown size="16" color={theme.neutral2} />
                   </ArrowWrapper>
                   <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
                     <Trans>- Remove recipient</Trans>

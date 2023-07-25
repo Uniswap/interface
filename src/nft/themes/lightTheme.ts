@@ -2,36 +2,30 @@ import { Theme, vars } from 'nft/css/sprinkles.css'
 
 export const lightTheme: Theme = {
   colors: {
-    accentFailure: vars.color.critical,
-    accentFailureSoft: 'rgba(250, 43, 57, 0.12)',
-    accentAction: vars.color.accent1_light,
-    accentActionSoft: vars.color.accent2_light,
-    accentSuccess: vars.color.success,
+    neutral1: vars.color.neutral1_light,
+    neutral2: vars.color.neutral2_light,
+    neutral3: vars.color.neutral3_light,
+    surface1: vars.color.surface1_light,
+    surface2: vars.color.surface2_light,
+    surface3: vars.color.surface3_light,
+    surface4: vars.color.surface4_light,
+    surface5: vars.color.surface5_light,
+    accent1: vars.color.accent1_light,
+    accent2: vars.color.accent2_light,
+    scrim: 'rgba(0, 0, 0, 0.60)',
 
-    explicitWhite: '#FFFFFF',
+    success: vars.color.success,
+    critical: vars.color.critical,
 
-    backgroundBackdrop: vars.color.surface1_light,
-    backgroundSurface: vars.color.surface1_light,
-    backgroundModule: vars.color.surface2_light,
-    backgroundFloating: vars.color.surface3_light,
-    backgroundInteractive: vars.color.surface3_light,
-    backgroundOutline: vars.color.surface3_light,
+    white: '#FFFFFF',
 
-    modalBackdrop: 'rgba(0, 0, 0, 0.3)',
-
-    searchBackground: `rgba(255,255,255,0.4)`,
-    searchOutline: `rgba(0,0,0,0.1)`,
-    stateOverlayHover: `rgba(153,161,189,0.08)`,
-    green: vars.color.success,
-    gold: vars.color.gold400,
-    violet: vars.color.violet400,
-
-    textPrimary: vars.color.neutral1_light,
-    textSecondary: vars.color.neutral2_light,
-    textTertiary: vars.color.neutral3_light,
-
+    //OLD NAMES
+    deprecated_accentFailureSoft: 'rgba(250, 43, 57, 0.12)',
+    deprecated_modalBackdrop: 'rgba(0, 0, 0, 0.3)',
+    deprecated_stateOverlayHover: `rgba(153,161,189,0.08)`,
+    deprecated_gold: vars.color.gold400,
+    deprecated_violet: vars.color.violet400,
     dropShadow: `0px 4px 16px rgba(251, 17, 142, 0.4)`,
-    hoverState: vars.color.surface4_light,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

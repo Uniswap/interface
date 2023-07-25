@@ -23,7 +23,7 @@ const TraitsHeader = styled(ThemedText.SubHeaderSmall)<{
 }>`
   display: flex;
   line-height: 20px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   flex: ${({ $flex }) => $flex ?? 1};
   justify-content: ${({ $justifyContent }) => $justifyContent};
 

@@ -18,7 +18,7 @@ import { ExplorerDataType } from 'utils/getExplorerLink'
 import { getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledBubble = styled(Row)`
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   padding: 10px 12px 10px 8px;
   border-radius: 20px;
   max-width: 144px;
@@ -32,7 +32,7 @@ const StyledLabelMedium = styled.div`
   font-weight: 535;
   font-size: 16px;
   line-height: 20px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 
   ${EllipsisStyle}
 `
@@ -41,7 +41,7 @@ const StyledIcon = styled(Row)`
   width: 24px;
   height: 24px;
   flex-shrink: 0;
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
   border-radius: 100%;
   overflow: hidden;
   justify-content: center;
@@ -84,7 +84,7 @@ const InfoBubble = ({
 }) => {
   return (
     <Column gap="sm">
-      <ThemedText.Caption color="textSecondary">{title}</ThemedText.Caption>
+      <ThemedText.Caption color="neutral2">{title}</ThemedText.Caption>
       <ConditionalLinkWrapper isExternal={isExternal} href={href}>
         <StyledBubble gap="sm">
           <StyledIcon>{icon}</StyledIcon>
@@ -97,8 +97,8 @@ const InfoBubble = ({
 
 const InfoChipDropdown = styled.button`
   padding: 10px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface1};
+  color: ${({ theme }) => theme.neutral2};
   border-radius: 100%;
   border: none;
   cursor: pointer;

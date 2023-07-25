@@ -23,12 +23,12 @@ export const NavIcon = ({
     <Box
       as="button"
       className={styles.navIcon}
-      color={isActive ? 'textPrimary' : 'textSecondary'}
+      color={isActive ? 'neutral1' : 'neutral2'}
       onClick={onClick}
       height="40"
       width="40"
       aria-label={label}
-      backgroundColor={activeBackground ? 'accentActiveSoft' : 'transparent'}
+      backgroundColor={activeBackground ? 'accent2' : 'transparent'}
     >
       {children}
     </Box>

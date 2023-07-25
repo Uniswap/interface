@@ -22,7 +22,7 @@ export const baseCollectionImage = sprinkles({
   left: '0',
   borderStyle: 'solid',
   borderWidth: '4px',
-  borderColor: 'backgroundSurface',
+  borderColor: 'surface1',
   borderRadius: 'round',
   position: 'absolute',
 })
@@ -49,7 +49,7 @@ export const collectionImage = style([
 export const statsLabel = style([
   subheadSmall,
   sprinkles({
-    color: 'textSecondary',
+    color: 'neutral2',
     whiteSpace: 'nowrap',
   }),
   {
@@ -95,7 +95,7 @@ export const descriptionLoading = style([
 export const collectionImageIsLoadingBackground = style([
   collectionImage,
   sprinkles({
-    backgroundColor: 'backgroundSurface',
+    backgroundColor: 'surface1',
   }),
 ])
 
@@ -105,7 +105,7 @@ export const collectionImageIsLoading = style([
   sprinkles({
     borderStyle: 'solid',
     borderWidth: '4px',
-    borderColor: 'backgroundSurface',
+    borderColor: 'surface1',
   }),
 ])
 

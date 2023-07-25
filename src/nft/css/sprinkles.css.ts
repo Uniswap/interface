@@ -3,37 +3,30 @@ import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
 
 const themeContractValues = {
   colors: {
-    accentFailure: '',
-    accentFailureSoft: '',
-    accentAction: '',
-    accentActionSoft: '',
-    accentSuccess: '',
+    neutral1: '',
+    neutral2: '',
+    neutral3: '',
+    surface1: '',
+    surface2: '',
+    surface3: '',
+    surface4: '',
+    surface5: '',
+    accent1: '',
+    accent2: '',
 
-    explicitWhite: '',
-    gold: '',
-    green: '',
-    violet: '',
+    success: '',
+    critical: '',
+    scrim: '',
 
-    backgroundFloating: '',
-    backgroundInteractive: '',
-    backgroundModule: '',
-    backgroundOutline: '',
-    backgroundSurface: '',
-    backgroundBackdrop: '',
+    white: '',
 
-    modalBackdrop: '',
-
-    searchBackground: '',
-    searchOutline: '',
-
-    stateOverlayHover: '',
-
-    textPrimary: '',
-    textSecondary: '',
-    textTertiary: '',
-
+    // OLD NAMES
+    deprecated_accentFailureSoft: '',
+    deprecated_gold: '',
+    deprecated_violet: '',
+    deprecated_modalBackdrop: '',
+    deprecated_stateOverlayHover: '',
     dropShadow: '',
-    hoverState: '',
   },
 
   shadows: {

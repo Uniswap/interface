@@ -86,7 +86,7 @@ const OptInContents = ({
 
   const tryItNowElement = (
     <ThemedText.BodySecondary
-      color="accentAction"
+      color="accent1"
       fontSize={14}
       fontWeight="500"
       onClick={() => {
@@ -207,7 +207,7 @@ const UniswapXOptInPopover = (props: PropsWithChildren<{ visible: boolean; shiny
 }
 
 const CloseIcon = styled(X)`
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
   cursor: pointer;
   position: absolute;
   top: 14px;
