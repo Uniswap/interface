@@ -13,7 +13,7 @@ describe('Universal search bar', () => {
       .and('contain.text', '$')
       .and('contain.text', '%')
     cy.get('[data-cy="searchbar-token-row-UNI"]').first().click()
-    cy.location('hash').should('equal', '#/tokens/ethereum/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984')
+    cy.location('pathname').should('equal', '/tokens/ethereum/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984')
   })
 
   it.skip('should show recent tokens and popular tokens with empty search term', () => {

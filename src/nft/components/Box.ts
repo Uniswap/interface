@@ -5,18 +5,13 @@ import { animated } from 'react-spring'
 import { Atoms, atoms } from '../css/atoms'
 import { sprinkles } from '../css/sprinkles.css'
 
-type HTMLProperties<T = HTMLElement> = Omit<
-  React.AllHTMLAttributes<T>,
-  'as' | 'className' | 'color' | 'height' | 'width'
->
-
-type Props = Atoms &
-  HTMLProperties & {
-    as?: React.ElementType
+type Props<T extends React.ElementType = 'div'> = Atoms &
+  Omit<React.ComponentProps<T>, 'as' | 'className' | 'color' | 'height' | 'width'> & {
+    as?: T
     className?: ClassValue
   }
 
-export const Box = React.forwardRef<HTMLElement, Props>(({ as = 'div', className, ...props }: Props, ref) => {
+export const Box = React.forwardRef(({ as = 'div', className, ...props }: Props, ref) => {
   const atomProps: Record<string, unknown> = {}
   const nativeProps: Record<string, unknown> = {}
 
@@ -38,7 +33,7 @@ export const Box = React.forwardRef<HTMLElement, Props>(({ as = 'div', className
     ...nativeProps,
     ref,
   })
-})
+}) as <T extends React.ElementType>(props: Props<T> & { ref?: React.ForwardedRef<T> }) => React.ReactElement
 
 // We get this error around the codebase: https://github.com/microsoft/TypeScript/issues/34933
 // so you see ts-ignore almost everywhere this component is used
