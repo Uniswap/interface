@@ -1,5 +1,5 @@
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { Trace } from 'analytics'
 import { useDetailsV2Enabled } from 'featureFlags/flags/nftDetails'
 import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'

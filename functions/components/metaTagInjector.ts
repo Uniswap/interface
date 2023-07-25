@@ -8,17 +8,14 @@ type MetaTagInjectorInput = {
  * Listener class for Cloudflare's HTMLRewriter {@link https://developers.cloudflare.com/workers/runtime-apis/html-rewriter}
  * to inject meta tags into the <head> of an HTML document.
  */
-export class MetaTagInjector {
+export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
   constructor(private input: MetaTagInjectorInput) {}
 
-  append(element, property: string, content: string) {
+  append(element: Element, property: string, content: string) {
     element.append(`<meta property="${property}" content="${content}"/>`, { html: true })
   }
 
-  /**
-   * Event handler for ElementHandler {@link https://developers.cloudflare.com/workers/runtime-apis/html-rewriter/#element-handlers}
-   */
-  element(element) {
+  element(element: Element) {
     //Open Graph Tags
     this.append(element, 'og:title', this.input.title)
     if (this.input.image) {

@@ -2,15 +2,15 @@
 
 exports[`LoadedRow.tsx renders a row 1`] = `
 <DocumentFragment>
-  .c18 {
+  .c19 {
   color: #40B66B;
 }
 
-.c19 {
+.c20 {
   color: #40B66B;
 }
 
-.c17 {
+.c18 {
   padding-right: 3px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -18,12 +18,23 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   display: flex;
 }
 
-.c8 {
+.c9 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: radial-gradient(white 60%,#ffffff00 calc(70% + 1px));
+}
+
+.c8 {
+  width: 24px;
+  height: 24px;
+  background: #E8ECFB;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
   box-shadow: 0 0 1px white;
+  border-radius: 50%;
 }
 
 .c7 {
@@ -34,7 +45,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   display: flex;
 }
 
-.c9 {
+.c10 {
   --size: calc(24px / 2);
   width: var(--size);
   height: var(--size);
@@ -113,7 +124,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   font-size: 14px;
 }
 
-.c13 {
+.c14 {
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
   -ms-flex-pack: end;
@@ -127,7 +138,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   transition: background-color 250ms ease;
 }
 
-.c21 {
+.c22 {
   padding-right: 8px;
 }
 
@@ -141,19 +152,19 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   gap: 8px;
 }
 
-.c14 {
+.c15 {
   padding-right: 8px;
 }
 
-.c20 {
+.c21 {
   padding-right: 8px;
 }
 
-.c16 {
+.c17 {
   display: none;
 }
 
-.c15 {
+.c16 {
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
   -ms-flex-pack: end;
@@ -163,12 +174,12 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   flex: 1;
 }
 
-.c23 {
+.c24 {
   padding: 0px 24px;
   min-width: 120px;
 }
 
-.c24 {
+.c25 {
   width: 124px;
   height: 42px;
 }
@@ -178,7 +189,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   text-decoration: none;
 }
 
-.c10 {
+.c11 {
   gap: 8px;
   line-height: 24px;
   font-size: 16px;
@@ -188,19 +199,19 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   white-space: nowrap;
 }
 
-.c11 {
+.c12 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 100%;
 }
 
-.c12 {
+.c13 {
   color: #98A1C0;
   text-transform: uppercase;
 }
 
-.c22 {
+.c23 {
   padding-right: 8px;
 }
 
@@ -241,19 +252,19 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 @media only screen and (max-width:720px) {
+  .c22 {
+    display: none;
+  }
+}
+
+@media only screen and (max-width:540px) {
   .c21 {
     display: none;
   }
 }
 
 @media only screen and (max-width:540px) {
-  .c20 {
-    display: none;
-  }
-}
-
-@media only screen and (max-width:540px) {
-  .c16 {
+  .c17 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -269,7 +280,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 @media only screen and (max-width:540px) {
-  .c15 {
+  .c16 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -281,13 +292,13 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 @media only screen and (max-width:1200px) {
-  .c23 {
+  .c24 {
     display: none;
   }
 }
 
 @media only screen and (max-width:540px) {
-  .c10 {
+  .c11 {
     -webkit-box-pack: start;
     -webkit-justify-content: flex-start;
     -ms-flex-pack: start;
@@ -304,7 +315,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 @media only screen and (max-width:540px) {
-  .c12 {
+  .c13 {
     font-size: 12px;
     height: 16px;
     -webkit-box-pack: start;
@@ -316,7 +327,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 @media only screen and (max-width:840px) {
-  .c22 {
+  .c23 {
     display: none;
   }
 }
@@ -346,26 +357,30 @@ exports[`LoadedRow.tsx renders a row 1`] = `
             <div
               class="c7"
             >
-              <img
-                alt="USDC logo"
-                class="c8"
-                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-              />
               <div
-                class="c9"
+                class="c8"
+              >
+                <img
+                  alt="USDC logo"
+                  class="c9"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                />
+              </div>
+              <div
+                class="c10"
               />
             </div>
             <div
-              class="7 c2 c10"
+              class="7 c2 c11"
             >
               <div
-                class="8 c11"
+                class="8 c12"
                 data-cy="token-name"
               >
                 USD Coin
               </div>
               <div
-                class="9 c2 c12"
+                class="9 c2 c13"
               >
                 USDC
               </div>
@@ -373,25 +388,25 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="c2 c13 c14"
+          class="c2 c14 c15"
           data-testid="price-cell"
         >
           <div
             class="c5"
           >
             <div
-              class="2 c2 c15"
+              class="2 c2 c16"
             >
               $1.00
               <div
-                class="1 c2 c16"
+                class="1 c2 c17"
               >
                 <div
-                  class="c17"
+                  class="c18"
                 >
                   <svg
                     aria-label="up"
-                    class="c18"
+                    class="c19"
                     fill="none"
                     height="14"
                     stroke="currentColor"
@@ -414,7 +429,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
                   </svg>
                 </div>
                 <span
-                  class="c19"
+                  class="c20"
                 >
                   0.00%
                 </span>
@@ -423,18 +438,18 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="0 c2 c13 c20"
+          class="0 c2 c14 c21"
           data-testid="percent-change-cell"
         >
           <div
             class="c5"
           >
             <div
-              class="c17"
+              class="c18"
             >
               <svg
                 aria-label="up"
-                class="c18"
+                class="c19"
                 fill="none"
                 height="20"
                 stroke="currentColor"
@@ -457,14 +472,14 @@ exports[`LoadedRow.tsx renders a row 1`] = `
               </svg>
             </div>
             <span
-              class="c19"
+              class="c20"
             >
               0.00%
             </span>
           </div>
         </div>
         <div
-          class="c2 c13 c21"
+          class="c2 c14 c22"
           data-testid="tvl-cell"
         >
           <div
@@ -474,7 +489,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="0 c2 c13 c22"
+          class="0 c2 c14 c23"
           data-testid="volume-cell"
         >
           <div
@@ -484,10 +499,10 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="4 c2 c23"
+          class="4 c2 c24"
         >
           <div
-            class="5 c2 c24"
+            class="5 c2 c25"
           >
             <div
               style="width: 100%; height: 100%;"
