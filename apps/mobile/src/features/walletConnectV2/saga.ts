@@ -116,7 +116,7 @@ function* watchWalletConnectV2Events() {
   }
 }
 
-async function* handleSessionProposal(proposal: ProposalTypes.Struct) {
+function* handleSessionProposal(proposal: ProposalTypes.Struct) {
   const activeAccountAddress = yield* appSelect(selectActiveAccountAddress)
 
   const {
