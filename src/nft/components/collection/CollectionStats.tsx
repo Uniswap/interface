@@ -435,6 +435,24 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
   const [collectionSocialsIsOpen, toggleCollectionSocials] = useReducer((state) => !state, false)
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
+  const collectionImageElement = isCollectionStatsLoading ? (
+    <Box
+      background="explicitWhite"
+      borderRadius="round"
+      position="absolute"
+      className={styles.collectionImageIsLoading}
+    />
+  ) : (
+    <Box
+      as="img"
+      background="explicitWhite"
+      borderRadius="round"
+      position="absolute"
+      className={styles.collectionImage}
+      src={stats.imageUrl}
+    />
+  )
+
   return (
     <Box
       display="flex"
@@ -447,14 +465,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       {isCollectionStatsLoading && (
         <Box as="div" borderRadius="round" position="absolute" className={styles.collectionImageIsLoadingBackground} />
       )}
-      <Box
-        as={isCollectionStatsLoading ? 'div' : 'img'}
-        background="explicitWhite"
-        borderRadius="round"
-        position="absolute"
-        className={isCollectionStatsLoading ? styles.collectionImageIsLoading : styles.collectionImage}
-        src={stats.imageUrl}
-      />
+      {collectionImageElement}
       <Box className={styles.statsText}>
         <CollectionName
           collectionStats={stats}

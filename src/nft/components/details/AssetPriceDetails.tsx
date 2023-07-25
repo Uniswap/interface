@@ -11,9 +11,9 @@ import {
   ethNumberStandardFormatter,
   fetchPrice,
   formatEthPrice,
-  generateTweetForAsset,
   getMarketplaceIcon,
   timeLeft,
+  useTweetForAsset,
   useUsdPrice,
 } from 'nft/utils'
 import { useMemo } from 'react'
@@ -335,9 +335,11 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     }
   }, [asset, itemsInBag])
 
+  const assetTweetUri = useTweetForAsset(asset)
+
   const shareTweet = () => {
     window.open(
-      generateTweetForAsset(asset),
+      assetTweetUri,
       'newwindow',
       `left=${(window.screen.width - TWITTER_WIDTH) / 2}, top=${
         (window.screen.height - TWITTER_HEIGHT) / 2

@@ -15,6 +15,7 @@ import {
 } from 'nft/components/icons'
 import { DetailsOrigin, GenieAsset, Listing, Markets, Trait, UpdatedGenieAsset, WalletAsset } from 'nft/types'
 import qs from 'qs'
+import { useHref } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 
 export function getRarityStatus(
@@ -76,19 +77,22 @@ export const getMarketplaceIcon = (marketplace: string, size: string | number = 
   }
 }
 
-export const generateTweetForAsset = (asset: GenieAsset): string => {
-  return `https://twitter.com/intent/tweet?text=Check%20out%20${
-    asset.name ? encodeURIComponent(asset.name) : `${asset.collectionName}%20%23${asset.tokenId}`
-  }%20(${asset.collectionName})%20https://app.uniswap.org/%23/nfts/asset/${asset.address}/${
-    asset.tokenId
-  }%20via%20@uniswap`
+export const useTweetForAsset = (asset: GenieAsset): string => {
+  // TODO: Should we use `getAssetHref()` here too?
+  const assetHref = useHref(`/nfts/asset/${asset.address}/${asset.tokenId}`)
+  const tweetText = `Check out ${asset.name || `${asset.collectionName} #${asset.tokenId}`} (${
+    asset.collectionName
+  } ${assetHref} via @uniswap`
+  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
 }
 
-export const generateTweetForPurchase = (assets: UpdatedGenieAsset[], txHashUrl: string): string => {
+export const useTweetForPurchase = (assets: UpdatedGenieAsset[], txHashUrl: string): string => {
+  // TODO: why this collection is always hardcoded? Is this intentional?
+  const collectionHref = useHref('/nfts/collection/0x60bb1e2aa1c9acafb4d34f71585d7e959f387769')
   const multipleCollections = assets.length > 0 && assets.some((asset) => asset.address !== assets[0].address)
   const tweetText = `I just purchased ${
     multipleCollections ? `${assets.length} NFTs` : `${assets.length} ${assets[0].collectionName ?? 'NFT'}`
-  } with @Uniswap 🦄\n\nhttps://app.uniswap.org/#/nfts/collection/0x60bb1e2aa1c9acafb4d34f71585d7e959f387769\n${txHashUrl}`
+  } with @Uniswap 🦄\n\n${collectionHref}\n${txHashUrl}`
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
 }
 
@@ -109,7 +113,10 @@ function mapAssetsToCollections(assets: WalletAsset[]): { collection: string; it
   })
 }
 
-export const generateTweetForList = (assets: WalletAsset[]): string => {
+export const useTweetForList = (assets: WalletAsset[]): string => {
+  const assetsHref = useHref(getAssetHref(assets[0]))
+  const profileHref = useHref('/nfts/profile')
+
   const tweetText =
     assets.length == 1
       ? `I just listed ${
@@ -118,10 +125,10 @@ export const generateTweetForList = (assets: WalletAsset[]): string => {
             : `${assets[0].collection?.name} ` ?? ''
         }${assets[0].name} for ${getMinListingPrice(assets[0].newListings ?? [])} ETH on ${assets[0].marketplaces
           ?.map((market) => market.name)
-          .join(', ')}. Buy it on @Uniswap at https://app.uniswap.org/#${getAssetHref(assets[0])}`
-      : `I just listed ${
-          assets.length
-        } items on @Uniswap at https://app.uniswap.org/#/nfts/profile\n\nCollections: ${mapAssetsToCollections(assets)
+          .join(', ')}. Buy it on @Uniswap at ${assetsHref}`
+      : `I just listed ${assets.length} items on @Uniswap at ${profileHref}\n\nCollections: ${mapAssetsToCollections(
+          assets
+        )
           .map(({ collection, items }) => `${collection} ${items.map((item) => item).join(', ')}`)
           .join(', ')} \n\nMarketplaces: ${assets[0].marketplaces?.map((market) => market.name).join(', ')}`
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`

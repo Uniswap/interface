@@ -139,6 +139,8 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
                     <Box
                       as={Link}
                       data-testid="nft-activity-row"
+                      // @ts-ignore Box component is not typed properly to typecheck
+                      // custom components' props and will incorrectly report `to` as invalid
                       to={`/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`}
                       className={styles.eventRow}
                       key={i}

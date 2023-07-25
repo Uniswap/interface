@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
-import { resolvePath } from 'react-router-dom'
+import { useHref } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
@@ -80,6 +80,8 @@ export default function FiatOnrampModal() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
+  const swapUrl = useHref('/swap')
+
   const fetchSignedIframeUrl = useCallback(async () => {
     if (!account) {
       setError('Please connect an account before making a purchase.')
@@ -99,7 +101,7 @@ export default function FiatOnrampModal() {
           theme: isDarkMode ? 'dark' : 'light',
           colorCode: theme.accentAction,
           defaultCurrencyCode: 'eth',
-          redirectUrl: resolvePath('/swap'),
+          redirectUrl: swapUrl,
           walletAddresses: JSON.stringify(
             MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
               (acc, currencyCode) => ({
