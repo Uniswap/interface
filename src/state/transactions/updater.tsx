@@ -1,13 +1,28 @@
+import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import LibUpdater from 'lib/hooks/transactions/updater'
 import { useCallback, useMemo } from 'react'
+import { PopupType } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { L2_CHAIN_IDS } from '../../constants/chains'
 import { useAddPopup } from '../application/hooks'
 import { checkedTransaction, finalizeTransaction } from './reducer'
 import { SerializableTransactionReceipt, TransactionDetails } from './types'
+
+export function toSerializableReceipt(receipt: TransactionReceipt): SerializableTransactionReceipt {
+  return {
+    blockHash: receipt.blockHash,
+    blockNumber: receipt.blockNumber,
+    contractAddress: receipt.contractAddress,
+    from: receipt.from,
+    status: receipt.status,
+    to: receipt.to,
+    transactionHash: receipt.transactionHash,
+    transactionIndex: receipt.transactionIndex,
+  }
+}
 
 export default function Updater() {
   const { chainId } = useWeb3React()
@@ -30,27 +45,19 @@ export default function Updater() {
     [dispatch]
   )
   const onReceipt = useCallback(
-    ({ chainId, hash, receipt }: { chainId: number; hash: string; receipt: SerializableTransactionReceipt }) => {
+    ({ chainId, hash, receipt }: { chainId: number; hash: string; receipt: TransactionReceipt }) => {
       dispatch(
         finalizeTransaction({
           chainId,
           hash,
-          receipt: {
-            blockHash: receipt.blockHash,
-            blockNumber: receipt.blockNumber,
-            contractAddress: receipt.contractAddress,
-            from: receipt.from,
-            status: receipt.status,
-            to: receipt.to,
-            transactionHash: receipt.transactionHash,
-            transactionIndex: receipt.transactionIndex,
-          },
+          receipt: toSerializableReceipt(receipt),
         })
       )
 
       addPopup(
         {
-          txn: { hash },
+          type: PopupType.Transaction,
+          hash,
         },
         hash,
         isL2 ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS

@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -11,8 +11,6 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
-import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
@@ -34,6 +32,7 @@ import { useToggleAccountDrawer } from '.'
 import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
+import { useCachedPortfolioBalancesQuery } from './PrefetchBalancesWrapper'
 
 const AuthenticatedHeaderWrapper = styled.div`
   padding: 20px 16px;
@@ -105,7 +104,7 @@ const StatusWrapper = styled.div`
   display: inline-block;
   width: 70%;
   max-width: 70%;
-  padding-right: 14px;
+  padding-right: 8px;
   display: inline-flex;
 `
 
@@ -226,11 +225,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const openFiatOnrampUnavailableTooltip = useCallback(() => setShow(true), [setShow])
   const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
-  const { data: portfolioBalances } = usePortfolioBalancesQuery({
-    variables: { ownerAddress: account ?? '', chains: GQL_MAINNET_CHAINS },
-    fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
-  })
-
+  const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account })
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
@@ -257,9 +252,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           )}
         </StatusWrapper>
         <IconContainer>
-          {!showDisconnectConfirm && (
-            <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings} />
-          )}
+          <IconButton
+            hideHorizontal={showDisconnectConfirm}
+            data-testid="wallet-settings"
+            onClick={openSettings}
+            Icon={Settings}
+          />
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
@@ -271,6 +269,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               onShowConfirm={setShowDisconnectConfirm}
               Icon={LogOutCentered}
               text="Disconnect"
+              dismissOnHoverOut
             />
           </TraceEvent>
         </IconContainer>
