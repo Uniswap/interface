@@ -169,6 +169,41 @@ jobs:
           name: Cypress tests
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
+  cloud-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/cache-on-main
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-cloud-tsc-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-cloud-tsc-
+      - run: yarn typecheck:cloud
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Cloud typecheck
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+
+  # TODO(WEB-2537): Setup CodeCOV
+  cloud-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/cache-on-main
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-cloud-jest-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-cloud-jest-
+      - run: yarn test:cloud --coverage --maxWorkers=100%
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Cloud tests
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+        
   pre:
     if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
     runs-on: ubuntu-latest

@@ -26,8 +26,9 @@
     "serve": "serve build -l 3000",
     "lint": "yarn eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ .",
     "typecheck": "tsc",
+    "typecheck:cloud": "tsc -p functions/tsconfig.json",
     "test": "craco test",
-    "test:cloud": "NODE_OPTIONS=--experimental-vm-modules yarn jest functions  --watch --config=functions/jest.config.json",
+    "test:cloud": "NODE_OPTIONS=--experimental-vm-modules yarn jest functions --config=functions/jest.config.json",
     "cypress:open": "cypress open --browser chrome --e2e",
     "cypress:run": "cypress run --browser chrome --e2e",
     "deduplicate": "yarn-deduplicate --strategy=highest"
@@ -70,7 +71,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.22.7",
-    "@cloudflare/workers-types": "^4.20230518.0",
+    "@cloudflare/workers-types": "^4.20230710.1",
     "@craco/craco": "^7.1.0",
     "@ethersproject/experimental": "^5.4.0",
     "@lingui/cli": "^3.9.0",
