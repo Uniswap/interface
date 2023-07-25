@@ -1,5 +1,4 @@
-import usePrevious from 'hooks/usePrevious'
-import React, { Suspense } from 'react'
+import React, { Suspense, useDeferredValue } from 'react'
 
 /**
  * This is useful for keeping the "last rendered" components on-screen while any suspense
@@ -9,6 +8,7 @@ import React, { Suspense } from 'react'
  */
 
 export const SuspenseWithPreviousRenderAsFallback = (props: { children: React.ReactNode }) => {
-  const previousContents = usePrevious(props.children)
-  return <Suspense fallback={previousContents ?? null}>{props.children}</Suspense>
+  const previousChildren = useDeferredValue(props.children)
+
+  return <Suspense fallback={previousChildren ?? null}>{props.children}</Suspense>
 }
