@@ -11961,7 +11961,7 @@ __metadata:
     react-native-svg-transformer: 1.0.0
     react-native-tab-view: 3.1.1
     react-native-url-polyfill: 1.3.0
-    react-native-wagmi-charts: 2.2.0
+    react-native-wagmi-charts: 2.3.0
     react-native-web: 0.18.12
     react-native-webview: 11.23.1
     react-redux: 8.0.5
@@ -32258,9 +32258,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-wagmi-charts@npm:2.2.0":
-  version: 2.2.0
-  resolution: "react-native-wagmi-charts@npm:2.2.0"
+"react-native-wagmi-charts@npm:2.3.0":
+  version: 2.3.0
+  resolution: "react-native-wagmi-charts@npm:2.3.0"
   dependencies:
     d3-interpolate-path: ^2.2.3
     d3-scale: ^2
@@ -32273,7 +32273,7 @@ __metadata:
     react-native-gesture-handler: "*"
     react-native-reanimated: "*"
     react-native-svg: "*"
-  checksum: 58f439cb9bf4ac65f152155a5c2b460bdbc770e60b29fcbd5ab51743df3d7857686dccffc717b613638bcf30d3579244eaaf0871cd9013e7cabd96f81c5df053
+  checksum: 3788e5da0c0197f70f229a53d88f0a856104767f79944cc37c7b0c2b5765d072b4fa7fdd05b937d7b76d059244460f96b33c5321ce9fe89d44699002fecbf35e
   languageName: node
   linkType: hard
 
