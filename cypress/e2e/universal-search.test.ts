@@ -34,20 +34,31 @@ describe('Universal search bar', () => {
       .should('exist')
   })
 
-  it('should go to the selected result when recent results are shown', () => {
-    // Seed recent results with UNI.
-    openSearch()
-    getSearchBar().type('uni')
-    cy.get(getTestSelector('searchbar-token-row-UNI'))
-    getSearchBar().clear().type('{esc}')
+  it(
+    'should go to the selected result when recent results are shown',
+    // this test is experiencing flake despite being correct, i can see the right value in DOM
+    // but for some reason cypress doesn't find it, so adding retries for now :/
+    {
+      retries: {
+        runMode: 3,
+        openMode: 3,
+      },
+    },
+    () => {
+      // Seed recent results with UNI.
+      openSearch()
+      getSearchBar().type('uni')
+      cy.get(getTestSelector('searchbar-token-row-UNI'))
+      getSearchBar().clear().type('{esc}')
 
-    // Search a different token by name.
-    openSearch()
-    getSearchBar().type('eth')
-    cy.get(getTestSelector('searchbar-token-row-ETH'))
+      // Search a different token by name.
+      openSearch()
+      getSearchBar().type('eth')
+      cy.get(getTestSelector('searchbar-token-row-ETH'))
 
-    // Validate that we go to the searched/selected result.
-    getSearchBar().type('{enter}')
-    cy.url().should('contain', 'tokens/ethereum/NATIVE')
-  })
+      // Validate that we go to the searched/selected result.
+      getSearchBar().type('{enter}')
+      cy.url().should('contain', 'tokens/ethereum/NATIVE')
+    }
+  )
 })
