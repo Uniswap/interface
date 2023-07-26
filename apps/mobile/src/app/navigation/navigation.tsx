@@ -14,7 +14,6 @@ import {
 import { Chevron } from 'src/components/icons/Chevron'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
-import { CloudBackupPasswordConfirmScreen } from 'src/features/onboarding/CloudBackupConfirmPasswordConfirm'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
@@ -32,7 +31,9 @@ import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTItemScreen } from 'src/screens/NFTItemScreen'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
-import { CloudBackupPasswordScreen } from 'src/screens/Onboarding/CloudBackupPasswordScreen'
+import { CloudBackupPasswordConfirmScreen } from 'src/screens/Onboarding/CloudBackupPasswordConfirmScreen'
+import { CloudBackupPasswordCreateScreen } from 'src/screens/Onboarding/CloudBackupPasswordCreateScreen'
+
 import { CloudBackupProcessingScreen } from 'src/screens/Onboarding/CloudBackupProcessingScreen'
 import { EditNameScreen } from 'src/screens/Onboarding/EditNameScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
@@ -45,7 +46,10 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { SettingsAppearanceScreen } from 'src/screens/SettingsAppearanceScreen'
 import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthScreen'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
-import { SettingsCloudBackupScreen } from 'src/screens/SettingsCloudBackupScreen'
+import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCloudBackupPasswordConfirmScreen'
+import { SettingsCloudBackupPasswordCreateScreen } from 'src/screens/SettingsCloudBackupPasswordCreateScreen'
+
+import { SettingsCloudBackupProcessingScreen } from 'src/screens/SettingsCloudBackupProcessingScreen'
 import { SettingsCloudBackupStatus } from 'src/screens/SettingsCloudBackupStatus'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsViewSeedPhraseScreen } from 'src/screens/SettingsViewSeedPhraseScreen'
@@ -86,8 +90,16 @@ function SettingsStackGroup(): JSX.Element {
         name={Screens.SettingsViewSeedPhrase}
       />
       <SettingsStack.Screen
-        component={SettingsCloudBackupScreen}
-        name={Screens.SettingsCloudBackupScreen}
+        component={SettingsCloudBackupPasswordCreateScreen}
+        name={Screens.SettingsCloudBackupPasswordCreate}
+      />
+      <SettingsStack.Screen
+        component={SettingsCloudBackupPasswordConfirmScreen}
+        name={Screens.SettingsCloudBackupPasswordConfirm}
+      />
+      <SettingsStack.Screen
+        component={SettingsCloudBackupProcessingScreen}
+        name={Screens.SettingsCloudBackupProcessing}
       />
       <SettingsStack.Screen
         component={SettingsCloudBackupStatus}
@@ -207,8 +219,8 @@ export function OnboardingStackNavigator(): JSX.Element {
           name={OnboardingScreens.BackupCloudProcessing}
         />
         <OnboardingStack.Screen
-          component={CloudBackupPasswordScreen}
-          name={OnboardingScreens.BackupCloudPassword}
+          component={CloudBackupPasswordCreateScreen}
+          name={OnboardingScreens.BackupCloudPasswordCreate}
         />
         <OnboardingStack.Screen
           component={CloudBackupPasswordConfirmScreen}

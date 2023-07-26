@@ -200,7 +200,7 @@ export function SettingsWallet({
         {
           screen: hasICloudBackup
             ? Screens.SettingsCloudBackupStatus
-            : Screens.SettingsCloudBackupScreen,
+            : Screens.SettingsCloudBackupPasswordCreate,
           screenProps: { address },
           text: t('iCloud backup'),
           icon: <CloudIcon {...iconProps} />,

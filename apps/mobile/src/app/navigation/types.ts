@@ -12,6 +12,11 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
 type NFTItem = { owner?: Address; address: string; tokenId: string; isSpam?: boolean }
 
+export type CloudBackupFormParms = {
+  address: Address
+  password: string
+}
+
 export type ExploreStackParamList = {
   [Screens.Explore]: undefined
   [Screens.ExternalProfile]: {
@@ -39,7 +44,9 @@ export type SettingsStackParamList = {
   [Screens.SettingsAppearance]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
   [Screens.Dev]: undefined
-  [Screens.SettingsCloudBackupScreen]: { address: Address }
+  [Screens.SettingsCloudBackupPasswordCreate]: { address: Address }
+  [Screens.SettingsCloudBackupPasswordConfirm]: CloudBackupFormParms
+  [Screens.SettingsCloudBackupProcessing]: CloudBackupFormParms
   [Screens.SettingsCloudBackupStatus]: { address: Address }
   [Screens.SettingsViewSeedPhrase]: { address: Address }
 }
@@ -50,14 +57,12 @@ export type OnboardingStackBaseParams = {
 }
 
 export type OnboardingStackParamList = {
-  [OnboardingScreens.BackupCloudProcessing]: {
-    password: string
-  } & OnboardingStackBaseParams
   [OnboardingScreens.BackupManual]: OnboardingStackBaseParams
-  [OnboardingScreens.BackupCloudPassword]: OnboardingStackBaseParams
-  [OnboardingScreens.BackupCloudPasswordConfirm]: {
-    password: string
+  [OnboardingScreens.BackupCloudPasswordCreate]: {
+    address: Address
   } & OnboardingStackBaseParams
+  [OnboardingScreens.BackupCloudPasswordConfirm]: CloudBackupFormParms & OnboardingStackBaseParams
+  [OnboardingScreens.BackupCloudProcessing]: CloudBackupFormParms & OnboardingStackBaseParams
   [OnboardingScreens.Backup]: OnboardingStackBaseParams
   [OnboardingScreens.Landing]: OnboardingStackBaseParams
   [OnboardingScreens.EditName]: OnboardingStackBaseParams

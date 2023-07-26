@@ -43,7 +43,8 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
   const { data: iCloudAvailable } = useAsyncData(isICloudAvailable)
 
-  const activeAccountBackups = useActiveAccount()?.backups
+  const activeAccount = useActiveAccount()
+  const activeAccountBackups = activeAccount?.backups
 
   const renderHeaderLeft = useCallback(
     () => (
@@ -91,9 +92,10 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       )
       return
     }
+    if (!activeAccount?.address) return
     navigate({
-      name: OnboardingScreens.BackupCloudPassword,
-      params,
+      name: OnboardingScreens.BackupCloudPasswordCreate,
+      params: { ...params, address: activeAccount.address },
       merge: true,
     })
   }

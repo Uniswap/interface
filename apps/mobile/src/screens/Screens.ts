@@ -9,8 +9,10 @@ export enum Screens {
   NFTCollection = 'NFTCollection',
   OnboardingStack = 'OnboardingStack',
   Settings = 'Settings',
+  SettingsCloudBackupPasswordCreate = 'SettingsCloudBackupPasswordCreate',
+  SettingsCloudBackupPasswordConfirm = 'SettingsCloudBackupPasswordConfirm',
+  SettingsCloudBackupProcessing = 'SettingsCloudBackupProcessing',
   SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',
-  SettingsCloudBackupScreen = 'SettingsCloudBackupScreen',
   SettingsWallet = 'SettingsWallet',
   SettingsWalletEdit = 'SettingsWalletEdit',
   SettingsWalletManageConnection = 'SettingsWalletManageConnection',
@@ -27,7 +29,7 @@ export enum Screens {
 
 export enum OnboardingScreens {
   Backup = 'OnboardingBackup',
-  BackupCloudPassword = 'OnboardingBackupCloudPassword',
+  BackupCloudPasswordCreate = 'OnboardingBackupCloudPasswordCreate',
   BackupCloudPasswordConfirm = 'OnboardingBackupCloudPasswordConfirm',
   BackupCloudProcessing = 'OnboardingBackupCloudProcessing',
   BackupManual = 'OnboardingBackupManual',

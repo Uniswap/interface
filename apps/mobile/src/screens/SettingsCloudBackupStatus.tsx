@@ -87,9 +87,13 @@ export function SettingsCloudBackupStatus({
   const { requiredForTransactions } = useBiometricAppSettings()
   const { trigger: biometricTrigger } = useBiometricPrompt(deleteBackup)
 
+  const onPressBack = (): void => {
+    navigation.navigate(Screens.SettingsWallet, { address })
+  }
+
   return (
     <Screen mx="spacing16" my="spacing16">
-      <BackHeader alignment="center" mb="spacing16">
+      <BackHeader alignment="center" mb="spacing16" onPressBack={onPressBack}>
         <Text variant="bodyLarge">{t('iCloud backup')}</Text>
       </BackHeader>
 

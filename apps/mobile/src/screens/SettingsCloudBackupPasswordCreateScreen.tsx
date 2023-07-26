@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, ScrollView } from 'react-native'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { ScrollView } from 'react-native'
+import { useAppTheme } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -11,81 +11,38 @@ import { Flex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import { backupMnemonicToICloud } from 'src/features/CloudBackup/RNICloudBackupsManager'
-import { CloudBackupSetPassword } from 'src/features/onboarding/CloudBackupSetPassword'
+import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
-import { logger } from 'wallet/src/features/logger/logger'
-import {
-  EditAccountAction,
-  editAccountActions,
-} from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import serializeError from 'wallet/src/utils/serializeError'
 
-type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupScreen>
+type Props = NativeStackScreenProps<
+  SettingsStackParamList,
+  Screens.SettingsCloudBackupPasswordCreate
+>
 
 // This screen is visited when no iCloud backup exists (checked from settings)
-export function SettingsCloudBackupScreen({
+export function SettingsCloudBackupPasswordCreateScreen({
   navigation,
   route: {
     params: { address },
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
   const theme = useAppTheme()
 
   const [showCloudBackupInfoModal, setShowCloudBackupInfoModal] = useState(true)
 
-  const accounts = useAccounts()
-  const accountBackups = accounts[address]?.backups
-
-  const onPressNext = async (password: string): Promise<void> => {
-    try {
-      const mnemonicId = (accounts[address] as SignerMnemonicAccount)?.mnemonicId
-      if (!mnemonicId) return
-
-      await backupMnemonicToICloud(mnemonicId, password)
-      dispatch(
-        editAccountActions.trigger({
-          type: EditAccountAction.AddBackupMethod,
-          address,
-          backupMethod: BackupType.Cloud,
-        })
-      )
-    } catch (error) {
-      logger.error('Unable to backup to iCloud', {
-        tags: {
-          file: 'SettingsCloudBackupScreen',
-          function: 'onPressNext',
-          error: serializeError(error),
-        },
-      })
-
-      Alert.alert(
-        t('iCloud error'),
-        t(
-          'Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.'
-        ),
-        [
-          {
-            text: t('OK'),
-            style: 'default',
-          },
-        ]
-      )
-      navigation.goBack()
-    }
+  const navigateToNextScreen = ({ password }: { password: string }): void => {
+    navigation.navigate({
+      name: Screens.SettingsCloudBackupPasswordConfirm,
+      params: {
+        password,
+        address,
+      },
+      merge: true,
+    })
   }
-
-  useEffect(() => {
-    if (accountBackups?.includes(BackupType.Cloud)) {
-      navigation.replace(Screens.SettingsCloudBackupStatus, { address })
-    }
-  }, [accountBackups, address, navigation])
 
   return (
     <Screen mx="spacing16" my="spacing16">
@@ -99,11 +56,7 @@ export function SettingsCloudBackupScreen({
             )}
           </Text>
         </Flex>
-        <CloudBackupSetPassword
-          doneButtonText={t('Back up to iCloud')}
-          focusPassword={!showCloudBackupInfoModal}
-          onPressDone={onPressNext}
-        />
+        <CloudBackupPasswordForm navigateToNextScreen={navigateToNextScreen} />
         {showCloudBackupInfoModal && (
           <BottomSheetModal
             backgroundColor={theme.colors.background1}
