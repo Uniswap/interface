@@ -115,7 +115,7 @@ export const FALLBACK_URLS = {
   ],
   [ChainId.BASE]: [
     // "Safe" URLs
-    'https://developer-access-mainnet.base.org',
+    'https://mainnet.base.org',
   ],
   [ChainId.BASE_GOERLI]: [
     // "Safe" URLs
