@@ -1,5 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { RPC_PROVIDERS } from 'constants/providers'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
@@ -44,23 +45,20 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     chainId: activeChainId,
   })
 
-  const onBlock = useCallback(
-    (chainId: number, block: number) => {
-      setChainBlock((chainBlock) => {
-        if (chainBlock.chainId === chainId) {
-          if (!chainBlock.block || chainBlock.block < block) {
-            return { chainId, block, mainnetBlock: chainId === ChainId.MAINNET ? block : chainBlock.mainnetBlock }
-          }
-        } else if (chainId === ChainId.MAINNET) {
-          if (!chainBlock.mainnetBlock || chainBlock.mainnetBlock < block) {
-            return { chainId, block: chainBlock.block, mainnetBlock: block }
-          }
+  const onChainBlock = useCallback((chainId: number, block: number) => {
+    setChainBlock((chainBlock) => {
+      if (chainBlock.chainId === chainId) {
+        if (!chainBlock.block || chainBlock.block < block) {
+          return { chainId, block, mainnetBlock: chainId === ChainId.MAINNET ? block : chainBlock.mainnetBlock }
         }
-        return chainBlock
-      })
-    },
-    [setChainBlock]
-  )
+      } else if (chainId === ChainId.MAINNET) {
+        if (!chainBlock.mainnetBlock || chainBlock.mainnetBlock < block) {
+          return { ...chainBlock, mainnetBlock: block }
+        }
+      }
+      return chainBlock
+    })
+  }, [])
 
   const windowVisible = useIsWindowVisible()
   useEffect(() => {
@@ -77,12 +75,13 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
       provider
         .getBlockNumber()
         .then((block) => {
-          if (!stale) onBlock(activeChainId, block)
+          if (!stale) onChainBlock(activeChainId, block)
         })
         .catch((error) => {
           console.error(`Failed to get block number for chainId ${activeChainId}`, error)
         })
 
+      const onBlock = (block: number) => onChainBlock(activeChainId, block)
       provider.on('block', onBlock)
       return () => {
         stale = true
@@ -91,7 +90,20 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     }
 
     return void 0
-  }, [activeChainId, provider, onBlock, setChainBlock, windowVisible, block, mainnetBlock])
+  }, [activeChainId, provider, windowVisible, onChainBlock])
+
+  useEffect(() => {
+    if (mainnetBlock === undefined) {
+      RPC_PROVIDERS[ChainId.MAINNET]
+        .getBlockNumber()
+        .then((block) => {
+          onChainBlock(ChainId.MAINNET, block)
+        })
+        .catch((error) => {
+          console.error(`Failed to get block number for chainId ${ChainId.MAINNET}`, error)
+        })
+    }
+  }, [mainnetBlock, onChainBlock])
 
   const value = useMemo(
     () => ({
