@@ -64,7 +64,7 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const { account, tradeType, tokenOutAddress, tokenInChainId, uniswapXForceSyntheticQuotes, forceUniswapXOn } = args
+  const { account, tradeType, tokenOutAddress, tokenInChainId, uniswapXForceSyntheticQuotes } = args
 
   const uniswapx = {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
