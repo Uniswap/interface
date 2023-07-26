@@ -21,7 +21,6 @@ import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { ExternalProfileScreen } from 'src/screens/ExternalProfileScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
-import { ImportMethodScreenNew } from 'src/screens/Import/ImportMethodScreenNew'
 import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloudBackupLoadingScreen'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
@@ -37,7 +36,6 @@ import { CloudBackupPasswordCreateScreen } from 'src/screens/Onboarding/CloudBac
 import { CloudBackupProcessingScreen } from 'src/screens/Onboarding/CloudBackupProcessingScreen'
 import { EditNameScreen } from 'src/screens/Onboarding/EditNameScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
-import { LandingScreenNew } from 'src/screens/Onboarding/LandingScreenNew'
 import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { QRAnimationScreen } from 'src/screens/Onboarding/QRAnimationScreen'
@@ -58,8 +56,6 @@ import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
-import { EXPERIMENT_NAMES } from 'wallet/src/features/experiments/constants'
-import { useExperimentEnabled } from 'wallet/src/features/experiments/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
@@ -159,10 +155,6 @@ export function OnboardingStackNavigator(): JSX.Element {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
 
-  const isOnboardingNewCreateImportExperimentEnabled = useExperimentEnabled(
-    EXPERIMENT_NAMES.OnboardingNewCreateImportFlow
-  )
-
   const renderHeaderBackImage = useCallback(
     () => <Chevron color={theme.colors.textSecondary} height={28} width={28} />,
     [theme.colors.textSecondary]
@@ -183,9 +175,7 @@ export function OnboardingStackNavigator(): JSX.Element {
           headerRightContainerStyle: { paddingRight: theme.spacing.spacing16 },
         }}>
         <OnboardingStack.Screen
-          component={
-            isOnboardingNewCreateImportExperimentEnabled ? LandingScreenNew : LandingScreen
-          }
+          component={LandingScreen}
           name={OnboardingScreens.Landing}
           options={{ headerShown: false }}
         />
@@ -227,11 +217,7 @@ export function OnboardingStackNavigator(): JSX.Element {
           name={OnboardingScreens.BackupCloudPasswordConfirm}
         />
         <OnboardingStack.Screen
-          component={
-            isOnboardingNewCreateImportExperimentEnabled
-              ? ImportMethodScreenNew
-              : ImportMethodScreen
-          }
+          component={ImportMethodScreen}
           name={OnboardingScreens.ImportMethod}
         />
         <OnboardingStack.Screen

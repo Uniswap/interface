@@ -5,6 +5,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button, ButtonSize } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
@@ -17,6 +18,7 @@ import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { uniswapUrls } from 'wallet/src/constants/urls'
+import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -31,8 +33,16 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
-  const onPressGetStarted = (): void => {
+  const onPressCreateWallet = (): void => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
+    dispatch(createAccountActions.trigger())
+    navigation.navigate(OnboardingScreens.EditName, {
+      importType: ImportType.CreateNew,
+      entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+    })
+  }
+
+  const onPressImportWallet = (): void => {
     navigation.navigate(OnboardingScreens.ImportMethod, {
       importType: ImportType.NotYetSelected,
       entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
@@ -52,17 +62,22 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
         <LandingBackground />
       </Flex>
       <Flex grow height="auto">
-        <Flex gap={outerGap} justifyContent="flex-end">
-          <Flex mx="spacing16">
-            <Trace logPress element={ElementName.GetStarted}>
-              <Button
-                hapticFeedback
-                label={t('Get started')}
-                size={buttonSize}
-                onPress={onPressGetStarted}
-              />
-            </Trace>
-          </Flex>
+        <Flex grow gap={outerGap} justifyContent="flex-end" mx="spacing16">
+          <Trace logPress element={ElementName.CreateAccount}>
+            <Button
+              hapticFeedback
+              label={t('Create a new wallet')}
+              size={buttonSize}
+              onPress={onPressCreateWallet}
+            />
+          </Trace>
+          <Trace logPress element={ElementName.ImportAccount}>
+            <TouchableArea hapticFeedback alignItems="center" onPress={onPressImportWallet}>
+              <Text color="magentaVibrant" variant="buttonLabelLarge">
+                {t('Import or watch a wallet')}
+              </Text>
+            </TouchableArea>
+          </Trace>
           <Box mx="spacing24" pb={pb}>
             <Text color="textTertiary" mx="spacing4" textAlign="center" variant="buttonLabelMicro">
               <Trans t={t}>
