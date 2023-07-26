@@ -184,10 +184,13 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
 
     Alert.alert(
       i18n.t('Connection Error'),
-      i18n.t('Uniswap Wallet currently only supports {{ chains }}. \n\n {{ error }}', {
-        chains: chainLabels,
-        error: e,
-      }),
+      i18n.t(
+        `Uniswap Wallet currently supports {{ chains }}. Please only use "{{ dappName }}" on these chains`,
+        {
+          chains: chainLabels,
+          dappName: dapp.name,
+        }
+      ),
       [
         {
           text: 'OK',
