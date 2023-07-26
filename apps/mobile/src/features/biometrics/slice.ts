@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 export enum BiometricSettingType {
   RequiredForAppAccess,
@@ -26,6 +27,15 @@ const slice = createSlice({
       state.requiredForTransactions = action.payload
     },
     resetSettings: () => initialBiometricsSettingsState,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(setFinishedOnboarding, (state, action) => {
+      // disable biometrics if user has no wallets
+      if (!action.payload.finishedOnboarding) {
+        state.requiredForAppAccess = false
+        state.requiredForTransactions = false
+      }
+    })
   },
 })
 
