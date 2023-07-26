@@ -1,12 +1,9 @@
+import { mocked } from '../src/test-utils/mocked'
 import getCollection from './utils/getCollection'
 
 jest.mock('./utils/getCollection')
 
 test('Should use cache', async () => {
-  // const mockedGetCollection = getCollection as jest.MockedFunction<typeof getCollection>
-  // mockedGetCollection.mockImplementation(undefined)
-  expect(getCollection).not.toHaveBeenCalled()
-
   const url = 'http://127.0.0.1:3000/nfts/collection/0xbd3531da5cf5857e7cfaa92426877b022e612cf8'
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).toMatchSnapshot()
@@ -28,7 +25,7 @@ test('Should use cache', async () => {
   )
   expect(body).toContain(`<meta property="twitter:image:alt" content="Pudgy Penguins on Uniswap"/>`)
 
-  // expect(getCollection).toHaveBeenCalledTimes(1)
+  mocked(getCollection).mockResolvedValueOnce(undefined)
 
   const body2 = await fetch(new Request(url)).then((res) => res.text())
   expect(body2).toMatchSnapshot()
