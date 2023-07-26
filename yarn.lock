@@ -11950,7 +11950,7 @@ __metadata:
     react-native-markdown-display: 7.0.0-alpha.2
     react-native-mmkv: 2.4.3
     react-native-mmkv-flipper-plugin: 1.0.0
-    react-native-onesignal: 4.3.7
+    react-native-onesignal: 4.5.1
     react-native-pager-view: 6.0.1
     react-native-permissions: 3.6.0
     react-native-reanimated: 3.3.0
@@ -32106,12 +32106,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-onesignal@npm:4.3.7":
-  version: 4.3.7
-  resolution: "react-native-onesignal@npm:4.3.7"
+"react-native-onesignal@npm:4.5.1":
+  version: 4.5.1
+  resolution: "react-native-onesignal@npm:4.5.1"
   dependencies:
     invariant: ^2.2.2
-  checksum: b5c9918873161280d540d54736689b4c2d46349894b06afdf9a305952fea5aedc6624334611837bc6ee56cfe005ab49047b81ccffa81e431c9929cfaa4fb4b7e
+  checksum: 9e9a7ae81704050c4329bb94dd5df5304f5726261244b700d3005790fe17c34e1dc2ce4b0dccc46b11ccdc8aa48413c3e77dd93a65b179d6189b417702789eca
   languageName: node
   linkType: hard
 

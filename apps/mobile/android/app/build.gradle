@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'maven-publish'
 apply plugin: 'kotlin-android'
 
