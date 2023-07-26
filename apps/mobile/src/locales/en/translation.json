@@ -567,5 +567,7 @@
   "Failed to {{action}}": "Failed to {{action}}",
   "Invalid phrase": "Invalid phrase",
   "Invalid word: {{word}}": "Invalid word: {{word}}",
-  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words"
+  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
+  "Restore wallet": "Restore wallet",
+  "Because you’re on a new device, you’ll need to restore your recovery phrase. This will allow you to swap and send tokens.": "Because you’re on a new device, you’ll need to restore your recovery phrase. This will allow you to swap and send tokens."
 }

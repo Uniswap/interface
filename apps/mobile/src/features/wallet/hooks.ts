@@ -1,6 +1,15 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
+import { openModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { logger } from 'wallet/src/features/logger/logger'
+import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { useAppDispatch } from 'wallet/src/state'
+import serializeError from 'wallet/src/utils/serializeError'
 
 export function useWCTimeoutError(timeoutDurationInMs: number): {
   hasScanError: boolean
@@ -44,4 +53,38 @@ export function useWCTimeoutError(timeoutDurationInMs: number): {
   }, [shouldFreezeCamera, t, timeoutDurationInMs])
 
   return { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera }
+}
+
+export function useWalletRestore(): {
+  walletNeedsRestore: boolean
+  openWalletRestoreModal: () => void
+} {
+  const dispatch = useAppDispatch()
+  // Means that no private key found for mnemonic wallets
+  const [walletNeedsRestore, setWalletNeedsRestore] = useState<boolean>(false)
+  const hasImportedSeedPhrase = useNativeAccountExists()
+  const isRestoreWalletEnabled = useFeatureFlag(FEATURE_FLAGS.RestoreWallet)
+
+  const openWalletRestoreModal = useCallback((): void => {
+    dispatch(openModal({ name: ModalName.RestoreWallet }))
+  }, [dispatch])
+
+  useEffect(() => {
+    if (!hasImportedSeedPhrase || !isRestoreWalletEnabled) return
+    const openRestoreWalletModalIfNeeded = async (): Promise<void> => {
+      const addresses = await Keyring.getAddressesForStoredPrivateKeys()
+      setWalletNeedsRestore(hasImportedSeedPhrase && !addresses.length)
+    }
+    openRestoreWalletModalIfNeeded().catch((error) =>
+      logger.error('Error at fetching addresses from Keyring', {
+        tags: {
+          file: 'wallet/hooks',
+          function: 'useWalletRestore',
+          error: serializeError(error),
+        },
+      })
+    )
+  }, [dispatch, hasImportedSeedPhrase, isRestoreWalletEnabled])
+
+  return { walletNeedsRestore, openWalletRestoreModal }
 }

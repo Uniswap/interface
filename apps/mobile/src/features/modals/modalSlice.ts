@@ -28,6 +28,8 @@ type RemoveWalletModalParams = {
   initialState?: RemoveWalletModalState
 }
 
+type RestoreWalletModalParams = { name: ModalName.RestoreWallet; initialState?: undefined }
+
 type WalletConnectModalParams = {
   name: ModalName.WalletConnectScan
   initialState: ScannerModalState
@@ -46,6 +48,7 @@ export type OpenModalParams =
   | SendModalParams
   | SwapModalParams
   | WalletConnectModalParams
+  | RestoreWalletModalParams
 
 export interface ModalsState {
   [ModalName.AccountSwitcher]: AppModalState<undefined>
@@ -53,6 +56,7 @@ export interface ModalsState {
   [ModalName.Explore]: AppModalState<ExploreModalState>
   [ModalName.FiatOnRamp]: AppModalState<undefined>
   [ModalName.RemoveWallet]: AppModalState<RemoveWalletModalState>
+  [ModalName.RestoreWallet]: AppModalState<undefined>
   [ModalName.Send]: AppModalState<TransactionState>
   [ModalName.Swap]: AppModalState<TransactionState>
   [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
@@ -88,6 +92,10 @@ export const initialModalState: ModalsState = {
     initialState: undefined,
   },
   [ModalName.RemoveWallet]: {
+    isOpen: false,
+    initialState: undefined,
+  },
+  [ModalName.RestoreWallet]: {
     isOpen: false,
     initialState: undefined,
   },

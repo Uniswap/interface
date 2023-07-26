@@ -59,6 +59,7 @@ import {
   SectionName,
 } from 'src/features/telemetry/constants'
 import { useLastBalancesReporter } from 'src/features/telemetry/hooks'
+import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
@@ -91,6 +92,14 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
   const dispatch = useAppDispatch()
+
+  const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
+
+  useEffect(() => {
+    if (walletNeedsRestore) {
+      openWalletRestoreModal()
+    }
+  }, [openWalletRestoreModal, walletNeedsRestore])
 
   // Report balances at most every 24 hours, checking every 15 seconds when app is open
   const lastBalancesReporter = useLastBalancesReporter()
