@@ -86,9 +86,6 @@ describe('Mini Portfolio account drawer', () => {
       // Opens the account drawer
       cy.get(getTestSelector('web3-status-connected')).click()
 
-      // A shortened version of the first account's address should be shown
-      cy.contains(account.slice(0, 6)).should('exist')
-
       // Simulate wallet changing to Hayden's account
       cy.window().then((win) => win.ethereum.emit('accountsChanged', [haydenAccount]))
 

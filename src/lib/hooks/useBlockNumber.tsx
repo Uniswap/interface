@@ -1,6 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { RPC_PROVIDERS } from 'constants/providers'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
@@ -46,23 +45,18 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
   })
 
   const onBlock = useCallback(
-    (block: number) => {
+    (chainId: number, block: number) => {
       setChainBlock((chainBlock) => {
-        if (chainBlock.chainId === activeChainId) {
+        if (chainBlock.chainId === chainId) {
           if (!chainBlock.block || chainBlock.block < block) {
-            return { chainId: activeChainId, block, mainnetBlock: chainBlock.mainnetBlock }
+            return { chainId, block, mainnetBlock: chainId === ChainId.MAINNET ? block : chainBlock.mainnetBlock }
+          }
+        } else if (chainId === ChainId.MAINNET) {
+          if (!chainBlock.mainnetBlock || chainBlock.mainnetBlock < block) {
+            return { chainId, block: chainBlock.block, mainnetBlock: block }
           }
         }
         return chainBlock
-      })
-    },
-    [activeChainId, setChainBlock]
-  )
-
-  const onMainnetBlock = useCallback(
-    (block: number) => {
-      setChainBlock((chainBlock) => {
-        return { ...chainBlock, mainnetBlock: block }
       })
     },
     [setChainBlock]
@@ -74,21 +68,21 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
 
     if (provider && activeChainId && windowVisible) {
       // If chainId hasn't changed, don't clear the block. This prevents re-fetching still valid data.
-      setChainBlock((chainBlock) => (chainBlock.chainId === activeChainId ? chainBlock : { chainId: activeChainId }))
+      setChainBlock((chainBlock) =>
+        chainBlock.chainId === activeChainId
+          ? chainBlock
+          : { chainId: activeChainId, mainnetBlock: chainBlock.mainnetBlock }
+      )
 
       provider
         .getBlockNumber()
         .then((block) => {
-          if (!stale) onBlock(block)
+          if (!stale) onBlock(activeChainId, block)
         })
         .catch((error) => {
           console.error(`Failed to get block number for chainId ${activeChainId}`, error)
         })
-      if (mainnetBlock === undefined) {
-        RPC_PROVIDERS[ChainId.MAINNET].getBlockNumber().then((block) => {
-          if (!stale) onMainnetBlock(block)
-        })
-      }
+
       provider.on('block', onBlock)
       return () => {
         stale = true
@@ -97,7 +91,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     }
 
     return void 0
-  }, [activeChainId, provider, onBlock, setChainBlock, windowVisible, block, mainnetBlock, onMainnetBlock])
+  }, [activeChainId, provider, onBlock, setChainBlock, windowVisible, block, mainnetBlock])
 
   const value = useMemo(
     () => ({
@@ -107,7 +101,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
           setChainBlock({ chainId: activeChainId, block: update })
         }
       },
-      mainnetValue: chainId === ChainId.MAINNET ? block : mainnetBlock,
+      mainnetValue: mainnetBlock,
     }),
     [activeChainId, block, chainId, mainnetBlock]
   )
