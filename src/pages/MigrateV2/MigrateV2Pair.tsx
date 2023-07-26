@@ -264,6 +264,8 @@ function V2PairMigration({
   const addTransaction = useTransactionAdder()
   const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)
 
+  const networkSupportsV2 = useNetworkSupportsV2()
+
   const migrate = useCallback(() => {
     if (
       !migrator ||
@@ -274,7 +276,8 @@ function V2PairMigration({
       typeof tickUpper !== 'number' ||
       !v3Amount0Min ||
       !v3Amount1Min ||
-      !chainId
+      !chainId ||
+      !networkSupportsV2
     )
       return
 
@@ -380,7 +383,7 @@ function V2PairMigration({
   ])
 
   const isSuccessfullyMigrated = !!pendingMigrationHash && JSBI.equal(pairBalance.quotient, ZERO)
-  const networkSupportsV2 = useNetworkSupportsV2()
+
   if (!networkSupportsV2) return <V2Unsupported />
 
   return (
