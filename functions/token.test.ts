@@ -23,7 +23,7 @@ const tokens = [
     address: '0x1f52145666c862ed3e2f1da213d479e61b2892af',
     network: 'arbitrum',
     symbol: 'FUC',
-    image: 'https://assets.coingecko.com/coins/images/30081/large/fuc.png?1683016112',
+    image: 'https://assets.coingecko.com/coins/images/30081/thumb/fuc.png?1683016112',
   },
   {
     address: '0x6982508145454ce325ddbe47a25d4ec3d2311933',
