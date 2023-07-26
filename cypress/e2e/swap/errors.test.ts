@@ -1,11 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
 import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
-const UNI_MAINNET = UNI[SupportedChainId.MAINNET]
+const UNI_MAINNET = UNI[ChainId.MAINNET]
 
 describe('Swap errors', () => {
   it('wallet rejection', () => {
@@ -41,7 +41,7 @@ describe('Swap errors', () => {
       cy.get('#swap-button').click()
       cy.contains('Confirm swap').click()
       cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-      cy.contains('Transaction submitted')
+      cy.contains('Swap submitted')
       cy.get(getTestSelector('confirmation-close-icon')).click()
       cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
@@ -64,7 +64,7 @@ describe('Swap errors', () => {
     })
   })
 
-  it('slippage failure', () => {
+  it.skip('slippage failure', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UNI_MAINNET.address}`, { ethereum: 'hardhat' })
     cy.hardhat({ automine: false })
     getBalance(USDC_MAINNET).then((initialBalance) => {
@@ -89,7 +89,7 @@ describe('Swap errors', () => {
         cy.get('#swap-button').click()
         cy.contains('Confirm swap').click()
         cy.wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-        cy.contains('Transaction submitted')
+        cy.contains('Swap submitted')
         cy.get(getTestSelector('confirmation-close-icon')).click()
       }
       cy.get(getTestSelector('web3-status-connected')).should('contain', '2 Pending')

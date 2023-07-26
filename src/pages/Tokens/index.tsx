@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { Trace } from 'analytics'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'

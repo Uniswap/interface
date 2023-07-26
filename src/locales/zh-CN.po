@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"POT-Creation-Date: 2023-07-21 17:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-05-23 20:46\n"
+"PO-Revision-Date: 2023-07-21 19:01\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -51,6 +51,18 @@ msgstr "+ 新职位"
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- 删除接收人"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 month"
+msgstr "1个月"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 week"
+msgstr "1周"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 year"
+msgstr "1年"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -113,6 +125,10 @@ msgstr "<0>提示：</0>使用此工具可查找未自动出现在界面中的 v
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 msgstr "<0>提示：</0>当您注入流动资金时，您将收到代表您份额的流动池代币。这些代币将根据您在池中所占份额，自动赚取和累计相称的手续费，并且可以随时赎回流动池币对。"
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "<0>UniswapX</0> aggregates liquidity sources for better prices and gas free swaps."
+msgstr "<0>UniswapX</0> 聚合流动性来源，以获得更好的价格和无 Gas 掉期。"
+
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0>解锁投票</0>，以准备下一个提案。"
@@ -170,11 +186,11 @@ msgstr "添加流动性"
 msgid "Add V2 Liquidity"
 msgstr "添加 V2 流动性"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add V2 liquidity failed"
 msgstr "添加 V2 流动性失败"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add liquidity failed"
 msgstr "添加流动性失败"
 
@@ -207,11 +223,11 @@ msgstr "添加{0}/{1} V3流动性"
 msgid "Added Liquidity"
 msgstr "增加流动性"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added V2 liquidity"
 msgstr "增加了 V2 流动性"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added liquidity"
 msgstr "增加流动性"
 
@@ -219,11 +235,11 @@ msgstr "增加流动性"
 msgid "Added {0}"
 msgstr "已添加 {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding V2 liquidity"
 msgstr "添加 V2 流动性"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding liquidity"
 msgstr "增加流动性"
 
@@ -239,9 +255,25 @@ msgstr "地址没有可领取的代币"
 msgid "Against"
 msgstr "反对"
 
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "All time"
+msgstr "整天"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "允许流动池代币迁移"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "Allow analytics"
+msgstr "允许分析"
+
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Allow {0} (one time)"
+msgstr "允许 {0} （一次）"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Allow {0} to be used for swapping"
+msgstr "允许 {0} 用于交换"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -260,7 +292,7 @@ msgstr "交易前始终进行自己的研究。"
 msgid "Amount"
 msgstr "数额"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "An approval is needed to use this token."
 msgstr "使用此令牌需要获得批准。"
 
@@ -272,16 +304,15 @@ msgstr "加载令牌时发生错误。请再试一次。"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币与Uniswap不兼容。注：Uniswap V3不兼容转账时带扣除费用（fee-on-transfer）的代币和弹性供应（rebase）代币。"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Approval failed"
 msgstr "审批失败"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approval pending"
 msgstr "等待批准"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -295,14 +326,9 @@ msgstr "批准代币"
 msgid "Approve in wallet"
 msgstr "在钱包中批准"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approve in your wallet"
 msgstr "在您的钱包中批准"
-
-#: src/pages/Swap/index.tsx
-msgid "Approve use of {0}"
-msgstr "批准使用 {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -313,12 +339,12 @@ msgid "Approve {0}"
 msgstr "批准 {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "已批准"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -340,10 +366,6 @@ msgstr "根据选定的兑换率范围，至少会有 {0} {1} 和 {2} {3} 将退
 #: src/theme/components/ThemeToggle.tsx
 msgid "Auto"
 msgstr "自动"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Auto Router API"
-msgstr "自动路由 API"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Back to Pools"
@@ -382,6 +404,15 @@ msgstr "适合非常稳定的币对。"
 msgid "Best price route costs ~{gasPrice} in gas."
 msgstr "最佳价格路线成本 ~{gasPrice} 天然气。"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Beta"
+msgstr "贝塔"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Better prices and more liquidity"
+msgstr "更好的价格和更多的流动性"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "Blocked Address"
 msgstr "封锁地址"
@@ -390,32 +421,32 @@ msgstr "封锁地址"
 msgid "Blocked on OpenSea"
 msgstr "在 OpenSea 上被封锁"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrow failed"
 msgstr "借用失败"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowed"
 msgstr "借来的"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowing"
 msgstr "借款"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Bought"
 msgstr "买"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burn failed"
 msgstr "刻录失败"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burned"
 msgstr "被烧毁"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burning"
 msgstr "燃烧"
 
@@ -428,7 +459,7 @@ msgstr "买"
 msgid "Buy crypto"
 msgstr "购买加密货币"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buy failed"
 msgstr "购买失败"
 
@@ -448,7 +479,7 @@ msgstr "购买、出售和探索代币"
 msgid "Buy, sell, and explore tokens and NFTs"
 msgstr "购买、出售和探索代币和 NFT"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buying"
 msgstr "购买"
 
@@ -464,7 +495,11 @@ msgstr "通过添加流动性，您将按您在流动池中所占比例赚取对
 msgid "By connecting a wallet, you agree to Uniswap Labs'"
 msgstr "连接钱包即表示您同意 Uniswap Labs'"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/PriceImpactModal.tsx
+msgid "Cancel"
+msgstr "取消"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancel failed"
 msgstr "取消失败"
 
@@ -472,12 +507,13 @@ msgstr "取消失败"
 msgid "Canceled"
 msgstr "已取消"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Cancelled"
 msgstr "取消"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancelling"
 msgstr "取消"
 
@@ -517,7 +553,7 @@ msgstr "{0} 领取 UNI 奖励"
 msgid "Claim Uniswap NFT Airdrop"
 msgstr "领取 Uniswap NFT 空投"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Claim failed"
 msgstr "索赔失败"
 
@@ -529,12 +565,12 @@ msgstr "领取已累积的手续费"
 msgid "Claim your UNI tokens"
 msgstr "领取您的 UNI 代币"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "已领取"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
 msgstr "领取中"
@@ -576,7 +612,7 @@ msgstr "收藏为 {nativeWrappedSymbol}"
 msgid "Collect fees"
 msgstr "收取手续费"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collect fees failed"
 msgstr "收费失败"
 
@@ -588,7 +624,7 @@ msgstr "收取 {0}/{1} 手续费"
 msgid "Collected"
 msgstr "已收取"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collected fees"
 msgstr "收取的费用"
 
@@ -596,7 +632,7 @@ msgstr "收取的费用"
 msgid "Collecting"
 msgstr "收取中"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
 msgstr "收取手续费"
@@ -604,6 +640,10 @@ msgstr "收取手续费"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "收取手续费的操作将为您提取您当前已累积的手续费。"
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Coming soon: search and explore tokens on Avalanche Chain"
+msgstr "即将推出：在 Avalanche 链上搜索和探索代币"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Coming soon: search and explore tokens on BNB Chain"
@@ -624,6 +664,14 @@ msgstr "确认"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "确认供应"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Confirm Swap"
+msgstr "确认兑换"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm swap"
+msgstr "确认交易"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -671,14 +719,20 @@ msgstr "连接到钱包以查看您的 V2 流动资金。"
 msgid "Connect to a wallet to view your liquidity."
 msgstr "连接到钱包以查看您的流动资金。"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Connect wallet"
 msgstr "连接钱包"
+
+#: src/pages/Swap/index.tsx
+msgid "Connecting to {0}"
+msgstr "连接到 {0}"
 
 #: src/nft/components/card/media.tsx
 msgid "Content not"
 msgstr "内容不"
 
+#: src/components/TokenSafety/index.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/nft/components/bag/Bag.tsx
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Continue"
@@ -719,7 +773,7 @@ msgstr "创建币对"
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "创建流动池并注入 {0}/{1} V3 流动资金"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Create pool failed"
 msgstr "创建池失败"
 
@@ -731,11 +785,11 @@ msgstr "创建流动池。"
 msgid "Create {0}/{1} V3 pool"
 msgstr "创建 {0}/{1} V3 池"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Created pool"
 msgstr "创建池"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Creating pool"
 msgstr "创建池"
 
@@ -769,7 +823,7 @@ msgstr "未通过"
 msgid "Delegate Votes"
 msgstr "委托投票"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegate failed"
 msgstr "委托失败"
 
@@ -777,7 +831,7 @@ msgstr "委托失败"
 msgid "Delegate voting power to {0}"
 msgstr "将投票权委托给 {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegated"
 msgstr "委派"
 
@@ -785,7 +839,7 @@ msgstr "委派"
 msgid "Delegated to:"
 msgstr "委托给："
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegating"
 msgstr "委派"
 
@@ -793,15 +847,15 @@ msgstr "委派"
 msgid "Delegating votes"
 msgstr "委托投票"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploy failed"
 msgstr "部署失败"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deployed"
 msgstr "已部署"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploying"
 msgstr "部署中"
 
@@ -809,7 +863,7 @@ msgstr "部署中"
 msgid "Deposit Amounts"
 msgstr "充值数额"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposit failed"
 msgstr "入金失败"
 
@@ -821,11 +875,11 @@ msgstr "充入流动资金"
 msgid "Deposit tokens to the {label} network."
 msgstr "将代币存入 {label} 网络。"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposited"
 msgstr "存入"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Depositing"
 msgstr "存款"
 
@@ -843,7 +897,6 @@ msgstr "详细信息"
 msgid "Details"
 msgstr "详细信息"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "关闭"
@@ -892,6 +945,10 @@ msgstr "修改"
 msgid "Edit listings"
 msgstr "编辑列表"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Enable spending {0} on Uniswap"
+msgstr "在 Uniswap 上启用支出 {0}"
+
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "输入百分比"
@@ -916,9 +973,8 @@ msgstr "输入数额"
 msgid "Enter {0} amount"
 msgstr "输入 {0} 数量"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "错误"
 
@@ -954,7 +1010,7 @@ msgstr "执行"
 msgid "Execute Proposal {proposalId}"
 msgstr "执行提案 {proposalId}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Execute failed"
 msgstr "执行失败"
 
@@ -962,12 +1018,12 @@ msgstr "执行失败"
 msgid "Execute proposal {proposalKey}."
 msgstr "执行提案 {proposalKey}。"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "已执行"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing"
 msgstr "执行中"
@@ -1014,7 +1070,7 @@ msgstr "极为罕见"
 msgid "Failed"
 msgstr "失败的"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "Failed to switch networks"
 msgstr "切换网络失败"
 
@@ -1038,7 +1094,7 @@ msgstr "反馈"
 msgid "Fees"
 msgstr "费用"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
 msgid "Fetching Route"
 msgstr "获取路线"
@@ -1054,14 +1110,6 @@ msgstr "正在获取价格..."
 #: src/components/Tokens/TokenTable/SearchBar.tsx
 msgid "Filter tokens"
 msgstr "筛选标记"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol through your browser. May result in high latency and prices."
-msgstr "通过浏览器在 Uniswap 协议上找到最佳路线。可能会导致高延迟和价格。"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol using the Uniswap Labs Routing API."
-msgstr "使用 Uniswap 实验室路由 API 在 Uniswap 协议上找到最佳路由。"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Floor"
@@ -1092,6 +1140,10 @@ msgstr "来源 (最多为)"
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
 msgstr "全范围"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Gas free swaps"
+msgstr "无天然气互换"
 
 #: src/pages/Landing/index.tsx
 msgid "Get started"
@@ -1164,11 +1216,15 @@ msgstr "初始兑换率和流动池份额"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "输入数额仅为估值。您最多会售出<0>{0} {1}</0> 否则将还原交易。"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient funds"
 msgstr "不充足的资金"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Insufficient funds for swap"
+msgstr "互换资金不足"
+
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient liquidity"
 msgstr "流动性不足"
 
@@ -1176,7 +1232,7 @@ msgstr "流动性不足"
 msgid "Insufficient liquidity for this trade."
 msgstr "现有流动量不足以支持此交易。"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient pool liquidity to complete transaction"
 msgstr "资金池流动性不足，无法完成交易"
 
@@ -1242,10 +1298,17 @@ msgstr "了解提供流动性的相关信息"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
 #: src/components/TokenSafety/index.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapBuyFiatButton.tsx
 #: src/pages/Landing/index.tsx
 msgid "Learn more"
 msgstr "了解更多"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Learn more about swapping with UniswapX"
+msgstr "了解有关使用 UniswapX 进行交换的更多信息"
 
 #: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1298,9 +1361,13 @@ msgstr "房源"
 msgid "Loading"
 msgstr "正在加载"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Loading Allowance"
 msgstr "装载津贴"
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Local routing"
+msgstr "本地路由"
 
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Low listing price"
@@ -1309,6 +1376,10 @@ msgstr "上市价低"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "最大值"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "MEV protection"
+msgstr "MEV保护"
 
 #: src/nft/components/details/detailsV2/OfferButton.tsx
 msgid "Make an offer"
@@ -1384,7 +1455,7 @@ msgstr "将流动资金迁移到V3"
 msgid "Migrate V2 Liquidity"
 msgstr "迁移V2 流动资金"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrate liquidity failed"
 msgstr "迁移流动性失败"
 
@@ -1396,7 +1467,7 @@ msgstr "将您的流动资金从 Uniswap V2 迁移到 Uniswap V3。"
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "将 {0}/{1} 流动性迁移到 V3"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrated liquidity"
 msgstr "迁移的流动性"
 
@@ -1404,7 +1475,7 @@ msgstr "迁移的流动性"
 msgid "Migrating"
 msgstr "迁移中"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrating liquidity"
 msgstr "转移流动性"
 
@@ -1429,16 +1500,16 @@ msgstr "最小输出"
 msgid "Minimum received"
 msgstr "收到的最低数额"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Mint failed"
 msgstr "铸币失败"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minted"
 msgstr "铸造的"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minting"
 msgstr "铸造"
 
@@ -1487,14 +1558,13 @@ msgstr "找不到名称"
 msgid "Navigation button"
 msgstr "导航按钮"
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Network Fees are paid to the Ethereum network to secure transactions."
+msgstr "网络费用支付给以太坊网络以确保交易安全。"
+
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "网络警告"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swap/SwapModalFooter.tsx
-msgid "Network fee"
-msgstr "网络费用"
 
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Never"
@@ -1576,6 +1646,10 @@ msgstr "在您所在的地区不可用"
 msgid "Not created"
 msgstr "未创建"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "Not enough liquidity to show accurate USD value."
+msgstr "流动性不足，无法显示准确的美元价值。"
+
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "Not listed"
 msgstr "不在名单中"
@@ -1631,14 +1705,14 @@ msgstr "拥有者"
 msgid "Page not found!"
 msgstr "找不到网页！"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay"
 msgstr "支付"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay Anyway"
 msgstr "无论如何支付"
 
@@ -1651,13 +1725,23 @@ msgstr "使用。。。支付"
 msgid "Pending"
 msgstr "待办"
 
-#: src/pages/Swap/index.tsx
-msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
-msgstr "Uniswap 交换每个代币需要获得许可。为了您的安全，这将在一个月后过期。"
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Pending..."
+msgstr "待办的..."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit approval failed"
+msgstr "许可证批准失败"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Permit2"
 msgstr "许可证2"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit2 allows token approvals to be shared and managed across different applications."
+msgstr "Permit2 允许在不同的应用程序之间共享和管理令牌批准。"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1729,16 +1813,12 @@ msgstr "兑换率差异："
 msgid "Price Impact"
 msgstr "兑换率影响"
 
-#: src/pages/Swap/index.tsx
-msgid "Price Impact Too High"
-msgstr "太过影响兑换率"
-
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Price impact"
 msgstr "兑换率影响"
 
 #: src/components/swap/PriceImpactWarning.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price impact warning"
 msgstr "价格影响预警"
 
@@ -1747,7 +1827,7 @@ msgid "Price range"
 msgstr "兑换率范围"
 
 #: src/components/swap/SwapModalFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price updated"
 msgstr "兑换率已更新"
 
@@ -1767,10 +1847,18 @@ msgstr "隐私政策"
 msgid "Privacy Policy."
 msgstr "隐私政策。"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
 msgstr "进入钱包"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Proceed in your wallet"
+msgstr "进入你的钱包"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Proceeds if sold"
@@ -1808,6 +1896,10 @@ msgstr "提案者"
 msgid "Public Resolver"
 msgstr "公共解析器"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Purchased"
+msgstr "已购买"
+
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Quantity"
@@ -1822,7 +1914,7 @@ msgstr "队列"
 msgid "Queue Proposal {proposalId}"
 msgstr "队列提议 {proposalId}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queue failed"
 msgstr "排队失败"
 
@@ -1830,7 +1922,7 @@ msgstr "排队失败"
 msgid "Queue proposal {proposalKey}."
 msgstr "队列提案 {proposalKey}。"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "待执行"
@@ -1839,7 +1931,7 @@ msgstr "待执行"
 msgid "Queueing"
 msgstr "排队"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queuing"
 msgstr "排队"
 
@@ -1871,16 +1963,16 @@ msgstr "阅读有关不受支持的代币的更多信息"
 msgid "Receive"
 msgstr "收到"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receive failed"
 msgstr "接收失败"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Received"
 msgstr "已收到"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receiving"
 msgstr "接收"
 
@@ -1892,7 +1984,7 @@ msgstr "最近搜索"
 msgid "Recipient"
 msgstr "接收方"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Refunds for unavailable items will be given in ETH"
 msgstr "不可用物品的退款将以 ETH 形式提供"
 
@@ -1941,7 +2033,7 @@ msgstr "从包中取出"
 msgid "Remove item"
 msgstr "除去项目"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Remove liquidity failed"
 msgstr "移除流动性失败"
 
@@ -1949,11 +2041,11 @@ msgstr "移除流动性失败"
 msgid "Removed Liquidity"
 msgstr "移除的流动性"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removed liquidity"
 msgstr "去除流动性"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removing liquidity"
 msgstr "去除流动性"
 
@@ -1965,22 +2057,27 @@ msgstr "正在去除 {0} {1} 和 {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "移除 {0} {1} 和 {2} {3}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaid"
 msgstr "已偿还"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repay failed"
 msgstr "还款失败"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaying"
 msgstr "回报中"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Reset USDT"
+msgstr "重置USDT"
 
 #: src/nft/components/profile/list/ListingButton.tsx
 msgid "Resolve {issues} issues"
 msgstr "解决 {issues} 问题"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Retry"
 msgstr "重试"
@@ -2000,11 +2097,27 @@ msgid "Reverse Registrar"
 msgstr "反向注册商"
 
 #: src/components/swap/ConfirmSwapModal.tsx
-msgid "Review Swap"
-msgstr "审查交换"
+msgid "Review swap"
+msgstr "检查交易"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoke approval failed"
+msgstr "撤销批准失败"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Revoke {0}"
+msgstr "撤销 {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Revoked Approval"
+msgstr "撤销批准"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoked approval"
+msgstr "撤销批准"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoking approval"
 msgstr "撤销批准"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
@@ -2024,8 +2137,12 @@ msgid "Search name or paste address"
 msgstr "搜索名称或粘贴地址"
 
 #: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "搜索代币"
+
+#: src/components/NavBar/SearchBar.tsx
 msgid "Search tokens and NFT collections"
-msgstr "搜索代币和 NFT 收藏"
+msgstr "搜索代币和 NFT 集合"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
@@ -2075,16 +2192,16 @@ msgstr "出售 NFT"
 msgid "Seller"
 msgstr "卖方"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Send failed"
 msgstr "发送失败"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sending"
 msgstr "发送中"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sent"
 msgstr "发送"
 
@@ -2144,6 +2261,10 @@ msgstr "展示更多"
 msgid "Show resources"
 msgstr "显示资源"
 
+#: src/components/AccountDrawer/TestnetsToggle.tsx
+msgid "Show testnets"
+msgstr "显示测试网"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Sign"
 msgstr "符号"
@@ -2167,11 +2288,11 @@ msgstr "有些代币无法通过此界面使用，因为它们可能无法很好
 
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong"
 msgstr "出错了"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong. Please try again."
 msgstr "出了些问题。请再试一次。"
 
@@ -2196,11 +2317,11 @@ msgstr "统计数据"
 msgid "Submit new proposal"
 msgstr "提交新提案"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submit proposal failed"
 msgstr "提交提案失败"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitted proposal"
 msgstr "提交提案"
 
@@ -2212,7 +2333,7 @@ msgstr "正提交提案"
 msgid "Submitting Vote"
 msgstr "提交投票"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitting proposal"
 msgstr "提交提案"
 
@@ -2221,6 +2342,7 @@ msgid "Succeeded"
 msgstr "投票通过"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Success"
 msgstr "成功"
 
@@ -2238,8 +2360,9 @@ msgstr "提供 {0} {1} 和 {2} {3}"
 
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/components/swap/SwapModalFooter.tsx
 #: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2254,32 +2377,44 @@ msgstr "将约 <0/> 兑换成 <1/>"
 msgid "Swap Anyway"
 msgstr "仍要兑换"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap cancelled"
+msgstr "掉期已取消"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "将恰好 <0/> 兑换成 <1/>"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap expired"
+msgstr "掉期已过期"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Swap failed"
 msgstr "交换失败"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Swap submitted"
+msgstr "交换已提交"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapped"
 msgstr "交换"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapping"
 msgstr "交换"
-
-#: src/components/swap/ConfirmSwapModal.tsx
-msgid "Swapping {0} {1} for {2} {3}"
-msgstr "将 {0} {1} 兑换为 {2} {3}"
 
 #: src/nft/components/collection/Sweep.tsx
 msgid "Sweep"
 msgstr "扫"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Switch networks"
 msgstr "切换网络"
 
@@ -2419,6 +2554,10 @@ msgstr "此应用程序使用以下第三方 API："
 msgid "This month"
 msgstr "这个月"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "This order was cancelled"
+msgstr "该订单已取消"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "需要先初始化，然后再添加流动性。初始化时，请先选择起始价格，然后输入您的流动性价格范围和存款金额。因需进行初始化相关操作，Gas 费将比平时高一些。"
@@ -2426,6 +2565,10 @@ msgstr "需要先初始化，然后再添加流动性。初始化时，请先选
 #: src/pages/Vote/VotePage.tsx
 msgid "This proposal may be executed after {0}."
 msgstr "该提案可能会在 {0}之后执行。"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days."
+msgstr "这为 Uniswap 协议提供了对您的代币进行交易的访问权限。为了安全起见，这将在 30 天后过期。"
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
@@ -2459,6 +2602,10 @@ msgstr "由于兑换率变动，此交易将不会成功。尝试增加您的滑
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "由于兑换率变动或代币带有转账时的扣除费用（fee-on-transfer），该交易将不会成功。请尝试增加滑点容差。"
 
+#: src/components/swap/PriceImpactModal.tsx
+msgid "This transaction will result in a <0>{0}</0> price impact on the market price of this pool. Do you wish to continue?"
+msgstr "该交易将对该池的市场价格产生 <0>{0}</0> 价格影响。你想继续吗？"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "This week"
 msgstr "本星期"
@@ -2482,7 +2629,7 @@ msgstr "兑换到"
 msgid "To (at least)"
 msgstr "兑换到(至少数额)"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "To use Uniswap on {0}, switch the network in your wallet’s settings."
 msgstr "要在 {0}上使用 Uniswap，请在钱包设置中切换网络。"
 
@@ -2494,11 +2641,15 @@ msgstr "要查看职位，您必须连接到它所属的网络。"
 msgid "Today"
 msgstr "今天"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Token approval failed"
+msgstr "令牌批准失败"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "代币名称"
 
-#: src/components/TokenSafety/index.tsx
+#: src/constants/tokenSafety.tsx
 msgid "Token not found"
 msgstr "未找到令牌"
 
@@ -2571,7 +2722,7 @@ msgstr "交易完成于"
 msgid "Transaction deadline"
 msgstr "交易截止期限"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Transaction pending"
 msgstr "交易等待中"
 
@@ -2591,6 +2742,14 @@ msgstr "代币转账"
 msgid "Try Again"
 msgstr "再试一次"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try gas free swaps with the"
+msgstr "尝试使用无汽油交换"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try the"
+msgstr "尝试一下"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "UNI Governance"
 msgstr "UNI治理"
@@ -2607,6 +2766,10 @@ msgstr "UNI代币代表了Uniswap治理中的投票份额。您可以自行为�
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} 被摧毁"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "USDT requires resetting approval when spending limits are too low."
+msgstr "USDT 需要在支出限额过低时重置审批。"
+
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Unavailable"
 msgstr "不可用"
@@ -2622,10 +2785,6 @@ msgstr "未领取的手续费"
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
 msgstr "未定"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap API"
-msgstr "Uniswap API"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
@@ -2647,10 +2806,6 @@ msgstr "Uniswap V2 在此网络上不可用。"
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap可用：<0>{0}</0>"
 
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap client"
-msgstr "Uniswap 客户端"
-
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Uniswap 治理仅在 Layer 1 可用。将您的网络切换到以太坊主网以查看提案和投票。"
@@ -2666,6 +2821,10 @@ msgstr "口袋里的 Uniswap"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap 迁移合约↗"
+
+#: src/components/Logo/UniswapXBrandMark.tsx
+msgid "UniswapX"
+msgstr "UniswapX"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
@@ -2730,26 +2889,22 @@ msgstr "展开"
 msgid "Unwrap <0/> to {0}"
 msgstr "将 <0/> 换回为 {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrap failed"
 msgstr "解包失败"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapped"
 msgstr "展开"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapping"
 msgstr "展开"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "更新投票权委托"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Use the Uniswap Labs API to get faster quotes."
-msgstr "使用 Uniswap Labs API 获得更快的报价。"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2784,18 +2939,24 @@ msgstr "查看和出售 NFT"
 msgid "View more analytics"
 msgstr "查看更多分析"
 
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on  Etherscan"
+msgstr "在 Etherscan 上查看"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on Block Explorer"
+msgstr "在区块浏览器上查看"
+
 #: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "在 Etherscan 上查看"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "View on Explorer"
 msgstr "在以太坊资源浏览器上查看"
-
-#: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on {0}"
-msgstr "查看 {0}"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -2830,7 +2991,7 @@ msgstr "投票反对提案 {proposalKey}"
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
 msgstr "以“{0}”为由反对提案 {proposalKey}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Vote failed"
 msgstr "投票失败"
 
@@ -2864,11 +3025,11 @@ msgstr "为提案 {proposalKey} 投弃权票"
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
 msgstr "以“{0}”为由为提案 {proposalKey} 投弃权票"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voted"
 msgstr "已投票"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voting"
 msgstr "表决"
 
@@ -2893,31 +3054,54 @@ msgid "Wallet Address or ENS name"
 msgstr "钱包地址或 ENS 名"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "警告"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "We use anonymized data to enhance your experience with Uniswap Labs products."
+msgstr "我们使用匿名数据来增强您使用 Uniswap Labs 产品的体验。"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
 msgstr "欢迎来到 Unicorn （独角兽）团队 :)"
 
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "When available, aggregates liquidity sources for better prices and gas free swaps."
+msgstr "如果可用，聚合流动性来源以获得更好的价格和无天然气掉期。"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are approvals required?"
+msgstr "为什么需要批准？"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are permits required?"
+msgstr "为什么需要许可证？"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Why is a transaction required?"
 msgstr "为什么需要交易？"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Why is this required?"
+msgstr "为什么这是必需的？"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "赎回注入的流动资金"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdraw failed"
 msgstr "提现失败"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrawing"
 msgstr "提现"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrew"
 msgstr "退出"
 
@@ -2929,20 +3113,26 @@ msgstr "兑换"
 msgid "Wrap <0/> to {0}"
 msgstr "将 <0/> 换为 {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Wrap ETH"
+msgstr "包裹以太坊"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Wrap failed"
 msgstr "包装失败"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapped"
 msgstr "包裹"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapping"
 msgstr "包装"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Wrong network"
 msgstr "错误的网络"
 
@@ -2969,6 +3159,14 @@ msgstr "您是第一个流动资金提供者。"
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "您可以对每个提案自行进行投票，也可以将您的投票权委托给第三方。"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You can turn it off at anytime in settings"
+msgstr "您可以随时在设置中将其关闭"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "You didn't have enough {0} to complete this swap."
+msgstr "您没有足够的 {0} 来完成此交换。"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
@@ -3013,9 +3211,17 @@ msgstr "您还将从此仓位中领取已赚取的手续费。"
 msgid "You will receive"
 msgstr "您将收到"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You're in!"
+msgstr "你在！"
+
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
 msgstr "您的V2流动资金"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your account had insufficent funds to complete this swap."
+msgstr "您的帐户资金不足，无法完成此兑换。"
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
@@ -3070,6 +3276,18 @@ msgstr "您的仓位在市场兑换率变化进入到您设置的范围内之前
 #: src/components/PositionList/index.tsx
 msgid "Your positions"
 msgstr "您的仓位"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your swap could not be fulfilled at this time. Please try again."
+msgstr "您的交换目前无法完成。请再试一次。"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap couldn't be filled at this time. Try again or"
+msgstr "您的交换目前无法填补。再试一次或"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap expired before it could be filled. Try again or"
+msgstr "您的交换空间在被填满之前就已过期。再试一次或"
 
 #: src/hooks/useUniversalRouter.ts
 msgid "Your swap is expected to fail."
@@ -3137,6 +3355,7 @@ msgid "fee"
 msgstr "费用"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "for"
 msgstr "为了"
 
@@ -3151,6 +3370,11 @@ msgstr "从"
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "here."
 msgstr "这里。"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "learn more."
+msgstr "了解更多。"
 
 #: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "minutes"
@@ -3296,7 +3520,7 @@ msgstr "{0}/{1} 流动池代币"
 
 #: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "{0}m"
-msgstr "{0}米"
+msgstr "{0}分钟"
 
 #: src/nft/components/profile/list/SetDurationModal.tsx
 msgid "{amount, plural, =1 {day} other {days}}"
@@ -3357,6 +3581,11 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} 每 {tokenA}"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "{txCount, plural, one {Network fee} other {Network fees}}"
+msgstr "{txCount, plural, one {网络费} other {网络费}}"
 
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "{uniqueCollections, plural, =1 {collection} other {collections}}"

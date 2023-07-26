@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"POT-Creation-Date: 2023-07-21 17:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8,7 +8,7 @@ msgstr ""
 "Language: vi\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-05-23 20:46\n"
+"PO-Revision-Date: 2023-07-21 19:01\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -51,6 +51,18 @@ msgstr "+ Vị trí mới"
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- Xóa người nhận"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 month"
+msgstr "1 tháng"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 week"
+msgstr "1 tuần"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 year"
+msgstr "1 năm"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -113,6 +125,10 @@ msgstr "<0> Mẹo:</0> Sử dụng công cụ này để tìm các nhóm v2 khô
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 msgstr "<0> Mẹo:</0> Khi bạn thêm thanh khoản, bạn sẽ nhận được mã token chung đại diện cho vị trí của bạn. Các mã token này tự động kiếm được phí tỷ lệ thuận với phần của bạn trong nhóm và có thể được đổi bất kỳ lúc nào."
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "<0>UniswapX</0> aggregates liquidity sources for better prices and gas free swaps."
+msgstr "<0>UniswapX</0> tổng hợp các nguồn thanh khoản để có giá tốt hơn và các giao dịch hoán đổi miễn phí gas."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0>Mở khóa biểu quyết</0> để chuẩn bị cho đề xuất tiếp theo."
@@ -170,11 +186,11 @@ msgstr "Thêm thanh khoản"
 msgid "Add V2 Liquidity"
 msgstr "Thêm thanh khoản V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add V2 liquidity failed"
 msgstr "Thêm thanh khoản V2 không thành công"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add liquidity failed"
 msgstr "Thêm thanh khoản không thành công"
 
@@ -207,11 +223,11 @@ msgstr "Thêm {0}/{1} thanh khoản V3"
 msgid "Added Liquidity"
 msgstr "Đã thêm thanh khoản"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added V2 liquidity"
 msgstr "Đã thêm thanh khoản V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added liquidity"
 msgstr "Đã thêm thanh khoản"
 
@@ -219,11 +235,11 @@ msgstr "Đã thêm thanh khoản"
 msgid "Added {0}"
 msgstr "Đã thêm {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding V2 liquidity"
 msgstr "Thêm thanh khoản V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding liquidity"
 msgstr "Thêm thanh khoản"
 
@@ -239,9 +255,25 @@ msgstr "Địa chỉ không có yêu cầu"
 msgid "Against"
 msgstr "Chống lại"
 
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "All time"
+msgstr "Mọi thời đại"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Cho phép di chuyển mã token LP"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "Allow analytics"
+msgstr "Cho phép phân tích"
+
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Allow {0} (one time)"
+msgstr "Cho phép {0} (một lần)"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Allow {0} to be used for swapping"
+msgstr "Cho phép {0} được sử dụng để hoán đổi"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -260,7 +292,7 @@ msgstr "Luôn tiến hành nghiên cứu của riêng bạn trước khi giao d�
 msgid "Amount"
 msgstr "Số tiền"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "An approval is needed to use this token."
 msgstr "Cần có sự chấp thuận để sử dụng mã thông báo này."
 
@@ -272,16 +304,15 @@ msgstr "Đã xảy ra lỗi khi tải mã thông báo. Vui lòng thử lại."
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Đã xảy ra lỗi khi cố gắng thực hiện hoán đổi này. Bạn có thể cần phải tăng khả năng chịu trượt của mình. Nếu điều đó không hiệu quả, có thể có sự không tương thích với mã thông báo bạn đang giao dịch. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Approval failed"
 msgstr "Phê duyệt không thành công"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approval pending"
 msgstr "Đang chờ phê duyệt"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -295,14 +326,9 @@ msgstr "Phê duyệt mã thông báo"
 msgid "Approve in wallet"
 msgstr "Phê duyệt trong ví"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approve in your wallet"
 msgstr "Phê duyệt trong ví của bạn"
-
-#: src/pages/Swap/index.tsx
-msgid "Approve use of {0}"
-msgstr "Phê duyệt sử dụng {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -313,12 +339,12 @@ msgid "Approve {0}"
 msgstr "Phê duyệt {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "Tán thành"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -340,10 +366,6 @@ msgstr "Ít nhất {0} {1} và {2} {3} sẽ được hoàn lại vào ví của 
 #: src/theme/components/ThemeToggle.tsx
 msgid "Auto"
 msgstr "Tự động"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Auto Router API"
-msgstr "API bộ định tuyến tự động"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Back to Pools"
@@ -382,6 +404,15 @@ msgstr "Tốt nhất cho các cặp rất ổn định."
 msgid "Best price route costs ~{gasPrice} in gas."
 msgstr "Tuyến đường giá tốt nhất chi phí ~{gasPrice} tiền xăng."
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Beta"
+msgstr "bản thử nghiệm"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Better prices and more liquidity"
+msgstr "Giá tốt hơn và thanh khoản cao hơn"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "Blocked Address"
 msgstr "Địa chỉ bị chặn"
@@ -390,32 +421,32 @@ msgstr "Địa chỉ bị chặn"
 msgid "Blocked on OpenSea"
 msgstr "Bị chặn trên OpenSea"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrow failed"
 msgstr "Mượn không thành công"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowed"
 msgstr "Mượn"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowing"
 msgstr "Vay"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Bought"
 msgstr "Mua"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burn failed"
 msgstr "Ghi không thành công"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burned"
 msgstr "đốt cháy"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burning"
 msgstr "Đốt cháy"
 
@@ -428,7 +459,7 @@ msgstr "Mua"
 msgid "Buy crypto"
 msgstr "Mua tiền điện tử"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buy failed"
 msgstr "Mua không thành công"
 
@@ -448,7 +479,7 @@ msgstr "Mua, bán và khám phá mã thông báo"
 msgid "Buy, sell, and explore tokens and NFTs"
 msgstr "Mua, bán và khám phá mã thông báo và NFT"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buying"
 msgstr "mua"
 
@@ -464,7 +495,11 @@ msgstr "Bằng cách thêm thanh khoản, bạn sẽ kiếm được 0,3% tất 
 msgid "By connecting a wallet, you agree to Uniswap Labs'"
 msgstr "Bằng cách kết nối ví, bạn đồng ý với Uniswap Labs'"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/PriceImpactModal.tsx
+msgid "Cancel"
+msgstr "Hủy bỏ"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancel failed"
 msgstr "Hủy không thành công"
 
@@ -472,12 +507,13 @@ msgstr "Hủy không thành công"
 msgid "Canceled"
 msgstr "Đã hủy"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Cancelled"
 msgstr "Đã hủy"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancelling"
 msgstr "hủy bỏ"
 
@@ -517,7 +553,7 @@ msgstr "Yêu cầu phần thưởng UNI cho {0}"
 msgid "Claim Uniswap NFT Airdrop"
 msgstr "Yêu cầu Uniswap NFT Airdrop"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Claim failed"
 msgstr "Yêu cầu không thành công"
 
@@ -529,12 +565,12 @@ msgstr "Yêu cầu phí"
 msgid "Claim your UNI tokens"
 msgstr "Yêu cầu mã token UNI của bạn"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "Đã yêu cầu bồi thường"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
 msgstr "Đang yêu cầu"
@@ -576,7 +612,7 @@ msgstr "Thu thập là {nativeWrappedSymbol}"
 msgid "Collect fees"
 msgstr "Thu phí"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collect fees failed"
 msgstr "Thu phí không thành công"
 
@@ -588,7 +624,7 @@ msgstr "Thu{1} {0}"
 msgid "Collected"
 msgstr "Đã thu thập"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collected fees"
 msgstr "Phí đã thu"
 
@@ -596,7 +632,7 @@ msgstr "Phí đã thu"
 msgid "Collecting"
 msgstr "Sưu tập"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
 msgstr "Thu phí"
@@ -604,6 +640,10 @@ msgstr "Thu phí"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Thu phí sẽ rút các khoản phí hiện có sẵn cho bạn."
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Coming soon: search and explore tokens on Avalanche Chain"
+msgstr "Sắp ra mắt: tìm kiếm và khám phá mã thông báo trên Avalanche Chain"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Coming soon: search and explore tokens on BNB Chain"
@@ -624,6 +664,14 @@ msgstr "Xác nhận"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "Xác nhận cung cấp"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Confirm Swap"
+msgstr "Xác nhận Hoán đổi"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm swap"
+msgstr "xác nhận trao đổi"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -671,14 +719,20 @@ msgstr "Kết nối với ví để xem tính thanh khoản V2 của bạn."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Kết nối với ví để xem tính thanh khoản của bạn."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Connect wallet"
 msgstr "Kết nối ví"
+
+#: src/pages/Swap/index.tsx
+msgid "Connecting to {0}"
+msgstr "Kết nối với {0}"
 
 #: src/nft/components/card/media.tsx
 msgid "Content not"
 msgstr "Nội dung không"
 
+#: src/components/TokenSafety/index.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/nft/components/bag/Bag.tsx
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Continue"
@@ -719,7 +773,7 @@ msgstr "Tạo một cặp"
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Tạo nhóm và thêm {0}/{1} thanh khoản V3"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Create pool failed"
 msgstr "Tạo nhóm không thành công"
 
@@ -731,11 +785,11 @@ msgstr "Tạo nhóm."
 msgid "Create {0}/{1} V3 pool"
 msgstr "Tạo nhóm {0}{1}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Created pool"
 msgstr "nhóm đã tạo"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Creating pool"
 msgstr "Tạo hồ bơi"
 
@@ -769,7 +823,7 @@ msgstr "đánh bại"
 msgid "Delegate Votes"
 msgstr "Phiếu bầu ủy quyền"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegate failed"
 msgstr "Đại biểu không thành công"
 
@@ -777,7 +831,7 @@ msgstr "Đại biểu không thành công"
 msgid "Delegate voting power to {0}"
 msgstr "Ủy quyền biểu quyết cho {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegated"
 msgstr "được ủy quyền"
 
@@ -785,7 +839,7 @@ msgstr "được ủy quyền"
 msgid "Delegated to:"
 msgstr "Giao cho:"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegating"
 msgstr "ủy quyền"
 
@@ -793,15 +847,15 @@ msgstr "ủy quyền"
 msgid "Delegating votes"
 msgstr "Ủy quyền phiếu bầu"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploy failed"
 msgstr "Triển khai không thành công"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deployed"
 msgstr "đã triển khai"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploying"
 msgstr "triển khai"
 
@@ -809,7 +863,7 @@ msgstr "triển khai"
 msgid "Deposit Amounts"
 msgstr "Số tiền đặt cọc"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposit failed"
 msgstr "Gửi tiền không thành công"
 
@@ -821,11 +875,11 @@ msgstr "Thanh khoản tiền gửi"
 msgid "Deposit tokens to the {label} network."
 msgstr "Gửi mã thông báo vào mạng {label}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposited"
 msgstr "ký gửi"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Depositing"
 msgstr "gửi tiền"
 
@@ -843,7 +897,6 @@ msgstr "Chi tiết"
 msgid "Details"
 msgstr "Chi tiết"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "Bỏ qua"
@@ -892,6 +945,10 @@ msgstr "Biên tập"
 msgid "Edit listings"
 msgstr "chỉnh sửa danh sách"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Enable spending {0} on Uniswap"
+msgstr "Kích hoạt chi tiêu {0} trên Uniswap"
+
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "Nhập một phần trăm"
@@ -916,9 +973,8 @@ msgstr "Nhập số tiền"
 msgid "Enter {0} amount"
 msgstr "Nhập {0} số tiền"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Lỗi"
 
@@ -954,7 +1010,7 @@ msgstr "Hành hình"
 msgid "Execute Proposal {proposalId}"
 msgstr "Thực hiện đề xuất {proposalId}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Execute failed"
 msgstr "Thực thi không thành công"
 
@@ -962,12 +1018,12 @@ msgstr "Thực thi không thành công"
 msgid "Execute proposal {proposalKey}."
 msgstr "Thực hiện đề xuất {proposalKey}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Thực thi"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing"
 msgstr "thi hành"
@@ -1014,7 +1070,7 @@ msgstr "Cực kì hiếm"
 msgid "Failed"
 msgstr "Thất bại"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "Failed to switch networks"
 msgstr "Chuyển đổi mạng không thành công"
 
@@ -1038,7 +1094,7 @@ msgstr "Nhận xét"
 msgid "Fees"
 msgstr "lệ phí"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
 msgid "Fetching Route"
 msgstr "Đang tìm nạp tuyến đường"
@@ -1054,14 +1110,6 @@ msgstr "Đang tìm nạp giá..."
 #: src/components/Tokens/TokenTable/SearchBar.tsx
 msgid "Filter tokens"
 msgstr "Lọc mã thông báo"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol through your browser. May result in high latency and prices."
-msgstr "Tìm tuyến đường tốt nhất trên Giao thức Uniswap thông qua trình duyệt của bạn. Có thể dẫn đến độ trễ và giá cao."
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol using the Uniswap Labs Routing API."
-msgstr "Tìm tuyến đường tốt nhất trên Giao thức Uniswap bằng cách sử dụng API định tuyến của Uniswap Labs."
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Floor"
@@ -1092,6 +1140,10 @@ msgstr "Từ (nhiều nhất)"
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
 msgstr "Phạm vi đầy đủ"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Gas free swaps"
+msgstr "Hoán đổi gas miễn phí"
 
 #: src/pages/Landing/index.tsx
 msgid "Get started"
@@ -1164,11 +1216,15 @@ msgstr "Giá ban đầu và tỷ trọng pool"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Đầu vào được ước tính. Bạn sẽ bán nhiều nhất <0>{0} {1}</0> hoặc giao dịch sẽ hoàn nguyên."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient funds"
 msgstr "Không đủ tiền"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Insufficient funds for swap"
+msgstr "Không đủ tiền để trao đổi"
+
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient liquidity"
 msgstr "Thanh khoản không đủ"
 
@@ -1176,7 +1232,7 @@ msgstr "Thanh khoản không đủ"
 msgid "Insufficient liquidity for this trade."
 msgstr "Không đủ thanh khoản cho giao dịch này."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient pool liquidity to complete transaction"
 msgstr "Không đủ thanh khoản nhóm để hoàn thành giao dịch"
 
@@ -1242,10 +1298,17 @@ msgstr "Tìm hiểu về việc cung cấp thanh khoản"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
 #: src/components/TokenSafety/index.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapBuyFiatButton.tsx
 #: src/pages/Landing/index.tsx
 msgid "Learn more"
 msgstr "Tìm hiểu thêm"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Learn more about swapping with UniswapX"
+msgstr "Tìm hiểu thêm về hoán đổi với UniswapX"
 
 #: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1298,9 +1361,13 @@ msgstr "danh sách"
 msgid "Loading"
 msgstr "Đang tải"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Loading Allowance"
 msgstr "phụ cấp tải"
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Local routing"
+msgstr "Định tuyến cục bộ"
 
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Low listing price"
@@ -1309,6 +1376,10 @@ msgstr "Giá niêm yết thấp"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "TỐI ĐA"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "MEV protection"
+msgstr "bảo vệ MEV"
 
 #: src/nft/components/details/detailsV2/OfferButton.tsx
 msgid "Make an offer"
@@ -1384,7 +1455,7 @@ msgstr "Di chuyển thanh khoản sang V3"
 msgid "Migrate V2 Liquidity"
 msgstr "Di chuyển Thanh khoản V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrate liquidity failed"
 msgstr "Di chuyển thanh khoản không thành công"
 
@@ -1396,7 +1467,7 @@ msgstr "Di chuyển mã token thanh khoản của bạn từ Uniswap V2 sang Uni
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "{1} chuyển thanh khoản {0}sang V3"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrated liquidity"
 msgstr "thanh khoản di chuyển"
 
@@ -1404,7 +1475,7 @@ msgstr "thanh khoản di chuyển"
 msgid "Migrating"
 msgstr "Đang di chuyển"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrating liquidity"
 msgstr "Di chuyển thanh khoản"
 
@@ -1429,16 +1500,16 @@ msgstr "đầu ra tối thiểu"
 msgid "Minimum received"
 msgstr "Số tiền nhận được tối thiểu"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Mint failed"
 msgstr "đúc thất bại"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minted"
 msgstr "đúc"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minting"
 msgstr "đúc tiền"
 
@@ -1487,14 +1558,13 @@ msgstr "Không tìm thấy tên"
 msgid "Navigation button"
 msgstr "nút điều hướng"
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Network Fees are paid to the Ethereum network to secure transactions."
+msgstr "Phí mạng được trả cho mạng Ethereum để đảm bảo giao dịch."
+
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Cảnh báo mạng"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swap/SwapModalFooter.tsx
-msgid "Network fee"
-msgstr "Phí mạng"
 
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Never"
@@ -1576,6 +1646,10 @@ msgstr "Không có sẵn trong khu vực của bạn"
 msgid "Not created"
 msgstr "Chưa tạo"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "Not enough liquidity to show accurate USD value."
+msgstr "Không đủ thanh khoản để hiển thị giá trị USD chính xác."
+
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "Not listed"
 msgstr "Không được liệt kê"
@@ -1631,14 +1705,14 @@ msgstr "Chủ sở hữu"
 msgid "Page not found!"
 msgstr "Không tìm thấy trang!"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay"
 msgstr "Chi trả"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay Anyway"
 msgstr "Dù sao cũng phải trả tiền"
 
@@ -1651,13 +1725,23 @@ msgstr "Thanh toán bằng"
 msgid "Pending"
 msgstr "Chưa giải quyết"
 
-#: src/pages/Swap/index.tsx
-msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
-msgstr "Cần có quyền để Uniswap hoán đổi từng mã thông báo. Điều này sẽ hết hạn sau một tháng để bảo mật cho bạn."
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Pending..."
+msgstr "Chưa giải quyết..."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit approval failed"
+msgstr "Phê duyệt giấy phép không thành công"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Permit2"
 msgstr "giấy phép2"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit2 allows token approvals to be shared and managed across different applications."
+msgstr "Permit2 cho phép chia sẻ và quản lý phê duyệt mã thông báo trên các ứng dụng khác nhau."
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1729,16 +1813,12 @@ msgstr "Chênh lệch giá:"
 msgid "Price Impact"
 msgstr "Tác động giá"
 
-#: src/pages/Swap/index.tsx
-msgid "Price Impact Too High"
-msgstr "Tác động giá quá cao"
-
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Price impact"
 msgstr "Tác động giá"
 
 #: src/components/swap/PriceImpactWarning.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price impact warning"
 msgstr "Cảnh báo tác động giá"
 
@@ -1747,7 +1827,7 @@ msgid "Price range"
 msgstr "Phạm vi giá"
 
 #: src/components/swap/SwapModalFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price updated"
 msgstr "Đã cập nhật giá"
 
@@ -1767,10 +1847,18 @@ msgstr "Chính sách bảo mật"
 msgid "Privacy Policy."
 msgstr "Chính sách bảo mật."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
 msgstr "Tiếp tục trong ví"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Proceed in your wallet"
+msgstr "Tiếp tục trong ví của bạn"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Proceeds if sold"
@@ -1808,6 +1896,10 @@ msgstr "Người đề xuất"
 msgid "Public Resolver"
 msgstr "Người giải quyết công khai"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Purchased"
+msgstr "đã mua"
+
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Quantity"
@@ -1822,7 +1914,7 @@ msgstr "Xếp hàng"
 msgid "Queue Proposal {proposalId}"
 msgstr "Đề xuất hàng đợi {proposalId}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queue failed"
 msgstr "Hàng đợi không thành công"
 
@@ -1830,7 +1922,7 @@ msgstr "Hàng đợi không thành công"
 msgid "Queue proposal {proposalKey}."
 msgstr "Đề xuất hàng đợi {proposalKey}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "xếp hàng"
@@ -1839,7 +1931,7 @@ msgstr "xếp hàng"
 msgid "Queueing"
 msgstr "xếp hàng"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queuing"
 msgstr "Xếp hàng"
 
@@ -1871,16 +1963,16 @@ msgstr "Đọc thêm về nội dung không được hỗ trợ"
 msgid "Receive"
 msgstr "Nhận được"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receive failed"
 msgstr "nhận không thành công"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Received"
 msgstr "Đã nhận"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receiving"
 msgstr "nhận"
 
@@ -1892,7 +1984,7 @@ msgstr "Tìm kiếm gần đây"
 msgid "Recipient"
 msgstr "Người nhận"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Refunds for unavailable items will be given in ETH"
 msgstr "Hoàn lại tiền cho các mặt hàng không có sẵn sẽ được trao bằng ETH"
 
@@ -1941,7 +2033,7 @@ msgstr "Lấy ra khỏi túi"
 msgid "Remove item"
 msgstr "Loại bỏ mục"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Remove liquidity failed"
 msgstr "Xóa thanh khoản không thành công"
 
@@ -1949,11 +2041,11 @@ msgstr "Xóa thanh khoản không thành công"
 msgid "Removed Liquidity"
 msgstr "thanh khoản bị loại bỏ"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removed liquidity"
 msgstr "Đã xóa thanh khoản"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removing liquidity"
 msgstr "Loại bỏ thanh khoản"
 
@@ -1965,22 +2057,27 @@ msgstr "Loại bỏ {0} {1} và {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Đang xóa {0} {1} và{2} {3}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaid"
 msgstr "hoàn trả"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repay failed"
 msgstr "Trả nợ không thành công"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaying"
 msgstr "trả nợ"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Reset USDT"
+msgstr "Đặt lại USDT"
 
 #: src/nft/components/profile/list/ListingButton.tsx
 msgid "Resolve {issues} issues"
 msgstr "Giải quyết {issues} vấn đề"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Retry"
 msgstr "Thử lại"
@@ -2000,11 +2097,27 @@ msgid "Reverse Registrar"
 msgstr "Công ty đăng ký đảo ngược"
 
 #: src/components/swap/ConfirmSwapModal.tsx
-msgid "Review Swap"
-msgstr "Đánh giá Hoán đổi"
+msgid "Review swap"
+msgstr "Đánh giá hoán đổi"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoke approval failed"
+msgstr "Thu hồi phê duyệt không thành công"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Revoke {0}"
+msgstr "thu hồi {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Revoked Approval"
+msgstr "Thu hồi phê duyệt"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoked approval"
+msgstr "Đã thu hồi phê duyệt"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoking approval"
 msgstr "Thu hồi phê duyệt"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
@@ -2022,6 +2135,10 @@ msgstr "Tìm kiếm"
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Tìm kiếm tên hoặc dán địa chỉ"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Tìm kiếm mã thông báo"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "Search tokens and NFT collections"
@@ -2075,16 +2192,16 @@ msgstr "Bán NFT"
 msgid "Seller"
 msgstr "Người bán"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Send failed"
 msgstr "Gửi thất bại"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sending"
 msgstr "Gửi"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sent"
 msgstr "Đã gửi"
 
@@ -2144,6 +2261,10 @@ msgstr "Cho xem nhiều hơn"
 msgid "Show resources"
 msgstr "Hiển thị tài nguyên"
 
+#: src/components/AccountDrawer/TestnetsToggle.tsx
+msgid "Show testnets"
+msgstr "Hiển thị mạng thử nghiệm"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Sign"
 msgstr "Dấu hiệu"
@@ -2167,11 +2288,11 @@ msgstr "Một số tài sản không khả dụng thông qua giao diện này v�
 
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong"
 msgstr "Đã xảy ra sự cố"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Đã xảy ra sự cố. Vui lòng thử lại."
 
@@ -2196,11 +2317,11 @@ msgstr "số liệu thống kê"
 msgid "Submit new proposal"
 msgstr "Gửi đề xuất mới"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submit proposal failed"
 msgstr "Gửi đề xuất không thành công"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitted proposal"
 msgstr "đề xuất đã gửi"
 
@@ -2212,7 +2333,7 @@ msgstr "Gửi đề xuất"
 msgid "Submitting Vote"
 msgstr "Gửi phiếu bầu"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitting proposal"
 msgstr "Gửi đề xuất"
 
@@ -2221,6 +2342,7 @@ msgid "Succeeded"
 msgstr "thành công"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Success"
 msgstr "Sự thành công"
 
@@ -2238,8 +2360,9 @@ msgstr "Cung cấp {0} {1} và {2} {3}"
 
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/components/swap/SwapModalFooter.tsx
 #: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2254,32 +2377,44 @@ msgstr "Hoán đổi <0/> lấy đúng <1/>"
 msgid "Swap Anyway"
 msgstr "Vẫn hoán đổi"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap cancelled"
+msgstr "Hoán đổi bị hủy"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Hoán đổi chính xác <0/> cho <1/>"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap expired"
+msgstr "Hoán đổi đã hết hạn"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Swap failed"
 msgstr "Hoán đổi không thành công"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Swap submitted"
+msgstr "Đã gửi giao dịch hoán đổi"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapped"
 msgstr "hoán đổi"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapping"
 msgstr "hoán đổi"
-
-#: src/components/swap/ConfirmSwapModal.tsx
-msgid "Swapping {0} {1} for {2} {3}"
-msgstr "Đổi {0} {1} lấy {2} {3}"
 
 #: src/nft/components/collection/Sweep.tsx
 msgid "Sweep"
 msgstr "quét"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Switch networks"
 msgstr "Chuyển đổi mạng"
 
@@ -2419,6 +2554,10 @@ msgstr "Ứng dụng này sử dụng các API của bên thứ ba sau:"
 msgid "This month"
 msgstr "Tháng này"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "This order was cancelled"
+msgstr "Đơn đặt hàng này đã bị hủy"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Nhóm này phải được khởi tạo trước khi bạn có thể thêm thanh khoản. Để khởi tạo, hãy chọn giá khởi điểm cho nhóm. Sau đó, nhập phạm vi giá thanh khoản và số tiền gửi của bạn. Phí gas sẽ cao hơn bình thường do giao dịch khởi tạo."
@@ -2426,6 +2565,10 @@ msgstr "Nhóm này phải được khởi tạo trước khi bạn có thể th�
 #: src/pages/Vote/VotePage.tsx
 msgid "This proposal may be executed after {0}."
 msgstr "Đề xuất này có thể được thực hiện sau {0}."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days."
+msgstr "Điều này cung cấp quyền truy cập giao thức Uniswap vào mã thông báo của bạn để giao dịch. Để bảo mật, điều này sẽ hết hạn sau 30 ngày."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
@@ -2459,6 +2602,10 @@ msgstr "Giao dịch này sẽ không thành công do biến động giá. Hãy t
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Giao dịch này sẽ không thành công do biến động giá hoặc phí chuyển nhượng. Hãy thử tăng khả năng chịu trượt của bạn."
 
+#: src/components/swap/PriceImpactModal.tsx
+msgid "This transaction will result in a <0>{0}</0> price impact on the market price of this pool. Do you wish to continue?"
+msgstr "Giao dịch này sẽ dẫn đến tác động giá <0>{0}</0> đối với giá thị trường của nhóm này. Bạn có muốn tiếp tục không?"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "This week"
 msgstr "Tuần này"
@@ -2482,7 +2629,7 @@ msgstr "Đến"
 msgid "To (at least)"
 msgstr "Đến (Ít nhất)"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "To use Uniswap on {0}, switch the network in your wallet’s settings."
 msgstr "Để sử dụng Uniswap trên {0}, hãy chuyển đổi mạng trong cài đặt ví của bạn."
 
@@ -2494,11 +2641,15 @@ msgstr "Để xem một vị trí, bạn phải kết nối với mạng của v
 msgid "Today"
 msgstr "Hôm nay"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Token approval failed"
+msgstr "Phê duyệt mã thông báo không thành công"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "Tên mã thông báo"
 
-#: src/components/TokenSafety/index.tsx
+#: src/constants/tokenSafety.tsx
 msgid "Token not found"
 msgstr "Không tìm thấy mã thông báo"
 
@@ -2571,7 +2722,7 @@ msgstr "Giao dịch hoàn tất trong"
 msgid "Transaction deadline"
 msgstr "Thời hạn giao dịch"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Transaction pending"
 msgstr "Giao dịch đang chờ xử lý"
 
@@ -2591,6 +2742,14 @@ msgstr "Chuyển mã thông báo"
 msgid "Try Again"
 msgstr "Thử lại"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try gas free swaps with the"
+msgstr "Hãy thử hoán đổi gas miễn phí với"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try the"
+msgstr "Thử"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "UNI Governance"
 msgstr "Quản trị UNI"
@@ -2607,6 +2766,10 @@ msgstr "Mã token UNI đại diện cho cổ phần có quyền biểu quyết t
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} đã đốt"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "USDT requires resetting approval when spending limits are too low."
+msgstr "USDT yêu cầu đặt lại phê duyệt khi giới hạn chi tiêu quá thấp."
+
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Unavailable"
 msgstr "Không có sẵn"
@@ -2622,10 +2785,6 @@ msgstr "Phí chưa nhận"
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
 msgstr "không xác định"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap API"
-msgstr "API Uniswap"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
@@ -2647,10 +2806,6 @@ msgstr "Uniswap V2 không khả dụng trên mạng này."
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap có sẵn ở: <0>{0}</0>"
 
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap client"
-msgstr "Ứng dụng khách Uniswap"
-
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Quản trị Uniswap chỉ khả dụng trên Lớp 1. Chuyển mạng của bạn sang Ethereum Mainnet để xem Đề xuất và Bình chọn."
@@ -2666,6 +2821,10 @@ msgstr "Uniswap trong túi của bạn"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Hợp đồng di chuyển Uniswap↗"
+
+#: src/components/Logo/UniswapXBrandMark.tsx
+msgid "UniswapX"
+msgstr "UniswapX"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
@@ -2730,26 +2889,22 @@ msgstr "Tháo"
 msgid "Unwrap <0/> to {0}"
 msgstr "Mở gói <0/> đến {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrap failed"
 msgstr "Unwrap không thành công"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapped"
 msgstr "chưa mở"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapping"
 msgstr "mở gói"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Cập nhật ủy quyền"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Use the Uniswap Labs API to get faster quotes."
-msgstr "Sử dụng API Uniswap Labs để nhận báo giá nhanh hơn."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2784,18 +2939,24 @@ msgstr "Xem và bán NFT"
 msgid "View more analytics"
 msgstr "Xem thêm phân tích"
 
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on  Etherscan"
+msgstr "Xem trên Etherscan"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on Block Explorer"
+msgstr "Xem trên Block Explorer"
+
 #: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Xem trên Etherscan"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "View on Explorer"
 msgstr "Xem trên Explorer"
-
-#: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on {0}"
-msgstr "Xem trên {0}"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -2830,7 +2991,7 @@ msgstr "Bỏ phiếu chống lại đề xuất {proposalKey}"
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
 msgstr "Bỏ phiếu chống lại đề xuất {proposalKey} với lý do \"{0}\""
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Vote failed"
 msgstr "Bỏ phiếu không thành công"
 
@@ -2864,11 +3025,11 @@ msgstr "Bỏ phiếu trắng cho đề xuất {proposalKey}"
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
 msgstr "Bỏ phiếu trắng cho đề xuất {proposalKey} với lý do \"{0}\""
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voted"
 msgstr "bình chọn"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voting"
 msgstr "bỏ phiếu"
 
@@ -2893,31 +3054,54 @@ msgid "Wallet Address or ENS name"
 msgstr "Địa chỉ ví hoặc tên ENS"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "Cảnh báo"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "We use anonymized data to enhance your experience with Uniswap Labs products."
+msgstr "Chúng tôi sử dụng dữ liệu ẩn danh để nâng cao trải nghiệm của bạn với các sản phẩm của Uniswap Labs."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
 msgstr "Chào mừng đến với đội Unicorn :)"
 
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "When available, aggregates liquidity sources for better prices and gas free swaps."
+msgstr "Khi có sẵn, tổng hợp các nguồn thanh khoản để có giá tốt hơn và giao dịch hoán đổi miễn phí gas."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are approvals required?"
+msgstr "Tại sao cần phải phê duyệt?"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are permits required?"
+msgstr "Tại sao phải có giấy phép?"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Why is a transaction required?"
 msgstr "Tại sao phải giao dịch?"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Why is this required?"
+msgstr "Tại sao điều này là bắt buộc?"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Rút tiền thanh khoản đã ký gửi"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdraw failed"
 msgstr "Rút tiền không thành công"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrawing"
 msgstr "rút tiền"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrew"
 msgstr "rút tiền"
 
@@ -2929,20 +3113,26 @@ msgstr "Bọc lại"
 msgid "Wrap <0/> to {0}"
 msgstr "Bọc <0/> đến {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Wrap ETH"
+msgstr "Quấn ETH"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Wrap failed"
 msgstr "Gói không thành công"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapped"
 msgstr "bọc"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapping"
 msgstr "gói"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Wrong network"
 msgstr "mạng sai"
 
@@ -2969,6 +3159,14 @@ msgstr "Bạn là nhà cung cấp thanh khoản đầu tiên."
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Bạn có thể tự bỏ phiếu cho từng đề xuất hoặc ủy thác phiếu bầu của mình cho bên thứ ba."
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You can turn it off at anytime in settings"
+msgstr "Bạn có thể tắt nó bất cứ lúc nào trong phần cài đặt"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "You didn't have enough {0} to complete this swap."
+msgstr "Bạn không có đủ {0} để hoàn thành việc hoán đổi này."
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
@@ -3013,9 +3211,17 @@ msgstr "Bạn cũng sẽ thu phí kiếm được từ vị trí này."
 msgid "You will receive"
 msgstr "Bạn sẽ nhận"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You're in!"
+msgstr "Bạn đang ở trong!"
+
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
 msgstr "Thanh khoản V2 của bạn"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your account had insufficent funds to complete this swap."
+msgstr "Tài khoản của bạn không đủ tiền để hoàn tất giao dịch hoán đổi này."
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
@@ -3070,6 +3276,18 @@ msgstr "Vị trí của bạn sẽ không kiếm được phí hoặc được s
 #: src/components/PositionList/index.tsx
 msgid "Your positions"
 msgstr "Vị trí của bạn"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your swap could not be fulfilled at this time. Please try again."
+msgstr "Trao đổi của bạn không thể được thực hiện tại thời điểm này. Vui lòng thử lại."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap couldn't be filled at this time. Try again or"
+msgstr "Trao đổi của bạn không thể được thực hiện tại thời điểm này. Thử lại hoặc"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap expired before it could be filled. Try again or"
+msgstr "Trao đổi của bạn đã hết hạn trước khi nó có thể được lấp đầy. Thử lại hoặc"
 
 #: src/hooks/useUniversalRouter.ts
 msgid "Your swap is expected to fail."
@@ -3137,6 +3355,7 @@ msgid "fee"
 msgstr "phí"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "for"
 msgstr "vì"
 
@@ -3151,6 +3370,11 @@ msgstr "từ"
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "here."
 msgstr "đây."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "learn more."
+msgstr "tìm hiểu thêm."
 
 #: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "minutes"
@@ -3357,6 +3581,11 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} trên {tokenA}"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "{txCount, plural, one {Network fee} other {Network fees}}"
+msgstr "{txCount, plural, one {Cước mạng} other {Phí mạng}}"
 
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "{uniqueCollections, plural, =1 {collection} other {collections}}"

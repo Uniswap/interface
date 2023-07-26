@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
+import { Trace, TraceEvent } from 'analytics'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
@@ -8,20 +8,20 @@ import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
 import { AppleLogo } from 'components/Logo/AppleLogo'
-import { useAtomValue } from 'jotai/utils'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDownCircle } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
+import { getDownloadAppLinkProps } from 'utils/openDownloadApp'
 
 const PageContainer = styled.div`
   position: absolute;
@@ -323,7 +323,12 @@ export default function Landing() {
     }
   }, [navigate, selectedWallet, queryParams.intro, accountDrawerOpen])
 
-  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
+
+  const cards = useMemo(
+    () => MAIN_CARDS.filter((card) => !(shouldDisableNFTRoutes && card.to.startsWith('/nft'))),
+    [shouldDisableNFTRoutes]
+  )
 
   return (
     <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
@@ -384,14 +389,20 @@ export default function Landing() {
                 <LearnMoreArrow />
               </LearnMoreContainer>
 
-              <DownloadWalletLink href="https://wallet.uniswap.org/">
+              <DownloadWalletLink
+                {...getDownloadAppLinkProps({
+                  // landing page specific tracking params
+                  microSiteParams: `utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
+                  appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
+                })}
+              >
                 <AppleLogo width="20" height="20" />
                 Download the Uniswap Wallet for iOS
               </DownloadWalletLink>
             </ContentContainer>
             <AboutContentContainer isDarkMode={isDarkMode}>
-              <CardGrid cols={2} ref={cardsRef}>
-                {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
+              <CardGrid cols={cards.length} ref={cardsRef}>
+                {cards.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
                   <Card
                     {...card}
                     backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}

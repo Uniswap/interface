@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"POT-Creation-Date: 2023-07-21 17:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8,7 +8,7 @@ msgstr ""
 "Language: id\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-05-23 20:46\n"
+"PO-Revision-Date: 2023-07-21 19:01\n"
 "Last-Translator: \n"
 "Language-Team: Indonesian\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -51,6 +51,18 @@ msgstr "+ Posisi baru"
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- Hapus penerima"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 month"
+msgstr "1 bulan"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 week"
+msgstr "1 minggu"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 year"
+msgstr "1 tahun"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -113,6 +125,10 @@ msgstr "<0>Kiat:</0> Gunakan alat ini untuk menemukan pool v2 yang tidak otomati
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 msgstr "<0>Kiat:</0> Saat menambahkan likuiditas, Anda akan menerima token pool yang mewakili posisi Anda. Token ini secara otomatis menghasilkan biaya yang sebanding dengan bagian Anda dalam pool, dan dapat ditukarkan kapan saja."
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "<0>UniswapX</0> aggregates liquidity sources for better prices and gas free swaps."
+msgstr "<0>UniswapX</0> mengumpulkan sumber likuiditas untuk harga yang lebih baik dan swap bebas gas."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0>Buka voting</0> untuk mempersiapkan usulan berikutnya."
@@ -170,11 +186,11 @@ msgstr "Tambahkan Likuiditas"
 msgid "Add V2 Liquidity"
 msgstr "Tambahkan Likuiditas V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add V2 liquidity failed"
 msgstr "Menambahkan likuiditas V2 gagal"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add liquidity failed"
 msgstr "Tambahkan likuiditas gagal"
 
@@ -207,11 +223,11 @@ msgstr "Tambahkan {0}/{1} likuiditas V3"
 msgid "Added Liquidity"
 msgstr "Menambahkan Likuiditas"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added V2 liquidity"
 msgstr "Menambahkan likuiditas V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added liquidity"
 msgstr "Menambahkan likuiditas"
 
@@ -219,11 +235,11 @@ msgstr "Menambahkan likuiditas"
 msgid "Added {0}"
 msgstr "Ditambahkan {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding V2 liquidity"
 msgstr "Menambahkan likuiditas V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding liquidity"
 msgstr "Menambah likuiditas"
 
@@ -239,9 +255,25 @@ msgstr "Alamat tidak memiliki klaim yang tersedia"
 msgid "Against"
 msgstr "Melawan"
 
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "All time"
+msgstr "Sepanjang waktu"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Izinkan migrasi token LP"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "Allow analytics"
+msgstr "Izinkan analitik"
+
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Allow {0} (one time)"
+msgstr "Izinkan {0} (satu kali)"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Allow {0} to be used for swapping"
+msgstr "Biarkan {0} digunakan untuk bertukar"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -260,7 +292,7 @@ msgstr "Selalu lakukan riset Anda sendiri sebelum berdagang."
 msgid "Amount"
 msgstr "Jumlah"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "An approval is needed to use this token."
 msgstr "Persetujuan diperlukan untuk menggunakan token ini."
 
@@ -272,16 +304,15 @@ msgstr "Terjadi kesalahan saat memuat token. Silakan coba lagi."
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Terjadi kesalahan saat mengeksekusi swap ini. Anda mungkin memerlukan peningkatan toleransi slip Anda. Jika tidak berhasil, kemungkinan token yang anda perdagangkan tidak cocok. Catatan: biaya transfer token rebase tidak cocok dengan Uniswap V3."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Approval failed"
 msgstr "Persetujuan gagal"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approval pending"
 msgstr "Persetujuan Tertunda"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -295,14 +326,9 @@ msgstr "Setujui Token"
 msgid "Approve in wallet"
 msgstr "Setujui di dompet"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approve in your wallet"
 msgstr "Setujui di dompet Anda"
-
-#: src/pages/Swap/index.tsx
-msgid "Approve use of {0}"
-msgstr "Menyetujui penggunaan {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -313,12 +339,12 @@ msgid "Approve {0}"
 msgstr "Setujui {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "Disetujui"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -340,10 +366,6 @@ msgstr "Setidaknya {0} {1} dan {2} {3} akan dikembalikan ke dompet Anda akibat r
 #: src/theme/components/ThemeToggle.tsx
 msgid "Auto"
 msgstr "Otomatis"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Auto Router API"
-msgstr "API Perute Otomatis"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Back to Pools"
@@ -382,6 +404,15 @@ msgstr "Terbaik untuk pasangan yang sangat stabil."
 msgid "Best price route costs ~{gasPrice} in gas."
 msgstr "Biaya rute harga terbaik ~{gasPrice} dalam gas."
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Beta"
+msgstr "Beta"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Better prices and more liquidity"
+msgstr "Harga yang lebih baik dan lebih banyak likuiditas"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "Blocked Address"
 msgstr "Alamat Diblokir"
@@ -390,32 +421,32 @@ msgstr "Alamat Diblokir"
 msgid "Blocked on OpenSea"
 msgstr "Diblokir di OpenSea"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrow failed"
 msgstr "Pinjam gagal"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowed"
 msgstr "Dipinjam"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowing"
 msgstr "Peminjaman"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Bought"
 msgstr "Dibeli"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burn failed"
 msgstr "Pembakaran gagal"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burned"
 msgstr "Dibakar"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burning"
 msgstr "Pembakaran"
 
@@ -428,7 +459,7 @@ msgstr "Membeli"
 msgid "Buy crypto"
 msgstr "Beli kripto"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buy failed"
 msgstr "Beli gagal"
 
@@ -448,7 +479,7 @@ msgstr "Beli, jual, dan jelajahi token"
 msgid "Buy, sell, and explore tokens and NFTs"
 msgstr "Beli, jual, dan jelajahi token dan NFT"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buying"
 msgstr "Pembelian"
 
@@ -464,7 +495,11 @@ msgstr "Dengan menambahkan likuiditas, Anda akan mendapatkan 0,3% dari semua per
 msgid "By connecting a wallet, you agree to Uniswap Labs'"
 msgstr "Dengan menghubungkan dompet, Anda menyetujui Uniswap Labs"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/PriceImpactModal.tsx
+msgid "Cancel"
+msgstr "Membatalkan"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancel failed"
 msgstr "Pembatalan gagal"
 
@@ -472,12 +507,13 @@ msgstr "Pembatalan gagal"
 msgid "Canceled"
 msgstr "Dibatalkan"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Cancelled"
 msgstr "Dibatalkan"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancelling"
 msgstr "Membatalkan"
 
@@ -517,7 +553,7 @@ msgstr "Klaim hadiah UNI untuk {0}"
 msgid "Claim Uniswap NFT Airdrop"
 msgstr "Klaim Airdrop NFT Uniswap"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Claim failed"
 msgstr "Klaim gagal"
 
@@ -529,12 +565,12 @@ msgstr "Biaya klaim"
 msgid "Claim your UNI tokens"
 msgstr "Klaim token UNI Anda"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "Diklaim"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
 msgstr "Mengklaim"
@@ -576,7 +612,7 @@ msgstr "Kumpulkan sebagai {nativeWrappedSymbol}"
 msgid "Collect fees"
 msgstr "Tagih biaya"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collect fees failed"
 msgstr "Kumpulkan biaya gagal"
 
@@ -588,7 +624,7 @@ msgstr "Kumpulkan{1} {0}"
 msgid "Collected"
 msgstr "Ditagihkan"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collected fees"
 msgstr "Biaya yang terkumpul"
 
@@ -596,7 +632,7 @@ msgstr "Biaya yang terkumpul"
 msgid "Collecting"
 msgstr "Menagih"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
 msgstr "Menagih biaya"
@@ -604,6 +640,10 @@ msgstr "Menagih biaya"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Biaya pengumpulan akan menarik biaya yang tersedia saat ini untuk Anda."
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Coming soon: search and explore tokens on Avalanche Chain"
+msgstr "Segera hadir: cari dan jelajahi token di Avalanche Chain"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Coming soon: search and explore tokens on BNB Chain"
@@ -624,6 +664,14 @@ msgstr "Konfirmasikan"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "Konfirmasikan Pasokan"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Confirm Swap"
+msgstr "Konfirmasikan Swap"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm swap"
+msgstr "Konfirmasi tukar"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -671,14 +719,20 @@ msgstr "Hubungkan ke dompet untuk melihat likuiditas V2 Anda."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Hubungkan ke dompet untuk melihat likuiditas Anda."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Connect wallet"
 msgstr "Hubungkan dompet"
+
+#: src/pages/Swap/index.tsx
+msgid "Connecting to {0}"
+msgstr "Menghubungkan ke {0}"
 
 #: src/nft/components/card/media.tsx
 msgid "Content not"
 msgstr "Konten tidak"
 
+#: src/components/TokenSafety/index.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/nft/components/bag/Bag.tsx
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Continue"
@@ -719,7 +773,7 @@ msgstr "Buat pasangan"
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Buat pool renang dan tambahkan {0}/{1} likuiditas V3"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Create pool failed"
 msgstr "Pembuatan kumpulan gagal"
 
@@ -731,11 +785,11 @@ msgstr "Buat pool."
 msgid "Create {0}/{1} V3 pool"
 msgstr "Buat kumpulan {0}/{1}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Created pool"
 msgstr "Dibuat kolam"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Creating pool"
 msgstr "Membuat kolam"
 
@@ -769,7 +823,7 @@ msgstr "Dikalahkan"
 msgid "Delegate Votes"
 msgstr "Delegasikan Suara"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegate failed"
 msgstr "Delegasi gagal"
 
@@ -777,7 +831,7 @@ msgstr "Delegasi gagal"
 msgid "Delegate voting power to {0}"
 msgstr "Delegasikan hak suara ke {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegated"
 msgstr "Didelegasikan"
 
@@ -785,7 +839,7 @@ msgstr "Didelegasikan"
 msgid "Delegated to:"
 msgstr "Didelegasikan ke:"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegating"
 msgstr "Mendelegasikan"
 
@@ -793,15 +847,15 @@ msgstr "Mendelegasikan"
 msgid "Delegating votes"
 msgstr "Mendelegasikan suara"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploy failed"
 msgstr "Penerapan gagal"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deployed"
 msgstr "Diterapkan"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploying"
 msgstr "Menyebarkan"
 
@@ -809,7 +863,7 @@ msgstr "Menyebarkan"
 msgid "Deposit Amounts"
 msgstr "Jumlah Setoran"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposit failed"
 msgstr "Setoran gagal"
 
@@ -821,11 +875,11 @@ msgstr "Setor likuiditas"
 msgid "Deposit tokens to the {label} network."
 msgstr "Setor token ke jaringan {label}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposited"
 msgstr "Disetor"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Depositing"
 msgstr "Menyetor"
 
@@ -843,7 +897,6 @@ msgstr "Terperinci"
 msgid "Details"
 msgstr "Perincian"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "Buang"
@@ -892,6 +945,10 @@ msgstr "Ubah"
 msgid "Edit listings"
 msgstr "Mengedit daftar"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Enable spending {0} on Uniswap"
+msgstr "Aktifkan pembelanjaan {0} di Uniswap"
+
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "Masukkan persen"
@@ -916,9 +973,8 @@ msgstr "Masukkan jumlah"
 msgid "Enter {0} amount"
 msgstr "Masukkan {0} jumlah"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Kesalahan"
 
@@ -954,7 +1010,7 @@ msgstr "Menjalankan"
 msgid "Execute Proposal {proposalId}"
 msgstr "Jalankan Proposal {proposalId}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Execute failed"
 msgstr "Eksekusi gagal"
 
@@ -962,12 +1018,12 @@ msgstr "Eksekusi gagal"
 msgid "Execute proposal {proposalKey}."
 msgstr "Jalankan proposal {proposalKey}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Dieksekusi"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing"
 msgstr "Mengeksekusi"
@@ -1014,7 +1070,7 @@ msgstr "Luar biasa langka"
 msgid "Failed"
 msgstr "Gagal"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "Failed to switch networks"
 msgstr "Gagal beralih jaringan"
 
@@ -1038,7 +1094,7 @@ msgstr "Masukan"
 msgid "Fees"
 msgstr "Biaya"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
 msgid "Fetching Route"
 msgstr "Mengambil Rute"
@@ -1054,14 +1110,6 @@ msgstr "Mengambil harga..."
 #: src/components/Tokens/TokenTable/SearchBar.tsx
 msgid "Filter tokens"
 msgstr "Filter token"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol through your browser. May result in high latency and prices."
-msgstr "Temukan rute terbaik di Protokol Uniswap melalui browser Anda. Dapat mengakibatkan latensi dan harga tinggi."
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol using the Uniswap Labs Routing API."
-msgstr "Menemukan rute terbaik pada Uniswap Protocol menggunakan Uniswap Labs Routing API."
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Floor"
@@ -1092,6 +1140,10 @@ msgstr "Dari (paling banyak)"
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
 msgstr "Rentang Penuh"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Gas free swaps"
+msgstr "Pertukaran bebas gas"
 
 #: src/pages/Landing/index.tsx
 msgid "Get started"
@@ -1164,11 +1216,15 @@ msgstr "Harga awal dan bagian pool"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Input diperkirakan. Anda akan menjual paling banyak <0>{0} {1}</0> atau transaksi akan dikembalikan."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient funds"
 msgstr "Dana tidak mencukupi"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Insufficient funds for swap"
+msgstr "Dana tidak cukup untuk swap"
+
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient liquidity"
 msgstr "Likuiditas tidak mencukupi"
 
@@ -1176,7 +1232,7 @@ msgstr "Likuiditas tidak mencukupi"
 msgid "Insufficient liquidity for this trade."
 msgstr "Likuiditas tidak cukup untuk perdagangan ini."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient pool liquidity to complete transaction"
 msgstr "Likuiditas kumpulan tidak cukup untuk menyelesaikan transaksi"
 
@@ -1242,10 +1298,17 @@ msgstr "Pelajari tentang menyediakan likuiditas"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
 #: src/components/TokenSafety/index.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapBuyFiatButton.tsx
 #: src/pages/Landing/index.tsx
 msgid "Learn more"
 msgstr "Pelajari lebih lanjut"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Learn more about swapping with UniswapX"
+msgstr "Pelajari lebih lanjut tentang bertukar dengan UniswapX"
 
 #: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1298,9 +1361,13 @@ msgstr "Daftar"
 msgid "Loading"
 msgstr "Memuat"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Loading Allowance"
 msgstr "Memuat Tunjangan"
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Local routing"
+msgstr "Perutean lokal"
 
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Low listing price"
@@ -1309,6 +1376,10 @@ msgstr "Harga daftar rendah"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "MAKS"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "MEV protection"
+msgstr "perlindungan MEV"
 
 #: src/nft/components/details/detailsV2/OfferButton.tsx
 msgid "Make an offer"
@@ -1384,7 +1455,7 @@ msgstr "Migrasi Likuiditas ke V3"
 msgid "Migrate V2 Liquidity"
 msgstr "Migrasikan Likuiditas V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrate liquidity failed"
 msgstr "Migrasi likuiditas gagal"
 
@@ -1396,7 +1467,7 @@ msgstr "Migrasikan token likuiditas Anda dari Uniswap V2 ke Uniswap V3."
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "Migrasi{1} {0}ke V3"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrated liquidity"
 msgstr "Likuiditas bermigrasi"
 
@@ -1404,7 +1475,7 @@ msgstr "Likuiditas bermigrasi"
 msgid "Migrating"
 msgstr "Bermigrasi"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrating liquidity"
 msgstr "Migrasi likuiditas"
 
@@ -1429,16 +1500,16 @@ msgstr "Pengeluaran minimal"
 msgid "Minimum received"
 msgstr "Minimum diterima"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Mint failed"
 msgstr "Mint gagal"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minted"
 msgstr "Dicetak"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minting"
 msgstr "Mencetak"
 
@@ -1487,14 +1558,13 @@ msgstr "Nama tidak ditemukan"
 msgid "Navigation button"
 msgstr "Tombol navigasi"
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Network Fees are paid to the Ethereum network to secure transactions."
+msgstr "Biaya Jaringan dibayarkan ke jaringan Ethereum untuk mengamankan transaksi."
+
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Peringatan Jaringan"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swap/SwapModalFooter.tsx
-msgid "Network fee"
-msgstr "Biaya jaringan"
 
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Never"
@@ -1576,6 +1646,10 @@ msgstr "Tidak tersedia di wilayah Anda"
 msgid "Not created"
 msgstr "Belum dibuat"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "Not enough liquidity to show accurate USD value."
+msgstr "Likuiditas tidak cukup untuk menunjukkan nilai USD yang akurat."
+
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "Not listed"
 msgstr "Tidak terdaftar"
@@ -1631,14 +1705,14 @@ msgstr "Pemilik"
 msgid "Page not found!"
 msgstr "Halaman tidak ditemukan!"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay"
 msgstr "Membayar"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay Anyway"
 msgstr "Bayar Pokoknya"
 
@@ -1651,13 +1725,23 @@ msgstr "Bayar menggunakan"
 msgid "Pending"
 msgstr "Tertunda"
 
-#: src/pages/Swap/index.tsx
-msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
-msgstr "Izin diperlukan untuk Uniswap untuk menukar setiap token. Ini akan kedaluwarsa setelah satu bulan untuk keamanan Anda."
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Pending..."
+msgstr "Tertunda..."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit approval failed"
+msgstr "Persetujuan izin gagal"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Permit2"
 msgstr "Izin2"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit2 allows token approvals to be shared and managed across different applications."
+msgstr "Permit2 memungkinkan persetujuan token untuk dibagikan dan dikelola di berbagai aplikasi."
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1729,16 +1813,12 @@ msgstr "Selisih Harga:"
 msgid "Price Impact"
 msgstr "Dampak Harga"
 
-#: src/pages/Swap/index.tsx
-msgid "Price Impact Too High"
-msgstr "Dampak Harga Terlalu Tinggi"
-
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Price impact"
 msgstr "Dampak harga"
 
 #: src/components/swap/PriceImpactWarning.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price impact warning"
 msgstr "Peringatan dampak harga"
 
@@ -1747,7 +1827,7 @@ msgid "Price range"
 msgstr "Rentang harga"
 
 #: src/components/swap/SwapModalFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price updated"
 msgstr "Harga diperbarui"
 
@@ -1767,10 +1847,18 @@ msgstr "Kebijakan pribadi"
 msgid "Privacy Policy."
 msgstr "Kebijakan pribadi."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
 msgstr "Lanjutkan di dompet"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Proceed in your wallet"
+msgstr "Lanjutkan di dompet Anda"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Proceeds if sold"
@@ -1808,6 +1896,10 @@ msgstr "Pengusul"
 msgid "Public Resolver"
 msgstr "Penyelesai Publik"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Purchased"
+msgstr "Dibeli"
+
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Quantity"
@@ -1822,7 +1914,7 @@ msgstr "Antre"
 msgid "Queue Proposal {proposalId}"
 msgstr "Usulan Antrian {proposalId}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queue failed"
 msgstr "Antrean gagal"
 
@@ -1830,7 +1922,7 @@ msgstr "Antrean gagal"
 msgid "Queue proposal {proposalKey}."
 msgstr "Usulan antrian {proposalKey}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "Mengantri"
@@ -1839,7 +1931,7 @@ msgstr "Mengantri"
 msgid "Queueing"
 msgstr "Mengantri"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queuing"
 msgstr "Mengantri"
 
@@ -1871,16 +1963,16 @@ msgstr "Baca selengkapnya tentang aset yang tidak didukung"
 msgid "Receive"
 msgstr "Menerima"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receive failed"
 msgstr "Penerimaan gagal"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Received"
 msgstr "Diterima"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receiving"
 msgstr "Menerima"
 
@@ -1892,7 +1984,7 @@ msgstr "Pencarian terkini"
 msgid "Recipient"
 msgstr "Penerima"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Refunds for unavailable items will be given in ETH"
 msgstr "Pengembalian uang untuk item yang tidak tersedia akan diberikan dalam ETH"
 
@@ -1941,7 +2033,7 @@ msgstr "Hapus dari tas"
 msgid "Remove item"
 msgstr "Hapus item"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Remove liquidity failed"
 msgstr "Hapus likuiditas gagal"
 
@@ -1949,11 +2041,11 @@ msgstr "Hapus likuiditas gagal"
 msgid "Removed Liquidity"
 msgstr "Dihapus Likuiditas"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removed liquidity"
 msgstr "Likuiditas dihapus"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removing liquidity"
 msgstr "Menghapus likuiditas"
 
@@ -1965,22 +2057,27 @@ msgstr "Menghapus {0} {1} dan {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Menghapus {0} {1} dan{2} {3}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaid"
 msgstr "Dilunasi"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repay failed"
 msgstr "Pembayaran gagal"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaying"
 msgstr "Membayar kembali"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Reset USDT"
+msgstr "Setel ulang USDT"
 
 #: src/nft/components/profile/list/ListingButton.tsx
 msgid "Resolve {issues} issues"
 msgstr "Selesaikan {issues} masalah"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Retry"
 msgstr "Mencoba kembali"
@@ -2000,12 +2097,28 @@ msgid "Reverse Registrar"
 msgstr "Pencatat Terbalik"
 
 #: src/components/swap/ConfirmSwapModal.tsx
-msgid "Review Swap"
-msgstr "Tukar Tinjauan"
+msgid "Review swap"
+msgstr "Tukar ulasan"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoke approval failed"
+msgstr "Pencabutan persetujuan gagal"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Revoke {0}"
+msgstr "Cabut {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Revoked Approval"
 msgstr "Persetujuan Dicabut"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoked approval"
+msgstr "Persetujuan dicabut"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoking approval"
+msgstr "Mencabut persetujuan"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
@@ -2022,6 +2135,10 @@ msgstr "Mencari"
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Cari nama atau tempel alamat"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Token pencarian"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "Search tokens and NFT collections"
@@ -2075,16 +2192,16 @@ msgstr "Jual NFT"
 msgid "Seller"
 msgstr "Penjual"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Send failed"
 msgstr "Pengiriman gagal"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sending"
 msgstr "Mengirim"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sent"
 msgstr "Terkirim"
 
@@ -2144,6 +2261,10 @@ msgstr "Menampilkan lebih banyak"
 msgid "Show resources"
 msgstr "Tampilkan sumber daya"
 
+#: src/components/AccountDrawer/TestnetsToggle.tsx
+msgid "Show testnets"
+msgstr "Tampilkan testnet"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Sign"
 msgstr "Tanda"
@@ -2167,11 +2288,11 @@ msgstr "Sejumlah aset tidak tersedia melalui antarmuka ini karena mereka mungkin
 
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong"
 msgstr "Ada yang salah"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Ada yang salah. Silakan coba lagi."
 
@@ -2196,11 +2317,11 @@ msgstr "Statistik"
 msgid "Submit new proposal"
 msgstr "Ajukan proposal baru"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submit proposal failed"
 msgstr "Pengiriman proposal gagal"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitted proposal"
 msgstr "Proposal yang diajukan"
 
@@ -2212,7 +2333,7 @@ msgstr "Mengajukan Proposal"
 msgid "Submitting Vote"
 msgstr "Mengirim Suara"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitting proposal"
 msgstr "Mengajukan proposal"
 
@@ -2221,6 +2342,7 @@ msgid "Succeeded"
 msgstr "Berhasil"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Success"
 msgstr "Berhasil"
 
@@ -2238,8 +2360,9 @@ msgstr "Memasok {0} {1} dan {2} {3}"
 
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/components/swap/SwapModalFooter.tsx
 #: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2254,32 +2377,44 @@ msgstr "Tukar <0/> dengan tepat <1/>"
 msgid "Swap Anyway"
 msgstr "Tukar Saja"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap cancelled"
+msgstr "Tukar dibatalkan"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Tukar persis <0/> dengan <1/>"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap expired"
+msgstr "Tukar kedaluwarsa"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Swap failed"
 msgstr "Tukar gagal"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Swap submitted"
+msgstr "Tukar dikirim"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapped"
 msgstr "Tertukar"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapping"
 msgstr "Bertukar"
-
-#: src/components/swap/ConfirmSwapModal.tsx
-msgid "Swapping {0} {1} for {2} {3}"
-msgstr "Menukar {0} {1} untuk {2} {3}"
 
 #: src/nft/components/collection/Sweep.tsx
 msgid "Sweep"
 msgstr "Menyapu"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Switch networks"
 msgstr "Beralih jaringan"
 
@@ -2419,6 +2554,10 @@ msgstr "Aplikasi ini menggunakan API pihak ketiga berikut:"
 msgid "This month"
 msgstr "Bulan ini"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "This order was cancelled"
+msgstr "Pesanan ini dibatalkan"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Pool ini harus diinisialisasi sebelum Anda dapat menambahkan likuiditas. Untuk menginisialisasi, pilih harga awal untuk pool. Kemudian, masukkan kisaran harga likuiditas dan jumlah deposit Anda. Biaya gas akan lebih tinggi dari biasanya karena transaksi inisialisasi."
@@ -2426,6 +2565,10 @@ msgstr "Pool ini harus diinisialisasi sebelum Anda dapat menambahkan likuiditas.
 #: src/pages/Vote/VotePage.tsx
 msgid "This proposal may be executed after {0}."
 msgstr "Proposal ini dapat dijalankan setelah {0}."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days."
+msgstr "Ini memberikan akses protokol Uniswap ke token Anda untuk berdagang. Untuk keamanan, ini akan kedaluwarsa setelah 30 hari."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
@@ -2459,6 +2602,10 @@ msgstr "Transaksi ini tidak akan berhasil karena pergerakan harga. Coba tingkatk
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Transaksi ini tidak akan berhasil baik karena pergerakan harga atau biaya transfer. Coba tingkatkan toleransi selip Anda."
 
+#: src/components/swap/PriceImpactModal.tsx
+msgid "This transaction will result in a <0>{0}</0> price impact on the market price of this pool. Do you wish to continue?"
+msgstr "Transaksi ini akan menghasilkan dampak harga <0>{0}</0> pada harga pasar kumpulan ini. Apakah Anda ingin melanjutkan?"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "This week"
 msgstr "Minggu ini"
@@ -2482,7 +2629,7 @@ msgstr "Untuk"
 msgid "To (at least)"
 msgstr "Untuk (setidaknya)"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "To use Uniswap on {0}, switch the network in your wallet’s settings."
 msgstr "Untuk menggunakan Uniswap pada {0}, alihkan jaringan di pengaturan dompet Anda."
 
@@ -2494,11 +2641,15 @@ msgstr "Untuk melihat posisi, Anda harus terhubung ke jaringan tempatnya berada.
 msgid "Today"
 msgstr "Hari ini"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Token approval failed"
+msgstr "Persetujuan token gagal"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "Nama token"
 
-#: src/components/TokenSafety/index.tsx
+#: src/constants/tokenSafety.tsx
 msgid "Token not found"
 msgstr "Token tidak ditemukan"
 
@@ -2571,7 +2722,7 @@ msgstr "Transaksi selesai pada"
 msgid "Transaction deadline"
 msgstr "Batas waktu transaksi"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Transaction pending"
 msgstr "Transaksi tertunda"
 
@@ -2591,6 +2742,14 @@ msgstr "Token Transfer"
 msgid "Try Again"
 msgstr "Coba Lagi"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try gas free swaps with the"
+msgstr "Cobalah pertukaran gas gratis dengan"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try the"
+msgstr "Cobalah"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "UNI Governance"
 msgstr "Tata Kelola UNI"
@@ -2607,6 +2766,10 @@ msgstr "Token UNI menunjukkan hak suara dalam pengaturan Uniswap. Anda dapat mem
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} Terbakar"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "USDT requires resetting approval when spending limits are too low."
+msgstr "USDT memerlukan persetujuan pengaturan ulang ketika batas pengeluaran terlalu rendah."
+
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Unavailable"
 msgstr "Tidak tersedia"
@@ -2622,10 +2785,6 @@ msgstr "Biaya yang tidak diklaim"
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
 msgstr "Tidak dapat ditentukan"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap API"
-msgstr "API Uniswap"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
@@ -2647,10 +2806,6 @@ msgstr "Uniswap V2 tidak tersedia di jaringan ini."
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap tersedia dalam: <0>{0}</0>"
 
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap client"
-msgstr "Klien Uniswap"
-
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Tata kelola Uniswap hanya tersedia di Layer 1. Alihkan jaringan Anda ke Ethereum Mainnet untuk melihat Proposal dan Vote."
@@ -2666,6 +2821,10 @@ msgstr "Uniswap di saku Anda"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Kontrak migrasi Uniswap↗"
+
+#: src/components/Logo/UniswapXBrandMark.tsx
+msgid "UniswapX"
+msgstr "UniswapX"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
@@ -2730,26 +2889,22 @@ msgstr "Membuka"
 msgid "Unwrap <0/> to {0}"
 msgstr "Buka bungkus <0/> ke {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrap failed"
 msgstr "Pembukaan gagal"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapped"
 msgstr "Tidak terbungkus"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapping"
 msgstr "Membuka bungkus"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Perbarui Delegasi"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Use the Uniswap Labs API to get faster quotes."
-msgstr "Gunakan Uniswap Labs API untuk mendapatkan penawaran lebih cepat."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2784,18 +2939,24 @@ msgstr "Lihat dan jual NFT"
 msgid "View more analytics"
 msgstr "Lihat analitik lainnya"
 
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on  Etherscan"
+msgstr "Lihat di Etherscan"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on Block Explorer"
+msgstr "Lihat di Blok Explorer"
+
 #: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Lihat di Etherscan"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "View on Explorer"
 msgstr "Lihat di Explorer"
-
-#: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on {0}"
-msgstr "Lihat di {0}"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -2830,7 +2991,7 @@ msgstr "Suara menentang proposal {proposalKey}"
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
 msgstr "Beri suara terhadap proposal {proposalKey} dengan alasan \"{0}\""
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Vote failed"
 msgstr "Pemungutan suara gagal"
 
@@ -2864,11 +3025,11 @@ msgstr "Suara untuk abstain pada proposal {proposalKey}"
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
 msgstr "Memilih abstain pada proposal {proposalKey} dengan alasan \"{0}\""
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voted"
 msgstr "Terpilih"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voting"
 msgstr "Pemungutan suara"
 
@@ -2893,31 +3054,54 @@ msgid "Wallet Address or ENS name"
 msgstr "Alamat Dompet atau nama ENS"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "Peringatan"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "We use anonymized data to enhance your experience with Uniswap Labs products."
+msgstr "Kami menggunakan data anonim untuk meningkatkan pengalaman Anda dengan produk Uniswap Labs."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
 msgstr "Selamat datang di tim Unicorn :)"
 
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "When available, aggregates liquidity sources for better prices and gas free swaps."
+msgstr "Jika tersedia, kumpulkan sumber likuiditas untuk harga yang lebih baik dan swap bebas gas."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are approvals required?"
+msgstr "Mengapa diperlukan persetujuan?"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are permits required?"
+msgstr "Mengapa diperlukan izin?"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Why is a transaction required?"
 msgstr "Mengapa diperlukan transaksi?"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Why is this required?"
+msgstr "Mengapa ini diperlukan?"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Tarik likuiditas yang disetor"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdraw failed"
 msgstr "Penarikan gagal"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrawing"
 msgstr "Penarikan"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrew"
 msgstr "Mundur"
 
@@ -2929,20 +3113,26 @@ msgstr "Wrap"
 msgid "Wrap <0/> to {0}"
 msgstr "Bungkus <0/> ke {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Wrap ETH"
+msgstr "Bungkus ETH"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Wrap failed"
 msgstr "Bungkus gagal"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapped"
 msgstr "Dibungkus"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapping"
 msgstr "Pembungkus"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Wrong network"
 msgstr "Salah jaringan"
 
@@ -2969,6 +3159,14 @@ msgstr "Anda adalah penyedia likuiditas pertama."
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Anda dapat memilih sendiri setiap usulan atau mendelegasikan suara Anda ke pihak ketiga."
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You can turn it off at anytime in settings"
+msgstr "Anda dapat menonaktifkannya kapan saja di setelan"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "You didn't have enough {0} to complete this swap."
+msgstr "Anda tidak memiliki cukup {0} untuk menyelesaikan penukaran ini."
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
@@ -3013,9 +3211,17 @@ msgstr "Anda juga akan memungut biaya yang diperoleh dari posisi ini."
 msgid "You will receive"
 msgstr "Anda akan menerima"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You're in!"
+msgstr "Anda masuk!"
+
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
 msgstr "Likuiditas V2 Anda"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your account had insufficent funds to complete this swap."
+msgstr "Akun Anda tidak memiliki cukup dana untuk menyelesaikan penukaran ini."
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
@@ -3070,6 +3276,18 @@ msgstr "Posisi Anda tidak akan menghasilkan biaya atau digunakan dalam perdagang
 #: src/components/PositionList/index.tsx
 msgid "Your positions"
 msgstr "Posisi Anda"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your swap could not be fulfilled at this time. Please try again."
+msgstr "Pertukaran Anda tidak dapat dipenuhi saat ini. Silakan coba lagi."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap couldn't be filled at this time. Try again or"
+msgstr "Swap Anda tidak dapat diisi saat ini. Coba lagi atau"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap expired before it could be filled. Try again or"
+msgstr "Swap Anda kedaluwarsa sebelum dapat diisi. Coba lagi atau"
 
 #: src/hooks/useUniversalRouter.ts
 msgid "Your swap is expected to fail."
@@ -3137,6 +3355,7 @@ msgid "fee"
 msgstr "biaya"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "for"
 msgstr "untuk"
 
@@ -3151,6 +3370,11 @@ msgstr "dari"
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "here."
 msgstr "Di Sini."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "learn more."
+msgstr "Belajarlah lagi."
 
 #: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "minutes"
@@ -3357,6 +3581,11 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} per {tokenA}"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "{txCount, plural, one {Network fee} other {Network fees}}"
+msgstr "{txCount, plural, one {Biaya jaringan} other {Biaya jaringan}}"
 
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "{uniqueCollections, plural, =1 {collection} other {collections}}"

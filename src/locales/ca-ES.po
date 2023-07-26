@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"POT-Creation-Date: 2023-07-21 17:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-05-23 20:46\n"
+"PO-Revision-Date: 2023-07-21 19:01\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -51,6 +51,18 @@ msgstr "+ Nova posició"
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- Eliminar el destinatari"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 month"
+msgstr "1 mes"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 week"
+msgstr "1 setmana"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 year"
+msgstr "1 any"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -113,6 +125,10 @@ msgstr "<0>Consell:</0> Utilitzeu aquesta eina per trobar grups de v2 que no apa
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 msgstr "<0>Consell:</0> Quan afegiu liquiditat, rebreu fitxes de grup que representin la vostra posició. Aquestes fitxes guanyen automàticament quotes proporcionals a la vostra quota de fons i es poden bescanviar en qualsevol moment."
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "<0>UniswapX</0> aggregates liquidity sources for better prices and gas free swaps."
+msgstr "<0>UniswapX</0> agrega fonts de liquiditat per obtenir millors preus i permutes sense gas."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0>Desbloqueja la votació</0> per preparar la propera proposta."
@@ -170,11 +186,11 @@ msgstr "Afegiu liquiditat"
 msgid "Add V2 Liquidity"
 msgstr "Afegiu liquiditat V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add V2 liquidity failed"
 msgstr "S'ha produït un error en afegir liquiditat V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add liquidity failed"
 msgstr "No s'ha pogut afegir liquiditat"
 
@@ -207,11 +223,11 @@ msgstr "Afegir {0}/{1} liquiditat V3"
 msgid "Added Liquidity"
 msgstr "Liquiditat afegida"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added V2 liquidity"
 msgstr "S'ha afegit liquiditat V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added liquidity"
 msgstr "Liquiditat afegida"
 
@@ -219,11 +235,11 @@ msgstr "Liquiditat afegida"
 msgid "Added {0}"
 msgstr "Afegit {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding V2 liquidity"
 msgstr "Afegir liquiditat V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding liquidity"
 msgstr "Afegir liquiditat"
 
@@ -239,9 +255,25 @@ msgstr "L'adreça no té cap reclamació disponible"
 msgid "Against"
 msgstr "En contra"
 
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "All time"
+msgstr "Tot el temps"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Permet la migració de token LP"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "Allow analytics"
+msgstr "Permet analítiques"
+
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Allow {0} (one time)"
+msgstr "Permet {0} (una vegada)"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Allow {0} to be used for swapping"
+msgstr "Permet que s'utilitzi {0} per intercanviar"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -260,7 +292,7 @@ msgstr "Feu sempre la vostra pròpia investigació abans de negociar."
 msgid "Amount"
 msgstr "Import"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "An approval is needed to use this token."
 msgstr "Es necessita una aprovació per utilitzar aquest testimoni."
 
@@ -272,16 +304,15 @@ msgstr "S'ha produït un error en carregar fitxes. Siusplau torna-ho a provar."
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "S'ha produït un error en intentar executar aquest intercanvi. És possible que hàgiu d'augmentar la tolerància a la relliscada. Si això no funciona, és possible que hi hagi una incompatibilitat amb el testimoni que esteu negociant. Nota: els tokens de transferència i rebase no són compatibles amb Uniswap V3."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Approval failed"
 msgstr "L'aprovació ha fallat"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approval pending"
 msgstr "Aprovació pendent"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -295,14 +326,9 @@ msgstr "Aprova el testimoni"
 msgid "Approve in wallet"
 msgstr "Aprovar a la cartera"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approve in your wallet"
 msgstr "Aprova a la teva cartera"
-
-#: src/pages/Swap/index.tsx
-msgid "Approve use of {0}"
-msgstr "Aprova l'ús de {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -313,12 +339,12 @@ msgid "Approve {0}"
 msgstr "Aprova {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "Aprovat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -340,10 +366,6 @@ msgstr "Com a mínim {0} {1} i {2} {3} seran reemborsats a la cartera a causa de
 #: src/theme/components/ThemeToggle.tsx
 msgid "Auto"
 msgstr "Automàtic"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Auto Router API"
-msgstr "Auto Router API"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Back to Pools"
@@ -382,6 +404,15 @@ msgstr "El millor per a parelles molt estables."
 msgid "Best price route costs ~{gasPrice} in gas."
 msgstr "La ruta al millor preu costa ~{gasPrice} en gasolina."
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Beta"
+msgstr "Beta"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Better prices and more liquidity"
+msgstr "Millors preus i més liquiditat"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "Blocked Address"
 msgstr "Adreça bloquejada"
@@ -390,32 +421,32 @@ msgstr "Adreça bloquejada"
 msgid "Blocked on OpenSea"
 msgstr "Bloquejat a OpenSea"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrow failed"
 msgstr "El préstec ha fallat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowed"
 msgstr "Prestat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowing"
 msgstr "Préstec"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Bought"
 msgstr "Comprat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burn failed"
 msgstr "La crema ha fallat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burned"
 msgstr "Cremat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burning"
 msgstr "Cremant"
 
@@ -428,7 +459,7 @@ msgstr "Compra"
 msgid "Buy crypto"
 msgstr "Comprar cripto"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buy failed"
 msgstr "La compra ha fallat"
 
@@ -448,7 +479,7 @@ msgstr "Compreu, veneu i exploreu fitxes"
 msgid "Buy, sell, and explore tokens and NFTs"
 msgstr "Compreu, veneu i exploreu fitxes i NFT"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buying"
 msgstr "Comprant"
 
@@ -464,7 +495,11 @@ msgstr "Si afegiu liquiditat, guanyareu el 0,3% de totes les operacions d’aque
 msgid "By connecting a wallet, you agree to Uniswap Labs'"
 msgstr "En connectar una cartera, accepteu Uniswap Labs"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/PriceImpactModal.tsx
+msgid "Cancel"
+msgstr "Cancel · lar"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancel failed"
 msgstr "La cancel·lació ha fallat"
 
@@ -472,12 +507,13 @@ msgstr "La cancel·lació ha fallat"
 msgid "Canceled"
 msgstr "Cancel·lat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Cancelled"
 msgstr "Cancel·lat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancelling"
 msgstr "S'està cancel·lant"
 
@@ -517,7 +553,7 @@ msgstr "Reclama la recompensa UNI per {0}"
 msgid "Claim Uniswap NFT Airdrop"
 msgstr "Reclama Uniswap NFT Airdrop"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Claim failed"
 msgstr "La reclamació ha fallat"
 
@@ -529,12 +565,12 @@ msgstr "Taxes de reclamació"
 msgid "Claim your UNI tokens"
 msgstr "Reclameu les vostres fitxes UNI"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "Reclamat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
 msgstr "Reclamant"
@@ -576,7 +612,7 @@ msgstr "Recull com a {nativeWrappedSymbol}"
 msgid "Collect fees"
 msgstr "Cobra les taxes"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collect fees failed"
 msgstr "No s'han pogut cobrar les taxes"
 
@@ -588,7 +624,7 @@ msgstr "Recolliu {0}{1}"
 msgid "Collected"
 msgstr "Cobrat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collected fees"
 msgstr "Comissions cobrades"
 
@@ -596,7 +632,7 @@ msgstr "Comissions cobrades"
 msgid "Collecting"
 msgstr "Cobrant"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
 msgstr "Cobrament de taxes"
@@ -604,6 +640,10 @@ msgstr "Cobrament de taxes"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Les taxes de cobrament us retiraran les taxes disponibles actualment."
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Coming soon: search and explore tokens on Avalanche Chain"
+msgstr "Aviat: cerca i explora fitxes a Avalanche Chain"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Coming soon: search and explore tokens on BNB Chain"
@@ -624,6 +664,14 @@ msgstr "Confirmeu"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "Confirmeu el subministrament"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Confirm Swap"
+msgstr "Confirmeu l'intercanvi"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm swap"
+msgstr "Confirmeu l'intercanvi"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -671,14 +719,20 @@ msgstr "Connecteu-vos a una cartera per veure la vostra liquiditat V2."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Connecteu-vos a una cartera per veure la vostra liquiditat."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Connect wallet"
 msgstr "Connecteu la cartera"
+
+#: src/pages/Swap/index.tsx
+msgid "Connecting to {0}"
+msgstr "Connexió a {0}"
 
 #: src/nft/components/card/media.tsx
 msgid "Content not"
 msgstr "Contingut no"
 
+#: src/components/TokenSafety/index.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/nft/components/bag/Bag.tsx
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Continue"
@@ -719,7 +773,7 @@ msgstr "Crea un parell"
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Crea fons i afegeix {0}/{1} liquiditat V3"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Create pool failed"
 msgstr "No s'ha pogut crear l'agrupació"
 
@@ -731,11 +785,11 @@ msgstr "Crea un grup."
 msgid "Create {0}/{1} V3 pool"
 msgstr "Crea{1} grup V3 {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Created pool"
 msgstr "Piscina creada"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Creating pool"
 msgstr "Creació de piscina"
 
@@ -769,7 +823,7 @@ msgstr "Derrotat"
 msgid "Delegate Votes"
 msgstr "Vots delegats"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegate failed"
 msgstr "El delegat ha fallat"
 
@@ -777,7 +831,7 @@ msgstr "El delegat ha fallat"
 msgid "Delegate voting power to {0}"
 msgstr "Delega el poder de vot a {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegated"
 msgstr "Delegat"
 
@@ -785,7 +839,7 @@ msgstr "Delegat"
 msgid "Delegated to:"
 msgstr "Delegat a:"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegating"
 msgstr "Delegant"
 
@@ -793,15 +847,15 @@ msgstr "Delegant"
 msgid "Delegating votes"
 msgstr "Delegar vots"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploy failed"
 msgstr "La implementació ha fallat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deployed"
 msgstr "Desplegat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploying"
 msgstr "Desplegant"
 
@@ -809,7 +863,7 @@ msgstr "Desplegant"
 msgid "Deposit Amounts"
 msgstr "Quantitats de dipòsit"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposit failed"
 msgstr "El dipòsit ha fallat"
 
@@ -821,11 +875,11 @@ msgstr "Dipòsit de liquiditat"
 msgid "Deposit tokens to the {label} network."
 msgstr "Diposita fitxes a la xarxa {label}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposited"
 msgstr "Dipositat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Depositing"
 msgstr "Dipositant"
 
@@ -843,7 +897,6 @@ msgstr "Detallada"
 msgid "Details"
 msgstr "Detalls"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "Destitueix"
@@ -892,6 +945,10 @@ msgstr "Edita"
 msgid "Edit listings"
 msgstr "Edita les llistes"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Enable spending {0} on Uniswap"
+msgstr "Activa la despesa {0} a Uniswap"
+
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "Introduïu un percentatge"
@@ -916,9 +973,8 @@ msgstr "Introduïu un import"
 msgid "Enter {0} amount"
 msgstr "Introduïu {0} import"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Error"
 
@@ -954,7 +1010,7 @@ msgstr "Executar"
 msgid "Execute Proposal {proposalId}"
 msgstr "Executar la proposta {proposalId}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Execute failed"
 msgstr "Ha fallat l'execució"
 
@@ -962,12 +1018,12 @@ msgstr "Ha fallat l'execució"
 msgid "Execute proposal {proposalKey}."
 msgstr "Executar la proposta {proposalKey}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Executat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing"
 msgstr "Executant"
@@ -1014,7 +1070,7 @@ msgstr "Extremadament rar"
 msgid "Failed"
 msgstr "Fracassat"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "Failed to switch networks"
 msgstr "No s'ha pogut canviar de xarxa"
 
@@ -1038,7 +1094,7 @@ msgstr "Feedback"
 msgid "Fees"
 msgstr "Tarifes"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
 msgid "Fetching Route"
 msgstr "Ruta de recollida"
@@ -1054,14 +1110,6 @@ msgstr "S'està obtenint el preu..."
 #: src/components/Tokens/TokenTable/SearchBar.tsx
 msgid "Filter tokens"
 msgstr "Fitxes de filtre"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol through your browser. May result in high latency and prices."
-msgstr "Troba la millor ruta al protocol Uniswap a través del vostre navegador. Pot comportar una latència i uns preus elevats."
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol using the Uniswap Labs Routing API."
-msgstr "Troba la millor ruta al protocol Uniswap mitjançant l'API d'encaminament d'Uniswap Labs."
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Floor"
@@ -1092,6 +1140,10 @@ msgstr "De (com a màxim)"
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
 msgstr "Gamma completa"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Gas free swaps"
+msgstr "Canvis sense gas"
 
 #: src/pages/Landing/index.tsx
 msgid "Get started"
@@ -1164,11 +1216,15 @@ msgstr "Preus inicials i quota de grup"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "S’estima l’entrada. Vindràs com a màxim <0>{0} {1}</0> o la transacció es revertirà."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient funds"
 msgstr "Fons insuficients"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Insufficient funds for swap"
+msgstr "Fons insuficients per a l'intercanvi"
+
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient liquidity"
 msgstr "Liquiditat insuficient"
 
@@ -1176,7 +1232,7 @@ msgstr "Liquiditat insuficient"
 msgid "Insufficient liquidity for this trade."
 msgstr "Liquiditat insuficient per a aquest comerç."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient pool liquidity to complete transaction"
 msgstr "Liquiditat del grup insuficient per completar la transacció"
 
@@ -1242,10 +1298,17 @@ msgstr "Obteniu informació sobre com proporcionar liquiditat"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
 #: src/components/TokenSafety/index.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapBuyFiatButton.tsx
 #: src/pages/Landing/index.tsx
 msgid "Learn more"
 msgstr "Aprèn més"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Learn more about swapping with UniswapX"
+msgstr "Més informació sobre l'intercanvi amb UniswapX"
 
 #: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1298,9 +1361,13 @@ msgstr "Llistats"
 msgid "Loading"
 msgstr "S'està carregant"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Loading Allowance"
 msgstr "Bonificació de càrrega"
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Local routing"
+msgstr "Encaminament local"
 
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Low listing price"
@@ -1309,6 +1376,10 @@ msgstr "Preu de llista baix"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "MAX"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "MEV protection"
+msgstr "Protecció MEV"
 
 #: src/nft/components/details/detailsV2/OfferButton.tsx
 msgid "Make an offer"
@@ -1384,7 +1455,7 @@ msgstr "Migreu la liquiditat a la V3"
 msgid "Migrate V2 Liquidity"
 msgstr "Migrar la liquiditat V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrate liquidity failed"
 msgstr "Ha fallat la migració de liquiditat"
 
@@ -1396,7 +1467,7 @@ msgstr "Migreu les vostres fitxes de liquiditat des d'Uniswap V2 a Uniswap V3."
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "Migra{1} liquiditat {0}a V3"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrated liquidity"
 msgstr "Liquiditat migrada"
 
@@ -1404,7 +1475,7 @@ msgstr "Liquiditat migrada"
 msgid "Migrating"
 msgstr "Migrant"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrating liquidity"
 msgstr "Liquiditat migratòria"
 
@@ -1429,16 +1500,16 @@ msgstr "Sortida mínima"
 msgid "Minimum received"
 msgstr "Mínim rebut"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Mint failed"
 msgstr "Mint ha fallat"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minted"
 msgstr "Encunyat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minting"
 msgstr "Encunyació"
 
@@ -1487,14 +1558,13 @@ msgstr "No s'ha trobat el nom"
 msgid "Navigation button"
 msgstr "Botó de navegació"
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Network Fees are paid to the Ethereum network to secure transactions."
+msgstr "Les tarifes de xarxa es paguen a la xarxa {0} per assegurar les transaccions."
+
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Avís de xarxa"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swap/SwapModalFooter.tsx
-msgid "Network fee"
-msgstr "Tarifa de la xarxa"
 
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Never"
@@ -1576,6 +1646,10 @@ msgstr "No disponible a la teva regió"
 msgid "Not created"
 msgstr "No creat"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "Not enough liquidity to show accurate USD value."
+msgstr "No hi ha prou liquiditat per mostrar el valor en USD precís."
+
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "Not listed"
 msgstr "No figura a la llista"
@@ -1631,14 +1705,14 @@ msgstr "Propietari"
 msgid "Page not found!"
 msgstr "Pàgina no trobada!"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay"
 msgstr "Pagar"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay Anyway"
 msgstr "Paga de totes maneres"
 
@@ -1651,13 +1725,23 @@ msgstr "Paga amb"
 msgid "Pending"
 msgstr "Pendents"
 
-#: src/pages/Swap/index.tsx
-msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
-msgstr "Es requereix permís perquè Uniswap intercanvii cada testimoni. Això caducarà al cap d'un mes per la vostra seguretat."
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Pending..."
+msgstr "Pendents..."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit approval failed"
+msgstr "L'aprovació del permís ha fallat"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Permit2"
 msgstr "Permís 2"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit2 allows token approvals to be shared and managed across different applications."
+msgstr "Permit2 permet compartir i gestionar les aprovacions de testimonis entre diferents aplicacions."
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1729,16 +1813,12 @@ msgstr "Diferència de preu:"
 msgid "Price Impact"
 msgstr "Impacte en els preus"
 
-#: src/pages/Swap/index.tsx
-msgid "Price Impact Too High"
-msgstr "L’impacte en el preu és massa alt"
-
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Price impact"
 msgstr "Impacte en el preu"
 
 #: src/components/swap/PriceImpactWarning.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price impact warning"
 msgstr "Avís d'impacte dels preus"
 
@@ -1747,7 +1827,7 @@ msgid "Price range"
 msgstr "Gamma de preus"
 
 #: src/components/swap/SwapModalFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price updated"
 msgstr "Preu actualitzat"
 
@@ -1767,10 +1847,18 @@ msgstr "Política de privacitat"
 msgid "Privacy Policy."
 msgstr "Política de privacitat."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
 msgstr "Continueu amb la cartera"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Proceed in your wallet"
+msgstr "Continua amb la teva cartera"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Proceeds if sold"
@@ -1808,6 +1896,10 @@ msgstr "Proponent"
 msgid "Public Resolver"
 msgstr "Resolvedor públic"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Purchased"
+msgstr "Comprat"
+
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Quantity"
@@ -1822,7 +1914,7 @@ msgstr "Cua"
 msgid "Queue Proposal {proposalId}"
 msgstr "Proposta de cua {proposalId}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queue failed"
 msgstr "Ha fallat la cua"
 
@@ -1830,7 +1922,7 @@ msgstr "Ha fallat la cua"
 msgid "Queue proposal {proposalKey}."
 msgstr "Proposta de cua {proposalKey}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "En cua"
@@ -1839,7 +1931,7 @@ msgstr "En cua"
 msgid "Queueing"
 msgstr "Fent cua"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queuing"
 msgstr "Fent cua"
 
@@ -1871,16 +1963,16 @@ msgstr "Obteniu més informació sobre els recursos no compatibles"
 msgid "Receive"
 msgstr "Rebre"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receive failed"
 msgstr "La recepció ha fallat"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Received"
 msgstr "Rebut"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receiving"
 msgstr "Recepció"
 
@@ -1892,7 +1984,7 @@ msgstr "Recerques recents"
 msgid "Recipient"
 msgstr "Destinatari"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Refunds for unavailable items will be given in ETH"
 msgstr "Els reemborsaments dels articles no disponibles es faran a ETH"
 
@@ -1941,7 +2033,7 @@ msgstr "Traieu de la bossa"
 msgid "Remove item"
 msgstr "Elimina l'element"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Remove liquidity failed"
 msgstr "S'ha produït un error en eliminar la liquiditat"
 
@@ -1949,11 +2041,11 @@ msgstr "S'ha produït un error en eliminar la liquiditat"
 msgid "Removed Liquidity"
 msgstr "Liquiditat eliminada"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removed liquidity"
 msgstr "Liquiditat eliminada"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removing liquidity"
 msgstr "Eliminació de liquiditat"
 
@@ -1965,22 +2057,27 @@ msgstr "Eliminació de {0} {1} i {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Eliminant {0} {1} i{2} {3}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaid"
 msgstr "Reemborsat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repay failed"
 msgstr "Ha fallat el reemborsament"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaying"
 msgstr "Reemborsament"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Reset USDT"
+msgstr "Restableix l'USDT"
 
 #: src/nft/components/profile/list/ListingButton.tsx
 msgid "Resolve {issues} issues"
 msgstr "Resoldre {issues} problemes"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Retry"
 msgstr "Torna-ho a provar"
@@ -2000,12 +2097,28 @@ msgid "Reverse Registrar"
 msgstr "Registrador invers"
 
 #: src/components/swap/ConfirmSwapModal.tsx
-msgid "Review Swap"
+msgid "Review swap"
 msgstr "Intercanvi de ressenyes"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoke approval failed"
+msgstr "No s'ha pogut revocar l'aprovació"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Revoke {0}"
+msgstr "Revoca {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Revoked Approval"
 msgstr "Aprovació revocada"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoked approval"
+msgstr "Aprovació revocada"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoking approval"
+msgstr "Revocació de l'aprovació"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
@@ -2022,6 +2135,10 @@ msgstr "Cerca"
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Cerqueu el nom o enganxeu l'adreça"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Cerca fitxes"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "Search tokens and NFT collections"
@@ -2075,16 +2192,16 @@ msgstr "Vendre NFT"
 msgid "Seller"
 msgstr "Venedor"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Send failed"
 msgstr "L'enviament ha fallat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sending"
 msgstr "Enviament"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sent"
 msgstr "Enviat"
 
@@ -2144,6 +2261,10 @@ msgstr "Mostra més"
 msgid "Show resources"
 msgstr "Mostra recursos"
 
+#: src/components/AccountDrawer/TestnetsToggle.tsx
+msgid "Show testnets"
+msgstr "Mostra les xarxes de prova"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Sign"
 msgstr "Signe"
@@ -2167,11 +2288,11 @@ msgstr "Alguns recursos no estan disponibles a través d’aquesta interfície p
 
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong"
 msgstr "Alguna cosa ha anat malament"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Alguna cosa ha anat malament. Siusplau torna-ho a provar."
 
@@ -2196,11 +2317,11 @@ msgstr "Estadístiques"
 msgid "Submit new proposal"
 msgstr "Presentar nova proposta"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submit proposal failed"
 msgstr "No s'ha pogut enviar la proposta"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitted proposal"
 msgstr "Proposta presentada"
 
@@ -2212,7 +2333,7 @@ msgstr "Presentació de la proposta"
 msgid "Submitting Vote"
 msgstr "Enviament de vot"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitting proposal"
 msgstr "Presentació de la proposta"
 
@@ -2221,6 +2342,7 @@ msgid "Succeeded"
 msgstr "Encertat"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Success"
 msgstr "Èxit"
 
@@ -2238,8 +2360,9 @@ msgstr "Subministrant {0} {1} i {2} {3}"
 
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/components/swap/SwapModalFooter.tsx
 #: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2254,32 +2377,44 @@ msgstr "Canvia <0/> per exactament <1/>"
 msgid "Swap Anyway"
 msgstr "Intercanviar de totes maneres"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap cancelled"
+msgstr "S'ha cancel·lat l'intercanvi"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Canvia exactament <0/> per <1/>"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap expired"
+msgstr "L'intercanvi ha caducat"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Swap failed"
 msgstr "L'intercanvi ha fallat"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Swap submitted"
+msgstr "S'ha enviat l'intercanvi"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapped"
 msgstr "Canviat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapping"
 msgstr "Canvi"
-
-#: src/components/swap/ConfirmSwapModal.tsx
-msgid "Swapping {0} {1} for {2} {3}"
-msgstr "Intercanvi de {0} {1} per {2} {3}"
 
 #: src/nft/components/collection/Sweep.tsx
 msgid "Sweep"
 msgstr "Escombrar"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Switch networks"
 msgstr "Canvia de xarxes"
 
@@ -2419,6 +2554,10 @@ msgstr "Aquesta aplicació utilitza les següents API de tercers:"
 msgid "This month"
 msgstr "Aquest mes"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "This order was cancelled"
+msgstr "Aquesta comanda s'ha cancel·lat"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Aquest grup s'ha d'inicialitzar abans de poder afegir liquiditat. Per inicialitzar, seleccioneu un preu inicial per a la piscina. A continuació, introduïu el vostre rang de preus de liquiditat i l'import del dipòsit. Les tarifes del gas seran més altes de l'habitual a causa de la transacció d'inicialització."
@@ -2426,6 +2565,10 @@ msgstr "Aquest grup s'ha d'inicialitzar abans de poder afegir liquiditat. Per in
 #: src/pages/Vote/VotePage.tsx
 msgid "This proposal may be executed after {0}."
 msgstr "Aquesta proposta es pot executar després de {0}."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days."
+msgstr "Això proporciona l'accés del protocol Uniswap al vostre testimoni per al comerç. Per seguretat, caducarà al cap de 30 dies."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
@@ -2459,6 +2602,10 @@ msgstr "Aquesta transacció no tindrà èxit a causa del moviment dels preus. Pr
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Aquesta transacció no tindrà èxit a causa del moviment de preus o de la comissió de transferència. Proveu d'augmentar la tolerància al lliscament."
 
+#: src/components/swap/PriceImpactModal.tsx
+msgid "This transaction will result in a <0>{0}</0> price impact on the market price of this pool. Do you wish to continue?"
+msgstr "Aquesta transacció tindrà un impacte de <0>{0}</0> en el preu de mercat d'aquest grup. Vols continuar?"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "This week"
 msgstr "Aquesta setmana"
@@ -2482,7 +2629,7 @@ msgstr "Per a"
 msgid "To (at least)"
 msgstr "A (com a mínim)"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "To use Uniswap on {0}, switch the network in your wallet’s settings."
 msgstr "Per utilitzar Uniswap a {0}, canvieu la xarxa a la configuració de la cartera."
 
@@ -2494,11 +2641,15 @@ msgstr "Per visualitzar una posició, heu d'estar connectat a la xarxa a la qual
 msgid "Today"
 msgstr "Avui"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Token approval failed"
+msgstr "L'aprovació del testimoni ha fallat"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "Nom del testimoni"
 
-#: src/components/TokenSafety/index.tsx
+#: src/constants/tokenSafety.tsx
 msgid "Token not found"
 msgstr "No s'ha trobat el testimoni"
 
@@ -2571,7 +2722,7 @@ msgstr "Transacció completada a"
 msgid "Transaction deadline"
 msgstr "Termini de transacció"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Transaction pending"
 msgstr "Transacció pendent"
 
@@ -2591,6 +2742,14 @@ msgstr "Fitxa de transferència"
 msgid "Try Again"
 msgstr "Torna-ho a provar"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try gas free swaps with the"
+msgstr "Proveu els intercanvis sense gas amb el"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try the"
+msgstr "Prova el"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "UNI Governance"
 msgstr "Governació UNI"
@@ -2607,6 +2766,10 @@ msgstr "Les fitxesUNI representen accions de vot en el govern Uniswap. Podeu vot
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} Cremat"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "USDT requires resetting approval when spending limits are too low."
+msgstr "L'USDT requereix l'aprovació de restabliment quan els límits de despesa són massa baixos."
+
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Unavailable"
 msgstr "No disponible"
@@ -2622,10 +2785,6 @@ msgstr "Tarifes no reclamades"
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
 msgstr "Indeterminat"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap API"
-msgstr "API Uniswap"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
@@ -2647,10 +2806,6 @@ msgstr "Uniswap V2 no està disponible en aquesta xarxa."
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap disponible a: <0>{0}</0>"
 
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap client"
-msgstr "Client Uniswap"
-
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "La governança Uniswap només està disponible a la capa 1. Canvieu la vostra xarxa a Ethereum Mainnet per veure les propostes i votar."
@@ -2666,6 +2821,10 @@ msgstr "Uniswap a la butxaca"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Contracte de migració Uniswap↗"
+
+#: src/components/Logo/UniswapXBrandMark.tsx
+msgid "UniswapX"
+msgstr "UniswapX"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
@@ -2730,26 +2889,22 @@ msgstr "Desembolicar"
 msgid "Unwrap <0/> to {0}"
 msgstr "Desembolica <0/> a {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrap failed"
 msgstr "S'ha produït un error en desembalar"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapped"
 msgstr "Desembolicat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapping"
 msgstr "Desembolcall"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Actualitza la delegació"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Use the Uniswap Labs API to get faster quotes."
-msgstr "Utilitzeu l'API d'Uniswap Labs per obtenir pressupostos més ràpids."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2784,18 +2939,24 @@ msgstr "Veure i vendre NFT"
 msgid "View more analytics"
 msgstr "Veure més analítiques"
 
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on  Etherscan"
+msgstr "Veure a Etherscan"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on Block Explorer"
+msgstr "Veure a Block Explorer"
+
 #: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Veure a Etherscan"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "View on Explorer"
 msgstr "Veure a Explorer"
-
-#: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on {0}"
-msgstr "Veure a {0}"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -2830,7 +2991,7 @@ msgstr "Votar en contra de la proposta {proposalKey}"
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
 msgstr "Vota en contra de la proposta {proposalKey} amb el motiu \"{0}\""
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Vote failed"
 msgstr "La votació ha fallat"
 
@@ -2864,11 +3025,11 @@ msgstr "Votació a favor de l'abstenció a la proposta {proposalKey}"
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
 msgstr "Votar l'abstenció a la proposta {proposalKey} amb el motiu \"{0}\""
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voted"
 msgstr "Votat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voting"
 msgstr "Votació"
 
@@ -2893,31 +3054,54 @@ msgid "Wallet Address or ENS name"
 msgstr "Adreça de cartera o nom de l'ENS"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "Avís"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "We use anonymized data to enhance your experience with Uniswap Labs products."
+msgstr "Utilitzem dades anònimes per millorar la vostra experiència amb els productes d'Uniswap Labs."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
 msgstr "Benvingut a l'equip Unicorn :)"
 
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "When available, aggregates liquidity sources for better prices and gas free swaps."
+msgstr "Quan està disponible, agrega fonts de liquiditat per obtenir millors preus i permutes sense gas."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are approvals required?"
+msgstr "Per què cal les aprovacions?"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are permits required?"
+msgstr "Per què es requereixen permisos?"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Why is a transaction required?"
 msgstr "Per què és necessària una transacció?"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Why is this required?"
+msgstr "Per què això és necessari?"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Retirar la liquiditat dipositada"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdraw failed"
 msgstr "La retirada ha fallat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrawing"
 msgstr "Retirant"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrew"
 msgstr "Es va retirar"
 
@@ -2929,20 +3113,26 @@ msgstr "Embolicar"
 msgid "Wrap <0/> to {0}"
 msgstr "Embolcall <0/> a {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Wrap ETH"
+msgstr "Emboliqui ETH"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Wrap failed"
 msgstr "Ha fallat l'embolcall"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapped"
 msgstr "Embolicat"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapping"
 msgstr "Embolcall"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Wrong network"
 msgstr "Xarxa incorrecta"
 
@@ -2969,6 +3159,14 @@ msgstr "Sou el primer proveïdor de liquiditat."
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Podeu votar vosaltres cada proposta o delegar els vostres vots a un tercer."
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You can turn it off at anytime in settings"
+msgstr "Pots desactivar-lo en qualsevol moment a la configuració"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "You didn't have enough {0} to complete this swap."
+msgstr "No teníeu prou {0} per completar aquest intercanvi."
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
@@ -3013,9 +3211,17 @@ msgstr "També cobrarà els honoraris obtinguts per aquesta posició."
 msgid "You will receive"
 msgstr "Rebreu"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You're in!"
+msgstr "Estàs dins!"
+
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
 msgstr "La vostra liquiditat V2"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your account had insufficent funds to complete this swap."
+msgstr "El vostre compte no tenia fons suficients per completar aquest intercanvi."
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
@@ -3070,6 +3276,18 @@ msgstr "La vostra posició no guanyarà comissions ni s’utilitzarà en operaci
 #: src/components/PositionList/index.tsx
 msgid "Your positions"
 msgstr "Les vostres posicions"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your swap could not be fulfilled at this time. Please try again."
+msgstr "El vostre intercanvi no s'ha pogut complir en aquest moment. Siusplau torna-ho a provar."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap couldn't be filled at this time. Try again or"
+msgstr "El vostre intercanvi no s'ha pogut omplir en aquest moment. Torna-ho a provar o"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap expired before it could be filled. Try again or"
+msgstr "El vostre intercanvi ha caducat abans que es pogués omplir. Torna-ho a provar o"
 
 #: src/hooks/useUniversalRouter.ts
 msgid "Your swap is expected to fail."
@@ -3137,6 +3355,7 @@ msgid "fee"
 msgstr "quota"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "for"
 msgstr "per"
 
@@ -3151,6 +3370,11 @@ msgstr "des de"
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "here."
 msgstr "aquí."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "learn more."
+msgstr "aprèn més."
 
 #: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "minutes"
@@ -3357,6 +3581,11 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} per {tokenA}"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "{txCount, plural, one {Network fee} other {Network fees}}"
+msgstr "{txCount, plural, one {Quota de xarxa} other {Tarifes de xarxa}}"
 
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "{uniqueCollections, plural, =1 {collection} other {collections}}"

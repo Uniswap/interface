@@ -1,0 +1,10 @@
+{
+  "globalSetup": "<rootDir>/global-setup.ts",
+  "globalTeardown": "<rootDir>/global-teardown.ts",
+  "preset": "ts-jest",
+  "transform": {
+    "'^.+\\.(ts|tsx)?$'": "ts-jest",
+    "^.+\\.(js|jsx)$": "babel-jest"
+  },
+  "testTimeout": 50000
+}

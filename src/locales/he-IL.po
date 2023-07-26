@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"POT-Creation-Date: 2023-07-21 17:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8,7 +8,7 @@ msgstr ""
 "Language: he\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-05-23 20:46\n"
+"PO-Revision-Date: 2023-07-21 19:01\n"
 "Last-Translator: \n"
 "Language-Team: Hebrew\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;\n"
@@ -51,6 +51,18 @@ msgstr "+ תפקיד חדש"
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- הסר את הנמען"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 month"
+msgstr "1 חודש"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 week"
+msgstr "שבוע 1"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 year"
+msgstr "1 שנה"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -113,6 +125,10 @@ msgstr "<0> טיפ:</0> השתמש בכלי זה כדי למצוא מאגרי v2
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 msgstr "<0> טיפ:</0> כשתוסיף נזילות, תקבל אסימונים לבריכה המייצגים את עמדתך. אסימונים אלה מרוויחים עמלות באופן אוטומטי ביחס לחלקך בבריכה, וניתן לפדותם בכל עת."
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "<0>UniswapX</0> aggregates liquidity sources for better prices and gas free swaps."
+msgstr "<0>UniswapX</0> אוסף מקורות נזילות למחירים טובים יותר והחלפות ללא גז."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0> בטל את ההצבעה</0> להתכונן להצעה הבאה."
@@ -170,11 +186,11 @@ msgstr "הוסף נזילות"
 msgid "Add V2 Liquidity"
 msgstr "הוסף נזילות V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add V2 liquidity failed"
 msgstr "הוספת נזילות V2 נכשלה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add liquidity failed"
 msgstr "הוספת נזילות נכשלה"
 
@@ -207,11 +223,11 @@ msgstr "להוסיף {0}/{1} נזילות V3"
 msgid "Added Liquidity"
 msgstr "תוספת נזילות"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added V2 liquidity"
 msgstr "נוספה נזילות V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added liquidity"
 msgstr "תוספת נזילות"
 
@@ -219,11 +235,11 @@ msgstr "תוספת נזילות"
 msgid "Added {0}"
 msgstr "נוסף {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding V2 liquidity"
 msgstr "הוספת נזילות V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding liquidity"
 msgstr "הוספת נזילות"
 
@@ -239,9 +255,25 @@ msgstr "לכתובת אין כל תביעה זמינה"
 msgid "Against"
 msgstr "נגד"
 
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "All time"
+msgstr "כל הזמן"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "אפשר העברת אסימון LP"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "Allow analytics"
+msgstr "אפשר ניתוח"
+
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Allow {0} (one time)"
+msgstr "אפשר {0} (פעם אחת)"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Allow {0} to be used for swapping"
+msgstr "אפשר להשתמש {0} להחלפה"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -260,7 +292,7 @@ msgstr "בצע תמיד מחקר משלך לפני המסחר."
 msgid "Amount"
 msgstr "כמות"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "An approval is needed to use this token."
 msgstr "יש צורך באישור כדי להשתמש באסימון זה."
 
@@ -272,16 +304,15 @@ msgstr "אירעה שגיאה בטעינת אסימונים. בבקשה נסה �
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "אירעה שגיאה בניסיון לבצע החלפה זו. יתכן שתצטרך להגביר את סובלנות ההחלקה שלך. אם זה לא עובד, ייתכן שיש אי התאמה לאסימון שאתה סוחר בו. הערה: עמלה על אסימון העברה וריבוס אינם תואמים ל- Uniswap V3."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Approval failed"
 msgstr "האישור נכשל"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approval pending"
 msgstr "מחכה לאישור"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -295,14 +326,9 @@ msgstr "אשר אסימון"
 msgid "Approve in wallet"
 msgstr "אישור בארנק"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approve in your wallet"
 msgstr "אשר בארנק שלך"
-
-#: src/pages/Swap/index.tsx
-msgid "Approve use of {0}"
-msgstr "אשר שימוש ב {0}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -313,12 +339,12 @@ msgid "Approve {0}"
 msgstr "אשר {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "אושר"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -340,10 +366,6 @@ msgstr "לפחות {0} {1} ו {2} {3} יוחזרו לארנק שלך בגלל ט
 #: src/theme/components/ThemeToggle.tsx
 msgid "Auto"
 msgstr "אוטומטי"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Auto Router API"
-msgstr "ממשק API של נתב אוטומטי"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Back to Pools"
@@ -382,6 +404,15 @@ msgstr "הטוב ביותר עבור זוגות יציבים מאוד."
 msgid "Best price route costs ~{gasPrice} in gas."
 msgstr "מסלול המחיר הטוב ביותר עולה ~{gasPrice} בדלק."
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Beta"
+msgstr "בטא"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Better prices and more liquidity"
+msgstr "מחירים טובים יותר ויותר נזילות"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "Blocked Address"
 msgstr "כתובת חסומה"
@@ -390,32 +421,32 @@ msgstr "כתובת חסומה"
 msgid "Blocked on OpenSea"
 msgstr "חסום ב-OpenSea"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrow failed"
 msgstr "ההשאלה נכשלה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowed"
 msgstr "שָׁאוּל"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowing"
 msgstr "שְׁאֵילָה"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Bought"
 msgstr "קנה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burn failed"
 msgstr "הצריבה נכשלה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burned"
 msgstr "נשרף"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burning"
 msgstr "שריפה"
 
@@ -428,7 +459,7 @@ msgstr "לִקְנוֹת"
 msgid "Buy crypto"
 msgstr "קנה קריפטו"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buy failed"
 msgstr "הקנייה נכשלה"
 
@@ -448,7 +479,7 @@ msgstr "קנה, מכור וחקור אסימונים"
 msgid "Buy, sell, and explore tokens and NFTs"
 msgstr "קנה, מכור וחקור אסימונים ו-NFTs"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buying"
 msgstr "קְנִיָה"
 
@@ -464,7 +495,11 @@ msgstr "על ידי הוספת נזילות תרוויח 0.3% מכלל העסק�
 msgid "By connecting a wallet, you agree to Uniswap Labs'"
 msgstr "על ידי חיבור ארנק, אתה מסכים ל-Uniswap Labs'"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/PriceImpactModal.tsx
+msgid "Cancel"
+msgstr "לְבַטֵל"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancel failed"
 msgstr "הביטול נכשל"
 
@@ -472,12 +507,13 @@ msgstr "הביטול נכשל"
 msgid "Canceled"
 msgstr "מבוטל"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Cancelled"
 msgstr "מבוטל"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancelling"
 msgstr "מבטל"
 
@@ -517,7 +553,7 @@ msgstr "תבע פרס UNI עבור {0}"
 msgid "Claim Uniswap NFT Airdrop"
 msgstr "טען Uniswap NFT Airdrop"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Claim failed"
 msgstr "התביעה נכשלה"
 
@@ -529,12 +565,12 @@ msgstr "דמי תביעה"
 msgid "Claim your UNI tokens"
 msgstr "תבע את אסימוני ה- UNI שלך"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "נִתבָּע"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
 msgstr "תביעה"
@@ -576,7 +612,7 @@ msgstr "אסוף כ {nativeWrappedSymbol}"
 msgid "Collect fees"
 msgstr "גבה עמלות"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collect fees failed"
 msgstr "איסוף עמלות נכשל"
 
@@ -588,7 +624,7 @@ msgstr "גביית עמלות{1} {0}"
 msgid "Collected"
 msgstr "נגבה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collected fees"
 msgstr "עמלות שנגבו"
 
@@ -596,7 +632,7 @@ msgstr "עמלות שנגבו"
 msgid "Collecting"
 msgstr "גבייה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
 msgstr "גביית עמלות"
@@ -604,6 +640,10 @@ msgstr "גביית עמלות"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "דמי גבייה ימשכו עבורך את העמלות הזמינות כיום."
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Coming soon: search and explore tokens on Avalanche Chain"
+msgstr "בקרוב: חפש וחקור אסימונים ב-Avalanche Chain"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Coming soon: search and explore tokens on BNB Chain"
@@ -624,6 +664,14 @@ msgstr "לְאַשֵׁר"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "אשר אספקה"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Confirm Swap"
+msgstr "אשר החלפה"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm swap"
+msgstr "אשר את ההחלפה"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -671,14 +719,20 @@ msgstr "התחבר לארנק כדי להציג את נזילות V2 שלך."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "התחבר לארנק כדי להציג את הנזילות שלך."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Connect wallet"
 msgstr "חבר ארנק"
+
+#: src/pages/Swap/index.tsx
+msgid "Connecting to {0}"
+msgstr "מתחבר ל {0}"
 
 #: src/nft/components/card/media.tsx
 msgid "Content not"
 msgstr "תוכן לא"
 
+#: src/components/TokenSafety/index.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/nft/components/bag/Bag.tsx
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Continue"
@@ -719,7 +773,7 @@ msgstr "צור זוג"
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "צור ברכה והוסף {0}/{1} נזילות V3"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Create pool failed"
 msgstr "יצירת המאגר נכשלה"
 
@@ -731,11 +785,11 @@ msgstr "צור בריכה."
 msgid "Create {0}/{1} V3 pool"
 msgstr "צור מאגר {0}{1}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Created pool"
 msgstr "נוצר בריכה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Creating pool"
 msgstr "יצירת בריכה"
 
@@ -769,7 +823,7 @@ msgstr "מוּבָס"
 msgid "Delegate Votes"
 msgstr "האצל הצבעות"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegate failed"
 msgstr "הנציג נכשל"
 
@@ -777,7 +831,7 @@ msgstr "הנציג נכשל"
 msgid "Delegate voting power to {0}"
 msgstr "האציל את כוח ההצבעה ל {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegated"
 msgstr "האצלה"
 
@@ -785,7 +839,7 @@ msgstr "האצלה"
 msgid "Delegated to:"
 msgstr "הואצל ל:"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegating"
 msgstr "אֲצִילָה"
 
@@ -793,15 +847,15 @@ msgstr "אֲצִילָה"
 msgid "Delegating votes"
 msgstr "האצלת קולות"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploy failed"
 msgstr "הפריסה נכשלה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deployed"
 msgstr "נפרס"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploying"
 msgstr "פריסה"
 
@@ -809,7 +863,7 @@ msgstr "פריסה"
 msgid "Deposit Amounts"
 msgstr "סכומי הפקדה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposit failed"
 msgstr "ההפקדה נכשלה"
 
@@ -821,11 +875,11 @@ msgstr "הפקדת נזילות"
 msgid "Deposit tokens to the {label} network."
 msgstr "הפקד אסימונים לרשת {label}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposited"
 msgstr "הופקד"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Depositing"
 msgstr "הפקדה"
 
@@ -843,7 +897,6 @@ msgstr "מְפוֹרָט"
 msgid "Details"
 msgstr "פרטים"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "לשחרר"
@@ -892,6 +945,10 @@ msgstr "לַעֲרוֹך"
 msgid "Edit listings"
 msgstr "ערוך רישומים"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Enable spending {0} on Uniswap"
+msgstr "אפשר הוצאה {0} על Uniswap"
+
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "הזן אחוז"
@@ -916,9 +973,8 @@ msgstr "הזן סכום"
 msgid "Enter {0} amount"
 msgstr "הזן סכום {0}"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "שְׁגִיאָה"
 
@@ -954,7 +1010,7 @@ msgstr "לבצע"
 msgid "Execute Proposal {proposalId}"
 msgstr "בצע הצעה {proposalId}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Execute failed"
 msgstr "הביצוע נכשל"
 
@@ -962,12 +1018,12 @@ msgstr "הביצוע נכשל"
 msgid "Execute proposal {proposalKey}."
 msgstr "בצע הצעה {proposalKey}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "יצא לפועל"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing"
 msgstr "מְבַצֵעַ"
@@ -1014,7 +1070,7 @@ msgstr "נדיר מאוד"
 msgid "Failed"
 msgstr "נִכשָׁל"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "Failed to switch networks"
 msgstr "החלפת רשת נכשלה"
 
@@ -1038,7 +1094,7 @@ msgstr "מָשׁוֹב"
 msgid "Fees"
 msgstr "עמלות"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
 msgid "Fetching Route"
 msgstr "מסלול אחזור"
@@ -1054,14 +1110,6 @@ msgstr "מביא מחיר..."
 #: src/components/Tokens/TokenTable/SearchBar.tsx
 msgid "Filter tokens"
 msgstr "סינון אסימונים"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol through your browser. May result in high latency and prices."
-msgstr "מוצא את המסלול הטוב ביותר בפרוטוקול Uniswap דרך הדפדפן שלך. עלול לגרום לאחזור ומחירים גבוהים."
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol using the Uniswap Labs Routing API."
-msgstr "מוצא את המסלול הטוב ביותר ב-Uniswap Protocol באמצעות Uniswap Labs Routing API."
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Floor"
@@ -1092,6 +1140,10 @@ msgstr "מאת (לכל היותר)"
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
 msgstr "טווח מלא"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Gas free swaps"
+msgstr "החלפות ללא גז"
 
 #: src/pages/Landing/index.tsx
 msgid "Get started"
@@ -1164,11 +1216,15 @@ msgstr "מחירים ראשוניים ונתח בריכה"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "הקלט מוערך. אתה תמכור לכל היותר <0>{0} {1}</0> או שהעסקה תחזור."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient funds"
 msgstr "אין מספיק כספים"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Insufficient funds for swap"
+msgstr "אין מספיק כספים להחלפה"
+
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient liquidity"
 msgstr "נזילות לא מספקת"
 
@@ -1176,7 +1232,7 @@ msgstr "נזילות לא מספקת"
 msgid "Insufficient liquidity for this trade."
 msgstr "לא מספיק נזילות למסחר זה."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient pool liquidity to complete transaction"
 msgstr "נזילות מאגר לא מספקת להשלמת העסקה"
 
@@ -1242,10 +1298,17 @@ msgstr "למד על מתן נזילות"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
 #: src/components/TokenSafety/index.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapBuyFiatButton.tsx
 #: src/pages/Landing/index.tsx
 msgid "Learn more"
 msgstr "למד עוד"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Learn more about swapping with UniswapX"
+msgstr "למידע נוסף על החלפה עם UniswapX"
 
 #: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1298,9 +1361,13 @@ msgstr "רישומים"
 msgid "Loading"
 msgstr "טוען"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Loading Allowance"
 msgstr "קצבת טעינה"
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Local routing"
+msgstr "ניתוב מקומי"
 
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Low listing price"
@@ -1309,6 +1376,10 @@ msgstr "מחיר רישום נמוך"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "MAX"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "MEV protection"
+msgstr "הגנת MEV"
 
 #: src/nft/components/details/detailsV2/OfferButton.tsx
 msgid "Make an offer"
@@ -1384,7 +1455,7 @@ msgstr "העבר נזילות ל- V3"
 msgid "Migrate V2 Liquidity"
 msgstr "העבר נזילות V2"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrate liquidity failed"
 msgstr "העברת הנזילות נכשלה"
 
@@ -1396,7 +1467,7 @@ msgstr "העבר את אסימוני הנזילות שלך מ- Uniswap V2 ל- Un
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "העבר{1} {0}ל-V3"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrated liquidity"
 msgstr "נזילות עברה"
 
@@ -1404,7 +1475,7 @@ msgstr "נזילות עברה"
 msgid "Migrating"
 msgstr "נודדים"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrating liquidity"
 msgstr "העברת נזילות"
 
@@ -1429,16 +1500,16 @@ msgstr "תפוקה מינימלית"
 msgid "Minimum received"
 msgstr "מינימום שהתקבל"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Mint failed"
 msgstr "מנטה נכשלה"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minted"
 msgstr "טָבוּעַ"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minting"
 msgstr "טְבִיעָה"
 
@@ -1487,14 +1558,13 @@ msgstr "השם לא נמצא"
 msgid "Navigation button"
 msgstr "כפתור ניווט"
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Network Fees are paid to the Ethereum network to secure transactions."
+msgstr "עמלות רשת משולמים לרשת Ethereum כדי לאבטח עסקאות."
+
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "אזהרת רשת"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swap/SwapModalFooter.tsx
-msgid "Network fee"
-msgstr "עמלת רשת"
 
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Never"
@@ -1576,6 +1646,10 @@ msgstr "לא זמין באזור שלך"
 msgid "Not created"
 msgstr "לא נוצר"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "Not enough liquidity to show accurate USD value."
+msgstr "אין מספיק נזילות כדי להציג ערך מדויק של דולר ארה\"ב."
+
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "Not listed"
 msgstr "לא רשום"
@@ -1631,14 +1705,14 @@ msgstr "בעלים"
 msgid "Page not found!"
 msgstr "הדף לא נמצא!"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay"
 msgstr "לְשַׁלֵם"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay Anyway"
 msgstr "שלם בכל מקרה"
 
@@ -1651,13 +1725,23 @@ msgstr "לשלם עם"
 msgid "Pending"
 msgstr "ממתין ל"
 
-#: src/pages/Swap/index.tsx
-msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
-msgstr "נדרשת הרשאה עבור Uniswap להחליף כל אסימון. תוקף זה יפוג לאחר חודש לביטחון שלך."
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Pending..."
+msgstr "ממתין ל..."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit approval failed"
+msgstr "אישור ההיתר נכשל"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Permit2"
 msgstr "היתר2"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit2 allows token approvals to be shared and managed across different applications."
+msgstr "Permit2 מאפשר שיתוף וניהול של אישורי אסימונים בין יישומים שונים."
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1729,16 +1813,12 @@ msgstr "הבדל במחיר:"
 msgid "Price Impact"
 msgstr "השפעת מחיר"
 
-#: src/pages/Swap/index.tsx
-msgid "Price Impact Too High"
-msgstr "השפעת המחיר גבוהה מדי"
-
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Price impact"
 msgstr "השפעה על המחיר"
 
 #: src/components/swap/PriceImpactWarning.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price impact warning"
 msgstr "אזהרת השפעה על המחיר"
 
@@ -1747,7 +1827,7 @@ msgid "Price range"
 msgstr "טווח מחירים"
 
 #: src/components/swap/SwapModalFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price updated"
 msgstr "המחיר עודכן"
 
@@ -1767,10 +1847,18 @@ msgstr "מדיניות הפרטיות"
 msgid "Privacy Policy."
 msgstr "מדיניות הפרטיות."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
 msgstr "המשך בארנק"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Proceed in your wallet"
+msgstr "המשך בארנק שלך"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Proceeds if sold"
@@ -1808,6 +1896,10 @@ msgstr "מציע"
 msgid "Public Resolver"
 msgstr "פותר ציבורי"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Purchased"
+msgstr "נרכש"
+
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Quantity"
@@ -1822,7 +1914,7 @@ msgstr "תוֹר"
 msgid "Queue Proposal {proposalId}"
 msgstr "הצעה לתור {proposalId}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queue failed"
 msgstr "התור נכשל"
 
@@ -1830,7 +1922,7 @@ msgstr "התור נכשל"
 msgid "Queue proposal {proposalKey}."
 msgstr "הצעת תור {proposalKey}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "בתור"
@@ -1839,7 +1931,7 @@ msgstr "בתור"
 msgid "Queueing"
 msgstr "הִזדַנְבוּת"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queuing"
 msgstr "הִזדַנְבוּת"
 
@@ -1871,16 +1963,16 @@ msgstr "קרא עוד על נכסים שאינם נתמכים"
 msgid "Receive"
 msgstr "לְקַבֵּל"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receive failed"
 msgstr "הקבלה נכשלה"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Received"
 msgstr "קיבלו"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receiving"
 msgstr "קבלה"
 
@@ -1892,7 +1984,7 @@ msgstr "חיפושים אחרונים"
 msgid "Recipient"
 msgstr "מקבל"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Refunds for unavailable items will be given in ETH"
 msgstr "החזרים עבור פריטים לא זמינים יינתנו ב-ETH"
 
@@ -1941,7 +2033,7 @@ msgstr "הוצא מהשקית"
 msgid "Remove item"
 msgstr "הסר פריט"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Remove liquidity failed"
 msgstr "הסרת הנזילות נכשלה"
 
@@ -1949,11 +2041,11 @@ msgstr "הסרת הנזילות נכשלה"
 msgid "Removed Liquidity"
 msgstr "הוסרה נזילות"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removed liquidity"
 msgstr "הוסרה נזילות"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removing liquidity"
 msgstr "הסרת נזילות"
 
@@ -1965,22 +2057,27 @@ msgstr "הסרת {0} {1} ו {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "הסרת {0} {1} ו-{2} {3}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaid"
 msgstr "נפרע"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repay failed"
 msgstr "ההחזר נכשל"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaying"
 msgstr "מחזיר"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Reset USDT"
+msgstr "אפס את USDT"
 
 #: src/nft/components/profile/list/ListingButton.tsx
 msgid "Resolve {issues} issues"
 msgstr "פתור {issues} בעיות"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Retry"
 msgstr "נסה שוב"
@@ -2000,12 +2097,28 @@ msgid "Reverse Registrar"
 msgstr "רשם הפוך"
 
 #: src/components/swap/ConfirmSwapModal.tsx
-msgid "Review Swap"
-msgstr "סקירת Swap"
+msgid "Review swap"
+msgstr "סקירת החלפה"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoke approval failed"
+msgstr "אישור ביטול נכשל"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Revoke {0}"
+msgstr "בטל {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Revoked Approval"
 msgstr "אישור בוטל"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoked approval"
+msgstr "בוטל האישור"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoking approval"
+msgstr "ביטול אישור"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
@@ -2022,6 +2135,10 @@ msgstr "לחפש"
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "חפש שם או הדבק כתובת"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "חפש אסימונים"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "Search tokens and NFT collections"
@@ -2075,16 +2192,16 @@ msgstr "למכור NFTs"
 msgid "Seller"
 msgstr "מוֹכֵר"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Send failed"
 msgstr "שליחה נכשלה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sending"
 msgstr "שְׁלִיחָה"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sent"
 msgstr "נשלח"
 
@@ -2144,6 +2261,10 @@ msgstr "להראות יותר"
 msgid "Show resources"
 msgstr "הצג משאבים"
 
+#: src/components/AccountDrawer/TestnetsToggle.tsx
+msgid "Show testnets"
+msgstr "הצג רשתות בדיקה"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Sign"
 msgstr "סִימָן"
@@ -2167,11 +2288,11 @@ msgstr "חלק מהנכסים אינם זמינים דרך ממשק זה מכי�
 
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong"
 msgstr "משהו השתבש"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong. Please try again."
 msgstr "משהו השתבש. בבקשה נסה שוב."
 
@@ -2196,11 +2317,11 @@ msgstr "סטטיסטיקות"
 msgid "Submit new proposal"
 msgstr "הגש הצעה חדשה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submit proposal failed"
 msgstr "הגשת ההצעה נכשלה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitted proposal"
 msgstr "הצעה שהוגשה"
 
@@ -2212,7 +2333,7 @@ msgstr "הגשת הצעה"
 msgid "Submitting Vote"
 msgstr "הגשת הצבעה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitting proposal"
 msgstr "מגיש הצעה"
 
@@ -2221,6 +2342,7 @@ msgid "Succeeded"
 msgstr "הצליח"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Success"
 msgstr "הַצלָחָה"
 
@@ -2238,8 +2360,9 @@ msgstr "אספקת {0} {1} ו {2} {3}"
 
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/components/swap/SwapModalFooter.tsx
 #: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2254,32 +2377,44 @@ msgstr "החלף <0/> ב <1/>בדיוק"
 msgid "Swap Anyway"
 msgstr "החלף בכל מקרה"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap cancelled"
+msgstr "ההחלפה בוטלה"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "החלף בדיוק <0/> ב <1/>"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap expired"
+msgstr "פג תוקף ההחלפה"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Swap failed"
 msgstr "ההחלפה נכשלה"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Swap submitted"
+msgstr "החלפה הוגשה"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapped"
 msgstr "הוחלף"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapping"
 msgstr "החלפה"
-
-#: src/components/swap/ConfirmSwapModal.tsx
-msgid "Swapping {0} {1} for {2} {3}"
-msgstr "החלפת {0} {1} ב- {2} {3}"
 
 #: src/nft/components/collection/Sweep.tsx
 msgid "Sweep"
 msgstr "לְטַאטֵא"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Switch networks"
 msgstr "החלף רשתות"
 
@@ -2419,6 +2554,10 @@ msgstr "אפליקציה זו משתמשת בממשקי ה-API של צד שלי�
 msgid "This month"
 msgstr "החודש"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "This order was cancelled"
+msgstr "הזמנה זו בוטלה"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "יש לאתחל את המאגר הזה לפני שתוכל להוסיף נזילות. לאתחול, בחר מחיר התחלתי לבריכה. לאחר מכן, הזן את טווח מחירי הנזילות ואת סכום ההפקדה. עמלות הגז יהיו גבוהות מהרגיל עקב עסקת האתחול."
@@ -2426,6 +2565,10 @@ msgstr "יש לאתחל את המאגר הזה לפני שתוכל להוסיף 
 #: src/pages/Vote/VotePage.tsx
 msgid "This proposal may be executed after {0}."
 msgstr "הצעה זו עשויה להתבצע לאחר {0}."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days."
+msgstr "זה מספק לפרוטוקול Uniswap גישה לטוקן שלך למסחר. מטעמי אבטחה, תוקף זה יפוג לאחר 30 יום."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
@@ -2459,6 +2602,10 @@ msgstr "עסקה זו לא תצליח בגלל תנועת מחירים. נסה �
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "עסקה זו לא תצליח גם בגלל תנועת מחירים או עמלה על העברה. נסה להגביר את סובלנות ההחלקה שלך."
 
+#: src/components/swap/PriceImpactModal.tsx
+msgid "This transaction will result in a <0>{0}</0> price impact on the market price of this pool. Do you wish to continue?"
+msgstr "עסקה זו תגרום להשפעת מחיר <0>{0}</0> על מחיר השוק של מאגר זה. האם אתה מקווה להמשיך?"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "This week"
 msgstr "השבוע"
@@ -2482,7 +2629,7 @@ msgstr "ל"
 msgid "To (at least)"
 msgstr "עבור (לפחות)"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "To use Uniswap on {0}, switch the network in your wallet’s settings."
 msgstr "כדי להשתמש ב-Uniswap ב {0}, החלף את הרשת בהגדרות הארנק שלך."
 
@@ -2494,11 +2641,15 @@ msgstr "כדי להציג עמדה, עליך להיות מחובר לרשת שא
 msgid "Today"
 msgstr "היום"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Token approval failed"
+msgstr "אישור האסימון נכשל"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "שם אסימון"
 
-#: src/components/TokenSafety/index.tsx
+#: src/constants/tokenSafety.tsx
 msgid "Token not found"
 msgstr "האסימון לא נמצא"
 
@@ -2571,7 +2722,7 @@ msgstr "העסקה הושלמה ב"
 msgid "Transaction deadline"
 msgstr "מועד אחרון לעסקה"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Transaction pending"
 msgstr "העסקה בהמתנה"
 
@@ -2591,6 +2742,14 @@ msgstr "העבר אסימון"
 msgid "Try Again"
 msgstr "נסה שוב"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try gas free swaps with the"
+msgstr "נסה החלפות ללא גז עם"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try the"
+msgstr "לנסות את"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "UNI Governance"
 msgstr "ממשל יוני"
@@ -2607,6 +2766,10 @@ msgstr "אסימונים של UNI מייצגים מניות הצבעה בממש�
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} שרופה"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "USDT requires resetting approval when spending limits are too low."
+msgstr "USDT דורש איפוס אישור כאשר מגבלות ההוצאה נמוכות מדי."
+
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Unavailable"
 msgstr "אינו זמין"
@@ -2622,10 +2785,6 @@ msgstr "עמלות שלא נדרשו"
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
 msgstr "לא נקבע"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap API"
-msgstr "Uniswap API"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
@@ -2647,10 +2806,6 @@ msgstr "Uniswap V2 אינו זמין ברשת זו."
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap זמין ב: <0>{0}</0>"
 
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap client"
-msgstr "לקוח חד-החלפה"
-
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "ממשל Uniswap זמין רק בשכבה 1. העבר את הרשת שלך ל-Ethereum Mainnet כדי להציג הצעות ולהצביע."
@@ -2666,6 +2821,10 @@ msgstr "ללא החלפה בכיס שלך"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "חוזה הגירה מביטול החלפה↗"
+
+#: src/components/Logo/UniswapXBrandMark.tsx
+msgid "UniswapX"
+msgstr "UniswapX"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
@@ -2730,26 +2889,22 @@ msgstr "לְגוֹלֵל"
 msgid "Unwrap <0/> to {0}"
 msgstr "פרק <0/> עד {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrap failed"
 msgstr "ביטול הגלישה נכשל"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapped"
 msgstr "לא עטוף"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapping"
 msgstr "פורקים את העטיפה"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "עדכן משלחת"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Use the Uniswap Labs API to get faster quotes."
-msgstr "השתמש בממשק ה-API של Uniswap Labs כדי לקבל הצעות מחיר מהירות יותר."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2784,18 +2939,24 @@ msgstr "הצג ומכור NFTs"
 msgid "View more analytics"
 msgstr "הצג ניתוחים נוספים"
 
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on  Etherscan"
+msgstr "צפה ב-Etherscan"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on Block Explorer"
+msgstr "הצג ב- Block Explorer"
+
 #: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "מבט על אתרסקאן"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "View on Explorer"
 msgstr "צפה ב- Explorer"
-
-#: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on {0}"
-msgstr "צפה ב {0}"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -2830,7 +2991,7 @@ msgstr "הצביעו נגד הצעה {proposalKey}"
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
 msgstr "הצביעו נגד הצעה {proposalKey} עם הסיבה \"{0}\""
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Vote failed"
 msgstr "ההצבעה נכשלה"
 
@@ -2864,11 +3025,11 @@ msgstr "הצביעו על הימנעות על הצעה {proposalKey}"
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
 msgstr "הצבע על הימנעות על הצעה {proposalKey} עם הסיבה \"{0}\""
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voted"
 msgstr "הצביעו"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voting"
 msgstr "הַצבָּעָה"
 
@@ -2893,31 +3054,54 @@ msgid "Wallet Address or ENS name"
 msgstr "כתובת ארנק או שם ENS"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "אַזהָרָה"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "We use anonymized data to enhance your experience with Uniswap Labs products."
+msgstr "אנו משתמשים בנתונים אנונימיים כדי לשפר את החוויה שלך עם מוצרי Uniswap Labs."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
 msgstr "ברוך הבא לצוות חד קרן :)"
 
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "When available, aggregates liquidity sources for better prices and gas free swaps."
+msgstr "כאשר זמין, צובר מקורות נזילות למחירים טובים יותר והחלפות ללא גז."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are approvals required?"
+msgstr "מדוע נדרשים אישורים?"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are permits required?"
+msgstr "מדוע נדרשים אישורים?"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Why is a transaction required?"
 msgstr "מדוע נדרשת עסקה?"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Why is this required?"
+msgstr "למה זה נדרש?"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "משיכת נזילות שהופקדה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdraw failed"
 msgstr "הנסיגה נכשלה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrawing"
 msgstr "נסיגה"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrew"
 msgstr "נסוג"
 
@@ -2929,20 +3113,26 @@ msgstr "לַעֲטוֹף"
 msgid "Wrap <0/> to {0}"
 msgstr "עטוף <0/> ל {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Wrap ETH"
+msgstr "לעטוף את ETH"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Wrap failed"
 msgstr "גלישה נכשלה"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapped"
 msgstr "עָטוּף"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapping"
 msgstr "לְפָפָה"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Wrong network"
 msgstr "רשת שגויה"
 
@@ -2969,6 +3159,14 @@ msgstr "אתה ספק הנזילות הראשון."
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "אתה יכול להצביע בעצמך על כל הצעה או להאציל את קולותיך לצד שלישי."
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You can turn it off at anytime in settings"
+msgstr "אתה יכול לכבות אותו בכל עת בהגדרות"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "You didn't have enough {0} to complete this swap."
+msgstr "לא היה לך מספיק {0} כדי להשלים את ההחלפה הזו."
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
@@ -3013,9 +3211,17 @@ msgstr "אתה גם יגבה עמלות שהרווחת מתפקיד זה."
 msgid "You will receive"
 msgstr "אתה תקבל"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You're in!"
+msgstr "אתה בפנים!"
+
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
 msgstr "נזילות ה- V2 שלך"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your account had insufficent funds to complete this swap."
+msgstr "לחשבון שלך לא היו מספיק כספים כדי להשלים את ההחלפה הזו."
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
@@ -3070,6 +3276,18 @@ msgstr "העמדה שלך לא תרוויח עמלות ולא תשמש בעסק�
 #: src/components/PositionList/index.tsx
 msgid "Your positions"
 msgstr "העמדות שלך"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your swap could not be fulfilled at this time. Please try again."
+msgstr "לא ניתן היה למלא את ההחלפה שלך בשלב זה. בבקשה נסה שוב."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap couldn't be filled at this time. Try again or"
+msgstr "לא ניתן היה למלא את ההחלפה שלך בשלב זה. נסה שוב או"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap expired before it could be filled. Try again or"
+msgstr "תוקף ההחלפה שלך פג לפני שניתן היה למלא אותה. נסה שוב או"
 
 #: src/hooks/useUniversalRouter.ts
 msgid "Your swap is expected to fail."
@@ -3137,6 +3355,7 @@ msgid "fee"
 msgstr "תַשְׁלוּם"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "for"
 msgstr "ל"
 
@@ -3151,6 +3370,11 @@ msgstr "מ"
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "here."
 msgstr "כאן."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "learn more."
+msgstr "למד עוד."
 
 #: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "minutes"
@@ -3357,6 +3581,11 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} לכל {tokenA}"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "{txCount, plural, one {Network fee} other {Network fees}}"
+msgstr "{txCount, plural, one {עמלת רשת} other {עמלות רשת}}"
 
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "{uniqueCollections, plural, =1 {collection} other {collections}}"

@@ -1,5 +1,5 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
+import { TraceEvent } from 'analytics'
 import { Link } from 'react-router-dom'
 import styled, { DefaultTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'

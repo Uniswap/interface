@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-05-22 22:30+0000\n"
+"POT-Creation-Date: 2023-07-21 17:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-05-23 20:46\n"
+"PO-Revision-Date: 2023-07-21 19:01\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -51,6 +51,18 @@ msgstr "+ Új pozíció"
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
 msgstr "- Távolítsa el a címzettet"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 month"
+msgstr "1 hónap"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 week"
+msgstr "1 hét"
+
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "1 year"
+msgstr "1 év"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
@@ -113,6 +125,10 @@ msgstr "<0> Tipp:</0> Ezzel a poollal olyan v2 poolokat találhat, amelyek nem j
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
 msgstr "<0> Tipp:</0> Amikor likviditást ad hozzá, a pozícióját képviselő pool tokeneket fog kapni. Ezek a tokenek automatikusan a poolból való részesedésével arányos díjakat keresnek, és bármikor beválthatók."
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "<0>UniswapX</0> aggregates liquidity sources for better prices and gas free swaps."
+msgstr "<0>Az UniswapX</0> likviditási forrásokat aggregál a jobb árak és a gázmentes csereügyletek érdekében."
+
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0> Szavazás feloldása</0> a következő javaslatra való felkészüléshez."
@@ -170,11 +186,11 @@ msgstr "Adja hozzá a likviditást"
 msgid "Add V2 Liquidity"
 msgstr "Adja hozzá a V2 likviditást"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add V2 liquidity failed"
 msgstr "A V2 likviditás hozzáadása nem sikerült"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Add liquidity failed"
 msgstr "Nem sikerült a likviditás hozzáadása"
 
@@ -207,11 +223,11 @@ msgstr "Adjon hozzá {0}/{1} V3 likviditást"
 msgid "Added Liquidity"
 msgstr "Hozzáadott likviditás"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added V2 liquidity"
 msgstr "Hozzáadott V2 likviditás"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Added liquidity"
 msgstr "Hozzáadott likviditás"
 
@@ -219,11 +235,11 @@ msgstr "Hozzáadott likviditás"
 msgid "Added {0}"
 msgstr "Hozzáadva {0}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding V2 liquidity"
 msgstr "V2 likviditás hozzáadása"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Adding liquidity"
 msgstr "Likviditás hozzáadása"
 
@@ -239,9 +255,25 @@ msgstr "A címnek nincs elérhető követelése"
 msgid "Against"
 msgstr "Ellen"
 
+#: src/nft/components/details/detailsV2/TimePeriodSwitcher.tsx
+msgid "All time"
+msgstr "Mindig"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "LP token migráció engedélyezése"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "Allow analytics"
+msgstr "Engedélyezze az elemzést"
+
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Allow {0} (one time)"
+msgstr "{0} engedélyezése (egyszer)"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Allow {0} to be used for swapping"
+msgstr "Hagyja, hogy {0} legyen a cseréhez"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -260,7 +292,7 @@ msgstr "Kereskedés előtt mindig végezzen saját kutatást."
 msgid "Amount"
 msgstr "Összeg"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "An approval is needed to use this token."
 msgstr "A token használatához jóváhagyásra van szükség."
 
@@ -272,16 +304,15 @@ msgstr "Hiba történt a tokenek betöltésekor. Kérlek próbáld újra."
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hiba történt a csere végrehajtása során. Lehet, hogy növelnie kell a csúszási toleranciát. Ha ez nem működik, akkor összeférhetetlenség állhat fenn az Ön által forgalmazott tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Approval failed"
 msgstr "A jóváhagyás sikertelen"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approval pending"
 msgstr "Kérelem folyamatban"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -295,14 +326,9 @@ msgstr "Token jóváhagyása"
 msgid "Approve in wallet"
 msgstr "Jóváhagyás a pénztárcában"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/pages/Swap/index.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Approve in your wallet"
 msgstr "Jóváhagyja a pénztárcájában"
-
-#: src/pages/Swap/index.tsx
-msgid "Approve use of {0}"
-msgstr "{0}használatának jóváhagyása"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -313,12 +339,12 @@ msgid "Approve {0}"
 msgstr "Jóváhagyás {0}"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "Jóváhagyott"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -340,10 +366,6 @@ msgstr "Legalább {0} {1} és {2} {3} visszatérítésre kerül a pénztárcáj�
 #: src/theme/components/ThemeToggle.tsx
 msgid "Auto"
 msgstr "Auto"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Auto Router API"
-msgstr "Auto Router API"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Back to Pools"
@@ -382,6 +404,15 @@ msgstr "A legjobb nagyon stabil párok számára."
 msgid "Best price route costs ~{gasPrice} in gas."
 msgstr "A legjobb árú útvonal ~{gasPrice} a benzinben."
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Beta"
+msgstr "Beta"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Better prices and more liquidity"
+msgstr "Jobb árak és több likviditás"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "Blocked Address"
 msgstr "Blokkolt cím"
@@ -390,32 +421,32 @@ msgstr "Blokkolt cím"
 msgid "Blocked on OpenSea"
 msgstr "Letiltva az OpenSea-n"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrow failed"
 msgstr "A kölcsönzés nem sikerült"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowed"
 msgstr "Kölcsönözve"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Borrowing"
 msgstr "Hitelfelvétel"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Bought"
 msgstr "Vásárolt"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burn failed"
 msgstr "Az égés nem sikerült"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burned"
 msgstr "Leégett"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Burning"
 msgstr "Égő"
 
@@ -428,7 +459,7 @@ msgstr "megvesz"
 msgid "Buy crypto"
 msgstr "Vásároljon kriptot"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buy failed"
 msgstr "A vásárlás nem sikerült"
 
@@ -448,7 +479,7 @@ msgstr "Vásároljon, adjon el és fedezzen fel tokeneket"
 msgid "Buy, sell, and explore tokens and NFTs"
 msgstr "Vásároljon, adjon el és fedezzen fel tokeneket és NFT-ket"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Buying"
 msgstr "Vásárlás"
 
@@ -464,7 +495,11 @@ msgstr "Likviditás hozzáadásával az összes kereskedés 3%-át keresheti meg
 msgid "By connecting a wallet, you agree to Uniswap Labs'"
 msgstr "A pénztárca csatlakoztatásával elfogadja az Uniswap Labs"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/PriceImpactModal.tsx
+msgid "Cancel"
+msgstr "Megszünteti"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancel failed"
 msgstr "A törlés nem sikerült"
 
@@ -472,12 +507,13 @@ msgstr "A törlés nem sikerült"
 msgid "Canceled"
 msgstr "Törölve"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Cancelled"
 msgstr "Törölve"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Cancelling"
 msgstr "Törlés"
 
@@ -517,7 +553,7 @@ msgstr "Igényelje az UNI-jutalmat {0}ért"
 msgid "Claim Uniswap NFT Airdrop"
 msgstr "Az NFT Airdrop visszaváltásának igénylése"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Claim failed"
 msgstr "A követelés sikertelen"
 
@@ -529,12 +565,12 @@ msgstr "Követelési díjak"
 msgid "Claim your UNI tokens"
 msgstr "Saját UNI tokenek igénylése"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "Igényelt"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
 msgstr "Igénylés"
@@ -576,7 +612,7 @@ msgstr "Gyűjtse {nativeWrappedSymbol}-ként"
 msgid "Collect fees"
 msgstr "Díjak begyűjtése"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collect fees failed"
 msgstr "A díjak beszedése nem sikerült"
 
@@ -588,7 +624,7 @@ msgstr "Szedjen be {0}{1}"
 msgid "Collected"
 msgstr "Beszedett"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Collected fees"
 msgstr "Beszedett díjak"
 
@@ -596,7 +632,7 @@ msgstr "Beszedett díjak"
 msgid "Collecting"
 msgstr "Beszedés"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
 msgstr "Díjak beszedése"
@@ -604,6 +640,10 @@ msgstr "Díjak beszedése"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "A díjak beszedése visszavonja a jelenleg elérhető díjakat az Ön számára."
+
+#: src/components/NavBar/SearchBarDropdown.tsx
+msgid "Coming soon: search and explore tokens on Avalanche Chain"
+msgstr "Hamarosan: keressen és fedezzen fel tokeneket az Avalanche Chain-en"
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Coming soon: search and explore tokens on BNB Chain"
@@ -624,6 +664,14 @@ msgstr "Megerősítés"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "Kínálat megerősítése"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Confirm Swap"
+msgstr "Swap megerősítése"
+
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm swap"
+msgstr "Erősítse meg a cserét"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -671,14 +719,20 @@ msgstr "Csatlakozzon egy pénztárcához a V2 likviditás megtekintéséhez."
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Csatlakozzon egy pénztárcához a likviditás megtekintéséhez."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Connect wallet"
 msgstr "Pénztárca csatlakoztatása"
+
+#: src/pages/Swap/index.tsx
+msgid "Connecting to {0}"
+msgstr "Csatlakozás a {0}hoz"
 
 #: src/nft/components/card/media.tsx
 msgid "Content not"
 msgstr "Tartalom nem"
 
+#: src/components/TokenSafety/index.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/nft/components/bag/Bag.tsx
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Continue"
@@ -719,7 +773,7 @@ msgstr "Egy pár létrehozása"
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Pool létrehozása és {0}/{1} V3 likviditás hozzáadása"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Create pool failed"
 msgstr "A készlet létrehozása nem sikerült"
 
@@ -731,11 +785,11 @@ msgstr "Pool létrehozása."
 msgid "Create {0}/{1} V3 pool"
 msgstr "{0}V3 készlet{1}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Created pool"
 msgstr "Létrehozva medence"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Creating pool"
 msgstr "Medence létrehozása"
 
@@ -769,7 +823,7 @@ msgstr "Legyőzött"
 msgid "Delegate Votes"
 msgstr "Szavazatok delegálása"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegate failed"
 msgstr "A delegálás nem sikerült"
 
@@ -777,7 +831,7 @@ msgstr "A delegálás nem sikerült"
 msgid "Delegate voting power to {0}"
 msgstr "A szavazati jogot {0}-ra delegálják"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegated"
 msgstr "Delegált"
 
@@ -785,7 +839,7 @@ msgstr "Delegált"
 msgid "Delegated to:"
 msgstr "Delegálva:"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Delegating"
 msgstr "Delegálás"
 
@@ -793,15 +847,15 @@ msgstr "Delegálás"
 msgid "Delegating votes"
 msgstr "Szavazatok delegálása"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploy failed"
 msgstr "A telepítés sikertelen"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deployed"
 msgstr "Telepítve"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deploying"
 msgstr "Telepítés"
 
@@ -809,7 +863,7 @@ msgstr "Telepítés"
 msgid "Deposit Amounts"
 msgstr "Letéti összegek"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposit failed"
 msgstr "A befizetés sikertelen"
 
@@ -821,11 +875,11 @@ msgstr "Likviditás letétbe helyezése"
 msgid "Deposit tokens to the {label} network."
 msgstr "Befizetési tokenek a {label} hálózatba."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Deposited"
 msgstr "Letétbe helyezve"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Depositing"
 msgstr "Befizetés"
 
@@ -843,7 +897,6 @@ msgstr "Részletes"
 msgid "Details"
 msgstr "Részletek"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "Elvetés"
@@ -892,6 +945,10 @@ msgstr "Szerkesztés"
 msgid "Edit listings"
 msgstr "Adatok szerkesztése"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Enable spending {0} on Uniswap"
+msgstr "Engedélyezze {0} költést az Uniswapra"
+
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "Adjon meg egy százalékot"
@@ -916,9 +973,8 @@ msgstr "Adjon meg egy összeget"
 msgid "Enter {0} amount"
 msgstr "Adjon meg {0} összeget"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Hiba"
 
@@ -954,7 +1010,7 @@ msgstr "Végrehajtás"
 msgid "Execute Proposal {proposalId}"
 msgstr "A {proposalId}javaslat végrehajtása"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Execute failed"
 msgstr "A végrehajtás nem sikerült"
 
@@ -962,12 +1018,12 @@ msgstr "A végrehajtás nem sikerült"
 msgid "Execute proposal {proposalKey}."
 msgstr "{proposalKey}javaslat végrehajtása."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Végrehajtott"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing"
 msgstr "Végrehajtó"
@@ -1014,7 +1070,7 @@ msgstr "Nagyon ritka"
 msgid "Failed"
 msgstr "nem sikerült"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "Failed to switch networks"
 msgstr "Nem sikerült váltani a hálózatot"
 
@@ -1038,7 +1094,7 @@ msgstr "Visszacsatolás"
 msgid "Fees"
 msgstr "Díjak"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/details/detailsV2/BuyButton.tsx
 msgid "Fetching Route"
 msgstr "Útvonal lekérése"
@@ -1054,14 +1110,6 @@ msgstr "Ár lekérése..."
 #: src/components/Tokens/TokenTable/SearchBar.tsx
 msgid "Filter tokens"
 msgstr "Szűrő tokenek"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol through your browser. May result in high latency and prices."
-msgstr "Megkeresi a legjobb útvonalat az Uniswap protokollon keresztül a böngészőn keresztül. Magas késleltetést és árakat eredményezhet."
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Finds the best route on the Uniswap Protocol using the Uniswap Labs Routing API."
-msgstr "A Uniswap Labs Routing API segítségével megtalálja a legjobb útvonalat a Uniswap Protocolban."
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Floor"
@@ -1092,6 +1140,10 @@ msgstr "Feladó (legfeljebb)"
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
 msgstr "Teljes körű"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Gas free swaps"
+msgstr "Gázmentes csere"
 
 #: src/pages/Landing/index.tsx
 msgid "Get started"
@@ -1164,11 +1216,15 @@ msgstr "Kezdeti árfolyam és a pool részesedés"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Az input becsült. Legfeljebb <0>{0} {1}</0> értékesíthet, különben a tranzakció visszafordul."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient funds"
 msgstr "Fedezethiány"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Insufficient funds for swap"
+msgstr "Nincs elég pénz a swaphoz"
+
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient liquidity"
 msgstr "Elégtelen likviditás"
 
@@ -1176,7 +1232,7 @@ msgstr "Elégtelen likviditás"
 msgid "Insufficient liquidity for this trade."
 msgstr "Nincs elegendő likviditás ehhez a kereskedéshez."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Insufficient pool liquidity to complete transaction"
 msgstr "Nincs elegendő pool likviditás a tranzakció befejezéséhez"
 
@@ -1242,10 +1298,17 @@ msgstr "Ismerje meg a likviditás biztosítását"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
 #: src/components/TokenSafety/index.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapBuyFiatButton.tsx
 #: src/pages/Landing/index.tsx
 msgid "Learn more"
 msgstr "Tudj meg többet"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Learn more about swapping with UniswapX"
+msgstr "Tudjon meg többet az UniswapX-szel való cseréről"
 
 #: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1298,9 +1361,13 @@ msgstr "Listákat"
 msgid "Loading"
 msgstr "Feltöltés"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Loading Allowance"
 msgstr "Betöltési juttatás"
+
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "Local routing"
+msgstr "Helyi útválasztás"
 
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Low listing price"
@@ -1309,6 +1376,10 @@ msgstr "Alacsony tőzsdei ár"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "MAX"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "MEV protection"
+msgstr "MEV védelem"
 
 #: src/nft/components/details/detailsV2/OfferButton.tsx
 msgid "Make an offer"
@@ -1384,7 +1455,7 @@ msgstr "Likviditás migrálása a V3-ra"
 msgid "Migrate V2 Liquidity"
 msgstr "V2 likviditás migrálása"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrate liquidity failed"
 msgstr "A likviditás migrálása nem sikerült"
 
@@ -1396,7 +1467,7 @@ msgstr "Likviditási tokenek migrálása az Uniswap V2-ről az Uniswap V3-ra."
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "{0}likviditás{1} V3-ra"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrated liquidity"
 msgstr "Migrált likviditás"
 
@@ -1404,7 +1475,7 @@ msgstr "Migrált likviditás"
 msgid "Migrating"
 msgstr "Migrálás"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Migrating liquidity"
 msgstr "Likviditás migrációja"
 
@@ -1429,16 +1500,16 @@ msgstr "Minimális teljesítmény"
 msgid "Minimum received"
 msgstr "Minimum beérkezett"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Mint failed"
 msgstr "Mint nem sikerült"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minted"
 msgstr "Verés"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Minting"
 msgstr "Pénzverés"
 
@@ -1487,14 +1558,13 @@ msgstr "A név nem található"
 msgid "Navigation button"
 msgstr "Navigációs gomb"
 
+#: src/components/swap/GasBreakdownTooltip.tsx
+msgid "Network Fees are paid to the Ethereum network to secure transactions."
+msgstr "A tranzakciók biztonsága érdekében hálózati díjakat kell fizetni az Ethereum hálózatnak."
+
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "Hálózati figyelmeztetés"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-#: src/components/swap/SwapModalFooter.tsx
-msgid "Network fee"
-msgstr "Hálózati díj"
 
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Never"
@@ -1576,6 +1646,10 @@ msgstr "Nem érhető el az Ön régiójában"
 msgid "Not created"
 msgstr "Nem jött létre"
 
+#: src/components/CurrencyInputPanel/FiatValue.tsx
+msgid "Not enough liquidity to show accurate USD value."
+msgstr "Nincs elég likviditás a pontos USD-érték megjelenítéséhez."
+
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "Not listed"
 msgstr "Nem felsorolt"
@@ -1631,14 +1705,14 @@ msgstr "Tulajdonos"
 msgid "Page not found!"
 msgstr "Az oldal nem található!"
 
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay"
 msgstr "Fizetés"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Pay Anyway"
 msgstr "Fizessen egyébként"
 
@@ -1651,13 +1725,23 @@ msgstr "Fizessen ezzel"
 msgid "Pending"
 msgstr "Függőben levő"
 
-#: src/pages/Swap/index.tsx
-msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
-msgstr "Az Uniswap engedélye szükséges az egyes token felcseréléséhez. Ez az Ön biztonsága érdekében egy hónap múlva lejár."
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Pending..."
+msgstr "Függőben levő..."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit approval failed"
+msgstr "Az engedély jóváhagyása sikertelen"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Permit2"
 msgstr "Engedély 2"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Permit2 allows token approvals to be shared and managed across different applications."
+msgstr "A Permit2 lehetővé teszi a token jóváhagyások megosztását és kezelését különböző alkalmazások között."
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1729,16 +1813,12 @@ msgstr "Árkülönbség:"
 msgid "Price Impact"
 msgstr "Árhatás"
 
-#: src/pages/Swap/index.tsx
-msgid "Price Impact Too High"
-msgstr "Az ár hatása túl nagy"
-
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Price impact"
 msgstr "Árhatás"
 
 #: src/components/swap/PriceImpactWarning.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price impact warning"
 msgstr "Figyelmeztetés az ár hatásáról"
 
@@ -1747,7 +1827,7 @@ msgid "Price range"
 msgstr "Ártartomány"
 
 #: src/components/swap/SwapModalFooter.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Price updated"
 msgstr "Ár frissítve"
 
@@ -1767,10 +1847,18 @@ msgstr "Adatvédelmi irányelvek"
 msgid "Privacy Policy."
 msgstr "Adatvédelmi irányelvek."
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
 msgstr "Tovább a pénztárcában"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Proceed in your wallet"
+msgstr "Folytassa a pénztárcájában"
 
 #: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Proceeds if sold"
@@ -1808,6 +1896,10 @@ msgstr "Javaslattevő"
 msgid "Public Resolver"
 msgstr "Nyilvános megoldó"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
+msgid "Purchased"
+msgstr "Vásárolt"
+
 #: src/nft/components/details/detailsV2/DataPageTraits.tsx
 #: src/nft/components/details/detailsV2/TableRowComponent.tsx
 msgid "Quantity"
@@ -1822,7 +1914,7 @@ msgstr "Sor"
 msgid "Queue Proposal {proposalId}"
 msgstr "Sorozati javaslat {proposalId}"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queue failed"
 msgstr "A várólista nem sikerült"
 
@@ -1830,7 +1922,7 @@ msgstr "A várólista nem sikerült"
 msgid "Queue proposal {proposalKey}."
 msgstr "Sorajánlat {proposalKey}."
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "Sorban"
@@ -1839,7 +1931,7 @@ msgstr "Sorban"
 msgid "Queueing"
 msgstr "Sorban állás"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Queuing"
 msgstr "Sorban állás"
 
@@ -1871,16 +1963,16 @@ msgstr "További információk a nem támogatott eszközökről"
 msgid "Receive"
 msgstr "Kap"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receive failed"
 msgstr "Sikertelen fogadás"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Received"
 msgstr "Megkapta"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Receiving"
 msgstr "Fogadás"
 
@@ -1892,7 +1984,7 @@ msgstr "Legutóbbi keresések"
 msgid "Recipient"
 msgstr "Befogadó"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Refunds for unavailable items will be given in ETH"
 msgstr "A nem elérhető tételek visszatérítése ETH-ban történik"
 
@@ -1941,7 +2033,7 @@ msgstr "Vegye ki a zsákból"
 msgid "Remove item"
 msgstr "Elem eltávolítása"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Remove liquidity failed"
 msgstr "A likviditás eltávolítása nem sikerült"
 
@@ -1949,11 +2041,11 @@ msgstr "A likviditás eltávolítása nem sikerült"
 msgid "Removed Liquidity"
 msgstr "Likviditás eltávolítva"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removed liquidity"
 msgstr "Likviditás eltávolítva"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Removing liquidity"
 msgstr "A likviditás eltávolítása"
 
@@ -1965,22 +2057,27 @@ msgstr "{0} {1} és {2} {3} eltávolítása"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "{0} {1} és{2} {3}eltávolítása"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaid"
 msgstr "Visszafizetve"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repay failed"
 msgstr "A visszafizetés nem sikerült"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Repaying"
 msgstr "Visszafizetés"
+
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Reset USDT"
+msgstr "USDT alaphelyzetbe állítása"
 
 #: src/nft/components/profile/list/ListingButton.tsx
 msgid "Resolve {issues} issues"
 msgstr "{issues} probléma megoldása"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 #: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Retry"
 msgstr "Próbálja újra"
@@ -2000,12 +2097,28 @@ msgid "Reverse Registrar"
 msgstr "Fordított iktató"
 
 #: src/components/swap/ConfirmSwapModal.tsx
-msgid "Review Swap"
-msgstr "Review Swap"
+msgid "Review swap"
+msgstr "Véleménycsere"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoke approval failed"
+msgstr "A jóváhagyás visszavonása sikertelen"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Revoke {0}"
+msgstr "{0}visszavonása"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "Revoked Approval"
 msgstr "Visszavont jóváhagyás"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoked approval"
+msgstr "Visszavont jóváhagyás"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Revoking approval"
+msgstr "Jóváhagyás visszavonása"
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
@@ -2022,6 +2135,10 @@ msgstr "Keresés"
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Név keresése vagy cím beillesztése"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Tokenek keresése"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "Search tokens and NFT collections"
@@ -2075,16 +2192,16 @@ msgstr "NFT-k eladása"
 msgid "Seller"
 msgstr "Eladó"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Send failed"
 msgstr "A küldés sikertelen"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sending"
 msgstr "Küldés"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Sent"
 msgstr "Küldött"
 
@@ -2144,6 +2261,10 @@ msgstr "Mutass többet"
 msgid "Show resources"
 msgstr "Erőforrások megjelenítése"
 
+#: src/components/AccountDrawer/TestnetsToggle.tsx
+msgid "Show testnets"
+msgstr "Testnetek megjelenítése"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Sign"
 msgstr "Jel"
@@ -2167,11 +2288,11 @@ msgstr "Egyes eszközök nem érhetők el ezen a felületen keresztül, mert el�
 
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/ErrorBoundary/index.tsx
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong"
 msgstr "Valami elromlott"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Valami elromlott. Kérlek próbáld újra."
 
@@ -2196,11 +2317,11 @@ msgstr "Statisztika"
 msgid "Submit new proposal"
 msgstr "Új ajánlat benyújtása"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submit proposal failed"
 msgstr "Az ajánlat elküldése sikertelen"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitted proposal"
 msgstr "Benyújtott javaslat"
 
@@ -2212,7 +2333,7 @@ msgstr "Javaslat benyújtása"
 msgid "Submitting Vote"
 msgstr "Szavazat benyújtása"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Submitting proposal"
 msgstr "Javaslat benyújtása"
 
@@ -2221,6 +2342,7 @@ msgid "Succeeded"
 msgstr "Sikerült"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "Success"
 msgstr "Siker"
 
@@ -2238,8 +2360,9 @@ msgstr "{0} {1} és {2} {3} kínálása"
 
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/GasBreakdownTooltip.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/components/swap/SwapModalFooter.tsx
 #: src/components/swap/SwapSkeleton.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2254,32 +2377,44 @@ msgstr "Cseréld le <0/> pontosan <1/>"
 msgid "Swap Anyway"
 msgstr "Swap mindenképp"
 
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap cancelled"
+msgstr "A csere törölve"
+
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Cseréld le pontosan <0/> t <1/>"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Swap expired"
+msgstr "A csere lejárt"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Swap failed"
 msgstr "A csere nem sikerült"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Swap submitted"
+msgstr "Csere beküldve"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapped"
 msgstr "Cserélve"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Swapping"
 msgstr "Csere"
-
-#: src/components/swap/ConfirmSwapModal.tsx
-msgid "Swapping {0} {1} for {2} {3}"
-msgstr "{0} {1} cseréje a következőre {2} {3}"
 
 #: src/nft/components/collection/Sweep.tsx
 msgid "Sweep"
 msgstr "Söprés"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Switch networks"
 msgstr "Váltson hálózatot"
 
@@ -2419,6 +2554,10 @@ msgstr "Ez az alkalmazás a következő harmadik féltől származó API-kat has
 msgid "This month"
 msgstr "Ebben a hónapban"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "This order was cancelled"
+msgstr "Ezt a rendelést törölték"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Ezt a készletet inicializálni kell, mielőtt likviditást adhatna hozzá. Az inicializáláshoz válasszon kikiáltási árat a készlethez. Ezután adja meg likviditási ártartományát és a betét összegét. A gázdíjak az inicializálási tranzakció miatt a szokásosnál magasabbak lesznek."
@@ -2426,6 +2565,10 @@ msgstr "Ezt a készletet inicializálni kell, mielőtt likviditást adhatna hozz
 #: src/pages/Vote/VotePage.tsx
 msgid "This proposal may be executed after {0}."
 msgstr "Ezt a javaslatot {0}után lehet végrehajtani."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "This provides the Uniswap protocol access to your token for trading. For security, this will expire after 30 days."
+msgstr "Ez hozzáférést biztosít az Uniswap protokoll számára a tokenhez kereskedés céljából. Biztonsági okokból ez 30 nap múlva lejár."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
@@ -2459,6 +2602,10 @@ msgstr "Ez a tranzakció az ármozgás miatt nem fog sikerülni. Próbáld meg n
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Ez a tranzakció sem az ármozgás, sem az átutalási díj miatt nem lesz sikeres. Próbáld meg növelni a csúszástűrést."
 
+#: src/components/swap/PriceImpactModal.tsx
+msgid "This transaction will result in a <0>{0}</0> price impact on the market price of this pool. Do you wish to continue?"
+msgstr "Ez a tranzakció <0>{0}</0> árhatást fog eredményezni ennek a poolnak a piaci árára. Szeretnéd folytatni?"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/index.tsx
 msgid "This week"
 msgstr "Ezen a héten"
@@ -2482,7 +2629,7 @@ msgstr "-nak/-nek"
 msgid "To (at least)"
 msgstr "(Legalább)"
 
-#: src/components/Popups/FailedNetworkSwitchPopup.tsx
+#: src/components/Popups/PopupContent.tsx
 msgid "To use Uniswap on {0}, switch the network in your wallet’s settings."
 msgstr "Az Uniswap {0}-n történő használatához váltson hálózatot a pénztárca beállításaiban."
 
@@ -2494,11 +2641,15 @@ msgstr "Egy pozíció megtekintéséhez csatlakoznia kell ahhoz a hálózathoz, 
 msgid "Today"
 msgstr "Ma"
 
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Token approval failed"
+msgstr "A token jóváhagyása sikertelen"
+
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
 msgstr "Token név"
 
-#: src/components/TokenSafety/index.tsx
+#: src/constants/tokenSafety.tsx
 msgid "Token not found"
 msgstr "Token nem található"
 
@@ -2571,7 +2722,7 @@ msgstr "A tranzakció befejeződött"
 msgid "Transaction deadline"
 msgstr "Tranzakció határideje"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Transaction pending"
 msgstr "Tranzakció függőben"
 
@@ -2591,6 +2742,14 @@ msgstr "Transfer Token"
 msgid "Try Again"
 msgstr "Próbálja meg újra"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try gas free swaps with the"
+msgstr "Próbáld ki a gázmentes cserét a"
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "Try the"
+msgstr "Próbáld ki a"
+
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "UNI Governance"
 msgstr "UNI kormányzás"
@@ -2607,6 +2766,10 @@ msgstr "Az UNI tokenek szavazati részvényeket képviselnek az Uniswap irányí
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} Elégett"
 
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "USDT requires resetting approval when spending limits are too low."
+msgstr "Az USDT visszaállítási jóváhagyást igényel, ha a költési korlátok túl alacsonyak."
+
 #: src/nft/components/collection/ActivityCells.tsx
 msgid "Unavailable"
 msgstr "Nem érhető el"
@@ -2622,10 +2785,6 @@ msgstr "Nem igényelt díjak"
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
 msgstr "Meghatározatlan"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap API"
-msgstr "Uniswap API"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
@@ -2647,10 +2806,6 @@ msgstr "Az Uniswap V2 nem érhető el ezen a hálózaton."
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Az Uniswap itt érhető el: <0>{0}</0>"
 
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Uniswap client"
-msgstr "Unswap kliens"
-
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
 msgstr "Az Uniswap irányítás csak az 1. rétegen érhető el. A javaslatok és a szavazás megtekintéséhez kapcsolja át hálózatát az Ethereum Mainnet hálózatra."
@@ -2666,6 +2821,10 @@ msgstr "Unswap a zsebében"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap migrációs szerződés↗"
+
+#: src/components/Logo/UniswapXBrandMark.tsx
+msgid "UniswapX"
+msgstr "UniswapX"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
@@ -2730,26 +2889,22 @@ msgstr "Kicsomagolás"
 msgid "Unwrap <0/> to {0}"
 msgstr "Kicsomagolás <0/> -tól {0}-ig"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrap failed"
 msgstr "A kibontás nem sikerült"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapped"
 msgstr "Kibontva"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Unwrapping"
 msgstr "Kicsomagolás"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Delegálás frissítése"
-
-#: src/components/Settings/RouterPreferenceSettings/index.tsx
-msgid "Use the Uniswap Labs API to get faster quotes."
-msgstr "A Uniswap Labs API segítségével gyorsabb árajánlatokat kaphat."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2784,18 +2939,24 @@ msgstr "NFT-k megtekintése és eladása"
 msgid "View more analytics"
 msgstr "További elemzések megtekintése"
 
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on  Etherscan"
+msgstr "Megtekintés az Etherscan-en"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on Block Explorer"
+msgstr "Megtekintés a Block Explorerben"
+
 #: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Nézd meg az Etherscan webhelyen"
 
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
 msgid "View on Explorer"
 msgstr "Megtekintés az Explorerben"
-
-#: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on {0}"
-msgstr "Megtekintés a {0}"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -2830,7 +2991,7 @@ msgstr "Szavazz {proposalKey}javaslat ellen"
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
 msgstr "Szavazzon a {proposalKey} javaslat ellen \"{0}\" indoklással"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Vote failed"
 msgstr "A szavazás nem sikerült"
 
@@ -2864,11 +3025,11 @@ msgstr "A {proposalKey}számú javaslat esetében tartózkodni kell"
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
 msgstr "Tartózkodásra szavaz a {proposalKey} javaslatnál, „{0}” indoklással"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voted"
 msgstr "Szavazott"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Voting"
 msgstr "Szavazás"
 
@@ -2893,31 +3054,54 @@ msgid "Wallet Address or ENS name"
 msgstr "Pénztárca címe vagy ENS neve"
 
 #: src/components/addLiquidity/OwnershipWarning.tsx
+#: src/components/swap/PriceImpactModal.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Warning"
 msgstr "Figyelem"
+
+#: src/components/AccountDrawer/AnalyticsToggle.tsx
+msgid "We use anonymized data to enhance your experience with Uniswap Labs products."
+msgstr "Anonimizált adatokat használunk, hogy javítsuk az Uniswap Labs termékeivel kapcsolatos élményt."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
 msgstr "Üdvözöljük az Unicorn csapatban :)"
 
+#: src/components/Settings/RouterPreferenceSettings/index.tsx
+msgid "When available, aggregates liquidity sources for better prices and gas free swaps."
+msgstr "Ha elérhető, összesíti a likviditási forrásokat a jobb árak és a gázmentes csereügyletek érdekében."
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are approvals required?"
+msgstr "Miért szükségesek jóváhagyások?"
+
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
+msgid "Why are permits required?"
+msgstr "Miért szükségesek az engedélyek?"
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Why is a transaction required?"
 msgstr "Miért van szükség tranzakcióra?"
+
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Why is this required?"
+msgstr "Miért van erre szükség?"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "A letétbe helyezett likviditás visszavonása"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdraw failed"
 msgstr "A visszavonás nem sikerült"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrawing"
 msgstr "Visszavonás"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Withdrew"
 msgstr "Visszavonult"
 
@@ -2929,20 +3113,26 @@ msgstr "Becsomagolás"
 msgid "Wrap <0/> to {0}"
 msgstr "Tekerje <0/> tól {0}-ig"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/swap/GasBreakdownTooltip.tsx
+#: src/components/swap/PendingModalContent/index.tsx
+msgid "Wrap ETH"
+msgstr "Csomagolja be az ETH-t"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+#: src/components/swap/PendingModalContent/ErrorModalContent.tsx
 msgid "Wrap failed"
 msgstr "A becsomagolás nem sikerült"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapped"
 msgstr "Csomagolt"
 
-#: src/components/AccountDrawer/MiniPortfolio/constants.ts
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
 msgid "Wrapping"
 msgstr "Csomagolás"
 
-#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/ButtonStates.tsx
 msgid "Wrong network"
 msgstr "Hibás hálózat"
 
@@ -2969,6 +3159,14 @@ msgstr "Ön az első likviditásszolgáltató."
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Az egyes javaslatokról vagy saját maga szavazhat, vagy delegálhatja a szavazatait egy harmadik félre."
+
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You can turn it off at anytime in settings"
+msgstr "A beállításokban bármikor kikapcsolhatja"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "You didn't have enough {0} to complete this swap."
+msgstr "Nem volt elég {0} a csere befejezéséhez."
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
@@ -3013,9 +3211,17 @@ msgstr "Ezen a pozíción megszerzett díjakat is beszedi."
 msgid "You will receive"
 msgstr "Kapni fog"
 
+#: src/pages/Swap/UniswapXOptIn.tsx
+msgid "You're in!"
+msgstr "Benne vagy!"
+
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
 msgstr "Saját V2 likviditása"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your account had insufficent funds to complete this swap."
+msgstr "Fiókjában nem volt elegendő fedezet a csere végrehajtásához."
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
@@ -3070,6 +3276,18 @@ msgstr "A saját pozíció nem fog díjakat keresni, és kereskedelemben nem has
 #: src/components/PositionList/index.tsx
 msgid "Your positions"
 msgstr "Saját pozíciók"
+
+#: src/components/AccountDrawer/MiniPortfolio/constants.tsx
+msgid "Your swap could not be fulfilled at this time. Please try again."
+msgstr "A csere jelenleg nem teljesíthető. Kérlek próbáld újra."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap couldn't be filled at this time. Try again or"
+msgstr "A cserét jelenleg nem sikerült kitölteni. Próbálja újra, vagy"
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "Your swap expired before it could be filled. Try again or"
+msgstr "A csereügylete lejárt, mielőtt kitölthette volna. Próbálja újra, vagy"
 
 #: src/hooks/useUniversalRouter.ts
 msgid "Your swap is expected to fail."
@@ -3137,6 +3355,7 @@ msgid "fee"
 msgstr "díj"
 
 #: src/components/AccountDrawer/MiniPortfolio/Activity/parseLocal.ts
+#: src/components/AccountDrawer/MiniPortfolio/Activity/parseRemote.tsx
 msgid "for"
 msgstr "számára"
 
@@ -3151,6 +3370,11 @@ msgstr "tól től"
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "here."
 msgstr "itt."
+
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+#: src/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal.tsx
+msgid "learn more."
+msgstr "tudj meg többet."
 
 #: src/components/Settings/TransactionDeadlineSettings/index.tsx
 msgid "minutes"
@@ -3358,6 +3582,11 @@ msgstr "{percentForSlider}%"
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} per {tokenA}"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "{txCount, plural, one {Network fee} other {Network fees}}"
+msgstr "{txCount, plural, one {Hálózati díj} other {Hálózati díjak}}"
 
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "{uniqueCollections, plural, =1 {collection} other {collections}}"

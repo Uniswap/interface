@@ -78,7 +78,7 @@ export default function Toggle({ id, bgColor, isActive, toggle }: ToggleProps) {
   }
 
   return (
-    <Wrapper id={id} isActive={isActive} onClick={switchToggle}>
+    <Wrapper id={id} data-testid={id} role="option" aria-selected={isActive} isActive={isActive} onClick={switchToggle}>
       <ToggleElement isActive={isActive} bgColor={bgColor} isInitialToggleLoad={isInitialToggleLoad} />
     </Wrapper>
   )

@@ -86,9 +86,10 @@ export const generateTweetForAsset = (asset: GenieAsset): string => {
 
 export const generateTweetForPurchase = (assets: UpdatedGenieAsset[], txHashUrl: string): string => {
   const multipleCollections = assets.length > 0 && assets.some((asset) => asset.address !== assets[0].address)
+  const collectionUrl = assets.length > 0 && !multipleCollections ? `/collection/${assets[0].address}` : ''
   const tweetText = `I just purchased ${
     multipleCollections ? `${assets.length} NFTs` : `${assets.length} ${assets[0].collectionName ?? 'NFT'}`
-  } with @Uniswap 🦄\n\nhttps://app.uniswap.org/#/nfts/collection/0x60bb1e2aa1c9acafb4d34f71585d7e959f387769\n${txHashUrl}`
+  } with @Uniswap 🦄\n\nhttps://app.uniswap.org/#/nfts${collectionUrl}\n${txHashUrl}`
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
 }
 

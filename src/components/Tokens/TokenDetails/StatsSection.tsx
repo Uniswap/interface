@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
+import { ChainId } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
@@ -68,7 +68,7 @@ function Stat({
 }
 
 type StatsSectionProps = {
-  chainId: SupportedChainId
+  chainId: ChainId
   address: string
   priceLow52W?: NumericStat
   priceHigh52W?: NumericStat

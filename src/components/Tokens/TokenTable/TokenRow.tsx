@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
+import { sendAnalyticsEvent } from 'analytics'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, validateUrlChainParam } from 'graphql/data/util'
+import { getTokenDetailsURL, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
@@ -435,7 +435,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const filterString = useAtomValue(filterStringAtom)
 
   const filterNetwork = validateUrlChainParam(useParams<{ chainName?: string }>().chainName?.toUpperCase())
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[filterNetwork]
+  const chainId = supportedChainIdFromGQLChain(filterNetwork)
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
@@ -458,7 +458,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <div ref={ref} data-testid={`token-table-row-${token.symbol}`}>
+    <div ref={ref} data-testid={`token-table-row-${token.address}`}>
       <StyledLink
         to={getTokenDetailsURL(token)}
         onClick={() =>

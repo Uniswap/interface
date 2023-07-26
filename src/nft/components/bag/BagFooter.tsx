@@ -1,10 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
@@ -13,11 +13,12 @@ import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { SupportedChainId } from 'constants/chains'
+import { isSupportedChain } from 'constants/chains'
 import { useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
 import { useCurrency } from 'hooks/Tokens'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
@@ -37,7 +38,6 @@ import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { switchChain } from 'utils/switchChain'
 import { shallow } from 'zustand/shallow'
 
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
@@ -297,7 +297,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
-  const usingPayWithAnyToken = !!inputCurrency && chainId === SupportedChainId.MAINNET
+  const usingPayWithAnyToken = !!inputCurrency && chainId === ChainId.MAINNET
   const { universalRouterAddress, universalRouterAddressIsLoading } = useNftUniversalRouterAddress()
 
   useSubscribeTransactionState(setModalIsOpen)
@@ -327,7 +327,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
-    if (!connected || chainId !== SupportedChainId.MAINNET) {
+    if (!connected || chainId !== ChainId.MAINNET) {
       return undefined
     }
 
@@ -348,6 +348,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     setBagStatus(BagStatus.ADDING_TO_BAG)
   }, [inputCurrency, setBagStatus])
 
+  const switchChain = useSwitchChain()
   const {
     buttonText,
     buttonTextColor,
@@ -359,8 +360,8 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     handleClick,
     buttonColor,
   } = useMemo((): BuyButtonStateData => {
-    if (connected && chainId !== SupportedChainId.MAINNET) {
-      const handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
+    if (connected && chainId !== ChainId.MAINNET) {
+      const handleClick = () => switchChain(connector, ChainId.MAINNET)
       return getBuyButtonStateData(BuyButtonStates.NOT_SUPPORTED_CHAIN, theme, handleClick)
     }
 
@@ -441,6 +442,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     priceImpact,
     theme,
     fetchAssets,
+    switchChain,
     connector,
     toggleWalletDrawer,
     setBagExpanded,
@@ -461,23 +463,27 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         <FooterHeader gap="xs">
           <CurrencyRow>
             <Column gap="xs">
-              <ThemedText.SubHeaderSmall>
-                <Trans>Pay with</Trans>
-              </ThemedText.SubHeaderSmall>
-              <CurrencyInput
-                onClick={() => {
-                  if (!bagIsLocked) {
-                    setTokenSelectorOpen(true)
-                    sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
-                  }
-                }}
-              >
-                <CurrencyLogo currency={activeCurrency} size="24px" />
-                <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
-                  {activeCurrency?.symbol}
-                </ThemedText.HeadlineSmall>
-                <ChevronDown size={20} color={theme.textSecondary} />
-              </CurrencyInput>
+              {isSupportedChain(chainId) && (
+                <>
+                  <ThemedText.SubHeaderSmall>
+                    <Trans>Pay with</Trans>
+                  </ThemedText.SubHeaderSmall>
+                  <CurrencyInput
+                    onClick={() => {
+                      if (!bagIsLocked) {
+                        setTokenSelectorOpen(true)
+                        sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
+                      }
+                    }}
+                  >
+                    <CurrencyLogo currency={activeCurrency} size="24px" />
+                    <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
+                      {activeCurrency?.symbol}
+                    </ThemedText.HeadlineSmall>
+                    <ChevronDown size={20} color={theme.textSecondary} />
+                  </CurrencyInput>
+                </>
+              )}
             </Column>
             <TotalColumn gap="xs">
               <ThemedText.SubHeaderSmall marginBottom="4px">

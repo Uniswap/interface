@@ -49,7 +49,14 @@ describe('#useBestV3Trade ExactIn', () => {
 
     const { result } = renderHook(() => useBestTrade(TradeType.EXACT_INPUT, USDCAmount, DAI))
 
-    expect(useRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, DAI, RouterPreference.CLIENT)
+    expect(useRoutingAPITrade).toHaveBeenCalledWith(
+      TradeType.EXACT_INPUT,
+      USDCAmount,
+      DAI,
+      RouterPreference.CLIENT,
+      true, // skipFetch
+      undefined
+    )
     expect(useClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, USDCAmount, DAI)
     expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
   })
@@ -61,7 +68,14 @@ describe('#useBestV3Trade ExactIn', () => {
 
     const { result } = renderHook(() => useBestTrade(TradeType.EXACT_INPUT, USDCAmount, DAI))
 
-    expect(useRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, DAI, RouterPreference.CLIENT)
+    expect(useRoutingAPITrade).toHaveBeenCalledWith(
+      TradeType.EXACT_INPUT,
+      USDCAmount,
+      DAI,
+      RouterPreference.CLIENT,
+      true, // skipFetch
+      undefined
+    )
     expect(result.current).toEqual({ state: TradeState.NO_ROUTE_FOUND, trade: undefined })
   })
 
@@ -117,9 +131,11 @@ describe('#useBestV3Trade ExactOut', () => {
 
     expect(useRoutingAPITrade).toHaveBeenCalledWith(
       TradeType.EXACT_OUTPUT,
-      undefined,
+      DAIAmount,
       USDC_MAINNET,
-      RouterPreference.CLIENT
+      RouterPreference.CLIENT,
+      true, // skipFetch
+      undefined
     )
     expect(useClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, DAIAmount, USDC_MAINNET)
     expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
@@ -134,9 +150,11 @@ describe('#useBestV3Trade ExactOut', () => {
 
     expect(useRoutingAPITrade).toHaveBeenCalledWith(
       TradeType.EXACT_OUTPUT,
-      undefined,
+      DAIAmount,
       USDC_MAINNET,
-      RouterPreference.CLIENT
+      RouterPreference.CLIENT,
+      true, // skipFetch
+      undefined
     )
     expect(result.current).toEqual({ state: TradeState.NO_ROUTE_FOUND, trade: undefined })
   })
