@@ -8,7 +8,9 @@ import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
+import { V2Unsupported } from 'components/V2Unsupported'
 import { isSupportedChain } from 'constants/chains'
+import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
@@ -438,6 +440,9 @@ function RemoveLiquidity() {
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
     liquidityPercentChangeCallback
   )
+
+  const networkSupportsV2 = useNetworkSupportsV2()
+  if (!networkSupportsV2) return <V2Unsupported />
 
   return (
     <>
