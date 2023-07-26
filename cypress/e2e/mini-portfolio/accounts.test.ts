@@ -41,6 +41,7 @@ describe('Mini Portfolio account drawer', () => {
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('NFTs').click()
     cy.get(getTestSelector('mini-portfolio-page')).contains('I Got Plenty')
 
+    cy.intercept(/graphql/, { fixture: 'mini-portfolio/pools.json' })
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('Pools').click()
     cy.get(getTestSelector('mini-portfolio-page')).contains('No pools yet')
 

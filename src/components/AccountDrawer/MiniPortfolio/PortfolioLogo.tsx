@@ -1,7 +1,8 @@
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
-import { LogoImage, MissingImageLogo } from 'components/Logo/AssetLogo'
+import { MissingImageLogo } from 'components/Logo/AssetLogo'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { Unicon } from 'components/Unicon'
 import { getChainInfo } from 'constants/chainInfo'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
@@ -20,16 +21,16 @@ const DoubleLogoContainer = styled.div`
   position: relative;
   top: 0;
   left: 0;
-  ${LogoImage}:nth-child(n) {
+  img:nth-child(n) {
     width: 19px;
     height: 40px;
     object-fit: cover;
   }
-  ${LogoImage}:nth-child(1) {
+  img:nth-child(1) {
     border-radius: 20px 0 0 20px;
     object-position: 0 0;
   }
-  ${LogoImage}:nth-child(2) {
+  img:nth-child(2) {
     border-radius: 0 20px 20px 0;
     object-position: 100% 0;
   }
@@ -64,6 +65,12 @@ const StyledChainLogo = styled.img`
 const SquareChainLogo = styled.img`
   height: 100%;
   width: 100%;
+`
+
+const CircleLogoImage = styled.img<{ size: string }>`
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
+  border-radius: 50%;
 `
 
 const L2LogoContainer = styled.div<{ $backgroundColor?: string }>`
@@ -109,18 +116,16 @@ export function PortfolioLogo({
       <Unicon size={40} address={accountAddress} />
     )
   } else if (currencies && currencies.length) {
-    const logo1 = <LogoImage size={size} src={src ?? blankTokenUrl} onError={nextSrc} />
-
-    const logo2 = <LogoImage size={size} src={src2 ?? blankTokenUrl} onError={nextSrc2} />
-
+    const logo1 = <CircleLogoImage size={size} src={src ?? blankTokenUrl} onError={nextSrc} />
+    const logo2 = <CircleLogoImage size={size} src={src2 ?? blankTokenUrl} onError={nextSrc2} />
     component =
       currencies.length > 1 ? (
         <DoubleLogoContainer style={style}>
           {logo1}
           {logo2}
         </DoubleLogoContainer>
-      ) : src ? (
-        logo1
+      ) : currencies.length === 1 ? (
+        <CurrencyLogo currency={currencies[0]} size={size} />
       ) : (
         <MissingImageLogo size={size}>
           {currencies[0]?.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
@@ -130,11 +135,11 @@ export function PortfolioLogo({
     component =
       images.length > 1 ? (
         <DoubleLogoContainer style={style}>
-          <LogoImage size={size} src={images[0]} />
-          <LogoImage size={size} src={images[images.length - 1]} />
+          <CircleLogoImage size={size} src={images[0]} />
+          <CircleLogoImage size={size} src={images[images.length - 1]} />
         </DoubleLogoContainer>
       ) : (
-        <LogoImage size={size} src={images[0]} />
+        <CircleLogoImage size={size} src={images[0]} />
       )
   } else {
     return <UnknownContract width={size} height={size} />

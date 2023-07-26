@@ -186,13 +186,13 @@ function getContent(args: ContentArgs): PendingModalStep {
       let labelText: string | null = null
       let href: string | null = null
 
-      if (chainId && swapConfirmed && swapResult && swapResult.type === TradeFillType.Classic) {
-        labelText = t`View on Explorer`
-        href = getExplorerLink(chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)
-      } else if (swapPending && trade?.fillType === TradeFillType.UniswapX) {
+      if (swapPending && trade?.fillType === TradeFillType.UniswapX) {
         labelText = t`Learn more about swapping with UniswapX`
         href = 'https://support.uniswap.org/hc/en-us/articles/17515415311501'
-      } else if (swapPending) {
+      } else if (chainId && (swapConfirmed || swapPending) && swapResult && swapResult.type === TradeFillType.Classic) {
+        labelText = t`View on Explorer`
+        href = getExplorerLink(chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)
+      } else {
         labelText = t`Proceed in your wallet`
       }
 

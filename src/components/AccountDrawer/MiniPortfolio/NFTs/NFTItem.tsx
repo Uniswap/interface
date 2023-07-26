@@ -1,5 +1,5 @@
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
 import Row from 'components/Row'

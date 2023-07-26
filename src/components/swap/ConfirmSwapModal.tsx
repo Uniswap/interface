@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
 import {
   InterfaceEventName,
   InterfaceModalName,
@@ -9,6 +8,7 @@ import {
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
 import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
@@ -161,17 +161,7 @@ function useConfirmModalState({
         case ConfirmModalState.APPROVING_TOKEN:
           setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
           invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
-          allowance
-            .approve()
-            .then(() => {
-              sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-                chain_id: chainId,
-                token_symbol: maximumAmountIn?.currency.symbol,
-                token_address: maximumAmountIn?.currency.address,
-                ...trace,
-              })
-            })
-            .catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
+          allowance.approve().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
           break
         case ConfirmModalState.PERMITTING:
           setConfirmModalState(ConfirmModalState.PERMITTING)
