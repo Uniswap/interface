@@ -3,7 +3,7 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
-import { UNSUPPORTED_V2POOL_CHAIN_IDS } from 'constants/chains'
+import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
@@ -91,12 +91,12 @@ const Layer2Prompt = styled(EmptyProposals)`
 
 export default function Pool() {
   const theme = useTheme()
-  const { account, chainId } = useWeb3React()
-  const unsupportedV2Network = chainId && UNSUPPORTED_V2POOL_CHAIN_IDS.includes(chainId)
+  const { account } = useWeb3React()
+  const networkSupportsV2 = useNetworkSupportsV2()
 
   // fetch the user's balances of all tracked V2 LP tokens
   let trackedTokenPairs = useTrackedTokenPairs()
-  if (unsupportedV2Network) trackedTokenPairs = []
+  if (!networkSupportsV2) trackedTokenPairs = []
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
@@ -178,7 +178,7 @@ export default function Pool() {
             <CardNoise />
           </VoteCard>
 
-          {unsupportedV2Network ? (
+          {!networkSupportsV2 ? (
             <AutoColumn gap="lg" justify="center">
               <AutoColumn gap="md" style={{ width: '100%' }}>
                 <Layer2Prompt>
