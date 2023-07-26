@@ -16,7 +16,7 @@ import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useProvider, useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
-import { signTypedData } from 'wallet/src/features/wallet/signing/signing.ios'
+import { signTypedData } from 'wallet/src/features/wallet/signing/signing'
 import { useAsyncData } from 'wallet/src/utils/hooks'
 import { currentTimeInSeconds, inXMinutesUnix } from 'wallet/src/utils/time'
 

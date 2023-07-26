@@ -51,7 +51,7 @@ export async function signTypedDataMessage(
   message: string,
   account: Account,
   signerManager: SignerManager,
-  provider: ethers.providers.JsonRpcProvider
+  provider?: ethers.providers.JsonRpcProvider
 ): Promise<string> {
   const parsedData: EthTypedMessage = JSON.parse(message)
   // ethers computes EIP712Domain type for you, so we should not pass it in directly

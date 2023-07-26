@@ -1,6 +1,6 @@
 // If the message to be signed is a hex string, it must be converted to an array:
 
-import { TypedDataDomain, TypedDataField, Wallet } from 'ethers'
+import { ethers, TypedDataDomain, TypedDataField, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
@@ -42,7 +42,8 @@ export async function signTypedData(
 export async function signTypedDataMessage(
   message: string,
   account: Account,
-  signerManager: SignerManager
+  signerManager: SignerManager,
+  _provider?: ethers.providers.JsonRpcProvider
 ): Promise<string> {
   const parsedData: EthTypedMessage = JSON.parse(message)
   // ethers computes EIP712Domain type for you, so we should not pass it in directly

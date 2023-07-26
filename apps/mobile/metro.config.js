@@ -15,8 +15,6 @@ const workspaceRoot = path.resolve(mobileRoot, '../..')
 
 const watchFolders = [mobileRoot, `${workspaceRoot}/node_modules`, `${workspaceRoot}/packages`]
 
-const iosExtensions = ['ios.js', 'ios.jsx', 'ios.ts', 'ios.tsx']
-
 module.exports = (async () => {
   const {
     resolver: { sourceExts, assetExts },
@@ -25,7 +23,7 @@ module.exports = (async () => {
     resolver: {
       nodeModulesPaths: [`${workspaceRoot}/node_modules`],
       assetExts: assetExts.filter((ext) => ext !== 'svg'),
-      sourceExts: [...sourceExts, ...iosExtensions, 'svg', 'cjs'],
+      sourceExts: [...sourceExts, 'svg', 'cjs'],
     },
     transformer: {
       getTransformOptions: async () => ({

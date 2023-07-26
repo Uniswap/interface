@@ -33,7 +33,7 @@ import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
-import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing.ios'
+import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
 import {
   DappInfo,
   EthMethod,
