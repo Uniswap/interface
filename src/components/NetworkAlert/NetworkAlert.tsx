@@ -160,8 +160,8 @@ const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [ChainId.BNB]: colors.gold400,
   [ChainId.ARBITRUM_GOERLI]: '#0490ed',
   [ChainId.AVALANCHE]: '#ff3856',
-  [ChainId.BASE]: '#0052FF',
-  [ChainId.BASE_GOERLI]: '#0052FF',
+  [ChainId.BASE]: colors.networkBase,
+  [ChainId.BASE_GOERLI]: colors.networkBase,
 }
 
 function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertChains {
