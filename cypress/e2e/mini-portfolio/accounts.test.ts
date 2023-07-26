@@ -79,7 +79,6 @@ describe('Mini Portfolio account drawer', () => {
 
   it('fetches ENS name', () => {
     cy.hardhat().then((hardhat) => {
-      const account = hardhat.wallets[0].address
       const haydenAccount = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
       const haydenENS = 'hayden.eth'
 
