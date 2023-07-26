@@ -77,7 +77,9 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
         .then((block) => {
           if (!stale) onChainBlock(activeChainId, block)
         })
-        .catch()
+        .catch(() => {
+          console.error(`Failed to get block number for chainId ${activeChainId}`, error)
+        })
 
       const onBlock = (block: number) => onChainBlock(activeChainId, block)
       provider.on('block', onBlock)
@@ -97,7 +99,8 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
         .then((block) => {
           onChainBlock(ChainId.MAINNET, block)
         })
-        .catch()
+        // swallow errors - it's ok if this fails, as we'll try again if we activate mainnet
+        .catch(() => undefined)
     }
   }, [mainnetBlock, onChainBlock])
 
