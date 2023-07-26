@@ -149,10 +149,11 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   ) : null
 
   // first price point on the x-axis of the current time period's chart
-  const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
+  const startingPrice = prices?.[0] ?? DATA_EMPTY
   // last price point on the x-axis of the current time period's chart
-  const endingPrice = originalPrices?.[originalPrices.length - 1] ?? DATA_EMPTY
-  const [displayPrice, setDisplayPrice] = useState(startingPrice)
+  const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
+
+  const [displayPrice, setDisplayPrice] = useState(endingPrice)
 
   // set display price to ending price when prices have changed.
   useEffect(() => {
@@ -173,9 +174,9 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   const rdScale = useMemo(
     () =>
       scaleLinear()
-        .domain(getPriceBounds(originalPrices ?? []))
+        .domain(getPriceBounds(prices ?? []))
         .range([graphInnerHeight, 0]),
-    [originalPrices, graphInnerHeight]
+    [prices, graphInnerHeight]
   )
 
   function tickFormat(
@@ -294,7 +295,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   return (
     <>
       <ChartHeader data-cy="chart-header">
-        {displayPrice.value ? (
+        {displayPrice.value != null ? (
           <>
             <TokenPrice>{formatUSDPrice(displayPrice.value)}</TokenPrice>
             <DeltaContainer>
