@@ -240,7 +240,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         <StatusWrapper>
           <StatusIcon account={account} connection={connection} size={40} />
           {account && (
-            <AccountNamesWrapper>
+            <AccountNamesWrapper data-testid="account-names">
               <ThemedText.SubHeader>
                 <CopyText toCopy={ENSName ?? account}>{ENSName ?? shortenAddress(account)}</CopyText>
               </ThemedText.SubHeader>
