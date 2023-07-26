@@ -62,15 +62,13 @@ const ButtonRow = styled(RowFixed)`
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
-    flex-direction: row-reverse;
   `};
 `
 const PoolMenu = styled(Menu)`
   margin-left: 0;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex: 1 1 auto;
-    width: 49%;
-    right: 0px;
+    width: 50%;
   `};
 
   a {
@@ -129,7 +127,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   width: fit-content;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex: 1 1 auto;
-    width: 100%;
+    width: 50%;
   `};
 `
 
