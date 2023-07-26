@@ -11,8 +11,3 @@ export function getBalance(token: Currency) {
     .then((hardhat) => hardhat.getBalance(hardhat.wallet, token))
     .then((balance) => Number(balance.toFixed(1)))
 }
-
-export function switchChain(chain: string) {
-  cy.get(getTestSelector('chain-selector')).eq(1).click()
-  cy.contains(chain).click()
-}
