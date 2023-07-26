@@ -72,7 +72,8 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     // for now recipient === swapper
     recipient: account,
     swapper: account,
-    useUniswapX: forceUniswapXOn,
+    // if forceUniswapXOn is not ON, then use the backend's default value
+    useUniswapX: forceUniswapXOn || undefined,
     routingType: URAQuoteType.DUTCH_LIMIT,
   }
 
