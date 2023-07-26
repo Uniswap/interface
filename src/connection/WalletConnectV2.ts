@@ -83,10 +83,7 @@ export class UniwalletConnect extends WalletConnectV2 {
 
       // Opens deeplink to Uniswap Wallet if on iOS
       if (isIOS) {
-        const newTab = window.open(`https://uniswap.org/app/wc?uri=${encodeURIComponent(uri)}`)
-
-        // Fixes blank tab opening on mobile Chrome
-        newTab?.close()
+        window.location.href = `uniswap://wc?uri=${encodeURIComponent(uri)}`
       }
     })
   }
