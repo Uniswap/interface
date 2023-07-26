@@ -32,7 +32,7 @@ interface Props {
 export default function InputWithSuffix(props: Props): JSX.Element {
   const isAndroid = Platform.OS === 'android'
 
-  return isAndroid && props.inputSuffix ? (
+  return isAndroid ? (
     <Box width="100%">
       <Inputs {...props} layerType="foreground" />
       <Inputs {...props} layerType="background" />
@@ -88,7 +88,7 @@ function Inputs({
           py="none"
           scrollEnabled={false}
           textAlign={
-            textAlign ?? isMultiline ? 'right' : inputAlignment === 'flex-start' ? 'left' : 'center'
+            textAlign ?? (isMultiline || inputAlignment === 'flex-start' ? 'left' : 'center')
           }
           textAlignVertical="bottom"
           value={value}
@@ -114,7 +114,7 @@ function Inputs({
           selectionColor={theme.colors.textPrimary}
           spellCheck={false}
           testID="import_account_form/input"
-          textAlign={textAlign ?? (inputAlignment !== 'center' || value ? 'right' : 'left')}
+          textAlign={textAlign ?? (inputAlignment === 'center' || !value ? 'left' : 'center')}
           textAlignVertical="bottom"
           value={value}
           width={value ? 'auto' : (layout?.width || 0) + theme.spacing.spacing8}
