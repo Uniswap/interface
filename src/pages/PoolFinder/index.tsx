@@ -3,6 +3,8 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
+import { V2Unsupported } from 'components/V2Unsupported'
+import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
@@ -95,6 +97,9 @@ export default function PoolFinder() {
       </Text>
     </LightCard>
   )
+
+  const networkSupportsV2 = useNetworkSupportsV2()
+  if (!networkSupportsV2) return <V2Unsupported />
 
   return (
     <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
