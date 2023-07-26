@@ -246,7 +246,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               </ThemedText.SubHeader>
               {/* Displays smaller view of account if ENS name was rendered above */}
               {ENSName && (
-                <ThemedText.BodySmall color="textTertiary">
+                <ThemedText.BodySmall color="textTertiary" data-testid="ens-name">
                   <CopyText toCopy={account}>{shortenAddress(account)}</CopyText>
                 </ThemedText.BodySmall>
               )}
