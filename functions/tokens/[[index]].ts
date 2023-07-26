@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unused-modules */
 import { MetaTagInjector } from '../components/metaTagInjector'
 import getToken from '../utils/getToken'
+import { getCache, putCache } from '../utils/useCache'
 
 const convertTokenAddress = (tokenAddress: string) => {
   return tokenAddress && tokenAddress === 'NATIVE' ? '0x0000000000000000000000000000000000000000' : tokenAddress
@@ -16,18 +17,15 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const tokenPromise = getToken(networkName, tokenAddress, request.url)
   const resPromise = next()
   try {
-    const cache = await caches.open('tokens-cache')
-    const response = await cache.match(request.url)
+    const response = await getCache(request.url, 'tokens-cache')
     if (response) {
-      const data = JSON.parse(await response.text())
-      return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(await resPromise)
+      return new HTMLRewriter().on('head', new MetaTagInjector(response)).transform(await resPromise)
     } else {
       const [data, res] = await Promise.all([tokenPromise, resPromise])
       if (!data) {
         return resPromise
       }
-      const response = new Response(JSON.stringify(data))
-      await cache.put(request.url, response)
+      putCache(new Response(JSON.stringify(data)), request.url, 'tokens-cache')
       return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(res)
     }
   } catch (e) {

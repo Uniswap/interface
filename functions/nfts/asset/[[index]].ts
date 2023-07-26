@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unused-modules */
 import { MetaTagInjector } from '../../components/metaTagInjector'
 import getAsset from '../../utils/getAsset'
+import { getCache, putCache } from '../../utils/useCache'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const { index } = params
@@ -9,18 +10,15 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const assetPromise = getAsset(collectionAddress, tokenId, request.url)
   const resPromise = next()
   try {
-    const cache = await caches.open('assets-cache')
-    const response = await cache.match(request.url)
+    const response = await getCache(request.url, 'assets-cache')
     if (response) {
-      const data = JSON.parse(await response.text())
-      return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(await resPromise)
+      return new HTMLRewriter().on('head', new MetaTagInjector(response)).transform(await resPromise)
     } else {
       const [data, res] = await Promise.all([assetPromise, resPromise])
       if (!data) {
         return resPromise
       }
-      const response = new Response(JSON.stringify(data))
-      await cache.put(request.url, response)
+      await putCache(new Response(JSON.stringify(data)), request.url, 'assets-cache')
       return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(res)
     }
   } catch (e) {
