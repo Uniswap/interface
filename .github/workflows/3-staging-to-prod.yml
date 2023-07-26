@@ -6,6 +6,10 @@ name: 3 | Push staging -> prod
 
 on:
   workflow_dispatch:
+    inputs:
+      skip_tests:
+        default: false
+        type: boolean
 
 jobs:
   push-prod:
@@ -15,6 +19,7 @@ jobs:
       name: push/prod
     steps:
       - name: Check test status
+        if: ${{ !inputs.skip_tests }}
         uses: actions/github-script@v6.4.1
         with:
           script: |
