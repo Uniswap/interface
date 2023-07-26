@@ -12177,6 +12177,7 @@ __metadata:
     copy-webpack-plugin: ^11.0.0
     crypto-browserify: ^3.12.0
     dotenv-webpack: 8.0.1
+    esbuild-loader: ^3.0.1
     eslint-config-custom: "workspace:^"
     eslint-plugin-prettier: 4.2.1
     eth-rpc-errors: 4.0.3
@@ -18822,6 +18823,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"esbuild-loader@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "esbuild-loader@npm:3.0.1"
+  dependencies:
+    esbuild: ^0.17.6
+    get-tsconfig: ^4.4.0
+    loader-utils: ^2.0.4
+    webpack-sources: ^1.4.3
+  peerDependencies:
+    webpack: ^4.40.0 || ^5.0.0
+  checksum: c8925eb3c04f53841bfc387fb6897e52735fbfb3bcfae2401c98aa076907ab85672cda520de1bc5db9c4ec5e0d4effdf12b04fa4c980b51a6af9192b70110697
+  languageName: node
+  linkType: hard
+
 "esbuild-plugin-alias@npm:^0.2.1":
   version: 0.2.1
   resolution: "esbuild-plugin-alias@npm:0.2.1"
@@ -21595,10 +21610,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"get-tsconfig@npm:^4.2.0, get-tsconfig@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "get-tsconfig@npm:4.5.0"
-  checksum: 687ee2bd69a5a07db2e2edeb4d6c41c3debb38f6281a66beb643e3f5b520252e27fcbbb5702bdd9a5f05dcf8c1d2e0150a4d8a960ad75cbdea74e06a51e91b02
+"get-tsconfig@npm:^4.2.0, get-tsconfig@npm:^4.4.0, get-tsconfig@npm:^4.5.0":
+  version: 4.6.2
+  resolution: "get-tsconfig@npm:4.6.2"
+  dependencies:
+    resolve-pkg-maps: ^1.0.0
+  checksum: e791e671a9b55e91efea3ca819ecd7a25beae679e31c83234bf3dd62ddd93df070c1b95ae7e29d206358ebb6408f6f79ac6d83a32a3bbd6a6d217babe23de077
   languageName: node
   linkType: hard
 
@@ -33375,6 +33392,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"resolve-pkg-maps@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "resolve-pkg-maps@npm:1.0.0"
+  checksum: 1012afc566b3fdb190a6309cc37ef3b2dcc35dff5fa6683a9d00cd25c3247edfbc4691b91078c97adc82a29b77a2660c30d791d65dab4fc78bfc473f60289977
+  languageName: node
+  linkType: hard
+
 "resolve-url@npm:^0.2.1":
   version: 0.2.1
   resolution: "resolve-url@npm:0.2.1"
@@ -34743,6 +34767,13 @@ __metadata:
   dependencies:
     is-plain-obj: ^1.0.0
   checksum: f0fd827fa9f8f866e98588d2a38c35209afbf1e9a05bb0e4ceeeb8bbf31d923c8902b0a7e0f561590ddb65e58eba6a74f74b991c85360bcc52e83a3f0d1cffd7
+  languageName: node
+  linkType: hard
+
+"source-list-map@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "source-list-map@npm:2.0.1"
+  checksum: 806efc6f75e7cd31e4815e7a3aaf75a45c704871ea4075cb2eb49882c6fca28998f44fc5ac91adb6de03b2882ee6fb02f951fdc85e6a22b338c32bfe19557938
   languageName: node
   linkType: hard
 
@@ -38343,6 +38374,16 @@ __metadata:
   version: 3.0.0
   resolution: "webpack-node-externals@npm:3.0.0"
   checksum: 355080c35c821115b97dda8c93d9d0565a90a6012a532324eb0d6a64f8f0d609431fd29504fc7ce414755841ac14f601f3eef99472c2c5dc00233b504ebe73f2
+  languageName: node
+  linkType: hard
+
+"webpack-sources@npm:^1.4.3":
+  version: 1.4.3
+  resolution: "webpack-sources@npm:1.4.3"
+  dependencies:
+    source-list-map: ^2.0.0
+    source-map: ~0.6.1
+  checksum: 37463dad8d08114930f4bc4882a9602941f07c9f0efa9b6bc78738cd936275b990a596d801ef450d022bb005b109b9f451dd087db2f3c9baf53e8e22cf388f79
   languageName: node
   linkType: hard
 

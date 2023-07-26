@@ -9,6 +9,12 @@ const DotenvPlugin = require('dotenv-webpack')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
+
+// setting to web for tamagui
+process.env.TAMAGUI_TARGET = 'web'
+// if not set tamagui wont add nice data-at, data-in etc debug attributes
+process.env.NODE_ENV = NODE_ENV
+
 const EXTENSION_NAME =
   NODE_ENV === 'development' ? '(DEV) Uniswap Wallet' : 'Uniswap Wallet'
 
@@ -186,7 +192,39 @@ const options = {
       },
       babelLoaderConfiguration,
       swcLoaderConfiguration,
-      // tamaguiLoaderConfiguration, // NOTE(peter) turned off for now bc it's not working with our webpack conifg. it's just an optimization compiler that we can configure later once i figure it out
+      {
+        test: /.tsx$/,
+        exclude: file => {
+          if (file.includes('node_modules')) {
+            return true
+          }
+          return false
+        },
+        use: [
+          // idk why but handing the source off to swc it gets confused about jsx, but esbuild doesnt
+          {
+            loader: 'esbuild-loader',
+            options: {
+              target: 'es2020',
+              loader: 'tsx',
+              minify: false,
+            },
+          },
+          {
+            loader: 'tamagui-loader',
+            options: {
+              config: './tamagui.config.ts',
+              components: ['tamagui', 'ui'],
+              // add files here that should be parsed by the compiler from within any of the apps/*
+              // for example if you have constants.ts then constants.js goes here and it will eval them
+              // at build time and if it can flatten views even if they use imports from that file
+              importsWhitelist: ['constants.js'],
+              disableExtraction: NODE_ENV === 'development',
+              // disable: true,
+            }
+          }
+        ]
+      }
     ],
   },
   resolve: {
