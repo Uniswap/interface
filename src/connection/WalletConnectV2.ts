@@ -83,6 +83,8 @@ export class UniwalletConnect extends WalletConnectV2 {
 
       // Opens deeplink to Uniswap Wallet if on iOS
       if (isIOS) {
+        // Using window.location.href to open the deep link ensures smooth navigation and leverages OS handling for installed apps,
+        // avoiding potential popup blockers or inconsistent behavior associated with window.open
         window.location.href = `uniswap://wc?uri=${encodeURIComponent(uri)}`
       }
     })
