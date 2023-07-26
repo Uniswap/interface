@@ -2,6 +2,7 @@ import { Navigate, useParams } from 'react-router-dom'
 
 import AddLiquidityV2 from './index'
 
+// eslint-disable-next-line
 export function RedirectDuplicateTokenIdsV2() {
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
 
