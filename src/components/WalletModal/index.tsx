@@ -51,6 +51,10 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     }
   }, [chainId, connector])
 
+  useEffect(() => {
+    alert(`${!!window.ethereum}, ${!!window.ethereum?.isMetaMask}`)
+  }, [])
+
   return (
     <Wrapper data-testid="wallet-modal">
       <AutoRow justify="space-between" width="100%" marginBottom="16px">
