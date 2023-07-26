@@ -3,6 +3,7 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
+import { V2Unsupported } from 'components/V2Unsupported'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
@@ -35,8 +36,9 @@ const PageWrapper = styled(AutoColumn)`
   `};
 `
 
-const VoteCard = styled(DataCard)`
+const LPFeeExplainer = styled(DataCard)`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  margin: 0 0 16px 0;
   overflow: hidden;
 `
 
@@ -83,10 +85,6 @@ const EmptyProposals = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`
-
-const Layer2Prompt = styled(EmptyProposals)`
-  margin-top: 16px;
 `
 
 export default function Pool() {
@@ -145,7 +143,7 @@ export default function Pool() {
     <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <PageWrapper>
-          <VoteCard>
+          <LPFeeExplainer>
             <CardBGImage />
             <CardNoise />
             <CardSection>
@@ -176,18 +174,10 @@ export default function Pool() {
             </CardSection>
             <CardBGImage />
             <CardNoise />
-          </VoteCard>
+          </LPFeeExplainer>
 
           {!networkSupportsV2 ? (
-            <AutoColumn gap="lg" justify="center">
-              <AutoColumn gap="md" style={{ width: '100%' }}>
-                <Layer2Prompt>
-                  <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
-                    <Trans>Uniswap V2 is not available on this network.</Trans>
-                  </ThemedText.DeprecatedBody>
-                </Layer2Prompt>
-              </AutoColumn>
-            </AutoColumn>
+            <V2Unsupported />
           ) : (
             <AutoColumn gap="lg" justify="center">
               <AutoColumn gap="md" style={{ width: '100%' }}>
