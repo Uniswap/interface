@@ -21,7 +21,7 @@ jobs:
             const statuses = await github.rest.repos.listCommitStatusesForRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: context.payload.head_commit.sha
+              ref: context.sha
             })
             const status = statuses.data.find(status => status.context === 'Test / promotion')?.state || 'missing'
             core.info('Status: ' + status)
