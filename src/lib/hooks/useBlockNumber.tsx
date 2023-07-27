@@ -7,9 +7,9 @@ import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, 
 const MISSING_PROVIDER = Symbol()
 const BlockNumberContext = createContext<
   | {
-      value?: number
       fastForward(block: number): void
-      mainnetValue?: number
+      block?: number
+      mainnetBlock?: number
     }
   | typeof MISSING_PROVIDER
 >(MISSING_PROVIDER)
@@ -22,17 +22,17 @@ function useBlockNumberContext() {
   return blockNumber
 }
 
-/** Requires that BlockUpdater be installed in the DOM tree. */
-export default function useBlockNumber(): number | undefined {
-  return useBlockNumberContext().value
-}
-
 export function useFastForwardBlockNumber(): (block: number) => void {
   return useBlockNumberContext().fastForward
 }
 
+/** Requires that BlockUpdater be installed in the DOM tree. */
+export default function useBlockNumber(): number | undefined {
+  return useBlockNumberContext().block
+}
+
 export function useMainnetBlockNumber(): number | undefined {
-  return useBlockNumberContext().mainnetValue
+  return useBlockNumberContext().mainnetBlock
 }
 
 export function BlockNumberProvider({ children }: { children: ReactNode }) {
@@ -106,13 +106,17 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({
-      value: chainId === activeChainId ? block : undefined,
       fastForward: (update: number) => {
         if (block && update > block) {
-          setChainBlock({ chainId: activeChainId, block: update })
+          setChainBlock({
+            chainId: activeChainId,
+            block: update,
+            mainnetBlock: activeChainId === ChainId.MAINNET ? update : mainnetBlock,
+          })
         }
       },
-      mainnetValue: mainnetBlock,
+      block: chainId === activeChainId ? block : undefined,
+      mainnetBlock,
     }),
     [activeChainId, block, chainId, mainnetBlock]
   )
