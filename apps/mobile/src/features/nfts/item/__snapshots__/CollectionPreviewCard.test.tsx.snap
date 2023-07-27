@@ -106,7 +106,7 @@ exports[`renders collection preview card 1`] = `
                 {
                   "color": "rgba(93,103,133,1.00)",
                   "display": "flex",
-                  "flex": 1,
+                  "flex": 0,
                   "flexGrow": 0,
                   "flexWrap": "wrap",
                   "fontFamily": "Inter",

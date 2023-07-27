@@ -122,6 +122,7 @@ export function NFTCollectionScreen({
       address: asset.contractAddress ?? '',
       tokenId: asset.tokenId ?? '',
       isSpam: asset.isSpam ?? false,
+      fallbackData: asset,
     })
   }
 

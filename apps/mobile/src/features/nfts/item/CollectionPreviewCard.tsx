@@ -7,6 +7,7 @@ import { Box, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
+import { NFTItem } from 'src/features/nfts/types'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { imageSizes } from 'ui/src/theme/imageSizes'
@@ -19,23 +20,27 @@ export type Collection = NonNullable<
 
 interface CollectionPreviewCardProps {
   collection: Maybe<Collection>
+  fallbackData?: NFTItem
   onPress: () => void
   loading: boolean
 }
 export function CollectionPreviewCard({
   collection,
+  fallbackData,
   onPress,
   loading,
 }: CollectionPreviewCardProps): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
 
-  if (loading || !collection) {
+  if (loading || (!collection && !fallbackData?.name)) {
     return <Loader.Box borderRadius="$rounded16" height={theme.spacing.spacing60} />
   }
 
+  const isViewableCollection = Boolean(collection || fallbackData?.contractAddress)
+
   return (
-    <TouchableArea hapticFeedback disabled={!collection} onPress={onPress}>
+    <TouchableArea hapticFeedback disabled={!isViewableCollection} onPress={onPress}>
       <Flex
         row
         alignItems="center"
@@ -46,7 +51,7 @@ export function CollectionPreviewCard({
         px="spacing12"
         py="spacing12">
         <Flex row shrink alignItems="center" gap="spacing12" overflow="hidden">
-          {collection.image?.url ? (
+          {collection?.image?.url ? (
             <Box
               borderRadius="roundedFull"
               height={imageSizes.image40}
@@ -65,7 +70,7 @@ export function CollectionPreviewCard({
                 and large screens with sufficient padding */}
               <Box flexShrink={1}>
                 <Text color="textOnBrightPrimary" numberOfLines={1} variant="bodyLarge">
-                  {collection?.name || '-'}
+                  {collection?.name || fallbackData?.name || '-'}
                 </Text>
               </Box>
               {collection?.isVerified && (
@@ -95,12 +100,14 @@ export function CollectionPreviewCard({
             )}
           </Flex>
         </Flex>
-        <Chevron
-          color={theme.colors.textOnBrightSecondary}
-          direction="e"
-          height={theme.iconSizes.icon24}
-          width={theme.iconSizes.icon24}
-        />
+        {isViewableCollection ? (
+          <Chevron
+            color={theme.colors.textOnBrightSecondary}
+            direction="e"
+            height={theme.iconSizes.icon24}
+            width={theme.iconSizes.icon24}
+          />
+        ) : null}
       </Flex>
     </TouchableArea>
   )

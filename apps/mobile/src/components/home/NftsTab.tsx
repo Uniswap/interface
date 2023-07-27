@@ -87,8 +87,9 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
       address: item.contractAddress ?? '',
       tokenId: item.tokenId ?? '',
       isSpam: item.isSpam,
+      fallbackData: item,
     })
-  }, [item.contractAddress, item.isSpam, item.tokenId, navigation, owner])
+  }, [item, navigation, owner])
 
   const { menuActions, onContextMenuPress } = useNFTMenu({
     contractAddress: item.contractAddress,

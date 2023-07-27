@@ -6,11 +6,18 @@ import {
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { EducationContentType } from 'src/components/education'
+import { NFTItem } from 'src/features/nfts/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { TabIndex } from 'src/screens/HomeScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
-type NFTItem = { owner?: Address; address: string; tokenId: string; isSpam?: boolean }
+type NFTItemScreenParams = {
+  owner?: Address
+  address: string
+  tokenId: string
+  isSpam?: boolean
+  fallbackData?: NFTItem
+}
 
 export type CloudBackupFormParms = {
   address: Address
@@ -22,7 +29,7 @@ export type ExploreStackParamList = {
   [Screens.ExternalProfile]: {
     address: string
   }
-  [Screens.NFTItem]: NFTItem
+  [Screens.NFTItem]: NFTItemScreenParams
   [Screens.NFTCollection]: { collectionAddress: string }
   [Screens.TokenDetails]: {
     currencyId: string
@@ -94,7 +101,7 @@ export type AppStackParamList = {
   [Screens.TokenDetails]: {
     currencyId: string
   }
-  [Screens.NFTItem]: NFTItem
+  [Screens.NFTItem]: NFTItemScreenParams
   [Screens.NFTCollection]: { collectionAddress: string }
   [Screens.ExternalProfile]: {
     address: string

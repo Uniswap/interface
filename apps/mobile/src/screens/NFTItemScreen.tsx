@@ -55,7 +55,7 @@ export function NFTItemScreen({
   route: {
     // ownerFromProps needed here, when nftBalances GQL query returns a user NFT,
     // but nftAssets query for this NFT returns ownerAddress === null,
-    params: { owner: ownerFromProps, address, tokenId, isSpam },
+    params: { owner: ownerFromProps, address, tokenId, isSpam, fallbackData },
   },
 }: AppStackScreenProp<Screens.NFTItem>): JSX.Element {
   const { t } = useTranslation()
@@ -86,11 +86,20 @@ export function NFTItemScreen({
   const lastSaleData = data?.nftActivity?.edges[0]?.node
   const listingPrice = asset?.listings?.edges?.[0]?.node?.price
 
+  const name = useMemo(() => asset?.name ?? fallbackData?.name, [asset?.name, fallbackData?.name])
+  const description = useMemo(
+    () => asset?.description ?? fallbackData?.description,
+    [asset?.description, fallbackData?.description]
+  )
+  const imageUrl = useMemo(
+    () => asset?.image?.url ?? fallbackData?.imageUrl,
+    [asset?.image?.url, fallbackData?.imageUrl]
+  )
+
   const onPressCollection = (): void => {
-    if (asset && asset.collection?.collectionId && asset.nftContract?.address) {
-      navigation.navigate(Screens.NFTCollection, {
-        collectionAddress: asset.nftContract?.address,
-      })
+    const collectionAddress = asset?.nftContract?.address ?? fallbackData?.contractAddress
+    if (collectionAddress) {
+      navigation.navigate(Screens.NFTCollection, { collectionAddress })
     }
   }
 
@@ -117,7 +126,7 @@ export function NFTItemScreen({
     [address, asset?.collection?.name, owner, tokenId]
   )
 
-  const { colorLight, colorDark } = useNearestThemeColorFromImageUri(asset?.image?.url)
+  const { colorLight, colorDark } = useNearestThemeColorFromImageUri(imageUrl)
   // check if colorLight passes contrast against card bg color, if not use fallback
   const accentTextColor = useMemo(() => {
     if (
@@ -130,7 +139,7 @@ export function NFTItemScreen({
   }, [colorLight])
 
   const onLongPressNFTImage = async (): Promise<void> => {
-    await setClipboardImage(asset?.image?.url)
+    await setClipboardImage(imageUrl)
     await impactAsync()
     dispatch(
       pushNotification({
@@ -157,24 +166,24 @@ export function NFTItemScreen({
           <>
             <BlurredImageBackground
               backgroundColor={colorDark ?? colorsDark.background3}
-              imageUri={asset?.image?.url}
+              imageUri={imageUrl}
             />
             <HeaderScrollScreen
               backButtonColor="textOnBrightPrimary"
               backgroundColor="none"
               centerElement={
-                asset?.image?.url ? (
+                imageUrl ? (
                   <Box
                     borderRadius="rounded8"
                     maxHeight={darkTheme.iconSizes.icon40}
                     maxWidth={darkTheme.iconSizes.icon40}
                     ml="spacing16"
                     overflow="hidden">
-                    <NFTViewer autoplay uri={asset.image.url} />
+                    <NFTViewer autoplay uri={imageUrl} />
                   </Box>
                 ) : (
                   <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
-                    {asset?.name}
+                    {name}
                   </Text>
                 )
               }
@@ -199,13 +208,9 @@ export function NFTItemScreen({
                       <Box aspectRatio={1} width="100%">
                         <Loader.Image />
                       </Box>
-                    ) : asset?.image?.url ? (
+                    ) : imageUrl ? (
                       <TouchableArea onPress={onLongPressNFTImage}>
-                        <NFTViewer
-                          autoplay
-                          maxHeight={MAX_NFT_IMAGE_HEIGHT}
-                          uri={asset.image.url}
-                        />
+                        <NFTViewer autoplay maxHeight={MAX_NFT_IMAGE_HEIGHT} uri={imageUrl} />
                       </TouchableArea>
                     ) : (
                       <Box
@@ -230,17 +235,18 @@ export function NFTItemScreen({
                       mt="spacing4"
                       variant="subheadLarge"
                     />
-                  ) : asset?.name ? (
+                  ) : name ? (
                     <Text
                       color="textPrimary"
                       mt="spacing4"
                       numberOfLines={2}
                       variant="subheadLarge">
-                      {asset.name}
+                      {name}
                     </Text>
                   ) : null}
                   <CollectionPreviewCard
                     collection={asset?.collection}
+                    fallbackData={fallbackData}
                     loading={nftLoading}
                     onPress={onPressCollection}
                   />
@@ -257,13 +263,13 @@ export function NFTItemScreen({
                         repeat={3}
                       />
                     </Box>
-                  ) : asset?.description ? (
+                  ) : description ? (
                     <LongText
                       renderAsMarkdown
                       color={darkTheme.colors.textPrimary}
                       initialDisplayedLines={3}
                       readMoreOrLessColor={accentTextColor}
-                      text={asset?.description || '-'}
+                      text={description || '-'}
                     />
                   ) : null}
                 </Flex>
