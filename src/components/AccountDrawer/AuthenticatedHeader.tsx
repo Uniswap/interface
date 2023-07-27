@@ -14,6 +14,7 @@ import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
+import useENSName from 'hooks/useENSName'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
@@ -163,7 +164,8 @@ export function PortfolioArrow({ change, ...rest }: { change: number } & IconPro
 }
 
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
-  const { connector, ENSName } = useWeb3React()
+  const { connector } = useWeb3React()
+  const { ENSName } = useENSName(account)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const closeModal = useCloseModal()

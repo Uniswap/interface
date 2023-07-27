@@ -7,7 +7,6 @@ import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall } from 'theme'
 import { colors } from 'theme/colors'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
-import { Z_INDEX } from 'theme/zIndex'
 
 import { AutoRow } from '../Row'
 
@@ -112,6 +111,7 @@ const ContentWrapper = styled.div<{ chainId: NetworkAlertChains; darkMode: boole
     position: absolute;
     transform: rotate(25deg) translate(-90px, -40px);
     width: 300px;
+    pointer-events: none;
   }
 `
 const Header = styled.h2`
@@ -130,7 +130,6 @@ const LinkOutToBridge = styled(ExternalLink)`
   padding: 6px 8px;
   text-decoration: none !important;
   width: 100%;
-  z-index: ${Z_INDEX.hover};
 `
 
 const StyledArrowUpRight = styled(ArrowUpRight)`
