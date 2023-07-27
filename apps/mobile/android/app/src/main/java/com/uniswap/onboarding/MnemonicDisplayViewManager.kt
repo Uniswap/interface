@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.uniswap.onboarding.ui.MnemonicView
+import com.uniswap.theme.UniswapComponent
 
 /**
  * View manager used to import native component into React Native code
@@ -20,10 +21,8 @@ class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
   override fun createViewInstance(reactContext: ThemedReactContext): ComposeView {
     return ComposeView(reactContext).apply {
       setContent {
-        MaterialTheme {
-          Surface(modifier = Modifier.fillMaxSize()) {
-            MnemonicView()
-          }
+        UniswapComponent {
+          MnemonicView(words = MOCK_WORDS) // TODO gary replace with real words
         }
       }
     }
@@ -31,5 +30,19 @@ class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
 
   companion object {
     private const val REACT_CLASS = "MnemonicDisplay"
+    private val MOCK_WORDS = listOf(
+      "video",
+      "dignity",
+      "pond",
+      "segment",
+      "lock",
+      "pen",
+      "friend",
+      "heart",
+      "torch",
+      "artefact",
+      "profit",
+      "concert",
+    )
   }
 }

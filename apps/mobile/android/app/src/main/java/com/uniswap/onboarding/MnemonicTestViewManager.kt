@@ -14,7 +14,7 @@ import com.uniswap.onboarding.ui.MnemonicView
  * for the MnemonicTest component used to test if user has saved their
  * seed phrase
  */
-class MnemonicTestViewManager: ViewGroupManager<ComposeView>() {
+class MnemonicTestViewManager : ViewGroupManager<ComposeView>() {
 
   override fun getName(): String = REACT_CLASS
 
@@ -23,7 +23,8 @@ class MnemonicTestViewManager: ViewGroupManager<ComposeView>() {
       setContent {
         MaterialTheme {
           Surface(modifier = Modifier.fillMaxSize()) {
-            MnemonicView()
+            // TODO gary replace with mock words or real data and phrase testing functionality
+            MnemonicView(words = emptyList())
           }
         }
       }
