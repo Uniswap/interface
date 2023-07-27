@@ -74,14 +74,15 @@ export const ArrowContainer = styled.div`
 `
 
 const SwapSection = styled.div`
-  position: relative;
   background-color: ${({ theme }) => theme.backgroundModule};
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 16px;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
-  line-height: 20px;
   font-weight: 500;
+  height: 120px;
+  line-height: 20px;
+  padding: 16px;
+  position: relative;
 
   &:before {
     box-sizing: border-box;
@@ -614,10 +615,7 @@ export function Swap({
               }}
               color={theme.textPrimary}
             >
-              <ArrowDown
-                size="16"
-                color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.textPrimary : theme.textTertiary}
-              />
+              <ArrowDown size="16" color={theme.textPrimary} />
             </ArrowContainer>
           </TraceEvent>
         </ArrowWrapper>
@@ -669,13 +667,13 @@ export function Swap({
         {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
         <div>
           {swapIsUnsupported ? (
-            <ButtonPrimary disabled={true}>
+            <ButtonPrimary $borderRadius="16px" disabled={true}>
               <ThemedText.DeprecatedMain mb="4px">
                 <Trans>Unsupported Asset</Trans>
               </ThemedText.DeprecatedMain>
             </ButtonPrimary>
           ) : switchingChain ? (
-            <ButtonPrimary disabled={true}>
+            <ButtonPrimary $borderRadius="16px" disabled={true}>
               <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
             </ButtonPrimary>
           ) : !account ? (
@@ -685,12 +683,13 @@ export function Swap({
               properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
-              <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
+              <ButtonLight onClick={toggleWalletDrawer} fontWeight={600} $borderRadius="16px">
                 <Trans>Connect Wallet</Trans>
               </ButtonLight>
             </TraceEvent>
           ) : chainId && chainId !== connectedChainId ? (
             <ButtonPrimary
+              $borderRadius="16px"
               onClick={async () => {
                 try {
                   await switchChain(connector, chainId)
@@ -708,6 +707,7 @@ export function Swap({
             </ButtonPrimary>
           ) : showWrap ? (
             <ButtonPrimary
+              $borderRadius="16px"
               disabled={Boolean(wrapInputError)}
               onClick={handleOnWrap}
               fontWeight={600}
