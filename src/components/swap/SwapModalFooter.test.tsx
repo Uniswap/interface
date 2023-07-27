@@ -36,7 +36,9 @@ describe('SwapModalFooter.tsx', () => {
     expect(
       screen.getByText('The fee paid to miners who process your transaction. This must be paid in $ETH.')
     ).toBeInTheDocument()
-    expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
+    expect(
+      screen.getByText('A combination of pool fees and the impact your trade has on the market price of this pool.')
+    ).toBeInTheDocument()
   })
 
   it('shows accept changes section when available', () => {
@@ -98,6 +100,8 @@ describe('SwapModalFooter.tsx', () => {
     expect(
       screen.getByText('The fee paid to miners who process your transaction. This must be paid in $ETH.')
     ).toBeInTheDocument()
-    expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
+    expect(
+      screen.getByText('A combination of pool fees and the impact your trade has on the market price of this pool.')
+    ).toBeInTheDocument()
   })
 })

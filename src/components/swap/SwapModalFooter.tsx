@@ -117,7 +117,13 @@ export default function SwapModalFooter({
         {isClassicTrade(trade) && (
           <ThemedText.BodySmall>
             <Row align="flex-start" justify="space-between" gap="sm">
-              <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
+              <MouseoverTooltip
+                text={
+                  <Trans>
+                    A combination of pool fees and the impact your trade has on the market price of this pool.
+                  </Trans>
+                }
+              >
                 <Label cursor="help">
                   <Trans>Price impact</Trans>
                 </Label>

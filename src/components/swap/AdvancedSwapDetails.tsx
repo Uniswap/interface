@@ -83,7 +83,11 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
       )}
       {isClassicTrade(trade) && (
         <RowBetween>
-          <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
+          <MouseoverTooltip
+            text={
+              <Trans>A combination of pool fees and the impact your trade has on the market price of this pool.</Trans>
+            }
+          >
             <ThemedText.BodySmall color="textSecondary">
               <Trans>Price Impact</Trans>
             </ThemedText.BodySmall>
