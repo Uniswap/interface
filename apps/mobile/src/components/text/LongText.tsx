@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { ComponentProps, useCallback, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
@@ -61,27 +60,22 @@ export function LongText(props: LongTextProps): JSX.Element {
 
   const onTextLayout = useCallback(
     (e: NativeSyntheticEvent<TextLayoutEventData>) => {
-      if (!renderAsMarkdown) {
-        setTextLengthExceedsLimit(e.nativeEvent.lines.length >= initialDisplayedLines)
-      }
+      setTextLengthExceedsLimit(e.nativeEvent.lines.length >= initialDisplayedLines)
     },
-    [renderAsMarkdown, initialDisplayedLines]
+    [initialDisplayedLines]
   )
 
   return (
     <Flex gap={gap}>
-      <Box
-        style={
-          renderAsMarkdown && {
-            height: !textLengthExceedsLimit || expanded ? 'auto' : maxVisibleHeight,
-            overflow: 'hidden',
-          }
-        }
-        onLayout={onLayout}>
+      <Box onLayout={onLayout}>
         {renderAsMarkdown ? (
           <Markdown
             style={{
-              body: { color },
+              body: {
+                color,
+                height: !textLengthExceedsLimit || expanded ? 'auto' : maxVisibleHeight,
+                overflow: 'hidden',
+              },
               link: { color: linkColor },
               paragraph: {
                 marginBottom: 0,

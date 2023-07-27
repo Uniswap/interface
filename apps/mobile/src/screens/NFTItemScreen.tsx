@@ -4,7 +4,7 @@ import { isAddress } from 'ethers/lib/utils'
 import { impactAsync } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableOpacity } from 'react-native'
+import { StatusBar, TouchableOpacity } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
@@ -147,6 +147,7 @@ export function NFTItemScreen({
 
   return (
     <ThemeProvider theme={darkTheme}>
+      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
       <Trace
         directFromPage
         logImpression={!!traceProperties}
