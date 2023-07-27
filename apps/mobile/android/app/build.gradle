@@ -83,6 +83,13 @@ import com.android.build.OutputFile
 def nodeModulesPath = "../../../../node_modules"
 def rnRoot = "../.."
 
+
+def keystorePropertiesFile = rootProject.file("keystore.properties");
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+  keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 project.ext.react = [
     enableHermes: true,  // clean and rebuild if changing
     root: "${rnRoot}/",
@@ -160,10 +167,10 @@ android {
             keyPassword 'android'
         }
         release {
-          storeFile file(System.getenv("KEYSTORE_FILE"))
-          storePassword System.getenv("STORE_PASSWORD")
-          keyAlias System.getenv("KEYSTORE_ALIAS")
-          keyPassword System.getenv("KEY_PASSWORD")
+          storeFile file(System.getenv("KEYSTORE_FILE") ?: 'keystore.jks')
+          storePassword System.getenv("STORE_PASSWORD") ?: keystoreProperties.getProperty("STORE_PASSWORD")
+          keyAlias System.getenv("KEYSTORE_ALIAS") ?: keystoreProperties.getProperty("KEYSTORE_ALIAS")
+          keyPassword System.getenv("KEY_PASSWORD") ?: keystoreProperties.getProperty("KEY_PASSWORD")
         }
     }
 
