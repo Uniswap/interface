@@ -85,7 +85,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <RowBetween>
           <MouseoverTooltip
             text={
-              <Trans>A combination of pool fees and the impact your trade has on the market price of this pool.</Trans>
+              <Trans>A combination of swap fees and the impact your trade has on the market price of this pool.</Trans>
             }
           >
             <ThemedText.BodySmall color="textSecondary">

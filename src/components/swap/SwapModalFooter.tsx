@@ -120,7 +120,7 @@ export default function SwapModalFooter({
               <MouseoverTooltip
                 text={
                   <Trans>
-                    A combination of pool fees and the impact your trade has on the market price of this pool.
+                    A combination of swap fees and the impact your trade has on the market price of this pool.
                   </Trans>
                 }
               >
