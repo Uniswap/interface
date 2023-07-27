@@ -526,7 +526,16 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
-  - OneSignalXCFramework (3.10.1)
+  - OneSignalXCFramework (3.12.4):
+    - OneSignalXCFramework/OneSignalCore (= 3.12.4)
+    - OneSignalXCFramework/OneSignalExtension (= 3.12.4)
+    - OneSignalXCFramework/OneSignalOutcomes (= 3.12.4)
+  - OneSignalXCFramework/OneSignalCore (3.12.4)
+  - OneSignalXCFramework/OneSignalExtension (3.12.4):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalOutcomes
+  - OneSignalXCFramework/OneSignalOutcomes (3.12.4):
+    - OneSignalXCFramework/OneSignalCore
   - Permission-FaceID (3.6.0):
     - RNPermissions
   - Permission-Notifications (3.6.0):
@@ -777,8 +786,8 @@ PODS:
     - React-Core
   - react-native-netinfo (9.3.0):
     - React-Core
-  - react-native-onesignal (4.3.7):
-    - OneSignalXCFramework (= 3.10.1)
+  - react-native-onesignal (4.5.1):
+    - OneSignalXCFramework (= 3.12.4)
     - React (< 1.0.0, >= 0.13.0)
   - react-native-pager-view (6.0.1):
     - React-Core
@@ -1352,7 +1361,7 @@ SPEC CHECKSUMS:
   MMKV: 7f34558bbb5a33b0eaefae2de4b6a20a2ffdad6f
   MMKVCore: ddf41b9d9262f058419f9ba7598719af56c02cd3
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
-  OneSignalXCFramework: fe027712118f2862ab193b72270487f11450ea63
+  OneSignalXCFramework: 087934ab0d4d7445fcf1c015c7c782359e26c020
   Permission-FaceID: aaf43b353c25aaa2c1a501f93fa33dcb0f76e6c8
   Permission-Notifications: 7f2a467ab97a130a847519705340830d52cfc5f0
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
@@ -1378,7 +1387,7 @@ SPEC CHECKSUMS:
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-mmkv: 1265a348a4711097ba29c8bcefd5971f48220f2b
   react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95
-  react-native-onesignal: 7643517fe655b94cfda8e697ec16f9b9135648b8
+  react-native-onesignal: 7bd44dbd031d8d57110c0203836ffc37ddead526
   react-native-pager-view: 3051346698a0ba0c4e13e40097cc11b00ee03cca
   react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
