@@ -3,7 +3,7 @@ import { useAppDispatch } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
 import { Image, Input, InputProps, Stack, Text, YStack } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
-import { Button, ButtonSize } from 'ui/src/components/button/Button'
+import { Button } from 'ui/src/components/button/Button'
 import { authActions, authSagaName } from 'wallet/src/features/auth/saga'
 import { AuthActionType, AuthSagaError } from 'wallet/src/features/auth/types'
 import { SagaStatus } from 'wallet/src/utils/saga'
@@ -94,7 +94,7 @@ export function Locked(): JSX.Element {
           color="$textPrimary"
         />
       </YStack>
-      <Button buttonSize={ButtonSize.Large} theme="primary" onPress={onPress}>
+      <Button size="large" theme="primary" onPress={onPress}>
         Unlock
       </Button>
     </Stack>

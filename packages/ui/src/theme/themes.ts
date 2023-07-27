@@ -114,20 +114,17 @@ const light_primary_Button: BaseTheme = {
   background: colorsLight.magentaVibrant,
   backgroundHover: hoverColor(colorsLight.magentaVibrant),
   backgroundPress: pressedColor(colorsLight.magentaVibrant),
+  color: colorsLight.white,
 }
-const light_primary_ButtonText: BaseTheme = {
-  ...light,
-  color: colorsLight.textOnDimPrimary,
-}
+
+console.log('colorsLight.textOnDimPrimary', colorsLight.textOnDimPrimary)
+
 // theme: dark
 const dark_primary_Button: BaseTheme = {
   ...dark,
   background: colorsDark.magentaVibrant,
   backgroundHover: hoverColor(colorsDark.magentaVibrant),
   backgroundPress: pressedColor(colorsDark.magentaVibrant),
-}
-const dark_primary_ButtonText: BaseTheme = {
-  ...dark,
   color: colorsDark.textOnDimPrimary,
 }
 
@@ -138,20 +135,15 @@ const light_secondary_Button: BaseTheme = {
   background: colorsLight.background3,
   backgroundHover: hoverColor(colorsLight.background3),
   backgroundPress: pressedColor(colorsLight.background3),
+  color: colorsLight.textOnDimPrimary,
 }
-const light_secondary_ButtonText: BaseTheme = {
-  ...light,
-  color: colorsLight.textOnBrightPrimary,
-}
+
 // theme: dark
 const dark_secondary_Button: BaseTheme = {
   ...dark,
   background: colorsDark.background3,
   backgroundHover: hoverColor(colorsDark.background3),
   backgroundPress: pressedColor(colorsDark.background3),
-}
-const dark_secondary_ButtonText: BaseTheme = {
-  ...dark,
   color: colorsDark.textOnBrightPrimary,
 }
 
@@ -163,11 +155,9 @@ const light_tertiary_Button: BaseTheme = {
   backgroundHover: colorsLight.none,
   backgroundPress: colorsLight.none,
   borderColor: colorsLight.backgroundOutline,
-}
-const light_tertiary_ButtonText: BaseTheme = {
-  ...light,
   color: colorsLight.textOnBrightPrimary,
 }
+
 // theme: dark
 const dark_tertiary_Button: BaseTheme = {
   ...dark,
@@ -175,9 +165,6 @@ const dark_tertiary_Button: BaseTheme = {
   backgroundHover: colorsDark.none,
   backgroundPress: colorsDark.none,
   borderColor: colorsDark.backgroundOutline,
-}
-const dark_tertiary_ButtonText: BaseTheme = {
-  ...dark,
   color: colorsDark.textOnBrightPrimary,
 }
 
@@ -188,20 +175,15 @@ const light_detrimental_Button: BaseTheme = {
   background: colorsLight.accentCriticalSoft,
   backgroundHover: colorsLight.accentCriticalSoft,
   backgroundPress: colorsLight.accentCriticalSoft,
-}
-const light_detrimental_ButtonText: BaseTheme = {
-  ...light,
   color: colorsLight.accentCritical,
 }
+
 // theme: dark
 const dark_detrimental_Button: BaseTheme = {
   ...dark,
   background: colorsDark.accentCriticalSoft,
   backgroundHover: colorsLight.accentCriticalSoft,
   backgroundPress: colorsLight.accentCriticalSoft,
-}
-const dark_detrimental_ButtonText: BaseTheme = {
-  ...dark,
   color: colorsDark.accentCritical,
 }
 
@@ -212,20 +194,15 @@ const light_warning_Button: BaseTheme = {
   background: colorsLight.accentWarningSoft,
   backgroundHover: colorsLight.accentWarningSoft,
   backgroundPress: colorsLight.accentWarningSoft,
-}
-const light_warning_ButtonText: BaseTheme = {
-  ...light,
   color: colorsLight.accentWarning,
 }
+
 // theme: dark
 const dark_warning_Button: BaseTheme = {
   ...dark,
   background: colorsDark.accentWarningSoft,
   backgroundHover: colorsDark.accentWarningSoft,
   backgroundPress: colorsDark.accentWarningSoft,
-}
-const dark_warning_ButtonText: BaseTheme = {
-  ...dark,
   color: colorsDark.accentWarning,
 }
 
@@ -247,25 +224,17 @@ const allThemes = {
   dark_warning,
   light_primary_Button,
   dark_primary_Button,
-  light_primary_ButtonText,
-  dark_primary_ButtonText,
   light_secondary_Button,
   dark_secondary_Button,
-  light_secondary_ButtonText,
-  dark_secondary_ButtonText,
   light_tertiary_Button,
   dark_tertiary_Button,
-  light_tertiary_ButtonText,
-  dark_tertiary_ButtonText,
   light_detrimental_Button,
   dark_detrimental_Button,
-  light_detrimental_ButtonText,
-  dark_detrimental_ButtonText,
   light_warning_Button,
   dark_warning_Button,
-  light_warning_ButtonText,
-  dark_warning_ButtonText,
 }
+
+console.log('allThemes', allThemes)
 
 type ThemeName = keyof typeof allThemes
 type Themes = {

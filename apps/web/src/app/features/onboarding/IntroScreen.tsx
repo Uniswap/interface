@@ -54,10 +54,7 @@ export function IntroScreen(): JSX.Element {
               replace: true,
             })
           }>
-          {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}
-          <Text color="$white" variant="buttonLabelMedium">
-            Create a new wallet
-          </Text>
+          Create a new wallet
         </Button>
         <Button
           flexGrow={1}
@@ -67,10 +64,7 @@ export function IntroScreen(): JSX.Element {
               replace: true,
             })
           }>
-          {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}
-          <Text color="$textPrimary" variant="buttonLabelMedium">
-            I already have a wallet
-          </Text>
+          I already have a wallet
         </Button>
       </YStack>
     </XStack>

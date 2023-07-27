@@ -3,7 +3,7 @@ import { selectChainByDappAndWallet } from 'src/background/features/dapp/selecto
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Image } from 'tamagui'
 import { XStack, YStack } from 'ui/src'
-import { Button, ButtonSize } from 'ui/src/components/button/Button'
+import { Button } from 'ui/src/components/button/Button'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -111,15 +111,10 @@ export function DappRequestContent(): JSX.Element {
         {displayDetails}
       </YStack>
       <XStack gap="$spacing12">
-        <Button
-          buttonSize={ButtonSize.Medium}
-          flex={1}
-          theme="secondary"
-          onPress={async (): Promise<void> => await onCancel(request)}>
+        <Button theme="secondary" onPress={async (): Promise<void> => await onCancel(request)}>
           Cancel
         </Button>
         <Button
-          buttonSize={ButtonSize.Medium}
           flex={1}
           theme="primary"
           onPress={async (): Promise<void> => await onConfirm(request)}>

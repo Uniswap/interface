@@ -64,16 +64,9 @@ export function OnboardingScreen({
             <Icons.BackArrow color="$textSecondary" size={iconSizes.icon24} />
           </Button>
         )}
-        <Button
-          backgroundColor={nextButtonEnabled ? '$magentaVibrant' : '$background3'}
-          disabled={!nextButtonEnabled}
-          flexGrow={1}
-          theme="primary"
-          onPress={onSubmit}>
-          {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}
-          <Text color={nextButtonEnabled ? '$white' : '$textTertiary'} variant="buttonLabelMedium">
-            {nextButtonText}
-          </Text>
+
+        <Button disabled={!nextButtonEnabled} flexGrow={1} onPress={onSubmit}>
+          {nextButtonText}
         </Button>
       </XStack>
     </Stack>

@@ -100,7 +100,6 @@ exports[`renders collection preview card 1`] = `
         >
           <Text
             allowFontScaling={true}
-            fontFamily="$body"
             style={
               [
                 {

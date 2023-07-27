@@ -1,4 +1,4 @@
-import { createInterFont } from '@tamagui/font-inter'
+import { createFont, isWeb } from 'tamagui'
 
 export const fonts = {
   headlineLarge: {
@@ -55,9 +55,94 @@ export const fonts = {
   },
 }
 
-// TODO(EXT-148): leverage font tokens better
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const headingFont: any = createInterFont({})
+const interFontFamily = isWeb
+  ? 'Inter, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+  : 'Inter'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const bodyFont: any = createInterFont({})
+export const headingFont = createFont({
+  family: interFontFamily,
+  face: {},
+  size: {
+    small: fonts.headlineSmall.fontSize,
+    medium: fonts.headlineMedium.fontSize,
+    large: fonts.headlineLarge.fontSize,
+  },
+  weight: {
+    small: '500',
+    medium: '500',
+    large: '500',
+  },
+  lineHeight: {
+    small: fonts.headlineSmall.lineHeight,
+    medium: fonts.headlineMedium.lineHeight,
+    large: fonts.headlineLarge.lineHeight,
+  },
+})
+
+export const subHeadingFont = createFont({
+  family: interFontFamily,
+  face: {},
+  size: {
+    small: fonts.subheadSmall.fontSize,
+    large: fonts.subheadLarge.fontSize,
+  },
+  weight: {
+    small: '500',
+    medium: '500',
+    large: '500',
+  },
+  lineHeight: {
+    small: fonts.subheadSmall.lineHeight,
+    large: fonts.subheadLarge.lineHeight,
+  },
+})
+
+// for now tamagui is inferring all the font size from body, but we have differences in the diff fonts
+// so i'm filling in blanks (adding medium here), but will need to fix this properly in tamagui...
+
+export const bodyFont = createFont({
+  family: interFontFamily,
+  face: {},
+  size: {
+    small: fonts.bodySmall.fontSize,
+    large: fonts.bodyLarge.fontSize,
+    micro: fonts.bodyMicro.fontSize,
+    medium: fonts.bodySmall.fontSize,
+  },
+  weight: {
+    small: '500',
+    large: '500',
+    micro: '500',
+  },
+  lineHeight: {
+    small: fonts.bodySmall.lineHeight,
+    large: fonts.bodyLarge.lineHeight,
+    micro: fonts.bodyMicro.lineHeight,
+    medium: fonts.bodySmall.lineHeight,
+  },
+})
+
+export const buttonFont = createFont({
+  family: interFontFamily,
+  face: {},
+  size: {
+    small: fonts.buttonLabelSmall.fontSize,
+    medium: fonts.buttonLabelMedium.fontSize,
+    large: fonts.buttonLabelLarge.fontSize,
+    micro: fonts.buttonLabelMicro.fontSize,
+  },
+  weight: {
+    small: '500',
+    medium: '500',
+    large: '500',
+    micro: '500',
+  },
+  lineHeight: {
+    small: fonts.buttonLabelSmall.lineHeight,
+    medium: fonts.buttonLabelMedium.lineHeight,
+    large: fonts.buttonLabelLarge.lineHeight,
+    micro: fonts.buttonLabelMicro.lineHeight,
+  },
+})
+
+// TODO mono font
