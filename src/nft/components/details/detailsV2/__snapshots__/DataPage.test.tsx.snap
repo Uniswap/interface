@@ -246,16 +246,17 @@ exports[`data page loads with header showing 1`] = `
 .c16 {
   background-color: #FFFFFF;
   color: #7D7D7D;
+  border: 1px solid #22222212;
   font-size: 16px;
   font-weight: 535;
 }
 
 .c16:hover {
-  background-color: rgba(21,21,21,0.07);
+  background-color: #ececec;
 }
 
 .c16:active {
-  background-color: rgba(8,8,8,0.07);
+  background-color: #e0e0e0;
 }
 
 .c17 {
@@ -847,16 +848,17 @@ exports[`data page loads without header showing 1`] = `
 .c16 {
   background-color: #FFFFFF;
   color: #7D7D7D;
+  border: 1px solid #22222212;
   font-size: 16px;
   font-weight: 535;
 }
 
 .c16:hover {
-  background-color: rgba(21,21,21,0.07);
+  background-color: #ececec;
 }
 
 .c16:active {
-  background-color: rgba(8,8,8,0.07);
+  background-color: #e0e0e0;
 }
 
 .c17 {

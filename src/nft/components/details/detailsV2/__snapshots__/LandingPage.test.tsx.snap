@@ -220,16 +220,17 @@ exports[`LandingPage renders it correctly 1`] = `
 .c27 {
   background-color: #FFFFFF;
   color: #7D7D7D;
+  border: 1px solid #22222212;
   font-size: 16px;
   font-weight: 535;
 }
 
 .c27:hover {
-  background-color: rgba(21,21,21,0.07);
+  background-color: #ececec;
 }
 
 .c27:active {
-  background-color: rgba(8,8,8,0.07);
+  background-color: #e0e0e0;
 }
 
 .c28 {

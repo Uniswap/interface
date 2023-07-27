@@ -516,16 +516,17 @@ exports[`Header loads with asset with no sell orders 1`] = `
 .c13 {
   background-color: #FFFFFF;
   color: #7D7D7D;
+  border: 1px solid #22222212;
   font-size: 16px;
   font-weight: 535;
 }
 
 .c13:hover {
-  background-color: rgba(21,21,21,0.07);
+  background-color: #ececec;
 }
 
 .c13:active {
-  background-color: rgba(8,8,8,0.07);
+  background-color: #e0e0e0;
 }
 
 .c14 {
