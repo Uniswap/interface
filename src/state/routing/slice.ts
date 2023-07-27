@@ -52,6 +52,7 @@ export interface GetQuoteArgs {
   needsWrapIfUniswapX: boolean
   uniswapXEnabled: boolean
   uniswapXForceSyntheticQuotes: boolean
+  forceUniswapXOn: boolean
   isRoutingAPIPrice?: boolean
 }
 
@@ -133,7 +134,15 @@ export const routingApi = createApi({
         const fellBack = false
         if (shouldUseAPIRouter(args)) {
           try {
-            const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
+            const {
+              tokenInAddress,
+              tokenInChainId,
+              tokenOutAddress,
+              tokenOutChainId,
+              amount,
+              tradeType,
+              forceUniswapXOn,
+            } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
 
             const requestBody = {
@@ -143,6 +152,8 @@ export const routingApi = createApi({
               tokenOut: tokenOutAddress,
               amount,
               type,
+              // if forceUniswapXOn is not ON, then use the backend's default value
+              useUniswapX: forceUniswapXOn || undefined,
               configs: getRoutingAPIConfig(args),
             }
 
