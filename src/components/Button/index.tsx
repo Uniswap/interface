@@ -148,14 +148,15 @@ const BaseButtonLight = styled(BaseButton)`
 export const ButtonGray = styled(BaseButton)`
   background-color: ${({ theme }) => theme.surface1};
   color: ${({ theme }) => theme.neutral2};
+  border: 1px solid ${({ theme }) => theme.surface3};
   font-size: 16px;
   font-weight: 535;
 
   &:hover {
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.surface3)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.surface2)};
   }
   &:active {
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.1, theme.surface3)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.1, theme.surface2)};
   }
 `
 

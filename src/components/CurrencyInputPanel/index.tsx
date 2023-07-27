@@ -71,10 +71,12 @@ const CurrencySelect = styled(ButtonGray)<{
   disabled?: boolean
 }>`
   align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.surface2 : theme.accent1)};
+  background-color: ${({ selected, theme }) => (selected ? theme.surface1 : theme.accent1)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
 
   color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
+  box-shadow: ${({ theme }) => theme.deprecated_shallowShadow};
+
   cursor: pointer;
   border-radius: 16px;
   outline: none;

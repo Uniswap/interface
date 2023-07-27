@@ -38,7 +38,7 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <!-- <link rel="preload" href="%PUBLIC_URL%/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin /> -->
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Essential-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Essential-Variable.woff" as="font" type="font/woff" crossorigin />
 
    
     <style>
@@ -57,12 +57,13 @@
         font-display: block;
         font-named-instance: 'Book';
         src: 
-          url(%PUBLIC_URL%/fonts/Basel-Grotesk-Essential-Variable.woff2) format('woff2');
+          url(%PUBLIC_URL%/fonts/Basel-Grotesk-Essential-Variable.woff) format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
           font-family: 'Basel', sans-serif;
+          
         }
       }
 
@@ -81,7 +82,8 @@
         font-weight: 485;
         font-variant: none;
         font-smooth: always;
-        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
       }
