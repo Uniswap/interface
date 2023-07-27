@@ -1,8 +1,9 @@
 import type { IconProps } from '@tamagui/helpers-icon'
 import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
-import { Icons, Logos, useTheme } from 'ui/src'
+import { Icons, useTheme } from 'ui/src'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
+import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
 import { Box } from 'ui/src/components/layout'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { CurrencyLogo, STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -57,7 +58,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
 
   const logo =
     txType === TransactionType.FiatPurchase ? (
-      <Logos.Moonpay width={size} />
+      <MoonpayLogo height={size} width={size} />
     ) : assetType === AssetType.Currency ? (
       <CurrencyLogo hideNetworkLogo currencyInfo={props.currencyInfo} size={size} />
     ) : (
