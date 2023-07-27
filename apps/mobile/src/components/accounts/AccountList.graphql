@@ -1,5 +1,5 @@
 query AccountList($addresses: [String!]!) {
-  portfolios(ownerAddresses: $addresses) {
+  portfolios(ownerAddresses: $addresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]) {
     id
     ownerAddress
     tokensTotalDenominatedValue {

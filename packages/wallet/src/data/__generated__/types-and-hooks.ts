@@ -26,6 +26,9 @@ export type Scalars = {
   AWSJSON: any;
 };
 
+export type ActivityDetails = SwapOrderDetails | TransactionDetails;
+
+/**   deprecated and replaced with TransactionType, please do not use this */
 export enum ActivityType {
   Approve = 'APPROVE',
   Borrow = 'BORROW',
@@ -41,6 +44,7 @@ export enum ActivityType {
   Send = 'SEND',
   Stake = 'STAKE',
   Swap = 'SWAP',
+  SwapOrder = 'SWAP_ORDER',
   Staking = 'Staking',
   Unknown = 'UNKNOWN',
   Unstake = 'UNSTAKE',
@@ -65,12 +69,17 @@ export type AmountChange = {
 
 export type AssetActivity = {
   __typename?: 'AssetActivity';
+  /** @deprecated use assetChanges field in details */
   assetChanges: Array<Maybe<AssetChange>>;
   chain: Chain;
+  details: ActivityDetails;
+  /** @deprecated not required, remove usage */
   gasUsed?: Maybe<Scalars['Float']>;
   id: Scalars['ID'];
   timestamp: Scalars['Int'];
+  /** @deprecated use fields from details */
   transaction: Transaction;
+  /** @deprecated use type field in details */
   type: ActivityType;
 };
 
@@ -78,10 +87,12 @@ export type AssetChange = NftApproval | NftApproveForAll | NftTransfer | TokenAp
 
 export enum Chain {
   Arbitrum = 'ARBITRUM',
+  Avalanche = 'AVALANCHE',
   Bnb = 'BNB',
   Celo = 'CELO',
   Ethereum = 'ETHEREUM',
   EthereumGoerli = 'ETHEREUM_GOERLI',
+  EthereumSepolia = 'ETHEREUM_SEPOLIA',
   Optimism = 'OPTIMISM',
   Polygon = 'POLYGON',
   UnknownChain = 'UNKNOWN_CHAIN'
@@ -146,12 +157,6 @@ export type Image = {
   id: Scalars['ID'];
   url: Scalars['String'];
 };
-
-/**   TODO: deprecate this enum */
-export enum MarketSortableField {
-  MarketCap = 'MARKET_CAP',
-  Volume = 'VOLUME'
-}
 
 export enum MediaType {
   Audio = 'AUDIO',
@@ -231,6 +236,7 @@ export type NftAsset = {
   flaggedBy?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
+  /** @deprecated Field no longer supported */
   imageUrl?: Maybe<Scalars['String']>;
   isSpam?: Maybe<Scalars['Boolean']>;
   listings?: Maybe<NftOrderConnection>;
@@ -243,9 +249,11 @@ export type NftAsset = {
   ownerAddress?: Maybe<Scalars['String']>;
   rarities?: Maybe<Array<NftAssetRarity>>;
   smallImage?: Maybe<Image>;
+  /** @deprecated Field no longer supported */
   smallImageUrl?: Maybe<Scalars['String']>;
   suspiciousFlag?: Maybe<Scalars['Boolean']>;
   thumbnail?: Maybe<Image>;
+  /** @deprecated Field no longer supported */
   thumbnailUrl?: Maybe<Scalars['String']>;
   tokenId: Scalars['String'];
   traits?: Maybe<Array<NftAssetTrait>>;
@@ -350,6 +358,7 @@ export type NftCollection = {
   /**
    *  TODO: support querying for collection assets here
    * assets(page: Int, pageSize: Int, orderBy: NftAssetSortableField): [NftAsset]
+   * @deprecated Field no longer supported
    */
   bannerImageUrl?: Maybe<Scalars['String']>;
   collectionId: Scalars['String'];
@@ -359,6 +368,7 @@ export type NftCollection = {
   homepageUrl?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
+  /** @deprecated Field no longer supported */
   imageUrl?: Maybe<Scalars['String']>;
   instagramName?: Maybe<Scalars['String']>;
   isVerified?: Maybe<Scalars['Boolean']>;
@@ -366,6 +376,7 @@ export type NftCollection = {
   name?: Maybe<Scalars['String']>;
   nftContracts?: Maybe<Array<NftContract>>;
   numAssets?: Maybe<Scalars['Int']>;
+  /** @deprecated Field no longer supported */
   openseaUrl?: Maybe<Scalars['String']>;
   traits?: Maybe<Array<NftCollectionTrait>>;
   twitterName?: Maybe<Scalars['String']>;
@@ -380,6 +391,27 @@ export type NftCollectionMarketsArgs = {
 
 export type NftCollectionTraitsArgs = {
   _fs?: InputMaybe<Scalars['String']>;
+};
+
+export type NftCollectionBalance = {
+  __typename?: 'NftCollectionBalance';
+  address: Scalars['String'];
+  balance: Scalars['Float'];
+  id: Scalars['ID'];
+  logoImage?: Maybe<Image>;
+  name: Scalars['String'];
+};
+
+export type NftCollectionBalanceConnection = {
+  __typename?: 'NftCollectionBalanceConnection';
+  edges: Array<NftCollectionBalanceEdge>;
+  pageInfo: PageInfo;
+};
+
+export type NftCollectionBalanceEdge = {
+  __typename?: 'NftCollectionBalanceEdge';
+  cursor: Scalars['String'];
+  node: NftCollectionBalance;
 };
 
 export type NftCollectionConnection = {
@@ -408,6 +440,7 @@ export type NftCollectionMarket = {
   sales?: Maybe<TimestampedAmount>;
   totalVolume?: Maybe<TimestampedAmount>;
   volume?: Maybe<TimestampedAmount>;
+  /** @deprecated Field no longer supported */
   volume24h?: Maybe<Amount>;
   volumePercentChange?: Maybe<TimestampedAmount>;
 };
@@ -495,11 +528,6 @@ export type NftFee = {
   payoutAddress: Scalars['String'];
 };
 
-export enum NftMarketSortableField {
-  FloorPrice = 'FLOOR_PRICE',
-  Volume = 'VOLUME'
-}
-
 export enum NftMarketplace {
   Cryptopunks = 'CRYPTOPUNKS',
   Foundation = 'FOUNDATION',
@@ -522,6 +550,7 @@ export type NftOrder = {
   marketplace: NftMarketplace;
   marketplaceUrl: Scalars['String'];
   orderHash?: Maybe<Scalars['String']>;
+  poolPrices?: Maybe<Array<Scalars['String']>>;
   price: Amount;
   protocolParameters?: Maybe<Scalars['AWSJSON']>;
   quantity: Scalars['Int'];
@@ -687,12 +716,10 @@ export type Query = {
   nftActivity?: Maybe<NftActivityConnection>;
   nftAssets?: Maybe<NftAssetConnection>;
   nftBalances?: Maybe<NftBalanceConnection>;
+  nftCollectionBalances?: Maybe<NftCollectionBalanceConnection>;
   nftCollections?: Maybe<NftCollectionConnection>;
-  nftCollectionsById?: Maybe<Array<Maybe<NftCollection>>>;
   nftRoute?: Maybe<NftRouteResponse>;
   portfolios?: Maybe<Array<Maybe<Portfolio>>>;
-  /** @deprecated Use searchTokens */
-  searchTokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   searchTokens?: Maybe<Array<Maybe<Token>>>;
   token?: Maybe<Token>;
   tokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
@@ -743,17 +770,22 @@ export type QueryNftBalancesArgs = {
 };
 
 
+export type QueryNftCollectionBalancesArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  chain?: InputMaybe<Chain>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  ownerAddress: Scalars['String'];
+};
+
+
 export type QueryNftCollectionsArgs = {
   _fs?: InputMaybe<Scalars['String']>;
   after?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
   filter?: InputMaybe<NftCollectionsFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryNftCollectionsByIdArgs = {
-  collectionIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 
@@ -768,12 +800,8 @@ export type QueryNftRouteArgs = {
 export type QueryPortfoliosArgs = {
   _fs?: InputMaybe<Scalars['String']>;
   chains?: InputMaybe<Array<Chain>>;
+  lookupTokens?: InputMaybe<Array<ContractInput>>;
   ownerAddresses: Array<Scalars['String']>;
-};
-
-
-export type QuerySearchTokenProjectsArgs = {
-  searchQuery: Scalars['String'];
 };
 
 
@@ -826,6 +854,25 @@ export enum SafetyLevel {
   MediumWarning = 'MEDIUM_WARNING',
   StrongWarning = 'STRONG_WARNING',
   Verified = 'VERIFIED'
+}
+
+export type SwapOrderDetails = {
+  __typename?: 'SwapOrderDetails';
+  hash: Scalars['String'];
+  id: Scalars['ID'];
+  inputToken: Token;
+  inputTokenQuantity: Scalars['String'];
+  offerer: Scalars['String'];
+  outputToken: Token;
+  outputTokenQuantity: Scalars['String'];
+  status: SwapOrderStatus;
+};
+
+export enum SwapOrderStatus {
+  Error = 'ERROR',
+  Expired = 'EXPIRED',
+  InsufficientFunds = 'INSUFFICIENT_FUNDS',
+  Open = 'OPEN'
 }
 
 export type TimestampedAmount = IAmount & {
@@ -954,47 +1001,41 @@ export type TokenProject = {
 
 
 export type TokenProjectMarketsArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   currencies: Array<Currency>;
 };
 
 export type TokenProjectMarket = {
   __typename?: 'TokenProjectMarket';
   currency: Currency;
-  /** @deprecated Use marketCap */
-  fullyDilutedMarketCap?: Maybe<Amount>;
   id: Scalars['ID'];
   marketCap?: Maybe<Amount>;
   price?: Maybe<Amount>;
+  priceHigh52w?: Maybe<Amount>;
   priceHighLow?: Maybe<Amount>;
   priceHistory?: Maybe<Array<Maybe<TimestampedAmount>>>;
+  priceLow52w?: Maybe<Amount>;
   pricePercentChange?: Maybe<Amount>;
-  /** @deprecated Use pricePercentChange */
   pricePercentChange24h?: Maybe<Amount>;
   tokenProject: TokenProject;
-  /** @deprecated Use TokenMarket.volume for Uniswap volume */
-  volume?: Maybe<Amount>;
-  /** @deprecated Use TokenMarket.volume with duration DAY for Uniswap volume */
-  volume24h?: Maybe<Amount>;
 };
 
 
 export type TokenProjectMarketPriceHighLowArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   duration: HistoryDuration;
   highLow: HighLow;
 };
 
 
 export type TokenProjectMarketPriceHistoryArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   duration: HistoryDuration;
 };
 
 
 export type TokenProjectMarketPricePercentChangeArgs = {
-  duration: HistoryDuration;
-};
-
-
-export type TokenProjectMarketVolumeArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   duration: HistoryDuration;
 };
 
@@ -1065,6 +1106,18 @@ export type Transaction = {
   to: Scalars['String'];
 };
 
+export type TransactionDetails = {
+  __typename?: 'TransactionDetails';
+  assetChanges: Array<Maybe<AssetChange>>;
+  from: Scalars['String'];
+  hash: Scalars['String'];
+  id: Scalars['ID'];
+  nonce: Scalars['Int'];
+  status: TransactionStatus;
+  to: Scalars['String'];
+  type: TransactionType;
+};
+
 export enum TransactionDirection {
   In = 'IN',
   Out = 'OUT',
@@ -1075,6 +1128,16 @@ export enum TransactionStatus {
   Confirmed = 'CONFIRMED',
   Failed = 'FAILED',
   Pending = 'PENDING'
+}
+
+export enum TransactionType {
+  Approve = 'APPROVE',
+  Mint = 'MINT',
+  Receive = 'RECEIVE',
+  Send = 'SEND',
+  Swap = 'SWAP',
+  SwapOrder = 'SWAP_ORDER',
+  Unknown = 'UNKNOWN'
 }
 
 export type TokenPriceHistoryQueryVariables = Exact<{
@@ -1351,7 +1414,10 @@ export type TokenPriceHistoryLazyQueryHookResult = ReturnType<typeof useTokenPri
 export type TokenPriceHistoryQueryResult = Apollo.QueryResult<TokenPriceHistoryQuery, TokenPriceHistoryQueryVariables>;
 export const AccountListDocument = gql`
     query AccountList($addresses: [String!]!) {
-  portfolios(ownerAddresses: $addresses) {
+  portfolios(
+    ownerAddresses: $addresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+  ) {
     id
     ownerAddress
     tokensTotalDenominatedValue {
@@ -1910,7 +1976,10 @@ export type NftsTabLazyQueryHookResult = ReturnType<typeof useNftsTabLazyQuery>;
 export type NftsTabQueryResult = Apollo.QueryResult<NftsTabQuery, NftsTabQueryVariables>;
 export const PortfolioBalancesDocument = gql`
     query PortfolioBalances($ownerAddress: String!) {
-  portfolios(ownerAddresses: [$ownerAddress]) {
+  portfolios(
+    ownerAddresses: [$ownerAddress]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+  ) {
     id
     tokensTotalDenominatedValue {
       id
@@ -1987,7 +2056,10 @@ export type PortfolioBalancesLazyQueryHookResult = ReturnType<typeof usePortfoli
 export type PortfolioBalancesQueryResult = Apollo.QueryResult<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>;
 export const SelectWalletScreenDocument = gql`
     query SelectWalletScreen($ownerAddresses: [String!]!) {
-  portfolios(ownerAddresses: $ownerAddresses) {
+  portfolios(
+    ownerAddresses: $ownerAddresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+  ) {
     id
     ownerAddress
     tokensTotalDenominatedValue {
@@ -2027,7 +2099,10 @@ export type SelectWalletScreenLazyQueryHookResult = ReturnType<typeof useSelectW
 export type SelectWalletScreenQueryResult = Apollo.QueryResult<SelectWalletScreenQuery, SelectWalletScreenQueryVariables>;
 export const TransactionHistoryUpdaterDocument = gql`
     query TransactionHistoryUpdater($addresses: [String!]!) {
-  portfolios(ownerAddresses: $addresses) {
+  portfolios(
+    ownerAddresses: $addresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+  ) {
     id
     ownerAddress
     assetActivities(pageSize: 1, page: 1) {
@@ -2238,7 +2313,10 @@ export type TokenProjectsLazyQueryHookResult = ReturnType<typeof useTokenProject
 export type TokenProjectsQueryResult = Apollo.QueryResult<TokenProjectsQuery, TokenProjectsQueryVariables>;
 export const TransactionListDocument = gql`
     query TransactionList($address: String!) {
-  portfolios(ownerAddresses: [$address]) {
+  portfolios(
+    ownerAddresses: [$address]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+  ) {
     id
     assetActivities(pageSize: 50, page: 1) {
       id
@@ -2652,7 +2730,10 @@ export type FavoriteTokenCardLazyQueryHookResult = ReturnType<typeof useFavorite
 export type FavoriteTokenCardQueryResult = Apollo.QueryResult<FavoriteTokenCardQuery, FavoriteTokenCardQueryVariables>;
 export const PortfolioBalanceDocument = gql`
     query PortfolioBalance($owner: String!) {
-  portfolios(ownerAddresses: [$owner]) {
+  portfolios(
+    ownerAddresses: [$owner]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+  ) {
     id
     tokensTotalDenominatedValue {
       id
@@ -2701,7 +2782,10 @@ export type PortfolioBalanceLazyQueryHookResult = ReturnType<typeof usePortfolio
 export type PortfolioBalanceQueryResult = Apollo.QueryResult<PortfolioBalanceQuery, PortfolioBalanceQueryVariables>;
 export const PortfolioTokenBalancesDocument = gql`
     query PortfolioTokenBalances($ownerAddress: String!) {
-  portfolios(ownerAddresses: [$ownerAddress]) {
+  portfolios(
+    ownerAddresses: [$ownerAddress]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+  ) {
     id
     tokenBalances {
       id

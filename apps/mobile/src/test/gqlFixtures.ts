@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { faker } from '@faker-js/faker'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC } from 'wallet/src/constants/tokens'
@@ -20,6 +21,7 @@ import {
   TokenTransfer,
   TransactionDirection,
   TransactionStatus,
+  TransactionType,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { FAKER_SEED, SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
 import { getWrappedNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
@@ -100,6 +102,7 @@ const AssetActivityBase = {
     from: SAMPLE_SEED_ADDRESS_1,
     nonce: faker.datatype.number(),
     blockNumber: 1,
+    assetChanges: [],
   },
 }
 
@@ -138,6 +141,11 @@ const Erc20ApproveAssetChange: TokenApproval & { __typename: 'TokenApproval' } =
 const ApproveAssetActivty: RequiredAssetActivity = {
   ...AssetActivityBase,
   id: faker.datatype.uuid(),
+  details: {
+    ...AssetActivityBase.transaction,
+    hash: faker.finance.ethereumAddress(), // need unique ID
+    type: TransactionType.Approve,
+  },
   transaction: {
     ...AssetActivityBase.transaction, // need unique ID
     hash: faker.finance.ethereumAddress(),
@@ -149,6 +157,11 @@ const ApproveAssetActivty: RequiredAssetActivity = {
 export const Erc20SwapAssetActivity: RequiredAssetActivity = {
   ...AssetActivityBase,
   id: faker.datatype.uuid(),
+  details: {
+    ...AssetActivityBase.transaction,
+    hash: faker.finance.ethereumAddress(), // need unique ID
+    type: TransactionType.Swap,
+  },
   transaction: {
     ...AssetActivityBase.transaction,
     hash: faker.finance.ethereumAddress(), // need unique ID
@@ -160,6 +173,11 @@ export const Erc20SwapAssetActivity: RequiredAssetActivity = {
 export const Erc20ReceiveAssetActivity: RequiredAssetActivity = {
   ...AssetActivityBase,
   id: faker.datatype.uuid(),
+  details: {
+    ...AssetActivityBase.transaction,
+    hash: faker.finance.ethereumAddress(), // need unique ID
+    type: TransactionType.Receive,
+  },
   transaction: {
     ...AssetActivityBase.transaction,
     hash: faker.finance.ethereumAddress(), // need unique ID

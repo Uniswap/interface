@@ -305,7 +305,7 @@ query NftsTab(
 }
 
 query PortfolioBalances($ownerAddress: String!) {
-  portfolios(ownerAddresses: [$ownerAddress]) {
+  portfolios(ownerAddresses: [$ownerAddress], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]) {
     id
 
     # Total portfolio balance for header
@@ -357,7 +357,7 @@ query PortfolioBalances($ownerAddress: String!) {
 }
 
 query SelectWalletScreen($ownerAddresses: [String!]!) {
-  portfolios(ownerAddresses: $ownerAddresses) {
+  portfolios(ownerAddresses: $ownerAddresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]) {
     id
     ownerAddress
     tokensTotalDenominatedValue {
@@ -368,7 +368,7 @@ query SelectWalletScreen($ownerAddresses: [String!]!) {
 }
 
 query TransactionHistoryUpdater($addresses: [String!]!) {
-  portfolios(ownerAddresses: $addresses) {
+  portfolios(ownerAddresses: $addresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]) {
     id
     ownerAddress
     assetActivities(pageSize: 1, page: 1) {
@@ -461,7 +461,7 @@ query TokenProjects($contracts: [ContractInput!]!) {
 }
 
 query TransactionList($address: String!) {
-  portfolios(ownerAddresses: [$address]) {
+  portfolios(ownerAddresses: [$address], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]) {
     id
     assetActivities(pageSize: 50, page: 1) {
       id

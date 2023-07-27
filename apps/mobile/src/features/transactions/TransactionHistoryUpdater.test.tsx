@@ -217,7 +217,7 @@ describe(getReceiveNotificationFromData, () => {
       chainId: ChainId.Mainnet,
       txHash: PortfoliosWithReceive[0].assetActivities[0]?.transaction.hash, // generated
       address: account.address,
-      txId: '0x80cde0e2abd1bf5fadcf7ff9edf7ae13feec1c32',
+      txId: '0x852eade76dd6a467979dacafafb9c5f2b6a372bd',
       type: AppNotificationType.Transaction,
       txType: TransactionType.Receive,
       assetType: AssetType.Currency,
