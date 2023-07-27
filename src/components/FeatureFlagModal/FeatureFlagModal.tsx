@@ -1,4 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
@@ -214,7 +215,13 @@ export default function FeatureFlagModal() {
         variant={UniswapXVariant}
         value={useUniswapXFlag()}
         featureFlag={FeatureFlag.uniswapXEnabled}
-        label="Enable UniswapX"
+        label="Enable UniswapX on interface"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useForceUniswapXOnFlag()}
+        featureFlag={FeatureFlag.forceUniswapXOn}
+        label="Force routing api to enable UniswapX"
       />
       <FeatureFlagOption
         variant={BaseVariant}
