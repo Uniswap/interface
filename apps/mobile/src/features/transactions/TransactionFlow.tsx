@@ -13,6 +13,7 @@ import { Warning, WarningSeverity } from 'src/components/modals/WarningModal/typ
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
+import { IS_ANDROID } from 'src/constants/globals'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { useTokenFormActionHandlers } from 'src/features/transactions/hooks'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
@@ -143,7 +144,7 @@ export function TransactionFlow({
         <AnimatedFlex grow row gap="none" height="100%" style={wrapperStyle}>
           <Flex
             gap="spacing16"
-            pb="spacing16"
+            pb={IS_ANDROID ? 'spacing32' : 'spacing16'}
             px="spacing16"
             style={{ marginBottom: insets.bottom }}
             width="100%">
@@ -244,9 +245,10 @@ function HeaderContent({
       row
       alignItems="center"
       justifyContent="space-between"
+      mt="spacing8"
+      pb="spacing8"
       pl="spacing12"
-      pr={customSlippageTolerance ? 'spacing8' : 'spacing16'}
-      pt="spacing8">
+      pr={customSlippageTolerance ? 'spacing8' : 'spacing16'}>
       <Text variant={{ xs: 'subheadSmall', sm: 'subheadLarge' }}>{flowName}</Text>
       <Flex row gap="spacing4">
         {step === TransactionStep.FORM && showUSDToggle ? (

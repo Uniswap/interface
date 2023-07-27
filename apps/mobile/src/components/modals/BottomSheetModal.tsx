@@ -9,10 +9,17 @@ import { BlurView } from '@react-native-community/blur'
 import { useResponsiveProp } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { Keyboard, StyleSheet } from 'react-native'
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
+import { IS_ANDROID } from 'src/constants/globals'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
@@ -84,6 +91,7 @@ export function BottomSheetModal({
 
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints)
+  const animatedPosition = useSharedValue(0)
   const theme = useAppTheme()
   const isDarkMode = useIsDarkMode()
 
@@ -131,7 +139,10 @@ export function BottomSheetModal({
     modalRef.current?.present()
   }, [modalRef])
 
-  const fullScreenContentHeight = (renderBehindInset ? 1 : FULL_HEIGHT) * dimensions.fullHeight
+  let fullScreenContentHeight = (renderBehindInset ? 1 : FULL_HEIGHT) * dimensions.fullHeight
+  if (IS_ANDROID) {
+    fullScreenContentHeight += insets.top
+  }
 
   const borderRadius = useResponsiveProp({
     // on screens without rounded corners, remove rounded corners when modal is fullscreen
@@ -139,16 +150,28 @@ export function BottomSheetModal({
     sm: theme.borderRadii.rounded24,
   })
 
+  const animatedBorderRadius = useAnimatedStyle(() => {
+    const interpolatedRadius = interpolate(
+      animatedPosition.value,
+      [0, insets.top],
+      [0, borderRadius ?? theme.borderRadii.rounded24],
+      Extrapolate.CLAMP
+    )
+    return { borderTopLeftRadius: interpolatedRadius, borderTopRightRadius: interpolatedRadius }
+  })
+
   const renderBlurredBg = useCallback(
     () => (
-      <BlurView
-        blurAmount={5}
-        blurType={isDarkMode ? 'dark' : 'xlight'}
-        reducedTransparencyFallbackColor={isDarkMode ? 'black' : 'white'}
-        style={[BlurViewStyle.base, { borderRadius }]}
-      />
+      <Animated.View style={[BlurViewStyle.base, animatedBorderRadius]}>
+        <BlurView
+          blurAmount={5}
+          blurType={isDarkMode ? 'dark' : 'xlight'}
+          reducedTransparencyFallbackColor={isDarkMode ? 'black' : 'white'}
+          style={BlurViewStyle.base}
+        />
+      </Animated.View>
     ),
-    [borderRadius, isDarkMode]
+    [isDarkMode, animatedBorderRadius]
   )
 
   const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
@@ -173,10 +196,18 @@ export function BottomSheetModal({
       {...background}
       {...backdrop}
       ref={modalRef}
-      activeOffsetY={DRAG_ACTIVATION_OFFSET}
-      backgroundStyle={{
-        backgroundColor: backgroundColorValue,
-      }}
+      // This is required for android to make scrollable containers work
+      // and allow closing the modal by dragging the content
+      // (adding this property on iOS breaks closing the modal by dragging the content)
+      activeOffsetY={IS_ANDROID ? [-DRAG_ACTIVATION_OFFSET, DRAG_ACTIVATION_OFFSET] : undefined}
+      animatedPosition={animatedPosition}
+      backgroundStyle={
+        hideHandlebar
+          ? BottomSheetStyle.modalTransparent
+          : {
+              backgroundColor: backgroundColorValue,
+            }
+      }
       contentHeight={animatedContentHeight}
       enableContentPanningGesture={isDismissible}
       enableHandlePanningGesture={isDismissible}
@@ -190,9 +221,12 @@ export function BottomSheetModal({
       <Trace logImpression modal={name}>
         <BottomSheetView
           style={[
-            { height: fullScreen ? fullScreenContentHeight : undefined },
+            {
+              height: fullScreen ? fullScreenContentHeight : undefined,
+              backgroundColor: backgroundColorValue,
+            },
             BottomSheetStyle.view,
-            renderBehindInset ? { ...BottomSheetStyle.behindInset, borderRadius } : undefined,
+            ...(renderBehindInset ? [BottomSheetStyle.behindInset, animatedBorderRadius] : []),
           ]}
           onLayout={handleContentLayout}>
           {children}
@@ -235,11 +269,18 @@ export function BottomSheetDetachedModal({
   return (
     <BaseModal
       ref={modalRef}
-      activeOffsetY={DRAG_ACTIVATION_OFFSET}
+      // This is required for android to make scrollable containers work
+      // and allow closing the modal by dragging the content
+      // (adding this property on iOS breaks closing the modal by dragging the content)
+      activeOffsetY={IS_ANDROID ? [-DRAG_ACTIVATION_OFFSET, DRAG_ACTIVATION_OFFSET] : undefined}
       backdropComponent={Backdrop}
-      backgroundStyle={{
-        backgroundColor: backgroundColor ?? theme.colors.background0,
-      }}
+      backgroundStyle={
+        hideHandlebar
+          ? BottomSheetStyle.modalTransparent
+          : {
+              backgroundColor: backgroundColor ?? theme.colors.background0,
+            }
+      }
       bottomInset={theme.spacing.spacing48}
       contentHeight={animatedContentHeight}
       detached={true}
@@ -272,6 +313,10 @@ const BottomSheetStyle = StyleSheet.create({
   },
   detached: {
     marginHorizontal: spacing.spacing12,
+  },
+  modalTransparent: {
+    backgroundColor: 'transparent',
+    borderRadius: 0,
   },
   view: {
     flex: 1,

@@ -14,6 +14,7 @@ import { TokenSelectorSendList } from 'src/components/TokenSelector/TokenSelecto
 import { TokenSelectorSwapInputList } from 'src/components/TokenSelector/TokenSelectorSwapInputList'
 import { TokenSelectorSwapOutputList } from 'src/components/TokenSelector/TokenSelectorSwapOutputList'
 import Trace from 'src/components/Trace/Trace'
+import { IS_IOS } from 'src/constants/globals'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -106,7 +107,7 @@ function _TokenSelectorModal({
       snapPoints={['65%', 'CONTENT_HEIGHT']}
       onClose={onClose}>
       <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
-        <Flex grow pb="spacing16" px="spacing16">
+        <Flex grow pb={IS_IOS ? 'spacing16' : 'none'} px="spacing16">
           <SearchBar
             backgroundColor="background2"
             placeholder={t('Search tokens')}

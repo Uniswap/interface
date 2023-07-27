@@ -3,12 +3,12 @@ import { useCallback, useState } from 'react'
 import {
   LayoutRectangle,
   NativeSyntheticEvent,
-  Platform,
   TextInput as NativeTextInput,
   TextInputContentSizeChangeEventData,
 } from 'react-native'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box } from 'src/components/layout'
+import { IS_ANDROID } from 'src/constants/globals'
 import { Theme } from 'ui/src/theme/restyle/theme'
 
 interface Props {
@@ -30,9 +30,7 @@ interface Props {
 }
 
 export default function InputWithSuffix(props: Props): JSX.Element {
-  const isAndroid = Platform.OS === 'android'
-
-  return isAndroid ? (
+  return IS_ANDROID && props.inputSuffix ? (
     <Box width="100%">
       <Inputs {...props} layerType="foreground" />
       <Inputs {...props} layerType="background" />

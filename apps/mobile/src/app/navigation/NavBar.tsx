@@ -21,6 +21,7 @@ import { pulseAnimation } from 'src/components/buttons/utils'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { IS_ANDROID } from 'src/constants/globals'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
@@ -86,6 +87,7 @@ export function NavBar(): JSX.Element {
           flex={1}
           gap="spacing12"
           justifyContent="space-between"
+          mb={IS_ANDROID ? 'spacing8' : 'none'}
           mx="spacing24"
           pointerEvents="auto">
           <ExploreTabBarButton />

@@ -18,11 +18,7 @@ import {
   useTheme,
 } from '@shopify/restyle'
 import React, { forwardRef } from 'react'
-import {
-  Platform,
-  TextInput as TextInputBase,
-  TextInputProps as BaseTextInputProps,
-} from 'react-native'
+import { TextInput as TextInputBase, TextInputProps as BaseTextInputProps } from 'react-native'
 import { Theme } from 'ui/src/theme/restyle/theme'
 
 const restyleFunctions = [
@@ -60,10 +56,6 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(function _Tex
 
   // restyle doesn't parse placeholderTextColorCorrectly
   rest.placeholderTextColor ??= theme.colors.textTertiary
-
-  if (Platform.OS === 'android') {
-    rest.textAlignVertical ??= 'bottom'
-  }
 
   const transformedProps = useRestyle(restyleFunctions, rest)
 

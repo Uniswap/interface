@@ -21,6 +21,7 @@ import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import Trace from 'src/components/Trace/Trace'
+import { IS_IOS } from 'src/constants/globals'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { openModal, selectModalState } from 'src/features/modals/modalSlice'
@@ -282,7 +283,7 @@ function TokenDetails({
     }
   }, [activeTransactionType, dismissWarningCallback, navigateToSwapBuy, navigateToSwapSell])
 
-  const pb = useResponsiveProp({ xs: 'none', sm: 'spacing16' })
+  const pb = useResponsiveProp(IS_IOS ? { xs: 'none', sm: 'spacing16' } : 'none')
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
