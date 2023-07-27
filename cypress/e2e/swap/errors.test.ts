@@ -1,11 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
-import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
+import { DAI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
-
-const UNI_MAINNET = UNI[ChainId.MAINNET]
 
 describe('Swap errors', () => {
   it('wallet rejection', () => {
@@ -64,10 +62,21 @@ describe('Swap errors', () => {
     })
   })
 
-  it.skip('slippage failure', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UNI_MAINNET.address}`, { ethereum: 'hardhat' })
-    cy.hardhat({ automine: false })
-    getBalance(USDC_MAINNET).then((initialBalance) => {
+  it('slippage failure', () => {
+    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, { ethereum: 'hardhat' })
+    cy.hardhat({ automine: false }).then((hardhat) =>
+      hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 500e6))
+    )
+    cy.hardhat().then((hardhat) => hardhat.mine())
+    cy.hardhat().then(({ approval, wallet }) =>
+      Promise.all([
+        approval.setTokenAllowanceForPermit2({ owner: wallet, token: USDC_MAINNET }),
+        approval.setPermit2Allowance({ owner: wallet, token: USDC_MAINNET }),
+      ])
+    )
+    cy.hardhat().then((hardhat) => hardhat.mine())
+
+    getBalance(DAI).then((initialBalance) => {
       // Gas estimation fails for this transaction (that would normally fail), so we stub it.
       cy.hardhat().then((hardhat) => {
         const send = cy.stub(hardhat.provider, 'send').log(false)
@@ -90,7 +99,9 @@ describe('Swap errors', () => {
         cy.contains('Confirm swap').click()
         cy.wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
         cy.contains('Swap submitted')
-        cy.get(getTestSelector('confirmation-close-icon')).click()
+        if (i === 0) {
+          cy.get(getTestSelector('confirmation-close-icon')).click()
+        }
       }
       cy.get(getTestSelector('web3-status-connected')).should('contain', '2 Pending')
 
@@ -98,10 +109,15 @@ describe('Swap errors', () => {
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.wait('@eth_getTransactionReceipt')
 
-      // Verify transaction did not occur
+      cy.contains('Swap failed')
+
+      // Verify only 1 transaction occurred
       cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
+      cy.get(getTestSelector('popups')).contains('Swapped')
       cy.get(getTestSelector('popups')).contains('Swap failed')
-      getBalance(UNI_MAINNET).should('eq', initialBalance)
+      getBalance(DAI).then((currentDaiBalance) => {
+        expect(currentDaiBalance).to.be.closeTo(initialBalance + 200, 1)
+      })
     })
   })
 })
