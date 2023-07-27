@@ -150,8 +150,16 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
 
   // first price point on the x-axis of the current time period's chart
   const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
-  // last price point on the x-axis of the current time period's chart
-  const endingPrice = originalPrices?.[originalPrices.length - 1] ?? DATA_EMPTY
+  // last non-zero price point on the x-axis of the current time period's chart
+  const endingPrice = useMemo(() => {
+    if (!originalPrices) return DATA_EMPTY
+    for (let i = originalPrices.length - 1; i >= 0; i--) {
+      if (originalPrices[i].value !== 0) {
+        return originalPrices[i]
+      }
+    }
+    return DATA_EMPTY
+  }, [originalPrices])
 
   const [displayPrice, setDisplayPrice] = useState(endingPrice)
 
