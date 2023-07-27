@@ -225,17 +225,18 @@ export function PendingModalContent({
   revocationPending = false,
 }: PendingModalContentProps) {
   const { chainId } = useWeb3React()
+
   const transaction = useTransaction(swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined)
   const tokens = useAllTokensMultichain()
 
-  const activity = transaction && chainId ? transactionToActivity(transaction, chainId, tokens) : undefined
-  const classicSwapConfirmed = activity?.status === TransactionStatus.Confirmed
+  const swapActivity = transaction && chainId ? transactionToActivity(transaction, chainId, tokens) : undefined
 
+  const classicSwapConfirmed = swapActivity?.status === TransactionStatus.Confirmed
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
   // TODO(UniswapX): Support UniswapX status here too
   const uniswapXSwapConfirmed = Boolean(swapResult)
 
-  const swapConfirmed = TradeFillType.Classic ? classicSwapConfirmed : uniswapXSwapConfirmed
+  const swapConfirmed = swapResult?.type === TradeFillType.Classic ? classicSwapConfirmed : uniswapXSwapConfirmed
 
   const swapPending = swapResult !== undefined && !swapConfirmed
   const wrapPending = wrapTxHash != undefined && !wrapConfirmed

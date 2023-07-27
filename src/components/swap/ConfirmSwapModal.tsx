@@ -9,11 +9,14 @@ import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
+import { transactionToActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
 import { USDT as USDT_MAINNET } from 'constants/tokens'
+import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { useAllTokensMultichain } from 'hooks/Tokens'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
@@ -24,7 +27,7 @@ import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
-import { useIsTransactionConfirmed } from 'state/transactions/hooks'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import invariant from 'tiny-invariant'
@@ -297,7 +300,16 @@ export default function ConfirmSwapModal({
       doesTradeDiffer: Boolean(doesTradeDiffer),
     })
 
-  const swapFailed = Boolean(swapError) && !didUserReject(swapError)
+  const transaction = useTransaction(swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined)
+  const tokens = useAllTokensMultichain()
+
+  const swapActivity = transaction && chainId ? transactionToActivity(transaction, chainId, tokens) : undefined
+
+  // Swap was reverted onchain.
+  const swapReverted = swapActivity?.status === TransactionStatus.Failed
+  // Swap failed locally and was not broadcast to the blockchain.
+  const localSwapFailure = Boolean(swapError) && !didUserReject(swapError)
+  const swapFailed = localSwapFailure || swapReverted
   useEffect(() => {
     // Reset the modal state if the user rejected the swap.
     if (swapError && !swapFailed) {
