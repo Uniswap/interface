@@ -111,6 +111,7 @@
     "@walletconnect/types": "^2.8.6",
     "babel-jest": "^29.6.1",
     "babel-plugin-istanbul": "^6.1.1",
+    "browser-cache-mock": "^0.1.7",
     "buffer": "^6.0.3",
     "concurrently": "^8.0.1",
     "cypress": "12.12.0",

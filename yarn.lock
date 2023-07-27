@@ -8446,6 +8446,11 @@ brorand@^1.1.0:
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
   integrity sha1-EsJe/kCkXjwyPrhnWgoM5XsiNx8=
 
+browser-cache-mock@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/browser-cache-mock/-/browser-cache-mock-0.1.7.tgz#4bfa4aa1022b1ce642e656e3cc8158deaaf30e12"
+  integrity sha512-+0bM5cjnj8Z8caAYBe1A9AA30juciI8fBHhw+aPBSSGL89UHPUcBA/E6CrQAecC635MEfx8qadTnaocEwE2q8Q==
+
 browser-level@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/browser-level/-/browser-level-1.0.1.tgz#36e8c3183d0fe1c405239792faaab5f315871011"
