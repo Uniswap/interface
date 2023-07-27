@@ -57,5 +57,22 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['**/*.ts', '**/*.tsx'],
+      excludedFiles: ['src/analytics/*'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: '@uniswap/analytics',
+                message: `Do not import from '@uniswap/analytics' directly. Use 'analytics' instead.`,
+              },
+            ],
+          },
+        ],
+      },
+    },
   ],
 }

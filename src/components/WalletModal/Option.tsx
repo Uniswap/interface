@@ -1,6 +1,6 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ActivationStatus, useActivationState } from 'connection/activate'
@@ -8,8 +8,6 @@ import { Connection } from 'connection/types'
 import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-
-import NewBadge from './NewBadge'
 
 const OptionCardLeft = styled.div`
   ${flexColumnNoWrap};
@@ -109,7 +107,6 @@ export default function Option({ connection }: OptionProps) {
               <img src={connection.getIcon?.(isDarkMode)} alt={connection.getName()} />
             </IconWrapper>
             <HeaderText>{connection.getName()}</HeaderText>
-            {connection.isNew && <NewBadge />}
           </OptionCardLeft>
           {isCurrentOptionPending && <Loader />}
         </OptionCardClickable>

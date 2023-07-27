@@ -2,7 +2,7 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { InterfaceTrade } from 'state/routing/types'
+import { ClassicTrade } from 'state/routing/types'
 
 export interface RoutingDiagramEntry {
   percent: Percent
@@ -15,7 +15,7 @@ const V2_DEFAULT_FEE_TIER = 3000
 /**
  * Loops through all routes on a trade and returns an array of diagram entries.
  */
-export default function getRoutingDiagramEntries(trade: InterfaceTrade): RoutingDiagramEntry[] {
+export default function getRoutingDiagramEntries(trade: ClassicTrade): RoutingDiagramEntry[] {
   return trade.swaps.map(({ route: { path: tokenPath, pools, protocol }, inputAmount, outputAmount }) => {
     const portion =
       trade.tradeType === TradeType.EXACT_INPUT

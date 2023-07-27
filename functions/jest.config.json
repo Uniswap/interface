@@ -5,5 +5,7 @@
   "transform": {
     "'^.+\\.(ts|tsx)?$'": "ts-jest",
     "^.+\\.(js|jsx)$": "babel-jest"
-  }
+  },
+  "testTimeout": 360000,
+  "cacheDirectory": "../node_modules/.cache/cloud-jest"
 }

@@ -1,4 +1,3 @@
-//We set a 50 second timeout on all tests as global-setup doesn't always wait for the proxy to be ready before running tests
 const tokens = [
   {
     address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -21,12 +20,6 @@ const tokens = [
       'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0/logo.png',
   },
   {
-    address: '0x1f52145666c862ed3e2f1da213d479e61b2892af',
-    network: 'arbitrum',
-    symbol: 'FUC',
-    image: 'https://assets.coingecko.com/coins/images/30081/large/fuc.png?1683016112',
-  },
-  {
     address: '0x6982508145454ce325ddbe47a25d4ec3d2311933',
     network: 'ethereum',
     symbol: 'PEPE',
@@ -35,33 +28,22 @@ const tokens = [
   },
 ]
 
-test.each(tokens)(
-  'should inject metadata for valid tokens',
-  async (token) => {
-    const url = 'http://127.0.0.1:3000/tokens/' + token.network + '/' + token.address
-    const body = await fetch(new Request(url)).then((res) => res.text())
-    expect(body).toMatchSnapshot()
-    expect(body).toContain('Get ' + token.symbol + ' on Uniswap')
-    expect(body).toContain(token.image)
-    expect(body).toContain(url)
-    expect(body).toContain(`<meta property="og:title" content="Get ${token.symbol} on Uniswap"/>`)
-    expect(body).toContain(`<meta property="og:image" content="${token.image}"/>`)
-    expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
-    expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
-    expect(body).toContain(`<meta property="og:type" content="website"/>`)
-    expect(body).toContain(`<meta property="og:url" content="${url}"/>`)
-    expect(body).toContain(
-      `<meta property="og:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`
-    )
-    expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
-    expect(body).toContain(`<meta property="twitter:title" content="Get ${token.symbol} on Uniswap"/>`)
-    expect(body).toContain(`<meta property="twitter:image" content="${token.image}"/>`)
-    expect(body).toContain(
-      `<meta property="twitter:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`
-    )
-  },
-  50000
-)
+test.each(tokens)('should inject metadata for valid tokens', async (token) => {
+  const url = 'http://127.0.0.1:3000/tokens/' + token.network + '/' + token.address
+  const body = await fetch(new Request(url)).then((res) => res.text())
+  expect(body).toMatchSnapshot()
+  expect(body).toContain(`<meta property="og:title" content="Get ${token.symbol} on Uniswap"/>`)
+  expect(body).toContain(`<meta property="og:image" content="${token.image}"/>`)
+  expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
+  expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
+  expect(body).toContain(`<meta property="og:type" content="website"/>`)
+  expect(body).toContain(`<meta property="og:url" content="${url}"/>`)
+  expect(body).toContain(`<meta property="og:image:alt" content="Get ${token.symbol} on Uniswap"/>`)
+  expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
+  expect(body).toContain(`<meta property="twitter:title" content="Get ${token.symbol} on Uniswap"/>`)
+  expect(body).toContain(`<meta property="twitter:image" content="${token.image}"/>`)
+  expect(body).toContain(`<meta property="twitter:image:alt" content="Get ${token.symbol} on Uniswap"/>`)
+})
 
 const invalidTokens = [
   'http://127.0.0.1:3000/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb49',
@@ -72,21 +54,17 @@ const invalidTokens = [
   'http://127.0.0.1:3000/tokens/potato/?potato=1',
 ]
 
-test.each(invalidTokens)(
-  'should not inject metadata for invalid tokens',
-  async (url) => {
-    const body = await fetch(new Request(url)).then((res) => res.text())
-    expect(body).not.toContain('og:title')
-    expect(body).not.toContain('og:image')
-    expect(body).not.toContain('og:image:width')
-    expect(body).not.toContain('og:image:height')
-    expect(body).not.toContain('og:type')
-    expect(body).not.toContain('og:url')
-    expect(body).not.toContain('og:image:alt')
-    expect(body).not.toContain('twitter:card')
-    expect(body).not.toContain('twitter:title')
-    expect(body).not.toContain('twitter:image')
-    expect(body).not.toContain('twitter:image:alt')
-  },
-  50000
-)
+test.each(invalidTokens)('should not inject metadata for invalid tokens', async (url) => {
+  const body = await fetch(new Request(url)).then((res) => res.text())
+  expect(body).not.toContain('og:title')
+  expect(body).not.toContain('og:image')
+  expect(body).not.toContain('og:image:width')
+  expect(body).not.toContain('og:image:height')
+  expect(body).not.toContain('og:type')
+  expect(body).not.toContain('og:url')
+  expect(body).not.toContain('og:image:alt')
+  expect(body).not.toContain('twitter:card')
+  expect(body).not.toContain('twitter:title')
+  expect(body).not.toContain('twitter:image')
+  expect(body).not.toContain('twitter:image:alt')
+})

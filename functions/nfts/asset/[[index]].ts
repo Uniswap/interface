@@ -1,26 +1,24 @@
 /* eslint-disable import/no-unused-modules */
 import { MetaTagInjector } from '../../components/metaTagInjector'
 import getAsset from '../../utils/getAsset'
+import { getCache, putCache } from '../../utils/useCache'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const { index } = params
-  const collectionAddress = String(index[0])
-  const tokenId = String(index[1])
-  const cache = caches.default
+  const collectionAddress = index[0]?.toString()
+  const tokenId = index[1]?.toString()
   const assetPromise = getAsset(collectionAddress, tokenId, request.url)
   const resPromise = next()
-  const cachePromise = cache.match(request.url)
+  const cachePromise = getCache(request.url, 'assets-cache')
   try {
     const [graphData, cacheResponse, res] = await Promise.all([assetPromise, cachePromise, resPromise])
     if (cacheResponse) {
-      const cacheData = JSON.parse(await cacheResponse.text())
-      return new HTMLRewriter().on('head', new MetaTagInjector(cacheData)).transform(res)
+      return new HTMLRewriter().on('head', new MetaTagInjector(cacheResponse)).transform(res)
     } else {
       if (!graphData) {
         return resPromise
       }
-      const response = new Response(JSON.stringify(graphData))
-      await cache.put(request.url, response)
+      await putCache(new Response(JSON.stringify(graphData)), request.url, 'assets-cache')
       return new HTMLRewriter().on('head', new MetaTagInjector(graphData)).transform(res)
     }
   } catch (e) {

@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import walletBannerPhoneImageSrc from 'assets/images/wallet_banner_phone_image.png'
 import { ReactComponent as AppleLogo } from 'assets/svg/apple_logo.svg'
-import { openDownloadApp, openWalletMicrosite } from 'components/AccountDrawer/DownloadButton'
 import { BaseButton } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
@@ -14,6 +13,7 @@ import { useHideUniswapWalletBanner } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { openDownloadApp, openWalletMicrosite } from 'utils/openDownloadApp'
 import { isIOS, isMobileSafari } from 'utils/userAgent'
 
 const PopupContainer = styled.div<{ show: boolean }>`
@@ -119,7 +119,11 @@ export default function UniswapWalletBanner() {
           <>
             <BannerButton
               backgroundColor="white"
-              onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON)}
+              onClick={() =>
+                openDownloadApp({
+                  element: InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON,
+                })
+              }
             >
               <AppleLogo width={14} height={14} />
               <ThemedText.LabelSmall color="black" marginLeft="5px">
@@ -127,14 +131,14 @@ export default function UniswapWalletBanner() {
               </ThemedText.LabelSmall>
             </BannerButton>
 
-            <BannerButton backgroundColor="black" onClick={openWalletMicrosite}>
+            <BannerButton backgroundColor="black" onClick={() => openWalletMicrosite()}>
               <ThemedText.LabelSmall color="white">
                 <Trans>Learn more</Trans>
               </ThemedText.LabelSmall>
             </BannerButton>
           </>
         ) : (
-          <BannerButton backgroundColor="white" width="125px" onClick={openWalletMicrosite}>
+          <BannerButton backgroundColor="white" width="125px" onClick={() => openWalletMicrosite()}>
             <ThemedText.LabelSmall color="black">
               <Trans>Learn more</Trans>
             </ThemedText.LabelSmall>

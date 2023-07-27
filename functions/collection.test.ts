@@ -1,4 +1,3 @@
-//We set a 50 second timeout on all tests as global-setup doesn't always wait for the proxy to be ready before running tests
 const collections = [
   {
     address: '0xed5af388653567af2f388e6224dc7c4b3241c544',
@@ -20,30 +19,22 @@ const collections = [
   },
 ]
 
-test.each(collections)(
-  'should inject metadata for valid collections',
-  async (collection) => {
-    const url = 'http://127.0.0.1:3000/nfts/collection/' + collection.address
-    const body = await fetch(new Request(url)).then((res) => res.text())
-    expect(body).toMatchSnapshot()
-    expect(body).toContain(`<meta property="og:title" content="${collection.collectionName} on Uniswap"/>`)
-    expect(body).toContain(`<meta property="og:image" content="${collection.image}"/>`)
-    expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
-    expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
-    expect(body).toContain(`<meta property="og:type" content="website"/>`)
-    expect(body).toContain(`<meta property="og:url" content="${url}"/>`)
-    expect(body).toContain(
-      `<meta property="og:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`
-    )
-    expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
-    expect(body).toContain(`<meta property="twitter:title" content="${collection.collectionName} on Uniswap"/>`)
-    expect(body).toContain(`<meta property="twitter:image" content="${collection.image}"/>`)
-    expect(body).toContain(
-      `<meta property="twitter:image:alt" content="https://app.uniswap.org/images/512x512_App_Icon.png"/>`
-    )
-  },
-  50000
-)
+test.each(collections)('should inject metadata for valid collections', async (collection) => {
+  const url = 'http://127.0.0.1:3000/nfts/collection/' + collection.address
+  const body = await fetch(new Request(url)).then((res) => res.text())
+  expect(body).toMatchSnapshot()
+  expect(body).toContain(`<meta property="og:title" content="${collection.collectionName} on Uniswap"/>`)
+  expect(body).toContain(`<meta property="og:image" content="${collection.image}"/>`)
+  expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
+  expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
+  expect(body).toContain(`<meta property="og:type" content="website"/>`)
+  expect(body).toContain(`<meta property="og:url" content="${url}"/>`)
+  expect(body).toContain(`<meta property="og:image:alt" content="${collection.collectionName} on Uniswap"/>`)
+  expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
+  expect(body).toContain(`<meta property="twitter:title" content="${collection.collectionName} on Uniswap"/>`)
+  expect(body).toContain(`<meta property="twitter:image" content="${collection.image}"/>`)
+  expect(body).toContain(`<meta property="twitter:image:alt" content="${collection.collectionName} on Uniswap"/>`)
+})
 
 const invalidCollections = [
   'http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545',
@@ -53,7 +44,7 @@ const invalidCollections = [
 ]
 
 test.each(invalidCollections)(
-  'should not inject metadata for invalid urls',
+  'should not inject metadata for invalid collection urls',
   async (url) => {
     const body = await fetch(new Request(url)).then((res) => res.text())
     expect(body).not.toContain('og:title')
