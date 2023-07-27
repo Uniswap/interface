@@ -2,6 +2,7 @@ import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -75,25 +76,26 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
           filter_type: selectedMenuAction.orderBy,
         })
       }}>
-      <Flex
-        row
+      <TouchableArea
         alignItems="center"
         backgroundColor={isDarkMode ? 'backgroundOverlay' : 'background0'}
         borderRadius="roundedFull"
-        gap="spacing4"
+        flexDirection="row"
         px="spacing12"
         py="spacing8">
-        {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}
-        <Text color="textSecondary" variant="buttonLabelSmall">
-          {getTokensOrderBySelectedLabel(orderBy, t)}
-        </Text>
-        <Chevron
-          color={theme.colors.textSecondary}
-          direction="s"
-          height={theme.iconSizes.icon20}
-          width={theme.iconSizes.icon20}
-        />
-      </Flex>
+        <Flex row gap="spacing4">
+          {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}
+          <Text color="textSecondary" variant="buttonLabelSmall">
+            {getTokensOrderBySelectedLabel(orderBy, t)}
+          </Text>
+          <Chevron
+            color={theme.colors.textSecondary}
+            direction="s"
+            height={theme.iconSizes.icon20}
+            width={theme.iconSizes.icon20}
+          />
+        </Flex>
+      </TouchableArea>
     </ContextMenu>
   )
 }
