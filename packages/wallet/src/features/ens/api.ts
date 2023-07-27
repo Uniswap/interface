@@ -24,8 +24,6 @@ export type EnslookupParams = {
   chainId: ChainId
 }
 
-const ENS_TTL_MS = 5 * ONE_MINUTE_MS
-
 async function getNameFetch(address: string, provider: providers.JsonRpcProvider) {
   const name = await provider.lookupAddress(address)
 
@@ -78,28 +76,27 @@ function useEnsQuery(
   chainId: ChainId = ChainId.Mainnet
 ) {
   const result = useRestQuery<{ data?: string; timestamp: number }, EnslookupParams>(
-    STUB_ONCHAIN_ENS_ENDPOINT,
+    STUB_ONCHAIN_ENS_ENDPOINT, // will invoke `getOnChainEnsFecth`
     // the query is skipped if this is not defined so the assertion is okay
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     { type, nameOrAddress: nameOrAddress!, chainId },
-    ['data', 'timestamp'],
-    { skip: !nameOrAddress }
+    ['data'],
+    {
+      ttlMs: 5 * ONE_MINUTE_MS,
+      skip: !nameOrAddress,
+    }
   )
 
-  const { data, error, refetch } = result
+  const { data, error } = result
 
-  return useMemo(() => {
-    if (data?.timestamp && Date.now() - data.timestamp > ENS_TTL_MS) {
-      refetch?.()
-      return { ...result, data: undefined }
-    }
-
-    return {
+  return useMemo(
+    () => ({
       ...result,
       data: data?.data,
       error,
-    }
-  }, [data, error, refetch, result])
+    }),
+    [data, error, result]
+  )
 }
 
 export function useENSName(address?: Address, chainId: ChainId = ChainId.Mainnet) {
