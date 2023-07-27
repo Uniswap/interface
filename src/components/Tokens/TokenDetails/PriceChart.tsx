@@ -303,7 +303,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   return (
     <>
       <ChartHeader data-cy="chart-header">
-        {displayPrice.value != null ? (
+        {displayPrice.value != null && (prices?.length ?? 0) > 0 ? (
           <>
             <TokenPrice>{formatUSDPrice(displayPrice.value)}</TokenPrice>
             <DeltaContainer>
