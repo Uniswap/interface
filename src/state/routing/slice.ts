@@ -53,6 +53,7 @@ export interface GetQuoteArgs {
   uniswapXEnabled: boolean
   uniswapXForceSyntheticQuotes: boolean
   forceUniswapXOn: boolean
+  userDisabledUniswapX: boolean
   isRoutingAPIPrice?: boolean
 }
 
@@ -86,6 +87,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
   if (
     !args.uniswapXEnabled ||
+    args.userDisabledUniswapX ||
     tokenOutIsNative ||
     tradeType === TradeType.EXACT_OUTPUT ||
     !isUniswapXSupportedChain(tokenInChainId)
