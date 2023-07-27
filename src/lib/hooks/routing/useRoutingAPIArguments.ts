@@ -6,6 +6,7 @@ import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUse
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
+import { useUserDisabledUniswapX } from 'state/user/hooks'
 
 /**
  * Returns query arguments for the Routing API query or undefined if the
@@ -30,6 +31,7 @@ export function useRoutingAPIArguments({
   const uniswapXEnabled = useUniswapXEnabled()
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
   const forceUniswapXOn = useForceUniswapXOn()
+  const userDisabledUniswapX = useUserDisabledUniswapX()
   const isRoutingAPIPrice = useRoutingAPIForPrice()
 
   return useMemo(
@@ -54,6 +56,7 @@ export function useRoutingAPIArguments({
             uniswapXEnabled,
             uniswapXForceSyntheticQuotes,
             forceUniswapXOn,
+            userDisabledUniswapX,
           },
     [
       account,
@@ -62,10 +65,11 @@ export function useRoutingAPIArguments({
       tokenIn,
       tokenOut,
       tradeType,
-      uniswapXEnabled,
       isRoutingAPIPrice,
+      uniswapXEnabled,
       uniswapXForceSyntheticQuotes,
       forceUniswapXOn,
+      userDisabledUniswapX,
     ]
   )
 }
