@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { useForceUniswapXOn } from 'featureFlags/flags/forceUniswapXOn'
 import { useRoutingAPIForPrice } from 'featureFlags/flags/priceRoutingApi'
 import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
@@ -28,6 +29,7 @@ export function useRoutingAPIArguments({
 }): GetQuoteArgs | undefined {
   const uniswapXEnabled = useUniswapXEnabled()
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
+  const forceUniswapXOn = useForceUniswapXOn()
   const isRoutingAPIPrice = useRoutingAPIForPrice()
 
   return useMemo(
@@ -51,6 +53,7 @@ export function useRoutingAPIArguments({
             needsWrapIfUniswapX: tokenIn.isNative,
             uniswapXEnabled,
             uniswapXForceSyntheticQuotes,
+            forceUniswapXOn,
           },
     [
       account,
@@ -62,6 +65,7 @@ export function useRoutingAPIArguments({
       uniswapXEnabled,
       isRoutingAPIPrice,
       uniswapXForceSyntheticQuotes,
+      forceUniswapXOn,
     ]
   )
 }
