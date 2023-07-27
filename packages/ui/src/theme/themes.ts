@@ -117,8 +117,6 @@ const light_primary_Button: BaseTheme = {
   color: colorsLight.white,
 }
 
-console.log('colorsLight.textOnDimPrimary', colorsLight.textOnDimPrimary)
-
 // theme: dark
 const dark_primary_Button: BaseTheme = {
   ...dark,
@@ -233,8 +231,6 @@ const allThemes = {
   light_warning_Button,
   dark_warning_Button,
 }
-
-console.log('allThemes', allThemes)
 
 type ThemeName = keyof typeof allThemes
 type Themes = {

@@ -149,6 +149,9 @@ const buttonToIconSize: Record<ButtonSize, SpecificTokens> = {
   large: '$icon.20',
 }
 
+// we do a few things different from tamagui here, and also tamagui is deprecating useButton
+// because its just too specific to maintain. we don't allow number sizes for example.
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function useButton<Props extends ButtonProps>(propsIn: Props) {
   // careful not to desctructure and re-order props, order is important
