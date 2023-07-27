@@ -1,5 +1,7 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
+import { SwapEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import LibUpdater from 'lib/hooks/transactions/updater'
 import { useCallback, useMemo } from 'react'
@@ -25,6 +27,7 @@ export function toSerializableReceipt(receipt: TransactionReceipt): Serializable
 }
 
 export default function Updater() {
+  const analyticsContext = useTrace()
   const { chainId } = useWeb3React()
   const addPopup = useAddPopup()
   // speed up popup dismisall time if on L2
@@ -54,6 +57,24 @@ export default function Updater() {
         })
       )
 
+      const ttsMarks = performance.getEntriesByName('tts-mark', 'mark')
+      let elapsedTime: number | undefined
+      // Only log this metric for the first swap of a session.
+      if (ttsMarks.length === 0) {
+        elapsedTime = performance.now() / 1000 // time-to-swap in seconds
+        performance.mark('tts-mark')
+      }
+      if (elapsedTime && elapsedTime > 60 * 5) {
+        // 5 minute maximum
+        elapsedTime = undefined
+      }
+
+      sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
+        tts: elapsedTime,
+        hash,
+        ...analyticsContext,
+      })
+
       addPopup(
         {
           type: PopupType.Transaction,
@@ -63,7 +84,7 @@ export default function Updater() {
         isL2 ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
       )
     },
-    [addPopup, dispatch, isL2]
+    [addPopup, analyticsContext, dispatch, isL2]
   )
 
   return <LibUpdater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />
