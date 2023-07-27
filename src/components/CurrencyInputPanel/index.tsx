@@ -296,7 +296,7 @@ export default function CurrencyInputPanel({
                 {fiatValue && <FiatValue fiatValue={fiatValue} />}
               </LoadingOpacityContainer>
               {account ? (
-                <RowFixed style={{ height: '17px' }}>
+                <RowFixed style={{ height: '16px' }}>
                   <ThemedText.DeprecatedBody
                     onClick={onMax}
                     color={theme.neutral3}

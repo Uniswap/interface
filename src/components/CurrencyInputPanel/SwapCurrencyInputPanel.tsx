@@ -128,7 +128,7 @@ const LabelRow = styled.div`
 
 const FiatRow = styled(LabelRow)`
   justify-content: flex-end;
-  min-height: 20px;
+  min-height: 24px;
   padding: 8px 0px 0px 0px;
 `
 
@@ -312,7 +312,7 @@ export default function SwapCurrencyInputPanel({
                 {fiatValue && <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />}
               </LoadingOpacityContainer>
               {account ? (
-                <RowFixed style={{ height: '17px' }}>
+                <RowFixed style={{ height: '16px' }}>
                   <ThemedText.DeprecatedBody
                     data-testid="balance-text"
                     color={theme.neutral2}
