@@ -18,10 +18,11 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const resPromise = next()
   const cachePromise = getCache(request.url, 'tokens-cache')
   try {
-    const [graphData, cacheResponse, res] = await Promise.all([tokenPromise, cachePromise, resPromise])
+    const [cacheResponse, res] = await Promise.all([cachePromise, resPromise])
     if (cacheResponse) {
       return new HTMLRewriter().on('head', new MetaTagInjector(cacheResponse)).transform(res)
     } else {
+      const graphData = await tokenPromise
       if (!graphData) {
         return resPromise
       }
