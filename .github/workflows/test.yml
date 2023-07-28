@@ -158,6 +158,7 @@ jobs:
           COMMIT_INFO_TIMESTAMP: ${{ github.event.pull_request.updated_at || github.event.head_commit.timestamp }}
           CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
           CYPRESS_PULL_REQUEST_URL: ${{ github.event.pull_request.html_url }}
+          NODE_OPTIONS: "--max_old_space_size=4096"
       - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
