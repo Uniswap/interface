@@ -7,6 +7,7 @@ import { fetchSVG } from 'wallet/src/features/images/utils'
 import { SvgUriProps } from 'wallet/src/features/images/WebSvgUri'
 import { logger } from 'wallet/src/features/logger/logger'
 import { useAsyncData } from 'wallet/src/utils/hooks'
+import serializeError from 'wallet/src/utils/serializeError'
 
 const heightUnits = Platform.OS === 'ios' ? 'vh' : '%'
 
@@ -56,7 +57,7 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Elemen
         return // expect AbortError on unmount
       }
       logger.error('Failed to fetch remote SVG content', {
-        tags: { file: 'WebSvgUri', function: 'fetchSvg' },
+        tags: { file: 'WebSvgUri', function: 'fetchSvg', uri, error: serializeError(err) },
       })
     }
   }, [autoplay, uri])

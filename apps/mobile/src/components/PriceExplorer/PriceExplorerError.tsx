@@ -17,12 +17,8 @@ export function PriceExplorerError({
       <Flex gap="spacing12">
         <Text color="textTertiary" variant="headlineLarge">
           {
-            // em dash
-            '\u2013'
+            '\u2013' // em dash
           }
-        </Text>
-        <Text color="textTertiary" variant="bodySmall">
-          -
         </Text>
       </Flex>
       <Box

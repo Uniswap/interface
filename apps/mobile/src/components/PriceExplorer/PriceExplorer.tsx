@@ -49,7 +49,7 @@ export function PriceExplorer({
 }): JSX.Element {
   const { data, loading, error, refetch, setDuration } = useTokenPriceHistory(currencyId)
 
-  if (!loading && !data) {
+  if (!loading && (!data || !data.priceHistory || !data.spot)) {
     // Propagate retry up while refetching, if available
     const refetchAndRetry = (): void => {
       if (refetch) refetch()
