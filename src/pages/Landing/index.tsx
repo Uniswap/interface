@@ -10,8 +10,9 @@ import { BaseButton } from 'components/Button'
 import { AppleLogo } from 'components/Logo/AppleLogo'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
+import { RedirectPathToSwapOnly } from 'pages/Swap/redirects'
 import { parse } from 'qs'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { ArrowDownCircle } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
@@ -300,35 +301,28 @@ const Link = styled(NativeLink)`
 
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
-
   const cardsRef = useRef<HTMLDivElement>(null)
-
-  const [showContent, setShowContent] = useState(false)
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
-  const navigate = useNavigate()
-  const location = useLocation()
-  const queryParams = parse(location.search, {
-    ignoreQueryPrefix: true,
-  })
-
-  const [accountDrawerOpen] = useAccountDrawer()
-  useEffect(() => {
-    if ((queryParams.intro || !selectedWallet) && !accountDrawerOpen) {
-      setShowContent(true)
-    } else {
-      setShowContent(false)
-      setTimeout(() => {
-        navigate('/swap')
-      }, TRANSITION_DURATIONS.medium)
-    }
-  }, [navigate, selectedWallet, queryParams.intro, accountDrawerOpen])
-
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
-
   const cards = useMemo(
     () => MAIN_CARDS.filter((card) => !(shouldDisableNFTRoutes && card.to.startsWith('/nft'))),
     [shouldDisableNFTRoutes]
   )
+
+  const [accountDrawerOpen] = useAccountDrawer()
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (accountDrawerOpen) {
+      setTimeout(() => {
+        navigate('/swap')
+      }, TRANSITION_DURATIONS.fast)
+    }
+  }, [accountDrawerOpen, navigate])
+
+  const queryParams = parse(useLocation().search, { ignoreQueryPrefix: true })
+  if (selectedWallet && !queryParams.intro) {
+    return <RedirectPathToSwapOnly />
+  }
 
   return (
     <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
@@ -344,82 +338,78 @@ export default function Landing() {
             </Link>
           </TraceEvent>
         </LandingSwapContainer>
-        {showContent && (
-          <>
-            <Gradient isDarkMode={isDarkMode} />
-            <GlowContainer>
-              <Glow />
-            </GlowContainer>
-            <ContentContainer isDarkMode={isDarkMode}>
-              <TitleText isDarkMode={isDarkMode}>
-                {shouldDisableNFTRoutes ? (
-                  <Trans>Trade crypto with confidence</Trans>
-                ) : (
-                  <Trans>Trade crypto and NFTs with confidence</Trans>
-                )}
-              </TitleText>
-              <SubTextContainer>
-                <SubText>
-                  {shouldDisableNFTRoutes ? (
-                    <Trans>Buy, sell, and explore tokens</Trans>
-                  ) : (
-                    <Trans>Buy, sell, and explore tokens and NFTs</Trans>
-                  )}
-                </SubText>
-              </SubTextContainer>
-              <ActionsContainer>
-                <TraceEvent
-                  events={[BrowserEvent.onClick]}
-                  name={SharedEventName.ELEMENT_CLICKED}
-                  element={InterfaceElementName.CONTINUE_BUTTON}
-                >
-                  <ButtonCTA as={Link} to="/swap">
-                    <ButtonCTAText>
-                      <Trans>Get started</Trans>
-                    </ButtonCTAText>
-                  </ButtonCTA>
-                </TraceEvent>
-              </ActionsContainer>
-              <LearnMoreContainer
-                onClick={() => {
-                  cardsRef?.current?.scrollIntoView({ behavior: 'smooth' })
-                }}
-              >
-                <Trans>Learn more</Trans>
-                <LearnMoreArrow />
-              </LearnMoreContainer>
+        <Gradient isDarkMode={isDarkMode} />
+        <GlowContainer>
+          <Glow />
+        </GlowContainer>
+        <ContentContainer isDarkMode={isDarkMode}>
+          <TitleText isDarkMode={isDarkMode}>
+            {shouldDisableNFTRoutes ? (
+              <Trans>Trade crypto with confidence</Trans>
+            ) : (
+              <Trans>Trade crypto and NFTs with confidence</Trans>
+            )}
+          </TitleText>
+          <SubTextContainer>
+            <SubText>
+              {shouldDisableNFTRoutes ? (
+                <Trans>Buy, sell, and explore tokens</Trans>
+              ) : (
+                <Trans>Buy, sell, and explore tokens and NFTs</Trans>
+              )}
+            </SubText>
+          </SubTextContainer>
+          <ActionsContainer>
+            <TraceEvent
+              events={[BrowserEvent.onClick]}
+              name={SharedEventName.ELEMENT_CLICKED}
+              element={InterfaceElementName.CONTINUE_BUTTON}
+            >
+              <ButtonCTA as={Link} to="/swap">
+                <ButtonCTAText>
+                  <Trans>Get started</Trans>
+                </ButtonCTAText>
+              </ButtonCTA>
+            </TraceEvent>
+          </ActionsContainer>
+          <LearnMoreContainer
+            onClick={() => {
+              cardsRef?.current?.scrollIntoView({ behavior: 'smooth' })
+            }}
+          >
+            <Trans>Learn more</Trans>
+            <LearnMoreArrow />
+          </LearnMoreContainer>
 
-              <DownloadWalletLink
-                {...getDownloadAppLinkProps({
-                  // landing page specific tracking params
-                  microSiteParams: `utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
-                  appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
-                })}
-              >
-                <AppleLogo width="20" height="20" />
-                Download the Uniswap Wallet for iOS
-              </DownloadWalletLink>
-            </ContentContainer>
-            <AboutContentContainer isDarkMode={isDarkMode}>
-              <CardGrid cols={cards.length} ref={cardsRef}>
-                {cards.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
-                  <Card
-                    {...card}
-                    backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
-                    key={card.title}
-                  />
-                ))}
-              </CardGrid>
-              <CardGrid cols={3}>
-                {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
-                  <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
-                ))}
-              </CardGrid>
-              <ProtocolBanner />
-              <AboutFooter />
-            </AboutContentContainer>
-          </>
-        )}
+          <DownloadWalletLink
+            {...getDownloadAppLinkProps({
+              // landing page specific tracking params
+              microSiteParams: `utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
+              appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
+            })}
+          >
+            <AppleLogo width="20" height="20" />
+            Download the Uniswap Wallet for iOS
+          </DownloadWalletLink>
+        </ContentContainer>
+        <AboutContentContainer isDarkMode={isDarkMode}>
+          <CardGrid cols={cards.length} ref={cardsRef}>
+            {cards.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
+              <Card
+                {...card}
+                backgroundImgSrc={isDarkMode ? darkBackgroundImgSrc : lightBackgroundImgSrc}
+                key={card.title}
+              />
+            ))}
+          </CardGrid>
+          <CardGrid cols={3}>
+            {MORE_CARDS.map(({ darkIcon, lightIcon, ...card }) => (
+              <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
+            ))}
+          </CardGrid>
+          <ProtocolBanner />
+          <AboutFooter />
+        </AboutContentContainer>
       </PageContainer>
     </Trace>
   )
