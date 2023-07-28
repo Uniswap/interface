@@ -50,7 +50,6 @@ function usePriceHistory(tokenData: TokenData, timePeriod: TimePeriod): PricePoi
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await fetchTokenPriceData(tokenData.address, ONE_HOUR_SECONDS, startTimestamp, qtyDataPerTime)
-      console.log('tokenData.address', tokenData.address)
       setData(data)
     }
 
