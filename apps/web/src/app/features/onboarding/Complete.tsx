@@ -1,5 +1,5 @@
 import { Toast } from '@tamagui/toast'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
@@ -15,6 +15,7 @@ import { iconSizes } from 'ui/src/theme/iconSizes'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
+import { useInterval } from 'wallet/src/utils/timing'
 
 const POPUP_WIDTH = 400
 const POPUP_OFFSET = 20
@@ -46,26 +47,20 @@ export function Complete(): JSX.Element {
     throw new Error('No address found')
   }
 
-  // We set the initial state to true to avoid the message flickering when the component remounts
-  const [isPinned, setIsPinned] = useState<boolean>(true)
+  // We set the initial state to undefined to avoid the wrong message flickering when the component remounts
+  const [isPinned, setIsPinned] = useState<boolean | undefined>(undefined)
 
-  useEffect(() => {
-    const isExtensionPinned = async (): Promise<void> => {
-      const settings = await chrome.action.getUserSettings()
-      setIsPinned(settings.isOnToolbar)
-    }
+  const isExtensionPinned = async (): Promise<void> => {
+    const settings = await chrome.action.getUserSettings()
+    setIsPinned(settings.isOnToolbar)
+  }
 
-    // there's no way to listen to the extension pinning status,
-    // so check every [PINNED_CHECK_FREQUENCY_IN_MS]ms during this step if it's pinned
-    // TODO: use useInterval hook once migrated to wallet package
-    const intervalId = setInterval(isExtensionPinned, PINNED_CHECK_FREQUENCY_IN_MS)
-    return () => {
-      clearInterval(intervalId)
-    }
-  }, [])
+  // there's no way to listen to the extension pinning status,
+  // so check every [PINNED_CHECK_FREQUENCY_IN_MS]ms during this step if it's pinned
+  useInterval(isExtensionPinned, PINNED_CHECK_FREQUENCY_IN_MS)
 
   return (
-    <Stack alignItems="center" flexGrow={1} justifyContent="center" width="100%">
+    <>
       <Stack alignItems="center" width={ONBOARDING_CONTENT_WIDTH}>
         <YStack gap="$spacing12">
           <YStack alignItems="center" gap="$spacing12">
@@ -121,10 +116,13 @@ export function Complete(): JSX.Element {
           </YStack>
         </YStack>
       </Stack>
-      {!isPinned ? (
+
+      {/* check for false because !isPinned will trigger on undefined, and since that's what the value gets initialized as */}
+      {/* it would flicker with a false positive before it can check if it's pinned or not */}
+      {isPinned === false && (
         // extension is not pinned, show reminder popup
         // TODO: try using Tamagui Popover component here
-        <Stack position="absolute" right={0} top={0}>
+        <Stack position="absolute" right={0} top={-60}>
           {/* pinning reminder popup container */}
           <Stack
             backgroundColor="$background2"
@@ -200,27 +198,32 @@ export function Complete(): JSX.Element {
             </XStack>
           </Stack>
         </Stack>
-      ) : (
-        // extension was pinned, show success message
+      )}
+
+      {/* this and the condition above are separated out as two separate conditions that check for false and true respectively */}
+      {/* instead of as a ternary, because we initialize the value as undefined instead of false, to avoid a flicker on re-render */}
+      {isPinned && (
         <Toast
           backgroundColor="$background2"
           borderColor="$backgroundOutline"
           borderRadius="$roundedFull"
           borderWidth={1}
+          duration={30_000}
           gap="$spacing4"
           justifyContent="center"
           marginTop="$spacing12"
           opacity={0.9}
+          open={true}
           paddingHorizontal="$spacing36"
           paddingVertical="$spacing24"
           viewportName="onboarding">
           <Toast.Title alignItems="center" display="flex" flexDirection="row" gap="$spacing8">
             <Icons.Checkmark color="$accentSuccess" size={iconSizes.icon24} />
-            <Text variant="bodyLarge">{t("Awesome! It's safe to close this tab now")}</Text>
+            <Text variant="bodyLarge">{t("Pinned! It's safe to close this tab now")}</Text>
           </Toast.Title>
         </Toast>
       )}
-    </Stack>
+    </>
   )
 }
 

@@ -4,11 +4,6 @@ import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingCont
 import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { UniconWithLockIcon } from 'src/app/features/onboarding/UniconWithLockIcon'
-import {
-  CreateOnboardingRoutes,
-  OnboardingRoutes,
-  TopLevelRoutes,
-} from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
 import {
   EditAccountAction,
@@ -18,7 +13,7 @@ import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { setAccountAsActive, setAccountsNonPending } from 'wallet/src/features/wallet/slice'
 
-export function NameWallet(): JSX.Element {
+export function NameWallet({ previousPath }: { previousPath: string }): JSX.Element {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
@@ -50,8 +45,6 @@ export function NameWallet(): JSX.Element {
     )
 
     await dispatch(setAccountsNonPending([pendingAddress]))
-
-    // Activating an account will automatically redirect to `/onboarding/complete` thanks to `OnboardingWrapper`.
     await dispatch(setAccountAsActive(pendingAddress))
   }
 
@@ -63,12 +56,9 @@ export function NameWallet(): JSX.Element {
       subtitle="This nickname is only visible to you"
       title="Give your wallet a name"
       onBack={(): void =>
-        navigate(
-          `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.ViewMnemonic}`,
-          {
-            replace: true,
-          }
-        )
+        navigate(previousPath, {
+          replace: true,
+        })
       }
       onSubmit={onSubmit}>
       <OnboardingInput

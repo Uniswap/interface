@@ -1,37 +1,53 @@
-import { Navigate, Outlet, useMatch } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { OnboardingContextProvider } from 'src/app/features/onboarding/OnboardingContextProvider'
-import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
+import {
+  CreateOnboardingRoutes,
+  ImportOnboardingRoutes,
+  OnboardingRoutes,
+  TopLevelRoutes,
+} from 'src/app/navigation/constants'
+import { useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
 import { Stack } from 'ui/src'
 import { UniswapLogo } from 'ui/src/assets/icons/UniswapLogo'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
-import { useAppSelector } from 'wallet/src/state'
-
-const onboardingCompleteRoute = `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Complete}`
 
 export function OnboardingWrapper(): JSX.Element {
+  // check which onboarding flow we're in (/create or /import) so we can redirect to the correct complete route if user is already onboarded
+  const isCreate = !!useMatch(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/*`)
+
+  const completeRoute = isCreate
+    ? `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}/${CreateOnboardingRoutes.Complete}`
+    : `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Complete}`
+
   const isOnboarded = useAppSelector(isOnboardedSelector)
   const hasActiveAccount = !!useActiveAccount()
-  const isInOnboardingCompleteRoute = !!useMatch(onboardingCompleteRoute)
+  const location = useLocation()
+  const navigate = useNavigate()
 
-  // We check for `hasActiveAccount` to make sure the onboarding process is 100% complete before triggering the redirect or else it would redirect too soon.
-  return isOnboarded && hasActiveAccount && !isInOnboardingCompleteRoute ? (
-    <Navigate replace to={onboardingCompleteRoute} />
-  ) : (
+  const isIntroRoute = !!useMatch(TopLevelRoutes.Onboarding)
+
+  useEffect(() => {
+    if (
+      isOnboarded &&
+      hasActiveAccount &&
+      location.pathname !== completeRoute &&
+      // to account for cases where a user ends up (manually or through browser history) at "/onboarding" after completing onboarding
+      !isIntroRoute
+    ) {
+      navigate(completeRoute, { replace: true })
+    }
+  }, [isOnboarded, hasActiveAccount, location, completeRoute, navigate, isIntroRoute])
+
+  return (
     <OnboardingContextProvider>
-      <Stack
-        alignItems="center"
-        backgroundColor="$background1"
-        minHeight="100vh"
-        theme="primary"
-        width="100%">
+      <Stack alignItems="center" backgroundColor="$background1" minHeight="100vh" width="100%">
         <Stack padding="$spacing12">
           {/* TODO: make generic Icon component that can use `currentColor` in SVGs and be more easily reused */}
           <UniswapLogo />
         </Stack>
-        <Stack flex={1} padding="$spacing12">
-          <Outlet />
-        </Stack>
+        <Outlet />
       </Stack>
     </OnboardingContextProvider>
   )

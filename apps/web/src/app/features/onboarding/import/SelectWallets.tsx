@@ -164,8 +164,7 @@ export function SelectWallets(): JSX.Element {
         }
       }
     })
-
-    // Activating an account will automatically redirect to `/onboarding/complete` thanks to `OnboardingWrapper`.
+    // Activating an account will automatically redirect to the complete screen using the useOnboardingCompleteRedirect() hook
     await dispatch(pendingAccountActions.trigger(PendingAccountActions.Activate))
   }, [addresses, selectedAddresses, dispatch, pendingAccounts])
 

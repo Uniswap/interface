@@ -1,9 +1,13 @@
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { ONBOARDING_CONTENT_WIDTH } from 'src/app/features/onboarding/utils'
 import {
   CreateOnboardingRoutes,
   ImportOnboardingRoutes,
   OnboardingRoutes,
 } from 'src/app/navigation/constants'
+import { useAppSelector } from 'src/background/store'
+import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
 import { Image, Stack, Text, XStack, YStack } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { Button } from 'ui/src/components/button/Button'
@@ -13,6 +17,32 @@ const INTRO_SCREEN_WIDTH = 320
 
 export function IntroScreen(): JSX.Element {
   const navigate = useNavigate()
+  const { t } = useTranslation()
+
+  const isOnboarded = useAppSelector(isOnboardedSelector)
+
+  if (isOnboarded) {
+    // this case will only be triggered if a user manually arrives directly on /onboarding after having completed onboarding
+    return (
+      <Stack
+        alignItems="center"
+        flexGrow={1}
+        justifyContent="center"
+        width={ONBOARDING_CONTENT_WIDTH}>
+        <YStack alignItems="center" gap="$spacing12">
+          <Text color="$textPrimary" variant="subheadLarge">
+            {t('You‘ve already completed onboarding')}
+          </Text>
+          <Text color="$textSecondary" textAlign="center" variant="bodySmall">
+            {t(
+              'To create more wallets, open the account switcher inside the extension popup, or reinstall the extension to start over'
+            )}
+          </Text>
+        </YStack>
+      </Stack>
+    )
+  }
+
   return (
     <XStack
       alignItems="center"
@@ -54,7 +84,7 @@ export function IntroScreen(): JSX.Element {
               replace: true,
             })
           }>
-          Create a new wallet
+          {t('Create a new wallet')}
         </Button>
         <Button
           flexGrow={1}
@@ -64,7 +94,7 @@ export function IntroScreen(): JSX.Element {
               replace: true,
             })
           }>
-          I already have a wallet
+          {t('I already have a wallet')}
         </Button>
       </YStack>
     </XStack>
