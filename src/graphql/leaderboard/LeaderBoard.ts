@@ -35,6 +35,16 @@ const LEADERBOARD = gql`
   }
 `
 
+const LEADERBOARD_FILTERED = gql`
+  query leaderBoardUser($address: Bytes!) {
+    users(orderBy: totalVolume, first: 300, orderDirection: desc, where: { address: $address }) {
+      id
+      txCount
+      totalVolume
+    }
+  }
+`
+
 const LEADERBOARDWEEK = gql`
   query leaderBoardWeek($startTime: Int!) {
     userWeekDatas(orderBy: date, first: 300, orderDirection: desc, where: { date: $startTime }) {
@@ -137,21 +147,33 @@ export function useLeaderboardData(time: TimePeriodLeaderboard): {
   }
 }
 
-// function useLeaderboardFilteredData(address: string): {
-//   loading: boolean
-//   error: boolean
-//   data?: LeaderBoard[]
-// } {
-//   const { loading, error, data } = useQuery<LeaderBoarDataResponse>(LEADERBOARD_FILTERED, {
-//     client: apolloClient,
-//     variables: {
-//       address,
-//     },
-//   })
+export default function useLeaderboardFilteredData(address: string): {
+  loading: boolean
+  error: boolean
+  data?: Omit<LeaderBoard, 'date' | 'address'>[]
+} {
+  const { loading, error, data } = useQuery<LeaderBoarDataResponseAll>(LEADERBOARD_FILTERED, {
+    client: apolloClient,
+    variables: {
+      address,
+    },
+  })
 
-//   return {
-//     loading: anyLoading,
-//     error: anyError,
-//     data: formatted,
-//   }
-// }
+  const anyError = Boolean(error)
+  const anyLoading = Boolean(loading)
+
+  // return early if not all data yet
+  if (anyError || anyLoading) {
+    return {
+      loading: anyLoading,
+      error: anyError,
+      data: undefined,
+    }
+  }
+
+  return {
+    loading: anyLoading,
+    error: anyError,
+    data: data?.users,
+  }
+}

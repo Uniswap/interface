@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import LeaderboardTable from 'components/Leaderboard/LeaderBoardTable'
+import { LeaderboardUserTable } from 'components/Leaderboard/LeaderBoardUserTable'
 import SearchBar from 'components/Leaderboard/SearchBar'
 import TimeSelector from 'components/Leaderboard/TimeSelector'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
@@ -62,7 +64,14 @@ const FiltersWrapper = styled.div`
   }
 `
 
+const LeaderBoardUserWrapper = styled.div`
+  margin: 0 auto;
+  margin-bottom: 20px;
+`
+
 export function LeaderBoard() {
+  const { account } = useWeb3React()
+
   return (
     <LeaderBoardLayout id="contest-page">
       <TitleContainer>
@@ -71,10 +80,11 @@ export function LeaderBoard() {
           placement="bottom"
         >
           <ThemedText.LargeHeader>
-            <Trans>Leaderboard Pegasys</Trans>
+            <Trans>Leader Board</Trans>
           </ThemedText.LargeHeader>
         </MouseoverTooltip>
       </TitleContainer>
+      <LeaderBoardUserWrapper>{!!account && <LeaderboardUserTable address={account} />}</LeaderBoardUserWrapper>
       <FiltersWrapper>
         <FiltersContainer>
           <TimeSelector />

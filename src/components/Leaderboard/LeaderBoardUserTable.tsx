@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { LeaderBoard, useLeaderboardData } from 'graphql/leaderboard/LeaderBoard'
+import useLeaderboardFilteredData, { LeaderBoard } from 'graphql/leaderboard/LeaderBoard'
 import { PAGE_SIZE } from 'graphql/tokens/TokenData'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useMemo } from 'react'
@@ -8,7 +8,7 @@ import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { HeaderRow, LoadedRow, LoadingRow } from './LeaderBoardRow'
-import { filterStringAtom, filterTimeAtom, sortAscendingAtom, sortMethodAtom } from './state'
+import { filterStringAtom, sortAscendingAtom, sortMethodAtom } from './state'
 
 const GridContainer = styled.div`
   display: flex;
@@ -74,10 +74,9 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
   )
 }
 
-export default function LeaderboardTable() {
-  const timePeriod = useAtomValue(filterTimeAtom)
-
-  const { loading, data: leaderBoard } = useLeaderboardData(timePeriod)
+export function LeaderboardUserTable({ address }: { address: string }) {
+  const { loading, data: leaderBoard } = useLeaderboardFilteredData(address)
+  console.log('leaderBoard', leaderBoard)
 
   const filterString = useAtomValue(filterStringAtom)
   const sortMethod = useAtomValue(sortMethodAtom)
@@ -125,7 +124,7 @@ export default function LeaderboardTable() {
         message={
           <>
             <AlertTriangle size={16} />
-            <Trans>An error occurred loading tokens. Please try again.</Trans>
+            <Trans>An error occurred loading leaderboard. Please try again.</Trans>
           </>
         }
       />

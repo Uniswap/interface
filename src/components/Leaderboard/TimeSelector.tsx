@@ -35,7 +35,7 @@ const FilterOption = styled.button<{ active: boolean; highlight?: boolean }>`
   }
 `
 const DISPLAYS: Record<TimePeriodLeaderboard, string> = {
-  [TimePeriodLeaderboard.DAY]: '1D',
+  [TimePeriodLeaderboard.DAY]: 'All',
   [TimePeriodLeaderboard.WEEK]: '1W',
   [TimePeriodLeaderboard.MONTH]: '1M',
 }
