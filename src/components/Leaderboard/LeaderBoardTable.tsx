@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { useNewTopTokens } from 'graphql/tokens/NewTopTokens'
-import { PAGE_SIZE, TokenData } from 'graphql/tokens/TokenData'
-import { useFetchedTokenData } from 'graphql/tokens/TokenData'
+import { LeaderBoard, useLeaderboardData } from 'graphql/leaderboard/LeaderBoard'
+import { PAGE_SIZE } from 'graphql/tokens/TokenData'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -76,29 +75,29 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
 }
 
 export default function LeaderboardTable() {
-  const { loading, tokens: newTokens } = useNewTopTokens()
-  // TODO: get above a leaderboard query
-
-  const tokensAddress = newTokens?.map((token) => token.id) || []
-  const filterString = useAtomValue(filterStringAtom)
-  const { loading: tokenDataLoading, data: tokenData } = useFetchedTokenData(tokensAddress)
-  const sortMethod = useAtomValue(sortMethodAtom)
-  const sortAscending = useAtomValue(sortAscendingAtom)
   const timePeriod = useAtomValue(filterTimeAtom)
 
+  const { loading, data: leaderBoard } = useLeaderboardData(timePeriod)
+
+  const filterString = useAtomValue(filterStringAtom)
+  const sortMethod = useAtomValue(sortMethodAtom)
+  const sortAscending = useAtomValue(sortAscendingAtom)
+
   const filteredAndSortedData = useMemo(() => {
-    const sortMethodMapping: { [key: string]: keyof TokenData } = {
-      Change: timePeriod === 0 ? 'priceUSDChange' : 'priceUSDChangeWeek',
-      TVL: 'tvlUSD',
-      Price: 'priceUSD',
-      Volume: timePeriod === 0 ? 'volumeUSD' : 'volumeUSDWeek',
+    type LeaderBoardKeys = Exclude<keyof LeaderBoard, 'address' | 'date'>
+
+    const sortMethodMapping: { [key: string]: LeaderBoardKeys } = {
+      Trades: 'txCount',
+      VolumeUSDT: 'totalVolume',
     }
 
-    const filtered = tokenData?.filter((obj) => {
-      const nameMatch = obj.name.toLowerCase().includes(filterString.toLowerCase())
-      const symbolMatch = obj.symbol.toLowerCase().includes(filterString.toLowerCase())
+    const filtered = leaderBoard?.filter((obj: LeaderBoard | Omit<LeaderBoard, 'address' | 'date'>) => {
+      if ('address' in obj) {
+        const addressMatch = obj.address.toLowerCase().includes(filterString.toLowerCase())
+        return addressMatch
+      }
 
-      return nameMatch || symbolMatch
+      return obj.id.toLowerCase().includes(filterString.toLowerCase())
     })
 
     const sorted = filtered?.sort((a, b) => {
@@ -115,10 +114,11 @@ export default function LeaderboardTable() {
     })
 
     return sorted
-  }, [filterString, sortAscending, sortMethod, timePeriod, tokenData])
+  }, [filterString, leaderBoard, sortAscending, sortMethod])
+  console.log('filteredAndSortedData', filteredAndSortedData)
 
   /* loading and error state */
-  if (loading && tokenDataLoading && !newTokens && !tokenData) {
+  if (loading) {
     return <LoadingTokenTable rowCount={PAGE_SIZE} />
   } else if (!filteredAndSortedData) {
     return (
@@ -137,13 +137,13 @@ export default function LeaderboardTable() {
         <HeaderRow />
         <TokenDataContainer>
           {filteredAndSortedData?.map(
-            (token, index) =>
-              token?.address && (
+            (leaderboard, index) =>
+              leaderboard?.id && (
                 <LoadedRow
-                  key={token.address}
+                  key={leaderboard.id}
                   leaderboardListIndex={index}
                   leaderboardListLength={filteredAndSortedData.length}
-                  leaderboard={token}
+                  leaderboard={leaderboard}
                   sortRank={index + 1}
                 />
               )

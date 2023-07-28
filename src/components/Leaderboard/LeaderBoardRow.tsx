@@ -7,7 +7,7 @@ import {
 } from 'components/Tokens/constants'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { TokenData } from 'graphql/tokens/TokenData'
+import { LeaderBoard } from 'graphql/leaderboard/LeaderBoard'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
@@ -15,7 +15,7 @@ import { ArrowDown, ArrowUp, Info } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
 
-import { filterTimeAtom, LeaderboardSortMethod, sortAscendingAtom, sortMethodAtom, useSetSortMethod } from './state'
+import { LeaderboardSortMethod, sortAscendingAtom, sortMethodAtom, useSetSortMethod } from './state'
 
 const Cell = styled.div`
   display: flex;
@@ -30,7 +30,7 @@ const StyledTokenRow = styled.div<{
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr;
+  grid-template-columns: 1fr 7fr 2fr 2fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -63,15 +63,15 @@ const StyledTokenRow = styled.div<{
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
+    grid-template-columns: 1fr 6.5fr 4.5fr 4.5fr;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 7.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
+    grid-template-columns: 1fr 7.5fr 4.5fr 4.5fr;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 10fr 5fr 5fr 1.2fr;
+    grid-template-columns: 1fr 10fr 5fr 5fr;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -137,7 +137,7 @@ const DataCell = styled(Cell)<{ sortable: boolean }>`
 const AddressCell = styled(Cell)`
   justify-content: flex-start;
   padding: 0px 8px;
-  min-width: 240px;
+  min-width: 280px;
   gap: 8px;
 `
 
@@ -188,7 +188,6 @@ const InfoIconContainer = styled.div`
 `
 
 const HEADER_DESCRIPTIONS: Record<LeaderboardSortMethod, ReactNode | undefined> = {
-  [LeaderboardSortMethod.ADDRESS]: undefined,
   [LeaderboardSortMethod.TRADES]: undefined,
   [LeaderboardSortMethod.VOLUME_USDT]: (
     <Trans>Volume is the amount of the asset that has been traded on Pegasys v3 during the selected time frame.</Trans>
@@ -293,7 +292,7 @@ export function LoadingRow(props: { first?: boolean; last?: boolean }) {
 interface LoadedRowProps {
   leaderboardListIndex: number
   leaderboardListLength: number
-  leaderboard: NonNullable<TokenData> // TODO: create a object to receive leaderboard from graphql
+  leaderboard: NonNullable<LeaderBoard | Omit<LeaderBoard, 'address' | 'date'>>
   sortRank: number
 }
 
@@ -301,14 +300,13 @@ interface LoadedRowProps {
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { leaderboardListIndex, leaderboardListLength, leaderboard, sortRank } = props
 
-  const timePeriod = useAtomValue(filterTimeAtom)
-  const address = ''
-  const trades = ''
-  const volumeUSDC = ''
+  // const timePeriod = useAtomValue(filterTimeAtom)
+  const address = leaderboard.id.split('-')[0]
+  const trades = leaderboard.txCount
+  const volumeUSDC = parseFloat(leaderboard.totalVolume).toFixed(2)
 
   return (
     <div ref={ref} data-testid={`leaderboard-table-row-${leaderboardListIndex}`}>
-      {/* <StyledLink to={to}> */}
       <LeaderBoardRow
         header={false}
         listNumber={sortRank}
@@ -318,7 +316,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
         first={leaderboardListIndex === 0}
         last={leaderboardListIndex === leaderboardListLength - 1}
       />
-      {/* </StyledLink> */}
     </div>
   )
 })

@@ -1,16 +1,15 @@
-import { TimePeriod } from 'graphql/utils/util'
+import { TimePeriodLeaderboard } from 'graphql/utils/util'
 import { atom, useAtom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
 import { useCallback } from 'react'
 
 export enum LeaderboardSortMethod {
-  ADDRESS = 'Address',
   TRADES = 'Trades',
   VOLUME_USDT = 'VolumeUSDT',
 }
 
 export const filterStringAtom = atomWithReset<string>('')
-export const filterTimeAtom = atom<TimePeriod>(TimePeriod.DAY)
+export const filterTimeAtom = atom<TimePeriodLeaderboard>(TimePeriodLeaderboard.DAY)
 export const sortMethodAtom = atom<LeaderboardSortMethod>(LeaderboardSortMethod.TRADES)
 export const sortAscendingAtom = atom<boolean>(false)
 
