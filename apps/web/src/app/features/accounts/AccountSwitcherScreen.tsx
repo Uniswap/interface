@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
-import { Icons, ScrollView, Text, validToken, XStack, YStack } from 'ui/src'
+import { Icons, ScrollView, Text, Theme, validToken, XStack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { adjustColor, useUniconColors } from 'ui/src/components/Unicon/utils'
 import { iconSizes } from 'ui/src/theme/iconSizes'
@@ -48,53 +48,55 @@ export function AccountSwitcherScreen(): JSX.Element {
   const uniconAccentColor = adjustColor(glow, -100)
 
   return (
-    <LinearGradient
-      colors={['$background1', uniconAccentColor]}
-      end={[0, 0]}
-      height="100%"
-      start={[0, 1]}
-      width="100%">
-      {/* TODO: generalize into a flexible header component */}
-      <XStack
-        alignItems="center"
-        paddingBottom="$spacing12"
-        paddingHorizontal="$spacing12"
-        paddingTop="$spacing16">
-        <Flex onPress={onClose}>
-          <Icons.X color="$textSecondary" height={iconSizes.icon20} width={iconSizes.icon20} />
-        </Flex>
-        <Flex alignItems="center" flexGrow={1}>
-          <Text variant="bodyLarge">Your wallets</Text>
-        </Flex>
-        {/* have an invisible X component so the title is center aligned. */}
-        <Flex opacity={0}>
-          <Icons.X height={iconSizes.icon20} width={iconSizes.icon20} />
-        </Flex>
-      </XStack>
+    <Theme name="dark">
+      <LinearGradient
+        colors={['$background1', uniconAccentColor]}
+        end={[0, 0]}
+        height="100%"
+        start={[0, 1]}
+        width="100%">
+        {/* TODO: generalize into a flexible header component */}
+        <XStack
+          alignItems="center"
+          paddingBottom="$spacing12"
+          paddingHorizontal="$spacing12"
+          paddingTop="$spacing16">
+          <Flex onPress={onClose}>
+            <Icons.X color="$textSecondary" height={iconSizes.icon20} width={iconSizes.icon20} />
+          </Flex>
+          <Flex alignItems="center" flexGrow={1}>
+            <Text variant="bodyLarge">Your wallets</Text>
+          </Flex>
+          {/* have an invisible X component so the title is center aligned. */}
+          <Flex opacity={0}>
+            <Icons.X height={iconSizes.icon20} width={iconSizes.icon20} />
+          </Flex>
+        </XStack>
 
-      <ScrollView>
-        <YStack>
-          {accountAddresses.map((address: string) => {
-            return (
-              <AccountItem
-                key={address}
-                accentColor={validToken(glow)}
-                address={address}
-                selected={activeAddress === address}
-                onAccountSelect={async (): Promise<void> => {
-                  await dispatch(setAccountAsActive(address))
-                  navigate(-1)
-                }}
-              />
-            )
-          })}
-        </YStack>
-      </ScrollView>
-      <Flex alignItems="center" cursor="pointer" paddingBottom="$spacing12">
-        <Text color="$textSecondary" variant="bodyLarge" onPress={onCreateWallet}>
-          Create another wallet
-        </Text>
-      </Flex>
-    </LinearGradient>
+        <ScrollView>
+          <YStack>
+            {accountAddresses.map((address: string) => {
+              return (
+                <AccountItem
+                  key={address}
+                  accentColor={validToken(glow)}
+                  address={address}
+                  selected={activeAddress === address}
+                  onAccountSelect={async (): Promise<void> => {
+                    await dispatch(setAccountAsActive(address))
+                    navigate(-1)
+                  }}
+                />
+              )
+            })}
+          </YStack>
+        </ScrollView>
+        <Flex alignItems="center" cursor="pointer" paddingBottom="$spacing12">
+          <Text color="$textSecondary" variant="bodyLarge" onPress={onCreateWallet}>
+            Create another wallet
+          </Text>
+        </Flex>
+      </LinearGradient>
+    </Theme>
   )
 }
