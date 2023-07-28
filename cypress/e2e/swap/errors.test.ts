@@ -64,17 +64,15 @@ describe('Swap errors', () => {
 
   it('slippage failure', () => {
     cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, { ethereum: 'hardhat' })
-    cy.hardhat({ automine: false }).then((hardhat) =>
-      hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 500e6))
-    )
-    cy.hardhat().then((hardhat) => hardhat.mine())
-    cy.hardhat().then(({ approval, wallet }) =>
-      Promise.all([
-        approval.setTokenAllowanceForPermit2({ owner: wallet, token: USDC_MAINNET }),
-        approval.setPermit2Allowance({ owner: wallet, token: USDC_MAINNET }),
+    cy.hardhat({ automine: false }).then(async (hardhat) => {
+      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 500e6))
+      await hardhat.mine()
+      await Promise.all([
+        hardhat.approval.setTokenAllowanceForPermit2({ owner: hardhat.wallet, token: USDC_MAINNET }),
+        hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: USDC_MAINNET }),
       ])
-    )
-    cy.hardhat().then((hardhat) => hardhat.mine())
+      await hardhat.mine()
+    })
 
     getBalance(DAI).then((initialBalance) => {
       // Gas estimation fails for this transaction (that would normally fail), so we stub it.
