@@ -9,8 +9,7 @@ import {
 } from 'src/app/navigation/constants'
 import { useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
-import { Stack } from 'ui/src'
-import { UniswapLogo } from 'ui/src/assets/icons/UniswapLogo'
+import { getTokenValue, Icons, Stack } from 'ui/src'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function OnboardingWrapper(): JSX.Element {
@@ -43,10 +42,11 @@ export function OnboardingWrapper(): JSX.Element {
   return (
     <OnboardingContextProvider>
       <Stack alignItems="center" backgroundColor="$background1" minHeight="100vh" width="100%">
-        <Stack padding="$spacing12">
-          {/* TODO: make generic Icon component that can use `currentColor` in SVGs and be more easily reused */}
-          <UniswapLogo />
-        </Stack>
+        {!isIntroRoute && (
+          <Stack padding="$spacing12">
+            <Icons.UniswapLogo size={getTokenValue('$icon.36')} />
+          </Stack>
+        )}
         <Outlet />
       </Stack>
     </OnboardingContextProvider>
