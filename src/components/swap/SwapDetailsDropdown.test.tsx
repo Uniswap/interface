@@ -4,8 +4,7 @@ import { act, render, screen } from 'test-utils/render'
 
 import SwapDetailsDropdown from './SwapDetailsDropdown'
 
-// TODO(WEB-2120): Reenable tests after mocking trade fetch in this file
-describe.skip('SwapDetailsDropdown.tsx', () => {
+describe('SwapDetailsDropdown.tsx', () => {
   it('renders a trade', () => {
     const { asFragment } = render(
       <SwapDetailsDropdown
@@ -26,7 +25,7 @@ describe.skip('SwapDetailsDropdown.tsx', () => {
   })
 
   it('is interactive once loaded', async () => {
-    TEST_TRADE_EXACT_INPUT.gasUseEstimateUSD = '1.00'
+    TEST_TRADE_EXACT_INPUT.gasUseEstimateUSD = 1.0
     render(
       <SwapDetailsDropdown
         trade={TEST_TRADE_EXACT_INPUT}

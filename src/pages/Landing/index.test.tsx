@@ -18,6 +18,7 @@ describe('disable nft on landing page', () => {
     expect(container).toHaveTextContent('Explore NFTs')
     expect(container).toHaveTextContent('Buy and sell NFTs across marketplaces to find more listings at better prices.')
   })
+
   it('does not render nft information and card', () => {
     mocked(useDisableNFTRoutes).mockReturnValue(true)
     const { container } = render(<Landing />)

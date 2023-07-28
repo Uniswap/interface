@@ -1,8 +1,8 @@
-import { sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
+import { sendAnalyticsEvent, user } from 'analytics'
 import { getConnection } from 'connection'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
@@ -10,7 +10,7 @@ import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/tra
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
 import usePrevious from 'hooks/usePrevious'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
@@ -20,16 +20,8 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
   const connections = useOrderedConnections()
   const connectors: [Connector, Web3ReactHooks][] = connections.map(({ hooks, connector }) => [connector, hooks])
 
-  // Force a re-render when our connection state changes.
-  const [index, setIndex] = useState(0)
-  useEffect(() => setIndex((index) => index + 1), [connections])
-  const key = useMemo(
-    () => connections.map((connection) => connection.getName()).join('-') + index,
-    [connections, index]
-  )
-
   return (
-    <Web3ReactProvider connectors={connectors} key={key}>
+    <Web3ReactProvider connectors={connectors}>
       <Updater />
       {children}
     </Web3ReactProvider>

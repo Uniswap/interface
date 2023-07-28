@@ -8,6 +8,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { ClickableStyle, ThemedText } from 'theme'
 import ThemeToggle from 'theme/components/ThemeToggle'
 
+import { AnalyticsToggle } from './AnalyticsToggle'
 import { GitVersionRow } from './GitVersionRow'
 import { SlideOutMenu } from './SlideOutMenu'
 import { SmallBalanceToggle } from './SmallBalanceToggle'
@@ -63,6 +64,7 @@ export default function SettingsMenu({ onClose }: { onClose: () => void }) {
       <ToggleWrapper>
         <ThemeToggle />
         <SmallBalanceToggle />
+        <AnalyticsToggle />
         <TestnetsToggle />
       </ToggleWrapper>
 
