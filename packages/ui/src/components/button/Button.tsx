@@ -4,7 +4,6 @@ import {
   ButtonText,
   GetProps,
   getTokenValue,
-  getVariableValue,
   spacedChildren,
   SpecificTokens,
   styled,
@@ -46,15 +45,18 @@ const CustomButtonFrame = styled(XStack, {
       small: {
         padding: '$spacing8',
         borderRadius: '$rounded8',
+        gap: '$spacing4',
       },
       medium: {
         padding: '$spacing12',
         borderRadius: '$rounded16',
+        gap: '$spacing8',
       },
       large: {
         padding: '$spacing16',
         paddingVertical: '$spacing16',
         borderRadius: '$rounded20',
+        gap: '$spacing12',
       },
     },
 
@@ -76,6 +78,8 @@ const CustomButtonFrame = styled(XStack, {
 const CustomButtonText = styled(Text, {
   tag: 'span',
   fontFamily: '$button',
+  color: '$color',
+  cursor: 'pointer',
 
   variants: {
     size: {
@@ -111,7 +115,7 @@ const CustomButtonText = styled(Text, {
 
 type CustomButtonProps = GetProps<typeof CustomButtonFrame>
 
-type ButtonIconProps = { color?: string; size?: number }
+type ButtonIconProps = { color?: string; size?: number; cursor: 'pointer' }
 type IconProp = JSX.Element | FunctionComponent<ButtonIconProps> | null
 
 export type ButtonProps = CustomButtonProps &
@@ -145,8 +149,8 @@ export const Button = withStaticProperties(ButtonComponent, {
 
 const buttonToIconSize: Record<ButtonSize, SpecificTokens> = {
   small: '$icon.12',
-  medium: '$icon.16',
-  large: '$icon.20',
+  medium: '$icon.20',
+  large: '$icon.24',
 }
 
 // we do a few things different from tamagui here, and also tamagui is deprecating useButton
@@ -172,7 +176,6 @@ function useButton<Props extends ButtonProps>(propsIn: Props) {
   const iconSize = getTokenValue(buttonToIconSize[size])
   const getThemedIcon = useGetThemedIcon({ size: iconSize, color })
   const [themedIcon, themedIconAfter] = [icon, iconAfter].map(getThemedIcon)
-  const spaceSize = propsActive.space ?? getVariableValue(iconSize)
 
   const contents = wrapChildrenInText(
     CustomButtonText,
@@ -185,8 +188,6 @@ function useButton<Props extends ButtonProps>(propsIn: Props) {
   )
 
   const inner = spacedChildren({
-    // a bit arbitrary but scaling to font size is necessary so long as button does
-    space: spaceSize,
     separator,
     direction:
       propsActive.flexDirection === 'column' || propsActive.flexDirection === 'column-reverse'
@@ -221,7 +222,6 @@ function useButton<Props extends ButtonProps>(propsIn: Props) {
   } as Props
 
   return {
-    spaceSize,
     isNested,
     props,
   }

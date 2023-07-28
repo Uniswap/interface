@@ -65,7 +65,7 @@ export function OnboardingScreen({
           </Button>
         )}
 
-        <Button disabled={!nextButtonEnabled} flexGrow={1} onPress={onSubmit}>
+        <Button disabled={!nextButtonEnabled} flexGrow={1} theme="primary" onPress={onSubmit}>
           {nextButtonText}
         </Button>
       </XStack>

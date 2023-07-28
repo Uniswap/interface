@@ -93,7 +93,9 @@ export function SettingsScreen(): JSX.Element {
           </YGroup.Item>
         </YGroup>
       </ScrollView>
-      <Button onPress={onPressLockWallet}>{t('Lock Wallet')}</Button>
+      <Button icon={<Icons.Lock />} theme="secondary" onPress={onPressLockWallet}>
+        {t('Lock Wallet')}
+      </Button>
     </YStack>
   )
 }

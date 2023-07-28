@@ -123,7 +123,7 @@ const dark_primary_Button: BaseTheme = {
   background: colorsDark.magentaVibrant,
   backgroundHover: hoverColor(colorsDark.magentaVibrant),
   backgroundPress: pressedColor(colorsDark.magentaVibrant),
-  color: colorsDark.textOnDimPrimary,
+  color: colorsDark.white,
 }
 
 // secondary
