@@ -53,11 +53,6 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
       : css`
           left: 0rem;
         `};
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-    bottom: unset;
-    right: 0;
-    left: unset;
-  `};
 `
 
 const MenuItem = styled(ExternalLink)`
