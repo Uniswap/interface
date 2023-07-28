@@ -29,49 +29,41 @@ const PageWrapper = styled(AutoColumn)`
   max-width: 870px;
   width: 100%;
 
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     max-width: 800px;
-  `};
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    max-width: 500px;
-  `};
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding-top: 48px;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    max-width: 500px;
     padding-top: 20px;
   }
 `
 const TitleRow = styled(RowBetween)`
   color: ${({ theme }) => theme.textSecondary};
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     flex-wrap: wrap;
     gap: 12px;
     width: 100%;
-  `};
+  }
 `
 const ButtonRow = styled(RowFixed)`
   & > *:not(:last-child) {
     margin-left: 8px;
   }
 
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
-    flex-direction: row-reverse;
-  `};
+  }
 `
 const PoolMenu = styled(Menu)`
   margin-left: 0;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     flex: 1 1 auto;
-    width: 49%;
-    right: 0px;
-  `};
+    width: 50%;
+  }
 
   a {
     width: 100%;
@@ -93,7 +85,7 @@ const MoreOptionsButton = styled(ButtonGray)`
   margin-right: 8px;
 `
 
-const MoreOptionsText = styled(ThemedText.DeprecatedBody)`
+const MoreOptionsText = styled(ThemedText.BodyPrimary)`
   align-items: center;
   display: flex;
 `
@@ -127,10 +119,10 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   font-size: 16px;
   padding: 6px 8px;
   width: fit-content;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     flex: 1 1 auto;
-    width: 100%;
-  `};
+    width: 50%;
+  }
 `
 
 const MainContentWrapper = styled.main`
@@ -180,12 +172,12 @@ function WrongNetworkCard() {
 
             <MainContentWrapper>
               <ErrorContainer>
-                <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                <ThemedText.BodyPrimary color={theme.textTertiary} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
                   <div data-testid="pools-unsupported-err">
                     <Trans>Your connected network is unsupported.</Trans>
                   </div>
-                </ThemedText.DeprecatedBody>
+                </ThemedText.BodyPrimary>
               </ErrorContainer>
             </MainContentWrapper>
           </AutoColumn>
@@ -301,12 +293,12 @@ export default function Pool() {
                 />
               ) : (
                 <ErrorContainer>
-                  <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                  <ThemedText.BodyPrimary color={theme.textTertiary} textAlign="center">
                     <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} />
                     <div>
                       <Trans>Your active V3 liquidity positions will appear here.</Trans>
                     </div>
-                  </ThemedText.DeprecatedBody>
+                  </ThemedText.BodyPrimary>
                   {!showConnectAWallet && closedPositions.length > 0 && (
                     <ButtonText
                       style={{ marginTop: '.5rem' }}
