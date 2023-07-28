@@ -44,7 +44,7 @@ function logJsonRpc(req: CyHttpMessages.IncomingHttpRequest) {
   const log = Cypress.log({
     autoEnd: false,
     name: req.body.method,
-    message: req.body.params?.map((param: unknown) =>
+    message: req.body.params?.map((param: any) =>
       typeof param === 'object' ? '{...}' : param?.toString().substring(0, 10)
     ),
   })

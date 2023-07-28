@@ -9,7 +9,7 @@ const UNI_MAINNET = UNI[ChainId.MAINNET]
 
 describe('Swap errors', () => {
   it('wallet rejection', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, { ethereum: 'hardhat' })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat().then((hardhat) => {
       // Stub the wallet to reject any transaction.
       cy.stub(hardhat.wallet, 'sendTransaction').log(false).rejects(new Error('user cancelled'))
@@ -30,7 +30,7 @@ describe('Swap errors', () => {
   })
 
   it('transaction past deadline', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, { ethereum: 'hardhat' })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat({ automine: false })
     getBalance(USDC_MAINNET).then((initialBalance) => {
       // Enter amount to swap
@@ -65,7 +65,7 @@ describe('Swap errors', () => {
   })
 
   it.skip('slippage failure', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UNI_MAINNET.address}`, { ethereum: 'hardhat' })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UNI_MAINNET.address}`)
     cy.hardhat({ automine: false })
     getBalance(USDC_MAINNET).then((initialBalance) => {
       // Gas estimation fails for this transaction (that would normally fail), so we stub it.
