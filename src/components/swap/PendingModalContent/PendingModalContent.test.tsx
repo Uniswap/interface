@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { TradeFillType } from 'state/routing/types'
-import { useIsTransactionConfirmed } from 'state/transactions/hooks'
+import { useSwapTransactionStatus } from 'state/transactions/hooks'
 import { TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
@@ -14,7 +15,7 @@ jest.mock('state/transactions/hooks')
 describe('PendingModalContent', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    mocked(useIsTransactionConfirmed).mockReturnValue(false)
+    mocked(useSwapTransactionStatus).mockReturnValue(TransactionStatus.Pending)
   })
 
   it('renders null for invalid content', () => {
@@ -128,7 +129,7 @@ describe('PendingModalContent', () => {
     })
 
     it('renders the success icon instead of the given logo when confirmed and successful', () => {
-      mocked(useIsTransactionConfirmed).mockReturnValue(true)
+      mocked(useSwapTransactionStatus).mockReturnValue(TransactionStatus.Confirmed)
 
       render(
         <PendingModalContent
@@ -138,6 +139,20 @@ describe('PendingModalContent', () => {
             ConfirmModalState.PENDING_CONFIRMATION,
           ]}
           currentStep={ConfirmModalState.PENDING_CONFIRMATION}
+          swapResult={{
+            type: TradeFillType.Classic,
+            response: {
+              hash: '',
+              confirmations: 0,
+              from: '',
+              wait: jest.fn(),
+              nonce: 0,
+              gasLimit: BigNumber.from(0),
+              data: '',
+              value: BigNumber.from(0),
+              chainId: 0,
+            },
+          }}
         />
       )
       expect(screen.queryByTestId('pending-modal-failure-icon')).toBeNull()

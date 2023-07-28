@@ -7,6 +7,7 @@ import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWr
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import { getConnection } from 'connection'
+import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
@@ -135,7 +136,8 @@ const StyledConnectButton = styled.button`
 function Web3StatusInner() {
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const ignoreWhileSwitchingChain = useCallback(() => !switchingChain, [switchingChain])
-  const { account, connector, ENSName } = useLast(useWeb3React(), ignoreWhileSwitchingChain)
+  const { account, connector } = useLast(useWeb3React(), ignoreWhileSwitchingChain)
+  const { ENSName } = useENSName(account)
   const connection = getConnection(connector)
 
   const [, toggleAccountDrawer] = useAccountDrawer()
