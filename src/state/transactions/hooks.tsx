@@ -2,8 +2,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { ChainId, SUPPORTED_CHAINS, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { getTransactionStatus } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { SwapResult } from 'hooks/useSwapCallback'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { TradeFillType } from 'state/routing/types'
 
 import { addTransaction, removeTransaction } from './reducer'
 import { TransactionDetails, TransactionInfo, TransactionType } from './types'
@@ -87,6 +91,12 @@ export function useIsTransactionConfirmed(transactionHash?: string): boolean {
   if (!transactionHash || !transactions[transactionHash]) return false
 
   return Boolean(transactions[transactionHash].receipt)
+}
+
+export function useSwapTransactionStatus(swapResult: SwapResult | undefined): TransactionStatus | undefined {
+  const transaction = useTransaction(swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined)
+  if (!transaction) return undefined
+  return getTransactionStatus(transaction)
 }
 
 /**
