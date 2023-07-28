@@ -2,12 +2,10 @@ import { t, Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import { transactionToActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { ColumnCenter } from 'components/Column'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
-import { useAllTokensMultichain } from 'hooks/Tokens'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
@@ -15,7 +13,7 @@ import { ReactNode, useRef } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { useOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
+import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { ThemedText } from 'theme/components/text'
@@ -226,12 +224,9 @@ export function PendingModalContent({
 }: PendingModalContentProps) {
   const { chainId } = useWeb3React()
 
-  const transaction = useTransaction(swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined)
-  const tokens = useAllTokensMultichain()
+  const swapStatus = useSwapTransactionStatus(swapResult)
 
-  const swapActivity = transaction && chainId ? transactionToActivity(transaction, chainId, tokens) : undefined
-
-  const classicSwapConfirmed = swapActivity?.status === TransactionStatus.Confirmed
+  const classicSwapConfirmed = swapStatus === TransactionStatus.Confirmed
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
   // TODO(UniswapX): Support UniswapX status here too
   const uniswapXSwapConfirmed = Boolean(swapResult)
