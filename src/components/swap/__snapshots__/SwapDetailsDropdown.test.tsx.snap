@@ -235,7 +235,13 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                 <div
                   class="c14 css-zhpkf8"
                 >
-                  $1.00
+                  <div
+                    class="c2 c11"
+                  >
+                    <div>
+                      $1.00
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -288,9 +294,15 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                 </div>
               </div>
               <div
-                class="c9 css-zhpkf8"
+                class="c10"
               >
-                ~$1.00
+                <div>
+                  <div
+                    class="c9 css-zhpkf8"
+                  >
+                    ~$1.00
+                  </div>
+                </div>
               </div>
             </div>
             <div
@@ -301,7 +313,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               >
                 <div>
                   <div
-                    class="c12 css-zhpkf8"
+                    class="c14 css-zhpkf8"
                   >
                     Price Impact
                   </div>
@@ -310,7 +322,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               <div
                 class="c9 css-zhpkf8"
               >
-                105566.37%
+                105566.373%
               </div>
             </div>
             <div
