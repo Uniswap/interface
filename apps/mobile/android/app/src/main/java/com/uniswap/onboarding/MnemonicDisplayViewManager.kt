@@ -1,13 +1,9 @@
 package com.uniswap.onboarding
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
-import com.uniswap.onboarding.ui.MnemonicView
+import com.uniswap.onboarding.ui.MnemonicDisplay
 import com.uniswap.theme.UniswapComponent
 
 /**
@@ -22,7 +18,7 @@ class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
     return ComposeView(reactContext).apply {
       setContent {
         UniswapComponent {
-          MnemonicView(words = MOCK_WORDS) // TODO gary replace with real words
+          MnemonicDisplay(words = MOCK_WORDS) // TODO gary replace with real words
         }
       }
     }
@@ -30,7 +26,7 @@ class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
 
   companion object {
     private const val REACT_CLASS = "MnemonicDisplay"
-    private val MOCK_WORDS = listOf(
+    val MOCK_WORDS = listOf(
       "video",
       "dignity",
       "pond",

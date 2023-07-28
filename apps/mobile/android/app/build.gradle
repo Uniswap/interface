@@ -236,6 +236,8 @@ dependencies {
     implementation "androidx.compose.foundation:foundation:$compose"
     implementation "androidx.compose.material:material:$compose"
 
+    implementation "com.google.accompanist:accompanist-flowlayout:$flowlayout"
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }

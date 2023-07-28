@@ -10,6 +10,7 @@ buildscript {
         kotlinVersion = "1.6.10"
 
         compose = "1.1.1"
+        flowlayout = "0.23.1"
     }
     repositories {
         google()

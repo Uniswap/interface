@@ -2,6 +2,8 @@ package com.uniswap.onboarding.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.uniswap.theme.UniswapTheme
@@ -10,13 +12,16 @@ import com.uniswap.theme.UniswapTheme
  * View used to display mnemonic words for wallet seed phrase
  */
 @Composable
-fun MnemonicView(
+fun MnemonicDisplay(
   modifier: Modifier = Modifier,
-  words: List<String>,
+  words: List<String?>,
   columnCount: Int = DEFAULT_COLUMN_COUNT,
+  onClick: (index: Int, word: String?) -> Unit = { _, _ -> },
 ) {
   Row(
-    modifier = modifier,
+    modifier = modifier
+      .fillMaxWidth()
+      .wrapContentHeight(),
     horizontalArrangement = Arrangement.spacedBy(
       UniswapTheme.spacing.spacing12
     )
@@ -28,11 +33,11 @@ fun MnemonicView(
       MnemonicWordsColumn(
         modifier = Modifier.weight(1f),
         words = words.subList(starting, ending),
-        indexOffset = starting + 1
+        numberOffset = starting + 1,
+        onClick = onClick,
       )
     }
   }
 }
-
 
 private const val DEFAULT_COLUMN_COUNT = 2

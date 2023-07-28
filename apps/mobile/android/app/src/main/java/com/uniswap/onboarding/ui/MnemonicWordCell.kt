@@ -1,6 +1,7 @@
 package com.uniswap.onboarding.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,13 +24,19 @@ import com.uniswap.theme.UniswapTheme
  * Component used to display a single word as part of an overall seed phrase
  */
 @Composable
-fun MnemonicWordCell(modifier: Modifier = Modifier, index: Int, word: String) {
+fun MnemonicWordCell(
+  modifier: Modifier = Modifier,
+  index: Int,
+  word: String?,
+  onClick: () -> Unit = {},
+) {
   val shape = UniswapTheme.shapes.large
   Row(
     modifier = modifier
       .shadow(1.dp, shape)
       .clip(shape)
       .background(cellBackgroundColor())
+      .clickable { onClick() }
       .padding(horizontal = UniswapTheme.spacing.spacing16)
       .padding(vertical = UniswapTheme.spacing.spacing12)
   ) {
@@ -42,7 +49,7 @@ fun MnemonicWordCell(modifier: Modifier = Modifier, index: Int, word: String) {
       textAlign = TextAlign.Center,
     )
     Spacer(modifier = Modifier.width(UniswapTheme.spacing.spacing12))
-    Text(modifier = Modifier.weight(1f), text = word)
+    Text(modifier = Modifier.weight(1f), text = word ?: "")
   }
 }
 

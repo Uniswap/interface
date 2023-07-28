@@ -1,13 +1,11 @@
 package com.uniswap.onboarding
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
-import com.uniswap.onboarding.ui.MnemonicView
+import com.uniswap.onboarding.MnemonicDisplayViewManager.Companion.MOCK_WORDS
+import com.uniswap.onboarding.ui.MnemonicConfirmation
+import com.uniswap.theme.UniswapComponent
 
 /**
  * View manager used to import native component into React Native code
@@ -21,11 +19,9 @@ class MnemonicTestViewManager : ViewGroupManager<ComposeView>() {
   override fun createViewInstance(reactContext: ThemedReactContext): ComposeView {
     return ComposeView(reactContext).apply {
       setContent {
-        MaterialTheme {
-          Surface(modifier = Modifier.fillMaxSize()) {
-            // TODO gary replace with mock words or real data and phrase testing functionality
-            MnemonicView(words = emptyList())
-          }
+        UniswapComponent {
+          // TODO gary replace with mock words or real data and phrase testing functionality
+          MnemonicConfirmation(words = MOCK_WORDS)
         }
       }
     }

@@ -12,8 +12,9 @@ import com.uniswap.theme.UniswapTheme
 @Composable
 fun MnemonicWordsColumn(
   modifier: Modifier = Modifier,
-  words: List<String>,
-  indexOffset: Int,
+  words: List<String?>,
+  numberOffset: Int,
+  onClick: (index: Int, word: String?) -> Unit = { _, _ -> },
 ) {
   Column(
     modifier = modifier,
@@ -22,7 +23,9 @@ fun MnemonicWordsColumn(
     ),
   ) {
     words.forEachIndexed { index, word ->
-      MnemonicWordCell(index = index + indexOffset, word = word)
+      MnemonicWordCell(index = index + numberOffset, word = word) {
+        onClick(index, word)
+      }
     }
   }
 }
