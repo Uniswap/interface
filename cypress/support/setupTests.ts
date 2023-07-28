@@ -9,12 +9,19 @@ beforeEach(() => {
     req.headers['origin'] = 'https://app.uniswap.org'
   })
 
-  // Infura uses a test endpoint, which allow-lists http://localhost:3000 instead.
-  cy.intercept(/infura.io/, (req) => {
-    req.headers['referer'] = 'http://localhost:3000'
-    req.headers['origin'] = 'http://localhost:3000'
-    req.alias = req.body.method
-    req.continue()
+  // Get the hardhat fork URL. This is a known static URL, so it can be safely hoisted out of its closure.
+  let rpcUrl: string
+  cy.hardhat().then(({ network }) => {
+    rpcUrl = network.url
+  })
+
+  // Delegate infura calls to the hardhat fork.
+  cy.intercept(/infura.io/, async (req) => {
+    return fetch(rpcUrl, { body: JSON.stringify(req.body), method: 'POST' })
+      .then((res) => res.json())
+      .then((json) => {
+        req.reply({ body: json })
+      })
   })
 
   // Log requests to hardhat.
