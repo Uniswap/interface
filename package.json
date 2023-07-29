@@ -133,6 +133,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "serve": "^11.3.2",
     "source-map-explorer": "^2.5.3",
+    "thread-loader": "^4.0.2",
     "ts-jest": "^29.1.1",
     "ts-transform-graphql-tag": "^0.2.1",
     "typechain": "^5.0.0",
