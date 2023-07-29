@@ -40,7 +40,7 @@ import { PositionPreview } from '../../components/PositionPreview'
 import RangeSelector from '../../components/RangeSelector'
 import PresetsButtons from '../../components/RangeSelector/PresetsButtons'
 import RateToggle from '../../components/RateToggle'
-import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import Row, { RowBetween, RowFixed } from '../../components/Row'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { ZERO_PERCENT } from '../../constants/misc'
@@ -71,8 +71,6 @@ import {
   MediumOnly,
   ResponsiveTwoColumns,
   ScrollablePage,
-  StackedContainer,
-  StackedItem,
   StyledInput,
   Wrapper,
 } from './styled'
@@ -689,58 +687,54 @@ function AddLiquidity() {
               {!hasExistingPosition && (
                 <>
                   <DynamicSection gap="md" disabled={!feeAmount || invalidPool}>
-                    <StackedContainer>
-                      <StackedItem>
-                        <AutoColumn gap="md">
-                          <RowBetween>
-                            <ThemedText.DeprecatedLabel>
-                              <Trans>Set Price Range</Trans>
-                            </ThemedText.DeprecatedLabel>
+                    <RowBetween>
+                      <ThemedText.DeprecatedLabel>
+                        <Trans>Set Price Range</Trans>
+                      </ThemedText.DeprecatedLabel>
 
-                            {baseCurrency && quoteCurrency ? (
-                              <RateToggle
-                                currencyA={baseCurrency}
-                                currencyB={quoteCurrency}
-                                handleRateToggle={() => {
-                                  if (!ticksAtLimit[Bound.LOWER] && !ticksAtLimit[Bound.UPPER]) {
-                                    onLeftRangeInput(
-                                      (invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? ''
-                                    )
-                                    onRightRangeInput(
-                                      (invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? ''
-                                    )
-                                    onFieldAInput(formattedAmounts[Field.CURRENCY_B] ?? '')
-                                  }
-                                  navigate(
-                                    `/add/${currencyIdB as string}/${currencyIdA as string}${
-                                      feeAmount ? '/' + feeAmount : ''
-                                    }`
-                                  )
-                                }}
-                              />
-                            ) : null}
-                          </RowBetween>
+                      {baseCurrency && quoteCurrency ? (
+                        <RowFixed gap="8px">
+                          <PresetsButtons onSetFullRange={handleSetFullRange} />
+                          <RateToggle
+                            currencyA={baseCurrency}
+                            currencyB={quoteCurrency}
+                            handleRateToggle={() => {
+                              if (!ticksAtLimit[Bound.LOWER] && !ticksAtLimit[Bound.UPPER]) {
+                                onLeftRangeInput(
+                                  (invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? ''
+                                )
+                                onRightRangeInput(
+                                  (invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? ''
+                                )
+                                onFieldAInput(formattedAmounts[Field.CURRENCY_B] ?? '')
+                              }
+                              navigate(
+                                `/add/${currencyIdB as string}/${currencyIdA as string}${
+                                  feeAmount ? '/' + feeAmount : ''
+                                }`
+                              )
+                            }}
+                          />
+                        </RowFixed>
+                      ) : null}
+                    </RowBetween>
 
-                          {!noLiquidity && (
-                            <RangeSelector
-                              priceLower={priceLower}
-                              priceUpper={priceUpper}
-                              getDecrementLower={getDecrementLower}
-                              getIncrementLower={getIncrementLower}
-                              getDecrementUpper={getDecrementUpper}
-                              getIncrementUpper={getIncrementUpper}
-                              onLeftRangeInput={onLeftRangeInput}
-                              onRightRangeInput={onRightRangeInput}
-                              currencyA={baseCurrency}
-                              currencyB={quoteCurrency}
-                              feeAmount={feeAmount}
-                              ticksAtLimit={ticksAtLimit}
-                            />
-                          )}
-                          {!noLiquidity && <PresetsButtons onSetFullRange={handleSetFullRange} />}
-                        </AutoColumn>
-                      </StackedItem>
-                    </StackedContainer>
+                    {!noLiquidity && (
+                      <RangeSelector
+                        priceLower={priceLower}
+                        priceUpper={priceUpper}
+                        getDecrementLower={getDecrementLower}
+                        getIncrementLower={getIncrementLower}
+                        getDecrementUpper={getDecrementUpper}
+                        getIncrementUpper={getIncrementUpper}
+                        onLeftRangeInput={onLeftRangeInput}
+                        onRightRangeInput={onRightRangeInput}
+                        currencyA={baseCurrency}
+                        currencyB={quoteCurrency}
+                        feeAmount={feeAmount}
+                        ticksAtLimit={ticksAtLimit}
+                      />
+                    )}
 
                     {outOfRange ? (
                       <YellowCard padding="8px 12px" $borderRadius="12px">
@@ -772,12 +766,12 @@ function AddLiquidity() {
                     {!noLiquidity ? (
                       <>
                         {price && baseCurrency && quoteCurrency && !noLiquidity && (
-                          <AutoRow gap="2px" justify="" style={{ marginTop: '0.5rem' }}>
+                          <AutoColumn gap="2px" style={{ marginTop: '0.5rem' }}>
                             <Trans>
                               <ThemedText.DeprecatedMain fontWeight={500} fontSize={12} color="text1">
                                 Current Price:
                               </ThemedText.DeprecatedMain>
-                              <ThemedText.DeprecatedBody fontWeight={500} fontSize={12} color="text1">
+                              <ThemedText.DeprecatedBody fontWeight={500} fontSize={20} color="text1">
                                 <HoverInlineText
                                   maxCharacters={20}
                                   text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
@@ -787,7 +781,7 @@ function AddLiquidity() {
                                 {quoteCurrency?.symbol} per {baseCurrency.symbol}
                               </ThemedText.DeprecatedBody>
                             </Trans>
-                          </AutoRow>
+                          </AutoColumn>
                         )}
                         <LiquidityChartRangeInput
                           currencyA={baseCurrency ?? undefined}

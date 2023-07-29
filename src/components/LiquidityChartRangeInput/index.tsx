@@ -47,7 +47,7 @@ const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
 const ChartWrapper = styled.div`
   position: relative;
   width: 100%;
-  max-height: 150px;
+  max-height: 200px;
   justify-content: center;
   align-content: center;
 `
@@ -159,7 +159,7 @@ export default function LiquidityChartRangeInput({
   const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading)
 
   return (
-    <AutoColumn gap="md" style={{ minHeight: '150px' }}>
+    <AutoColumn gap="md" style={{ minHeight: '200px' }}>
       {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}
@@ -181,7 +181,7 @@ export default function LiquidityChartRangeInput({
         <ChartWrapper>
           <Chart
             data={{ series: formattedData, current: price }}
-            dimensions={{ width: 560, height: 150 }}
+            dimensions={{ width: 560, height: 200 }}
             margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
             styles={{
               area: {
