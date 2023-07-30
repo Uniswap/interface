@@ -5,6 +5,7 @@ const { execSync } = require('child_process')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
+const threadLoader = require('thread-loader')
 const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
@@ -171,16 +172,16 @@ module.exports = {
             const options = rule.options
             delete rule.loader
             delete rule.options
+            const workerOptions = {
+              name: loader,
+              workers: 2,
+              workerParallelJobs: 50,
+              workerNodeArgs: ['--max-old-space-size=4096'],
+              poolParallelJobs: 50,
+            }
+            threadLoader.warmup(workerOptions, [loader])
             rule.use = [
-              {
-                loader: 'thread-loader',
-                options: {
-                  workers: 2,
-                  workerParallelJobs: 50,
-                  workerNodeArgs: ['--max-old-space-size=4096'],
-                  poolParallelJobs: 50,
-                },
-              },
+              { loader: 'thread-loader', options: workerOptions },
               { loader, options },
             ]
           }
