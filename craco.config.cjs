@@ -174,10 +174,7 @@ module.exports = {
             delete rule.options
             const workerOptions = {
               name: loader,
-              workers: 2,
-              workerParallelJobs: 50,
               workerNodeArgs: ['--max-old-space-size=4096'],
-              poolParallelJobs: 50,
             }
             threadLoader.warmup(workerOptions, [loader])
             rule.use = [
