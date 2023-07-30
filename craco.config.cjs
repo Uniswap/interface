@@ -163,6 +163,13 @@ module.exports = {
       })
 
       // Configure webpack transpilation (create-react-app specifies transpilation rules in a oneOf):
+      const cpuCount = require('os').cpus().length
+      console.log(`Using ${cpuCount} workers for babel transpilation.`)
+      const babelPoolOptions = {
+        name: 'babel',
+        workers: require('os').cpus().length,
+        workerNodeArgs: ['--max-old-space-size=4096'],
+      }
       webpackConfig.module.rules[1].oneOf = webpackConfig.module.rules[1].oneOf.map((rule) => {
         if (rule.loader && rule.loader.match(/babel-loader/)) {
           // The standard rule (eg for src).
@@ -172,13 +179,9 @@ module.exports = {
             const options = rule.options
             delete rule.loader
             delete rule.options
-            const workerOptions = {
-              name: loader,
-              workerNodeArgs: ['--max-old-space-size=4096'],
-            }
-            threadLoader.warmup(workerOptions, [loader])
+            threadLoader.warmup(babelPoolOptions, [loader])
             rule.use = [
-              { loader: 'thread-loader', options: workerOptions },
+              { loader: 'thread-loader', options: babelPoolOptions },
               { loader, options },
             ]
           }
