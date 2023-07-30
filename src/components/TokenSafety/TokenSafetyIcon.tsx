@@ -1,6 +1,6 @@
 import { Warning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { AlertTriangle, Slash } from 'react-feather'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 
 const WarningContainer = styled.div`
   margin-left: 4px;

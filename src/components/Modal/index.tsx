@@ -2,7 +2,7 @@ import { DialogContent, DialogOverlay } from '@reach/dialog'
 import React from 'react'
 import { animated, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { isMobile } from '../../utils/userAgent'

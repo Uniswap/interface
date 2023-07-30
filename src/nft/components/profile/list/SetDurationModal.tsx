@@ -8,7 +8,7 @@ import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { Dropdown } from './Dropdown'

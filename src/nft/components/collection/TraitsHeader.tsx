@@ -6,7 +6,7 @@ import { subheadSmall } from 'nft/css/common.css'
 import { useIsMobile } from 'nft/hooks'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { ReactNode, useEffect, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const ChildreMobileWrapper = styled.div<{ isMobile: boolean }>`
   padding: ${({ isMobile }) => (isMobile ? '0px 16px 0px 12px' : '0px')};

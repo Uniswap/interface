@@ -6,7 +6,7 @@ import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Dispatch, ReactNode, SetStateAction, useReducer, useRef } from 'react'
 import { Check, ChevronDown } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 

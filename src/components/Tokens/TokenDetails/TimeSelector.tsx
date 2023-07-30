@@ -1,6 +1,6 @@
 import { TimePeriod } from 'graphql/data/util'
 import { startTransition, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'

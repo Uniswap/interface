@@ -13,7 +13,7 @@ import { isSupportedChain } from 'constants/chains'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'

@@ -6,7 +6,7 @@ import { Overlay } from 'nft/components/modals/Overlay'
 import { Listing, WalletAsset } from 'nft/types'
 import React from 'react'
 import { AlertTriangle, X } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 

@@ -2,7 +2,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { GenieAsset } from 'nft/types'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { BuyButton } from './BuyButton'

@@ -1,7 +1,7 @@
 import { GenieAsset } from 'nft/types'
 import { isAudio, isVideo } from 'nft/utils'
 import { useState } from 'react'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 const MediaStyle = css`

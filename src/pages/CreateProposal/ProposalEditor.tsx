@@ -3,7 +3,7 @@ import { t, Trans } from '@lingui/macro'
 import { ResizingTextArea, TextInput } from 'components/TextInput'
 import React, { memo } from 'react'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const ProposalEditorHeader = styled(Text)`
   font-size: 14px;

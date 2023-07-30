@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 
 import { useActivePopups } from '../../state/application/hooks'

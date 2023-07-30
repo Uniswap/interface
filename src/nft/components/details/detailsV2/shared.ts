@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { opacify } from 'theme/utils'
 
 export const containerStyles = css`

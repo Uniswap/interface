@@ -10,7 +10,7 @@ import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme'
 
 import { useToggleAccountDrawer } from '../..'

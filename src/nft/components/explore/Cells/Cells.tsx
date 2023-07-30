@@ -4,7 +4,7 @@ import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
 import { ethNumberStandardFormatter, volumeFormatter } from 'nft/utils'
 import { ReactNode } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 import * as styles from './Cells.css'

@@ -163,13 +163,17 @@ module.exports = {
 
       // Configure webpack transpilation (create-react-app specifies transpilation rules in a oneOf):
       webpackConfig.module.rules[1].oneOf = webpackConfig.module.rules[1].oneOf.map((rule) => {
-        // The fallback rule (eg for dependencies).
-        if (rule.loader && rule.loader.match(/babel-loader/) && !rule.include) {
-          // Allow not-fully-specified modules so that legacy packages are still able to build.
-          rule.resolve = { fullySpecified: false }
+        if (rule.loader && rule.loader.match(/babel-loader/)) {
+          rule.loader = 'swc-loader'
+          delete rule.options
+          // The fallback rule (eg for dependencies).
+          // if (!rule.include) {
+          //   // Allow not-fully-specified modules so that legacy packages are still able to build.
+          //   rule.resolve = { fullySpecified: false }
 
-          // The class properties transform is required for @uniswap/analytics to build.
-          rule.options.plugins.push('@babel/plugin-proposal-class-properties')
+          //   // The class properties transform is required for @uniswap/analytics to build.
+          //   rule.options.plugins.push('@babel/plugin-proposal-class-properties')
+          // }
         }
         return rule
       })

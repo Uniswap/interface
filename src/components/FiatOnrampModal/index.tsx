@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ThemedText } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 

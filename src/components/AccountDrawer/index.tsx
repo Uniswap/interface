@@ -6,7 +6,7 @@ import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useEffect, useRef } from 'react'
 import { ChevronsRight } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 

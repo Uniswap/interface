@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { Trait } from 'nft/types'
 import { formatEth, getLinkForTrait } from 'nft/utils'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { getRarityLevel, RarityGraph } from './RarityGraph'

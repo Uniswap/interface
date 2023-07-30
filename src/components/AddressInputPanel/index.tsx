@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import useENS from '../../hooks/useENS'

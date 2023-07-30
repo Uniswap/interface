@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components'
 
 import tokenLogo from '../../assets/images/token-logo.png'
 import {

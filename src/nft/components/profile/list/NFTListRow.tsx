@@ -5,7 +5,7 @@ import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { Dispatch, useEffect, useReducer, useState } from 'react'
 import { Trash2 } from 'react-feather'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { MarketplaceRow } from './MarketplaceRow'

@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 
 import { themeVars, vars } from '../css/sprinkles.css'
 

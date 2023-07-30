@@ -11,7 +11,7 @@ import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-rou
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useRouterPreference } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { SpinnerSVG } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'

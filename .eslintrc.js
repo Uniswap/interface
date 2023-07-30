@@ -38,6 +38,7 @@ module.exports = {
             ],
           },
         ],
+        '@typescript-eslint/no-restricted-imports': 'off',
         'no-restricted-imports': [
           'error',
           {

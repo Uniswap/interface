@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { Gap } from 'theme'
 
 export const Column = styled.div<{

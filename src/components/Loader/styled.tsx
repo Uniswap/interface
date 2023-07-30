@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from 'styled-components/macro'
+import styled, { css, keyframes } from 'styled-components'
 
 export const loadingAnimation = keyframes`
   0% {

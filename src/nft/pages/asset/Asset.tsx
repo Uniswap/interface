@@ -7,7 +7,7 @@ import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { NftDetails } from 'nft/components/details/detailsV2/NftDetails'
 import { useParams } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const AssetContainer = styled.div`
   display: flex;

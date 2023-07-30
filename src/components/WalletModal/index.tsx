@@ -7,7 +7,7 @@ import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
 import { useEffect } from 'react'
 import { Settings } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { flexColumnNoWrap } from 'theme/styles'
 

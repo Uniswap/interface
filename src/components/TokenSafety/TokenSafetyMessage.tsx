@@ -3,7 +3,7 @@ import { displayWarningLabel, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning } fr
 import { useTokenWarningColor, useTokenWarningTextColor } from 'hooks/useTokenWarningColor'
 import { AlertTriangle, Slash } from 'react-feather'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink } from 'theme'
 
 const Label = styled.div<{ color: string; backgroundColor: string }>`

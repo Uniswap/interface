@@ -3,7 +3,7 @@ import { BaseButton } from 'components/Button'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
 import { useIsMobile, useSellAsset } from 'nft/hooks'
 import { useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { shallow } from 'zustand/shallow'
 

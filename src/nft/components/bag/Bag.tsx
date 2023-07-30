@@ -11,7 +11,7 @@ import { useBag, useIsMobile, useProfilePageState, useSellAsset, useSubscribeScr
 import { BagStatus, ProfilePageStateType } from 'nft/types'
 import { formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 import { shallow } from 'zustand/shallow'
 

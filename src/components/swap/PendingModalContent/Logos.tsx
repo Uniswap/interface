@@ -4,7 +4,7 @@ import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { useRef } from 'react'
-import styled, { css, keyframes, useTheme } from 'styled-components/macro'
+import styled, { css, keyframes, useTheme } from 'styled-components'
 
 export const LogoContainer = styled.div`
   height: 48px;

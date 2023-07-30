@@ -16,7 +16,7 @@ import { useToken } from 'hooks/Tokens'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
 import { useAddUserToken } from 'state/user/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 

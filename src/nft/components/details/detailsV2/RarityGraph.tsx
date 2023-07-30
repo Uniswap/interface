@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import { Trait } from 'nft/types'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { colors } from 'theme/colors'
 
 const RarityBar = styled.div<{ $color?: string }>`

@@ -6,7 +6,7 @@ import xIcon from 'assets/svg/x.svg'
 import useDebounce from 'hooks/useDebounce'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { filterStringAtom } from '../state'
