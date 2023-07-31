@@ -24,12 +24,13 @@ export function isAppUniswapStagingOrg({ hostname }: { hostname: string }): bool
 }
 
 export function isBrowserRouterEnabled(): boolean {
-  return (
-    isAppUniswapOrg(window.location) ||
-    isAppUniswapStagingOrg(window.location) ||
-    window.location.hostname.includes('uniswap.vercel.app') ||
-    window.location.hostname === 'localhost'
-  )
+  if (isProductionEnv()) {
+    if (isAppUniswapOrg(window.location) || isAppUniswapStagingOrg(window.location)) {
+      return true
+    }
+    return false
+  }
+  return true
 }
 
 export function isSentryEnabled(): boolean {
