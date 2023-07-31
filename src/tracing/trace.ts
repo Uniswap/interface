@@ -1,5 +1,5 @@
+import { Span, SpanStatusType } from '@sentry/browser'
 import * as Sentry from '@sentry/react'
-import { Span, SpanStatusType } from '@sentry/tracing'
 
 // Modify this type if you want to add any Trace tags.
 type TraceTags = Record<string, never>

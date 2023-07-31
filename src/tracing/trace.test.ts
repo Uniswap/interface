@@ -1,7 +1,7 @@
 import '@sentry/tracing' // required to populate Sentry.startTransaction, which is not included in the core module
 
+import { Transaction } from '@sentry/browser'
 import * as Sentry from '@sentry/react'
-import { Transaction } from '@sentry/tracing'
 import { ErrorEvent, EventHint } from '@sentry/types'
 import assert from 'assert'
 import { mocked } from 'test-utils/mocked'
@@ -27,7 +27,7 @@ describe('trace', () => {
   beforeEach(() => {
     mocked(Sentry.startTransaction).mockImplementation((context) => {
       const transaction: Transaction = jest.requireActual('@sentry/react').startTransaction(context)
-      transaction.initSpanRecorder()
+      transaction.startChild()
       return transaction
     })
   })
@@ -173,7 +173,7 @@ describe('trace', () => {
         return Promise.resolve()
       })
       const transaction = getTransaction()
-      const span = transaction.spanRecorder?.spans[1]
+      const span = transaction.getTraceContext()
       assert(span)
       expect(span.op).toBe('child')
       expect(span.data).toEqual({ e: 'e' })

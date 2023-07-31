@@ -1,7 +1,7 @@
 import 'components/analytics'
 
+import { BrowserTracing } from '@sentry/browser'
 import * as Sentry from '@sentry/react'
-import { BrowserTracing } from '@sentry/tracing'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { initializeAnalytics, OriginApplication } from 'analytics'
 import { isSentryEnabled } from 'utils/env'
