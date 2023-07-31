@@ -16,12 +16,21 @@ declare global {
       /**
        * Wait for a specific event in a series of network requests. If the event is found, the subject will be the event.
        *
-       * @param {string} alias - The alias of the intercepted network request.
-       * @param {string} eventType - The type of the event to search for.
-       * @param {number} [timeout=20000] - The maximum amount of time (in ms) to wait for the event.
+       * @param {string} eventName - The type of the event to search for.
+       * @param {object} [options] - Options to configure the event search.
+       *  {string} alias - The alias of the intercepted network request.
+       *  {number} [timeout=20000] - The maximum amount of time (in ms) to wait for the event.
+       *  {boolean} [shouldTimeout = false] - Whether the event should not be found within the timeout.
        * @returns {Chainable<Subject>}
        */
-      waitForEvent(alias: string, eventType: string, timeout?: number): Chainable<Subject>
+      waitForAmplitudeEvent(
+        eventName: string,
+        options?: {
+          alias?: string
+          timeout?: number
+          shouldTimeout?: boolean
+        }
+      ): Chainable<Subject>
     }
     interface VisitOptions {
       serviceWorker?: true
@@ -78,7 +87,8 @@ Cypress.Commands.overwrite(
   }
 )
 
-Cypress.Commands.add('waitForEvent', (alias, eventName, timeout = 20000) => {
+Cypress.Commands.add('waitForAmplitudeEvent', (eventName, options) => {
+  const { alias = '@analytics', timeout = 20000, shouldTimeout = false } = options ?? {}
   const startTime = new Date().getTime()
 
   function checkRequest() {
@@ -89,7 +99,11 @@ Cypress.Commands.add('waitForEvent', (alias, eventName, timeout = 20000) => {
       if (eventFound) {
         return cy.wrap(eventFound)
       } else if (new Date().getTime() - startTime > timeout) {
-        throw new Error('Event not found within the specified timeout')
+        if (shouldTimeout) {
+          return cy.log(`Event ${eventName} not found within the specified timeout, as expected.`)
+        } else {
+          throw new Error(`Event ${eventName} not found within the specified timeout`)
+        }
       } else {
         return checkRequest()
       }
