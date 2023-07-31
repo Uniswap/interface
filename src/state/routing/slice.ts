@@ -3,7 +3,7 @@ import { Protocol } from '@uniswap/router-sdk'
 import { ChainId, TradeType } from '@uniswap/sdk-core'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { trace } from 'tracing/trace'
 
 import {
@@ -209,7 +209,7 @@ export const routingApi = createApi({
           return { error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error } }
         }
       },
-      keepUnusedDataFor: ms`10s`,
+      keepUnusedDataFor: ms(`10s`),
       extraOptions: {
         maxRetries: 0,
       },

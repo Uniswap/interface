@@ -1,4 +1,4 @@
-import ms from 'ms.macro'
+import ms from 'ms'
 
 export async function PostOpenSeaSellOrder(payload?: Record<string, unknown>): Promise<boolean> {
   const body = payload ? JSON.stringify(payload) : undefined
@@ -12,7 +12,7 @@ export async function PostOpenSeaSellOrder(payload?: Record<string, unknown>): P
     body,
     signal: ac.signal,
   })
-  const timeout = setTimeout(() => ac.abort(), ms`60s`)
+  const timeout = setTimeout(() => ac.abort(), ms(`60s`))
   try {
     const res = await fetch(req)
     const data = await res.json()

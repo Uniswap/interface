@@ -1,5 +1,5 @@
 import { sendEvent } from 'components/analytics'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useEffect } from 'react'
 import { ApplicationModal, setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
@@ -35,7 +35,7 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
             .catch(() => dispatch(setOpenModal(null)))
         }
       } finally {
-        localStorage.setItem(riskCheckLocalStorageKey, (now + ms`1 day`).toString())
+        localStorage.setItem(riskCheckLocalStorageKey, (now + ms(`1d`)).toString())
       }
     }
   }, [account, dispatch])

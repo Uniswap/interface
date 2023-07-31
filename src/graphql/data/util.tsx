@@ -1,18 +1,19 @@
 import { QueryResult } from '@apollo/client'
 import * as Sentry from '@sentry/react'
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useEffect } from 'react'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 import { Chain, ContractInput, HistoryDuration, TokenStandard } from './__generated__/types-and-hooks'
 
 export enum PollingInterval {
-  Slow = ms`5m`,
-  Normal = ms`1m`,
-  Fast = ms`12s`, // 12 seconds, block times for mainnet
-  LightningMcQueen = ms`3s`, // 3 seconds, approx block times for polygon
+  Slow = ms(`5m`),
+  Normal = ms(`1m`),
+  Fast = AVERAGE_L1_BLOCK_TIME,
+  LightningMcQueen = ms(`3s`), // approx block interval for polygon
 }
 
 // Polls a query only when the current component is mounted, as useQuery's pollInterval prop will continue to poll after unmount

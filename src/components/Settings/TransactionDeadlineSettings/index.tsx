@@ -4,7 +4,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import Row from 'components/Row'
 import { Input, InputContainer } from 'components/Settings/Input'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
-import ms from 'ms.macro'
+import ms from 'ms'
 import React, { useState } from 'react'
 import { useUserTransactionTTL } from 'state/user/hooks'
 import { ThemedText } from 'theme'
@@ -13,7 +13,7 @@ enum DeadlineError {
   InvalidInput = 'InvalidInput',
 }
 
-const THREE_DAYS_IN_SECONDS = ms`3 days` / 1000
+const THREE_DAYS_IN_SECONDS = ms(`3d`) / 1000
 const NUMBERS_ONLY = /^[0-9\b]+$/
 
 export default function TransactionDeadlineSettings() {

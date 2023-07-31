@@ -1,6 +1,6 @@
 import { Plural } from '@lingui/macro'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { body, caption } from 'nft/css/common.css'
@@ -163,8 +163,8 @@ export const SetDurationModal = () => {
   useEffect(() => {
     const expiration = convertDurationToExpiration(parseFloat(amount), duration)
 
-    if (expiration * 1000 - Date.now() < ms`60 seconds` || isNaN(expiration)) setErrorState(ErrorState.empty)
-    else if (expiration * 1000 - Date.now() > ms`180 days`) setErrorState(ErrorState.overMax)
+    if (expiration * 1000 - Date.now() < ms(`60s`) || isNaN(expiration)) setErrorState(ErrorState.empty)
+    else if (expiration * 1000 - Date.now() > ms(`180d`)) setErrorState(ErrorState.overMax)
     else setErrorState(ErrorState.valid)
     setGlobalExpiration(expiration)
   }, [amount, duration, setGlobalExpiration])
@@ -218,5 +218,5 @@ const convertDurationToExpiration = (amount: number, duration: Duration) => {
         return 24 * 30
     }
   }
-  return Math.round((Date.now() + ms`1 hour` * durationFactor() * amount) / 1000)
+  return Math.round((Date.now() + ms(`1h`) * durationFactor() * amount) / 1000)
 }
