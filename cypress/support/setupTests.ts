@@ -19,6 +19,7 @@ beforeEach(() => {
   cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
     const requestBody = JSON.stringify(req.body)
     const byteSize = new Blob([requestBody]).size
+    req.alias = 'analytics'
     req.reply(
       JSON.stringify({
         code: 200,

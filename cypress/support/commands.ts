@@ -12,6 +12,17 @@ declare global {
     interface ApplicationWindow {
       ethereum: Eip1193Bridge
     }
+    interface Chainable<Subject> {
+      /**
+       * Wait for a specific event in a series of network requests. If the event is found, the subject will be the event.
+       *
+       * @param {string} alias - The alias of the intercepted network request.
+       * @param {string} eventType - The type of the event to search for.
+       * @param {number} [timeout=20000] - The maximum amount of time (in ms) to wait for the event.
+       * @returns {Chainable<Subject>}
+       */
+      waitForEvent(alias: string, eventType: string, timeout?: number): Chainable<Subject>
+    }
     interface VisitOptions {
       serviceWorker?: true
       featureFlags?: Array<FeatureFlag>
@@ -74,3 +85,23 @@ Cypress.Commands.overwrite(
       )
   }
 )
+
+Cypress.Commands.add('waitForEvent', (alias, eventName, timeout = 20000) => {
+  const startTime = new Date().getTime()
+
+  function checkRequest() {
+    return cy.wait(alias, { timeout }).then((interception) => {
+      const events = interception.request.body.events
+      const eventFound = events.find((event: any) => event.event_type === eventName)
+
+      if (eventFound) {
+        return cy.wrap(eventFound)
+      } else if (new Date().getTime() - startTime > timeout) {
+        throw new Error('Event not found within the specified timeout')
+      } else {
+        return checkRequest()
+      }
+    })
+  }
+  return checkRequest()
+})

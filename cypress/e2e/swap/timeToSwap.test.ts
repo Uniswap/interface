@@ -1,15 +1,12 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 
-import { sendAnalyticsEvent } from '../../../src/analytics'
 import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
 
 describe('time-to-swap logging', () => {
   it('completes two swaps and verifies the TTS logging for the first', () => {
-    cy.visit('/swap', { ethereum: 'hardhat' })
+    cy.visit('/swap')
     cy.hardhat({ automine: false })
-
-    cy.spy(sendAnalyticsEvent).as('analyticsSpy')
 
     // Select USDC
     cy.get('#swap-currency-output .open-currency-select-button').click()
@@ -31,11 +28,15 @@ describe('time-to-swap logging', () => {
     cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
     // Mine transaction
-    cy.hardhat().then((hardhat) => hardhat.mine())
+    cy.hardhat().then((hardhat) => hardhat.mine(1))
     cy.wait('@eth_getTransactionReceipt')
     cy.get(getTestSelector('popups')).contains('Swapped')
 
     // Verify logging
-    cy.get('@analyticsSpy').should('have.been.calledWithMatch', SwapEventName.SWAP_TRANSACTION_COMPLETED, { tts: 0 })
+    cy.waitForEvent('@analytics', SwapEventName.SWAP_TRANSACTION_COMPLETED).then((event: any) => {
+      cy.wrap(event.event_properties).should('have.property', 'tts')
+      cy.wrap(event.event_properties.tts).should('be.a', 'number')
+      cy.wrap(event.event_properties.tts).should('be.gte', 0)
+    })
   })
 })
