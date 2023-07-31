@@ -16,12 +16,6 @@ declare global {
       serviceWorker?: true
       featureFlags?: Array<FeatureFlag>
       /**
-       * The mock ethereum provider to inject into the page.
-       * @default 'goerli'
-       */
-      // TODO(INFRA-175): Migrate all usage of 'goerli' to 'hardhat'.
-      ethereum?: false
-      /**
        * Initial user state.
        * @default {@type import('../utils/user-state').CONNECTED_WALLET_USER_STATE}
        */
@@ -66,9 +60,7 @@ Cypress.Commands.overwrite(
             }
 
             // Inject the mock ethereum provider.
-            if (options?.ethereum !== false) {
-              win.ethereum = provider
-            }
+            win.ethereum = provider
           },
         })
       )
