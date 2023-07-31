@@ -1,6 +1,6 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import { Contract } from '@ethersproject/contracts'
-import { namehash } from '@ethersproject/hash'
+import { safeNamehash } from 'utils/safeNamehash'
 
 const REGISTRAR_ABI = [
   {
@@ -61,7 +61,7 @@ function resolverContract(resolverAddress: string, provider: Provider): Contract
  */
 export default async function resolveENSContentHash(ensName: string, provider: Provider): Promise<string> {
   const ensRegistrarContract = new Contract(REGISTRAR_ADDRESS, REGISTRAR_ABI, provider)
-  const hash = namehash(ensName)
+  const hash = safeNamehash(ensName)
   const resolverAddress = await ensRegistrarContract.resolver(hash)
   return resolverContract(resolverAddress, provider).contenthash(hash)
 }
