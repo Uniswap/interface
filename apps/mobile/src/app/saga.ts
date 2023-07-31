@@ -25,8 +25,8 @@ import {
   transferTokenSagaName,
 } from 'src/features/transactions/transfer/transferTokenSaga'
 import { signWcRequestSaga } from 'src/features/walletConnect/saga'
-import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
-import { spawn } from 'typed-redux-saga'
+import { initializeWeb3Wallet, walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
+import { call, spawn } from 'typed-redux-saga'
 import {
   editAccountActions,
   editAccountReducer,
@@ -106,6 +106,9 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
 export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)
 
 export function* mobileSaga() {
+  // Ensure WalletConnect core is initialized before spawning any other sagas (deepLinkWatcher)
+  yield* call(initializeWeb3Wallet)
+
   for (const s of sagas) {
     yield* spawn(s)
   }

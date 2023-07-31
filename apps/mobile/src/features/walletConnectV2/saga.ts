@@ -34,7 +34,7 @@ import serializeError from 'wallet/src/utils/serializeError'
 
 export let wcWeb3Wallet: IWeb3Wallet
 
-async function initializeWeb3Wallet(): Promise<void> {
+export async function initializeWeb3Wallet(): Promise<void> {
   const wcCore = new Core({
     projectId: config.walletConnectProjectId,
   })
@@ -349,7 +349,6 @@ function* fetchPendingSessionRequests() {
 }
 
 export function* walletConnectV2Saga() {
-  yield* call(initializeWeb3Wallet)
   yield* call(populateActiveSessions)
   yield* fork(fetchPendingSessionProposals)
   yield* fork(fetchPendingSessionRequests)
