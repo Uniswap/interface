@@ -13,13 +13,13 @@ import optimismSquareLogoUrl from 'assets/svg/optimism_square_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import polygonSquareLogoUrl from 'assets/svg/polygon_square_logo.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
 import { ARBITRUM_LIST, AVALANCHE_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
 
-export const AVERAGE_L1_BLOCK_TIME = ms`12s`
+export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
 
 export enum NetworkType {
   L1,
@@ -95,7 +95,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.OPTIMISM]: {
     networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`25m`,
+    blockWaitMsBeforeWarning: ms(`25m`),
     bridge: 'https://app.optimism.io/bridge',
     defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
@@ -114,7 +114,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.OPTIMISM_GOERLI]: {
     networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`25m`,
+    blockWaitMsBeforeWarning: ms(`25m`),
     bridge: 'https://app.optimism.io/bridge',
     defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
@@ -129,7 +129,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.ARBITRUM_ONE]: {
     networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`10m`,
+    blockWaitMsBeforeWarning: ms(`10m`),
     bridge: 'https://bridge.arbitrum.io/',
     docs: 'https://offchainlabs.com/',
     explorer: 'https://arbiscan.io/',
@@ -145,7 +145,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.ARBITRUM_GOERLI]: {
     networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`10m`,
+    blockWaitMsBeforeWarning: ms(`10m`),
     bridge: 'https://bridge.arbitrum.io/',
     docs: 'https://offchainlabs.com/',
     explorer: 'https://goerli.arbiscan.io/',
@@ -159,7 +159,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.POLYGON]: {
     networkType: NetworkType.L1,
-    blockWaitMsBeforeWarning: ms`10m`,
+    blockWaitMsBeforeWarning: ms(`10m`),
     bridge: 'https://wallet.polygon.technology/polygon/bridge',
     docs: 'https://polygon.io/',
     explorer: 'https://polygonscan.com/',
@@ -174,7 +174,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.POLYGON_MUMBAI]: {
     networkType: NetworkType.L1,
-    blockWaitMsBeforeWarning: ms`10m`,
+    blockWaitMsBeforeWarning: ms(`10m`),
     bridge: 'https://wallet.polygon.technology/bridge',
     docs: 'https://polygon.io/',
     explorer: 'https://mumbai.polygonscan.com/',
@@ -185,7 +185,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.CELO]: {
     networkType: NetworkType.L1,
-    blockWaitMsBeforeWarning: ms`10m`,
+    blockWaitMsBeforeWarning: ms(`10m`),
     bridge: 'https://www.portalbridge.com/#/transfer',
     docs: 'https://docs.celo.org/',
     explorer: 'https://celoscan.io/',
@@ -199,7 +199,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.CELO_ALFAJORES]: {
     networkType: NetworkType.L1,
-    blockWaitMsBeforeWarning: ms`10m`,
+    blockWaitMsBeforeWarning: ms(`10m`),
     bridge: 'https://www.portalbridge.com/#/transfer',
     docs: 'https://docs.celo.org/',
     explorer: 'https://alfajores-blockscout.celo-testnet.org/',
@@ -211,7 +211,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.BNB]: {
     networkType: NetworkType.L1,
-    blockWaitMsBeforeWarning: ms`10m`,
+    blockWaitMsBeforeWarning: ms(`10m`),
     bridge: 'https://cbridge.celer.network/1/56',
     docs: 'https://docs.bnbchain.org/',
     explorer: 'https://bscscan.com/',
@@ -227,7 +227,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.AVALANCHE]: {
     networkType: NetworkType.L1,
-    blockWaitMsBeforeWarning: ms`10m`,
+    blockWaitMsBeforeWarning: ms(`10m`),
     bridge: 'https://core.app/bridge/',
     docs: 'https://docs.avax.network/',
     explorer: 'https://snowtrace.io/',

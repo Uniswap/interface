@@ -6,7 +6,7 @@ import {
   OrderStatus,
   OrderType,
 } from 'graphql/data/__generated__/types-and-hooks'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { ActivityEvent, CollectionInfoForAsset, GenieAsset, Markets, Offer, SellOrder, WalletAsset } from 'nft/types'
 
 export const TEST_NFT_ASSET: GenieAsset = {
@@ -221,7 +221,7 @@ export const TEST_NFT_COLLECTION_INFO_FOR_ASSET: CollectionInfoForAsset = {
   totalSupply: 10000,
 }
 
-const FIVE_MONTHS_MILLISECONDS = ms`165 days`
+const FIVE_MONTHS_MILLISECONDS = ms(`165 days`)
 
 export const TEST_SELL_ORDER: SellOrder = {
   address: '0x29d7ebca656665c1a52a92f830e413e394db6b4f',

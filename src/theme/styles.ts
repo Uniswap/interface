@@ -18,9 +18,9 @@ export enum TRANSITION_DURATIONS {
 
 const transitions = {
   duration: {
-    slow: `${TRANSITION_DURATIONS.slow}ms`,
-    medium: `${TRANSITION_DURATIONS.medium}ms`,
-    fast: `${TRANSITION_DURATIONS.fast}ms`,
+    slow: `${TRANSITION_DURATIONS.slow}ms(`,
+    medium: `${TRANSITION_DURATIONS.medium}ms(`,
+    fast: `${TRANSITION_DURATIONS.fast}ms(`,
   },
   timing: {
     ease: 'ease',

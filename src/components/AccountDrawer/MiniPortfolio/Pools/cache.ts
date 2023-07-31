@@ -3,7 +3,7 @@ import { Pool, Position } from '@uniswap/v3-sdk'
 import { useAllTokensMultichain } from 'hooks/Tokens'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useCallback } from 'react'
 import { deserializeToken, serializeToken } from 'state/user/hooks'
 import { SerializedToken } from 'state/user/types'
@@ -25,7 +25,7 @@ export type PositionInfo = {
   prices?: [number?, number?]
 }
 
-const POSITION_CACHE_EXPIRY = ms`1m` // 1 minute is arbitrary here
+const POSITION_CACHE_EXPIRY = ms(`1m`) // 1 minute is arbitrary here
 // Allows reusing recently fetched positions between component mounts
 type CachedPositionsEntry = { result: PositionInfo[]; stale: boolean }
 const cachedPositionsAtom = atom<{ [address: string]: CachedPositionsEntry | undefined }>({})

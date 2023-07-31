@@ -1,14 +1,14 @@
 import { plural, t } from '@lingui/macro'
-import ms from 'ms.macro'
+import ms from 'ms'
 
 import { roundAndPluralize } from './roundAndPluralize'
 
-const SECOND = ms`1s`
-const MINUTE = ms`1m`
-const HOUR = ms`1h`
-const DAY = ms`1d`
-const WEEK = ms`7d`
-const MONTH = ms`30d`
+const SECOND = ms(`1s`)
+const MINUTE = ms(`1m`)
+const HOUR = ms(`1h`)
+const DAY = ms(`1d`)
+const WEEK = ms(`7d`)
+const MONTH = ms(`30d`)
 
 interface TimePeriod {
   milliseconds: number

@@ -1,7 +1,7 @@
 import { OpacityHoverState } from 'components/Common'
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
 import { fetchPrice } from 'nft/utils'
 import { useMemo, useState } from 'react'
@@ -98,7 +98,7 @@ const TrendingCollections = () => {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    refetchInterval: ms`1m`,
+    refetchInterval: ms(`1m`),
   })
 
   const trendingCollectionColumns = useMemo(() => {
