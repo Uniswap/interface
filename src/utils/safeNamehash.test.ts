@@ -19,7 +19,7 @@ describe('safeNamehash', () => {
     expect(() => namehash(zeroWidthJoiner)).toThrow()
   })
 
-  it('works', () => {
+  it('safenamehash works', () => {
     expect(safeNamehash(zeroWidthJoiner)).toEqual(undefined)
   })
 })
