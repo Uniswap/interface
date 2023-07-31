@@ -101,8 +101,13 @@ export default function LeaderboardTable() {
     })
 
     const sorted = filtered?.sort((a, b) => {
-      const fieldA = a[sortMethodMapping[sortMethod]]
-      const fieldB = b[sortMethodMapping[sortMethod]]
+      const isTotalVolume = sortMethodMapping[sortMethod] === 'totalVolume'
+      const fieldA = isTotalVolume
+        ? parseFloat(a[sortMethodMapping[sortMethod]] as string)
+        : a[sortMethodMapping[sortMethod]]
+      const fieldB = isTotalVolume
+        ? parseFloat(b[sortMethodMapping[sortMethod]] as string)
+        : b[sortMethodMapping[sortMethod]]
 
       if (fieldA < fieldB) {
         return sortAscending ? -1 : 1
