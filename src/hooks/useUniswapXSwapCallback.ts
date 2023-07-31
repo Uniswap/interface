@@ -106,6 +106,16 @@ export function useUniswapXSwapCallback({
         // TODO(UniswapX): For now, `errorCode` is not always present in the response, so we have to fallback
         // check for status code and perform this type narrowing.
         if (isErrorResponse(res, body)) {
+          sendAnalyticsEvent('UniswapX Order Post Error', {
+            ...formatSwapSignedAnalyticsEventProperties({
+              trade,
+              allowedSlippage,
+              fiatValues,
+            }),
+            ...analyticsContext,
+            errorCode: body.errorCode,
+            detail: body.detail,
+          })
           // TODO(UniswapX): Provide a similar utility to `swapErrorToUserReadableMessage` once
           // backend team provides a list of error codes and potential messages
           throw new Error(`${body.errorCode ?? body.detail ?? 'Unknown error'}`)

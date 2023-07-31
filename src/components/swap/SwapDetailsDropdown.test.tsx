@@ -4,8 +4,7 @@ import { act, render, screen } from 'test-utils/render'
 
 import SwapDetailsDropdown from './SwapDetailsDropdown'
 
-// TODO(WEB-2120): Reenable tests after mocking trade fetch in this file
-describe.skip('SwapDetailsDropdown.tsx', () => {
+describe('SwapDetailsDropdown.tsx', () => {
   it('renders a trade', () => {
     const { asFragment } = render(
       <SwapDetailsDropdown

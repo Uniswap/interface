@@ -68,12 +68,11 @@ const CurrencySelect = styled(ButtonGray)<{
   selected: boolean
   hideInput?: boolean
   disabled?: boolean
+  pointerEvents?: string
 }>`
   align-items: center;
   background-color: ${({ selected, theme }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
-  box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
   cursor: pointer;
   border-radius: 16px;
@@ -92,6 +91,7 @@ const CurrencySelect = styled(ButtonGray)<{
     background-color: ${({ selected, theme }) => (selected ? theme.deprecated_bg3 : darken(0.05, theme.accentAction))};
   }
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
+  ${({ pointerEvents }) => pointerEvents && `pointer-events: none`}
 `
 
 const InputRow = styled.div<{ selected: boolean }>`
@@ -259,6 +259,7 @@ export default function CurrencyInputPanel({
                 setModalOpen(true)
               }
             }}
+            pointerEvents={!onCurrencySelect ? 'none' : undefined}
           >
             <Aligner>
               <RowFixed>
