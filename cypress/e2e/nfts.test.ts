@@ -37,7 +37,8 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-details-asset-details')).should('exist')
   })
 
-  it('should toggle buy now on details page', () => {
+  // TODO(WEB-2583): Mock the nft data.
+  it.skip('should toggle buy now on details page', () => {
     cy.visit(`#/nfts/asset/${BONSAI_COLLECTION_ADDRESS}/7580`)
     cy.get(getTestSelector('nft-details-description-text')).should('exist')
     cy.get(getTestSelector('nft-details-description')).click()
