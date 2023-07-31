@@ -48,7 +48,7 @@ const invalidAssets = [
   'http://127.0.0.1:3000/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544//2550',
 ]
 
-test.each(invalidAssets)('should not inject metadata for invalid calls', async (url) => {
+test.each(invalidAssets)('should not inject metadata for invalid asset calls', async (url) => {
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).not.toContain('og:title')
   expect(body).not.toContain('og:image')

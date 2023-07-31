@@ -1,6 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
+  ChainId,
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
@@ -28,6 +29,7 @@ import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
 import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
+import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, QuoterV2, TickLens, UniswapInterfaceMulticall } from 'types/v3'
@@ -66,6 +68,23 @@ export function useContract<T extends Contract = Contract>(
   }, [addressOrAddressMap, ABI, provider, chainId, withSignerIfPossible, account]) as T
 }
 
+function useMainnetContract<T extends Contract = Contract>(address: string | undefined, ABI: any): T | null {
+  const { chainId } = useWeb3React()
+  const isMainnet = chainId === ChainId.MAINNET
+  const contract = useContract(isMainnet ? address : undefined, ABI, false)
+  return useMemo(() => {
+    if (isMainnet) return contract
+    if (!address) return null
+    const provider = RPC_PROVIDERS[ChainId.MAINNET]
+    try {
+      return getContract(address, ABI, provider)
+    } catch (error) {
+      console.error('Failed to get mainnet contract', error)
+      return null
+    }
+  }, [address, ABI, contract, isMainnet]) as T
+}
+
 export function useV2MigratorContract() {
   return useContract<V3Migrator>(V3_MIGRATOR_ADDRESSES, V2MigratorABI, true)
 }
@@ -95,12 +114,12 @@ export function useArgentWalletDetectorContract() {
   return useContract<ArgentWalletDetector>(ARGENT_WALLET_DETECTOR_ADDRESS, ARGENT_WALLET_DETECTOR_ABI, false)
 }
 
-export function useENSRegistrarContract(withSignerIfPossible?: boolean) {
-  return useContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES, ENS_ABI, withSignerIfPossible)
+export function useENSRegistrarContract() {
+  return useMainnetContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES[ChainId.MAINNET], ENS_ABI)
 }
 
-export function useENSResolverContract(address: string | undefined, withSignerIfPossible?: boolean) {
-  return useContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI, withSignerIfPossible)
+export function useENSResolverContract(address: string | undefined) {
+  return useMainnetContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI)
 }
 
 export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
@@ -121,6 +140,13 @@ export function useV2RouterContract(): Contract | null {
 
 export function useInterfaceMulticall() {
   return useContract<UniswapInterfaceMulticall>(MULTICALL_ADDRESSES, MulticallABI, false) as UniswapInterfaceMulticall
+}
+
+export function useMainnetInterfaceMulticall() {
+  return useMainnetContract<UniswapInterfaceMulticall>(
+    MULTICALL_ADDRESSES[ChainId.MAINNET],
+    MulticallABI
+  ) as UniswapInterfaceMulticall
 }
 
 export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
