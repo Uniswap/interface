@@ -37,7 +37,10 @@ describe('Testing nfts', () => {
   })
 
   it('should toggle buy now on details page', () => {
-    cy.visit(`/nfts/asset/${PUDGY_COLLECTION_ADDRESS}`)
+    cy.visit(`/nfts/collection/${PUDGY_COLLECTION_ADDRESS}`)
+    cy.get(getTestSelector('nft-filter')).first().click()
+    cy.get(getTestSelector('nft-collection-filter-buy-now')).click()
+    cy.get(getTestSelector('nft-collection-asset')).first().click()
     cy.get(getTestSelector('nft-details-description-text')).should('exist')
     cy.get(getTestSelector('nft-details-description')).click()
     cy.get(getTestSelector('nft-details-description-text')).should('not.exist')
