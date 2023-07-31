@@ -1,6 +1,6 @@
 import { FunctionComponent, PropsWithChildren, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'

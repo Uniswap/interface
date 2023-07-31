@@ -10,7 +10,7 @@ import { formatCommonPropertiesForTrade } from 'lib/utils/analytics'
 import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
-import styled, { keyframes, useTheme } from 'styled-components/macro'
+import styled, { keyframes, useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'

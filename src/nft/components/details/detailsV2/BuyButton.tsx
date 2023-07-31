@@ -4,7 +4,7 @@ import { ButtonPrimary } from 'components/Button'
 import Loader from 'components/Icons/LoadingSpinner'
 import { useBuyAssetCallback } from 'nft/hooks/useFetchAssets'
 import { GenieAsset } from 'nft/types'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { OfferButton } from './OfferButton'
 import { ButtonStyles } from './shared'

@@ -3,7 +3,7 @@ import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset } from 'nft/types'
 import { Check } from 'react-feather'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { TEST_OFFER } from 'test-utils/nft/fixtures'
 
 import { TableTabsKeys } from './DataPageTable'

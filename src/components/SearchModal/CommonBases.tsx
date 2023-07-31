@@ -8,7 +8,7 @@ import { COMMON_BASES } from 'constants/routing'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { currencyId } from 'utils/currencyId'
 
 const MobileWrapper = styled(AutoColumn)`

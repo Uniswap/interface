@@ -12,7 +12,7 @@ import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 
 import { LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'

@@ -15,7 +15,7 @@ import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'

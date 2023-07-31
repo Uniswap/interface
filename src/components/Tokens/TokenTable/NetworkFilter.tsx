@@ -12,7 +12,7 @@ import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme'
 
 import FilterOption from './FilterOption'

@@ -21,7 +21,7 @@ import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal, getAssetHref } from 'nft/utils'
 import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import * as styles from './BagRow.css'
 

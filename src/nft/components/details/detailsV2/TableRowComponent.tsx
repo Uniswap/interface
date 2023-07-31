@@ -11,7 +11,7 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { HomeSearchIcon } from 'nft/components/icons'
 import { Offer, SellOrder } from 'nft/types'
 import { formatEth, getMarketplaceIcon, timeUntil } from 'nft/utils'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS, ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 

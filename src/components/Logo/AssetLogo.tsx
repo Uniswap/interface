@@ -2,7 +2,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { getChainInfo } from 'constants/chainInfo'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import React, { useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 export const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};

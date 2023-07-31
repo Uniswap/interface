@@ -2,7 +2,7 @@ import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'compone
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from 'd3'
 import usePrevious from 'hooks/usePrevious'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const Handle = styled.path<{ color: string }>`
   cursor: ew-resize;

@@ -3,7 +3,7 @@ import { curveCardinal, scaleLinear } from 'd3'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { PricePoint } from 'graphql/data/util'
 import { memo } from 'react'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 
 import { getPriceBounds } from '../Tokens/TokenDetails/PriceChart'
 import LineChart from './LineChart'

@@ -5,7 +5,7 @@ import Row from 'components/Row'
 import { useSubscribeScrollState } from 'nft/hooks'
 import { GenieAsset } from 'nft/types'
 import { useMemo } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { Scrim } from './shared'

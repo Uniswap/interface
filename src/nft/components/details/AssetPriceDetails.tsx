@@ -19,7 +19,7 @@ import { useMemo } from 'react'
 import { Upload } from 'react-feather'
 import { useQuery } from 'react-query'
 import { Link, useNavigate } from 'react-router-dom'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils/addresses'
 

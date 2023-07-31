@@ -3,7 +3,7 @@ import { GenieAsset, Trait } from 'nft/types'
 import qs from 'query-string'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const Grid = styled.div`
   display: grid;

@@ -12,7 +12,7 @@ import { useSellAsset } from 'nft/hooks'
 import { formatEth, generateTweetForList, pluralize } from 'nft/utils'
 import { useMemo } from 'react'
 import { Twitter, X } from 'react-feather'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { TitleRow } from '../shared'

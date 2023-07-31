@@ -1,6 +1,6 @@
 import Row from 'components/Row'
 import { useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 import { containerStyles } from './shared'

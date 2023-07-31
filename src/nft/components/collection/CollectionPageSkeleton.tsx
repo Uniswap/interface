@@ -4,7 +4,7 @@ import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { useBag, useIsMobile } from 'nft/hooks'
 import { BannerWrapper, CollectionBannerLoading } from 'nft/pages/collection'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { ActivitySwitcherLoading } from './ActivitySwitcher'
 import { CollectionNftsAndMenuLoading } from './CollectionNfts'

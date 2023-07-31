@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 
 const StyledLink = styled(ExternalLink)`

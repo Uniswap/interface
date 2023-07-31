@@ -35,7 +35,7 @@ import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Field } from 'state/swap/actions'
 import { SwapState } from 'state/swap/reducer'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { isAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 

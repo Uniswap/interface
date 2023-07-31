@@ -1,6 +1,6 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { PropsWithChildren, useCallback } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ClickableStyle } from 'theme'
 import { openDownloadApp } from 'utils/openDownloadApp'
 

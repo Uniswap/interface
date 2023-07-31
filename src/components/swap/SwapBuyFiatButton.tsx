@@ -6,7 +6,7 @@ import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink } from 'theme'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'

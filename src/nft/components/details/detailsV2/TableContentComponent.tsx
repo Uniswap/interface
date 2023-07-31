@@ -1,6 +1,6 @@
 import { ScrollBarStyles } from 'components/Common'
 import { useSubscribeScrollState } from 'nft/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { TableTabsKeys } from './DataPageTable'
 import { Scrim } from './shared'

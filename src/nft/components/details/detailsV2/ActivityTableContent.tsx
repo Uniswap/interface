@@ -1,7 +1,7 @@
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { Row } from 'nft/components/Flex'
 import { useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { SupportedTimePeriodsType, TimePeriodSwitcher } from './TimePeriodSwitcher'
 

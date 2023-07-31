@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { useEffect, useRef } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 
 import { BuyButton } from './BuyButton'

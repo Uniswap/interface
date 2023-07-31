@@ -1,7 +1,7 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { GenieAsset } from 'nft/types'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 
 import { DataPageDescription } from './DataPageDescription'

@@ -5,7 +5,7 @@ import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useMemo } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { warningSeverity } from 'utils/prices'
 

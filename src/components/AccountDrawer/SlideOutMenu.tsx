@@ -1,6 +1,6 @@
 import { ScrollBarStyles } from 'components/Common'
 import { ArrowLeft } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme'
 
 const Menu = styled.div`

@@ -2,7 +2,7 @@ import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 
 const BREAKPOINT = '960px'
 

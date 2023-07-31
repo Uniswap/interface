@@ -2,7 +2,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'

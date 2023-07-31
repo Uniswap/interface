@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { OpacityHoverState } from 'components/Common'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useMemo } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ButtonText, ThemedText } from 'theme'
 
 const ClearButton = styled(ButtonText)`

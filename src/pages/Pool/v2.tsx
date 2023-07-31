@@ -10,7 +10,7 @@ import { useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'

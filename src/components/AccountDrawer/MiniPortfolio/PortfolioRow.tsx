@@ -1,7 +1,7 @@
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
-import styled, { css, keyframes } from 'styled-components/macro'
+import styled, { css, keyframes } from 'styled-components'
 
 export const PortfolioRowWrapper = styled(Row)<{ onClick?: any }>`
   gap: 12px;

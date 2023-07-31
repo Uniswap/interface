@@ -1,4 +1,4 @@
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 
 import { StyledSVG } from './shared'
 

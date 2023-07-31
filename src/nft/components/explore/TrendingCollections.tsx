@@ -6,7 +6,7 @@ import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft
 import { fetchPrice } from 'nft/utils'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 import CollectionTable from './CollectionTable'

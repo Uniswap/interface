@@ -5,7 +5,7 @@ import { ButtonPrimary } from 'components/Button'
 import { getChainInfo } from 'constants/chainInfo'
 import useSelectChain from 'hooks/useSelectChain'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 import { ReactComponent as EyeIcon } from '../../../assets/svg/eye.svg'

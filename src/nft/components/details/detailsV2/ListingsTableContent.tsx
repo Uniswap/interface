@@ -3,7 +3,7 @@ import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { AddToBagIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset } from 'nft/types'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 
 import { TableTabsKeys } from './DataPageTable'
 import { TableContentComponent } from './TableContentComponent'

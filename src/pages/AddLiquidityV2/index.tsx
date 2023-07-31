@@ -15,7 +15,7 @@ import { useCallback, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'

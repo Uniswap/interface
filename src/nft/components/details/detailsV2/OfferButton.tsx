@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ButtonGray, ButtonPrimary } from 'components/Button'
 import { HandHoldingDollarIcon } from 'nft/components/icons'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { ButtonStyles } from './shared'
 
