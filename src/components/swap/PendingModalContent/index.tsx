@@ -5,6 +5,7 @@ import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/Of
 import { ColumnCenter } from 'components/Column'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
@@ -12,7 +13,7 @@ import { ReactNode, useRef } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { useOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import { useIsTransactionConfirmed } from 'state/transactions/hooks'
+import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { ThemedText } from 'theme/components/text'
@@ -223,14 +224,14 @@ export function PendingModalContent({
 }: PendingModalContentProps) {
   const { chainId } = useWeb3React()
 
-  const classicSwapConfirmed = useIsTransactionConfirmed(
-    swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined
-  )
+  const swapStatus = useSwapTransactionStatus(swapResult)
+
+  const classicSwapConfirmed = swapStatus === TransactionStatus.Confirmed
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
   // TODO(UniswapX): Support UniswapX status here too
   const uniswapXSwapConfirmed = Boolean(swapResult)
 
-  const swapConfirmed = TradeFillType.Classic ? classicSwapConfirmed : uniswapXSwapConfirmed
+  const swapConfirmed = swapResult?.type === TradeFillType.Classic ? classicSwapConfirmed : uniswapXSwapConfirmed
 
   const swapPending = swapResult !== undefined && !swapConfirmed
   const wrapPending = wrapTxHash != undefined && !wrapConfirmed

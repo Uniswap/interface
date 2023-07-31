@@ -1,7 +1,6 @@
 import { getTestSelector } from '../utils'
 
 const PUDGY_COLLECTION_ADDRESS = '0xbd3531da5cf5857e7cfaa92426877b022e612cf8'
-const BONSAI_COLLECTION_ADDRESS = '0xec9c519d49856fd2f8133a0741b4dbe002ce211b'
 
 describe('Testing nfts', () => {
   it('should load nft leaderboard', () => {
@@ -38,7 +37,7 @@ describe('Testing nfts', () => {
   })
 
   it('should toggle buy now on details page', () => {
-    cy.visit(`/nfts/asset/${BONSAI_COLLECTION_ADDRESS}/7580`)
+    cy.visit(`/nfts/asset/${PUDGY_COLLECTION_ADDRESS}`)
     cy.get(getTestSelector('nft-details-description-text')).should('exist')
     cy.get(getTestSelector('nft-details-description')).click()
     cy.get(getTestSelector('nft-details-description-text')).should('not.exist')
