@@ -261,7 +261,7 @@ describe('transaction reducer', () => {
 
       expect(cancelTx).toEqual({ ...originalTx, hash: '0x1', cancelled: true })
     })
-    it('does not error on cancelled a non-existant tx', () => {
+    it('does not error on cancelling a non-existant tx', () => {
       store.dispatch(
         cancelTransaction({
           chainId: ChainId.MAINNET,
