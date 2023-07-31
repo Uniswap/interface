@@ -5,6 +5,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 import {
   Chain,
   ContractInput,
+  SafetyLevel,
   TokenProjectsQuery,
   TopTokensQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -76,21 +77,26 @@ export function gqlTokenToCurrencyInfo(
   const { chain, address, decimals, symbol, project } = token
   const chainId = fromGraphQLChain(chain)
 
-  if (!chainId || !decimals || !symbol || !project || !project.name) return null
+  if (!chainId || !decimals) return null
   if (chainFilter && chainFilter !== chainId) return null
 
-  const { logoUrl, name, safetyLevel, isSpam } = project
-
   const currency = isNonNativeAddress(chainId, address)
-    ? new Token(chainId, address, decimals, symbol, name, /* bypassChecksum:*/ true)
+    ? new Token(
+        chainId,
+        address,
+        decimals,
+        symbol ?? undefined,
+        project?.name ?? undefined,
+        /* bypassChecksum:*/ true
+      )
     : NativeCurrency.onChain(chainId)
 
   const currencyInfo: CurrencyInfo = {
     currency,
     currencyId: currencyId(currency),
-    logoUrl,
-    safetyLevel,
-    isSpam,
+    logoUrl: project?.logoUrl,
+    safetyLevel: project?.safetyLevel ?? SafetyLevel.StrongWarning,
+    isSpam: project?.isSpam ?? false,
   }
   return currencyInfo
 }
