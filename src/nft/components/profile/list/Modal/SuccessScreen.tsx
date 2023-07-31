@@ -9,7 +9,7 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { getTotalEthValue } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
-import { formatEth, pluralize, useTweetForList } from 'nft/utils'
+import { formatEth, generateTweetForList, pluralize } from 'nft/utils'
 import { useMemo } from 'react'
 import { Twitter, X } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
@@ -84,8 +84,6 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
 
-  const tweetUri = useTweetForList(sellAssets)
-
   return (
     <>
       <TitleRow>
@@ -121,7 +119,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
         <ReturnButton onClick={() => window.location.reload()}>
           <Trans>Return to My NFTs</Trans>
         </ReturnButton>
-        <TweetButton href={tweetUri} target="_blank" rel="noreferrer">
+        <TweetButton href={generateTweetForList(sellAssets)} target="_blank" rel="noreferrer">
           <TweetRow>
             <Twitter height={20} width={20} color={theme.accentTextLightPrimary} fill={theme.accentTextLightPrimary} />
             <Trans>Share on Twitter</Trans>

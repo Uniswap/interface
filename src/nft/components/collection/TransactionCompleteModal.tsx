@@ -17,9 +17,9 @@ import {
   formatEthPrice,
   formatUsdPrice,
   formatUSDPriceWithCommas,
+  generateTweetForPurchase,
   getSuccessfulImageSize,
   parseTransactionResponse,
-  useTweetForPurchase,
 } from 'nft/utils'
 import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -92,11 +92,9 @@ const TxCompleteModal = () => {
     useSendTransaction.subscribe((state) => (transactionStateRef.current = state.state))
   }, [])
 
-  const purchaseTweetUri = useTweetForPurchase(nftsPurchased, txHashUrl)
-
   const shareTweet = () => {
     window.open(
-      purchaseTweetUri,
+      generateTweetForPurchase(nftsPurchased, txHashUrl),
       'newwindow',
       `left=${(window.screen.width - TWITTER_WIDTH) / 2}, top=${
         (window.screen.height - TWITTER_HEIGHT) / 2
