@@ -212,9 +212,7 @@ export default function CurrencyInputPanel({
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
-      {locked ? (
-        <></>
-      ) : (
+      {!locked && (
         <>
           <Container hideInput={hideInput} disabled={!chainAllowed}>
             <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
@@ -247,9 +245,9 @@ export default function CurrencyInputPanel({
                       <span style={{ marginRight: '0.5rem' }}>
                         <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
                       </span>
-                    ) : currency ? (
-                      <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size="24px" />
-                    ) : null}
+                    ) : (
+                      currency && <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size="24px" />
+                    )}
                     {pair ? (
                       <StyledTokenName className="pair-name-container">
                         {pair?.token0.symbol}:{pair?.token1.symbol}
@@ -268,13 +266,13 @@ export default function CurrencyInputPanel({
                 </Aligner>
               </CurrencySelect>
             </InputRow>
-            {!hideInput && !hideBalance && currency && (
+            {Boolean(!hideInput && !hideBalance && currency) && (
               <FiatRow>
                 <RowBetween>
                   <LoadingOpacityContainer $loading={loading}>
                     {fiatValue && <FiatValue fiatValue={fiatValue} />}
                   </LoadingOpacityContainer>
-                  {account ? (
+                  {account && (
                     <RowFixed style={{ height: '17px' }}>
                       <ThemedText.DeprecatedBody
                         onClick={onMax}
@@ -283,15 +281,12 @@ export default function CurrencyInputPanel({
                         fontSize={14}
                         style={{ display: 'inline', cursor: 'pointer' }}
                       >
-                        {!hideBalance && currency && selectedCurrencyBalance ? (
-                          renderBalance ? (
-                            renderBalance(selectedCurrencyBalance)
-                          ) : (
+                        {Boolean(!hideBalance && currency && selectedCurrencyBalance) &&
+                          (renderBalance?.(selectedCurrencyBalance as CurrencyAmount<Currency>) || (
                             <Trans>Balance: {formatCurrencyAmount(selectedCurrencyBalance, 4)}</Trans>
-                          )
-                        ) : null}
+                          ))}
                       </ThemedText.DeprecatedBody>
-                      {showMaxButton && selectedCurrencyBalance ? (
+                      {Boolean(showMaxButton && selectedCurrencyBalance) && (
                         <TraceEvent
                           events={[BrowserEvent.onClick]}
                           name={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
@@ -301,10 +296,8 @@ export default function CurrencyInputPanel({
                             <Trans>MAX</Trans>
                           </StyledBalanceMax>
                         </TraceEvent>
-                      ) : null}
+                      )}
                     </RowFixed>
-                  ) : (
-                    <span />
                   )}
                 </RowBetween>
               </FiatRow>
