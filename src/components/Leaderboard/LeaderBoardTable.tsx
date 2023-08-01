@@ -109,10 +109,10 @@ export default function LeaderboardTable() {
         ? parseFloat(b[sortMethodMapping[sortMethod]] as string)
         : b[sortMethodMapping[sortMethod]]
 
-      if (fieldA < fieldB) {
+      if (fieldA && fieldB && fieldA < fieldB) {
         return sortAscending ? -1 : 1
       }
-      if (fieldA > fieldB) {
+      if (fieldA && fieldB && fieldA > fieldB) {
         return sortAscending ? 1 : -1
       }
       return 0

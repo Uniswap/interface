@@ -11,6 +11,7 @@ export type LeaderBoard = {
   id: string
   totalVolume: string
   txCount: number
+  rank?: number
 }
 
 interface LeaderboardDataResponseWeek {
@@ -25,6 +26,10 @@ interface LeaderBoarDataResponseAll {
   users: Omit<LeaderBoard, 'date' | 'address'>[]
 }
 
+interface LeaderBoarDataResponseUser {
+  user: Omit<LeaderBoard, 'date' | 'address'>
+}
+
 const LEADERBOARD = gql`
   query leaderBoardAll {
     users(orderBy: totalVolume, first: 300, orderDirection: desc) {
@@ -37,7 +42,7 @@ const LEADERBOARD = gql`
 
 const LEADERBOARD_FILTERED = gql`
   query leaderBoardUser($address: Bytes!) {
-    users(orderBy: totalVolume, first: 300, orderDirection: desc, where: { address: $address }) {
+    user(id: $address) {
       id
       txCount
       totalVolume
@@ -150,9 +155,9 @@ export function useLeaderboardData(time: TimePeriodLeaderboard): {
 export default function useLeaderboardFilteredData(address: string): {
   loading: boolean
   error: boolean
-  data?: Omit<LeaderBoard, 'date' | 'address'>[]
+  data?: Omit<LeaderBoard, 'date' | 'address'>
 } {
-  const { loading, error, data } = useQuery<LeaderBoarDataResponseAll>(LEADERBOARD_FILTERED, {
+  const { loading, error, data } = useQuery<LeaderBoarDataResponseUser>(LEADERBOARD_FILTERED, {
     client: apolloClient,
     variables: {
       address,
@@ -174,6 +179,6 @@ export default function useLeaderboardFilteredData(address: string): {
   return {
     loading: anyLoading,
     error: anyError,
-    data: data?.users,
+    data: data?.user,
   }
 }

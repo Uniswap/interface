@@ -9,7 +9,7 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { LeaderBoard } from 'graphql/leaderboard/LeaderBoard'
 import { useAtomValue } from 'jotai/utils'
-import { ForwardedRef, forwardRef } from 'react'
+import { ForwardedRef, forwardRef, useMemo } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Info } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
@@ -245,9 +245,16 @@ function LeaderBoardRow({
   last?: boolean
   style?: CSSProperties
 }) {
+  const rank = useMemo(() => {
+    if (listNumber && listNumber > 300) {
+      return '300>'
+    }
+    return listNumber
+  }, [listNumber])
+
   const rowCells = (
     <>
-      <ListNumberCell header={header}>{listNumber}</ListNumberCell>
+      <ListNumberCell header={header}>{rank}</ListNumberCell>
       <AddressCell data-testid="address-cell">{address}</AddressCell>
       <TradeCell data-testid="price-cell" sortable={header}>
         {trades}
@@ -296,11 +303,16 @@ interface LoadedRowProps {
   sortRank: number
 }
 
+interface LoadedUserRowProps {
+  leaderboardListIndex: number
+  leaderboardListLength: number
+  leaderboard: NonNullable<Omit<LeaderBoard, 'address' | 'date'>>
+  sortRank: number
+}
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { leaderboardListIndex, leaderboardListLength, leaderboard, sortRank } = props
 
-  // const timePeriod = useAtomValue(filterTimeAtom)
   const address = leaderboard.id.split('-')[0]
   const trades = leaderboard.txCount
   const volumeUSDC = parseFloat(leaderboard.totalVolume).toFixed(2)
@@ -319,5 +331,24 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     </div>
   )
 })
+
+export function LoadedUserRow(props: LoadedUserRowProps) {
+  const { leaderboardListIndex, leaderboardListLength, leaderboard, sortRank } = props
+  const address = leaderboard.id
+  const trades = leaderboard.txCount
+  const volumeUSDC = parseFloat(leaderboard.totalVolume).toFixed(2)
+
+  return (
+    <LeaderBoardRow
+      header={false}
+      listNumber={sortRank}
+      address={<AddressComponent data-cy="address-user">{address}</AddressComponent>}
+      trades={<ClickableContent>{trades}</ClickableContent>}
+      volumeUSDT={<ClickableContent>{volumeUSDC}</ClickableContent>}
+      first={leaderboardListIndex === 0}
+      last={leaderboardListIndex === leaderboardListLength - 1}
+    />
+  )
+}
 
 LoadedRow.displayName = 'LoadedRow'

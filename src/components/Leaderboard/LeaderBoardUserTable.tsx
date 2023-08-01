@@ -2,13 +2,11 @@ import { Trans } from '@lingui/macro'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import useLeaderboardFilteredData, { LeaderBoard } from 'graphql/leaderboard/LeaderBoard'
 import { PAGE_SIZE } from 'graphql/tokens/TokenData'
-import { useAtomValue } from 'jotai/utils'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
-import { HeaderRow, LoadedRow, LoadingRow } from './LeaderBoardRow'
-import { filterStringAtom, sortAscendingAtom, sortMethodAtom } from './state'
+import { HeaderRow, LoadedUserRow, LoadingRow } from './LeaderBoardRow'
 
 const GridContainer = styled.div`
   display: flex;
@@ -75,51 +73,39 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
 }
 
 export function LeaderboardUserTable({ address }: { address: string }) {
-  const { loading, data: leaderBoard } = useLeaderboardFilteredData(address)
+  const { loading, data: leaderBoard } = useLeaderboardFilteredData(address.toLowerCase())
   console.log('leaderBoard', leaderBoard)
 
-  const filterString = useAtomValue(filterStringAtom)
-  const sortMethod = useAtomValue(sortMethodAtom)
-  const sortAscending = useAtomValue(sortAscendingAtom)
+  const [user, setuser] = useState<Omit<LeaderBoard, 'address' | 'date'>>()
 
-  const filteredAndSortedData = useMemo(() => {
-    type LeaderBoardKeys = Exclude<keyof LeaderBoard, 'address' | 'date'>
-
-    const sortMethodMapping: { [key: string]: LeaderBoardKeys } = {
-      Trades: 'txCount',
-      VolumeUSDT: 'totalVolume',
+  useEffect(() => {
+    if (leaderBoard) {
+      setuser({ id: leaderBoard.id, txCount: leaderBoard.txCount, totalVolume: leaderBoard.totalVolume })
+    } else if (leaderBoard === null) {
+      setuser({ id: address.toLowerCase(), txCount: 0, totalVolume: '0', rank: 300 })
     }
-
-    const filtered = leaderBoard?.filter((obj: LeaderBoard | Omit<LeaderBoard, 'address' | 'date'>) => {
-      if ('address' in obj) {
-        const addressMatch = obj.address.toLowerCase().includes(filterString.toLowerCase())
-        return addressMatch
-      }
-
-      return obj.id.toLowerCase().includes(filterString.toLowerCase())
-    })
-
-    const sorted = filtered?.sort((a, b) => {
-      const fieldA = a[sortMethodMapping[sortMethod]]
-      const fieldB = b[sortMethodMapping[sortMethod]]
-
-      if (fieldA < fieldB) {
-        return sortAscending ? -1 : 1
-      }
-      if (fieldA > fieldB) {
-        return sortAscending ? 1 : -1
-      }
-      return 0
-    })
-
-    return sorted
-  }, [filterString, leaderBoard, sortAscending, sortMethod])
+  }, [address, leaderBoard])
 
   /* loading and error state */
   if (loading) {
     return <LoadingTokenTable rowCount={PAGE_SIZE} />
-  } else if (!filteredAndSortedData) {
-    return (
+  } else {
+    return user ? (
+      <GridContainer>
+        <HeaderRow />
+        <TokenDataContainer>
+          {user?.id && (
+            <LoadedUserRow
+              key={user.id}
+              leaderboardListIndex={1}
+              leaderboardListLength={1}
+              leaderboard={user}
+              sortRank={user?.rank ? user?.rank + 1 : 0 + 1}
+            />
+          )}
+        </TokenDataContainer>
+      </GridContainer>
+    ) : (
       <NoTokensState
         message={
           <>
@@ -128,26 +114,6 @@ export function LeaderboardUserTable({ address }: { address: string }) {
           </>
         }
       />
-    )
-  } else {
-    return (
-      <GridContainer>
-        <HeaderRow />
-        <TokenDataContainer>
-          {filteredAndSortedData?.map(
-            (leaderboard, index) =>
-              leaderboard?.id && (
-                <LoadedRow
-                  key={leaderboard.id}
-                  leaderboardListIndex={index}
-                  leaderboardListLength={filteredAndSortedData.length}
-                  leaderboard={leaderboard}
-                  sortRank={index + 1}
-                />
-              )
-          )}
-        </TokenDataContainer>
-      </GridContainer>
     )
   }
 }
