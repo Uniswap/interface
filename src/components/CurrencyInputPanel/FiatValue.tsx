@@ -28,7 +28,7 @@ export function FiatValue({
     const severity = warningSeverity(priceImpact)
     if (severity < 1) return 'neutral3'
     if (severity < 3) return 'deprecated_yellow1'
-    return "critical"
+    return 'critical'
   }, [priceImpact])
 
   if (fiatValue.isLoading) {

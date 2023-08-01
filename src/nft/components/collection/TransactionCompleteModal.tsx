@@ -242,12 +242,7 @@ const TxCompleteModal = () => {
                           width={{ sm: 'half', md: 'auto' }}
                         >
                           <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                            <Box
-                              fontWeight="normal"
-                              marginTop="16"
-                              color="neutral2"
-                              className={styles.totalEthCost}
-                            >
+                            <Box fontWeight="normal" marginTop="16" color="neutral2" className={styles.totalEthCost}>
                               View on Etherscan
                             </Box>
                           </a>
@@ -311,10 +306,7 @@ const TxCompleteModal = () => {
                               ))}
                             </Box>
                           )}
-                          <Box
-                            color={showUnavailable ? 'neutral1' : 'neutral2'}
-                            className={styles.unavailableText}
-                          >
+                          <Box color={showUnavailable ? 'neutral1' : 'neutral2'} className={styles.unavailableText}>
                             Unavailable
                             <Box className={styles.unavailableItems}>
                               {nftsNotPurchased.length} item{nftsNotPurchased.length === 1 ? '' : 's'}

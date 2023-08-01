@@ -26,8 +26,7 @@ export const Scrim = styled.div<{ isBottom?: boolean }>`
         transform: matrix(1, 0, 0, -1, 0, 0);
       `};
 
-  background: ${({ theme }) =>
-    `linear-gradient(180deg, ${opacify(0, theme.surface1)} 0%, ${theme.surface1} 100%)`};
+  background: ${({ theme }) => `linear-gradient(180deg, ${opacify(0, theme.surface1)} 0%, ${theme.surface1} 100%)`};
   display: flex;
 `
 

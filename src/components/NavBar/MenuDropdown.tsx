@@ -216,28 +216,13 @@ export const MenuDropdown = () => {
               </Box>
               <IconRow>
                 <Icon href="https://discord.com/invite/FCfyBSbCU5">
-                  <DiscordIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.neutral2}
-                  />
+                  <DiscordIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
                 <Icon href="https://twitter.com/Uniswap">
-                  <TwitterIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.neutral2}
-                  />
+                  <TwitterIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
                 <Icon href="https://github.com/Uniswap">
-                  <GithubIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.neutral2}
-                  />
+                  <GithubIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
               </IconRow>
             </Column>
