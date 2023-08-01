@@ -24,7 +24,7 @@ interface ActivityGroup {
 const sortActivities = (a: Activity, b: Activity) => b.timestamp - a.timestamp
 
 const createGroups = (activities?: Array<Activity>) => {
-  if (!activities || !activities.length) return []
+  if (!activities) return undefined
   const now = Date.now()
 
   const pending: Array<Activity> = []
@@ -102,14 +102,14 @@ export function ActivityTab({ account }: { account: string }) {
 
   const activityGroups = useMemo(() => createGroups(activities), [activities])
 
-  if (!activities && loading)
+  if (!activityGroups && loading) {
     return (
       <>
         <LoadingBubble height="16px" width="80px" margin="16px 16px 8px" />
         <PortfolioSkeleton shrinkRight />
       </>
     )
-  else if (activityGroups.length === 0) {
+  } else if (!activityGroups || activityGroups?.length === 0) {
     return <EmptyWalletModule type="activity" onNavigateClick={toggleWalletDrawer} />
   } else {
     return (
