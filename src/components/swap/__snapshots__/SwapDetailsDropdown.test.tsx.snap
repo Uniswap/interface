@@ -391,7 +391,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                   <div
                     class="c9 css-zhpkf8"
                   >
-                    Uniswap API
+                    Uniswap Client
                   </div>
                 </div>
               </div>
