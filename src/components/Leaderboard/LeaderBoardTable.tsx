@@ -3,7 +3,7 @@ import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { LeaderBoard, useLeaderboardData } from 'graphql/leaderboard/LeaderBoard'
 import { PAGE_SIZE } from 'graphql/tokens/TokenData'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { ReactNode, useEffect, useMemo } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -44,6 +44,42 @@ const NoTokenDisplay = styled.div`
   gap: 8px;
 `
 
+const ButtonPagination = styled.button`
+  background-color: transparent;
+  border: none;
+  color: ${({ theme }) => theme.accentActive};
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 6px;
+
+  :hover {
+    opacity: 0.8;
+  }
+
+  :focus {
+    outline: none;
+  }
+`
+
+const ButtonNumberPagination = styled.button`
+  background-color: transparent;
+  border: none;
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 6px;
+
+  :hover {
+    opacity: 0.8;
+  }
+
+  :focus {
+    outline: none;
+  }
+`
+
 function NoTokensState({ message }: { message: ReactNode }) {
   return (
     <GridContainer>
@@ -74,8 +110,71 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
   )
 }
 
+const ITEMS_PER_PAGE = 10
+
+function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: {
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => any
+}) {
+  let pages = [...Array(totalPages).keys()].map((i) => i + 1)
+
+  if (pages.length > 3) {
+    if (currentPage === 1 || currentPage === 2) {
+      pages = pages.slice(0, 3)
+    } else if (currentPage === totalPages || currentPage === totalPages - 1) {
+      pages = pages.slice(-3)
+    } else {
+      pages = pages.slice(currentPage - 2, currentPage + 1)
+    }
+  }
+
+  return (
+    <div style={{ marginBottom: '20px' }}>
+      {currentPage > 1 && <ButtonPagination onClick={() => onPageChange(currentPage - 1)}>Prev</ButtonPagination>}
+
+      {currentPage > 3 && (
+        <>
+          <ButtonNumberPagination onClick={() => onPageChange(1)}>1</ButtonNumberPagination>
+          <span>...</span>
+        </>
+      )}
+
+      {pages.map((page) => (
+        <ButtonNumberPagination
+          key={page}
+          onClick={() => onPageChange(page)}
+          style={{ fontWeight: page === currentPage ? 'bold' : 'normal' }}
+        >
+          {page}
+        </ButtonNumberPagination>
+      ))}
+
+      {currentPage < totalPages - 2 && (
+        <>
+          <span>...</span>
+          <ButtonNumberPagination onClick={() => onPageChange(totalPages)}>{totalPages}</ButtonNumberPagination>
+        </>
+      )}
+
+      {currentPage < totalPages && (
+        <ButtonPagination onClick={() => onPageChange(currentPage + 1)}>Next</ButtonPagination>
+      )}
+    </div>
+  )
+}
+
 export default function LeaderboardTable({ address }: { address?: string }) {
   const timePeriod = useAtomValue(filterTimeAtom)
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const handlePageChange = (newPage: any) => {
+    setCurrentPage(newPage)
+  }
 
   const { loading, data: leaderBoard } = useLeaderboardData(timePeriod)
 
@@ -123,6 +222,10 @@ export default function LeaderboardTable({ address }: { address?: string }) {
 
   const setRankString = useUpdateAtom(rankAtom)
 
+  const paginatedData = filteredAndSortedData
+    ? filteredAndSortedData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+    : []
+
   useEffect(() => {
     if (address) {
       filteredAndSortedData?.map((leaderboard, index) => {
@@ -152,19 +255,23 @@ export default function LeaderboardTable({ address }: { address?: string }) {
       <GridContainer>
         <HeaderRow />
         <TokenDataContainer>
-          {filteredAndSortedData?.map(
-            (leaderboard, index) =>
-              leaderboard?.id && (
-                <LoadedRow
-                  key={leaderboard.id}
-                  leaderboardListIndex={index}
-                  leaderboardListLength={filteredAndSortedData.length}
-                  leaderboard={leaderboard}
-                  sortRank={index + 1}
-                />
-              )
+          {paginatedData.map((leaderboard, index) =>
+            leaderboard?.id ? (
+              <LoadedRow
+                key={leaderboard.id}
+                leaderboardListIndex={index}
+                leaderboardListLength={paginatedData.length}
+                leaderboard={leaderboard}
+                sortRank={(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
+              />
+            ) : null
           )}
         </TokenDataContainer>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil((filteredAndSortedData?.length || 0) / ITEMS_PER_PAGE)}
+          onPageChange={handlePageChange}
+        />
       </GridContainer>
     )
   }
