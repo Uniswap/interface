@@ -4,6 +4,8 @@
  *
  * @format
  */
+const { getMetroAndroidAssetsResolutionFix } = require('react-native-monorepo-tools')
+const androidAssetsResolutionFix = getMetroAndroidAssetsResolutionFix()
 
 process.env.TAMAGUI_TARGET = 'native'
 
@@ -33,6 +35,12 @@ module.exports = (async () => {
         },
       }),
       babelTransformerPath: require.resolve('react-native-svg-transformer'),
+      publicPath: androidAssetsResolutionFix.publicPath,
+    },
+    server: {
+      enhanceMiddleware: (middleware) => {
+        return androidAssetsResolutionFix.applyMiddleware(middleware)
+      },
     },
     watchFolders,
   }
