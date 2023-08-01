@@ -7,6 +7,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { formatTransactionAmount } from 'utils/formatNumbers'
 import { warningSeverity } from 'utils/prices'
 
 const FiatLoadingBubble = styled(LoadingBubble)`
@@ -35,11 +36,19 @@ export function FiatValue({
     return <FiatLoadingBubble />
   }
 
+  let formattedValue = formatNumber(fiatValue.data, NumberType.FiatTokenPrice)
+  if (formattedValue.length > 18) {
+    //Removes the dollar sign at the start, commas, and decimal places
+    formattedValue = formattedValue.slice(1).replaceAll(',', '').slice(0, -4)
+    formattedValue = formatTransactionAmount(Number(formattedValue))
+    formattedValue = '$' + formattedValue + 'T'
+  }
+
   return (
     <Row gap="sm">
       <ThemedText.BodySmall>
         {fiatValue.data ? (
-          formatNumber(fiatValue.data, NumberType.FiatTokenPrice)
+          formattedValue
         ) : (
           <MouseoverTooltip text={<Trans>Not enough liquidity to show accurate USD value.</Trans>}>-</MouseoverTooltip>
         )}
