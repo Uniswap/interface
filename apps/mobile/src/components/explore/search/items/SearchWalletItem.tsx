@@ -54,8 +54,7 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
 
   const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
 
-  const onPress = async (): Promise<void> => {
-    await preload(address)
+  const onPress = (): void => {
     navigate(address)
     if (searchContext) {
       sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
@@ -89,7 +88,10 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
         testID={`wallet-item-${address}`}
-        onPress={onPress}>
+        onPress={onPress}
+        onPressIn={async (): Promise<void> => {
+          await preload(address)
+        }}>
         <Flex row alignItems="center" gap="spacing12" px="spacing8" py="spacing12">
           <AccountIcon address={address} avatarUri={avatar} size={theme.imageSizes.image40} />
           <Box flexShrink={1}>

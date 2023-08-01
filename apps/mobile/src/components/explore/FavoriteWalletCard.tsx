@@ -81,9 +81,11 @@ export default function FavoriteWalletCard({
         borderRadius="rounded16"
         hapticStyle={ImpactFeedbackStyle.Light}
         m="spacing4"
-        onPress={async (): Promise<void> => {
-          await preload(address)
+        onPress={(): void => {
           navigate(address)
+        }}
+        onPressIn={async (): Promise<void> => {
+          await preload(address)
         }}>
         <BaseCard.Shadow>
           <Flex row gap="spacing4" justifyContent="space-between">
