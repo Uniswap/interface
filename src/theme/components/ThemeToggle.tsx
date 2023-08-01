@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
-import { atom, useAtom } from 'jotai'
-import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 import ms from 'ms.macro'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
@@ -27,7 +27,7 @@ const systemThemeAtom = atom<ThemeMode.LIGHT | ThemeMode.DARK>(
 const themeModeAtom = atomWithStorage<ThemeMode>('interface_color_theme', ThemeMode.AUTO)
 
 export function SystemThemeUpdater() {
-  const setSystemTheme = useUpdateAtom(systemThemeAtom)
+  const setSystemTheme = useSetAtom(systemThemeAtom)
 
   useEffect(() => {
     DARKMODE_MEDIA_QUERY.addEventListener('change', (event) => {
@@ -47,7 +47,7 @@ export function useIsDarkMode(): boolean {
 
 export function useDarkModeManager(): [boolean, (mode: ThemeMode) => void] {
   const isDarkMode = useIsDarkMode()
-  const setMode = useUpdateAtom(themeModeAtom)
+  const setMode = useSetAtom(themeModeAtom)
 
   return useMemo(() => {
     return [isDarkMode, setMode]

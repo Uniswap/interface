@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { LeaderBoard, useLeaderboardData } from 'graphql/leaderboard/LeaderBoard'
 import { PAGE_SIZE } from 'graphql/tokens/TokenData'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -220,7 +220,7 @@ export default function LeaderboardTable({ address }: { address?: string }) {
     return sorted
   }, [filterString, leaderBoard, sortAscending, sortMethod])
 
-  const setRankString = useUpdateAtom(rankAtom)
+  const setRankString = useSetAtom(rankAtom)
 
   const paginatedData = filteredAndSortedData
     ? filteredAndSortedData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)

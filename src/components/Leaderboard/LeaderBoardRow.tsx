@@ -8,7 +8,7 @@ import {
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { LeaderBoard } from 'graphql/leaderboard/LeaderBoard'
-import { useAtomValue } from 'jotai/utils'
+import { useAtomValue } from 'jotai'
 import { ForwardedRef, forwardRef, useMemo } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Info } from 'react-feather'
@@ -316,6 +316,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const address = leaderboard.id.split('-')[0]
   const trades = leaderboard.txCount
   const volumeUSDC = parseFloat(leaderboard.totalVolume).toFixed(2)
+  const theme = useTheme()
 
   return (
     <div ref={ref} data-testid={`leaderboard-table-row-${leaderboardListIndex}`}>
@@ -324,7 +325,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
         listNumber={sortRank}
         address={<AddressComponent data-cy="address">{address}</AddressComponent>}
         trades={<ClickableContent>{trades}</ClickableContent>}
-        volumeUSDT={<ClickableContent>{volumeUSDC}</ClickableContent>}
+        volumeUSDT={<ClickableContent style={{ color: `${theme.accentSuccess}` }}>{volumeUSDC}</ClickableContent>}
         first={leaderboardListIndex === 0}
         last={leaderboardListIndex === leaderboardListLength - 1}
       />
