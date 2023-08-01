@@ -26,6 +26,17 @@ export function toSerializableReceipt(receipt: TransactionReceipt): Serializable
   }
 }
 
+function getElapsedTime(): number | undefined {
+  const ttsMarks = performance.getEntriesByName('tts-mark', 'mark')
+  let elapsedTime: number | undefined
+  // Only log this metric for the first swap of a session.
+  if (ttsMarks.length === 0) {
+    elapsedTime = performance.now() / 1000 // time-to-swap in seconds
+    performance.mark('tts-mark')
+  }
+  return elapsedTime
+}
+
 export default function Updater() {
   const analyticsContext = useTrace()
   const { chainId } = useWeb3React()
@@ -57,20 +68,8 @@ export default function Updater() {
         })
       )
 
-      const ttsMarks = performance.getEntriesByName('tts-mark', 'mark')
-      let elapsedTime: number | undefined
-      // Only log this metric for the first swap of a session.
-      if (ttsMarks.length === 0) {
-        elapsedTime = performance.now() / 1000 // time-to-swap in seconds
-        performance.mark('tts-mark')
-      }
-      if (elapsedTime && elapsedTime > 60 * 5) {
-        // 5 minute maximum
-        elapsedTime = undefined
-      }
-
       sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
-        tts: elapsedTime,
+        tts: getElapsedTime(),
         hash,
         ...analyticsContext,
       })
