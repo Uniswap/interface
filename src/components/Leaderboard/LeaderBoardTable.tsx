@@ -187,7 +187,7 @@ export default function LeaderboardTable({ address }: { address?: string }) {
 
     const sortMethodMapping: { [key: string]: LeaderBoardKeys } = {
       Trades: 'txCount',
-      VolumeUSDT: 'totalVolume',
+      Volume: 'totalVolume',
     }
 
     const filtered = leaderBoard?.filter((obj: LeaderBoard | Omit<LeaderBoard, 'address' | 'date'>) => {
@@ -229,7 +229,7 @@ export default function LeaderboardTable({ address }: { address?: string }) {
   useEffect(() => {
     if (address) {
       filteredAndSortedData?.map((leaderboard, index) => {
-        if (leaderboard.id.split('-')[0] === address) {
+        if (leaderboard.id.split('-')[0] === address.toLowerCase()) {
           setRankString(String(index))
         }
       })

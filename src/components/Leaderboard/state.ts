@@ -11,7 +11,7 @@ export enum LeaderboardSortMethod {
 export const rankAtom = atomWithReset<string>('')
 export const filterStringAtom = atomWithReset<string>('')
 export const filterTimeAtom = atom<TimePeriodLeaderboard>(TimePeriodLeaderboard.DAY)
-export const sortMethodAtom = atom<LeaderboardSortMethod>(LeaderboardSortMethod.TRADES)
+export const sortMethodAtom = atom<LeaderboardSortMethod>(LeaderboardSortMethod.VOLUME_USDT)
 export const sortAscendingAtom = atom<boolean>(false)
 
 /* keep track of sort category for token table */

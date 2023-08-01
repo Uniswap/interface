@@ -90,7 +90,7 @@ export default function SearchBar() {
           />
         )}
       >
-        Filter tokens
+        Filter address
       </Trans>
     </SearchBarContainer>
   )

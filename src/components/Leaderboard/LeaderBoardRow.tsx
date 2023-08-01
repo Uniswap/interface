@@ -12,8 +12,10 @@ import { useAtomValue } from 'jotai'
 import { ForwardedRef, forwardRef, useMemo } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Info } from 'react-feather'
+import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { LeaderboardSortMethod, sortAscendingAtom, sortMethodAtom, useSetSortMethod } from './state'
 
@@ -75,7 +77,7 @@ const StyledTokenRow = styled.div<{
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 2fr 3fr;
+    grid-template-columns: 1fr 3fr 2fr 2fr;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundModule};
 
@@ -185,6 +187,11 @@ const InfoIconContainer = styled.div`
   display: flex;
   align-items: center;
   cursor: help;
+`
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: ${({ theme }) => theme.textPrimary};
 `
 
 const HEADER_DESCRIPTIONS: Record<LeaderboardSortMethod, ReactNode | undefined> = {
@@ -317,18 +324,22 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const trades = leaderboard.txCount
   const volumeUSDC = parseFloat(leaderboard.totalVolume).toFixed(2)
   const theme = useTheme()
-
+  const to = getExplorerLink(570, address, ExplorerDataType.ADDRESS)
   return (
     <div ref={ref} data-testid={`leaderboard-table-row-${leaderboardListIndex}`}>
-      <LeaderBoardRow
-        header={false}
-        listNumber={sortRank}
-        address={<AddressComponent data-cy="address">{address}</AddressComponent>}
-        trades={<ClickableContent>{trades}</ClickableContent>}
-        volumeUSDT={<ClickableContent style={{ color: `${theme.accentSuccess}` }}>{volumeUSDC}</ClickableContent>}
-        first={leaderboardListIndex === 0}
-        last={leaderboardListIndex === leaderboardListLength - 1}
-      />
+      <StyledLink to={to}>
+        <LeaderBoardRow
+          header={false}
+          listNumber={sortRank}
+          address={<AddressComponent data-cy="address">{address}</AddressComponent>}
+          trades={<ClickableContent>{trades}</ClickableContent>}
+          volumeUSDT={
+            <ClickableContent style={{ color: `${theme.accentSuccess}` }}>{'$ ' + volumeUSDC}</ClickableContent>
+          }
+          first={leaderboardListIndex === 0}
+          last={leaderboardListIndex === leaderboardListLength - 1}
+        />
+      </StyledLink>
     </div>
   )
 })
@@ -336,19 +347,25 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 export function LoadedUserRow(props: LoadedUserRowProps) {
   const { leaderboardListIndex, leaderboardListLength, leaderboard, sortRank } = props
   const address = leaderboard.id
+  const to = getExplorerLink(570, address, ExplorerDataType.ADDRESS)
   const trades = leaderboard.txCount
   const volumeUSDC = parseFloat(leaderboard.totalVolume).toFixed(2)
+  const theme = useTheme()
 
   return (
-    <LeaderBoardRow
-      header={false}
-      listNumber={sortRank}
-      address={<AddressComponent data-cy="address-user">{address}</AddressComponent>}
-      trades={<ClickableContent>{trades}</ClickableContent>}
-      volumeUSDT={<ClickableContent>{volumeUSDC}</ClickableContent>}
-      first={leaderboardListIndex === 0}
-      last={leaderboardListIndex === leaderboardListLength - 1}
-    />
+    <StyledLink to={to} target="_blank">
+      <LeaderBoardRow
+        header={false}
+        listNumber={sortRank}
+        address={<AddressComponent data-cy="address-user">{address}</AddressComponent>}
+        trades={<ClickableContent>{trades}</ClickableContent>}
+        volumeUSDT={
+          <ClickableContent style={{ color: `${theme.accentSuccess}` }}>{'$ ' + volumeUSDC}</ClickableContent>
+        }
+        first={leaderboardListIndex === 0}
+        last={leaderboardListIndex === leaderboardListLength - 1}
+      />
+    </StyledLink>
   )
 }
 

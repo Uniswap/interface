@@ -80,7 +80,7 @@ export function LeaderBoard() {
           placement="bottom"
         >
           <ThemedText.LargeHeader>
-            <Trans>Leader Board</Trans>
+            <Trans>Leaderboard</Trans>
           </ThemedText.LargeHeader>
         </MouseoverTooltip>
       </TitleContainer>
