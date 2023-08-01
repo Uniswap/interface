@@ -16,7 +16,7 @@ import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { ClickableStyle } from 'theme'
+import { BREAKPOINTS, ClickableStyle } from 'theme'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -165,6 +165,10 @@ const NameCell = styled(Cell)`
   padding: 0px 8px;
   min-width: 240px;
   gap: 8px;
+
+  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
+    min-width: 200px;
+  }
 `
 const PriceCell = styled(DataCell)`
   padding-right: 8px;

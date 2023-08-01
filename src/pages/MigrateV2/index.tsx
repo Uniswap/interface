@@ -7,6 +7,8 @@ import { useWeb3React } from '@web3-react/core'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import { V2Unsupported } from 'components/V2Unsupported'
+import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
@@ -109,6 +111,9 @@ export default function MigrateV2() {
 
   const v2Pairs = useV2Pairs(tokenPairsWithV2Balance)
   const v2IsLoading = fetchingPairBalances || v2Pairs.some(([pairState]) => pairState === PairState.LOADING)
+
+  const networkSupportsV2 = useNetworkSupportsV2()
+  if (!networkSupportsV2) return <V2Unsupported />
 
   return (
     <>

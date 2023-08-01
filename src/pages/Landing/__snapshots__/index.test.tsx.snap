@@ -950,7 +950,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
   -webkit-justify-content: flex-end;
   -ms-flex-pack: end;
   justify-content: flex-end;
-  min-height: 20px;
+  min-height: 24px;
   padding: 8px 0px 0px 0px;
 }
 
@@ -3442,7 +3442,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   -webkit-justify-content: flex-end;
   -ms-flex-pack: end;
   justify-content: flex-end;
-  min-height: 20px;
+  min-height: 24px;
   padding: 8px 0px 0px 0px;
 }
 

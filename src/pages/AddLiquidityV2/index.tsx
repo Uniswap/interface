@@ -9,6 +9,8 @@ import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import { V2Unsupported } from 'components/V2Unsupported'
+import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useCallback, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -132,9 +134,10 @@ export default function AddLiquidity() {
   const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], router?.address)
 
   const addTransaction = useTransactionAdder()
+  const networkSupportsV2 = useNetworkSupportsV2()
 
   async function onAdd() {
-    if (!chainId || !provider || !account || !router) return
+    if (!chainId || !provider || !account || !router || !networkSupportsV2) return
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
@@ -317,6 +320,8 @@ export default function AddLiquidity() {
   const isCreate = pathname.includes('/create')
 
   const addIsUnsupported = useIsSwapUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
+
+  if (!networkSupportsV2) return <V2Unsupported />
 
   return (
     <>
