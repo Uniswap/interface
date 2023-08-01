@@ -20,6 +20,7 @@ schema.graphql
 /coverage
 /cache
 /functions/coverage
+/.swc
 
 # builds
 /build
