@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useTrace } from 'analytics'
 import clsx from 'clsx'
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
@@ -57,7 +57,7 @@ const SearchBarDropdownSection = ({
   eventProperties,
 }: SearchBarDropdownSectionProps) => {
   return (
-    <Column gap="12" data-cy="searchbar-dropdown">
+    <Column gap="12" data-testid="searchbar-dropdown">
       <Row paddingX="16" paddingY="4" gap="8" color="gray300" className={subheadSmall} style={{ lineHeight: '20px' }}>
         {headerIcon ? headerIcon : null}
         <Box>{header}</Box>

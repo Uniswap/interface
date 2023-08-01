@@ -1,6 +1,6 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatUSDPrice } from '@uniswap/conedison/format'
+import { sendAnalyticsEvent } from 'analytics'
 import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
@@ -160,7 +160,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
 
   return (
     <Link
-      data-cy={`searchbar-token-row-${token.symbol}`}
+      data-testid={`searchbar-token-row-${token.symbol}`}
       to={tokenDetailsPath}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}

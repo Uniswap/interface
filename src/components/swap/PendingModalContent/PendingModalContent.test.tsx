@@ -1,4 +1,7 @@
-import { useIsTransactionConfirmed } from 'state/transactions/hooks'
+import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { TradeFillType } from 'state/routing/types'
+import { useSwapTransactionStatus } from 'state/transactions/hooks'
 import { TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
@@ -12,7 +15,7 @@ jest.mock('state/transactions/hooks')
 describe('PendingModalContent', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    mocked(useIsTransactionConfirmed).mockReturnValue(false)
+    mocked(useSwapTransactionStatus).mockReturnValue(TransactionStatus.Pending)
   })
 
   it('renders null for invalid content', () => {
@@ -69,6 +72,37 @@ describe('PendingModalContent', () => {
       expect(screen.getByText('Why is this required?')).toBeInTheDocument()
       expect(screen.queryByText('Enable spending ABC on Uniswap')).not.toBeInTheDocument()
     })
+
+    it('renders the correct label for a submitted classic order', () => {
+      render(
+        <PendingModalContent
+          steps={[
+            ConfirmModalState.APPROVING_TOKEN,
+            ConfirmModalState.PERMITTING,
+            ConfirmModalState.PENDING_CONFIRMATION,
+          ]}
+          currentStep={ConfirmModalState.PENDING_CONFIRMATION}
+          trade={TEST_TRADE_EXACT_INPUT}
+          swapResult={{
+            type: TradeFillType.Classic,
+            response: {
+              hash: '12345',
+              confirmations: 0,
+              from: '0x12345',
+              wait: jest.fn(),
+              nonce: 0,
+              gasLimit: BigNumber.from(100000),
+              data: '0xmockdata',
+              value: BigNumber.from(100000),
+              chainId: 1,
+            },
+          }}
+        />
+      )
+      expect(screen.getByText('Swap submitted')).toBeInTheDocument()
+      expect(screen.getByText('View on Explorer')).toBeInTheDocument()
+      expect(screen.queryByText('Proceed in your wallet')).not.toBeInTheDocument()
+    })
   })
 
   describe('renders the correct logo', () => {
@@ -95,7 +129,7 @@ describe('PendingModalContent', () => {
     })
 
     it('renders the success icon instead of the given logo when confirmed and successful', () => {
-      mocked(useIsTransactionConfirmed).mockReturnValue(true)
+      mocked(useSwapTransactionStatus).mockReturnValue(TransactionStatus.Confirmed)
 
       render(
         <PendingModalContent
@@ -105,6 +139,20 @@ describe('PendingModalContent', () => {
             ConfirmModalState.PENDING_CONFIRMATION,
           ]}
           currentStep={ConfirmModalState.PENDING_CONFIRMATION}
+          swapResult={{
+            type: TradeFillType.Classic,
+            response: {
+              hash: '',
+              confirmations: 0,
+              from: '',
+              wait: jest.fn(),
+              nonce: 0,
+              gasLimit: BigNumber.from(0),
+              data: '',
+              value: BigNumber.from(0),
+              chainId: 0,
+            },
+          }}
         />
       )
       expect(screen.queryByTestId('pending-modal-failure-icon')).toBeNull()

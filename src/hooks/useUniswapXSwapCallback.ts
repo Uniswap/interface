@@ -1,9 +1,9 @@
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { signTypedData } from '@uniswap/conedison/provider/signing'
 import { Percent } from '@uniswap/sdk-core'
 import { DutchOrder, DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
@@ -106,6 +106,16 @@ export function useUniswapXSwapCallback({
         // TODO(UniswapX): For now, `errorCode` is not always present in the response, so we have to fallback
         // check for status code and perform this type narrowing.
         if (isErrorResponse(res, body)) {
+          sendAnalyticsEvent('UniswapX Order Post Error', {
+            ...formatSwapSignedAnalyticsEventProperties({
+              trade,
+              allowedSlippage,
+              fiatValues,
+            }),
+            ...analyticsContext,
+            errorCode: body.errorCode,
+            detail: body.detail,
+          })
           // TODO(UniswapX): Provide a similar utility to `swapErrorToUserReadableMessage` once
           // backend team provides a list of error codes and potential messages
           throw new Error(`${body.errorCode ?? body.detail ?? 'Unknown error'}`)
