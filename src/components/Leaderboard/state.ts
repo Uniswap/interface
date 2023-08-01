@@ -8,6 +8,7 @@ export enum LeaderboardSortMethod {
   VOLUME_USDT = 'VolumeUSDT',
 }
 
+export const rankAtom = atomWithReset<string>('')
 export const filterStringAtom = atomWithReset<string>('')
 export const filterTimeAtom = atom<TimePeriodLeaderboard>(TimePeriodLeaderboard.DAY)
 export const sortMethodAtom = atom<LeaderboardSortMethod>(LeaderboardSortMethod.TRADES)

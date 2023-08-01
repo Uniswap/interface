@@ -2,11 +2,13 @@ import { Trans } from '@lingui/macro'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import useLeaderboardFilteredData, { LeaderBoard } from 'graphql/leaderboard/LeaderBoard'
 import { PAGE_SIZE } from 'graphql/tokens/TokenData'
+import { useAtomValue } from 'jotai'
 import { ReactNode, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { HeaderRow, LoadedUserRow, LoadingRow } from './LeaderBoardRow'
+import { rankAtom } from './state'
 
 const GridContainer = styled.div`
   display: flex;
@@ -74,17 +76,22 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
 
 export function LeaderboardUserTable({ address }: { address: string }) {
   const { loading, data: leaderBoard } = useLeaderboardFilteredData(address.toLowerCase())
-  console.log('leaderBoard', leaderBoard)
 
   const [user, setuser] = useState<Omit<LeaderBoard, 'address' | 'date'>>()
+  const currentRank = useAtomValue(rankAtom)
 
   useEffect(() => {
     if (leaderBoard) {
-      setuser({ id: leaderBoard.id, txCount: leaderBoard.txCount, totalVolume: leaderBoard.totalVolume })
+      setuser({
+        id: leaderBoard.id,
+        txCount: leaderBoard.txCount,
+        totalVolume: leaderBoard.totalVolume,
+        rank: Number(currentRank),
+      })
     } else if (leaderBoard === null) {
       setuser({ id: address.toLowerCase(), txCount: 0, totalVolume: '0', rank: 300 })
     }
-  }, [address, leaderBoard])
+  }, [address, currentRank, leaderBoard])
 
   /* loading and error state */
   if (loading) {

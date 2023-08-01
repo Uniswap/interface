@@ -2,13 +2,13 @@ import { Trans } from '@lingui/macro'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { LeaderBoard, useLeaderboardData } from 'graphql/leaderboard/LeaderBoard'
 import { PAGE_SIZE } from 'graphql/tokens/TokenData'
-import { useAtomValue } from 'jotai/utils'
-import { ReactNode, useMemo } from 'react'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { ReactNode, useEffect, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { HeaderRow, LoadedRow, LoadingRow } from './LeaderBoardRow'
-import { filterStringAtom, filterTimeAtom, sortAscendingAtom, sortMethodAtom } from './state'
+import { filterStringAtom, filterTimeAtom, rankAtom, sortAscendingAtom, sortMethodAtom } from './state'
 
 const GridContainer = styled.div`
   display: flex;
@@ -74,7 +74,7 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
   )
 }
 
-export default function LeaderboardTable() {
+export default function LeaderboardTable({ address }: { address?: string }) {
   const timePeriod = useAtomValue(filterTimeAtom)
 
   const { loading, data: leaderBoard } = useLeaderboardData(timePeriod)
@@ -120,6 +120,18 @@ export default function LeaderboardTable() {
 
     return sorted
   }, [filterString, leaderBoard, sortAscending, sortMethod])
+
+  const setRankString = useUpdateAtom(rankAtom)
+
+  useEffect(() => {
+    if (address) {
+      filteredAndSortedData?.map((leaderboard, index) => {
+        if (leaderboard.id.split('-')[0] === address) {
+          setRankString(String(index))
+        }
+      })
+    }
+  }, [address, filteredAndSortedData, setRankString])
 
   /* loading and error state */
   if (loading) {

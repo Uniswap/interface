@@ -93,7 +93,7 @@ export function LeaderBoard() {
           <SearchBar />
         </SearchContainer>
       </FiltersWrapper>
-      <LeaderboardTable />
+      <LeaderboardTable address={account ? account : undefined} />
     </LeaderBoardLayout>
   )
 }
