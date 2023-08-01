@@ -20,7 +20,7 @@ import Trace from 'src/components/Trace/Trace'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { usePersistedApolloClient } from 'src/data/usePersistedApolloClient'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
+import { useCurrentAppearanceSetting, useIsDarkMode } from 'src/features/appearance/hooks'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
@@ -154,12 +154,13 @@ function App(): JSX.Element | null {
 
 function AppInner(): JSX.Element {
   const isDarkMode = useIsDarkMode()
+  const themeSetting = useCurrentAppearanceSetting()
 
   useEffect(() => {
     // TODO: This is a temporary solution (it should be replaced with Appearance.setColorScheme
     // after updating RN to 0.72.0 or higher)
-    NativeModules.ThemeModule.setColorScheme(isDarkMode ? 'dark' : 'light')
-  }, [isDarkMode])
+    NativeModules.ThemeModule.setColorScheme(themeSetting)
+  }, [themeSetting])
 
   return <NavStack isDarkMode={isDarkMode} />
 }
