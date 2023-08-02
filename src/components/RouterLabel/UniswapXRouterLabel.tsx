@@ -21,12 +21,12 @@ export { Gradient as UniswapXGradient }
 // Uniswap X SVG icon with gradient, copied from Figma.
 // In order for gradient to work, we must give its definition a unique ID that does not collide
 // with other occurences of this component on the page.
-export const UniswapXRouterIcon = () => {
+export const UniswapXRouterIcon = ({ testId }: { testId?: string }) => {
   const componentIdRef = useRef(uuid())
   const componentId = `AutoRouterIconGradient${componentIdRef.current}`
 
   return (
-    <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg" data-testid={testId}>
       <defs>
         <linearGradient
           id={componentId}
@@ -50,12 +50,18 @@ export const UniswapXRouterIcon = () => {
 
 export type UnswapXRouterLabelProps = BoxProps & {
   disableTextGradient?: boolean
+  testId?: string
 }
 
-export default function UniswapXRouterLabel({ children, disableTextGradient, ...rest }: UnswapXRouterLabelProps) {
+export default function UniswapXRouterLabel({
+  children,
+  disableTextGradient,
+  testId,
+  ...rest
+}: UnswapXRouterLabelProps) {
   return (
     <Row gap="xs" width="auto" {...rest} style={{ display: 'inline-flex', ...rest.style }}>
-      <UniswapXRouterIcon />
+      <UniswapXRouterIcon testId={testId} />
       {disableTextGradient ? children : <Gradient>{children}</Gradient>}
     </Row>
   )
