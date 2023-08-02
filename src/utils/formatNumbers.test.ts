@@ -103,7 +103,7 @@ describe('formatReviewSwapCurrencyAmount', () => {
     expect(formatReviewSwapCurrencyAmount(currencyAmount, 4)).toBe('2000')
   })
   it('should use SwapTradeAmount formatting over the default length', () => {
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,00,000 USDC
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
     expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
   })
   it('should use SwapTradeAmount formatting over a custom length', () => {
