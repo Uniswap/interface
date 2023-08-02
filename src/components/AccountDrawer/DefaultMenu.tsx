@@ -28,10 +28,12 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   useEffect(() => {
     if (!drawerOpen && menu === MenuState.SETTINGS) {
       // wait for the drawer to close before resetting the menu
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         closeSettings()
       }, 250)
+      return () => clearTimeout(timer)
     }
+    return
   }, [drawerOpen, menu, closeSettings])
 
   return (
