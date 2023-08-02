@@ -1,5 +1,5 @@
 import { namehash } from '@ethersproject/hash'
-import { useSingleCallResult } from 'lib/hooks/multicall'
+import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 
 import { isAddress } from '../utils'
@@ -18,14 +18,13 @@ export default function useENSName(address?: string): { ENSName: string | null; 
     if (!debouncedAddress || !isAddress(debouncedAddress)) return [undefined]
     return [namehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)]
   }, [debouncedAddress])
-  const registrarContract = useENSRegistrarContract(false)
-  const resolverAddress = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument)
+  const registrarContract = useENSRegistrarContract()
+  const resolverAddress = useMainnetSingleCallResult(registrarContract, 'resolver', ensNodeArgument, NEVER_RELOAD)
   const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
-    resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined,
-    false
+    resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined
   )
-  const nameCallRes = useSingleCallResult(resolverContract, 'name', ensNodeArgument)
+  const nameCallRes = useMainnetSingleCallResult(resolverContract, 'name', ensNodeArgument, NEVER_RELOAD)
   const name = nameCallRes.result?.[0]
 
   // ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy

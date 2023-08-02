@@ -1,5 +1,7 @@
 import { ContractTransaction } from '@ethersproject/contracts'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -43,6 +45,7 @@ export function useUpdateTokenAllowance(
   spender: string
 ): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
   const contract = useTokenContract(amount?.currency.address)
+  const trace = useTrace()
 
   return useCallback(async () => {
     try {
@@ -52,6 +55,12 @@ export function useUpdateTokenAllowance(
 
       const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
       const response = await contract.approve(spender, allowance)
+      sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
+        chain_id: amount.currency.chainId,
+        token_symbol: amount.currency.symbol,
+        token_address: amount.currency.address,
+        ...trace,
+      })
       return {
         response,
         info: {
@@ -68,7 +77,7 @@ export function useUpdateTokenAllowance(
       }
       throw new Error(`${symbol} token allowance failed: ${e instanceof Error ? e.message : e}`)
     }
-  }, [amount, contract, spender])
+  }, [amount, contract, spender, trace])
 }
 
 export function useRevokeTokenAllowance(

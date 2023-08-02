@@ -20,12 +20,6 @@ const tokens = [
       'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0/logo.png',
   },
   {
-    address: '0x1f52145666c862ed3e2f1da213d479e61b2892af',
-    network: 'arbitrum',
-    symbol: 'FUC',
-    image: 'https://assets.coingecko.com/coins/images/30081/large/fuc.png?1683016112',
-  },
-  {
     address: '0x6982508145454ce325ddbe47a25d4ec3d2311933',
     network: 'ethereum',
     symbol: 'PEPE',

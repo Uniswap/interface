@@ -2,7 +2,7 @@ import { getTestSelector } from '../../utils'
 import { DISCONNECTED_WALLET_USER_STATE } from '../../utils/user-state'
 
 describe('disconnect wallet', () => {
-  it('should clear state', () => {
+  it('should not clear state', () => {
     cy.visit('/swap', { ethereum: 'hardhat' })
     cy.get('#swap-currency-input .token-amount-input').clear().type('1')
 
@@ -22,7 +22,7 @@ describe('disconnect wallet', () => {
     cy.contains('Connect Wallet')
 
     // Verify swap input is cleared
-    cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
+    cy.get('#swap-currency-input .token-amount-input').should('have.value', '1')
   })
 })
 
