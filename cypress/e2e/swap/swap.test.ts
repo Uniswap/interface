@@ -52,7 +52,7 @@ describe('Swap', () => {
     })
 
     it('swaps ETH for USDC', () => {
-      cy.visit('/swap', { ethereum: 'hardhat' })
+      cy.visit('/swap')
       cy.hardhat({ automine: false })
       getBalance(USDC_MAINNET).then((initialBalance) => {
         // Select USDC
