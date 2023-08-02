@@ -13,7 +13,7 @@ import {
   makeSelectLocalTxCurrencyIds,
   makeSelectTransaction,
 } from 'src/features/transactions/selectors'
-import { updateTransaction } from 'src/features/transactions/slice'
+import { finalizeTransaction } from 'src/features/transactions/slice'
 import {
   createSwapFormFromTxDetails,
   createWrapFormFromTxDetails,
@@ -28,6 +28,7 @@ import {
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 import {
+  FinalizedTransactionDetails,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
@@ -35,6 +36,17 @@ import {
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
+
+function isFinalizedTx(
+  tx: TransactionDetails | FinalizedTransactionDetails
+): tx is FinalizedTransactionDetails {
+  return (
+    tx.status === TransactionStatus.Success ||
+    tx.status === TransactionStatus.Failed ||
+    tx.status === TransactionStatus.Cancelled ||
+    tx.status === TransactionStatus.FailedCancel
+  )
+}
 
 export function usePendingTransactions(
   address: Address | null,
@@ -294,7 +306,7 @@ export function useMergeLocalAndRemoteTransactions(
       // of truth to avoid infinite pending states and filter the remote tx from the combined list
       if (dupeLocalTx.status !== remoteTxn.status) {
         dupeLocalTx.status = remoteTxn.status
-        dispatch(updateTransaction(dupeLocalTx))
+        if (isFinalizedTx(dupeLocalTx)) dispatch(finalizeTransaction(dupeLocalTx))
       }
 
       return false

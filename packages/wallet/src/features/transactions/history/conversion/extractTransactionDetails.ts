@@ -1,5 +1,8 @@
 import { ChainId } from 'wallet/src/constants/chains'
-import { ActivityType } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  ActivityType,
+  TransactionStatus as RemoteTransactionStatus,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   TransactionDetails,
   TransactionListQueryResponse,
@@ -12,6 +15,17 @@ import parseNFTMintTransaction from './parseMintTransaction'
 import parseReceiveTransaction from './parseReceiveTransaction'
 import parseSendTransaction from './parseSendTransaction'
 import parseTradeTransaction from './parseTradeTransaction'
+
+function remoteTxStatusToLocalTxStatus(status: RemoteTransactionStatus): TransactionStatus {
+  switch (status) {
+    case RemoteTransactionStatus.Failed:
+      return TransactionStatus.Failed
+    case RemoteTransactionStatus.Pending:
+      return TransactionStatus.Pending
+    case RemoteTransactionStatus.Confirmed:
+      return TransactionStatus.Success
+  }
+}
 
 /**
  * Parses txn API response item and identifies known txn type. Helps strictly
@@ -58,7 +72,7 @@ export default function extractTransactionDetails(
     chainId: ChainId.Mainnet,
     hash: transaction.transaction.hash,
     addedTime: transaction.timestamp * 1000, // convert to ms
-    status: TransactionStatus.Success,
+    status: remoteTxStatusToLocalTxStatus(transaction.transaction.status),
     from: transaction.transaction.from,
     typeInfo,
     options: { request: {} }, // Empty request is okay, gate re-submissions on txn type and status.

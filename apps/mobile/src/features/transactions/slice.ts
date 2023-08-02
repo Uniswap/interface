@@ -28,7 +28,6 @@ const slice = createSlice({
         !state?.[from]?.[chainId]?.[id],
         `addTransaction: Attempted to overwrite tx with id ${id}`
       )
-
       state[from] ??= {}
       state[from]![chainId] ??= {}
       state[from]![chainId]![id] = transaction
