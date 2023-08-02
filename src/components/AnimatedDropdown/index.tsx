@@ -26,7 +26,7 @@ export default function AnimatedDropdown({
     },
   })
   return (
-    <animated.div style={{ ...props, overflow: `${overflow}`, width: '100%', willChange: 'height' }}>
+    <animated.div style={{ ...props, overflow: `${open ? overflow : 'hidden'}`, width: '100%', willChange: 'height' }}>
       <div ref={ref}>{children}</div>
     </animated.div>
   )
