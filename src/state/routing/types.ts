@@ -18,6 +18,12 @@ export enum QuoteMethod {
   CLIENT_SIDE_FALLBACK = 'CLIENT_SIDE_FALLBACK', // If client-side was used after the routing-api call failed.
 }
 
+export enum RouterPreference {
+  X = 'uniswapx',
+  API = 'api',
+  CLIENT = 'client',
+}
+
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
 type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>

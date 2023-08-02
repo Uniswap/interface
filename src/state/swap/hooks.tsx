@@ -5,7 +5,7 @@ import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
-import { ReactNode, useCallback, useEffect, useMemo } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -89,6 +89,7 @@ export type SwapInfo = {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefined): SwapInfo {
   const { account } = useWeb3React()
+  const [previouslyInvalid, setPreviouslyInvalid] = useState(false)
 
   const {
     independentField,
@@ -114,13 +115,32 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     [inputCurrency, isExactIn, outputCurrency, typedValue]
   )
 
-  const trade = useBestTrade(
+  let trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined,
     undefined,
     account
   )
+
+  const nextPreviouslyInvalid = (() => {
+    if (trade.state === TradeState.INVALID) {
+      return true
+    } else if (trade.state !== TradeState.LOADING) {
+      return false
+    }
+    return undefined
+  })()
+  if (typeof nextPreviouslyInvalid === 'boolean' && nextPreviouslyInvalid !== previouslyInvalid) {
+    setPreviouslyInvalid(nextPreviouslyInvalid)
+  }
+
+  if (trade.state == TradeState.LOADING && previouslyInvalid) {
+    trade = {
+      ...trade,
+      trade: undefined,
+    }
+  }
 
   const currencyBalances = useMemo(
     () => ({
