@@ -119,7 +119,7 @@ export const ArrowCell = styled.div`
 
 const MissingPriceContainer = styled.div`
   display: flex;
-  gap: 6px;
+  gap: 8px;
 `
 
 function fixChart(prices: PricePoint[] | undefined | null) {
