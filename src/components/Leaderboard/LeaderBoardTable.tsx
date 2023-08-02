@@ -234,7 +234,7 @@ export default function LeaderboardTable({ address }: { address?: string }) {
         }
       })
     }
-  }, [address, filteredAndSortedData, setRankString])
+  }, [address, filteredAndSortedData, setRankString, timePeriod])
 
   /* loading and error state */
   if (loading) {

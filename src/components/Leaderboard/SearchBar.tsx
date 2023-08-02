@@ -3,9 +3,7 @@ import { Trans } from '@lingui/macro'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import { MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import useDebounce from 'hooks/useDebounce'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { filterStringAtom } from './state'
@@ -60,20 +58,9 @@ const SearchInput = styled.input`
   }
 `
 
-// eslint-disable-next-line import/no-unused-modules
 export default function SearchBar() {
   const currentString = useAtomValue(filterStringAtom)
-  const [localFilterString, setLocalFilterString] = useState(currentString)
   const setFilterString = useSetAtom(filterStringAtom)
-  const debouncedLocalFilterString = useDebounce(localFilterString, 300)
-
-  useEffect(() => {
-    setLocalFilterString(currentString)
-  }, [currentString])
-
-  useEffect(() => {
-    setFilterString(debouncedLocalFilterString)
-  }, [debouncedLocalFilterString, setFilterString])
 
   return (
     <SearchBarContainer>
@@ -85,8 +72,8 @@ export default function SearchBar() {
             placeholder={`${translation}`}
             id="searchBar"
             autoComplete="off"
-            value={localFilterString}
-            onChange={({ target: { value } }) => setLocalFilterString(value)}
+            value={currentString}
+            onChange={({ target: { value } }) => setFilterString(value)}
           />
         )}
       >

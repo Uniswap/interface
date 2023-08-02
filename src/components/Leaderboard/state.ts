@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 
 export enum LeaderboardSortMethod {
   TRADES = 'Trades',
-  VOLUME_USDT = 'VolumeUSDT',
+  VOLUME_USDT = 'Volume',
 }
 
 export const rankAtom = atomWithReset<string>('')
