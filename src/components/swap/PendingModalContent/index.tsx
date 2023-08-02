@@ -304,9 +304,9 @@ export function PendingModalContent({
 
   // On mainnet, we show a different icon when the transaction is submitted but pending confirmation.
   const showSubmitted = swapPending && !swapConfirmed && chainId === ChainId.MAINNET
+  const showSuccess = swapConfirmed || (chainId !== ChainId.MAINNET && swapPending)
 
-  const transactionPending =
-    revocationPending || tokenApprovalPending || wrapPending || (swapPending && !swapConfirmed && !showSubmitted)
+  const transactionPending = revocationPending || tokenApprovalPending || wrapPending || swapPending
 
   return (
     <PendingModalContainer gap="lg">
@@ -323,13 +323,15 @@ export function PendingModalContent({
           />
         )}
         {/* Shown only during the final step under "success" conditions, and scales in. */}
-        {currentStep === ConfirmModalState.PENDING_CONFIRMATION && swapConfirmed && (
-          <AnimatedEntranceConfirmationIcon />
-        )}
+        {currentStep === ConfirmModalState.PENDING_CONFIRMATION && showSuccess && <AnimatedEntranceConfirmationIcon />}
         {/* Shown only during the final step on mainnet, when the transaction is sent but pending confirmation. */}
         {currentStep === ConfirmModalState.PENDING_CONFIRMATION && showSubmitted && <AnimatedEntranceSubmittedIcon />}
         {/* Scales in for any step that waits for an onchain transaction, while the transaction is pending. */}
-        {transactionPending && <LoadingIndicatorOverlay />}
+        {/* On the last step, appears while waiting for the transaction to be signed too. */}
+        {((currentStep !== ConfirmModalState.PENDING_CONFIRMATION && transactionPending) ||
+          (currentStep === ConfirmModalState.PENDING_CONFIRMATION && !showSuccess && !showSubmitted)) && (
+          <LoadingIndicatorOverlay />
+        )}
       </LogoContainer>
       <HeaderContainer gap="md" $disabled={transactionPending}>
         <AnimationWrapper>
@@ -358,7 +360,7 @@ export function PendingModalContent({
         </Row>
       </HeaderContainer>
       {stepContents[currentStep].button && <Row justify="center">{stepContents[currentStep].button}</Row>}
-      {!hideStepIndicators && !swapConfirmed && (
+      {!hideStepIndicators && !showSuccess && (
         <Row gap="14px" justify="center">
           {steps.map((_, i) => {
             return <StepCircle key={i} active={steps.indexOf(currentStep) === i} />

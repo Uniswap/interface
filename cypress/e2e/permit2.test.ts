@@ -17,9 +17,7 @@ function initiateSwap() {
 describe('Permit2', () => {
   function setupInputs(inputToken: Token, outputToken: Token) {
     // Sets up a swap between inputToken and outputToken.
-    cy.visit(`/swap/?inputCurrency=${inputToken.address}&outputCurrency=${outputToken.address}`, {
-      ethereum: 'hardhat',
-    })
+    cy.visit(`/swap/?inputCurrency=${inputToken.address}&outputCurrency=${outputToken.address}`)
     cy.get('#swap-currency-input .token-amount-input').type('0.01')
   }
 
