@@ -1,13 +1,14 @@
 /* eslint-disable import/no-unused-modules */
+import { Chain } from '../../src/graphql/data/__generated__/types-and-hooks'
 import { MetaTagInjector } from '../components/metaTagInjector'
 import getToken from '../utils/getToken'
 
 const convertTokenAddress = (tokenAddress: string, networkName: string) => {
   if (tokenAddress === 'NATIVE') {
     switch (networkName) {
-      case 'CELO':
+      case Chain.Celo:
         return '0x471EcE3750Da237f93B8E339c536989b8978a438'
-      case 'POLYGON':
+      case Chain.Polygon:
         return '0x0000000000000000000000000000000000001010'
       default:
         return undefined
