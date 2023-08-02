@@ -79,41 +79,31 @@ exports[`renders collection preview card 1`] = `
       >
         <View
           style={
-            [
-              {
-                "alignItems": "center",
-                "aspectRatio": 1,
-                "backgroundColor": "rgba(232,236,251,1.00)",
-                "display": "flex",
-                "flexBasis": "auto",
-                "flexDirection": "column",
-                "flexShrink": 0,
-                "justifyContent": "center",
-                "maxHeight": 60,
-                "minHeight": 0,
-                "minWidth": 0,
-                "position": "relative",
-                "width": "100%",
-              },
-            ]
+            {
+              "alignItems": "center",
+              "aspectRatio": 1,
+              "backgroundColor": "#E8ECFB",
+              "flexDirection": "column",
+              "justifyContent": "center",
+              "maxHeight": 60,
+              "width": "100%",
+            }
           }
         >
           <Text
             allowFontScaling={true}
             style={
-              [
-                {
-                  "color": "rgba(93,103,133,1.00)",
-                  "display": "flex",
-                  "flex": 0,
-                  "flexGrow": 0,
-                  "flexWrap": "wrap",
-                  "fontFamily": "Inter",
-                  "fontSize": 14,
-                  "fontWeight": "500",
-                  "lineHeight": 20,
-                },
-              ]
+              {
+                "color": "#5D6785",
+                "display": "flex",
+                "flex": 0,
+                "flexGrow": 0,
+                "flexWrap": "wrap",
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": "500",
+                "lineHeight": 20,
+              }
             }
             suppressHighlighting={true}
           >
