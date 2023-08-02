@@ -14,7 +14,7 @@ import {
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
-import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
+import { useTransactionGasFee, useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'
 import {
   CurrencyField,
@@ -50,6 +50,8 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
     step === TransactionStep.SUBMITTED ||
       warnings.some((warning) => warning.action === WarningAction.DisableReview)
   )
+
+  const gasFeeUSD = useUSDValue(derivedTransferInfo.chainId, gasFeeInfo?.gasFee)
   const transferTxWithGasSettings = useMemo(() => {
     return gasFeeInfo ? { ...txRequest, ...gasFeeInfo.params } : txRequest
   }, [gasFeeInfo, txRequest])
@@ -74,6 +76,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
         exactValue={isUSDInput ? exactAmountUSD : exactAmountToken}
         flowName={t('Send')}
         gasFallbackUsed={false}
+        gasFeeUSD={gasFeeUSD}
         isUSDInput={derivedTransferInfo.isUSDInput}
         recipientSelector={
           <RecipientSelect

@@ -8,23 +8,21 @@ import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import InfoCircleSVG from 'ui/src/assets/icons/info-circle.svg'
 import { ChainId } from 'wallet/src/constants/chains'
-import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 export function NetworkFee({
   chainId,
-  gasFee,
+  gasFeeUSD,
   gasFallbackUsed,
   onShowGasWarning,
 }: {
   chainId: ChainId
-  gasFee?: string
+  gasFeeUSD?: string
   gasFallbackUsed?: boolean
   onShowGasWarning?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
-  const gasFeeUSD = useUSDValue(chainId, gasFee)
 
   const feeSectionContent = (
     <>

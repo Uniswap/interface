@@ -21,7 +21,7 @@ import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'wallet/s
 interface TransferFormProps {
   derivedTransferInfo: DerivedTransferInfo
   txRequest?: providers.TransactionRequest
-  totalGasFee?: string
+  gasFeeUSD?: string
   onNext: () => void
   onPrev: () => void
   warnings: Warning[]
@@ -29,7 +29,7 @@ interface TransferFormProps {
 
 export function TransferReview({
   derivedTransferInfo,
-  totalGasFee,
+  gasFeeUSD,
   onNext,
   onPrev,
   txRequest,
@@ -67,7 +67,7 @@ export function TransferReview({
   )
 
   const actionButtonDisabled =
-    blockingWarning || !totalGasFee || !txRequest || account.type === AccountType.Readonly
+    blockingWarning || !gasFeeUSD || !txRequest || account.type === AccountType.Readonly
 
   const transferERC20Callback = useTransferERC20Callback(
     txId,
@@ -139,7 +139,7 @@ export function TransferReview({
         transactionDetails={
           <TransactionDetails
             chainId={chainId}
-            gasFee={totalGasFee}
+            gasFeeUSD={gasFeeUSD}
             showWarning={Boolean(transferWarning)}
             warning={transferWarning}
             onShowWarning={onShowWarning}

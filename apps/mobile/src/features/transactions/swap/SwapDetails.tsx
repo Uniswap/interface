@@ -19,7 +19,7 @@ import { formatPrice, NumberType } from 'wallet/src/utils/format'
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
   trade: Trade<Currency, Currency, TradeType>
-  gasFee?: string
+  gasFeeUSD?: string
   gasFallbackUsed?: boolean
   customSlippageTolerance?: number
   autoSlippageTolerance?: number
@@ -33,7 +33,7 @@ interface SwapDetailsProps {
 
 export function SwapDetails({
   acceptedTrade,
-  gasFee,
+  gasFeeUSD,
   gasFallbackUsed,
   newTradeToAccept,
   customSlippageTolerance,
@@ -109,7 +109,7 @@ export function SwapDetails({
       }
       chainId={acceptedTrade.inputAmount.currency.chainId}
       gasFallbackUsed={gasFallbackUsed}
-      gasFee={gasFee}
+      gasFeeUSD={gasFeeUSD}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeToAccept}
       warning={warning}

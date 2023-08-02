@@ -49,6 +49,7 @@ interface TransactionFlowProps {
   approveTxRequest?: providers.TransactionRequest
   txRequest?: providers.TransactionRequest
   totalGasFee?: string
+  gasFeeUSD?: string
   gasFallbackUsed?: boolean
   step: TransactionStep
   setStep: (newStep: TransactionStep) => void
@@ -73,6 +74,7 @@ type InnerContentProps = Pick<
   step: number
   setStep: (step: TransactionStep) => void
   showingSelectorScreen: boolean
+  gasFeeUSD?: string
 }
 
 type HeaderContentProps = Pick<
@@ -99,6 +101,7 @@ export function TransactionFlow({
   approveTxRequest,
   txRequest,
   totalGasFee,
+  gasFeeUSD,
   gasFallbackUsed,
   step,
   setStep,
@@ -168,6 +171,7 @@ export function TransactionFlow({
                 dispatch={dispatch}
                 exactValue={exactValue}
                 gasFallbackUsed={gasFallbackUsed}
+                gasFeeUSD={gasFeeUSD}
                 setStep={setStep}
                 showingSelectorScreen={!!showRecipientSelector}
                 step={step}
@@ -359,6 +363,7 @@ function InnerContentRouter(props: InnerContentProps): JSX.Element {
 
 interface SwapInnerContentProps extends InnerContentProps {
   derivedSwapInfo: DerivedSwapInfo
+  gasFeeUSD?: string
   onFormNext: () => void
   onReviewNext: () => void
   onReviewPrev: () => void
@@ -370,6 +375,7 @@ function SwapInnerContent({
   onClose,
   dispatch,
   totalGasFee,
+  gasFeeUSD,
   gasFallbackUsed,
   approveTxRequest,
   txRequest,
@@ -415,6 +421,7 @@ function SwapInnerContent({
           derivedSwapInfo={derivedSwapInfo}
           exactValue={exactValue}
           gasFallbackUsed={gasFallbackUsed}
+          gasFeeUSD={gasFeeUSD}
           totalGasFee={totalGasFee}
           txRequest={txRequest}
           warnings={warnings}
@@ -441,7 +448,7 @@ function TransferInnerContent({
   onClose,
   dispatch,
   step,
-  totalGasFee,
+  gasFeeUSD,
   txRequest,
   warnings,
   onFormNext,
@@ -477,7 +484,7 @@ function TransferInnerContent({
         <Trace logImpression section={SectionName.TransferReview}>
           <TransferReview
             derivedTransferInfo={derivedTransferInfo}
-            totalGasFee={totalGasFee}
+            gasFeeUSD={gasFeeUSD}
             txRequest={txRequest}
             warnings={warnings}
             onNext={onReviewNext}

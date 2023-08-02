@@ -317,30 +317,35 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
       }
     />
     <View
-      sentry-label="SpinningLoader"
+      sentry-label="Flex"
       style={
         [
           {
+            "alignItems": "center",
             "display": "flex",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
           },
-          [
-            {
-              "transform": [
-                {
-                  "rotateZ": "0deg",
-                },
-              ],
-            },
-          ],
         ]
       }
     >
-      <svg
-        color="#0E1524"
-        data-file-name="SvgCircleSpinner"
-        height={20}
-        width={20}
-      />
+      <Text
+        allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
+        style={
+          [
+            {
+              "color": "#0E1524",
+              "display": "flex",
+              "fontFamily": "Inter-Medium",
+              "fontSize": 15,
+              "lineHeight": 20,
+            },
+          ]
+        }
+      >
+        $500.00
+      </Text>
     </View>
   </View>
 </View>
@@ -490,30 +495,52 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
       }
     />
     <View
-      sentry-label="SpinningLoader"
+      sentry-label="Flex"
       style={
         [
           {
+            "alignItems": "center",
             "display": "flex",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
           },
-          [
-            {
-              "transform": [
-                {
-                  "rotateZ": "0deg",
-                },
-              ],
-            },
-          ],
         ]
       }
     >
-      <svg
-        color="#0E1524"
-        data-file-name="SvgCircleSpinner"
-        height={20}
-        width={20}
-      />
+      <Text
+        allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
+        style={
+          [
+            {
+              "color": "#FEB239",
+              "display": "flex",
+              "fontFamily": "Inter-Medium",
+              "fontSize": 15,
+              "lineHeight": 20,
+            },
+          ]
+        }
+      >
+        $500.00
+      </Text>
+      <View
+        style={
+          [
+            {
+              "display": "flex",
+              "marginLeft": 4,
+            },
+          ]
+        }
+      >
+        <svg
+          color="#FEB239"
+          data-file-name="SvgInfoCircle"
+          height={20}
+          width={20}
+        />
+      </View>
     </View>
   </View>
 </View>

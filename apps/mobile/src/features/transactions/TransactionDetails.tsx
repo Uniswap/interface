@@ -23,7 +23,7 @@ const ALERT_ICONS_SIZE = 18
 interface TransactionDetailsProps {
   banner?: ReactNode
   chainId: ChainId
-  gasFee?: string
+  gasFeeUSD?: string
   gasFallbackUsed?: boolean
   showExpandedChildren?: boolean
   showWarning?: boolean
@@ -37,7 +37,7 @@ export function TransactionDetails({
   children,
   showExpandedChildren,
   chainId,
-  gasFee,
+  gasFeeUSD,
   gasFallbackUsed,
   showWarning,
   warning,
@@ -96,7 +96,7 @@ export function TransactionDetails({
           <NetworkFee
             chainId={chainId}
             gasFallbackUsed={gasFallbackUsed}
-            gasFee={gasFee}
+            gasFeeUSD={gasFeeUSD}
             onShowGasWarning={onShowGasWarning}
           />
         </Flex>

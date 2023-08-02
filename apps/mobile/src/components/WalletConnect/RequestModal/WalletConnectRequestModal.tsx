@@ -32,7 +32,7 @@ import {
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
+import { useTransactionGasFee, useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'
 import { logger } from 'wallet/src/features/logger/logger'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
@@ -133,6 +133,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     areAddressesEqual(account.address, request.account)
   )
   const gasFeeInfo = useTransactionGasFee(tx, GasSpeed.Urgent)
+  const gasFeeUSD = useUSDValue(chainId, gasFeeInfo?.gasFee)
   const hasSufficientFunds = useHasSufficientFunds({
     account: request.account,
     chainId,
@@ -289,7 +290,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
             )}
             <Box px="spacing16" py="spacing12">
               {methodCostsGas(request) ? (
-                <NetworkFee chainId={chainId} gasFee={gasFeeInfo?.gasFee} />
+                <NetworkFee chainId={chainId} gasFeeUSD={gasFeeUSD} />
               ) : (
                 <Flex row alignItems="center" justifyContent="space-between">
                   <Text color="textPrimary" variant="subheadSmall">

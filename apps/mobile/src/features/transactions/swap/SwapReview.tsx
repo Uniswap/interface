@@ -35,6 +35,7 @@ interface SwapFormProps {
   approveTxRequest?: providers.TransactionRequest
   txRequest?: providers.TransactionRequest
   totalGasFee?: string
+  gasFeeUSD?: string
   gasFallbackUsed?: boolean
   warnings: Warning[]
   exactValue: string
@@ -47,6 +48,7 @@ export function SwapReview({
   approveTxRequest,
   txRequest,
   totalGasFee,
+  gasFeeUSD,
   gasFallbackUsed,
   warnings,
   exactValue,
@@ -175,7 +177,7 @@ export function SwapReview({
         <TransactionDetails
           chainId={chainId}
           gasFallbackUsed={gasFallbackUsed}
-          gasFee={totalGasFee}
+          gasFeeUSD={gasFeeUSD}
           warning={swapWarning}
           onShowGasWarning={onShowGasWarning}
           onShowWarning={onShowWarning}
@@ -191,7 +193,7 @@ export function SwapReview({
         autoSlippageTolerance={autoSlippageTolerance}
         customSlippageTolerance={customSlippageTolerance}
         gasFallbackUsed={gasFallbackUsed}
-        gasFee={totalGasFee}
+        gasFeeUSD={gasFeeUSD}
         newTradeToAccept={newTradeToAccept}
         trade={trade}
         warning={swapWarning}

@@ -17,7 +17,7 @@ jest.mock('wallet/src/features/experiments/hooks', () => {
 
 describe(NetworkFee, () => {
   it('renders a NetworkFee normally', () => {
-    const tree = render(<NetworkFee chainId={ChainId.Mainnet} gasFee="420000" />)
+    const tree = render(<NetworkFee chainId={ChainId.Mainnet} gasFeeUSD="500" />)
     expect(tree).toMatchSnapshot()
   })
 
@@ -28,7 +28,7 @@ describe(NetworkFee, () => {
 
   it('renders a NetworkFee with a warning', () => {
     const tree = render(
-      <NetworkFee chainId={ChainId.Mainnet} gasFallbackUsed={true} gasFee="420000" />
+      <NetworkFee chainId={ChainId.Mainnet} gasFallbackUsed={true} gasFeeUSD="500" />
     )
     expect(tree).toMatchSnapshot()
   })
