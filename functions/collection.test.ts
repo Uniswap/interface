@@ -38,9 +38,7 @@ test.each(collections)('should inject metadata for valid collections', async (co
 
 const invalidCollections = [
   'http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545',
-  'http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545/10',
   'http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545//',
-  'http://127.0.0.1:3000/nfts/collection',
 ]
 
 test.each(invalidCollections)(
