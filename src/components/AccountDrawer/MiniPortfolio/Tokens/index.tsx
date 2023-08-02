@@ -83,9 +83,7 @@ const TokenBalanceText = styled(ThemedText.BodySecondary)`
   ${EllipsisStyle}
 `
 const TokenNameText = styled(ThemedText.SubHeader)`
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: no-wrap;
+  ${EllipsisStyle}
 `
 
 type TokenBalance = NonNullable<
