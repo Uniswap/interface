@@ -52,7 +52,7 @@ describe('Add Liquidity', () => {
       cy.get('#add-liquidity-selected-fee .selected-fee-percentage').should('contain.text', '40% select')
     })
   })
-  
+
   it('disables increment and decrement until initial prices are inputted', () => {
     // ETH / BITCOIN pool (0.05% tier not created)
     cy.visit('/add/ETH/0x72e4f9F808C49A2a61dE9C5896298920Dc4EEEa9/500')
