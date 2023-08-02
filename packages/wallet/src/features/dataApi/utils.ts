@@ -96,6 +96,8 @@ export function gqlTokenToCurrencyInfo(
     currencyId: currencyId(currency),
     logoUrl: project?.logoUrl,
     safetyLevel: project?.safetyLevel ?? SafetyLevel.StrongWarning,
+    // defaulting to not spam. currently this flow triggers when a user is searching
+    // for a token, in which case the user probably doesn't expect the token to be spam
     isSpam: project?.isSpam ?? false,
   }
   return currencyInfo
