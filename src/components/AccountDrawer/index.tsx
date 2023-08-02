@@ -158,7 +158,6 @@ const CloseDrawer = styled.div`
 
 function AccountDrawer() {
   const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
-
   const scrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!walletDrawerOpen) {
