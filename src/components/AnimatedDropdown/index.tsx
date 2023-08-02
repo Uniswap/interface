@@ -5,7 +5,11 @@ import useResizeObserver from 'use-resize-observer'
  * @param open conditional to show content or hide
  * @returns Wrapper to smoothly hide and expand content
  */
-export default function AnimatedDropdown({ open, children }: React.PropsWithChildren<{ open: boolean }>) {
+export default function AnimatedDropdown({
+  open,
+  overflow = 'hidden',
+  children,
+}: React.PropsWithChildren<{ open: boolean; overflow?: string }>) {
   const { ref, height } = useResizeObserver()
 
   const props = useSpring({
@@ -22,7 +26,7 @@ export default function AnimatedDropdown({ open, children }: React.PropsWithChil
     },
   })
   return (
-    <animated.div style={{ ...props, overflow: 'hidden', width: '100%', willChange: 'height' }}>
+    <animated.div style={{ ...props, overflow: `${overflow}`, width: '100%', willChange: 'height' }}>
       <div ref={ref}>{children}</div>
     </animated.div>
   )
