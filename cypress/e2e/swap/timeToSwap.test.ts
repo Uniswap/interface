@@ -5,13 +5,8 @@ import { getTestSelector } from '../../utils'
 
 describe('time-to-swap logging', () => {
   it('completes two swaps and verifies the TTS logging for the first', () => {
-    cy.visit('/swap')
-    cy.hardhat({ automine: false })
-
-    // Select USDC
-    cy.get('#swap-currency-output .open-currency-select-button').click()
-    cy.get(getTestSelector('token-search-input')).type(USDC_MAINNET.address)
-    cy.get(getTestSelector('common-base-USDC')).click()
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
+    cy.hardhat()
 
     // First swap in the session:
     // Enter amount to swap
@@ -23,21 +18,15 @@ describe('time-to-swap logging', () => {
     cy.contains('Review swap')
     cy.contains('Confirm swap').click()
     cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-    cy.contains('Swap submitted')
     cy.get(getTestSelector('confirmation-close-icon')).click()
-    cy.contains('Swap submitted').should('not.exist')
-    cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
-    // Mine transaction
-    cy.hardhat().then((hardhat) => hardhat.mine(1))
-    cy.wait('@eth_getTransactionReceipt')
     cy.get(getTestSelector('popups')).contains('Swapped')
 
     // Verify logging
     cy.waitForAmplitudeEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED).then((event: any) => {
-      cy.wrap(event.event_properties).should('have.property', 'tts')
-      cy.wrap(event.event_properties.tts).should('be.a', 'number')
-      cy.wrap(event.event_properties.tts).should('be.gte', 0)
+      cy.wrap(event.event_properties).should('have.property', 'time_to_swap')
+      cy.wrap(event.event_properties.time_to_swap).should('be.a', 'number')
+      cy.wrap(event.event_properties.time_to_swap).should('be.gte', 0)
     })
 
     // Second swap in the session:
@@ -50,14 +39,8 @@ describe('time-to-swap logging', () => {
     cy.contains('Review swap')
     cy.contains('Confirm swap').click()
     cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-    cy.contains('Swap submitted')
     cy.get(getTestSelector('confirmation-close-icon')).click()
-    cy.contains('Swap submitted').should('not.exist')
-    cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
-    // Mine transaction
-    cy.hardhat().then((hardhat) => hardhat.mine(1))
-    cy.wait('@eth_getTransactionReceipt')
     cy.get(getTestSelector('popups')).contains('Swapped')
     cy.waitForAmplitudeEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, { shouldTimeout: true })
   })

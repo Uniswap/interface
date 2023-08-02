@@ -14,11 +14,10 @@ declare global {
     }
     interface Chainable<Subject> {
       /**
-       * Wait for a specific event in a series of network requests. If the event is found, the subject will be the event.
+       * Wait for a specific event to be sent to amplitude. If the event is found, the subject will be the event.
        *
-       * @param {string} eventName - The type of the event to search for.
+       * @param {string} eventName - The type of the event to search for e.g. SwapEventName.SWAP_TRANSACTION_COMPLETED
        * @param {object} [options] - Options to configure the event search.
-       *  {string} alias - The alias of the intercepted network request.
        *  {number} [timeout=20000] - The maximum amount of time (in ms) to wait for the event.
        *  {boolean} [shouldTimeout = false] - Whether the event should not be found within the timeout.
        * @returns {Chainable<Subject>}
@@ -26,7 +25,6 @@ declare global {
       waitForAmplitudeEvent(
         eventName: string,
         options?: {
-          alias?: string
           timeout?: number
           shouldTimeout?: boolean
         }
@@ -88,16 +86,16 @@ Cypress.Commands.overwrite(
 )
 
 Cypress.Commands.add('waitForAmplitudeEvent', (eventName, options) => {
-  const { alias = '@analytics', timeout = 20000, shouldTimeout = false } = options ?? {}
+  const { timeout = 20000, shouldTimeout = false } = options ?? {}
   const startTime = new Date().getTime()
 
   function checkRequest() {
-    return cy.wait(alias, { timeout }).then((interception) => {
+    return cy.wait('@amplitude', { timeout }).then((interception) => {
       const events = interception.request.body.events
-      const eventFound = events.find((event: any) => event.event_type === eventName)
+      const event = events.find((event: any) => event.event_type === eventName)
 
-      if (eventFound) {
-        return cy.wrap(eventFound)
+      if (event) {
+        return cy.wrap(event)
       } else if (new Date().getTime() - startTime > timeout) {
         if (shouldTimeout) {
           return cy.log(`Event ${eventName} not found within the specified timeout, as expected.`)
