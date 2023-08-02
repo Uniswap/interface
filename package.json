@@ -27,6 +27,7 @@
     "lint": "yarn eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ .",
     "typecheck": "tsc",
     "typecheck:cloud": "tsc -p functions/tsconfig.json",
+    "typecheck:cypress": "tsc -p cypress/tsconfig.json",
     "test": "craco test",
     "test:cloud": "NODE_OPTIONS=--experimental-vm-modules yarn jest functions --config=functions/jest.config.json",
     "cypress:open": "cypress open --browser chrome --e2e",
