@@ -36,7 +36,7 @@ describe('Token explore', () => {
       .then(function ($elem) {
         cy.wrap($elem.text()).as('yearlyEthVol')
       })
-    expect(cy.get('@dailyEthVol')).to.not.equal(cy.get('@yearlyEthVol'))
+    cy.get('@dailyEthVol').should('not.equal', cy.get('@yearlyEthVol'))
   })
 
   it('should navigate to token detail page when row clicked', () => {
