@@ -102,13 +102,15 @@ export default function SettingsTab({
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)
 
   const toggleMenu = useToggleSettingsMenu()
-  const isMobile = useIsMobile()
-  useOnClickOutside(node, isOpen && !isMobile ? toggleMenu : undefined)
 
+  const isMobile = useIsMobile()
+  const isOpenMobile = isOpen && isMobile
+  const isOpenDesktop = isOpen && !isMobile
+
+  useOnClickOutside(node, isOpenDesktop ? toggleMenu : undefined)
   useDisableScrolling(isOpen)
 
   const isChainSupported = isSupportedChain(chainId)
-  const shouldOpenMobile = isOpen && isMobile
 
   const Settings = useMemo(
     () => (
@@ -141,13 +143,13 @@ export default function SettingsTab({
           isActive={isOpen}
           onClick={toggleMenu}
         />
-        {isOpen && !isMobile && <MenuFlyout>{Settings}</MenuFlyout>}
+        {isOpenDesktop && !isMobile && <MenuFlyout>{Settings}</MenuFlyout>}
       </Menu>
       {isMobile && (
         <Portal>
           <MobileMenuContainer>
-            <Scrim onClick={toggleMenu} open={shouldOpenMobile} />
-            <MobileMenuWrapper open={shouldOpenMobile}>
+            <Scrim onClick={toggleMenu} open={isOpenMobile} />
+            <MobileMenuWrapper open={isOpenMobile}>
               <MobileMenuHeader padding="8px 0px 4px">
                 <CloseIcon size={24} onClick={toggleMenu} />
                 <Row padding="0px 24px 0px 0px" justify="center">
