@@ -147,8 +147,8 @@ export default function SettingsTab({
       </Menu>
       {isMobile && (
         <Portal>
-          <MobileMenuContainer>
-            <Scrim onClick={toggleMenu} open={isOpenMobile} />
+          <MobileMenuContainer data-testid="mobile-settings-menu">
+            <Scrim data-testid="mobile-settings-scrim" onClick={toggleMenu} open={isOpenMobile} />
             <MobileMenuWrapper open={isOpenMobile}>
               <MobileMenuHeader padding="8px 0px 4px">
                 <CloseIcon size={24} onClick={toggleMenu} />
