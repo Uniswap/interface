@@ -4,7 +4,7 @@ import { ScrollBarStyles } from 'components/Common'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { ChevronsRight } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
@@ -17,11 +17,6 @@ const DRAWER_WIDTH = '320px'
 const DRAWER_MARGIN = '8px'
 const DRAWER_OFFSET = '10px'
 const DRAWER_TOP_MARGIN_MOBILE_WEB = '72px'
-
-enum MenuState {
-  DEFAULT,
-  SETTINGS,
-}
 
 const accountDrawerOpenAtom = atom(false)
 
@@ -164,19 +159,6 @@ const CloseDrawer = styled.div`
 function AccountDrawer() {
   const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
 
-  const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
-  const openSettings = useCallback(() => setMenu(MenuState.SETTINGS), [])
-  const closeSettings = useCallback(() => setMenu(MenuState.DEFAULT), [])
-
-  useEffect(() => {
-    if (!walletDrawerOpen && menu === MenuState.SETTINGS) {
-      // wait for the drawer to close before resetting the menu
-      setTimeout(() => {
-        closeSettings()
-      }, 250)
-    }
-  }, [walletDrawerOpen, menu, closeSettings])
-
   const scrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!walletDrawerOpen) {
@@ -233,7 +215,7 @@ function AccountDrawer() {
       <AccountDrawerWrapper open={walletDrawerOpen}>
         {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
         <AccountDrawerScrollWrapper ref={scrollRef} id="wallet-dropdown-scroll-wrapper">
-          <DefaultMenu menu={menu} openSettings={openSettings} closeSettings={closeSettings} />
+          <DefaultMenu drawerOpen={walletDrawerOpen} />
         </AccountDrawerScrollWrapper>
       </AccountDrawerWrapper>
     </Container>
