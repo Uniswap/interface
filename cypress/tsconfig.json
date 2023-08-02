@@ -1,18 +1,13 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "esModuleInterop": true,
+    "composite": false,
     "incremental": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "noEmit": true,
-    "strict": true,
+    "isolatedModules": false,
+    "noImplicitAny": false,
     "target": "ES5",
     "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/cypress", // avoid clobbering the build tsbuildinfo
     "types": ["cypress", "node"],
-    "jsx": "react"
   },
-  "exclude": ["node_modules"],
   "include": ["**/*.ts"],
-  "watchOptions": {
-    "excludeDirectories": ["node_modules"]
-  }
 }
