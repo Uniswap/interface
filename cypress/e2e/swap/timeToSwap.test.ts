@@ -42,6 +42,8 @@ describe('time-to-swap logging', () => {
     cy.get(getTestSelector('confirmation-close-icon')).click()
 
     cy.get(getTestSelector('popups')).contains('Swapped')
-    cy.waitForAmplitudeEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, { shouldTimeout: true })
+    cy.waitForAmplitudeEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED).then((event: any) => {
+      cy.wrap(event.event_properties).should('not.have.property', 'time_to_swap')
+    })
   })
 })
