@@ -1,6 +1,7 @@
 package com.uniswap.onboarding.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.uniswap.onboarding.ui.model.MnemonicWordUiState
 import com.uniswap.theme.UniswapColors
 import com.uniswap.theme.UniswapTheme
 
@@ -27,15 +29,24 @@ import com.uniswap.theme.UniswapTheme
 fun MnemonicWordCell(
   modifier: Modifier = Modifier,
   index: Int,
-  word: String?,
+  word: MnemonicWordUiState,
   onClick: () -> Unit = {},
 ) {
   val shape = UniswapTheme.shapes.large
+
+  var rowModifier = modifier
+    .clip(shape)
+    .shadow(1.dp, shape)
+    .background(cellBackgroundColor(word.focused))
+
+  if (word.hasError) {
+    rowModifier = rowModifier.border(1.dp, UniswapTheme.extendedColors.accentCritical, shape)
+  } else if (word.focused) {
+    rowModifier = rowModifier.border(1.dp, UniswapTheme.extendedColors.accentActive, shape)
+  }
+
   Row(
-    modifier = modifier
-      .shadow(1.dp, shape)
-      .clip(shape)
-      .background(cellBackgroundColor())
+    modifier = rowModifier
       .clickable { onClick() }
       .padding(horizontal = UniswapTheme.spacing.spacing16)
       .padding(vertical = UniswapTheme.spacing.spacing12)
@@ -49,13 +60,15 @@ fun MnemonicWordCell(
       textAlign = TextAlign.Center,
     )
     Spacer(modifier = Modifier.width(UniswapTheme.spacing.spacing12))
-    Text(modifier = Modifier.weight(1f), text = word ?: "")
+    Text(modifier = Modifier.weight(1f), text = word.text)
   }
 }
 
 @Composable
-private fun cellBackgroundColor(): Color =
-  if (isSystemInDarkTheme()) { // TODO gary verify if this reflects ThemeModule overrides
+private fun cellBackgroundColor(focused: Boolean): Color =
+  if (focused) {
+    UniswapTheme.extendedColors.background3
+  } else if (isSystemInDarkTheme()) { // TODO gary verify if this reflects ThemeModule overrides
     UniswapColors.Gray900
   } else {
     UniswapColors.Gray100

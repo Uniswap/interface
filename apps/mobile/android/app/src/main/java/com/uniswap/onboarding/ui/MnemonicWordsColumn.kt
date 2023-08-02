@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.uniswap.onboarding.ui.model.MnemonicWordUiState
 import com.uniswap.theme.UniswapTheme
 
 /**
@@ -12,9 +13,9 @@ import com.uniswap.theme.UniswapTheme
 @Composable
 fun MnemonicWordsColumn(
   modifier: Modifier = Modifier,
-  words: List<String?>,
+  words: List<MnemonicWordUiState>,
   numberOffset: Int,
-  onClick: (index: Int, word: String?) -> Unit = { _, _ -> },
+  onClick: (word: MnemonicWordUiState) -> Unit = {},
 ) {
   Column(
     modifier = modifier,
@@ -24,7 +25,7 @@ fun MnemonicWordsColumn(
   ) {
     words.forEachIndexed { index, word ->
       MnemonicWordCell(index = index + numberOffset, word = word) {
-        onClick(index, word)
+        onClick(word)
       }
     }
   }

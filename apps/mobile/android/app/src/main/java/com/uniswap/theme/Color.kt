@@ -2,6 +2,7 @@ package com.uniswap.theme
 
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 object UniswapColors {
@@ -181,3 +182,43 @@ val DarkColors = darkColors(
     onSurface = UniswapColors.White,
     onError = UniswapColors.White,
 )
+
+data class ExtendedColors(
+  val background0: Color,
+  val background1: Color,
+  val background2: Color,
+  val background3: Color,
+  val accentAction: Color,
+  val accentActive: Color,
+  val accentSuccess: Color,
+  val accentWarning: Color,
+  val accentCritical: Color,
+)
+
+val lightExtendedColors = ExtendedColors(
+  background0 = UniswapColors.White,
+  background1 = UniswapColors.White,
+  background2 = UniswapColors.Gray50,
+  background3 = UniswapColors.Gray100,
+  accentAction = UniswapColors.Pink400,
+  accentActive = UniswapColors.Blue400,
+  accentSuccess = UniswapColors.Lime300,
+  accentWarning = UniswapColors.GoldVibrant,
+  accentCritical = UniswapColors.Red400,
+)
+
+val darkExtendedColors = ExtendedColors(
+  background0 = UniswapColors.Black,
+  background1 = UniswapColors.Gray900,
+  background2 = UniswapColors.Gray800,
+  background3 = UniswapColors.Gray700,
+  accentAction = UniswapColors.Pink400,
+  accentActive = UniswapColors.Blue400,
+  accentSuccess = UniswapColors.Lime300,
+  accentWarning = UniswapColors.GoldVibrant,
+  accentCritical = UniswapColors.Red400,
+)
+
+val LocalExtendedColors = staticCompositionLocalOf {
+  lightExtendedColors
+}

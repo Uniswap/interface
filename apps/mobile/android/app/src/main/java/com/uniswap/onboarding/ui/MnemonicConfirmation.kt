@@ -4,13 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime .setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uniswap.theme.UniswapTheme
 
 /**
@@ -18,26 +18,32 @@ import com.uniswap.theme.UniswapTheme
  * by testing they can select it in order
  */
 @Composable
-fun MnemonicConfirmation(words: List<String>) {
-  val shuffledWords = remember { words.shuffled() }
-  var inputtedWords by remember {
-    mutableStateOf<List<String?>>(words.map { null })
+fun MnemonicConfirmation(
+  sourceWords: List<String>,
+  viewModel: MnemonicConfirmationViewModel = viewModel()
+) {
+
+  val displayedWords by viewModel.displayWords.collectAsState()
+  val wordBankList by viewModel.wordBankList.collectAsState()
+
+  LaunchedEffect(sourceWords) {
+    viewModel.setup(sourceWords)
   }
 
-  LaunchedEffect(key1 = inputtedWords) {
-    val size = inputtedWords.size
-    if (size == words.size) {
+  LaunchedEffect(displayedWords) {
+    val size = displayedWords.size
+    if (size == sourceWords.size) {
       // TODO gary handle done trigger
     }
   }
 
-  Column(modifier = Modifier.fillMaxSize()) {
-    MnemonicDisplay(words = inputtedWords) { clickedIndex, clickedWord ->
-      // TODO gary handle onclick
+  Column(modifier = Modifier.fillMaxSize().padding(horizontal = UniswapTheme.spacing.spacing16)) {
+    MnemonicDisplay(words = displayedWords) {
+      viewModel.handleWordRowClick(it)
     }
     Spacer(modifier = Modifier.height(UniswapTheme.spacing.spacing24))
-    MnemonicWordBank(words = shuffledWords) { clickedWord ->
-      // TODO gary handle onclick
+    MnemonicWordBank(words = wordBankList) {
+      viewModel.handleWordBankClick(it)
     }
   }
 }

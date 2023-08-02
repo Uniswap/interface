@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.uniswap.onboarding.ui.model.MnemonicWordUiState
 import com.uniswap.theme.UniswapTheme
 
 /**
@@ -14,9 +15,9 @@ import com.uniswap.theme.UniswapTheme
 @Composable
 fun MnemonicDisplay(
   modifier: Modifier = Modifier,
-  words: List<String?>,
+  words: List<MnemonicWordUiState>,
   columnCount: Int = DEFAULT_COLUMN_COUNT,
-  onClick: (index: Int, word: String?) -> Unit = { _, _ -> },
+  onClick: (word: MnemonicWordUiState) -> Unit = {},
 ) {
   Row(
     modifier = modifier

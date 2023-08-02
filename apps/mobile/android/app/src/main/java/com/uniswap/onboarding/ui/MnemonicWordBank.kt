@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
+import com.uniswap.onboarding.ui.model.MnemonicWordBankCellUiState
 import com.uniswap.theme.UniswapColors
 import com.uniswap.theme.UniswapTheme
 
@@ -19,7 +21,10 @@ import com.uniswap.theme.UniswapTheme
  * Used to render a set of clickable mnemonic words
  */
 @Composable
-fun MnemonicWordBank(words: List<String>, onClick: (word: String) -> Unit) {
+fun MnemonicWordBank(
+  words: List<MnemonicWordBankCellUiState>,
+  onClick: (word: MnemonicWordBankCellUiState) -> Unit
+) {
   FlowRow(
     modifier = Modifier
       .fillMaxWidth()
@@ -37,7 +42,12 @@ fun MnemonicWordBank(words: List<String>, onClick: (word: String) -> Unit) {
 }
 
 @Composable
-private fun MnemonicWordBankCell(word: String, onClick: () -> Unit) {
+private fun MnemonicWordBankCell(word: MnemonicWordBankCellUiState, onClick: () -> Unit) {
+  val textColor = if (word.used) {
+    MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+  } else {
+    MaterialTheme.colors.onSurface
+  }
   Box(
     modifier = Modifier
       .clip(UniswapTheme.shapes.xlarge)
@@ -46,6 +56,6 @@ private fun MnemonicWordBankCell(word: String, onClick: () -> Unit) {
       .padding(vertical = UniswapTheme.spacing.spacing8)
       .padding(horizontal = UniswapTheme.spacing.spacing12),
   ) {
-    Text(text = word)
+    Text(text = word.text, color = textColor)
   }
 }

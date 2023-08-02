@@ -4,6 +4,7 @@ import androidx.compose.ui.platform.ComposeView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.uniswap.onboarding.ui.MnemonicDisplay
+import com.uniswap.onboarding.ui.model.MnemonicWordUiState
 import com.uniswap.theme.UniswapComponent
 
 /**
@@ -18,7 +19,7 @@ class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
     return ComposeView(reactContext).apply {
       setContent {
         UniswapComponent {
-          MnemonicDisplay(words = MOCK_WORDS) // TODO gary replace with real words
+          MnemonicDisplay(words = MOCK_WORDS.map { MnemonicWordUiState(text = it) }) // TODO gary replace with real words
         }
       }
     }

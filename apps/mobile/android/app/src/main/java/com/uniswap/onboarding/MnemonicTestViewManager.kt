@@ -21,7 +21,7 @@ class MnemonicTestViewManager : ViewGroupManager<ComposeView>() {
       setContent {
         UniswapComponent {
           // TODO gary replace with mock words or real data and phrase testing functionality
-          MnemonicConfirmation(words = MOCK_WORDS)
+          MnemonicConfirmation(sourceWords = MOCK_WORDS)
         }
       }
     }

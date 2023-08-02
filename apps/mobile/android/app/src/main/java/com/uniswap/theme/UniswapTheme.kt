@@ -5,6 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 
 @Composable
 fun UniswapTheme(
@@ -14,14 +15,18 @@ fun UniswapTheme(
   val customSpacing = CustomSpacing()
   val customTypography = CustomTypography()
   val customShapes = CustomShapes()
+  val extendedColors = remember {
+    if (darkTheme) darkExtendedColors else lightExtendedColors
+  }
 
   CompositionLocalProvider(
     LocalCustomSpacing provides customSpacing,
     LocalCustomTypography provides customTypography,
     LocalCustomShapes provides customShapes,
+    LocalExtendedColors provides extendedColors,
   ) {
     ProvideTextStyle(value = customTypography.bodyLarge) {
-      MaterialTheme(
+      MaterialTheme( // TODO gary MOB-1011 move everything from MaterialTheme to UniswapTheme
         colors = if (darkTheme) DarkColors else LightColors,
         content = content
       )
@@ -41,4 +46,8 @@ object UniswapTheme {
   val shapes: CustomShapes
     @Composable
     get() = LocalCustomShapes.current
+
+  val extendedColors: ExtendedColors
+    @Composable
+    get() = LocalExtendedColors.current
 }

@@ -1,9 +1,14 @@
-apply plugin: "com.android.application"
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'maven-publish'
-apply plugin: 'kotlin-android'
-
 import com.android.build.OutputFile
+
+plugins {
+  id 'com.android.application'
+  id 'com.google.gms.google-services'
+  id 'maven-publish'
+  id 'kotlin-android'
+  id 'kotlin-kapt'
+  id 'com.google.dagger.hilt.android'
+}
+
 
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
@@ -233,10 +238,19 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
+    // Specifying versions to deal with version conflicts from react native modules
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle"
+
+
     implementation "androidx.compose.foundation:foundation:$compose"
     implementation "androidx.compose.material:material:$compose"
 
     implementation "com.google.accompanist:accompanist-flowlayout:$flowlayout"
+
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
@@ -258,6 +272,11 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+}
+
+// Allow references to generated code
+kapt {
+  correctErrorTypes true
 }
 
 // Run this once to be able to run the application with BUCK
