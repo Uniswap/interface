@@ -12,6 +12,8 @@ import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
 import { useCallback, useMemo, useState } from 'react'
+import { ArrowLeft } from 'react-feather'
+import { Link } from 'react-router-dom'
 import {
   CreateProposalData,
   ProposalState,
@@ -24,7 +26,6 @@ import {
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 
-import { CreateProposalTabs } from '../../components/NavigationTabs'
 import { LATEST_GOVERNOR_INDEX } from '../../constants/governance'
 import { UNI } from '../../constants/tokens'
 import AppBody from '../AppBody'
@@ -43,6 +44,19 @@ const PageWrapper = styled(AutoColumn)`
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     padding-top: 20px;
   }
+`
+
+const BackArrow = styled(ArrowLeft)`
+  cursor: pointer;
+  color: ${({ theme }) => theme.textPrimary};
+`
+const Nav = styled(Link)`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 1em 0 0 1em;
+  text-decoration: none;
 `
 
 const CreateProposalButton = ({
@@ -242,7 +256,10 @@ ${bodyValue}
     <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
       <PageWrapper>
         <AppBody $maxWidth="800px">
-          <CreateProposalTabs />
+          <Nav to="/vote">
+            <BackArrow />
+            <ThemedText.SubHeaderLarge>Create Proposal</ThemedText.SubHeaderLarge>
+          </Nav>
           <CreateProposalWrapper>
             <BlueCard>
               <AutoColumn gap="10px">

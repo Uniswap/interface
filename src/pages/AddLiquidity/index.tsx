@@ -25,7 +25,7 @@ import {
   useV3MintActionHandlers,
   useV3MintState,
 } from 'state/mint/v3/hooks'
-import { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
@@ -76,6 +76,11 @@ import {
 } from './styled'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
+
+const StyledBodyWrapper = styled(BodyWrapper)<{ $hasExistingPosition: boolean }>`
+  padding: ${({ $hasExistingPosition }) => ($hasExistingPosition ? '10px' : 0)};
+  max-width: 640px;
+`
 
 export default function AddLiquidityWrapper() {
   const { chainId } = useWeb3React()
@@ -601,7 +606,7 @@ function AddLiquidity() {
           )}
           pendingText={pendingText}
         />
-        <BodyWrapper style={{ padding: hasExistingPosition ? '10px' : 0, maxWidth: '640px' }}>
+        <StyledBodyWrapper $hasExistingPosition={hasExistingPosition}>
           <AddRemoveTabs
             creating={false}
             adding={true}
@@ -692,12 +697,12 @@ function AddLiquidity() {
                         <Trans>Set Price Range</Trans>
                       </ThemedText.DeprecatedLabel>
 
-                      {baseCurrency && quoteCurrency ? (
+                      {Boolean(baseCurrency && quoteCurrency) && (
                         <RowFixed gap="8px">
                           <PresetsButtons onSetFullRange={handleSetFullRange} />
                           <RateToggle
-                            currencyA={baseCurrency}
-                            currencyB={quoteCurrency}
+                            currencyA={baseCurrency as Currency}
+                            currencyB={quoteCurrency as Currency}
                             handleRateToggle={() => {
                               if (!ticksAtLimit[Bound.LOWER] && !ticksAtLimit[Bound.UPPER]) {
                                 onLeftRangeInput(
@@ -716,7 +721,7 @@ function AddLiquidity() {
                             }}
                           />
                         </RowFixed>
-                      ) : null}
+                      )}
                     </RowBetween>
 
                     <RangeSelector
@@ -734,7 +739,7 @@ function AddLiquidity() {
                       ticksAtLimit={ticksAtLimit}
                     />
 
-                    {outOfRange ? (
+                    {outOfRange && (
                       <YellowCard padding="8px 12px" $borderRadius="12px">
                         <RowBetween>
                           <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
@@ -746,9 +751,9 @@ function AddLiquidity() {
                           </ThemedText.DeprecatedYellow>
                         </RowBetween>
                       </YellowCard>
-                    ) : null}
+                    )}
 
-                    {invalidRange ? (
+                    {invalidRange && (
                       <YellowCard padding="8px 12px" $borderRadius="12px">
                         <RowBetween>
                           <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
@@ -757,27 +762,31 @@ function AddLiquidity() {
                           </ThemedText.DeprecatedYellow>
                         </RowBetween>
                       </YellowCard>
-                    ) : null}
+                    )}
                   </DynamicSection>
 
                   <DynamicSection gap="md" disabled={!feeAmount || invalidPool}>
                     {!noLiquidity ? (
                       <>
-                        {price && baseCurrency && quoteCurrency && !noLiquidity && (
+                        {Boolean(price && baseCurrency && quoteCurrency && !noLiquidity) && (
                           <AutoColumn gap="2px" style={{ marginTop: '0.5rem' }}>
                             <Trans>
                               <ThemedText.DeprecatedMain fontWeight={500} fontSize={12} color="text1">
                                 Current Price:
                               </ThemedText.DeprecatedMain>
                               <ThemedText.DeprecatedBody fontWeight={500} fontSize={20} color="text1">
-                                <HoverInlineText
-                                  maxCharacters={20}
-                                  text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
-                                />
+                                {price && (
+                                  <HoverInlineText
+                                    maxCharacters={20}
+                                    text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
+                                  />
+                                )}
                               </ThemedText.DeprecatedBody>
-                              <ThemedText.DeprecatedBody color="text2" fontSize={12}>
-                                {quoteCurrency?.symbol} per {baseCurrency.symbol}
-                              </ThemedText.DeprecatedBody>
+                              {baseCurrency && (
+                                <ThemedText.DeprecatedBody color="text2" fontSize={12}>
+                                  {quoteCurrency?.symbol} per {baseCurrency.symbol}
+                                </ThemedText.DeprecatedBody>
+                              )}
                             </Trans>
                           </AutoColumn>
                         )}
@@ -901,7 +910,7 @@ function AddLiquidity() {
               <Buttons />
             </ResponsiveTwoColumns>
           </Wrapper>
-        </BodyWrapper>
+        </StyledBodyWrapper>
         {showOwnershipWarning && <OwnershipWarning ownerAddress={owner} />}
         {addIsUnsupported && (
           <UnsupportedCurrencyFooter

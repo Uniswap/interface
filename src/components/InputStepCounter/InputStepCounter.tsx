@@ -41,13 +41,17 @@ const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boo
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   background-color: transparent;
+  font-weight: 500;
   text-align: left;
   width: 100%;
-  font-weight: 500;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     font-size: 16px;
   `};
+`
+
+const InputColumn = styled(AutoColumn)`
+  width: 100%;
 `
 
 const InputTitle = styled(ThemedText.DeprecatedSmall)`
@@ -136,7 +140,7 @@ const StepCounter = ({
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
       <InputRow>
-        <AutoColumn style={{ width: '100%' }} justify="flex-start">
+        <InputColumn justify="flex-start">
           <InputTitle fontSize={12} textAlign="center">
             {title}
           </InputTitle>
@@ -145,7 +149,6 @@ const StepCounter = ({
             value={localValue}
             fontSize="20px"
             disabled={locked}
-            style={{ textAlign: 'left' }}
             onUserInput={(val) => {
               setLocalValue(val)
             }}
@@ -155,7 +158,7 @@ const StepCounter = ({
               {tokenB} per {tokenA}
             </Trans>
           </InputTitle>
-        </AutoColumn>
+        </InputColumn>
 
         <AutoColumn gap="8px">
           {!locked && (
