@@ -1,0 +1,33 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.uniswap",
+      "sha256_cert_fingerprints":
+        ["97:A5:81:51:DA:AF:8F:6E:65:3A:90:1E:82:12:6C:FB:61:2D:36:C7:CF:20:61:6B:A3:4C:52:CA:BC:58:43:8E"]
+    }
+  },
+  [
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.uniswap.beta",
+        "sha256_cert_fingerprints":
+          ["E5:39:87:DC:4D:FD:4C:1B:A6:74:36:7D:3A:3B:6B:ED:9E:B3:66:89:92:8A:1B:B8:FC:1B:22:56:56:B4:46:A3"]
+      }
+    }
+  ],
+  [
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.uniswap.dev",
+        "sha256_cert_fingerprints":
+          ["A8:A7:D4:DE:46:8E:BE:F6:DE:3B:62:2B:A7:26:60:F2:9A:4C:CD:AF:A6:96:C9:E5:7C:91:68:A1:29:2A:48:D3"]
+      }
+    }
+  ]
+]
