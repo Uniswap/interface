@@ -82,6 +82,11 @@ export default function Tokens({ account }: { account: string }) {
 const TokenBalanceText = styled(ThemedText.BodySecondary)`
   ${EllipsisStyle}
 `
+const TokenNameText = styled(ThemedText.SubHeader)`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: no-wrap;
+`
 
 type TokenBalance = NonNullable<
   NonNullable<NonNullable<PortfolioBalancesQuery['portfolios']>[number]>['tokenBalances']
@@ -116,7 +121,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
     >
       <PortfolioRow
         left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size="40px" />}
-        title={<ThemedText.SubHeader>{token?.name}</ThemedText.SubHeader>}
+        title={<TokenNameText>{token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>
             {formatNumber(quantity, NumberType.TokenNonTx)} {token?.symbol}
