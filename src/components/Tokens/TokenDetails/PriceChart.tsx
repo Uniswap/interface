@@ -53,24 +53,22 @@ function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
 
-export function getDeltaArrow(delta: number | null | undefined, iconSize = 20) {
+export function getDeltaArrow(delta: number | null | undefined, iconSize = 20, styled = true) {
   // Null-check not including zero
   if (delta === null || delta === undefined) {
     return null
   } else if (Math.sign(delta) < 0) {
-    return <StyledDownArrow size={iconSize} key="arrow-down" aria-label="down" />
+    return styled ? (
+      <StyledDownArrow size={iconSize} key="arrow-down" aria-label="down" />
+    ) : (
+      <DefaultDownArrow size={iconSize} key="arrow-down" aria-label="down" />
+    )
   }
-  return <StyledUpArrow size={iconSize} key="arrow-up" aria-label="up" />
-}
-
-function getDefaultDeltaArrow(delta: number | null | undefined, iconSize = 20) {
-  // Null-check not including zero
-  if (delta === null || delta === undefined) {
-    return null
-  } else if (Math.sign(delta) < 0) {
-    return <DefaultDownArrow size={iconSize} key="arrow-down" aria-label="down" />
-  }
-  return <DefaultUpArrow size={iconSize} key="arrow-up" aria-label="up" />
+  return styled ? (
+    <StyledUpArrow size={iconSize} key="arrow-up" aria-label="up" />
+  ) : (
+    <DefaultUpArrow size={iconSize} key="arrow-up" aria-label="up" />
+  )
 }
 
 export function formatDelta(delta: number | null | undefined) {
@@ -197,7 +195,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
 
   const totalDelta = calculateDelta(firstPrice.value, lastPrice.value)
   const formattedTotalDelta = formatDelta(totalDelta)
-  const defaultArrow = getDefaultDeltaArrow(totalDelta)
+  const defaultArrow = getDeltaArrow(totalDelta, 20, false)
 
   // first price point on the x-axis of the current time period's chart
   const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
