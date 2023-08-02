@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro'
+import { ReactComponent as Settings } from 'assets/svg/settings.svg'
 import Row from 'components/Row'
-import { Settings } from 'react-feather'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components/macro'
@@ -8,10 +8,10 @@ import { ThemedText } from 'theme'
 import validateUserSlippageTolerance, { SlippageValidationResult } from 'utils/validateUserSlippageTolerance'
 
 const Icon = styled(Settings)`
-  height: 20px;
-  width: 20px;
+  height: 24px;
+  width: 24px;
   > * {
-    stroke: ${({ theme }) => theme.textSecondary};
+    fill: ${({ theme }) => theme.textSecondary};
   }
 `
 
