@@ -27,14 +27,15 @@ export function toSerializableReceipt(receipt: TransactionReceipt): Serializable
 }
 
 function getElapsedTime(): number | undefined {
-  const ttsMarks = performance.getEntriesByName('tts-mark', 'mark')
-  let elapsedTime: number | undefined
   // Only log this metric for the first swap of a session.
-  if (ttsMarks.length === 0) {
-    elapsedTime = performance.now() / 1000 // time-to-swap in seconds
-    performance.mark('tts-mark')
+  const ttsMarks = performance.getEntriesByName('tts-mark', 'mark')
+
+  if (ttsMarks.length > 0) {
+    return
   }
-  return elapsedTime
+
+  performance.mark('tts-mark')
+  return performance.now() / 1000 // time-to-swap in seconds
 }
 
 export default function Updater() {
