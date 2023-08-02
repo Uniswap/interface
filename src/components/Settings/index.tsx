@@ -77,7 +77,7 @@ export default function SettingsTab({
           <AutoColumn gap="16px">
             <RouterPreferenceSettings />
           </AutoColumn>
-          <AnimatedDropdown open={!isUniswapXTrade(trade)} overflow="visible">
+          <AnimatedDropdown open={!isUniswapXTrade(trade)}>
             <ExpandColumn>
               <Divider />
               <MaxSlippageSettings autoSlippage={autoSlippage} />
