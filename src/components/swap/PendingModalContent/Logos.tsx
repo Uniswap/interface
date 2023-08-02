@@ -184,14 +184,16 @@ function SubmittedIcon({ className }: { className?: string }) {
   )
 }
 
-export const AnimatedEntranceConfirmationIcon = styled(ConfirmedIcon)`
+const IconCss = css`
   position: absolute;
   height: 48px;
   width: 48px;
 `
 
+export const AnimatedEntranceConfirmationIcon = styled(ConfirmedIcon)`
+  ${IconCss}
+`
+
 export const AnimatedEntranceSubmittedIcon = styled(SubmittedIcon)`
-  position: absolute;
-  height: 48px;
-  width: 48px;
+  ${IconCss}
 `

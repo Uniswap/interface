@@ -77,6 +77,7 @@ describe('Permit2', () => {
       cy.contains('Allow DAI to be used for swapping')
       cy.wait('@eth_signTypedData_v4')
       cy.wait('@eth_sendRawTransaction')
+      cy.contains('Swap submitted')
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.contains('Swap success!')
       cy.get(getTestSelector('popups')).contains('Swapped')
