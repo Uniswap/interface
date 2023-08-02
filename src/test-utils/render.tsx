@@ -10,7 +10,7 @@ import { en } from 'make-plural/plurals'
 import { ReactElement, ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
-import { HashRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import store from 'state'
 import ThemeProvider from 'theme'
 
@@ -30,7 +30,7 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
     <MockedI18nProvider>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <HashRouter>
+          <BrowserRouter>
             {/*
              * Web3Provider is mocked through setupTests.ts
              * To test behavior that depends on Web3Provider, use jest.unmock('@web3-react/core')
@@ -40,7 +40,7 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
                 <ThemeProvider>{children}</ThemeProvider>
               </BlockNumberProvider>
             </MockedProvider>
-          </HashRouter>
+          </BrowserRouter>
         </QueryClientProvider>
       </Provider>
     </MockedI18nProvider>
