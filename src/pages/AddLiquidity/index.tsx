@@ -719,22 +719,20 @@ function AddLiquidity() {
                       ) : null}
                     </RowBetween>
 
-                    {!noLiquidity && (
-                      <RangeSelector
-                        priceLower={priceLower}
-                        priceUpper={priceUpper}
-                        getDecrementLower={getDecrementLower}
-                        getIncrementLower={getIncrementLower}
-                        getDecrementUpper={getDecrementUpper}
-                        getIncrementUpper={getIncrementUpper}
-                        onLeftRangeInput={onLeftRangeInput}
-                        onRightRangeInput={onRightRangeInput}
-                        currencyA={baseCurrency}
-                        currencyB={quoteCurrency}
-                        feeAmount={feeAmount}
-                        ticksAtLimit={ticksAtLimit}
-                      />
-                    )}
+                    <RangeSelector
+                      priceLower={priceLower}
+                      priceUpper={priceUpper}
+                      getDecrementLower={getDecrementLower}
+                      getIncrementLower={getIncrementLower}
+                      getDecrementUpper={getDecrementUpper}
+                      getIncrementUpper={getIncrementUpper}
+                      onLeftRangeInput={onLeftRangeInput}
+                      onRightRangeInput={onRightRangeInput}
+                      currencyA={baseCurrency}
+                      currencyB={quoteCurrency}
+                      feeAmount={feeAmount}
+                      ticksAtLimit={ticksAtLimit}
+                    />
 
                     {outOfRange ? (
                       <YellowCard padding="8px 12px" $borderRadius="12px">
