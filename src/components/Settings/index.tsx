@@ -110,7 +110,7 @@ export default function SettingsTab({
   const isChainSupported = isSupportedChain(chainId)
   const shouldOpenMobile = isOpen && isMobile
 
-  const Preferences = useMemo(
+  const Settings = useMemo(
     () => (
       <>
         <AutoColumn gap="16px">
@@ -141,7 +141,7 @@ export default function SettingsTab({
           isActive={isOpen}
           onClick={toggleMenu}
         />
-        {isOpen && !isMobile && <MenuFlyout>{Preferences}</MenuFlyout>}
+        {isOpen && !isMobile && <MenuFlyout>{Settings}</MenuFlyout>}
       </Menu>
       {isMobile && (
         <Portal>
@@ -156,7 +156,7 @@ export default function SettingsTab({
                   </ThemedText.SubHeader>
                 </Row>
               </MobileMenuHeader>
-              {Preferences}
+              {Settings}
             </MobileMenuWrapper>
           </MobileMenuContainer>
         </Portal>
