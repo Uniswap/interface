@@ -7,12 +7,13 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
 import { PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
+import { ArrowDownRight, ArrowUpRight, Info, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
@@ -41,6 +42,13 @@ const StyledDownArrow = styled(ArrowDownRight)`
   color: ${({ theme }) => theme.accentFailure};
 `
 
+const DefaultUpArrow = styled(ArrowUpRight)`
+  color: ${({ theme }) => theme.textTertiary};
+`
+const DefaultDownArrow = styled(ArrowDownRight)`
+  color: ${({ theme }) => theme.textTertiary};
+`
+
 function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
@@ -53,6 +61,16 @@ export function getDeltaArrow(delta: number | null | undefined, iconSize = 20) {
     return <StyledDownArrow size={iconSize} key="arrow-down" aria-label="down" />
   }
   return <StyledUpArrow size={iconSize} key="arrow-up" aria-label="up" />
+}
+
+function getDefaultDeltaArrow(delta: number | null | undefined, iconSize = 20) {
+  // Null-check not including zero
+  if (delta === null || delta === undefined) {
+    return null
+  } else if (Math.sign(delta) < 0) {
+    return <DefaultDownArrow size={iconSize} key="arrow-down" aria-label="down" />
+  }
+  return <DefaultUpArrow size={iconSize} key="arrow-up" aria-label="up" />
 }
 
 export function formatDelta(delta: number | null | undefined) {
@@ -93,6 +111,11 @@ const DeltaContainer = styled.div`
 export const ArrowCell = styled.div`
   padding-right: 3px;
   display: flex;
+`
+
+const MissingPriceContainer = styled.div`
+  display: flex;
+  gap: 4px;
 `
 
 function fixChart(prices: PricePoint[] | undefined | null) {
@@ -147,6 +170,34 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
       <Trans>Missing chart data</Trans>
     )
   ) : null
+
+  const tooltipMessage = (
+    <>
+      <Trans>Price may not be up-to-date due to recently low trading volume</Trans>
+    </>
+  )
+
+  //get the last non-zero price point
+  const lastPrice = useMemo(() => {
+    if (!prices) return DATA_EMPTY
+    for (let i = prices.length - 1; i >= 0; i--) {
+      if (prices[i].value !== 0) return prices[i]
+    }
+    return DATA_EMPTY
+  }, [prices])
+
+  //get the first non-zero price point
+  const firstPrice = useMemo(() => {
+    if (!prices) return DATA_EMPTY
+    for (let i = 0; i < prices.length; i++) {
+      if (prices[i].value !== 0) return prices[i]
+    }
+    return DATA_EMPTY
+  }, [prices])
+
+  const totalDelta = calculateDelta(firstPrice.value, lastPrice.value)
+  const formattedTotalDelta = formatDelta(totalDelta)
+  const defaultArrow = getDefaultDeltaArrow(totalDelta)
 
   // first price point on the x-axis of the current time period's chart
   const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
@@ -301,6 +352,21 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
               {formattedDelta}
               <ArrowCell>{arrow}</ArrowCell>
             </DeltaContainer>
+          </>
+        ) : lastPrice.value ? (
+          <>
+            <MissingPrice>
+              <MissingPriceContainer>
+                <TokenPrice>{formatUSDPrice(lastPrice.value)}</TokenPrice>
+                <MouseoverTooltip text={tooltipMessage}>
+                  <Info size={16} />
+                </MouseoverTooltip>
+              </MissingPriceContainer>
+              <DeltaContainer>
+                {formattedTotalDelta}
+                <ArrowCell>{defaultArrow}</ArrowCell>
+              </DeltaContainer>
+            </MissingPrice>
           </>
         ) : (
           <>
