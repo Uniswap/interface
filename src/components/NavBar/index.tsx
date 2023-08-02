@@ -47,10 +47,18 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
       style={{ textDecoration: 'none' }}
       data-testid={dataTestId}
     >
-      {children}
+      <MenuItemText>{children}</MenuItemText>
     </NavLink>
   )
 }
+
+const MenuItemText = styled.span`
+  display: inline;
+  overflow: hidden;
+  max-width: 250px;
+  text-overflow: ellipsis;
+  white-space: pre;
+`
 
 export const PageTabs = () => {
   const { pathname } = useLocation()
