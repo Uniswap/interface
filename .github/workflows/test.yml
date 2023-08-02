@@ -91,9 +91,8 @@ jobs:
           path: node_modules/.cache
           key: ${{ runner.os }}-build-e2e-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-build-e2e-
+      - run: yarn build:vendor
       - run: yarn build:e2e
-        env:
-          NODE_OPTIONS: "--max_old_space_size=4096"
       - uses: actions/upload-artifact@v3
         with:
           name: build-e2e

@@ -5,7 +5,8 @@ const { execSync } = require('child_process')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
-const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
+const TerserPlugin = require('terser-webpack-plugin')
+const { DefinePlugin, DllReferencePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
@@ -94,6 +95,10 @@ module.exports = {
       // See https://vanilla-extract.style/documentation/integrations/webpack/#identifiers for docs.
       // See https://github.com/vanilla-extract-css/vanilla-extract/issues/771#issuecomment-1249524366.
       new VanillaExtractPlugin({ identifiers: 'short' }),
+      new DllReferencePlugin({
+        context: __dirname,
+        manifest: path.resolve(__dirname, 'vendor/manifest.json'),
+      }),
       new RetryChunkLoadPlugin({
         cacheBust: `function() {
           return 'cache-bust=' + Date.now();
@@ -177,6 +182,14 @@ module.exports = {
       // Configure webpack optimization:
       webpackConfig.optimization = Object.assign(
         webpackConfig.optimization,
+        {
+          minimizer: [
+            new TerserPlugin({
+              minify: TerserPlugin.swcMinify,
+              parallel: require('os').cpus().length,
+            }),
+          ],
+        },
         isProduction
           ? {
               splitChunks: {

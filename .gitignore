@@ -24,6 +24,7 @@ schema.graphql
 # builds
 /build
 /dts
+/vendor
 
 # misc
 .DS_Store
