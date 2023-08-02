@@ -29,13 +29,17 @@ export function isBrowserRouterEnabled(): boolean {
       isAppUniswapOrg(window.location) ||
       isAppUniswapStagingOrg(window.location) ||
       // Cypress tests
-      window.location.hostname === 'localhost'
+      isLocalhost(window.location)
     ) {
       return true
     }
     return false
   }
   return true
+}
+
+function isLocalhost({ hostname }: { hostname: string }): boolean {
+  return hostname === 'localhost'
 }
 
 export function isSentryEnabled(): boolean {
