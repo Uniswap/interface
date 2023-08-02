@@ -46,7 +46,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  // const [permissionStatus, setPermissionStatus] = useState<Nullable<PermissionStatus>>(null)
   const [permissionResponse, requestPermissionResponse] = BarCodeScanner.usePermissions()
   const permissionStatus = permissionResponse?.status
 
