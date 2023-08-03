@@ -10693,13 +10693,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chrome@npm:0.0.229":
-  version: 0.0.229
-  resolution: "@types/chrome@npm:0.0.229"
+"@types/chrome@npm:0.0.243":
+  version: 0.0.243
+  resolution: "@types/chrome@npm:0.0.243"
   dependencies:
     "@types/filesystem": "*"
     "@types/har-format": "*"
-  checksum: dafddbfc0e0a93e0742b3fce9c028587d9a1be7e0a6ecde50cc49475b56afb2de43f4b44bff5b9c5da81a2ac5c9272a1026e22dcc68913c96889238d63fb2ad9
+  checksum: cd0a26f31d100760d6425ee55d1f0faaaa00bbb0a8f4932f780868b7173325156b2066491bf5393aaadb5d108c85d1fca931b832ca4c210d8e8134b47bb0d9a1
   languageName: node
   linkType: hard
 
@@ -12134,7 +12134,7 @@ __metadata:
     "@svgr/webpack": 8.0.1
     "@swc/core": ^1.3.39
     "@tamagui/toast": 1.48.8
-    "@types/chrome": 0.0.229
+    "@types/chrome": 0.0.243
     "@types/jest": 29.5.0
     "@types/react": ^18.0.15
     "@types/react-dom": ^18.0.0

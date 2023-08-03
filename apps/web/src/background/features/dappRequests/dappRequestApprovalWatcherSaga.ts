@@ -21,7 +21,6 @@ import {
   sendTransaction,
 } from './saga'
 import { dappRequestActions } from './slice'
-import { closeDockedWindow } from './utils'
 
 /**
  * Watch for pending requests to be confirmed or rejected and dispatch action
@@ -103,7 +102,6 @@ export function* dappRequestApprovalWatcher() {
       })
     } finally {
       yield* put(dappRequestActions.remove(request.dappRequest.requestId))
-      yield* call(closeDockedWindow)
     }
   }
 }

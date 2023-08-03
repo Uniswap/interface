@@ -8,11 +8,22 @@ import {
 import { addRequest } from 'src/background/features/dappRequests/saga'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
 import { PortName } from 'src/types'
+import { logger } from 'utilities/src/logger/logger'
 import { initializeStore, WebState } from './store'
 
 // Since we are in a service worker, this is not persistent and this will be
 // reset to false, as expected, whenever the service worker wakes up from idle.
 let isInitialized = false
+
+// Allows users to open the side panel by clicking on the action toolbar icon
+chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error) =>
+  logger.error(error, {
+    tags: {
+      file: 'background/index.ts',
+      function: 'setPanelBehavior',
+    },
+  })
+)
 
 /** Main entrypoint for intializing the app. */
 const initApp = async ({
@@ -91,6 +102,12 @@ function initMessageBridge(dispatch: Dispatch<AnyAction>): void {
       ) {
         return
       }
+
+      // The side panel needs to be opened here because it has to be in response to a user action.
+      // Further down in the chain it will be opened in response to a message from the background script.
+      // TODO: remove the cast to any once sidePanel.open is out of beta
+      // eslint-disable-next-line security/detect-non-literal-fs-filename, prettier/prettier, @typescript-eslint/no-explicit-any
+      (chrome.sidePanel as any).open({ tabId: sender.tab?.id })
 
       // Dispatches a saga action which will handle side effects as well
       dispatch(

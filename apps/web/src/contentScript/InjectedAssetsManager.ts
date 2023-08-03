@@ -48,7 +48,7 @@ function injectScript<T extends string = keyof typeof INJECTED_SCRIPTS>(
   }
 }
 
-// FRAMES
+// FRAMES (Not currently used with the sidebar)
 
 // iframes are useful when context isolation is necessary (e.g. security)
 // NOTE: ensure html is exported via webpack
@@ -105,16 +105,20 @@ function removeFrame<T extends string = keyof typeof INJECTED_FRAMES>(filename: 
 
   tag.remove()
 }
-function init(scripts = INJECTED_SCRIPTS, frames = INJECTED_FRAMES): void {
+
+function init(scripts = INJECTED_SCRIPTS, frames?: typeof INJECTED_FRAMES | undefined): void {
   for (const name of Object.keys(scripts) as Array<keyof typeof scripts>) {
     if (!scripts[name].lazy) {
       injectScript(name, scripts[name])
     }
   }
 
-  for (const name of Object.keys(frames) as Array<keyof typeof frames>) {
-    if (!frames[name].lazy) {
-      injectFrame(name)
+  // Only needed if we want to inject content (UI elements) onto the page
+  if (frames) {
+    for (const name of Object.keys(frames) as Array<keyof typeof frames>) {
+      if (!frames[name].lazy) {
+        injectFrame(name)
+      }
     }
   }
 }

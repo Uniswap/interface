@@ -111,7 +111,10 @@ export function DappRequestContent(): JSX.Element {
         {displayDetails}
       </YStack>
       <XStack gap="$spacing12">
-        <Button theme="secondary" onPress={async (): Promise<void> => await onCancel(request)}>
+        <Button
+          flex={1}
+          theme="secondary"
+          onPress={async (): Promise<void> => await onCancel(request)}>
           Cancel
         </Button>
         <Button

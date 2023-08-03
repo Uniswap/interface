@@ -61,8 +61,6 @@ export function TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element 
     <ScrollView
       backgroundColor="$DEP_background1"
       marginTop="$spacing16"
-      // TODO: make this dynamic
-      maxHeight={310}
       paddingBottom="$spacing16"
       showsVerticalScrollIndicator={false}
       width="100%">

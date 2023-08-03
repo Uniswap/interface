@@ -57,8 +57,6 @@ export function TransactionActivity({ address }: { address: Address }): JSX.Elem
     <ScrollView
       backgroundColor="$DEP_background1"
       marginTop="$spacing16"
-      // TODO: make this dynamic
-      maxHeight={330}
       px="$spacing16"
       showsVerticalScrollIndicator={false}
       width="100%">

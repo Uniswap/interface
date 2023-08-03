@@ -24,8 +24,6 @@ export function MainContent(): JSX.Element {
   return areRequestsPending ? <DappRequestContent /> : <HomeScreen />
 }
 
-const CONTENT_MIN_HEIGHT = 576 // Subtract 2 * $spacing12 from 600 height
-
 export function WebNavigation(): JSX.Element {
   const isLoggedIn = useAppSelector((state) => state.wallet.isUnlocked)
 
@@ -35,10 +33,8 @@ export function WebNavigation(): JSX.Element {
         backgroundColor="$DEP_background1"
         borderRadius="$rounded24"
         flex={1}
-        height={CONTENT_MIN_HEIGHT}
         margin="$spacing12"
-        overflow="hidden"
-        width={350}>
+        overflow="hidden">
         <Flex flex={1} flexGrow={1} overflow="visible">
           {isLoggedIn ? <Outlet /> : <LoggedOut />}
         </Flex>

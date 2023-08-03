@@ -15,8 +15,10 @@
       "32": "assets/icon32.png",
       "48": "assets/icon48.png",
       "128": "assets/icon128.png"
-    },
-    "default_popup": "index.html"
+    }
+  },
+  "side_panel": {
+    "default_path": "index.html"
   },
   "background": {
     "service_worker": "background.js",
@@ -24,6 +26,7 @@
   },
   "permissions": [
     "notifications",
+    "sidePanel",
     "storage",
     "tabs"
   ],

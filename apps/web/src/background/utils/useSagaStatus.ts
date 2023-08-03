@@ -10,7 +10,7 @@ export function useSagaStatus(
   resetSagaOnSuccess = true
 ): SagaState {
   const dispatch = useAppDispatch()
-  const sagaState = useAppSelector((s) => s.saga[sagaName])
+  const sagaState = useAppSelector((s): SagaState | undefined => s.saga[sagaName])
   if (!sagaState) {
     throw new Error(`No saga state found, is sagaName valid? Name: ${sagaName}`)
   }

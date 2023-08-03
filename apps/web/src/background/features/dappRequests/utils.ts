@@ -73,7 +73,7 @@ export async function maybeOpenRequestsWindow(
   // tab sending the request
   tabId: number,
   // for dapps
-  dockInclusionList = ['https://app.uniswap.org']
+  dockInclusionList: string[] = []
 ): Promise<void> {
   const dappUrl = extractBaseUrl((await chrome.tabs.get(tabId)).url ?? '')
   const useDock = dappUrl && dockInclusionList.includes(dappUrl)
