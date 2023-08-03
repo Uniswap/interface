@@ -140,21 +140,22 @@ export default function SwapPage({ className }: { className?: string }) {
 
   const location = useLocation()
 
+  const supportedChainId = asSupportedChain(connectedChainId, {
+    [ChainId.BASE]: baseEnabled,
+    [ChainId.BASE_GOERLI]: baseEnabled,
+  })
+
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <PageWrapper>
         <Swap
           className={className}
-          chainId={
-            asSupportedChain(connectedChainId, {
-              [ChainId.BASE]: baseEnabled,
-              [ChainId.BASE_GOERLI]: baseEnabled,
-            }) ?? ChainId.MAINNET
-          }
+          chainId={supportedChainId ?? ChainId.MAINNET}
           prefilledState={{
             [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
             [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
           }}
+          disableTokenInputs={supportedChainId === undefined}
         />
         <NetworkAlert />
       </PageWrapper>

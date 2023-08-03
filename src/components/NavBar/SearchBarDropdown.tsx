@@ -138,7 +138,7 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
   const { isLoading } = props
   const { chainId } = useWeb3React()
   const showChainComingSoonBadge = chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) && !isLoading
-  const logoUri = chainId ? getChainInfo(chainId)?.logoUrl : undefined
+  const logoUri = getChainInfo(chainId)?.logoUrl
 
   return (
     <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>

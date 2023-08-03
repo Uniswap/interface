@@ -32,8 +32,8 @@ export function asSupportedChain(
   featureFlags?: Record<number, boolean>
 ): SupportedChainsType | undefined {
   if (!chainId) return undefined
-  if (featureFlags && chainId in featureFlags) {
-    return featureFlags[chainId] ? chainId : undefined
+  if (featureFlags && chainId in featureFlags && !featureFlags[chainId]) {
+    return undefined
   }
   return isSupportedChain(chainId) ? chainId : undefined
 }
