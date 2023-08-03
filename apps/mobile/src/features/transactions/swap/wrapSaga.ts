@@ -2,10 +2,11 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Contract, providers } from 'ethers'
 import { sendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { call } from 'typed-redux-saga'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { Weth } from 'wallet/src/abis/types'
 import WETH_ABI from 'wallet/src/abis/weth.json'
 import { ChainId } from 'wallet/src/constants/chains'
-import { logger } from 'wallet/src/features/logger/logger'
 import {
   TransactionOptions,
   TransactionType,
@@ -14,7 +15,6 @@ import {
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getWrappedNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
-import serializeError from 'wallet/src/utils/serializeError'
 
 export enum WrapType {
   NotApplicable,

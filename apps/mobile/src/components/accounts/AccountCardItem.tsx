@@ -16,11 +16,11 @@ import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 type AccountCardItemProps = {
   address: Address

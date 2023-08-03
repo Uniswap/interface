@@ -1,8 +1,8 @@
 import { BigintIsh, Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { logger } from 'wallet/src/features/logger/logger'
+import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
+import { formatCurrencyAmount } from 'utilities/src/format/format'
+import { logger } from 'utilities/src/logger/logger'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
-import { convertScientificNotationToNumber } from 'wallet/src/utils/convertScientificNotation'
-import { formatCurrencyAmount } from 'wallet/src/utils/format'
 
 export const getFormattedCurrencyAmount = (
   currency: Maybe<Currency>,

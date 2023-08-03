@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { memo, PropsWithChildren, ReactNode, useEffect, useMemo } from 'react'
-import { analytics } from 'wallet/src/features/telemetry/analytics/analytics'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAnalyticsNavigationContext } from './AnalyticsNavigationContext'
 import { ITraceContext, TraceContext, useTrace } from './TraceContext'
 import { getEventHandlers } from './utils'

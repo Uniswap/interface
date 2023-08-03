@@ -10,6 +10,7 @@ import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
 import { buildReceiveNotification } from 'src/features/notifications/utils'
 import { useSelectAddressTransactions } from 'src/features/transactions/hooks'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   TransactionHistoryUpdaterQueryResult,
@@ -30,7 +31,6 @@ import {
   useSelectAccountHideSpamTokens,
 } from 'wallet/src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 /**
  * For all imported accounts, checks for new transactions and updates

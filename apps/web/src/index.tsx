@@ -1,6 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../../../index.d.ts" />
+
 import React, { lazy } from 'react'
 import { createRoot } from 'react-dom/client'
-import { logger } from 'wallet/src/features/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
 import { Store } from 'webext-redux'
 import { WebState } from './background/store'
 import { PortName } from './types'

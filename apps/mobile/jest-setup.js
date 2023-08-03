@@ -31,15 +31,6 @@ jest.mock('@amplitude/analytics-react-native', () => ({
   track: () => jest.fn(),
 }))
 
-jest.mock('@amplitude/experiment-react-native-client', () => ({
-  Experiment: {
-    initialize: () => ({
-      fetch: jest.fn(),
-      all: jest.fn(),
-    }),
-  },
-}))
-
 // Mock Sentry crash reporting
 jest.mock('@sentry/react-native', () => ({
   init: () => jest.fn(),
@@ -149,21 +140,6 @@ jest.mock('react-native', () => {
   }
 
   return RN
-})
-
-jest.mock('@amplitude/experiment-react-native-client', () => {
-  const mockExperimentClient = {
-    initialize: jest.fn(() => ({
-      fetch: () => Promise.resolve('123'),
-      all: () => {
-        return {}
-      },
-    })),
-  }
-
-  return {
-    Experiment: mockExperimentClient,
-  }
 })
 
 jest.mock('react-native-safe-area-context', () => ({

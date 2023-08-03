@@ -1,4 +1,14 @@
-import { trimToLength } from './string'
+import { trimToLength } from 'utilities/src/primitives/string'
+
+export class NotImplementedError extends Error {
+  constructor(functionName: string) {
+    super(`${functionName}() not implemented. Did you forget a platform override?`)
+    this.name = this.constructor.name
+  }
+}
+
+export const serializeError = (error: unknown): string =>
+  JSON.stringify(error, Object.getOwnPropertyNames(error))
 
 export function assert(predicate: unknown, errorMessage: string): void {
   if (!predicate) throw new Error(errorMessage)

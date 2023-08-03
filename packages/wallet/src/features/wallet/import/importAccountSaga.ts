@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { all, call, put } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
 import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { addAccounts, setAccountAsActive, unlockWallet } from 'wallet/src/features/wallet/slice'

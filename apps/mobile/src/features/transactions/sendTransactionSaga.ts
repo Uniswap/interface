@@ -8,8 +8,9 @@ import {
   getSerializableTransactionRequest,
 } from 'src/features/transactions/utils'
 import { call, put } from 'typed-redux-saga'
+import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { logger } from 'utilities/src/logger/logger'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
-import { logger } from 'wallet/src/features/logger/logger'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   TransactionDetails,
@@ -22,7 +23,6 @@ import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
-import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
 export interface SendTransactionParams {

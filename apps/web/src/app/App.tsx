@@ -37,10 +37,14 @@ import {
   SettingsWalletRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { analytics } from 'wallet/src/features/telemetry/analytics/analytics'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { SharedProvider } from 'wallet/src/provider'
 import { Store } from 'webext-redux'
 import { MainContent, WebNavigation } from './navigation'
+
+const EXTENSION_ORIGIN_APPLICATION = 'extension'
 
 const router = createHashRouter([
   {
@@ -174,7 +178,9 @@ function App({ store }: { store: Store }): JSX.Element {
   // initialize analytics on load
   useEffect(() => {
     async function initAndLogLoad(): Promise<void> {
-      await analytics.init()
+      await analytics.init(
+        new ApplicationTransport(uniswapUrls.amplitudeProxyUrl, EXTENSION_ORIGIN_APPLICATION)
+      )
       sendAnalyticsEvent(ExtensionEventName.ExtensionLoad)
     }
     initAndLogLoad().catch(() => undefined)

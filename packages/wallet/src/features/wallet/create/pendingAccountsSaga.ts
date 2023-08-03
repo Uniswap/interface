@@ -1,5 +1,5 @@
 import { put } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
 import { selectPendingAccounts } from 'wallet/src/features/wallet/selectors'
 import {
   removeAccounts,

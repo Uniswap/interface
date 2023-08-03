@@ -12,9 +12,9 @@ import {
 import { Circle, Text, XStack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { useAsyncData } from 'wallet/src/utils/hooks'
 
 const ROW_SIZE = 3
 const NUM_ROWS = 4

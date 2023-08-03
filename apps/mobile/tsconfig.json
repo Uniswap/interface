@@ -7,6 +7,9 @@
       "path": "../../packages/ui"
     },
     {
+      "path": "../../packages/utilities"
+    },
+    {
       "path": "../../packages/wallet"
     }
   ],

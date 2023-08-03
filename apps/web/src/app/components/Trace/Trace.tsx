@@ -6,7 +6,7 @@ import {
   ScreenName,
   SectionName,
 } from 'src/app/features/telemetry/constants'
-import { Trace as UntypedTrace, TraceProps } from 'wallet/src/features/telemetry/trace/Trace'
+import { Trace as UntypedTrace, TraceProps } from 'utilities/src/telemetry/trace/Trace'
 
 // Extension specific version of ITraceContext
 interface ExtensionTraceContext {

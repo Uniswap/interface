@@ -4,10 +4,10 @@ import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { DecimalNumber } from 'src/components/text/DecimalNumber'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 interface PortfolioBalanceProps {
   owner: Address

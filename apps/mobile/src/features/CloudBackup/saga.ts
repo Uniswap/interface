@@ -4,8 +4,8 @@ import { eventChannel } from 'redux-saga'
 import { foundCloudBackup } from 'src/features/CloudBackup/cloudBackupSlice'
 import { ICloudBackupsManagerEventType, ICloudMnemonicBackup } from 'src/features/CloudBackup/types'
 import { call, fork, put, take } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
-import serializeError from 'wallet/src/utils/serializeError'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 
 function createICloudBackupManagerChannel(eventEmitter: NativeEventEmitter) {
   return eventChannel<Action>((emit) => {

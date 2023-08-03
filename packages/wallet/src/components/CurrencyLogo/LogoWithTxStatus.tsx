@@ -6,6 +6,7 @@ import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
 import { Box } from 'ui/src/components/layout'
 import { borderRadii } from 'ui/src/theme/borderRadii'
+import { logger } from 'utilities/src/logger/logger'
 import { CurrencyLogo, STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
@@ -15,7 +16,6 @@ import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
-import { logger } from 'wallet/src/features/logger/logger'
 import {
   NFTTradeType,
   TransactionStatus,

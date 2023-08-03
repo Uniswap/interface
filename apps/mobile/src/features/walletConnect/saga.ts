@@ -26,8 +26,10 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { call, fork, put, take } from 'typed-redux-saga'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
-import { logger } from 'wallet/src/features/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionType } from 'wallet/src/features/transactions/types'
@@ -51,8 +53,6 @@ import {
   WCEventType,
 } from 'wallet/src/features/walletConnect/types'
 import { createSaga } from 'wallet/src/utils/saga'
-import serializeError from 'wallet/src/utils/serializeError'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 function createWalletConnectChannel(
   wcEventEmitter: NativeEventEmitter

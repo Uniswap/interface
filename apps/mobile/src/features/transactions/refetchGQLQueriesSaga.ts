@@ -3,6 +3,7 @@ import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { call, delay } from 'typed-redux-saga'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   PortfolioBalancesDocument,
@@ -17,7 +18,6 @@ import {
   CurrencyId,
   getNativeCurrencyAddressForChain,
 } from 'wallet/src/utils/currencyId'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 type CurrencyIdToBalance = Record<CurrencyId, number>
 

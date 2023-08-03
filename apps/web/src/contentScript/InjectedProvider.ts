@@ -31,11 +31,11 @@ import {
   ExtensionChainChange,
   ExtensionRequestType,
 } from 'src/types/requests'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
+import { ONE_HOUR_MS } from 'utilities/src/time/time'
 import { v4 as uuidv4 } from 'uuid'
 import { chainIdtoHexadecimalString } from 'wallet/src/features/chains/utils'
-import { logger } from 'wallet/src/features/logger/logger'
-import serializeError from 'wallet/src/utils/serializeError'
-import { ONE_HOUR_MS } from 'wallet/src/utils/time'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
 

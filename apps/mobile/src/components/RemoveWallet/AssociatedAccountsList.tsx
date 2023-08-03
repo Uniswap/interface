@@ -5,12 +5,12 @@ import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { spacing } from 'ui/src/theme/spacing'
+import { formatUSDPrice } from 'utilities/src/format/format'
 import {
   AccountListQuery,
   useAccountListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { formatUSDPrice } from 'wallet/src/utils/format'
 
 const ADDRESS_ROW_HEIGHT = 40
 

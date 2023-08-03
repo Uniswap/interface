@@ -8,14 +8,14 @@ import {
   getSerializableTransactionRequest,
 } from 'src/features/transactions/utils'
 import { call, put } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import { getValidAddress } from 'wallet/src/utils/addresses'
-import serializeError from 'wallet/src/utils/serializeError'
 
 export function* attemptReplaceTransaction(
   transaction: TransactionDetails,

@@ -1,7 +1,7 @@
 import { sendRejectionToContentScript } from 'src/background/utils/messageUtils'
 import { call, put, take } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
-import serializeError from 'wallet/src/utils/serializeError'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import {
   ChangeChainRequest,
   ConnectRequest,

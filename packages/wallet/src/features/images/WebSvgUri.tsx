@@ -1,4 +1,4 @@
-import { NotImplementedError } from 'wallet/src/utils/errors'
+import { NotImplementedError } from 'utilities/src/errors'
 
 export type SvgUriProps = {
   autoplay: boolean

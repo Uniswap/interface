@@ -11,6 +11,8 @@ import {
 import { useAppDispatch } from 'src/background/store'
 import { Icons, ScrollView, Stack, Text, XStack, YStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useTimeout } from 'utilities/src/time/timing'
 import { useSelectWalletScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   EditAccountAction,
@@ -24,8 +26,6 @@ import {
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
-import { useTimeout } from 'wallet/src/utils/timing'
 
 const FORCED_LOADING_DURATION = 3 * ONE_SECOND_MS // 3s
 

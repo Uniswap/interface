@@ -5,7 +5,7 @@ import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { setClipboard } from 'src/utils/clipboard'
 import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import CopySheets from 'ui/src/assets/icons/copy-sheets.svg'
-import { useTimeout } from 'wallet/src/utils/timing'
+import { useTimeout } from 'utilities/src/time/timing'
 
 interface Props {
   copyText?: string

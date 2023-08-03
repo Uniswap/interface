@@ -12,11 +12,11 @@ import { useCancelationGasFeeInfo } from 'src/features/gas/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { theme } from 'ui/src/theme/restyle/theme'
+import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 const spacerProps: BoxProps = {
   borderBottomColor: 'backgroundOutline',

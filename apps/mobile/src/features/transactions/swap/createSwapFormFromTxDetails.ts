@@ -1,6 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
-import { logger } from 'wallet/src/features/logger/logger'
 import {
   CurrencyField,
   TransactionState,
@@ -8,7 +9,6 @@ import {
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { currencyAddress, currencyIdToAddress } from 'wallet/src/utils/currencyId'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
-import serializeError from 'wallet/src/utils/serializeError'
 
 interface Props {
   transactionDetails: TransactionDetails

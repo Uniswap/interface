@@ -1,9 +1,9 @@
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
-import { logger } from 'wallet/src/features/logger/logger'
-import { convertScientificNotationToNumber } from 'wallet/src/utils/convertScientificNotation'
-import serializeError from 'wallet/src/utils/serializeError'
+import { serializeError } from 'utilities/src/errors'
+import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
+import { logger } from 'utilities/src/logger/logger'
 
 const HAS_NO_NUMBERS_REGEX = /^([^0-9]*)$/
 

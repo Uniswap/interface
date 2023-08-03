@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
-import { logger } from 'wallet/src/features/logger/logger'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { useAppDispatch } from 'wallet/src/state'
-import serializeError from 'wallet/src/utils/serializeError'
 
 export function useWCTimeoutError(timeoutDurationInMs: number): {
   hasScanError: boolean

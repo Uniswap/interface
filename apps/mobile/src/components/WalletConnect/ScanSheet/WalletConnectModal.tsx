@@ -24,8 +24,8 @@ import { connectToApp } from 'src/features/walletConnect/WalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 const WC_TIMEOUT_DURATION_MS = 10 * ONE_SECOND_MS // timeout after 10 seconds
 

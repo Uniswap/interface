@@ -3,8 +3,8 @@ import { CheckmarkIcon } from 'ui/src/assets/icons/CheckmarkIcon'
 import { Unicon } from 'ui/src/components/Unicon'
 import { useUniconColors } from 'ui/src/components/Unicon/utils'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 interface Props {
   address: string

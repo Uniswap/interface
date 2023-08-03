@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { providers } from 'ethers'
 import { useMemo } from 'react'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useRestQuery } from 'wallet/src/data/rest'
 import { getEthersProvider } from 'wallet/src/features/providers/getEthersProvider'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
 
 // stub endpoint to conform to REST endpoint styles
 // Rest link should intercept and use custom fetcher instead

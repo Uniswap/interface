@@ -16,7 +16,8 @@ import { deleteICloudMnemonicBackup } from 'src/features/CloudBackup/RNICloudBac
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import Checkmark from 'ui/src/assets/icons/check.svg'
-import { logger } from 'wallet/src/features/logger/logger'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import {
   EditAccountAction,
   editAccountActions,
@@ -27,7 +28,6 @@ import {
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import serializeError from 'wallet/src/utils/serializeError'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupStatus>
 

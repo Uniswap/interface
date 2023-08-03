@@ -21,10 +21,10 @@ import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
-import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'wallet/src/utils/time'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,

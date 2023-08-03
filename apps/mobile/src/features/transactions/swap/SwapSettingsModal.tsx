@@ -27,12 +27,12 @@ import { openUri } from 'src/utils/linking'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { opacify } from 'ui/src/theme/color/utils'
+import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import {
   DEFAULT_SLIPPAGE_TOLERANCE,
   MAX_CUSTOM_SLIPPAGE_TOLERANCE,
 } from 'wallet/src/constants/transactions'
 import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
-import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 
 const SLIPPAGE_INCREMENT = 0.1
 

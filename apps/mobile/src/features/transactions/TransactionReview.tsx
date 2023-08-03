@@ -19,9 +19,9 @@ import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
+import { formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { formatNumberOrString, NumberType } from 'wallet/src/utils/format'
 
 interface BaseReviewProps {
   actionButtonProps: { disabled: boolean; label: string; name: ElementName; onPress: () => void }

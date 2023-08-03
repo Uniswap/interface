@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function SpendingDetails({

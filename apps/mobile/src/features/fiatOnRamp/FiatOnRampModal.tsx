@@ -41,6 +41,8 @@ import { iconSizes } from 'ui/src/theme/iconSizes'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { Theme } from 'ui/src/theme/restyle/theme'
 import { spacing } from 'ui/src/theme/spacing'
+import { formatUSDPrice } from 'utilities/src/format/format'
+import { useTimeout } from 'utilities/src/time/timing'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -48,8 +50,6 @@ import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-import { formatUSDPrice } from 'wallet/src/utils/format'
-import { useTimeout } from 'wallet/src/utils/timing'
 
 export type FiatOnRampCurrency = {
   currencyInfo: Maybe<CurrencyInfo>

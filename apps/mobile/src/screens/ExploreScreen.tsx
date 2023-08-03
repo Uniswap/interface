@@ -21,7 +21,7 @@ import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'ui/src/theme/restyle/flex'
 import { Theme } from 'ui/src/theme/restyle/theme'
-import { useDebounce } from 'wallet/src/utils/timing'
+import { useDebounce } from 'utilities/src/time/timing'
 
 export function ExploreScreen(): JSX.Element {
   const modalInitialState = useAppSelector(selectModalState(ModalName.Explore)).initialState

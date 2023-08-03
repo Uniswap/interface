@@ -29,6 +29,7 @@ import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { getSessionNamespaces } from 'src/features/walletConnectV2/utils'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import X from 'ui/src/assets/icons/x.svg'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
@@ -45,7 +46,6 @@ import {
   WCEventType,
   WCRequestOutcome,
 } from 'wallet/src/features/walletConnect/types'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
 
 type Props = {
   pendingSession: WalletConnectPendingSession

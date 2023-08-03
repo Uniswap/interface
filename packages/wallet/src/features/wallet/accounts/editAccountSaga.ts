@@ -1,5 +1,6 @@
 import { all, call, put } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
+import { unique } from 'utilities/src/primitives/array'
 import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import {
@@ -7,7 +8,6 @@ import {
   removeAccount as removeInStore,
 } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
-import { unique } from 'wallet/src/utils/array'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export enum EditAccountAction {

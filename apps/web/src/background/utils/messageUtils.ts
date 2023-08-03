@@ -3,7 +3,7 @@ import {
   Message,
   TransactionRejectedResponse,
 } from 'src/background/features/dappRequests/dappRequestTypes'
-import { logger } from 'wallet/src/features/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
 
 export function sendMessageToActiveTab(message: Message, onError?: () => void): void {
   chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {

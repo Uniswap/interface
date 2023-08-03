@@ -18,7 +18,7 @@ import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
-import { useAsyncData } from 'wallet/src/utils/hooks'
+import { useAsyncData } from 'utilities/src/react/hooks'
 
 type QRCodeScannerProps = {
   onScanCode: (data: string) => void

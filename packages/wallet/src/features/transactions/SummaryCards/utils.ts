@@ -3,6 +3,8 @@ import { createElement, useMemo, useState } from 'react'
 import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src/components/loading/TransactionLoader'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { useInterval } from 'utilities/src/time/timing'
 import {
   isLoadingItem,
   isSectionHeader,
@@ -15,8 +17,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
-import { useInterval } from 'wallet/src/utils/timing'
 import { ApproveSummaryItem } from './SummaryItems/ApproveSummaryItem'
 import { FiatPurchaseSummaryItem } from './SummaryItems/FiatPurchaseSummaryItem'
 import { NFTApproveSummaryItem } from './SummaryItems/NFTApproveSummaryItem'

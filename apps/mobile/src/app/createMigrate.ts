@@ -1,8 +1,8 @@
 // Adapted from https://github.com/rt2zz/redux-persist/blob/master/src/createMigrate.ts to add more logging
 import type { MigrationManifest, PersistedState } from 'redux-persist'
 import { DEFAULT_VERSION } from 'redux-persist/es/constants'
-import { logger } from 'wallet/src/features/logger/logger'
-import serializeError from 'wallet/src/utils/serializeError'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 
 export default function createMigrate(
   migrations: MigrationManifest

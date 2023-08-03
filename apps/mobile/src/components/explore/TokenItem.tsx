@@ -20,6 +20,7 @@ import {
   ModalName,
   SectionName,
 } from 'src/features/telemetry/constants'
+import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -34,7 +35,6 @@ import {
   currencyIdToAddress,
   currencyIdToChain,
 } from 'wallet/src/utils/currencyId'
-import { formatNumber, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 const FAVORITE_ACTION_INDEX = 0
 const SWAP_ACTION_INDEX = 1

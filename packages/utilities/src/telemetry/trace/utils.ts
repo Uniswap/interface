@@ -1,7 +1,7 @@
 import React from 'react'
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
-import { analytics } from 'wallet/src/features/telemetry/analytics/analytics'
-import { ITraceContext } from 'wallet/src/features/telemetry/trace/TraceContext'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 const EVENTS_HANDLED = ['onPress']
 

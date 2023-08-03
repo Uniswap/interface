@@ -1,8 +1,8 @@
+import { trimToLength } from 'utilities/src/primitives/string'
 import { useENSName } from 'wallet/src/features/ens/api'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useAppSelector } from 'wallet/src/state'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
-import { trimToLength } from 'wallet/src/utils/string'
 import {
   makeSelectAccountHideSmallBalances,
   makeSelectAccountHideSpamTokens,

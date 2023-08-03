@@ -1,0 +1,44 @@
+{
+  "name": "utilities",
+  "version": "0.0.0",
+  "dependencies": {
+    "@amplitude/analytics-browser": "1.12.1",
+    "@amplitude/analytics-core": "0.11.0",
+    "@amplitude/analytics-react-native": "0.5.0",
+    "@amplitude/analytics-types": "0.13.0",
+    "@react-navigation/core": "6.2.2",
+    "@sentry/react-native": "5.5.0",
+    "@testing-library/react-hooks": "7.0.2",
+    "@uniswap/analytics-events": "2.14.0",
+    "@uniswap/sdk-core": "3.2.2",
+    "dayjs": "1.11.7",
+    "jsbi": "3.2.5",
+    "react": "18.2.0",
+    "react-native": "0.70.8",
+    "react-native-device-info": "10.0.2",
+    "react-test-renderer": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.15",
+    "eslint": "8.44.0",
+    "eslint-config-custom": "workspace:^",
+    "jest": "29.5.0",
+    "jest-presets": "workspace:^",
+    "typescript": "4.9.4"
+  },
+  "jest": {
+    "preset": "jest-presets/jest",
+    "displayName": "Utilities Package"
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --ext ts,tsx",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "test": "jest",
+    "typecheck": "tsc -b"
+  },
+  "sideEffects": [
+    "*.css"
+  ]
+}

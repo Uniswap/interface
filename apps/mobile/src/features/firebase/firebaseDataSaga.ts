@@ -9,8 +9,9 @@ import {
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
 import { getKeys } from 'src/utils/objects'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { selectTestnetsAreEnabled } from 'wallet/src/features/chains/slice'
-import { logger } from 'wallet/src/features/logger/logger'
 import {
   EditAccountAction,
   editAccountActions,
@@ -22,7 +23,6 @@ import {
   selectAccounts,
 } from 'wallet/src/features/wallet/selectors'
 import { editAccount } from 'wallet/src/features/wallet/slice'
-import serializeError from 'wallet/src/utils/serializeError'
 
 interface AccountMetadata {
   name?: string

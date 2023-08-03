@@ -3,12 +3,12 @@ import { MockedResponse } from '@apollo/client/testing'
 import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
 import { SearchTokens } from 'src/test/gqlFixtures'
 import { renderHook } from 'src/test/test-utils'
+import { sleep } from 'utilities/src/time/timing'
 import {
   SearchTokensDocument,
   SearchTokensQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
-import { sleep } from 'wallet/src/utils/timing'
 import { useSearchTokens } from './searchTokens'
 
 const mock: MockedResponse<SearchTokensQuery> = {

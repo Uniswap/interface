@@ -1,6 +1,6 @@
 import { TokenOption } from 'src/components/TokenSelector/types'
+import { differenceWith } from 'utilities/src/primitives/array'
 import { CurrencyInfo, PortfolioBalance } from 'wallet/src/features/dataApi/types'
-import { differenceWith } from 'wallet/src/utils/array'
 import { areCurrencyIdsEqual } from 'wallet/src/utils/currencyId'
 import { TokenSection } from './TokenSelectorList'
 

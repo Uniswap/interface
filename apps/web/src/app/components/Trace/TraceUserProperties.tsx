@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import { setUserProperty } from 'src/app/features/telemetry'
 import { UserPropertyName } from 'src/app/features/telemetry/constants'
-import { analytics } from 'wallet/src/features/telemetry/analytics/analytics'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import {
   useActiveAccount,
   useNonPendingSignerAccounts,

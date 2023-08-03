@@ -1,5 +1,6 @@
 import { createElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
@@ -14,7 +15,6 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-import { formatNumberOrString, NumberType } from 'wallet/src/utils/format'
 
 const INFINITE_AMOUNT = 'INF'
 const ZERO_AMOUNT = '0.0'

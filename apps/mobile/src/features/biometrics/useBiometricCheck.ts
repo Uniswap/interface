@@ -5,7 +5,7 @@ import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { useAsyncData } from 'wallet/src/utils/hooks'
+import { useAsyncData } from 'utilities/src/react/hooks'
 
 // TODO: [MOB-221] handle scenario where user has biometrics enabled as in-app security but disables it at the OS level
 export function useBiometricCheck(): void {

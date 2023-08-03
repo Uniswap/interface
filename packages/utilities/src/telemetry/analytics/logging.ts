@@ -1,6 +1,6 @@
-import { logger } from 'wallet/src/features/logger/logger'
-import { UserPropertyValue } from 'wallet/src/features/telemetry/analytics/analytics'
-import serializeError from 'wallet/src/utils/serializeError'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
+import { UserPropertyValue } from './analytics'
 
 interface ErrorLoggers {
   init(err: unknown): void

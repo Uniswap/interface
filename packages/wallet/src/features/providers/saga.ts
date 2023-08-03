@@ -2,15 +2,15 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { providers as ethersProviders } from 'ethers'
 import { REHYDRATE } from 'redux-persist'
 import { call, fork, join, take, takeEvery } from 'typed-redux-saga'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
 import { setChainActiveStatus } from 'wallet/src/features/chains/slice'
 import { getSortedActiveChainIds } from 'wallet/src/features/chains/utils'
-import { logger } from 'wallet/src/features/logger/logger'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 import { getProviderManager } from 'wallet/src/features/wallet/context'
 import { RootState } from 'wallet/src/state'
-import serializeError from 'wallet/src/utils/serializeError'
 
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {

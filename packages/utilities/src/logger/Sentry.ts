@@ -1,6 +1,6 @@
 import { SeverityLevel } from '@sentry/types'
-import { LoggerErrorContext } from 'wallet/src/features/logger/logger'
-import { NotImplementedError } from 'wallet/src/utils/errors'
+import { NotImplementedError } from 'utilities/src/errors'
+import { LoggerErrorContext } from 'utilities/src/logger/logger'
 
 /** Dummy Sentry logging class. Overridden by mobile or extension related code. */
 export interface ISentry {

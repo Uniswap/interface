@@ -9,12 +9,12 @@ import { Box, Flex } from 'src/components/layout'
 import { Spacer } from 'src/components/layout/Spacer'
 import { Text } from 'src/components/Text'
 import { spacing } from 'ui/src/theme/spacing'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useAccountListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
-import { useAsyncData } from 'wallet/src/utils/hooks'
 
 // Most screens can fit more but this is set conservatively
 const MIN_ACCOUNTS_TO_ENABLE_SCROLL = 5

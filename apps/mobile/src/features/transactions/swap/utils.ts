@@ -7,6 +7,7 @@ import { BigNumber } from 'ethers'
 import { TFunction } from 'i18next'
 import { ElementName } from 'src/features/telemetry/constants'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
+import { formatPrice, NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
@@ -28,7 +29,6 @@ import {
   currencyIdToAddress,
   currencyIdToChain,
 } from 'wallet/src/utils/currencyId'
-import { formatPrice, NumberType } from 'wallet/src/utils/format'
 
 export function getWrapType(
   inputCurrency: Currency | null | undefined,

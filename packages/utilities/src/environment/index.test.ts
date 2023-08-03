@@ -1,4 +1,4 @@
-import { isNonJestDev } from 'wallet/src/utils/environment'
+import { isNonJestDev } from './index'
 
 describe(isNonJestDev, () => {
   it('returns true when is a non-jest dev environment', () => {

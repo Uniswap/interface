@@ -5,14 +5,14 @@ import { MMKV } from 'react-native-mmkv'
 import { initAndPersistCache } from 'src/data/cache'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
+import { isNonJestDev } from 'utilities/src/environment'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import {
   getErrorLink,
   getGraphqlHttpLink,
   getPerformanceLink,
   getRestLink,
 } from 'wallet/src/data/links'
-import { isNonJestDev } from 'wallet/src/utils/environment'
-import { useAsyncData } from 'wallet/src/utils/hooks'
 
 export let apolloClient: ApolloClient<NormalizedCacheObject> | null = null
 

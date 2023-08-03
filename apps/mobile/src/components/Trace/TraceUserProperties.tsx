@@ -7,7 +7,7 @@ import {
 import { setUserProperty } from 'src/features/telemetry'
 import { getAuthMethod, UserPropertyName } from 'src/features/telemetry/constants'
 import { getFullAppVersion } from 'src/utils/version'
-import { analytics } from 'wallet/src/features/telemetry/analytics/analytics'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
   useActiveAccount,

@@ -1,6 +1,6 @@
 import { FastImageProps, ImageStyle, ResizeMode } from 'react-native-fast-image'
 import { BoxProps } from 'ui/src/components/layout'
-import { NotImplementedError } from 'wallet/src/utils/errors'
+import { NotImplementedError } from 'utilities/src/errors'
 
 export type ImageUriProps = {
   maxHeight?: number

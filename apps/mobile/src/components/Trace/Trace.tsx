@@ -7,7 +7,7 @@ import {
   SectionName,
 } from 'src/features/telemetry/constants'
 import { AppScreen } from 'src/screens/Screens'
-import { Trace as UntypedTrace, TraceProps } from 'wallet/src/features/telemetry/trace/Trace'
+import { Trace as UntypedTrace, TraceProps } from 'utilities/src/telemetry/trace/Trace'
 
 // Mobile specific version of ITraceContext
 interface MobileTraceContext {

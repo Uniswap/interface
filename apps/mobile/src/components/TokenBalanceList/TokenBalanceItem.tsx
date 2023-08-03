@@ -10,10 +10,10 @@ import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
+import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
-import { formatNumber, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 interface TokenBalanceItemProps {
   portfolioBalance: PortfolioBalance

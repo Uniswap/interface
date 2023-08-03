@@ -1,15 +1,15 @@
 import { ApolloLink, createHttpLink } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import { RestLink } from 'apollo-link-rest'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { getOnChainEnsFetch, STUB_ONCHAIN_ENS_ENDPOINT } from 'wallet/src/features/ens/api'
-import { logger } from 'wallet/src/features/logger/logger'
 import {
   getOnChainBalancesFetch,
   STUB_ONCHAIN_BALANCES_ENDPOINT,
 } from 'wallet/src/features/portfolio/api'
-import serializeError from 'wallet/src/utils/serializeError'
 
 const REST_API_URL = uniswapUrls.apiBaseUrl
 

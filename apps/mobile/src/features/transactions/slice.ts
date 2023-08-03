@@ -2,6 +2,7 @@
 /* helpful when dealing with deeply nested state objects */
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
+import { assert } from 'utilities/src/errors'
 import {
   ChainIdToTxIdToDetails,
   FinalizedTransactionDetails,
@@ -10,7 +11,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { assert } from 'wallet/src/utils/validation'
 
 export interface TransactionStateMap {
   [address: Address]: ChainIdToTxIdToDetails

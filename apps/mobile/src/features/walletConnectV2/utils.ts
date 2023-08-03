@@ -3,11 +3,11 @@ import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { utils } from 'ethers'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
-import { logger } from 'wallet/src/features/logger/logger'
 import { EthMethod, EthSignMethod } from 'wallet/src/features/walletConnect/types'
-import serializeError from 'wallet/src/utils/serializeError'
 
 /**
  * Construct WalletConnect 2.0 session namespaces to complete a new pairing. Used when approving a new pairing request.

@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { logger } from 'wallet/src/features/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
 
 export function convertScientificNotationToNumber(value: string): string {
   let convertedValue = value

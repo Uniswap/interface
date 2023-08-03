@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { call, put } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
 import {
   AccountType,
   BackupType,

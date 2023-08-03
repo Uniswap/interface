@@ -4,7 +4,7 @@ import { Caret } from 'src/components/icons/Caret'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Theme } from 'ui/src/theme/restyle/theme'
-import { formatNumber, NumberType } from 'wallet/src/utils/format'
+import { formatNumber, NumberType } from 'utilities/src/format/format'
 
 interface RelativeChangeProps {
   change?: number

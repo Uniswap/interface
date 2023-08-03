@@ -1,6 +1,6 @@
 import { SectionListData } from 'react-native'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
-import { unique } from 'wallet/src/utils/array'
+import { unique } from 'utilities/src/primitives/array'
 
 interface HasAddress {
   address: string

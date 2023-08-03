@@ -1,7 +1,7 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { MobileState } from 'src/app/reducer'
 import { AccountToNftData, AccountToTokenVisibility } from 'src/features/favorites/slice'
-import { unique } from 'wallet/src/utils/array'
+import { unique } from 'utilities/src/primitives/array'
 
 export const selectFavoriteTokens = (state: MobileState): string[] => unique(state.favorites.tokens)
 

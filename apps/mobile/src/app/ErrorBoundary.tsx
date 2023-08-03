@@ -6,7 +6,7 @@ import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import DeadLuni from 'ui/src/assets/graphics/dead-luni.svg'
-import { logger } from 'wallet/src/features/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
 
 interface ErrorBoundaryState {
   error: Error | null

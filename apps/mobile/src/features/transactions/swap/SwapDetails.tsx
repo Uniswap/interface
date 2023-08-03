@@ -12,9 +12,9 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
+import { formatPrice, NumberType } from 'utilities/src/format/format'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
-import { formatPrice, NumberType } from 'wallet/src/utils/format'
 
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>

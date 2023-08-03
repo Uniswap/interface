@@ -1,5 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { createElement, useMemo } from 'react'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
@@ -13,7 +14,6 @@ import {
   TransactionDetails,
 } from 'wallet/src/features/transactions/types'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
-import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
 
 const MAX_SHOW_RETRY_TIME = 15 * ONE_MINUTE_MS
 

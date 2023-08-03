@@ -1,4 +1,4 @@
-import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'wallet/src/utils/time'
+import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
 // Polling interval (in milliseconds) for data fetching
 export enum PollingInterval {

@@ -6,8 +6,8 @@ import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Logos } from 'ui/src'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
+import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { Amount } from 'wallet/src/data/__generated__/types-and-hooks'
-import { formatNumber, NumberType } from 'wallet/src/utils/format'
 
 interface ListPriceProps extends BoxProps {
   price: Amount

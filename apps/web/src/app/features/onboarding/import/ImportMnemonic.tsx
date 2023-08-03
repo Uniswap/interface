@@ -12,6 +12,7 @@ import {
 import { useAppDispatch } from 'src/background/store'
 import { Circle, Icons } from 'ui/src'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -19,7 +20,6 @@ import {
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
-import { useAsyncData } from 'wallet/src/utils/hooks'
 import { translateMnemonicErrorMessage, validateMnemonic } from 'wallet/src/utils/mnemonics'
 
 export function ImportMnemonic(): JSX.Element {

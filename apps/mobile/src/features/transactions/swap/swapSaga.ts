@@ -2,13 +2,13 @@ import { providers } from 'ethers'
 import { sendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
 import { call } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
-import serializeError from 'wallet/src/utils/serializeError'
 
 export type SwapParams = {
   txId?: string

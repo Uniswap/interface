@@ -4,8 +4,8 @@ import {
   isEnrolledAsync,
   LocalAuthenticationOptions,
 } from 'expo-local-authentication'
-import { logger } from 'wallet/src/features/logger/logger'
-import serializeError from 'wallet/src/utils/serializeError'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 
 /**
  * Biometric authentication statuses

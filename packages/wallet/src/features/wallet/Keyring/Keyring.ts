@@ -1,5 +1,5 @@
 // Based on https://github.com/Uniswap/wallet-internal/blob/main/apps/mobile/src/lib/RNEthersRs.ts
-import { NotImplementedError } from 'wallet/src/utils/errors'
+import { NotImplementedError } from 'utilities/src/errors'
 
 /**
  * Provides the generation, storage, and signing logic for mnemonics and private keys.

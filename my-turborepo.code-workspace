@@ -23,7 +23,8 @@
       "./config/jest-presets",
       "./config/tsconfig",
       "./packages/wallet",
-      "./packages/ui"
+      "./packages/ui",
+      "./packages/utilities"
     ]
   }
 }

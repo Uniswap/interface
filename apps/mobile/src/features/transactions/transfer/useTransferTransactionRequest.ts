@@ -1,6 +1,7 @@
 import { providers } from 'ethers'
 import { useCallback } from 'react'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import ERC1155_ABI from 'wallet/src/abis/erc1155.json'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import ERC721_ABI from 'wallet/src/abis/erc721.json'
@@ -14,7 +15,6 @@ import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { currencyAddress, isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
-import { useAsyncData } from 'wallet/src/utils/hooks'
 
 export interface BaseTransferParams {
   type: AssetType

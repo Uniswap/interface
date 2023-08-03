@@ -33,14 +33,14 @@ import { DynamicThemeProvider } from 'src/theme/DynamicThemeProvider'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
 import { flex } from 'ui/src/theme/restyle/flex'
+import { useAsyncData } from 'utilities/src/react/hooks'
+import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { config } from 'wallet/src/config'
-import { AnalyticsNavigationContextProvider } from 'wallet/src/features/telemetry/trace/AnalyticsNavigationContext'
 import { useTrmQuery } from 'wallet/src/features/trm/api'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { SharedProvider } from 'wallet/src/provider'
-import { useAsyncData } from 'wallet/src/utils/hooks'
 
 // Keep the splash screen visible while we fetch resources until one of our landing pages loads
 SplashScreen.preventAutoHideAsync().catch(() => undefined)

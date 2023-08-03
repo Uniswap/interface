@@ -16,7 +16,7 @@ import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { getEventParams } from 'src/features/telemetry/constants'
 import { DIRECT_LOG_ONLY_SCREENS } from 'src/features/telemetry/directLogScreens'
 import { AppScreen } from 'src/screens/Screens'
-import { useAsyncData } from 'wallet/src/utils/hooks'
+import { useAsyncData } from 'utilities/src/react/hooks'
 
 interface Props {
   onReady: (navigationRef: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>) => void

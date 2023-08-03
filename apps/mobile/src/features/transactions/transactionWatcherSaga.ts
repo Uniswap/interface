@@ -24,9 +24,10 @@ import {
 } from 'src/features/transactions/slice'
 import { getFinalizedTransactionStatus } from 'src/features/transactions/utils'
 import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { logger } from 'wallet/src/features/logger/logger'
 import { pushNotification, setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
@@ -37,7 +38,6 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
-import serializeError from 'wallet/src/utils/serializeError'
 
 export function* transactionWatcher() {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')

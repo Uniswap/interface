@@ -10,15 +10,15 @@ import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import { useCallback } from 'react'
+import { logger } from 'utilities/src/logger/logger'
+import { useAsyncData } from 'utilities/src/react/hooks'
+import { currentTimeInSeconds, inXMinutesUnix } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
-import { logger } from 'wallet/src/features/logger/logger'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useProvider, useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { signTypedData } from 'wallet/src/features/wallet/signing/signing'
-import { useAsyncData } from 'wallet/src/utils/hooks'
-import { currentTimeInSeconds, inXMinutesUnix } from 'wallet/src/utils/time'
 
 const PERMIT2_SIG_VALIDITY_TIME = 30 // minutes
 function getPermitStruct(

@@ -5,6 +5,7 @@ import { goBack } from 'src/app/navigation/rootNavigation'
 import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
+import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {
   TransactionDetails,
@@ -12,7 +13,6 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 
 type TransferStatusProps = {
   derivedTransferInfo: DerivedTransferInfo

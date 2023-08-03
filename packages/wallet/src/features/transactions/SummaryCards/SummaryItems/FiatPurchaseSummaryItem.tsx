@@ -1,5 +1,6 @@
 import React, { createElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { formatFiatPrice, formatNumber } from 'utilities/src/format/format'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
@@ -13,7 +14,6 @@ import {
   TransactionDetails,
 } from 'wallet/src/features/transactions/types'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-import { formatFiatPrice, formatNumber } from 'wallet/src/utils/format'
 
 export function FiatPurchaseSummaryItem({
   transaction,

@@ -1,11 +1,11 @@
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
+import { isStale } from 'utilities/src/time/time'
 import { config } from 'wallet/src/config'
 import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'wallet/src/constants/chains'
-import { logger } from 'wallet/src/features/logger/logger'
-
 import { getEthersProvider } from 'wallet/src/features/providers/getEthersProvider'
-import serializeError from 'wallet/src/utils/serializeError'
 import { getInfuraChainName } from './utils'
 
 enum ProviderStatus {
@@ -152,10 +152,6 @@ export class ProviderManager {
     block?: ethersProviders.Block,
     network?: ethersProviders.Network
   ): boolean {
-    function isStale(lastUpdated: number | null, staleTime: number): boolean {
-      return !lastUpdated || Date.now() - lastUpdated > staleTime
-    }
-
     const chainDetails = getChainDetails(chainId)
     const staleTime = chainDetails.blockWaitMsBeforeWarning ?? 600_000 // 10 minutes
     if (!(block && block.number && block.timestamp && network && network.chainId === chainId)) {

@@ -32,13 +32,15 @@ import {
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { toStringish } from 'src/utils/number'
 import { flattenObjectOfObjects } from 'src/utils/objects'
+import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { logger } from 'utilities/src/logger/logger'
+import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20 } from 'wallet/src/abis/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'
-import { logger } from 'wallet/src/features/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
@@ -66,9 +68,7 @@ import {
   useActiveAccountAddressWithThrow,
 } from 'wallet/src/features/wallet/hooks'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-import { formatCurrencyAmount, NumberType } from 'wallet/src/utils/format'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
-import { useAsyncData, usePrevious } from 'wallet/src/utils/hooks'
 
 const NUM_USD_DECIMALS_DISPLAY = 2
 

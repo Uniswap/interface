@@ -13,6 +13,7 @@ import {
 import { addTransaction } from 'src/features/transactions/slice'
 import { createTransactionId } from 'src/features/transactions/utils'
 import { Theme } from 'ui/src/theme/restyle/theme'
+import { useDebounce } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import {
@@ -21,7 +22,6 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useDebounce } from 'wallet/src/utils/timing'
 
 /** Returns a new externalTransactionId and a callback to store the transaction. */
 export function useFiatOnRampTransactionCreator(ownerAddress: string): {

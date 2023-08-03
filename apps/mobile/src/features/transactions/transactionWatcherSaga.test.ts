@@ -25,11 +25,11 @@ import {
   txDetailsPending,
   txReceipt,
 } from 'src/test/fixtures'
+import { sleep } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
-import { sleep } from 'wallet/src/utils/timing'
 
 describe(transactionWatcher, () => {
   it('Triggers watchers successfully', () => {

@@ -1,13 +1,13 @@
 import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'react-native'
 import { theme } from 'ui/src/theme/restyle/theme'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { toUniswapWebAppLink } from 'wallet/src/features/chains/utils'
-import { logger } from 'wallet/src/features/logger/logger'
 import { FiatPurchaseTransactionInfo } from 'wallet/src/features/transactions/types'
 import { currencyIdToChain, currencyIdToGraphQLAddress } from 'wallet/src/utils/currencyId'
-import serializeError from 'wallet/src/utils/serializeError'
 
 export const UNISWAP_APP_NATIVE_TOKEN = 'NATIVE'
 const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']

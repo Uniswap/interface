@@ -3,10 +3,10 @@ import { useTheme } from 'tamagui'
 import { Box } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { uriToHttp } from 'utilities/src/format/uriToHttp'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { SHADOW_OFFSET, style, THIN_BORDER } from 'wallet/src/components/CurrencyLogo/styles'
 import { ChainId } from 'wallet/src/constants/chains'
-import { uriToHttp } from 'wallet/src/utils/uriToHttp'
 import { NetworkLogo } from './NetworkLogo'
 
 interface TokenLogoProps {

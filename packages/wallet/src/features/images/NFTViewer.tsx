@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { Box } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text/Text'
-import { uriToHttp } from 'wallet/src/utils/uriToHttp'
+import { uriToHttp } from 'utilities/src/format/uriToHttp'
 import { ImageUri, ImageUriProps } from './ImageUri'
 import { WebSvgUri } from './WebSvgUri'
 

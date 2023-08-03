@@ -2,6 +2,7 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { i18n } from 'src/app/i18n'
 import { SpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
+import { formatUSDPrice } from 'utilities/src/format/format'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
@@ -20,7 +21,6 @@ import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
-import { formatUSDPrice } from 'wallet/src/utils/format'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
   const { event, dappName, chainId } = appNotification

@@ -14,10 +14,10 @@ import {
 } from 'src/components/TokenSelector/TokenSelectorList'
 import { formatSearchResults, getTokenOptionsSection } from 'src/components/TokenSelector/utils'
 import { useSearchTokens } from 'src/features/dataApi/searchTokens'
+import { useDebounce } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useDebounce } from 'wallet/src/utils/timing'
 
 function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
   const { t } = useTranslation()

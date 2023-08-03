@@ -8,10 +8,9 @@ import {
   useState,
 } from 'react'
 import { call, getContext } from 'typed-redux-saga'
+import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
-
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
-import { logger } from 'wallet/src/features/logger/logger'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 import { SignerManager } from './signing/SignerManager'
 

@@ -2,9 +2,9 @@ import { REHYDRATE } from 'redux-persist'
 import { WebState } from 'src/background/store'
 import { openTab } from 'src/background/utils/navigationSaga'
 import { call, delay, put, select, take } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { lockWallet, unlockWallet } from 'wallet/src/features/wallet/slice'
-import serializeError from 'wallet/src/utils/serializeError'
 
 // The service worker will be shut down if there is no activity for 30 seconds.
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/service-worker-lifecycle/#idle-shutdown

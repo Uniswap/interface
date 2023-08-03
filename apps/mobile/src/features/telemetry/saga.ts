@@ -1,10 +1,22 @@
+import { OriginApplication } from '@uniswap/analytics'
+import DeviceInfo from 'react-native-device-info'
 import { transactionActions } from 'src/features/transactions/slice'
 import { logTransactionEvent } from 'src/features/transactions/transactionWatcherSaga'
 import { call, fork, takeEvery } from 'typed-redux-saga'
-import { analytics } from 'wallet/src/features/telemetry/analytics/analytics'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 
 export function* telemetrySaga() {
-  yield* call(analytics.init)
+  yield* call(
+    analytics.init,
+    new ApplicationTransport(
+      uniswapUrls.amplitudeProxyUrl,
+      OriginApplication.MOBILE,
+      uniswapUrls.apiBaseUrl,
+      DeviceInfo.getBundleId()
+    )
+  )
   yield* fork(watchTransactionEvents)
 }
 

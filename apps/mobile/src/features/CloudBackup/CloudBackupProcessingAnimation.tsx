@@ -6,17 +6,17 @@ import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { backupMnemonicToICloud } from 'src/features/CloudBackup/RNICloudBackupsManager'
-import { logger } from 'wallet/src/features/logger/logger'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
+import { useAsyncData } from 'utilities/src/react/hooks'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { promiseMinDelay } from 'utilities/src/time/timing'
 import {
   EditAccountAction,
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
-import { useAsyncData } from 'wallet/src/utils/hooks'
-import serializeError from 'wallet/src/utils/serializeError'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
-import { promiseMinDelay } from 'wallet/src/utils/timing'
 
 type Props = {
   accountAddress: Address

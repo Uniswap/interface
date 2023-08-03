@@ -2,6 +2,7 @@ import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
@@ -14,7 +15,7 @@ import {
   currencyAddressForSwapQuote,
   currencyId,
 } from 'wallet/src/utils/currencyId'
-import { useDebounceWithStatus } from 'wallet/src/utils/timing'
+
 export interface UseQuoteProps {
   amountSpecified: CurrencyAmount<Currency> | null | undefined
   otherCurrency: Currency | null | undefined

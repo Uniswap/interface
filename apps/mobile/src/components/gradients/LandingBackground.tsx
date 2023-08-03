@@ -5,7 +5,7 @@ import { ViewStyle } from 'react-native'
 import Rive, { Alignment, Fit, RiveRef } from 'rive-react-native'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
-import { useTimeout } from 'wallet/src/utils/timing'
+import { useTimeout } from 'utilities/src/time/timing'
 
 const stateMachineName = 'State Machine 1'
 

@@ -7,8 +7,8 @@ import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import InfoCircleSVG from 'ui/src/assets/icons/info-circle.svg'
+import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
-import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 export function NetworkFee({
   chainId,

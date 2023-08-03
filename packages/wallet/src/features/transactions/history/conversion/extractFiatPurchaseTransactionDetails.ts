@@ -1,7 +1,8 @@
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { MoonpayTransactionsResponse } from 'wallet/src/features/fiatOnRamp/types'
-import { logger } from 'wallet/src/features/logger/logger'
 import {
   FiatPurchaseTransactionInfo,
   TransactionDetails,
@@ -9,7 +10,6 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
-import serializeError from 'wallet/src/utils/serializeError'
 
 const MOONPAY_ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'
 

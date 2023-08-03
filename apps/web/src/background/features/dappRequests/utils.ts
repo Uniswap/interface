@@ -4,8 +4,8 @@ import {
   InjectedAssetRemoveRequest,
   InjectFrameRequest,
 } from 'src/types/requests'
-import { logger } from 'wallet/src/features/logger/logger'
-import serializeError from 'wallet/src/utils/serializeError'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 
 const DEFAULT_WINDOW_WIDTH = 2000
 export const REQUESTS_WINDOW_URL = 'requestsWindow.html'

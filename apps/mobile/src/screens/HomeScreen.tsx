@@ -67,11 +67,11 @@ import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useInterval, useTimeout } from 'utilities/src/time/timing'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
-import { useInterval, useTimeout } from 'wallet/src/utils/timing'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 

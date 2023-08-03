@@ -2,12 +2,12 @@
 
 import { Contract, ContractInterface } from 'ethers'
 import { useMemo } from 'react'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20 } from 'wallet/src/abis/types'
 import { ChainId } from 'wallet/src/constants/chains'
-import { logger } from 'wallet/src/features/logger/logger'
 import { useContractManager, useProviderManager } from 'wallet/src/features/wallet/context'
-import serializeError from 'wallet/src/utils/serializeError'
 
 export function useContract<T extends Contract = Contract>(
   chainId: ChainId,

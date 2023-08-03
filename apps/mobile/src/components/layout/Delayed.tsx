@@ -1,5 +1,5 @@
 import { PropsWithChildren, useReducer } from 'react'
-import { useTimeout } from 'wallet/src/utils/timing'
+import { useTimeout } from 'utilities/src/time/timing'
 
 export enum Delay {
   Short = 500,

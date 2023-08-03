@@ -1,6 +1,6 @@
+import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useRestQuery } from 'wallet/src/data/rest'
-import { ONE_DAY_MS } from 'wallet/src/utils/time'
 
 type ScreenResponse = {
   block: boolean

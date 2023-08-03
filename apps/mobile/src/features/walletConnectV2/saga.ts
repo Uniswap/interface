@@ -25,12 +25,12 @@ import {
   parseTransactionRequest,
 } from 'src/features/walletConnectV2/utils'
 import { call, fork, put, take } from 'typed-redux-saga'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
-import { logger } from 'wallet/src/features/logger/logger'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { EthEvent, EthMethod } from 'wallet/src/features/walletConnect/types'
-import serializeError from 'wallet/src/utils/serializeError'
 
 export let wcWeb3Wallet: IWeb3Wallet
 

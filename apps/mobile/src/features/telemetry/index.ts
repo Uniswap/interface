@@ -1,6 +1,6 @@
 import { UserPropertyName } from 'src/features/telemetry/constants'
 import { MobileEventProperties } from 'src/features/telemetry/types'
-import { analytics, UserPropertyValue } from 'wallet/src/features/telemetry/analytics/analytics'
+import { analytics, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 
 export function sendAnalyticsEvent<EventName extends keyof MobileEventProperties>(
   ...args: undefined extends MobileEventProperties[EventName]

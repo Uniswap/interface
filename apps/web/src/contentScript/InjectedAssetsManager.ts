@@ -1,5 +1,5 @@
 import { spacing } from 'ui/src/theme/spacing'
-import { logger } from 'wallet/src/features/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
 
 const TAG_ID_PREFIX = 'uniswap-wallet'
 

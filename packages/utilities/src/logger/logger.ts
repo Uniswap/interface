@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
-
 import { Primitive, ScopeContext } from '@sentry/types'
-import { errorToString } from 'wallet/src/utils/validation'
+import { errorToString } from 'utilities/src/errors'
 import { Sentry } from './Sentry'
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error'

@@ -2,6 +2,7 @@ import { MockedResponse } from '@apollo/client/testing'
 import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
 import { TokenProjects } from 'src/test/gqlFixtures'
 import { renderHook } from 'src/test/test-utils'
+import { sleep } from 'utilities/src/time/timing'
 import {
   TokenProjectsDocument,
   TokenProjectsQuery,
@@ -12,7 +13,6 @@ import {
 } from 'wallet/src/features/dataApi/utils'
 import { MainnetEth } from 'wallet/src/test/fixtures'
 import { currencyId } from 'wallet/src/utils/currencyId'
-import { sleep } from 'wallet/src/utils/timing'
 
 const _currencyId = currencyId(MainnetEth)
 

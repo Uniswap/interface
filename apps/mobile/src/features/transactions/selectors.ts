@@ -4,6 +4,7 @@ import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
 import { TransactionStateMap } from 'src/features/transactions/slice'
 import { flattenObjectOfObjects } from 'src/utils/objects'
+import { unique } from 'utilities/src/primitives/array'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
   SendTokenTransactionInfo,
@@ -11,7 +12,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { unique } from 'wallet/src/utils/array'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export const selectTransactions = (state: MobileState): TransactionStateMap => state.transactions

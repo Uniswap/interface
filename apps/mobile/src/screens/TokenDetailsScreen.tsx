@@ -31,6 +31,7 @@ import { Screens } from 'src/screens/Screens'
 import { useExtractedTokenColor } from 'src/utils/colors'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { formatUSDPrice } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -48,7 +49,6 @@ import {
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
-import { formatUSDPrice } from 'wallet/src/utils/format'
 
 type Price = NonNullable<
   NonNullable<NonNullable<NonNullable<TokenDetailsScreenQuery['token']>['project']>['markets']>[0]

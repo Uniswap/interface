@@ -5,8 +5,8 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
+import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { formatNumber, NumberType } from 'wallet/src/utils/format'
 
 function StatsRow({
   label,

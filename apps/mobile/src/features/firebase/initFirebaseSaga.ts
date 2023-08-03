@@ -1,8 +1,8 @@
 import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth'
 import { call } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
-import serializeError from 'wallet/src/utils/serializeError'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 
 export function* initFirebase() {
   yield* call(anonFirebaseSignIn)

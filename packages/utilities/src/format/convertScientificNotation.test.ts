@@ -1,4 +1,4 @@
-import { convertScientificNotationToNumber } from 'wallet/src/utils/convertScientificNotation'
+import { convertScientificNotationToNumber } from './convertScientificNotation'
 
 describe('convertScientificNotationToNumber', () => {
   it('does not do anything to a regular number', () => {

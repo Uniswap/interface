@@ -2,6 +2,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { MoonpayEventName } from '@uniswap/analytics-events'
 import dayjs from 'dayjs'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { logger } from 'utilities/src/logger/logger'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import {
@@ -14,11 +16,9 @@ import {
   MoonpayListCurrenciesResponse,
   MoonpayTransactionsResponse,
 } from 'wallet/src/features/fiatOnRamp/types'
-import { logger } from 'wallet/src/features/logger/logger'
 import { extractFiatOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatPurchaseTransactionDetails'
 import { serializeQueryParams } from 'wallet/src/features/transactions/swap/utils'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
-import { ONE_MINUTE_MS } from 'wallet/src/utils/time'
 
 const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
 const TRANSACTION_NOT_FOUND = 404

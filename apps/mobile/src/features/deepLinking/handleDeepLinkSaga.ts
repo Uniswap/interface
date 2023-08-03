@@ -16,9 +16,10 @@ import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
 import { Screens } from 'src/screens/Screens'
 import { openUri, UNISWAP_APP_NATIVE_TOKEN } from 'src/utils/linking'
 import { call, fork, put, takeLatest } from 'typed-redux-saga'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
 import { fromUniswapWebAppLink } from 'wallet/src/features/chains/utils'
-import { logger } from 'wallet/src/features/logger/logger'
 import {
   selectAccounts,
   selectActiveAccount,
@@ -27,7 +28,6 @@ import {
 } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
-import serializeError from 'wallet/src/utils/serializeError'
 
 export interface DeepLink {
   url: string

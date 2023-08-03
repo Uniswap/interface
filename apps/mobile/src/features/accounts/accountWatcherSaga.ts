@@ -1,6 +1,6 @@
 import { disconnectWCForAccount } from 'src/features/walletConnect/WalletConnect'
 import { call, takeEvery } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
 import { removeAccount } from 'wallet/src/features/wallet/slice'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 

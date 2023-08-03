@@ -16,10 +16,10 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
-import { logger } from 'wallet/src/features/logger/logger'
-import { useAsyncData } from 'wallet/src/utils/hooks'
-import { ONE_SECOND_MS } from 'wallet/src/utils/time'
-import { useTimeout } from 'wallet/src/utils/timing'
+import { logger } from 'utilities/src/logger/logger'
+import { useAsyncData } from 'utilities/src/react/hooks'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useTimeout } from 'utilities/src/time/timing'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,

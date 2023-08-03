@@ -43,6 +43,9 @@
       ],
       "ui/*": [
         "packages/ui/*"
+      ],
+      "utilities/*": [
+        "packages/utilities/*"
       ]
     }
   }

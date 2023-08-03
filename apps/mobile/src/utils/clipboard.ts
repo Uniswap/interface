@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard'
-import { logger } from 'wallet/src/features/logger/logger'
-import serializeError from 'wallet/src/utils/serializeError'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 
 export async function setClipboard(value: string): Promise<void> {
   try {

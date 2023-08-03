@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
 import { YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { useAsyncData } from 'wallet/src/utils/hooks'
+import { useAsyncData } from 'utilities/src/react/hooks'
 
 export function MainContent(): JSX.Element {
   const pendingDappRequests = useAppSelector((state) => state.dappRequests.pending)

@@ -6,7 +6,7 @@ import * as appearanceHooks from 'src/features/appearance/hooks'
 import * as biometricHooks from 'src/features/biometrics/hooks'
 import { AuthMethod, UserPropertyName } from 'src/features/telemetry/constants'
 import * as versionUtils from 'src/utils/version'
-import { analytics } from 'wallet/src/features/telemetry/analytics/analytics'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import * as walletHooks from 'wallet/src/features/wallet/hooks'
 

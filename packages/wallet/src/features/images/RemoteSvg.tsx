@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { View } from 'react-native'
 import { parse, SvgXml } from 'react-native-svg'
-import { logger } from 'wallet/src/features/logger/logger'
-import { useAsyncData } from 'wallet/src/utils/hooks'
-import serializeError from 'wallet/src/utils/serializeError'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
+import { useAsyncData } from 'utilities/src/react/hooks'
 
 type Props = {
   backgroundColor?: string

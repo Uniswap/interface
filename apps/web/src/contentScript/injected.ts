@@ -10,7 +10,7 @@ import {
   ExtensionRequestType,
   ExtensionToContentScriptRequestType,
 } from 'src/types/requests'
-import { logger } from 'wallet/src/features/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
 import { InjectedAssetsManager } from './InjectedAssetsManager'
 
 InjectedAssetsManager.init()

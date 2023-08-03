@@ -3,9 +3,9 @@ import { Image, Stack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
-import { formatNumber, formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 interface TokenBalanceItemProps {
   portfolioBalance: PortfolioBalance

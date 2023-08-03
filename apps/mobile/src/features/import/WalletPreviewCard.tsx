@@ -6,10 +6,10 @@ import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
+import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { formatUSDPrice, NumberType } from 'wallet/src/utils/format'
 
 interface Props {
   address: string

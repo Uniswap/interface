@@ -1,10 +1,9 @@
 import { createAction, createReducer, PayloadActionCreator } from '@reduxjs/toolkit'
 import { call, delay, put, race, take } from 'typed-redux-saga'
-import { logger } from 'wallet/src/features/logger/logger'
+import { errorToString, serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import serializeError from 'wallet/src/utils/serializeError'
-import { errorToString } from './validation'
 
 /**
  * A convenience utility to create a saga and trigger action

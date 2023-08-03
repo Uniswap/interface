@@ -18,9 +18,9 @@ import { Text } from 'src/components/Text'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
 import { Theme } from 'ui/src/theme/restyle/theme'
+import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
+import { useMemoCompare } from 'utilities/src/react/hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'wallet/src/utils/format'
-import { useMemoCompare } from 'wallet/src/utils/hooks'
 
 const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
