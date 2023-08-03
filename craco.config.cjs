@@ -44,7 +44,7 @@ module.exports = {
   },
   jest: {
     configure(jestConfig) {
-      const config = Object.assign(jestConfig, {
+      return Object.assign(jestConfig, {
         cacheDirectory: getCacheDirectory('jest'),
         transform: {
           ...Object.entries(jestConfig.transform).reduce((transform, [key, value]) => {
@@ -63,7 +63,6 @@ module.exports = {
           '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
         },
       })
-      return config
     },
   },
   webpack: {
@@ -177,9 +176,6 @@ module.exports = {
         // so it is unnecessary (and bothersome) to log it. This should be turned off when debugging missing sourcemaps.
         // See https://webpack.js.org/loaders/source-map-loader#ignoring-warnings.
         /Failed to parse source map/,
-        // This dependency warning is logged when compiling with coverage, but is not fatal.
-        // Because it is logged in CI, it must be ignored (as CI treats warnings as errors).
-        /require function is used in a way in which dependencies cannot be statically extracted/,
       ]
 
       return webpackConfig
