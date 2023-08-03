@@ -67,7 +67,6 @@ module.exports = {
           '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
         },
       })
-      console.log(config.transform)
       return config
     },
   },
@@ -151,7 +150,7 @@ module.exports = {
       webpackConfig.optimization = Object.assign(
         webpackConfig.optimization,
         {
-          minimize: isProduction && !isE2E,
+          minimize: isProduction,
           minimizer: [
             new TerserPlugin({
               minify: TerserPlugin.swcMinify,
@@ -159,7 +158,7 @@ module.exports = {
             }),
           ],
         },
-        isProduction && !isE2E
+        isProduction
           ? {
               splitChunks: {
                 // Cap the chunk size to 5MB.

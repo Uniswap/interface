@@ -109,7 +109,7 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
             {isCollectionApprovalSection ? (
               <>
                 <Trans>Approve</Trans>&nbsp;
-                <Plural value={uniqueCollections} _1="collection" other="collections" />
+                <Plural value={uniqueCollections ?? 1} _1="collection" other="collections" />
               </>
             ) : (
               <>
