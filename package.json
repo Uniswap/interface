@@ -70,7 +70,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.22.7",
     "@cloudflare/workers-types": "^4.20230710.1",
     "@craco/craco": "^7.1.0",
@@ -114,7 +113,6 @@
     "@vanilla-extract/webpack-plugin": "^2.2.0",
     "@walletconnect/types": "^2.8.6",
     "babel-jest": "^29.6.1",
-    "babel-plugin-istanbul": "^6.1.1",
     "buffer": "^6.0.3",
     "concurrently": "^8.0.1",
     "cypress": "12.12.0",
