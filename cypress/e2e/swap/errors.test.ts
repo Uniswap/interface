@@ -121,7 +121,8 @@ describe('Swap errors', () => {
     cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
     // This is assuming there is not > 100 Trillion Dai in a pool
     cy.get('#swap-currency-output .token-amount-input').type('100000000000000').should('have.value', '100000000000000')
-    cy.contains('Insufficient liquidity for this trade.')
+    // The API takes X seconds to return a 404, so we extend the timeout.
+    cy.contains('Insufficient liquidity for this trade.', { timeout: 48000 ))
     cy.get('#swap-button').should('not.exist')
   })
 })
