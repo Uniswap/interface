@@ -5,7 +5,6 @@
     "experimental": {
       "plugins": [
         [
-          // https://lingui.dev/ref/swc-plugin#usage
           "@lingui/swc-plugin",
           {}
         ],

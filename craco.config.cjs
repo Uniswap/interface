@@ -2,6 +2,7 @@
 const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const { execSync } = require('child_process')
+const { readFileSync } = require('fs')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
@@ -9,13 +10,14 @@ const TerserPlugin = require('terser-webpack-plugin')
 const { IgnorePlugin, ProvidePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
+const swcrc = JSON.parse(readFileSync('./.swcrc'))
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
-const isE2E = process.env.E2E === 'true'
 const isProduction = process.env.NODE_ENV === 'production'
 
 process.env.REACT_APP_GIT_COMMIT_HASH = commitHash
-if (isE2E) {
+if (process.env.E2E === 'true') {
   process.env.REACT_APP_CSP_ALLOW_UNSAFE_EVAL = true
+  swcrc.jsc.experimental.plugins.unshift(['swc-plugin-coverage-instrument', {}])
 }
 
 // Linting and type checking are only necessary as part of development and testing.
@@ -141,7 +143,7 @@ module.exports = {
       webpackConfig.module.rules[1].oneOf = webpackConfig.module.rules[1].oneOf.map((rule) => {
         if (rule.loader && rule.loader.match(/babel-loader/)) {
           rule.loader = 'swc-loader'
-          delete rule.options
+          rule.options = swcrc
         }
         return rule
       })

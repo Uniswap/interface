@@ -138,6 +138,7 @@
     "serve": "^11.3.2",
     "source-map-explorer": "^2.5.3",
     "swc-loader": "^0.2.3",
+    "swc-plugin-coverage-instrument": "^0.0.20",
     "terser-webpack-plugin": "^5.3.9",
     "ts-jest": "^29.1.1",
     "ts-transform-graphql-tag": "^0.2.1",
