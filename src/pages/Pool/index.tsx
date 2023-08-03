@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace, TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
@@ -10,6 +11,7 @@ import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
+import { useBaseEnabled } from 'featureFlags/flags/baseEnabled'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV3Positions } from 'hooks/useV3Positions'
@@ -212,8 +214,14 @@ export default function Pool() {
   )
 
   const filteredPositions = useFilterPossiblyMaliciousPositions(userSelectedPositionSet)
+  const baseEnabled = useBaseEnabled()
 
-  if (!isSupportedChain(chainId)) {
+  if (
+    !isSupportedChain(chainId, {
+      [ChainId.BASE]: baseEnabled,
+      [ChainId.BASE_GOERLI]: baseEnabled,
+    })
+  ) {
     return <WrongNetworkCard />
   }
 
