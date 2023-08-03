@@ -103,7 +103,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
 
   const { component: Page, key: currentKey } = Pages[currentPage]
 
-  const hasPendingActivity = useHasPendingActivity()
+  const { hasPendingActivity } = useHasPendingActivity()
 
   useEffect(() => {
     if (hasPendingActivity && currentKey !== 'activity') setActivityUnread(true)
