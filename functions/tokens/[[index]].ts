@@ -1,7 +1,6 @@
 /* eslint-disable import/no-unused-modules */
 import { Chain } from '../../src/graphql/data/__generated__/types-and-hooks'
-import { MetaTagInjector } from '../components/metaTagInjector'
-import Cache from '../utils/cache'
+import getRequest from '../utils/getRequest'
 import getToken from '../utils/getToken'
 
 const convertTokenAddress = (tokenAddress: string, networkName: string) => {
@@ -20,26 +19,16 @@ const convertTokenAddress = (tokenAddress: string, networkName: string) => {
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const res = next()
-  const cachePromise = Cache.match(request.url, 'tokens-cache')
   try {
-    const cacheResponse = await cachePromise
-    if (cacheResponse) {
-      return new HTMLRewriter().on('head', new MetaTagInjector(cacheResponse)).transform(await res)
-    } else {
-      const { index } = params
-      const networkName = index[0]?.toString().toUpperCase()
-      const tokenString = index[1]?.toString()
-      if (!tokenString) {
-        return res
-      }
-      const tokenAddress = convertTokenAddress(tokenString, networkName)
-      const graphData = await getToken(networkName, tokenAddress, request.url)
-      if (!graphData) {
-        return res
-      }
-      await Cache.put(new Response(JSON.stringify(graphData)), request.url, 'tokens-cache')
-      return new HTMLRewriter().on('head', new MetaTagInjector(graphData)).transform(await res)
+    const { index } = params
+    const networkName = index[0]?.toString().toUpperCase()
+    const tokenString = index[1]?.toString()
+    if (!tokenString) {
+      return res
     }
+    const tokenAddress = convertTokenAddress(tokenString, networkName)
+    const graphCall = getToken(networkName, tokenAddress, request.url)
+    return getRequest(res, request.url, 'tokens-cache', graphCall)
   } catch (e) {
     return res
   }
