@@ -100,9 +100,7 @@ const MissingPrice = styled(TokenPrice)`
   color: ${({ theme }) => theme.textTertiary};
 `
 
-const OutdatedPrice = styled(TokenPrice)`
-  font-size: 24px;
-  line-height: 44px;
+const OutdatedContainer = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 
@@ -119,7 +117,9 @@ export const ArrowCell = styled.div`
 
 const OutdatedPriceContainer = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  font-size: 24px;
+  line-height: 44px;
 `
 
 function fixChart(prices: PricePoint[] | undefined | null) {
@@ -358,20 +358,18 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
             </DeltaContainer>
           </>
         ) : lastPrice.value ? (
-          <>
-            <OutdatedPrice>
-              <OutdatedPriceContainer>
-                <TokenPrice>{formatUSDPrice(lastPrice.value)}</TokenPrice>
-                <MouseoverTooltip text={tooltipMessage}>
-                  <Info size={16} />
-                </MouseoverTooltip>
-              </OutdatedPriceContainer>
-              <DeltaContainer>
-                {formattedTotalDelta}
-                <ArrowCell>{defaultArrow}</ArrowCell>
-              </DeltaContainer>
-            </OutdatedPrice>
-          </>
+          <OutdatedContainer>
+            <OutdatedPriceContainer>
+              <TokenPrice>{formatUSDPrice(lastPrice.value)}</TokenPrice>
+              <MouseoverTooltip text={tooltipMessage}>
+                <Info size={16} />
+              </MouseoverTooltip>
+            </OutdatedPriceContainer>
+            <DeltaContainer>
+              {formattedTotalDelta}
+              <ArrowCell>{defaultArrow}</ArrowCell>
+            </DeltaContainer>
+          </OutdatedContainer>
         ) : (
           <>
             <MissingPrice>Price Unavailable</MissingPrice>
