@@ -29,7 +29,7 @@ describe('time-to-swap logging', () => {
 
     // Second swap in the session:
     // Enter amount to swap
-    cy.get('#swap-currency-output .token-amount-input').type('1').should('have.value', '1')
+    cy.get('#swap-currency-output .token-amount-input').clear().type('1').should('have.value', '1')
     cy.get('#swap-currency-input .token-amount-input').should('not.have.value', '')
 
     // Submit transaction
