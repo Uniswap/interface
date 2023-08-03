@@ -1,10 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexZeroPad } from '@ethersproject/bytes'
-import { namehash } from '@ethersproject/hash'
 import { useWeb3React } from '@web3-react/core'
 import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useEffect, useMemo, useState } from 'react'
+import { safeNamehash } from 'utils/safeNamehash'
 
 import { isAddress } from '../utils'
 import isZero from '../utils/isZero'
@@ -23,12 +23,12 @@ export default function useENSAvatar(
   const debouncedAddress = useDebounce(address, 200)
   const node = useMemo(() => {
     if (!debouncedAddress || !isAddress(debouncedAddress)) return undefined
-    return namehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)
+    return safeNamehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)
   }, [debouncedAddress])
 
   const addressAvatar = useAvatarFromNode(node)
   const ENSName = useENSName(address).ENSName
-  const nameAvatar = useAvatarFromNode(ENSName === null ? undefined : namehash(ENSName))
+  const nameAvatar = useAvatarFromNode(ENSName === null ? undefined : safeNamehash(ENSName))
   let avatar = addressAvatar.avatar || nameAvatar.avatar
 
   const nftAvatar = useAvatarFromNFT(avatar, enforceOwnership)

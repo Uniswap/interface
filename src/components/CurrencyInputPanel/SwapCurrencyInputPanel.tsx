@@ -71,7 +71,7 @@ const CurrencySelect = styled(ButtonGray)<{
   user-select: none;
   border: none;
   font-size: 24px;
-  font-weight: 400;
+  font-weight: 500;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   padding: ${({ selected }) => (selected ? '4px 8px 4px 4px' : '6px 6px 6px 8px')};
   gap: 8px;
@@ -189,7 +189,7 @@ interface SwapCurrencyInputPanelProps {
   onUserInput: (value: string) => void
   onMax?: () => void
   showMaxButton: boolean
-  label?: ReactNode
+  label: ReactNode
   onCurrencySelect?: (currency: Currency) => void
   currency?: Currency | null
   hideBalance?: boolean
@@ -229,6 +229,7 @@ export default function SwapCurrencyInputPanel({
   locked = false,
   loading = false,
   disabled = false,
+  label,
   ...rest
 }: SwapCurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -255,6 +256,7 @@ export default function SwapCurrencyInputPanel({
         </FixedContainer>
       )}
       <Container hideInput={hideInput}>
+        <ThemedText.SubHeaderSmall color="textTertiary">{label}</ThemedText.SubHeaderSmall>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
           {!hideInput && (
             <StyledNumericalInput

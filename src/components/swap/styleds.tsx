@@ -26,7 +26,7 @@ export const PageWrapper = styled.div`
 export const SwapWrapper = styled.main<{ chainId?: number }>`
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
-  border-radius: 16px;
+  border-radius: 24px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
   padding-top: 12px;
@@ -151,7 +151,7 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   margin-bottom: -18px;
   margin-left: auto;
   margin-right: auto;
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.backgroundModule};
   border: 4px solid;
   border-color: ${({ theme }) => theme.backgroundSurface};
 
