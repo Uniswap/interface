@@ -106,17 +106,11 @@ export const SearchBar = () => {
   }
 
   const { i18n } = useLingui() // subscribe to locale changes
-  const placeholderText = (() => {
-    if (isMobileOrTablet) {
-      return t(i18n)`Search`
-    } else {
-      if (shouldDisableNFTRoutes) {
-        return t(i18n)`Search tokens`
-      } else {
-        return t(i18n)`Search tokens and NFT collections`
-      }
-    }
-  })()
+  const placeholderText = isMobileOrTablet
+    ? t(i18n)`Search`
+    : shouldDisableNFTRoutes
+    ? t(i18n)`Search tokens`
+    : t(i18n)`Search tokens and NFT collections`
 
   const handleKeyPress = useCallback(
     (event: any) => {
