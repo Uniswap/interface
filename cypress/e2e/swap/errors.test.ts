@@ -120,7 +120,7 @@ describe('Swap errors', () => {
   it('insufficient liquidity', () => {
     cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
     // The API response is too variable so stubbing a 404.
-    cy.intercept('/v2/quote', (req) => {
+    cy.intercept('POST', 'https://api.uniswap.org/v2/quote', (req) => {
       req.reply({
         statusCode: 404,
         fixture: 'insufficientLiquidity.json',
