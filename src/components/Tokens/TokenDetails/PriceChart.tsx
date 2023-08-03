@@ -117,7 +117,7 @@ export const ArrowCell = styled.div`
   display: flex;
 `
 
-const MissingPriceContainer = styled.div`
+const OutdatedPriceContainer = styled.div`
   display: flex;
   gap: 8px;
 `
@@ -360,12 +360,12 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
         ) : lastPrice.value ? (
           <>
             <OutdatedPrice>
-              <MissingPriceContainer>
+              <OutdatedPriceContainer>
                 <TokenPrice>{formatUSDPrice(lastPrice.value)}</TokenPrice>
                 <MouseoverTooltip text={tooltipMessage}>
                   <Info size={16} />
                 </MouseoverTooltip>
-              </MissingPriceContainer>
+              </OutdatedPriceContainer>
               <DeltaContainer>
                 {formattedTotalDelta}
                 <ArrowCell>{defaultArrow}</ArrowCell>
