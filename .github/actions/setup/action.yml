@@ -41,5 +41,5 @@ runs:
     # - graphql: GraphQL is generated from schema and client-side graphql queries. The schema is always fetched and
     #   changes to client-side queries are hard to detect, so it is always re-generated.
     # - i18n: Messages are extracted from source and compiled. No caching extractor is available (out-of-the-box).
-    - run: yarn concurrently npm:ajv npm:graphql npm:i18n
+    - run: yarn concurrently --max-processes=100% npm:ajv npm:graphql npm:i18n
       shell: bash
