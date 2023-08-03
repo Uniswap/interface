@@ -149,7 +149,7 @@ const StepCounter = ({
 
         <InputRow>
           {!locked && (
-            <SmallButton onClick={handleDecrement} disabled={decrementDisabled}>
+            <SmallButton data-testid="decrement-price-range" onClick={handleDecrement} disabled={decrementDisabled}>
               <ButtonLabel disabled={decrementDisabled} fontSize="12px">
                 <Minus size={18} />
               </ButtonLabel>
@@ -167,7 +167,7 @@ const StepCounter = ({
           />
 
           {!locked && (
-            <SmallButton onClick={handleIncrement} disabled={incrementDisabled}>
+            <SmallButton data-testid="increment-price-range" onClick={handleIncrement} disabled={incrementDisabled}>
               <ButtonLabel disabled={incrementDisabled} fontSize="12px">
                 <Plus size={18} />
               </ButtonLabel>
