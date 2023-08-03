@@ -32,6 +32,12 @@ export enum TimePeriod {
   YEAR,
 }
 
+export enum TimePeriodLeaderboard {
+  DAY,
+  WEEK,
+  MONTH,
+}
+
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
     case TimePeriod.DAY:

@@ -9,6 +9,7 @@ import {
   BarChartIcon,
   DiscordIconMenu,
   EllipsisIcon,
+  LightningBoltIcon,
   PegasysIcon,
   PoolIcon,
   TwitterIconMenu,
@@ -208,6 +209,16 @@ export const MenuDropdown = () => {
                     <Trans>View more analytics</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
+
+                <PrimaryMenuRow to="/leaderboard" close={toggleOpen}>
+                  <Icon>
+                    <LightningBoltIcon width={24} height={24} color={theme.accentActive} />
+                  </Icon>
+                  <PrimaryMenuRow.Text>
+                    <Trans>Leaderboard</Trans>
+                  </PrimaryMenuRow.Text>
+                </PrimaryMenuRow>
+
                 <PrimaryMenuRow href="https://v1.pegasys.fi/">
                   <Icon>
                     <PegasysIcon width={24} height={24} color={theme.textPrimary} />

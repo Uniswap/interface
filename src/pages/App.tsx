@@ -27,6 +27,7 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import { BodyWrapper } from './AppBody'
 import Landing from './Landing'
+import { LeaderBoard } from './Leaderboard'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import NotFound from './NotFound'
@@ -204,6 +205,8 @@ export default function App() {
 
               <Route path="migrate/v2" element={<MigrateV2 />} />
               <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
+
+              <Route path="leaderboard" element={<LeaderBoard />} />
 
               {!shouldDisableNFTRoutes && (
                 <>

@@ -5,7 +5,7 @@ import { fetchTokenPriceData } from 'graphql/tokens/NewTokenPrice'
 import { TokenData } from 'graphql/tokens/TokenData'
 import { PricePoint } from 'graphql/utils/util'
 import { TimePeriod } from 'graphql/utils/util'
-import { useAtomValue } from 'jotai/utils'
+import { useAtomValue } from 'jotai'
 import { pageTimePeriodAtom } from 'pages/TokenDetails'
 import { startTransition, Suspense, useEffect, useMemo, useState } from 'react'
 import { PriceChartEntry } from 'types/chart'
@@ -50,7 +50,6 @@ function usePriceHistory(tokenData: TokenData, timePeriod: TimePeriod): PricePoi
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await fetchTokenPriceData(tokenData.address, ONE_HOUR_SECONDS, startTimestamp, qtyDataPerTime)
-      console.log('tokenData.address', tokenData.address)
       setData(data)
     }
 

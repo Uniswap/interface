@@ -1,13 +1,13 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 import { Trans } from '@lingui/macro'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
-import useDebounce from 'hooks/useDebounce'
+import { MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 
-import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
-import { filterStringAtom } from '../state'
+import { filterStringAtom } from './state'
+
 const ICON_SIZE = '20px'
 
 const SearchBarContainer = styled.div`
@@ -58,38 +58,26 @@ const SearchInput = styled.input`
   }
 `
 
-// eslint-disable-next-line import/no-unused-modules
 export default function SearchBar() {
   const currentString = useAtomValue(filterStringAtom)
-  const [localFilterString, setLocalFilterString] = useState(currentString)
   const setFilterString = useSetAtom(filterStringAtom)
-  const debouncedLocalFilterString = useDebounce(localFilterString, 300)
-
-  useEffect(() => {
-    setLocalFilterString(currentString)
-  }, [currentString])
-
-  useEffect(() => {
-    setFilterString(debouncedLocalFilterString)
-  }, [debouncedLocalFilterString, setFilterString])
 
   return (
     <SearchBarContainer>
       <Trans
         render={({ translation }) => (
           <SearchInput
-            data-cy="explore-tokens-search-input"
+            data-cy="explore-address-search-input"
             type="search"
-            // eslint-disable-next-line react/jsx-curly-brace-presence
             placeholder={`${translation}`}
             id="searchBar"
             autoComplete="off"
-            value={localFilterString}
-            onChange={({ target: { value } }) => setLocalFilterString(value)}
+            value={currentString}
+            onChange={({ target: { value } }) => setFilterString(value)}
           />
         )}
       >
-        Filter tokens
+        Filter address
       </Trans>
     </SearchBarContainer>
   )
