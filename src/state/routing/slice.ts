@@ -50,6 +50,7 @@ export interface GetQuoteArgs {
   forceUniswapXOn: boolean
   userDisabledUniswapX: boolean
   isRoutingAPIPrice?: boolean
+  uniswapXEthOutputEnabled: boolean
 }
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
@@ -60,7 +61,14 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const { account, tradeType, tokenOutAddress, tokenInChainId, uniswapXForceSyntheticQuotes } = args
+  const {
+    account,
+    tradeType,
+    tokenOutAddress,
+    tokenInChainId,
+    uniswapXForceSyntheticQuotes,
+    uniswapXEthOutputEnabled,
+  } = args
 
   const uniswapx = {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
@@ -83,7 +91,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   if (
     !args.uniswapXEnabled ||
     args.userDisabledUniswapX ||
-    tokenOutIsNative ||
+    (tokenOutIsNative && !uniswapXEthOutputEnabled) ||
     tradeType === TradeType.EXACT_OUTPUT ||
     !isUniswapXSupportedChain(tokenInChainId)
   ) {
