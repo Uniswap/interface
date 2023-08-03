@@ -65,10 +65,7 @@ module.exports = {
         // - react-markdown requires process.cwd
         process: 'process/browser.js',
       }),
-      // vanilla-extract has poor performance on M1 machines with 'debug' identifiers, so we use 'short' instead.
-      // See https://vanilla-extract.style/documentation/integrations/webpack/#identifiers for docs.
-      // See https://github.com/vanilla-extract-css/vanilla-extract/issues/771#issuecomment-1249524366.
-      new VanillaExtractPlugin({ identifiers: 'short' }),
+      new VanillaExtractPlugin(),
       new RetryChunkLoadPlugin({
         cacheBust: `function() {
           return 'cache-bust=' + Date.now();
