@@ -63,9 +63,9 @@ export const formatTransactionAmount = (num: number | undefined | null, maxDigit
 
 const MAX_AMOUNT_STR_LENGTH = 9
 
-export function formatReviewSwapCurrencyAmount(amount: CurrencyAmount<Currency>, maxLength?: number): string {
+export function formatReviewSwapCurrencyAmount(amount: CurrencyAmount<Currency>): string {
   let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
-  if (formattedAmount.length > (maxLength ?? MAX_AMOUNT_STR_LENGTH)) {
+  if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
     formattedAmount = formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
   }
   return formattedAmount

@@ -98,16 +98,8 @@ describe('formatReviewSwapCurrencyAmount', () => {
     const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000') // 2,000 USDC
     expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2,000')
   })
-  it('should use SwapTradeAmount formatting under a custom length', () => {
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000')
-    expect(formatReviewSwapCurrencyAmount(currencyAmount, 4)).toBe('2000')
-  })
   it('should use SwapTradeAmount formatting over the default length', () => {
     const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
     expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
-  })
-  it('should use SwapTradeAmount formatting over a custom length', () => {
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
-    expect(formatReviewSwapCurrencyAmount(currencyAmount, 7)).toBe('2000000')
   })
 })
