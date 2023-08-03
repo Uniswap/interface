@@ -1974,25 +1974,25 @@ exports[`disable nft on landing page does not render nft information and card 1`
         </div>
       </div>
       <span
-        class="1 c53"
+        class="c53"
       >
         <a
           class="c2 c24 c54 c55"
           href="#/swap"
         >
           <p
-            class="0 c56"
+            class="c56"
           >
             Get started
           </p>
         </a>
       </span>
       <div
-        class="2 c57"
+        class="c57"
       >
         Learn more
         <svg
-          class="3 c58"
+          class="c58"
           fill="none"
           height="24"
           stroke="currentColor"
@@ -2020,7 +2020,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
         </svg>
       </div>
       <a
-        class="9 c59"
+        class="c59"
         href="https://wallet.uniswap.org/?utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1"
       >
         <svg
@@ -2037,10 +2037,10 @@ exports[`disable nft on landing page does not render nft information and card 1`
       </a>
     </div>
     <div
-      class="4 c60"
+      class="c60"
     >
       <div
-        class="5 c61"
+        class="c61"
         cols="1"
       >
         <a
@@ -2071,7 +2071,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
         </a>
       </div>
       <div
-        class="5 c67"
+        class="c67"
         cols="3"
       >
         <a
@@ -2290,7 +2290,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
             </a>
           </div>
           <span
-            class="2 c88"
+            class="c88"
           >
             © 
             2023
@@ -2309,19 +2309,19 @@ exports[`disable nft on landing page does not render nft information and card 1`
               App
             </span>
             <a
-              class="1 c92 c93"
+              class="c92 c93"
               href="#/swap"
             >
               Swap
             </a>
             <a
-              class="1 c92 c93"
+              class="c92 c93"
               href="#/tokens"
             >
               Tokens
             </a>
             <a
-              class="1 c92 c93"
+              class="c92 c93"
               href="#/pools"
             >
               Pools
@@ -2336,7 +2336,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
               Protocol
             </span>
             <a
-              class="c94 0 c95"
+              class="c94 c95"
               href="https://uniswap.org/community"
               rel="noopener noreferrer"
               target="_blank"
@@ -2344,7 +2344,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
               Community
             </a>
             <a
-              class="c94 0 c95"
+              class="c94 c95"
               href="https://uniswap.org/governance"
               rel="noopener noreferrer"
               target="_blank"
@@ -2352,7 +2352,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
               Governance
             </a>
             <a
-              class="c94 0 c95"
+              class="c94 c95"
               href="https://uniswap.org/developers"
               rel="noopener noreferrer"
               target="_blank"
@@ -2369,7 +2369,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
               Company
             </span>
             <a
-              class="c94 0 c95"
+              class="c94 c95"
               href="https://boards.greenhouse.io/uniswaplabs"
               rel="noopener noreferrer"
               target="_blank"
@@ -2377,7 +2377,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
               Careers
             </a>
             <a
-              class="c94 0 c95"
+              class="c94 c95"
               href="https://uniswap.org/blog"
               rel="noopener noreferrer"
               target="_blank"
@@ -2394,7 +2394,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
               Get Help
             </span>
             <a
-              class="c94 0 c95"
+              class="c94 c95"
               href="https://support.uniswap.org/hc/en-us/requests/new"
               rel="noopener noreferrer"
               target="_blank"
@@ -2402,7 +2402,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
               Contact Us
             </a>
             <a
-              class="c94 0 c95"
+              class="c94 c95"
               href="https://support.uniswap.org/hc/en-us"
               rel="noopener noreferrer"
               target="_blank"
@@ -2463,7 +2463,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
             </a>
           </div>
           <span
-            class="2 c88"
+            class="c88"
           >
             © 
             2023
@@ -4495,25 +4495,25 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
         </div>
       </div>
       <span
-        class="1 c53"
+        class="c53"
       >
         <a
           class="c2 c24 c54 c55"
           href="#/swap"
         >
           <p
-            class="0 c56"
+            class="c56"
           >
             Get started
           </p>
         </a>
       </span>
       <div
-        class="2 c57"
+        class="c57"
       >
         Learn more
         <svg
-          class="3 c58"
+          class="c58"
           fill="none"
           height="24"
           stroke="currentColor"
@@ -4541,7 +4541,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
         </svg>
       </div>
       <a
-        class="9 c59"
+        class="c59"
         href="https://wallet.uniswap.org/?utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1"
       >
         <svg
@@ -4558,10 +4558,10 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
       </a>
     </div>
     <div
-      class="4 c60"
+      class="c60"
     >
       <div
-        class="5 c61"
+        class="c61"
         cols="2"
       >
         <a
@@ -4618,7 +4618,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
         </a>
       </div>
       <div
-        class="5 c68"
+        class="c68"
         cols="3"
       >
         <a
@@ -4837,7 +4837,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
             </a>
           </div>
           <span
-            class="2 c89"
+            class="c89"
           >
             © 
             2023
@@ -4856,25 +4856,25 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
               App
             </span>
             <a
-              class="1 c93 c94"
+              class="c93 c94"
               href="#/swap"
             >
               Swap
             </a>
             <a
-              class="1 c93 c94"
+              class="c93 c94"
               href="#/tokens"
             >
               Tokens
             </a>
             <a
-              class="1 c93 c94"
+              class="c93 c94"
               href="#/nfts"
             >
               NFTs
             </a>
             <a
-              class="1 c93 c94"
+              class="c93 c94"
               href="#/pools"
             >
               Pools
@@ -4889,7 +4889,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
               Protocol
             </span>
             <a
-              class="c95 0 c96"
+              class="c95 c96"
               href="https://uniswap.org/community"
               rel="noopener noreferrer"
               target="_blank"
@@ -4897,7 +4897,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
               Community
             </a>
             <a
-              class="c95 0 c96"
+              class="c95 c96"
               href="https://uniswap.org/governance"
               rel="noopener noreferrer"
               target="_blank"
@@ -4905,7 +4905,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
               Governance
             </a>
             <a
-              class="c95 0 c96"
+              class="c95 c96"
               href="https://uniswap.org/developers"
               rel="noopener noreferrer"
               target="_blank"
@@ -4922,7 +4922,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
               Company
             </span>
             <a
-              class="c95 0 c96"
+              class="c95 c96"
               href="https://boards.greenhouse.io/uniswaplabs"
               rel="noopener noreferrer"
               target="_blank"
@@ -4930,7 +4930,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
               Careers
             </a>
             <a
-              class="c95 0 c96"
+              class="c95 c96"
               href="https://uniswap.org/blog"
               rel="noopener noreferrer"
               target="_blank"
@@ -4947,7 +4947,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
               Get Help
             </span>
             <a
-              class="c95 0 c96"
+              class="c95 c96"
               href="https://support.uniswap.org/hc/en-us/requests/new"
               rel="noopener noreferrer"
               target="_blank"
@@ -4955,7 +4955,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
               Contact Us
             </a>
             <a
-              class="c95 0 c96"
+              class="c95 c96"
               href="https://support.uniswap.org/hc/en-us"
               rel="noopener noreferrer"
               target="_blank"
@@ -5016,7 +5016,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
             </a>
           </div>
           <span
-            class="2 c89"
+            class="c89"
           >
             © 
             2023

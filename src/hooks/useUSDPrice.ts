@@ -3,8 +3,7 @@ import { ChainId, Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sd
 import { nativeOnChain } from 'constants/tokens'
 import { Chain, useTokenSpotPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, isGqlSupportedChain, PollingInterval } from 'graphql/data/util'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/slice'
-import { TradeState } from 'state/routing/types'
+import { INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 

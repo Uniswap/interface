@@ -18,6 +18,37 @@ export enum QuoteMethod {
   CLIENT_SIDE_FALLBACK = 'CLIENT_SIDE_FALLBACK', // If client-side was used after the routing-api call failed.
 }
 
+// This is excluded from `RouterPreference` enum because it's only used
+// internally for token -> USDC trades to get a USD value.
+export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
+
+export enum RouterPreference {
+  X = 'uniswapx',
+  API = 'api',
+  CLIENT = 'client',
+}
+
+export interface GetQuoteArgs {
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  amount: string
+  account?: string
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+  tradeType: TradeType
+  needsWrapIfUniswapX: boolean
+  uniswapXEnabled: boolean
+  uniswapXForceSyntheticQuotes: boolean
+  forceUniswapXOn: boolean
+  userDisabledUniswapX: boolean
+  isRoutingAPIPrice?: boolean
+}
+
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
 type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>

@@ -48,13 +48,18 @@ module.exports = {
   },
   jest: {
     configure(jestConfig) {
-      return Object.assign(jestConfig, {
+      const config = Object.assign(jestConfig, {
         cacheDirectory: getCacheDirectory('jest'),
-        transform: Object.assign(jestConfig.transform, {
+        transform: {
+          ...Object.entries(jestConfig.transform).reduce((transform, [key, value]) => {
+            if (value.match(/babel/)) return transform
+            return { ...transform, [key]: value }
+          }, {}),
           // Transform vanilla-extract using its own transformer.
           // See https://sandroroth.com/blog/vanilla-extract-cra#jest-transform.
           '\\.css\\.ts$': '@vanilla-extract/jest-transform',
-        }),
+          '\\.(t|j)sx?$': '@swc/jest',
+        },
         // Use @uniswap/conedison's build directly, as jest does not support its exports.
         transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
         moduleNameMapper: {
@@ -62,6 +67,8 @@ module.exports = {
           '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
         },
       })
+      console.log(config.transform)
+      return config
     },
   },
   webpack: {

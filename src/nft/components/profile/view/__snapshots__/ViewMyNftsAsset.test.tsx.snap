@@ -313,10 +313,10 @@ exports[`NftCard renders correctly 1`] = `
             class="c2 c3 c16"
           >
             <div
-              class="c80 c2 c3 c17"
+              class="c2 c3 c17"
             >
               <div
-                class="c14 c81 c18 css-1jljtub"
+                class="c14 c18 css-1jljtub"
               >
                 Froggy Friend #2359
               </div>
