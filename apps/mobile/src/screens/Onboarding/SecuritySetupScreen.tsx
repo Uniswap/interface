@@ -107,6 +107,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
           <Box
             borderRadius="rounded16"
             borderWidth={1}
+            overflow="hidden"
             padding="spacing36"
             position="absolute"
             style={{
@@ -122,7 +123,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             />
             {isTouchIdDevice ? (
               <FingerprintIcon
-                color={theme.colors.textPrimary}
+                color={theme.colors.textOnBrightPrimary}
                 height={theme.imageSizes.image48}
                 width={theme.imageSizes.image48}
               />
@@ -172,7 +173,6 @@ const styles = StyleSheet.create({
   blurView: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: FixedTheme.borderRadii.rounded16,
-    overflow: 'hidden',
   },
   image: {
     height: '100%',
