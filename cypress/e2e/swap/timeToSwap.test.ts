@@ -15,9 +15,7 @@ describe('time-to-swap logging', () => {
 
     // Submit transaction
     cy.get('#swap-button').click()
-    cy.contains('Review swap')
     cy.contains('Confirm swap').click()
-    cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
     cy.get(getTestSelector('confirmation-close-icon')).click()
 
     cy.get(getTestSelector('popups')).contains('Swapped')
@@ -36,9 +34,7 @@ describe('time-to-swap logging', () => {
 
     // Submit transaction
     cy.get('#swap-button').click()
-    cy.contains('Review swap')
     cy.contains('Confirm swap').click()
-    cy.wait('@eth_estimateGas').wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
     cy.get(getTestSelector('confirmation-close-icon')).click()
 
     cy.get(getTestSelector('popups')).contains('Swapped')

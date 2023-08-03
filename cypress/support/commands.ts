@@ -17,7 +17,7 @@ declare global {
        * Wait for a specific event to be sent to amplitude. If the event is found, the subject will be the event.
        *
        * @param {string} eventName - The type of the event to search for e.g. SwapEventName.SWAP_TRANSACTION_COMPLETED
-       * @param {number} [timeout=20000] - The maximum amount of time (in ms) to wait for the event.
+       * @param {number} timeout - The maximum amount of time (in ms) to wait for the event.
        * @returns {Chainable<Subject>}
        */
       waitForAmplitudeEvent(eventName: string, timeout?: number): Chainable<Subject>

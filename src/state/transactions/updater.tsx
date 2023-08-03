@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import LibUpdater from 'lib/hooks/transactions/updater'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { PopupType } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
@@ -26,11 +26,12 @@ export function toSerializableReceipt(receipt: TransactionReceipt): Serializable
   }
 }
 
+// We only log the time-to-swap metric for the first swap of a session.
+let hasReportedTimeToSwap = false
+
 /**
  * Returns the time elapsed between page load and now,
  * if the time-to-swap mark doesn't already exist.
- *
- * We only log the time-to-swap metric for the first swap of a session.
  */
 function getElapsedTime(): number {
   const timeToSwap = performance.mark('time-to-swap')
@@ -41,7 +42,6 @@ export default function Updater() {
   const analyticsContext = useTrace()
   const { chainId } = useWeb3React()
   const addPopup = useAddPopup()
-  const [timeToSwap, setTimeToSwap] = useState<number | undefined>(undefined)
   // speed up popup dismisall time if on L2
   const isL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
   const transactions = useAppSelector((state) => state.transactions)
@@ -73,12 +73,12 @@ export default function Updater() {
 
       sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
         // if timeToSwap was already set, we already logged this session
-        time_to_swap: timeToSwap ? undefined : elapsedTime,
+        time_to_swap: hasReportedTimeToSwap ? undefined : elapsedTime,
         hash,
         ...analyticsContext,
       })
 
-      setTimeToSwap(elapsedTime)
+      hasReportedTimeToSwap = true
 
       addPopup(
         {
@@ -89,7 +89,7 @@ export default function Updater() {
         isL2 ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
       )
     },
-    [addPopup, analyticsContext, dispatch, isL2, timeToSwap]
+    [addPopup, analyticsContext, dispatch, isL2]
   )
 
   return <LibUpdater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />
