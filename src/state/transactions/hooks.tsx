@@ -9,7 +9,7 @@ import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { TradeFillType } from 'state/routing/types'
 
-import { addTransaction, removeTransaction } from './reducer'
+import { addTransaction, cancelTransaction, removeTransaction } from './reducer'
 import { TransactionDetails, TransactionInfo, TransactionType } from './types'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
@@ -51,6 +51,17 @@ export function useTransactionRemover() {
   )
 }
 
+export function useTransactionCanceller() {
+  const dispatch = useAppDispatch()
+
+  return useCallback(
+    (hash: string, chainId: number, cancelHash: string) => {
+      dispatch(cancelTransaction({ hash, chainId, cancelHash }))
+    },
+    [dispatch]
+  )
+}
+
 export function useMultichainTransactions(): [TransactionDetails, ChainId][] {
   const state = useAppSelector((state) => state.transactions)
   return SUPPORTED_CHAINS.flatMap((chainId) =>
@@ -82,7 +93,7 @@ export function useIsTransactionPending(transactionHash?: string): boolean {
 
   if (!transactionHash || !transactions[transactionHash]) return false
 
-  return !transactions[transactionHash].receipt
+  return isPendingTx(transactions[transactionHash])
 }
 
 export function useIsTransactionConfirmed(transactionHash?: string): boolean {
@@ -103,7 +114,7 @@ export function useSwapTransactionStatus(swapResult: SwapResult | undefined): Tr
  * Returns whether a transaction happened in the last day (86400 seconds * 1000 milliseconds / second)
  * @param tx to check for recency
  */
-export function isTransactionRecent(tx: TransactionDetails): boolean {
+function isTransactionRecent(tx: TransactionDetails): boolean {
   return new Date().getTime() - tx.addedTime < 86_400_000
 }
 
@@ -133,9 +144,11 @@ export function useHasPendingRevocation(token?: Token, spender?: string): boolea
   return usePendingApprovalAmount(token, spender)?.eq(0) ?? false
 }
 
-export function useHasPendingTransactions() {
+export function isPendingTx(tx: TransactionDetails): boolean {
+  return !tx.receipt && !tx.cancelled
+}
+
+export function usePendingTransactions(): TransactionDetails[] {
   const allTransactions = useAllTransactions()
-  return useMemo(() => {
-    return Object.values(allTransactions).filter((tx) => !tx.receipt).length > 0
-  }, [allTransactions])
+  return useMemo(() => Object.values(allTransactions).filter(isPendingTx), [allTransactions])
 }
