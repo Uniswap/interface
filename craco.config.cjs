@@ -6,11 +6,17 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const TerserPlugin = require('terser-webpack-plugin')
-const { DefinePlugin, IgnorePlugin, ProvidePlugin } = require('webpack')
+const { IgnorePlugin, ProvidePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
+const isE2E = process.env.E2E === 'true'
 const isProduction = process.env.NODE_ENV === 'production'
+
+process.env.REACT_APP_GIT_COMMIT_HASH = commitHash
+if (isE2E) {
+  process.env.REACT_APP_CSP_ALLOW_UNSAFE_EVAL = true
+}
 
 // Linting and type checking are only necessary as part of development and testing.
 // Omit them from production builds, as they slow down the feedback loop.
@@ -81,14 +87,6 @@ module.exports = {
       // Configure webpack plugins:
       webpackConfig.plugins = webpackConfig.plugins
         .map((plugin) => {
-          // Extend process.env with dynamic values (eg commit hash).
-          // This will make dynamic values available to JavaScript only, not to interpolated HTML (ie index.html).
-          if (plugin instanceof DefinePlugin) {
-            Object.assign(plugin.definitions['process.env'], {
-              REACT_APP_GIT_COMMIT_HASH: JSON.stringify(commitHash),
-            })
-          }
-
           // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
           // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
           if (plugin instanceof MiniCssExtractPlugin) {
@@ -146,6 +144,7 @@ module.exports = {
       webpackConfig.optimization = Object.assign(
         webpackConfig.optimization,
         {
+          minimize: isProduction && !isE2E,
           minimizer: [
             new TerserPlugin({
               minify: TerserPlugin.swcMinify,
@@ -153,7 +152,7 @@ module.exports = {
             }),
           ],
         },
-        isProduction
+        isProduction && !isE2E
           ? {
               splitChunks: {
                 // Cap the chunk size to 5MB.
