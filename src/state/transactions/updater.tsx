@@ -1,5 +1,7 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
+import { SwapEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import LibUpdater from 'lib/hooks/transactions/updater'
 import { useCallback, useMemo } from 'react'
@@ -25,7 +27,20 @@ export function toSerializableReceipt(receipt: TransactionReceipt): Serializable
   }
 }
 
+// We only log the time-to-swap metric for the first swap of a session.
+let hasReportedTimeToSwap = false
+
+/**
+ * Returns the time elapsed between page load and now,
+ * if the time-to-swap mark doesn't already exist.
+ */
+function getElapsedTime(): number {
+  const timeToSwap = performance.mark('time-to-swap')
+  return timeToSwap.startTime
+}
+
 export default function Updater() {
+  const analyticsContext = useTrace()
   const { chainId } = useWeb3React()
   const addPopup = useAddPopup()
   // speed up popup dismisall time if on L2
@@ -55,6 +70,17 @@ export default function Updater() {
         })
       )
 
+      const elapsedTime = getElapsedTime()
+
+      sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
+        // if timeToSwap was already set, we already logged this session
+        time_to_swap: hasReportedTimeToSwap ? undefined : elapsedTime,
+        hash,
+        ...analyticsContext,
+      })
+
+      hasReportedTimeToSwap = true
+
       addPopup(
         {
           type: PopupType.Transaction,
@@ -64,7 +90,7 @@ export default function Updater() {
         isL2 ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
       )
     },
-    [addPopup, dispatch, isL2]
+    [addPopup, analyticsContext, dispatch, isL2]
   )
 
   return <LibUpdater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />
