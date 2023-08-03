@@ -178,11 +178,15 @@ module.exports = {
       // Configure webpack resolution. webpackConfig.cache is unused with swc-loader, but the resolver can still cache:
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, { unsafeCache: true })
 
-      // Ignore failed source mappings to avoid spamming the console.
-      // Source mappings for a package will fail if the package does not provide them, but the build will still succeed,
-      // so it is unnecessary (and bothersome) to log it. This should be turned off when debugging missing sourcemaps.
-      // See https://webpack.js.org/loaders/source-map-loader#ignoring-warnings.
-      webpackConfig.ignoreWarnings = [/Failed to parse source map/]
+      webpackConfig.ignoreWarnings = [
+        // Source mappings for a package will fail if the package does not provide them, but the build will still succeed,
+        // so it is unnecessary (and bothersome) to log it. This should be turned off when debugging missing sourcemaps.
+        // See https://webpack.js.org/loaders/source-map-loader#ignoring-warnings.
+        /Failed to parse source map/,
+        // This dependency warning is logged when compiling with coverage, but is not fatal.
+        // Because it is logged in CI, it must be ignored (as CI treats warnings as errors).
+        /require function is used in a way in which dependencies cannot be statically extracted/,
+      ]
 
       return webpackConfig
     },
