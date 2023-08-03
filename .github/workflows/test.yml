@@ -88,9 +88,9 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cache-on-main
         with:
-          path: node_modules/.cache
-          key: ${{ runner.os }}-build-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-build-
+          path: node_modules/.swc
+          key: ${{ runner.os }}-swc-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-swc-
       - run: yarn build
       - uses: actions/upload-artifact@v3
         with:
