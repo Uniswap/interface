@@ -1,11 +1,9 @@
 import { ThemeProvider } from '@shopify/restyle'
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Appearance, ColorSchemeName } from 'react-native'
-import { useAppSelector } from 'src/app/hooks'
 import { useCurrentAppearanceSetting } from 'src/features/appearance/hooks'
 import { AppearanceSettingType } from 'src/features/appearance/slice'
 import { darkTheme, theme as lightTheme, Theme } from 'ui/src/theme/restyle/theme'
-import { selectUserPalette } from 'wallet/src/features/wallet/selectors'
 
 const COLOR_SCHEME_FLICKER_DELAY_MS = 250
 
@@ -20,19 +18,12 @@ export function DynamicThemeProvider({ children }: PropsWithChildren<unknown>): 
   const selectedTheme =
     currentAppearanceSetting === AppearanceSettingType.Dark ? darkTheme : lightTheme
 
-  const userPalette = useAppSelector(selectUserPalette)
   const baseTheme =
     currentAppearanceSetting !== AppearanceSettingType.System ? selectedTheme : systemTheme
 
   const theme: Theme = useMemo(
-    () => ({
-      ...baseTheme,
-      colors: {
-        ...baseTheme.colors,
-        userThemeColor: userPalette?.userThemeColor ?? baseTheme.colors.userThemeColor,
-      },
-    }),
-    [baseTheme, userPalette?.userThemeColor]
+    () => ({ ...baseTheme, colors: { ...baseTheme.colors } }),
+    [baseTheme]
   )
 
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>

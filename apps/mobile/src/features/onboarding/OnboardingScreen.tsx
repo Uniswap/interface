@@ -81,7 +81,7 @@ export function OnboardingScreen({
             )}
             {subtitle ? (
               <Text
-                color="textSecondary"
+                color="DEP_textSecondary"
                 maxFontSizeMultiplier={subtitleMaxFontScaleMultiplier}
                 textAlign="center"
                 variant={subtitleSize}>

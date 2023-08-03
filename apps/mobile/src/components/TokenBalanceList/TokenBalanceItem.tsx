@@ -83,7 +83,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               {currency.name ?? currency.symbol}
             </Text>
             <Flex row alignItems="center" gap="spacing8" minHeight={20}>
-              <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
+              <Text color="DEP_textSecondary" numberOfLines={1} variant="subheadSmall">
                 {`${formatNumber(quantity)}`} {currency.symbol}
               </Text>
             </Flex>
@@ -93,22 +93,22 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
             {!portfolioBalance.balanceUSD ? (
               <Flex centered flex={1}>
-                <Text color="textSecondary">{t('N/A')}</Text>
+                <Text color="DEP_textSecondary">{t('N/A')}</Text>
               </Flex>
             ) : (
               <Flex alignItems="flex-end" gap="spacing4" pl="spacing8">
                 <Text
-                  color={isWarmLoading ? 'textSecondary' : 'textPrimary'}
+                  color={isWarmLoading ? 'DEP_textSecondary' : 'DEP_textPrimary'}
                   numberOfLines={1}
                   variant="bodyLarge">
                   {formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
                 </Text>
-                <Text color="textSecondary">
+                <Text color="DEP_textSecondary">
                   <RelativeChange
                     alignRight
                     change={relativeChange24 ?? undefined}
-                    negativeChangeColor={isWarmLoading ? 'textSecondary' : 'accentCritical'}
-                    positiveChangeColor={isWarmLoading ? 'textSecondary' : 'accentSuccess'}
+                    negativeChangeColor={isWarmLoading ? 'DEP_textSecondary' : 'DEP_accentCritical'}
+                    positiveChangeColor={isWarmLoading ? 'DEP_textSecondary' : 'DEP_accentSuccess'}
                     variant="subheadSmall"
                   />
                 </Text>

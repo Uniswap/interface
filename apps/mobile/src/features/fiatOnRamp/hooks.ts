@@ -124,7 +124,7 @@ export function useMoonpayFiatOnRamp({
     // as-is, avoids waterfalling requests => better ux
     {
       ownerAddress: activeAccountAddress,
-      colorCode: theme.colors.accentAction,
+      colorCode: theme.colors.DEP_accentAction,
       externalTransactionId,
       amount: baseCurrencyAmount,
       currencyCode: quoteCurrencyCode,
@@ -176,13 +176,13 @@ export function useMoonpayFiatOnRamp({
   let errorText, errorColor: keyof Theme['colors'] | undefined
   if (isError) {
     errorText = t('Something went wrong.')
-    errorColor = 'accentWarning'
+    errorColor = 'DEP_accentWarning'
   } else if (amountIsTooSmall) {
     errorText = t('${{amount}} minimum', { amount: minBuyAmount })
-    errorColor = 'accentCritical'
+    errorColor = 'DEP_accentCritical'
   } else if (amountIsTooLarge) {
     errorText = t('${{amount}} maximum', { amount: maxBuyAmount })
-    errorColor = 'accentCritical'
+    errorColor = 'DEP_accentCritical'
   }
 
   return {

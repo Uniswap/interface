@@ -40,9 +40,9 @@ fun MnemonicWordCell(
     .background(cellBackgroundColor(word.focused))
 
   if (word.hasError) {
-    rowModifier = rowModifier.border(1.dp, UniswapTheme.extendedColors.accentCritical, shape)
+    rowModifier = rowModifier.border(1.dp, UniswapTheme.extendedColors.DEP_accentCritical, shape)
   } else if (word.focused) {
-    rowModifier = rowModifier.border(1.dp, UniswapTheme.extendedColors.accentActive, shape)
+    rowModifier = rowModifier.border(1.dp, UniswapTheme.extendedColors.DEP_accentActive, shape)
   }
 
   Row(
@@ -67,7 +67,7 @@ fun MnemonicWordCell(
 @Composable
 private fun cellBackgroundColor(focused: Boolean): Color =
   if (focused) {
-    UniswapTheme.extendedColors.background3
+    UniswapTheme.extendedColors.DEP_background3
   } else if (isSystemInDarkTheme()) { // TODO gary verify if this reflects ThemeModule overrides
     UniswapColors.Gray900
   } else {

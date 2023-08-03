@@ -25,9 +25,9 @@ export function HideContentShield({
       opacity={visibility ? 0 : 1}
       position="absolute"
       width="100%">
-      <Icons.EyeOff color="$textSecondary" size={getTokenValue('$icon.64')} />
+      <Icons.EyeOff color="$DEP_textSecondary" size={getTokenValue('$icon.64')} />
       <Button
-        backgroundColor="$background3"
+        backgroundColor="$DEP_background3"
         borderRadius="$rounded12"
         paddingHorizontal="$spacing16"
         paddingVertical="$spacing8"

@@ -7,7 +7,7 @@ export function OnboardingInputError({ error }: { error: string }): JSX.Element 
   return (
     <Text
       bottom={ERROR_MESSAGE_OFFSET}
-      color="$accentCritical"
+      color="$DEP_accentCritical"
       position="absolute"
       variant="bodyMicro">
       {error}

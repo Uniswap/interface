@@ -72,7 +72,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
         <Flex shrink alignItems="flex-start" gap="none">
           <Flex centered row gap="spacing8">
             <Flex shrink>
-              <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
+              <Text color="DEP_textPrimary" numberOfLines={1} variant="bodyLarge">
                 {name}
               </Text>
             </Flex>
@@ -80,13 +80,13 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               <WarningIcon
                 height={theme.iconSizes.icon16}
                 safetyLevel={safetyLevel}
-                strokeColorOverride="textTertiary"
+                strokeColorOverride="DEP_textTertiary"
                 width={theme.iconSizes.icon16}
               />
             )}
           </Flex>
           <Flex centered row gap="spacing8">
-            <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
+            <Text color="DEP_textSecondary" numberOfLines={1} variant="subheadSmall">
               {symbol}
             </Text>
           </Flex>

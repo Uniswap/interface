@@ -31,7 +31,7 @@ export function SpendingDetails({
 
   return (
     <Flex row alignItems="center" gap="spacing16">
-      <Text color="textSecondary" variant="bodySmall">
+      <Text color="DEP_textSecondary" variant="bodySmall">
         {t('Sending')}:
       </Text>
       <Flex row alignItems="center" gap="spacing4">
@@ -40,7 +40,7 @@ export function SpendingDetails({
           {formatCurrencyAmount(nativeCurrencyAmount, NumberType.TokenTx)}{' '}
           {nativeCurrencyInfo?.currency.symbol}
         </Text>
-        <Text color="textSecondary" loading={!usdValue} variant="subheadSmall">
+        <Text color="DEP_textSecondary" loading={!usdValue} variant="subheadSmall">
           ({formatUSDPrice(usdValue)})
         </Text>
       </Flex>

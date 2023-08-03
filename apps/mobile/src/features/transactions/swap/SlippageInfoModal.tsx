@@ -53,7 +53,7 @@ export default function SlippageInfoModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.background1}
+      backgroundColor={theme.colors.DEP_background1}
       name={ModalName.SlippageInfo}
       onClose={onClose}>
       <Flex centered fill gap="spacing16" mb="spacing12" p="spacing24">
@@ -62,10 +62,10 @@ export default function SlippageInfoModal({
           borderRadius="rounded12"
           p="spacing12"
           style={{
-            backgroundColor: opacify(12, theme.colors.textTertiary),
+            backgroundColor: opacify(12, theme.colors.DEP_textTertiary),
           }}>
           <SettingsIcon
-            color={theme.colors.textTertiary}
+            color={theme.colors.DEP_textTertiary}
             height={theme.iconSizes.icon28}
             width={theme.iconSizes.icon28}
           />
@@ -73,7 +73,7 @@ export default function SlippageInfoModal({
         <Text textAlign="center" variant="bodyLarge">
           {t('Maximum slippage')}
         </Text>
-        <Text color="textSecondary" textAlign="center" variant="bodySmall">
+        <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
           {tradeType === TradeType.EXACT_INPUT
             ? t(
                 'If the price slips any further, your transaction will revert. Below is the minimum amount you are guaranteed to receive.'
@@ -82,34 +82,34 @@ export default function SlippageInfoModal({
                 'If the price slips any further, your transaction will revert. Below is the maximum amount you would need to spend.'
               )}{' '}
           <TouchableArea height={18} onPress={onPressLearnMore}>
-            <Text color="accentActive" variant="buttonLabelSmall">
+            <Text color="DEP_accentActive" variant="buttonLabelSmall">
               {t('Learn more')}
             </Text>
           </TouchableArea>
         </Text>
-        <Flex fill bg="background2" borderRadius="rounded20" p="spacing12" width="100%">
+        <Flex fill bg="DEP_background2" borderRadius="rounded20" p="spacing12" width="100%">
           <Flex fill row justifyContent="space-between">
-            <Text color="textSecondary" variant="bodySmall">
+            <Text color="DEP_textSecondary" variant="bodySmall">
               {t('Max slippage')}
             </Text>
             <Flex row gap="spacing8">
               {!isCustomSlippage ? (
-                <Flex centered bg="accentActionSoft" borderRadius="roundedFull" px="spacing8">
-                  <Text color="accentAction" variant="buttonLabelMicro">
+                <Flex centered bg="DEP_accentActionSoft" borderRadius="roundedFull" px="spacing8">
+                  <Text color="DEP_accentAction" variant="buttonLabelMicro">
                     {t('Auto')}
                   </Text>
                 </Flex>
               ) : null}
               <Text
-                color={showSlippageWarning ? 'accentWarning' : 'textPrimary'}
+                color={showSlippageWarning ? 'DEP_accentWarning' : 'DEP_textPrimary'}
                 variant="subheadSmall">{`${slippageTolerance.toFixed(2).toString()}%`}</Text>
             </Flex>
           </Flex>
           <Flex fill row justifyContent="space-between">
-            <Text color="textSecondary" variant="bodySmall">
+            <Text color="DEP_textSecondary" variant="bodySmall">
               {tradeType === TradeType.EXACT_INPUT ? t('Receive at least') : t('Spend at most')}
             </Text>
-            <Text color="textPrimary" textAlign="center" variant="subheadSmall">
+            <Text color="DEP_textPrimary" textAlign="center" variant="subheadSmall">
               {amount + ' ' + symbol}
             </Text>
           </Flex>
@@ -117,11 +117,11 @@ export default function SlippageInfoModal({
         {showSlippageWarning ? (
           <Flex centered row gap="spacing8">
             <AlertTriangleIcon
-              color={theme.colors.accentWarning}
+              color={theme.colors.DEP_accentWarning}
               height={theme.iconSizes.icon16}
               width={theme.iconSizes.icon16}
             />
-            <Text color="accentWarning" variant="bodySmall">
+            <Text color="DEP_accentWarning" variant="bodySmall">
               {t('Slippage may be higher than necessary')}
             </Text>
           </Flex>

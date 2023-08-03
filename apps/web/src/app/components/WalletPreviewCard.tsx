@@ -25,7 +25,7 @@ export default function WalletPreviewCard({
   hideSelectionCircle,
   ...rest
 }: Props): JSX.Element {
-  const unselectedBorderColor = '$backgroundOutline'
+  const unselectedBorderColor = '$DEP_backgroundOutline'
 
   const { gradientStart } = useUniconColors(address)
 
@@ -52,7 +52,7 @@ export default function WalletPreviewCard({
           <YStack>
             <Text variant="subheadLarge">{shortenAddress(address)}</Text>
             {balance ? (
-              <Text color="$textSecondary" variant="bodySmall">
+              <Text color="$DEP_textSecondary" variant="bodySmall">
                 {formatUSDPrice(balance, NumberType.FiatTokenQuantity)}
               </Text>
             ) : null}
@@ -62,7 +62,7 @@ export default function WalletPreviewCard({
           selected ? (
             <CheckmarkIcon color={gradientStart} />
           ) : (
-            <Circle borderColor="$backgroundOutline" borderWidth={2} size={iconSizes.icon20} />
+            <Circle borderColor="$DEP_backgroundOutline" borderWidth={2} size={iconSizes.icon20} />
           )
         ) : null}
       </XStack>

@@ -41,7 +41,7 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
 
   return (
     <Box
-      borderColor="backgroundOutline"
+      borderColor="DEP_backgroundOutline"
       borderRadius="rounded16"
       borderWidth={1}
       maxHeight={accountsScrollViewHeight}
@@ -63,7 +63,7 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
               variant="subheadSmall"
             />
             <Text
-              color="textTertiary"
+              color="DEP_textTertiary"
               loading={loading}
               numberOfLines={1}
               variant="buttonLabelMicro">

@@ -12,8 +12,8 @@ interface SelectionCircleProps {
 export function SelectionCircle({
   selected,
   size,
-  unselectedColor = 'textSecondary',
-  selectedColor = 'magentaVibrant',
+  unselectedColor = 'DEP_textSecondary',
+  selectedColor = 'DEP_magentaVibrant',
 }: SelectionCircleProps): JSX.Element {
   return (
     <Flex

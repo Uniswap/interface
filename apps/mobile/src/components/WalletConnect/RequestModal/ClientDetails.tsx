@@ -34,10 +34,10 @@ export function ClientDetails({
           request={request}
         />
         <LinkButton
-          backgroundColor="background2"
+          backgroundColor="DEP_background2"
           borderRadius="rounded16"
-          color={theme.colors.accentActive}
-          iconColor={theme.colors.accentActive}
+          color={theme.colors.DEP_accentActive}
+          iconColor={theme.colors.DEP_accentActive}
           label={dapp.url}
           mb="spacing12"
           px="spacing8"

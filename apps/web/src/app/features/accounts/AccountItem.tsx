@@ -60,24 +60,24 @@ export function AccountItem({
           )}
         </XStack>
         <Flex>
-          <Text color="$textPrimary" variant="bodyLarge">
+          <Text color="$DEP_textPrimary" variant="bodyLarge">
             {displayName}
           </Text>
           <XStack>
             <XStack space alignItems="center" flex={1}>
-              <Text color="$textSecondary" variant="bodySmall">
+              <Text color="$DEP_textSecondary" variant="bodySmall">
                 {sanitizeAddressText(shortenAddress(address))}
               </Text>
               <Flex onPress={copyAddress}>
                 {/* TODO convert icon and remove dark mode color hardcoding */}
                 <CopyIcon
-                  color={colorsDark.textSecondary}
+                  color={colorsDark.DEP_textSecondary}
                   height={iconSizes.icon12}
                   width={iconSizes.icon12}
                 />
               </Flex>
             </XStack>
-            <Text color="$textSecondary" variant="bodySmall">
+            <Text color="$DEP_textSecondary" variant="bodySmall">
               ${loading || error ? '' : portfolioBalanceUSD?.toFixed(2)}
             </Text>
           </XStack>

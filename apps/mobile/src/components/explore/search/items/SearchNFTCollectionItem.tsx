@@ -87,20 +87,20 @@ export function SearchNFTCollectionItem({
           {imageUrl ? (
             <NFTViewer uri={imageUrl} />
           ) : (
-            <Text color="textPrimary" numberOfLines={1} textAlign="center">
+            <Text color="DEP_textPrimary" numberOfLines={1} textAlign="center">
               {name.slice(0, 1)}
             </Text>
           )}
         </Flex>
         <Box flexShrink={1}>
-          <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
+          <Text color="DEP_textPrimary" numberOfLines={1} variant="bodyLarge">
             {name}
           </Text>
         </Box>
         <Flex grow alignItems="flex-start" width={theme.spacing.spacing36}>
           {isVerified ? (
             <VerifiedIcon
-              color={theme.colors.userThemeMagenta}
+              color={theme.colors.DEP_magentaVibrant}
               height={iconSizes.icon16}
               width={iconSizes.icon16}
             />

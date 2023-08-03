@@ -211,10 +211,10 @@ export default function SwapSettingsModal({
           borderRadius="rounded12"
           p="spacing12"
           style={{
-            backgroundColor: opacify(12, theme.colors.textTertiary),
+            backgroundColor: opacify(12, theme.colors.DEP_textTertiary),
           }}>
           <SettingsIcon
-            color={theme.colors.textTertiary}
+            color={theme.colors.DEP_textTertiary}
             height={theme.iconSizes.icon28}
             width={theme.iconSizes.icon28}
           />
@@ -222,12 +222,12 @@ export default function SwapSettingsModal({
         <Text textAlign="center" variant="bodyLarge">
           {t('Maximum slippage')}
         </Text>
-        <Text color="textSecondary" textAlign="center" variant="bodySmall">
+        <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
           {t(
             'Your transaction will revert if the price changes more than the slippage percentage.'
           )}{' '}
           <TouchableArea height={18} onPress={onPressLearnMore}>
-            <Text color="accentActive" variant="buttonLabelSmall">
+            <Text color="DEP_accentActive" variant="buttonLabelSmall">
               {t('Learn more')}
             </Text>
           </TouchableArea>
@@ -242,15 +242,15 @@ export default function SwapSettingsModal({
             <AnimatedFlex
               row
               alignItems="center"
-              bg={isEditingSlippage ? 'background2' : 'background0'}
-              borderColor="backgroundOutline"
+              bg={isEditingSlippage ? 'DEP_background2' : 'DEP_background0'}
+              borderColor="DEP_backgroundOutline"
               borderRadius="roundedFull"
               borderWidth={1}
               gap="spacing12"
               p="spacing16"
               style={inputAnimatedStyle}>
               <TouchableArea hapticFeedback onPress={onPressAutoSlippage}>
-                <Text color="accentAction" variant="buttonLabelSmall">
+                <Text color="DEP_accentAction" variant="buttonLabelSmall">
                   {t('Auto')}
                 </Text>
               </TouchableArea>
@@ -258,8 +258,8 @@ export default function SwapSettingsModal({
                 keyboardType="numeric"
                 style={{
                   color: autoSlippageEnabled
-                    ? theme.colors.textSecondary
-                    : theme.colors.textPrimary,
+                    ? theme.colors.DEP_textSecondary
+                    : theme.colors.DEP_textPrimary,
                   fontSize: theme.textVariants.subheadLarge.fontSize,
                   fontFamily: theme.textVariants.subheadLarge.fontFamily,
                   width: theme.textVariants.subheadLarge.fontSize * 4,
@@ -275,7 +275,7 @@ export default function SwapSettingsModal({
                 onFocus={onFocusSlippageInput}
               />
               <Box width={theme.iconSizes.icon28}>
-                <Text color="textTertiary" textAlign="center" variant="subheadLarge">
+                <Text color="DEP_textTertiary" textAlign="center" variant="subheadLarge">
                   %
                 </Text>
               </Box>
@@ -324,11 +324,11 @@ function BottomLabel({
         gap="spacing8"
         height={theme.textVariants.bodySmall.lineHeight * 2 + theme.spacing.spacing8}>
         <AlertTriangleIcon
-          color={theme.colors.accentWarning}
+          color={theme.colors.DEP_accentWarning}
           height={theme.iconSizes.icon16}
           width={theme.iconSizes.icon16}
         />
-        <Text color="accentWarning" textAlign="center" variant="bodySmall">
+        <Text color="DEP_accentWarning" textAlign="center" variant="bodySmall">
           {inputWarning}
         </Text>
       </Flex>
@@ -340,7 +340,7 @@ function BottomLabel({
       centered
       gap="spacing8"
       height={theme.textVariants.bodySmall.lineHeight * 2 + theme.spacing.spacing8}>
-      <Text color="textSecondary" textAlign="center" variant="bodySmall">
+      <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
         {trade.tradeType === TradeType.EXACT_INPUT
           ? t('Receive at least {{amount}} {{symbol}}', {
               amount: formatCurrencyAmount(
@@ -360,11 +360,11 @@ function BottomLabel({
       {showSlippageWarning ? (
         <Flex centered row gap="spacing8">
           <AlertTriangleIcon
-            color={theme.colors.accentWarning}
+            color={theme.colors.DEP_accentWarning}
             height={theme.iconSizes.icon16}
             width={theme.iconSizes.icon16}
           />
-          <Text color="accentWarning" variant="bodySmall">
+          <Text color="DEP_accentWarning" variant="bodySmall">
             {t('Slippage may be higher than necessary')}
           </Text>
         </Flex>

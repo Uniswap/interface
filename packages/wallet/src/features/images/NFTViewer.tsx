@@ -37,11 +37,11 @@ export function NFTViewer({
       <Box
         alignItems="center"
         aspectRatio={1}
-        bg="$background3"
+        bg="$DEP_background3"
         justifyContent="center"
         maxHeight={maxHeight ?? '100%'}
         width="100%">
-        <Text color="$textSecondary" flex={0} variant="subheadSmall">
+        <Text color="$DEP_textSecondary" flex={0} variant="subheadSmall">
           {placeholderContent || t('Content not available')}
         </Text>
       </Box>

@@ -170,7 +170,7 @@ export const TokenItem = memo(function _TokenItem({
             <Flex centered row gap="spacing4" overflow="hidden">
               {index !== undefined && (
                 <Box minWidth={16}>
-                  <Text color="textSecondary" variant="buttonLabelMicro">
+                  <Text color="DEP_textSecondary" variant="buttonLabelMicro">
                     {index + 1}
                   </Text>
                 </Box>
@@ -181,7 +181,7 @@ export const TokenItem = memo(function _TokenItem({
               <Text numberOfLines={1} variant="bodyLarge">
                 {name}
               </Text>
-              <Text color="textSecondary" variant="subheadSmall">
+              <Text color="DEP_textSecondary" variant="subheadSmall">
                 {getMetadataSubtitle()}
               </Text>
             </Flex>

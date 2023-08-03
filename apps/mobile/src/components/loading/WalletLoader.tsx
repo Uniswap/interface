@@ -12,7 +12,7 @@ export function WalletLoader({ opacity }: Props): JSX.Element {
     <Flex
       row
       alignItems="center"
-      borderColor="background3"
+      borderColor="DEP_background3"
       borderRadius="rounded20"
       borderWidth={1}
       justifyContent="flex-start"
@@ -22,7 +22,7 @@ export function WalletLoader({ opacity }: Props): JSX.Element {
       py="spacing16"
       sentry-label="WalletLoader">
       <Flex row alignItems="center" gap="spacing12" height={ADDRESS_WRAPPER_HEIGHT}>
-        <Box bg="background3" borderRadius="roundedFull" height={32} width={32} />
+        <Box bg="DEP_background3" borderRadius="roundedFull" height={32} width={32} />
         <Flex alignItems="flex-start" gap="none" width="100%">
           <Text loading loadingPlaceholderText="Wallet Nickname" variant="bodyLarge" />
           <Text loading loadingPlaceholderText="0xaaaa...aaaa" variant="subheadSmall" />

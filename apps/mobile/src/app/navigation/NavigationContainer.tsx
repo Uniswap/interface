@@ -43,7 +43,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
       // avoid white flickering background on screen navigation
       theme={{
         ...DefaultTheme,
-        colors: { ...DefaultTheme.colors, background: theme.colors.background0 },
+        colors: { ...DefaultTheme.colors, background: theme.colors.DEP_background0 },
       }}
       onReady={(): void => {
         onReady(navigationRef)

@@ -227,7 +227,7 @@ function _SwapForm({
           gap="spacing2"
           onLayout={onInputPanelLayout}>
           <Trace section={SectionName.CurrencyInputPanel}>
-            <Flex backgroundColor="background2" borderRadius="rounded20">
+            <Flex backgroundColor="DEP_background2" borderRadius="rounded20">
               <CurrencyInputPanel
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
@@ -268,7 +268,7 @@ function _SwapForm({
                 position="absolute">
                 <Trace logPress element={ElementName.SwitchCurrenciesButton}>
                   <SwapArrowButton
-                    bg="background2"
+                    bg="DEP_background2"
                     size={SWAP_DIRECTION_BUTTON_SIZE}
                     onPress={onSwitchCurrencies}
                   />
@@ -280,7 +280,7 @@ function _SwapForm({
           <Trace section={SectionName.CurrencyOutputPanel}>
             <Box>
               <Flex
-                backgroundColor="background2"
+                backgroundColor="DEP_background2"
                 borderBottomLeftRadius={swapWarning || showRate || isBlocked ? 'none' : 'rounded20'}
                 borderBottomRightRadius={
                   swapWarning || showRate || isBlocked ? 'none' : 'rounded20'
@@ -317,7 +317,7 @@ function _SwapForm({
                     row
                     alignItems="center"
                     alignSelf="stretch"
-                    backgroundColor="background2"
+                    backgroundColor="DEP_background2"
                     borderBottomLeftRadius="rounded16"
                     borderBottomRightRadius="rounded16"
                     flexGrow={1}
@@ -337,7 +337,7 @@ function _SwapForm({
                           : swapWarning.title}
                       </Text>
                       {isPriceImpactWarning(swapWarning) && (
-                        <Text color="textSecondary" variant="bodySmall">
+                        <Text color="DEP_textSecondary" variant="bodySmall">
                           {rateUnitPrice &&
                             ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}
                         </Text>
@@ -351,7 +351,7 @@ function _SwapForm({
                   row
                   alignItems="center"
                   alignSelf="stretch"
-                  backgroundColor="background2"
+                  backgroundColor="DEP_background2"
                   borderBottomLeftRadius="rounded16"
                   borderBottomRightRadius="rounded16"
                   flexGrow={1}
@@ -366,10 +366,10 @@ function _SwapForm({
                     row
                     alignItems="center"
                     alignSelf="stretch"
-                    backgroundColor="background2"
+                    backgroundColor="DEP_background2"
                     borderBottomLeftRadius="rounded16"
                     borderBottomRightRadius="rounded16"
-                    borderTopColor="background0"
+                    borderTopColor="DEP_background0"
                     borderTopWidth={1}
                     flexGrow={1}
                     gap="spacing8"
@@ -379,21 +379,21 @@ function _SwapForm({
                       <SpinningLoader size={theme.iconSizes.icon20} />
                     ) : (
                       <InfoCircle
-                        color={theme.colors.textPrimary}
+                        color={theme.colors.DEP_textPrimary}
                         height={theme.iconSizes.icon20}
                         width={theme.iconSizes.icon20}
                       />
                     )}
                     <Flex row gap="none">
                       <Text
-                        color={swapDataRefreshing ? 'textTertiary' : undefined}
+                        color={swapDataRefreshing ? 'DEP_textTertiary' : undefined}
                         variant="subheadSmall">
                         {trade.trade
                           ? getRateToDisplay(trade.trade, showInverseRate)
                           : t('Fetching price...')}
                       </Text>
                       <Text
-                        color={swapDataRefreshing ? 'textTertiary' : 'textSecondary'}
+                        color={swapDataRefreshing ? 'DEP_textTertiary' : 'DEP_textSecondary'}
                         variant="subheadSmall">
                         {rateUnitPrice &&
                           ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}

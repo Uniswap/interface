@@ -78,18 +78,18 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
       }}>
       <TouchableArea
         alignItems="center"
-        backgroundColor={isDarkMode ? 'backgroundOverlay' : 'background0'}
+        backgroundColor={isDarkMode ? 'DEP_backgroundOverlay' : 'DEP_background0'}
         borderRadius="roundedFull"
         flexDirection="row"
         px="spacing12"
         py="spacing8">
         <Flex row gap="spacing4">
           {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}
-          <Text color="textSecondary" variant="buttonLabelSmall">
+          <Text color="DEP_textSecondary" variant="buttonLabelSmall">
             {getTokensOrderBySelectedLabel(orderBy, t)}
           </Text>
           <Chevron
-            color={theme.colors.textSecondary}
+            color={theme.colors.DEP_textSecondary}
             direction="s"
             height={theme.iconSizes.icon20}
             width={theme.iconSizes.icon20}

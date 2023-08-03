@@ -252,7 +252,7 @@ export function SwapReview({
           closeText={t('Dismiss')}
           icon={
             <InfoCircleSVG
-              color={theme.colors.accentWarning}
+              color={theme.colors.DEP_accentWarning}
               height={theme.iconSizes.icon24}
               width={theme.iconSizes.icon24}
             />

@@ -97,7 +97,7 @@ export function BottomSheetModal({
 
   const backgroundColorValue = blurredBackground
     ? theme.colors.none
-    : backgroundColor ?? theme.colors.background1
+    : backgroundColor ?? theme.colors.DEP_background1
 
   const renderBackdrop = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -166,7 +166,7 @@ export function BottomSheetModal({
         <BlurView
           blurAmount={5}
           blurType={isDarkMode ? 'dark' : 'xlight'}
-          reducedTransparencyFallbackColor={isDarkMode ? 'black' : 'white'}
+          reducedTransparencyFallbackColor={isDarkMode ? 'DEP_black' : 'DEP_white'}
           style={BlurViewStyle.base}
         />
       </Animated.View>
@@ -278,7 +278,7 @@ export function BottomSheetDetachedModal({
         hideHandlebar
           ? BottomSheetStyle.modalTransparent
           : {
-              backgroundColor: backgroundColor ?? theme.colors.background0,
+              backgroundColor: backgroundColor ?? theme.colors.DEP_background0,
             }
       }
       bottomInset={theme.spacing.spacing48}

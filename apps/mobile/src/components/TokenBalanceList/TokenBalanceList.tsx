@@ -109,11 +109,11 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
         <RefreshControl
           progressViewOffset={insets.top}
           refreshing={refreshing ?? false}
-          tintColor={theme.colors.textTertiary}
+          tintColor={theme.colors.DEP_textTertiary}
           onRefresh={onRefresh}
         />
       )
-    }, [refreshing, onRefresh, theme.colors.textTertiary, insets.top])
+    }, [refreshing, onRefresh, theme.colors.DEP_textTertiary, insets.top])
 
     // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
     return (

@@ -68,7 +68,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       onCancel?.()
     }
 
-    const backgroundColorValue = backgroundColor ?? 'background1'
+    const backgroundColorValue = backgroundColor ?? 'DEP_background1'
 
     const onCancelLayout = useCallback(
       (event: LayoutChangeEvent) => {
@@ -142,7 +142,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
 
     const shadowProps = showShadow
       ? {
-          shadowColor: isDarkMode ? 'black' : 'brandedAccentSoft',
+          shadowColor: isDarkMode ? 'black' : 'DEP_brandedAccentSoft',
           shadowOffset: SHADOW_OFFSET_SMALL,
           shadowOpacity: 0.25,
           shadowRadius: 6,
@@ -166,7 +166,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           {...shadowProps}>
           <Box py="spacing4">
             <SearchIcon
-              color={isDarkMode ? theme.colors.textSecondary : theme.colors.textTertiary}
+              color={isDarkMode ? theme.colors.DEP_textSecondary : theme.colors.DEP_textTertiary}
               height={theme.iconSizes.icon20}
               width={theme.iconSizes.icon20}
             />
@@ -184,7 +184,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             maxFontSizeMultiplier={theme.textVariants.bodyLarge.maxFontSizeMultiplier}
             placeholder={placeholder}
             placeholderTextColor={
-              isDarkMode ? theme.colors.textSecondary : theme.colors.textTertiary
+              isDarkMode ? theme.colors.DEP_textSecondary : theme.colors.DEP_textTertiary
             }
             px="none"
             py="none"
@@ -230,12 +230,14 @@ interface ClearButtonProps {
 function ClearButton(props: ClearButtonProps): JSX.Element {
   const theme = useAppTheme()
 
-  const { onPress, clearIcon = <X color={theme.colors.textSecondary} height={16} width={16} /> } =
-    props
+  const {
+    onPress,
+    clearIcon = <X color={theme.colors.DEP_textSecondary} height={16} width={16} />,
+  } = props
 
   return (
     <TouchableArea
-      backgroundColor="backgroundOutline"
+      backgroundColor="DEP_backgroundOutline"
       borderRadius="roundedFull"
       p="spacing4"
       onPress={onPress}>

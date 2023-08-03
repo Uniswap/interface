@@ -84,11 +84,11 @@ export function TransactionDetails({
           </Flex>
         </TouchableArea>
       )}
-      <Flex backgroundColor="background2" borderRadius="rounded16" gap="none">
+      <Flex backgroundColor="DEP_background2" borderRadius="rounded16" gap="none">
         {!showWarning && (
           <>
             {banner}
-            <Separator color="background1" width={1} />
+            <Separator color="DEP_background1" width={1} />
           </>
         )}
         <Flex gap="spacing12" px="spacing12" py="spacing12">
@@ -100,7 +100,7 @@ export function TransactionDetails({
             onShowGasWarning={onShowGasWarning}
           />
         </Flex>
-        <Separator color="background1" width={1} />
+        <Separator color="DEP_background1" width={1} />
         <Box px="spacing12" py="spacing12">
           <AccountDetails address={userAddress} iconSize={20} />
         </Box>
@@ -112,18 +112,18 @@ export function TransactionDetails({
           justifyContent="center"
           py="spacing8"
           onPress={onPressToggleShowChildren}>
-          <Text color="textTertiary" variant="bodySmall">
+          <Text color="DEP_textTertiary" variant="bodySmall">
             {showChildren ? t('Show less') : t('Show more')}
           </Text>
           {showChildren ? (
             <AnglesMinimize
-              color={theme.colors.textTertiary}
+              color={theme.colors.DEP_textTertiary}
               height={theme.iconSizes.icon20}
               width={theme.iconSizes.icon20}
             />
           ) : (
             <AnglesMaximize
-              color={theme.colors.textTertiary}
+              color={theme.colors.DEP_textTertiary}
               height={theme.iconSizes.icon20}
               width={theme.iconSizes.icon20}
             />

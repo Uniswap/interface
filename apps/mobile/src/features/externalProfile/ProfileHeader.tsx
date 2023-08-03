@@ -48,7 +48,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors = useMemo(() => {
     if (loading || (hasAvatar && !avatarColors)) {
-      return [theme.colors.background0, theme.colors.background0]
+      return [theme.colors.DEP_background0, theme.colors.DEP_background0]
     }
     if (hasAvatar && avatarColors && avatarColors.base) {
       return [avatarColors.base, avatarColors.base]
@@ -58,7 +58,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
     avatarColors,
     hasAvatar,
     loading,
-    theme.colors.background0,
+    theme.colors.DEP_background0,
     uniconGradientEnd,
     uniconGradientStart,
   ])
@@ -87,7 +87,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
 
   const { t } = useTranslation()
   return (
-    <Flex bg="background0" gap="spacing16" pt="spacing36" px="spacing24">
+    <Flex bg="DEP_background0" gap="spacing16" pt="spacing36" px="spacing24">
       {/* fixed gradient */}
       <AnimatedBox
         bottom={0}
@@ -109,12 +109,12 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="spacing4">
         <TouchableArea
-          backgroundColor="textOnDimTertiary"
+          backgroundColor="DEP_textOnDimTertiary"
           borderRadius="roundedFull"
           opacity={0.8}
           padding="spacing8">
           <Flex centered grow height={theme.iconSizes.icon16} width={theme.iconSizes.icon16}>
-            <BackButton color="white" size={theme.iconSizes.icon24} />
+            <BackButton color="DEP_white" size={theme.iconSizes.icon24} />
           </Flex>
         </TouchableArea>
         <ProfileContextMenu address={address} />
@@ -138,8 +138,8 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
             <TouchableArea
               hapticFeedback
               activeOpacity={1}
-              backgroundColor="background0"
-              borderColor="backgroundOutline"
+              backgroundColor="DEP_background0"
+              borderColor="DEP_backgroundOutline"
               borderRadius="rounded20"
               borderWidth={1}
               padding="spacing12"
@@ -153,8 +153,8 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
             <TouchableArea
               hapticFeedback
               activeOpacity={1}
-              backgroundColor="background0"
-              borderColor="backgroundOutline"
+              backgroundColor="DEP_background0"
+              borderColor="DEP_backgroundOutline"
               borderRadius="rounded20"
               borderWidth={1}
               padding="spacing12"
@@ -162,11 +162,11 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               onPress={onPressSend}>
               <Flex row alignItems="center" gap="spacing8">
                 <SendIcon
-                  color={theme.colors.textSecondary}
+                  color={theme.colors.DEP_textSecondary}
                   height={theme.iconSizes.icon20}
                   width={theme.iconSizes.icon20}
                 />
-                <Text color="textSecondary" variant="buttonLabelMedium">
+                <Text color="DEP_textSecondary" variant="buttonLabelMedium">
                   {t('Send')}
                 </Text>
               </Flex>

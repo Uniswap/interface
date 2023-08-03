@@ -48,14 +48,14 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(function _Tex
   const theme = useTheme<Theme>()
 
   // Set defaults for style values
-  rest.backgroundColor ??= 'background0'
+  rest.backgroundColor ??= 'DEP_background0'
   rest.px ??= 'spacing16'
   rest.py ??= 'spacing12'
-  rest.color ??= 'textPrimary'
+  rest.color ??= 'DEP_textPrimary'
   rest.borderRadius ??= 'rounded12'
 
   // restyle doesn't parse placeholderTextColorCorrectly
-  rest.placeholderTextColor ??= theme.colors.textTertiary
+  rest.placeholderTextColor ??= theme.colors.DEP_textTertiary
 
   const transformedProps = useRestyle(restyleFunctions, rest)
 
@@ -63,7 +63,7 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(function _Tex
     <TextInputBase
       ref={ref}
       autoComplete="off"
-      selectionColor={theme.colors.textTertiary}
+      selectionColor={theme.colors.DEP_textTertiary}
       onBlur={onBlur}
       onChangeText={onChangeText}
       {...transformedProps}

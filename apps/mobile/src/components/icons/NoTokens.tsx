@@ -10,9 +10,12 @@ export const NoTokens = memo(function _NoTokens() {
     <Box>
       <OverlayIcon
         bottom={0}
-        icon={<NoTokensBgIcon color={theme.colors.textSecondary} />}
+        icon={<NoTokensBgIcon color={theme.colors.DEP_textSecondary} />}
         overlay={
-          <NoTokensFgIcon color={theme.colors.background3} fill={theme.colors.accentAction} />
+          <NoTokensFgIcon
+            color={theme.colors.DEP_background3}
+            fill={theme.colors.DEP_accentAction}
+          />
         }
         right={0}
       />

@@ -10,7 +10,7 @@ const CenterElement = <Text variant="headlineLarge">Screen Title</Text>
 
 const RightElement = (
   <HeartIcon
-    color={theme.colors.textTertiary}
+    color={theme.colors.DEP_textTertiary}
     height={theme.iconSizes.icon24}
     width={theme.iconSizes.icon24}
   />
@@ -21,7 +21,7 @@ export default {
   component: HeaderScrollScreen,
   decorators: [
     (Story): JSX.Element => (
-      <Box borderColor="background2" borderWidth={1} height={812} width={375}>
+      <Box borderColor="DEP_background2" borderWidth={1} height={812} width={375}>
         <Story />
       </Box>
     ),
@@ -31,7 +31,7 @@ export default {
 const Template: ComponentStory<typeof HeaderScrollScreen> = (args) => {
   return (
     <HeaderScrollScreen {...args}>
-      <Flex row bg="background2" m="spacing16" p="spacing16">
+      <Flex row bg="DEP_background2" m="spacing16" p="spacing16">
         <Text variant="bodyLarge">Body content</Text>
       </Flex>
     </HeaderScrollScreen>

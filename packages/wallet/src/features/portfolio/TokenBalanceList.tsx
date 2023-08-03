@@ -40,7 +40,7 @@ export function TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element 
   if (!data && loading) {
     return (
       <Flex marginTop="$spacing16" paddingHorizontal="$spacing16" width="100%">
-        <Text color="$textSecondary" variant="bodyLarge">
+        <Text color="$DEP_textSecondary" variant="bodyLarge">
           Loading balances
         </Text>
       </Flex>
@@ -50,7 +50,7 @@ export function TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element 
   if (!data || data?.balances?.length === 0) {
     return (
       <Flex marginTop="$spacing16" paddingHorizontal="$spacing16" width="100%">
-        <Text color="$textTertiary" variant="bodyLarge">
+        <Text color="$DEP_textTertiary" variant="bodyLarge">
           No tokens
         </Text>
       </Flex>
@@ -59,7 +59,7 @@ export function TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element 
 
   return (
     <ScrollView
-      backgroundColor="$background1"
+      backgroundColor="$DEP_background1"
       marginTop="$spacing16"
       // TODO: make this dynamic
       maxHeight={310}

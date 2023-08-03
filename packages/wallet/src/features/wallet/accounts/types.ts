@@ -1,5 +1,3 @@
-import { Palette } from 'ui/src/theme/color/types'
-
 export enum AccountType {
   SignerMnemonic = 'signerMnemonic', // Key lives in native keystore
   Readonly = 'readonly', // Accounts without keys (e.g. so user can track balances)
@@ -9,10 +7,7 @@ export enum BackupType {
   Cloud = 'cloud',
 }
 
-type DynamicPalette = Pick<Palette, 'userThemeColor'>
-
 export type AccountCustomizations = {
-  palette?: DynamicPalette
   localPfp?: string
 }
 

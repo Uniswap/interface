@@ -110,7 +110,7 @@ function Favorite({ height }: { height?: number }): JSX.Element {
   return (
     <Shimmer>
       <BoxLoader
-        backgroundColor="$backgroundOutline"
+        backgroundColor="$DEP_backgroundOutline"
         borderRadius="$rounded16"
         height={height ?? 50}
       />

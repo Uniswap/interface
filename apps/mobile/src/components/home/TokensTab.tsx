@@ -58,7 +58,7 @@ export const TokensTab = forwardRef<FlashList<any>, TabProps & { isExternalProfi
     }
 
     return (
-      <Flex grow bg="background0">
+      <Flex grow bg="DEP_background0">
         <TokenBalanceList
           ref={ref}
           containerProps={formattedContainerProps}

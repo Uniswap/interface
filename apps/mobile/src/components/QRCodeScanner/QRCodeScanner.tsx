@@ -98,14 +98,14 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
         maskElement={
           <Box
             alignItems="center"
-            bg="backgroundScrim"
+            bg="DEP_backgroundScrim"
             justifyContent="center"
             position="absolute"
             style={StyleSheet.absoluteFill}>
             {!shouldFreezeCamera ? (
               // don't cut out the center scan area if the camera is frozen (has seen a barcode)
               <Box
-                bg="white"
+                bg="DEP_white"
                 height={SCANNER_SIZE - SCAN_ICON_MASK_OFFSET}
                 style={scanIconMaskStyle}
                 width={SCANNER_SIZE - SCAN_ICON_MASK_OFFSET}
@@ -125,25 +125,25 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
         <Svg height="100%" width="100%">
           <Defs>
             <LinearGradient id="scan-top-fadeout" x1="0" x2="0" y1="0" y2="1">
-              <Stop offset="0" stopColor={theme.colors.background1} stopOpacity="1" />
+              <Stop offset="0" stopColor={theme.colors.DEP_background1} stopOpacity="1" />
               <Stop
                 offset="0.4"
-                stopColor={theme.colors.background1}
+                stopColor={theme.colors.DEP_background1}
                 stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
               />
             </LinearGradient>
             <LinearGradient id="scan-bottom-fadeout" x1="0" x2="0" y1="1" y2="0">
-              <Stop offset="0" stopColor={theme.colors.background1} stopOpacity="1" />
+              <Stop offset="0" stopColor={theme.colors.DEP_background1} stopOpacity="1" />
               <Stop
                 offset="0.4"
-                stopColor={theme.colors.background1}
+                stopColor={theme.colors.DEP_background1}
                 stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
               />
             </LinearGradient>
           </Defs>
-          {/* gradient from top of modal to top of QR code, of color background0 to transparent */}
+          {/* gradient from top of modal to top of QR code, of color DEP_background0 to transparent */}
           <Rect fill="url(#scan-top-fadeout)" height="100%" width="100%" x="0" y="0" />
-          {/* gradient from bottom of modal to bottom of QR code, of color background0 to transparent */}
+          {/* gradient from bottom of modal to bottom of QR code, of color DEP_background0 to transparent */}
           <Rect fill="url(#scan-bottom-fadeout)" height="100%" width="100%" x="0" y="0" />
         </Svg>
       </MaskedView>
@@ -162,14 +162,14 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             top={0}
             width="100%"
             onLayout={(event: LayoutChangeEvent): void => setInfoLayout(event.nativeEvent.layout)}>
-            <Text color="textPrimary" variant="subheadLarge">
+            <Text color="DEP_textPrimary" variant="subheadLarge">
               {t('Scan a QR code')}
             </Text>
           </Flex>
           {!shouldFreezeCamera ? (
             // camera isn't frozen (after seeing barcode) — show the camera scan icon (the four white corners)
             <CameraScan
-              color={theme.colors.white}
+              color={theme.colors.DEP_white}
               height={SCANNER_SIZE}
               strokeWidth={5}
               width={SCANNER_SIZE}
@@ -187,10 +187,10 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                   left={SCANNER_SIZE / 2 - LOADER_SIZE / 2}
                   position="absolute"
                   top={SCANNER_SIZE / 2 - LOADER_SIZE / 2}>
-                  <SpinningLoader color="textPrimary" size={theme.iconSizes.icon40} />
+                  <SpinningLoader color="DEP_textPrimary" size={theme.iconSizes.icon40} />
                 </Flex>
                 <Box style={{ marginTop: LOADER_SIZE + theme.spacing.spacing24 }} />
-                <Text color="textPrimary" textAlign="center" variant="bodyLarge">
+                <Text color="DEP_textPrimary" textAlign="center" variant="bodyLarge">
                   {isWalletConnectModal ? t('Connecting...') : t('Loading...')}
                 </Text>
               </Flex>
@@ -205,13 +205,13 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                 style={[StyleSheet.absoluteFill]}
                 width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}>
                 <Flex
-                  backgroundColor="background1"
+                  backgroundColor="DEP_background1"
                   borderRadius="rounded16"
                   gap="spacing24"
                   m="spacing12"
                   opacity={0.6}
                   p="spacing12">
-                  <Text color="textPrimary" textAlign="center" variant="bodyLarge">
+                  <Text color="DEP_textPrimary" textAlign="center" variant="bodyLarge">
                     This paste button will only show up in development mode
                   </Text>
                   <PasteButton onPress={onScanCode} />

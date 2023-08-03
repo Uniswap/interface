@@ -159,58 +159,50 @@ export interface GlobalPalette {
 }
 
 export interface Palette {
-  userThemeColor: string
-  userThemeMagenta: string
-  userThemeViolet: string
-  userThemeOrange: string
-  userThemeLime: string
-  userThemeCyan: string
-  userThemeSlate: string
+  DEP_background0: string
+  DEP_background1: string
+  DEP_background2: string
+  DEP_background3: string
+  DEP_backgroundOutline: string
+  DEP_backgroundScrim: string
+  DEP_backgroundBranded: string
+  DEP_backgroundOverlay: string
+  DEP_backgroundActionButton: string
 
-  background0: string
-  background1: string
-  background2: string
-  background3: string
-  backgroundOutline: string
-  backgroundScrim: string
-  backgroundBranded: string
-  backgroundOverlay: string
-  backgroundActionButton: string
+  DEP_textPrimary: string
+  DEP_textSecondary: string
+  DEP_textTertiary: string
 
-  textPrimary: string
-  textSecondary: string
-  textTertiary: string
+  DEP_accentAction: string
+  DEP_accentActive: string
+  DEP_accentSuccess: string
+  DEP_accentWarning: string
+  DEP_accentCritical: string
 
-  accentAction: string
-  accentActive: string
-  accentSuccess: string
-  accentWarning: string
-  accentCritical: string
+  DEP_accentBranded: string
+  DEP_shadowBranded: string
 
-  accentBranded: string
-  shadowBranded: string
+  DEP_accentActionSoft: string
+  DEP_accentActiveSoft: string
+  DEP_accentSuccessSoft: string
+  DEP_accentWarningSoft: string
+  DEP_accentCriticalSoft: string
 
-  accentActionSoft: string
-  accentActiveSoft: string
-  accentSuccessSoft: string
-  accentWarningSoft: string
-  accentCriticalSoft: string
+  DEP_textOnBrightPrimary: string
+  DEP_textOnBrightSecondary: string
+  DEP_textOnBrightTertiary: string
 
-  textOnBrightPrimary: string
-  textOnBrightSecondary: string
-  textOnBrightTertiary: string
+  DEP_textOnDimPrimary: string
+  DEP_textOnDimSecondary: string
+  DEP_textOnDimTertiary: string
 
-  textOnDimPrimary: string
-  textOnDimSecondary: string
-  textOnDimTertiary: string
-
-  white: string
-  black: string
+  DEP_white: string
+  DEP_black: string
   none: string
-  blue300: string
-  brandedAccentSoft: string
-  magentaVibrant: string
-  magentaDark: string
+  DEP_blue300: string
+  DEP_brandedAccentSoft: string
+  DEP_magentaVibrant: string
+  DEP_magentaDark: string
 
   chain_1: string
   chain_3: string

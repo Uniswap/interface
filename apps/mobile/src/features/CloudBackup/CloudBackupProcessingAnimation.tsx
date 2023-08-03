@@ -98,10 +98,10 @@ export function CloudBackupProcessingAnimation({
   ) : (
     <Flex centered grow gap="spacing24">
       <CheckmarkCircle
-        borderColor="accentSuccess"
+        borderColor="DEP_accentSuccess"
         borderWidth={3}
         checkmarkStrokeWidth={2}
-        color={theme.colors.accentSuccess}
+        color={theme.colors.DEP_accentSuccess}
         size={theme.iconSizes.icon40}
       />
       <Text variant="headlineSmall">{t('Backed up to iCloud')}</Text>

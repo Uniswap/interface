@@ -104,7 +104,7 @@ export function DappRequestContent(): JSX.Element {
       <Text textAlign="center" variant="headlineSmall">
         {title}
       </Text>
-      <Text color="$accentBranded" textAlign="center" variant="bodyMicro">
+      <Text color="$DEP_accentBranded" textAlign="center" variant="bodyMicro">
         {dappUrl}
       </Text>
       <YStack alignItems="stretch" flexShrink={1} width="100%">

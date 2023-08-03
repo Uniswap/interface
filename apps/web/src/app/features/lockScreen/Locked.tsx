@@ -62,23 +62,23 @@ export function Locked(): JSX.Element {
             <Image height={ICON_SIZE} source={UNISWAP_LOGO} width={ICON_SIZE} />
           </Stack>
         </Stack>
-        <Text color="$textPrimary" textAlign="center" variant="headlineMedium">
+        <Text color="$DEP_textPrimary" textAlign="center" variant="headlineMedium">
           Welcome back
         </Text>
-        <Text color="$accentBranded" textAlign="center" variant="subheadLarge">
+        <Text color="$DEP_accentBranded" textAlign="center" variant="subheadLarge">
           Uniswap Wallet
         </Text>
       </YStack>
       <YStack alignItems="stretch" gap="$spacing12">
         {isIncorrectPassword && (
-          <Text color="$accentCritical" textAlign="center" variant="bodySmall">
+          <Text color="$DEP_accentCritical" textAlign="center" variant="bodySmall">
             Wrong password. Try again
           </Text>
         )}
         <Input
           autoFocus
           secureTextEntry
-          borderColor={isIncorrectPassword ? '$accentCritical' : '$backgroundOutline'}
+          borderColor={isIncorrectPassword ? '$DEP_accentCritical' : '$DEP_backgroundOutline'}
           borderRadius={100}
           borderWidth={0.5}
           fontSize={16}
@@ -87,11 +87,11 @@ export function Locked(): JSX.Element {
           paddingHorizontal="$spacing24"
           paddingVertical="$spacing16"
           placeholder="Enter password to unlock"
-          placeholderTextColor="$textTertiary"
+          placeholderTextColor="$DEP_textTertiary"
           onSubmitEditing={onPress}
           {...passwordInputProps}
-          backgroundColor={isIncorrectPassword ? '$accentCriticalSoft' : '$backgroundScrim'}
-          color="$textPrimary"
+          backgroundColor={isIncorrectPassword ? '$DEP_accentCriticalSoft' : '$DEP_backgroundScrim'}
+          color="$DEP_textPrimary"
         />
       </YStack>
       <Button size="large" theme="primary" onPress={onPress}>

@@ -31,7 +31,7 @@ const loadingData: ActivityItem[] = [
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
   <Box pb="$spacing12">
-    <Text color="$textSecondary" variant="subheadSmall">
+    <Text color="$DEP_textSecondary" variant="subheadSmall">
       {title}
     </Text>
   </Box>
@@ -55,7 +55,7 @@ export function TransactionActivity({ address }: { address: Address }): JSX.Elem
 
   return (
     <ScrollView
-      backgroundColor="$background1"
+      backgroundColor="$DEP_background1"
       marginTop="$spacing16"
       // TODO: make this dynamic
       maxHeight={330}

@@ -110,7 +110,7 @@ function SectionContainer({
 }
 
 const spacerProps: BoxProps = {
-  borderBottomColor: 'background1',
+  borderBottomColor: 'DEP_background1',
   borderBottomWidth: 1,
 }
 
@@ -277,7 +277,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
         <ClientDetails permitInfo={permitInfo} request={request} />
         <Flex gap="spacing12">
           <Flex
-            backgroundColor="background2"
+            backgroundColor="DEP_background2"
             borderRadius="rounded16"
             gap="none"
             spacerProps={spacerProps}>
@@ -293,7 +293,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                 <NetworkFee chainId={chainId} gasFeeUSD={gasFeeUSD} />
               ) : (
                 <Flex row alignItems="center" justifyContent="space-between">
-                  <Text color="textPrimary" variant="subheadSmall">
+                  <Text color="DEP_textPrimary" variant="subheadSmall">
                     {t('Network')}
                   </Text>
                   <NetworkPill
@@ -312,7 +312,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
             <SectionContainer>
               <AccountDetails address={request.account} />
               {!hasSufficientFunds && (
-                <Text color="accentWarning" paddingTop="spacing8" variant="bodySmall">
+                <Text color="DEP_accentWarning" paddingTop="spacing8" variant="bodySmall">
                   {t("You don't have enough {{symbol}} to complete this transaction.", {
                     symbol: nativeCurrency?.symbol,
                   })}
@@ -322,15 +322,15 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           </Flex>
           {!netInfo.isInternetReachable ? (
             <BaseCard.InlineErrorState
-              backgroundColor="accentWarningSoft"
+              backgroundColor="DEP_accentWarningSoft"
               icon={
                 <AlertTriangle
-                  color={theme.colors.accentWarning}
+                  color={theme.colors.DEP_accentWarning}
                   height={theme.iconSizes.icon16}
                   width={theme.iconSizes.icon16}
                 />
               }
-              textColor="accentWarning"
+              textColor="DEP_accentWarning"
               title={t('Internet or network connection error')}
             />
           ) : (
@@ -391,11 +391,11 @@ function WarningSection({
   return (
     <Flex centered row alignSelf="center" gap="spacing8">
       <AlertTriangle
-        color={theme.colors.accentWarning}
+        color={theme.colors.DEP_accentWarning}
         height={iconSizes.icon16}
         width={iconSizes.icon16}
       />
-      <Text color="textSecondary" fontStyle="italic" variant="bodyMicro">
+      <Text color="DEP_textSecondary" fontStyle="italic" variant="bodyMicro">
         {t('Be careful: this {{ requestType }} may transfer assets', {
           requestType: isTransactionRequest(request) ? 'transaction' : 'message',
         })}

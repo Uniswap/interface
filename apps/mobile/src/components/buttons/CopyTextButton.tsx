@@ -21,10 +21,10 @@ export function CopyTextButton({ copyText }: Props): JSX.Element {
   const [isCopied, setIsCopied] = useState(false)
 
   const copyIcon = (
-    <CopySheets color={theme.colors.textPrimary} height={ICON_SIZE} width={ICON_SIZE} />
+    <CopySheets color={theme.colors.DEP_textPrimary} height={ICON_SIZE} width={ICON_SIZE} />
   )
   const copiedIcon = (
-    <CheckCircle color={theme.colors.accentSuccess} height={ICON_SIZE} width={ICON_SIZE} />
+    <CheckCircle color={theme.colors.DEP_accentSuccess} height={ICON_SIZE} width={ICON_SIZE} />
   )
 
   const onPress = async (): Promise<void> => {

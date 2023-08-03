@@ -69,7 +69,7 @@ export function NFTCollectionHeader({
   const profileImageUrl = data?.image?.url
 
   // Extract profile image color as a fallback background color if no banner image.
-  const { colors: bannerColorsFallback } = useExtractedColors(profileImageUrl, 'background2')
+  const { colors: bannerColorsFallback } = useExtractedColors(profileImageUrl, 'DEP_background2')
 
   return (
     <>
@@ -88,7 +88,7 @@ export function NFTCollectionHeader({
           <Box
             style={[
               bannerImageStyle,
-              { backgroundColor: bannerColorsFallback?.base ?? theme.colors.background2 },
+              { backgroundColor: bannerColorsFallback?.base ?? theme.colors.DEP_background2 },
             ]}
           />
         )}
@@ -97,17 +97,17 @@ export function NFTCollectionHeader({
         <Flex row alignItems="center" justifyContent="space-between" mx="spacing24" pt="spacing48">
           <TouchableArea
             hapticFeedback
-            backgroundColor="textOnDimTertiary"
+            backgroundColor="DEP_textOnDimTertiary"
             borderRadius="roundedFull"
             padding="spacing12">
             <Flex centered grow height={theme.iconSizes.icon8} width={theme.iconSizes.icon8}>
-              <BackButton color="white" size={theme.iconSizes.icon24} />
+              <BackButton color="DEP_white" size={theme.iconSizes.icon24} />
             </Flex>
           </TouchableArea>
           <NFTCollectionContextMenu
             collectionAddress={collectionAddress}
             data={data}
-            iconColor="white"
+            iconColor="DEP_white"
             showButtonOutline={true}
           />
         </Flex>
@@ -116,7 +116,7 @@ export function NFTCollectionHeader({
         <Flex gap="none" px="spacing24" style={profileImageWrapperStyle}>
           <Flex
             alignItems="center"
-            bg="background0"
+            bg="DEP_background0"
             borderRadius="roundedFull"
             height={PROFILE_IMAGE_WRAPPER_SIZE}
             justifyContent="center"
@@ -131,7 +131,7 @@ export function NFTCollectionHeader({
               </Box>
             ) : (
               <Box
-                backgroundColor="background2"
+                backgroundColor="DEP_background2"
                 borderRadius="roundedFull"
                 height={PROFILE_IMAGE_SIZE}
                 width={PROFILE_IMAGE_SIZE}
@@ -152,7 +152,7 @@ export function NFTCollectionHeader({
             </Text>
             {data?.isVerified ? (
               <VerifiedIcon
-                color={theme.colors.userThemeMagenta}
+                color={theme.colors.DEP_magentaVibrant}
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
               />
@@ -161,7 +161,7 @@ export function NFTCollectionHeader({
 
           <Flex row gap="spacing24" justifyContent="space-between">
             <Flex fill alignItems="flex-start" gap="spacing4">
-              <Text color="textTertiary" variant="subheadSmall">
+              <Text color="DEP_textTertiary" variant="subheadSmall">
                 {t('Items')}
               </Text>
               <Text loading={loading} variant="bodyLarge">
@@ -169,7 +169,7 @@ export function NFTCollectionHeader({
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="spacing4">
-              <Text color="textTertiary" variant="subheadSmall">
+              <Text color="DEP_textTertiary" variant="subheadSmall">
                 {t('Owners')}
               </Text>
               <Text loading={loading} variant="bodyLarge">
@@ -177,7 +177,7 @@ export function NFTCollectionHeader({
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="spacing4">
-              <Text color="textTertiary" variant="subheadSmall">
+              <Text color="DEP_textTertiary" variant="subheadSmall">
                 {t('Floor')}
               </Text>
               <Flex row alignItems="center" gap="none">
@@ -188,12 +188,12 @@ export function NFTCollectionHeader({
                   )} `}
                 </Text>
                 {collectionStats?.floorPrice?.value !== undefined ? (
-                  <Logos.Ethereum color={theme.colors.textPrimary} />
+                  <Logos.Ethereum color={theme.colors.DEP_textPrimary} />
                 ) : null}
               </Flex>
             </Flex>
             <Flex fill alignItems="flex-start" gap="spacing4">
-              <Text color="textTertiary" variant="subheadSmall">
+              <Text color="DEP_textTertiary" variant="subheadSmall">
                 {t('Volume')}
               </Text>
               <Flex row alignItems="center" gap="spacing4">
@@ -204,7 +204,7 @@ export function NFTCollectionHeader({
                   )}`}
                 </Text>
                 {collectionStats?.totalVolume?.value !== undefined ? (
-                  <Logos.Ethereum color={theme.colors.textPrimary} />
+                  <Logos.Ethereum color={theme.colors.DEP_textPrimary} />
                 ) : null}
               </Flex>
             </Flex>
@@ -217,7 +217,7 @@ export function NFTCollectionHeader({
               initialDisplayedLines={3}
               lineBreakMode="tail"
               mt="spacing4"
-              readMoreOrLessColor={theme.colors.textTertiary}
+              readMoreOrLessColor={theme.colors.DEP_textTertiary}
               renderAsMarkdown={true}
               text={data?.description}
             />

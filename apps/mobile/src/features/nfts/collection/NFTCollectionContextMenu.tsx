@@ -24,7 +24,7 @@ export function NFTCollectionContextMenu({
   data,
   collectionAddress,
   showButtonOutline = false,
-  iconColor = 'textSecondary',
+  iconColor = 'DEP_textSecondary',
 }: {
   data: NFTCollectionData
   collectionAddress?: Maybe<string>
@@ -99,7 +99,7 @@ export function NFTCollectionContextMenu({
       }}>
       <TouchableArea
         hapticFeedback
-        backgroundColor={showButtonOutline ? 'textOnDimTertiary' : 'none'}
+        backgroundColor={showButtonOutline ? 'DEP_textOnDimTertiary' : 'none'}
         borderRadius="roundedFull"
         style={{ padding: ICON_PADDING }}>
         <Flex centered grow height={ICON_SIZE} width={ICON_SIZE}>

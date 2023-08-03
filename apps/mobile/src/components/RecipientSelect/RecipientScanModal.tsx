@@ -70,7 +70,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
   return (
     <BottomSheetModal
       fullScreen
-      backgroundColor={theme.colors.background1}
+      backgroundColor={theme.colors.DEP_background1}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
       {currentScreenState === ScannerModalState.ScanQr && (
@@ -82,21 +82,21 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
       <Flex centered mb="spacing36" mt="spacing16" mx="spacing16">
         <TouchableArea
           hapticFeedback
-          borderColor={isDarkMode ? 'none' : 'backgroundOutline'}
+          borderColor={isDarkMode ? 'none' : 'DEP_backgroundOutline'}
           borderRadius="roundedFull"
           borderWidth={1}
           p="spacing16"
           paddingEnd="spacing24"
-          style={{ backgroundColor: theme.colors.backgroundOverlay }}
+          style={{ backgroundColor: theme.colors.DEP_backgroundOverlay }}
           testID={ElementName.QRCodeModalToggle}
           onPress={onPressBottomToggle}>
           <Flex row alignItems="center" gap="spacing12">
             {currentScreenState === ScannerModalState.ScanQr ? (
-              <Scan color={theme.colors.textPrimary} height={24} width={24} />
+              <Scan color={theme.colors.DEP_textPrimary} height={24} width={24} />
             ) : (
-              <ScanQRIcon color={theme.colors.textPrimary} height={24} width={24} />
+              <ScanQRIcon color={theme.colors.DEP_textPrimary} height={24} width={24} />
             )}
-            <Text color="textPrimary" variant="buttonLabelMedium">
+            <Text color="DEP_textPrimary" variant="buttonLabelMedium">
               {currentScreenState === ScannerModalState.ScanQr
                 ? t('Show my QR code')
                 : t('Scan a QR code')}

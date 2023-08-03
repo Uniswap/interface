@@ -47,7 +47,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
         <DecimalNumber
           adjustsFontSizeToFit={!isLoading}
           // initially set color to textSecondary when isWarm because the shimmer mask takes a second to load, resulting in a flash of the underlying color
-          color={isWarmLoading ? 'textSecondary' : undefined}
+          color={isWarmLoading ? 'DEP_textSecondary' : undefined}
           fontSize={48}
           fontWeight="600"
           formattedNumber={formatUSDPrice(totalBalance, NumberType.PortfolioBalance)}
@@ -61,8 +61,8 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
           arrowSize={iconSizes.icon20}
           change={portfolioChange?.percentage?.value}
           loading={isLoading}
-          negativeChangeColor={isWarmLoading ? 'textSecondary' : 'accentCritical'}
-          positiveChangeColor={isWarmLoading ? 'textSecondary' : 'accentSuccess'}
+          negativeChangeColor={isWarmLoading ? 'DEP_textSecondary' : 'DEP_accentCritical'}
+          positiveChangeColor={isWarmLoading ? 'DEP_textSecondary' : 'DEP_accentSuccess'}
           variant="bodyLarge"
         />
       </Flex>

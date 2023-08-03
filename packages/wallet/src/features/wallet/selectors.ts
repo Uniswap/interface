@@ -81,11 +81,6 @@ export const selectActiveAccount = createSelector(
     (activeAccountAddress ? accounts[activeAccountAddress] : null) ?? null
 )
 
-export const selectUserPalette = createSelector(
-  selectActiveAccount,
-  (activeAccount) => activeAccount?.customizations?.palette
-)
-
 export const selectFinishedOnboarding = (state: RootState): boolean | undefined =>
   state.wallet.finishedOnboarding
 

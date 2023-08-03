@@ -45,29 +45,29 @@ struct MnemonicTextField: View {
     switch (focusState) {
     case .focusedNoInput:
       return AnyView(RoundedRectangle(cornerRadius: 100)
-        .strokeBorder(Colors.accentActive, lineWidth: 2)
-        .background(Colors.background3)
+        .strokeBorder(Colors.DEP_accentActive, lineWidth: 2)
+        .background(Colors.DEP_background3)
         .cornerRadius(100)
       )
       
     case .focusedWrongInput:
       return AnyView(RoundedRectangle(cornerRadius: 100)
-        .strokeBorder(Colors.accentCritical, lineWidth: 2)
-        .background(Colors.background3)
+        .strokeBorder(Colors.DEP_accentCritical, lineWidth: 2)
+        .background(Colors.DEP_background3)
         .cornerRadius(100)
       )
       
     case .notFocusedWrongInput:
       return AnyView(RoundedRectangle(cornerRadius: 100)
-        .strokeBorder(Colors.accentCritical, lineWidth: 2)
-        .background(Colors.background1)
+        .strokeBorder(Colors.DEP_accentCritical, lineWidth: 2)
+        .background(Colors.DEP_background1)
         .cornerRadius(100)
       )
       
     case .notFocused:
       return AnyView(
         RoundedRectangle(cornerRadius: 100, style: .continuous)
-          .fill(Colors.background1)
+          .fill(Colors.DEP_background1)
       )
     }
   }
@@ -78,14 +78,14 @@ struct MnemonicTextField: View {
       
       Text(String(index)).cornerRadius(16)
         .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
-        .foregroundColor(Colors.textTertiary)
+        .foregroundColor(Colors.DEP_textTertiary)
         .padding(shouldShowSmallText ? EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16) : EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
         .frame(alignment: Alignment.leading)
       
       Text(initialText)
         .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
         .multilineTextAlignment(TextAlignment.leading)
-        .foregroundColor(Colors.textPrimary)
+        .foregroundColor(Colors.DEP_textPrimary)
         .padding(shouldShowSmallText ? EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 16) : EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
         .frame(maxWidth: .infinity, alignment: Alignment.leading)
     }

@@ -15,7 +15,7 @@ export const SectionHeaderText = ({
   return (
     <Flex row alignItems="center" gap="spacing12" mb="spacing4" mx="spacing4" {...rest}>
       {icon && icon}
-      <Text color="textSecondary" variant="subheadSmall">
+      <Text color="DEP_textSecondary" variant="subheadSmall">
         {title}
       </Text>
     </Flex>

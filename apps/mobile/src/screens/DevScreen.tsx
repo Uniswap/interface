@@ -81,7 +81,7 @@ export function DevScreen(): JSX.Element {
       </Box>
       <ScrollView>
         <Box alignItems="center">
-          <Text color="textPrimary" textAlign="center" variant="headlineSmall">
+          <Text color="DEP_textPrimary" textAlign="center" variant="headlineSmall">
             {`Your Account: ${activeAccount?.address || 'none'}`}
           </Text>
           <Text mt="spacing16" textAlign="center" variant="headlineSmall">
@@ -94,7 +94,7 @@ export function DevScreen(): JSX.Element {
                 m="spacing8"
                 testID={`dev_screen/${s}`}
                 onPress={(): void => activateWormhole(s)}>
-                <Text color="textPrimary">{s}</Text>
+                <Text color="DEP_textPrimary">{s}</Text>
               </TouchableArea>
             ))}
           </Box>
@@ -102,24 +102,24 @@ export function DevScreen(): JSX.Element {
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
           <TouchableArea mt="spacing16" onPress={onPressCreate}>
-            <Text color="textPrimary">Create account</Text>
+            <Text color="DEP_textPrimary">Create account</Text>
           </TouchableArea>
           <TouchableArea mt="spacing12" onPress={onPressToggleTestnets}>
-            <Text color="textPrimary">Toggle testnets</Text>
+            <Text color="DEP_textPrimary">Toggle testnets</Text>
           </TouchableArea>
           <TouchableArea mt="spacing12" onPress={onPressResetTokenWarnings}>
-            <Text color="textPrimary">Reset token warnings</Text>
+            <Text color="DEP_textPrimary">Reset token warnings</Text>
           </TouchableArea>
           <TouchableArea mt="spacing12" onPress={onPressShowError}>
-            <Text color="textPrimary">Show global error</Text>
+            <Text color="DEP_textPrimary">Show global error</Text>
           </TouchableArea>
           <TouchableArea mt="spacing12" onPress={onPressResetOnboarding}>
-            <Text color="textPrimary">Reset onboarding</Text>
+            <Text color="DEP_textPrimary">Reset onboarding</Text>
           </TouchableArea>
-          <Text color="textPrimary" mt="spacing36" textAlign="center">
+          <Text color="DEP_textPrimary" mt="spacing36" textAlign="center">
             {`Active Chains: ${activeChains}`}
           </Text>
-          <Text color="textPrimary" mt="spacing12" textAlign="center">
+          <Text color="DEP_textPrimary" mt="spacing12" textAlign="center">
             {`Current Chain: ${currentChain}`}
           </Text>
         </Box>

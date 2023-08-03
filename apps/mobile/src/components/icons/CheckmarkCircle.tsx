@@ -32,7 +32,7 @@ function _CheckmarkCircle({ color, checkmarkStrokeWidth = 3, size, ...rest }: Pr
       width={size}
       {...rest}>
       <Checkmark
-        color={color ?? theme.colors.white}
+        color={color ?? theme.colors.DEP_white}
         height={size / 2}
         strokeWidth={checkmarkStrokeWidth}
         width={size / 2}

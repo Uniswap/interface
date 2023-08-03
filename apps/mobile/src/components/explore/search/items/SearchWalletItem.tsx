@@ -104,7 +104,7 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
             </Text>
             {showOwnedBy ? (
               <Text
-                color="textSecondary"
+                color="DEP_textSecondary"
                 ellipsizeMode="tail"
                 numberOfLines={1}
                 variant="subheadSmall">

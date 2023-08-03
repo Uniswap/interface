@@ -64,35 +64,35 @@ const SitePermissions = (): JSX.Element => {
 
   return (
     <Flex gap="spacing12" p="spacing16">
-      <Text color="textSecondary" variant="subheadSmall">
+      <Text color="DEP_textSecondary" variant="subheadSmall">
         {t('App permissions')}
       </Text>
       <Flex row alignItems="flex-start" gap="spacing8">
         <Box mt="spacing2">
-          <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
+          <Checkmark color={theme.colors.DEP_accentSuccess} height={16} width={16} />
         </Box>
         <Box flex={1}>
-          <Text color="textPrimary" variant="bodySmall">
+          <Text color="DEP_textPrimary" variant="bodySmall">
             {t('View your wallet address')}
           </Text>
         </Box>
       </Flex>
       <Flex row alignItems="flex-start" gap="spacing8">
         <Box mt="spacing2">
-          <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
+          <Checkmark color={theme.colors.DEP_accentSuccess} height={16} width={16} />
         </Box>
         <Box flex={1}>
-          <Text color="textPrimary" variant="bodySmall">
+          <Text color="DEP_textPrimary" variant="bodySmall">
             {t('View your token balances')}
           </Text>
         </Box>
       </Flex>
       <Flex row alignItems="flex-start" gap="spacing8">
         <Box mt="spacing2">
-          <X color={theme.colors.accentCritical} height={16} width={16} />
+          <X color={theme.colors.DEP_accentCritical} height={16} width={16} />
         </Box>
         <Box flex={1}>
-          <Text color="textPrimary" variant="bodySmall">
+          <Text color="DEP_textPrimary" variant="bodySmall">
             {t('Transfer your assets without consent')}
           </Text>
         </Box>
@@ -124,11 +124,11 @@ const SwitchNetworkRow = ({ selectedChainId, setModalState }: SwitchNetworkProps
         p="spacing12">
         <Flex row shrink gap="spacing8">
           <NetworkLogo chainId={selectedChainId} />
-          <Text color="textPrimary" variant="subheadSmall">
+          <Text color="DEP_textPrimary" variant="subheadSmall">
             {CHAIN_INFO[selectedChainId].label}
           </Text>
         </Flex>
-        <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="20" />
+        <Chevron color={theme.colors.DEP_textSecondary} direction="e" height="20" width="20" />
       </Flex>
     </TouchableArea>
   )
@@ -146,7 +146,7 @@ const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
       justifyContent="space-between"
       p="spacing12">
       <Flex grow row gap="spacing8" justifyContent="space-between">
-        <Text color="textPrimary" variant="subheadSmall">
+        <Text color="DEP_textPrimary" variant="subheadSmall">
           {t('Networks')}
         </Text>
         <NetworkLogos chains={chains} />
@@ -279,7 +279,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
   return (
     <BottomSheetModal name={ModalName.WCPendingConnection} onClose={onClose}>
       <AnimatedFlex
-        backgroundColor="background1"
+        backgroundColor="DEP_background1"
         borderRadius="rounded12"
         flex={1}
         gap="spacing24"
@@ -294,10 +294,10 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             })}{' '}
           </Text>
           <LinkButton
-            backgroundColor="background2"
+            backgroundColor="DEP_background2"
             borderRadius="rounded16"
-            color={theme.colors.accentActive}
-            iconColor={theme.colors.accentActive}
+            color={theme.colors.DEP_accentActive}
+            iconColor={theme.colors.DEP_accentActive}
             label={pendingSession.dapp.url}
             mb="spacing12"
             px="spacing8"
@@ -307,18 +307,18 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             url={pendingSession.dapp.url}
           />
         </Flex>
-        <Flex bg="background2" borderRadius="rounded16" gap="spacing2">
+        <Flex bg="DEP_background2" borderRadius="rounded16" gap="spacing2">
           <SitePermissions />
-          <Separator color="background1" width={1} />
+          <Separator color="DEP_background1" width={1} />
           {pendingSession.version === '1' ? (
             <>
               <SwitchNetworkRow selectedChainId={selectedChainId} setModalState={setModalState} />
-              <Separator color="background1" width={1} />
+              <Separator color="DEP_background1" width={1} />
             </>
           ) : (
             <>
               <NetworksRow chains={pendingSession.chains} />
-              <Separator color="background1" width={1} />
+              <Separator color="DEP_background1" width={1} />
             </>
           )}
           <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />

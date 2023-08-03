@@ -53,7 +53,7 @@ export function Shimmer({ children }: Props): JSX.Element {
         width: layout.width,
         height: layout.height,
       }}>
-      <Box backgroundColor="background2" flexGrow={1} overflow="hidden" />
+      <Box backgroundColor="DEP_background2" flexGrow={1} overflow="hidden" />
       <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <MaskedView
           maskElement={
@@ -65,7 +65,7 @@ export function Shimmer({ children }: Props): JSX.Element {
             />
           }
           style={StyleSheet.absoluteFill}>
-          <Box backgroundColor="backgroundOutline" style={StyleSheet.absoluteFill} />
+          <Box backgroundColor="DEP_backgroundOutline" style={StyleSheet.absoluteFill} />
         </MaskedView>
       </Reanimated.View>
     </MaskedView>

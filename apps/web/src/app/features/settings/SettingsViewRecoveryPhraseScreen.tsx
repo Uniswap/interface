@@ -31,12 +31,12 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
   const [showPhrase, setShowPhrase] = useState(false)
 
   return (
-    <YStack backgroundColor="$background0" flexGrow={1} padding="$spacing12">
+    <YStack backgroundColor="$DEP_background0" flexGrow={1} padding="$spacing12">
       <BackButtonHeader headerText={t('Recovery phrase')} />
       <YStack gap="$spacing24" padding="$spacing12">
         <Flex position="relative" onHoverOut={(): void => setShowPhrase(false)}>
           <YStack
-            backgroundColor="$background1"
+            backgroundColor="$DEP_background1"
             borderRadius="$rounded16"
             flex={1}
             gap="$spacing12"
@@ -48,7 +48,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
             </XStack>
           </YStack>
           <HideContentShield
-            color="$background1"
+            color="$DEP_background1"
             visibility={showPhrase}
             onShowContent={(): void => setShowPhrase(true)}
           />
@@ -82,7 +82,7 @@ function SeedPhraseColumn({
     <YStack flex={1} gap="$spacing16">
       {words.map((word, index) => (
         <XStack key={index} gap="$spacing12">
-          <Text color="$textTertiary" variant="bodySmall">
+          <Text color="$DEP_textTertiary" variant="bodySmall">
             {index + indexOffset}
           </Text>
           <Text variant="bodySmall">{word}</Text>

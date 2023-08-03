@@ -63,7 +63,7 @@ const CustomButtonFrame = styled(XStack, {
     disabled: {
       true: {
         opacity: 0.4,
-        backgroundColor: '$background3',
+        backgroundColor: '$DEP_background3',
         pointerEvents: 'none',
         userSelect: 'none',
       },
@@ -103,7 +103,7 @@ const CustomButtonText = styled(Text, {
 
     disabled: {
       true: {
-        color: '$textTertiary',
+        color: '$DEP_textTertiary',
       },
     },
   } as const,

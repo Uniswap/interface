@@ -8,7 +8,7 @@ import { Text } from '../Text'
   component={Inset}
   decorators={[
     (Story) => (
-      <Box bg="background3" borderRadius="rounded12">
+      <Box bg="DEP_background3" borderRadius="rounded12">
         <Inset>
           {/* calls function directly to preserve displayName */}
           {Story()}
@@ -19,9 +19,9 @@ import { Text } from '../Text'
 />
 
 export const Template = (args) => (
-  <Box bg="accentAction">
+  <Box bg="DEP_accentAction">
     <Inset {...args}>
-      <Box bg="accentAction">
+      <Box bg="DEP_accentAction">
         <Text color="white">This is the default inset</Text>
       </Box>
     </Inset>
@@ -44,7 +44,7 @@ export const Template = (args) => (
       {['spacing8', 'spacing12', 'spacing16', 'lg', 'xl'].map((size) => (
         <Box bg="black">
           <Inset all={size}>
-            <Box bg="background3">
+            <Box bg="DEP_background3">
               <Text>This is the {size} inset</Text>
             </Box>
           </Inset>

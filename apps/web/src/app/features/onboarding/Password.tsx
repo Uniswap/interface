@@ -70,8 +70,11 @@ export function Password({
   return (
     <OnboardingScreen
       Icon={
-        <Circle backgroundColor="$magentaDark" height={iconSizes.icon64} width={iconSizes.icon64}>
-          <Icons.Lock color="$magentaVibrant" size={iconSizes.icon36} />
+        <Circle
+          backgroundColor="$DEP_magentaDark"
+          height={iconSizes.icon64}
+          width={iconSizes.icon64}>
+          <Icons.Lock color="$DEP_magentaVibrant" size={iconSizes.icon36} />
         </Circle>
       }
       inputError={passwordError}

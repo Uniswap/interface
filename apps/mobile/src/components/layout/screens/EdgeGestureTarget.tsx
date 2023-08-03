@@ -19,7 +19,7 @@ export function HorizontalEdgeGestureTarget({
 }): JSX.Element {
   return (
     <Box
-      bg="accentAction"
+      bg="DEP_accentAction"
       height={height}
       left={edge === 'left' ? 0 : undefined}
       opacity={0}

@@ -30,7 +30,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
       <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="spacing12">
         <Flex row alignItems="center" justifyContent="space-between" px="spacing24">
           <Box width={theme.iconSizes.icon40}>{backButton ?? <BackButton />}</Box>
-          <Text color="textPrimary" variant="bodyLarge">
+          <Text color="DEP_textPrimary" variant="bodyLarge">
             {t('Manage connections')}
           </Text>
           <TouchableArea
@@ -39,7 +39,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
               setIsEditing(!isEditing)
             }}>
             <Text
-              color={isEditing ? 'accentActive' : 'textTertiary'}
+              color={isEditing ? 'DEP_accentActive' : 'DEP_textTertiary'}
               textAlign="right"
               variant="subheadSmall">
               {isEditing ? t('Done') : t('Edit')}
@@ -64,10 +64,10 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           />
         ) : (
           <Flex fill alignItems="center" gap="spacing8" px="spacing24" style={emptyCardStyle}>
-            <Text color="textPrimary" variant="subheadLarge">
+            <Text color="DEP_textPrimary" variant="subheadLarge">
               {t('No apps connected')}
             </Text>
-            <Text color="textSecondary" textAlign="center" variant="bodySmall">
+            <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
               {t('Connect to an app by scanning a code via WalletConnect')}
             </Text>
           </Flex>

@@ -63,13 +63,13 @@ export function ExploreScreen(): JSX.Element {
     setIsSearchMode(false)
   }
 
-  // Handle special case with design system light colors because background1 is the same as background0
+  // Handle special case with design system light colors because DEP_background1 is the same as DEP_background0
   const contrastBackgroundColor: keyof Theme['colors'] = isDarkMode
-    ? 'backgroundOverlay'
-    : 'background1'
+    ? 'DEP_backgroundOverlay'
+    : 'DEP_background1'
   const searchBarBackgroundColor: keyof Theme['colors'] = isDarkMode
-    ? 'backgroundOverlay'
-    : 'background1'
+    ? 'DEP_backgroundOverlay'
+    : 'DEP_background1'
 
   const onScroll = useCallback(() => {
     textInputRef.current?.blur()

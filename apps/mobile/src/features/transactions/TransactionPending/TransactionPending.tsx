@@ -48,12 +48,12 @@ export function TransactionPending({
         </Flex>
         <Flex alignItems="center" gap="spacing12" justifyContent="flex-start">
           <Text variant="headlineSmall">{title}</Text>
-          <Text color="textTertiary" textAlign="center" variant="bodyLarge">
+          <Text color="DEP_textTertiary" textAlign="center" variant="bodyLarge">
             {description}
           </Text>
           {transaction?.status === TransactionStatus.Failed ? (
             <TouchableArea onPress={onTryAgain}>
-              <Text color="accentAction" variant="bodyLarge">
+              <Text color="DEP_accentAction" variant="bodyLarge">
                 {t('Try again')}
               </Text>
             </TouchableArea>

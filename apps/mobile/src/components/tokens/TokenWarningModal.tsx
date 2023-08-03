@@ -102,10 +102,10 @@ export default function TokenWarningModal({
           <TokenLogo size={theme.imageSizes.image48} url={tokenLogoUrl} />
         )}
         <Flex centered gap="spacing4" width="90%">
-          <Text color="textSecondary" textAlign="center" variant="bodySmall">
+          <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
             {getTokenSafetyBodyText(safetyLevel, t)}{' '}
             <TouchableArea height={18} onPress={onPressLearnMore}>
-              <Text color="accentActive" variant="buttonLabelSmall">
+              <Text color="DEP_accentActive" variant="buttonLabelSmall">
                 {t('Learn more')}
               </Text>
             </TouchableArea>
@@ -113,7 +113,7 @@ export default function TokenWarningModal({
         </Flex>
         <TouchableArea
           alignItems="center"
-          bg="accentActiveSoft"
+          bg="DEP_accentActiveSoft"
           borderRadius="rounded16"
           flexDirection="row"
           mx="spacing48"
@@ -121,7 +121,7 @@ export default function TokenWarningModal({
           py="spacing8"
           onPress={(): Promise<void> => openUri(explorerLink)}>
           <Text
-            color="accentActive"
+            color="DEP_accentActive"
             ellipsizeMode="tail"
             mx="spacing8"
             numberOfLines={1}
@@ -129,7 +129,7 @@ export default function TokenWarningModal({
             {explorerLink}
           </Text>
           <ExternalLinkIcon
-            color={theme.colors.accentActive}
+            color={theme.colors.DEP_accentActive}
             height={iconSizes.icon16}
             width={iconSizes.icon16}
           />

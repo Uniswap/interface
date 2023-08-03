@@ -40,7 +40,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         <Unicon address={address} size={iconSizes.icon36} />
         <Text variant="subheadSmall">{displayName}</Text>
         <Chevron
-          color="$textSecondary"
+          color="$DEP_textSecondary"
           direction="s"
           height={iconSizes.icon20}
           width={iconSizes.icon20}
@@ -52,13 +52,13 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
             <Popover.Trigger
               onTouchEnd={(): void => setUpdateConnectionStatus(!updateConnectionStatus)}>
               <Icons.Globe
-                color="$textSecondary"
+                color="$DEP_textSecondary"
                 height={iconSizes.icon20}
                 width={iconSizes.icon20}
               />
             </Popover.Trigger>
             <Popover.Content
-              borderColor="$background3"
+              borderColor="$DEP_background3"
               borderRadius="$rounded12"
               borderWidth={1}
               paddingLeft="$spacing4">
@@ -68,7 +68,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         ) : null}
         <Button padding={0} onPress={(): void => navigate('/settings')}>
           <Icons.Settings
-            color="$textSecondary"
+            color="$DEP_textSecondary"
             height={iconSizes.icon24}
             width={iconSizes.icon24}
           />

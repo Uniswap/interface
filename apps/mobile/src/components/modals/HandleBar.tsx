@@ -19,7 +19,7 @@ export const HandleBar = ({
   containerFlexStyles?: FlexStyle
 }): JSX.Element => {
   const theme = useAppTheme()
-  const bg = hidden ? 'transparent' : backgroundColor ?? theme.colors.background0
+  const bg = hidden ? 'transparent' : backgroundColor ?? theme.colors.DEP_background0
 
   return (
     <Box mt={IS_ANDROID ? 'spacing4' : 'none'}>
@@ -33,7 +33,7 @@ export const HandleBar = ({
         }}>
         <Box
           alignSelf="center"
-          backgroundColor={hidden ? 'none' : 'backgroundOutline'}
+          backgroundColor={hidden ? 'none' : 'DEP_backgroundOutline'}
           borderRadius="rounded24"
           height={HANDLEBAR_HEIGHT}
           overflow="hidden"

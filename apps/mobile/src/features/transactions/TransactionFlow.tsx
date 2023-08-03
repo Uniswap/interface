@@ -192,7 +192,7 @@ export function TransactionFlow({
               confirmText={t('Dismiss')}
               icon={
                 <EyeIcon
-                  color={theme.colors.textSecondary}
+                  color={theme.colors.DEP_textSecondary}
                   height={theme.iconSizes.icon24}
                   width={theme.iconSizes.icon24}
                 />
@@ -258,19 +258,19 @@ function HeaderContent({
         {step === TransactionStep.FORM && showUSDToggle ? (
           <TouchableArea
             hapticFeedback
-            bg={isUSDInput ? 'accentActionSoft' : 'background2'}
+            bg={isUSDInput ? 'DEP_accentActionSoft' : 'DEP_background2'}
             borderRadius="rounded16"
             px="spacing8"
             py="spacing4"
             onPress={(): void => onToggleUSDInput(!isUSDInput)}>
             <Flex row alignItems="center" gap="spacing4">
               <DollarSign
-                color={isUSDInput ? theme.colors.accentAction : theme.colors.textSecondary}
+                color={isUSDInput ? theme.colors.DEP_accentAction : theme.colors.DEP_textSecondary}
                 height={theme.iconSizes.icon16}
                 width={theme.iconSizes.icon16}
               />
               <Text
-                color={isUSDInput ? 'accentAction' : 'textSecondary'}
+                color={isUSDInput ? 'DEP_accentAction' : 'DEP_textSecondary'}
                 variant="buttonLabelSmall">
                 {t('USD')}
               </Text>
@@ -279,7 +279,7 @@ function HeaderContent({
         ) : null}
         {isViewOnlyWallet ? (
           <TouchableArea
-            bg="background2"
+            bg="DEP_background2"
             borderRadius="rounded12"
             justifyContent="center"
             px="spacing8"
@@ -287,11 +287,11 @@ function HeaderContent({
             onPress={(): void => setShowViewOnlyModal(true)}>
             <Flex row alignItems="center" gap="spacing4">
               <EyeIcon
-                color={theme.colors.textTertiary}
+                color={theme.colors.DEP_textTertiary}
                 height={theme.iconSizes.icon16}
                 width={theme.iconSizes.icon16}
               />
-              <Text color="textTertiary" variant="buttonLabelSmall">
+              <Text color="DEP_textTertiary" variant="buttonLabelSmall">
                 {t('View-only')}
               </Text>
             </Flex>
@@ -305,20 +305,20 @@ function HeaderContent({
             <Flex
               centered
               row
-              bg={customSlippageTolerance ? 'background2' : 'none'}
+              bg={customSlippageTolerance ? 'DEP_background2' : 'none'}
               borderRadius="roundedFull"
               gap="spacing4"
               px={customSlippageTolerance ? 'spacing8' : 'none'}
               py="spacing4">
               {customSlippageTolerance ? (
-                <Text color="textSecondary" variant="buttonLabelMicro">
+                <Text color="DEP_textSecondary" variant="buttonLabelMicro">
                   {t('{{slippage}}% slippage', {
                     slippage: customSlippageTolerance.toFixed(2),
                   })}
                 </Text>
               ) : null}
               <SettingsIcon
-                color={theme.colors.textTertiary}
+                color={theme.colors.DEP_textTertiary}
                 height={theme.iconSizes.icon28}
                 width={theme.iconSizes.icon28}
               />

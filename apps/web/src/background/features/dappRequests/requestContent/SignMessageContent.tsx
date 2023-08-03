@@ -19,7 +19,7 @@ export const SignMessageDetails = ({
   return (
     <YStack flex={1} gap="$spacing16" width="100%">
       <YStack
-        backgroundColor="$backgroundScrim"
+        backgroundColor="$DEP_backgroundScrim"
         borderTopLeftRadius="$rounded16"
         borderTopRightRadius="$rounded16"
         flex={1}
@@ -28,7 +28,7 @@ export const SignMessageDetails = ({
         overflow="scroll"
         paddingHorizontal="$spacing16"
         paddingVertical="$spacing12">
-        <Text color="$textSecondary" variant="bodySmall">
+        <Text color="$DEP_textSecondary" variant="bodySmall">
           {signMessageRequest.messageHex}
         </Text>
       </YStack>

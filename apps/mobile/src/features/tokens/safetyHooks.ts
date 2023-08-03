@@ -34,11 +34,11 @@ export function useTokenWarningDismissed(currencyId: Maybe<CurrencyId>): {
 export function useTokenSafetyLevelColors(safetyLevel: Maybe<SafetyLevel>): keyof Theme['colors'] {
   switch (safetyLevel) {
     case SafetyLevel.MediumWarning:
-      return 'accentWarning'
+      return 'DEP_accentWarning'
     case SafetyLevel.StrongWarning:
-      return 'accentCritical'
+      return 'DEP_accentCritical'
     case SafetyLevel.Blocked:
     default:
-      return 'textSecondary'
+      return 'DEP_textSecondary'
   }
 }

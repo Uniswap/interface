@@ -27,14 +27,14 @@ export function NetworkFee({
   const feeSectionContent = (
     <>
       <Text
-        color={gasFallbackUsed && gasFeeUSD ? 'accentWarning' : 'textPrimary'}
+        color={gasFallbackUsed && gasFeeUSD ? 'DEP_accentWarning' : 'DEP_textPrimary'}
         variant="subheadSmall">
         {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
       </Text>
       {gasFallbackUsed && gasFeeUSD && (
         <Box ml="spacing4">
           <InfoCircleSVG
-            color={theme.colors.accentWarning}
+            color={theme.colors.DEP_accentWarning}
             height={theme.iconSizes.icon20}
             width={theme.iconSizes.icon20}
           />

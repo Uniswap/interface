@@ -42,7 +42,7 @@ function PortfolioValue({
 
   return (
     <Text
-      color="textTertiary"
+      color="DEP_textTertiary"
       loading={isLoading}
       loadingPlaceholderText="$000.00"
       variant="subheadSmall">
@@ -155,7 +155,7 @@ export function AccountCardItem({
           <Flex row alignItems="center" gap="none">
             {isActive && (
               <Check
-                color={theme.colors.userThemeMagenta}
+                color={theme.colors.DEP_magentaVibrant}
                 height={theme.iconSizes.icon24}
                 width={theme.iconSizes.icon24}
               />

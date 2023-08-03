@@ -17,16 +17,16 @@ const light = createTheme({
 
   // Tamagui Theme
   // Tamagui components expect the following
-  background: colorsLight.background0,
-  backgroundHover: colorsLight.background1,
-  backgroundPress: colorsLight.background1,
-  backgroundFocus: colorsLight.background1,
+  background: colorsLight.DEP_background0,
+  backgroundHover: colorsLight.DEP_background1,
+  backgroundPress: colorsLight.DEP_background1,
+  backgroundFocus: colorsLight.DEP_background1,
   borderColor: colorsLight.none,
   borderColorHover: colorsLight.none,
-  color: colorsLight.textPrimary,
-  colorHover: colorsLight.userThemeMagenta,
-  colorPress: colorsLight.userThemeMagenta,
-  colorFocus: colorsLight.userThemeMagenta,
+  color: colorsLight.DEP_textPrimary,
+  colorHover: colorsLight.DEP_magentaVibrant,
+  colorPress: colorsLight.DEP_magentaVibrant,
+  colorFocus: colorsLight.DEP_magentaVibrant,
   shadowColor: colorsLight.none,
   shadowColorHover: colorsLight.none,
 })
@@ -35,16 +35,16 @@ type BaseTheme = typeof light
 const dark: BaseTheme = {
   ...light,
   ...colorsDark,
-  background: colorsDark.background0,
-  backgroundHover: colorsDark.background1,
-  backgroundPress: colorsDark.background1,
-  backgroundFocus: colorsDark.background1,
+  background: colorsDark.DEP_background0,
+  backgroundHover: colorsDark.DEP_background1,
+  backgroundPress: colorsDark.DEP_background1,
+  backgroundFocus: colorsDark.DEP_background1,
   borderColor: colorsDark.none,
   borderColorHover: colorsDark.none,
-  color: colorsDark.textPrimary,
-  colorHover: colorsDark.userThemeMagenta,
-  colorPress: colorsDark.userThemeMagenta,
-  colorFocus: colorsDark.userThemeMagenta,
+  color: colorsDark.DEP_textPrimary,
+  colorHover: colorsDark.DEP_magentaVibrant,
+  colorPress: colorsDark.DEP_magentaVibrant,
+  colorFocus: colorsDark.DEP_magentaVibrant,
   shadowColor: colorsDark.none,
   shadowColorHover: colorsDark.none,
 }
@@ -68,11 +68,11 @@ const dark: BaseTheme = {
 
 const light_branded: BaseTheme = {
   ...light,
-  color: colorsLight.magentaVibrant,
+  color: colorsLight.DEP_magentaVibrant,
 }
 const dark_branded: BaseTheme = {
   ...dark,
-  color: colorsDark.magentaVibrant,
+  color: colorsDark.DEP_magentaVibrant,
 }
 const light_primary: BaseTheme = {
   ...light,
@@ -85,7 +85,7 @@ const light_secondary: BaseTheme = {
 }
 const dark_secondary: BaseTheme = {
   ...dark,
-  color: colorsDark.textSecondary,
+  color: colorsDark.DEP_textSecondary,
 }
 const light_tertiary: BaseTheme = {
   ...light,
@@ -111,38 +111,38 @@ const dark_warning: BaseTheme = {
 // theme: light
 const light_primary_Button: BaseTheme = {
   ...light,
-  background: colorsLight.magentaVibrant,
-  backgroundHover: hoverColor(colorsLight.magentaVibrant),
-  backgroundPress: pressedColor(colorsLight.magentaVibrant),
-  color: colorsLight.white,
+  background: colorsLight.DEP_magentaVibrant,
+  backgroundHover: hoverColor(colorsLight.DEP_magentaVibrant),
+  backgroundPress: pressedColor(colorsLight.DEP_magentaVibrant),
+  color: colorsLight.DEP_white,
 }
 
 // theme: dark
 const dark_primary_Button: BaseTheme = {
   ...dark,
-  background: colorsDark.magentaVibrant,
-  backgroundHover: hoverColor(colorsDark.magentaVibrant),
-  backgroundPress: pressedColor(colorsDark.magentaVibrant),
-  color: colorsDark.white,
+  background: colorsDark.DEP_magentaVibrant,
+  backgroundHover: hoverColor(colorsDark.DEP_magentaVibrant),
+  backgroundPress: pressedColor(colorsDark.DEP_magentaVibrant),
+  color: colorsDark.DEP_white,
 }
 
 // secondary
 // theme: light
 const light_secondary_Button: BaseTheme = {
   ...light,
-  background: colorsLight.background3,
-  backgroundHover: hoverColor(colorsLight.background3),
-  backgroundPress: pressedColor(colorsLight.background3),
-  color: colorsLight.textOnDimPrimary,
+  background: colorsLight.DEP_background3,
+  backgroundHover: hoverColor(colorsLight.DEP_background3),
+  backgroundPress: pressedColor(colorsLight.DEP_background3),
+  color: colorsLight.DEP_textOnDimPrimary,
 }
 
 // theme: dark
 const dark_secondary_Button: BaseTheme = {
   ...dark,
-  background: colorsDark.background3,
-  backgroundHover: hoverColor(colorsDark.background3),
-  backgroundPress: pressedColor(colorsDark.background3),
-  color: colorsDark.textOnBrightPrimary,
+  background: colorsDark.DEP_background3,
+  backgroundHover: hoverColor(colorsDark.DEP_background3),
+  backgroundPress: pressedColor(colorsDark.DEP_background3),
+  color: colorsDark.DEP_textOnBrightPrimary,
 }
 
 // tertiary
@@ -152,8 +152,8 @@ const light_tertiary_Button: BaseTheme = {
   background: colorsLight.none,
   backgroundHover: colorsLight.none,
   backgroundPress: colorsLight.none,
-  borderColor: colorsLight.backgroundOutline,
-  color: colorsLight.textOnBrightPrimary,
+  borderColor: colorsLight.DEP_backgroundOutline,
+  color: colorsLight.DEP_textOnBrightPrimary,
 }
 
 // theme: dark
@@ -162,46 +162,46 @@ const dark_tertiary_Button: BaseTheme = {
   background: colorsDark.none,
   backgroundHover: colorsDark.none,
   backgroundPress: colorsDark.none,
-  borderColor: colorsDark.backgroundOutline,
-  color: colorsDark.textOnBrightPrimary,
+  borderColor: colorsDark.DEP_backgroundOutline,
+  color: colorsDark.DEP_textOnBrightPrimary,
 }
 
 // detrimental
 // theme: light
 const light_detrimental_Button: BaseTheme = {
   ...light,
-  background: colorsLight.accentCriticalSoft,
-  backgroundHover: colorsLight.accentCriticalSoft,
-  backgroundPress: colorsLight.accentCriticalSoft,
-  color: colorsLight.accentCritical,
+  background: colorsLight.DEP_accentCriticalSoft,
+  backgroundHover: colorsLight.DEP_accentCriticalSoft,
+  backgroundPress: colorsLight.DEP_accentCriticalSoft,
+  color: colorsLight.DEP_accentCritical,
 }
 
 // theme: dark
 const dark_detrimental_Button: BaseTheme = {
   ...dark,
-  background: colorsDark.accentCriticalSoft,
-  backgroundHover: colorsLight.accentCriticalSoft,
-  backgroundPress: colorsLight.accentCriticalSoft,
-  color: colorsDark.accentCritical,
+  background: colorsDark.DEP_accentCriticalSoft,
+  backgroundHover: colorsLight.DEP_accentCriticalSoft,
+  backgroundPress: colorsLight.DEP_accentCriticalSoft,
+  color: colorsDark.DEP_accentCritical,
 }
 
 // warning
 // theme: light
 const light_warning_Button: BaseTheme = {
   ...light,
-  background: colorsLight.accentWarningSoft,
-  backgroundHover: colorsLight.accentWarningSoft,
-  backgroundPress: colorsLight.accentWarningSoft,
-  color: colorsLight.accentWarning,
+  background: colorsLight.DEP_accentWarningSoft,
+  backgroundHover: colorsLight.DEP_accentWarningSoft,
+  backgroundPress: colorsLight.DEP_accentWarningSoft,
+  color: colorsLight.DEP_accentWarning,
 }
 
 // theme: dark
 const dark_warning_Button: BaseTheme = {
   ...dark,
-  background: colorsDark.accentWarningSoft,
-  backgroundHover: colorsDark.accentWarningSoft,
-  backgroundPress: colorsDark.accentWarningSoft,
-  color: colorsDark.accentWarning,
+  background: colorsDark.DEP_accentWarningSoft,
+  backgroundHover: colorsDark.DEP_accentWarningSoft,
+  backgroundPress: colorsDark.DEP_accentWarningSoft,
+  color: colorsDark.DEP_accentWarning,
 }
 
 // combine and narrow theme types before exporting

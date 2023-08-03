@@ -26,11 +26,11 @@ export function BlockedAddressWarning(props: FlexProps): JSX.Element {
         }}>
         <Flex gap="spacing8" {...props}>
           <InfoCircle
-            color={theme.colors.textSecondary}
+            color={theme.colors.DEP_textSecondary}
             height={theme.iconSizes.icon16}
             width={theme.iconSizes.icon16}
           />
-          <Text color="textSecondary" variant="subheadSmall">
+          <Text color="DEP_textSecondary" variant="subheadSmall">
             {t('This wallet is blocked')}
           </Text>
         </Flex>

@@ -20,11 +20,11 @@ export const parameters = {
     values: [
       {
         name: 'light',
-        value: theme.colors.background0,
+        value: theme.colors.DEP_background0,
       },
       {
         name: 'dark',
-        value: darkTheme.colors.background0,
+        value: darkTheme.colors.DEP_background0,
       },
     ],
   },
@@ -33,13 +33,13 @@ export const parameters = {
     // Override the default dark theme
     dark: {
       ...theme.dark,
-      barSelectedColor: darkTheme.colors.accentAction,
-      appBg: darkTheme.colors.background0,
-      appContentBg: darkTheme.colors.backgroundOutline,
-      barBg: darkTheme.colors.background1,
-      textColor: darkTheme.colors.textPrimary,
-      colorPrimary: darkTheme.colors.accentAction,
-      colorSecondary: darkTheme.colors.accentAction,
+      barSelectedColor: darkTheme.colors.DEP_accentAction,
+      appBg: darkTheme.colors.DEP_background0,
+      appContentBg: darkTheme.colors.DEP_backgroundOutline,
+      barBg: darkTheme.colors.DEP_background1,
+      textColor: darkTheme.colors.DEP_textPrimary,
+      colorPrimary: darkTheme.colors.DEP_accentAction,
+      colorSecondary: darkTheme.colors.DEP_accentAction,
     },
     docs: {
       inlineStories: false,
@@ -52,13 +52,13 @@ export const parameters = {
     // Override the default light theme
     light: {
       ...theme.light,
-      barSelectedColor: theme.colors.accentAction,
-      appBg: theme.colors.background0,
-      appContentBg: theme.colors.background1,
-      barBg: theme.colors.background1,
-      textColor: theme.colors.textPrimary,
-      colorPrimary: theme.colors.accentAction,
-      colorSecondary: theme.colors.accentAction,
+      barSelectedColor: theme.colors.DEP_accentAction,
+      appBg: theme.colors.DEP_background0,
+      appContentBg: theme.colors.DEP_background1,
+      barBg: theme.colors.DEP_background1,
+      textColor: theme.colors.DEP_textPrimary,
+      colorPrimary: theme.colors.DEP_accentAction,
+      colorSecondary: theme.colors.DEP_accentAction,
     },
   },
   options: {

@@ -55,14 +55,14 @@ export const useModalContent = ({
           <Trans t={t}>
             {/* https://react.i18next.com/latest/trans-component#interpolation */}
             {/* @ts-expect-error: react-i18next uses this ^ syntax and it's not canonic */}
-            You're removing <Text color="accentCritical">{{ wallet: account?.name }}</Text>
+            You're removing <Text color="DEP_accentCritical">{{ wallet: account?.name }}</Text>
           </Trans>
         ),
         description: t(
           'This will remove your wallet from this device along with your recovery phrase.'
         ),
         Icon: TrashIcon,
-        iconColorLabel: 'accentCritical',
+        iconColorLabel: 'DEP_accentCritical',
         actionButtonLabel: t('Continue'),
         actionButtonEmphasis: ButtonEmphasis.Detrimental,
       }
@@ -76,7 +76,7 @@ export const useModalContent = ({
           'You can only store one recovery phrase at a time. To continue importing a new one, you’ll need to remove your current recovery phrase and any associated wallets from this device.'
         ),
         Icon: WalletIcon,
-        iconColorLabel: 'textSecondary',
+        iconColorLabel: 'DEP_textSecondary',
         actionButtonLabel: t('Continue'),
         actionButtonEmphasis: ButtonEmphasis.Secondary,
       }
@@ -87,19 +87,19 @@ export const useModalContent = ({
       return {
         title: (
           <Trans t={t}>
-            You're removing your <Text color="accentCritical">recovery phrase</Text>
+            You're removing your <Text color="DEP_accentCritical">recovery phrase</Text>
           </Trans>
         ),
         description: (
           <Trans t={t}>
             Make sure you’ve written down your recovery phrase or backed it up on iCloud.{' '}
-            <Text color="textSecondary" maxFontSizeMultiplier={1.4} variant="buttonLabelSmall">
+            <Text color="DEP_textSecondary" maxFontSizeMultiplier={1.4} variant="buttonLabelSmall">
               You will not be able to access your funds otherwise.
             </Text>
           </Trans>
         ),
         Icon: AlertTriangleIcon,
-        iconColorLabel: 'accentCritical',
+        iconColorLabel: 'DEP_accentCritical',
       }
     }
 
@@ -115,7 +115,7 @@ export const useModalContent = ({
           <Trans t={t}>
             {/* https://react.i18next.com/latest/trans-component#interpolation */}
             {/* @ts-expect-error: react-i18next uses this ^ syntax and it's not canonic */}
-            You're removing <Text color="accentCritical">{{ wallet: account?.name }}</Text>
+            You're removing <Text color="DEP_accentCritical">{{ wallet: account?.name }}</Text>
           </Trans>
         ),
         description: (
@@ -128,7 +128,7 @@ export const useModalContent = ({
           </Trans>
         ),
         Icon: TrashIcon,
-        iconColorLabel: 'accentCritical',
+        iconColorLabel: 'DEP_accentCritical',
         actionButtonLabel: t('Remove'),
         actionButtonEmphasis: ButtonEmphasis.Detrimental,
       }
@@ -141,14 +141,14 @@ export const useModalContent = ({
           <Trans t={t}>
             You're removing {/* https://react.i18next.com/latest/trans-component#interpolation */}
             {/* @ts-expect-error: react-i18next uses this ^ syntax and it's not canonic */}
-            <Text color="textSecondary">{{ wallet: viewOnlyDisplayName?.name }}</Text>
+            <Text color="DEP_textSecondary">{{ wallet: viewOnlyDisplayName?.name }}</Text>
           </Trans>
         ),
         description: t(
           "You can always add back view-only wallets by entering the wallet's address."
         ),
         Icon: TrashIcon,
-        iconColorLabel: 'textSecondary',
+        iconColorLabel: 'DEP_textSecondary',
         actionButtonLabel: t('Remove'),
         actionButtonEmphasis: ButtonEmphasis.Secondary,
       }

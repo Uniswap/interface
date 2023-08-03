@@ -22,7 +22,7 @@ export const AddressQRCode = ({
   address,
   errorCorrectionLevel,
   size,
-  backgroundColor = 'background0',
+  backgroundColor = 'DEP_background0',
   color,
   safeAreaSize,
   safeAreaColor,
@@ -45,7 +45,7 @@ export const AddressQRCode = ({
         logoSize: safeAreaSize,
         logo: { uri: '' },
         // this could eventually be set to an SVG version of the Unicon which would ensure it's perfectly centered, but for now we can just use an empty logo image to create a blank circle in the middle of the QR code
-        logoBackgroundColor: theme.colors.background0,
+        logoBackgroundColor: theme.colors.DEP_background0,
         logoBorderRadius: theme.borderRadii.roundedFull,
         // note: this QR code library doesn't actually create a "safe" space in the middle, it just adds the logo on top, so that's why ecl is set to H (high error correction level) by default to ensure the QR code is still readable even if the middle of the QR code is partially obscured
       }
@@ -102,7 +102,7 @@ const _QRCodeDisplay = ({
   address,
   errorCorrectionLevel = 'M',
   size,
-  backgroundColor = 'background0',
+  backgroundColor = 'DEP_background0',
   containerBackgroundColor,
   overlayOpacityPercent,
   logoSize = 32,
@@ -116,13 +116,13 @@ const _QRCodeDisplay = ({
     <Box
       alignItems="center"
       backgroundColor={containerBackgroundColor}
-      borderColor="backgroundOutline"
+      borderColor="DEP_backgroundOutline"
       borderRadius="rounded32"
       borderWidth={hideOutline ? 0 : 2}
       justifyContent="center"
       padding="spacing24"
       position="relative"
-      shadowColor="black"
+      shadowColor="DEP_black"
       shadowOffset={{ width: 0, height: 16 }}
       shadowOpacity={displayShadow ? 0.1 : 0}
       shadowRadius={16}>
@@ -140,7 +140,7 @@ const _QRCodeDisplay = ({
             <AddressQRCode
               address={address}
               backgroundColor="none"
-              color={opacify(overlayOpacityPercent, theme.colors.textPrimary)}
+              color={opacify(overlayOpacityPercent, theme.colors.DEP_textPrimary)}
               errorCorrectionLevel={errorCorrectionLevel}
               safeAreaColor={safeAreaColor}
               safeAreaSize={logoSize / 1.5}
@@ -160,7 +160,7 @@ const _QRCodeDisplay = ({
         <Unicon
           showBorder
           address={address}
-          backgroundColor={theme.colors.background0}
+          backgroundColor={theme.colors.DEP_background0}
           size={logoSize}
         />
       </Box>

@@ -39,11 +39,11 @@ export function OnboardingScreen({
             {title}
           </Text>
           <YStack alignItems="center" gap="$spacing4">
-            <Text color="$textSecondary" textAlign="center" variant="subheadSmall">
+            <Text color="$DEP_textSecondary" textAlign="center" variant="subheadSmall">
               {subtitle}
             </Text>
             {warningSubtitle && (
-              <Text color="$accentCritical" textAlign="center" variant="bodySmall">
+              <Text color="$DEP_accentCritical" textAlign="center" variant="bodySmall">
                 {warningSubtitle}
               </Text>
             )}
@@ -57,11 +57,11 @@ export function OnboardingScreen({
       <XStack gap="$spacing12" width="100%">
         {onBack && (
           <Button
-            backgroundColor="$background2"
+            backgroundColor="$DEP_background2"
             flexShrink={1}
             padding="$spacing16"
             onPress={onBack}>
-            <Icons.BackArrow color="$textSecondary" size={iconSizes.icon24} />
+            <Icons.BackArrow color="$DEP_textSecondary" size={iconSizes.icon24} />
           </Button>
         )}
 

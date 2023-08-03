@@ -28,8 +28,8 @@ export function TokenDetailsActionButtons({
   return (
     <Flex
       row
-      bg="background0"
-      borderTopColor="backgroundOutline"
+      bg="DEP_background0"
+      borderTopColor="DEP_backgroundOutline"
       borderTopWidth={1}
       gap="spacing8"
       pb="spacing16"
@@ -46,10 +46,10 @@ export function TokenDetailsActionButtons({
           flexGrow={1}
           px={paddingX}
           py={paddingY}
-          style={{ backgroundColor: tokenColor ?? theme.colors.magentaVibrant }}
+          style={{ backgroundColor: tokenColor ?? theme.colors.DEP_magentaVibrant }}
           onPress={onPressSwap}>
           <Text
-            color={tokenColor ? getContrastPassingTextColor(tokenColor) : 'textOnBrightPrimary'}
+            color={tokenColor ? getContrastPassingTextColor(tokenColor) : 'DEP_textOnBrightPrimary'}
             variant={textVariant}>
             {t('Swap')}
           </Text>

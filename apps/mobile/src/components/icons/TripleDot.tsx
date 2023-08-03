@@ -7,7 +7,10 @@ type Props = {
   color?: keyof Theme['colors']
 }
 
-export const TripleDot = memo(function _TripleDot({ size = 5, color = 'textSecondary' }: Props) {
+export const TripleDot = memo(function _TripleDot({
+  size = 5,
+  color = 'DEP_textSecondary',
+}: Props) {
   return (
     <Flex row gap="spacing4">
       <Box bg={color} borderRadius="roundedFull" height={size} width={size} />

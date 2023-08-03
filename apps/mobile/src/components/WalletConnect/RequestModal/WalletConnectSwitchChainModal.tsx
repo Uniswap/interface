@@ -84,10 +84,10 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
             </Trans>
           </Text>
           <LinkButton
-            backgroundColor="background2"
+            backgroundColor="DEP_background2"
             borderRadius="rounded12"
-            color={theme.colors.accentActive}
-            iconColor={theme.colors.accentActive}
+            color={theme.colors.DEP_accentActive}
+            iconColor={theme.colors.DEP_accentActive}
             label={dapp.url}
             p="spacing8"
             size={theme.iconSizes.icon12}
@@ -96,7 +96,7 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
           />
         </Flex>
         <Flex gap="spacing12">
-          <Flex backgroundColor="background2" borderRadius="rounded16" gap="none">
+          <Flex backgroundColor="DEP_background2" borderRadius="rounded16" gap="none">
             <Flex
               row
               alignItems="center"
@@ -114,7 +114,7 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
                 textVariant="subheadSmall"
               />
             </Flex>
-            <Separator color="background1" width={1} />
+            <Separator color="DEP_background1" width={1} />
             <Box p="spacing16">
               <AccountDetails address={request.account} />
             </Box>

@@ -76,7 +76,7 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
   const textInputProps: TextInputProps = useMemo(
     () => ({
       ref,
-      color: !value || dimTextColor ? 'textTertiary' : 'textPrimary',
+      color: !value || dimTextColor ? 'DEP_textTertiary' : 'DEP_textPrimary',
       keyboardType: 'numeric' as KeyboardTypeOptions,
 
       // Use defaultValue here to make TextInput technically an uncontrolled element

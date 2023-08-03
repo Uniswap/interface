@@ -36,11 +36,11 @@ export function TokenLogo({
           style={[
             style.image,
             {
-              backgroundColor: theme.backgroundOutline.get(),
+              backgroundColor: theme.DEP_backgroundOutline.get(),
               width: size,
               height: size,
               borderRadius: size / 2,
-              borderColor: theme.backgroundOutline.get(),
+              borderColor: theme.DEP_backgroundOutline.get(),
               borderWidth: THIN_BORDER,
             },
           ]}
@@ -48,7 +48,7 @@ export function TokenLogo({
       ) : (
         <Box
           alignItems="center"
-          bg="$backgroundOutline"
+          bg="$DEP_backgroundOutline"
           borderRadius="$roundedFull"
           height={size}
           justifyContent="center"
@@ -56,7 +56,7 @@ export function TokenLogo({
           width={size}>
           <Text
             adjustsFontSizeToFit
-            color="$textPrimary"
+            color="$DEP_textPrimary"
             flex={0}
             numberOfLines={1}
             textAlign="center">

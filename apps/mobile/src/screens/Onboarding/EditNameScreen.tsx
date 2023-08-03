@@ -153,7 +153,7 @@ function CustomizationSection({
             maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
             maxLength={NICKNAME_MAX_LENGTH}
             placeholder="Nickname"
-            placeholderTextColor={theme.colors.textTertiary}
+            placeholderTextColor={theme.colors.DEP_textTertiary}
             testID="customize/name"
             textAlign="center"
             value={accountName}
@@ -173,10 +173,10 @@ function CustomizationSection({
           )}
         </Flex>
         <Flex centered gap="spacing4">
-          <Text color="textTertiary" variant="bodyMicro">
+          <Text color="DEP_textTertiary" variant="bodyMicro">
             {t('Your public address will be')}
           </Text>
-          <Text color="textTertiary" variant="buttonLabelSmall">
+          <Text color="DEP_textTertiary" variant="buttonLabelSmall">
             {shortenAddress(address)}
           </Text>
         </Flex>

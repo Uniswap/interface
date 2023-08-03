@@ -111,8 +111,8 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             padding="spacing36"
             position="absolute"
             style={{
-              borderColor: opacify(15, theme.colors.textOnBrightPrimary),
-              backgroundColor: opacify(35, theme.colors.background0),
+              borderColor: opacify(15, theme.colors.DEP_textOnBrightPrimary),
+              backgroundColor: opacify(35, theme.colors.DEP_background0),
             }}
             top={0}>
             <BlurView
@@ -123,13 +123,13 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             />
             {isTouchIdDevice ? (
               <FingerprintIcon
-                color={theme.colors.textOnBrightPrimary}
+                color={theme.colors.DEP_textOnBrightPrimary}
                 height={theme.imageSizes.image48}
                 width={theme.imageSizes.image48}
               />
             ) : (
               <FaceIcon
-                color={theme.colors.textOnBrightPrimary}
+                color={theme.colors.DEP_textOnBrightPrimary}
                 height={theme.imageSizes.image48}
                 width={theme.imageSizes.image48}
               />
@@ -139,7 +139,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
         <Flex gap="spacing24">
           <Trace logPress element={ElementName.Skip}>
             <TouchableArea onPress={onMaybeLaterPressed}>
-              <Text color="magentaVibrant" textAlign="center" variant="buttonLabelMedium">
+              <Text color="DEP_magentaVibrant" textAlign="center" variant="buttonLabelMedium">
                 {t('Maybe later')}
               </Text>
             </TouchableArea>

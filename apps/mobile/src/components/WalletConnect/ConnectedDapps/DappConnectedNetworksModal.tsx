@@ -77,7 +77,7 @@ export function DappConnectedNetworkModal({
             {dapp.name || dapp.url}
           </Text>
           <Text
-            color="accentActive"
+            color="DEP_accentActive"
             numberOfLines={1}
             textAlign="center"
             variant="buttonLabelMicro">
@@ -87,7 +87,7 @@ export function DappConnectedNetworkModal({
         <Box flexDirection="row">
           <Flex
             grow
-            borderColor="backgroundOutline"
+            borderColor="DEP_backgroundOutline"
             borderRadius="rounded12"
             borderWidth={1}
             gap="spacing16"
@@ -95,12 +95,12 @@ export function DappConnectedNetworkModal({
             {session.chains.map((chainId) => (
               <Flex key={chainId} row alignItems="center" justifyContent="space-between">
                 <NetworkLogo chainId={chainId} size={theme.iconSizes.icon24} />
-                <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
+                <Text color="DEP_textPrimary" numberOfLines={1} variant="bodyLarge">
                   {CHAIN_INFO[chainId].label}
                 </Text>
                 <Flex centered height={theme.iconSizes.icon24} width={theme.iconSizes.icon24}>
                   <Box
-                    bg="accentSuccess"
+                    bg="DEP_accentSuccess"
                     borderRadius="roundedFull"
                     height={theme.iconSizes.icon8}
                     width={theme.iconSizes.icon8}

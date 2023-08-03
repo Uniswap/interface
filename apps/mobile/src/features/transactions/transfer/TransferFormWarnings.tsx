@@ -125,17 +125,17 @@ const TransferRecipient = ({
   return (
     <Flex
       centered
-      borderColor="backgroundOutline"
+      borderColor="DEP_backgroundOutline"
       borderRadius="rounded12"
       borderWidth={1}
       gap="spacing8"
       px="spacing16"
       py="spacing12">
-      <Text color="textPrimary" textAlign="center" variant="subheadSmall">
+      <Text color="DEP_textPrimary" textAlign="center" variant="subheadSmall">
         {type === 'ens' ? displayName : address}
       </Text>
       {type === 'ens' && (
-        <Text color="textSecondary" textAlign="center" variant="buttonLabelMicro">
+        <Text color="DEP_textSecondary" textAlign="center" variant="buttonLabelMicro">
           {address}
         </Text>
       )}

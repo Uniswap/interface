@@ -156,8 +156,8 @@ export function OnboardingStackNavigator(): JSX.Element {
   const insets = useSafeAreaInsets()
 
   const renderHeaderBackImage = useCallback(
-    () => <Chevron color={theme.colors.textSecondary} height={28} width={28} />,
-    [theme.colors.textSecondary]
+    () => <Chevron color={theme.colors.DEP_textSecondary} height={28} width={28} />,
+    [theme.colors.DEP_textSecondary]
   )
 
   return (
@@ -170,7 +170,7 @@ export function OnboardingStackNavigator(): JSX.Element {
           headerBackImage: renderHeaderBackImage,
           headerStatusBarHeight: insets.top + theme.spacing.spacing8,
           headerTransparent: true,
-          headerTintColor: theme.colors.textSecondary,
+          headerTintColor: theme.colors.DEP_textSecondary,
           headerLeftContainerStyle: { paddingLeft: theme.spacing.spacing16 },
           headerRightContainerStyle: { paddingRight: theme.spacing.spacing16 },
         }}>

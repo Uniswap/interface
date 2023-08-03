@@ -31,21 +31,21 @@ export function FiatOnRampBanner(props: BoxProps): JSX.Element {
         {...props}
         hapticFeedback>
         <Box flex={1} position="absolute" right={0} top={0}>
-          <FiatOnRampBackground color={theme.colors.white} />
+          <FiatOnRampBackground color={theme.colors.DEP_white} />
         </Box>
         <Flex gap="spacing4">
           <Flex row justifyContent="space-between">
-            <Text color="textOnBrightPrimary" variant="buttonLabelMedium">
+            <Text color="DEP_textOnBrightPrimary" variant="buttonLabelMedium">
               {t('Buy crypto')}
             </Text>
             <Chevron
-              color={theme.colors.textOnBrightPrimary}
+              color={theme.colors.DEP_textOnBrightPrimary}
               direction="e"
               width={theme.iconSizes.icon20}
             />
           </Flex>
 
-          <Text color="textOnBrightPrimary" opacity={0.72} variant="subheadSmall">
+          <Text color="DEP_textOnBrightPrimary" opacity={0.72} variant="subheadSmall">
             {t('Get tokens at the best prices in web3 with Uniswap Wallet.')}
           </Text>
         </Flex>

@@ -244,7 +244,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               minHeight={2 * MAX_INPUT_FONT_SIZE}
               overflow="visible"
               placeholder="0"
-              placeholderTextColor={theme.colors.textTertiary}
+              placeholderTextColor={theme.colors.DEP_textTertiary}
               px="none"
               py="none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
@@ -270,13 +270,13 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
       {currencyInfo && (
         <Flex row alignItems="center" gap="spacing8" justifyContent="space-between" mb="spacing4">
           <Flex shrink>
-            <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
+            <Text color="DEP_textSecondary" numberOfLines={1} variant="subheadSmall">
               {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
             </Text>
           </Flex>
           <Flex row alignItems="center" gap="spacing8" justifyContent="flex-end">
             <Text
-              color={showInsufficientBalanceWarning ? 'accentWarning' : 'textSecondary'}
+              color={showInsufficientBalanceWarning ? 'DEP_accentWarning' : 'DEP_textSecondary'}
               variant="subheadSmall">
               {t('Balance')}: {formatCurrencyAmount(currencyBalance, NumberType.TokenNonTx)}
             </Text>

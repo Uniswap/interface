@@ -88,13 +88,13 @@ export function GenericImportForm({
       <Flex gap="spacing16" onTouchEnd={handleFocus}>
         <Flex
           centered
-          backgroundColor="background1"
+          backgroundColor="DEP_background1"
           borderColor={
             showSuccess
-              ? 'accentSuccess'
+              ? 'DEP_accentSuccess'
               : errorMessage && (liveCheck || !focused) && value
-              ? 'accentCritical'
-              : 'background2'
+              ? 'DEP_accentCritical'
+              : 'DEP_background2'
           }
           borderRadius="rounded20"
           borderWidth={1}
@@ -133,7 +133,7 @@ export function GenericImportForm({
               onLayout={(event: LayoutChangeEvent): void => setLayout(event.nativeEvent.layout)}>
               <Text
                 adjustsFontSizeToFit
-                color="textSecondary"
+                color="DEP_textSecondary"
                 maxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
                 numberOfLines={1}
                 style={styles.placeholderLabelStyle}
@@ -148,7 +148,7 @@ export function GenericImportForm({
               {placeholderLabel && (
                 <Text
                   adjustsFontSizeToFit
-                  color="textSecondary"
+                  color="DEP_textSecondary"
                   numberOfLines={1}
                   style={styles.placeholderLabelStyle}
                   variant="bodyLarge">
@@ -161,8 +161,8 @@ export function GenericImportForm({
         <Flex>
           {errorMessage && value && (liveCheck || !focused) && (
             <Flex centered row gap="spacing12">
-              <AlertTriangle color={theme.colors.accentCritical} />
-              <Text color="accentCritical" variant="bodyLarge">
+              <AlertTriangle color={theme.colors.DEP_accentCritical} />
+              <Text color="DEP_accentCritical" variant="bodyLarge">
                 {errorMessage}
               </Text>
             </Flex>

@@ -72,8 +72,11 @@ export function ImportMnemonic(): JSX.Element {
   return (
     <OnboardingScreen
       Icon={
-        <Circle backgroundColor="$magentaDark" height={iconSizes.icon64} width={iconSizes.icon64}>
-          <Icons.FileListLock color="$magentaVibrant" size={iconSizes.icon36} />
+        <Circle
+          backgroundColor="$DEP_magentaDark"
+          height={iconSizes.icon64}
+          width={iconSizes.icon64}>
+          <Icons.FileListLock color="$DEP_magentaVibrant" size={iconSizes.icon36} />
         </Circle>
       }
       inputError={errorMessage}

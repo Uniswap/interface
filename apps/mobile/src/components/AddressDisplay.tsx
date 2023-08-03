@@ -58,8 +58,8 @@ export function AddressDisplay({
   address,
   size = 24,
   variant = 'bodyLarge',
-  textColor = 'textPrimary',
-  captionTextColor = 'textSecondary',
+  textColor = 'DEP_textPrimary',
+  captionTextColor = 'DEP_textSecondary',
   captionVariant = 'subheadSmall',
   hideAddressInSubtitle,
   direction = 'row',
@@ -123,7 +123,7 @@ export function AddressDisplay({
               {displayName?.name}
             </Text>
             {showCopy && !showAddressAsSubtitle && (
-              <CopyIcon color={theme.colors.textPrimary} height={mainSize} width={mainSize} />
+              <CopyIcon color={theme.colors.DEP_textPrimary} height={mainSize} width={mainSize} />
             )}
           </Flex>
         </CopyButtonWrapper>
@@ -132,7 +132,7 @@ export function AddressDisplay({
             <Flex
               centered
               row
-              backgroundColor={showCopyWrapperButton ? 'backgroundOverlay' : 'none'}
+              backgroundColor={showCopyWrapperButton ? 'DEP_backgroundOverlay' : 'none'}
               borderRadius="roundedFull"
               gap="spacing4"
               marginTop={showCopyWrapperButton ? 'spacing8' : 'none'}

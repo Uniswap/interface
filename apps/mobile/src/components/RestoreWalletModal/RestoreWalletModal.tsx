@@ -20,7 +20,7 @@ export function RestoreWalletModal(): JSX.Element | null {
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.background1}
+      backgroundColor={theme.colors.DEP_background1}
       name={ModalName.RestoreWallet}
       onClose={onClose}>
       <Flex centered gap="spacing16" height="100%" mb="spacing24" p="spacing24" paddingTop="none">
@@ -29,10 +29,10 @@ export function RestoreWalletModal(): JSX.Element | null {
           borderRadius="roundedFull"
           p="spacing12"
           style={{
-            backgroundColor: opacify(12, theme.colors.textPrimary),
+            backgroundColor: opacify(12, theme.colors.DEP_textPrimary),
           }}>
           <LockIcon
-            color={theme.colors.textPrimary}
+            color={theme.colors.DEP_textPrimary}
             height={theme.iconSizes.icon24}
             width={theme.iconSizes.icon24}
           />
@@ -40,7 +40,7 @@ export function RestoreWalletModal(): JSX.Element | null {
         <Text textAlign="center" variant="bodyLarge">
           {t('Restore wallet')}
         </Text>
-        <Text color="textSecondary" textAlign="center" variant="bodySmall">
+        <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
           {t(
             'Because you’re on a new device, you’ll need to restore your recovery phrase. This will allow you to swap and send tokens.'
           )}

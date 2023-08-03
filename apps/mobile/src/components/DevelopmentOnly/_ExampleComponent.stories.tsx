@@ -32,17 +32,17 @@ export const ExampleGreen = Template.bind({})
 ExampleGreen.args = {
   success: true,
   header: (
-    <Text color="textPrimary" variant="headlineLarge">
+    <Text color="DEP_textPrimary" variant="headlineLarge">
       The `success: true` argument passed to this version of the component will make its background
       green!
     </Text>
   ),
   children: (
     <Flex>
-      <Text color="textSecondary" variant="subheadLarge">
+      <Text color="DEP_textSecondary" variant="subheadLarge">
         One paragraph
       </Text>
-      <Text color="textSecondary" variant="bodyLarge">
+      <Text color="DEP_textSecondary" variant="bodyLarge">
         Another paragraph
       </Text>
     </Flex>
@@ -53,13 +53,13 @@ export const ExampleRed = Template.bind({})
 ExampleRed.args = {
   success: false,
   header: (
-    <Text color="textSecondary" variant="headlineSmall">
+    <Text color="DEP_textSecondary" variant="headlineSmall">
       But when `success: false` is passed in, its background will be red
     </Text>
   ),
   children: (
     <Flex>
-      <Text color="accentCritical" variant="bodyLarge">
+      <Text color="DEP_accentCritical" variant="bodyLarge">
         Scary red text!
       </Text>
     </Flex>
@@ -71,10 +71,10 @@ ExampleRedWithParagraph.args = {
   ...ExampleRed.args,
   children: (
     <>
-      <Text color="accentCritical" variant="headlineLarge">
+      <Text color="DEP_accentCritical" variant="headlineLarge">
         Scary red text!
       </Text>
-      <Text color="accentCritical" variant="bodyLarge">
+      <Text color="DEP_accentCritical" variant="bodyLarge">
         With a scary warning text body paragraph underneath it no less!
       </Text>
     </>

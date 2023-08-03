@@ -37,8 +37,12 @@ export function RecipientList({ onPress, sections }: RecipientListProps): JSX.El
 
 function SectionHeader(info: { section: SectionListData<SearchableRecipient> }): JSX.Element {
   return (
-    <AnimatedFlex backgroundColor="background1" entering={FadeIn} exiting={FadeOut} py="spacing8">
-      <Text color="textSecondary" variant="subheadSmall">
+    <AnimatedFlex
+      backgroundColor="DEP_background1"
+      entering={FadeIn}
+      exiting={FadeOut}
+      py="spacing8">
+      <Text color="DEP_textSecondary" variant="subheadSmall">
         {info.section.title}
       </Text>
     </AnimatedFlex>

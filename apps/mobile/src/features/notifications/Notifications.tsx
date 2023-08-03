@@ -482,7 +482,7 @@ export function CopiedNotification({
       hideDelay={hideDelay}
       icon={
         <CheckCircle
-          color={theme.colors.accentSuccess}
+          color={theme.colors.DEP_accentSuccess}
           height={iconSizes.icon24}
           strokeWidth={1.5}
           width={iconSizes.icon24}
@@ -526,13 +526,13 @@ export function ChangeAssetVisibilityNotification({
       icon={
         visible ? (
           <EyeOffIcon
-            color={theme.colors.textPrimary}
+            color={theme.colors.DEP_textPrimary}
             height={theme.iconSizes.icon24}
             width={theme.iconSizes.icon24}
           />
         ) : (
           <EyeIcon
-            color={theme.colors.textPrimary}
+            color={theme.colors.DEP_textPrimary}
             height={theme.iconSizes.icon24}
             width={theme.iconSizes.icon24}
           />

@@ -40,7 +40,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       onPress={onPress}>
       {loading ? (
         <Flex
-          backgroundColor="$textTertiary"
+          backgroundColor="$DEP_textTertiary"
           borderRadius="$rounded16"
           paddingHorizontal="$spacing16"
           paddingVertical="$spacing12"
@@ -69,7 +69,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
                 : formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
             </Text>
             <Flex maxWidth={100}>
-              <Text color="$textTertiary" numberOfLines={1} variant="subheadSmall">
+              <Text color="$DEP_textTertiary" numberOfLines={1} variant="subheadSmall">
                 {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
               </Text>
             </Flex>

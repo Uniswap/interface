@@ -95,7 +95,7 @@ export function ScrollHeader({
           {rightElement}
         </Flex>
         <AnimatedBox
-          borderBottomColor={backgroundColor ?? 'backgroundOutline'}
+          borderBottomColor={backgroundColor ?? 'DEP_backgroundOutline'}
           borderBottomWidth={0.25}
           height={1}
           overflow="visible"
@@ -111,7 +111,7 @@ function HeaderWrapper({
   fullScreen,
   children,
   style,
-  backgroundColor = 'background0',
+  backgroundColor = 'DEP_background0',
 }: {
   fullScreen: boolean
   children: ReactElement

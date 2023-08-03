@@ -23,7 +23,7 @@ export function Indicator({
       {[...Array(stepCount)].map((_, i) => (
         <Box
           key={`indicator-${i}`}
-          bg="textPrimary"
+          bg="DEP_textPrimary"
           borderRadius="rounded16"
           flex={1}
           height={4}
@@ -67,7 +67,7 @@ function AnimatedIndicatorPill({
   return (
     <AnimatedBox
       key={`indicator-${index}`}
-      bg="textPrimary"
+      bg="DEP_textPrimary"
       borderRadius="rounded16"
       flex={1}
       height={4}

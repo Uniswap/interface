@@ -79,7 +79,7 @@ export function AccountHeader(): JSX.Element {
               />
             </Flex>
             <Chevron
-              color={theme.colors.textTertiary}
+              color={theme.colors.DEP_textTertiary}
               direction="s"
               height={iconSizes.icon20}
               width={iconSizes.icon20}
@@ -89,7 +89,7 @@ export function AccountHeader(): JSX.Element {
       </TouchableArea>
       <TouchableArea hapticFeedback onPress={onPressSettings}>
         <SettingsIcon
-          color={theme.colors.textTertiary}
+          color={theme.colors.DEP_textTertiary}
           height={theme.iconSizes.icon28}
           opacity="0.8"
           width={theme.iconSizes.icon28}

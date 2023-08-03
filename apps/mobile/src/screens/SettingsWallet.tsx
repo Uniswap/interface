@@ -138,7 +138,7 @@ export function SettingsWallet({
   }
 
   const iconProps: SvgProps = {
-    color: theme.colors.textTertiary,
+    color: theme.colors.DEP_textTertiary,
     height: 24,
     strokeLinecap: 'round',
     strokeLinejoin: 'round',
@@ -153,7 +153,7 @@ export function SettingsWallet({
         {
           screen: Screens.SettingsWalletEdit,
           text: t('Nickname'),
-          icon: <EditIcon fill={theme.colors.textSecondary} {...iconProps} />,
+          icon: <EditIcon fill={theme.colors.DEP_textSecondary} {...iconProps} />,
           screenProps: { address },
         },
         {
@@ -252,8 +252,8 @@ export function SettingsWallet({
             renderItem={renderItem}
             renderSectionFooter={(): JSX.Element => <Flex pt="spacing24" />}
             renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-              <Box bg="background0" pb="spacing12">
-                <Text color="textSecondary" variant="bodyLarge">
+              <Box bg="DEP_background0" pb="spacing12">
+                <Text color="DEP_textSecondary" variant="bodyLarge">
                   {subTitle}
                 </Text>
               </Box>

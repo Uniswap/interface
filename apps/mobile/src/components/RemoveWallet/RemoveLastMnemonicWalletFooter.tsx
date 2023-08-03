@@ -22,7 +22,7 @@ export function RemoveLastMnemonicWalletFooter({
   return (
     <>
       <Box
-        backgroundColor="background2"
+        backgroundColor="DEP_background2"
         borderRadius="rounded16"
         mx="spacing16"
         px="spacing8"
@@ -32,10 +32,10 @@ export function RemoveLastMnemonicWalletFooter({
           text={
             <Box>
               <Trans t={t}>
-                <Text color="textPrimary" variant="subheadSmall">
+                <Text color="DEP_textPrimary" variant="subheadSmall">
                   I backed up my recovery phrase
                 </Text>
-                <Text color="textSecondary" variant="bodySmall">
+                <Text color="DEP_textSecondary" variant="bodySmall">
                   I understand that Uniswap Labs can’t help me recover my wallets if I failed to do
                   so
                 </Text>
@@ -48,7 +48,7 @@ export function RemoveLastMnemonicWalletFooter({
       <Flex centered row gap="spacing12" pt="spacing12">
         <Button
           fill
-          CustomIcon={inProgress ? <SpinningLoader color="accentCritical" /> : undefined}
+          CustomIcon={inProgress ? <SpinningLoader color="DEP_accentCritical" /> : undefined}
           disabled={!checkBoxAccepted}
           emphasis={ButtonEmphasis.Detrimental}
           label={!inProgress ? t('Remove wallet') : undefined}

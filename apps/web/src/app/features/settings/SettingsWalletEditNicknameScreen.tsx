@@ -41,12 +41,12 @@ function EditNicknameScreenContent({ address }: { address: Address }): JSX.Eleme
   }
 
   return (
-    <YStack backgroundColor="$background0" flexGrow={1}>
+    <YStack backgroundColor="$DEP_background0" flexGrow={1}>
       <BackButtonHeader headerText={t('Edit nickname')} />
       <YStack flex={1} justifyContent="space-between" padding="$spacing12">
         <YStack flex={1} gap="$spacing24">
           <Input
-            backgroundColor="$background1"
+            backgroundColor="$DEP_background1"
             borderRadius="$rounded20"
             fontSize={20}
             fontWeight="400"
@@ -71,7 +71,7 @@ function EditNicknameScreenContent({ address }: { address: Address }): JSX.Eleme
               {nickname}
             </Text>
           ) : null}
-          <Text color="$textTertiary" textAlign="center" variant="bodySmall">
+          <Text color="$DEP_textTertiary" textAlign="center" variant="bodySmall">
             {t('This nickname is only visible to you.')}
           </Text>
         </YStack>

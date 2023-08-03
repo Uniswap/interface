@@ -25,8 +25,8 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     change,
     variant = 'subheadSmall',
     semanticColor,
-    positiveChangeColor = 'accentSuccess',
-    negativeChangeColor = 'accentCritical',
+    positiveChangeColor = 'DEP_accentSuccess',
+    negativeChangeColor = 'DEP_accentCritical',
     arrowSize = theme.iconSizes.icon16,
     loading = false,
     alignRight = false,
@@ -53,7 +53,11 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
       )}
       <Text
         color={
-          semanticColor ? (isPositiveChange ? 'accentSuccess' : 'accentCritical') : 'textSecondary'
+          semanticColor
+            ? isPositiveChange
+              ? 'DEP_accentSuccess'
+              : 'DEP_accentCritical'
+            : 'DEP_textSecondary'
         }
         loading={loading}
         loadingPlaceholderText="$0.00 (0.00)%"

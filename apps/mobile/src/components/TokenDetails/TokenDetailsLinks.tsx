@@ -32,7 +32,7 @@ export function TokenDetailsLinks({
 
   return (
     <Flex gap="spacing8">
-      <Text color="textTertiary" mx="spacing16" variant="subheadSmall">
+      <Text color="DEP_textTertiary" mx="spacing16" variant="subheadSmall">
         {t('Links')}
       </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>

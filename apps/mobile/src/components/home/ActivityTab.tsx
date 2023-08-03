@@ -39,7 +39,7 @@ const ESTIMATED_ITEM_SIZE = 92
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
   <Box pb="spacing12">
-    <Text color="textSecondary" variant="subheadSmall">
+    <Text color="DEP_textSecondary" variant="subheadSmall">
       {title}
     </Text>
   </Box>
@@ -121,11 +121,11 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
       <RefreshControl
         progressViewOffset={insets.top}
         refreshing={refreshing ?? false}
-        tintColor={theme.colors.textTertiary}
+        tintColor={theme.colors.DEP_textTertiary}
         onRefresh={onRefresh}
       />
     )
-  }, [refreshing, onRefresh, theme.colors.textTertiary, insets.top])
+  }, [refreshing, onRefresh, theme.colors.DEP_textTertiary, insets.top])
 
   if (!hasData && isError) {
     return errorCard

@@ -22,13 +22,13 @@ export function FavoriteHeaderRow({
   const theme = useAppTheme()
   return (
     <Flex row alignItems="center" justifyContent="space-between" mb="spacing8" mx="spacing8">
-      <Text color="textSecondary" variant="subheadSmall">
+      <Text color="DEP_textSecondary" variant="subheadSmall">
         {isEditing ? editingTitle : title}
       </Text>
       {!isEditing ? (
         <TouchableArea hapticFeedback testID={ElementName.Edit} onPress={onPress}>
           <TripleDots
-            color={theme.colors.textSecondary}
+            color={theme.colors.DEP_textSecondary}
             height={theme.iconSizes.icon20}
             strokeLinecap="round"
             strokeWidth="1"
@@ -37,7 +37,7 @@ export function FavoriteHeaderRow({
         </TouchableArea>
       ) : (
         <TouchableArea height={theme.iconSizes.icon20} onPress={onPress}>
-          <Text color="accentActive" variant="buttonLabelSmall">
+          <Text color="DEP_accentActive" variant="buttonLabelSmall">
             {t('Done')}
           </Text>
         </TouchableArea>

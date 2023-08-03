@@ -32,11 +32,15 @@ export function RelativeChangeText({
 
   const styles = useAnimatedStyle(() => ({
     color:
-      relativeChange.value.value > 0 ? theme.colors.accentSuccess : theme.colors.accentCritical,
+      relativeChange.value.value > 0
+        ? theme.colors.DEP_accentSuccess
+        : theme.colors.DEP_accentCritical,
   }))
   const caretStyle = useAnimatedStyle(() => ({
     color:
-      relativeChange.value.value > 0 ? theme.colors.accentSuccess : theme.colors.accentCritical,
+      relativeChange.value.value > 0
+        ? theme.colors.DEP_accentSuccess
+        : theme.colors.DEP_accentCritical,
     transform: [{ rotate: relativeChange.value.value > 0 ? '180deg' : '0deg' }],
   }))
 
@@ -68,5 +72,5 @@ export function DatetimeText({ loading }: { loading: boolean }): JSX.Element | n
 
   if (loading) return null
 
-  return <AnimatedText color="textSecondary" text={datetime.formatted} variant="bodyLarge" />
+  return <AnimatedText color="DEP_textSecondary" text={datetime.formatted} variant="bodyLarge" />
 }

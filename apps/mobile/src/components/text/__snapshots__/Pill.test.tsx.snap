@@ -102,7 +102,7 @@ exports[`renders a Pill without image 1`] = `
           "lineHeight": 20,
         },
         {
-          "color": "accentActive",
+          "color": "DEP_accentActive",
         },
       ]
     }

@@ -30,10 +30,10 @@ export function IntroScreen(): JSX.Element {
         justifyContent="center"
         width={ONBOARDING_CONTENT_WIDTH}>
         <YStack alignItems="center" gap="$spacing12">
-          <Text color="$textPrimary" variant="subheadLarge">
+          <Text color="$DEP_textPrimary" variant="subheadLarge">
             {t('You‘ve already completed onboarding')}
           </Text>
-          <Text color="$textSecondary" textAlign="center" variant="bodySmall">
+          <Text color="$DEP_textSecondary" textAlign="center" variant="bodySmall">
             {t(
               'To create more wallets, open the account switcher inside the extension popup, or reinstall the extension to start over'
             )}
@@ -72,7 +72,7 @@ export function IntroScreen(): JSX.Element {
           <Text textAlign="center" variant="headlineMedium">
             Welcome to
           </Text>
-          <Text color="$magentaVibrant" textAlign="center" variant="headlineMedium">
+          <Text color="$DEP_magentaVibrant" textAlign="center" variant="headlineMedium">
             Uniswap Wallet
           </Text>
         </Stack>

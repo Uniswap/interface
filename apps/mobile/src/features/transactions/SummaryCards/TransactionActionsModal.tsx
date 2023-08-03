@@ -24,7 +24,7 @@ function renderOptionItem(
       <>
         <Separator />
         <Text
-          color={textColorOverride ?? 'textPrimary'}
+          color={textColorOverride ?? 'DEP_textPrimary'}
           p="spacing16"
           textAlign="center"
           variant="bodyLarge">
@@ -137,7 +137,7 @@ export default function TransactionActionsModal({
       transactionActionOptions.push({
         key: ElementName.Cancel,
         onPress: onCancel,
-        render: renderOptionItem(t('Cancel transaction'), 'accentCritical'),
+        render: renderOptionItem(t('Cancel transaction'), 'DEP_accentCritical'),
       })
     }
     return transactionActionOptions
@@ -156,13 +156,13 @@ export default function TransactionActionsModal({
   return (
     <BottomSheetModal
       hideHandlebar
-      backgroundColor="accentCritical"
+      backgroundColor="DEP_accentCritical"
       name={ModalName.TransactionActions}
       onClose={handleClose}>
       <Flex pb="spacing24" px="spacing12">
         <ActionSheetModalContent
           header={
-            <Text color="textTertiary" p="spacing16" variant="bodySmall">
+            <Text color="DEP_textTertiary" p="spacing16" variant="bodySmall">
               {t('Submitted on') + ' ' + dateString}
             </Text>
           }

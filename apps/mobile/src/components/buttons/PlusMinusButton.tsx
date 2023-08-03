@@ -24,7 +24,7 @@ export default function PlusMinusButton({
     <TouchableArea
       hapticFeedback
       alignItems="center"
-      backgroundColor={disabled ? 'backgroundOutline' : 'textTertiary'}
+      backgroundColor={disabled ? 'DEP_backgroundOutline' : 'DEP_textTertiary'}
       borderRadius="roundedFull"
       disabled={disabled}
       height={theme.iconSizes.icon28}
@@ -33,13 +33,13 @@ export default function PlusMinusButton({
       onPress={(): void => onPress(type)}>
       {type === PlusMinusButtonType.Plus ? (
         <PlusIcon
-          color={theme.colors.background0}
+          color={theme.colors.DEP_background0}
           height={theme.iconSizes.icon12}
           strokeWidth={2.5}
           width={theme.iconSizes.icon12}
         />
       ) : (
-        <Box backgroundColor="background0" borderRadius="rounded12" height={2} width={10} />
+        <Box backgroundColor="DEP_background0" borderRadius="rounded12" height={2} width={10} />
       )}
     </TouchableArea>
   )

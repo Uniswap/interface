@@ -76,7 +76,7 @@ function Inputs({
         <TextInput
           ref={textInputRef}
           backgroundColor="none"
-          color="textPrimary"
+          color="DEP_textPrimary"
           fontSize={inputFontSize}
           justifyContent="flex-start"
           lineHeight={inputFontSize}
@@ -99,7 +99,7 @@ function Inputs({
           autoFocus
           autoCapitalize="none"
           backgroundColor="none"
-          color="textPrimary"
+          color="DEP_textPrimary"
           fontSize={inputFontSize}
           justifyContent="center"
           lineHeight={inputFontSize}
@@ -109,7 +109,7 @@ function Inputs({
           py="none"
           returnKeyType="done"
           scrollEnabled={false}
-          selectionColor={theme.colors.textPrimary}
+          selectionColor={theme.colors.DEP_textPrimary}
           spellCheck={false}
           testID="import_account_form/input"
           textAlign={textAlign ?? (inputAlignment === 'center' || !value ? 'left' : 'center')}
@@ -124,7 +124,7 @@ function Inputs({
       {inputSuffix && value && !value.includes(inputSuffix) ? (
         <TextInput
           backgroundColor="none"
-          color="textSecondary"
+          color="DEP_textSecondary"
           editable={false}
           fontSize={inputFontSize}
           justifyContent="center"

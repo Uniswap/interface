@@ -58,7 +58,7 @@ export default function WarningModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.background1}
+      backgroundColor={theme.colors.DEP_background1}
       hideHandlebar={hideHandlebar}
       isDismissible={isDismissible}
       name={modalName}
@@ -84,7 +84,7 @@ export default function WarningModal({
           {title}
         </Text>
         {caption && (
-          <Text color="textSecondary" textAlign="center" variant="bodySmall">
+          <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
             {caption}
           </Text>
         )}
@@ -117,29 +117,33 @@ export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
   switch (severity) {
     case WarningSeverity.None:
       return {
-        text: 'textSecondary',
-        background: 'textSecondary',
+        text: 'DEP_textSecondary',
+        background: 'DEP_textSecondary',
         buttonEmphasis: ButtonEmphasis.Secondary,
       }
     case WarningSeverity.Low:
       return {
-        text: 'textSecondary',
-        background: 'background2',
+        text: 'DEP_textSecondary',
+        background: 'DEP_background2',
         buttonEmphasis: ButtonEmphasis.Tertiary,
       }
     case WarningSeverity.High:
       return {
-        text: 'accentCritical',
-        background: 'accentCriticalSoft',
+        text: 'DEP_accentCritical',
+        background: 'DEP_accentCriticalSoft',
         buttonEmphasis: ButtonEmphasis.Detrimental,
       }
     case WarningSeverity.Medium:
       return {
-        text: 'accentWarning',
-        background: 'accentWarningSoft',
+        text: 'DEP_accentWarning',
+        background: 'DEP_accentWarningSoft',
         buttonEmphasis: ButtonEmphasis.Warning,
       }
     default:
-      return { text: 'textSecondary', background: 'none', buttonEmphasis: ButtonEmphasis.Tertiary }
+      return {
+        text: 'DEP_textSecondary',
+        background: 'none',
+        buttonEmphasis: ButtonEmphasis.Tertiary,
+      }
   }
 }

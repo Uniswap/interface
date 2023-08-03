@@ -40,7 +40,9 @@ export function MaxAmountButton({
   return (
     <Trace logPress element={ElementName.SetMax}>
       <TouchableArea disabled={disableMaxButton} style={style} onPress={onPress}>
-        <Text color={disableMaxButton ? 'textTertiary' : 'magentaVibrant'} variant="subheadSmall">
+        <Text
+          color={disableMaxButton ? 'DEP_textTertiary' : 'DEP_magentaVibrant'}
+          variant="subheadSmall">
           {t('Max')}
         </Text>
       </TouchableArea>

@@ -8,13 +8,13 @@ export function UniconWithLockIcon({ address }: { address: Address }): JSX.Eleme
     <Flex>
       <Unicon address={address} size={iconSizes.icon64} />
       <Flex
-        backgroundColor="$background3"
+        backgroundColor="$DEP_background3"
         borderRadius="$roundedFull"
         bottom={-4}
         padding="$spacing8"
         position="absolute"
         right={-4}>
-        <Icons.FileListLock color="$magentaVibrant" size={iconSizes.icon16} />
+        <Icons.FileListLock color="$DEP_magentaVibrant" size={iconSizes.icon16} />
       </Flex>
     </Flex>
   )

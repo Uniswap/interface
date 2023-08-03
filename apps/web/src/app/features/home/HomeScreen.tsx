@@ -21,7 +21,7 @@ export function HomeScreen(): JSX.Element {
     <Flex alignItems="center" flexGrow={1} width="100%">
       {address ? (
         <Flex
-          backgroundColor="$background1"
+          backgroundColor="$DEP_background1"
           flexGrow={1}
           gap="$spacing8"
           paddingBottom="$spacing24"
@@ -39,14 +39,20 @@ export function HomeScreen(): JSX.Element {
                 <Tabs.List unstyled>
                   <Tabs.Tab unstyled backgroundColor={undefined} value={HomeTabs.Tokens}>
                     <Text
-                      color={selectedTab === HomeTabs.Tokens ? '$textPrimary' : '$textSecondary'}
+                      color={
+                        selectedTab === HomeTabs.Tokens ? '$DEP_textPrimary' : '$DEP_textSecondary'
+                      }
                       variant="subheadSmall">
                       Tokens
                     </Text>
                   </Tabs.Tab>
                   <Tabs.Tab unstyled backgroundColor={undefined} value={HomeTabs.Activity}>
                     <Text
-                      color={selectedTab === HomeTabs.Activity ? '$textPrimary' : '$textSecondary'}
+                      color={
+                        selectedTab === HomeTabs.Activity
+                          ? '$DEP_textPrimary'
+                          : '$DEP_textSecondary'
+                      }
                       variant="subheadSmall">
                       Activity
                     </Text>
@@ -64,7 +70,7 @@ export function HomeScreen(): JSX.Element {
           </Tabs>
         </Flex>
       ) : (
-        <Text color="$accentCritical" variant="subheadLarge">
+        <Text color="$DEP_accentCritical" variant="subheadLarge">
           Error loading accounts
         </Text>
       )}

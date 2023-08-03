@@ -64,7 +64,7 @@ export function TokenBalances({
       )}
       {hasOtherChainBalances && otherChainBalances ? (
         <Flex>
-          <Text color="textTertiary" variant="subheadSmall">
+          <Text color="DEP_textTertiary" variant="subheadSmall">
             {t('Balances on other networks')}
           </Text>
           <Flex gap="spacing12">
@@ -102,19 +102,19 @@ export function CurrentChainBalance({
   return (
     <Flex row>
       <Flex fill gap="spacing4">
-        <Text color="textTertiary" variant="subheadSmall">
+        <Text color="DEP_textTertiary" variant="subheadSmall">
           {isReadonly ? t("{{owner}}'s balance", { owner: displayName }) : t('Your balance')}
         </Text>
         <Text variant="subheadLarge">
           {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
         </Text>
-        <Text color="textSecondary" variant="bodySmall">
+        <Text color="DEP_textSecondary" variant="bodySmall">
           {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
           {balance.currencyInfo.currency.symbol}
         </Text>
       </Flex>
       <Flex alignItems="flex-end" justifyContent="center">
-        <SendButton color={theme.colors.textPrimary} onPress={onPressSend} />
+        <SendButton color={theme.colors.DEP_textPrimary} onPress={onPressSend} />
       </Flex>
     </Flex>
   )
@@ -149,7 +149,7 @@ function OtherChainBalance({
               />
             </Box>
           </Flex>
-          <Text color="textSecondary" variant="bodyLarge">
+          <Text color="DEP_textSecondary" variant="bodyLarge">
             {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
             {balance.currencyInfo.currency.symbol}
           </Text>

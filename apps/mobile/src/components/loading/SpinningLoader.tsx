@@ -47,11 +47,11 @@ export function SpinningLoader({
   }, [rotation])
 
   if (disabled) {
-    return <EmptySpinner color={theme.colors.textTertiary} height={size} width={size} />
+    return <EmptySpinner color={theme.colors.DEP_textTertiary} height={size} width={size} />
   }
   return (
     <AnimatedBox sentry-label="SpinningLoader" style={[animatedStyles]}>
-      <Loader color={theme.colors[color ?? 'textPrimary']} height={size} width={size} />
+      <Loader color={theme.colors[color ?? 'DEP_textPrimary']} height={size} width={size} />
     </AnimatedBox>
   )
 }

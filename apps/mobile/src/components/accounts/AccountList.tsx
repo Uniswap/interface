@@ -33,9 +33,9 @@ type AccountWithPortfolioValue = {
 const ViewOnlyHeader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
-    <Flex row alignItems="center" borderBottomColor="backgroundOutline">
+    <Flex row alignItems="center" borderBottomColor="DEP_backgroundOutline">
       <Box flex={1} px="spacing24">
-        <Text color="textSecondary" variant="subheadSmall">
+        <Text color="DEP_textSecondary" variant="subheadSmall">
           {t('View only')}
         </Text>
       </Box>
@@ -107,7 +107,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
     <Box flexShrink={1} position="relative">
       {/* TODO(MOB-646): attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
       <LinearGradient
-        colors={[theme.colors.clearBackground1Backdrop, theme.colors.background1]}
+        colors={[theme.colors.clearBackground1Backdrop, theme.colors.DEP_background1]}
         end={{ x: 0, y: 0 }}
         start={{ x: 0, y: 1 }}
         style={ListSheet.topGradient}
@@ -126,7 +126,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
         )}
       </ScrollView>
       <LinearGradient
-        colors={[theme.colors.clearBackground1Backdrop, theme.colors.background1]}
+        colors={[theme.colors.clearBackground1Backdrop, theme.colors.DEP_background1]}
         end={{ x: 0, y: 1 }}
         start={{ x: 0, y: 0 }}
         style={ListSheet.bottomGradient}

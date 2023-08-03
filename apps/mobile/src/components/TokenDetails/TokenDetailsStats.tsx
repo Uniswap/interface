@@ -22,11 +22,11 @@ function StatsRow({
     <Flex row justifyContent="space-between" paddingLeft="spacing2">
       <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start">
         <StatsIcon
-          color={tokenColor ?? theme.colors.textTertiary}
+          color={tokenColor ?? theme.colors.DEP_textTertiary}
           height={theme.iconSizes.icon12}
           width={theme.iconSizes.icon12}
         />
-        <Text color="textPrimary" variant="bodySmall">
+        <Text color="DEP_textPrimary" variant="bodySmall">
           {label}
         </Text>
       </Flex>
@@ -102,7 +102,7 @@ export function TokenDetailsStats({
       {tokenProjectData?.description && (
         <Flex gap="spacing4">
           {tokenProjectData?.name && (
-            <Text color="textTertiary" variant="subheadSmall">
+            <Text color="DEP_textTertiary" variant="subheadSmall">
               {t('About {{ token }}', { token: tokenProjectData.name })}
             </Text>
           )}
@@ -110,15 +110,15 @@ export function TokenDetailsStats({
             <LongText
               gap="spacing2"
               initialDisplayedLines={5}
-              linkColor={tokenColor ?? theme.colors.textPrimary}
-              readMoreOrLessColor={tokenColor ?? theme.colors.accentAction}
+              linkColor={tokenColor ?? theme.colors.DEP_textPrimary}
+              readMoreOrLessColor={tokenColor ?? theme.colors.DEP_accentActive}
               text={tokenProjectData.description.trim()}
             />
           </Flex>
         </Flex>
       )}
       <Flex gap="spacing4">
-        <Text color="textTertiary" variant="subheadSmall">
+        <Text color="DEP_textTertiary" variant="subheadSmall">
           {t('Stats')}
         </Text>
         <TokenDetailsMarketData

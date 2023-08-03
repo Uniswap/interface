@@ -64,7 +64,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
     ) : (
       <Box
         alignItems="center"
-        backgroundColor="$background2"
+        backgroundColor="$DEP_background2"
         borderRadius="$rounded4"
         height={size}
         justifyContent="center"
@@ -74,8 +74,9 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
       </Box>
     )
 
-  const fill = txStatus === TransactionStatus.Success ? theme.accentSuccess : theme.textSecondary
-  const color = theme.background1
+  const fill =
+    txStatus === TransactionStatus.Success ? theme.DEP_accentSuccess : theme.DEP_textSecondary
+  const color = theme.DEP_background1
 
   let icon: JSX.Element | undefined
   if (chainId && chainId !== ChainId.Mainnet) {
@@ -145,9 +146,9 @@ export function DappLogoWithTxStatus({
   chainId,
 }: DappLogoWithTxStatusProps): JSX.Element | null {
   const theme = useTheme()
-  const green = theme.accentSuccess.get()
-  const yellow = theme.accentWarning.get()
-  const fill = theme.background0.get()
+  const green = theme.DEP_accentSuccess.get()
+  const yellow = theme.DEP_accentWarning.get()
+  const fill = theme.DEP_background0.get()
 
   const dappImageSize = size
   const statusSize = dappImageSize * (1 / 2)
@@ -250,8 +251,8 @@ export function DappLogoWithWCBadge({
         </Box>
       ) : (
         <Box
-          backgroundColor="$background1"
-          borderColor="$background0"
+          backgroundColor="$DEP_background1"
+          borderColor="$DEP_background0"
           borderRadius="$roundedFull"
           borderWidth={2}
           bottom={-2}

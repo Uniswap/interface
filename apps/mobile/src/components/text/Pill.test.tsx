@@ -5,14 +5,18 @@ import { render } from 'src/test/test-utils'
 
 it('renders a Pill without image', () => {
   const tree = render(
-    <Pill backgroundColor="background1" foregroundColor="accentActive" label="My Pill Label" />
+    <Pill
+      backgroundColor="DEP_background1"
+      foregroundColor="DEP_accentActive"
+      label="My Pill Label"
+    />
   )
   expect(tree).toMatchSnapshot()
 })
 
 it('renders a Pill with border', () => {
   const tree = render(
-    <Pill borderColor="accentSuccess" icon={<Text>Icon</Text>} label="My Second Pill Label" />
+    <Pill borderColor="DEP_accentSuccess" icon={<Text>Icon</Text>} label="My Second Pill Label" />
   )
   expect(tree).toMatchSnapshot()
 })
