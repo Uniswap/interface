@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ConnectionType } from 'connection/types'
-import { SupportedLocale } from 'constants/locales'
-import { RouterPreference } from 'state/routing/slice'
 
+import { ConnectionType } from '../../connection/types'
+import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
+import { RouterPreference } from '../../state/routing/types'
 import { updateVersion } from '../global/actions'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 

@@ -2,7 +2,7 @@ import { act } from '@testing-library/react'
 import { Percent } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'
-import { RouterPreference } from 'state/routing/slice'
+import { RouterPreference } from 'state/routing/types'
 import { renderHook } from 'test-utils/render'
 
 import {

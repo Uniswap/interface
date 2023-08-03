@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, NativeCurrency, Percent, Token, TradeType } f
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import { useMemo } from 'react'
-import { RouterPreference } from 'state/routing/slice'
+import { RouterPreference } from 'state/routing/types'
 import { ClassicTrade, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 
