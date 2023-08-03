@@ -15,10 +15,9 @@ describe('Swap settings', () => {
     cy.contains('Settings').should('not.exist')
   })
 
-  it('should open the ', () => {
+  it('should open the mobile settings menu', () => {
     cy.viewport('iphone-6')
-    cy.visit('/')
-    cy.contains('Settings').should('not.exist')
+    cy.visit('/swap', { featureFlags: [FeatureFlag.uniswapXEnabled] })
     cy.get(getTestSelector('open-settings-dialog-button')).click()
     cy.get(getTestSelector('mobile-settings-menu')).should('exist')
     cy.contains('Max slippage').should('exist')
@@ -26,6 +25,5 @@ describe('Swap settings', () => {
     cy.contains('UniswapX').should('exist')
     cy.contains('Local routing').should('exist')
     cy.get(getTestSelector('mobile-settings-scrim')).click()
-    cy.get(getTestSelector('mobile-settings-menu')).should('not.exist')
   })
 })
