@@ -154,6 +154,26 @@ runs:
     - name: Check Sensitive File Changes
       uses: ./.github/actions/sensitive_files_changed
 
+    - name: 🐞 Create Sentry release
+      working-directory: ./apps/mobile
+      env:
+        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-auth-token }}
+        SENTRY_ORG: ${{ inputs.sentry-org }}
+        SENTRY_PROJECT: ${{ inputs.sentry-project }}
+        APP_IDENTIFIER: ${{ inputs.app-identifier }}
+      shell: bash
+      run: |
+        # Install Sentry CLI
+        curl -sL https://sentry.io/get-cli/ | bash
+
+        # Create new Sentry release
+        export SENTRY_RELEASE="$APP_IDENTIFIER@$IOS_VERSION_NUMBER+$IOS_BUILD_NUMBER"
+        sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE --log-level=info
+        sentry-cli releases set-commits $SENTRY_RELEASE --auto --ignore-missing --log-level=info
+
+        # Create new deploy for this Sentry release
+        sentry-cli releases deploys $SENTRY_RELEASE new -e ${{ inputs.sentry-env }}
+
     - name: 📲 Build + deploy iOS app
       working-directory: ./apps/mobile
       run: |
@@ -196,35 +216,6 @@ runs:
         GIT_BRANCH_NAME: ${{ github.ref }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
         URL_TO_FASTLANE_CERTIFICATES_REPO: ${{ inputs.url-to-fastlane-certificates-repo }}
-
-    - name: 🍎 Generate iOS bundle and sourcemaps
-      working-directory: ./apps/mobile
-      shell: bash
-      run: |
-        yarn react-native bundle --platform ios --dev false --entry-file index.js --reset-cache --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map --minify false
-
-    - name: 🐞 Create Sentry release with sourcemaps
-      working-directory: ./apps/mobile
-      env:
         SENTRY_AUTH_TOKEN: ${{ inputs.sentry-auth-token }}
         SENTRY_ORG: ${{ inputs.sentry-org }}
         SENTRY_PROJECT: ${{ inputs.sentry-project }}
-        APP_IDENTIFIER: ${{ inputs.app-identifier }}
-      shell: bash
-      run: |
-        # Install Sentry CLI
-        curl -sL https://sentry.io/get-cli/ | bash
-
-        # Create new Sentry release
-        export SENTRY_RELEASE="$APP_IDENTIFIER@$IOS_VERSION_NUMBER+$IOS_BUILD_NUMBER"
-        sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE --log-level=info
-        sentry-cli releases set-commits $SENTRY_RELEASE --auto --ignore-missing --log-level=info
-
-        #Upload sourcemaps
-        sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps main.jsbundle.map --dist $IOS_BUILD_NUMBER --log-level=info
-        sentry-cli releases files $SENTRY_RELEASE upload main.jsbundle '~/main.jsbundle' --dist $IOS_BUILD_NUMBER --log-level=info
-
-        sentry-cli releases finalize $SENTRY_RELEASE --log-level=info
-
-        # Create new deploy for this Sentry release
-        sentry-cli releases deploys $SENTRY_RELEASE new -e ${{ inputs.sentry-env }}

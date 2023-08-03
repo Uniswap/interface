@@ -105,3 +105,6 @@ storybook-static/*
 
 # Jest
 coverage/
+
+# Sentry
+ios/sentry.properties

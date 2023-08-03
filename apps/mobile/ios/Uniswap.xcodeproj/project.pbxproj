@@ -431,6 +431,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				0312A12D2A77D07B008CAAFD /* Upload Debug Symbols to Sentry */,
 				F35AFD4627EE49990011A725 /* Embed App Extensions */,
 				11ABDA19EC3508C14907F53A /* [CP] Embed Pods Frameworks */,
 				95C59BDDCB4A750ADC9CF7F1 /* [CP] Copy Pods Resources */,
@@ -556,7 +557,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nexport NODE_BINARY=node\nexport PROJECT_ROOT=$PWD/..\n../../../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export PROJECT_ROOT=$PWD/..\nexport SENTRY_PROPERTIES=sentry.properties\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $PROJECT_ROOT/main.jsbundle.map\"\n\nset -e\n\nWITH_ENVIRONMENT=\"../../../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../../../node_modules/react-native/scripts/react-native-xcode.sh\"\nSENTRY_CLI=\"../../../node_modules/@sentry/cli/bin/sentry-cli\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT \\\"$SENTRY_CLI react-native xcode $REACT_NATIVE_XCODE\\\"\"\n\n/bin/sh ../../../node_modules/@sentry/react-native/scripts/collect-modules.sh\n";
+		};
+		0312A12D2A77D07B008CAAFD /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n\n[[ $SENTRY_INCLUDE_NATIVE_SOURCES == \"true\" ]] && INCLUDE_SOURCES_FLAG=\"--include-sources\" || INCLUDE_SOURCES_FLAG=\"\"\nSENTRY_CLI=\"../../../node_modules/@sentry/cli/bin/sentry-cli\"\n$SENTRY_CLI debug-files upload \"$INCLUDE_SOURCES_FLAG\" \"$DWARF_DSYM_FOLDER_PATH\"\n";
 		};
 		11ABDA19EC3508C14907F53A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
