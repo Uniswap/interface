@@ -1,19 +1,15 @@
 /* eslint-disable import/no-unused-modules */
-import { MetaTagInjector } from '../../components/metaTagInjector'
 import getCollection from '../../utils/getCollection'
+import getRequest from '../../utils/getRequest'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
-  const { index } = params
-  const collectionAddress = index?.toString()
-  const collectionPromise = getCollection(collectionAddress, request.url)
-  const resPromise = next()
+  const res = next()
   try {
-    const [data, res] = await Promise.all([collectionPromise, resPromise])
-    if (!data) {
-      return resPromise
-    }
-    return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(res)
+    const { index } = params
+    const collectionAddress = index?.toString()
+    const graphCall = getCollection(collectionAddress, request.url)
+    return getRequest(res, request.url, 'collections-cache', graphCall)
   } catch (e) {
-    return resPromise
+    return res
   }
 }

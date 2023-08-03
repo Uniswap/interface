@@ -1,6 +1,6 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { ChainId } from '@uniswap/sdk-core'
 import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
+import { sendAnalyticsEvent } from 'analytics'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'
 import { isIOS } from 'utils/userAgent'
@@ -83,10 +83,9 @@ export class UniwalletConnect extends WalletConnectV2 {
 
       // Opens deeplink to Uniswap Wallet if on iOS
       if (isIOS) {
-        const newTab = window.open(`https://uniswap.org/app/wc?uri=${encodeURIComponent(uri)}`)
-
-        // Fixes blank tab opening on mobile Chrome
-        newTab?.close()
+        // Using window.location.href to open the deep link ensures smooth navigation and leverages OS handling for installed apps,
+        // avoiding potential popup blockers or inconsistent behavior associated with window.open
+        window.location.href = `uniswap://wc?uri=${encodeURIComponent(uri)}`
       }
     })
   }

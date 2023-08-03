@@ -41,16 +41,9 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
 ] as const
 
 /**
- * Unsupported networks for V2 pool behavior.
+ * Supported networks for V2 pool behavior.
  */
-export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
-  ChainId.POLYGON,
-  ChainId.OPTIMISM,
-  ChainId.ARBITRUM_ONE,
-  ChainId.BNB,
-  ChainId.ARBITRUM_GOERLI,
-  ChainId.AVALANCHE,
-] as const
+export const SUPPORTED_V2POOL_CHAIN_IDS = [ChainId.MAINNET, ChainId.GOERLI] as const
 
 export const TESTNET_CHAIN_IDS = [
   ChainId.GOERLI,

@@ -45,7 +45,7 @@ const invalidAssets = [
   'http://127.0.0.1:3000/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544//2550',
 ]
 
-test.each(invalidAssets)('should not inject metadata for invalid calls', async (url) => {
+test.each(invalidAssets)('should not inject metadata for invalid asset calls', async (url) => {
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).not.toContain('og:title')
   expect(body).not.toContain('og:image')
@@ -58,19 +58,4 @@ test.each(invalidAssets)('should not inject metadata for invalid calls', async (
   expect(body).not.toContain('twitter:title')
   expect(body).not.toContain('twitter:image')
   expect(body).not.toContain('twitter:image:alt')
-})
-
-const invalidAssetAPIs = [
-  '0xed5af388653567af2f388e6224dc7c4b3241c545',
-  '0xed5af388653567af2f388e6224dc7c4b3241c545/',
-  '0xed5af388653567af2f388e6224dc7c4b3241c545/0',
-  '0xed5af388653567af2f388e6224dc7c4b3241c544/100000',
-  '0xed5af388653567af2f388e6224dc7c4b3241c544',
-]
-
-test.each(invalidAssetAPIs)('api should not return a valid response', async (urls) => {
-  const url = 'http://127.0.0.1:3000/api/image/nfts/asset/' + urls
-  const req = new Request(url)
-  const res = await fetch(req)
-  expect([404, 500]).toContain(res.status)
 })

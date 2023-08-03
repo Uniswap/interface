@@ -11,11 +11,7 @@ function formatTitleName(symbol: string, name: string) {
   return 'View Token on Uniswap'
 }
 
-export default async function getToken(networkName: string, tokenAddress: string, url: string) {
-  const lowerNetworkName = networkName.toLowerCase()
-  const tokenAddressRef = tokenAddress === '0x0000000000000000000000000000000000000000' ? 'NATIVE' : tokenAddress
-  const origin = new URL(url).origin
-  const image = origin + '/api/image/tokens/' + lowerNetworkName + '/' + tokenAddressRef
+export default async function getToken(networkName: string, tokenAddress: string | undefined, url: string) {
   const { data } = await client.query({
     query: TokenDocument,
     variables: {
@@ -32,9 +28,6 @@ export default async function getToken(networkName: string, tokenAddress: string
     title,
     image,
     url,
-    symbol: asset.symbol,
-    ogImage: asset.project?.logoUrl,
-    name: asset.name,
   }
   return formattedAsset
 }

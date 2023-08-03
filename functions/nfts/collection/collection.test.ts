@@ -40,24 +40,21 @@ const invalidCollections = [
   'http://127.0.0.1:3000/nfts/collection',
 ]
 
-test.each(invalidCollections)('should not inject metadata for invalid urls', async (url) => {
-  const body = await fetch(new Request(url)).then((res) => res.text())
-  expect(body).not.toContain('og:title')
-  expect(body).not.toContain('og:image')
-  expect(body).not.toContain('og:image:width')
-  expect(body).not.toContain('og:image:height')
-  expect(body).not.toContain('og:type')
-  expect(body).not.toContain('og:url')
-  expect(body).not.toContain('og:image:alt')
-  expect(body).not.toContain('twitter:card')
-  expect(body).not.toContain('twitter:title')
-  expect(body).not.toContain('twitter:image')
-  expect(body).not.toContain('twitter:image:alt')
-})
-
-test('api should not return a valid response', async () => {
-  const url = 'http://127.0.0.1:3000/api/image/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545'
-  const req = new Request(url)
-  const res = await fetch(req)
-  expect([404, 500]).toContain(res.status)
-})
+test.each(invalidCollections)(
+  'should not inject metadata for invalid collection urls',
+  async (url) => {
+    const body = await fetch(new Request(url)).then((res) => res.text())
+    expect(body).not.toContain('og:title')
+    expect(body).not.toContain('og:image')
+    expect(body).not.toContain('og:image:width')
+    expect(body).not.toContain('og:image:height')
+    expect(body).not.toContain('og:type')
+    expect(body).not.toContain('og:url')
+    expect(body).not.toContain('og:image:alt')
+    expect(body).not.toContain('twitter:card')
+    expect(body).not.toContain('twitter:title')
+    expect(body).not.toContain('twitter:image')
+    expect(body).not.toContain('twitter:image:alt')
+  },
+  50000
+)

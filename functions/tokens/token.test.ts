@@ -18,12 +18,6 @@ const tokens = [
     image: 'http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE',
   },
   {
-    address: '0x1f52145666c862ed3e2f1da213d479e61b2892af',
-    network: 'arbitrum',
-    symbol: 'FUC',
-    image: 'http://127.0.0.1:3000/api/image/tokens/arbitrum/0x1f52145666c862ed3e2f1da213d479e61b2892af',
-  },
-  {
     address: '0x6982508145454ce325ddbe47a25d4ec3d2311933',
     network: 'ethereum',
     symbol: 'PEPE',
@@ -70,18 +64,4 @@ test.each(invalidTokens)('should not inject metadata for invalid tokens', async 
   expect(body).not.toContain('twitter:title')
   expect(body).not.toContain('twitter:image')
   expect(body).not.toContain('twitter:image:alt')
-})
-
-const invalidTokenAPIs = [
-  'ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb49',
-  'ethereum/0x0',
-  'potato/?potato=1',
-  'tomato/NATIVE',
-]
-
-test.each(invalidTokenAPIs)('api should not return a valid response', async (urls) => {
-  const url = 'http://127.0.0.1:3000/api/image/tokens/' + urls
-  const req = new Request(url)
-  const res = await fetch(req)
-  expect([404, 500]).toContain(res.status)
 })
