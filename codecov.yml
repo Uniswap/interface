@@ -11,7 +11,6 @@ ignore:
 
 coverage:
   status:
-    # Omit merging unit/e2e reports into the defaults, as it is nonsensical.
     project: off
     patch: off
 
@@ -28,17 +27,9 @@ flag_management:
         target: 80%
   individual_flags:
     - name: unit-tests
-    - name: e2e-tests
-      # Wait until all machines have reported coverage - e2e tests run across 4 machines.
-      after_n_builds: 4
-      statuses:
-        - type: patch
-          target: 0%
 
 comment:
   layout: flags
-  # Wait until all machines have reported coverage - e2e tests run across 4 machines + unit tests across 1.
-  after_n_builds: 5
   hide_comment_details: false
 
 github_checks:
