@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { L2_CHAIN_IDS } from '../../constants/chains'
 import { useAddPopup } from '../application/hooks'
+import { isPendingTx } from './hooks'
 import { checkedTransaction, finalizeTransaction } from './reducer'
 import { SerializableTransactionReceipt, TransactionDetails } from './types'
 
@@ -33,7 +34,7 @@ export default function Updater() {
   const pendingTransactions = useMemo(() => {
     if (!chainId || !transactions[chainId]) return {}
     return Object.values(transactions[chainId]).reduce((acc, tx) => {
-      if (!tx.receipt) acc[tx.hash] = tx
+      if (isPendingTx(tx)) acc[tx.hash] = tx
       return acc
     }, {} as Record<string, TransactionDetails>)
   }, [chainId, transactions])

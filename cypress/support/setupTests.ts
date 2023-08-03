@@ -9,13 +9,8 @@ beforeEach(() => {
     req.headers['origin'] = 'https://app.uniswap.org'
   })
 
-  // Infura uses a test endpoint, which allow-lists http://localhost:3000 instead.
-  cy.intercept(/infura.io/, (req) => {
-    req.headers['referer'] = 'http://localhost:3000'
-    req.headers['origin'] = 'http://localhost:3000'
-    req.alias = req.body.method
-    req.continue()
-  })
+  // Infura is disabled for cypress tests - calls should be routed through the connected wallet instead.
+  cy.intercept(/infura.io/, { statusCode: 404 })
 
   // Log requests to hardhat.
   cy.intercept(/:8545/, logJsonRpc)
@@ -49,7 +44,7 @@ function logJsonRpc(req: CyHttpMessages.IncomingHttpRequest) {
   const log = Cypress.log({
     autoEnd: false,
     name: req.body.method,
-    message: req.body.params?.map((param: unknown) =>
+    message: req.body.params?.map((param: any) =>
       typeof param === 'object' ? '{...}' : param?.toString().substring(0, 10)
     ),
   })
