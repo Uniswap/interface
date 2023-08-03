@@ -8,17 +8,18 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const collectionAddress = index?.toString()
   const collectionPromise = getCollection(collectionAddress, request.url)
   const resPromise = next()
+  const cachePromise = getCache(request.url, 'collections-cache')
   try {
-    const response = await getCache(request.url, 'collections-cache')
-    if (response) {
-      return new HTMLRewriter().on('head', new MetaTagInjector(response)).transform(await resPromise)
+    const [cacheResponse, res] = await Promise.all([cachePromise, resPromise])
+    if (cacheResponse) {
+      return new HTMLRewriter().on('head', new MetaTagInjector(cacheResponse)).transform(res)
     } else {
-      const [data, res] = await Promise.all([collectionPromise, resPromise])
-      if (!data) {
+      const graphData = await collectionPromise
+      if (!graphData) {
         return resPromise
       }
-      await putCache(new Response(JSON.stringify(data)), request.url, 'collections-cache')
-      return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(res)
+      await putCache(new Response(JSON.stringify(graphData)), request.url, 'collections-cache')
+      return new HTMLRewriter().on('head', new MetaTagInjector(graphData)).transform(res)
     }
   } catch (e) {
     return resPromise

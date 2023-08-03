@@ -9,17 +9,18 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
   const tokenId = index[1]?.toString()
   const assetPromise = getAsset(collectionAddress, tokenId, request.url)
   const resPromise = next()
+  const cachePromise = getCache(request.url, 'assets-cache')
   try {
-    const response = await getCache(request.url, 'assets-cache')
-    if (response) {
-      return new HTMLRewriter().on('head', new MetaTagInjector(response)).transform(await resPromise)
+    const [cacheResponse, res] = await Promise.all([cachePromise, resPromise])
+    if (cacheResponse) {
+      return new HTMLRewriter().on('head', new MetaTagInjector(cacheResponse)).transform(res)
     } else {
-      const [data, res] = await Promise.all([assetPromise, resPromise])
-      if (!data) {
+      const graphData = await assetPromise
+      if (!graphData) {
         return resPromise
       }
-      await putCache(new Response(JSON.stringify(data)), request.url, 'assets-cache')
-      return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(res)
+      await putCache(new Response(JSON.stringify(graphData)), request.url, 'assets-cache')
+      return new HTMLRewriter().on('head', new MetaTagInjector(graphData)).transform(res)
     }
   } catch (e) {
     return resPromise

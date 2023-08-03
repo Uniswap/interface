@@ -16,17 +16,18 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
   }
   const tokenPromise = getToken(networkName, tokenAddress, request.url)
   const resPromise = next()
+  const cachePromise = getCache(request.url, 'tokens-cache')
   try {
-    const response = await getCache(request.url, 'tokens-cache')
-    if (response) {
-      return new HTMLRewriter().on('head', new MetaTagInjector(response)).transform(await resPromise)
+    const [cacheResponse, res] = await Promise.all([cachePromise, resPromise])
+    if (cacheResponse) {
+      return new HTMLRewriter().on('head', new MetaTagInjector(cacheResponse)).transform(res)
     } else {
-      const [data, res] = await Promise.all([tokenPromise, resPromise])
-      if (!data) {
+      const graphData = await tokenPromise
+      if (!graphData) {
         return resPromise
       }
-      putCache(new Response(JSON.stringify(data)), request.url, 'tokens-cache')
-      return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(res)
+      await putCache(new Response(JSON.stringify(graphData)), request.url, 'tokens-cache')
+      return new HTMLRewriter().on('head', new MetaTagInjector(graphData)).transform(res)
     }
   } catch (e) {
     return resPromise
