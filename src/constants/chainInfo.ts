@@ -277,11 +277,15 @@ const CHAIN_INFO: ChainInfoMap = {
   },
 } as const
 
-export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo
-export function getChainInfo(chainId: SupportedL2ChainId): L2ChainInfo
-export function getChainInfo(chainId: ChainId): L1ChainInfo | L2ChainInfo
+export function getChainInfo(chainId: SupportedL1ChainId, featureFlags?: Record<typeof chainId, boolean>): L1ChainInfo
+export function getChainInfo(chainId: SupportedL2ChainId, featureFlags?: Record<typeof chainId, boolean>): L2ChainInfo
 export function getChainInfo(
-  chainId: ChainId | SupportedL1ChainId | SupportedL2ChainId | number | undefined
+  chainId: ChainId,
+  featureFlags?: Record<typeof chainId, boolean>
+): L1ChainInfo | L2ChainInfo
+export function getChainInfo(
+  chainId: ChainId | SupportedL1ChainId | SupportedL2ChainId | number,
+  featureFlags?: Record<typeof chainId, boolean>
 ): L1ChainInfo | L2ChainInfo | undefined
 
 /**
@@ -292,7 +296,10 @@ export function getChainInfo(
  * SupportedL1ChainId -> returns L1ChainInfo
  * SupportedL2ChainId -> returns L2ChainInfo
  */
-export function getChainInfo(chainId: any): any {
+export function getChainInfo(chainId: any, featureFlags?: Record<typeof chainId, boolean>): any {
+  if (featureFlags && chainId in featureFlags) {
+    return featureFlags[chainId] ? CHAIN_INFO[chainId] : undefined
+  }
   if (chainId) {
     return CHAIN_INFO[chainId] ?? undefined
   }
@@ -300,6 +307,6 @@ export function getChainInfo(chainId: any): any {
 }
 
 const MAINNET_INFO = CHAIN_INFO[ChainId.MAINNET]
-export function getChainInfoOrDefault(chainId: number | undefined) {
-  return getChainInfo(chainId) ?? MAINNET_INFO
+export function getChainInfoOrDefault(chainId: number | undefined, featureFlags?: Record<number, boolean>) {
+  return chainId ? getChainInfo(chainId, featureFlags) ?? MAINNET_INFO : MAINNET_INFO
 }

@@ -1,5 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useBaseEnabled } from 'featureFlags/flags/baseEnabled'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
@@ -27,10 +28,19 @@ const setBackground = (newValues: TargetBackgroundStyles) =>
     }
   })
 
+function setDefaultBackground(backgroundRadialGradientElement: HTMLElement, darkMode?: boolean) {
+  setBackground(initialStyles)
+  const defaultLightGradient =
+    'radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
+  const defaultDarkGradient = 'linear-gradient(180deg, #202738 0%, #070816 100%)'
+  backgroundRadialGradientElement.style.background = darkMode ? defaultDarkGradient : defaultLightGradient
+}
+
 export default function RadialGradientByChainUpdater(): null {
   const { chainId } = useWeb3React()
   const [darkMode] = useDarkModeManager()
   const isNftPage = useIsNftPage()
+  const baseEnabled = useBaseEnabled()
 
   // manage background color
   useEffect(() => {
@@ -107,6 +117,10 @@ export default function RadialGradientByChainUpdater(): null {
       }
       case ChainId.BASE:
       case ChainId.BASE_GOERLI: {
+        if (!baseEnabled) {
+          setDefaultBackground(backgroundRadialGradientElement, darkMode)
+          return
+        }
         setBackground(backgroundResetStyles)
         const baseLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(0, 82, 255, 0.20) 0%, rgba(0, 82, 255, 0.08) 40.0%, rgba(252, 255, 82, 0.00) 100%), rgb(255, 255, 255)'
@@ -116,13 +130,9 @@ export default function RadialGradientByChainUpdater(): null {
         break
       }
       default: {
-        setBackground(initialStyles)
-        const defaultLightGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
-        const defaultDarkGradient = 'linear-gradient(180deg, #202738 0%, #070816 100%)'
-        backgroundRadialGradientElement.style.background = darkMode ? defaultDarkGradient : defaultLightGradient
+        setDefaultBackground(backgroundRadialGradientElement, darkMode)
       }
     }
-  }, [darkMode, chainId, isNftPage])
+  }, [darkMode, chainId, isNftPage, baseEnabled])
   return null
 }

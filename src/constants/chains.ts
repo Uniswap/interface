@@ -27,7 +27,14 @@ export function isSupportedChain(chainId: number | null | undefined | ChainId): 
   return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) !== -1 && NOT_YET_UX_SUPPORTED_CHAIN_IDS.indexOf(chainId) === -1
 }
 
-export function asSupportedChain(chainId: number | null | undefined | ChainId): SupportedChainsType | undefined {
+export function asSupportedChain(
+  chainId: number | null | undefined | ChainId,
+  featureFlags?: Record<number, boolean>
+): SupportedChainsType | undefined {
+  if (!chainId) return undefined
+  if (featureFlags && chainId in featureFlags) {
+    return featureFlags[chainId] ? chainId : undefined
+  }
   return isSupportedChain(chainId) ? chainId : undefined
 }
 

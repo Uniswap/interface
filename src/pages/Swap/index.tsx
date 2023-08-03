@@ -33,6 +33,7 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
+import { useBaseEnabled } from 'featureFlags/flags/baseEnabled'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
@@ -135,6 +136,7 @@ function largerPercentValue(a?: Percent, b?: Percent) {
 export default function SwapPage({ className }: { className?: string }) {
   const { chainId: connectedChainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
+  const baseEnabled = useBaseEnabled()
 
   const location = useLocation()
 
@@ -143,7 +145,12 @@ export default function SwapPage({ className }: { className?: string }) {
       <PageWrapper>
         <Swap
           className={className}
-          chainId={connectedChainId}
+          chainId={
+            asSupportedChain(connectedChainId, {
+              [ChainId.BASE]: baseEnabled,
+              [ChainId.BASE_GOERLI]: baseEnabled,
+            }) ?? ChainId.MAINNET
+          }
           prefilledState={{
             [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
             [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
