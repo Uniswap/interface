@@ -7,21 +7,24 @@ import getNetworkLogoUrl from '../../../utils/getNetworkLogoURL'
 import getSetup from '../../../utils/getSetup'
 import getToken from '../../../utils/getToken'
 
-export async function onRequest({ params, request }) {
+export const onRequest: PagesFunction = async ({ params, request }) => {
   try {
-    const { fontData, watermark } = await getSetup(request)
-
     const { index } = params
     const networkName = String(index[0])
     const tokenAddress = String(index[1])
+
     const data = await getToken(networkName, tokenAddress, request.url)
     if (!data) {
       return new Response('Token not found', { status: 404 })
     }
 
-    const palette = await getColor(data.ogImage)
-    const networkLogo = getNetworkLogoUrl(networkName)
+    const setupPromise = getSetup(request)
+    const palettePromise = getColor(data.ogImage)
 
+    const [setup, palette] = await Promise.all([setupPromise, palettePromise])
+    const { fontData, watermark } = setup
+
+    const networkLogo = getNetworkLogoUrl(networkName)
     const words = data.name.split(' ')
     let name = ''
     for (let i = 0; i < words.length; i++) {
@@ -29,7 +32,7 @@ export async function onRequest({ params, request }) {
     }
     name = name.trim()
 
-    return new ImageResponse(
+    const image = new ImageResponse(
       (
         <div
           style={{
@@ -127,7 +130,8 @@ export async function onRequest({ params, request }) {
         ],
       }
     )
-  } catch (error) {
+    return image as Response
+  } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 })
   }
 }

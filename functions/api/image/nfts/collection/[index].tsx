@@ -6,20 +6,23 @@ import getCollection from '../../../../utils/getCollection'
 import getColor from '../../../../utils/getColor'
 import getSetup from '../../../../utils/getSetup'
 
-export async function onRequest({ params, request }) {
+export const onRequest: PagesFunction = async ({ params, request }) => {
   try {
-    const { fontData, watermark, check } = await getSetup(request)
-
     const { index } = params
-    const collectionAddress = String(index)
+    const collectionAddress = index?.toString()
     const data = await getCollection(collectionAddress, request.url)
+
     if (!data) {
       return new Response('Collection not found', { status: 404 })
     }
-    const palette = await getColor(data.ogImage)
+    const setupPromise = getSetup(request)
+    const palettePromise = getColor(data.ogImage)
+
+    const [setup, palette] = await Promise.all([setupPromise, palettePromise])
+    const { fontData, watermark, check } = setup
     const words = data.name.split(' ')
 
-    return new ImageResponse(
+    const image = new ImageResponse(
       (
         <div
           style={{
@@ -76,7 +79,7 @@ export async function onRequest({ params, request }) {
                     flexWrap: 'wrap',
                   }}
                 >
-                  {words.map((word) => (
+                  {words.map((word: string) => (
                     <text key={word}>{word}</text>
                   ))}
                   {data.isVerified && <img src={check} height="54px" />}
@@ -105,7 +108,8 @@ export async function onRequest({ params, request }) {
         ],
       }
     )
-  } catch (error) {
+    return image as Response
+  } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 })
   }
 }

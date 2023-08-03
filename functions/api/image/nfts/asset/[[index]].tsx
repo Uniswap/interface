@@ -5,20 +5,23 @@ import React from 'react'
 import getAsset from '../../../../utils/getAsset'
 import getSetup from '../../../../utils/getSetup'
 
-export async function onRequest({ params, request }) {
+export const onRequest: PagesFunction = async ({ params, request }) => {
   try {
-    const { fontData, watermark } = await getSetup(request)
-
     const { index } = params
-    const collectionAddress = String(index[0])
-    const tokenId = String(index[1])
+    const collectionAddress = index[0]?.toString()
+    const tokenId = index[1]?.toString()
 
-    const data = await getAsset(collectionAddress, tokenId, request.url)
+    const setupPromise = getSetup(request)
+    const assetPromise = getAsset(collectionAddress, tokenId, request.url)
+
+    const [setup, data] = await Promise.all([setupPromise, assetPromise])
+    const { fontData, watermark } = setup
+
     if (!data) {
       return new Response('Asset not found.', { status: 404 })
     }
 
-    return new ImageResponse(
+    const image = new ImageResponse(
       (
         <div
           style={{
@@ -40,7 +43,7 @@ export async function onRequest({ params, request }) {
               gap: '24px',
             }}
           >
-            <img src={watermark} height="72px" />
+            <img src={watermark} alt="Uniswap" height="74px" width="324px" />
           </div>
         </div>
       ),
@@ -56,7 +59,8 @@ export async function onRequest({ params, request }) {
         ],
       }
     )
-  } catch (error) {
+    return image as Response
+  } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 })
   }
 }
