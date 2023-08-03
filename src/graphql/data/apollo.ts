@@ -8,7 +8,7 @@ if (!GRAPHQL_URL) {
 
 export const apolloClient = new ApolloClient({
   connectToDevTools: true,
-  uri: 'https://beta.api.uniswap.org/v1/graphql',
+  uri: GRAPHQL_URL,
   headers: {
     'Content-Type': 'application/json',
     Origin: 'https://app.uniswap.org',
