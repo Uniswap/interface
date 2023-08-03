@@ -116,4 +116,12 @@ describe('Swap errors', () => {
       getBalance(DAI).should('be.closeTo', initialBalance + 200, 1)
     })
   })
+
+  it('insufficient liquidity', () => {
+    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    // This is assuming there is not > 100 Trillion Dai in a pool
+    cy.get('#swap-currency-output .token-amount-input').type('100000000000000').should('have.value', '100000000000000')
+    cy.contains('Insufficient liquidity for this trade.')
+    cy.get('#swap-button').should('not.exist')
+  })
 })
