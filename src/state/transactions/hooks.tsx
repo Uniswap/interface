@@ -89,7 +89,7 @@ export function useIsTransactionPending(transactionHash?: string): boolean {
 
   if (!transactionHash || !transactions[transactionHash]) return false
 
-  return !transactions[transactionHash].receipt
+  return isPendingTx(transactions[transactionHash])
 }
 
 export function useIsTransactionConfirmed(transactionHash?: string): boolean {
@@ -134,7 +134,7 @@ export function useHasPendingRevocation(token?: Token, spender?: string): boolea
   return usePendingApprovalAmount(token, spender)?.eq(0) ?? false
 }
 
-function isPendingTx(tx: TransactionDetails): boolean {
+export function isPendingTx(tx: TransactionDetails): boolean {
   return !tx.receipt && !tx.cancelled
 }
 
