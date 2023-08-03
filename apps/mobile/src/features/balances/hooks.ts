@@ -219,8 +219,8 @@ export function useTokenBalancesGroupedByVisibility({
 }: {
   balancesById?: Record<string, PortfolioBalance>
 }): {
-  shownTokens: Array<PortfolioBalance | string> | undefined
-  hiddenTokens: Array<PortfolioBalance | string> | undefined
+  shownTokens: PortfolioBalance[] | undefined
+  hiddenTokens: PortfolioBalance[] | undefined
 } {
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const { hideSmallBalances, hideSpamTokens, accountTokensVisibility, sentOrSwappedLocally } =

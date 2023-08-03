@@ -5,6 +5,7 @@ import { filter } from 'src/components/TokenSelector/filter'
 import { flowToModalName, TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { createEmptyBalanceOption } from 'src/components/TokenSelector/utils'
+import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { selectFavoriteTokens } from 'src/features/favorites/selectors'
@@ -191,14 +192,14 @@ export function usePortfolioTokenOptions(
     loading,
   } = usePortfolioBalancesForAddressById(address)
 
-  const portfolioBalances = useMemo(() => {
-    if (!portfolioBalancesById) return
+  const { shownTokens } = useTokenBalancesGroupedByVisibility({
+    balancesById: portfolioBalancesById,
+  })
 
-    const allPortfolioBalances: PortfolioBalance[] = sortPortfolioBalances(
-      Object.values(portfolioBalancesById)
-    )
-    return allPortfolioBalances
-  }, [portfolioBalancesById])
+  const portfolioBalances = useMemo(
+    () => (shownTokens ? sortPortfolioBalances(shownTokens) : undefined),
+    [shownTokens]
+  )
 
   const filteredPortfolioBalances = useMemo(
     () => portfolioBalances && filter(portfolioBalances, chainFilter, searchFilter),
