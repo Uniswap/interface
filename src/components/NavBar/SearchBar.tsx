@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
@@ -16,7 +17,7 @@ import { Column, Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
-import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -103,17 +104,19 @@ export const SearchBar = () => {
     hasInput: debouncedSearchValue && debouncedSearchValue.length > 0,
     ...trace,
   }
-  const placeholderText = useMemo(() => {
+
+  const { i18n } = useLingui() // subscribe to locale changes
+  const placeholderText = (() => {
     if (isMobileOrTablet) {
-      return t`Search`
+      return t(i18n)`Search`
     } else {
       if (shouldDisableNFTRoutes) {
-        return t`Search tokens`
+        return t(i18n)`Search tokens`
       } else {
-        return t`Search tokens and NFT collections`
+        return t(i18n)`Search tokens and NFT collections`
       }
     }
-  }, [isMobileOrTablet, shouldDisableNFTRoutes])
+  })()
 
   const handleKeyPress = useCallback(
     (event: any) => {

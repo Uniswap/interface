@@ -22,7 +22,6 @@ async function dynamicActivate(locale: SupportedLocale) {
 
 interface ProviderProps {
   locale: SupportedLocale
-  forceRenderAfterLocaleChange?: boolean
   onActivate?: (locale: SupportedLocale) => void
   children: ReactNode
 }
