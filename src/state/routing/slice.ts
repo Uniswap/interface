@@ -9,6 +9,7 @@ import { trace } from 'tracing/trace'
 import {
   QuoteMethod,
   QuoteState,
+  RouterPreference,
   RoutingConfig,
   SwapRouterNativeAssets,
   TradeResult,
@@ -20,12 +21,6 @@ import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } f
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
 if (UNISWAP_API_URL === undefined) {
   throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
-}
-
-export enum RouterPreference {
-  X = 'uniswapx',
-  API = 'api',
-  CLIENT = 'client',
 }
 
 // This is excluded from `RouterPreference` enum because it's only used
@@ -52,6 +47,8 @@ export interface GetQuoteArgs {
   needsWrapIfUniswapX: boolean
   uniswapXEnabled: boolean
   uniswapXForceSyntheticQuotes: boolean
+  forceUniswapXOn: boolean
+  userDisabledUniswapX: boolean
   isRoutingAPIPrice?: boolean
 }
 
@@ -85,6 +82,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
   if (
     !args.uniswapXEnabled ||
+    args.userDisabledUniswapX ||
     tokenOutIsNative ||
     tradeType === TradeType.EXACT_OUTPUT ||
     !isUniswapXSupportedChain(tokenInChainId)
@@ -133,7 +131,15 @@ export const routingApi = createApi({
         const fellBack = false
         if (shouldUseAPIRouter(args)) {
           try {
-            const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
+            const {
+              tokenInAddress,
+              tokenInChainId,
+              tokenOutAddress,
+              tokenOutChainId,
+              amount,
+              tradeType,
+              forceUniswapXOn,
+            } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
 
             const requestBody = {
@@ -143,6 +149,8 @@ export const routingApi = createApi({
               tokenOut: tokenOutAddress,
               amount,
               type,
+              // if forceUniswapXOn is not ON, then use the backend's default value
+              useUniswapX: forceUniswapXOn || undefined,
               configs: getRoutingAPIConfig(args),
             }
 

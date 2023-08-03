@@ -5,7 +5,6 @@ import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 import { FeatureFlag } from '../../src/featureFlags'
 import { UserState } from '../../src/state/user/reducer'
 import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
-import { injected } from './ethereum'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -16,12 +15,6 @@ declare global {
     interface VisitOptions {
       serviceWorker?: true
       featureFlags?: Array<FeatureFlag>
-      /**
-       * The mock ethereum provider to inject into the page.
-       * @default 'goerli'
-       */
-      // TODO(INFRA-175): Migrate all usage of 'goerli' to 'hardhat'.
-      ethereum?: 'goerli' | 'hardhat'
       /**
        * Initial user state.
        * @default {@type import('../utils/user-state').CONNECTED_WALLET_USER_STATE}
@@ -39,8 +32,7 @@ Cypress.Commands.overwrite(
     if (typeof url !== 'string') throw new Error('Invalid arguments. The first argument to cy.visit must be the path.')
 
     // Add a hash in the URL if it is not present (to use hash-based routing correctly with queryParams).
-    let hashUrl = url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url
-    if (options?.ethereum === 'goerli') hashUrl += `${url.includes('?') ? '&' : '?'}chain=goerli`
+    const hashUrl = url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url
 
     return cy
       .intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 })
@@ -68,11 +60,7 @@ Cypress.Commands.overwrite(
             }
 
             // Inject the mock ethereum provider.
-            if (options?.ethereum === 'hardhat') {
-              win.ethereum = provider
-            } else {
-              win.ethereum = injected
-            }
+            win.ethereum = provider
           },
         })
       )

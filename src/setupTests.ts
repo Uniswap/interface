@@ -73,6 +73,20 @@ jest.mock('@web3-react/core', () => {
   }
 })
 
+jest.mock('state/routing/slice', () => {
+  const routingSlice = jest.requireActual('state/routing/slice')
+  return {
+    ...routingSlice,
+    // Prevents unit tests from logging errors from failed getQuote queries
+    useGetQuoteQuery: () => ({
+      isError: false,
+      data: undefined,
+      error: undefined,
+      currentData: undefined,
+    }),
+  }
+})
+
 // Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
 beforeEach(() => {
   // Mock window.getComputedStyle, because it is otherwise too computationally expensive to unit test.

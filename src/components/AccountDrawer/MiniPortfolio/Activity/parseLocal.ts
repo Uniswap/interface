@@ -138,17 +138,21 @@ function parseMigrateCreateV3(
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
 
+export function getTransactionStatus(details: TransactionDetails): TransactionStatus {
+  return !details.receipt
+    ? TransactionStatus.Pending
+    : details.receipt.status === 1 || details.receipt?.status === undefined
+    ? TransactionStatus.Confirmed
+    : TransactionStatus.Failed
+}
+
 export function transactionToActivity(
   details: TransactionDetails,
   chainId: ChainId,
   tokens: ChainTokenMap
 ): Activity | undefined {
   try {
-    const status = !details.receipt
-      ? TransactionStatus.Pending
-      : details.receipt.status === 1 || details.receipt?.status === undefined
-      ? TransactionStatus.Confirmed
-      : TransactionStatus.Failed
+    const status = getTransactionStatus(details)
 
     const defaultFields = {
       hash: details.hash,
