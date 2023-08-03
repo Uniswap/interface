@@ -15,5 +15,5 @@
     "baseUrl": "functions"
   },
   "exclude": ["../node_modules", "../src"],
-  "include": ["**/*.ts", ".ts"],
+  "include": ["**/*.ts"],
 }
