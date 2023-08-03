@@ -1,6 +1,6 @@
 export default async function getSetup(request: Request) {
   const font = fetch(
-    new URL('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZFhjQ.ttf')
+    new Request('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZFhjQ.ttf')
   ).then((res) => res.arrayBuffer())
   const fontData = await font
 
