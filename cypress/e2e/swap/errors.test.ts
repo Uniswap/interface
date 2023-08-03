@@ -124,6 +124,9 @@ describe('Swap errors', () => {
       req.reply({
         statusCode: 404,
         fixture: 'insufficientLiquidity.json',
+        headers: {
+          'access-control-allow-origin': '*',
+        },
       })
     })
     cy.get('#swap-currency-output .token-amount-input').type('100000000000000').should('have.value', '100000000000000') // 100 trillion
