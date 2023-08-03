@@ -7,17 +7,13 @@ import getNetworkLogoUrl from '../../../utils/getNetworkLogoURL'
 import getSetup from '../../../utils/getSetup'
 import getToken from '../../../utils/getToken'
 
-export async function onRequestGet({ params, request }) {
+export async function onRequest({ params, request }) {
   try {
     const { fontData, watermark } = await getSetup(request)
 
     const { index } = params
-    const networkName = String(index[0]).toUpperCase()
-    let tokenAddress = String(index[1])
-    tokenAddress =
-      tokenAddress !== 'undefined' && tokenAddress === 'NATIVE'
-        ? '0x0000000000000000000000000000000000000000'
-        : tokenAddress
+    const networkName = String(index[0])
+    const tokenAddress = String(index[1])
     const data = await getToken(networkName, tokenAddress, request.url)
     if (!data) {
       return new Response('Token not found', { status: 404 })

@@ -6,7 +6,7 @@ import getCollection from '../../../../utils/getCollection'
 import getColor from '../../../../utils/getColor'
 import getSetup from '../../../../utils/getSetup'
 
-export async function onRequestGet({ params, request }) {
+export async function onRequest({ params, request }) {
   try {
     const { fontData, watermark, check } = await getSetup(request)
 
@@ -53,7 +53,6 @@ export async function onRequestGet({ params, request }) {
                 height="500px"
                 style={{
                   borderRadius: '60px',
-                  //boxShadow: '0px 0px 24px rgba(0, 0, 0, 0.25)',
                   objectFit: 'cover',
                 }}
               />

@@ -5,7 +5,7 @@ import React from 'react'
 import getAsset from '../../../../utils/getAsset'
 import getSetup from '../../../../utils/getSetup'
 
-export async function onRequestGet({ params, request }) {
+export async function onRequest({ params, request }) {
   try {
     const { fontData, watermark } = await getSetup(request)
 
