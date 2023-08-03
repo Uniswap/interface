@@ -1,13 +1,9 @@
 /* eslint-disable import/no-unused-modules */
 import { MetaTagInjector } from '../../components/metaTagInjector'
+import { getCache, putCache } from '../../utils/cache'
 import getAsset from '../../utils/getAsset'
-import { getCache, putCache } from '../../utils/useCache'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
-  const { index } = params
-  const collectionAddress = index[0]?.toString()
-  const tokenId = index[1]?.toString()
-  const assetPromise = getAsset(collectionAddress, tokenId, request.url)
   const resPromise = next()
   const cachePromise = getCache(request.url, 'assets-cache')
   try {
@@ -15,7 +11,10 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
     if (cacheResponse) {
       return new HTMLRewriter().on('head', new MetaTagInjector(cacheResponse)).transform(res)
     } else {
-      const graphData = await assetPromise
+      const { index } = params
+      const collectionAddress = index[0]?.toString()
+      const tokenId = index[1]?.toString()
+      const graphData = await getAsset(collectionAddress, tokenId, request.url)
       if (!graphData) {
         return resPromise
       }

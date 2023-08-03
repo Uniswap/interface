@@ -1,6 +1,6 @@
 import CacheMock from 'browser-cache-mock'
 
-import { getCache, putCache } from './utils/useCache'
+import { getCache, putCache } from './cache'
 
 const cacheMock = new CacheMock()
 
