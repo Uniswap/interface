@@ -15,6 +15,8 @@ function formatTitleName(name: string, collectionName: string, tokenId: string) 
 }
 
 export default async function getAsset(collectionAddress: string, tokenId: string, url: string) {
+  const origin = new URL(url).origin
+  const image = origin + '/api/image/nfts/asset/' + collectionAddress + '/' + tokenId
   const { data } = await client.query({
     query: AssetDocument,
     variables: {
