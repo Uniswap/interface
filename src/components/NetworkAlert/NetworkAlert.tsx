@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
-import { useBaseEnabled } from 'featureFlags/flags/baseEnabled'
+import { useBaseEnabledChains } from 'featureFlags/flags/baseEnabled'
 import { ArrowUpRight } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall } from 'theme'
@@ -171,16 +171,13 @@ function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertCh
 export function NetworkAlert() {
   const { chainId } = useWeb3React()
   const [darkMode] = useDarkModeManager()
-  const baseEnabled = useBaseEnabled()
+  const baseEnabledChains = useBaseEnabledChains()
 
   if (!shouldShowAlert(chainId)) {
     return null
   }
 
-  const chainInfo = getChainInfo(chainId, {
-    [ChainId.BASE]: baseEnabled,
-    [ChainId.BASE_GOERLI]: baseEnabled,
-  })
+  const chainInfo = getChainInfo(chainId, baseEnabledChains)
 
   if (!chainInfo) return null
 

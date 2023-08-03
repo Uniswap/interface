@@ -14,7 +14,7 @@ import {
   TESTNET_CHAIN_IDS,
   UniWalletSupportedChains,
 } from 'constants/chains'
-import { useBaseEnabled } from 'featureFlags/flags/baseEnabled'
+import { useBaseEnabled, useBaseEnabledChains } from 'featureFlags/flags/baseEnabled'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -93,10 +93,8 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const modalRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => setIsOpen(false), [modalRef])
 
-  const info = getChainInfo(chainId, {
-    [ChainId.BASE]: baseEnabled,
-    [ChainId.BASE_GOERLI]: baseEnabled,
-  })
+  const baseEnabledChains = useBaseEnabledChains()
+  const info = getChainInfo(chainId, baseEnabledChains)
 
   const selectChain = useSelectChain()
   useSyncChainQuery()
