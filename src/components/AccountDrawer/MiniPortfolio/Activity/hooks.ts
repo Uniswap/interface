@@ -1,6 +1,7 @@
 import { TransactionStatus, useActivityQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useEffect, useMemo } from 'react'
-import { useTransactionCanceller } from 'state/transactions/hooks'
+import { usePendingOrders } from 'state/signatures/hooks'
+import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
 
 import { useLocalActivities } from './parseLocal'
 import { parseRemoteActivities } from './parseRemote'
@@ -76,4 +77,14 @@ export function useAllActivities(account: string) {
   )
 
   return { loading, activities: combinedActivities, refetch }
+}
+
+export function useHasPendingActivity() {
+  const pendingTransactions = usePendingTransactions()
+  const pendingOrders = usePendingOrders()
+
+  const hasPendingActivity = pendingTransactions.length > 0 || pendingOrders.length > 0
+  const pendingActivityCount = pendingTransactions.length + pendingOrders.length
+
+  return { hasPendingActivity, pendingActivityCount }
 }

@@ -72,9 +72,11 @@ const transactionSlice = createSlice({
 
       if (tx) {
         delete transactions[chainId]?.[hash]
-        tx.hash = cancelHash
-        tx.cancelled = true
-        transactions[chainId][cancelHash] = tx
+        transactions[chainId][cancelHash] = {
+          ...tx,
+          hash: cancelHash,
+          cancelled: true,
+        }
       }
     },
   },

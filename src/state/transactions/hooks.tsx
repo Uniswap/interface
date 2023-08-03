@@ -48,16 +48,13 @@ export function useTransactionRemover() {
 }
 
 export function useTransactionCanceller() {
-  const { account } = useWeb3React()
   const dispatch = useAppDispatch()
 
   return useCallback(
     (hash: string, chainId: number, cancelHash: string) => {
-      if (!account) return
-
       dispatch(cancelTransaction({ hash, chainId, cancelHash }))
     },
-    [account, dispatch]
+    [dispatch]
   )
 }
 
@@ -137,9 +134,11 @@ export function useHasPendingRevocation(token?: Token, spender?: string): boolea
   return usePendingApprovalAmount(token, spender)?.eq(0) ?? false
 }
 
-export function useHasPendingTransactions() {
+function isPendingTx(tx: TransactionDetails): boolean {
+  return !tx.receipt && !tx.cancelled
+}
+
+export function usePendingTransactions(): TransactionDetails[] {
   const allTransactions = useAllTransactions()
-  return useMemo(() => {
-    return Object.values(allTransactions).filter((tx) => !tx.receipt && !tx.cancelled).length > 0
-  }, [allTransactions])
+  return useMemo(() => Object.values(allTransactions).filter(isPendingTx), [allTransactions])
 }
