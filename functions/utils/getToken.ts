@@ -11,7 +11,7 @@ function formatTitleName(symbol: string, name: string) {
   return 'View Token on Uniswap'
 }
 
-export default async function getToken(networkName: string, tokenAddress: string, url: string) {
+export default async function getToken(networkName: string, tokenAddress: string | undefined, url: string) {
   const { data } = await client.query({
     query: TokenDocument,
     variables: {

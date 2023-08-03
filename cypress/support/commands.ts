@@ -12,6 +12,16 @@ declare global {
     interface ApplicationWindow {
       ethereum: Eip1193Bridge
     }
+    interface Chainable<Subject> {
+      /**
+       * Wait for a specific event to be sent to amplitude. If the event is found, the subject will be the event.
+       *
+       * @param {string} eventName - The type of the event to search for e.g. SwapEventName.SWAP_TRANSACTION_COMPLETED
+       * @param {number} timeout - The maximum amount of time (in ms) to wait for the event.
+       * @returns {Chainable<Subject>}
+       */
+      waitForAmplitudeEvent(eventName: string, timeout?: number): Chainable<Subject>
+    }
     interface VisitOptions {
       serviceWorker?: true
       featureFlags?: Array<FeatureFlag>
@@ -66,3 +76,23 @@ Cypress.Commands.overwrite(
       )
   }
 )
+
+Cypress.Commands.add('waitForAmplitudeEvent', (eventName, timeout = 5000 /* 5s */) => {
+  const startTime = new Date().getTime()
+
+  function checkRequest() {
+    return cy.wait('@amplitude', { timeout }).then((interception) => {
+      const events = interception.request.body.events
+      const event = events.find((event: any) => event.event_type === eventName)
+
+      if (event) {
+        return cy.wrap(event)
+      } else if (new Date().getTime() - startTime > timeout) {
+        throw new Error(`Event ${eventName} not found within the specified timeout`)
+      } else {
+        return checkRequest()
+      }
+    })
+  }
+  return checkRequest()
+})
