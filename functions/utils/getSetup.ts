@@ -1,5 +1,5 @@
-const watermark = (await import('../assets/watermark.svg')) as unknown as string
-const check = (await import('../assets/verified.svg')) as unknown as string
+import check from '../assets/verified.svg'
+import watermark from '../assets/watermark.svg'
 
 export default async function getSetup() {
   const font = fetch(
