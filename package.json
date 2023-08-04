@@ -139,7 +139,7 @@
     "ts-jest": "^29.1.1",
     "ts-transform-graphql-tag": "^0.2.1",
     "typechain": "^5.0.0",
-    "typescript": "^4.4.3",
+    "typescript": "^4.9.4",
     "webpack-retry-chunk-load-plugin": "^3.1.1",
     "wrangler": "https://prerelease-registry.devprod.cloudflare.dev/workers-sdk/runs/4925945367/npm-package-wrangler-3048",
     "yarn-deduplicate": "^6.0.0"
