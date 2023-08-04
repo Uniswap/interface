@@ -22,7 +22,7 @@ export const Template = (args) => (
   <Box bg="DEP_accentAction">
     <Inset {...args}>
       <Box bg="DEP_accentAction">
-        <Text color="white">This is the default inset</Text>
+        <Text color="DEP_white">This is the default inset</Text>
       </Box>
     </Inset>
   </Box>
@@ -42,7 +42,7 @@ export const Template = (args) => (
   <Story name="variants" args={{}}>
     <Flex>
       {['spacing8', 'spacing12', 'spacing16', 'lg', 'xl'].map((size) => (
-        <Box bg="black">
+        <Box bg="DEP_black">
           <Inset all={size}>
             <Box bg="DEP_background3">
               <Text>This is the {size} inset</Text>

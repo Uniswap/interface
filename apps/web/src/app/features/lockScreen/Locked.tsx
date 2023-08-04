@@ -55,7 +55,7 @@ export function Locked(): JSX.Element {
         <Stack paddingBottom="$spacing8">
           <Stack
             alignItems="center"
-            backgroundColor="$white"
+            backgroundColor="$DEP_white"
             borderRadius="$rounded24"
             justifyContent="center"
             padding="$spacing12">

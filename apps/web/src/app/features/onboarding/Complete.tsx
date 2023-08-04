@@ -163,7 +163,7 @@ export function Complete(): JSX.Element {
                 {/* mocked extension icon */}
                 <Stack
                   alignItems="center"
-                  backgroundColor="$white"
+                  backgroundColor="$DEP_white"
                   borderRadius="$roundedFull"
                   flexGrow={0}
                   justifyContent="center"

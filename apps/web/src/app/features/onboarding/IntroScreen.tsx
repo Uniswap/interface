@@ -55,7 +55,7 @@ export function IntroScreen(): JSX.Element {
         <Stack alignItems="center" justifyContent="center" paddingBottom="$spacing8">
           <Stack
             alignItems="center"
-            backgroundColor="$white"
+            backgroundColor="$DEP_white"
             borderRadius="$rounded24"
             flexGrow={0}
             justifyContent="center"
