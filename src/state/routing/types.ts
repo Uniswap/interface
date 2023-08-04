@@ -144,7 +144,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   gasUseEstimateUSD?: number // gas estimate for swaps
   blockNumber: string | null | undefined
   isUniswapXBetter: boolean | undefined
-  fromClientRouter: boolean | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
 
@@ -163,7 +162,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     isUniswapXBetter?: boolean
     requestId?: string
     quoteMethod: QuoteMethod
-    fromClientRouter?: boolean
     approveInfo: ApproveInfo
     v2Routes: {
       routev2: V2Route<Currency, Currency>

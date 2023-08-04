@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unused-modules */
 import { Chain } from '../../src/graphql/data/__generated__/types-and-hooks'
-import { MetaTagInjector } from '../components/metaTagInjector'
+import getRequest from '../utils/getRequest'
 import getToken from '../utils/getToken'
 
 const convertTokenAddress = (tokenAddress: string, networkName: string) => {
@@ -18,22 +18,17 @@ const convertTokenAddress = (tokenAddress: string, networkName: string) => {
 }
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
-  const { index } = params
-  const networkName = index[0]?.toString().toUpperCase()
-  const tokenString = index[1]?.toString()
-  if (!tokenString) {
-    return next()
-  }
-  const tokenAddress = convertTokenAddress(tokenString, networkName)
-  const tokenPromise = getToken(networkName, tokenAddress, request.url)
-  const resPromise = next()
+  const res = next()
   try {
-    const [data, res] = await Promise.all([tokenPromise, resPromise])
-    if (!data) {
-      return resPromise
+    const { index } = params
+    const networkName = index[0]?.toString().toUpperCase()
+    const tokenString = index[1]?.toString()
+    if (!tokenString) {
+      return res
     }
-    return new HTMLRewriter().on('head', new MetaTagInjector(data)).transform(res)
+    const tokenAddress = convertTokenAddress(tokenString, networkName)
+    return getRequest(res, request.url, () => getToken(networkName, tokenAddress, request.url))
   } catch (e) {
-    return resPromise
+    return res
   }
 }

@@ -53,6 +53,8 @@ export default function InvalidTokenDetails({
   // if the token's address is valid and the chains match, it's a non-existant token
   const isNonExistantToken = !isInvalidAddress && pageChainId === chainId
 
+  const connectedChainLabel = chainId ? getChainInfo(chainId)?.label : undefined
+
   return (
     <InvalidDetailsContainer>
       <EyeIcon />
@@ -69,9 +71,11 @@ export default function InvalidTokenDetails({
         </>
       ) : (
         <>
-          <InvalidDetailsText>
-            <Trans>This token doesn&apos;t exist on {getChainInfo(chainId)?.label}</Trans>
-          </InvalidDetailsText>
+          {connectedChainLabel && (
+            <InvalidDetailsText>
+              <Trans>This token doesn&apos;t exist on {connectedChainLabel}</Trans>
+            </InvalidDetailsText>
+          )}
           <TokenExploreButton onClick={() => selectChain(pageChainId)}>
             <ThemedText.SubHeader>
               <Trans>Switch to {getChainInfo(pageChainId).label}</Trans>
