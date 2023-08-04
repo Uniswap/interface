@@ -184,7 +184,7 @@ export const BACKEND_SUPPORTED_CHAINS = [
   Chain.Optimism,
   Chain.Celo,
 ] as const
-export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE] as const
+export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE, ChainId.BASE] as const
 
 export function getTokenDetailsURL({
   address,

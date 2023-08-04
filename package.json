@@ -181,7 +181,7 @@
     "@uniswap/redux-multicall": "^1.1.8",
     "@uniswap/router-sdk": "^1.6.0",
     "@uniswap/sdk-core": "^4.0.3",
-    "@uniswap/smart-order-router": "^3.13.7",
+    "@uniswap/smart-order-router": "^3.15.0",
     "@uniswap/token-lists": "^1.0.0-beta.33",
     "@uniswap/uniswapx-sdk": "^1.1.0",
     "@uniswap/universal-router-sdk": "^1.5.6",
