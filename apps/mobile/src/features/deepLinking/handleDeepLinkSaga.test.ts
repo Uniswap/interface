@@ -151,9 +151,10 @@ describe(handleDeepLink, () => {
 
   it('Handles Share NFT Item Universal Link', () => {
     const hash = `#/nfts/asset/${SAMPLE_SEED_ADDRESS_1}/123`
+    const url = `https://${UNISWAP_APP_HOSTNAME}/${hash}`
     return expectSaga(handleDeepLink, {
       payload: {
-        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        url,
         coldStart: false,
       },
       type: '',
@@ -166,7 +167,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash)
+      .call(handleUniswapAppDeepLink, hash, url)
       .put(
         openModal({
           name: ModalName.Explore,
@@ -186,9 +187,10 @@ describe(handleDeepLink, () => {
 
   it('Handles Share NFT Collection Universal Link', () => {
     const hash = `#/nfts/collection/${SAMPLE_SEED_ADDRESS_1}`
+    const url = `https://${UNISWAP_APP_HOSTNAME}/${hash}`
     return expectSaga(handleDeepLink, {
       payload: {
-        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        url,
         coldStart: false,
       },
       type: '',
@@ -201,7 +203,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash)
+      .call(handleUniswapAppDeepLink, hash, url)
       .put(
         openModal({
           name: ModalName.Explore,
@@ -219,9 +221,10 @@ describe(handleDeepLink, () => {
 
   it('Handles Share Token Item Universal Link', () => {
     const hash = `#/tokens/ethereum/${SAMPLE_SEED_ADDRESS_1}`
+    const url = `https://${UNISWAP_APP_HOSTNAME}/${hash}`
     return expectSaga(handleDeepLink, {
       payload: {
-        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        url,
         coldStart: false,
       },
       type: '',
@@ -234,7 +237,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash)
+      .call(handleUniswapAppDeepLink, hash, url)
       .put(
         openModal({
           name: ModalName.Explore,
@@ -252,9 +255,10 @@ describe(handleDeepLink, () => {
 
   it('Handles Share currently active Account Address Universal Link', () => {
     const hash = `#/address/${account.address}`
+    const url = `https://${UNISWAP_APP_HOSTNAME}/${hash}`
     return expectSaga(handleDeepLink, {
       payload: {
-        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        url,
         coldStart: false,
       },
       type: '',
@@ -267,16 +271,17 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash)
+      .call(handleUniswapAppDeepLink, hash, url)
       .returns(undefined)
       .silentRun()
   })
 
   it('Handles Share already added Account Address Universal Link', () => {
     const hash = `#/address/${SAMPLE_SEED_ADDRESS_2}`
+    const url = `https://${UNISWAP_APP_HOSTNAME}/${hash}`
     return expectSaga(handleDeepLink, {
       payload: {
-        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        url,
         coldStart: false,
       },
       type: '',
@@ -290,7 +295,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash)
+      .call(handleUniswapAppDeepLink, hash, url)
       .put(setAccountAsActive(SAMPLE_SEED_ADDRESS_2))
       .returns(undefined)
       .silentRun()
@@ -298,9 +303,10 @@ describe(handleDeepLink, () => {
 
   it('Handles Share external Account Address Universal Link', () => {
     const hash = `#/address/${SAMPLE_SEED_ADDRESS_2}`
+    const url = `https://${UNISWAP_APP_HOSTNAME}/${hash}`
     return expectSaga(handleDeepLink, {
       payload: {
-        url: `https://${UNISWAP_APP_HOSTNAME}/${hash}`,
+        url,
         coldStart: false,
       },
       type: '',
@@ -313,7 +319,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash)
+      .call(handleUniswapAppDeepLink, hash, url)
       .put(
         openModal({
           name: ModalName.Explore,

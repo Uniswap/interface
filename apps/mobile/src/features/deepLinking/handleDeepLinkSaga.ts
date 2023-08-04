@@ -9,7 +9,7 @@ import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName, ModalName } from 'src/features/telemetry/constants'
+import { MobileEventName, ModalName, ShareableEntity } from 'src/features/telemetry/constants'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
@@ -51,7 +51,7 @@ export function* deepLinkWatcher() {
   yield* takeLatest(openDeepLink.type, handleDeepLink)
 }
 
-export function* handleUniswapAppDeepLink(hash: string) {
+export function* handleUniswapAppDeepLink(hash: string, url: string) {
   // Handle NFT Item share (ex. https://app.uniswap.org/#/nfts/asset/0x.../123)
   if (NFT_ITEM_SHARE_LINK_HASH_REGEX.test(hash)) {
     const [, contractAddress, tokenId] = hash.match(NFT_ITEM_SHARE_LINK_HASH_REGEX) || []
@@ -69,6 +69,10 @@ export function* handleUniswapAppDeepLink(hash: string) {
         },
       })
     )
+    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+      entity: ShareableEntity.NftItem,
+      url,
+    })
     return
   }
 
@@ -87,7 +91,10 @@ export function* handleUniswapAppDeepLink(hash: string) {
         },
       })
     )
-
+    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+      entity: ShareableEntity.NftCollection,
+      url,
+    })
     return
   }
 
@@ -111,6 +118,10 @@ export function* handleUniswapAppDeepLink(hash: string) {
         },
       })
     )
+    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+      entity: ShareableEntity.Token,
+      url,
+    })
     return
   }
 
@@ -138,6 +149,10 @@ export function* handleUniswapAppDeepLink(hash: string) {
         })
       )
     }
+    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+      entity: ShareableEntity.Wallet,
+      url,
+    })
     return
   }
 }
@@ -186,7 +201,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     }
 
     if (url.hostname === UNISWAP_APP_HOSTNAME) {
-      yield* call(handleUniswapAppDeepLink, url.hash)
+      yield* call(handleUniswapAppDeepLink, url.hash, action.payload.url)
       return
     }
 

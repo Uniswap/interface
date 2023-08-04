@@ -1,7 +1,7 @@
 import { RenderPassReport } from '@shopify/react-native-performance'
 import { MoonpayEventName, SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { ImportType } from 'src/features/onboarding/utils'
-import { MobileEventName } from 'src/features/telemetry/constants'
+import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -110,6 +110,14 @@ export type MobileEventProperties = {
   [MobileEventName.PortfolioBalanceFreshnessLag]: {
     freshnessLag: number
     updatedCurrencies: string[]
+  }
+  [MobileEventName.ShareButtonClicked]: {
+    entity: ShareableEntity
+    url: string
+  }
+  [MobileEventName.ShareLinkOpened]: {
+    entity: ShareableEntity
+    url: string
   }
   [MobileEventName.SwapSubmitted]: {
     transaction_hash: string

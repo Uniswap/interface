@@ -7,11 +7,14 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TripleDot } from 'src/components/icons/TripleDot'
 import { Flex } from 'src/components/layout/Flex'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { setClipboard } from 'src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'src/utils/linking'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
+
+import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 
@@ -36,8 +39,13 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   const onPressShare = useCallback(async () => {
     if (!address) return
     try {
+      const url = getProfileUrl(address)
       await Share.share({
-        message: getProfileUrl(address),
+        message: url,
+      })
+      sendAnalyticsEvent(MobileEventName.ShareButtonClicked, {
+        entity: ShareableEntity.Wallet,
+        url,
       })
     } catch (error) {
       logger.error('Unable to share Account url', {

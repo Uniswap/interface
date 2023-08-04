@@ -14,6 +14,9 @@ import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import {
   useActiveAccountAddressWithThrow,
   useSelectAccountHideSmallBalances,
@@ -138,6 +141,10 @@ export function useTokenContextMenu({
     try {
       await Share.share({
         message: tokenUrl,
+      })
+      sendAnalyticsEvent(MobileEventName.ShareButtonClicked, {
+        entity: ShareableEntity.Token,
+        url: tokenUrl,
       })
     } catch (error) {
       logger.error('Unable to share Token url', {
