@@ -142,7 +142,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
 
     const shadowProps = showShadow
       ? {
-          shadowColor: isDarkMode ? 'black' : 'DEP_brandedAccentSoft',
+          shadowColor: isDarkMode ? 'DEP_black' : 'DEP_brandedAccentSoft',
           shadowOffset: SHADOW_OFFSET_SMALL,
           shadowOpacity: 0.25,
           shadowRadius: 6,
