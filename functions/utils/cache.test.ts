@@ -21,7 +21,6 @@ beforeAll(() => {
 
 test('Should put cache properly', async () => {
   jest.spyOn(cacheMock, 'put')
-  jest.spyOn(cacheMock, 'match')
   await Cache.put(data, 'https://example.com')
   expect(cacheMock.put).toHaveBeenCalledWith('https://example.com', expect.anything())
   const call = mocked(cacheMock.put).mock.calls[0]
