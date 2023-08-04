@@ -21,7 +21,6 @@ import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
 import { shortenAddress } from 'utils'
 
-import { TransactionDetails } from '../../state/transactions/types'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import { RowBetween } from '../Row'
@@ -114,11 +113,6 @@ const Text = styled.p`
   width: fit-content;
   font-weight: 500;
 `
-
-// we want the latest one to come first, so return negative if a is after b
-function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
-  return b.addedTime - a.addedTime
-}
 
 const StyledConnectButton = styled.button`
   background-color: transparent;
