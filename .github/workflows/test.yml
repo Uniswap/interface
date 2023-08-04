@@ -144,7 +144,7 @@ jobs:
           name: build
           path: build
 
-      - uses: actions/cache@v3
+      - uses: actions/cache/restore@v3
         with:
           path: cache
           key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
@@ -178,6 +178,24 @@ jobs:
         with:
           name: Cypress tests
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: hardhat-cache
+          path: cache
+
+  hardhat-cache:
+    needs: [cypress-test-matrix]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: hardhat-cache
+          path: cache
+      - uses: actions/cache/save@v3
+        with:
+          path: cache
+          key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
 
   cloud-typecheck:
     runs-on: ubuntu-latest
