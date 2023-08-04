@@ -23,11 +23,24 @@ export const CHAIN_IDS_TO_NAMES = {
 // Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.
 const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = []
 
-export function isSupportedChain(chainId: number | null | undefined | ChainId): chainId is SupportedChainsType {
+export function isSupportedChain(
+  chainId: number | null | undefined | ChainId,
+  featureFlags?: Record<number, boolean>
+): chainId is SupportedChainsType {
+  if (featureFlags && chainId && chainId in featureFlags) {
+    return featureFlags[chainId]
+  }
   return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) !== -1 && NOT_YET_UX_SUPPORTED_CHAIN_IDS.indexOf(chainId) === -1
 }
 
-export function asSupportedChain(chainId: number | null | undefined | ChainId): SupportedChainsType | undefined {
+export function asSupportedChain(
+  chainId: number | null | undefined | ChainId,
+  featureFlags?: Record<number, boolean>
+): SupportedChainsType | undefined {
+  if (!chainId) return undefined
+  if (featureFlags && chainId in featureFlags && !featureFlags[chainId]) {
+    return undefined
+  }
   return isSupportedChain(chainId) ? chainId : undefined
 }
 
