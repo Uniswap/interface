@@ -12,19 +12,31 @@ beforeAll(() => {
   }
 })
 
-test('Should use cache properly', async () => {
+test('Should put cache properly', async () => {
   //wait for the server to start
   const url = 'http://127.0.0.1:3000/'
   await fetch(new Request(url)).then((res) => res.text())
 
-  let response = await Cache.match('https://example.com', 'test-cache')
+  const response = await Cache.match('https://example.com')
   expect(response).toBeUndefined()
-  const data = JSON.stringify({
+  const data = {
     title: 'test',
     image: 'testImage',
     url: 'testUrl',
-  })
-  await Cache.put(new Response(JSON.stringify(data)), 'https://example.com', 'test-cache')
-  response = await Cache.match('https://example.com', 'test-cache')
-  expect(response).toBe(data)
+  }
+  await Cache.put(data, 'https://example.com')
+})
+
+test('Should match cache properly', async () => {
+  //wait for the server to start
+  const url = 'http://127.0.0.1:3000/'
+  await fetch(new Request(url)).then((res) => res.text())
+
+  const response = await Cache.match('https://example.com')
+  const data = {
+    title: 'test',
+    image: 'testImage',
+    url: 'testUrl',
+  }
+  expect(response).toStrictEqual(data)
 })
