@@ -11,7 +11,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const collectionAddress = index[0]?.toString()
     const tokenId = index[1]?.toString()
 
-    const setupPromise = getSetup(request)
+    const setupPromise = getSetup()
     const assetPromise = getAsset(collectionAddress, tokenId, request.url)
 
     const [setup, data] = await Promise.all([setupPromise, assetPromise])
