@@ -34,7 +34,9 @@ import {
 import { TransferFormSpeedbumps } from 'src/features/transactions/transfer/TransferFormWarnings'
 import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
+import { useWalletRestore } from 'src/features/wallet/hooks'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
+import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
@@ -104,11 +106,14 @@ export function TransferTokenForm({
 
   const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
 
+  const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
+
   const actionButtonDisabled =
     warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
     transferSpeedbump.loading ||
     isBlocked ||
-    isBlockedLoading
+    isBlockedLoading ||
+    walletNeedsRestore
 
   const goToNext = useCallback(() => {
     const txId = createTransactionId()
@@ -291,14 +296,39 @@ export function TransferTokenForm({
               borderBottomRightRadius={transferWarning || isBlocked ? 'none' : 'rounded20'}
               borderTopLeftRadius="rounded20"
               borderTopRightRadius="rounded20"
-              justifyContent="center"
-              px="spacing16"
-              py="spacing24">
+              gap="none"
+              justifyContent="center">
               {recipient && (
                 <RecipientInputPanel
                   recipientAddress={recipient}
                   onToggleShowRecipientSelector={onToggleShowRecipientSelector}
                 />
+              )}
+              {walletNeedsRestore && (
+                <TouchableArea onPress={openWalletRestoreModal}>
+                  <Flex
+                    row
+                    alignItems="center"
+                    alignSelf="stretch"
+                    backgroundColor="DEP_background2"
+                    borderBottomLeftRadius="rounded16"
+                    borderBottomRightRadius="rounded16"
+                    borderTopColor="DEP_background0"
+                    borderTopWidth={1}
+                    flexGrow={1}
+                    gap="spacing8"
+                    px="spacing12"
+                    py="spacing12">
+                    <InfoCircleFilled
+                      color={theme.colors.DEP_accentWarning}
+                      height={theme.iconSizes.icon20}
+                      width={theme.iconSizes.icon20}
+                    />
+                    <Text color="DEP_accentWarning" variant="subheadSmall">
+                      {t('Restore your wallet to send')}
+                    </Text>
+                  </Flex>
+                </TouchableArea>
               )}
             </Flex>
             {transferWarning && !isBlocked ? (

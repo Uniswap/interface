@@ -566,5 +566,7 @@
   "Failed to {{action}}": "Failed to {{action}}",
   "Invalid phrase": "Invalid phrase",
   "Invalid word: {{word}}": "Invalid word: {{word}}",
-  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words"
+  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
+  "Restore your wallet to swap": "Restore your wallet to swap",
+  "Restore your wallet to send": "Restore your wallet to send"
 }

@@ -27,10 +27,11 @@ export function RecipientInputPanel({
 
   return (
     <TouchableArea
-      p="spacing16"
+      px="spacing32"
+      py="spacing16"
       testID={ElementName.SelectRecipient}
       onPress={onToggleShowRecipientSelector}>
-      <Flex gap="spacing8">
+      <Flex gap="spacing8" py="spacing24">
         <Flex centered row gap="spacing4">
           <AddressDisplay
             hideAddressInSubtitle

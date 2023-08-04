@@ -64,7 +64,7 @@ export function RestoreWalletModal(): JSX.Element | null {
           <Button
             fill
             emphasis={ButtonEmphasis.Tertiary}
-            label={t('Maybe later')}
+            label={t('Dismiss')}
             onPress={onDismiss}
           />
           <Button

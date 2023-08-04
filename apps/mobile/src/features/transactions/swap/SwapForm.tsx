@@ -38,8 +38,10 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
+import { useWalletRestore } from 'src/features/wallet/hooks'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import InfoCircle from 'ui/src/assets/icons/info.svg'
+import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
+import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { formatCurrencyAmount, formatPrice, NumberType } from 'utilities/src/format/format'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -89,6 +91,8 @@ function _SwapForm({
 
   useShowSwapNetworkNotification(chainId)
 
+  const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
+
   const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
 
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -99,7 +103,12 @@ function _SwapForm({
   const blockingWarning = warnings.some((warning) => warning.action === WarningAction.DisableReview)
 
   const actionButtonDisabled =
-    noValidSwap || blockingWarning || swapDataRefreshing || isBlocked || isBlockedLoading
+    noValidSwap ||
+    blockingWarning ||
+    swapDataRefreshing ||
+    isBlocked ||
+    isBlockedLoading ||
+    walletNeedsRestore
 
   // We clear swap warnings while refreshing in order to show the loading indicator
   const swapWarning = swapDataRefreshing
@@ -310,6 +319,32 @@ function _SwapForm({
                   onSetExactAmount={onSetExactAmountOutput}
                   onShowTokenSelector={onShowTokenSelectorOutput}
                 />
+                {walletNeedsRestore && (
+                  <TouchableArea onPress={openWalletRestoreModal}>
+                    <Flex
+                      row
+                      alignItems="center"
+                      alignSelf="stretch"
+                      backgroundColor="DEP_background2"
+                      borderBottomLeftRadius="rounded16"
+                      borderBottomRightRadius="rounded16"
+                      borderTopColor="DEP_background0"
+                      borderTopWidth={1}
+                      flexGrow={1}
+                      gap="spacing8"
+                      px="spacing12"
+                      py="spacing12">
+                      <InfoCircleFilled
+                        color={theme.colors.DEP_accentWarning}
+                        height={theme.iconSizes.icon20}
+                        width={theme.iconSizes.icon20}
+                      />
+                      <Text color="DEP_accentWarning" variant="subheadSmall">
+                        {t('Restore your wallet to swap')}
+                      </Text>
+                    </Flex>
+                  </TouchableArea>
+                )}
               </Flex>
               {swapWarning && !isBlocked ? (
                 <TouchableArea mt="spacing1" onPress={onSwapWarningClick}>
