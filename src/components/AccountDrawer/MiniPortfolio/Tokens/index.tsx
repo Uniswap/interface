@@ -34,12 +34,6 @@ function meetsThreshold(tokenBalance: TokenBalance, hideSmallBalances: boolean) 
   return !hideSmallBalances || value > HIDE_SMALL_USD_BALANCES_THRESHOLD
 }
 
-function hasSwappedBefore() {
-  // TODO we need some way to reference if its swapped before?
-  // simplest is to accept we only cross reference the most recent 100 transactions like in activity feed
-  return false
-}
-
 export default function Tokens({ account }: { account: string }) {
   const toggleWalletDrawer = useToggleAccountDrawer()
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
@@ -57,10 +51,10 @@ export default function Tokens({ account }: { account: string }) {
 
     for (const tokenBalance of tokenBalances) {
       if (
-        // if below $1, hide by default
+        // if below $1
         !meetsThreshold(tokenBalance, hideSmallBalances) ||
-        // if its a spam token and you haven't swapped it before, hide it by default
-        (tokenBalance.tokenProjectMarket?.tokenProject?.spamCode === 1 && !hasSwappedBefore())
+        // if its a spam token
+        tokenBalance.tokenProjectMarket?.tokenProject?.spamCode === 1
       ) {
         hidden.push(tokenBalance)
       } else {
