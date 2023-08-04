@@ -20,24 +20,27 @@ import com.uniswap.theme.UniswapTheme
 @Composable
 fun MnemonicConfirmation(
   sourceWords: List<String>,
-  viewModel: MnemonicConfirmationViewModel = viewModel()
+  viewModel: MnemonicConfirmationViewModel = viewModel(),
+  onCompleted: () -> Unit,
 ) {
 
   val displayedWords by viewModel.displayWords.collectAsState()
   val wordBankList by viewModel.wordBankList.collectAsState()
+  val completed by viewModel.completed.collectAsState()
 
-  LaunchedEffect(sourceWords) {
+  LaunchedEffect(Unit) {
     viewModel.setup(sourceWords)
   }
 
-  LaunchedEffect(displayedWords) {
-    val size = displayedWords.size
-    if (size == sourceWords.size) {
-      // TODO gary handle done trigger
+  LaunchedEffect(completed) {
+    if (completed) {
+      onCompleted()
     }
   }
 
-  Column(modifier = Modifier.fillMaxSize().padding(horizontal = UniswapTheme.spacing.spacing16)) {
+  Column(modifier = Modifier
+    .fillMaxSize()
+    .padding(horizontal = UniswapTheme.spacing.spacing16)) {
     MnemonicDisplay(words = displayedWords) {
       viewModel.handleWordRowClick(it)
     }

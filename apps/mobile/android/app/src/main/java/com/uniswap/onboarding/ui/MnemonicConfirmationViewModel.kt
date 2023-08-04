@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -40,11 +41,16 @@ class MnemonicConfirmationViewModel @Inject constructor() : ViewModel() {
     }
   }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
+  private val _completed = MutableStateFlow(false)
+  val completed = _completed.asStateFlow()
+
   fun setup(words: List<String>) {
-    sourceWords = words
-    shuffledWords = words.shuffled()
-    focusedIndex.update { 0 }
-    selectedWords.update { List(words.size) { null } }
+    if (sourceWords != words) {
+      sourceWords = words
+      shuffledWords = words.shuffled()
+      focusedIndex.update { 0 }
+      selectedWords.update { List(words.size) { null } }
+    }
   }
 
   fun handleWordRowClick(word: MnemonicWordUiState) {
@@ -56,7 +62,7 @@ class MnemonicConfirmationViewModel @Inject constructor() : ViewModel() {
     if (!state.used) {
       val focusedIndexValue = focusedIndex.value
       selectedWords.update { words ->
-        words.mapIndexed { index, word ->
+        val updated = words.mapIndexed { index, word ->
           if (index == focusedIndexValue) {
             if (state.text == sourceWords[focusedIndexValue]) {
               focusedIndex.update { focusedIndexValue + 1 }
@@ -66,7 +72,16 @@ class MnemonicConfirmationViewModel @Inject constructor() : ViewModel() {
             word
           }
         }
+
+        checkIfCompleted(updated)
+        updated
       }
+    }
+  }
+
+  private fun checkIfCompleted(words: List<String?>) {
+    if (sourceWords == words) {
+      _completed.update { true }
     }
   }
 }

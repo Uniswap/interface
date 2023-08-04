@@ -2,6 +2,7 @@ package com.uniswap.onboarding.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.uniswap.onboarding.ui.model.MnemonicWordBankCellUiState
@@ -51,7 +53,7 @@ private fun MnemonicWordBankCell(word: MnemonicWordBankCellUiState, onClick: () 
   Box(
     modifier = Modifier
       .clip(UniswapTheme.shapes.xlarge)
-      .background(UniswapColors.Gray900)
+      .background(cellBackgroundColor())
       .clickable { onClick() }
       .padding(vertical = UniswapTheme.spacing.spacing8)
       .padding(horizontal = UniswapTheme.spacing.spacing12),
@@ -59,3 +61,11 @@ private fun MnemonicWordBankCell(word: MnemonicWordBankCellUiState, onClick: () 
     Text(text = word.text, color = textColor)
   }
 }
+
+@Composable
+private fun cellBackgroundColor(): Color =
+  if (isSystemInDarkTheme()) {
+    UniswapColors.Gray900
+  } else {
+    UniswapColors.Gray100
+  }
