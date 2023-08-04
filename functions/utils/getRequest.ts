@@ -14,9 +14,9 @@ export default async function getRequest(
   >
 ) {
   try {
-    const cacheResponse = await Cache.match(url)
-    if (cacheResponse) {
-      return new HTMLRewriter().on('head', new MetaTagInjector(cacheResponse)).transform(await res)
+    const cachedData = await Cache.match(url)
+    if (cachedData) {
+      return new HTMLRewriter().on('head', new MetaTagInjector(cachedData)).transform(await res)
     } else {
       const data = await getData()
       if (!data) {

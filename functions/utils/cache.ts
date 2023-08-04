@@ -1,19 +1,20 @@
+interface Data {
+  title: string
+  image: string
+  url: string
+}
+
 class Cache {
-  async match(request: string) {
+  async match(request: string): Promise<Data | undefined> {
     const cache = await caches.open('function-cache')
     const response = await cache.match(request)
     if (!response) return undefined
-    return JSON.parse(await response.text())
+    const data: Data = JSON.parse(await response.text())
+    if (!data.title || !data.image || !data.url) throw new Error('Invalid data')
+    return data
   }
 
-  async put(
-    data: {
-      title: string
-      image: string
-      url: string
-    },
-    request: string
-  ) {
+  async put(data: Data, request: string) {
     // Set max age to 1 week
     const response = new Response(JSON.stringify(data))
     response.headers.set('Cache-Control', 'max-age=604800')
