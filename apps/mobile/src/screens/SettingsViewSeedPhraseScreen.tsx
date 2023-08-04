@@ -15,7 +15,7 @@ type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsView
 export function SettingsViewSeedPhraseScreen({
   navigation,
   route: {
-    params: { address },
+    params: { address, walletNeedsRestore },
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
@@ -33,7 +33,11 @@ export function SettingsViewSeedPhraseScreen({
       <BackHeader alignment="center">
         <Text variant="bodyLarge">{t('Recovery phrase')}</Text>
       </BackHeader>
-      <SeedPhraseDisplay mnemonicId={mnemonicId} onDismiss={navigateBack} />
+      <SeedPhraseDisplay
+        mnemonicId={mnemonicId}
+        walletNeedsRestore={walletNeedsRestore}
+        onDismiss={navigateBack}
+      />
     </Screen>
   )
 }

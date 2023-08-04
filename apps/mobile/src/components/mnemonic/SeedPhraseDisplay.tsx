@@ -2,6 +2,7 @@ import { useResponsiveProp } from '@shopify/restyle'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { usePrevious } from 'react-native-wagmi-charts'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout/Flex'
 import {
@@ -13,21 +14,41 @@ import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { useWalletRestore } from 'src/features/wallet/hooks'
 
 type Props = {
   mnemonicId: string
   onDismiss?: () => void
+  walletNeedsRestore?: boolean
 }
 
-export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props): JSX.Element {
+export function SeedPhraseDisplay({
+  mnemonicId,
+  onDismiss,
+  walletNeedsRestore,
+}: Props): JSX.Element {
   const { t } = useTranslation()
+  const { isModalOpen: isWalletRestoreModalOpen } = useWalletRestore({ openModalImmediately: true })
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
-  const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(true)
+  const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(
+    !walletNeedsRestore
+  )
+
+  const prevIsWalletRestoreModalOpen = usePrevious(isWalletRestoreModalOpen)
+  useEffect(() => {
+    if (prevIsWalletRestoreModalOpen && !isWalletRestoreModalOpen) {
+      onDismiss?.()
+    }
+  })
 
   const onShowSeedPhraseConfirmed = (): void => {
     setShowSeedPhrase(true)
     setShowSeedPhraseViewWarningModal(false)
+  }
+
+  const onClose = (): void => {
+    if (!showSeedPhrase) onDismiss?.()
   }
 
   const onConfirmWarning = async (): Promise<void> => {
@@ -48,13 +69,6 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props): JSX.Element
     const listener = addScreenshotListener(() => setShowScreenShotWarningModal(showSeedPhrase))
     return () => listener?.remove()
   }, [showSeedPhrase])
-
-  // when warning modal is not confirmed or closed we need to close this screen
-  useEffect(() => {
-    if (!showSeedPhrase && !showSeedPhraseViewWarningModal) {
-      onDismiss && onDismiss()
-    }
-  }, [onDismiss, showSeedPhrase, showSeedPhraseViewWarningModal])
 
   const mnemonicDisplayHeight = useResponsiveProp({
     xs: DEFAULT_MNEMONIC_DISPLAY_HEIGHT,
@@ -97,9 +111,10 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props): JSX.Element
           isDismissible={false}
           modalName={ModalName.ViewSeedPhraseWarning}
           title={t('Be careful')}
-          onClose={(): void => {
+          onCancel={(): void => {
             setShowSeedPhraseViewWarningModal(false)
           }}
+          onClose={onClose}
           onConfirm={onConfirmWarning}
         />
       )}

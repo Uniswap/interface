@@ -1,12 +1,15 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { closeModal } from 'src/features/modals/modalSlice'
+import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { opacify } from 'ui/src/theme/color/utils'
 
@@ -14,15 +17,27 @@ export function RestoreWalletModal(): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
-  const onClose = useCallback((): void => {
+
+  const onDismiss = (): void => {
     dispatch(closeModal({ name: ModalName.RestoreWallet }))
-  }, [dispatch])
+  }
+
+  const onRestore = (): void => {
+    onDismiss()
+    navigate(Screens.OnboardingStack, {
+      screen: OnboardingScreens.RestoreCloudBackupLoading,
+      params: {
+        entryPoint: OnboardingEntryPoint.Sidebar,
+        importType: ImportType.Restore,
+      },
+    })
+  }
 
   return (
     <BottomSheetModal
       backgroundColor={theme.colors.DEP_background1}
-      name={ModalName.RestoreWallet}
-      onClose={onClose}>
+      isDismissible={false}
+      name={ModalName.RestoreWallet}>
       <Flex centered gap="spacing16" height="100%" mb="spacing24" p="spacing24" paddingTop="none">
         <Flex
           centered
@@ -50,13 +65,14 @@ export function RestoreWalletModal(): JSX.Element | null {
             fill
             emphasis={ButtonEmphasis.Tertiary}
             label={t('Maybe later')}
-            onPress={onClose}
+            onPress={onDismiss}
           />
           <Button
             fill
             emphasis={ButtonEmphasis.Primary}
             label="Restore"
             testID={ElementName.RestoreWallet}
+            onPress={onRestore}
           />
         </Flex>
       </Flex>

@@ -55,7 +55,7 @@ export type SettingsStackParamList = {
   [Screens.SettingsCloudBackupPasswordConfirm]: CloudBackupFormParms
   [Screens.SettingsCloudBackupProcessing]: CloudBackupFormParms
   [Screens.SettingsCloudBackupStatus]: { address: Address }
-  [Screens.SettingsViewSeedPhrase]: { address: Address }
+  [Screens.SettingsViewSeedPhrase]: { address: Address; walletNeedsRestore?: boolean }
 }
 
 export type OnboardingStackBaseParams = {

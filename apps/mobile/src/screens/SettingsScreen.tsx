@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/core'
 import { useTheme } from '@shopify/restyle'
 import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -5,7 +6,11 @@ import { Image, ListRenderItemInfo, SectionList, StyleSheet } from 'react-native
 import { FadeInDown, FadeOutUp } from 'react-native-reanimated'
 import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
-import { useSettingsStackNavigation } from 'src/app/navigation/types'
+import {
+  OnboardingStackNavigationProp,
+  SettingsStackNavigationProp,
+  useSettingsStackNavigation,
+} from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -40,7 +45,7 @@ import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 export function SettingsScreen(): JSX.Element {
-  const navigation = useSettingsStackNavigation()
+  const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
   const theme = useTheme()
   const { t } = useTranslation()
 

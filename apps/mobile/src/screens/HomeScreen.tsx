@@ -93,13 +93,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const insets = useSafeAreaInsets()
   const dispatch = useAppDispatch()
 
-  const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
-
-  useEffect(() => {
-    if (walletNeedsRestore) {
-      openWalletRestoreModal()
-    }
-  }, [openWalletRestoreModal, walletNeedsRestore])
+  // opens the wallet restore modal if recovery phrase is missing after the app is opened
+  useWalletRestore({ openModalImmediately: true })
 
   // Report balances at most every 24 hours, checking every 15 seconds when app is open
   const lastBalancesReporter = useLastBalancesReporter()
