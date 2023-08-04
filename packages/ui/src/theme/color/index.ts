@@ -165,6 +165,54 @@ export const colors = {
   networkArbitrumSoft: opacify(12, '#28A0F0'),
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const sporeDark = {
+  sporeWhite: '#FFFFFF',
+  sporeBlack: '#000000',
+
+  neutral1: '#FFFFFF',
+  neutral2: '#9B9B9B',
+  neutral3: '#5E5E5E',
+
+  surface1: '#131313',
+  surface2: '#1B1B1B',
+  surface3: '#FFFFFF1F', //1F = 12%
+  surface4: '#FFFFFF33', //33 = 20%
+  surface5: '#0000000A', //0A = 4%
+
+  accent1: '#FC72FF',
+  accent2: '#311C31',
+
+  statusActive: '#236EFF',
+  statusSuccess: '#40B66B',
+  statusCritical: '#FF5F52',
+}
+
+// TODO: map named colors to new Spore colors
+// TODO: consolidate Spore colors and raw color palette
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const sporeLight = {
+  sporeWhite: '#FFFFFF',
+  sporeBlack: '#000000',
+
+  neutral1: '#222222',
+  neutral2: '#7D7D7D',
+  neutral3: '#CECECE',
+
+  surface1: '#FFFFFF',
+  surface2: '#F9F9F9',
+  surface3: '#2222220D', //0D = 5%
+  surface4: '#FFFFFFA3', //A3 = 64%
+  surface5: '#0000000A', //0A = 4%
+
+  accent1: '#FC72FF',
+  accent2: '#FFEFFF',
+
+  statusActive: '#236EFF',
+  statusSuccess: '#40B66B',
+  statusCritical: '#FF5F52',
+}
+
 export const colorsLight = {
   none: 'transparent',
 
@@ -223,6 +271,8 @@ export const colorsLight = {
 }
 
 export const colorsDark = {
+  none: 'transparent',
+
   DEP_background0: colors.black,
   DEP_background1: colors.gray900,
   DEP_background2: colors.gray800,
@@ -276,8 +326,6 @@ export const colorsDark = {
   chain_137: colors.networkPolygon,
   chain_42161: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
-
-  none: 'transparent',
 }
 
 export const tamaguiLight = createTheme(colorsLight)
