@@ -25,7 +25,7 @@ import {
   WrapTransactionInfo,
 } from 'state/transactions/types'
 
-import { getActivityTitle, OrderTextTable } from '../constants'
+import { CancelledTransactionTitleTable, getActivityTitle, OrderTextTable } from '../constants'
 import { Activity, ActivityMap } from './types'
 
 function getCurrency(currencyId: string, chainId: ChainId, tokens: ChainTokenMap): Currency | undefined {
@@ -138,17 +138,21 @@ function parseMigrateCreateV3(
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
 
+export function getTransactionStatus(details: TransactionDetails): TransactionStatus {
+  return !details.receipt
+    ? TransactionStatus.Pending
+    : details.receipt.status === 1 || details.receipt?.status === undefined
+    ? TransactionStatus.Confirmed
+    : TransactionStatus.Failed
+}
+
 export function transactionToActivity(
   details: TransactionDetails,
   chainId: ChainId,
   tokens: ChainTokenMap
 ): Activity | undefined {
   try {
-    const status = !details.receipt
-      ? TransactionStatus.Pending
-      : details.receipt.status === 1 || details.receipt?.status === undefined
-      ? TransactionStatus.Confirmed
-      : TransactionStatus.Failed
+    const status = getTransactionStatus(details)
 
     const defaultFields = {
       hash: details.hash,
@@ -158,6 +162,7 @@ export function transactionToActivity(
       timestamp: (details.confirmedTime ?? details.addedTime) / 1000,
       from: details.from,
       nonce: details.nonce,
+      cancelled: details.cancelled,
     }
 
     let additionalFields: Partial<Activity> = {}
@@ -180,7 +185,14 @@ export function transactionToActivity(
       additionalFields = parseMigrateCreateV3(info, chainId, tokens)
     }
 
-    return { ...defaultFields, ...additionalFields }
+    const activity = { ...defaultFields, ...additionalFields }
+
+    if (details.cancelled) {
+      activity.title = CancelledTransactionTitleTable[details.info.type]
+      activity.status = TransactionStatus.Confirmed
+    }
+
+    return activity
   } catch (error) {
     console.debug(`Failed to parse transaction ${details.hash}`, error)
     return undefined

@@ -2,13 +2,15 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
+import { V2Unsupported } from 'components/V2Unsupported'
 import { isSupportedChain } from 'constants/chains'
+import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
@@ -157,8 +159,12 @@ function RemoveLiquidity() {
   // tx sending
   const addTransaction = useTransactionAdder()
 
+  const networkSupportsV2 = useNetworkSupportsV2()
+
   async function onRemove() {
-    if (!chainId || !provider || !account || !deadline || !router) throw new Error('missing dependencies')
+    if (!chainId || !provider || !account || !deadline || !router || !networkSupportsV2) {
+      throw new Error('missing dependencies')
+    }
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
     if (!currencyAmountA || !currencyAmountB) {
       throw new Error('missing currency amounts')
@@ -438,6 +444,8 @@ function RemoveLiquidity() {
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
     liquidityPercentChangeCallback
   )
+
+  if (!networkSupportsV2) return <V2Unsupported />
 
   return (
     <>
