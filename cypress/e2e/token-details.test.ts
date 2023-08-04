@@ -36,7 +36,9 @@ describe('Token details', () => {
     // Links section should link out to Etherscan, More analytics, Website, Twitter
     cy.get('[data-cy="resources-container"]').within(() => {
       cy.contains('Etherscan').should('have.attr', 'href').and('include', `etherscan.io/address/${UNI_ADDRESS}`)
-      cy.contains('More analytics').should('have.attr', 'href').and('include', `info.uniswap.org/tokens/${UNI_ADDRESS}`)
+      cy.contains('More analytics')
+        .should('have.attr', 'href')
+        .and('include', `info.uniswap.org/#/tokens/${UNI_ADDRESS}`)
       cy.contains('Website').should('have.attr', 'href').and('include', 'uniswap.org')
       cy.contains('Twitter').should('have.attr', 'href').and('include', 'twitter.com/Uniswap')
     })
@@ -73,7 +75,7 @@ describe('Token details', () => {
         .and('include', 'etherscan.io/address/0xa71d0588EAf47f12B13cF8eC750430d21DF04974')
       cy.contains('More analytics')
         .should('have.attr', 'href')
-        .and('include', 'info.uniswap.org/tokens/0xa71d0588EAf47f12B13cF8eC750430d21DF04974')
+        .and('include', 'info.uniswap.org/#/tokens/0xa71d0588EAf47f12B13cF8eC750430d21DF04974')
       cy.contains('Website').should('have.attr', 'href').and('include', 'qom')
       cy.contains('Twitter').should('have.attr', 'href').and('include', 'twitter.com/ShibaPredator1')
     })
