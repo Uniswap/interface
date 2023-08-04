@@ -19,5 +19,8 @@ class UniswapPackage : ReactPackage {
 
     override fun createNativeModules(
         reactContext: ReactApplicationContext
-    ): List<NativeModule> = listOf(ThemeModule(reactContext))
+    ): List<NativeModule> = listOf(
+      ThemeModule(reactContext),
+      RNEthersRSModule(reactContext)
+    )
 }

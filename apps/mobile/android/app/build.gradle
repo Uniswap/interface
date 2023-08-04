@@ -246,6 +246,7 @@ dependencies {
 
     implementation "androidx.compose.foundation:foundation:$compose"
     implementation "androidx.compose.material:material:$compose"
+    implementation "androidx.security:security-crypto:1.0.0"
 
     implementation "com.google.accompanist:accompanist-flowlayout:$flowlayout"
 
