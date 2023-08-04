@@ -7,8 +7,7 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
   try {
     const { index } = params
     const collectionAddress = index?.toString()
-    const graphCall = getCollection(collectionAddress, request.url)
-    return getRequest(res, request.url, 'collections-cache', graphCall)
+    return getRequest(res, request.url, () => getCollection(collectionAddress, request.url))
   } catch (e) {
     return res
   }

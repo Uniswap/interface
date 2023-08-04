@@ -11,8 +11,7 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
     if (!tokenAddress) {
       return res
     }
-    const graphCall = getToken(networkName, tokenAddress, request.url)
-    return getRequest(res, request.url, 'tokens-cache', graphCall)
+    return getRequest(res, request.url, () => getToken(networkName, tokenAddress, request.url))
   } catch (e) {
     return res
   }

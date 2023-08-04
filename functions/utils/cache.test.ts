@@ -1,8 +1,15 @@
 import CacheMock from 'browser-cache-mock'
 
+//import { mocked } from '../../src/test-utils/mocked'
 import Cache from './cache'
 
 const cacheMock = new CacheMock()
+
+const data = {
+  title: 'test',
+  image: 'testImage',
+  url: 'testUrl',
+}
 
 beforeAll(() => {
   const globalAny: any = global
@@ -12,19 +19,19 @@ beforeAll(() => {
   }
 })
 
-test('Should use cache properly', async () => {
-  //wait for the server to start
-  const url = 'http://127.0.0.1:3000/'
-  await fetch(new Request(url)).then((res) => res.text())
-
-  let response = await Cache.match('https://example.com', 'test-cache')
+test('Should put cache properly', async () => {
+  jest.spyOn(cacheMock, 'put')
+  const response = await Cache.match('https://example.com')
   expect(response).toBeUndefined()
-  const data = JSON.stringify({
-    title: 'test',
-    image: 'testImage',
-    url: 'testUrl',
-  })
-  await Cache.put(new Response(JSON.stringify(data)), 'https://example.com', 'test-cache')
-  response = await Cache.match('https://example.com', 'test-cache')
-  expect(response).toBe(data)
+  await Cache.put(data, 'https://example.com')
+  expect(cacheMock.put).toHaveBeenCalledWith('https://example.com', expect.anything())
+
+  const response2 = await Cache.match('https://example.com')
+  expect(response2).toStrictEqual(data)
+})
+
+test('Should match cache properly', async () => {
+  jest.spyOn(cacheMock, 'match').mockResolvedValueOnce(new Response(JSON.stringify(data)))
+  const response = await Cache.match('https://example.com')
+  expect(response).toStrictEqual(data)
 })

@@ -8,8 +8,7 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
     const { index } = params
     const collectionAddress = index[0]?.toString()
     const tokenId = index[1]?.toString()
-    const graphCall = getAsset(collectionAddress, tokenId, request.url)
-    return getRequest(res, request.url, 'assets-cache', graphCall)
+    return getRequest(res, request.url, () => getAsset(collectionAddress, tokenId, request.url))
   } catch (e) {
     return res
   }
