@@ -54,7 +54,7 @@ export default function Tokens({ account }: { account: string }) {
         // if below $1
         !meetsThreshold(tokenBalance, hideSmallBalances) ||
         // if its a spam token
-        tokenBalance.tokenProjectMarket?.tokenProject?.spamCode === 1
+        tokenBalance.tokenProjectMarket?.tokenProject?.isSpam
       ) {
         hidden.push(tokenBalance)
       } else {
