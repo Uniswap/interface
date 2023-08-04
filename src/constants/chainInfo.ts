@@ -245,7 +245,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.BASE]: {
     networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`25m`,
+    blockWaitMsBeforeWarning: ms(`25m`),
     bridge: 'https://bridge.base.org/deposit',
     defaultListUrl: BASE_LIST,
     docs: 'https://docs.base.org',
@@ -261,7 +261,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [ChainId.BASE_GOERLI]: {
     networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`25m`,
+    blockWaitMsBeforeWarning: ms(`25m`),
     bridge: 'https://goerli-bridge.base.org/deposit',
     defaultListUrl: BASE_LIST,
     docs: 'https://docs.base.org',
