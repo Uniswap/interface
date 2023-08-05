@@ -1,13 +1,11 @@
 import { act, render } from '@testing-library/react'
 import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
-import { initializeConnector, MockEIP1193Provider } from '@web3-react/core'
-import { EIP1193 } from '@web3-react/eip1193'
+import { MockEIP1193Provider } from '@web3-react/core'
 import { Provider as EIP1193Provider } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'analytics'
-import { getConnection } from 'connection'
+import { connections, getConnection } from 'connection'
 import { Connection, ConnectionType } from 'connection/types'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
-import useOrderedConnections from 'hooks/useOrderedConnections'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 import store from 'state'
@@ -20,11 +18,22 @@ jest.mock('analytics', () => ({
   user: { set: jest.fn(), postInsert: jest.fn() },
 }))
 jest.mock('connection', () => {
+  const { EIP1193 } = jest.requireActual('@web3-react/eip1193')
+  const { initializeConnector, MockEIP1193Provider } = jest.requireActual('@web3-react/core')
   const { ConnectionType } = jest.requireActual('connection')
-  return { ConnectionType, getConnection: jest.fn() }
+  const provider: EIP1193Provider = new MockEIP1193Provider()
+  const [connector, hooks] = initializeConnector((actions: any) => new EIP1193({ actions, provider }))
+  const mockConnection: Connection = {
+    connector,
+    hooks,
+    getName: () => 'test',
+    type: 'INJECTED' as ConnectionType,
+    shouldDisplay: () => false,
+  }
+
+  return { ConnectionType, getConnection: jest.fn(), connections: [mockConnection] }
 })
 jest.mock('hooks/useEagerlyConnect', () => jest.fn())
-jest.mock('hooks/useOrderedConnections', () => jest.fn())
 
 jest.unmock('@web3-react/core')
 
@@ -45,22 +54,6 @@ const UI = (
 )
 
 describe('Web3Provider', () => {
-  let provider: MockEIP1193Provider & EIP1193Provider
-  let connection: Connection
-
-  beforeEach(() => {
-    provider = new MockEIP1193Provider() as MockEIP1193Provider & EIP1193Provider
-    const [connector, hooks] = initializeConnector((actions) => new EIP1193({ actions, provider }))
-    connection = {
-      connector,
-      hooks,
-      getName: jest.fn().mockReturnValue('test'),
-      type: 'INJECTED' as ConnectionType,
-      shouldDisplay: () => false,
-    }
-    mocked(useOrderedConnections).mockReturnValue([connection])
-  })
-
   it('renders and eagerly connects', async () => {
     const result = render(UI)
     await act(async () => {
@@ -71,8 +64,12 @@ describe('Web3Provider', () => {
   })
 
   describe('analytics', () => {
+    let mockProvider: MockEIP1193Provider
+
     beforeEach(() => {
-      mocked(getConnection).mockReturnValue(connection)
+      const mockConnection = connections[0]
+      mockProvider = mockConnection.connector.provider as MockEIP1193Provider
+      mocked(getConnection).mockReturnValue(mockConnection)
     })
 
     it('sends event when the active account changes', async () => {
@@ -84,8 +81,8 @@ describe('Web3Provider', () => {
 
       // Act
       act(() => {
-        provider.emitConnect('0x1')
-        provider.emitAccountsChanged(['0x0000000000000000000000000000000000000000'])
+        mockProvider.emitConnect('0x1')
+        mockProvider.emitAccountsChanged(['0x0000000000000000000000000000000000000000'])
       })
 
       // Assert
@@ -114,14 +111,14 @@ describe('Web3Provider', () => {
 
       // Act
       act(() => {
-        provider.emitConnect('0x1')
-        provider.emitAccountsChanged(['0x0000000000000000000000000000000000000000'])
+        mockProvider.emitConnect('0x1')
+        mockProvider.emitAccountsChanged(['0x0000000000000000000000000000000000000000'])
       })
       act(() => {
-        provider.emitAccountsChanged(['0x0000000000000000000000000000000000000001'])
+        mockProvider.emitAccountsChanged(['0x0000000000000000000000000000000000000001'])
       })
       act(() => {
-        provider.emitAccountsChanged(['0x0000000000000000000000000000000000000000'])
+        mockProvider.emitAccountsChanged(['0x0000000000000000000000000000000000000000'])
       })
 
       // Assert
