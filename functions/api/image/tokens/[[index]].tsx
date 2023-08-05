@@ -18,7 +18,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       return new Response('Token not found', { status: 404 })
     }
 
-    const setupPromise = getSetup()
+    const setupPromise = getSetup(request.url)
     const palettePromise = getColor(data.ogImage)
 
     const [setup, palette] = await Promise.all([setupPromise, palettePromise])

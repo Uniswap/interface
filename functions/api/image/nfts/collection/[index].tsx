@@ -15,7 +15,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     if (!data) {
       return new Response('Collection not found', { status: 404 })
     }
-    const setupPromise = getSetup()
+    const setupPromise = getSetup(request.url)
     const palettePromise = getColor(data.ogImage)
 
     const [setup, palette] = await Promise.all([setupPromise, palettePromise])
