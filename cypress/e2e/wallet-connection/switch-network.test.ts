@@ -12,7 +12,7 @@ function switchChain(chain: string) {
 
 describe('network switching', () => {
   beforeEach(() => {
-    cy.visit('/swap', { ethereum: 'hardhat' })
+    cy.visit('/swap')
     cy.get(getTestSelector('web3-status-connected'))
   })
 
@@ -123,14 +123,14 @@ describe('network switching', () => {
 
 describe('network switching from URL param', () => {
   it('should switch network from URL param', () => {
-    cy.visit('/swap?chain=polygon', { ethereum: 'hardhat' })
+    cy.visit('/swap?chain=polygon')
     cy.get(getTestSelector('web3-status-connected'))
     cy.wait('@wallet_switchEthereumChain')
     waitsForActiveChain('Polygon')
   })
 
   it('should be able to switch network after loading from URL param', () => {
-    cy.visit('/swap?chain=polygon', { ethereum: 'hardhat' })
+    cy.visit('/swap?chain=polygon')
     cy.get(getTestSelector('web3-status-connected'))
     cy.wait('@wallet_switchEthereumChain')
     waitsForActiveChain('Polygon')

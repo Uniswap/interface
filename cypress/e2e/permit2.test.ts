@@ -17,9 +17,7 @@ function initiateSwap() {
 describe('Permit2', () => {
   function setupInputs(inputToken: Token, outputToken: Token) {
     // Sets up a swap between inputToken and outputToken.
-    cy.visit(`/swap/?inputCurrency=${inputToken.address}&outputCurrency=${outputToken.address}`, {
-      ethereum: 'hardhat',
-    })
+    cy.visit(`/swap/?inputCurrency=${inputToken.address}&outputCurrency=${outputToken.address}`)
     cy.get('#swap-currency-input .token-amount-input').type('0.01')
   }
 
@@ -77,8 +75,9 @@ describe('Permit2', () => {
       cy.contains('Allow DAI to be used for swapping')
       cy.wait('@eth_signTypedData_v4')
       cy.wait('@eth_sendRawTransaction')
+      cy.contains('Swap submitted')
       cy.hardhat().then((hardhat) => hardhat.mine())
-      cy.contains('Success')
+      cy.contains('Swap success!')
       cy.get(getTestSelector('popups')).contains('Swapped')
       expectPermit2AllowanceForUniversalRouterToBeMax(DAI)
     })
@@ -101,7 +100,7 @@ describe('Permit2', () => {
       // Verify transaction
       cy.wait('@eth_sendRawTransaction')
       cy.hardhat().then((hardhat) => hardhat.mine())
-      cy.contains('Success')
+      cy.contains('Swap success!')
       cy.get(getTestSelector('popups')).contains('Swapped')
     })
 
@@ -144,7 +143,7 @@ describe('Permit2', () => {
       // Verify transaction
       cy.wait('@eth_sendRawTransaction')
       cy.hardhat().then((hardhat) => hardhat.mine())
-      cy.contains('Success')
+      cy.contains('Swap success!')
       cy.get(getTestSelector('popups')).contains('Swapped')
     })
   })
@@ -160,7 +159,7 @@ describe('Permit2', () => {
     initiateSwap()
 
     // Verify transaction
-    cy.contains('Success')
+    cy.contains('Swap success!')
     cy.get(getTestSelector('popups')).contains('Swapped')
   })
 
@@ -199,7 +198,7 @@ describe('Permit2', () => {
       cy.contains('Confirm swap').click()
 
       // Verify permit2 approval
-      cy.contains('Success')
+      cy.contains('Swap success!')
       cy.get(getTestSelector('popups')).contains('Swapped')
       expectPermit2AllowanceForUniversalRouterToBeMax(DAI)
     })
@@ -233,7 +232,7 @@ describe('Permit2', () => {
 
     // Verify permit2 approval
     cy.wait('@eth_signTypedData_v4')
-    cy.contains('Success')
+    cy.contains('Swap success!')
     cy.get(getTestSelector('popups')).contains('Swapped')
     expectPermit2AllowanceForUniversalRouterToBeMax(DAI)
   })
@@ -251,7 +250,7 @@ describe('Permit2', () => {
 
     // Verify permit2 approval
     cy.wait('@eth_signTypedData_v4')
-    cy.contains('Success')
+    cy.contains('Swap success!')
     cy.get(getTestSelector('popups')).contains('Swapped')
     expectPermit2AllowanceForUniversalRouterToBeMax(DAI)
   })
