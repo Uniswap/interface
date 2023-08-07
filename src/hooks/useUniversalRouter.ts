@@ -9,6 +9,7 @@ import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
+import { SignedTransactionTimestampRegistry } from 'tracing/SignedTransactionTimestampRegistry'
 import { trace } from 'tracing/trace'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UserRejectedRequestError } from 'utils/errors'
@@ -89,6 +90,7 @@ export function useUniversalRouterSwapCallback(
           .getSigner()
           .sendTransaction({ ...tx, gasLimit })
           .then((response) => {
+            SignedTransactionTimestampRegistry.getInstance().set(response.hash)
             sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
               ...formatSwapSignedAnalyticsEventProperties({
                 trade,

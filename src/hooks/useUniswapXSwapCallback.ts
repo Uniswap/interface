@@ -89,6 +89,7 @@ export function useUniswapXSwapCallback({
             fiatValues,
           }),
           ...analyticsContext,
+          time_to_sign: performance.mark('time-to-sign-uniswapx').startTime,
         })
 
         const res = await fetch(`${UNISWAP_API_URL}/order`, {
