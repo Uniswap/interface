@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import React, { useCallback } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -66,7 +66,11 @@ const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
 function SettingsStackGroup(): JSX.Element {
   return (
     <SettingsStack.Navigator
-      screenOptions={{ ...navOptions.noHeader, fullScreenGestureEnabled: true }}>
+      screenOptions={{
+        ...navOptions.noHeader,
+        fullScreenGestureEnabled: true,
+        animation: 'slide_from_right',
+      }}>
       <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
       <SettingsStack.Screen component={SettingsWallet} name={Screens.SettingsWallet} />
       <SettingsStack.Screen component={SettingsWalletEdit} name={Screens.SettingsWalletEdit} />
@@ -136,6 +140,7 @@ export function ExploreStackNavigator(): JSX.Element {
           ...navOptions.noHeader,
           fullScreenGestureEnabled: true,
           gestureEnabled: true,
+          animation: 'slide_from_right',
         }}>
         <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
         <ExploreStack.Group>
@@ -173,6 +178,7 @@ export function OnboardingStackNavigator(): JSX.Element {
           headerTintColor: theme.colors.DEP_textSecondary,
           headerLeftContainerStyle: { paddingLeft: theme.spacing.spacing16 },
           headerRightContainerStyle: { paddingRight: theme.spacing.spacing16 },
+          ...TransitionPresets.SlideFromRightIOS,
         }}>
         <OnboardingStack.Screen
           component={LandingScreen}
@@ -254,7 +260,12 @@ export function AppStackNavigator(): JSX.Element {
 
   return (
     <AppStack.Navigator
-      screenOptions={{ headerShown: false, fullScreenGestureEnabled: true, gestureEnabled: true }}>
+      screenOptions={{
+        headerShown: false,
+        fullScreenGestureEnabled: true,
+        gestureEnabled: true,
+        animation: 'slide_from_right',
+      }}>
       {finishedOnboarding && <AppStack.Screen component={WrappedHomeScreen} name={Screens.Home} />}
       <AppStack.Screen
         component={OnboardingStackNavigator}
