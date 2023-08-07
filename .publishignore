@@ -12,6 +12,7 @@ apps/mobile/ios/GoogleServiceInfo
 apps/mobile/.storybook
 apps/mobile/codecov.yml
 apps/mobile/scripts
+apps/mobile/android
 
 apps/web
 *.web.ts
