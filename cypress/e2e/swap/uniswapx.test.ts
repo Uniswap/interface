@@ -14,9 +14,7 @@ function toggleUniswapXInSwapSettings() {
 describe('UniswapX Toggle', () => {
   beforeEach(() => {
     cy.intercept(QuoteEndpoint, { fixture: QuoteWhereUniswapXIsBetter })
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
-      ethereum: 'hardhat',
-    })
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
   })
 
   it('only displays uniswapx ui when setting is on', () => {
