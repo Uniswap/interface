@@ -12,7 +12,7 @@ const Wrapper = styled.div<{ count: number }>`
   grid-gap: 6px;
 
   position: absolute;
-  top: -75px;
+  top: -32px;
   right: 0;
 `
 

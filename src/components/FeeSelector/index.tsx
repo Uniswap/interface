@@ -3,57 +3,32 @@ import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
-import { ButtonGray } from 'components/Button'
-import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
-import usePrevious from 'hooks/usePrevious'
-import { DynamicSection } from 'pages/AddLiquidity/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Box } from 'rebass'
-import styled, { keyframes } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { FeeOption } from './FeeOption'
-import { FeeTierPercentageBadge } from './FeeTierPercentageBadge'
 import { FEE_AMOUNT_DETAIL } from './shared'
-
-const pulse = (color: string) => keyframes`
-  0% {
-    box-shadow: 0 0 0 0 ${color};
-  }
-
-  70% {
-    box-shadow: 0 0 0 2px ${color};
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 ${color};
-  }
-`
-const FocusedOutlineCard = styled(Card)<{ pulsing: boolean }>`
-  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accentAction)} 0.6s linear;
-  align-self: center;
-`
 
 const Select = styled.div`
   align-items: flex-start;
   display: grid;
   grid-auto-flow: column;
   grid-gap: 8px;
+  width: 100%;
+  display: flex;
 `
 
 export default function FeeSelector({
-  disabled = false,
   feeAmount,
   handleFeePoolSelect,
   currencyA,
   currencyB,
 }: {
-  disabled?: boolean
   feeAmount?: FeeAmount
   handleFeePoolSelect: (feeAmount: FeeAmount) => void
   currencyA?: Currency
@@ -93,9 +68,6 @@ export default function FeeSelector({
   )
 
   const [showOptions, setShowOptions] = useState(false)
-  const [pulsing, setPulsing] = useState(false)
-
-  const previousFeeAmount = usePrevious(feeAmount)
 
   const recommended = useRef(false)
 
@@ -127,7 +99,7 @@ export default function FeeSelector({
         action: ' Recommended',
       })
 
-      handleFeePoolSelect(largestUsageFeeTier)
+      // handleFeePoolSelect(largestUsageFeeTier)
     }
   }, [feeAmount, isLoading, isError, largestUsageFeeTier, handleFeePoolSelect])
 
@@ -135,52 +107,15 @@ export default function FeeSelector({
     setShowOptions(isError)
   }, [isError])
 
-  useEffect(() => {
-    if (feeAmount && previousFeeAmount !== feeAmount) {
-      setPulsing(true)
-    }
-  }, [previousFeeAmount, feeAmount])
-
   return (
-    <AutoColumn gap="16px">
-      <DynamicSection gap="md" disabled={disabled}>
-        <FocusedOutlineCard pulsing={pulsing} onAnimationEnd={() => setPulsing(false)}>
-          <RowBetween>
-            <AutoColumn id="add-liquidity-selected-fee">
-              {!feeAmount ? (
-                <>
-                  <ThemedText.DeprecatedLabel>
-                    <Trans>Fee tier</Trans>
-                  </ThemedText.DeprecatedLabel>
-                  <ThemedText.DeprecatedMain fontWeight={400} fontSize="12px" textAlign="left">
-                    <Trans>The % you will earn in fees.</Trans>
-                  </ThemedText.DeprecatedMain>
-                </>
-              ) : (
-                <>
-                  <ThemedText.DeprecatedLabel className="selected-fee-label">
-                    <Trans>{FEE_AMOUNT_DETAIL[feeAmount].label}% fee tier</Trans>
-                  </ThemedText.DeprecatedLabel>
-                  <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
-                    {distributions && (
-                      <FeeTierPercentageBadge
-                        distributions={distributions}
-                        feeAmount={feeAmount}
-                        poolState={poolsByFeeTier[feeAmount]}
-                      />
-                    )}
-                  </Box>
-                </>
-              )}
-            </AutoColumn>
-
-            <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" $borderRadius="6px">
-              {showOptions ? <Trans>Hide</Trans> : <Trans>Edit</Trans>}
-            </ButtonGray>
-          </RowBetween>
-        </FocusedOutlineCard>
-
-        {chainId && showOptions && (
+    <AutoColumn gap="md">
+      <RowBetween paddingBottom="20px">
+        <ThemedText.DeprecatedLabel>
+          <Trans>Select Fee Tier</Trans>
+        </ThemedText.DeprecatedLabel>
+      </RowBetween>
+      <RowBetween>
+        {chainId && (
           <Select>
             {[FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => {
               const { supportedChains } = FEE_AMOUNT_DETAIL[_feeAmount]
@@ -200,7 +135,7 @@ export default function FeeSelector({
             })}
           </Select>
         )}
-      </DynamicSection>
+      </RowBetween>
     </AutoColumn>
   )
 }

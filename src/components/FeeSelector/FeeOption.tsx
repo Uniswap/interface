@@ -20,6 +20,10 @@ const ResponsiveText = styled(ThemedText.DeprecatedLabel)`
     line-height: 12px;
   `};
 `
+const FeeOptionButton = styled(ButtonRadioChecked)`
+  flex: 1;
+  align-self: stretch;
+`
 
 interface FeeOptionProps {
   feeAmount: FeeAmount
@@ -31,7 +35,7 @@ interface FeeOptionProps {
 
 export function FeeOption({ feeAmount, active, poolState, distributions, onClick }: FeeOptionProps) {
   return (
-    <ButtonRadioChecked active={active} onClick={onClick}>
+    <FeeOptionButton active={active} onClick={onClick}>
       <AutoColumn gap="sm" justify="flex-start">
         <AutoColumn justify="flex-start" gap="6px">
           <ResponsiveText>
@@ -46,6 +50,6 @@ export function FeeOption({ feeAmount, active, poolState, distributions, onClick
           <FeeTierPercentageBadge distributions={distributions} feeAmount={feeAmount} poolState={poolState} />
         )}
       </AutoColumn>
-    </ButtonRadioChecked>
+    </FeeOptionButton>
   )
 }
