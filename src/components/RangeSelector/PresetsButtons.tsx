@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const Button = styled(ButtonOutlined).attrs(() => ({
-  padding: '8px',
+  padding: '6px',
   $borderRadius: '8px',
 }))`
   color: ${({ theme }) => theme.textPrimary};

@@ -213,14 +213,14 @@ function AccountDrawer() {
       }
     },
     // reset the yPosition when the user stops dragging
-    onDragEnd: (state) => {
+    onDragEnd: () => {
       setYPosition(0)
       if (scrollRef.current) {
         scrollRef.current.style.overflowY = 'auto'
       }
     },
     // set dragStartTop to true if the user starts dragging from the top of the drawer
-    onDragStart: (state) => {
+    onDragStart: () => {
       if (!scrollRef.current?.scrollTop || scrollRef.current?.scrollTop < 30) {
         setDragStartTop(true)
       } else {

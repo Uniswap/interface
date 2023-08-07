@@ -5,6 +5,8 @@ import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
 import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
 import avaxLogo from 'assets/svg/avax_logo.svg'
 import avaxSquareLogo from 'assets/svg/avax_square_logo.svg'
+import baseLogo from 'assets/svg/base_logo.svg'
+import baseSquareLogo from 'assets/svg/base_square_logo.svg'
 import bnbSquareLogoUrl from 'assets/svg/bnb_square_logo.svg'
 import bnbLogo from 'assets/svg/bnb-logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
@@ -17,7 +19,7 @@ import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { ARBITRUM_LIST, AVALANCHE_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
+import { ARBITRUM_LIST, AVALANCHE_LIST, BASE_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms`12s`
 
@@ -241,13 +243,55 @@ const CHAIN_INFO: ChainInfoMap = {
     color: darkTheme.chain_43114,
     backgroundColor: darkTheme.chain_43114_background,
   },
+  [ChainId.BASE]: {
+    networkType: NetworkType.L2,
+    blockWaitMsBeforeWarning: ms`25m`,
+    bridge: 'https://bridge.base.org/deposit',
+    defaultListUrl: BASE_LIST,
+    docs: 'https://docs.base.org',
+    explorer: 'https://basescan.org/',
+    infoLink: 'https://info.uniswap.org/#/base/',
+    label: 'Base',
+    logoUrl: baseLogo,
+    statusPage: 'https://status.base.org/',
+    circleLogoUrl: baseLogo,
+    squareLogoUrl: baseSquareLogo,
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    color: darkTheme.chain_84531,
+  },
+  [ChainId.BASE_GOERLI]: {
+    networkType: NetworkType.L2,
+    blockWaitMsBeforeWarning: ms`25m`,
+    bridge: 'https://goerli-bridge.base.org/deposit',
+    defaultListUrl: BASE_LIST,
+    docs: 'https://docs.base.org',
+    explorer: 'https://goerli.basescan.org/',
+    infoLink: 'https://info.uniswap.org/#/base/', // base testnet not supported
+    label: 'Base Goerli',
+    logoUrl: baseLogo,
+    statusPage: 'https://status.base.org/',
+    circleLogoUrl: baseLogo,
+    squareLogoUrl: baseSquareLogo,
+    nativeCurrency: { name: 'Base Goerli Ether', symbol: 'ETH', decimals: 18 },
+    color: darkTheme.chain_84531,
+  },
 } as const
 
-export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo
-export function getChainInfo(chainId: SupportedL2ChainId): L2ChainInfo
-export function getChainInfo(chainId: ChainId): L1ChainInfo | L2ChainInfo
 export function getChainInfo(
-  chainId: ChainId | SupportedL1ChainId | SupportedL2ChainId | number | undefined
+  chainId: SupportedL1ChainId,
+  featureFlags?: Record<ChainId | SupportedL1ChainId | SupportedL2ChainId | number, boolean>
+): L1ChainInfo
+export function getChainInfo(
+  chainId: SupportedL2ChainId,
+  featureFlags?: Record<ChainId | SupportedL1ChainId | SupportedL2ChainId | number, boolean>
+): L2ChainInfo
+export function getChainInfo(
+  chainId: ChainId,
+  featureFlags?: Record<ChainId | SupportedL1ChainId | SupportedL2ChainId | number, boolean>
+): L1ChainInfo | L2ChainInfo
+export function getChainInfo(
+  chainId: ChainId | SupportedL1ChainId | SupportedL2ChainId | number | undefined,
+  featureFlags?: Record<ChainId | SupportedL1ChainId | SupportedL2ChainId | number, boolean>
 ): L1ChainInfo | L2ChainInfo | undefined
 
 /**
@@ -258,7 +302,13 @@ export function getChainInfo(
  * SupportedL1ChainId -> returns L1ChainInfo
  * SupportedL2ChainId -> returns L2ChainInfo
  */
-export function getChainInfo(chainId: any): any {
+export function getChainInfo(
+  chainId: any,
+  featureFlags?: Record<ChainId | SupportedL1ChainId | SupportedL2ChainId | number, boolean>
+): any {
+  if (featureFlags && chainId in featureFlags) {
+    return featureFlags[chainId] ? CHAIN_INFO[chainId] : undefined
+  }
   if (chainId) {
     return CHAIN_INFO[chainId] ?? undefined
   }
@@ -266,6 +316,6 @@ export function getChainInfo(chainId: any): any {
 }
 
 const MAINNET_INFO = CHAIN_INFO[ChainId.MAINNET]
-export function getChainInfoOrDefault(chainId: number | undefined) {
-  return getChainInfo(chainId) ?? MAINNET_INFO
+export function getChainInfoOrDefault(chainId: number | undefined, featureFlags?: Record<number, boolean>) {
+  return getChainInfo(chainId, featureFlags) ?? MAINNET_INFO
 }

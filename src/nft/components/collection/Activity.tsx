@@ -5,10 +5,11 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile } from 'nft/hooks'
-import { ActivityEvent, ActivityEventType } from 'nft/types'
+import { ActivityEventType } from 'nft/types'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
@@ -59,8 +60,6 @@ const initialFilterState = {
 export const reduceFilters = (state: typeof initialFilterState, action: { eventType: ActivityEventType }) => {
   return { ...state, [action.eventType]: !state[action.eventType] }
 }
-
-const baseHref = (event: ActivityEvent) => `/#/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`
 
 export const Activity = ({ contractAddress, rarityVerified, collectionName, chainId }: ActivityProps) => {
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
@@ -138,9 +137,11 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
                 (event, i) =>
                   event.eventType && (
                     <Box
-                      as="a"
+                      as={Link}
                       data-testid="nft-activity-row"
-                      href={baseHref(event)}
+                      // @ts-ignore Box component is not typed properly to typecheck
+                      // custom components' props and will incorrectly report `to` as invalid
+                      to={`/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`}
                       className={styles.eventRow}
                       key={i}
                     >
