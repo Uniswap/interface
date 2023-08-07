@@ -3,7 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { Link as HistoryLink, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Box } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
@@ -12,7 +12,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { flexRowNoWrap } from 'theme/styles'
 
-import Row, { RowBetween } from '../Row'
+import { RowBetween } from '../Row'
 import SettingsTab from '../Settings'
 
 const Tabs = styled.div`
@@ -22,7 +22,7 @@ const Tabs = styled.div`
   justify-content: space-evenly;
 `
 
-const StyledHistoryLink = styled(HistoryLink)<{ flex?: string }>`
+const StyledLink = styled(Link)<{ flex?: string }>`
   flex: ${({ flex }) => flex ?? 'none'};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
@@ -31,9 +31,10 @@ const StyledHistoryLink = styled(HistoryLink)<{ flex?: string }>`
   `};
 `
 
-const ActiveText = styled.div`
-  font-weight: 500;
-  font-size: 20px;
+const FindPoolTabsText = styled(ThemedText.SubHeaderLarge)`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 `
 
 const StyledArrowLeft = styled(ArrowLeft)`
@@ -44,16 +45,21 @@ export function FindPoolTabs({ origin }: { origin: string }) {
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem', position: 'relative' }}>
-        <HistoryLink to={origin}>
+        <Link to={origin}>
           <StyledArrowLeft />
-        </HistoryLink>
-        <ActiveText style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+        </Link>
+        <FindPoolTabsText>
           <Trans>Import V2 Pool</Trans>
-        </ActiveText>
+        </FindPoolTabsText>
       </RowBetween>
     </Tabs>
   )
 }
+
+const AddRemoveTitleText = styled(ThemedText.SubHeaderLarge)`
+  flex: 1;
+  margin: auto;
+`
 
 export function AddRemoveTabs({
   adding,
@@ -83,7 +89,7 @@ export function AddRemoveTabs({
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
-        <StyledHistoryLink
+        <StyledLink
           to={poolLink}
           onClick={() => {
             if (adding) {
@@ -95,12 +101,8 @@ export function AddRemoveTabs({
           flex={children ? '1' : undefined}
         >
           <StyledArrowLeft stroke={theme.textSecondary} />
-        </StyledHistoryLink>
-        <ThemedText.DeprecatedMediumHeader
-          fontWeight={500}
-          fontSize={20}
-          style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
-        >
+        </StyledLink>
+        <AddRemoveTitleText textAlign={children ? 'start' : 'center'}>
           {creating ? (
             <Trans>Create a pair</Trans>
           ) : adding ? (
@@ -108,23 +110,10 @@ export function AddRemoveTabs({
           ) : (
             <Trans>Remove Liquidity</Trans>
           )}
-        </ThemedText.DeprecatedMediumHeader>
-        <Box style={{ marginRight: '.5rem' }}>{children}</Box>
+        </AddRemoveTitleText>
+        {children && <Box style={{ marginRight: '.5rem' }}>{children}</Box>}
         <SettingsTab autoSlippage={autoSlippage} chainId={chainId} />
       </RowBetween>
-    </Tabs>
-  )
-}
-
-export function CreateProposalTabs() {
-  return (
-    <Tabs>
-      <Row style={{ padding: '1rem 1rem 0 1rem' }}>
-        <HistoryLink to="/vote">
-          <StyledArrowLeft />
-        </HistoryLink>
-        <ActiveText style={{ marginLeft: 'auto', marginRight: 'auto' }}>Create Proposal</ActiveText>
-      </Row>
     </Tabs>
   )
 }
