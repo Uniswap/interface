@@ -6,7 +6,7 @@ import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
-import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
+import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
@@ -80,6 +80,10 @@ export function useUniversalRouterSwapCallback(
         } catch (gasError) {
           setTraceStatus('failed_precondition')
           setTraceError(gasError)
+          sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_FAILURE, {
+            ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
+            ...analyticsContext,
+          })
           console.warn(gasError)
           throw new GasEstimationError()
         }
