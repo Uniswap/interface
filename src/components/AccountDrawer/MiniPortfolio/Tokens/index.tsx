@@ -73,7 +73,7 @@ export default function Tokens({ account }: { account: string }) {
   }, [incomingTokenBalances])
 
   const { visibleTokens, hiddenTokens } = useMemo(
-    () => splitHiddenTokens(tokenBalances, hideSmallBalances),
+    () => splitHiddenTokens(tokenBalances, { hideSmallBalances }),
     [hideSmallBalances, tokenBalances]
   )
 
