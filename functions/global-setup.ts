@@ -6,13 +6,13 @@ module.exports = async function globalSetup() {
     port: 3000,
     launchTimeout: 50000,
   })
-  // Waiting for wrangler to return a request before running tests
+  // Wait for wrangler to return a request before running tests
   for (let i = 0; i < 3; i++) {
     const res = await fetch(new Request('http://127.0.0.1:3000/tokens/ethereum/NATIVE'))
     if (res.ok) {
       return
     }
-    //Set timeout to make sure the server isn't flooded with requests if wrangler is not running
+    // Set timeout to make sure the server isn't flooded with requests if wrangler is not running
     await new Promise((resolve) => setTimeout(resolve, 500 * (i + 1)))
   }
   throw new Error('Failed to start server')
