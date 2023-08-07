@@ -15,7 +15,7 @@ export class SignedTransactionTimestampRegistry {
   public set(hash: string): void {
     // Create a performance mark for the given hash
     const markName = this.getMarkNameForHash(hash)
-    if (performance.getEntriesByName(markName, 'mark').length > 0) {
+    if (performance.getEntriesByName(markName, 'mark')?.length > 0) {
       // If a mark already exists for this hash, remove it before creating a new one
       performance.clearMarks(markName)
     }
@@ -25,7 +25,7 @@ export class SignedTransactionTimestampRegistry {
   public get(hash: string): number | undefined {
     const markName = this.getMarkNameForHash(hash)
     const marks = performance.getEntriesByName(markName, 'mark')
-    return marks.length > 0 ? marks[0].startTime : undefined
+    return marks?.length > 0 ? marks[0].startTime : undefined
   }
 
   // Helper method to derive mark name from hash
