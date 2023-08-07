@@ -27,6 +27,7 @@ function meetsThreshold(tokenBalance: TokenBalance) {
   return value > HIDE_SMALL_USD_BALANCES_THRESHOLD
 }
 
+// exporting for use in tests only
 // eslint-disable-next-line import/no-unused-modules
 export function splitHiddenTokens(
   tokenBalances: TokenBalance[],
