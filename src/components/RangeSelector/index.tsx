@@ -46,8 +46,8 @@ export default function RangeSelector({
         onUserInput={onLeftRangeInput}
         decrement={isSorted ? getDecrementLower : getIncrementUpper}
         increment={isSorted ? getIncrementLower : getDecrementUpper}
-        decrementDisabled={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
-        incrementDisabled={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
+        decrementDisabled={leftPrice === undefined || ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
+        incrementDisabled={leftPrice === undefined || ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
         feeAmount={feeAmount}
         label={leftPrice ? `${currencyB?.symbol}` : '-'}
         title={<Trans>Low price</Trans>}
@@ -59,8 +59,8 @@ export default function RangeSelector({
         onUserInput={onRightRangeInput}
         decrement={isSorted ? getDecrementUpper : getIncrementLower}
         increment={isSorted ? getIncrementUpper : getDecrementLower}
-        incrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
-        decrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
+        incrementDisabled={rightPrice === undefined || ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
+        decrementDisabled={rightPrice === undefined || ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
         feeAmount={feeAmount}
         label={rightPrice ? `${currencyB?.symbol}` : '-'}
         tokenA={currencyA?.symbol}

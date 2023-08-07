@@ -60,7 +60,7 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const { account, tradeType, tokenOutAddress, tokenInChainId, uniswapXForceSyntheticQuotes } = args
+  const { account, tradeType, tokenOutAddress, tokenInChainId, uniswapXForceSyntheticQuotes, routerPreference } = args
 
   const uniswapx = {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
@@ -82,7 +82,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
   if (
     !args.uniswapXEnabled ||
-    args.userDisabledUniswapX ||
+    (args.userDisabledUniswapX && routerPreference !== RouterPreference.X) ||
     tokenOutIsNative ||
     tradeType === TradeType.EXACT_OUTPUT ||
     !isUniswapXSupportedChain(tokenInChainId)

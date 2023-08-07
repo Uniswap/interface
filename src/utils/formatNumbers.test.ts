@@ -1,7 +1,12 @@
 import { CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { renBTC, USDC_MAINNET } from 'constants/tokens'
 
-import { currencyAmountToPreciseFloat, formatTransactionAmount, priceToPreciseFloat } from './formatNumbers'
+import {
+  currencyAmountToPreciseFloat,
+  formatReviewSwapCurrencyAmount,
+  formatTransactionAmount,
+  priceToPreciseFloat,
+} from './formatNumbers'
 
 describe('currencyAmountToPreciseFloat', () => {
   it('small number', () => {
@@ -85,5 +90,16 @@ describe('formatTransactionAmount', () => {
   it('Number ≥ 1M extra long', () => {
     // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
     expect(formatTransactionAmount(1234567890123456.789)).toEqual('1.234568e+15')
+  })
+})
+
+describe('formatReviewSwapCurrencyAmount', () => {
+  it('should use TokenTx formatting under a default length', () => {
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000') // 2,000 USDC
+    expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2,000')
+  })
+  it('should use SwapTradeAmount formatting over the default length', () => {
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
+    expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
   })
 })

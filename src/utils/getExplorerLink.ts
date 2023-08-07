@@ -12,6 +12,8 @@ const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [ChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
   [ChainId.BNB]: 'https://bscscan.com',
   [ChainId.AVALANCHE]: 'https://snowtrace.io',
+  [ChainId.BASE]: 'https://basescan.org',
+  [ChainId.BASE_GOERLI]: 'https://goerli.basescan.org',
 }
 
 export enum ExplorerDataType {

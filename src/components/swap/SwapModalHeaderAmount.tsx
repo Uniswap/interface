@@ -1,4 +1,4 @@
-import { formatCurrencyAmount, formatNumber, NumberType } from '@uniswap/conedison/format'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -10,8 +10,7 @@ import { TextProps } from 'rebass'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
-
-const MAX_AMOUNT_STR_LENGTH = 9
+import { formatReviewSwapCurrencyAmount } from 'utils/formatNumbers'
 
 export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
@@ -46,11 +45,6 @@ interface AmountProps {
 }
 
 export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field, currency }: AmountProps) {
-  let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
-  if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
-    formattedAmount = formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
-  }
-
   return (
     <Row align="center" justify="space-between" gap="md">
       <Column gap="xs">
@@ -61,7 +55,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
         </ThemedText.BodySecondary>
         <Column gap="xs">
           <ResponsiveHeadline data-testid={`${field}-amount`}>
-            {formattedAmount} {currency?.symbol}
+            {formatReviewSwapCurrencyAmount(amount)} {currency?.symbol}
           </ResponsiveHeadline>
           {usdAmount && (
             <ThemedText.BodySmall color="textTertiary">
