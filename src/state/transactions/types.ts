@@ -210,4 +210,5 @@ export interface TransactionDetails {
   from: string
   info: TransactionInfo
   nonce?: number
+  cancelled?: boolean
 }

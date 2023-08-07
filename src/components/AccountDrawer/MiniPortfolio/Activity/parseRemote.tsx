@@ -404,15 +404,19 @@ export function useTimeSince(timestamp: number) {
   const [timeSince, setTimeSince] = useState<string>(getTimeSince(timestamp))
 
   useEffect(() => {
-    const refreshTime = () => {
-      if (Math.floor(Date.now() - timestamp * 1000) / ms`61s` <= 1) {
-        setTimeSince(getTimeSince(timestamp))
-        setTimeout(() => {
-          refreshTime()
-        }, ms`1s`)
-      }
+    const refreshTime = () =>
+      setTimeout(() => {
+        if (Math.floor(Date.now() - timestamp * 1000) / ms`61s` <= 1) {
+          setTimeSince(getTimeSince(timestamp))
+          timeout = refreshTime()
+        }
+      }, ms`1s`)
+
+    let timeout = refreshTime()
+
+    return () => {
+      timeout && clearTimeout(timeout)
     }
-    refreshTime()
   }, [timestamp])
 
   return timeSince

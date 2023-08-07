@@ -52,7 +52,7 @@ describe('Testing nfts', () => {
     cy.visit('/')
     cy.get(getTestSelector('web3-status-connected')).click()
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('NFTs').click()
-    cy.get(getTestSelector('mini-portfolio-nft')).click()
+    cy.get(getTestSelector('mini-portfolio-nft')).first().click()
     cy.get(getTestSelector('mini-portfolio-navbar')).should('not.be.visible')
   })
 })

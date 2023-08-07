@@ -1,6 +1,6 @@
-import { namehash } from '@ethersproject/hash'
 import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
+import { safeNamehash } from 'utils/safeNamehash'
 
 import isZero from '../utils/isZero'
 import { useENSRegistrarContract, useENSResolverContract } from './useContract'
@@ -11,7 +11,7 @@ import useDebounce from './useDebounce'
  */
 export default function useENSAddress(ensName?: string | null): { loading: boolean; address: string | null } {
   const debouncedName = useDebounce(ensName, 200)
-  const ensNodeArgument = useMemo(() => [debouncedName ? namehash(debouncedName) : undefined], [debouncedName])
+  const ensNodeArgument = useMemo(() => [debouncedName ? safeNamehash(debouncedName) : undefined], [debouncedName])
   const registrarContract = useENSRegistrarContract()
   const resolverAddress = useMainnetSingleCallResult(registrarContract, 'resolver', ensNodeArgument, NEVER_RELOAD)
   const resolverAddressResult = resolverAddress.result?.[0]
