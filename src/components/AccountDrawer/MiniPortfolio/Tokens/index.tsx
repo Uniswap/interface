@@ -4,7 +4,7 @@ import { TraceEvent } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
-import { PortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
@@ -22,16 +22,41 @@ import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../Portfol
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
-function meetsThreshold(tokenBalance: TokenBalance, hideSmallBalances: boolean) {
-  const value = tokenBalance.denominatedValue?.value
+function meetsThreshold(tokenBalance: TokenBalance) {
+  const value = tokenBalance.denominatedValue?.value ?? 0
+  return value > HIDE_SMALL_USD_BALANCES_THRESHOLD
+}
 
-  // we no longer hide tokens with no price
-  // https://linear.app/uniswap/issue/WEB-1940/[mp]-update-how-we-handle-what-goes-in-hidden-token-section-of-mini
-  if (typeof value !== 'number') {
-    return true
+// eslint-disable-next-line import/no-unused-modules
+export function splitHiddenTokens(
+  tokenBalances: TokenBalance[],
+  options?: {
+    hideSmallBalances?: boolean
+  }
+) {
+  const visibleTokens: TokenBalance[] = []
+  const hiddenTokens: TokenBalance[] = []
+
+  for (const tokenBalance of tokenBalances) {
+    const isValidValue =
+      // if undefined we keep visible (see https://linear.app/uniswap/issue/WEB-1940/[mp]-update-how-we-handle-what-goes-in-hidden-token-section-of-mini)
+      typeof tokenBalance.denominatedValue?.value === 'undefined' ||
+      // if below $1
+      options?.hideSmallBalances === false ||
+      meetsThreshold(tokenBalance)
+
+    if (
+      isValidValue &&
+      // a spam token
+      !tokenBalance.tokenProjectMarket?.tokenProject?.isSpam
+    ) {
+      visibleTokens.push(tokenBalance)
+    } else {
+      hiddenTokens.push(tokenBalance)
+    }
   }
 
-  return !hideSmallBalances || value > HIDE_SMALL_USD_BALANCES_THRESHOLD
+  return { visibleTokens, hiddenTokens }
 }
 
 export default function Tokens({ account }: { account: string }) {
@@ -41,29 +66,15 @@ export default function Tokens({ account }: { account: string }) {
 
   const { data } = useCachedPortfolioBalancesQuery({ account })
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const tokenBalances = data?.portfolios?.[0].tokenBalances ?? []
-  type TokenBalance = (typeof tokenBalances)[0]
+  const incomingTokenBalances = data?.portfolios?.[0].tokenBalances
+  const tokenBalances = useMemo(() => {
+    return (incomingTokenBalances as TokenBalance[]) ?? []
+  }, [incomingTokenBalances])
 
-  const [visibleTokens, hiddenTokens] = useMemo(() => {
-    const visible: TokenBalance[] = []
-    const hidden: TokenBalance[] = []
-
-    for (const tokenBalance of tokenBalances) {
-      if (
-        // if below $1
-        !meetsThreshold(tokenBalance, hideSmallBalances) ||
-        // if its a spam token
-        tokenBalance.tokenProjectMarket?.tokenProject?.isSpam
-      ) {
-        hidden.push(tokenBalance)
-      } else {
-        visible.push(tokenBalance)
-      }
-    }
-
-    return [visible, hidden]
-  }, [hideSmallBalances, tokenBalances])
+  const { visibleTokens, hiddenTokens } = useMemo(
+    () => splitHiddenTokens(tokenBalances, hideSmallBalances),
+    [hideSmallBalances, tokenBalances]
+  )
 
   if (!data) {
     return <PortfolioSkeleton />
@@ -80,10 +91,7 @@ export default function Tokens({ account }: { account: string }) {
     <PortfolioTabWrapper>
       {visibleTokens.map(
         (tokenBalance) =>
-          tokenBalance.token &&
-          meetsThreshold(tokenBalance, hideSmallBalances) && (
-            <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
-          )
+          tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
       )}
       <ExpandoRow isExpanded={showHiddenTokens} toggle={toggleHiddenTokens} numItems={hiddenTokens.length}>
         {hiddenTokens.map(
@@ -101,10 +109,6 @@ const TokenBalanceText = styled(ThemedText.BodySecondary)`
 const TokenNameText = styled(ThemedText.SubHeader)`
   ${EllipsisStyle}
 `
-
-type TokenBalance = NonNullable<
-  NonNullable<NonNullable<PortfolioBalancesQuery['portfolios']>[number]>['tokenBalances']
->[number]
 
 type PortfolioToken = NonNullable<TokenBalance['token']>
 
