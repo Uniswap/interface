@@ -59,6 +59,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   const onPressEnableSecurity = useCallback(async () => {
     const authStatus = await tryLocalAuthenticate({
       disableDeviceFallback: true,
+      cancelLabel: 'Cancel',
     })
 
     if (
