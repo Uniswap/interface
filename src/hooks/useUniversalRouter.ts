@@ -80,7 +80,7 @@ export function useUniversalRouterSwapCallback(
         } catch (gasError) {
           setTraceStatus('failed_precondition')
           setTraceError(gasError)
-          sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_FAILURE, {
+          sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
             ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
             ...analyticsContext,
           })
