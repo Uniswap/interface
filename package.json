@@ -166,7 +166,7 @@
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
-    "@reduxjs/toolkit": "^1.6.1",
+    "@reduxjs/toolkit": "^1.9.3",
     "@sentry/react": "^7.45.0",
     "@sentry/tracing": "^7.45.0",
     "@sentry/types": "^7.45.0",
