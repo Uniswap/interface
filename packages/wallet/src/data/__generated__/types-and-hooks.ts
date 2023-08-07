@@ -2528,7 +2528,7 @@ export const ExploreSearchDocument = gql`
     decimals
     symbol
     market {
-      volume(duration: YEAR) {
+      volume(duration: DAY) {
         id
         value
       }

@@ -595,9 +595,9 @@ query ExploreSearch(
     address
     decimals
     symbol
-    # Use 1Y volume to determine which token to show when results include the same token on multiple chains
+    # Use 1D volume to determine which token to show when results include the same token on multiple chains
     market {
-      volume(duration: YEAR) {
+      volume(duration: DAY) {
         id
         value
       }
