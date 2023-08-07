@@ -3,7 +3,7 @@ expect.extend(matchers)
 
 import { mocked } from '../../src/test-utils/mocked'
 import Cache from './cache'
-import getRequest from './getRequest'
+import { getRequest } from './getRequest'
 
 jest.mock('./cache', () => ({
   match: jest.fn(),

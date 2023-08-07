@@ -1,18 +1,8 @@
 import { MetaTagInjector } from '../components/metaTagInjector'
 import Cache from './cache'
+import { Data } from './cache'
 
-export default async function getRequest(
-  res: Promise<Response>,
-  url: string,
-  getData: () => Promise<
-    | {
-        title: string
-        image: string
-        url: string
-      }
-    | undefined
-  >
-) {
+export async function getRequest(res: Promise<Response>, url: string, getData: () => Promise<Data | undefined>) {
   try {
     const cachedData = await Cache.match(url)
     if (cachedData) {
@@ -27,5 +17,23 @@ export default async function getRequest(
     }
   } catch (e) {
     return res
+  }
+}
+
+export async function getImageRequest(url: string, getData: () => Promise<Data | undefined>) {
+  try {
+    const cachedData = await Cache.match(url)
+    if (cachedData) {
+      return cachedData
+    } else {
+      const data = await getData()
+      if (!data) {
+        return undefined
+      }
+      await Cache.put(data, url)
+      return data
+    }
+  } catch (e) {
+    return undefined
   }
 }

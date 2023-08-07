@@ -4,27 +4,35 @@ import React from 'react'
 
 import getColor from '../../../utils/getColor'
 import getNetworkLogoUrl from '../../../utils/getNetworkLogoURL'
+import { getImageRequest } from '../../../utils/getRequest'
 import getSetup from '../../../utils/getSetup'
 import getToken from '../../../utils/getToken'
 
 export const onRequest: PagesFunction = async ({ params, request }) => {
   try {
+    const origin = new URL(request.url).origin
     const { index } = params
     const networkName = String(index[0])
     const tokenAddress = String(index[1])
 
-    const data = await getToken(networkName, tokenAddress, request.url)
+    const cacheUrl = origin + '/tokens/' + networkName + '/' + tokenAddress
+
+    const data = await getImageRequest(cacheUrl, () => getToken(networkName, tokenAddress, cacheUrl))
+
     if (!data) {
-      return new Response('Token not found', { status: 404 })
+      return new Response('Asset not found.', { status: 404 })
     }
 
-    const setupPromise = getSetup(request.url)
+    data.ogImage = data.ogImage ?? origin + '/images/192x192_App_Icon.png'
+    data.name = data.name ?? 'Unknown Token'
+
+    const setupPromise = getSetup()
     const palettePromise = getColor(data.ogImage)
 
     const [setup, palette] = await Promise.all([setupPromise, palettePromise])
     const { fontData, watermark } = setup
 
-    const networkLogo = getNetworkLogoUrl(networkName)
+    const networkLogo = getNetworkLogoUrl(networkName.toUpperCase())
     const words = data.name.split(' ')
     let name = ''
     for (let i = 0; i < words.length; i++) {

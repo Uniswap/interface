@@ -3,23 +3,24 @@ import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
 import getAsset from '../../../../utils/getAsset'
+import { getImageRequest } from '../../../../utils/getRequest'
 import getSetup from '../../../../utils/getSetup'
 
 export const onRequest: PagesFunction = async ({ params, request }) => {
   try {
+    const origin = new URL(request.url).origin
     const { index } = params
     const collectionAddress = index[0]?.toString()
     const tokenId = index[1]?.toString()
+    const cacheUrl = origin + '/nfts/asset/' + collectionAddress + '/' + tokenId
 
-    const setupPromise = getSetup(request.url)
-    const assetPromise = getAsset(collectionAddress, tokenId, request.url)
-
-    const [setup, data] = await Promise.all([setupPromise, assetPromise])
-    const { fontData, watermark } = setup
+    const data = await getImageRequest(cacheUrl, () => getAsset(collectionAddress, tokenId, cacheUrl))
 
     if (!data) {
       return new Response('Asset not found.', { status: 404 })
     }
+
+    const { fontData, watermark } = await getSetup()
 
     const image = new ImageResponse(
       (
