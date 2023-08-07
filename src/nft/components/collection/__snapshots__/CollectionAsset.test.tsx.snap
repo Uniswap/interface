@@ -309,7 +309,7 @@ exports[`NftCard renders correctly 1`] = `
   >
     <a
       class="c1"
-      href="#/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/3318?origin=collection"
+      href="/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/3318?origin=collection"
     >
       <div
         class="c2"

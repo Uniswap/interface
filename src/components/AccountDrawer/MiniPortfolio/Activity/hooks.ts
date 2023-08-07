@@ -19,7 +19,8 @@ function findCancelTx(localActivity: Activity, remoteMap: ActivityMap, account: 
     if (
       remoteTx.nonce === localActivity.nonce &&
       remoteTx.from.toLowerCase() === account.toLowerCase() &&
-      remoteTx.hash.toLowerCase() !== localActivity.hash.toLowerCase()
+      remoteTx.hash.toLowerCase() !== localActivity.hash.toLowerCase() &&
+      remoteTx.chainId === localActivity.chainId
     ) {
       return remoteTx.hash
     }
@@ -37,6 +38,11 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
     const remoteActivity = (remoteMap?.[hash] ?? {}) as Activity
 
     if (localActivity.cancelled) {
+      // Hides misleading activities caused by cross-chain nonce collisions previously being incorrectly labelled as cancelled txs in redux
+      if (localActivity.chainId !== remoteActivity.chainId) {
+        acc.push(remoteActivity)
+        return acc
+      }
       // Remote data only contains data of the cancel tx, rather than the original tx, so we prefer local data here
       acc.push(localActivity)
     } else {
@@ -67,6 +73,7 @@ export function useAllActivities(account: string) {
       if (!localActivity) return
 
       const cancelHash = findCancelTx(localActivity, remoteMap, account)
+
       if (cancelHash) updateCancelledTx(localActivity.hash, localActivity.chainId, cancelHash)
     })
   }, [account, localMap, remoteMap, updateCancelledTx])

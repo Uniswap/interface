@@ -2,7 +2,6 @@
   "name": "@uniswap/interface",
   "version": "1.1.0",
   "description": "Uniswap Interface",
-  "homepage": ".",
   "license": "GPL-3.0-or-later",
   "scripts": {
     "ajv": "node scripts/compile-ajv-validators.js",
@@ -94,7 +93,6 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@types/react-redux": "^7.1.24",
-    "@types/react-router-dom": "^5.3.3",
     "@types/react-table": "^7.7.12",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.2",
