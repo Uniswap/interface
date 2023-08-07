@@ -3,7 +3,7 @@ const tokenImageUrl = [
   'http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE',
 ]
 
-test.each(tokenImageUrl)('assetImageUrl', async (url) => {
+test.each(tokenImageUrl)('tokenImageUrl', async (url) => {
   const response = await fetch(new Request(url))
   expect(response.status).toBe(200)
   expect(response.headers.get('content-type')).toBe('image/png')

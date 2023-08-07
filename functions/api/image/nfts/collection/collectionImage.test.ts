@@ -4,7 +4,7 @@ const collectionImageUrl = [
   'http://127.0.0.1:3000/api/image/nfts/collection/0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b',
 ]
 
-test.each(collectionImageUrl)('assetImageUrl', async (url) => {
+test.each(collectionImageUrl)('collectionImageUrl', async (url) => {
   const response = await fetch(new Request(url))
   expect(response.status).toBe(200)
   expect(response.headers.get('content-type')).toBe('image/png')
