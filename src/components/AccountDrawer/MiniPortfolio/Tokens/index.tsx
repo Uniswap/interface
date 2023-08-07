@@ -67,13 +67,10 @@ export default function Tokens({ account }: { account: string }) {
 
   const { data } = useCachedPortfolioBalancesQuery({ account })
 
-  const incomingTokenBalances = data?.portfolios?.[0].tokenBalances
-  const tokenBalances = useMemo(() => {
-    return (incomingTokenBalances as TokenBalance[]) ?? []
-  }, [incomingTokenBalances])
+  const tokenBalances = data?.portfolios?.[0].tokenBalances as TokenBalance[] | undefined
 
   const { visibleTokens, hiddenTokens } = useMemo(
-    () => splitHiddenTokens(tokenBalances, { hideSmallBalances }),
+    () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances }),
     [hideSmallBalances, tokenBalances]
   )
 
