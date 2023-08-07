@@ -265,13 +265,10 @@ export function PendingModalContent({
   const { chainId } = useWeb3React()
 
   const swapStatus = useSwapTransactionStatus(swapResult)
+  const order = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
 
-  const classicSwapConfirmed = swapStatus === TransactionStatus.Confirmed
+  const swapConfirmed = swapStatus === TransactionStatus.Confirmed || order?.status === UniswapXOrderStatus.FILLED
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
-  // TODO(UniswapX): Support UniswapX status here too
-  const uniswapXSwapConfirmed = Boolean(swapResult)
-
-  const swapConfirmed = swapResult?.type === TradeFillType.Classic ? classicSwapConfirmed : uniswapXSwapConfirmed
 
   const swapPending = swapResult !== undefined && !swapConfirmed
   const wrapPending = wrapTxHash != undefined && !wrapConfirmed
@@ -287,8 +284,6 @@ export function PendingModalContent({
     trade,
     chainId,
   })
-
-  const order = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
 
   const currentStepContainerRef = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(currentStepContainerRef, () => AnimationType.EXITING)
