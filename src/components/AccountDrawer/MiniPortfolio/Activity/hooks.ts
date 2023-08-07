@@ -38,6 +38,7 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
     const remoteActivity = (remoteMap?.[hash] ?? {}) as Activity
 
     if (localActivity.cancelled) {
+      // Hides misleading activities caused by cross-chain nonce collisions previously being incorrectly labelled as cancelled txs in redux
       if (localActivity.chainId !== remoteActivity.chainId) {
         acc.push(remoteActivity)
         return acc
