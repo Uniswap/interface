@@ -12,7 +12,7 @@ struct BankWord: Hashable {
   var used: Bool = false
 }
 
-struct MnemonicTestWordBankView: View {
+struct MnemonicConfirmationWordBankView: View {
   
   let smallFont = UIFont(name: "Inter-Regular", size: 14)
   let mediumFont = UIFont(name: "Inter-Regular", size: 16)

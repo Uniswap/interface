@@ -1,5 +1,5 @@
 //
-//  MnemonicTestView.swift
+//  MnemonicConfirmationView.swift
 //  Uniswap
 //
 //  Created by Thomas Thachil on 8/1/22.
@@ -8,8 +8,8 @@
 import React
 import SwiftUI
 
-@objcMembers class MnemonicTestView: NSObject {
-  private var vc = UIHostingController(rootView: MnemonicTest())
+@objcMembers class MnemonicConfirmationView: NSObject {
+  private var vc = UIHostingController(rootView: MnemonicConfirmation())
   
   static let storage = NSMutableDictionary()
   
@@ -23,9 +23,9 @@ import SwiftUI
     get { return vc.rootView.props.shouldShowSmallText }
   }
   
-  var onTestComplete: RCTDirectEventBlock {
-    set { vc.rootView.props.onTestComplete = newValue }
-    get { return vc.rootView.props.onTestComplete }
+  var onConfirmComplete: RCTDirectEventBlock {
+    set { vc.rootView.props.onConfirmComplete = newValue }
+    get { return vc.rootView.props.onConfirmComplete }
   }
   
   var view: UIView {
@@ -34,19 +34,19 @@ import SwiftUI
   }
 }
 
-class MnemonicTestProps : ObservableObject {
+class MnemonicConfirmationProps : ObservableObject {
   @Published var mnemonicId: String = ""
   @Published var shouldShowSmallText: Bool = false
-  @Published var onTestComplete: RCTDirectEventBlock = { _ in }
+  @Published var onConfirmComplete: RCTDirectEventBlock = { _ in }
   @Published var mnemonicWords: [String] = Array(repeating: "", count: 12)
   @Published var scrambledWords: [String] = Array(repeating: "", count: 12)
   @Published var typedWords: [String] = Array(repeating: "", count: 12)
   @Published var selectedIndex: Int = 0
 }
 
-struct MnemonicTest: View {
+struct MnemonicConfirmation: View {
   
-  @ObservedObject var props = MnemonicTestProps()
+  @ObservedObject var props = MnemonicConfirmationProps()
   
   let rnEthersRS = RNEthersRS()
   let interFont = UIFont(name: "Inter-SemiBold", size: 20)
@@ -58,7 +58,7 @@ struct MnemonicTest: View {
       props.scrambledWords = mnemonic.components(separatedBy: " ").shuffled()
     }
     if (props.mnemonicWords.count > 12) {
-      props.onTestComplete([:])
+      props.onConfirmComplete([:])
     }
   }
   
@@ -66,7 +66,7 @@ struct MnemonicTest: View {
     props.typedWords[props.selectedIndex] = word
     
     if (props.typedWords == props.mnemonicWords) {
-      props.onTestComplete([:])
+      props.onConfirmComplete([:])
     } else if (props.mnemonicWords[props.selectedIndex] == props.typedWords[props.selectedIndex] && props.selectedIndex < props.mnemonicWords.count - 1) {
       props.selectedIndex += 1
     }
@@ -134,7 +134,7 @@ struct MnemonicTest: View {
         }.frame(maxWidth: .infinity)
           .padding([.leading, .trailing], 24)
         
-        MnemonicTestWordBankView(words: props.scrambledWords,
+        MnemonicConfirmationWordBankView(words: props.scrambledWords,
                                  usedWords: props.typedWords,
                                  labelCallback: onSuggestionTapped,
                                  shouldShowSmallText: props.shouldShowSmallText)

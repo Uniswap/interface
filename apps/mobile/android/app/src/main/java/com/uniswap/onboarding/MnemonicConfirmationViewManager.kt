@@ -17,7 +17,7 @@ import com.uniswap.theme.UniswapComponent
  * for the MnemonicTest component used to test if user has saved their
  * seed phrase
  */
-class MnemonicTestViewManager : ViewGroupManager<ComposeView>() {
+class MnemonicConfirmationViewManager : ViewGroupManager<ComposeView>() {
 
   override fun getName(): String = REACT_CLASS
 
@@ -57,7 +57,7 @@ class MnemonicTestViewManager : ViewGroupManager<ComposeView>() {
   }
 
   companion object {
-    private const val REACT_CLASS = "MnemonicTest"
-    private const val EVENT_COMPLETED = "onTestComplete"
+    private const val REACT_CLASS = "MnemonicConfirmation"
+    private const val EVENT_COMPLETED = "onConfirmComplete"
   }
 }

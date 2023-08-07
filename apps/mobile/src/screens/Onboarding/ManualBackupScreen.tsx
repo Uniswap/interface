@@ -16,8 +16,8 @@ import {
   FULL_MNEMONIC_DISPLAY_HEIGHT,
 } from 'src/components/mnemonic/constants'
 import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
+import { MnemonicConfirmation } from 'src/components/mnemonic/MnemonicConfirmation'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
-import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
@@ -37,7 +37,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 enum View {
   SeedPhrase,
-  SeedPhraseTest,
+  SeedPhraseConfirm,
 }
 
 export function ManualBackupScreen({ navigation, route: { params } }: Props): JSX.Element | null {
@@ -107,7 +107,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
           screen: ManualPageViewScreen.WriteDownRecoveryPhrase,
         })
         break
-      case View.SeedPhraseTest:
+      case View.SeedPhraseConfirm:
         sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
           screen: ManualPageViewScreen.ConfirmRecoveryPhrase,
         })
@@ -151,13 +151,13 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
           )}
         </OnboardingScreen>
       )
-    case View.SeedPhraseTest:
+    case View.SeedPhraseConfirm:
       return (
         <OnboardingScreen subtitle={responsiveSubtitle} title={responsiveTitle}>
           <Flex grow pointerEvents={continueButtonEnabled ? 'none' : 'auto'} pt="spacing12">
-            <MnemonicTest
+            <MnemonicConfirmation
               mnemonicId={mnemonicId}
-              onTestComplete={(): void => setContinueButtonEnabled(true)}
+              onConfirmComplete={(): void => setContinueButtonEnabled(true)}
             />
           </Flex>
           <Flex justifyContent="flex-end">

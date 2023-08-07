@@ -3,20 +3,21 @@ import { requireNativeComponent, StyleProp, ViewProps } from 'react-native'
 import { BoxProps } from 'src/components/layout/Box'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 
-interface NativeMnemonicTestProps {
+interface NativeMnemonicConfirmationProps {
   mnemonicId: Address
   shouldShowSmallText: boolean
-  onTestComplete: () => void
+  onConfirmComplete: () => void
 }
 
-const NativeMnemonicTest = requireNativeComponent<NativeMnemonicTestProps>('MnemonicTest')
+const NativeMnemonicConfirmation =
+  requireNativeComponent<NativeMnemonicConfirmationProps>('MnemonicConfirmation')
 
-type MnemonicTestProps = ViewProps & {
+type MnemonicConfirmationProps = ViewProps & {
   mnemonicId: Address
-  onTestComplete: () => void
+  onConfirmComplete: () => void
 }
 
-const mnemonicTestStyle = (shouldShowSmallVersion: boolean): StyleProp<BoxProps> => {
+const mnemonicConfirmationStyle = (shouldShowSmallVersion: boolean): StyleProp<BoxProps> => {
   return {
     // This is the min height needed for native component to function correctly.
     // We handle padding separately wherever the component is placed.
@@ -24,13 +25,13 @@ const mnemonicTestStyle = (shouldShowSmallVersion: boolean): StyleProp<BoxProps>
   }
 }
 
-export function MnemonicTest(props: MnemonicTestProps): JSX.Element {
+export function MnemonicConfirmation(props: MnemonicConfirmationProps): JSX.Element {
   const shouldShowSmallText = dimensions.fullHeight < 700
 
   return (
-    <NativeMnemonicTest
+    <NativeMnemonicConfirmation
       shouldShowSmallText={shouldShowSmallText}
-      style={mnemonicTestStyle(shouldShowSmallText)}
+      style={mnemonicConfirmationStyle(shouldShowSmallText)}
       {...props}
     />
   )

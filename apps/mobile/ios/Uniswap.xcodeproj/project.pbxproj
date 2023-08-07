@@ -47,12 +47,12 @@
 		F35AFD3E27EE49990011A725 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35AFD3D27EE49990011A725 /* NotificationService.swift */; };
 		F35AFD4227EE49990011A725 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F35AFD3B27EE49990011A725 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FD54D51D296C79A4007A37E9 /* GoogleServiceInfo in Resources */ = {isa = PBXBuildFile; fileRef = FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */; };
-		FD7304CA28A364E70085BDEA /* MnemonicTestWordBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7304C928A364E70085BDEA /* MnemonicTestWordBankView.swift */; };
+		FD7304CA28A364E70085BDEA /* MnemonicConfirmationWordBankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7304C928A364E70085BDEA /* MnemonicConfirmationWordBankView.swift */; };
 		FD7304CC28A364EF0085BDEA /* MnemonicTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7304CB28A364EF0085BDEA /* MnemonicTextField.swift */; };
 		FD7304CE28A364FC0085BDEA /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD7304CD28A364FC0085BDEA /* Colors.xcassets */; };
 		FD7304D028A3650A0085BDEA /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7304CF28A3650A0085BDEA /* Colors.swift */; };
-		FDB23E4F289D935800248737 /* RNMnemonicTestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB23E4E289D935800248737 /* RNMnemonicTestManager.m */; };
-		FDDCC725289AE92600BCD4F3 /* MnemonicTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDDCC720289AE92600BCD4F3 /* MnemonicTestView.swift */; };
+		FDB23E4F289D935800248737 /* RNMnemonicConfirmationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB23E4E289D935800248737 /* RNMnemonicConfirmationManager.m */; };
+		FDDCC725289AE92600BCD4F3 /* MnemonicConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDDCC720289AE92600BCD4F3 /* MnemonicConfirmationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -151,12 +151,12 @@
 		F5F2751F56BDA3D0330E56BE /* Pods-Uniswap-UniswapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.release.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.release.xcconfig"; sourceTree = "<group>"; };
 		FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GoogleServiceInfo; sourceTree = SOURCE_ROOT; };
 		FD72162492D6B68BBC15F3ED /* Pods-Uniswap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.release.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.release.xcconfig"; sourceTree = "<group>"; };
-		FD7304C928A364E70085BDEA /* MnemonicTestWordBankView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicTestWordBankView.swift; path = Uniswap/Onboarding/MnemonicTestWordBankView.swift; sourceTree = "<group>"; };
+		FD7304C928A364E70085BDEA /* MnemonicConfirmationWordBankView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicConfirmationWordBankView.swift; path = Uniswap/Onboarding/MnemonicConfirmationWordBankView.swift; sourceTree = "<group>"; };
 		FD7304CB28A364EF0085BDEA /* MnemonicTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicTextField.swift; path = Uniswap/Onboarding/MnemonicTextField.swift; sourceTree = "<group>"; };
 		FD7304CD28A364FC0085BDEA /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = Uniswap/Colors.xcassets; sourceTree = "<group>"; };
 		FD7304CF28A3650A0085BDEA /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Colors.swift; path = Uniswap/Colors.swift; sourceTree = "<group>"; };
-		FDB23E4E289D935800248737 /* RNMnemonicTestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNMnemonicTestManager.m; path = Uniswap/Onboarding/RNMnemonicTestManager.m; sourceTree = "<group>"; };
-		FDDCC720289AE92600BCD4F3 /* MnemonicTestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicTestView.swift; path = Uniswap/Onboarding/MnemonicTestView.swift; sourceTree = "<group>"; };
+		FDB23E4E289D935800248737 /* RNMnemonicConfirmationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNMnemonicConfirmationManager.m; path = Uniswap/Onboarding/RNMnemonicConfirmationManager.m; sourceTree = "<group>"; };
+		FDDCC720289AE92600BCD4F3 /* MnemonicConfirmationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicConfirmationView.swift; path = Uniswap/Onboarding/MnemonicConfirmationView.swift; sourceTree = "<group>"; };
 		FDDCC727289B040900BCD4F3 /* RNSwiftUI-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNSwiftUI-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -275,10 +275,10 @@
 			isa = PBXGroup;
 			children = (
 				FD7304CB28A364EF0085BDEA /* MnemonicTextField.swift */,
-				FD7304C928A364E70085BDEA /* MnemonicTestWordBankView.swift */,
+				FD7304C928A364E70085BDEA /* MnemonicConfirmationWordBankView.swift */,
 				FDDCC727289B040900BCD4F3 /* RNSwiftUI-Bridging-Header.h */,
-				FDDCC720289AE92600BCD4F3 /* MnemonicTestView.swift */,
-				FDB23E4E289D935800248737 /* RNMnemonicTestManager.m */,
+				FDDCC720289AE92600BCD4F3 /* MnemonicConfirmationView.swift */,
+				FDB23E4E289D935800248737 /* RNMnemonicConfirmationManager.m */,
 				6C84F056283D83ED0071FA2E /* MnemonicDisplayView.swift */,
 				6C84F05E283DB7150071FA2E /* MnemonicWordView.swift */,
 				6C84F05C283DB7050071FA2E /* RNTMnemonicDisplayManager.m */,
@@ -787,20 +787,20 @@
 				6C8EFC2B28909EDF00FBD8EB /* EncryptionHelper.swift in Sources */,
 				A3F0A5AF272B01FD00895B25 /* RnEthersRS.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				FD7304CA28A364E70085BDEA /* MnemonicTestWordBankView.swift in Sources */,
+				FD7304CA28A364E70085BDEA /* MnemonicConfirmationWordBankView.swift in Sources */,
 				6C84F05D283DB7050071FA2E /* RNTMnemonicDisplayManager.m in Sources */,
 				6C13E36A28185E550065DBB1 /* WalletConnectAccountServer.swift in Sources */,
 				6C33CB452885E750006850A9 /* RNICloudBackupsManager.m in Sources */,
 				6C33CB462885E750006850A9 /* RNICloudBackupsManager.swift in Sources */,
 				6C13E36E28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift in Sources */,
 				6C84F05F283DB7150071FA2E /* MnemonicWordView.swift in Sources */,
-				FDB23E4F289D935800248737 /* RNMnemonicTestManager.m in Sources */,
+				FDB23E4F289D935800248737 /* RNMnemonicConfirmationManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				A3F0A5B3272B1E9A00895B25 /* RNEthersRS.swift in Sources */,
 				FD7304CC28A364EF0085BDEA /* MnemonicTextField.swift in Sources */,
 				034F01A92A4F11D4008CB8BF /* RCTThemeModule.m in Sources */,
 				D63452452821BD540018ED83 /* WalletConnectSendTransactionHandler.swift in Sources */,
-				FDDCC725289AE92600BCD4F3 /* MnemonicTestView.swift in Sources */,
+				FDDCC725289AE92600BCD4F3 /* MnemonicConfirmationView.swift in Sources */,
 				A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */,
 				1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */,
 				6C84F057283D83ED0071FA2E /* MnemonicDisplayView.swift in Sources */,
