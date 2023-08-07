@@ -75,6 +75,7 @@ export default function Updater() {
       sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
         // if timeToSwap was already set, we already logged this session
         time_to_swap: hasReportedTimeToSwap ? undefined : elapsedTime,
+        chainId,
         hash,
         ...analyticsContext,
       })
