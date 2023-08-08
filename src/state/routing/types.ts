@@ -44,6 +44,7 @@ export interface GetQuoteArgs {
   needsWrapIfUniswapX: boolean
   uniswapXEnabled: boolean
   uniswapXForceSyntheticQuotes: boolean
+  uniswapXEthOutputEnabled: boolean
   forceUniswapXOn: boolean
   userDisabledUniswapX: boolean
   isRoutingAPIPrice?: boolean
