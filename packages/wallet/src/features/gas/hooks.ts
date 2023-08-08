@@ -13,6 +13,12 @@ export function useTransactionGasFee(
   skip?: boolean
 ): TransactionGasFeeInfo | undefined {
   // TODO: [MOB-650] Handle error responses from gas endpoint
+
+  // HOTFIX for no base support on gas endpoint
+  if (tx?.chainId === ChainId.Base) {
+    tx.chainId = ChainId.Optimism
+  }
+
   const { data } = useGasFeeQuery(tx, skip)
 
   return useMemo(() => {

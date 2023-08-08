@@ -5,8 +5,11 @@ import { logger } from 'utilities/src/logger/logger'
 import { isStale } from 'utilities/src/time/time'
 import { config } from 'wallet/src/config'
 import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'wallet/src/constants/chains'
-import { getEthersProvider } from 'wallet/src/features/providers/getEthersProvider'
-import { getInfuraChainName } from './utils'
+import {
+  getEthersProvider,
+  getEthersProviderFromRpcUrl,
+} from 'wallet/src/features/providers/getEthersProvider'
+import { getInfuraChainName } from 'wallet/src/features/providers/utils'
 
 enum ProviderStatus {
   Disconnected,
@@ -125,25 +128,38 @@ export class ProviderManager {
 
   private initProvider(chainId: ChainId): Nullable<ethersProviders.JsonRpcProvider> {
     try {
+      // Attempt to create provider using getEthersProvider for Infura supported chains
+      const infuraChainName = getInfuraChainName(chainId)
+
       logger.debug(
         'ProviderManager',
         'initProvider',
-        `Connecting to infura rpc provider for ${getInfuraChainName(chainId)}`
+        `Connecting to infura rpc provider for ${infuraChainName}`
       )
 
       const provider = getEthersProvider(chainId, config)
-
       return provider
     } catch (error) {
-      logger.error('Failed to initialize provider', {
-        tags: {
-          file: 'ProviderManager',
-          function: 'initProvider',
-          chainId,
-          error: serializeError(error),
-        },
-      })
-      return null
+      // Attempt to fallback creating provider from RPC urls defined by CHAIN_INFO
+      try {
+        logger.debug(
+          'ProviderManager',
+          'initProvider',
+          `Fallback connecting to infura rpc provider for ${chainId}`
+        )
+        const provider = getEthersProviderFromRpcUrl(chainId)
+        return provider
+      } catch (e) {
+        logger.error('Failed to initialize provider', {
+          tags: {
+            file: 'ProviderManager',
+            function: 'initProvider',
+            chainId,
+            error: serializeError(e),
+          },
+        })
+        return null
+      }
     }
   }
 

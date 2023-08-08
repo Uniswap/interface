@@ -88,6 +88,7 @@ export type AssetChange = NftApproval | NftApproveForAll | NftTransfer | TokenAp
 export enum Chain {
   Arbitrum = 'ARBITRUM',
   Avalanche = 'AVALANCHE',
+  Base = 'BASE',
   Bnb = 'BNB',
   Celo = 'CELO',
   Ethereum = 'ETHEREUM',
@@ -700,6 +701,7 @@ export type Portfolio = {
 
 export type PortfolioAssetActivitiesArgs = {
   _fs?: InputMaybe<Scalars['String']>;
+  chains?: InputMaybe<Array<Chain>>;
   includeOffChain?: InputMaybe<Scalars['Boolean']>;
   page?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
@@ -1978,7 +1980,7 @@ export const PortfolioBalancesDocument = gql`
     query PortfolioBalances($ownerAddress: String!) {
   portfolios(
     ownerAddresses: [$ownerAddress]
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]
   ) {
     id
     tokensTotalDenominatedValue {

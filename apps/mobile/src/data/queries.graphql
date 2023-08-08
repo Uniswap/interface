@@ -305,7 +305,7 @@ query NftsTab(
 }
 
 query PortfolioBalances($ownerAddress: String!) {
-  portfolios(ownerAddresses: [$ownerAddress], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]) {
+  portfolios(ownerAddresses: [$ownerAddress], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]) {
     id
 
     # Total portfolio balance for header

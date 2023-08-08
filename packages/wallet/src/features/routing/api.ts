@@ -100,7 +100,11 @@ export function useQuoteQuery(
         {
           protocols,
           routingType: 'CLASSIC',
-          enableUniversalRouter,
+          // Quotes sometimes fail in the api when universal router is enabled, disable for USD quotes
+          // https://linear.app/uniswap/issue/MOB-1068/update-pricing-request-for-usd-quotes
+          enableUniversalRouter: request.loggingProperties.isUSDQuote
+            ? false
+            : enableUniversalRouter,
           ...recipientParams,
           ...simulatedParams,
           ...permit2Params,
