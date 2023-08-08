@@ -1,6 +1,6 @@
 import { Currency, TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 
-import { splitHiddenTokens } from "./splitHiddenTokens"
+import { splitHiddenTokens } from './splitHiddenTokens'
 
 const tokens: TokenBalance[] = [
   // low balance
@@ -60,6 +60,26 @@ const tokens: TokenBalance[] = [
       },
     },
   },
+  // empty value
+  {
+    id: 'undefined-value',
+    ownerAddress: '',
+    __typename: 'TokenBalance',
+    denominatedValue: {
+      id: '',
+      // @ts-ignore this is evidently possible but not represented in our types
+      value: undefined,
+    },
+    tokenProjectMarket: {
+      id: '',
+      currency: Currency.Eth,
+      tokenProject: {
+        id: '',
+        tokens: [],
+        isSpam: false,
+      },
+    },
+  },
 ]
 
 describe('MiniPortfolio.Tokens', () => {
@@ -71,7 +91,7 @@ describe('MiniPortfolio.Tokens', () => {
     expect(hiddenTokens.length).toBe(1)
     expect(hiddenTokens[0].id).toBe('spam')
 
-    expect(visibleTokens.length).toBe(2)
+    expect(visibleTokens.length).toBe(3)
     expect(visibleTokens[0].id).toBe('low-balance')
     expect(visibleTokens[1].id).toBe('valid')
   })
@@ -83,7 +103,15 @@ describe('MiniPortfolio.Tokens', () => {
     expect(hiddenTokens[0].id).toBe('low-balance')
     expect(hiddenTokens[1].id).toBe('spam')
 
-    expect(visibleTokens.length).toBe(1)
+    expect(visibleTokens.length).toBe(2)
     expect(visibleTokens[0].id).toBe('valid')
+  })
+
+  it('splits undefined value tokens into visible', () => {
+    const { visibleTokens } = splitHiddenTokens(tokens)
+
+    expect(visibleTokens.length).toBe(2)
+    expect(visibleTokens[0].id).toBe('valid')
+    expect(visibleTokens[1].id).toBe('undefined-value')
   })
 })
