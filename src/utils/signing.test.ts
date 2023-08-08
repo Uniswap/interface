@@ -51,7 +51,7 @@ describe('signing', () => {
             if (method === signingMethod) return Promise.reject({ message: `method ${message}` })
             throw new Error('Unimplemented')
           })
-          .mockImplementationOnce((method, params) => {
+          .mockImplementationOnce((method) => {
             if (method === 'eth_sign') return Promise.resolve()
             throw new Error('Unimplemented')
           })
@@ -86,7 +86,7 @@ describe('signing', () => {
     }
 
     it('signs using eth_signTypedData_v4', async () => {
-      const send = jest.spyOn(signer.provider, 'send').mockImplementationOnce((method, params) => {
+      const send = jest.spyOn(signer.provider, 'send').mockImplementationOnce((method) => {
         if (method === 'eth_signTypedData_v4') return Promise.resolve()
         throw new Error('Unimplemented')
       })
@@ -105,11 +105,14 @@ describe('signing', () => {
       describe.each(['SafePal Wallet', 'Ledger Wallet Connect'])('%s', (name) => {
         beforeEach(() => {
           const web3Provider = signer.provider as Mutable<Web3Provider>
-          web3Provider.provider = { isWalletConnect: true, connector: { peerMeta: { name } } } as ExternalProvider
+          web3Provider.provider = {
+            isWalletConnect: true,
+            session: { peer: { metadata: { name } } },
+          } as ExternalProvider
         })
 
         it('signs using eth_signTypedData', async () => {
-          const send = jest.spyOn(signer.provider, 'send').mockImplementationOnce((method, params) => {
+          const send = jest.spyOn(signer.provider, 'send').mockImplementationOnce((method) => {
             if (method === 'eth_signTypedData') return Promise.resolve()
             throw new Error('Unimplemented')
           })
@@ -131,12 +134,13 @@ describe('signing', () => {
         const web3Provider = signer.provider as Mutable<Web3Provider>
         web3Provider.provider = {
           isWalletConnect: true,
-          connector: { peerMeta: { name: 'Trust Wallet' } },
+          session: { peer: { metadata: { name: 'Trust Wallet' } } },
         } as ExternalProvider
       })
 
       it('signs using eth_sign', async () => {
-        const send = jest.spyOn(signer.provider, 'send').mockImplementation((method, params) => {
+        jest.spyOn(console, 'warn').mockReturnValue()
+        const send = jest.spyOn(signer.provider, 'send').mockImplementation((method) => {
           if (method === 'eth_sign') return Promise.resolve()
           throw new Error('TrustWalletConnect.WCError error 1')
         })
