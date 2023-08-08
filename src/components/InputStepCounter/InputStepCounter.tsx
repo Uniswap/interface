@@ -25,9 +25,7 @@ const pulse = (color: string) => keyframes`
 `
 
 const InputRow = styled.div`
-  display: grid;
-
-  grid-template-columns: 30px 1fr 30px;
+  display: flex;
 `
 
 const SmallButton = styled(ButtonGray)`
@@ -43,18 +41,17 @@ const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boo
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   background-color: transparent;
-  text-align: center;
-  width: 100%;
   font-weight: 500;
-  padding: 0 10px;
+  text-align: left;
+  width: 100%;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     font-size: 16px;
   `};
+`
 
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
-    font-size: 12px;
-  `};
+const InputColumn = styled(AutoColumn)`
+  width: 100%;
 `
 
 const InputTitle = styled(ThemedText.DeprecatedSmall)`
@@ -142,20 +139,11 @@ const StepCounter = ({
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
-      <AutoColumn gap="6px">
-        <InputTitle fontSize={12} textAlign="center">
-          {title}
-        </InputTitle>
-
-        <InputRow>
-          {!locked && (
-            <SmallButton data-testid="decrement-price-range" onClick={handleDecrement} disabled={decrementDisabled}>
-              <ButtonLabel disabled={decrementDisabled} fontSize="12px">
-                <Minus size={18} />
-              </ButtonLabel>
-            </SmallButton>
-          )}
-
+      <InputRow>
+        <InputColumn justify="flex-start">
+          <InputTitle fontSize={12} textAlign="center">
+            {title}
+          </InputTitle>
           <StyledInput
             className="rate-input-0"
             value={localValue}
@@ -165,7 +153,14 @@ const StepCounter = ({
               setLocalValue(val)
             }}
           />
+          <InputTitle fontSize={12} textAlign="left">
+            <Trans>
+              {tokenB} per {tokenA}
+            </Trans>
+          </InputTitle>
+        </InputColumn>
 
+        <AutoColumn gap="8px">
           {!locked && (
             <SmallButton data-testid="increment-price-range" onClick={handleIncrement} disabled={incrementDisabled}>
               <ButtonLabel disabled={incrementDisabled} fontSize="12px">
@@ -173,14 +168,15 @@ const StepCounter = ({
               </ButtonLabel>
             </SmallButton>
           )}
-        </InputRow>
-
-        <InputTitle fontSize={12} textAlign="center">
-          <Trans>
-            {tokenB} per {tokenA}
-          </Trans>
-        </InputTitle>
-      </AutoColumn>
+          {!locked && (
+            <SmallButton data-testid="decrement-price-range" onClick={handleDecrement} disabled={decrementDisabled}>
+              <ButtonLabel disabled={decrementDisabled} fontSize="12px">
+                <Minus size={18} />
+              </ButtonLabel>
+            </SmallButton>
+          )}
+        </AutoColumn>
+      </InputRow>
     </FocusedOutlineCard>
   )
 }
