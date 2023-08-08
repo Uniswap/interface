@@ -1,4 +1,4 @@
-import styled, { keyframes, useTheme } from 'styled-components/macro'
+import styled, { keyframes, useTheme } from 'styled-components'
 
 const Wrapper = styled.div<{ size?: string }>`
   height: 90px;

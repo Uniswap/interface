@@ -11,7 +11,7 @@ import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useS
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const StyledModal = styled.div`
   position: fixed;

@@ -8,7 +8,7 @@ import { useWindowSize } from 'hooks/useWindowSize'
 import { PropsWithChildren, ReactNode } from 'react'
 import { TextProps } from 'rebass'
 import { Field } from 'state/swap/actions'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { formatReviewSwapCurrencyAmount } from 'utils/formatNumbers'
 

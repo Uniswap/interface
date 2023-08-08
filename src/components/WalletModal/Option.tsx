@@ -5,7 +5,7 @@ import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { Connection } from 'connection/types'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 

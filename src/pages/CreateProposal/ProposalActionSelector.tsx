@@ -6,7 +6,7 @@ import { RowBetween } from 'components/Row'
 import { MenuItem, PaddedColumn, Separator } from 'components/SearchModal/styleds'
 import React, { useCallback } from 'react'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { CloseIcon } from 'theme'
 
 export enum ProposalAction {

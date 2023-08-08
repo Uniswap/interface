@@ -102,10 +102,6 @@ export const L2_CHAIN_IDS = [
 
 export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
 
-export function isPolygonChain(chainId: number): chainId is ChainId.POLYGON | ChainId.POLYGON_MUMBAI {
-  return chainId === ChainId.POLYGON || chainId === ChainId.POLYGON_MUMBAI
-}
-
 /**
  * Get the priority of a chainId based on its relevance to the user.
  * @param {ChainId} chainId - The chainId to determine the priority for.

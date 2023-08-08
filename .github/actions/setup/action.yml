@@ -24,10 +24,6 @@ runs:
       run: yarn install --frozen-lockfile --ignore-scripts
       shell: bash
 
-    # Validators compile quickly, so caching can be omitted.
-    - run: yarn ajv
-      shell: bash
-
     # Contracts are compiled from source. If source hasn't changed, the contracts do not need to be re-compiled.
     - uses: actions/cache@v3
       id: contracts-cache
@@ -40,30 +36,10 @@ runs:
       run: yarn contracts
       shell: bash
 
-    # GraphQL is generated from schema and client-side graphql queries. The schema is always fetched and changes to
-    # client-side queries are hard to detect, so it is always re-generated.
-    # TODO(WEB-2498): Cache based on both fetched schema and client-side graphql queries.
-    # This will require some processing: cp all literal graphql tags into a separate file and hash it?
-    - run: yarn graphql
-      shell: bash
-
-    # Messages are extracted from source.
-    # A record of source file content hashes and catalogs is maintained in node_modules/.cache/lingui.
-    # Messages are always extracted, but extraction may short-circuit from the custom extractor's cache.
-    - uses: ./.github/actions/cache-on-main
-      with:
-        path: node_modules/.cache
-        key: ${{ runner.os }}-i18n-extract-${{ github.run_id }}
-        restore-keys: ${{ runner.os }}-i18n-extract-
-    - run: yarn i18n:extract
-      shell: bash
-
-    # Translations are compiled from messages. If messages haven't changed, the translations do not need to be re-compiled.
-    - uses: actions/cache@v3
-      id: i18n-compile-cache
-      with:
-        path: src/locales/*.js
-        key: ${{ runner.os }}-i18n-compile-${{ hashFiles('src/locales/*.po') }}
-    - if: steps.i18n-compile-cache.outputs.cache-hit !='true'
-      run: yarn i18n:compile
+    # These operations cannot be cached, so they are run concurrently
+    # - ajv: Validators compile quickly, so caching can be omitted.
+    # - graphql: GraphQL is generated from schema and client-side graphql queries. The schema is always fetched and
+    #   changes to client-side queries are hard to detect, so it is always re-generated.
+    # - i18n: Messages are extracted from source and compiled. No caching extractor is available (out-of-the-box).
+    - run: yarn concurrently --max-processes=100% npm:ajv npm:graphql npm:i18n
       shell: bash

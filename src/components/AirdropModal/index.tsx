@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme'
 
 import Modal from '../Modal'
