@@ -1,7 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useBaseEnabledFlag } from 'featureFlags/flags/baseEnabled'
 import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
-import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
@@ -207,12 +206,6 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FeatureFlagOption
-        variant={DetailsV2Variant}
-        value={useDetailsV2Flag()}
-        featureFlag={FeatureFlag.detailsV2}
-        label="Use the new details page for nfts"
-      />
       <FeatureFlagOption
         variant={UniswapXVariant}
         value={useUniswapXFlag()}
