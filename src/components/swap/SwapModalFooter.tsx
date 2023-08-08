@@ -24,7 +24,7 @@ import { getPriceImpactWarning } from 'utils/prices'
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
-import { SwapCallbackError, SwapShowAcceptChanges } from './styleds'
+import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
 import { Label } from './SwapModalHeaderAmount'
 
 const DetailsContainer = styled(Column)`

@@ -8,6 +8,7 @@ ignore:
   - "styles/**/*"
   - "**/constants/**/*"
   - "constants/**/*"
+  - "**/styled.tsx"
 
 coverage:
   status:
