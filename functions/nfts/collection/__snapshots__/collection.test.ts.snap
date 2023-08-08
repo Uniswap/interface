@@ -39,7 +39,8 @@ exports[`should inject metadata for valid collections 1`] = `
     <link rel="manifest" href="/manifest.json" />
 
     <!-- <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin /> -->
-    <link rel="preload" href="/fonts/Basel-Grotesk-Essential-Variable.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
 
    
     <style>
@@ -49,16 +50,26 @@ exports[`should inject metadata for valid collections 1`] = `
       }
 
       /**
-          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
         */
       @font-face {
         font-family: 'Basel';
-        font-weight: 100 900;
+        font-weight: 535;
         font-style: normal;
         font-display: block;
         font-named-instance: 'Book';
         src: 
-          url(/fonts/Basel-Grotesk-Essential-Variable.woff) format('woff');
+          url(/fonts/Basel-Medium.woff) format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 435;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Book';
+        src: 
+          url(/fonts/Basel-Book.woff) format('woff');
       }
 
       @supports (font-variation-settings: normal) {
@@ -175,7 +186,8 @@ exports[`should inject metadata for valid collections 2`] = `
     <link rel="manifest" href="/manifest.json" />
 
     <!-- <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin /> -->
-    <link rel="preload" href="/fonts/Basel-Grotesk-Essential-Variable.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
 
    
     <style>
@@ -185,16 +197,26 @@ exports[`should inject metadata for valid collections 2`] = `
       }
 
       /**
-          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
         */
       @font-face {
         font-family: 'Basel';
-        font-weight: 100 900;
+        font-weight: 535;
         font-style: normal;
         font-display: block;
         font-named-instance: 'Book';
         src: 
-          url(/fonts/Basel-Grotesk-Essential-Variable.woff) format('woff');
+          url(/fonts/Basel-Medium.woff) format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 435;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Book';
+        src: 
+          url(/fonts/Basel-Book.woff) format('woff');
       }
 
       @supports (font-variation-settings: normal) {
@@ -311,7 +333,8 @@ exports[`should inject metadata for valid collections 3`] = `
     <link rel="manifest" href="/manifest.json" />
 
     <!-- <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin /> -->
-    <link rel="preload" href="/fonts/Basel-Grotesk-Essential-Variable.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
 
    
     <style>
@@ -321,16 +344,26 @@ exports[`should inject metadata for valid collections 3`] = `
       }
 
       /**
-          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
         */
       @font-face {
         font-family: 'Basel';
-        font-weight: 100 900;
+        font-weight: 535;
         font-style: normal;
         font-display: block;
         font-named-instance: 'Book';
         src: 
-          url(/fonts/Basel-Grotesk-Essential-Variable.woff) format('woff');
+          url(/fonts/Basel-Medium.woff) format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 435;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Book';
+        src: 
+          url(/fonts/Basel-Book.woff) format('woff');
       }
 
       @supports (font-variation-settings: normal) {
