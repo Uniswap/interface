@@ -1,7 +1,7 @@
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import Input from 'components/NumericalInput'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   position: relative;

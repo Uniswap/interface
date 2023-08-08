@@ -1,5 +1,6 @@
 /* eslint-env node */
 
+const { node: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
 require('@uniswap/eslint-config/load')
 
 const rulesDirPlugin = require('eslint-plugin-rulesdir')
@@ -27,6 +28,7 @@ module.exports = {
     {
       files: ['**/*.ts', '**/*.tsx'],
       rules: {
+        '@typescript-eslint/no-restricted-imports': ['error', restrictedImports],
         'import/no-restricted-paths': [
           'error',
           {

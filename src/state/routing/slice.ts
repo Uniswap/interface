@@ -1,12 +1,14 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { ChainId, TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@uniswap/sdk-core'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { trace } from 'tracing/trace'
 
 import {
+  GetQuoteArgs,
+  INTERNAL_ROUTER_PREFERENCE_PRICE,
   QuoteMethod,
   QuoteState,
   RouterPreference,
@@ -23,34 +25,8 @@ if (UNISWAP_API_URL === undefined) {
   throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
 }
 
-// This is excluded from `RouterPreference` enum because it's only used
-// internally for token -> USDC trades to get a USD value.
-export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
-
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
-}
-
-export interface GetQuoteArgs {
-  tokenInAddress: string
-  tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
-  tokenOutAddress: string
-  tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
-  amount: string
-  account?: string
-  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-  tradeType: TradeType
-  needsWrapIfUniswapX: boolean
-  uniswapXEnabled: boolean
-  uniswapXForceSyntheticQuotes: boolean
-  forceUniswapXOn: boolean
-  userDisabledUniswapX: boolean
-  isRoutingAPIPrice?: boolean
-  uniswapXEthOutputEnabled: boolean
 }
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
@@ -214,7 +190,7 @@ export const routingApi = createApi({
           return { error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error } }
         }
       },
-      keepUnusedDataFor: ms`10s`,
+      keepUnusedDataFor: ms(`10s`),
       extraOptions: {
         maxRetries: 0,
       },
