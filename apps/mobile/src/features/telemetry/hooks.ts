@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import {
   selectLastBalancesReport,
@@ -52,7 +52,7 @@ export function useLastBalancesReporter(): () => void {
     ) {
       const totalBalance = signerAccountValues.reduce((a, b) => a + b, 0)
 
-      sendAnalyticsEvent(MobileEventName.BalancesReport, {
+      sendMobileAnalyticsEvent(MobileEventName.BalancesReport, {
         total_balances_usd: totalBalance,
         wallets: signerAccountAddresses,
         balances: signerAccountValues,

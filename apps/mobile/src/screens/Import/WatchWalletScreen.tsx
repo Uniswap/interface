@@ -12,7 +12,7 @@ import { Text } from 'src/components/Text'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
@@ -84,7 +84,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           })
         )
       }
-      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      sendMobileAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
         screen: OnboardingScreens.WatchWallet,
         element: ElementName.Continue,
       })

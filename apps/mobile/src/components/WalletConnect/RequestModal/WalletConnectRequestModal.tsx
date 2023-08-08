@@ -17,7 +17,7 @@ import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestM
 import { useHasSufficientFunds } from 'src/components/WalletConnect/RequestModal/hooks'
 import { RequestDetails } from 'src/components/WalletConnect/RequestModal/RequestDetails'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
@@ -183,7 +183,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
     rejectOnCloseRef.current = false
 
-    sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
+    sendMobileAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
       request_type: isTransactionRequest(request)
         ? WCEventType.TransactionRequest
         : WCEventType.SignRequest,
@@ -235,7 +235,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
     rejectOnCloseRef.current = false
 
-    sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
+    sendMobileAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
       request_type: isTransactionRequest(request)
         ? WCEventType.TransactionRequest
         : WCEventType.SignRequest,

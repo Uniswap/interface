@@ -17,7 +17,7 @@ import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { removeFavoriteToken } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { formatUSDPrice } from 'utilities/src/format/format'
@@ -127,7 +127,7 @@ function FavoriteTokenCard({
         // Swap token action
         if (e.nativeEvent.index === 2) {
           navigateToSwapSell()
-          sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+          sendMobileAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
             element: ElementName.Swap,
             section: SectionName.ExploreFavoriteTokensSection,
           })

@@ -13,7 +13,7 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { useSelectHasTokenFavorited, useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import {
   ElementName,
   MobileEventName,
@@ -129,7 +129,7 @@ export const TokenItem = memo(function _TokenItem({
   const onPress = (): void => {
     tokenDetailsNavigation.preload(_currencyId)
     tokenDetailsNavigation.navigate(_currencyId)
-    sendAnalyticsEvent(MobileEventName.ExploreTokenItemSelected, {
+    sendMobileAnalyticsEvent(MobileEventName.ExploreTokenItemSelected, {
       address: currencyIdToAddress(_currencyId),
       chain: currencyIdToChain(_currencyId) as number,
       name,
@@ -149,7 +149,7 @@ export const TokenItem = memo(function _TokenItem({
         // Swap action
         if (e.nativeEvent.index === SWAP_ACTION_INDEX) {
           navigateToSwapSell()
-          sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+          sendMobileAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
             element: ElementName.Swap,
             section: SectionName.ExploreTopTokensSection,
           })

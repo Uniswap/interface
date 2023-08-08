@@ -3,7 +3,7 @@ import { MMKVWrapper } from 'apollo3-cache-persist'
 import { useCallback, useEffect, useState } from 'react'
 import { MMKV } from 'react-native-mmkv'
 import { initAndPersistCache } from 'src/data/cache'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { isNonJestDev } from 'utilities/src/environment'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -36,7 +36,7 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
         // requires typing outside of wallet package
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         getPerformanceLink((args: any) =>
-          sendAnalyticsEvent(MobileEventName.PerformanceGraphql, args)
+          sendMobileAnalyticsEvent(MobileEventName.PerformanceGraphql, args)
         ),
         getRestLink(),
         getGraphqlHttpLink(),

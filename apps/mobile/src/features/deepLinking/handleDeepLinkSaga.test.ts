@@ -8,7 +8,7 @@ import {
 
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { openModal } from 'src/features/modals/modalSlice'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { account } from 'src/test/fixtures'
@@ -42,7 +42,7 @@ describe(handleDeepLink, () => {
       })
       .call(parseAndValidateUserAddress, account.address)
       .put(setAccountAsActive(account.address))
-      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+      .call(sendMobileAnalyticsEvent, MobileEventName.DeepLinkOpened, {
         url: swapDeepLinkPayload.url,
         screen: 'swap',
         is_cold_start: swapDeepLinkPayload.coldStart,
@@ -61,7 +61,7 @@ describe(handleDeepLink, () => {
         },
       })
       .call(handleTransactionLink)
-      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+      .call(sendMobileAnalyticsEvent, MobileEventName.DeepLinkOpened, {
         url: transactionDeepLinkPayload.url,
         screen: 'transaction',
         is_cold_start: transactionDeepLinkPayload.coldStart,

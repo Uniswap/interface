@@ -26,7 +26,7 @@ import { LockScreenContextProvider } from 'src/features/authentication/lockScree
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
@@ -91,7 +91,7 @@ function App(): JSX.Element | null {
   const deviceId = useAsyncData(fetchAndSetDeviceId).data
 
   const onReportPrepared = useCallback((report: RenderPassReport) => {
-    sendAnalyticsEvent(MobileEventName.PerformanceReport, report)
+    sendMobileAnalyticsEvent(MobileEventName.PerformanceReport, report)
   }, [])
 
   if (!client) {

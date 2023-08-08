@@ -1,7 +1,5 @@
 import { GQLQueries } from 'src/data/queries'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
 import { call, delay } from 'typed-redux-saga'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -11,6 +9,8 @@ import {
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { WalletEventName } from 'wallet/src/telemetry/constants'
 import {
   buildCurrencyId,
   buildNativeCurrencyId,
@@ -56,7 +56,7 @@ export function* refetchGQLQueries(transaction: TransactionDetails) {
     freshnessLag += REFETCH_INTERVAL
   }
 
-  sendAnalyticsEvent(MobileEventName.PortfolioBalanceFreshnessLag, {
+  sendWalletAnalyticsEvent(WalletEventName.PortfolioBalanceFreshnessLag, {
     freshnessLag,
     updatedCurrencies: Object.keys(currencyIdToStartingBalance),
   })

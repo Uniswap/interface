@@ -15,7 +15,7 @@ import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import {
   useActiveAccountAddressWithThrow,
@@ -142,7 +142,7 @@ export function useTokenContextMenu({
       await Share.share({
         message: tokenUrl,
       })
-      sendAnalyticsEvent(MobileEventName.ShareButtonClicked, {
+      sendMobileAnalyticsEvent(MobileEventName.ShareButtonClicked, {
         entity: ShareableEntity.Token,
         url: tokenUrl,
       })

@@ -30,7 +30,7 @@ import Trace from 'src/components/Trace/Trace'
 import { FiatOnRampConnectingView } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
 import { useMoonpayFiatOnRamp } from 'src/features/fiatOnRamp/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { MobileEventProperties } from 'src/features/telemetry/types'
 import { useDynamicFontSizing, useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
@@ -161,7 +161,7 @@ export function FiatOnRampModal(): JSX.Element {
   const onChangeValue =
     (source: MobileEventProperties[MobileEventName.FiatOnRampAmountEntered]['source']) =>
     (newAmount: string): void => {
-      sendAnalyticsEvent(MobileEventName.FiatOnRampAmountEntered, { source })
+      sendMobileAnalyticsEvent(MobileEventName.FiatOnRampAmountEntered, { source })
       onSetFontSize(newAmount)
       setValue(newAmount)
     }

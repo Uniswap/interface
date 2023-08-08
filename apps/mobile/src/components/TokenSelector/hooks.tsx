@@ -9,7 +9,7 @@ import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks
 import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { selectFavoriteTokens } from 'src/features/favorites/selectors'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { MATIC_MAINNET_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -99,7 +99,7 @@ export function useFilterCallbacks(
   const onChangeChainFilter = useCallback(
     (newChainFilter: typeof chainFilter) => {
       setChainFilter(newChainFilter)
-      sendAnalyticsEvent(MobileEventName.NetworkFilterSelected, {
+      sendMobileAnalyticsEvent(MobileEventName.NetworkFilterSelected, {
         chain: newChainFilter ?? 'All',
         modal: flowToModalName(flow),
       })

@@ -12,7 +12,7 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { RootParamList } from 'src/app/navigation/types'
 import Trace from 'src/components/Trace/Trace'
 import { DeepLink, openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { getEventParams } from 'src/features/telemetry/constants'
 import { DIRECT_LOG_ONLY_SCREENS } from 'src/features/telemetry/directLogScreens'
 import { AppScreen } from 'src/screens/Screens'
@@ -47,7 +47,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
       }}
       onReady={(): void => {
         onReady(navigationRef)
-        sendAnalyticsEvent(SharedEventName.APP_LOADED)
+        sendMobileAnalyticsEvent(SharedEventName.APP_LOADED)
 
         // setting initial route name for telemetry
         const initialRoute = navigationRef.getCurrentRoute()?.name as AppScreen

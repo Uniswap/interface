@@ -5,7 +5,7 @@ import appsFlyer from 'react-native-appsflyer'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { attemptCancelTransaction } from 'src/features/transactions/cancelTransactionSaga'
 import { refetchGQLQueries } from 'src/features/transactions/refetchGQLQueriesSaga'
 import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransactionSaga'
@@ -265,7 +265,7 @@ export function logTransactionEvent(
       status === TransactionStatus.Success
         ? SwapEventName.SWAP_TRANSACTION_COMPLETED
         : SwapEventName.SWAP_TRANSACTION_FAILED
-    sendAnalyticsEvent(eventName, {
+    sendMobileAnalyticsEvent(eventName, {
       address: from,
       hash,
       chain_id: chainId,

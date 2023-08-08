@@ -10,7 +10,7 @@ import {
   removeFavoriteToken,
   removeWatchedAddress,
 } from 'src/features/favorites/slice'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -24,7 +24,7 @@ export function useToggleFavoriteCallback(id: CurrencyId, isFavoriteToken: boole
     if (isFavoriteToken) {
       dispatch(removeFavoriteToken({ currencyId: id }))
     } else {
-      sendAnalyticsEvent(MobileEventName.FavoriteItem, {
+      sendMobileAnalyticsEvent(MobileEventName.FavoriteItem, {
         address: currencyIdToAddress(id),
         chain: currencyIdToChain(id) as number,
         type: 'token',
@@ -44,7 +44,7 @@ export function useToggleWatchedWalletCallback(address: Address): () => void {
     if (isFavoriteWallet) {
       dispatch(removeWatchedAddress({ address }))
     } else {
-      sendAnalyticsEvent(MobileEventName.FavoriteItem, {
+      sendMobileAnalyticsEvent(MobileEventName.FavoriteItem, {
         address,
         type: 'wallet',
         name: displayName?.name,

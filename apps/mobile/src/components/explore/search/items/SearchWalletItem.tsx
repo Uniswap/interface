@@ -13,7 +13,7 @@ import { Text } from 'src/components/Text'
 import { addToSearchHistory, WalletSearchResult } from 'src/features/explore/searchHistorySlice'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import { getCompletedENSName } from 'wallet/src/features/ens/useENS'
@@ -57,7 +57,7 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
   const onPress = (): void => {
     navigate(address)
     if (searchContext) {
-      sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
+      sendMobileAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
         name: ensName ?? address,
         address,

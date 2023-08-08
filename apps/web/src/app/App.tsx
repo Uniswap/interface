@@ -24,7 +24,7 @@ import { SettingsScreenWrapper } from 'src/app/features/settings/SettingsScreenW
 import { SettingsViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsViewRecoveryPhraseScreen'
 import { SettingsWalletEditNicknameScreen } from 'src/app/features/settings/SettingsWalletEditNicknameScreen'
 import { SettingsWalletScreen } from 'src/app/features/settings/SettingsWalletScreen'
-import { sendAnalyticsEvent } from 'src/app/features/telemetry'
+import { sendExtensionAnalyticsEvent } from 'src/app/features/telemetry'
 import { ExtensionEventName } from 'src/app/features/telemetry/constants'
 import {
   AppRoutes,
@@ -181,7 +181,7 @@ function App({ store }: { store: Store }): JSX.Element {
       await analytics.init(
         new ApplicationTransport(uniswapUrls.amplitudeProxyUrl, EXTENSION_ORIGIN_APPLICATION)
       )
-      sendAnalyticsEvent(ExtensionEventName.ExtensionLoad)
+      sendExtensionAnalyticsEvent(ExtensionEventName.ExtensionLoad)
     }
     initAndLogLoad().catch(() => undefined)
   }, [])

@@ -11,7 +11,7 @@ import {
   getTokensOrderByMenuLabel,
   getTokensOrderBySelectedLabel,
 } from 'src/features/explore/utils'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -72,7 +72,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         }
 
         dispatch(setTokensOrderBy({ newTokensOrderBy: selectedMenuAction.orderBy }))
-        sendAnalyticsEvent(MobileEventName.ExploreFilterSelected, {
+        sendMobileAnalyticsEvent(MobileEventName.ExploreFilterSelected, {
           filter_type: selectedMenuAction.orderBy,
         })
       }}>

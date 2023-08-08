@@ -11,7 +11,7 @@ import {
   NFTCollectionSearchResult,
   SearchResultType,
 } from 'src/features/explore/searchHistorySlice'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
@@ -38,7 +38,7 @@ export function SearchNFTCollectionItem({
     })
 
     if (searchContext) {
-      sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
+      sendMobileAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
         name,
         chain: chainId,

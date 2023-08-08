@@ -6,7 +6,7 @@ import { LayoutChangeEvent } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { flowToModalName, TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import {
   makeSelectAddressTransactions,
@@ -181,7 +181,7 @@ export function useTokenSelectorActionHandlers(
       )
 
       // log event that a currency was selected
-      sendAnalyticsEvent(MobileEventName.TokenSelected, {
+      sendMobileAnalyticsEvent(MobileEventName.TokenSelected, {
         name: currency.name,
         address: currencyAddress(currency),
         chain: currency.chainId,

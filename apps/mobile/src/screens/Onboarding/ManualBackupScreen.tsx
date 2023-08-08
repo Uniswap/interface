@@ -23,7 +23,7 @@ import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ManualPageViewScreen, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import {
@@ -103,12 +103,12 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   useEffect(() => {
     switch (view) {
       case View.SeedPhrase:
-        sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
+        sendMobileAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
           screen: ManualPageViewScreen.WriteDownRecoveryPhrase,
         })
         break
       case View.SeedPhraseConfirm:
-        sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
+        sendMobileAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
           screen: ManualPageViewScreen.ConfirmRecoveryPhrase,
         })
     }

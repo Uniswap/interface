@@ -7,7 +7,7 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TripleDot } from 'src/components/icons/TripleDot'
 import { Flex } from 'src/components/layout/Flex'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { setClipboard } from 'src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'src/utils/linking'
 import { serializeError } from 'utilities/src/errors'
@@ -43,7 +43,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
       await Share.share({
         message: url,
       })
-      sendAnalyticsEvent(MobileEventName.ShareButtonClicked, {
+      sendMobileAnalyticsEvent(MobileEventName.ShareButtonClicked, {
         entity: ShareableEntity.Wallet,
         url,
       })

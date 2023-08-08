@@ -2,7 +2,7 @@ import appsFlyer from 'react-native-appsflyer'
 import { useAppDispatch } from 'src/app/hooks'
 import { useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -30,7 +30,7 @@ export function useCompleteOnboardingCallback(
   const navigation = useOnboardingStackNavigation()
 
   return async () => {
-    sendAnalyticsEvent(
+    sendMobileAnalyticsEvent(
       entryPoint === OnboardingEntryPoint.Sidebar
         ? MobileEventName.WalletAdded
         : MobileEventName.OnboardingCompleted,

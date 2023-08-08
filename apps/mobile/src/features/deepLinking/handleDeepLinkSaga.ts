@@ -8,7 +8,7 @@ import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayR
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { openModal } from 'src/features/modals/modalSlice'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ModalName, ShareableEntity } from 'src/features/telemetry/constants'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
@@ -69,7 +69,7 @@ export function* handleUniswapAppDeepLink(hash: string, url: string) {
         },
       })
     )
-    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+    yield* call(sendMobileAnalyticsEvent, MobileEventName.ShareLinkOpened, {
       entity: ShareableEntity.NftItem,
       url,
     })
@@ -91,7 +91,7 @@ export function* handleUniswapAppDeepLink(hash: string, url: string) {
         },
       })
     )
-    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+    yield* call(sendMobileAnalyticsEvent, MobileEventName.ShareLinkOpened, {
       entity: ShareableEntity.NftCollection,
       url,
     })
@@ -118,7 +118,7 @@ export function* handleUniswapAppDeepLink(hash: string, url: string) {
         },
       })
     )
-    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+    yield* call(sendMobileAnalyticsEvent, MobileEventName.ShareLinkOpened, {
       entity: ShareableEntity.Token,
       url,
     })
@@ -149,7 +149,7 @@ export function* handleUniswapAppDeepLink(hash: string, url: string) {
         })
       )
     }
-    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+    yield* call(sendMobileAnalyticsEvent, MobileEventName.ShareLinkOpened, {
       entity: ShareableEntity.Wallet,
       url,
     })
@@ -227,7 +227,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
         throw new Error('Invalid or unsupported screen')
     }
 
-    yield* call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+    yield* call(sendMobileAnalyticsEvent, MobileEventName.DeepLinkOpened, {
       url: url.toString(),
       screen,
       is_cold_start: coldStart,

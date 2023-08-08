@@ -16,7 +16,7 @@ import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { selectModalState } from 'src/features/modals/modalSlice'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'ui/src/theme/restyle/flex'
@@ -53,7 +53,7 @@ export function ExploreScreen(): JSX.Element {
 
   const onSearchFocus = (): void => {
     setIsSearchMode(true)
-    sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
+    sendMobileAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
       section: SectionName.ExploreSearch,
       screen: Screens.Explore,
     })

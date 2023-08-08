@@ -11,7 +11,7 @@ import { Warning } from 'src/components/modals/WarningModal/types'
 import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { Text } from 'src/components/Text'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
 import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
@@ -53,7 +53,7 @@ export function TransactionDetails({
 
   const onPressToggleShowChildren = (): void => {
     if (!showChildren) {
-      sendAnalyticsEvent(SwapEventName.SWAP_DETAILS_EXPANDED)
+      sendMobileAnalyticsEvent(SwapEventName.SWAP_DETAILS_EXPANDED)
     }
     setShowChildren(!showChildren)
   }

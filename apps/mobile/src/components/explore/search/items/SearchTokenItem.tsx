@@ -12,7 +12,7 @@ import {
   SearchResultType,
   TokenSearchResult,
 } from 'src/features/explore/searchHistorySlice'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -35,7 +35,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
     tokenDetailsNavigation.preload(currencyId)
     tokenDetailsNavigation.navigate(currencyId)
     if (searchContext) {
-      sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
+      sendMobileAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
         name: name ?? '',
         chain: token.chainId,

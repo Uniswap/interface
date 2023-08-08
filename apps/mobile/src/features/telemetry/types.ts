@@ -6,19 +6,7 @@ import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { EthMethod, WCEventType, WCRequestOutcome } from 'wallet/src/features/walletConnect/types'
-
-export type SwapTradeBaseProperties = {
-  allowed_slippage_basis_points?: number
-  token_in_symbol?: string
-  token_out_symbol?: string
-  token_in_address: string
-  token_out_address: string
-  price_impact_basis_points?: string
-  estimated_network_fee_usd?: number
-  chain_id: number
-  token_in_amount: string
-  token_out_amount: string
-} & TraceProps
+import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
 
 type SwapTransactionResultProperties = {
   address: string
@@ -107,10 +95,6 @@ export type MobileEventProperties = {
     operationName: string
     operationType?: string
   }
-  [MobileEventName.PortfolioBalanceFreshnessLag]: {
-    freshnessLag: number
-    updatedCurrencies: string[]
-  }
   [MobileEventName.ShareButtonClicked]: {
     entity: ShareableEntity
     url: string
@@ -119,9 +103,6 @@ export type MobileEventProperties = {
     entity: ShareableEntity
     url: string
   }
-  [MobileEventName.SwapSubmitted]: {
-    transaction_hash: string
-  } & SwapTradeBaseProperties
   [MobileEventName.TokenDetailsOtherChainButtonPressed]: TraceProps
   [MobileEventName.TokenSelected]: TraceProps &
     AssetDetailsBaseProperties &

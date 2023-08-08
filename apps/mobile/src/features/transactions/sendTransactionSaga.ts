@@ -1,7 +1,5 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
 import {
   createTransactionId,
@@ -22,6 +20,8 @@ import {
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { WalletEventName } from 'wallet/src/telemetry/constants'
 import { getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
@@ -106,7 +106,7 @@ function* addTransaction(
   }
 
   if (transaction.typeInfo.type === TransactionType.Swap && trade) {
-    yield* call(sendAnalyticsEvent, MobileEventName.SwapSubmitted, {
+    yield* call(sendWalletAnalyticsEvent, WalletEventName.SwapSubmitted, {
       transaction_hash: hash,
       chain_id: chainId,
       price_impact_basis_points: trade.priceImpact.multiply(100).toSignificant(),

@@ -10,7 +10,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { CurrencyInfo } from 'src/features/dataApi/types'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { selectTransactions } from 'src/features/transactions/selectors'
 import { getBaseTradeAnalyticsProperties } from 'src/features/transactions/swap/analytics'
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
@@ -651,7 +651,7 @@ export function useSwapCallback(
       )
       onSubmit()
 
-      sendAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
+      sendMobileAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
         ...getBaseTradeAnalyticsProperties(trade),
         estimated_network_fee_wei: totalGasFee,
         gas_limit: toStringish(swapTxRequest.gasLimit),

@@ -7,7 +7,7 @@ import { TripleDot } from 'src/components/icons/TripleDot'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { NFTCollectionData } from 'src/features/nfts/collection/NFTCollectionHeader'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { getNftCollectionUrl, getTwitterLink, openUri } from 'src/utils/linking'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
@@ -55,7 +55,7 @@ export function NFTCollectionContextMenu({
       await Share.share({
         message: shareURL,
       })
-      sendAnalyticsEvent(MobileEventName.ShareButtonClicked, {
+      sendMobileAnalyticsEvent(MobileEventName.ShareButtonClicked, {
         entity: ShareableEntity.NftCollection,
         url: shareURL,
       })

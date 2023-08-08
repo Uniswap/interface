@@ -1,11 +1,11 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useEffect, useRef } from 'react'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { SwapTradeBaseProperties } from 'src/features/telemetry/types'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
 import { currencyAddress, getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
 
 // hook-based analytics because this one is data-lifecycle dependent
@@ -36,7 +36,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
     const currTrade = tradeRef.current
     if (!currTrade || !inputAmount) return
 
-    sendAnalyticsEvent(
+    sendMobileAnalyticsEvent(
       SwapEventName.SWAP_QUOTE_RECEIVED,
       getBaseTradeAnalyticsProperties(currTrade)
     )

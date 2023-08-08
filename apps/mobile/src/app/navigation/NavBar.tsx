@@ -24,7 +24,7 @@ import { Text } from 'src/components/Text'
 import { IS_ANDROID } from 'src/constants/globals'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
 import { Screens } from 'src/screens/Screens'
@@ -40,7 +40,7 @@ export const SWAP_BUTTON_HEIGHT = 56
 const SWAP_BUTTON_SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 4 }
 
 function sendSwapPressAnalyticsEvent(): void {
-  sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+  sendMobileAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
     screen: Screens.Home,
     element: ElementName.Swap,
   })

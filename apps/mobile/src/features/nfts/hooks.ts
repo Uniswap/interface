@@ -7,7 +7,7 @@ import { selectNftsData } from 'src/features/favorites/selectors'
 import { AccountToNftData, isNftHidden, toggleNftVisibility } from 'src/features/favorites/slice'
 import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { getNftUrl } from 'src/utils/linking'
 import { serializeError } from 'utilities/src/errors'
@@ -110,7 +110,7 @@ export function useNFTMenu({
       await Share.share({
         message: url,
       })
-      sendAnalyticsEvent(MobileEventName.ShareButtonClicked, {
+      sendMobileAnalyticsEvent(MobileEventName.ShareButtonClicked, {
         entity: ShareableEntity.NftItem,
         url,
       })

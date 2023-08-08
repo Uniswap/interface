@@ -16,7 +16,7 @@ import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
 import { PendingConnectionSwitchNetworkModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchNetworkModal'
 import { truncateDappName } from 'src/components/WalletConnect/ScanSheet/util'
-import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { returnToPreviousApp, settlePendingSession } from 'src/features/walletConnect/WalletConnect'
@@ -203,7 +203,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
 
   const onPressSettleConnection = useCallback(
     async (approved: boolean) => {
-      sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
+      sendMobileAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
         request_type: WCEventType.SessionPending,
         dapp_url: pendingSession.dapp.url,
         dapp_name: pendingSession.dapp.name,
