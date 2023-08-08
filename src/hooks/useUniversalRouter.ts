@@ -83,6 +83,8 @@ export function useUniversalRouterSwapCallback(
           sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
             ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
             ...analyticsContext,
+            tx,
+            error: gasError,
           })
           console.warn(gasError)
           throw new GasEstimationError()
