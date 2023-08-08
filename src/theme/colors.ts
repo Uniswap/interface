@@ -94,6 +94,7 @@ export const colors = {
   networkPolygon: '#A457FF',
   networkArbitrum: '#28A0F0',
   networkBsc: '#F0B90B',
+  networkBase: '#0052FF',
   networkPolygonSoft: 'rgba(164, 87, 255, 0.16)',
   networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
   //NEW COLORS FOR SPORE - need to define light/dark here cause they are root colors now (different system)
@@ -145,6 +146,7 @@ const commonTheme = {
   chain_10_background: colors.red900,
   chain_43114_background: colors.red900,
   chain_42161_background: colors.blue900,
+  chain_84531: colors.networkBase,
   chain_56_background: colors.networkBsc,
   promotional: colors.magenta300,
 

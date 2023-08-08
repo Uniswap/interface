@@ -37,7 +37,7 @@ export function FiatValue({
 
   return (
     <Row gap="sm">
-      <ThemedText.BodySmall>
+      <ThemedText.BodySmall color="textSecondary">
         {fiatValue.data ? (
           formatNumber(fiatValue.data, NumberType.FiatTokenPrice)
         ) : (

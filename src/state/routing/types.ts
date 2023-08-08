@@ -18,6 +18,12 @@ export enum QuoteMethod {
   CLIENT_SIDE_FALLBACK = 'CLIENT_SIDE_FALLBACK', // If client-side was used after the routing-api call failed.
 }
 
+export enum RouterPreference {
+  X = 'uniswapx',
+  API = 'api',
+  CLIENT = 'client',
+}
+
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
 type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
@@ -113,7 +119,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   gasUseEstimateUSD?: number // gas estimate for swaps
   blockNumber: string | null | undefined
   isUniswapXBetter: boolean | undefined
-  fromClientRouter: boolean | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
 
@@ -132,7 +137,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     isUniswapXBetter?: boolean
     requestId?: string
     quoteMethod: QuoteMethod
-    fromClientRouter?: boolean
     approveInfo: ApproveInfo
     v2Routes: {
       routev2: V2Route<Currency, Currency>

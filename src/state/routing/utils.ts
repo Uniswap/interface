@@ -11,7 +11,7 @@ import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
 import { getApproveInfo, getWrapInfo } from './gas'
-import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from './slice'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE } from './slice'
 import {
   ClassicQuoteData,
   ClassicTrade,
@@ -21,6 +21,7 @@ import {
   PoolType,
   QuoteMethod,
   QuoteState,
+  RouterPreference,
   SwapRouterNativeAssets,
   TradeFillType,
   TradeResult,

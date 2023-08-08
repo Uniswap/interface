@@ -1,19 +1,21 @@
-import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
-import { useCallback, useEffect, useState } from 'react'
-import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
-import styled, { useTheme } from 'styled-components/macro'
-import { CustomLightSpinner, ThemedText } from 'theme'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { Trans } from "@lingui/macro";
+import { useWeb3React } from "@web3-react/core";
+import { useCallback, useEffect, useState } from "react";
+import { useHref } from "react-router-dom";
+import { useCloseModal, useModalIsOpen } from "state/application/hooks";
+import { ApplicationModal } from "state/application/reducer";
+import styled, { useTheme } from "styled-components/macro";
+import { CustomLightSpinner, ThemedText } from "theme";
+import { useIsDarkMode } from "theme/components/ThemeToggle";
 
-import Circle from '../../assets/images/blue-loader.svg'
-import Modal from '../Modal'
+import Circle from "../../assets/images/blue-loader.svg";
+import Modal from "../Modal";
 
-const MOONPAY_DARK_BACKGROUND = '#1c1c1e'
+const MOONPAY_DARK_BACKGROUND = "#1c1c1e";
 const Wrapper = styled.div<{ isDarkMode: boolean }>`
   // #1c1c1e is the background color for the darkmode moonpay iframe as of 2/16/2023
-  background-color: ${({ isDarkMode, theme }) => (isDarkMode ? MOONPAY_DARK_BACKGROUND : theme.white)};
+  background-color: ${({ isDarkMode, theme }) =>
+    isDarkMode ? MOONPAY_DARK_BACKGROUND : theme.white};
   border-radius: 20px;
   box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   display: flex;
@@ -23,17 +25,18 @@ const Wrapper = styled.div<{ isDarkMode: boolean }>`
   min-width: 375px;
   position: relative;
   width: 100%;
-`
+`;
 
 const ErrorText = styled(ThemedText.BodyPrimary)`
   color: ${({ theme }) => theme.critical};
   margin: auto !important;
   text-align: center;
   width: 90%;
-`
+`;
 const StyledIframe = styled.iframe<{ isDarkMode: boolean }>`
   // #1c1c1e is the background color for the darkmode moonpay iframe as of 2/16/2023
-  background-color: ${({ isDarkMode, theme }) => (isDarkMode ? MOONPAY_DARK_BACKGROUND : theme.white)};
+  background-color: ${({ isDarkMode, theme }) =>
+    isDarkMode ? MOONPAY_DARK_BACKGROUND : theme.white};
   border-radius: 12px;
   bottom: 0;
   left: 0;
@@ -44,7 +47,7 @@ const StyledIframe = styled.iframe<{ isDarkMode: boolean }>`
   right: 0;
   top: 0;
   width: calc(100% - 16px);
-`
+`;
 const StyledSpinner = styled(CustomLightSpinner)`
   bottom: 0;
   left: 0;
@@ -52,53 +55,56 @@ const StyledSpinner = styled(CustomLightSpinner)`
   position: absolute;
   right: 0;
   top: 0;
-`
+`;
 
 const MOONPAY_SUPPORTED_CURRENCY_CODES = [
-  'eth',
-  'eth_arbitrum',
-  'eth_optimism',
-  'eth_polygon',
-  'weth',
-  'wbtc',
-  'matic_polygon',
-  'polygon',
-  'usdc_arbitrum',
-  'usdc_optimism',
-  'usdc_polygon',
-]
+  "eth",
+  "eth_arbitrum",
+  "eth_optimism",
+  "eth_polygon",
+  "weth",
+  "wbtc",
+  "matic_polygon",
+  "polygon",
+  "usdc_arbitrum",
+  "usdc_optimism",
+  "usdc_polygon",
+];
 
 export default function FiatOnrampModal() {
-  const { account } = useWeb3React()
-  const theme = useTheme()
-  const isDarkMode = useIsDarkMode()
-  const closeModal = useCloseModal()
-  const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
+  const { account } = useWeb3React();
+  const theme = useTheme();
+  const isDarkMode = useIsDarkMode();
+  const closeModal = useCloseModal();
+  const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP);
 
-  const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const swapUrl = useHref("/swap");
 
   const fetchSignedIframeUrl = useCallback(async () => {
     if (!account) {
-      setError('Please connect an account before making a purchase.')
-      return
+      setError("Please connect an account before making a purchase.");
+      return;
     }
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
     try {
-      const signedIframeUrlFetchEndpoint = process.env.REACT_APP_MOONPAY_LINK as string
+      const signedIframeUrlFetchEndpoint = process.env
+        .REACT_APP_MOONPAY_LINK as string;
       const res = await fetch(signedIframeUrlFetchEndpoint, {
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
-          theme: isDarkMode ? 'dark' : 'light',
+          theme: isDarkMode ? "dark" : "light",
           colorCode: theme.accent1,
-          defaultCurrencyCode: 'eth',
-          redirectUrl: 'https://app.uniswap.org/#/swap',
+          defaultCurrencyCode: "eth",
+          redirectUrl: swapUrl,
           walletAddresses: JSON.stringify(
             MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
               (acc, currencyCode) => ({
@@ -109,23 +115,27 @@ export default function FiatOnrampModal() {
             )
           ),
         }),
-      })
-      const { url } = await res.json()
-      setSignedIframeUrl(url)
+      });
+      const { url } = await res.json();
+      setSignedIframeUrl(url);
     } catch (e) {
-      console.log('there was an error fetching the link', e)
-      setError(e.toString())
+      console.log("there was an error fetching the link", e);
+      setError(e.toString());
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [account, isDarkMode, theme.accent1])
+  }, [account, isDarkMode, swapUrl, theme.accent1]);
 
   useEffect(() => {
-    fetchSignedIframeUrl()
-  }, [fetchSignedIframeUrl])
+    fetchSignedIframeUrl();
+  }, [fetchSignedIframeUrl]);
 
   return (
-    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} height={80 /* vh */}>
+    <Modal
+      isOpen={fiatOnrampModalOpen}
+      onDismiss={closeModal}
+      height={80 /* vh */}
+    >
       <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
         {error ? (
           <>
@@ -142,7 +152,7 @@ export default function FiatOnrampModal() {
           <StyledSpinner src={Circle} alt="loading spinner" size="90px" />
         ) : (
           <StyledIframe
-            src={signedIframeUrl ?? ''}
+            src={signedIframeUrl ?? ""}
             frameBorder="0"
             title="fiat-onramp-iframe"
             isDarkMode={isDarkMode}
@@ -150,5 +160,5 @@ export default function FiatOnrampModal() {
         )}
       </Wrapper>
     </Modal>
-  )
+  );
 }

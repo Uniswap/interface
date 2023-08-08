@@ -100,6 +100,23 @@ jobs:
           path: build
           if-no-files-found: error
 
+  cypress-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/cache-on-main
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-cypress-tsc-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-cypress-tsc-
+      - run: yarn typecheck:cypress
+      - if: failure() && github.ref_name == 'main'
+        uses: ./.github/actions/report
+        with:
+          name: Cypress typecheck
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
+
   # Allows for parallel re-runs of cypress tests without re-building.
   cypress-rerun:
     runs-on: ubuntu-latest

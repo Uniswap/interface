@@ -6,7 +6,7 @@ import Loader from 'components/Icons/LoadingSpinner'
 import { format } from 'd3'
 import { useColor } from 'hooks/useColor'
 import { saturate } from 'polished'
-import React, { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo } from 'react'
 import { BarChart2, CloudOff, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
@@ -46,7 +46,8 @@ const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
 
 const ChartWrapper = styled.div`
   position: relative;
-
+  width: 100%;
+  max-height: 200px;
   justify-content: center;
   align-content: center;
 `
@@ -180,7 +181,7 @@ export default function LiquidityChartRangeInput({
         <ChartWrapper>
           <Chart
             data={{ series: formattedData, current: price }}
-            dimensions={{ width: 400, height: 200 }}
+            dimensions={{ width: 560, height: 200 }}
             margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
             styles={{
               area: {

@@ -3,7 +3,7 @@ import { ReactComponent as Settings } from 'assets/svg/settings.svg'
 import IconButton from 'components/AccountDrawer/IconButton'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import { getConnections, networkConnection } from 'connection'
+import { connections, networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
 import { useEffect } from 'react'
@@ -39,8 +39,6 @@ const PrivacyPolicyWrapper = styled.div`
 
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const { connector, chainId } = useWeb3React()
-
-  const connections = getConnections()
 
   const { activationState } = useActivationState()
 

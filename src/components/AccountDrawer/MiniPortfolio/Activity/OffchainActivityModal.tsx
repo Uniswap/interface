@@ -77,6 +77,7 @@ function Loader() {
 }
 
 const Success = styled(AnimatedEntranceConfirmationIcon)`
+  position: relative;
   margin-bottom: 10px;
 `
 

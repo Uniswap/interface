@@ -20,13 +20,27 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.BASE_GOERLI]: 'base_goerli',
 } as const
 
-const NOT_YET_UX_SUPPORTED_CHAIN_IDS = [ChainId.BASE, ChainId.BASE_GOERLI] as const
+// Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.
+const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = []
 
-export function isSupportedChain(chainId: number | null | undefined | ChainId): chainId is SupportedChainsType {
+export function isSupportedChain(
+  chainId: number | null | undefined | ChainId,
+  featureFlags?: Record<number, boolean>
+): chainId is SupportedChainsType {
+  if (featureFlags && chainId && chainId in featureFlags) {
+    return featureFlags[chainId]
+  }
   return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) !== -1 && NOT_YET_UX_SUPPORTED_CHAIN_IDS.indexOf(chainId) === -1
 }
 
-export function asSupportedChain(chainId: number | null | undefined | ChainId): SupportedChainsType | undefined {
+export function asSupportedChain(
+  chainId: number | null | undefined | ChainId,
+  featureFlags?: Record<number, boolean>
+): SupportedChainsType | undefined {
+  if (!chainId) return undefined
+  if (featureFlags && chainId in featureFlags && !featureFlags[chainId]) {
+    return undefined
+  }
   return isSupportedChain(chainId) ? chainId : undefined
 }
 
@@ -38,6 +52,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   ChainId.ARBITRUM_ONE,
   ChainId.BNB,
   ChainId.AVALANCHE,
+  ChainId.BASE,
 ] as const
 
 /**
@@ -52,6 +67,7 @@ export const TESTNET_CHAIN_IDS = [
   ChainId.ARBITRUM_GOERLI,
   ChainId.OPTIMISM_GOERLI,
   ChainId.CELO_ALFAJORES,
+  ChainId.BASE_GOERLI,
 ] as const
 
 /**
@@ -80,6 +96,8 @@ export const L2_CHAIN_IDS = [
   ChainId.ARBITRUM_GOERLI,
   ChainId.OPTIMISM,
   ChainId.OPTIMISM_GOERLI,
+  ChainId.BASE,
+  ChainId.BASE_GOERLI,
 ] as const
 
 export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]

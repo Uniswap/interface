@@ -9,6 +9,7 @@ import { trace } from 'tracing/trace'
 import {
   QuoteMethod,
   QuoteState,
+  RouterPreference,
   RoutingConfig,
   SwapRouterNativeAssets,
   TradeResult,
@@ -20,12 +21,6 @@ import { getRouter, isExactInput, shouldUseAPIRouter, transformRoutesToTrade } f
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
 if (UNISWAP_API_URL === undefined) {
   throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
-}
-
-export enum RouterPreference {
-  X = 'uniswapx',
-  API = 'api',
-  CLIENT = 'client',
 }
 
 // This is excluded from `RouterPreference` enum because it's only used
@@ -55,6 +50,7 @@ export interface GetQuoteArgs {
   forceUniswapXOn: boolean
   userDisabledUniswapX: boolean
   isRoutingAPIPrice?: boolean
+  uniswapXEthOutputEnabled: boolean
 }
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
@@ -65,7 +61,15 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const { account, tradeType, tokenOutAddress, tokenInChainId, uniswapXForceSyntheticQuotes } = args
+  const {
+    account,
+    tradeType,
+    tokenOutAddress,
+    tokenInChainId,
+    uniswapXForceSyntheticQuotes,
+    uniswapXEthOutputEnabled,
+    routerPreference,
+  } = args
 
   const uniswapx = {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
@@ -87,8 +91,8 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
   if (
     !args.uniswapXEnabled ||
-    args.userDisabledUniswapX ||
-    tokenOutIsNative ||
+    (args.userDisabledUniswapX && routerPreference !== RouterPreference.X) ||
+    (tokenOutIsNative && !uniswapXEthOutputEnabled) ||
     tradeType === TradeType.EXACT_OUTPUT ||
     !isUniswapXSupportedChain(tokenInChainId)
   ) {

@@ -190,7 +190,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
           <div
             class="c7 css-142zc9n"
           >
-            Uniswap API
+            Uniswap Client
           </div>
         </div>
       </div>

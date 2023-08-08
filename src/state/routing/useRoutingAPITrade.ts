@@ -6,10 +6,10 @@ import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
+import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/slice'
 import { useGetQuoteQuery } from 'state/routing/slice'
 
-import { ClassicTrade, InterfaceTrade, QuoteMethod, QuoteState, TradeState } from './types'
+import { ClassicTrade, InterfaceTrade, QuoteMethod, QuoteState, RouterPreference, TradeState } from './types'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const

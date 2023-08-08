@@ -7,7 +7,7 @@ import { getBalance, getTestSelector } from '../../utils'
 
 describe('Swap errors', () => {
   it('wallet rejection', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, { ethereum: 'hardhat' })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat().then((hardhat) => {
       // Stub the wallet to reject any transaction.
       cy.stub(hardhat.wallet, 'sendTransaction').log(false).rejects(new Error('user cancelled'))
@@ -28,7 +28,7 @@ describe('Swap errors', () => {
   })
 
   it('transaction past deadline', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, { ethereum: 'hardhat' })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat({ automine: false })
     getBalance(USDC_MAINNET).then((initialBalance) => {
       // Enter amount to swap
@@ -63,7 +63,7 @@ describe('Swap errors', () => {
   })
 
   it('slippage failure', () => {
-    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, { ethereum: 'hardhat' })
+    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
     cy.hardhat({ automine: false }).then(async (hardhat) => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 500e6))
       await hardhat.mine()
@@ -113,9 +113,7 @@ describe('Swap errors', () => {
       cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
       cy.get(getTestSelector('popups')).contains('Swapped')
       cy.get(getTestSelector('popups')).contains('Swap failed')
-      getBalance(DAI).then((currentDaiBalance) => {
-        expect(currentDaiBalance).to.be.closeTo(initialBalance + 200, 1)
-      })
+      getBalance(DAI).should('be.closeTo', initialBalance + 200, 1)
     })
   })
 })

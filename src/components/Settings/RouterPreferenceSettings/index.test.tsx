@@ -1,5 +1,5 @@
 import store from 'state'
-import { RouterPreference } from 'state/routing/slice'
+import { RouterPreference } from 'state/routing/types'
 import { updateUserRouterPreference } from 'state/user/reducer'
 import { fireEvent, render, screen } from 'test-utils/render'
 
