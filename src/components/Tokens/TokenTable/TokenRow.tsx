@@ -13,7 +13,7 @@ import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
 
 import {

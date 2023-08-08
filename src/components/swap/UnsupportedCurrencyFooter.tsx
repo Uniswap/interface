@@ -8,7 +8,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Modal from 'components/Modal'
 import { AutoRow, RowBetween } from 'components/Row'
 import { useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { CloseIcon, ExternalLink, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 

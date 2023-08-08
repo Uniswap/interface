@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { AlertTriangle, Slash } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 
 import { MouseoverTooltip } from '../../components/Tooltip'
 

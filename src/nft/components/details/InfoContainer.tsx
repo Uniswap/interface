@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 
 const Header = styled.div<{ isOpen: boolean }>`
   display: flex;

@@ -8,7 +8,7 @@ import { PollingInterval } from 'graphql/data/util'
 import { atom, useAtom } from 'jotai'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useEffect, useMemo } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 import { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
