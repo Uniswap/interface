@@ -196,7 +196,7 @@ jobs:
           path: node_modules/.cache
           key: ${{ runner.os }}-cloud-tsc-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-cloud-tsc-
-      - run: yarn && yarn typecheck:cloud
+      - run: yarn typecheck:cloud
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
         with:
@@ -214,7 +214,7 @@ jobs:
           path: node_modules/.cache
           key: ${{ runner.os }}-cloud-jest-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-cloud-jest-
-      - run: yarn && yarn test:cloud --coverage --maxWorkers=100%
+      - run: yarn test:cloud --coverage --maxWorkers=100%
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
         with:

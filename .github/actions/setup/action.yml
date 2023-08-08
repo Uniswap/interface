@@ -27,6 +27,10 @@ runs:
     # Validators compile quickly, so caching can be omitted.
     - run: yarn ajv
       shell: bash
+    
+    # Run patch-package to apply patches to dependencies.
+    - run: yarn patch-package
+      shell: bash
 
     # Contracts are compiled from source. If source hasn't changed, the contracts do not need to be re-compiled.
     - uses: actions/cache@v3
