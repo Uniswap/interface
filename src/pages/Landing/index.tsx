@@ -75,12 +75,12 @@ const GlowContainer = styled.div`
     height: 100vh;
   }
 `
-
+//glow location
 const Glow = styled.div`
   position: absolute;
   top: 68px;
   bottom: 0;
-  background: radial-gradient(72.04% 72.04% at 50% 3.99%, #ff37eb 0%, rgba(166, 151, 255, 0) 100%);
+  background: radial-gradient(72.04% 72.04% at 50% 3.99%, #ac50ef 0%, rgba(166, 151, 255, 0) 100%);
   filter: blur(72px);
   border-radius: 24px;
   max-width: 480px;
@@ -155,14 +155,15 @@ const SubTextContainer = styled.div`
   display: flex;
   justify-content: center;
 `
-
+//get started button location
 const LandingButton = styled(BaseButton)`
   padding: 16px 0px;
   border-radius: 24px;
 `
 
+//linear-gradient(93.06deg, #ff00c7 2.66%, #ff9ffb 98.99%)
 const ButtonCTA = styled(LandingButton)`
-  background: linear-gradient(93.06deg, #ff00c7 2.66%, #ff9ffb 98.99%);
+  background: linear-gradient(45deg, #ac50ef, #7059fb 50%, #2ecff6);
   border: none;
   color: ${({ theme }) => theme.white};
   transition: ${({ theme }) => `all ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
@@ -389,7 +390,7 @@ export default function Landing() {
             })}
           >
             <AppleLogo width="20" height="20" />
-            Download the Uniswap Wallet for iOS
+            Download the OpenEXA Wallet for iOS
           </DownloadWalletLink>
         </ContentContainer>
         <AboutContentContainer isDarkMode={isDarkMode}>

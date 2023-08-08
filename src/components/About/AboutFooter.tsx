@@ -124,15 +124,15 @@ const LogoSectionContent = () => {
           name={SharedEventName.ELEMENT_CLICKED}
           element={InterfaceElementName.TWITTER_LINK}
         >
-          <SocialLink href="https://twitter.com/uniswap" target="_blank" rel="noopener noreferrer">
+          <SocialLink href="https://twitter.com/openexa" target="_blank" rel="noopener noreferrer">
             <TwitterIcon size={32} />
           </SocialLink>
         </TraceEvent>
-        <SocialLink href="https://github.com/Uniswap" target="_blank" rel="noopener noreferrer">
+        <SocialLink href="https://github.com/OpenData-BondIntelligence" target="_blank" rel="noopener noreferrer">
           <GithubIcon size={32} />
         </SocialLink>
       </SocialLinks>
-      <Copyright>© {new Date().getFullYear()} Uniswap Labs</Copyright>
+      <Copyright>© {new Date().getFullYear()} OpenEXA</Copyright>
     </>
   )
 }
