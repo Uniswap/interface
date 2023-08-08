@@ -137,8 +137,9 @@ export const routingApi = createApi({
         )
       },
       async queryFn(args, _api, _extraOptions, fetch) {
-        const fellBack = false
+        let fellBack = false
         if (shouldUseAPIRouter(args)) {
+          fellBack = true
           try {
             const {
               tokenInAddress,
