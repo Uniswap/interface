@@ -53,3 +53,5 @@ cypress/videos
 cypress/screenshots
 
 .vercel
+
+.wrangler
