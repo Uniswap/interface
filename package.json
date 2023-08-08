@@ -18,7 +18,7 @@
     "i18n": "yarn i18n:extract --clean && yarn i18n:compile",
     "prepare": "concurrently \"npm:ajv\" \"npm:contracts\" \"npm:graphql\" \"npm:i18n\"",
     "start": "craco start",
-    "start:cloud": "NODE_OPTIONS=--dns-result-order=ipv4first PORT=3001 npx wrangler pages dev --node-compat --proxy=3001 --port=3000 -- yarn start",
+    "start:cloud": "NODE_OPTIONS=--dns-result-order=ipv4first PORT=3001 npx wrangler pages dev --node-compat --compatibility-date=2023-08-04 --proxy=3001 --port=3000 -- yarn start",
     "build": "craco build",
     "analyze": "source-map-explorer 'build/static/js/*.js' --only-mapped",
     "serve": "serve build -l 3000",
