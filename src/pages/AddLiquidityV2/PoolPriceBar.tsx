@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, Price } from '@uniswap/sdk-core'
 import { Text } from 'rebass'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'

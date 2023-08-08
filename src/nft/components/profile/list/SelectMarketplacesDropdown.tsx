@@ -9,7 +9,7 @@ import { ListingMarket } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { Dispatch, FormEvent, useMemo, useReducer, useRef } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 

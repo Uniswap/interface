@@ -5,7 +5,7 @@ import { useCollection } from 'graphql/data/nft/Collection'
 import { UniswapMagentaIcon, VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 
 const CarouselCardBorder = styled.div`

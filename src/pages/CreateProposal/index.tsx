@@ -23,7 +23,7 @@ import {
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 
 import { LATEST_GOVERNOR_INDEX } from '../../constants/governance'

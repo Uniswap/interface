@@ -81,22 +81,20 @@ jobs:
           name: Unit tests
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
-  build-e2e:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cache-on-main
         with:
-          path: node_modules/.cache
-          key: ${{ runner.os }}-build-e2e-${{ github.run_id }}
-          restore-keys: ${{ runner.os }}-build-e2e-
-      - run: yarn build:e2e
-        env:
-          NODE_OPTIONS: "--max_old_space_size=4096"
+          path: node_modules/.swc
+          key: ${{ runner.os }}-swc-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-swc-
+      - run: yarn build
       - uses: actions/upload-artifact@v3
         with:
-          name: build-e2e
+          name: build
           path: build
           if-no-files-found: error
 
@@ -124,7 +122,7 @@ jobs:
       - run: exit 0
 
   cypress-test-matrix:
-    needs: [build-e2e, cypress-rerun]
+    needs: [build, cypress-rerun]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -143,7 +141,7 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          name: build-e2e
+          name: build
           path: build
 
       - uses: ./.github/actions/cache-on-main
@@ -175,11 +173,6 @@ jobs:
           COMMIT_INFO_TIMESTAMP: ${{ github.event.pull_request.updated_at || github.event.head_commit.timestamp }}
           CYPRESS_PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
           CYPRESS_PULL_REQUEST_URL: ${{ github.event.pull_request.html_url }}
-      - uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
-          flags: e2e-tests
       - if: failure() && github.ref_name == 'main'
         uses: ./.github/actions/report
         with:

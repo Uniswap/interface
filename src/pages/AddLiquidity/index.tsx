@@ -25,7 +25,7 @@ import {
   useV3MintActionHandlers,
   useV3MintState,
 } from 'state/mint/v3/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
