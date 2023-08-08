@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import AuthenticatedHeader from './AuthenticatedHeader'
@@ -17,13 +17,24 @@ enum MenuState {
   SETTINGS,
 }
 
-function DefaultMenu() {
+function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const { account } = useWeb3React()
   const isAuthenticated = !!account
 
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
   const openSettings = useCallback(() => setMenu(MenuState.SETTINGS), [])
   const closeSettings = useCallback(() => setMenu(MenuState.DEFAULT), [])
+
+  useEffect(() => {
+    if (!drawerOpen && menu === MenuState.SETTINGS) {
+      // wait for the drawer to close before resetting the menu
+      const timer = setTimeout(() => {
+        closeSettings()
+      }, 250)
+      return () => clearTimeout(timer)
+    }
+    return
+  }, [drawerOpen, menu, closeSettings])
 
   return (
     <DefaultMenuWrap>

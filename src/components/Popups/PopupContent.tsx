@@ -92,7 +92,7 @@ const Descriptor = styled(ThemedText.BodySmall)`
 
 type ActivityPopupContentProps = { activity: Activity; onClick: () => void; onClose: () => void }
 function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupContentProps) {
-  const success = activity.status === TransactionStatus.Confirmed
+  const success = activity.status === TransactionStatus.Confirmed && !activity.cancelled
   const { ENSName } = useENSName(activity?.otherAccount)
 
   return (

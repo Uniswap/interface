@@ -1,4 +1,5 @@
 /* Copied from Uniswap/v-3: https://github.com/Uniswap/v3-info/blob/master/src/utils/numbers.ts */
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { DEFAULT_LOCALE } from 'constants/locales'
 
@@ -58,4 +59,14 @@ export const formatTransactionAmount = (num: number | undefined | null, maxDigit
     return `${num.toExponential(maxDigits - 3)}`
   }
   return `${Number(num.toFixed(2)).toLocaleString(DEFAULT_LOCALE, { minimumFractionDigits: 2 })}`
+}
+
+const MAX_AMOUNT_STR_LENGTH = 9
+
+export function formatReviewSwapCurrencyAmount(amount: CurrencyAmount<Currency>): string {
+  let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
+  if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
+    formattedAmount = formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
+  }
+  return formattedAmount
 }

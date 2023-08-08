@@ -48,6 +48,21 @@ export const TEST_TRADE_EXACT_INPUT = new ClassicTrade({
   quoteMethod: QuoteMethod.CLIENT_SIDE,
 })
 
+export const TEST_TRADE_EXACT_INPUT_API = new ClassicTrade({
+  v3Routes: [
+    {
+      routev3: new V3Route([TEST_POOL_12], TEST_TOKEN_1, TEST_TOKEN_2),
+      inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+      outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
+    },
+  ],
+  v2Routes: [],
+  tradeType: TradeType.EXACT_INPUT,
+  gasUseEstimateUSD: 1.0,
+  approveInfo: { needsApprove: false },
+  quoteMethod: QuoteMethod.ROUTING_API,
+})
+
 export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
   v3Routes: [
     {
