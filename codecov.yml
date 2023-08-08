@@ -28,12 +28,6 @@ flag_management:
         target: 80%
   individual_flags:
     - name: unit-tests
-    - name: e2e-tests
-      # Wait until all machines have reported coverage - e2e tests run across 4 machines.
-      after_n_builds: 4
-      statuses:
-        - type: patch
-          target: 0%
 
 comment:
   layout: flags
