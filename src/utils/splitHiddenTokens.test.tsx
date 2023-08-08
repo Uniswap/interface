@@ -82,7 +82,7 @@ const tokens: TokenBalance[] = [
   },
 ]
 
-describe('MiniPortfolio.Tokens', () => {
+describe('splitHiddenTokens', () => {
   it('splits spam tokens into hidden but keeps small balances if hideSmallBalances = false', () => {
     const { visibleTokens, hiddenTokens } = splitHiddenTokens(tokens, {
       hideSmallBalances: false,
