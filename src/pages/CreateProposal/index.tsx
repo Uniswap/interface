@@ -48,7 +48,7 @@ const PageWrapper = styled(AutoColumn)`
 
 const BackArrow = styled(ArrowLeft)`
   cursor: pointer;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 const Nav = styled(Link)`
   align-items: center;
