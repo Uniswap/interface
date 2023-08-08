@@ -92,7 +92,7 @@ export function TransferTokenSummaryItem({
     caption = `${translateOptions.what} to ${personDisplayName}`
     // caption = t('{{what}} to {{recipient}}', { recipient: personDisplayName, ...translateOptions })
   } else {
-    caption = `${translateOptions.what} to ${personDisplayName}`
+    caption = `${translateOptions.what} from ${personDisplayName}`
     // caption = t('{{what}} from {{sender}}', { sender: personDisplayName, ...translateOptions })
   }
 
