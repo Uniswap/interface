@@ -3,8 +3,9 @@ import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Icons/LoadingSpinner'
 import { getChainInfo } from 'constants/chainInfo'
+import { useBaseEnabledChains } from 'featureFlags/flags/baseEnabled'
 import { CheckMarkIcon } from 'nft/components/icons'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 
 const LOGO_SIZE = 20
 
@@ -71,7 +72,10 @@ interface ChainSelectorRowProps {
 export default function ChainSelectorRow({ disabled, targetChain, onSelectChain, isPending }: ChainSelectorRowProps) {
   const { chainId } = useWeb3React()
   const active = chainId === targetChain
-  const { label, logoUrl } = getChainInfo(targetChain)
+  const baseEnabledChains = useBaseEnabledChains()
+  const chainInfo = getChainInfo(targetChain, baseEnabledChains)
+  const label = chainInfo?.label
+  const logoUrl = chainInfo?.logoUrl
 
   const theme = useTheme()
 
@@ -82,8 +86,8 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
         if (!disabled) onSelectChain(targetChain)
       }}
     >
-      <Logo src={logoUrl} alt={label} />
-      <Label>{label}</Label>
+      {logoUrl && <Logo src={logoUrl} alt={label} />}
+      {label && <Label>{label}</Label>}
       {disabled && (
         <CaptionText>
           <Trans>Unsupported by your wallet</Trans>

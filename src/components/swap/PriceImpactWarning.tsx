@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { OutlineCard } from 'components/Card'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { opacify } from 'theme/utils'
 import formatPriceImpact from 'utils/formatPriceImpact'
 

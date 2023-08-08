@@ -33,6 +33,7 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
+import { useBaseEnabledChains } from 'featureFlags/flags/baseEnabled'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
@@ -54,7 +55,7 @@ import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { Field, replaceSwapState } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { LinkStyledButton, ThemedText } from 'theme'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -74,14 +75,15 @@ export const ArrowContainer = styled.div`
 `
 
 const SwapSection = styled.div`
-  position: relative;
   background-color: ${({ theme }) => theme.surface2};
   border-radius: 16px;
-  padding: 16px;
   color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
+  font-weight: 500;
+  height: 120px;
   line-height: 20px;
-  font-weight: 535;
+  padding: 16px;
+  position: relative;
 
   &:before {
     box-sizing: border-box;
@@ -134,19 +136,23 @@ function largerPercentValue(a?: Percent, b?: Percent) {
 export default function SwapPage({ className }: { className?: string }) {
   const { chainId: connectedChainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
+  const baseEnabledChains = useBaseEnabledChains()
 
   const location = useLocation()
+
+  const supportedChainId = asSupportedChain(connectedChainId, baseEnabledChains)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <PageWrapper>
         <Swap
           className={className}
-          chainId={connectedChainId}
+          chainId={supportedChainId ?? ChainId.MAINNET}
           prefilledState={{
             [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
             [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },
           }}
+          disableTokenInputs={supportedChainId === undefined}
         />
         <NetworkAlert />
       </PageWrapper>
@@ -585,9 +591,7 @@ export function Swap({
         <SwapSection>
           <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
             <SwapCurrencyInputPanel
-              label={
-                independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
-              }
+              label={<Trans>You pay</Trans>}
               disabled={disableTokenInputs}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={showMaxButton}
@@ -616,10 +620,7 @@ export function Swap({
               }}
               color={theme.neutral1}
             >
-              <ArrowDown
-                size="16"
-                color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.neutral1 : theme.neutral3}
-              />
+              <ArrowDown size="16" color={theme.neutral1} />
             </ArrowContainer>
           </TraceEvent>
         </ArrowWrapper>
@@ -632,7 +633,7 @@ export function Swap({
                 value={formattedAmounts[Field.OUTPUT]}
                 disabled={disableTokenInputs}
                 onUserInput={handleTypeOutput}
-                label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
+                label={<Trans>You receive</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
                 fiatValue={showFiatValueOutput ? fiatValueOutput : undefined}
@@ -671,13 +672,13 @@ export function Swap({
         {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
         <div>
           {swapIsUnsupported ? (
-            <ButtonPrimary disabled={true}>
+            <ButtonPrimary $borderRadius="16px" disabled={true}>
               <ThemedText.DeprecatedMain mb="4px">
                 <Trans>Unsupported Asset</Trans>
               </ThemedText.DeprecatedMain>
             </ButtonPrimary>
           ) : switchingChain ? (
-            <ButtonPrimary disabled={true}>
+            <ButtonPrimary $borderRadius="16px" disabled={true}>
               <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
             </ButtonPrimary>
           ) : !account ? (
@@ -687,12 +688,13 @@ export function Swap({
               properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
-              <ButtonLight onClick={toggleWalletDrawer} fontWeight={535}>
+              <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
                 <Trans>Connect Wallet</Trans>
               </ButtonLight>
             </TraceEvent>
           ) : chainId && chainId !== connectedChainId ? (
             <ButtonPrimary
+              $borderRadius="16px"
               onClick={async () => {
                 try {
                   await switchChain(connector, chainId)
@@ -709,7 +711,13 @@ export function Swap({
               Connect to {getChainInfo(chainId)?.label}
             </ButtonPrimary>
           ) : showWrap ? (
-            <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={handleOnWrap} data-testid="wrap-button">
+            <ButtonPrimary
+              $borderRadius="16px"
+              disabled={Boolean(wrapInputError)}
+              onClick={handleOnWrap}
+              fontWeight={535}
+              data-testid="wrap-button"
+            >
               {wrapInputError ? (
                 <WrapErrorText wrapInputError={wrapInputError} />
               ) : wrapType === WrapType.WRAP ? (

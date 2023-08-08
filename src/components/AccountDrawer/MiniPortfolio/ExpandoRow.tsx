@@ -3,7 +3,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { PropsWithChildren } from 'react'
 import { ChevronDown } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`

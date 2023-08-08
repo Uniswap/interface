@@ -308,7 +308,7 @@ exports[`NftCard renders correctly 1`] = `
   >
     <a
       class="c1"
-      href="#/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/3318?origin=collection"
+      href="/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/3318?origin=collection"
     >
       <div
         class="c2"
@@ -378,10 +378,14 @@ exports[`NftCard renders correctly 1`] = `
               class="c4 c5 c20"
             >
               <div
-                class="c100 c4 c5 c21"
+                class="c4 c5 c21"
               >
                 <div
+<<<<<<< HEAD
                   class="c16 c101 c22 css-1urox24"
+=======
+                  class="c16 c22 css-1jljtub"
+>>>>>>> origin/main
                 >
                   15.8 ETH
                 </div>

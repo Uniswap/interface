@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 const TextWrapper = styled.div`

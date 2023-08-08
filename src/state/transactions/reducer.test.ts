@@ -4,6 +4,7 @@ import { createStore, Store } from 'redux'
 import { updateVersion } from '../global/actions'
 import reducer, {
   addTransaction,
+  cancelTransaction,
   checkedTransaction,
   clearAllTransactions,
   finalizeTransaction,
@@ -230,6 +231,46 @@ describe('transaction reducer', () => {
       expect(Object.keys(store.getState())).toEqual([String(ChainId.MAINNET), String(ChainId.OPTIMISM)])
       expect(Object.keys(store.getState()[ChainId.MAINNET] ?? {})).toEqual([])
       expect(Object.keys(store.getState()[ChainId.OPTIMISM] ?? {})).toEqual(['0x1'])
+    })
+  })
+
+  describe('cancelTransaction', () => {
+    it('replaces original tx with a cancel tx', () => {
+      store.dispatch(
+        addTransaction({
+          chainId: ChainId.MAINNET,
+          hash: '0x0',
+          nonce: 7,
+          info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def', amount: '10000' },
+          from: 'abc',
+        })
+      )
+      const originalTx = store.getState()[ChainId.MAINNET]?.['0x0']
+      store.dispatch(
+        cancelTransaction({
+          chainId: ChainId.MAINNET,
+          hash: '0x0',
+          cancelHash: '0x1',
+        })
+      )
+      expect(Object.keys(store.getState())).toHaveLength(1)
+      expect(Object.keys(store.getState())).toEqual([String(ChainId.MAINNET)])
+      expect(Object.keys(store.getState()[ChainId.MAINNET] ?? {})).toEqual(['0x1'])
+
+      const cancelTx = store.getState()[ChainId.MAINNET]?.['0x1']
+
+      expect(cancelTx).toEqual({ ...originalTx, hash: '0x1', cancelled: true })
+    })
+    it('does not error on cancelling a non-existant tx', () => {
+      store.dispatch(
+        cancelTransaction({
+          chainId: ChainId.MAINNET,
+          hash: '0x0',
+          cancelHash: '0x1',
+        })
+      )
+      expect(Object.keys(store.getState())).toHaveLength(0)
+      expect(Object.keys(store.getState())).toEqual([])
     })
   })
 })

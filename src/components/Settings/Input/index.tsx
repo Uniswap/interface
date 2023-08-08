@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import Row from '../../Row'
 
@@ -24,6 +24,7 @@ export const InputContainer = styled(Row)<{ error?: boolean }>`
   padding: 8px 16px;
   border-radius: 12px;
   width: auto;
+  min-width: 100px;
   flex: 1;
   input {
     color: ${({ theme, error }) => (error ? theme.critical : theme.neutral1)};

@@ -7,7 +7,13 @@ import store from 'state'
 import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
 
-import { useHasPendingApproval, useHasPendingRevocation, useTransactionAdder, useTransactionRemover } from './hooks'
+import {
+  useHasPendingApproval,
+  useHasPendingRevocation,
+  useTransactionAdder,
+  useTransactionCanceller,
+  useTransactionRemover,
+} from './hooks'
 import { clearAllTransactions, finalizeTransaction } from './reducer'
 import { ApproveTransactionInfo, TransactionInfo, TransactionType } from './types'
 
@@ -175,6 +181,25 @@ describe('Transactions hooks', () => {
       addPendingTransaction(mockApprovalTransactionInfo)
       const { result } = renderHook(() => useHasPendingRevocation(USDC_MAINNET, PERMIT2_ADDRESS))
       expect(result.current).toBe(false)
+    })
+  })
+
+  describe('useTransactionCanceller', () => {
+    it('Replaces the original tx with a cancel tx with a different hash', () => {
+      addPendingTransaction(mockApprovalTransactionInfo)
+      const { result: canceller } = renderHook(() => useTransactionCanceller())
+
+      const originalTransactionDetails = store.getState().transactions[ChainId.MAINNET][pendingTransactionResponse.hash]
+
+      act(() => canceller.current(pendingTransactionResponse.hash, ChainId.MAINNET, '0x456'))
+
+      expect(store.getState().transactions[ChainId.MAINNET][pendingTransactionResponse.hash]).toBeUndefined()
+
+      expect(store.getState().transactions[ChainId.MAINNET]['0x456']).toEqual({
+        ...originalTransactionDetails,
+        hash: '0x456',
+        cancelled: true,
+      })
     })
   })
 })

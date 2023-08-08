@@ -145,6 +145,7 @@ const commonTheme = {
   chain_10_background: colors.red900,
   chain_43114_background: colors.red900,
   chain_42161_background: colors.blue900,
+  chain_84531: colors.networkBase,
   chain_56_background: colors.networkBsc,
   promotional: colors.magenta300,
 

@@ -3,7 +3,7 @@ import { useTokenWarningColor, useTokenWarningTextColor } from 'hooks/useTokenWa
 import { ReactNode } from 'react'
 import { AlertTriangle, Slash } from 'react-feather'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const Label = styled.div<{ color: string; backgroundColor: string }>`
   padding: 4px 4px;

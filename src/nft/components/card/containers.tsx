@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { StyledImage } from 'nft/components/card/media'
 import { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 const BORDER_RADIUS = '12'
@@ -95,7 +95,7 @@ const ActionButton = ({
     <StyledActionButton
       selected={isSelected}
       isDisabled={isDisabled}
-      onClick={(e: React.MouseEvent) => (isDisabled ? undefined : clickActionButton(e))}
+      onClick={(e) => (isDisabled ? undefined : clickActionButton(e))}
     >
       {children}
     </StyledActionButton>

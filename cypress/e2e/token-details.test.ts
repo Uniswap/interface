@@ -93,9 +93,7 @@ describe('Token details', () => {
     beforeEach(() => {
       // On mobile widths, we just link back to /swap instead of rendering the swap component.
       cy.viewport(1200, 800)
-      cy.visit(`/tokens/ethereum/${UNI_MAINNET.address}`, {
-        ethereum: 'hardhat',
-      }).then(() => {
+      cy.visit(`/tokens/ethereum/${UNI_MAINNET.address}`).then(() => {
         cy.wait('@eth_blockNumber')
         cy.scrollTo('top')
       })
@@ -145,7 +143,7 @@ describe('Token details', () => {
     })
 
     it('should show a L2 token even if the user is connected to a different network', () => {
-      cy.visit('/tokens', { ethereum: 'hardhat' })
+      cy.visit('/tokens')
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
       cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')

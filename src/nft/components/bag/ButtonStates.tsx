@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { PriceImpact } from 'nft/hooks/usePriceImpact'
 import { ReactNode } from 'react'
-import { DefaultTheme } from 'styled-components/macro'
+import { DefaultTheme } from 'styled-components'
 
 export enum BuyButtonStates {
   WALLET_NOT_CONNECTED,

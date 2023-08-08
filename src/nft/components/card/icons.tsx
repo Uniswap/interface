@@ -7,7 +7,7 @@ import { CollectionSelectedAssetIcon } from 'nft/components/icons'
 import { Markets } from 'nft/types'
 import { putCommas } from 'nft/utils'
 import { AlertTriangle, Check, Tag } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`

@@ -3,7 +3,7 @@ import { useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagIcon, HundredsOverflowIcon, TagIcon } from 'nft/components/icons'
 import { useBag, useSellAsset } from 'nft/hooks'
 import { useCallback } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { shallow } from 'zustand/shallow'
 
 const CounterDot = styled.div`

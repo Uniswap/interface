@@ -267,7 +267,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
       </div>
     </div>
     <div
-      style="height: 0px; overflow: hidden; width: 100%; will-change: height;"
+      style="height: 0px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
     >
       <div>
         <div
@@ -392,7 +392,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                   <div
                     class="c9 css-142zc9n"
                   >
-                    Uniswap API
+                    Uniswap Client
                   </div>
                 </div>
               </div>

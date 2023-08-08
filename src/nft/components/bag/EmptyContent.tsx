@@ -3,7 +3,7 @@ import { Center, Column } from 'nft/components/Flex'
 import { BagIcon, LargeTagIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const StyledColumn = styled(Column)`
   gap: 12px;

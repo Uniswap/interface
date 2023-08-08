@@ -52,7 +52,7 @@ This becomes more relevant as you work with data on the blockchain, as you'll ne
 
 ```
 cy.hardhat().then(async (hardhat) => {
-  cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, { ethereum: 'hardhat' })
+  cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
   cy.get('#swap-currency-output .token-amount-input').type('1').should('have.value', '1')
   cy.get('#swap-button').click()
   cy.contains('Confirm swap').click()
@@ -68,7 +68,7 @@ cy.hardhat().then(async (hardhat) => {
 ```
 
 ```
-  cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, { ethereum: 'hardhat' })
+  cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
   cy.get('#swap-currency-output .token-amount-input').type('1').should('have.value', '1')
   cy.get('#swap-button').click()
   cy.contains('Confirm swap').click()
@@ -87,7 +87,6 @@ cy.hardhat().then(async (hardhat) => {
 ### Working with the blockchain (ie hardhat)
 
 Our tests use a local hardhat node to simulate blockchain transactions. This can be accessed with `cy.hardhat().then((hardhat) => ...)`.
-Currently, tests using hardhat must opt-in in when they load the page: `cy.visit('/swap', { ethereum: 'hardhat' })`. This will not be necessary once we've totally migrated to hardhat.
 
 By default, automining is turned on, so that any transaction that you send to the blockchain is mined immediately. If you want to assert on intermediate states (between sending a transaction and mining it), you can turn off automining: `cy.hardhat({ automine: false })`.
 

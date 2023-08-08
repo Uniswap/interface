@@ -5,7 +5,7 @@ import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'
 import { AlertTriangle } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme'
 
 import Modal from '../Modal'

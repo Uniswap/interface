@@ -2,7 +2,7 @@ import { Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { loadingAsset } from 'nft/css/loading.css'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { DEFAULT_WALLET_ASSET_QUERY_AMOUNT } from './ProfilePage'
 

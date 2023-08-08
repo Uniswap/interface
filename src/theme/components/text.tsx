@@ -3,7 +3,7 @@
  */
 
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const TextWrapper = styled(Text).withConfig({
   shouldForwardProp: (prop) => prop !== 'color',

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import styled, { DefaultTheme } from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 
 import { ProposalState } from '../../state/governance/hooks'
 

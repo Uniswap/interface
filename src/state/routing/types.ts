@@ -1,5 +1,5 @@
 import { MixedRouteSDK, Protocol, Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
@@ -16,6 +16,38 @@ export enum QuoteMethod {
   ROUTING_API = 'ROUTING_API',
   CLIENT_SIDE = 'CLIENT_SIDE',
   CLIENT_SIDE_FALLBACK = 'CLIENT_SIDE_FALLBACK', // If client-side was used after the routing-api call failed.
+}
+
+// This is excluded from `RouterPreference` enum because it's only used
+// internally for token -> USDC trades to get a USD value.
+export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
+
+export enum RouterPreference {
+  X = 'uniswapx',
+  API = 'api',
+  CLIENT = 'client',
+}
+
+export interface GetQuoteArgs {
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  amount: string
+  account?: string
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+  tradeType: TradeType
+  needsWrapIfUniswapX: boolean
+  uniswapXEnabled: boolean
+  uniswapXForceSyntheticQuotes: boolean
+  uniswapXEthOutputEnabled: boolean
+  forceUniswapXOn: boolean
+  userDisabledUniswapX: boolean
+  isRoutingAPIPrice?: boolean
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
@@ -113,7 +145,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   gasUseEstimateUSD?: number // gas estimate for swaps
   blockNumber: string | null | undefined
   isUniswapXBetter: boolean | undefined
-  fromClientRouter: boolean | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
 
@@ -132,7 +163,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     isUniswapXBetter?: boolean
     requestId?: string
     quoteMethod: QuoteMethod
-    fromClientRouter?: boolean
     approveInfo: ApproveInfo
     v2Routes: {
       routev2: V2Route<Currency, Currency>

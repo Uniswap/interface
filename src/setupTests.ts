@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom' // jest custom assertions
+import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles
 import 'polyfills'
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills'

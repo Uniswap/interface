@@ -1,5 +1,5 @@
 import { WARNING_LEVEL } from 'constants/tokenSafety'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 
 export const useTokenWarningTextColor = (level: WARNING_LEVEL) => {
   const theme = useTheme()

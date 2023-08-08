@@ -4,7 +4,7 @@ import { ColumnCenter } from 'components/Column'
 import QuestionHelper from 'components/QuestionHelper'
 import Row from 'components/Row'
 import { AlertTriangle } from 'react-feather'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 
 import { PendingModalContainer } from '.'

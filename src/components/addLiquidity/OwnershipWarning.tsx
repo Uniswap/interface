@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { AlertTriangle } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 const ExplainerText = styled.div`

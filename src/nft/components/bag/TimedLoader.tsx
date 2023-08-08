@@ -1,5 +1,5 @@
 import { Box } from 'nft/components/Box'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components'
 
 const dash = keyframes`
   0% {

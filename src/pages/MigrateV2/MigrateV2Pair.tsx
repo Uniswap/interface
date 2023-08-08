@@ -32,7 +32,7 @@ import { Bound, resetMintState } from 'state/mint/v3/actions'
 import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } from 'state/mint/v3/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -445,7 +445,7 @@ function V2PairMigration({
               <AlertCircle color={theme.neutral1} style={{ marginBottom: '12px', opacity: 0.8 }} />
               <ThemedText.DeprecatedBody
                 fontSize={14}
-                style={{ marginBottom: 8, fontWeight: 500, opacity: 0.8 }}
+                style={{ marginBottom: 8, fontWeight: 535, opacity: 0.8 }}
                 textAlign="center"
               >
                 <Trans>
@@ -516,7 +516,7 @@ function V2PairMigration({
                   </ThemedText.DeprecatedBlack>
                 </RowBetween>
               </AutoColumn>
-              <ThemedText.DeprecatedBody fontSize={14} style={{ marginTop: 8, fontWeight: 400 }}>
+              <ThemedText.DeprecatedBody fontSize={14} style={{ marginTop: 8, fontWeight: 435 }}>
                 <Trans>
                   You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <br />
                   If the price seems incorrect, you can either make a swap to move the price or wait for someone else to
