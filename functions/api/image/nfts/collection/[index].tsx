@@ -28,6 +28,8 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
 
     const [setup, palette] = await Promise.all([setupPromise, palettePromise])
     const { fontData, watermark, check } = setup
+
+    // Split name into words to wrap them since satori does not support inline text wrapping
     const words = data.name.split(' ')
 
     const image = new ImageResponse(

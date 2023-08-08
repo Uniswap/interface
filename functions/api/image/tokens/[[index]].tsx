@@ -24,7 +24,8 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     }
 
     data.ogImage = data.ogImage ?? origin + '/images/192x192_App_Icon.png'
-    data.name = data.name ?? 'Unknown Token'
+    data.name = data.name ?? 'Token'
+    data.symbol = data.symbol ?? 'UNK'
 
     const setupPromise = getSetup()
     const palettePromise = getColor(data.ogImage)
@@ -33,6 +34,8 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const { fontData, watermark } = setup
 
     const networkLogo = getNetworkLogoUrl(networkName.toUpperCase())
+
+    // Capitalize name such that each word starts with a capital letter
     const words = data.name.split(' ')
     let name = ''
     for (let i = 0; i < words.length; i++) {
@@ -70,7 +73,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 color: 'white',
               }}
             >
-              <img src={data.ogImage} width="144px">
+              <img src={data.ogImage} width="144px" style = {{ borderRadius: '100%' }}>
                 {networkLogo != '' && (
                   <img
                     src={networkLogo}
