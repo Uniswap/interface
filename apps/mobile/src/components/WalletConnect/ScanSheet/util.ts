@@ -44,11 +44,12 @@ export async function getSupportedURI(uri: string): Promise<URIFormat | undefine
     return { type, value: maybeCustomWcUri }
   }
 
-  if (await isValidWCUrl(uri)) {
+  const wctUriVersion = parseUri(uri).version
+  if (wctUriVersion === 1) {
     return { type: URIType.WalletConnectURL, value: uri }
   }
 
-  if (parseUri(uri).version === 2) {
+  if (wctUriVersion === 2) {
     return { type: URIType.WalletConnectV2URL, value: uri }
   }
 

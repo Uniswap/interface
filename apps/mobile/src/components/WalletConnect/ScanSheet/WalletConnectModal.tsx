@@ -20,7 +20,6 @@ import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWCTimeoutError } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
-import { connectToApp } from 'src/features/walletConnect/WalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
@@ -92,8 +91,22 @@ export function WalletConnectModal({
       }
 
       if (supportedURI.type === URIType.WalletConnectURL) {
-        setShouldFreezeCamera(true)
-        connectToApp(supportedURI.value)
+        setHasScanError(true)
+        Alert.alert(
+          t('Invalid QR Code'),
+          t(
+            "WalletConnect v1 is no longer supported. The application you're trying to connect to needs to upgrade to WalletConnect v2."
+          ),
+          [
+            {
+              text: t('OK'),
+              onPress: (): void => {
+                setHasScanError(false)
+              },
+            },
+          ]
+        )
+        return
       }
 
       if (supportedURI.type === URIType.WalletConnectV2URL) {
