@@ -156,13 +156,10 @@ export const colors = {
   slateVibrant: '#7E887D',
   networkLightEthereum: '#393939',
   networkDarkEthereum: '#e6e6e6',
-  networkEthereumSoft: opacify(12, '#393939'),
   networkOptimism: '#FA2B39',
-  networkOptimismSoft: opacify(12, '#FA2B39'),
   networkPolygon: '#a26af3',
-  networkPolygonSoft: opacify(12, '#A26AF3'),
   networkArbitrum: '#28A0F0',
-  networkArbitrumSoft: opacify(12, '#28A0F0'),
+  networkBase: '#2151F5',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -268,6 +265,7 @@ export const colorsLight = {
   chain_137: colors.networkPolygon,
   chain_42161: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
+  chain_8453: colors.networkBase,
 }
 
 export const colorsDark = {
@@ -326,6 +324,7 @@ export const colorsDark = {
   chain_137: colors.networkPolygon,
   chain_42161: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
+  chain_8453: colors.networkBase,
 }
 
 export const tamaguiLight = createTheme(colorsLight)

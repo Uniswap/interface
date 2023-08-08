@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
+  USDBC_BASE,
   USDC,
   USDC_ARBITRUM,
   USDC_GOERLI,
@@ -18,6 +19,7 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [ChainId.Mainnet]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
   [ChainId.Goerli]: CurrencyAmount.fromRawAmount(USDC_GOERLI, 100_000e6),
   [ChainId.ArbitrumOne]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
+  [ChainId.Base]: CurrencyAmount.fromRawAmount(USDBC_BASE, 10_000e6),
   [ChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
   [ChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
 }

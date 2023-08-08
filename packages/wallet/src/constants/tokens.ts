@@ -31,6 +31,13 @@ export const USDC_ARBITRUM = new Token(
   'USDC',
   'USD//C'
 )
+export const USDBC_BASE = new Token(
+  ChainId.Base,
+  '0xd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca',
+  6,
+  'USDbC',
+  'USD Base Coin'
+)
 export const USDC_OPTIMISM = new Token(
   ChainId.Optimism,
   '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
@@ -100,6 +107,13 @@ export const WRAPPED_NATIVE_CURRENCY = {
   [ChainId.ArbitrumOne]: new Token(
     ChainId.ArbitrumOne,
     '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [ChainId.Base]: new Token(
+    ChainId.Base,
+    '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
     'Wrapped Ether'

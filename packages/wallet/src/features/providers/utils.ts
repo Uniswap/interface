@@ -2,7 +2,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 
 export function getInfuraChainName(
   chainId: ChainId
-): 'homestead' | 'goerli' | 'arbitrum' | 'optimism' | 'matic' | 'maticmum' {
+): 'homestead' | 'goerli' | 'arbitrum' | 'base' | 'optimism' | 'matic' | 'maticmum' {
   switch (chainId) {
     case ChainId.Mainnet:
       return 'homestead'
@@ -10,6 +10,8 @@ export function getInfuraChainName(
       return 'goerli'
     case ChainId.ArbitrumOne:
       return 'arbitrum'
+    case ChainId.Base:
+      return 'base'
     case ChainId.Optimism:
       return 'optimism'
     case ChainId.Polygon:

@@ -37,5 +37,6 @@ export const MainnetEth = NativeCurrency.onChain(ChainId.Mainnet)
 export const PolygonMatic = NativeCurrency.onChain(ChainId.Polygon)
 export const ArbitrumEth = NativeCurrency.onChain(ChainId.ArbitrumOne)
 export const OptimismEth = NativeCurrency.onChain(ChainId.Optimism)
+export const BaseEth = NativeCurrency.onChain(ChainId.Base)
 
 export { faker }

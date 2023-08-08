@@ -3,6 +3,7 @@ import {
   NATIVE_ADDRESS,
   NATIVE_ADDRESS_ALT,
   WRAPPED_ARBITRUM_ETH,
+  WRAPPED_BASE_ETH,
   WRAPPED_GOERLI_ETH,
   WRAPPED_MAINNET_ETH,
   WRAPPED_MAINNET_POLYGON,
@@ -86,6 +87,8 @@ export function getWrappedNativeCurrencyAddressForChain(chainId: ChainId): strin
       return WRAPPED_GOERLI_ETH
     case ChainId.ArbitrumOne:
       return WRAPPED_ARBITRUM_ETH
+    case ChainId.Base:
+      return WRAPPED_BASE_ETH
     case ChainId.Optimism:
       return WRAPPED_OPTIMISTIC_ETH
     case ChainId.Polygon:

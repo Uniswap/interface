@@ -65,6 +65,7 @@ export function fromGraphQLChain(chain: Chain | undefined): ChainId | null {
       return ChainId.Optimism
     case Chain.Polygon:
       return ChainId.Polygon
+    // TODO: add Base once Chain includes Base (GQL reliant)
   }
 
   return null
@@ -82,6 +83,7 @@ export function toGraphQLChain(chainId: ChainId): Chain | null {
       return Chain.Optimism
     case ChainId.Polygon:
       return Chain.Polygon
+    // TODO: add Base once Chain includes Base (GQL reliant)
   }
   return null
 }
@@ -115,6 +117,7 @@ export function fromUniswapWebAppLink(network: string | null): ChainId | null {
       return ChainId.Optimism
     case Chain.Polygon.toLowerCase():
       return ChainId.Polygon
+    // TODO: add Base once Chain includes Base (GQL reliant)
     default:
       throw new Error(`Network "${network}" can not be mapped`)
   }
@@ -130,6 +133,7 @@ export function toUniswapWebAppLink(chainId: ChainId): string | null {
       return Chain.Optimism.toLowerCase()
     case ChainId.Polygon:
       return Chain.Polygon.toLowerCase()
+    // TODO: add Base once Chain includes Base (GQL reliant)
     default:
       throw new Error(`ChainID "${chainId}" can not be mapped`)
   }

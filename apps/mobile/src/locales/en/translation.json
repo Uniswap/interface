@@ -117,7 +117,7 @@
   "Loading...": "Loading...",
   "1 app connected": "1 app connected",
   "{{numConnections}} apps connected": "{{numConnections}} apps connected",
-  "Only send tokens on Ethereum, Optimism, Polygon, and Arbitrum networks to this address.": "Only send tokens on Ethereum, Optimism, Polygon, and Arbitrum networks to this address.",
+  "Only send tokens on Ethereum, Arbitrum, Optimism, Polygon, Base networks to this address.": "Only send tokens on Ethereum, Arbitrum, Optimism, Polygon, Base networks to this address.",
   "Learn more": "Learn more",
   "Search Results": "Search Results",
   "Recent": "Recent",

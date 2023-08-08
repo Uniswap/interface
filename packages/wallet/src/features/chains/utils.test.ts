@@ -86,6 +86,7 @@ describe(fromMoonpayNetwork, () => {
     expect(fromMoonpayNetwork(Chain.Arbitrum.toLowerCase())).toEqual(ChainId.ArbitrumOne)
     expect(fromMoonpayNetwork(Chain.Optimism.toLowerCase())).toEqual(ChainId.Optimism)
     expect(fromMoonpayNetwork(Chain.Polygon.toLowerCase())).toEqual(ChainId.Polygon)
+    // TODO: add Base test once Chain includes Base (GQL reliant)
   })
 
   it('handle unsupported chain', () => {
@@ -111,6 +112,7 @@ describe(fromUniswapWebAppLink, () => {
     expect(fromUniswapWebAppLink(Chain.Arbitrum.toLowerCase())).toEqual(ChainId.ArbitrumOne)
     expect(fromUniswapWebAppLink(Chain.Optimism.toLowerCase())).toEqual(ChainId.Optimism)
     expect(fromUniswapWebAppLink(Chain.Polygon.toLowerCase())).toEqual(ChainId.Polygon)
+    // TODO: add Base test once Chain includes Base (GQL reliant)
   })
 
   it('handle unsupported chain', () => {
@@ -124,6 +126,7 @@ describe(toUniswapWebAppLink, () => {
     expect(toUniswapWebAppLink(ChainId.ArbitrumOne)).toEqual(Chain.Arbitrum.toLowerCase())
     expect(toUniswapWebAppLink(ChainId.Optimism)).toEqual(Chain.Optimism.toLowerCase())
     expect(toUniswapWebAppLink(ChainId.Polygon)).toEqual(Chain.Polygon.toLowerCase())
+    // TODO: add Base test once Chain includes Base (GQL reliant)
   })
 
   it('handle unsupported chain', () => {
