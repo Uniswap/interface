@@ -75,9 +75,8 @@ module.exports = {
           '\\.css\\.ts$': '@vanilla-extract/jest-transform',
         }),
         // Use @uniswap/conedison's build directly, as jest does not support its exports.
-        transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
+        transformIgnorePatterns: ['@uniswap/conedison/provider'],
         moduleNameMapper: {
-          '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
           '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
         },
       })
