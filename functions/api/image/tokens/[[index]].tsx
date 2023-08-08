@@ -27,20 +27,15 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     data.name = data.name ?? 'Token'
     data.symbol = data.symbol ?? 'UNK'
 
-    const setupPromise = getSetup()
-    const palettePromise = getColor(data.ogImage)
-
-    const [setup, palette] = await Promise.all([setupPromise, palettePromise])
+    const [setup, palette] = await Promise.all([getSetup(), getColor(data.ogImage)])
     const { fontData, watermark } = setup
 
     const networkLogo = getNetworkLogoUrl(networkName.toUpperCase())
 
     // Capitalize name such that each word starts with a capital letter
-    const words = data.name.split(' ')
-    let name = ''
-    for (let i = 0; i < words.length; i++) {
-      name += words[i].charAt(0).toUpperCase() + words[i].slice(1).toLowerCase() + ' '
-    }
+    let words = data.name.split(' ')
+    words = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    let name = words.join(' ')
     name = name.trim()
 
     const image = new ImageResponse(

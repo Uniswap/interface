@@ -23,10 +23,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     data.ogImage = data.ogImage ?? origin + '/images/192x192_App_Icon.png'
     data.name = data.name ?? 'Unknown Collection'
 
-    const setupPromise = getSetup()
-    const palettePromise = getColor(data.ogImage)
-
-    const [setup, palette] = await Promise.all([setupPromise, palettePromise])
+    const [setup, palette] = await Promise.all([getSetup(), getColor(data.ogImage)])
     const { fontData, watermark, check } = setup
 
     // Split name into words to wrap them since satori does not support inline text wrapping
@@ -90,7 +87,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                   }}
                 >
                   {words.map((word: string) => (
-                    <text key={word}>{word}</text>
+                    <text key={word + index}>{word}</text>
                   ))}
                   {data.isVerified && <img src={check} height="54px" />}
                 </div>
