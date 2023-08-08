@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { Reference, relayStylePagination } from '@apollo/client/utilities'
 
-const GRAPHQL_URL = process.env.REACT_APP_AWS_API_ENDPOINT
+const GRAPHQL_URL = 'https://4mmi66mlcbgsbegrfjwqjggk4i.appsync-api.us-east-2.amazonaws.com/graphql'
 if (!GRAPHQL_URL) {
   throw new Error('AWS URL MISSING FROM ENVIRONMENT')
 }
@@ -12,6 +12,8 @@ export const apolloClient = new ApolloClient({
   headers: {
     'Content-Type': 'application/json',
     Origin: 'https://app.uniswap.org',
+    'from-x-api-key': 'RltH8d0amOTHlsPeFuS4uYOBrA9i7abRi6OcRu94Ki',
+    'x-api-key': 'da2-ph3nd2i4uzblzpnrmn5ytukvje',
   },
   cache: new InMemoryCache({
     typePolicies: {
