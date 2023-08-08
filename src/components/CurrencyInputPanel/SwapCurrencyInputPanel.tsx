@@ -181,6 +181,7 @@ const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
   text-align: left;
   font-size: 36px;
   font-weight: 485;
+  max-height: 44px;
 `
 
 interface SwapCurrencyInputPanelProps {
