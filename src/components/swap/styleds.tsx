@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -23,16 +22,16 @@ export const PageWrapper = styled.div`
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-export const SwapWrapper = styled.main<{ chainId?: number }>`
+export const SwapWrapper = styled.main<{ isDark?: boolean }>`
   position: relative;
   background: ${({ theme }) => theme.surface1};
   border-radius: 24px;
   border: 1px solid ${({ theme }) => theme.surface3};
   padding: 8px;
   padding-top: 12px;
-  box-shadow: ${({ chainId }) =>
-    !!chainId && chainId === ChainId.BNB
-      ? '0px 40px 120px 0px #f0b90b29'
+  box-shadow: ${({ isDark }) =>
+    isDark
+      ? `0px 0px 10px 0px rgba(252, 114, 255, 0.08), 0px 40px 120px 0px rgba(252, 114, 255, 0.18)`
       : `0px 0px 10px 0px rgba(252, 114, 255, 0.04), 0px 40px 120px 0px rgba(252, 114, 255, 0.12);`};
   z-index: ${Z_INDEX.default};
   transition: transform 250ms ease;

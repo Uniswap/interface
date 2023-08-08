@@ -63,6 +63,7 @@ import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
+import { useIsDarkMode } from '../../theme/components/ThemeToggle'
 import { UniswapXOptIn } from './UniswapXOptIn'
 
 export const ArrowContainer = styled.div`
@@ -546,9 +547,10 @@ export function Swap({
   const switchChain = useSwitchChain()
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const showOptInSmall = !useScreenSize().navSearchInputVisible
+  const isDark = useIsDarkMode()
 
   const swapElement = (
-    <SwapWrapper chainId={chainId} className={className} id="swap-page">
+    <SwapWrapper isDark={isDark} className={className} id="swap-page">
       <TokenSafetyModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
         tokenAddress={importTokensNotInDefault[0]?.address}
