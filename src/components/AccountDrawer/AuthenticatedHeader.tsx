@@ -8,7 +8,7 @@ import { ReactComponent as Power } from 'assets/svg/power.svg'
 import { ReactComponent as Settings } from 'assets/svg/settings.svg'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
-import { AutoRow, RowBetween } from 'components/Row'
+import { AutoRow } from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
@@ -53,7 +53,6 @@ const HeaderButton = styled(ThemeButton)`
   border-width: 1px;
   height: 40px;
   margin-top: 8px;
-  width: 100%;
 `
 
 const WalletButton = styled(ThemeButton)`
@@ -111,7 +110,6 @@ const StatusWrapper = styled.div`
   max-width: 70%;
   padding-right: 8px;
   display: inline-flex;
-  gap: 8px;
 `
 
 const AccountNamesWrapper = styled.div`
@@ -228,9 +226,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const openFiatOnrampUnavailableTooltip = useCallback(() => setShow(true), [setShow])
   const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
-  const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({
-    account,
-  })
+  const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account })
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
@@ -282,7 +278,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
       <PortfolioDrawerContainer>
         {totalBalance !== undefined ? (
           <FadeInColumn gap="xs">
-            <ThemedText.HeadlineLarge data-testid="portfolio-total-balance">
+            <ThemedText.HeadlineLarge fontWeight={535} data-testid="portfolio-total-balance">
               {formatNumber(totalBalance, NumberType.PortfolioBalance)}
             </ThemedText.HeadlineLarge>
             <AutoRow marginBottom="20px">
@@ -304,57 +300,54 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
           </Column>
         )}
-        <RowBetween gap="sm">
-          {!shouldDisableNFTRoutes && (
-            <HeaderButton
-              data-testid="nft-view-self-nfts"
-              onClick={navigateToProfile}
-              size={ButtonSize.medium}
-              emphasis={ButtonEmphasis.highSoft}
-            >
-              <Trans>Sell NFTs</Trans>
-            </HeaderButton>
-          )}
+        {!shouldDisableNFTRoutes && (
           <HeaderButton
+            data-testid="nft-view-self-nfts"
+            onClick={navigateToProfile}
             size={ButtonSize.medium}
             emphasis={ButtonEmphasis.highSoft}
-            onClick={handleBuyCryptoClick}
-            disabled={disableBuyCryptoButton}
-            data-testid="wallet-buy-crypto"
           >
-            {error ? (
-              <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
-            ) : (
-              <>
-                {fiatOnrampAvailabilityLoading ? (
-                  <StyledLoadingButtonSpinner />
-                ) : (
-                  <CreditCard height="20px" width="20px" />
-                )}{' '}
-                <Trans>Buy crypto</Trans>
-              </>
-            )}
+            <Trans>View and sell NFTs</Trans>
           </HeaderButton>
-
-          {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
-            <FiatOnrampNotAvailableText marginTop="8px">
-              <Trans>Not available in your region</Trans>
-              <Tooltip
-                show={showFiatOnrampUnavailableTooltip}
-                text={<Trans>Moonpay is not available in some regions. Click to learn more.</Trans>}
-              >
-                <FiatOnrampAvailabilityExternalLink
-                  onMouseEnter={openFiatOnrampUnavailableTooltip}
-                  onMouseLeave={closeFiatOnrampUnavailableTooltip}
-                  style={{ color: 'inherit' }}
-                  href="https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-"
-                >
-                  <StyledInfoIcon />
-                </FiatOnrampAvailabilityExternalLink>
-              </Tooltip>
-            </FiatOnrampNotAvailableText>
+        )}
+        <HeaderButton
+          size={ButtonSize.medium}
+          emphasis={ButtonEmphasis.highSoft}
+          onClick={handleBuyCryptoClick}
+          disabled={disableBuyCryptoButton}
+          data-testid="wallet-buy-crypto"
+        >
+          {error ? (
+            <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
+          ) : (
+            <>
+              {fiatOnrampAvailabilityLoading ? (
+                <StyledLoadingButtonSpinner />
+              ) : (
+                <CreditCard height="20px" width="20px" />
+              )}{' '}
+              <Trans>Buy crypto</Trans>
+            </>
           )}
-        </RowBetween>
+        </HeaderButton>
+        {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
+          <FiatOnrampNotAvailableText marginTop="8px">
+            <Trans>Not available in your region</Trans>
+            <Tooltip
+              show={showFiatOnrampUnavailableTooltip}
+              text={<Trans>Moonpay is not available in some regions. Click to learn more.</Trans>}
+            >
+              <FiatOnrampAvailabilityExternalLink
+                onMouseEnter={openFiatOnrampUnavailableTooltip}
+                onMouseLeave={closeFiatOnrampUnavailableTooltip}
+                style={{ color: 'inherit' }}
+                href="https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-"
+              >
+                <StyledInfoIcon />
+              </FiatOnrampAvailabilityExternalLink>
+            </Tooltip>
+          </FiatOnrampNotAvailableText>
+        )}
         <MiniPortfolio account={account} />
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
