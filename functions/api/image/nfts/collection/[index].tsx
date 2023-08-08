@@ -74,7 +74,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '32px',
-                  width: '50%',
+                  width: '45%',
                 }}
               >
                 <div
