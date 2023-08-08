@@ -96,6 +96,7 @@ export const colors = {
   networkBsc: '#F0B90B',
   networkPolygonSoft: 'rgba(164, 87, 255, 0.16)',
   networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
+  networkBase: '#0052FF',
   //NEW COLORS FOR SPORE - need to define light/dark here cause they are root colors now (different system)
   neutral1_dark: '#FFFFFF',
   neutral2_dark: '#9B9B9B',

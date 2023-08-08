@@ -820,7 +820,7 @@ function AddLiquidity() {
                               fontSize={14}
                               style={{ fontWeight: 535 }}
                               textAlign="left"
-                              color={theme.accentAction}
+                              color={theme.accent1}
                             >
                               <Trans>
                                 This pool must be initialized before you can add liquidity. To initialize, select a
@@ -839,7 +839,7 @@ function AddLiquidity() {
                         </OutlineCard>
                         <RowBetween
                           style={{
-                            backgroundColor: theme.deprecated_bg1,
+                            backgroundColor: theme.surface1,
                             padding: '12px',
                             borderRadius: '12px',
                           }}

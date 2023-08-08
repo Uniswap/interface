@@ -14,6 +14,7 @@ import { default as Slider } from 'rc-slider'
 import { FocusEventHandler, FormEvent, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
+import { darkDeprecatedTheme } from 'theme/deprecatedColors'
 
 import * as styles from './PriceRange.css'
 import { TraitsHeader } from './TraitsHeader'
