@@ -73,7 +73,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 color: 'white',
               }}
             >
-              <img src={data.ogImage} width="144px" style = {{ borderRadius: '100%' }}>
+              <img src={data.ogImage} width="144px" style={{ borderRadius: '100%' }}>
                 {networkLogo != '' && (
                   <img
                     src={networkLogo}
