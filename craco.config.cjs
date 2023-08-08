@@ -57,10 +57,9 @@ module.exports = {
           '\\.(t|j)sx?$': '@swc/jest',
         },
         // Use @uniswap/conedison's build directly, as jest does not support its exports.
-        transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
+        transformIgnorePatterns: ['@uniswap/conedison/format'],
         moduleNameMapper: {
           '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
-          '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
         },
       })
     },
