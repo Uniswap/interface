@@ -19,46 +19,7 @@ import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-
-const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
-
-function meetsThreshold(tokenBalance: TokenBalance) {
-  const value = tokenBalance.denominatedValue?.value ?? 0
-  return value > HIDE_SMALL_USD_BALANCES_THRESHOLD
-}
-
-// exporting for use in tests only
-// eslint-disable-next-line import/no-unused-modules
-export function splitHiddenTokens(
-  tokenBalances: TokenBalance[],
-  options?: {
-    hideSmallBalances?: boolean
-  }
-) {
-  const visibleTokens: TokenBalance[] = []
-  const hiddenTokens: TokenBalance[] = []
-
-  for (const tokenBalance of tokenBalances) {
-    const isValidValue =
-      // if undefined we keep visible (see https://linear.app/uniswap/issue/WEB-1940/[mp]-update-how-we-handle-what-goes-in-hidden-token-section-of-mini)
-      typeof tokenBalance.denominatedValue?.value === 'undefined' ||
-      // if below $1
-      options?.hideSmallBalances === false ||
-      meetsThreshold(tokenBalance)
-
-    if (
-      isValidValue &&
-      // a spam token
-      !tokenBalance.tokenProjectMarket?.tokenProject?.isSpam
-    ) {
-      visibleTokens.push(tokenBalance)
-    } else {
-      hiddenTokens.push(tokenBalance)
-    }
-  }
-
-  return { visibleTokens, hiddenTokens }
-}
+import { splitHiddenTokens } from './splitHiddenTokens'
 
 export default function Tokens({ account }: { account: string }) {
   const toggleWalletDrawer = useToggleAccountDrawer()

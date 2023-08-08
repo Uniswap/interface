@@ -1,6 +1,6 @@
 import { Currency, TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 
-import { splitHiddenTokens } from './index'
+import { splitHiddenTokens } from "./splitHiddenTokens"
 
 const tokens: TokenBalance[] = [
   // low balance
