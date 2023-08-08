@@ -20,7 +20,7 @@ import Column, { AutoColumn } from '../../Column'
 import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
 import { MouseoverTooltip } from '../../Tooltip'
-import { LoadingRows, MenuItem } from '../styleds'
+import { LoadingRows, MenuItem } from '../styled'
 import { scrollbarStyle } from './index.css'
 
 function currencyKey(currency: Currency): string {

@@ -4,7 +4,7 @@ import { ArrowDown } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { ArrowWrapper } from './styleds'
+import { ArrowWrapper } from './styled'
 
 const StyledArrowWrapper = styled(ArrowWrapper)`
   position: absolute;

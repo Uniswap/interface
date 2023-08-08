@@ -23,7 +23,7 @@ import { HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
 import CTACards from './CTACards'
-import { LoadingRows } from './styleds'
+import { LoadingRows } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
