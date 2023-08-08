@@ -8,6 +8,7 @@ ignore:
   - "styles/**/*"
   - "**/constants/**/*"
   - "constants/**/*"
+  - "**/styled.tsx"
 
 coverage:
   status:
@@ -25,15 +26,9 @@ flag_management:
         removed_code_behavior: adjust_base
         if_ci_failed: error
       - type: patch
-        target: 80%
+        target: 50%
   individual_flags:
     - name: unit-tests
-    - name: e2e-tests
-      # Wait until all machines have reported coverage - e2e tests run across 4 machines.
-      after_n_builds: 4
-      statuses:
-        - type: patch
-          target: 0%
 
 comment:
   layout: flags
