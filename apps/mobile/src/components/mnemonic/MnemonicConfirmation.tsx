@@ -17,12 +17,9 @@ type MnemonicConfirmationProps = ViewProps & {
   onConfirmComplete: () => void
 }
 
-const mnemonicConfirmationStyle = (shouldShowSmallVersion: boolean): StyleProp<BoxProps> => {
-  return {
-    // This is the min height needed for native component to function correctly.
-    // We handle padding separately wherever the component is placed.
-    height: shouldShowSmallVersion ? 380 : 450,
-  }
+const mnemonicConfirmationStyle: StyleProp<BoxProps> = {
+  flex: 1,
+  flexGrow: 1,
 }
 
 export function MnemonicConfirmation(props: MnemonicConfirmationProps): JSX.Element {
@@ -31,7 +28,7 @@ export function MnemonicConfirmation(props: MnemonicConfirmationProps): JSX.Elem
   return (
     <NativeMnemonicConfirmation
       shouldShowSmallText={shouldShowSmallText}
-      style={mnemonicConfirmationStyle(shouldShowSmallText)}
+      style={mnemonicConfirmationStyle}
       {...props}
     />
   )
