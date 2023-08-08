@@ -381,11 +381,7 @@ exports[`NftCard renders correctly 1`] = `
                 class="c4 c5 c21"
               >
                 <div
-<<<<<<< HEAD
-                  class="c16 c101 c22 css-1urox24"
-=======
-                  class="c16 c22 css-1jljtub"
->>>>>>> origin/main
+                  class="c16 c22 css-1urox24"
                 >
                   15.8 ETH
                 </div>
