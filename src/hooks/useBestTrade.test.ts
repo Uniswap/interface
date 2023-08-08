@@ -1,8 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
-import { RouterPreference } from 'state/routing/types'
-import { TradeState } from 'state/routing/types'
+import { RouterPreference, TradeState } from 'state/routing/types'
 import { useRouterPreference } from 'state/user/hooks'
 import { mocked } from 'test-utils/mocked'
 

@@ -5,7 +5,7 @@ import Row from 'components/Row'
 import { ReactNode } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme'
 import { formatNumber, NumberType } from 'utils/formatNumbers'
 
