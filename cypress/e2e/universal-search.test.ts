@@ -39,6 +39,9 @@ describe('Universal search bar', () => {
     // this test is experiencing flake despite being correct, i can see the right value in DOM
     // but for some reason cypress doesn't find it, so adding retries for now :/
     {
+      // @ts-ignore see https://uniswapteam.slack.com/archives/C047U65H422/p1691455547556309
+      // basically cypress has bad types due to overlap with jest and you just have to deal with it
+      // i tried removing jest types but still happens
       retries: {
         runMode: 3,
         openMode: 3,
