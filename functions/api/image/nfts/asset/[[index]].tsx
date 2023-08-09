@@ -2,9 +2,10 @@
 import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
+import { WATERMARK_URL } from '../../../../constants'
 import getAsset from '../../../../utils/getAsset'
-import { getImageRequest } from '../../../../utils/getRequest'
-import getSetup from '../../../../utils/getSetup'
+import getFont from '../../../../utils/getFont'
+import { getRequest } from '../../../../utils/getRequest'
 
 export const onRequest: PagesFunction = async ({ params, request }) => {
   try {
@@ -14,15 +15,15 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const tokenId = index[1]?.toString()
     const cacheUrl = origin + '/nfts/asset/' + collectionAddress + '/' + tokenId
 
-    const data = await getImageRequest(cacheUrl, () => getAsset(collectionAddress, tokenId, cacheUrl))
+    const data = await getRequest(cacheUrl, () => getAsset(collectionAddress, tokenId, cacheUrl))
 
     if (!data) {
       return new Response('Asset not found.', { status: 404 })
     }
 
-    const { fontData, watermark } = await getSetup()
+    const fontData = await getFont()
 
-    const image = new ImageResponse(
+    return new ImageResponse(
       (
         <div
           style={{
@@ -44,7 +45,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
               gap: '24px',
             }}
           >
-            <img src={watermark} alt="Uniswap" height="74px" width="324px" />
+            <img src={WATERMARK_URL} alt="Uniswap" height="74px" width="324px" />
           </div>
         </div>
       ),
@@ -59,8 +60,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
           },
         ],
       }
-    )
-    return image as Response
+    ) as Response
   } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 })
   }

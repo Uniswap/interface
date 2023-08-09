@@ -12,7 +12,7 @@ function formatTitleName(symbol: string, name: string) {
   return 'View Token on Uniswap'
 }
 
-const convertTokenAddress = (tokenAddress: string, networkName: string) => {
+const convertTokenAddress = (networkName: string, tokenAddress: string) => {
   if (tokenAddress === 'NATIVE') {
     switch (networkName) {
       case Chain.Celo:
@@ -30,7 +30,7 @@ export default async function getToken(networkName: string, tokenAddress: string
   const origin = new URL(url).origin
   const image = origin + '/api/image/tokens/' + networkName + '/' + tokenAddress
   const uppercaseNetworkName = networkName.toUpperCase()
-  const convertedTokenAddress = convertTokenAddress(tokenAddress, uppercaseNetworkName)
+  const convertedTokenAddress = convertTokenAddress(uppercaseNetworkName, tokenAddress)
   const { data } = await client.query({
     query: TokenDocument,
     variables: {
@@ -42,6 +42,7 @@ export default async function getToken(networkName: string, tokenAddress: string
   if (!asset) {
     return undefined
   }
+
   const title = formatTitleName(asset.symbol, asset.name)
   const formattedAsset = {
     title,

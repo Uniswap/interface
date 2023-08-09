@@ -2,10 +2,11 @@
 import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
+import { CHECK_URL, WATERMARK_URL } from '../../../../constants'
 import getCollection from '../../../../utils/getCollection'
 import getColor from '../../../../utils/getColor'
-import { getImageRequest } from '../../../../utils/getRequest'
-import getSetup from '../../../../utils/getSetup'
+import getFont from '../../../../utils/getFont'
+import { getRequest } from '../../../../utils/getRequest'
 
 export const onRequest: PagesFunction = async ({ params, request }) => {
   try {
@@ -14,7 +15,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const collectionAddress = index?.toString()
     const cacheUrl = origin + '/nfts/collection/' + collectionAddress
 
-    const data = await getImageRequest(cacheUrl, () => getCollection(collectionAddress, cacheUrl))
+    const data = await getRequest(cacheUrl, () => getCollection(collectionAddress, cacheUrl))
 
     if (!data) {
       return new Response('Asset not found.', { status: 404 })
@@ -23,13 +24,12 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     data.ogImage = data.ogImage ?? origin + '/images/192x192_App_Icon.png'
     data.name = data.name ?? 'Unknown Collection'
 
-    const [setup, palette] = await Promise.all([getSetup(), getColor(data.ogImage)])
-    const { fontData, watermark, check } = setup
+    const [fontData, palette] = await Promise.all([getFont(), getColor(data.ogImage)])
 
     // Split name into words to wrap them since satori does not support inline text wrapping
     const words = data.name.split(' ')
 
-    const image = new ImageResponse(
+    return new ImageResponse(
       (
         <div
           style={{
@@ -89,10 +89,10 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                   {words.map((word: string) => (
                     <text key={word + index}>{word}</text>
                   ))}
-                  {data.isVerified && <img src={check} height="54px" />}
+                  {data.isVerified && <img src={CHECK_URL} height="54px" />}
                 </div>
                 <img
-                  src={watermark}
+                  src={WATERMARK_URL}
                   height="72px"
                   style={{
                     opacity: '0.5',
@@ -114,8 +114,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
           },
         ],
       }
-    )
-    return image as Response
+    ) as Response
   } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 })
   }

@@ -19,5 +19,5 @@ const invalidTokenImageUrl = [
 
 test.each(invalidTokenImageUrl)('invalidAssetImageUrl', async (url) => {
   const response = await fetch(new Request(url))
-  expect([404, 500]).toContain(response.status)
+  expect(response.status).toBe(404)
 })

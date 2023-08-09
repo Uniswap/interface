@@ -17,7 +17,7 @@ test('should call Cache.match before calling getData when request is not cached'
     image: 'testImage',
     url: 'testUrl',
   })
-  await getRequest(Promise.resolve(new Response()), url, getData)
+  await getRequest(url, getData)
   expect(Cache.match).toHaveBeenCalledWith(url)
   expect(getData).toHaveBeenCalled()
   expect(Cache.match).toHaveBeenCalledBefore(getData)
@@ -32,7 +32,7 @@ test('getData should not be called when request is cached', async () => {
     url: 'testUrl',
   })
   const getData = jest.fn()
-  await getRequest(Promise.resolve(new Response()), url, getData)
+  await getRequest(url, getData)
   expect(Cache.match).toHaveBeenCalledWith(url)
   expect(getData).not.toHaveBeenCalled()
 })

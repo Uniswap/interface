@@ -18,9 +18,10 @@ export default async function getCollection(collectionAddress: string, url: stri
     title: collection.name + ' on Uniswap',
     image,
     url,
-    name: collection.name,
-    ogImage: collection.image?.url,
-    isVerified: collection.isVerified,
+    name: collection.name ?? 'Collection',
+    symbol: collection.symbol ?? 'UNK',
+    ogImage: collection.image?.url ?? origin + '/images/192x192_App_Icon.png',
+    isVerified: collection.isVerified ?? false,
   }
   return formattedAsset
 }

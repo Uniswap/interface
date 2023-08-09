@@ -35,7 +35,10 @@ export default async function getAsset(collectionAddress: string, tokenId: strin
     title,
     image,
     url,
-    ogImage: asset.image?.url,
+    name: asset.name ?? 'Asset',
+    symbol: asset.collection?.symbol ?? 'UNK',
+    ogImage: asset.image?.url ?? origin + '/images/192x192_App_Icon.png',
+    isVerified: asset.collection?.isVerified ?? false,
   }
   return formattedAsset
 }

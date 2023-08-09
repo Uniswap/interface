@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unused-modules */
-import { getRequest } from '../utils/getRequest'
+import { getMetadataRequest } from '../utils/getRequest'
 import getToken from '../utils/getToken'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
@@ -11,7 +11,7 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
     if (!tokenAddress) {
       return res
     }
-    return getRequest(res, request.url, () => getToken(networkName, tokenAddress, request.url))
+    return getMetadataRequest(res, request.url, () => getToken(networkName, tokenAddress, request.url))
   } catch (e) {
     return res
   }

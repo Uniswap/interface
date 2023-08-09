@@ -16,8 +16,5 @@ const invalidCollectionImageUrl = [
 
 test.each(invalidCollectionImageUrl)('invalidAssetImageUrl', async (url) => {
   const response = await fetch(new Request(url))
-  if (response.status === 200) {
-    console.log(url)
-  }
-  expect([404, 500]).toContain(response.status)
+  expect(response.status).toBe(404)
 })

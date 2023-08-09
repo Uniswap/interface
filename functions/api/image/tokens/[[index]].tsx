@@ -2,10 +2,11 @@
 import { ImageResponse } from '@vercel/og'
 import React from 'react'
 
+import { WATERMARK_URL } from '../../../constants'
 import getColor from '../../../utils/getColor'
+import getFont from '../../../utils/getFont'
 import getNetworkLogoUrl from '../../../utils/getNetworkLogoURL'
-import { getImageRequest } from '../../../utils/getRequest'
-import getSetup from '../../../utils/getSetup'
+import { getRequest } from '../../../utils/getRequest'
 import getToken from '../../../utils/getToken'
 
 export const onRequest: PagesFunction = async ({ params, request }) => {
@@ -17,7 +18,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
 
     const cacheUrl = origin + '/tokens/' + networkName + '/' + tokenAddress
 
-    const data = await getImageRequest(cacheUrl, () => getToken(networkName, tokenAddress, cacheUrl))
+    const data = await getRequest(cacheUrl, () => getToken(networkName, tokenAddress, cacheUrl))
 
     if (!data) {
       return new Response('Asset not found.', { status: 404 })
@@ -27,8 +28,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     data.name = data.name ?? 'Token'
     data.symbol = data.symbol ?? 'UNK'
 
-    const [setup, palette] = await Promise.all([getSetup(), getColor(data.ogImage)])
-    const { fontData, watermark } = setup
+    const [fontData, palette] = await Promise.all([getFont(), getColor(data.ogImage)])
 
     const networkLogo = getNetworkLogoUrl(networkName.toUpperCase())
 
@@ -38,7 +38,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     let name = words.join(' ')
     name = name.trim()
 
-    const image = new ImageResponse(
+    return new ImageResponse(
       (
         <div
           style={{
@@ -113,7 +113,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                   {data.symbol}
                 </div>
                 <img
-                  src={watermark}
+                  src={WATERMARK_URL}
                   height="72px"
                   style={{
                     opacity: 0.5,
@@ -135,8 +135,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
           },
         ],
       }
-    )
-    return image as Response
+    ) as Response
   } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 })
   }
