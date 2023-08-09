@@ -56,6 +56,11 @@ module.exports = {
           '\\.css\\.ts$': '@vanilla-extract/jest-transform',
           '\\.(t|j)sx?$': '@swc/jest',
         },
+        // Use d3-arrays's build directly, as jest does not support its exports.
+        transformIgnorePatterns: ['d3-array'],
+        moduleNameMapper: {
+          'd3-array': 'd3-array/dist/d3-array.min.js',
+        },
       })
     },
   },
