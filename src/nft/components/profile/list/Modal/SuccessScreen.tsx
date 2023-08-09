@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
@@ -14,6 +13,7 @@ import { useMemo } from 'react'
 import { Twitter, X } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
+import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 
 import { TitleRow } from '../shared'
 

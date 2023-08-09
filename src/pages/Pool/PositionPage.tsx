@@ -2,7 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -13,7 +12,7 @@ import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
@@ -38,6 +37,7 @@ import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { formatPrice, NumberType } from 'utils/formatNumbers'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -716,7 +716,8 @@ function PositionPageContent() {
             <ResponsiveRow align="flex-start">
               <HideSmall
                 style={{
-                  marginRight: '12px',
+                  height: '100%',
+                  marginRight: 12,
                 }}
               >
                 {'result' in metadata ? (
@@ -744,9 +745,11 @@ function PositionPageContent() {
                     height="100%"
                     style={{
                       minWidth: '340px',
+                      position: 'relative',
+                      overflow: 'hidden',
                     }}
                   >
-                    <Loader />
+                    <LoadingFullscreen />
                   </DarkCard>
                 )}
               </HideSmall>
