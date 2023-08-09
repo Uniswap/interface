@@ -68,7 +68,7 @@ export function useUniswapXSwapCallback({
         const signDutchOrder = async (): Promise<{ signature: string; updatedOrder: DutchOrder }> => {
           try {
             const updatedNonce = await getUpdatedNonce(account, trade.order.chainId)
-            console.log('updatedNonce', updatedNonce?.toString())
+
             const startTime = Math.floor(Date.now() / 1000) + DEFAULT_START_TIME_PADDING_SECONDS
             setTraceData('startTime', startTime)
 
