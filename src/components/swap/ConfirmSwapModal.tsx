@@ -5,7 +5,6 @@ import {
   SwapEventName,
   SwapPriceUpdateUserResponse,
 } from '@uniswap/analytics-events'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
@@ -30,6 +29,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import invariant from 'tiny-invariant'
 import { isL2ChainId } from 'utils/chains'
+import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'

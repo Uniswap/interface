@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { AutoColumn } from 'components/Column'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row from 'components/Row'
@@ -8,6 +7,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 
 const Container = styled(AutoColumn)`
   padding: 4px;
