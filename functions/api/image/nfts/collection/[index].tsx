@@ -15,14 +15,16 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const collectionAddress = index?.toString()
     const cacheUrl = origin + '/nfts/collection/' + collectionAddress
 
-    const data = await getRequest(cacheUrl, () => getCollection(collectionAddress, cacheUrl))
+    const data = await getRequest(
+      cacheUrl,
+      () => getCollection(collectionAddress, cacheUrl),
+      (data): data is NonNullable<Awaited<ReturnType<typeof getCollection>>> =>
+        Boolean(data.ogImage && data.name && data.isVerified)
+    )
 
     if (!data) {
       return new Response('Asset not found.', { status: 404 })
     }
-
-    data.ogImage = data.ogImage ?? origin + '/images/192x192_App_Icon.png'
-    data.name = data.name ?? 'Unknown Collection'
 
     const [fontData, palette] = await Promise.all([getFont(), getColor(data.ogImage)])
 

@@ -1,7 +1,7 @@
-import { AssetDocument } from '../../src/graphql/data/__generated__/types-and-hooks'
+import { AssetDocument, AssetQuery } from '../../src/graphql/data/__generated__/types-and-hooks'
 import client from '../client'
 
-function formatTitleName(name: string, collectionName: string, tokenId: string) {
+function formatTitleName(name: string | undefined, collectionName: string | undefined, tokenId: string) {
   if (name) {
     return name
   }
@@ -17,7 +17,7 @@ function formatTitleName(name: string, collectionName: string, tokenId: string) 
 export default async function getAsset(collectionAddress: string, tokenId: string, url: string) {
   const origin = new URL(url).origin
   const image = origin + '/api/image/nfts/asset/' + collectionAddress + '/' + tokenId
-  const { data } = await client.query({
+  const { data } = await client.query<AssetQuery>({
     query: AssetDocument,
     variables: {
       address: collectionAddress,
@@ -35,10 +35,7 @@ export default async function getAsset(collectionAddress: string, tokenId: strin
     title,
     image,
     url,
-    name: asset.name ?? 'Asset',
-    symbol: asset.collection?.symbol ?? 'UNK',
     ogImage: asset.image?.url ?? origin + '/images/192x192_App_Icon.png',
-    isVerified: asset.collection?.isVerified ?? false,
   }
   return formattedAsset
 }

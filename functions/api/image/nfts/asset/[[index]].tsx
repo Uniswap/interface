@@ -15,7 +15,11 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const tokenId = index[1]?.toString()
     const cacheUrl = origin + '/nfts/asset/' + collectionAddress + '/' + tokenId
 
-    const data = await getRequest(cacheUrl, () => getAsset(collectionAddress, tokenId, cacheUrl))
+    const data = await getRequest(
+      cacheUrl,
+      () => getAsset(collectionAddress, tokenId, cacheUrl),
+      (data): data is NonNullable<Awaited<ReturnType<typeof getAsset>>> => Boolean(data.ogImage)
+    )
 
     if (!data) {
       return new Response('Asset not found.', { status: 404 })

@@ -37,7 +37,7 @@ index efc73b3..3c8317f 100644
 +        setTimeout(() => {
 +            reject('timeout');
 +        }
-+        , 10);
++        , 25); // 50ms timeout for cloud function
 +    });
 +    return Promise.race([p1, p2]);
  }

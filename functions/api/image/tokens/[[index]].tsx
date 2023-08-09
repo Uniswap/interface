@@ -18,15 +18,16 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
 
     const cacheUrl = origin + '/tokens/' + networkName + '/' + tokenAddress
 
-    const data = await getRequest(cacheUrl, () => getToken(networkName, tokenAddress, cacheUrl))
+    const data = await getRequest(
+      cacheUrl,
+      () => getToken(networkName, tokenAddress, cacheUrl),
+      (data): data is NonNullable<Awaited<ReturnType<typeof getToken>>> =>
+        Boolean(data.symbol && data.ogImage && data.name)
+    )
 
     if (!data) {
       return new Response('Asset not found.', { status: 404 })
     }
-
-    data.ogImage = data.ogImage ?? origin + '/images/192x192_App_Icon.png'
-    data.name = data.name ?? 'Token'
-    data.symbol = data.symbol ?? 'UNK'
 
     const [fontData, palette] = await Promise.all([getFont(), getColor(data.ogImage)])
 

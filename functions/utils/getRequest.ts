@@ -8,7 +8,7 @@ export async function getMetadataRequest(
   getData: () => Promise<Data | undefined>
 ) {
   try {
-    const cachedData = await getRequest(url, getData)
+    const cachedData = await getRequest(url, getData, (data): data is Data => true)
     if (cachedData) {
       return new HTMLRewriter().on('head', new MetaTagInjector(cachedData)).transform(await res)
     } else {
@@ -19,10 +19,14 @@ export async function getMetadataRequest(
   }
 }
 
-export async function getRequest(url: string, getData: () => Promise<Data | undefined>) {
+export async function getRequest<T extends Data>(
+  url: string,
+  getData: () => Promise<T | undefined>,
+  validateData: (data: Data) => data is T
+): Promise<T | undefined> {
   try {
     const cachedData = await Cache.match(url)
-    if (cachedData) {
+    if (cachedData && validateData(cachedData)) {
       return cachedData
     } else {
       const data = await getData()

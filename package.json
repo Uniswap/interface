@@ -129,7 +129,6 @@
     "jest-fail-on-console": "^3.1.1",
     "jest-fetch-mock": "^3.0.3",
     "jest-styled-components": "^7.0.8",
-    "ms.macro": "^2.0.0",
     "mini-css-extract-plugin": "^2.7.6",
     "patch-package": "^7.0.0",
     "path-browserify": "^1.0.1",

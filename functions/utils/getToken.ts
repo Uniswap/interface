@@ -1,8 +1,8 @@
-import { TokenDocument } from '../../src/graphql/data/__generated__/types-and-hooks'
+import { TokenDocument, TokenQuery } from '../../src/graphql/data/__generated__/types-and-hooks'
 import { Chain } from '../../src/graphql/data/__generated__/types-and-hooks'
 import client from '../client'
 
-function formatTitleName(symbol: string, name: string) {
+function formatTitleName(symbol: string | undefined, name: string | undefined) {
   if (symbol) {
     return 'Get ' + symbol + ' on Uniswap'
   }
@@ -31,7 +31,7 @@ export default async function getToken(networkName: string, tokenAddress: string
   const image = origin + '/api/image/tokens/' + networkName + '/' + tokenAddress
   const uppercaseNetworkName = networkName.toUpperCase()
   const convertedTokenAddress = convertTokenAddress(uppercaseNetworkName, tokenAddress)
-  const { data } = await client.query({
+  const { data } = await client.query<TokenQuery>({
     query: TokenDocument,
     variables: {
       chain: uppercaseNetworkName,
@@ -44,13 +44,14 @@ export default async function getToken(networkName: string, tokenAddress: string
   }
 
   const title = formatTitleName(asset.symbol, asset.name)
+
   const formattedAsset = {
     title,
     image,
     url,
-    symbol: asset.symbol,
-    ogImage: asset.project?.logoUrl,
-    name: asset.name,
+    symbol: asset.symbol ?? 'UNK',
+    ogImage: asset.project?.logoUrl ?? origin + '/images/192x192_App_Icon.png',
+    name: asset.name ?? 'Token',
   }
   return formattedAsset
 }
