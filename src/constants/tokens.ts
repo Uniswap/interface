@@ -80,7 +80,7 @@ export const USDC_BASE = new Token(
   'USD Base Coin',
   'USDbC'
 )
-
+export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const DAI_ARBITRUM_ONE = new Token(
   ChainId.ARBITRUM_ONE,
@@ -147,6 +147,8 @@ export const WBTC_OPTIMISM = new Token(
   'WBTC',
   'Wrapped BTC'
 )
+
+export const renBTC = new Token(ChainId.MAINNET, '0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D', 8, 'renBTC', 'renBTC')
 
 export const WETH_POLYGON_MUMBAI = new Token(
   ChainId.POLYGON_MUMBAI,
