@@ -1,16 +1,17 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { useBaseEnabledFlag } from 'featureFlags/flags/baseEnabled'
 import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
-import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
+import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const StyledModal = styled.div`
   position: fixed;
@@ -206,12 +207,6 @@ export default function FeatureFlagModal() {
         </CloseButton>
       </Header>
       <FeatureFlagOption
-        variant={DetailsV2Variant}
-        value={useDetailsV2Flag()}
-        featureFlag={FeatureFlag.detailsV2}
-        label="Use the new details page for nfts"
-      />
-      <FeatureFlagOption
         variant={UniswapXVariant}
         value={useUniswapXFlag()}
         featureFlag={FeatureFlag.uniswapXEnabled}
@@ -231,9 +226,21 @@ export default function FeatureFlagModal() {
       />
       <FeatureFlagOption
         variant={BaseVariant}
+        value={useUniswapXEthOutputFlag()}
+        featureFlag={FeatureFlag.uniswapXEthOutputEnabled}
+        label="Enable eth output for UniswapX orders"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
         value={useRoutingAPIForPriceFlag()}
         featureFlag={FeatureFlag.routingAPIPrice}
         label="Use the routing-api v2 for price fetches"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useBaseEnabledFlag()}
+        featureFlag={FeatureFlag.baseEnabled}
+        label="Enable Base"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

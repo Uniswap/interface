@@ -17,7 +17,7 @@ import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link as RouterLink } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { shortenAddress } from 'utils/addresses'
 

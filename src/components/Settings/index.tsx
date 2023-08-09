@@ -15,7 +15,7 @@ import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { CloseIcon, Divider, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 

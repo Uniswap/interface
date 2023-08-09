@@ -2,7 +2,7 @@ import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import React, { PropsWithChildren, ReactElement } from 'react'
 import { ChevronDown } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import Row, { RowBetween } from '../Row'
 

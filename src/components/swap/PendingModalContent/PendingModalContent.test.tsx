@@ -128,6 +128,38 @@ describe('PendingModalContent', () => {
       expect(screen.queryByTestId('pending-modal-currency-logo-loader')).toBeNull()
     })
 
+    it('renders the submitted icon instead of the given logo on mainnet when the transaction is submitted', () => {
+      mocked(useSwapTransactionStatus).mockReturnValue(TransactionStatus.Pending)
+
+      render(
+        <PendingModalContent
+          steps={[
+            ConfirmModalState.APPROVING_TOKEN,
+            ConfirmModalState.PERMITTING,
+            ConfirmModalState.PENDING_CONFIRMATION,
+          ]}
+          currentStep={ConfirmModalState.PENDING_CONFIRMATION}
+          swapResult={{
+            type: TradeFillType.Classic,
+            response: {
+              hash: '',
+              confirmations: 0,
+              from: '',
+              wait: jest.fn(),
+              nonce: 0,
+              gasLimit: BigNumber.from(0),
+              data: '',
+              value: BigNumber.from(0),
+              chainId: 0,
+            },
+          }}
+        />
+      )
+      expect(screen.queryByTestId('pending-modal-failure-icon')).toBeNull()
+      expect(screen.queryByTestId('pending-modal-currency-logo-loader')).toBeNull()
+      expect(screen.getByTestId('submitted-icon')).toBeInTheDocument()
+    })
+
     it('renders the success icon instead of the given logo when confirmed and successful', () => {
       mocked(useSwapTransactionStatus).mockReturnValue(TransactionStatus.Confirmed)
 

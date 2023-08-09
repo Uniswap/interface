@@ -4,7 +4,7 @@ import Row from 'components/Row'
 import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { formatEth, getMarketplaceIcon } from 'nft/utils'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme'
 
 const FeeWrap = styled(Row)`

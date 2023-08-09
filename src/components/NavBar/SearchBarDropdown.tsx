@@ -19,7 +19,7 @@ import { subheadSmall } from 'nft/css/common.css'
 import { GenieCollection, TrendingCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
@@ -362,6 +362,9 @@ function ComingSoonText({ chainId }: { chainId: ChainId }) {
       return <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
     case ChainId.AVALANCHE:
       return <Trans>Coming soon: search and explore tokens on Avalanche Chain</Trans>
+    case ChainId.BASE:
+    case ChainId.BASE_GOERLI:
+      return <Trans>Coming soon: search and explore tokens on Base</Trans>
     default:
       return null
   }

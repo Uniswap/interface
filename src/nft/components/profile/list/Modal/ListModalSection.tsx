@@ -8,7 +8,7 @@ import { useSellAsset } from 'nft/hooks'
 import { AssetRow, CollectionRow, ListingRow, ListingStatus } from 'nft/types'
 import { useMemo } from 'react'
 import { Info } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { colors } from 'theme/colors'
 import { TRANSITION_DURATIONS } from 'theme/styles'
@@ -109,7 +109,7 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
             {isCollectionApprovalSection ? (
               <>
                 <Trans>Approve</Trans>&nbsp;
-                <Plural value={uniqueCollections} _1="collection" other="collections" />
+                <Plural value={uniqueCollections ?? 1} _1="collection" other="collections" />
               </>
             ) : (
               <>
