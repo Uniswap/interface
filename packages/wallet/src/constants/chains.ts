@@ -10,6 +10,7 @@ import {
   OPTIMISM_LOGO,
   POLYGON_LOGO,
 } from 'ui/src/assets'
+import { chainListToStateMap } from 'wallet/src/features/chains/utils'
 
 export interface ChainState {
   isActive: boolean
@@ -32,6 +33,8 @@ export enum ChainId {
   PolygonMumbai = 80001,
 }
 
+export const ALL_SUPPORTED_CHAINS: string[] = Object.values(ChainId).map((c) => c.toString())
+
 // DON'T CHANGE - order here determines ordering of networks in app
 // TODO: [MOB-250] Add back in testnets once our endpoints support them
 export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
@@ -41,6 +44,8 @@ export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.Optimism,
   ChainId.Base,
 ]
+
+export const ACTIVE_CHAINS = chainListToStateMap(ALL_SUPPORTED_CHAIN_IDS)
 
 export const TESTNET_CHAIN_IDS = [ChainId.Goerli, ChainId.PolygonMumbai]
 

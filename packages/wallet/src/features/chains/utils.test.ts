@@ -8,7 +8,6 @@ import {
   fromUniswapWebAppLink,
   getPollingIntervalByBlocktime,
   isTestnet,
-  parseActiveChains,
   toGraphQLChain,
   toSupportedChainId,
   toUniswapWebAppLink,
@@ -25,24 +24,6 @@ describe(toSupportedChainId, () => {
 
   it('handles supported chain ID', () => {
     expect(toSupportedChainId(ChainId.Polygon)).toEqual(137)
-  })
-})
-
-describe(parseActiveChains, () => {
-  it('handles empty string', () => {
-    expect(parseActiveChains('')).toEqual([])
-  })
-
-  it('handles single chain ID', () => {
-    expect(parseActiveChains('1')).toEqual([1])
-  })
-
-  it('handles multiple chain IDs', () => {
-    expect(parseActiveChains('1,137')).toEqual([1, 137])
-  })
-
-  it('handles invalid characters', () => {
-    expect(parseActiveChains('1,test')).toEqual([1])
   })
 })
 

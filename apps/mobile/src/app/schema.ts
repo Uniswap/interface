@@ -1,5 +1,5 @@
 import { ModalName } from 'src/features/telemetry/constants'
-import { config } from 'wallet/src/config'
+import { ACTIVE_CHAINS } from 'wallet/src/constants/chains'
 
 // only add fields that are persisted
 export const initialSchema = {
@@ -7,7 +7,7 @@ export const initialSchema = {
     byChainId: {},
   },
   chains: {
-    byChainId: config.activeChains,
+    byChainId: ACTIVE_CHAINS,
   },
   favorites: {
     tokens: [],
@@ -318,6 +318,9 @@ delete v45SchemaIntermediate.trmApi
 
 export const v46Schema = { ...v45SchemaIntermediate }
 
+// Remove reliance on env var config.activeChains
+export const v47Schema = { ...v46Schema, chains: { byChainId: ACTIVE_CHAINS } }
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v46Schema => v46Schema
+export const getSchema = (): typeof v47Schema => v47Schema

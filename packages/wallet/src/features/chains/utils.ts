@@ -1,5 +1,6 @@
 import { BigNumberish } from 'ethers'
 import {
+  ALL_SUPPORTED_CHAINS,
   ALL_SUPPORTED_CHAIN_IDS,
   ChainId,
   ChainIdTo,
@@ -11,8 +12,6 @@ import { PollingInterval } from 'wallet/src/constants/misc'
 
 import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
 
-const supportedChains = Object.values(ChainId).map((c) => c.toString())
-
 // ALL_SUPPORTED_CHAINS is manually sorted by chain TVL
 export function getSortedActiveChainIds(chains: ChainIdTo<ChainState>): ChainId[] {
   return ALL_SUPPORTED_CHAIN_IDS.filter((n: ChainId) => !!chains[n]?.isActive)
@@ -21,7 +20,7 @@ export function getSortedActiveChainIds(chains: ChainIdTo<ChainState>): ChainId[
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
 export function toSupportedChainId(chainId?: BigNumberish): ChainId | null {
-  if (!chainId || !supportedChains.includes(chainId.toString())) {
+  if (!chainId || !ALL_SUPPORTED_CHAINS.includes(chainId.toString())) {
     return null
   }
   return parseInt(chainId.toString(), 10) as ChainId
@@ -29,15 +28,6 @@ export function toSupportedChainId(chainId?: BigNumberish): ChainId | null {
 
 export function chainIdtoHexadecimalString(chainId: ChainId): string {
   return chainId.toString(16)
-}
-
-// variant on `toSupportedChain` with a narrower return type
-export function parseActiveChains(activeChainsString: string): ChainId[] {
-  if (!activeChainsString) return []
-  return activeChainsString
-    .split(',')
-    .map((id) => parseInt(id, 10) as ChainId)
-    .filter(Boolean)
 }
 
 export function chainListToStateMap(chainIds: ChainId[]): Partial<Record<ChainId, ChainState>> {

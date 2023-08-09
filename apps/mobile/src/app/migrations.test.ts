@@ -44,6 +44,7 @@ import {
   v43Schema,
   v44Schema,
   v45Schema,
+  v46Schema,
   v4Schema,
   v5Schema,
   v6Schema,
@@ -66,7 +67,7 @@ import { initialTransactionsState, TransactionStateMap } from 'src/features/tran
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test/fixtures'
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ACTIVE_CHAINS, ChainId } from 'wallet/src/constants/chains'
 import { ChainsState, initialChainsState } from 'wallet/src/features/chains/slice'
 import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
 import {
@@ -1154,5 +1155,12 @@ describe('Redux state migrations', () => {
     expect(v46.onChainBalanceApi).toBeUndefined()
     expect(v46.routingApi).toBeUndefined()
     expect(v46.trmApi).toBeUndefined()
+  })
+
+  it('migrates from v46 to 47', () => {
+    const v46Stub = { ...v46Schema }
+    const v47 = migrations[47](v46Stub)
+
+    expect(v47.chains.byChainId).toBe(ACTIVE_CHAINS)
   })
 })
