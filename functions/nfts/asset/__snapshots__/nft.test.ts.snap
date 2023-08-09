@@ -38,7 +38,6 @@ exports[`should inject metadata for valid assets 1`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin /> -->
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
 
@@ -185,7 +184,6 @@ exports[`should inject metadata for valid assets 2`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin /> -->
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
 
@@ -332,7 +330,6 @@ exports[`should inject metadata for valid assets 3`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin /> -->
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
 
