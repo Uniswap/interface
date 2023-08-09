@@ -247,7 +247,7 @@ export default function FeatureFlagModal() {
         variant={BaseVariant}
         value={useMultichainUXFlag()}
         featureFlag={FeatureFlag.multichainUX}
-        label="Enable Base"
+        label="Updated Multichain UX"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
