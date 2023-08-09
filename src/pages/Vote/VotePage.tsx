@@ -10,12 +10,12 @@ import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
@@ -154,7 +154,7 @@ function getDateFromBlock(
     date.setTime(
       currentTimestamp
         .add(BigNumber.from(averageBlockTimeInSeconds).mul(BigNumber.from(targetBlock - currentBlock)))
-        .toNumber() * ms`1 second`
+        .toNumber() * ms(`1s`)
     )
     return date
   }
@@ -218,7 +218,7 @@ export default function VotePage() {
     timeZoneName: 'short',
   }
   // convert the eta to milliseconds before it's a date
-  const eta = proposalData?.eta ? new Date(proposalData.eta.mul(ms`1 second`).toNumber()) : undefined
+  const eta = proposalData?.eta ? new Date(proposalData.eta.mul(ms(`1s`)).toNumber()) : undefined
 
   // get total votes and format percentages for UI
   const totalVotes = proposalData?.forCount?.add(proposalData.againstCount)

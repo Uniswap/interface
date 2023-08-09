@@ -7,9 +7,9 @@ import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import useMachineTimeMs from 'hooks/useMachineTime'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -97,8 +97,8 @@ const Spinner = styled.div<{ warning: boolean }>`
   top: -3px;
 `
 
-const DEFAULT_MS_BEFORE_WARNING = ms`10m`
-const NETWORK_HEALTH_CHECK_MS = ms`10s`
+const DEFAULT_MS_BEFORE_WARNING = ms(`10m`)
+const NETWORK_HEALTH_CHECK_MS = ms(`10s`)
 
 export default function Polling() {
   const { chainId } = useWeb3React()

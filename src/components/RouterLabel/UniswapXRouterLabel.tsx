@@ -1,6 +1,6 @@
 import Row from 'components/Row'
 import { useRef } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { v4 as uuid } from 'uuid'
 
 import { BoxProps } from '../../nft/components/Box'
