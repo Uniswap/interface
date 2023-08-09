@@ -179,6 +179,10 @@ describe('UniswapX Eth Input', () => {
     cy.hardhat().then((hardhat) => hardhat.mine())
     cy.contains('Wrapped')
 
+    // Approve WETH spend
+    cy.wait('@eth_sendRawTransaction')
+    cy.hardhat().then((hardhat) => hardhat.mine())
+
     // Verify signed order submission
     cy.wait('@eth_signTypedData_v4')
     cy.contains('Swap submitted')
