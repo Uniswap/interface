@@ -1,11 +1,11 @@
-import MaskedView from '@react-native-masked-view/masked-view'
+import { BaseTheme } from '@shopify/restyle'
 import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner'
 import { PermissionStatus } from 'expo-modules-core'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet, ViewStyle } from 'react-native'
+import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { Defs, LinearGradient, Rect, Stop, Svg } from 'react-native-svg'
+import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PasteButton from 'src/components/buttons/PasteButton'
@@ -34,7 +34,7 @@ function isWalletConnect(props: QRCodeScannerProps | WCScannerProps): props is W
 }
 
 const SCAN_ICON_WIDTH_RATIO = 0.7
-const SCAN_ICON_MASK_OFFSET = 10 // used for mask to match spacing in CameraScan SVG
+const SCAN_ICON_MASK_OFFSET = 5.5 // used for mask to match spacing in CameraScan SVG
 
 const LOADER_SIZE = FixedTheme.iconSizes.icon40
 const SCANNER_SIZE = dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO
@@ -94,59 +94,21 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       entering={FadeIn}
       exiting={FadeOut}
       overflow="hidden">
-      <MaskedView
-        maskElement={
-          <Box
-            alignItems="center"
-            bg="DEP_backgroundScrim"
-            justifyContent="center"
-            position="absolute"
-            style={StyleSheet.absoluteFill}>
-            {!shouldFreezeCamera ? (
-              // don't cut out the center scan area if the camera is frozen (has seen a barcode)
-              <Box
-                bg="DEP_white"
-                height={SCANNER_SIZE - SCAN_ICON_MASK_OFFSET}
-                style={scanIconMaskStyle}
-                width={SCANNER_SIZE - SCAN_ICON_MASK_OFFSET}
-              />
-            ) : null}
-          </Box>
-        }
-        style={StyleSheet.absoluteFill}>
-        {permissionStatus === PermissionStatus.GRANTED && (
-          <BarCodeScanner
-            barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-            style={StyleSheet.absoluteFillObject}
-            type={BarCodeScanner.Constants.Type.back}
-            onBarCodeScanned={handleBarCodeScanned}
-          />
-        )}
-        <Svg height="100%" width="100%">
-          <Defs>
-            <LinearGradient id="scan-top-fadeout" x1="0" x2="0" y1="0" y2="1">
-              <Stop offset="0" stopColor={theme.colors.DEP_background1} stopOpacity="1" />
-              <Stop
-                offset="0.4"
-                stopColor={theme.colors.DEP_background1}
-                stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
-              />
-            </LinearGradient>
-            <LinearGradient id="scan-bottom-fadeout" x1="0" x2="0" y1="1" y2="0">
-              <Stop offset="0" stopColor={theme.colors.DEP_background1} stopOpacity="1" />
-              <Stop
-                offset="0.4"
-                stopColor={theme.colors.DEP_background1}
-                stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
-              />
-            </LinearGradient>
-          </Defs>
-          {/* gradient from top of modal to top of QR code, of color DEP_background0 to transparent */}
-          <Rect fill="url(#scan-top-fadeout)" height="100%" width="100%" x="0" y="0" />
-          {/* gradient from bottom of modal to bottom of QR code, of color DEP_background0 to transparent */}
-          <Rect fill="url(#scan-bottom-fadeout)" height="100%" width="100%" x="0" y="0" />
-        </Svg>
-      </MaskedView>
+      <Box justifyContent="center" style={StyleSheet.absoluteFill}>
+        <Box
+          height={Math.min((4 / 3) * dimensions.fullWidth, dimensions.fullHeight)}
+          overflow="hidden">
+          {permissionStatus === PermissionStatus.GRANTED && (
+            <BarCodeScanner
+              barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+              style={StyleSheet.absoluteFillObject}
+              type={BarCodeScanner.Constants.Type.back}
+              onBarCodeScanned={handleBarCodeScanned}
+            />
+          )}
+          <GradientOverlay shouldFreezeCamera={shouldFreezeCamera} theme={theme} />
+        </Box>
+      </Box>
       <Flex centered gap="spacing48" style={StyleSheet.absoluteFill}>
         <Flex alignItems="center" gap="none">
           <Flex
@@ -156,7 +118,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             position="absolute"
             style={{
               transform: [
-                { translateY: infoLayout ? -infoLayout.height - theme.spacing.spacing24 : 0 },
+                {
+                  translateY: infoLayout ? -infoLayout.height - theme.spacing.spacing24 : 0,
+                },
               ],
             }}
             top={0}
@@ -255,6 +219,78 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   )
 }
 
-const scanIconMaskStyle: ViewStyle = {
-  borderRadius: 30,
+type GradientOverlayProps = {
+  shouldFreezeCamera: boolean
+  theme: BaseTheme
 }
+
+const GradientOverlay = memo(function GradientOverlay({
+  shouldFreezeCamera,
+  theme,
+}: GradientOverlayProps): JSX.Element {
+  const [size, setSize] = useState<{ width: number; height: number } | null>(null)
+
+  const pathWithHole = useMemo(() => {
+    if (!size) return ''
+    const { width: W, height: H } = size
+    const paddingX = Math.max(0, (W - SCANNER_SIZE) / 2) + SCAN_ICON_MASK_OFFSET
+    const paddingY = Math.max(0, (H - SCANNER_SIZE) / 2) + SCAN_ICON_MASK_OFFSET
+    const r = 25
+    const L = paddingX
+    const R = W - paddingX
+    const T = paddingY
+    const B = H - paddingY
+    return `M${L + r} ${T} ${R - r} ${T}C${R - r} ${T} ${R} ${T} ${R} ${T + r}L${R} ${B - r}C${R} ${
+      B - r
+    } ${R} ${B} ${R - r} ${B}L${L + r} ${B}C${L + r} ${B} ${L} ${B} ${L} ${B - r}L${L} ${T + r} 0 ${
+      T + r
+    } 0 ${H} ${W} ${H} ${W} 0 0 0 0 ${T + r} ${L} ${T + r}C${L} ${T + r} ${L} ${T} ${L + r} ${T}`
+  }, [size])
+
+  const onLayout = ({
+    nativeEvent: {
+      layout: { width, height },
+    },
+  }: LayoutChangeEvent): void => {
+    setSize({ width, height })
+  }
+
+  return (
+    <Box
+      alignItems="center"
+      justifyContent="center"
+      position="absolute"
+      style={StyleSheet.absoluteFill}
+      onLayout={onLayout}>
+      <Svg height="100%" width="100%">
+        <Defs>
+          <LinearGradient id="scan-top-fadeout" x1="0" x2="0" y1="0" y2="1">
+            <Stop offset="0" stopColor={theme.colors.DEP_background1} stopOpacity="1" />
+            <Stop
+              offset="0.4"
+              stopColor={theme.colors.DEP_background1}
+              stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
+            />
+          </LinearGradient>
+          <LinearGradient id="scan-bottom-fadeout" x1="0" x2="0" y1="1" y2="0">
+            <Stop offset="0" stopColor={theme.colors.DEP_background1} stopOpacity="1" />
+            <Stop
+              offset="0.4"
+              stopColor={theme.colors.DEP_background1}
+              stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
+            />
+          </LinearGradient>
+        </Defs>
+        {!shouldFreezeCamera ? (
+          <Path d={pathWithHole} fill={theme.colors.DEP_backgroundScrim} strokeWidth="32" />
+        ) : (
+          <Rect fill={theme.colors.DEP_backgroundScrim} height="100%" width="100%" x="0" y="0" />
+        )}
+        {/* gradient from top of modal to top of QR code, of color DEP_background1 to transparent */}
+        <Rect fill="url(#scan-top-fadeout)" height="100%" width="100%" x="0" y="0" />
+        {/* gradient from bottom of modal to bottom of QR code, of color DEP_background1 to transparent */}
+        <Rect fill="url(#scan-bottom-fadeout)" height="100%" width="100%" x="0" y="0" />
+      </Svg>
+    </Box>
+  )
+})
