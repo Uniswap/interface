@@ -62,6 +62,7 @@ target 'Uniswap' do
 
         config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
         config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+        config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
       end
      end
   end
@@ -69,4 +70,26 @@ end
 
 target 'OneSignalNotificationServiceExtension' do
   pod 'OneSignalXCFramework', '>= 3.0', '< 4.0'
+end
+
+def widget_pods
+  pod "Apollo"
+  pod 'UIImageColors'
+end
+
+target 'Widgets' do
+  widget_pods
+  # Pods for widgets
+end
+target 'WidgetsCore' do
+  widget_pods
+  # Pods for widgets core
+end
+target 'WidgetsCoreTests' do
+  widget_pods
+  # Pods for widgets core test
+end
+target 'WidgetIntentExtension' do
+  widget_pods
+  # Pods for intent extension
 end

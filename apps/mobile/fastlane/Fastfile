@@ -3,6 +3,8 @@ opt_out_usage
 # Global variables to simplify the individual adjustment
 PROJECT_NAME = "Uniswap"
 ONE_SIGNAL_TARGET_NAME = "OneSignalNotificationServiceExtension"
+WIDGET_TARGET_NAME = "Widgets"
+WIDGET_INTENT_TARGET_NAME = "WidgetIntentExtension"
 XCODE_PROJECT = "./ios/#{PROJECT_NAME}.xcodeproj"
 XCODE_WORKSPACE = "./ios/#{PROJECT_NAME}.xcworkspace"
 OUTPUT_DIRECTORY = "./fastlane/builds/"
@@ -54,7 +56,7 @@ platform :ios do
     
     project = Xcodeproj::Project.open("../" + XCODE_PROJECT)
     project.targets.each do |mtarget|
-      if mtarget.name == PROJECT_NAME || mtarget.name == ONE_SIGNAL_TARGET_NAME
+      if mtarget.name == PROJECT_NAME || mtarget.name == ONE_SIGNAL_TARGET_NAME || mtarget.name == WIDGET_TARGET_NAME || mtarget.name == WIDGET_INTENT_TARGET_NAME
           mtarget.build_configurations.each do |mbuild|
             if mbuild.name == configuration
                 mbuild.build_settings['CURRENT_PROJECT_VERSION'] = new_build_number

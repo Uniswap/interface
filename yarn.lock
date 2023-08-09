@@ -11930,6 +11930,7 @@ __metadata:
     react-native-wagmi-charts: 2.3.0
     react-native-web: 0.18.12
     react-native-webview: 11.23.1
+    react-native-widgetkit: 1.0.9
     react-redux: 8.0.5
     react-svg-loader: ^3.0.3
     react-test-renderer: 18.2.0
@@ -32238,6 +32239,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 58367276b4457a12c0ecb24084c237048a31a8b4d49f53615634052c2dfcb318824e9239909b6bfb80cc8abacab658d278f480f7ff96267d10d5ff84a8ff1373
+  languageName: node
+  linkType: hard
+
+"react-native-widgetkit@npm:1.0.9":
+  version: 1.0.9
+  resolution: "react-native-widgetkit@npm:1.0.9"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: bf5e319226062150dcfe0e1371576b7e86e5b914683583dbb0b953812bcb8e278ce07c57c40690f414aadbbaf72938b21f390989ce8b54409e043c47204f4bc4
   languageName: node
   linkType: hard
 

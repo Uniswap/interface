@@ -1,2 +1,2 @@
 git_url(ENV['URL_TO_FASTLANE_CERTIFICATES_REPO'])
-app_identifier([ENV['APP_IDENTIFIER'], ENV['APP_IDENTIFIER'] + '.OneSignalNotificationServiceExtension'])
+app_identifier([ENV['APP_IDENTIFIER'], ENV['APP_IDENTIFIER'] + '.OneSignalNotificationServiceExtension', ENV['APP_IDENTIFIER'] + '.widgets', ENV['APP_IDENTIFIER'] + '.WidgetIntentExtension'] )

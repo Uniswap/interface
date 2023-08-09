@@ -10,6 +10,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
+import { useAppSelector } from 'src/app/hooks'
 import { AppModals } from 'src/app/modals/AppModals'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { AppStackNavigator } from 'src/app/navigation/navigation'
@@ -24,13 +25,16 @@ import { initAppsFlyer } from 'src/features/analytics/appsflyer'
 import { useCurrentAppearanceSetting, useIsDarkMode } from 'src/features/appearance/hooks'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
+import { selectFavoriteTokens } from 'src/features/favorites/selectors'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
+import { processWidgetEvents, setFavoritesUserDefaults } from 'src/features/widgets/widgets'
 import { DynamicThemeProvider } from 'src/theme/DynamicThemeProvider'
+import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
 import { flex } from 'ui/src/theme/restyle/flex'
@@ -42,6 +46,7 @@ import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { SharedProvider } from 'wallet/src/provider'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 // Keep the splash screen visible while we fetch resources until one of our landing pages loads
 SplashScreen.preventAutoHideAsync().catch(() => undefined)
@@ -177,11 +182,20 @@ function AppInner(): JSX.Element {
 
 function DataUpdaters(): JSX.Element {
   const activeAccount = useActiveAccount()
+  const favoriteTokens: CurrencyId[] = useAppSelector(selectFavoriteTokens)
+
   useTrmQuery(
     activeAccount && activeAccount.type === AccountType.SignerMnemonic
       ? activeAccount.address
       : undefined
   )
+
+  // Refreshes widgets when bringing app to foreground
+  useAppStateTrigger('background', 'active', processWidgetEvents)
+
+  useEffect(() => {
+    setFavoritesUserDefaults(favoriteTokens)
+  }, [favoriteTokens])
 
   return (
     <>

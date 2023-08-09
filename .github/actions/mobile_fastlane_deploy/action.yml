@@ -143,6 +143,16 @@ runs:
         key: ${{ runner.os }}-pods-v2-${{ hashFiles('**/Podfile.lock') }}
         restore-keys: ${{ runner.os }}-pods-v2
 
+    - name: 🗄️ Copy over env variables
+      uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
+      with:
+        timeout_minutes: 20
+        retry_wait_seconds: 2
+        max_attempts: 3
+        command: yarn mobile env:local:copy:swift
+      env:
+        UNISWAP_API_KEY: ${{ inputs.uniswap-api-key }}
+
     - name: 🫛 Pod Install
       uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
       with:
@@ -150,6 +160,14 @@ runs:
         retry_wait_seconds: 2
         max_attempts: 3
         command: cd apps/mobile/ios && pod install && cd ..
+
+    - name: 🦤 Generate GraphQL schemas and queries for Swift
+      uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
+      with:
+        timeout_minutes: 3
+        retry_wait_seconds: 20
+        max_attempts: 3
+        command: yarn mobile graphql:generate:swift
 
     - name: Check Sensitive File Changes
       uses: ./.github/actions/sensitive_files_changed

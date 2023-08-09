@@ -3,6 +3,7 @@ import {
   handleDeepLink,
   handleUniswapAppDeepLink,
   handleWalletConnectDeepLink,
+  LinkSource,
   parseAndValidateUserAddress,
 } from 'src/features/deepLinking/handleDeepLinkSaga'
 
@@ -167,7 +168,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash, url)
+      .call(handleUniswapAppDeepLink, hash, url, LinkSource.Share)
       .put(
         openModal({
           name: ModalName.Explore,
@@ -203,7 +204,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash, url)
+      .call(handleUniswapAppDeepLink, hash, url, LinkSource.Share)
       .put(
         openModal({
           name: ModalName.Explore,
@@ -237,7 +238,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash, url)
+      .call(handleUniswapAppDeepLink, hash, url, LinkSource.Share)
       .put(
         openModal({
           name: ModalName.Explore,
@@ -271,7 +272,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash, url)
+      .call(handleUniswapAppDeepLink, hash, url, LinkSource.Share)
       .returns(undefined)
       .silentRun()
   })
@@ -295,7 +296,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash, url)
+      .call(handleUniswapAppDeepLink, hash, url, LinkSource.Share)
       .put(setAccountAsActive(SAMPLE_SEED_ADDRESS_2))
       .returns(undefined)
       .silentRun()
@@ -319,7 +320,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash, url)
+      .call(handleUniswapAppDeepLink, hash, url, LinkSource.Share)
       .put(
         openModal({
           name: ModalName.Explore,

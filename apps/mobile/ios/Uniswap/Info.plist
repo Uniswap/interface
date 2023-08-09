@@ -48,6 +48,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAdvertisingAttributionReportEndpoint</key>
+	<string>https://appsflyer-skadnetwork.com/</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -59,8 +61,6 @@
 			</dict>
 		</dict>
 	</dict>
-  <key>NSAdvertisingAttributionReportEndpoint</key>
-	<string>https://appsflyer-skadnetwork.com/</string>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) Wallet needs access to your Camera to scan QR codes</string>
 	<key>NSFaceIDUsageDescription</key>
@@ -83,6 +83,10 @@
 			<string>Any</string>
 		</dict>
 	</dict>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>TokenPriceConfigurationIntent</string>
+	</array>
 	<key>OneSignal_suppress_launch_urls</key>
 	<true/>
 	<key>UIAppFonts</key>

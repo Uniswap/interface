@@ -2,6 +2,7 @@ import { RenderPassReport } from '@shopify/react-native-performance'
 import { MoonpayEventName, SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { ImportType } from 'src/features/onboarding/utils'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
+import { WidgetEvent, WidgetType } from 'src/features/widgets/widgets'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -118,6 +119,11 @@ export type MobileEventProperties = {
     wc_version: '1' | '2'
     chain_id?: number
     outcome: WCRequestOutcome
+  }
+  [MobileEventName.WidgetConfigurationUpdated]: WidgetEvent
+  [MobileEventName.WidgetClicked]: {
+    widget_type: WidgetType
+    url: string
   }
   [MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED]: {
     success: boolean

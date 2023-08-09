@@ -58,6 +58,8 @@ export enum MobileEventName {
   TokenSelected = 'Token Selected',
   WalletAdded = 'Wallet Added',
   WalletConnectSheetCompleted = 'Wallet Connect Sheet Completed',
+  WidgetConfigurationUpdated = 'Widget Configuration Updated',
+  WidgetClicked = 'Widget Clicked',
   // alphabetize additional values.
 }
 

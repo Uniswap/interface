@@ -340,6 +340,9 @@ PODS:
     - abseil/meta/type_traits
   - amplitude-react-native (0.5.0):
     - React-Core
+  - Apollo (1.2.1):
+    - Apollo/Core (= 1.2.1)
+  - Apollo/Core (1.2.1)
   - AppsFlyerFramework (6.10.1):
     - AppsFlyerFramework/Main (= 6.10.1)
   - AppsFlyerFramework/Main (6.10.1)
@@ -828,6 +831,8 @@ PODS:
     - React-Core
   - react-native-webview (11.23.1):
     - React-Core
+  - react-native-widgetkit (1.0.9):
+    - React
   - React-perflogger (0.70.8)
   - React-RCTActionSheet (0.70.8):
     - React-Core/RCTActionSheetHeaders (= 0.70.8)
@@ -982,6 +987,7 @@ PODS:
     - SentryPrivate (= 8.7.1)
   - SentryPrivate (8.7.1)
   - Starscream (3.1.1)
+  - UIImageColors (2.1.0)
   - WalletConnectSwift (1.6.0):
     - CryptoSwift (~> 1.4)
     - Starscream (~> 3.1)
@@ -994,6 +1000,7 @@ PODS:
 
 DEPENDENCIES:
   - "amplitude-react-native (from `../../../node_modules/@amplitude/analytics-react-native`)"
+  - Apollo
   - Argon2Swift
   - boost (from `../../../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -1053,6 +1060,7 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
   - "react-native-skia (from `../../../node_modules/@shopify/react-native-skia`)"
   - react-native-webview (from `../../../node_modules/react-native-webview`)
+  - react-native-widgetkit (from `../../../node_modules/react-native-widgetkit`)
   - React-perflogger (from `../../../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../../../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../../../node_modules/react-native/Libraries/NativeAnimation`)
@@ -1084,12 +1092,14 @@ DEPENDENCIES:
   - RNScreens (from `../../../node_modules/react-native-screens`)
   - "RNSentry (from `../../../node_modules/@sentry/react-native`)"
   - RNSVG (from `../../../node_modules/react-native-svg`)
+  - UIImageColors
   - WalletConnectSwift (= 1.6.0)
   - Yoga (from `../../../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
     - abseil
+    - Apollo
     - AppsFlyerFramework
     - Argon2Swift
     - BoringSSL-GRPC
@@ -1122,6 +1132,7 @@ SPEC REPOS:
     - Sentry
     - SentryPrivate
     - Starscream
+    - UIImageColors
     - WalletConnectSwift
     - ZXingObjC
 
@@ -1238,6 +1249,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@shopify/react-native-skia"
   react-native-webview:
     :path: "../../../node_modules/react-native-webview"
+  react-native-widgetkit:
+    :path: "../../../node_modules/react-native-widgetkit"
   React-perflogger:
     :path: "../../../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -1306,6 +1319,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
   amplitude-react-native: ad975c1f96cb5cbb22029bb57fd0e37d6a19bf33
+  Apollo: fe380f40e55e501a2499dd5885fab0cdf082b2bb
   AppsFlyerFramework: 88a6eed37ad52bcee4ad74232efa8e22809d06c9
   Argon2Swift: 99482c1b8122a03524b61e41c4903a9548e7c33b
   boost: a7c83b31436843459a1961bfd74b96033dc77234
@@ -1387,6 +1401,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   react-native-skia: 7e0c4708449d4c07b5b5cc82390b2ffc54051747
   react-native-webview: d33e2db8925d090871ffeb232dfa50cb3a727581
+  react-native-widgetkit: efb6680df237463bbe1be3a4d1a1578a1b0bb08f
   React-perflogger: e9249a18e055cae96fdf685bf6145cbea62506c8
   React-RCTActionSheet: a6d2a544a4605a111ce80fa9319cc870ca3ea778
   React-RCTAnimation: 21b776b15aa5451a0b5bcb342fd2f346817c1101
@@ -1424,10 +1439,11 @@ SPEC CHECKSUMS:
   Sentry: 11776f6a25a128808d793d0d41bb7ad873b5ae4f
   SentryPrivate: b3c448eacdabe9eab7679a2e0af609c608f91572
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
+  UIImageColors: d2ef3b0877d203cbb06489eeb78ea8b7788caabe
   WalletConnectSwift: 1fbff8f5315bd8d41596773ca1b384aa873b6824
   Yoga: d6133108734e69e8c0becc6ba587294b94829687
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: b004c3cab9f644b4dab21ef2f7263fcfad4dd80e
+PODFILE CHECKSUM: f4639e24e3ed7ea041985ae394f85cb9f31a7c15
 
 COCOAPODS: 1.11.3

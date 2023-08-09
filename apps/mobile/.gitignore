@@ -106,5 +106,14 @@ storybook-static/*
 # Jest
 coverage/
 
+# Swift GraphQL codegen
+# Ignores everything inside the schema folder except the README.md
+!ios/WidgetsCore/MobileSchema/
+ios/WidgetsCore/MobileSchema/*
+!ios/WidgetsCore/MobileSchema/README.md
+
+# Swift env
+ios/WidgetsCore/Env.swift
+
 # Sentry
 ios/sentry.properties

@@ -38,6 +38,17 @@
                ReferencedContainer = "container:Uniswap.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "072E238C2A44D5BD006AD6C9"
+               BuildableName = "WidgetsCoreTests.xctest"
+               BlueprintName = "WidgetsCoreTests"
+               ReferencedContainer = "container:Uniswap.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

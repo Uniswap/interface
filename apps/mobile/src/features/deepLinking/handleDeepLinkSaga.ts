@@ -13,6 +13,7 @@ import { MobileEventName, ModalName, ShareableEntity } from 'src/features/teleme
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
+import { WidgetType } from 'src/features/widgets/widgets'
 import { Screens } from 'src/screens/Screens'
 import { openUri, UNISWAP_APP_NATIVE_TOKEN } from 'src/utils/linking'
 import { call, fork, put, takeLatest } from 'typed-redux-saga'
@@ -34,8 +35,14 @@ export interface DeepLink {
   coldStart: boolean
 }
 
+export enum LinkSource {
+  Widget = 'Widget',
+  Share = 'Share',
+}
+
 const UNISWAP_URL_SCHEME = 'uniswap://'
 const UNISWAP_URL_SCHEME_WALLETCONNECT = 'uniswap://wc?uri='
+const UNISWAP_URL_SCHEME_WIDGET = 'uniswap://widget/'
 
 const NFT_ITEM_SHARE_LINK_HASH_REGEX = /^#\/nfts\/asset\/(0x[a-fA-F0-9]{40})\/(\d+)$/
 const NFT_COLLECTION_SHARE_LINK_HASH_REGEX = /^#\/nfts\/collection\/(0x[a-fA-F0-9]{40})$/
@@ -51,7 +58,7 @@ export function* deepLinkWatcher() {
   yield* takeLatest(openDeepLink.type, handleDeepLink)
 }
 
-export function* handleUniswapAppDeepLink(hash: string, url: string) {
+export function* handleUniswapAppDeepLink(hash: string, url: string, linkSource: LinkSource) {
   // Handle NFT Item share (ex. https://app.uniswap.org/#/nfts/asset/0x.../123)
   if (NFT_ITEM_SHARE_LINK_HASH_REGEX.test(hash)) {
     const [, contractAddress, tokenId] = hash.match(NFT_ITEM_SHARE_LINK_HASH_REGEX) || []
@@ -118,10 +125,17 @@ export function* handleUniswapAppDeepLink(hash: string, url: string) {
         },
       })
     )
-    yield* call(sendMobileAnalyticsEvent, MobileEventName.ShareLinkOpened, {
-      entity: ShareableEntity.Token,
-      url,
-    })
+    if (linkSource === LinkSource.Share) {
+      yield* call(sendMobileAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+        entity: ShareableEntity.Token,
+        url,
+      })
+    } else {
+      yield* call(sendMobileAnalyticsEvent, MobileEventName.WidgetClicked, {
+        widget_type: WidgetType.TokenPrice,
+        url,
+      })
+    }
     return
   }
 
@@ -183,6 +197,12 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       return
     }
 
+    // Handles deep links from Uniswap Widgets (ex. uniswap://widget/#/tokens/ethereum/0x...)
+    if (action.payload.url.startsWith(UNISWAP_URL_SCHEME_WIDGET)) {
+      yield* call(handleUniswapAppDeepLink, url.hash, action.payload.url, LinkSource.Widget)
+      return
+    }
+
     // Skip handling any non-WalletConnect uniswap:// URL scheme deep links for now for security reasons
     // Currently only used on WalletConnect Universal Link web page fallback button (https://uniswap.org/app/wc)
     if (action.payload.url.startsWith(UNISWAP_URL_SCHEME)) {
@@ -201,7 +221,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     }
 
     if (url.hostname === UNISWAP_APP_HOSTNAME) {
-      yield* call(handleUniswapAppDeepLink, url.hash, action.payload.url)
+      yield* call(handleUniswapAppDeepLink, url.hash, action.payload.url, LinkSource.Share)
       return
     }
 

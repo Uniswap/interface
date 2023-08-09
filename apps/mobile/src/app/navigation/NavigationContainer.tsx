@@ -15,6 +15,7 @@ import { DeepLink, openDeepLink } from 'src/features/deepLinking/handleDeepLinkS
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { getEventParams } from 'src/features/telemetry/constants'
 import { DIRECT_LOG_ONLY_SCREENS } from 'src/features/telemetry/directLogScreens'
+import { processWidgetEvents } from 'src/features/widgets/widgets'
 import { AppScreen } from 'src/screens/Screens'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
@@ -48,6 +49,8 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
       onReady={(): void => {
         onReady(navigationRef)
         sendMobileAnalyticsEvent(SharedEventName.APP_LOADED)
+        // Process widget events on app load
+        processWidgetEvents().catch(() => undefined)
 
         // setting initial route name for telemetry
         const initialRoute = navigationRef.getCurrentRoute()?.name as AppScreen
