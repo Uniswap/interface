@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { ChainId } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
@@ -7,6 +6,7 @@ import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 
 import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
 import { TokenSortMethod } from '../state'

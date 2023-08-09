@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
 import { sendAnalyticsEvent } from 'analytics'
 import SparklineChart from 'components/Charts/SparklineChart'
@@ -15,6 +14,7 @@ import { ArrowDown, ArrowUp, Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
+import { formatNumber, formatUSDPrice, NumberType } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,

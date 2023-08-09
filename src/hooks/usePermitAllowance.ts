@@ -77,7 +77,6 @@ export function useUpdatePermitAllowance(
       }
 
       const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
-      // Use conedison's signTypedData for better x-wallet compatibility.
       const signature = await signTypedData(provider.getSigner(account), domain, types, values)
       onPermitSignature?.({ ...permit, signature })
       return
