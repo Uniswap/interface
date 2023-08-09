@@ -10,10 +10,15 @@ import { useAdaptiveFooterHeight } from 'src/components/home/hooks'
 import { AnimatedBox, Box } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TabProps, TAB_VIEW_SCROLL_THROTTLE } from 'src/components/layout/TabHelpers'
+import {
+  TabProps,
+  TAB_BAR_HEIGHT,
+  TAB_VIEW_SCROLL_THROTTLE,
+} from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { HiddenTokensRow } from 'src/components/TokenBalanceList/HiddenTokensRow'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
+import { IS_ANDROID } from 'src/constants/globals'
 import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
@@ -107,13 +112,15 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
     const refreshControl = useMemo(() => {
       return (
         <RefreshControl
-          progressViewOffset={insets.top}
+          progressViewOffset={
+            insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
+          }
           refreshing={refreshing ?? false}
           tintColor={theme.colors.DEP_textTertiary}
           onRefresh={onRefresh}
         />
       )
-    }, [refreshing, onRefresh, theme.colors.DEP_textTertiary, insets.top])
+    }, [refreshing, headerHeight, onRefresh, theme.colors.DEP_textTertiary, insets.top])
 
     // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
     return (

@@ -9,10 +9,11 @@ import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Box, Flex } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TabProps } from 'src/components/layout/TabHelpers'
+import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
+import { IS_ANDROID } from 'src/constants/globals'
 import { GQLQueries } from 'src/data/queries'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -119,13 +120,15 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
   const refreshControl = useMemo(() => {
     return (
       <RefreshControl
-        progressViewOffset={insets.top}
+        progressViewOffset={
+          insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
+        }
         refreshing={refreshing ?? false}
         tintColor={theme.colors.DEP_textTertiary}
         onRefresh={onRefresh}
       />
     )
-  }, [refreshing, onRefresh, theme.colors.DEP_textTertiary, insets.top])
+  }, [refreshing, headerHeight, onRefresh, theme.colors.DEP_textTertiary, insets.top])
 
   if (!hasData && isError) {
     return errorCard

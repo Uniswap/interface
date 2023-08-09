@@ -168,6 +168,7 @@ exports[`ActivityTab renders without error 1`] = `
             "onRefresh": undefined,
             "onScroll": [Function],
             "refreshControl": <RefreshControlMock
+              progressViewOffset={NaN}
               refreshing={false}
               tintColor="#888FAB"
             />,
@@ -193,6 +194,7 @@ exports[`ActivityTab renders without error 1`] = `
       onVisibleIndicesChanged={[Function]}
       refreshControl={
         <RefreshControlMock
+          progressViewOffset={NaN}
           refreshing={false}
           tintColor="#888FAB"
         />
@@ -216,6 +218,7 @@ exports[`ActivityTab renders without error 1`] = `
           "onLayout": [Function],
           "onScrollBeginDrag": [Function],
           "refreshControl": <RefreshControlMock
+            progressViewOffset={NaN}
             refreshing={false}
             tintColor="#888FAB"
           />,
@@ -539,6 +542,7 @@ exports[`ActivityTab renders without error 2`] = `
             "onRefresh": undefined,
             "onScroll": [Function],
             "refreshControl": <RefreshControlMock
+              progressViewOffset={NaN}
               refreshing={false}
               tintColor="#888FAB"
             />,
@@ -564,6 +568,7 @@ exports[`ActivityTab renders without error 2`] = `
       onVisibleIndicesChanged={[Function]}
       refreshControl={
         <RefreshControlMock
+          progressViewOffset={NaN}
           refreshing={false}
           tintColor="#888FAB"
         />
@@ -587,6 +592,7 @@ exports[`ActivityTab renders without error 2`] = `
           "onLayout": [Function],
           "onScrollBeginDrag": [Function],
           "refreshControl": <RefreshControlMock
+            progressViewOffset={NaN}
             refreshing={false}
             tintColor="#888FAB"
           />,
