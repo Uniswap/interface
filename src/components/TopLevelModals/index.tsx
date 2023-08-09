@@ -1,6 +1,8 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { OffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import UniwalletModal from 'components/AccountDrawer/UniwalletModal'
+import BaseAnnouncementBanner from 'components/Banner/BaseAnnouncementBanner'
 import UniswapWalletBanner from 'components/Banner/UniswapWalletBanner'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
@@ -15,6 +17,7 @@ const TransactionCompleteModal = lazy(() => import('nft/components/collection/Tr
 const AirdropModal = lazy(() => import('components/AirdropModal'))
 
 export default function TopLevelModals() {
+  const { chainId } = useWeb3React()
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
   const addressClaimToggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const blockedAccountModalOpen = useModalIsOpen(ApplicationModal.BLOCKED_ACCOUNT)
@@ -28,7 +31,7 @@ export default function TopLevelModals() {
       <ConnectedAccountBlocked account={account} isOpen={accountBlocked} />
       <Bag />
       <UniwalletModal />
-      <UniswapWalletBanner />
+      {chainId === ChainId.BASE ? <BaseAnnouncementBanner /> : <UniswapWalletBanner />}
       <OffchainActivityModal />
       <TransactionCompleteModal />
       <AirdropModal />
