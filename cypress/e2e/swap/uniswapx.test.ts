@@ -19,13 +19,6 @@ const TransactionReceipt = 'uniswapx/fillTransactionReceipt.json'
 
 const InsufficientFundsStatusResponse = 'uniswapx/insufficientFundsStatusResponse.json'
 
-/** Simulates the user opening swap settings and toggling UniswapX.  */
-function toggleUniswapXInSwapSettings() {
-  cy.get(getTestSelector('open-settings-dialog-button')).click()
-  cy.get(getTestSelector('toggle-uniswap-x-button')).click()
-  cy.get(getTestSelector('open-settings-dialog-button')).click()
-}
-
 /** Stubs the provider to return a tx receipt corresponding to the mock filled uniswapx order's txHash */
 function stubSwapTxReceipt() {
   cy.hardhat().then((hardhat) => {
@@ -41,6 +34,9 @@ describe('UniswapX Toggle', () => {
   beforeEach(() => {
     cy.intercept(QuoteEndpoint, { fixture: QuoteWhereUniswapXIsBetter })
     cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+
+    // Hide banner that partially covers UniswapX mustache
+    cy.get(getTestSelector('uniswap-wallet-banner')).click()
   })
 
   it('only displays uniswapx ui when setting is on', () => {
@@ -50,7 +46,7 @@ describe('UniswapX Toggle', () => {
     // UniswapX ui should not be visible
     cy.get(getTestSelector('gas-estimate-uniswapx-icon')).should('not.exist')
 
-    toggleUniswapXInSwapSettings()
+    cy.contains('Try it now').click()
 
     // UniswapX ui should not be visible
     cy.get(getTestSelector('gas-estimate-uniswapx-icon')).should('exist')
@@ -63,9 +59,6 @@ describe('UniswapX Toggle', () => {
     // UniswapX should not display in gas estimate row before opt-in
     cy.get(getTestSelector('gas-estimate-uniswapx-icon')).should('not.exist')
 
-    // Hide banner that partially covers UniswapX mustache
-    cy.get(getTestSelector('uniswap-wallet-banner')).click()
-
     // UniswapX mustache should be visible
     cy.contains('Try it now').click()
 
@@ -76,7 +69,9 @@ describe('UniswapX Toggle', () => {
     cy.get(getTestSelector('gas-estimate-uniswapx-icon')).should('exist')
 
     // Opt-in dialog should not reappear if user manually toggles UniswapX off
-    toggleUniswapXInSwapSettings()
+    cy.get(getTestSelector('open-settings-dialog-button')).click()
+    cy.get(getTestSelector('toggle-uniswap-x-button')).click()
+    cy.get(getTestSelector('open-settings-dialog-button')).click()
     cy.contains('Try it now').should('not.be.visible')
   })
 })
@@ -93,12 +88,14 @@ describe('UniswapX Orders', () => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8))
     })
     cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    // Hide banner that partially covers UniswapX mustache
+    cy.get(getTestSelector('uniswap-wallet-banner')).click()
   })
 
   it('can swap using uniswapX', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('300')
-    toggleUniswapXInSwapSettings()
+    cy.contains('Try it now').click()
 
     // Submit uniswapx order signature
     cy.get('#swap-button').click()
@@ -117,7 +114,7 @@ describe('UniswapX Orders', () => {
   it('renders proper view if uniswapx order expires', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('300')
-    toggleUniswapXInSwapSettings()
+    cy.contains('Try it now').click()
 
     // Submit uniswapx order signature
     cy.get('#swap-button').click()
@@ -133,7 +130,7 @@ describe('UniswapX Orders', () => {
   it('renders proper view if uniswapx order has insufficient funds', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('300')
-    toggleUniswapXInSwapSettings()
+    cy.contains('Try it now').click()
 
     // Submit uniswapx order signature
     cy.get('#swap-button').click()
@@ -161,12 +158,14 @@ describe('UniswapX Eth Input', () => {
     stubSwapTxReceipt()
 
     cy.visit(`/swap/?inputCurrency=ETH&outputCurrency=${DAI.address}`)
+    // Hide banner that partially covers UniswapX mustache
+    cy.get(getTestSelector('uniswap-wallet-banner')).click()
   })
 
   it('can swap using uniswapX with ETH as input', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('1')
-    toggleUniswapXInSwapSettings()
+    cy.contains('Try it now').click()
 
     // Prompt ETH wrap to use for order
     cy.get('#swap-button').click()
@@ -198,7 +197,7 @@ describe('UniswapX Eth Input', () => {
   it('switches swap input to WETH after wrap', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('1')
-    toggleUniswapXInSwapSettings()
+    cy.contains('Try it now').click()
 
     // Prompt ETH wrap and confirm
     cy.get('#swap-button').click()
