@@ -17,9 +17,7 @@ class IntentHandler: INExtension, TokenPriceConfigurationIntentHandling {
     case favorite =  ".favorite"
   }
   
-  let ethereumChain = "ETHEREUM"
-  let WETHAddress = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
-  lazy var ETHTokenResponse = TokenResponse(chain: ethereumChain, symbol: "ETH", name: "Ethereum")
+  lazy var ETHTokenResponse = TokenResponse(chain: WidgetConstants.ethereumChain, symbol: WidgetConstants.ethereumSymbol, name: "Ethereum")
   
   func tokenResponseToIntentToken(_ result: TokenResponse, section: Section) -> IntentToken {
     let intentToken: IntentToken = IntentToken(identifier: result.name + section.rawValue, display: "\(result.name) (\(result.symbol))")
@@ -50,7 +48,7 @@ class IntentHandler: INExtension, TokenPriceConfigurationIntentHandling {
     
     let topTokens = topTokensResponse.map { (result) -> IntentToken in
       // replace wETH with ETH in the configuration
-      if (result.address == WETHAddress && result.chain == ethereumChain) {
+      if (result.address == WidgetConstants.WETHAddress && result.chain == WidgetConstants.ethereumSymbol) {
         return tokenResponseToIntentToken(ETHTokenResponse, section: Section.top)
       }
       return tokenResponseToIntentToken(result, section: Section.top)

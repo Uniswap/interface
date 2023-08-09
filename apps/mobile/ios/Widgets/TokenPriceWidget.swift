@@ -27,9 +27,9 @@ let placeholderPriceHistory = [
   PriceHistory(timestamp: 1689794997, price: 2167),
   PriceHistory(timestamp: 1689795264, price: 2165)
 ]
-let snapshotEntry = TokenPriceEntry(date: Date(), configuration: TokenPriceConfigurationIntent(), spotPrice: 2165, pricePercentChange: -9.87, symbol: "ETH", logo: UIImage(url: URL(string: "https://token-icons.s3.amazonaws.com/eth.png")), backgroundColor:  ColorExtraction.extractImageColorWithSpecialCase(imageURL: "https://token-icons.s3.amazonaws.com/eth.png"), tokenPriceHistory: TokenPriceHistoryResponse(priceHistory: placeholderPriceHistory))
+let previewEntry = TokenPriceEntry(date: Date(), configuration: TokenPriceConfigurationIntent(), spotPrice: 2165, pricePercentChange: -9.87, symbol: "ETH", logo: UIImage(url: URL(string: "https://token-icons.s3.amazonaws.com/eth.png")), backgroundColor:  ColorExtraction.extractImageColorWithSpecialCase(imageURL: "https://token-icons.s3.amazonaws.com/eth.png"), tokenPriceHistory: TokenPriceHistoryResponse(priceHistory: placeholderPriceHistory))
 
-let placeholderEntry = TokenPriceEntry(date: snapshotEntry.date, configuration: snapshotEntry.configuration, spotPrice: snapshotEntry.spotPrice, pricePercentChange: snapshotEntry.pricePercentChange, symbol: snapshotEntry.symbol, logo: nil, backgroundColor: nil,  tokenPriceHistory: snapshotEntry.tokenPriceHistory)
+let placeholderEntry = TokenPriceEntry(date: previewEntry.date, configuration: previewEntry.configuration, spotPrice: previewEntry.spotPrice, pricePercentChange: previewEntry.pricePercentChange, symbol: previewEntry.symbol, logo: nil, backgroundColor: nil,  tokenPriceHistory: previewEntry.tokenPriceHistory)
 
 let refreshMinutes = 5
 let displayName = "Token Prices"
@@ -37,37 +37,51 @@ let description = "Keep up to date on your favorite tokens."
 
 
 struct Provider: IntentTimelineProvider {
+  
+  func getEntry(configuration: TokenPriceConfigurationIntent, context: Context, isSnapshot: Bool) async throws -> TokenPriceEntry {
+    let entryDate = Date()
+    let tokenPriceResponse = isSnapshot ?
+    try await DataQueries.fetchTokenPriceData(chain: WidgetConstants.ethereumChain, address: nil) :
+    try await DataQueries.fetchTokenPriceData(chain: configuration.selectedToken?.chain ?? "", address: configuration.selectedToken?.address)
+    let spotPrice = tokenPriceResponse.spotPrice
+    let pricePercentChange = tokenPriceResponse.pricePercentChange
+    let symbol = tokenPriceResponse.symbol
+    let logo = UIImage(url: URL(string: tokenPriceResponse.logoUrl ?? ""))
+    var backgroundColor: UIColor? = nil
+    if let logoUrl = tokenPriceResponse.logoUrl {
+      backgroundColor = ColorExtraction.extractImageColorWithSpecialCase(imageURL: logoUrl)
+    }
+    var tokenPriceHistory: TokenPriceHistoryResponse? = nil
+    
+    if (context.family == .systemMedium) {
+      tokenPriceHistory = isSnapshot ?
+      try await DataQueries.fetchTokenPriceHistoryData(
+        chain: WidgetConstants.ethereumChain,
+        address: nil) :
+      try await DataQueries.fetchTokenPriceHistoryData(
+        chain: configuration.selectedToken?.chain ?? WidgetConstants.ethereumChain,
+        address: configuration.selectedToken?.address)
+    }
+    
+    return TokenPriceEntry(date: entryDate, configuration: configuration, spotPrice: spotPrice, pricePercentChange: pricePercentChange, symbol: symbol, logo: logo, backgroundColor: backgroundColor, tokenPriceHistory: tokenPriceHistory)
+  }
+  
   func placeholder(in context: Context) -> TokenPriceEntry {
     return placeholderEntry
   }
   
   func getSnapshot(for configuration: TokenPriceConfigurationIntent, in context: Context, completion: @escaping (TokenPriceEntry) -> ()) {
-    completion(snapshotEntry)
+    Task {
+      let entry = try await getEntry(configuration: configuration, context: context, isSnapshot: true)
+      completion(entry)
+    }
   }
   
   func getTimeline(for configuration: TokenPriceConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
     Metrics.logWidgetConfigurationChange()
     Task {
-      let entryDate = Date()
-      let tokenPriceResponse = try await DataQueries.fetchTokenPriceData(chain: configuration.selectedToken?.chain ?? "", address: configuration.selectedToken?.address)
-      let spotPrice = tokenPriceResponse.spotPrice
-      let pricePercentChange = tokenPriceResponse.pricePercentChange
-      let symbol = tokenPriceResponse.symbol
-      let logo = UIImage(url: URL(string: tokenPriceResponse.logoUrl ?? ""))
-      var backgroundColor: UIColor? = nil
-      if let logoUrl = tokenPriceResponse.logoUrl {
-        backgroundColor = ColorExtraction.extractImageColorWithSpecialCase(imageURL: logoUrl)
-      }
-      var tokenPriceHistory: TokenPriceHistoryResponse? = nil
-      
-      if (context.family == .systemMedium) {
-        tokenPriceHistory = try await DataQueries.fetchTokenPriceHistoryData(
-          chain: configuration.selectedToken?.chain ?? "ETHEREUM",
-          address: configuration.selectedToken?.address)
-      }
-      
-      let entry = TokenPriceEntry(date: entryDate, configuration: configuration, spotPrice: spotPrice, pricePercentChange: pricePercentChange, symbol: symbol, logo: logo, backgroundColor: backgroundColor, tokenPriceHistory: tokenPriceHistory)
-      let nextDate = Calendar.current.date(byAdding: .minute, value: refreshMinutes, to: entryDate)!
+      let entry = try await getEntry(configuration: configuration, context: context, isSnapshot: false)
+      let nextDate = Calendar.current.date(byAdding: .minute, value: refreshMinutes, to: entry.date)!
       let timeline = Timeline(entries: [entry], policy: .after(nextDate))
       completion(timeline)
     }
@@ -241,9 +255,9 @@ struct TokenPriceWidget: Widget {
 struct TokenPriceWidget_Previews: PreviewProvider {
   static var previews: some View {
     Group{
-      TokenPriceWidgetEntryView(entry: snapshotEntry)
+      TokenPriceWidgetEntryView(entry: previewEntry)
         .previewContext(WidgetPreviewContext(family: .systemSmall))
-      TokenPriceWidgetEntryView(entry: snapshotEntry)
+      TokenPriceWidgetEntryView(entry: previewEntry)
         .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
   }

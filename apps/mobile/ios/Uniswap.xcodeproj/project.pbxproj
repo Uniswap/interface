@@ -111,6 +111,7 @@
 		0743223C2A83E3CA00F8518D /* SchemaMetadata.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321E72A83E3C900F8518D /* SchemaMetadata.graphql.swift */; };
 		0743223D2A83E3CA00F8518D /* IAmount.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321E92A83E3C900F8518D /* IAmount.graphql.swift */; };
 		0743223E2A83E3CA00F8518D /* IContract.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321EA2A83E3C900F8518D /* IContract.graphql.swift */; };
+		074322402A841BBD00F8518D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0743223F2A841BBD00F8518D /* Constants.swift */; };
 		0767E02F2A61BBDC0042ADA2 /* Basel-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02B2A61BBDB0042ADA2 /* Basel-Regular.otf */; };
 		0767E0302A61BBDC0042ADA2 /* Basel-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02B2A61BBDB0042ADA2 /* Basel-Regular.otf */; };
 		0767E0312A61BBDC0042ADA2 /* Basel-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02C2A61BBDB0042ADA2 /* Basel-Semibold.otf */; };
@@ -388,6 +389,7 @@
 		074321E72A83E3C900F8518D /* SchemaMetadata.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchemaMetadata.graphql.swift; sourceTree = "<group>"; };
 		074321E92A83E3C900F8518D /* IAmount.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAmount.graphql.swift; sourceTree = "<group>"; };
 		074321EA2A83E3C900F8518D /* IContract.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IContract.graphql.swift; sourceTree = "<group>"; };
+		0743223F2A841BBD00F8518D /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		0750E42001CAEA9359159B7F /* libPods-Widgets.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Widgets.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0767E02B2A61BBDB0042ADA2 /* Basel-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Basel-Regular.otf"; sourceTree = "<group>"; };
 		0767E02C2A61BBDB0042ADA2 /* Basel-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Basel-Semibold.otf"; sourceTree = "<group>"; };
@@ -594,6 +596,7 @@
 				0741433F2A588F5800A157D3 /* Structs.swift */,
 				0767E0392A65CA590042ADA2 /* UI */,
 				0703EE022A5734A600AED1DA /* UserDefaults.swift */,
+				0743223F2A841BBD00F8518D /* Constants.swift */,
 				07F136412A5763480067004F /* Network.swift */,
 				072F6C372A44BECC00DA720A /* Logging.swift */,
 				07F1363F2A575EC00067004F /* DataQueries.swift */,
@@ -1684,6 +1687,7 @@
 				0703EE032A5734A600AED1DA /* UserDefaults.swift in Sources */,
 				074322212A83E3CA00F8518D /* NftCollectionConnection.graphql.swift in Sources */,
 				0743220A2A83E3CA00F8518D /* SafetyLevel.graphql.swift in Sources */,
+				074322402A841BBD00F8518D /* Constants.swift in Sources */,
 				0703EE052A57351800AED1DA /* Logging.swift in Sources */,
 				074321EB2A83E3CA00F8518D /* TokenDetailsScreenQuery.graphql.swift in Sources */,
 				0767E03B2A65D2550042ADA2 /* Styling.swift in Sources */,
