@@ -28,6 +28,7 @@ export function useTokenPriceHistory(
   'error'
 > & {
   setDuration: Dispatch<SetStateAction<HistoryDuration>>
+  selectedDuration: HistoryDuration
   error: boolean
 } {
   const [duration, setDuration] = useState(initialDuration)
@@ -87,6 +88,7 @@ export function useTokenPriceHistory(
       error: isError(networkStatus, !!priceData),
       refetch: retry,
       setDuration,
+      selectedDuration: duration,
     }),
     [duration, formattedPriceHistory, networkStatus, priceData, retry, spot]
   )

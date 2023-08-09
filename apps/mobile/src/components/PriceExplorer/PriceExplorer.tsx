@@ -14,6 +14,7 @@ import { PriceExplorerError } from 'src/components/PriceExplorer/PriceExplorerEr
 import { DatetimeText, PriceText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
 import { TimeRangeGroup } from 'src/components/PriceExplorer/TimeRangeGroup'
 import { invokeImpact } from 'src/utils/haptic'
+import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { useTokenPriceHistory } from './usePriceHistory'
 
@@ -47,9 +48,13 @@ export function PriceExplorer({
   tokenColor?: string
   onRetry: () => void
 }): JSX.Element {
-  const { data, loading, error, refetch, setDuration } = useTokenPriceHistory(currencyId)
+  const { data, loading, error, refetch, setDuration, selectedDuration } =
+    useTokenPriceHistory(currencyId)
 
-  if (!loading && (!data || !data.priceHistory || !data.spot)) {
+  if (
+    !loading &&
+    (!data || !data.priceHistory || (!data.spot && selectedDuration === HistoryDuration.Day))
+  ) {
     // Propagate retry up while refetching, if available
     const refetchAndRetry = (): void => {
       if (refetch) refetch()
