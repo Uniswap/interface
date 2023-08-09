@@ -1,5 +1,4 @@
 import { t } from '@lingui/macro'
-import { formatFiatPrice, formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { ChainId, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
@@ -22,6 +21,7 @@ import { logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
+import { formatFiatPrice, formatNumberOrString, NumberType } from 'utils/formatNumbers'
 
 import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
 import { Activity } from './types'
