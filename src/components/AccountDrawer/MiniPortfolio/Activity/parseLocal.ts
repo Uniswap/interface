@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
-import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from '@uniswap/smart-order-router'
 import UniswapXBolt from 'assets/svg/bolt.svg'
@@ -24,6 +23,7 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'state/transactions/types'
+import { formatCurrencyAmount } from 'utils/formatNumbers'
 
 import { CancelledTransactionTitleTable, getActivityTitle, OrderTextTable } from '../constants'
 import { Activity, ActivityMap } from './types'

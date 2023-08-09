@@ -1,5 +1,4 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { formatUSDPrice } from '@uniswap/conedison/format'
 import { sendAnalyticsEvent } from 'analytics'
 import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
@@ -19,6 +18,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
+import { formatUSDPrice } from 'utils/formatNumbers'
 
 import { DeltaText, getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'

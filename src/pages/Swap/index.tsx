@@ -8,7 +8,6 @@ import {
   SharedEventName,
   SwapEventName,
 } from '@uniswap/analytics-events'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { ChainId, Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -58,6 +57,7 @@ import swapReducer, { initialState as initialSwapState, SwapState } from 'state/
 import styled, { useTheme } from 'styled-components'
 import { LinkStyledButton, ThemedText } from 'theme'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
+import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'

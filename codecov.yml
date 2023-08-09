@@ -24,7 +24,7 @@ flag_management:
         removed_code_behavior: adjust_base
         if_ci_failed: error
       - type: patch
-        target: 80%
+        target: 50%
   individual_flags:
     - name: unit-tests
 

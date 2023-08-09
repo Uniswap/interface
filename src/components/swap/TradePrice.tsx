@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { formatNumber, formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
+import { formatNumber, formatPrice, NumberType } from 'utils/formatNumbers'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>

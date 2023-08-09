@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cache-on-main
+      - uses: actions/cache@v3
         with:
           path: node_modules/.cache
           key: ${{ runner.os }}-eslint-${{ github.run_id }}
@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cache-on-main
+      - uses: actions/cache@v3
         with:
           path: node_modules/.cache
           key: ${{ runner.os }}-tsc-${{ github.run_id }}
@@ -64,7 +64,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cache-on-main
+      - uses: actions/cache@v3
         with:
           path: node_modules/.cache
           key: ${{ runner.os }}-jest-${{ github.run_id }}
@@ -86,7 +86,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cache-on-main
+      - uses: actions/cache@v3
         with:
           path: node_modules/.swc
           key: ${{ runner.os }}-swc-${{ github.run_id }}
@@ -103,7 +103,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cache-on-main
+      - uses: actions/cache@v3
         with:
           path: node_modules/.cache
           key: ${{ runner.os }}-cypress-tsc-${{ github.run_id }}
@@ -131,7 +131,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cache-on-main
+      - uses: actions/cache@v3
         with:
           path: /root/.cache/Cypress
           key: ${{ runner.os }}-cypress-${{ hashFiles('**/node_modules/cypress/package.json') }}
@@ -144,7 +144,7 @@ jobs:
           name: build
           path: build
 
-      - uses: ./.github/actions/cache-on-main
+      - uses: actions/cache/restore@v3
         with:
           path: cache
           key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
@@ -179,12 +179,30 @@ jobs:
           name: Cypress tests
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: hardhat-cache
+          path: cache
+
+  hardhat-cache:
+    needs: [cypress-test-matrix]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: hardhat-cache
+          path: cache
+      - uses: actions/cache/save@v3
+        with:
+          path: cache
+          key: ${{ runner.os }}-hardhat-${{ hashFiles('hardhat.config.js') }}-${{ github.run_id }}
+
   cloud-typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cache-on-main
+      - uses: actions/cache@v3
         with:
           path: node_modules/.cache
           key: ${{ runner.os }}-cloud-tsc-${{ github.run_id }}
@@ -202,7 +220,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cache-on-main
+      - uses: actions/cache@v3
         with:
           path: node_modules/.cache
           key: ${{ runner.os }}-cloud-jest-${{ github.run_id }}

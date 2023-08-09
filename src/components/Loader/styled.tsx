@@ -9,6 +9,19 @@ export const loadingAnimation = keyframes`
   }
 `
 
+const shimmerMixin = css`
+  animation: ${loadingAnimation} 1.5s infinite;
+  animation-fill-mode: both;
+  background: linear-gradient(
+    to left,
+    ${({ theme }) => theme.surface1} 25%,
+    ${({ theme }) => theme.surface3} 50%,
+    ${({ theme }) => theme.surface1} 75%
+  );
+  background-size: 400%;
+  will-change: background-position;
+`
+
 export const LoadingRows = styled.div`
   display: grid;
 
@@ -24,7 +37,6 @@ export const LoadingRows = styled.div`
     background-size: 400%;
     border-radius: 12px;
     height: 2.4em;
-    will-change: background-position;
   }
 `
 
@@ -36,4 +48,10 @@ export const loadingOpacityMixin = css<{ $loading: boolean }>`
 
 export const LoadingOpacityContainer = styled.div<{ $loading: boolean }>`
   ${loadingOpacityMixin}
+`
+
+export const LoadingFullscreen = styled.div`
+  ${shimmerMixin}
+  inset: 0;
+  position: absolute;
 `

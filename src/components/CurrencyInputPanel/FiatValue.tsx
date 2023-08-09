@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { formatNumber, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Percent } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
@@ -7,6 +6,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
+import { formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
 import { warningSeverity } from 'utils/prices'
 
 const FiatLoadingBubble = styled(LoadingBubble)`

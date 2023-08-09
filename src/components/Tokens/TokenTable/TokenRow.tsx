@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
 import { sendAnalyticsEvent } from 'analytics'
 import { ReactComponent as ArrowChangeDown } from 'assets/svg/arrow-change-down.svg'
@@ -17,6 +16,7 @@ import { CSSProperties, ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
+import { formatNumber, formatUSDPrice, NumberType } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
