@@ -50,26 +50,25 @@ public struct PricePercentChangeTextWithIcon: View {
 }
 
 public struct Placeholder {
+  static let placeholderGradient = LinearGradient(
+    stops: [
+      Gradient.Stop(color: .widgetLightGrey.opacity(0.12), location: 0.00),
+      Gradient.Stop(color: .widgetLightGrey.opacity(0.05), location: 1.00),
+    ],
+    startPoint: UnitPoint(x: 0.13, y: 0.5),
+    endPoint: UnitPoint(x: 0.94, y: 0.5)
+  )
   
   public static func Circle(width: Double, height: Double) -> some View {
     return SwiftUI.Circle()
       .frame(width: width, height: height)
-      .foregroundColor( .gray.opacity(0.12))
+      .foregroundStyle(placeholderGradient)
   }
   
   public static func Rectangle(width: Double, height: Double) -> some View {
     return SwiftUI.Rectangle()
       .frame(width: width, height: height)
-      .foregroundStyle(
-        LinearGradient(
-          stops: [
-            Gradient.Stop(color: .gray.opacity(0.12), location: 0.00),
-            Gradient.Stop(color: .gray.opacity(0.05), location: 1.00),
-          ],
-          startPoint: UnitPoint(x: 0.13, y: 0.5),
-          endPoint: UnitPoint(x: 0.94, y: 0.5)
-        )
-      )
+      .foregroundStyle(placeholderGradient)
       .cornerRadius(6)
   }
 }

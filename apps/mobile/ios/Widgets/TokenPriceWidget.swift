@@ -145,6 +145,11 @@ struct TokenPriceWidgetEntryView: View {
     }
   }
   
+  func timeStamp() -> some View {
+    return Text("\(Date().formatted(date: .omitted, time: .shortened))")
+      .withHeadlineSmallStyle()
+  }
+  
   func smallWidget() -> some View {
     return ZStack {
       if let color = entry.backgroundColor {
@@ -153,8 +158,7 @@ struct TokenPriceWidgetEntryView: View {
           widgetPriceHeader(isPlaceholder: false).padding(.bottom, 12)
           Spacer()
           priceSection(isPlaceholder: false).padding(.bottom, 4)
-          Text("\(Date(), style: .relative) ago")
-            .withHeadlineSmallStyle()
+          timeStamp()
         }
         .withMaxFrame()
         .padding(12)
@@ -193,8 +197,7 @@ struct TokenPriceWidgetEntryView: View {
           priceSection(isPlaceholder: false)
         }
         .padding(.bottom, 4)
-        Text("\(Date(), style: .relative) ago")
-          .withHeadlineSmallStyle()
+        timeStamp()
       }
       .withMaxFrame()
       .padding(16)
