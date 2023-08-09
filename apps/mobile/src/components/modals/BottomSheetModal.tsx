@@ -5,22 +5,15 @@ import {
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
-import { BlurView } from '@react-native-community/blur'
 import { useResponsiveProp } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { Keyboard, StyleSheet } from 'react-native'
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated'
+import { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
@@ -36,7 +29,7 @@ type Props = PropsWithChildren<{
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
   fullScreen?: boolean
   backgroundColor?: string
-  blurredBackground?: boolean
+  transparentBackground?: boolean
   isDismissible?: boolean
   renderBehindInset?: boolean
   hideKeyboardOnDismiss?: boolean
@@ -71,7 +64,7 @@ export function BottomSheetModal({
   fullScreen,
   hideHandlebar,
   backgroundColor,
-  blurredBackground = false,
+  transparentBackground = false,
   isDismissible = true,
   renderBehindInset = false,
   hideKeyboardOnDismiss = false,
@@ -93,9 +86,8 @@ export function BottomSheetModal({
     useBottomSheetDynamicSnapPoints(snapPoints)
   const animatedPosition = useSharedValue(0)
   const theme = useAppTheme()
-  const isDarkMode = useIsDarkMode()
 
-  const backgroundColorValue = blurredBackground
+  const backgroundColorValue = transparentBackground
     ? theme.colors.none
     : backgroundColor ?? theme.colors.DEP_background1
 
@@ -106,11 +98,11 @@ export function BottomSheetModal({
         {...props}
         appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
         disappearsOnIndex={DISAPPEARS_ON_INDEX}
-        opacity={blurredBackground ? 0.2 : 0.4}
+        opacity={transparentBackground ? 0.2 : 0.4}
         pressBehavior={isDismissible ? 'close' : 'none'}
       />
     ),
-    [blurredBackground, isDismissible]
+    [transparentBackground, isDismissible]
   )
 
   const renderHandleBar = useCallback(
@@ -160,21 +152,6 @@ export function BottomSheetModal({
     return { borderTopLeftRadius: interpolatedRadius, borderTopRightRadius: interpolatedRadius }
   })
 
-  const renderBlurredBg = useCallback(
-    () => (
-      <Animated.View style={[BlurViewStyle.base, animatedBorderRadius]}>
-        <BlurView
-          blurAmount={5}
-          blurType={isDarkMode ? 'dark' : 'xlight'}
-          reducedTransparencyFallbackColor={isDarkMode ? 'DEP_black' : 'DEP_white'}
-          style={BlurViewStyle.base}
-        />
-      </Animated.View>
-    ),
-    [isDarkMode, animatedBorderRadius]
-  )
-
-  const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
   const backdrop = { backdropComponent: renderBackdrop }
 
   // onAnimated is called when the sheet is about to animate to a new position.
@@ -193,7 +170,6 @@ export function BottomSheetModal({
 
   return (
     <BaseModal
-      {...background}
       {...backdrop}
       ref={modalRef}
       // This is required for android to make scrollable containers work
@@ -320,12 +296,5 @@ const BottomSheetStyle = StyleSheet.create({
   },
   view: {
     flex: 1,
-  },
-})
-
-const BlurViewStyle = StyleSheet.create({
-  base: {
-    ...StyleSheet.absoluteFillObject,
-    overflow: 'hidden',
   },
 })

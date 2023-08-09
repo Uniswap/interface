@@ -57,7 +57,6 @@ jest.mock('expo-clipboard', () => ({
 }))
 jest.mock('@react-native-community/blur', () => ({ BlurView: {} }))
 jest.mock('expo-barcode-scanner', () => ({}))
-jest.mock('expo-blur', () => ({ BlurView: {} }))
 jest.mock('expo-av', () => ({}))
 jest.mock('expo-haptics', () => ({ impactAsync: jest.fn(), ImpactFeedbackStyle: jest.fn() }))
 jest.mock('expo-linear-gradient', () => ({ LinearGradient: () => 'ExpoLinearGradient' }))

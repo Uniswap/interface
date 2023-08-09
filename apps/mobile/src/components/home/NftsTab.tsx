@@ -81,8 +81,7 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
   const navigation = useAppStackNavigation()
   const theme = useAppTheme()
   const onPressItem = useCallback(() => {
-    // Always ensure push to enforce right push
-    navigation.push(Screens.NFTItem, {
+    navigation.navigate(Screens.NFTItem, {
       owner,
       address: item.contractAddress ?? '',
       tokenId: item.tokenId ?? '',

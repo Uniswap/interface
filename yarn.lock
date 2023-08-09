@@ -11869,7 +11869,6 @@ __metadata:
     expo: 48.0.19
     expo-av: 13.0.2
     expo-barcode-scanner: 12.3.2
-    expo-blur: 12.0.1
     expo-clipboard: 4.1.2
     expo-haptics: 12.0.1
     expo-linear-gradient: 12.0.1
@@ -19931,15 +19930,6 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: b07831a8b7205c838be54268ac927ca4ce431065f55f551d37e9957e3b2bae0c6b208fee278d846a9f06d9cd9e71d54f3821818c80327fa8387a7b56ee1291af
-  languageName: node
-  linkType: hard
-
-"expo-blur@npm:12.0.1":
-  version: 12.0.1
-  resolution: "expo-blur@npm:12.0.1"
-  peerDependencies:
-    expo: "*"
-  checksum: 4b76c5618fdc390d7cb2468f0f6fa8e5a1fe44c11706f8ee4002dd2ffb79eaae940b3956cf04bf67fcfaa088b9d82f1c732467ada7a8be8a586dfd775292633c
   languageName: node
   linkType: hard
 

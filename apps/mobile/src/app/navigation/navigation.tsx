@@ -119,6 +119,8 @@ export function WrappedHomeScreen(props: AppStackScreenProp<Screens.Home>): JSX.
 }
 
 export function ExploreStackNavigator(): JSX.Element {
+  const theme = useAppTheme()
+
   return (
     <NavigationContainer
       independent={true}
@@ -143,7 +145,8 @@ export function ExploreStackNavigator(): JSX.Element {
           animation: 'slide_from_right',
         }}>
         <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
-        <ExploreStack.Group>
+        <ExploreStack.Group
+          screenOptions={{ contentStyle: { backgroundColor: theme.colors.DEP_background0 } }}>
           <ExploreStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
           <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
           <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />

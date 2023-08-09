@@ -118,7 +118,7 @@ export function NFTCollectionScreen({
   })
 
   const onPressItem = (asset: NFTItem): void => {
-    navigation.push(Screens.NFTItem, {
+    navigation.navigate(Screens.NFTItem, {
       address: asset.contractAddress ?? '',
       tokenId: asset.tokenId ?? '',
       isSpam: asset.isSpam ?? false,
