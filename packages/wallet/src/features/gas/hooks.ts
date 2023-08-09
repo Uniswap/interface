@@ -14,10 +14,11 @@ export function useTransactionGasFee(
 ): TransactionGasFeeInfo | undefined {
   // TODO: [MOB-650] Handle error responses from gas endpoint
 
-  // HOTFIX for no base support on gas endpoint
-  if (tx?.chainId === ChainId.Base) {
-    tx.chainId = ChainId.Optimism
-  }
+  // TODO: remove this when we merge latest version of gas endpoint
+  // https://linear.app/uniswap/issue/MOB-1069/remove-chain-override-in-gas-endpoint-for-base
+  // if (tx?.chainId === ChainId.Base) {
+  //   tx.chainId = ChainId.Optimism
+  // }
 
   const { data } = useGasFeeQuery(tx, skip)
 
