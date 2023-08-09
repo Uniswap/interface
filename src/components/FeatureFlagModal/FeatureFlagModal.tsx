@@ -1,5 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useBaseEnabledFlag } from 'featureFlags/flags/baseEnabled'
+import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
@@ -241,6 +242,12 @@ export default function FeatureFlagModal() {
         value={useBaseEnabledFlag()}
         featureFlag={FeatureFlag.baseEnabled}
         label="Enable Base"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useCurrencyConversionFlag()}
+        featureFlag={FeatureFlag.currencyConversion}
+        label="Enable currency conversion"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
