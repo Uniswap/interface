@@ -129,7 +129,7 @@ export const CHAIN_INFO: ChainInfo = {
     blockWaitMsBeforeWarning: 600000,
     bridge: 'https://bridge.base.org/',
     docs: 'https://base.org/',
-    explorer: 'https://basescan.org',
+    explorer: 'https://basescan.org/',
     infoLink: 'https://info.uniswap.org/#/base',
     label: 'Base',
     logo: BASE_LOGO,
