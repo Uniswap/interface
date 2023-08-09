@@ -7,8 +7,8 @@ import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { FavoriteButton } from 'src/components/buttons/FavoriteButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { Favorite } from 'src/components/icons/Favorite'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
@@ -143,12 +143,9 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               borderRadius="rounded20"
               borderWidth={1}
               padding="spacing12"
-              testID={ElementName.Favorite}>
-              <FavoriteButton
-                isFavorited={isFavorited}
-                size={iconSizes.icon20}
-                onPress={onPressFavorite}
-              />
+              testID={ElementName.Favorite}
+              onPress={onPressFavorite}>
+              <Favorite isFavorited={isFavorited} size={iconSizes.icon20} />
             </TouchableArea>
             <TouchableArea
               hapticFeedback
