@@ -1,5 +1,4 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
@@ -11,6 +10,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 
 import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'

@@ -1,4 +1,3 @@
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -10,6 +9,7 @@ import { TextProps } from 'rebass'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 import { formatReviewSwapCurrencyAmount } from 'utils/formatNumbers'
 
 export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
