@@ -29,7 +29,7 @@ export function TransactionSummaryNetworkLogo({
 
 function _NetworkLogo({
   chainId,
-  shape = 'circle',
+  shape,
   size = iconSizes.icon20,
 }: NetworkLogoProps): JSX.Element | null {
   const { logo } = CHAIN_INFO[chainId]
