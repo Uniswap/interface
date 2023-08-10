@@ -111,7 +111,7 @@ struct TokenPriceWidgetEntryView: View {
     return HStack(alignment: .top) {
       if (!isPlaceholder) {
         if let logo = entry.logo {
-          Image(uiImage: logo).withIconStyle(background: .white)
+          Image(uiImage: logo).withIconStyle(background: .white, border: entry.backgroundColor != nil ? Color(entry.backgroundColor!) : Color.widgetTokenShadow)
         } else {
           Placeholder.Circle(width: 40, height: 40)
         }

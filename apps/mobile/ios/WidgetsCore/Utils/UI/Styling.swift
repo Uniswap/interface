@@ -27,11 +27,13 @@ public extension Text {
 }
 
 public extension Image {
-  func withIconStyle(background: Color) -> some View {
+  func withIconStyle(background: Color, border: Color) -> some View {
     self.resizable()
       .frame(width: 40, height: 40)
       .background(background)
-      .cornerRadius(40)
+      .clipShape(Circle())
+         .overlay(
+          Circle().stroke(border, lineWidth: 0.5))
       .shadow(color: .widgetTokenShadow, radius: 5, x: 0, y: 2)
   }
 }
