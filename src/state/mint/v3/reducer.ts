@@ -12,6 +12,17 @@ import {
 
 type FullRange = true
 
+export enum Presets {
+  SAFE,
+  RISK,
+  NORMAL,
+  FULL,
+  STABLE,
+  GAMMA_NARROW,
+  GAMMA_WIDE,
+  GAMMA_DYNAMIC,
+  GAMMA_STABLE,
+}
 interface MintState {
   readonly independentField: Field
   readonly typedValue: string
