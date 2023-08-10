@@ -146,7 +146,7 @@ function getPendingConfirmationContent({
       title,
       subtitle: tradeSummary,
       bottomLabel: (
-        <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501" color="textSecondary">
+        <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501" color="neutral2">
           <Trans>Learn more about swapping with UniswapX</Trans>
         </ExternalLink>
       ),
@@ -155,7 +155,7 @@ function getPendingConfirmationContent({
     const explorerLink = (
       <ExternalLink
         href={getExplorerLink(chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)}
-        color="textSecondary"
+        color="neutral2"
       >
         <Trans>View on Explorer</Trans>
       </ExternalLink>
