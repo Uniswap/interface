@@ -16,7 +16,6 @@ First, read and follow the instructions of the individual apps in this repositor
 There is a convenience command for setting up once you have installed the correct software. Before running ensure you installed and login to the [1Password CLI](https://1password.com/downloads/command-line/). Then run the following commands:
 
 ```bash
-yarn
 yarn lfg
 ```
 
