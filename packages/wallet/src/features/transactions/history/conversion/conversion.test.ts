@@ -38,6 +38,7 @@ const WRAPPED_NATIVE_ADDRESS = getWrappedNativeCurrencyAddressForChain(ChainId.M
 
 const RESPONSE_BASE = {
   id: 'base_id',
+  chain: Chain.Ethereum,
   timestamp: 1,
   transaction: {
     id: 'base_tranaction_id',

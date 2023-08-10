@@ -1,7 +1,7 @@
 // TODO(MOB-203): reduce component complexity
 /* eslint-disable complexity */
 import { TradeType } from '@uniswap/sdk-core'
-import { ChainId } from 'wallet/src/constants/chains'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
@@ -23,9 +23,14 @@ import {
 export default function parseTradeTransaction(
   transaction: TransactionListQueryResponse
 ): ExactInputSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
+  const chainId = fromGraphQLChain(transaction?.chain)
+  if (!chainId) {
+    return undefined
+  }
+
   // for detecting wraps
-  const nativeCurrencyID = buildNativeCurrencyId(ChainId.Mainnet).toLocaleLowerCase()
-  const wrappedCurrencyID = buildWrappedNativeCurrencyId(ChainId.Mainnet).toLocaleLowerCase()
+  const nativeCurrencyID = buildNativeCurrencyId(chainId).toLocaleLowerCase()
+  const wrappedCurrencyID = buildWrappedNativeCurrencyId(chainId).toLocaleLowerCase()
 
   const sent = transaction?.assetChanges.find((t) => {
     return (
@@ -56,15 +61,15 @@ export default function parseTradeTransaction(
   if (onlyERC20Tokens) {
     const inputCurrencyId =
       sent.tokenStandard === 'NATIVE'
-        ? buildNativeCurrencyId(ChainId.Mainnet)
+        ? buildNativeCurrencyId(chainId)
         : sent.asset.address
-        ? buildCurrencyId(ChainId.Mainnet, sent.asset.address)
+        ? buildCurrencyId(chainId, sent.asset.address)
         : null
     const outputCurrencyId =
       received.tokenStandard === 'NATIVE'
-        ? buildNativeCurrencyId(ChainId.Mainnet)
+        ? buildNativeCurrencyId(chainId)
         : received.asset.address
-        ? buildCurrencyId(ChainId.Mainnet, received.asset.address)
+        ? buildCurrencyId(chainId, received.asset.address)
         : null
     const inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       sent.tokenStandard,
@@ -126,9 +131,9 @@ export default function parseTradeTransaction(
     const tokenId = nftChange.asset?.name
     const purchaseCurrencyId =
       tokenChange.tokenStandard === 'NATIVE'
-        ? buildNativeCurrencyId(ChainId.Mainnet)
+        ? buildNativeCurrencyId(chainId)
         : tokenChange.asset?.address
-        ? buildCurrencyId(ChainId.Mainnet, tokenChange.asset.address)
+        ? buildCurrencyId(chainId, tokenChange.asset.address)
         : undefined
     const purchaseCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       tokenChange.tokenStandard,

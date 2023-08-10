@@ -461,12 +461,13 @@ query TokenProjects($contracts: [ContractInput!]!) {
 }
 
 query TransactionList($address: String!) {
-  portfolios(ownerAddresses: [$address], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]) {
+  portfolios(ownerAddresses: [$address], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]) {
     id
-    assetActivities(pageSize: 50, page: 1) {
+    assetActivities(pageSize: 100, page: 1, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]) {
       id
       timestamp
       type
+      chain
       transaction {
         id
         hash

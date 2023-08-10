@@ -2,6 +2,19 @@
 directive @defer on FIELD
 
 """
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
+
+"""
 Tells the service which subscriptions will be published to when this mutation is
 called. This directive is deprecated use @aws_susbscribe directive instead.
 """
@@ -12,18 +25,20 @@ directive @aws_publish(
   subscriptions: [String]
 ) on FIELD_DEFINITION
 
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
 """Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
-) on FIELD_DEFINITION
-
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
 ) on FIELD_DEFINITION
 
 """
@@ -35,24 +50,9 @@ directive @aws_cognito_user_pools(
 ) on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
 directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 union ActivityDetails = TransactionDetails | SwapOrderDetails
 
@@ -151,12 +151,6 @@ type Dimensions {
   id: ID!
   height: Float
   width: Float
-}
-
-type EnsEntry {
-  id: ID!
-  address: String!
-  ensDomainName: String!
 }
 
 enum HighLow {
@@ -644,7 +638,6 @@ type Portfolio {
 type Query {
   tokens(contracts: [ContractInput!]!, _fs: String): [Token]
   token(chain: Chain!, address: String, _fs: String): Token
-  ensEntry(ensDomainName: String!, chain: Chain!): EnsEntry
   tokenProjects(contracts: [ContractInput!]!, _fs: String): [TokenProject]
   searchTokens(searchQuery: String!, _fs: String): [Token]
   portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!], _fs: String): [Portfolio]

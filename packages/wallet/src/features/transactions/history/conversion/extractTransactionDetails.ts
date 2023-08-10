@@ -3,6 +3,7 @@ import {
   ActivityType,
   TransactionStatus as RemoteTransactionStatus,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   TransactionDetails,
   TransactionListQueryResponse,
@@ -66,10 +67,12 @@ export default function extractTransactionDetails(
     }
   }
 
+  const chainId = fromGraphQLChain(transaction.chain)
+
   return {
     id: transaction.transaction.hash,
-    // @TODO: [MOB-234] update with chainId from txn when backend supports other networks
-    chainId: ChainId.Mainnet,
+    // fallback to mainnet, although this should never happen
+    chainId: chainId ?? ChainId.Mainnet,
     hash: transaction.transaction.hash,
     addedTime: transaction.timestamp * 1000, // convert to ms
     status: remoteTxStatusToLocalTxStatus(transaction.transaction.status),

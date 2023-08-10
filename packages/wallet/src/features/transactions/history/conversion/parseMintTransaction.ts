@@ -1,4 +1,4 @@
-import { ChainId } from 'wallet/src/constants/chains'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
@@ -25,18 +25,19 @@ export default function parseNFTMintTransaction(
   const collectionName = nftChange.asset.collection?.name
   const imageURL = nftChange.asset.image?.url
   const tokenId = nftChange.asset.tokenId
+  const chainId = fromGraphQLChain(transaction?.chain)
   let transactedUSDValue: number | undefined
 
-  if (!name || !collectionName || !imageURL || !tokenId) return undefined
+  if (!name || !collectionName || !imageURL || !tokenId || !chainId) return undefined
 
   let purchaseCurrencyId: string | undefined
   let purchaseCurrencyAmountRaw: string | undefined
   if (tokenChange && tokenChange.__typename === 'TokenTransfer') {
     purchaseCurrencyId =
       tokenChange.tokenStandard === 'NATIVE'
-        ? buildNativeCurrencyId(ChainId.Mainnet)
+        ? buildNativeCurrencyId(chainId)
         : tokenChange.asset?.address
-        ? buildCurrencyId(ChainId.Mainnet, tokenChange.asset.address)
+        ? buildCurrencyId(chainId, tokenChange.asset.address)
         : undefined
     purchaseCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       tokenChange.tokenStandard,
