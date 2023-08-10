@@ -6,6 +6,7 @@ ignore:
   - "**/instrumented/**/*"
   - "**/styles/**/*"
   - "styles/**/*"
+  - "**/styled.tsx"
   - "**/constants/**/*"
   - "constants/**/*"
 
