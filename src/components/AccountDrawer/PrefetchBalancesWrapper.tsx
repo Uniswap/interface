@@ -3,36 +3,19 @@ import { usePortfolioBalancesLazyQuery, usePortfolioBalancesQuery } from 'graphq
 import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import usePrevious from 'hooks/usePrevious'
 import { atom, useAtom } from 'jotai'
-import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
-import { useAllTransactions } from 'state/transactions/hooks'
-import { TransactionDetails } from 'state/transactions/types'
+import { PropsWithChildren, useCallback, useEffect } from 'react'
+import { usePendingOrders } from 'state/signatures/hooks'
+import { usePendingTransactions } from 'state/transactions/hooks'
 
-const isTxPending = (tx: TransactionDetails) => !tx.receipt
-function wasPending(previousTxs: { [hash: string]: TransactionDetails | undefined }, current: TransactionDetails) {
-  const previousTx = previousTxs[current.hash]
-  return previousTx && isTxPending(previousTx)
-}
+/** Returns true if the number of pending activities has decreased */
+function useHasUpdatedTx() {
+  const numPendingTxs = usePendingTransactions().length
+  const numPendingOrders = usePendingOrders().length
 
-function useHasUpdatedTx(account: string | undefined) {
-  // TODO: consider monitoring tx's on chains other than the wallet's current chain
-  const currentChainTxs = useAllTransactions()
+  const totalPending = numPendingTxs + numPendingOrders
+  const prevPending = usePrevious(totalPending)
 
-  const pendingTxs = useMemo(() => {
-    return Object.entries(currentChainTxs).reduce((acc: { [hash: string]: TransactionDetails }, [hash, tx]) => {
-      if (!tx.receipt) acc[hash] = tx
-      return acc
-    }, {})
-  }, [currentChainTxs])
-
-  const previousPendingTxs = usePrevious(pendingTxs)
-
-  return useMemo(() => {
-    if (!previousPendingTxs || !account) return false
-    return Object.values(currentChainTxs).some(
-      (tx) => tx.from === account && !isTxPending(tx) && wasPending(previousPendingTxs, tx),
-      [currentChainTxs, previousPendingTxs]
-    )
-  }, [account, currentChainTxs, previousPendingTxs])
+  return !!prevPending && totalPending < prevPending
 }
 
 export function useCachedPortfolioBalancesQuery({ account }: { account?: string }) {
@@ -65,7 +48,7 @@ export default function PrefetchBalancesWrapper({
 
   const prevAccount = usePrevious(account)
 
-  const hasUpdatedTx = useHasUpdatedTx(account)
+  const hasUpdatedTx = useHasUpdatedTx()
   // Listens for account changes & recently updated transactions to keep portfolio balances fresh in apollo cache
   useEffect(() => {
     const accountChanged = prevAccount !== undefined && prevAccount !== account

@@ -150,5 +150,10 @@ export function isPendingTx(tx: TransactionDetails): boolean {
 
 export function usePendingTransactions(): TransactionDetails[] {
   const allTransactions = useAllTransactions()
-  return useMemo(() => Object.values(allTransactions).filter(isPendingTx), [allTransactions])
+  const { account } = useWeb3React()
+
+  return useMemo(
+    () => Object.values(allTransactions).filter((tx) => tx.from === account && isPendingTx(tx)),
+    [account, allTransactions]
+  )
 }
