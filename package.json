@@ -18,7 +18,7 @@
     "i18n": "yarn i18n:extract --clean && yarn i18n:compile",
     "prepare": "concurrently \"npm:ajv\" \"npm:contracts\" \"npm:graphql\" \"npm:i18n\"",
     "start": "craco start",
-    "start:cloud": "NODE_OPTIONS=--dns-result-order=ipv4first PORT=3001 npx wrangler pages dev --node-compat --compatibility-date=2023-08-04 --proxy=3001 --port=3000 -- yarn start",
+    "start:cloud": "NODE_OPTIONS=--dns-result-order=ipv4first PORT=3001 npx wrangler pages dev --compatibility-flags=nodejs_compat --compatibility-date=2023-08-01 --proxy=3001 --port=3000 -- yarn start",
     "build": "craco build",
     "analyze": "source-map-explorer 'build/static/js/*.js' --only-mapped",
     "serve": "serve build -l 3000",
@@ -30,7 +30,8 @@
     "test:cloud": "NODE_OPTIONS=--experimental-vm-modules yarn jest functions --config=functions/jest.config.json",
     "cypress:open": "cypress open --browser chrome --e2e",
     "cypress:run": "cypress run --browser chrome --e2e",
-    "deduplicate": "yarn-deduplicate --strategy=highest"
+    "deduplicate": "yarn-deduplicate --strategy=highest",
+    "postinstall": "yarn patch-package"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -108,10 +109,12 @@
     "@uniswap/eslint-config": "^1.2.0",
     "@vanilla-extract/jest-transform": "^1.1.1",
     "@vanilla-extract/webpack-plugin": "^2.2.0",
+    "@vercel/og": "0.5.8",
     "@walletconnect/types": "^2.8.6",
     "babel-jest": "^29.6.1",
     "browser-cache-mock": "^0.1.7",
     "buffer": "^6.0.3",
+    "colorthief": "^2.4.0",
     "concurrently": "^8.0.1",
     "cypress": "12.12.0",
     "cypress-hardhat": "^2.5.0",
@@ -127,7 +130,9 @@
     "jest-fetch-mock": "^3.0.3",
     "jest-styled-components": "^7.0.8",
     "mini-css-extract-plugin": "^2.7.6",
+    "patch-package": "^7.0.0",
     "path-browserify": "^1.0.1",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.8.8",
     "process": "^0.11.10",
     "react-scripts": "^5.0.1",
@@ -142,8 +147,7 @@
     "typescript": "^4.9.4",
     "webpack": "^5.88.2",
     "webpack-retry-chunk-load-plugin": "^3.1.1",
-    "//": "downgraded-because-vercel-og-incompatible",
-    "wrangler": "0.0.0-6ccc4fa6",
+    "wrangler": "^3.5.0",
     "yarn-deduplicate": "^6.0.0"
   },
   "dependencies": {
@@ -222,6 +226,7 @@
     "copy-to-clipboard": "^3.2.0",
     "d3": "^7.6.1",
     "ethers": "^5.7.2",
+    "ext-name": "^5.0.0",
     "focus-visible": "^5.2.0",
     "get-graphql-schema": "^2.1.2",
     "graphql": "^16.5.0",

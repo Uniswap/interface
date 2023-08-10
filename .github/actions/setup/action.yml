@@ -23,6 +23,10 @@ runs:
     - if: steps.install-cache.outputs.cache-hit != 'true'
       run: yarn install --frozen-lockfile --ignore-scripts
       shell: bash
+    
+    # Run patch-package to apply patches to dependencies.
+    - run: yarn patch-package
+      shell: bash
 
     # Contracts are compiled from source. If source hasn't changed, the contracts do not need to be re-compiled.
     - uses: actions/cache@v3
