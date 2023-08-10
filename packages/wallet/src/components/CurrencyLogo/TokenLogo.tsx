@@ -7,6 +7,7 @@ import { uriToHttp } from 'utilities/src/format/uriToHttp'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { SHADOW_OFFSET, style, THIN_BORDER } from 'wallet/src/components/CurrencyLogo/styles'
 import { ChainId } from 'wallet/src/constants/chains'
+import { RemoteSvg } from 'wallet/src/features/images/RemoteSvg'
 import { NetworkLogo } from './NetworkLogo'
 
 interface TokenLogoProps {
@@ -28,9 +29,23 @@ export function TokenLogo({
   const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== ChainId.Mainnet
   const httpUri = url ? uriToHttp(url)[0] : null
 
-  return (
-    <Box alignItems="center" height={size} justifyContent="center" width={size}>
-      {httpUri ? (
+  let tokenImage = null
+
+  if (httpUri) {
+    if (httpUri?.includes('.svg')) {
+      tokenImage = (
+        <Box borderRadius={size / 2} overflow="hidden">
+          <RemoteSvg
+            backgroundColor={theme.DEP_backgroundOutline.get()}
+            borderRadius={size / 2}
+            height={size}
+            imageHttpUrl={httpUri}
+            width={size}
+          />
+        </Box>
+      )
+    } else {
+      tokenImage = (
         <Image
           source={{ uri: httpUri }}
           style={[
@@ -45,6 +60,14 @@ export function TokenLogo({
             },
           ]}
         />
+      )
+    }
+  }
+
+  return (
+    <Box alignItems="center" height={size} justifyContent="center" width={size}>
+      {httpUri ? (
+        tokenImage
       ) : (
         <Box
           alignItems="center"

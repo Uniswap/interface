@@ -1,3 +1,4 @@
+import { useTheme } from '@tamagui/web'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ImageColors from 'react-native-image-colors'
 import { useAppTheme } from 'src/app/hooks'
@@ -209,6 +210,7 @@ export function useExtractedTokenColor(
   backgroundColor: string,
   defaultColor: string
 ): { tokenColor: Nullable<string>; tokenColorLoading: boolean } {
+  const theme = useTheme()
   const { colors, colorsLoading } = useExtractedColors(imageUrl)
   const [tokenColor, setTokenColor] = useState(defaultColor)
   const [tokenColorLoading, setTokenColorLoading] = useState(true)
@@ -226,6 +228,11 @@ export function useExtractedTokenColor(
 
   if (specialCaseTokenColor) {
     return { tokenColor: specialCaseTokenColor, tokenColorLoading: false }
+  }
+
+  if (imageUrl?.includes('.svg')) {
+    // Fall back to a more neutral color for SVG's since they fail extraction but we can render them elsewhere
+    return { tokenColor: theme.DEP_textPrimary?.get(), tokenColorLoading: false }
   }
 
   if (!imageUrl) {
