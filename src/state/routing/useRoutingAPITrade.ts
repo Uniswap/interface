@@ -31,6 +31,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 ): {
   state: TradeState
   trade?: ClassicTrade
+  swapQuoteLatency: PerformanceMeasure
 }
 
 export function useRoutingAPITrade<TTradeType extends TradeType>(
@@ -43,6 +44,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 ): {
   state: TradeState
   trade?: InterfaceTrade
+  swapQuoteLatency: PerformanceMeasure
 }
 
 /**
@@ -62,6 +64,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   state: TradeState
   trade?: InterfaceTrade
   method?: QuoteMethod
+  swapQuoteLatency?: PerformanceMeasure
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -96,7 +99,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   return useMemo(() => {
     if (skipFetch && amountSpecified) {
       // If we don't want to fetch new trades, but have valid inputs, return the stale trade.
-      return { state: TradeState.STALE, trade: tradeResult?.trade }
+      return { state: TradeState.STALE, trade: tradeResult?.trade, swapQuoteLatency: tradeResult?.swapQuoteLatency }
     } else if (!amountSpecified || isError || !queryArgs) {
       return {
         state: TradeState.INVALID,
@@ -112,9 +115,20 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: isCurrent ? TradeState.VALID : TradeState.LOADING,
         trade: tradeResult.trade,
+        swapQuoteLatency: tradeResult.swapQuoteLatency,
       }
     }
-  }, [amountSpecified, error, isCurrent, isError, queryArgs, skipFetch, tradeResult?.state, tradeResult?.trade])
+  }, [
+    amountSpecified,
+    error,
+    isCurrent,
+    isError,
+    queryArgs,
+    skipFetch,
+    tradeResult?.state,
+    tradeResult?.swapQuoteLatency,
+    tradeResult?.trade,
+  ])
 }
 
 // only want to enable this when app hook called
