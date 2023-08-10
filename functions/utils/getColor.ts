@@ -1,4 +1,5 @@
 import ColorThief from 'colorthief/src/color-thief-node'
+import { Buffer } from 'buffer'
 
 import { DEFAULT_COLOR } from '../constants'
 
@@ -11,6 +12,7 @@ export default async function getColor(image: string) {
     const palette = await ColorThief.getPalette(arrayBuffer, 5)
     return palette[0] ?? DEFAULT_COLOR
   } catch (e) {
+    console.log(e)
     return DEFAULT_COLOR
   }
 }

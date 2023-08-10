@@ -1,8 +1,8 @@
 diff --git a/node_modules/get-pixels/dom-pixels.js b/node_modules/get-pixels/dom-pixels.js
-index 7714528..64e8db3 100644
+index 7714528..74e01fe 100644
 --- a/node_modules/get-pixels/dom-pixels.js
 +++ b/node_modules/get-pixels/dom-pixels.js
-@@ -1,10 +1,8 @@
+@@ -1,11 +1,10 @@
  'use strict'
  
 -var path          = require('path')
@@ -12,17 +12,48 @@ index 7714528..64e8db3 100644
 -var pack          = require('ndarray-pack')
 -var through       = require('through')
  var parseDataURI  = require('data-uri-to-buffer')
++var Buffer        = require('buffer').Buffer
  
  function defaultImage(url, cb) {
-@@ -117,9 +115,9 @@ module.exports = function getPixels(url, type, cb) {
+   var img = new Image()
+@@ -117,12 +116,24 @@ module.exports = function getPixels(url, type, cb) {
      cb = type
      type = ''
    }
 -  var ext = path.extname(url)
-+  var ext = extname(url).ext
-   switch(type || ext.toUpperCase()) {
+-  switch(type || ext.toUpperCase()) {
 -    case '.GIF':
-+    case 'GIF':
-       httpGif(url, cb)
-     break
-     default:
+-      httpGif(url, cb)
+-    break
+-    default:
++  var ext = extname(url).ext
++  try {
++    switch(type || ext.toUpperCase()) {
++      case 'GIF':
++        httpGif(url, cb)
++      break
++      default:
++        if(Buffer.isBuffer(url)) {
++          url = 'data:' + type + ';base64,' + url.toString('base64')
++        }
++        if(url.indexOf('data:image/gif;') === 0) {
++          dataGif(url, cb)
++        } else {
++          defaultImage(url, cb)
++        }
++    }
++  } catch(err) {
++    try {
+       if(Buffer.isBuffer(url)) {
+         url = 'data:' + type + ';base64,' + url.toString('base64')
+       }
+@@ -131,5 +142,8 @@ module.exports = function getPixels(url, type, cb) {
+       } else {
+         defaultImage(url, cb)
+       }
++    } catch(err2) {
++      cb(err2)
++    }
+   }
+ }
+\ No newline at end of file
