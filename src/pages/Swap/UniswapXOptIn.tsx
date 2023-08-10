@@ -13,7 +13,7 @@ import {
   UniswapXOptInLargeContainer,
   UniswapXOptInLargeContainerPositioner,
   UniswapXShine,
-} from 'components/swap/styleds'
+} from 'components/swap/styled'
 import { formatCommonPropertiesForTrade } from 'lib/utils/analytics'
 import { PropsWithChildren, useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'

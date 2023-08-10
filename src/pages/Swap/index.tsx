@@ -24,7 +24,7 @@ import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWith
 import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
-import { ArrowWrapper, PageWrapper, SwapWrapper } from 'components/swap/styleds'
+import { ArrowWrapper, PageWrapper, SwapWrapper } from 'components/swap/styled'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import SwapHeader from 'components/swap/SwapHeader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'

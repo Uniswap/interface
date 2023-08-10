@@ -1,6 +1,7 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useBaseEnabledFlag } from 'featureFlags/flags/baseEnabled'
 import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
+import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
@@ -241,6 +242,12 @@ export default function FeatureFlagModal() {
         value={useBaseEnabledFlag()}
         featureFlag={FeatureFlag.baseEnabled}
         label="Enable Base"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useMultichainUXFlag()}
+        featureFlag={FeatureFlag.multichainUX}
+        label="Updated Multichain UX"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
