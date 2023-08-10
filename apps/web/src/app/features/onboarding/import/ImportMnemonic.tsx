@@ -85,9 +85,12 @@ export function ImportMnemonic(): JSX.Element {
       subtitle="Your recovery phrase will only be stored locally on your browser"
       title="Enter your recovery phrase"
       onBack={(): void =>
-        navigate(`/${TopLevelRoutes.Onboarding}`, {
-          replace: true,
-        })
+        navigate(
+          `/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}/${ImportOnboardingRoutes.Password}`,
+          {
+            replace: true,
+          }
+        )
       }
       onSubmit={onSubmit}>
       <OnboardingInput
