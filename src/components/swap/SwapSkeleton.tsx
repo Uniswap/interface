@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { ArrowContainer } from 'pages/Swap'
 import { ArrowDown } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 
-import { ArrowWrapper } from './styleds'
+import { ArrowWrapper } from './styled'
 
 const StyledArrowWrapper = styled(ArrowWrapper)`
   position: absolute;

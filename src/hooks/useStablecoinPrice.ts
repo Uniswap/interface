@@ -2,7 +2,7 @@ import { ChainId, Currency, CurrencyAmount, Price, Token, TradeType } from '@uni
 import { useWeb3React } from '@web3-react/core'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef } from 'react'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/slice'
+import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import {

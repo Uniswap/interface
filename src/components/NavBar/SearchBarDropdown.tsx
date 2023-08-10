@@ -19,7 +19,7 @@ import { subheadSmall } from 'nft/css/common.css'
 import { GenieCollection, TrendingCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
@@ -57,7 +57,7 @@ const SearchBarDropdownSection = ({
   eventProperties,
 }: SearchBarDropdownSectionProps) => {
   return (
-    <Column gap="12" data-cy="searchbar-dropdown">
+    <Column gap="12" data-testid="searchbar-dropdown">
       <Row paddingX="16" paddingY="4" gap="8" color="gray300" className={subheadSmall} style={{ lineHeight: '20px' }}>
         {headerIcon ? headerIcon : null}
         <Box>{header}</Box>
@@ -362,6 +362,9 @@ function ComingSoonText({ chainId }: { chainId: ChainId }) {
       return <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
     case ChainId.AVALANCHE:
       return <Trans>Coming soon: search and explore tokens on Avalanche Chain</Trans>
+    case ChainId.BASE:
+    case ChainId.BASE_GOERLI:
+      return <Trans>Coming soon: search and explore tokens on Base</Trans>
     default:
       return null
   }

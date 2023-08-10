@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { StyledInternalLink } from 'theme'
+import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 
 const Wrapper = styled.div`
   align-content: center;

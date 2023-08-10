@@ -15,7 +15,7 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
   margin-bottom: -18px;
   margin-left: auto;
   margin-right: auto;
-  background-color: #E8ECFB;
+  background-color: #F5F6FC;
   border: 4px solid;
   border-color: #FFFFFF;
   z-index: 2;

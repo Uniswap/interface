@@ -7,7 +7,7 @@ import { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'
 import { apolloClient } from 'graphql/thegraph/apollo'
 import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
@@ -158,7 +158,7 @@ function useTicksFromSubgraph(
   return useAllV3TicksQuery({
     variables: { poolAddress: poolAddress?.toLowerCase(), skip },
     skip: !poolAddress,
-    pollInterval: ms`30s`,
+    pollInterval: ms(`30s`),
     client: apolloClient,
   })
 }

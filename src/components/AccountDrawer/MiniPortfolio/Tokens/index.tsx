@@ -1,5 +1,4 @@
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { TraceEvent } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Row from 'components/Row'
@@ -10,8 +9,9 @@ import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 
 import { useToggleAccountDrawer } from '../..'
 import { PortfolioArrow } from '../../AuthenticatedHeader'
@@ -82,6 +82,9 @@ export default function Tokens({ account }: { account: string }) {
 const TokenBalanceText = styled(ThemedText.BodySecondary)`
   ${EllipsisStyle}
 `
+const TokenNameText = styled(ThemedText.SubHeader)`
+  ${EllipsisStyle}
+`
 
 type TokenBalance = NonNullable<
   NonNullable<NonNullable<PortfolioBalancesQuery['portfolios']>[number]>['tokenBalances']
@@ -116,7 +119,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
     >
       <PortfolioRow
         left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size="40px" />}
-        title={<ThemedText.SubHeader>{token?.name}</ThemedText.SubHeader>}
+        title={<TokenNameText>{token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>
             {formatNumber(quantity, NumberType.TokenNonTx)} {token?.symbol}

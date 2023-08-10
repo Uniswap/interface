@@ -257,6 +257,12 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   }
 }
 
+@media only screen and (max-width:396px) {
+  .c4 {
+    min-width: 200px;
+  }
+}
+
 @media only screen and (max-width:540px) {
   .c21 {
     display: none;
@@ -337,7 +343,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   >
     <a
       class="c0"
-      href="#/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      href="/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
     >
       <div
         class="c1"
@@ -371,16 +377,16 @@ exports[`LoadedRow.tsx renders a row 1`] = `
               />
             </div>
             <div
-              class="7 c2 c11"
+              class="c2 c11"
             >
               <div
-                class="8 c12"
+                class="c12"
                 data-cy="token-name"
               >
                 USD Coin
               </div>
               <div
-                class="9 c2 c13"
+                class="c2 c13"
               >
                 USDC
               </div>
@@ -395,11 +401,11 @@ exports[`LoadedRow.tsx renders a row 1`] = `
             class="c5"
           >
             <div
-              class="2 c2 c16"
+              class="c2 c16"
             >
               $1.00
               <div
-                class="1 c2 c17"
+                class="c2 c17"
               >
                 <div
                   class="c18"
@@ -438,7 +444,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="0 c2 c14 c21"
+          class="c2 c14 c21"
           data-testid="percent-change-cell"
         >
           <div
@@ -489,7 +495,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="0 c2 c14 c23"
+          class="c2 c14 c23"
           data-testid="volume-cell"
         >
           <div
@@ -499,10 +505,10 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="4 c2 c24"
+          class="c2 c24"
         >
           <div
-            class="5 c2 c25"
+            class="c2 c25"
           >
             <div
               style="width: 100%; height: 100%;"

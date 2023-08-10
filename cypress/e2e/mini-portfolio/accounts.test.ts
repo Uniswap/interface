@@ -3,7 +3,7 @@ import { getTestSelector } from '../../utils'
 describe('Mini Portfolio account drawer', () => {
   beforeEach(() => {
     cy.intercept(/api.uniswap.org\/v1\/graphql/, cy.spy().as('gqlSpy'))
-    cy.visit('/swap', { ethereum: 'hardhat' })
+    cy.visit('/swap')
   })
 
   it('fetches balances when account button is first hovered', () => {
