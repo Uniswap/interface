@@ -21,8 +21,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const data = await getRequest(
       cacheUrl,
       () => getToken(networkName, tokenAddress, cacheUrl),
-      (data): data is NonNullable<Awaited<ReturnType<typeof getToken>>> =>
-        Boolean(data.symbol && data.name)
+      (data): data is NonNullable<Awaited<ReturnType<typeof getToken>>> => Boolean(data.symbol && data.name)
     )
 
     if (!data) {
