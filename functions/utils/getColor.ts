@@ -4,7 +4,10 @@ import PNG from 'png-ts'
 
 import { DEFAULT_COLOR } from '../constants'
 
-export default async function getColor(image: string) {
+export default async function getColor(image: string | undefined) {
+  if (!image) {
+    return DEFAULT_COLOR
+  }
   try {
     const data = await fetch(image)
     const buffer = await data.arrayBuffer()
@@ -48,10 +51,10 @@ function getAverageColor(arrayBuffer: Uint8Array, type?: string) {
       return [r, g, b]
     }
     case 'image/jpeg' || 'image/jpg': {
-      const jpeg = JPEG.decode(arrayBuffer)
+      const jpeg = JPEG.decode(arrayBuffer, { useTArray: true })
       const jpegPixels = jpeg.data
 
-      const jpegPixelCount = jpegPixels.length / 3
+      const jpegPixelCount = jpegPixels.length / 4
 
       let jpegR = 0
       let jpegG = 0

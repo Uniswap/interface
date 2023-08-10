@@ -22,7 +22,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       cacheUrl,
       () => getToken(networkName, tokenAddress, cacheUrl),
       (data): data is NonNullable<Awaited<ReturnType<typeof getToken>>> =>
-        Boolean(data.symbol && data.ogImage && data.name)
+        Boolean(data.symbol && data.name)
     )
 
     if (!data) {
@@ -69,7 +69,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 color: 'white',
               }}
             >
-              {data.ogImage != '' ? (
+              {data.ogImage ? (
                 <img src={data.ogImage} width="144px" style={{ borderRadius: '100%' }}>
                   {networkLogo != '' && (
                     <img

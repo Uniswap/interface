@@ -50,7 +50,7 @@ export default async function getToken(networkName: string, tokenAddress: string
     image,
     url,
     symbol: asset.symbol ?? 'UNK',
-    ogImage: asset.project?.logoUrl ?? '',
+    ogImage: asset.project?.logoUrl,
     name: asset.name ?? 'Token',
   }
   return formattedAsset
