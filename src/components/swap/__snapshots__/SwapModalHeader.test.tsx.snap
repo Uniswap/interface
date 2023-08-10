@@ -165,6 +165,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
         </div>
         <div
           class="c10"
+          style="height: 36px; width: 36px;"
         >
           <div
             class="c11"
@@ -212,6 +213,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
         </div>
         <div
           class="c10"
+          style="height: 36px; width: 36px;"
         >
           <div
             class="c11"
@@ -397,6 +399,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
         </div>
         <div
           class="c10"
+          style="height: 36px; width: 36px;"
         >
           <div
             class="c11"
@@ -444,6 +447,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
         </div>
         <div
           class="c10"
+          style="height: 36px; width: 36px;"
         >
           <div
             class="c11"
@@ -629,6 +633,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
         </div>
         <div
           class="c10"
+          style="height: 36px; width: 36px;"
         >
           <div
             class="c11"
@@ -676,6 +681,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
         </div>
         <div
           class="c10"
+          style="height: 36px; width: 36px;"
         >
           <div
             class="c11"
