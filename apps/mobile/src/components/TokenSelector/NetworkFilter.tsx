@@ -37,11 +37,11 @@ type ListItem = 'ellipsis' | number
 
 function renderItem({ item: chainId }: { item: ListItem }): JSX.Element {
   return (
-    <Box key={chainId} borderColor="DEP_background1" style={styles.networksInSeriesIcon}>
+    <Box key={chainId} borderColor="surface2" style={styles.networksInSeriesIcon}>
       {chainId === ELLIPSIS ? (
         <Flex
           centered
-          backgroundColor="DEP_textTertiary"
+          backgroundColor="neutral3"
           height={NETWORK_ICON_SIZE}
           style={styles.ellipsisIcon}
           width={NETWORK_ICON_SIZE}>
@@ -149,7 +149,7 @@ export function NetworkFilter({
             networks={networks}
           />
           <Chevron
-            color={theme.colors.DEP_textTertiary}
+            color={theme.colors.neutral3}
             direction="s"
             height={theme.iconSizes.icon20}
             width={theme.iconSizes.icon20}

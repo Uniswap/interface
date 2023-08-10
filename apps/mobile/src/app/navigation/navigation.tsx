@@ -146,7 +146,7 @@ export function ExploreStackNavigator(): JSX.Element {
         }}>
         <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
         <ExploreStack.Group
-          screenOptions={{ contentStyle: { backgroundColor: theme.colors.DEP_background0 } }}>
+          screenOptions={{ contentStyle: { backgroundColor: theme.colors.surface1 } }}>
           <ExploreStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
           <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
           <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
@@ -164,8 +164,8 @@ export function OnboardingStackNavigator(): JSX.Element {
   const insets = useSafeAreaInsets()
 
   const renderHeaderBackImage = useCallback(
-    () => <Chevron color={theme.colors.DEP_textSecondary} height={28} width={28} />,
-    [theme.colors.DEP_textSecondary]
+    () => <Chevron color={theme.colors.neutral2} height={28} width={28} />,
+    [theme.colors.neutral2]
   )
 
   return (
@@ -178,7 +178,7 @@ export function OnboardingStackNavigator(): JSX.Element {
           headerBackImage: renderHeaderBackImage,
           headerStatusBarHeight: insets.top + theme.spacing.spacing8,
           headerTransparent: true,
-          headerTintColor: theme.colors.DEP_textSecondary,
+          headerTintColor: theme.colors.neutral2,
           headerLeftContainerStyle: { paddingLeft: theme.spacing.spacing16 },
           headerRightContainerStyle: { paddingRight: theme.spacing.spacing16 },
           ...TransitionPresets.SlideFromRightIOS,

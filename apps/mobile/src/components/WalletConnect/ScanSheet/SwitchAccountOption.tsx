@@ -27,19 +27,19 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
         <Unicon address={account.address} size={ICON_SIZE} />
         <Flex shrink alignItems="center" gap="none" p="none">
           <Text
-            color="DEP_textPrimary"
+            color="neutral1"
             numberOfLines={1}
             testID={`address-display/name/${displayName?.name}`}
             variant="bodyLarge">
             {displayName?.name}
           </Text>
-          <Text color="DEP_textSecondary" variant="subheadSmall">
+          <Text color="neutral2" variant="subheadSmall">
             {shortenAddress(account.address)}
           </Text>
         </Flex>
         <Box height={ICON_SIZE} width={ICON_SIZE}>
           {activeAccount?.address === account.address && (
-            <Check color={theme.colors.DEP_accentAction} height={ICON_SIZE} width={ICON_SIZE} />
+            <Check color={theme.colors.accent1} height={ICON_SIZE} width={ICON_SIZE} />
           )}
         </Box>
       </Flex>

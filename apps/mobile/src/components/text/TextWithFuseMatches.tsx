@@ -20,7 +20,7 @@ export function TextWithFuseMatches({
 }: TextWithFuseMatchesProps & TextProps): JSX.Element {
   if (!matches || matches.length === 0) {
     return (
-      <Text color="DEP_textPrimary" numberOfLines={numberOfLines} variant={variant}>
+      <Text color="neutral1" numberOfLines={numberOfLines} variant={variant}>
         {text}
       </Text>
     )
@@ -50,13 +50,13 @@ export function TextWithFuseMatches({
       {pieces.map((p, i) => {
         if (p[1])
           return (
-            <Text key={`${i}${p[0]}`} color="DEP_textPrimary" variant={variant}>
+            <Text key={`${i}${p[0]}`} color="neutral1" variant={variant}>
               {p[0]}
             </Text>
           )
         else
           return (
-            <Text key={`${i}${p[0]}`} color="DEP_textTertiary" variant={variant}>
+            <Text key={`${i}${p[0]}`} color="neutral3" variant={variant}>
               {p[0]}
             </Text>
           )

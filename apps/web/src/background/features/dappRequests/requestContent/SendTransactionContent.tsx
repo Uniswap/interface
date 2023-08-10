@@ -35,7 +35,7 @@ export const SendTransactionDetails = ({
   return (
     <YStack>
       <YStack
-        backgroundColor="$DEP_backgroundScrim"
+        backgroundColor="$scrim"
         borderTopLeftRadius="$rounded16"
         borderTopRightRadius="$rounded16"
         gap="$spacing16"
@@ -43,7 +43,7 @@ export const SendTransactionDetails = ({
         paddingHorizontal="$spacing16"
         paddingVertical="$spacing12">
         <XStack justifyContent="space-between">
-          <Text color="$DEP_textSecondary" variant="bodySmall">
+          <Text color="$neutral2" variant="bodySmall">
             Sending
           </Text>
           <XStack gap="$spacing4">
@@ -54,7 +54,7 @@ export const SendTransactionDetails = ({
         </XStack>
 
         <XStack justifyContent="space-between">
-          <Text color="$DEP_textSecondary" variant="bodySmall">
+          <Text color="$neutral2" variant="bodySmall">
             To
           </Text>
           <XStack gap="$spacing4">
@@ -65,7 +65,7 @@ export const SendTransactionDetails = ({
         </XStack>
         {contractFunction ? (
           <XStack justifyContent="space-between">
-            <Text color="$DEP_textSecondary" variant="bodySmall">
+            <Text color="$neutral2" variant="bodySmall">
               Function
             </Text>
             <XStack gap="$spacing4">
@@ -77,7 +77,7 @@ export const SendTransactionDetails = ({
         ) : null}
       </YStack>
       <YStack
-        backgroundColor="$DEP_backgroundScrim"
+        backgroundColor="$scrim"
         borderBottomLeftRadius="$rounded16"
         borderBottomRightRadius="$rounded16">
         <XStack
@@ -87,10 +87,10 @@ export const SendTransactionDetails = ({
           paddingHorizontal="$spacing16"
           paddingVertical="$spacing12"
           width="100%">
-          <Text color="$DEP_textSecondary" variant="bodySmall">
+          <Text color="$neutral2" variant="bodySmall">
             Network fee
           </Text>
-          <Text color="$DEP_textSecondary" textAlign="right" variant="bodySmall">
+          <Text color="$neutral2" textAlign="right" variant="bodySmall">
             {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
           </Text>
         </XStack>

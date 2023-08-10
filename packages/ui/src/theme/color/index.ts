@@ -162,45 +162,24 @@ export const colors = {
   networkBase: '#2151F5',
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const sporeDark = {
-  sporeWhite: '#FFFFFF',
-  sporeBlack: '#000000',
-
-  neutral1: '#FFFFFF',
-  neutral2: '#9B9B9B',
-  neutral3: '#5E5E5E',
-
-  surface1: '#131313',
-  surface2: '#1B1B1B',
-  surface3: '#FFFFFF1F', //1F = 12%
-  surface4: '#FFFFFF33', //33 = 20%
-  surface5: '#0000000A', //0A = 4%
-
-  accent1: '#FC72FF',
-  accent2: '#311C31',
-
-  statusActive: '#236EFF',
-  statusSuccess: '#40B66B',
-  statusCritical: '#FF5F52',
-}
-
 // TODO: map named colors to new Spore colors
 // TODO: consolidate Spore colors and raw color palette
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const sporeLight = {
   sporeWhite: '#FFFFFF',
   sporeBlack: '#000000',
-
-  neutral1: '#222222',
-  neutral2: '#7D7D7D',
-  neutral3: '#CECECE',
 
   surface1: '#FFFFFF',
   surface2: '#F9F9F9',
   surface3: '#2222220D', //0D = 5%
   surface4: '#FFFFFFA3', //A3 = 64%
   surface5: '#0000000A', //0A = 4%
+
+  scrim: '#00000099', //99 = 40%
+
+  neutral1: '#222222',
+  neutral2: '#7D7D7D',
+  neutral3: '#CECECE',
 
   accent1: '#FC72FF',
   accent2: '#FFEFFF',
@@ -210,51 +189,69 @@ const sporeLight = {
   statusCritical: '#FF5F52',
 }
 
+const sporeDark = {
+  sporeWhite: '#FFFFFF',
+  sporeBlack: '#000000',
+
+  surface1: '#131313',
+  surface2: '#1B1B1B',
+  surface3: '#FFFFFF1F', //1F = 12%
+  surface4: '#FFFFFF33', //33 = 20%
+  surface5: '#0000000A', //0A = 4%
+
+  scrim: '#00000099', //99 = 40%
+
+  neutral1: '#FFFFFF',
+  neutral2: '#9B9B9B',
+  neutral3: '#5E5E5E',
+
+  accent1: '#FC72FF',
+  accent2: '#311C31',
+
+  statusActive: '#236EFF',
+  statusSuccess: '#40B66B',
+  statusCritical: '#FF5F52',
+}
+
 export const colorsLight = {
   none: 'transparent',
 
-  DEP_background0: colors.white,
-  DEP_background1: colors.white,
-  DEP_background2: colors.gray50,
-  DEP_background3: colors.gray100,
-  DEP_backgroundOutline: colors.gray150,
-  DEP_backgroundScrim: opacify(50, colors.gray150),
+  sporeWhite: sporeLight.sporeWhite,
+  sporeBlack: sporeLight.sporeBlack,
+
+  surface1: sporeLight.surface1,
+  surface2: sporeLight.surface2,
+  surface3: sporeLight.surface3,
+  surface4: sporeLight.surface4,
+  surface5: sporeLight.surface5,
+
+  scrim: sporeLight.scrim,
+
+  neutral1: sporeLight.neutral1,
+  neutral2: sporeLight.neutral2,
+  neutral3: sporeLight.neutral3,
+
+  accent1: sporeLight.accent1,
+  accent2: sporeLight.accent2,
+
+  statusSuccess: sporeLight.statusSuccess,
+  statusCritical: sporeLight.statusCritical,
+
   DEP_backgroundBranded: '#FCF7FF',
   DEP_backgroundActionButton: colors.magenta50,
   DEP_backgroundOverlay: opacify(60, colors.white),
 
-  DEP_textPrimary: colors.gray850,
-  DEP_textSecondary: colors.gray500,
-  DEP_textTertiary: colors.gray350,
-
-  DEP_accentAction: colors.magentaVibrant,
-  DEP_accentActive: colors.blue400,
-  DEP_accentSuccess: colors.green300,
   DEP_accentWarning: colors.goldVibrant,
-  DEP_accentCritical: colors.red400,
 
   DEP_accentBranded: colors.magentaVibrant,
   DEP_shadowBranded: colors.magentaVibrant,
 
-  DEP_accentActionSoft: opacify(12, colors.magentaVibrant),
-  DEP_accentActiveSoft: opacify(24, colors.blue400),
   DEP_accentSuccessSoft: opacify(24, colors.green300),
   DEP_accentWarningSoft: opacify(24, colors.goldVibrant),
   DEP_accentCriticalSoft: opacify(12, colors.red400),
 
-  DEP_textOnBrightPrimary: colors.white,
-  DEP_textOnBrightSecondary: colors.gray50,
-  DEP_textOnBrightTertiary: opacify(50, colors.white),
-
-  DEP_textOnDimPrimary: colors.gray900,
-  DEP_textOnDimSecondary: colors.gray800,
-  DEP_textOnDimTertiary: opacify(45, colors.gray900),
-
-  DEP_white: colors.white,
-  DEP_black: colors.black,
   DEP_blue300: colors.blue300,
   DEP_brandedAccentSoft: colors.magenta100,
-  DEP_magentaVibrant: colors.magentaVibrant,
   DEP_magentaDark: opacify(12, colors.magentaVibrant),
 
   chain_1: colors.networkLightEthereum,
@@ -271,49 +268,43 @@ export const colorsLight = {
 export const colorsDark = {
   none: 'transparent',
 
-  DEP_background0: colors.black,
-  DEP_background1: colors.gray900,
-  DEP_background2: colors.gray800,
-  DEP_background3: colors.gray700,
-  DEP_backgroundOutline: colors.gray750,
-  DEP_backgroundScrim: opacify(50, colors.gray750),
+  sporeWhite: sporeDark.sporeWhite,
+  sporeBlack: sporeDark.sporeBlack,
+
+  surface1: sporeDark.surface1,
+  surface2: sporeDark.surface2,
+  surface3: sporeDark.surface3,
+  surface4: sporeDark.surface4,
+  surface5: sporeDark.surface5,
+
+  scrim: sporeDark.scrim,
+
+  neutral1: sporeDark.neutral1,
+  neutral2: sporeDark.neutral2,
+  neutral3: sporeDark.neutral3,
+
+  accent1: sporeDark.accent1,
+  accent2: sporeDark.accent2,
+
+  statusSuccess: sporeDark.statusSuccess,
+  statusCritical: sporeDark.statusCritical,
+
   DEP_backgroundBranded: '#100D1C',
   DEP_backgroundActionButton: opacify(12, colors.magentaVibrant),
   DEP_backgroundOverlay: opacify(10, colors.white),
 
-  DEP_textPrimary: colors.white,
-  DEP_textSecondary: colors.gray200,
-  DEP_textTertiary: colors.gray400,
-
-  DEP_accentAction: colors.magentaVibrant,
-  DEP_accentActive: colors.blue400,
-  DEP_accentSuccess: colors.green300,
   DEP_accentWarning: colors.goldVibrant,
-  DEP_accentCritical: colors.red400,
 
   DEP_accentBranded: colors.magentaVibrant,
   // TODO(MOB-160): accommodate one-off color in cleaner way
   DEP_shadowBranded: '#B60ACF',
 
-  DEP_accentActionSoft: opacify(24, colors.magentaVibrant),
-  DEP_accentActiveSoft: opacify(24, colors.blue400),
   DEP_accentSuccessSoft: opacify(24, colors.green400),
   DEP_accentWarningSoft: opacify(24, colors.gold200),
   DEP_accentCriticalSoft: opacify(12, colors.red400),
 
-  DEP_textOnBrightPrimary: colors.white,
-  DEP_textOnBrightSecondary: colors.gray50,
-  DEP_textOnBrightTertiary: opacify(50, colors.white),
-
-  DEP_textOnDimPrimary: colors.gray900,
-  DEP_textOnDimSecondary: colors.gray800,
-  DEP_textOnDimTertiary: opacify(45, colors.gray900),
-
-  DEP_white: colors.white,
-  DEP_black: colors.black,
   DEP_blue300: colors.blue300,
   DEP_brandedAccentSoft: '#46244F', // git blame Chelsy
-  DEP_magentaVibrant: colors.magentaVibrant,
   DEP_magentaDark: opacify(12, colors.magentaVibrant),
 
   chain_1: colors.networkDarkEthereum,

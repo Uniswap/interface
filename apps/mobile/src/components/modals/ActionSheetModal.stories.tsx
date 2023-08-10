@@ -41,7 +41,7 @@ export default {
   component: ActionSheetModalContent,
   decorators: [
     (Story): JSX.Element => (
-      <Box bg="DEP_background0" p="spacing24" width={300}>
+      <Box bg="surface1" p="spacing24" width={300}>
         <Story />
       </Box>
     ),

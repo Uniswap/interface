@@ -18,7 +18,7 @@ export function ErrorBoundary({ children }: PropsWithChildren<unknown>): JSX.Ele
   return (
     <Stack
       alignItems="center"
-      backgroundColor="$DEP_background1"
+      backgroundColor="$surface2"
       flex={1}
       minHeight="100vh"
       px="$spacing16"

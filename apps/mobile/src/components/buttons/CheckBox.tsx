@@ -31,8 +31,8 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
       <Flex row gap="spacing12">
         <Box
           alignItems="center"
-          backgroundColor={checked ? 'DEP_textPrimary' : 'DEP_background1'}
-          borderColor={checked ? 'DEP_textPrimary' : 'DEP_backgroundOutline'}
+          backgroundColor={checked ? 'neutral1' : 'surface2'}
+          borderColor={checked ? 'neutral1' : 'surface3'}
           borderRadius="roundedFull"
           borderWidth={1.5}
           height={theme.iconSizes.icon24}
@@ -42,7 +42,7 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
           width={theme.iconSizes.icon24}>
           {checked ? (
             <Check
-              color={isDarkMode ? theme.colors.DEP_black : theme.colors.DEP_white}
+              color={isDarkMode ? theme.colors.sporeBlack : theme.colors.sporeWhite}
               height={theme.iconSizes.icon16}
               width={theme.iconSizes.icon16}
             />

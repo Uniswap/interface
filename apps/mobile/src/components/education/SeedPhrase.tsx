@@ -37,10 +37,10 @@ function Page({
               justifyContent="space-between"
               px="spacing24"
               width={fullWidth}>
-              <Text color="DEP_textSecondary" variant="subheadSmall">
+              <Text color="neutral2" variant="subheadSmall">
                 <Trans>What’s a recovery phrase?</Trans>
               </Text>
-              <CloseButton color="DEP_textSecondary" onPress={onDismiss} />
+              <CloseButton color="neutral2" onPress={onDismiss} />
             </Flex>
             <Flex flex={0.2} />
             <Flex flex={0.8} px="spacing24">
@@ -61,8 +61,8 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
-          A recovery phrase (or seed phrase) is a <Text color="DEP_accentAction">set of words</Text>{' '}
-          required to access your wallet, <Text color="DEP_accentAction">like a password.</Text>
+          A recovery phrase (or seed phrase) is a <Text color="accent1">set of words</Text> required
+          to access your wallet, <Text color="accent1">like a password.</Text>
         </Trans>
       </Text>
     }
@@ -72,8 +72,8 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
-          You can <Text color="DEP_accentAction">enter</Text> your recovery phrase on a new device{' '}
-          <Text color="DEP_accentAction">to restore your wallet</Text> and its contents.
+          You can <Text color="accent1">enter</Text> your recovery phrase on a new device{' '}
+          <Text color="accent1">to restore your wallet</Text> and its contents.
         </Trans>
       </Text>
     }
@@ -83,8 +83,8 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
-          But, if you <Text color="DEP_accentAction">lose your recovery phrase</Text>, you’ll{' '}
-          <Text color="DEP_accentAction">lose access</Text> to your wallet.
+          But, if you <Text color="accent1">lose your recovery phrase</Text>, you’ll{' '}
+          <Text color="accent1">lose access</Text> to your wallet.
         </Trans>
       </Text>
     }
@@ -95,7 +95,7 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           Instead of memorizing your recovery phrase, you can{' '}
-          <Text color="DEP_accentAction">back it up to iCloud</Text> and protect it with a password.
+          <Text color="accent1">back it up to iCloud</Text> and protect it with a password.
         </Trans>
       </Text>
     }
@@ -106,7 +106,7 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
           You can also manually back up your recovery phrase by{' '}
-          <Text color="DEP_accentAction">writing it down</Text> and storing it in a safe place.
+          <Text color="accent1">writing it down</Text> and storing it in a safe place.
         </Trans>
       </Text>
     }
@@ -116,8 +116,8 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
-          We recommend using <Text color="DEP_accentAction">both types of backups</Text>, because if
-          you lose your recovery phrase, you won’t be able to restore your wallet.
+          We recommend using <Text color="accent1">both types of backups</Text>, because if you lose
+          your recovery phrase, you won’t be able to restore your wallet.
         </Trans>
       </Text>
     }

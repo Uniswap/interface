@@ -38,7 +38,7 @@ export function SettingsCloudBackupPasswordConfirmScreen({
           <Text textAlign="center" variant="headlineSmall">
             {t('Confirm your backup password')}
           </Text>
-          <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
+          <Text color="neutral2" textAlign="center" variant="bodySmall">
             {t(
               "You’ll need to enter this password to recover your account. It's not stored anywhere, so it can't be recovered by anyone else."
             )}

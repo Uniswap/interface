@@ -49,7 +49,7 @@ exports[`renders a relative change 1`] = `
     style={
       [
         {
-          "color": "#5D6785",
+          "color": "#7D7D7D",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,
@@ -112,7 +112,7 @@ exports[`renders placeholders with absolute change 1`] = `
     style={
       [
         {
-          "color": "#5D6785",
+          "color": "#7D7D7D",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,
@@ -146,7 +146,7 @@ exports[`renders placeholders without a change 1`] = `
     style={
       [
         {
-          "color": "#5D6785",
+          "color": "#7D7D7D",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,

@@ -10,7 +10,7 @@ export default {
   component: BaseCard.Container,
   decorators: [
     (Story): JSX.Element => (
-      <Box bg="DEP_background3" width={300}>
+      <Box bg="surface2" width={300}>
         <Story />
       </Box>
     ),

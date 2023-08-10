@@ -23,7 +23,7 @@ export const SWIPE_THRESHOLD = 5
 
 export const TAB_STYLES = StyleSheet.create({
   activeTabIndicator: {
-    backgroundColor: FixedTheme.colors.DEP_magentaVibrant,
+    backgroundColor: FixedTheme.colors.accent1,
     bottom: 0,
     height: 0,
     position: 'absolute',
@@ -108,10 +108,7 @@ export const renderTabLabel = ({
 }): JSX.Element => {
   return (
     <Flex row alignItems="center" gap="spacing4">
-      <Text
-        color={focused ? 'DEP_textPrimary' : 'DEP_textTertiary'}
-        fontSize={18}
-        variant="bodyLarge">
+      <Text color={focused ? 'neutral1' : 'neutral2'} fontSize={18} variant="bodyLarge">
         {route.title}
       </Text>
       {/* Streamline UI by hiding the Activity tab spinner when focused

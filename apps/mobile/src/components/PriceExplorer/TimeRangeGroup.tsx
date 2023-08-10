@@ -33,12 +33,12 @@ export function TimeRangeLabel({ index, label, selectedIndex, transition }: Prop
   const style = useAnimatedStyle(() => {
     const selected = index === selectedIndex.value
 
-    if (!selected) return { color: theme.colors.DEP_textSecondary }
+    if (!selected) return { color: theme.colors.neutral2 }
 
     const color = interpolateColor(
       transition.value,
       [0, 1],
-      [theme.colors.DEP_textSecondary, theme.colors.DEP_textPrimary]
+      [theme.colors.neutral2, theme.colors.neutral1]
     )
 
     return { color }
@@ -74,7 +74,7 @@ export function TimeRangeGroup({
     <Box alignSelf="center" flexDirection="row" width={CHART_WIDTH}>
       <View style={StyleSheet.absoluteFill}>
         <AnimatedBox
-          bg="DEP_background3"
+          bg="surface2"
           borderRadius="rounded20"
           style={[StyleSheet.absoluteFillObject, sliderStyle]}
           width={LABEL_WIDTH}

@@ -20,7 +20,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     style={
       [
         {
-          "color": "#0E1524",
+          "color": "#222222",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,
@@ -85,7 +85,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         style={
           [
             {
-              "color": "#0E1524",
+              "color": "#222222",
               "display": "flex",
               "fontFamily": "Inter-SemiBold",
               "fontSize": 12,
@@ -119,7 +119,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
       style={
         [
           {
-            "color": "#0E1524",
+            "color": "#222222",
             "display": "flex",
             "fontFamily": "Inter-Medium",
             "fontSize": 15,
@@ -163,7 +163,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
       }
     >
       <svg
-        color="#0E1524"
+        color="#222222"
         data-file-name="SvgCircleSpinner"
         height={20}
         width={20}
@@ -193,7 +193,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     style={
       [
         {
-          "color": "#0E1524",
+          "color": "#222222",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,
@@ -258,7 +258,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         style={
           [
             {
-              "color": "#0E1524",
+              "color": "#222222",
               "display": "flex",
               "fontFamily": "Inter-SemiBold",
               "fontSize": 12,
@@ -292,7 +292,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
       style={
         [
           {
-            "color": "#0E1524",
+            "color": "#222222",
             "display": "flex",
             "fontFamily": "Inter-Medium",
             "fontSize": 15,
@@ -335,7 +335,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         style={
           [
             {
-              "color": "#0E1524",
+              "color": "#222222",
               "display": "flex",
               "fontFamily": "Inter-Medium",
               "fontSize": 15,
@@ -371,7 +371,7 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
     style={
       [
         {
-          "color": "#0E1524",
+          "color": "#222222",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,
@@ -436,7 +436,7 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
         style={
           [
             {
-              "color": "#0E1524",
+              "color": "#222222",
               "display": "flex",
               "fontFamily": "Inter-SemiBold",
               "fontSize": 12,
@@ -470,7 +470,7 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
       style={
         [
           {
-            "color": "#0E1524",
+            "color": "#222222",
             "display": "flex",
             "fontFamily": "Inter-Medium",
             "fontSize": 15,

@@ -298,7 +298,7 @@ exports[`AccountHeader renders without error 1`] = `
                 style={
                   [
                     {
-                      "color": "#0E1524",
+                      "color": "#222222",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
                       "fontSize": 20,
@@ -399,7 +399,7 @@ exports[`AccountHeader renders without error 1`] = `
               }
               stroke={
                 {
-                  "payload": 4287139755,
+                  "payload": 4291743438,
                   "type": 0,
                 }
               }
@@ -439,7 +439,7 @@ exports[`AccountHeader renders without error 1`] = `
     }
   >
     <svg
-      color="#888FAB"
+      color="#CECECE"
       data-file-name="SvgSettings"
       height={28}
       opacity="0.8"

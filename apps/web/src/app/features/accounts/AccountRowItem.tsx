@@ -32,7 +32,7 @@ export function AccountRowItem({ address, onPress }: AccountRowItemProps): JSX.E
         {icon}
         <Text variant="bodyLarge">{name}</Text>
       </XStack>
-      <Text color="$DEP_textTertiary" variant="monospace">
+      <Text color="$neutral3" variant="monospace">
         {shortenAddress(address)}
       </Text>
     </XStack>

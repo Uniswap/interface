@@ -41,8 +41,8 @@ function StepCircle({ route }: { route: string }): JSX.Element {
   const active = pathname === route
 
   if (!active) {
-    return <Circle backgroundColor="$DEP_background3" size={getTokenValue('$icon.8')} />
+    return <Circle backgroundColor="$neutral3" size={getTokenValue('$icon.8')} />
   }
 
-  return <Icons.Sparkle color="$DEP_textPrimary" size={getTokenValue('$icon.16')} />
+  return <Icons.Sparkle color="$neutral1" size={getTokenValue('$icon.16')} />
 }

@@ -70,7 +70,7 @@ export function ViewMnemonic(): JSX.Element {
         createdAddress ? (
           <UniconWithLockIcon address={createdAddress} />
         ) : (
-          <Circle backgroundColor="$DEP_background2" size={iconSizes.icon64} />
+          <Circle backgroundColor="$surface2" size={iconSizes.icon64} />
         )
       }
       nextButtonEnabled={!!createdAddress}
@@ -86,7 +86,7 @@ export function ViewMnemonic(): JSX.Element {
       onSubmit={onSubmit}>
       <Flex margin="$spacing16" onHoverOut={(): void => setShowPhrase(false)}>
         <YStack
-          backgroundColor="$DEP_background1"
+          backgroundColor="$surface2"
           borderRadius="$rounded16"
           flex={1}
           gap="$spacing12"
@@ -110,7 +110,7 @@ export function ViewMnemonic(): JSX.Element {
               ))}
         </YStack>
         <HideContentShield
-          color="$DEP_background2"
+          color="$surface2"
           visibility={showPhrase && mnemonicRows !== undefined}
           onShowContent={(): void => setShowPhrase(true)}
         />
@@ -148,14 +148,14 @@ function SeedPhraseWord({
     <XStack
       alignContent="center"
       alignItems="center"
-      backgroundColor="$DEP_background2"
+      backgroundColor="$surface2"
       borderRadius="$rounded16"
       gap="$spacing16"
       height={48}
       paddingHorizontal="$spacing16"
       paddingVertical={12}
       width={132}>
-      <Text color="$DEP_textTertiary" variant="bodySmall">
+      <Text color="$neutral3" variant="bodySmall">
         {/* padStart adds a 0 at the start of 1-character numbers so they'll show up like "01, 02, ... 09, 10" instead of "1, 2, ... 9, 10" in order to match the designs*/}
         {String(index + indexOffset).padStart(2, '0')}
       </Text>

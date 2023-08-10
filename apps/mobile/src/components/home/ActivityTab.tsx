@@ -40,7 +40,7 @@ const ESTIMATED_ITEM_SIZE = 92
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
   <Box pb="spacing12">
-    <Text color="DEP_textSecondary" variant="subheadSmall">
+    <Text color="neutral2" variant="subheadSmall">
       {title}
     </Text>
   </Box>
@@ -124,11 +124,11 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
           insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
         }
         refreshing={refreshing ?? false}
-        tintColor={theme.colors.DEP_textTertiary}
+        tintColor={theme.colors.neutral3}
         onRefresh={onRefresh}
       />
     )
-  }, [refreshing, headerHeight, onRefresh, theme.colors.DEP_textTertiary, insets.top])
+  }, [refreshing, headerHeight, onRefresh, theme.colors.neutral3, insets.top])
 
   if (!hasData && isError) {
     return errorCard

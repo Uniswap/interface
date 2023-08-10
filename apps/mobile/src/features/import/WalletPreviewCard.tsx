@@ -35,12 +35,12 @@ export default function WalletPreviewCard({
   const { name: ensName } = useENS(ChainId.Mainnet, address)
   const isDarkMode = useIsDarkMode()
 
-  const unselectedBorderColor = isDarkMode ? 'none' : 'DEP_backgroundOutline'
+  const unselectedBorderColor = isDarkMode ? 'none' : 'surface3'
 
   return (
     <TouchableArea
-      backgroundColor="DEP_background1"
-      borderColor={selected ? 'DEP_magentaVibrant' : unselectedBorderColor}
+      backgroundColor="surface2"
+      borderColor={selected ? 'accent1' : unselectedBorderColor}
       borderRadius="rounded20"
       borderWidth={1}
       px="spacing16"
@@ -58,14 +58,14 @@ export default function WalletPreviewCard({
           <Box>
             <Text variant="bodyLarge">{ensName ?? shortenAddress(address)}</Text>
             {balance ? (
-              <Text color="DEP_textSecondary" variant="subheadSmall">
+              <Text color="neutral2" variant="subheadSmall">
                 {formatUSDPrice(balance, NumberType.FiatTokenQuantity)}
               </Text>
             ) : null}
           </Box>
         </Flex>
         {!hideSelectionCircle && (
-          <SelectionCircle selected={selected} size="icon16" unselectedColor="DEP_textSecondary" />
+          <SelectionCircle selected={selected} size="icon16" unselectedColor="neutral2" />
         )}
       </Flex>
     </TouchableArea>

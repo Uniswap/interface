@@ -5,7 +5,7 @@ import { Box, BoxProps } from 'ui/src/components/layout'
 export type BoxLoaderProps = { repeat?: number } & BoxProps & ViewProps
 export function BoxLoader({
   repeat = 1,
-  backgroundColor = '$DEP_background3',
+  backgroundColor = '$surface2',
   borderRadius = '$rounded12',
   width = '100%',
   height,

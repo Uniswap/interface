@@ -19,8 +19,8 @@ export function BottomToast(): JSX.Element | null {
       <XStack
         alignContent="center"
         alignItems="center"
-        backgroundColor="$DEP_background2"
-        borderColor="$DEP_textTertiary"
+        backgroundColor="$surface2"
+        borderColor="$neutral3"
         borderRadius={100}
         borderWidth={1}
         flex={1}

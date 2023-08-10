@@ -184,7 +184,7 @@ export function QRAnimation({
           <UniconThemedGradient
             borderRadius="rounded16"
             gradientEndColor={uniconColors.glow}
-            gradientStartColor={theme.colors.DEP_background0}
+            gradientStartColor={theme.colors.surface1}
             opacity={isDarkMode ? 0.3 : 0.2}
           />
         </GradientBackground>
@@ -212,8 +212,8 @@ export function QRAnimation({
                 </Animated.View>
                 <Animated.View entering={qrScaleIn}>
                   <Box
-                    bg="DEP_background0"
-                    borderColor="DEP_backgroundOutline"
+                    bg="surface1"
+                    borderColor="surface3"
                     borderRadius="rounded20"
                     borderWidth={2}
                     height={QR_CONTAINER_SIZE}
@@ -223,11 +223,11 @@ export function QRAnimation({
                       <QRCodeDisplay
                         hideOutline
                         address={activeAddress}
-                        backgroundColor="DEP_background0"
-                        containerBackgroundColor="DEP_background0"
+                        backgroundColor="surface1"
+                        containerBackgroundColor="surface1"
                         logoSize={UNICON_SIZE}
                         overlayOpacityPercent={10}
-                        safeAreaColor="DEP_background0"
+                        safeAreaColor="surface1"
                         size={QR_CODE_SIZE}
                       />
                     </Animated.View>
@@ -275,7 +275,7 @@ export function QRAnimation({
                     <AddressDisplay
                       showCopy
                       address={activeAddress}
-                      captionTextColor="DEP_textTertiary"
+                      captionTextColor="neutral3"
                       captionVariant="subheadSmall"
                       showAccountIcon={false}
                       variant="headlineSmall"
@@ -294,7 +294,7 @@ export function QRAnimation({
               {t('Welcome to your new wallet')}
             </Text>
             <Text
-              color="DEP_textSecondary"
+              color="neutral2"
               maxFontSizeMultiplier={finalBodyMaxFontSizeMultiplier}
               textAlign="center"
               variant={bodySize}>
@@ -315,19 +315,19 @@ export function QRAnimation({
                     <Box
                       borderRadius="roundedFull"
                       padding="spacing8"
-                      style={{ backgroundColor: opacify(10, theme.colors.DEP_white) }}>
+                      style={{ backgroundColor: opacify(10, theme.colors.sporeWhite) }}>
                       <LockIcon
-                        color={theme.colors.DEP_white}
+                        color={theme.colors.sporeWhite}
                         height={theme.iconSizes.icon16}
                         width={theme.iconSizes.icon16}
                       />
                     </Box>
-                    <Text color="DEP_white" variant="buttonLabelMedium">
+                    <Text color="sporeWhite" variant="buttonLabelMedium">
                       {t('Let’s keep it safe')}
                     </Text>
                   </Flex>
                   <Arrow
-                    color={theme.colors.DEP_white}
+                    color={theme.colors.sporeWhite}
                     direction="e"
                     size={theme.iconSizes.icon24}
                   />

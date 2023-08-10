@@ -145,7 +145,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
         <Flex row>
           <Flex gap="none">
             <Text variant="bodyLarge">{text}</Text>
-            <Text color="DEP_textSecondary" variant="bodyMicro">
+            <Text color="neutral2" variant="bodyMicro">
               {subText}
             </Text>
           </Flex>
@@ -199,6 +199,4 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   )
 }
 
-const renderItemSeparator = (): JSX.Element => (
-  <Box bg="DEP_backgroundOutline" height={1} my="spacing16" />
-)
+const renderItemSeparator = (): JSX.Element => <Box bg="surface3" height={1} my="spacing16" />

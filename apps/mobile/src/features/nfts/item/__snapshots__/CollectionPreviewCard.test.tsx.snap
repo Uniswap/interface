@@ -38,7 +38,7 @@ exports[`renders collection preview card 1`] = `
       [
         {
           "alignItems": "center",
-          "backgroundColor": "#0D111C73",
+          "backgroundColor": "#000000",
           "borderRadius": 16,
           "display": "flex",
           "flexDirection": "row",
@@ -82,7 +82,7 @@ exports[`renders collection preview card 1`] = `
             {
               "alignItems": "center",
               "aspectRatio": 1,
-              "backgroundColor": "#E8ECFB",
+              "backgroundColor": "#F9F9F9",
               "flexDirection": "column",
               "justifyContent": "center",
               "maxHeight": 60,
@@ -94,7 +94,7 @@ exports[`renders collection preview card 1`] = `
             allowFontScaling={true}
             style={
               {
-                "color": "#5D6785",
+                "color": "#7D7D7D",
                 "display": "flex",
                 "flex": 0,
                 "flexGrow": 0,
@@ -288,7 +288,7 @@ exports[`renders collection preview card 1`] = `
             }
             stroke={
               {
-                "payload": 4294309628,
+                "payload": 4294967295,
                 "type": 0,
               }
             }

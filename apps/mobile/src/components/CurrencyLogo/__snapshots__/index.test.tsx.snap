@@ -24,8 +24,8 @@ exports[`renders a currency logo with network logo 1`] = `
           "resizeMode": "contain",
         },
         {
-          "backgroundColor": "#D2D9EE",
-          "borderColor": "#D2D9EE",
+          "backgroundColor": "#2222220D",
+          "borderColor": "#2222220D",
           "borderRadius": 10,
           "borderWidth": 0.5,
           "height": 20,
@@ -79,8 +79,8 @@ exports[`renders a currency logo without network logo 1`] = `
           "resizeMode": "contain",
         },
         {
-          "backgroundColor": "#D2D9EE",
-          "borderColor": "#D2D9EE",
+          "backgroundColor": "#2222220D",
+          "borderColor": "#2222220D",
           "borderRadius": 10,
           "borderWidth": 0.5,
           "height": 20,

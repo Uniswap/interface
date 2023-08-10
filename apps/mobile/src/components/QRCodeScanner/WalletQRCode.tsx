@@ -39,7 +39,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
         <UniconThemedGradient
           middleOut
           borderRadius="rounded16"
-          gradientEndColor={theme.colors.DEP_background0}
+          gradientEndColor={theme.colors.surface1}
           gradientStartColor={gradientData.glow}
           opacity={isDarkMode ? 0.24 : 0.2}
         />
@@ -64,20 +64,20 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
         <QRCodeDisplay
           hideOutline
           address={address}
-          backgroundColor="DEP_background0"
-          containerBackgroundColor="DEP_background0"
+          backgroundColor="surface1"
+          containerBackgroundColor="surface1"
           displayShadow={true}
           logoSize={UNICON_SIZE}
           overlayOpacityPercent={10}
-          safeAreaColor="DEP_background0"
+          safeAreaColor="surface1"
           size={QR_CODE_SIZE}
         />
-        <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
+        <Text color="neutral2" textAlign="center" variant="bodySmall">
           {t(
             'Only send tokens on Ethereum, Arbitrum, Optimism, Polygon, Base networks to this address.'
           )}{' '}
           <TouchableArea height={18} onPress={onPressLearnMore}>
-            <Text color="DEP_accentActive" variant="buttonLabelSmall">
+            <Text color="accent1" variant="buttonLabelSmall">
               {t('Learn more')}
             </Text>
           </TouchableArea>

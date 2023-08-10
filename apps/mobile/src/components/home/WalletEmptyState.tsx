@@ -164,7 +164,7 @@ const ActionCard = ({
   elementName,
 }: ActionCardItem): JSX.Element => (
   <Trace logPress element={elementName}>
-    <TouchableArea backgroundColor="DEP_background2" borderRadius="rounded20" onPress={onPress}>
+    <TouchableArea backgroundColor="surface2" borderRadius="rounded20" onPress={onPress}>
       <Flex centered row p="spacing16">
         {icon}
         <Flex flexShrink={1} gap="spacing4">
@@ -177,13 +177,13 @@ const ActionCard = ({
                 borderRadius="rounded8"
                 px="spacing8"
                 py="spacing4">
-                <Text color="DEP_magentaVibrant" variant="buttonLabelMicro">
+                <Text color="accent1" variant="buttonLabelMicro">
                   {badgeText}
                 </Text>
               </Flex>
             )}
           </Flex>
-          <Text color="DEP_textSecondary" variant="bodySmall">
+          <Text color="neutral2" variant="bodySmall">
             {blurb}
           </Text>
         </Flex>

@@ -40,12 +40,7 @@ const options: ImportMethodOption[] = [
     title: (t: TFunction) => t('Import a wallet'),
     blurb: (t: TFunction) => t('Enter your recovery phrase from another crypto wallet'),
     icon: (theme: Theme) => (
-      <ImportIcon
-        color={theme.colors.DEP_magentaVibrant}
-        height={18}
-        strokeWidth="1.5"
-        width={18}
-      />
+      <ImportIcon color={theme.colors.accent1} height={18} strokeWidth="1.5" width={18} />
     ),
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
@@ -57,7 +52,7 @@ const options: ImportMethodOption[] = [
     blurb: (t: TFunction) =>
       t('Explore the contents of a wallet by entering any address or ENS name '),
     icon: (theme: Theme) => (
-      <EyeIcon color={theme.colors.DEP_magentaVibrant} height={24} strokeWidth="1.5" width={24} />
+      <EyeIcon color={theme.colors.accent1} height={24} strokeWidth="1.5" width={24} />
     ),
     nav: OnboardingScreens.WatchWallet,
     importType: ImportType.Watch,
@@ -139,7 +134,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       <Trace logPress element={ElementName.OnboardingImportBackup}>
         <TouchableArea alignItems="center" mb="spacing12">
           <Text
-            color="DEP_accentAction"
+            color="accent1"
             variant="buttonLabelMedium"
             onPress={(): Promise<void> =>
               handleOnPress(OnboardingScreens.RestoreCloudBackup, ImportType.Restore)

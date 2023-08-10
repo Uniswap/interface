@@ -58,7 +58,7 @@ function HeaderPriceLabel({ price }: { price: Price }): JSX.Element {
   const { t } = useTranslation()
 
   return (
-    <Text color="DEP_textPrimary" variant="bodyLarge">
+    <Text color="neutral1" variant="bodyLarge">
       {formatUSDPrice(price?.value) ?? t('Unknown token')}
     </Text>
   )
@@ -90,7 +90,7 @@ function HeaderTitleElement({
           symbol={token?.symbol ?? undefined}
           url={tokenProject?.logoUrl ?? undefined}
         />
-        <Text color="DEP_textSecondary" variant="buttonLabelMicro">
+        <Text color="neutral2" variant="buttonLabelMicro">
           {token?.symbol ?? t('Unknown token')}
         </Text>
       </Flex>
@@ -184,8 +184,8 @@ function TokenDetails({
 
   const { tokenColor, tokenColorLoading } = useExtractedTokenColor(
     tokenLogoUrl,
-    /*background=*/ theme.colors.DEP_background0,
-    /*default=*/ theme.colors.DEP_textTertiary
+    /*background=*/ theme.colors.surface1,
+    /*default=*/ theme.colors.neutral3
   )
 
   const onPriceChartRetry = useCallback((): void => {
@@ -297,9 +297,7 @@ function TokenDetails({
 
   const isDarkMode = useIsDarkMode()
   // shall be the same color as heart icon in not favorited state next to it
-  const ellipsisColor = isDarkMode
-    ? theme.colors.DEP_textTertiary
-    : theme.colors.DEP_backgroundOutline
+  const ellipsisColor = isDarkMode ? theme.colors.neutral3 : theme.colors.surface3
 
   const ellipsisMenuVisible = menuActions.length > 0
 
@@ -333,9 +331,7 @@ function TokenDetails({
             <PriceExplorer
               currencyId={_currencyId}
               tokenColor={
-                tokenColorLoading
-                  ? theme.colors.DEP_textTertiary
-                  : tokenColor ?? theme.colors.DEP_magentaVibrant
+                tokenColorLoading ? theme.colors.neutral3 : tokenColor ?? theme.colors.accent1
               }
               onRetry={onPriceChartRetry}
             />
@@ -360,7 +356,7 @@ function TokenDetails({
       </HeaderScrollScreen>
 
       {!loading && !tokenColorLoading ? (
-        <AnimatedFlex backgroundColor="DEP_background0" entering={FadeInDown} pb={pb}>
+        <AnimatedFlex backgroundColor="surface1" entering={FadeInDown} pb={pb}>
           <TokenDetailsActionButtons
             tokenColor={tokenColor}
             onPressSwap={

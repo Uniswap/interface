@@ -23,7 +23,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
       [
         {
           "alignItems": "center",
-          "borderBottomColor": "#D2D9EE",
           "display": "flex",
           "flexDirection": "row",
           "justifyContent": "flex-start",
@@ -49,7 +48,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
         style={
           [
             {
-              "color": "#0E1524",
+              "color": "#222222",
               "display": "flex",
               "fontFamily": "Inter-Medium",
               "fontSize": 17,
@@ -396,7 +395,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
                     style={
                       [
                         {
-                          "color": "#0E1524",
+                          "color": "#222222",
                           "display": "flex",
                           "fontFamily": "Inter-Medium",
                           "fontSize": 20,
@@ -455,7 +454,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
                             style={
                               [
                                 {
-                                  "color": "#888FAB",
+                                  "color": "#7D7D7D",
                                   "display": "flex",
                                   "fontFamily": "Inter-Medium",
                                   "fontSize": 15,
@@ -472,7 +471,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
                           style={
                             [
                               {
-                                "backgroundColor": "#E8ECFB",
+                                "backgroundColor": "#F9F9F9",
                                 "borderRadius": 4,
                                 "bottom": "5%",
                                 "display": "flex",
@@ -586,7 +585,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
         style={
           [
             {
-              "borderColor": "#D2D9EE",
+              "borderColor": "#2222220D",
               "borderRadius": 999999,
               "borderWidth": 1,
               "display": "flex",
@@ -596,7 +595,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
         }
       >
         <svg
-          color="#0E1524"
+          color="#222222"
           data-file-name="SvgPlus"
           height={16}
           strokeWidth={2}
@@ -622,7 +621,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
         style={
           [
             {
-              "color": "#0E1524",
+              "color": "#222222",
               "display": "flex",
               "fontFamily": "Inter-Medium",
               "fontSize": 17,

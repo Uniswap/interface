@@ -20,7 +20,7 @@ export function SwapModal(): JSX.Element {
       hideHandlebar
       hideKeyboardOnDismiss
       renderBehindInset
-      backgroundColor={theme.colors.DEP_background1}
+      backgroundColor={theme.colors.surface1}
       name={ModalName.Swap}
       onClose={onClose}>
       <SwapFlow prefilledState={modalState.initialState} onClose={onClose} />

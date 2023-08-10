@@ -79,7 +79,7 @@ function EmptyList({ onClose }: { onClose: () => void }): JSX.Element {
       <Box paddingHorizontal="spacing16" paddingTop="spacing16">
         {isLoading ? (
           <Flex centered row flexDirection="row" gap="spacing4" mt="spacing60" p="spacing4">
-            <SpinningLoader color="DEP_textTertiary" size={iconSizes.icon64} />
+            <SpinningLoader color="neutral3" size={iconSizes.icon64} />
           </Flex>
         ) : (
           <BaseCard.EmptyState

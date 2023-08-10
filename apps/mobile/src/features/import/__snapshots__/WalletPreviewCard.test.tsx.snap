@@ -22,7 +22,7 @@ exports[`renders wallet preview card 1`] = `
   onStartShouldSetResponder={[Function]}
   style={
     {
-      "backgroundColor": "#FFFFFF",
+      "backgroundColor": "#F9F9F9",
       "borderColor": "#FC72FF",
       "borderRadius": 20,
       "borderWidth": 1,
@@ -238,7 +238,7 @@ exports[`renders wallet preview card 1`] = `
           style={
             [
               {
-                "color": "#0E1524",
+                "color": "#222222",
                 "display": "flex",
                 "fontFamily": "Inter-Medium",
                 "fontSize": 17,

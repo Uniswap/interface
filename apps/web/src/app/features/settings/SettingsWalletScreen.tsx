@@ -53,7 +53,7 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
   }
 
   return (
-    <YStack backgroundColor="$DEP_background0" flex={1}>
+    <YStack backgroundColor="$surface1" flex={1}>
       <BackButtonHeader headerText={displayName ?? 'Wallet'} />
       <YStack flexGrow={1} justifyContent="space-between" padding="$spacing12">
         <YStack>
@@ -72,7 +72,7 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
             </YStack>
             <Switch
               alignItems="center"
-              backgroundColor="$DEP_background2"
+              backgroundColor="$surface2"
               checked={!account.showSpamTokens}
               height={32}
               padding="$spacing4"

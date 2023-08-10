@@ -41,10 +41,10 @@ export function PendingNotificationBadge({
     if (txStatus === TransactionStatus.Success) {
       return (
         <CheckmarkCircle
-          borderColor="DEP_accentSuccess"
+          borderColor="statusSuccess"
           borderWidth={2}
           checkmarkStrokeWidth={3}
-          color={theme.colors.DEP_accentSuccess}
+          color={theme.colors.statusSuccess}
           size={size}
         />
       )
@@ -78,11 +78,7 @@ export function PendingNotificationBadge({
           position="absolute"
           width={size}
           zIndex="modal">
-          <Text
-            color="DEP_textSecondary"
-            fontSize={8}
-            textAlign="center"
-            variant="buttonLabelMicro">
+          <Text color="neutral2" fontSize={8} textAlign="center" variant="buttonLabelMicro">
             {countToDisplay}
           </Text>
         </Box>
@@ -99,7 +95,7 @@ export function PendingNotificationBadge({
   if (hasNotifications) {
     return (
       <Box
-        backgroundColor="DEP_magentaVibrant"
+        backgroundColor="accent1"
         borderRadius="roundedFull"
         height={theme.iconSizes.icon8}
         width={theme.iconSizes.icon8}

@@ -99,10 +99,10 @@ struct MnemonicConfirmation: View {
           .font(Font(UIFont(name: "Inter-Regular", size: 16)!))
           .multilineTextAlignment(TextAlignment.center)
           .padding(EdgeInsets(top: 20, leading: 24, bottom: 20, trailing: 24))
-          .foregroundColor(Colors.DEP_textPrimary)
+          .foregroundColor(Colors.neutral1)
           .background(AnyView(
             RoundedRectangle(cornerRadius: 100, style: .continuous)
-              .fill(Colors.DEP_background1)
+              .fill(Colors.surface2)
           ))
           .frame(alignment: Alignment.center)
           .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))

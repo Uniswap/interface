@@ -44,7 +44,7 @@ export function CollectionPreviewCard({
       <Flex
         row
         alignItems="center"
-        backgroundColor="DEP_textOnDimTertiary"
+        backgroundColor="sporeBlack"
         borderRadius="rounded16"
         gap="spacing8"
         justifyContent="space-between"
@@ -69,13 +69,13 @@ export function CollectionPreviewCard({
               {/* Width chosen to ensure truncation of collection name on both small
                 and large screens with sufficient padding */}
               <Box flexShrink={1}>
-                <Text color="DEP_textOnBrightPrimary" numberOfLines={1} variant="bodyLarge">
+                <Text color="sporeWhite" numberOfLines={1} variant="bodyLarge">
                   {collection?.name || fallbackData?.name || '-'}
                 </Text>
               </Box>
               {collection?.isVerified && (
                 <VerifiedIcon
-                  color={theme.colors.DEP_magentaVibrant}
+                  color={theme.colors.accent1}
                   height={iconSizes.icon16}
                   width={iconSizes.icon16}
                 />
@@ -83,17 +83,17 @@ export function CollectionPreviewCard({
             </Flex>
             {collection?.markets?.[0]?.floorPrice?.value && (
               <Flex row gap="spacing4">
-                <Text color="DEP_textSecondary" numberOfLines={1} variant="subheadSmall">
+                <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
                   {t('Floor')}:
                 </Text>
                 <PriceAmount
-                  iconColor="DEP_textSecondary"
+                  iconColor="neutral2"
                   price={{
                     id: collection?.markets?.[0].floorPrice.id,
                     value: collection.markets[0].floorPrice.value,
                     currency: Currency.Eth,
                   }}
-                  textColor="DEP_textSecondary"
+                  textColor="neutral2"
                   textVariant="subheadSmall"
                 />
               </Flex>
@@ -102,7 +102,7 @@ export function CollectionPreviewCard({
         </Flex>
         {isViewableCollection ? (
           <Chevron
-            color={theme.colors.DEP_textOnBrightSecondary}
+            color={theme.colors.sporeWhite}
             direction="e"
             height={theme.iconSizes.icon24}
             width={theme.iconSizes.icon24}

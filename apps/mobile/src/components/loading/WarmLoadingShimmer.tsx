@@ -54,13 +54,13 @@ export function WarmLoadingShimmer({
   if (isWarmLoading) {
     return (
       <MaskedView maskElement={children} style={{ width: layout.width, height: layout.height }}>
-        <Box backgroundColor="DEP_textSecondary" flexGrow={1} height="100%" overflow="hidden" />
+        <Box backgroundColor="neutral2" flexGrow={1} height="100%" overflow="hidden" />
         <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
           <LinearGradient
             colors={[
-              theme.colors.DEP_textSecondary,
-              opacify(64, theme.colors.DEP_textPrimary),
-              theme.colors.DEP_textSecondary,
+              theme.colors.neutral2,
+              opacify(64, theme.colors.neutral1),
+              theme.colors.neutral2,
             ]}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}

@@ -174,7 +174,7 @@ function AppInner(): JSX.Element {
     // is hidden (there was an issue on Android where the native background
     // used as a splash screen which was visible when changing screens with
     // a transition)
-    <Box backgroundColor="DEP_background0" flex={1}>
+    <Box backgroundColor="surface1" flex={1}>
       <NavStack isDarkMode={isDarkMode} />
     </Box>
   )

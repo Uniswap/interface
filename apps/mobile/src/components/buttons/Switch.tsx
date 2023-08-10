@@ -22,11 +22,11 @@ export function Switch({ value, onValueChange, disabled, ...rest }: Props): JSX.
   return (
     <Box>
       <BaseSwitch
-        ios_backgroundColor={theme.colors.DEP_background3}
-        thumbColor={value ? theme.colors.DEP_accentAction : theme.colors.DEP_textSecondary}
+        ios_backgroundColor={theme.colors.surface2}
+        thumbColor={value ? theme.colors.accent1 : theme.colors.neutral2}
         trackColor={{
-          false: theme.colors.DEP_background3,
-          true: theme.colors.DEP_background3,
+          false: theme.colors.surface2,
+          true: theme.colors.surface2,
         }}
         value={value}
         onValueChange={disabled ? undefined : onValueChange}

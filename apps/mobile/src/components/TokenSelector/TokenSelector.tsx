@@ -102,14 +102,14 @@ function _TokenSelectorModal({
       extendOnKeyboardVisible
       fullScreen
       hideKeyboardOnDismiss
-      backgroundColor={theme.colors.DEP_background1}
+      backgroundColor={theme.colors.surface1}
       name={ModalName.TokenSelector}
       snapPoints={['65%', 'CONTENT_HEIGHT']}
       onClose={onClose}>
       <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
         <Flex grow pb={IS_IOS ? 'spacing16' : 'none'} px="spacing16">
           <SearchBar
-            backgroundColor="DEP_background2"
+            backgroundColor="surface2"
             placeholder={t('Search tokens')}
             value={searchFilter ?? ''}
             onChangeText={onChangeText}

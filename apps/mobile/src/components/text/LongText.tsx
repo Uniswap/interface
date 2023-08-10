@@ -29,9 +29,9 @@ export function LongText(props: LongTextProps): JSX.Element {
     initialDisplayedLines = 3,
     text,
     gap = 'spacing8',
-    color = theme.colors.DEP_textPrimary,
-    linkColor = theme.colors.DEP_accentAction,
-    readMoreOrLessColor = theme.colors.DEP_accentAction,
+    color = theme.colors.neutral1,
+    linkColor = theme.colors.accent1,
+    readMoreOrLessColor = theme.colors.accent1,
     renderAsMarkdown = false,
     variant = 'bodySmall',
     ...rest

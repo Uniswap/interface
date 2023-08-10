@@ -211,8 +211,8 @@ function _TokenSelectorList({
 
 export function SectionHeader({ title }: { title: string }): JSX.Element {
   return (
-    <Flex backgroundColor="DEP_background1" py="spacing16">
-      <Text color="DEP_textSecondary" variant="subheadSmall">
+    <Flex backgroundColor="surface1" py="spacing16">
+      <Text color="neutral2" variant="subheadSmall">
         {title}
       </Text>
     </Flex>

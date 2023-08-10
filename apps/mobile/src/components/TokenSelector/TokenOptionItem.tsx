@@ -74,7 +74,7 @@ function _TokenOptionItem({
             <Flex shrink alignItems="flex-start" gap="none">
               <Flex centered row gap="spacing8">
                 <Flex shrink>
-                  <Text color="DEP_textPrimary" numberOfLines={1} variant="bodyLarge">
+                  <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
                     {currency.name}
                   </Text>
                 </Flex>
@@ -83,13 +83,13 @@ function _TokenOptionItem({
                   <WarningIcon
                     height={theme.iconSizes.icon16}
                     safetyLevel={safetyLevel}
-                    strokeColorOverride="DEP_textTertiary"
+                    strokeColorOverride="neutral3"
                     width={theme.iconSizes.icon16}
                   />
                 )}
               </Flex>
               <Flex centered row gap="spacing8">
-                <Text color="DEP_textSecondary" numberOfLines={1} variant="subheadSmall">
+                <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
                   {currency.symbol}
                 </Text>
                 {showNetworkPill && <InlineNetworkPill chainId={currency.chainId} />}
@@ -100,7 +100,7 @@ function _TokenOptionItem({
           {quantity && quantity !== 0 ? (
             <Box alignItems="flex-end">
               <Text variant="bodyLarge">{formatNumber(quantity, NumberType.TokenTx)}</Text>
-              <Text color="DEP_textSecondary" variant="subheadSmall">
+              <Text color="neutral2" variant="subheadSmall">
                 {formatUSDPrice(balanceUSD)}
               </Text>
             </Box>

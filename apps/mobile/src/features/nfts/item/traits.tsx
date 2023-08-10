@@ -15,18 +15,11 @@ export function NFTTraitCard({
 }): JSX.Element {
   const theme = useAppTheme()
   return (
-    <Flex
-      bg="DEP_textOnDimTertiary"
-      borderRadius="rounded16"
-      gap="spacing4"
-      px="spacing16"
-      py="spacing12">
-      <Text
-        style={{ color: titleTextColor ?? theme.colors.DEP_textSecondary }}
-        variant="buttonLabelMicro">
+    <Flex bg="sporeBlack" borderRadius="rounded16" gap="spacing4" px="spacing16" py="spacing12">
+      <Text style={{ color: titleTextColor ?? theme.colors.neutral2 }} variant="buttonLabelMicro">
         {trait.name}
       </Text>
-      <Text color="DEP_textOnBrightPrimary" variant="subheadSmall">
+      <Text color="sporeWhite" variant="subheadSmall">
         {trait.value}
       </Text>
     </Flex>
@@ -35,7 +28,7 @@ export function NFTTraitCard({
 
 export function NFTTraitList({
   traits,
-  titleTextColor = 'DEP_textPrimary',
+  titleTextColor = 'neutral1',
 }: {
   traits: NftAssetTrait[]
   titleTextColor?: string

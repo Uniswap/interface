@@ -110,7 +110,7 @@ function SectionContainer({
 }
 
 const spacerProps: BoxProps = {
-  borderBottomColor: 'DEP_background1',
+  borderBottomColor: 'surface2',
   borderBottomWidth: 1,
 }
 
@@ -277,7 +277,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
         <ClientDetails permitInfo={permitInfo} request={request} />
         <Flex gap="spacing12">
           <Flex
-            backgroundColor="DEP_background2"
+            backgroundColor="surface2"
             borderRadius="rounded16"
             gap="none"
             spacerProps={spacerProps}>
@@ -293,7 +293,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                 <NetworkFee chainId={chainId} gasFeeUSD={gasFeeUSD} />
               ) : (
                 <Flex row alignItems="center" justifyContent="space-between">
-                  <Text color="DEP_textPrimary" variant="subheadSmall">
+                  <Text color="neutral1" variant="subheadSmall">
                     {t('Network')}
                   </Text>
                   <NetworkPill
@@ -395,7 +395,7 @@ function WarningSection({
         height={iconSizes.icon16}
         width={iconSizes.icon16}
       />
-      <Text color="DEP_textSecondary" fontStyle="italic" variant="bodyMicro">
+      <Text color="neutral2" fontStyle="italic" variant="bodyMicro">
         {t('Be careful: this {{ requestType }} may transfer assets', {
           requestType: isTransactionRequest(request) ? 'transaction' : 'message',
         })}

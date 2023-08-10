@@ -94,7 +94,7 @@ export function ExternalProfileScreen({
   const renderTabBar = useCallback(
     (sceneProps: SceneRendererProps) => {
       return (
-        <Box bg="DEP_background0" paddingLeft="spacing12">
+        <Box bg="surface1" paddingLeft="spacing12">
           <TabBar
             {...sceneProps}
             indicatorStyle={TAB_STYLES.activeTabIndicator}
@@ -105,8 +105,8 @@ export function ExternalProfileScreen({
             style={[
               TAB_STYLES.tabBar,
               {
-                backgroundColor: theme.colors.DEP_background0,
-                borderBottomColor: theme.colors.DEP_backgroundOutline,
+                backgroundColor: theme.colors.surface1,
+                borderBottomColor: theme.colors.surface3,
               },
             ]}
             tabStyle={styles.tabStyle}

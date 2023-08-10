@@ -58,7 +58,7 @@ export function SettingsScreen(): JSX.Element {
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
     const iconProps: SvgProps = {
-      color: theme.colors.DEP_textTertiary,
+      color: theme.colors.neutral3,
       height: 24,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
@@ -160,7 +160,7 @@ export function SettingsScreen(): JSX.Element {
       },
     ]
   }, [
-    theme.colors.DEP_textTertiary,
+    theme.colors.neutral3,
     t,
     currentAppearanceSetting,
     isTouchIdSupported,
@@ -192,8 +192,8 @@ export function SettingsScreen(): JSX.Element {
           renderItem={renderItem}
           renderSectionFooter={(): JSX.Element => <Flex pt="spacing24" />}
           renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-            <Box bg="DEP_background0" pb="spacing12">
-              <Text color="DEP_textSecondary" variant="bodyLarge">
+            <Box bg="surface1" pb="spacing12">
+              <Text color="neutral2" variant="bodyLarge">
                 {subTitle}
               </Text>
             </Box>
@@ -230,7 +230,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
             {t('Onboarding')}
           </Text>
         </Box>
-        <Chevron color={theme.colors.DEP_textTertiary} direction="e" height={24} width={24} />
+        <Chevron color={theme.colors.neutral3} direction="e" height={24} width={24} />
       </Box>
     </TouchableArea>
   )
@@ -271,12 +271,12 @@ function WalletSettings(): JSX.Element {
   return (
     <Box flexDirection="column" mb="spacing16">
       <Flex row justifyContent="space-between">
-        <Text color="DEP_textSecondary" variant="bodyLarge">
+        <Text color="neutral2" variant="bodyLarge">
           {t('Wallet settings')}
         </Text>
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
           <TouchableArea onPress={toggleViewAll}>
-            <Text color="DEP_textSecondary" mb="spacing12" variant="subheadSmall">
+            <Text color="neutral2" mb="spacing12" variant="subheadSmall">
               {showAll ? t('View less') : t('View all')}
             </Text>
           </TouchableArea>
@@ -299,7 +299,7 @@ function WalletSettings(): JSX.Element {
                   variant="bodyLarge"
                 />
               </Flex>
-              <Chevron color={theme.colors.DEP_textTertiary} direction="e" height={24} width={24} />
+              <Chevron color={theme.colors.neutral3} direction="e" height={24} width={24} />
             </Box>
           </TouchableArea>
         ))}
@@ -332,10 +332,10 @@ function FooterSettings(): JSX.Element {
           gap="none"
           mt="spacing16">
           <Flex gap="spacing4">
-            <Text color="DEP_textTertiary" textAlign="center" variant="bodySmall">
+            <Text color="neutral3" textAlign="center" variant="bodySmall">
               {t('Made with love, ')}
             </Text>
-            <Text color="DEP_textTertiary" textAlign="center" variant="bodySmall">
+            <Text color="neutral3" textAlign="center" variant="bodySmall">
               {t('Uniswap Team 🦄')}
             </Text>
           </Flex>
@@ -347,7 +347,7 @@ function FooterSettings(): JSX.Element {
         </AnimatedFlex>
       ) : null}
       <Text
-        color="DEP_textTertiary"
+        color="neutral3"
         mt="spacing8"
         variant="bodySmall"
         onLongPress={(): void => {

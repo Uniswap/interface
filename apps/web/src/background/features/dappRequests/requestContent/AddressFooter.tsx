@@ -22,7 +22,7 @@ export function AddressFooter({ account }: { account: Account }): JSX.Element {
           </Text>
         </XStack>
         <Text
-          color="$DEP_textSecondary"
+          color="$neutral2"
           overflow="hidden"
           textAlign="right"
           textOverflow="ellipsis"

@@ -17,7 +17,7 @@ export function SearchBar({ onBack, ...rest }: SearchBarProps): JSX.Element {
     <Flex centered row gap="spacing12">
       {onBack && (
         <TouchableArea testID={ElementName.Back} onPress={onBack}>
-          <Chevron color={theme.colors.DEP_textPrimary} />
+          <Chevron color={theme.colors.neutral1} />
         </TouchableArea>
       )}
       <SearchTextInput {...rest} />

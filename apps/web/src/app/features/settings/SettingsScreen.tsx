@@ -31,10 +31,10 @@ export function SettingsScreen(): JSX.Element {
   }
 
   return (
-    <YStack backgroundColor="$DEP_background0" flex={1}>
+    <YStack backgroundColor="$surface1" flex={1}>
       <BackButtonHeader headerText={t('Settings')} />
       <ScrollView padding="$spacing12" showsVerticalScrollIndicator={false}>
-        <Text color="$DEP_textSecondary" variant="subheadSmall">
+        <Text color="$neutral2" variant="subheadSmall">
           {t('Wallet settings')}
         </Text>
         {allAccountsSorted
@@ -64,7 +64,7 @@ export function SettingsScreen(): JSX.Element {
               flexShrink={1}
               iconAfter={
                 <Icons.FileListLock
-                  color="$DEP_textSecondary"
+                  color="$neutral2"
                   height={iconSizes.icon20}
                   width={iconSizes.icon20}
                 />
@@ -81,7 +81,7 @@ export function SettingsScreen(): JSX.Element {
               flexShrink={1}
               iconAfter={
                 <Icons.HelpCenter
-                  color="$DEP_textSecondary"
+                  color="$neutral2"
                   height={iconSizes.icon20}
                   width={iconSizes.icon20}
                 />

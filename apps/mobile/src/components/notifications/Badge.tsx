@@ -12,8 +12,8 @@ function _NotificationBadge({ showIndicator, children }: Props): JSX.Element {
     <Box height="100%" position="relative">
       {showIndicator ? (
         <Box
-          backgroundColor="DEP_magentaVibrant"
-          borderColor="DEP_background1"
+          backgroundColor="accent1"
+          borderColor="surface2"
           borderRadius="roundedFull"
           borderWidth={2}
           height={NOTIFICATION_DOT_SIZE}

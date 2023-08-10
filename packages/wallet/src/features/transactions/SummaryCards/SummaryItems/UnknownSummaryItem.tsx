@@ -26,8 +26,8 @@ export function UnknownSummaryItem({
     caption,
     icon: (
       <Icons.ContractInteraction
-        color="$DEP_textSecondary"
-        fill={theme.DEP_background0.get()}
+        color="$neutral2"
+        fill={theme.surface1.get()}
         height={TXN_HISTORY_ICON_SIZE}
         width={TXN_HISTORY_ICON_SIZE}
       />

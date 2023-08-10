@@ -28,8 +28,8 @@ export const OnboardingInput = forwardRef<GetRef<typeof Input>, OnboardingInputP
       <Input
         ref={ref}
         autoFocus
-        backgroundColor="$DEP_background1"
-        borderColor="$DEP_backgroundOutline"
+        backgroundColor="$surface1"
+        borderColor="$surface3"
         borderRadius="$rounded12"
         borderWidth={1}
         // @ts-expect-error TODO type and fix
@@ -41,7 +41,7 @@ export const OnboardingInput = forwardRef<GetRef<typeof Input>, OnboardingInputP
         paddingHorizontal={centered ? '$spacing60' : '$spacing24'}
         paddingVertical="$spacing24"
         placeholder={placeholderText}
-        placeholderTextColor="$DEP_textTertiary"
+        placeholderTextColor="$neutral3"
         secureTextEntry={hideInput}
         textAlign={centered ? 'center' : 'left'}
         width="100%"

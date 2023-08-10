@@ -31,7 +31,7 @@ const loadingData: ActivityItem[] = [
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
   <Box pb="$spacing12">
-    <Text color="$DEP_textSecondary" variant="subheadSmall">
+    <Text color="$neutral2" variant="subheadSmall">
       {title}
     </Text>
   </Box>
@@ -55,7 +55,7 @@ export function TransactionActivity({ address }: { address: Address }): JSX.Elem
 
   return (
     <ScrollView
-      backgroundColor="$DEP_background1"
+      backgroundColor="$surface2"
       marginTop="$spacing16"
       px="$spacing16"
       showsVerticalScrollIndicator={false}

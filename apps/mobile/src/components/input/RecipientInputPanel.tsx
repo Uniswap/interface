@@ -38,7 +38,7 @@ export function RecipientInputPanel({
             address={recipientAddress}
             variant="headlineSmall"
           />
-          <Chevron color={theme.colors.DEP_textPrimary} direction="e" />
+          <Chevron color={theme.colors.neutral1} direction="e" />
         </Flex>
 
         {recipientAddress && <RecipientPrevTransfers recipient={recipientAddress} />}
@@ -54,7 +54,7 @@ export function RecipientPrevTransfers({ recipient }: { recipient: string }): JS
   const prevTxnsCount = previousTransactions?.length ?? 0
 
   return (
-    <Text color="DEP_textTertiary" textAlign="center" variant="subheadSmall">
+    <Text color="neutral3" textAlign="center" variant="subheadSmall">
       {prevTxnsCount === 1
         ? t('{{ prevTxnsCount }} previous transfer', { prevTxnsCount })
         : t('{{ prevTxnsCount }} previous transfers', { prevTxnsCount })}

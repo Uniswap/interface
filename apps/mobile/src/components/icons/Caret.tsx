@@ -25,7 +25,7 @@ export function _Caret({ size = 24, color, direction = 'n' }: Props): JSX.Elemen
 
   return (
     <CaretChange
-      color={color ?? theme.colors.DEP_black}
+      color={color ?? theme.colors.sporeBlack}
       height={size}
       strokeWidth={2}
       style={{ transform: [{ rotate: degree }] }}

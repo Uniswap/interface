@@ -62,8 +62,8 @@ export function NavBar(): JSX.Element {
           <Svg height={screenHeight} opacity={isDarkMode ? '1' : '0.3'} width="100%">
             <Defs>
               <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
-                <Stop offset="0" stopColor={theme.colors.DEP_black} stopOpacity="0" />
-                <Stop offset="1" stopColor={theme.colors.DEP_black} stopOpacity="0.5" />
+                <Stop offset="0" stopColor={theme.colors.sporeBlack} stopOpacity="0" />
+                <Stop offset="1" stopColor={theme.colors.sporeBlack} stopOpacity="0.5" />
               </LinearGradient>
             </Defs>
             <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
@@ -174,7 +174,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
               <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
             </Svg>
           </Box>
-          <Text color="DEP_textOnBrightPrimary" variant="buttonLabelMedium">
+          <Text color="sporeWhite" variant="buttonLabelMedium">
             {t('Swap')}
           </Text>
         </AnimatedBox>
@@ -226,19 +226,19 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               grow
               row
               alignItems="center"
-              bg={isDarkMode ? 'DEP_background2' : 'DEP_background1'}
+              bg={isDarkMode ? 'surface2' : 'surface2'}
               borderRadius="roundedFull"
               flex={1}
               gap="spacing8"
               justifyContent="flex-start"
               opacity={isDarkMode ? 0.6 : 0.8}
               p="spacing16"
-              shadowColor={isDarkMode ? 'DEP_background3' : 'DEP_textTertiary'}
+              shadowColor={isDarkMode ? 'surface2' : 'neutral3'}
               shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
               shadowOpacity={isDarkMode ? 0.6 : 0.4}
               shadowRadius={theme.borderRadii.rounded20}>
-              <SearchIcon color={theme.colors.DEP_textSecondary} />
-              <Text color="DEP_textPrimary" variant="bodyLarge">
+              <SearchIcon color={theme.colors.neutral2} />
+              <Text color="neutral1" variant="bodyLarge">
                 {t('Search web3')}
               </Text>
             </Flex>

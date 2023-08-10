@@ -32,7 +32,7 @@ export function TokenDetailsHeader({
       />
       <Flex row alignItems="center" gap="spacing8">
         <Text
-          color="DEP_textPrimary"
+          color="neutral1"
           loading={loading}
           numberOfLines={1}
           style={flex.shrink}
@@ -46,7 +46,7 @@ export function TokenDetailsHeader({
             <WarningIcon
               height={theme.iconSizes.icon20}
               safetyLevel={tokenProject?.safetyLevel}
-              strokeColorOverride="DEP_textTertiary"
+              strokeColorOverride="neutral3"
               width={theme.imageSizes.image20}
             />
           </TouchableArea>

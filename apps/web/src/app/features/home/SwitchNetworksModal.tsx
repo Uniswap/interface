@@ -26,12 +26,12 @@ export function SwitchNetworksModal(): JSX.Element {
     <YStack
       alignContent="center"
       // TODO:  update background color to blurry scrim when available
-      backgroundColor="$DEP_background0"
+      backgroundColor="$surface1"
       borderRadius="$rounded12"
       gap="$spacing8"
       width={260}>
       <YStack
-        borderBottomColor="$DEP_backgroundOutline"
+        borderBottomColor="$surface3"
         borderBottomWidth={1}
         gap="$spacing4"
         padding="$spacing8">
@@ -58,14 +58,14 @@ export function SwitchNetworksModal(): JSX.Element {
                   source={CHAIN_INFO[chain].logo}
                   width={iconSizes.icon28}
                 />
-                <Text color="$DEP_textPrimary" variant="subheadSmall">
+                <Text color="$neutral1" variant="subheadSmall">
                   {CHAIN_INFO[chain]?.label}
                 </Text>
               </XStack>
               {activeChain === chain ? (
                 <XStack flexGrow={1}>
                   <Circle
-                    backgroundColor="$DEP_accentActive"
+                    backgroundColor="$accent1"
                     height={iconSizes.icon8}
                     marginRight="$spacing8"
                     width={iconSizes.icon8}
@@ -80,9 +80,9 @@ export function SwitchNetworksModal(): JSX.Element {
       <Popover.Close asChild>
         <Button borderRadius="$rounded32" theme="secondary" onPress={onDisconnect}>
           <XStack alignItems="center" gap="$spacing8" justifyContent="center">
-            <Icons.Power color="$DEP_textPrimary" size={getTokenValue('$icon.16')} />
+            <Icons.Power color="$neutral1" size={getTokenValue('$icon.16')} />
             {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}{' '}
-            <Text color="$DEP_textPrimary" variant="subheadSmall">
+            <Text color="$neutral1" variant="subheadSmall">
               Disconnect
             </Text>
           </XStack>

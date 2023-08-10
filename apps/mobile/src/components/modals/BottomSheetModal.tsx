@@ -89,7 +89,7 @@ export function BottomSheetModal({
 
   const backgroundColorValue = transparentBackground
     ? theme.colors.none
-    : backgroundColor ?? theme.colors.DEP_background1
+    : backgroundColor ?? theme.colors.surface2
 
   const renderBackdrop = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -254,7 +254,7 @@ export function BottomSheetDetachedModal({
         hideHandlebar
           ? BottomSheetStyle.modalTransparent
           : {
-              backgroundColor: backgroundColor ?? theme.colors.DEP_background0,
+              backgroundColor: backgroundColor ?? theme.colors.surface1,
             }
       }
       bottomInset={theme.spacing.spacing48}

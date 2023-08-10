@@ -24,7 +24,7 @@ export function ListPriceBadge(props: ListPriceProps): JSX.Element {
       <BlurView blurAmount={20} blurType="light" reducedTransparencyFallbackColor="black">
         <Box style={styles.blurView}>
           <Flex
-            bg="DEP_black"
+            bg="sporeBlack"
             bottom={0}
             left={0}
             opacity={0.25}
@@ -44,7 +44,7 @@ export function PriceAmount({
   gap = 'spacing4',
   iconSize = 'icon16',
   iconColor,
-  textColor = 'DEP_textPrimary',
+  textColor = 'neutral1',
   textVariant = 'buttonLabelMicro',
 }: ListPriceProps): JSX.Element {
   const theme = useAppTheme()
@@ -56,7 +56,7 @@ export function PriceAmount({
     <Flex centered row gap={gap} overflow="hidden">
       {!isUSD && (
         <Logos.Ethereum
-          color={theme.colors[iconColor || 'DEP_textPrimary']}
+          color={theme.colors[iconColor || 'neutral1']}
           height={theme.iconSizes[iconSize]}
           width={theme.iconSizes[iconSize]}
         />

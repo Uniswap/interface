@@ -104,7 +104,7 @@ export function NotificationToast({
   return (
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
       <AnimatedBox
-        borderColor={useSmallDisplay ? 'none' : 'DEP_background3'}
+        borderColor={useSmallDisplay ? 'none' : 'surface2'}
         borderRadius="rounded16"
         borderWidth={1}
         left={0}
@@ -147,7 +147,7 @@ export function NotificationContent({
   return (
     <TouchableArea
       alignItems="center"
-      bg="DEP_background1"
+      bg="surface2"
       borderRadius="rounded16"
       flex={1}
       flexDirection="row"
@@ -174,7 +174,7 @@ export function NotificationContent({
         {actionButton && (
           <Flex shrink alignItems="flex-end" flexBasis="25%" gap="spacing4">
             <TouchableArea p="spacing8" onPress={actionButton.onPress}>
-              <Text color="DEP_accentActive">{actionButton.title}</Text>
+              <Text color="accent1">{actionButton.title}</Text>
             </TouchableArea>
           </Flex>
         )}
@@ -192,8 +192,8 @@ export function NotificationContentSmall({
   return (
     <Flex row flexShrink={1} justifyContent="center" pointerEvents="box-none">
       <TouchableArea
-        bg="DEP_background1"
-        borderColor="DEP_background3"
+        bg="surface2"
+        borderColor="surface2"
         borderRadius="roundedFull"
         borderWidth={1}
         p="spacing12"

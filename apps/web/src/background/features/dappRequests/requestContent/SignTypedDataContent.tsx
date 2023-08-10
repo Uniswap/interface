@@ -19,7 +19,7 @@ export const SignTypedDataDetails = ({
   const typedData: EthTypedMessage = JSON.parse(rawTypedData)
 
   return (
-    <YStack backgroundColor="$DEP_backgroundScrim" borderRadius="$rounded16" flex={1}>
+    <YStack backgroundColor="$scrim" borderRadius="$rounded16" flex={1}>
       <YStack flexShrink={1} gap="$spacing16" margin="$none" overflow="scroll" padding="$spacing16">
         {getParsedObjectDisplay(chainId, typedData.message)}
       </YStack>
@@ -52,7 +52,7 @@ const getParsedObjectDisplay = (
             <YStack key={objKey} gap="$spacing8">
               <Text
                 alignItems="flex-start"
-                color="$DEP_textSecondary"
+                color="$neutral2"
                 ellipse={true}
                 fontSize={14}
                 fontWeight="300"
@@ -73,7 +73,7 @@ const getParsedObjectDisplay = (
               gap="$spacing8"
               paddingVertical="$spacing4"
               width="100%">
-              <Text color="$DEP_textSecondary" fontSize={14} fontWeight="300" variant="monospace">
+              <Text color="$neutral2" fontSize={14} fontWeight="300" variant="monospace">
                 {objKey}
               </Text>
               <Text fontSize={14} fontWeight="300">

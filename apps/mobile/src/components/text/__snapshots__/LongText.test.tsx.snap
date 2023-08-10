@@ -32,14 +32,14 @@ exports[`renders a LongText 1`] = `
       style={
         [
           {
-            "color": "#0E1524",
+            "color": "#222222",
             "display": "flex",
             "fontFamily": "Inter-Regular",
             "fontSize": 15,
             "lineHeight": 20,
           },
           {
-            "color": "#0E1524",
+            "color": "#222222",
           },
         ]
       }

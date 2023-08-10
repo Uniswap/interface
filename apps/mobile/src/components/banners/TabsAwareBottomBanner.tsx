@@ -36,7 +36,7 @@ export function TabsAwareBottomBanner({ icon, text, ...rest }: BottomBannerProps
 
   return (
     <BottomBanner
-      backgroundColor="DEP_background2"
+      backgroundColor="surface2"
       icon={icon}
       text={text}
       translateY={bannerTranslateY}

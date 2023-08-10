@@ -52,7 +52,7 @@ Props): JSX.Element {
         style={dimBackground && style.bgDimmed}
         onPress={dismissable ? hide : undefined}>
         <Box
-          backgroundColor="DEP_background0"
+          backgroundColor="surface1"
           style={width === '100%' ? style.modalBoxFullWidth : style.modalBox}
           width={width}>
           {title && (

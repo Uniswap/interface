@@ -68,7 +68,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       onCancel?.()
     }
 
-    const backgroundColorValue = backgroundColor ?? 'DEP_background1'
+    const backgroundColorValue = backgroundColor ?? 'surface2'
 
     const onCancelLayout = useCallback(
       (event: LayoutChangeEvent) => {
@@ -142,7 +142,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
 
     const shadowProps = showShadow
       ? {
-          shadowColor: isDarkMode ? 'DEP_black' : 'DEP_brandedAccentSoft',
+          shadowColor: isDarkMode ? 'sporeBlack' : 'DEP_brandedAccentSoft',
           shadowOffset: SHADOW_OFFSET_SMALL,
           shadowOpacity: 0.25,
           shadowRadius: 6,
@@ -166,7 +166,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           {...shadowProps}>
           <Box py="spacing4">
             <SearchIcon
-              color={isDarkMode ? theme.colors.DEP_textSecondary : theme.colors.DEP_textTertiary}
+              color={theme.colors.neutral2}
               height={theme.iconSizes.icon20}
               width={theme.iconSizes.icon20}
             />
@@ -183,9 +183,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             fontSize={theme.textVariants.bodyLarge.fontSize}
             maxFontSizeMultiplier={theme.textVariants.bodyLarge.maxFontSizeMultiplier}
             placeholder={placeholder}
-            placeholderTextColor={
-              isDarkMode ? theme.colors.DEP_textSecondary : theme.colors.DEP_textTertiary
-            }
+            placeholderTextColor={theme.colors.neutral2}
             px="none"
             py="none"
             returnKeyType="done"
@@ -230,14 +228,11 @@ interface ClearButtonProps {
 function ClearButton(props: ClearButtonProps): JSX.Element {
   const theme = useAppTheme()
 
-  const {
-    onPress,
-    clearIcon = <X color={theme.colors.DEP_textSecondary} height={16} width={16} />,
-  } = props
+  const { onPress, clearIcon = <X color={theme.colors.neutral2} height={16} width={16} /> } = props
 
   return (
     <TouchableArea
-      backgroundColor="DEP_backgroundOutline"
+      backgroundColor="surface3"
       borderRadius="roundedFull"
       p="spacing4"
       onPress={onPress}>

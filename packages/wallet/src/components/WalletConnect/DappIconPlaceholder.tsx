@@ -13,13 +13,13 @@ export function DappIconPlaceholder({
     <Flex
       centered
       row
-      backgroundColor="$DEP_background3"
+      backgroundColor="$surface2"
       borderRadius="$roundedFull"
       flex={1}
       height={iconSize}
       width={iconSize}>
       <Text
-        color="$DEP_textSecondary"
+        color="$neutral2"
         textAlign="center"
         variant={iconSize >= iconSizes.icon40 ? 'subheadLarge' : 'bodySmall'}>
         {name.length > 0 ? name.charAt(0) : ' '}

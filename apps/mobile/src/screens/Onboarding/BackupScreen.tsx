@@ -128,9 +128,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
             blurb={t('Safe, simple, and all you need to save is your password.')}
             disabled={hasCloudBackup}
             elementName={ElementName.AddiCloudBackup}
-            icon={
-              <CloudIcon color={theme.colors.DEP_magentaVibrant} height={theme.iconSizes.icon16} />
-            }
+            icon={<CloudIcon color={theme.colors.accent1} height={theme.iconSizes.icon16} />}
             title={t('Backup with iCloud')}
             onPress={onPressICloudBackup}
           />
@@ -138,9 +136,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
             blurb={t("Top-notch security with no third parties. You're in control.")}
             disabled={hasManualBackup}
             elementName={ElementName.AddManualBackup}
-            icon={
-              <PaperIcon color={theme.colors.DEP_magentaVibrant} height={theme.iconSizes.icon16} />
-            }
+            icon={<PaperIcon color={theme.colors.accent1} height={theme.iconSizes.icon16} />}
             title={t('Backup with recovery phrase')}
             onPress={onPressManualBackup}
           />
@@ -149,11 +145,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
           <TouchableArea alignSelf="center" py="none" onPress={onPressEducationButton}>
             <Flex centered row gap="spacing4">
               <InfoCircle
-                color={theme.colors.DEP_textSecondary}
+                color={theme.colors.neutral2}
                 height={theme.iconSizes.icon24}
                 width={theme.iconSizes.icon24}
               />
-              <Text color="DEP_textPrimary" variant="subheadSmall">
+              <Text color="neutral1" variant="subheadSmall">
                 {t('Learn about wallet safety and recovery')}
               </Text>
             </Flex>

@@ -99,7 +99,7 @@ export function SettingsCloudBackupStatus({
 
       <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="spacing16">
         <Flex grow gap="spacing24" justifyContent="flex-start">
-          <Text color="DEP_textSecondary" variant="bodySmall">
+          <Text color="neutral2" variant="bodySmall">
             {t(
               'By having your recovery phrase backed up to iCloud, you can recover your wallet just by being logged into your iCloud on any device.'
             )}
@@ -107,12 +107,12 @@ export function SettingsCloudBackupStatus({
           <Flex row justifyContent="space-between">
             <Text variant="bodyLarge">{t('Recovery phrase')}</Text>
             <Flex row alignItems="center" gap="spacing12" justifyContent="space-around">
-              <Text color="DEP_textSecondary" variant="buttonLabelMicro">
+              <Text color="neutral2" variant="buttonLabelMicro">
                 {t('Backed up')}
               </Text>
 
               {/* @TODO: [MOB-249] Add non-backed up state once we have more options on this page  */}
-              <Checkmark color={theme.colors.DEP_accentSuccess} height={24} width={24} />
+              <Checkmark color={theme.colors.statusSuccess} height={24} width={24} />
             </Flex>
           </Flex>
         </Flex>

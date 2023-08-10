@@ -28,13 +28,13 @@ export function NetworkOption({
         {(chainId && <NetworkLogo chainId={chainId} size={NETWORK_OPTION_ICON_SIZE} />) || (
           <Box width={NETWORK_OPTION_ICON_SIZE} />
         )}
-        <Text color="DEP_textPrimary" variant="bodyLarge">
+        <Text color="neutral1" variant="bodyLarge">
           {info?.label ?? t('All networks')}
         </Text>
         <Flex centered height={NETWORK_OPTION_ICON_SIZE} width={NETWORK_OPTION_ICON_SIZE}>
           {currentlySelected && (
             <Check
-              color={theme.colors.DEP_textPrimary}
+              color={theme.colors.neutral1}
               height={iconSizes.icon20}
               width={iconSizes.icon20}
             />

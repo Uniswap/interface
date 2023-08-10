@@ -50,7 +50,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
         <Flex alignItems="center" justifyContent="space-between" mb="spacing24" mx="spacing12">
           <Text variant="headlineSmall">{t('Back up to iCloud')}</Text>
-          <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
+          <Text color="neutral2" textAlign="center" variant="bodySmall">
             {t(
               'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your iCloud account is ever compromised.'
             )}
@@ -59,21 +59,21 @@ export function SettingsCloudBackupPasswordCreateScreen({
         <CloudBackupPasswordForm navigateToNextScreen={navigateToNextScreen} />
         {showCloudBackupInfoModal && (
           <BottomSheetModal
-            backgroundColor={theme.colors.DEP_background1}
+            backgroundColor={theme.colors.surface2}
             name={ModalName.ICloudBackupInfo}>
             <Flex gap="none" mb="spacing36" px="spacing16" py="spacing12">
               <Flex centered gap="spacing16">
                 <Box
-                  borderColor="DEP_accentAction"
+                  borderColor="accent1"
                   borderRadius="rounded12"
                   borderWidth={1}
                   padding="spacing12">
-                  <CloudIcon color={theme.colors.DEP_accentAction} />
+                  <CloudIcon color={theme.colors.accent1} />
                 </Box>
                 <Text textAlign="center" variant="buttonLabelMedium">
                   {t('Back up recovery phrase to iCloud?')}
                 </Text>
-                <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
+                <Text color="neutral2" textAlign="center" variant="bodySmall">
                   {t(
                     'It looks like you haven’t backed up your recovery phrase to iCloud yet. By doing so, you can recover your wallet just by being logged into iCloud on any device.'
                   )}

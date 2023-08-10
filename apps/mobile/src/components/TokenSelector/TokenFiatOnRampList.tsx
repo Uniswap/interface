@@ -181,7 +181,7 @@ function Header({ onBack }: { onBack: () => void }): JSX.Element {
   return (
     <Flex row justifyContent="space-between" my="spacing16">
       <TouchableArea testID={ElementName.Back} onPress={onBack}>
-        <Chevron color={theme.colors.DEP_textPrimary} />
+        <Chevron color={theme.colors.neutral1} />
       </TouchableArea>
       <Text variant="bodyLarge">{t('Select a token to buy')}</Text>
       <Box width={24} />

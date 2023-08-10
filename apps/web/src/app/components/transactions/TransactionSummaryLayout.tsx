@@ -32,7 +32,7 @@ function TransactionSummaryLayout({
 
   const rightBlock = inCancelling ? (
     <Icons.SlashCircle
-      color="DEP_accentCritical"
+      color="statusCritical"
       fill="statusIconFill"
       fillOpacity={1}
       height={TXN_STATUS_ICON_SIZE}
@@ -42,13 +42,13 @@ function TransactionSummaryLayout({
     <Box alignItems="flex-end" flexGrow={1} justifyContent="space-between">
       <Icons.AlertTriangle
         color="DEP_accentWarning"
-        fill="DEP_background0"
+        fill="surface1"
         height={TXN_STATUS_ICON_SIZE}
         width={TXN_STATUS_ICON_SIZE}
       />
     </Box>
   ) : (
-    <Text color="$DEP_textTertiary" variant="bodyMicro">
+    <Text color="$neutral3" variant="bodyMicro">
       {formattedAddedTime}
     </Text>
   )
@@ -64,14 +64,14 @@ function TransactionSummaryLayout({
         <Flex grow shrink gap="$none">
           <Flex grow gap="$none">
             <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
-              <Text color="$DEP_textSecondary" numberOfLines={1} variant="bodySmall">
+              <Text color="$neutral2" numberOfLines={1} variant="bodySmall">
                 {title}
               </Text>
               {!inProgress && rightBlock}
             </Flex>
             <Flex grow row>
               <Box flexGrow={1} flexShrink={1}>
-                <Text color="$DEP_textPrimary" variant="bodyMicro">
+                <Text color="$neutral1" variant="bodyMicro">
                   {caption}
                 </Text>
               </Box>
@@ -81,7 +81,7 @@ function TransactionSummaryLayout({
         {inProgress && (
           <Flex height="100%" justifyContent="center">
             {/* TODO actual loading spinner */}
-            <Text color="$DEP_textPrimary" variant="bodyMicro">
+            <Text color="$neutral1" variant="bodyMicro">
               Loading...
             </Text>
           </Flex>

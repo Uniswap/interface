@@ -19,7 +19,7 @@ export function TokenLoader({ opacity }: TokenLoaderProps): JSX.Element {
       py="spacing8">
       <Flex row alignItems="center" flexShrink={1} gap="spacing12" overflow="hidden">
         <Box
-          bg="DEP_background3"
+          bg="surface2"
           borderRadius="roundedFull"
           minHeight={iconSizes.icon40}
           minWidth={iconSizes.icon40}

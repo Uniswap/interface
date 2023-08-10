@@ -20,7 +20,7 @@ export function HiddenNftsRowLeft({ numHidden }: { numHidden: number }): JSX.Ele
       ml="spacing12"
       my="spacing16"
       py="spacing4">
-      <Text color="DEP_textSecondary" variant="subheadSmall">
+      <Text color="neutral2" variant="subheadSmall">
         {t('Hidden ({{numHidden}})', { numHidden })}
       </Text>
     </Flex>
@@ -63,18 +63,18 @@ export function HiddenNftsRowRight({
         <Flex
           row
           alignItems="center"
-          bg="DEP_background2"
+          bg="surface2"
           borderRadius="roundedFull"
           gap="none"
           pl="spacing12"
           pr="spacing8"
           py="spacing4">
-          <Text color="DEP_textSecondary" variant="buttonLabelSmall">
+          <Text color="neutral2" variant="buttonLabelSmall">
             {isExpanded ? t('Hide') : t('Show')}
           </Text>
           <AnimatedBox style={chevronAnimatedStyle}>
             <Chevron
-              color={theme.colors.DEP_textSecondary}
+              color={theme.colors.neutral2}
               direction="s"
               height={theme.iconSizes.icon20}
               width={theme.iconSizes.icon20}

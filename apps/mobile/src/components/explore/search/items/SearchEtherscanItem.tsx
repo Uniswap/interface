@@ -49,7 +49,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
           <EtherscanIcon height={theme.iconSizes.icon40} width={theme.iconSizes.icon40} />
           <Text variant="bodyLarge">{shortenAddress(address)}</Text>
         </Flex>
-        <Arrow color={theme.colors.DEP_textSecondary} direction="ne" size={24} />
+        <Arrow color={theme.colors.neutral2} direction="ne" size={24} />
       </Flex>
     </TouchableArea>
   )

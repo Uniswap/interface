@@ -65,7 +65,7 @@ export function LinkButton({
     <Trace logPress element={element}>
       <TouchableArea
         hapticFeedback
-        backgroundColor="DEP_background2"
+        backgroundColor="surface2"
         borderRadius="rounded20"
         paddingHorizontal="spacing12"
         paddingVertical="spacing8"
@@ -74,17 +74,17 @@ export function LinkButton({
         <Flex centered row gap="spacing8">
           {Icon && (
             <Icon
-              color={theme.colors.DEP_textPrimary}
+              color={theme.colors.neutral1}
               height={theme.iconSizes.icon16}
               width={theme.iconSizes.icon16}
             />
           )}
-          <Text color="DEP_textPrimary" variant={fontSize}>
+          <Text color="neutral1" variant={fontSize}>
             {label}
           </Text>
           {buttonType === LinkButtonType.Copy && (
             <CopyIcon
-              color={theme.colors.DEP_textSecondary}
+              color={theme.colors.neutral2}
               height={theme.iconSizes.icon16}
               width={theme.iconSizes.icon16}
             />

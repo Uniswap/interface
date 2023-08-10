@@ -58,7 +58,7 @@ export default function WarningModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.DEP_background1}
+      backgroundColor={theme.colors.surface2}
       hideHandlebar={hideHandlebar}
       isDismissible={isDismissible}
       name={modalName}
@@ -84,7 +84,7 @@ export default function WarningModal({
           {title}
         </Text>
         {caption && (
-          <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
+          <Text color="neutral2" textAlign="center" variant="bodySmall">
             {caption}
           </Text>
         )}
@@ -117,19 +117,19 @@ export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
   switch (severity) {
     case WarningSeverity.None:
       return {
-        text: 'DEP_textSecondary',
-        background: 'DEP_textSecondary',
+        text: 'neutral2',
+        background: 'neutral2',
         buttonEmphasis: ButtonEmphasis.Secondary,
       }
     case WarningSeverity.Low:
       return {
-        text: 'DEP_textSecondary',
-        background: 'DEP_background2',
+        text: 'neutral2',
+        background: 'surface2',
         buttonEmphasis: ButtonEmphasis.Tertiary,
       }
     case WarningSeverity.High:
       return {
-        text: 'DEP_accentCritical',
+        text: 'statusCritical',
         background: 'DEP_accentCriticalSoft',
         buttonEmphasis: ButtonEmphasis.Detrimental,
       }
@@ -141,7 +141,7 @@ export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
       }
     default:
       return {
-        text: 'DEP_textSecondary',
+        text: 'neutral2',
         background: 'none',
         buttonEmphasis: ButtonEmphasis.Tertiary,
       }

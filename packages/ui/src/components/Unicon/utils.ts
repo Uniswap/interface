@@ -66,18 +66,18 @@ export const useUniconColors = (
   const attributeIndices = deriveUniconAttributeIndices(activeAddress || '')
   if (!attributeIndices)
     return {
-      gradientStart: '$DEP_accentAction',
-      gradientEnd: '$DEP_accentActionSoft',
-      glow: '$DEP_accentAction',
+      gradientStart: '$accent1',
+      gradientEnd: '$accent2',
+      glow: '$accent1',
     }
 
   const attributeData = getUniconAttributeData(attributeIndices)
   const blurColor = blurs[attributeIndices[UniconAttributes.GradientStart]]
   if (!blurColor)
     return {
-      gradientStart: '$DEP_accentAction',
-      gradientEnd: '$DEP_accentActionSoft',
-      glow: '$DEP_accentAction',
+      gradientStart: '$accent1',
+      gradientEnd: '$accent2',
+      glow: '$accent1',
     }
 
   return {

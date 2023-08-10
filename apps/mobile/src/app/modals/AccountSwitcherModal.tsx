@@ -36,10 +36,10 @@ export function AccountSwitcherModal(): JSX.Element {
   return (
     <BottomSheetModal
       disableSwipe
-      backgroundColor={theme.colors.DEP_background1}
+      backgroundColor={theme.colors.surface1}
       name={ModalName.AccountSwitcher}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}>
-      <Screen bg="DEP_background1" noInsets={true}>
+      <Screen bg="surface1" noInsets={true}>
         <AccountSwitcher
           onClose={(): void => {
             dispatch(closeModal({ name: ModalName.AccountSwitcher }))
@@ -163,11 +163,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.CreateAccount,
         onPress: onPressCreateNewWallet,
         render: () => (
-          <Box
-            alignItems="center"
-            borderBottomColor="DEP_backgroundOutline"
-            borderBottomWidth={1}
-            p="spacing16">
+          <Box alignItems="center" borderBottomColor="surface3" borderBottomWidth={1} p="spacing16">
             <Text variant="bodyLarge">{t('Create a new wallet')}</Text>
           </Box>
         ),
@@ -185,11 +181,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.ImportAccount,
         onPress: onPressImportWallet,
         render: () => (
-          <Box
-            alignItems="center"
-            borderTopColor="DEP_backgroundOutline"
-            borderTopWidth={1}
-            p="spacing16">
+          <Box alignItems="center" borderTopColor="surface3" borderTopWidth={1} p="spacing16">
             <Text variant="bodyLarge">{t('Import a new wallet')}</Text>
           </Box>
         ),
@@ -201,11 +193,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.RestoreFromICloud,
         onPress: onPressRestore,
         render: () => (
-          <Box
-            alignItems="center"
-            borderTopColor="DEP_backgroundOutline"
-            borderTopWidth={1}
-            p="spacing16">
+          <Box alignItems="center" borderTopColor="surface3" borderTopWidth={1} p="spacing16">
             <Text variant="bodyLarge">{t('Restore from iCloud')}</Text>
           </Box>
         ),
@@ -223,9 +211,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
   return (
     <Flex fill gap="none" maxHeight={fullScreenContentHeight} mb="spacing12">
-      <Flex row alignItems="center" borderBottomColor="DEP_backgroundOutline" mb="spacing16">
+      <Flex row alignItems="center" mb="spacing16">
         <Box flex={1} pl="spacing24">
-          <Text color="DEP_textPrimary" textAlign="left" variant="bodyLarge">
+          <Text color="neutral1" textAlign="left" variant="bodyLarge">
             {t('Your wallets')}
           </Text>
         </Box>
@@ -233,19 +221,15 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       <AccountList accounts={accounts} isVisible={modalState.isOpen} onPress={onPressAccount} />
       <TouchableArea hapticFeedback my="spacing24" onPress={onPressAddWallet}>
         <Flex row alignItems="center" ml="spacing24">
-          <Box
-            borderColor="DEP_backgroundOutline"
-            borderRadius="roundedFull"
-            borderWidth={1}
-            p="spacing12">
+          <Box borderColor="surface3" borderRadius="roundedFull" borderWidth={1} p="spacing12">
             <PlusIcon
-              color={theme.colors.DEP_textPrimary}
+              color={theme.colors.neutral1}
               height={theme.iconSizes.icon16}
               strokeWidth={2}
               width={theme.iconSizes.icon16}
             />
           </Box>
-          <Text color="DEP_textPrimary" variant="bodyLarge">
+          <Text color="neutral1" variant="bodyLarge">
             {t('Add wallet')}
           </Text>
         </Flex>

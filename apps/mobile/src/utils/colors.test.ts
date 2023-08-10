@@ -46,7 +46,7 @@ describe('adjustColorVariant', () => {
 
 describe('findNearestThemeColor', () => {
   it('Finds correct theme color for color in theme', () => {
-    expect(findNearestThemeColor(theme.colors.DEP_accentActive)).toEqual('blue400')
+    expect(findNearestThemeColor(theme.colors.accent1)).toEqual('magentaVibrant')
   })
 })
 

@@ -126,7 +126,7 @@ export function RemoveWalletModal(): JSX.Element | null {
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.DEP_background1}
+      backgroundColor={theme.colors.surface2}
       name={ModalName.RemoveSeedPhraseWarningModal}
       onClose={onClose}>
       <Flex centered gap="spacing16" height="100%" mb="spacing24" p="spacing24" paddingTop="none">
@@ -146,7 +146,7 @@ export function RemoveWalletModal(): JSX.Element | null {
         <Text textAlign="center" variant="bodyLarge">
           {title}
         </Text>
-        <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
+        <Text color="neutral2" textAlign="center" variant="bodySmall">
           {description}
         </Text>
         {currentStep === RemoveWalletStep.Final && isRemovingRecoveryPhrase ? (

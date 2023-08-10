@@ -69,7 +69,7 @@ export function SettingsRow({
               {text}
             </Text>
             {subText && (
-              <Text color="DEP_textSecondary" numberOfLines={1} variant="buttonLabelMicro">
+              <Text color="neutral2" numberOfLines={1} variant="buttonLabelMicro">
                 {subText}
               </Text>
             )}
@@ -87,7 +87,7 @@ export function SettingsRow({
                 justifyContent="flex-end">
                 <Text
                   adjustsFontSizeToFit
-                  color="DEP_textSecondary"
+                  color="neutral2"
                   mr="spacing8"
                   numberOfLines={1}
                   variant="bodyMicro">
@@ -95,10 +95,10 @@ export function SettingsRow({
                 </Text>
               </Flex>
             ) : null}
-            <Chevron color={theme.colors.DEP_textTertiary} direction="e" height={24} width={24} />
+            <Chevron color={theme.colors.neutral3} direction="e" height={24} width={24} />
           </Flex>
         ) : externalLink ? (
-          <Arrow color={theme.colors.DEP_textTertiary} direction="ne" size={24} />
+          <Arrow color={theme.colors.neutral3} direction="ne" size={24} />
         ) : (
           action
         )}

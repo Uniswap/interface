@@ -5,9 +5,9 @@ import { Theme } from 'ui/src/theme/restyle/theme'
 function getButtonColor(emphasis: ButtonEmphasis): keyof Theme['colors'] {
   switch (emphasis) {
     case ButtonEmphasis.Primary:
-      return 'DEP_magentaVibrant'
+      return 'accent1'
     case ButtonEmphasis.Secondary:
-      return 'DEP_background3'
+      return 'surface2'
     case ButtonEmphasis.Tertiary:
       return 'none'
     case ButtonEmphasis.Detrimental:
@@ -20,12 +20,12 @@ function getButtonColor(emphasis: ButtonEmphasis): keyof Theme['colors'] {
 function getButtonTextColor(emphasis: ButtonEmphasis): keyof Theme['colors'] {
   switch (emphasis) {
     case ButtonEmphasis.Primary:
-      return 'DEP_white'
+      return 'sporeWhite'
     case ButtonEmphasis.Secondary:
     case ButtonEmphasis.Tertiary:
-      return 'DEP_textPrimary'
+      return 'neutral1'
     case ButtonEmphasis.Detrimental:
-      return 'DEP_accentCritical'
+      return 'statusCritical'
     case ButtonEmphasis.Warning:
       return 'DEP_accentWarning'
   }
@@ -34,7 +34,7 @@ function getButtonTextColor(emphasis: ButtonEmphasis): keyof Theme['colors'] {
 function getButtonBorderColor(emphasis: ButtonEmphasis): keyof Theme['colors'] {
   switch (emphasis) {
     case ButtonEmphasis.Tertiary:
-      return 'DEP_backgroundOutline'
+      return 'surface3'
     default:
       return 'none'
   }

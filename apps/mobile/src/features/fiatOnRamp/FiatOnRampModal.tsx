@@ -198,7 +198,7 @@ export function FiatOnRampModal(): JSX.Element {
     <BottomSheetModal
       fullScreen
       hideKeyboardOnDismiss
-      backgroundColor={theme.colors.DEP_background1}
+      backgroundColor={theme.colors.surface2}
       name={ModalName.FiatOnRamp}
       onClose={onClose}>
       {!showConnectingToMoonpayScreen && (
@@ -212,7 +212,7 @@ export function FiatOnRampModal(): JSX.Element {
             style={{ marginBottom: insets.bottom }}
             width="100%">
             <Flex style={{ height: maxContentHeight }} onLayout={onInputPanelLayout}>
-              <Text color="DEP_textPrimary" variant="subheadLarge">
+              <Text color="neutral1" variant="subheadLarge">
                 {t('Buy')}
               </Text>
               <AnimatedFlex
@@ -235,7 +235,7 @@ export function FiatOnRampModal(): JSX.Element {
                   mt="spacing48"
                   overflow="visible"
                   placeholder="$0"
-                  placeholderTextColor={theme.colors.DEP_background3}
+                  placeholderTextColor={theme.colors.surface2}
                   px="none"
                   py="none"
                   returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
@@ -359,9 +359,9 @@ function MoonpayCtaButton({
       <Button
         CustomIcon={
           isLoading ? (
-            <SpinningLoader color="DEP_textOnBrightPrimary" />
+            <SpinningLoader color="sporeWhite" />
           ) : !eligible ? (
-            <InformationIcon color={theme.colors.DEP_textPrimary} width={theme.iconSizes.icon20} />
+            <InformationIcon color={theme.colors.neutral1} width={theme.iconSizes.icon20} />
           ) : undefined
         }
         disabled={disabled}
@@ -394,8 +394,8 @@ function PredefinedAmount({
   return (
     <TouchableOpacity onPress={(): void => onPress(amount)}>
       <Pill
-        backgroundColor={highlighted ? 'DEP_backgroundActionButton' : 'DEP_background2'}
-        foregroundColor={theme.colors[highlighted ? 'DEP_accentAction' : 'DEP_textSecondary']}
+        backgroundColor={highlighted ? 'DEP_backgroundActionButton' : 'surface2'}
+        foregroundColor={theme.colors[highlighted ? 'accent1' : 'neutral2']}
         label={`$${amount}`}
         px="spacing16"
         textVariant="buttonLabelMedium"
@@ -421,7 +421,7 @@ function SelectTokenButton({
 }: SelectTokenButtonProps): JSX.Element {
   const theme = useTheme<Theme>()
 
-  const textColor = disabled ? 'DEP_textTertiary' : 'DEP_textSecondary'
+  const textColor = disabled ? 'neutral3' : 'neutral2'
 
   return (
     <TouchableArea

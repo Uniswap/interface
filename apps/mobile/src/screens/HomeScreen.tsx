@@ -249,7 +249,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const contentHeader = useMemo(() => {
     return (
-      <Flex bg="DEP_background0" gap="spacing16" pb="spacing16" px="spacing24">
+      <Flex bg="surface1" gap="spacing16" pb="spacing16" px="spacing24">
         <Box pb="spacing12">
           <AccountHeader />
         </Box>
@@ -317,7 +317,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     backgroundColor: interpolateColor(
       currentScrollValue.value,
       [0, headerHeightDiff],
-      [theme.colors.DEP_background0, theme.colors.DEP_background0]
+      [theme.colors.surface1, theme.colors.surface1]
     ),
   }))
 
@@ -330,7 +330,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
             {contentHeader}
           </Animated.View>
           <Animated.View style={[TAB_STYLES.header, tabBarStyle]}>
-            <Box bg="DEP_background0" paddingLeft="spacing12">
+            <Box bg="surface1" paddingLeft="spacing12">
               <TabBar
                 {...sceneProps}
                 indicatorStyle={TAB_STYLES.activeTabIndicator}
@@ -339,8 +339,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
                 style={[
                   TAB_STYLES.tabBar,
                   {
-                    backgroundColor: theme.colors.DEP_background0,
-                    borderBottomColor: theme.colors.DEP_backgroundOutline,
+                    backgroundColor: theme.colors.surface1,
+                    borderBottomColor: theme.colors.surface3,
                   },
                 ]}
                 tabStyle={style}
@@ -360,8 +360,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       routes,
       tabBarStyle,
       tabIndex,
-      theme.colors.DEP_background0,
-      theme.colors.DEP_backgroundOutline,
+      theme.colors.surface1,
+      theme.colors.surface3,
     ]
   )
 
@@ -579,18 +579,18 @@ function ActionButton({
             gap="none"
             px="spacing12"
             py="spacing16"
-            shadowColor="DEP_white"
+            shadowColor="sporeWhite"
             shadowOffset={SHADOW_OFFSET_SMALL}
             shadowOpacity={0.1}
             shadowRadius={6}
             style={animatedStyle}>
             <Icon
-              color={theme.colors.DEP_magentaVibrant}
+              color={theme.colors.accent1}
               height={theme.iconSizes.icon20}
               strokeWidth={2}
               width={theme.iconSizes.icon20}
             />
-            <Text color="DEP_accentAction" marginLeft="spacing8" variant="buttonLabelMedium">
+            <Text color="accent1" marginLeft="spacing8" variant="buttonLabelMedium">
               {label}
             </Text>
           </AnimatedFlex>

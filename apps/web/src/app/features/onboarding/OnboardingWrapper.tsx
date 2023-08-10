@@ -41,7 +41,7 @@ export function OnboardingWrapper(): JSX.Element {
 
   return (
     <OnboardingContextProvider>
-      <Stack alignItems="center" backgroundColor="$DEP_background1" minHeight="100vh" width="100%">
+      <Stack alignItems="center" backgroundColor="$surface1" minHeight="100vh" width="100%">
         {!isIntroRoute && (
           <Stack padding="$spacing12">
             <Icons.UniswapLogo size={getTokenValue('$icon.36')} />

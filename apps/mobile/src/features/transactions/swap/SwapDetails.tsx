@@ -66,7 +66,7 @@ export function SwapDetails({
           <Flex
             row
             alignItems="center"
-            backgroundColor="DEP_background2"
+            backgroundColor="surface2"
             borderRadius="rounded16"
             flexShrink={1}
             gap="spacing12"
@@ -74,7 +74,7 @@ export function SwapDetails({
             px="spacing12"
             py="spacing12">
             <Flex centered row gap="none">
-              <Text color="DEP_accentActive" variant="subheadSmall">
+              <Text color="accent1" variant="subheadSmall">
                 {t('New rate')}
               </Text>
             </Flex>
@@ -82,7 +82,7 @@ export function SwapDetails({
               <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
                 <Text
                   adjustsFontSizeToFit
-                  color="DEP_accentActive"
+                  color="accent1"
                   numberOfLines={1}
                   textAlign="center"
                   variant="subheadSmall">
@@ -93,12 +93,12 @@ export function SwapDetails({
             <Flex centered row gap="none">
               <Trace logPress element={ElementName.AcceptNewRate}>
                 <TouchableArea
-                  backgroundColor="DEP_accentActive"
+                  backgroundColor="accent1"
                   borderRadius="rounded8"
                   px="spacing8"
                   py="spacing4"
                   onPress={onAcceptTrade}>
-                  <Text color="DEP_textOnBrightPrimary" variant="buttonLabelSmall">
+                  <Text color="sporeWhite" variant="buttonLabelSmall">
                     {t('Accept')}
                   </Text>
                 </TouchableArea>
@@ -121,7 +121,7 @@ export function SwapDetails({
           <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
             <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadSmall">
               {acceptedRate}
-              <Text color="DEP_textSecondary" variant="subheadSmall">
+              <Text color="neutral2" variant="subheadSmall">
                 {usdcPrice && ` (${formatPrice(usdcPrice, NumberType.FiatTokenPrice)})`}
               </Text>
             </Text>
@@ -133,7 +133,7 @@ export function SwapDetails({
           <Flex row gap="spacing4">
             <Text variant="subheadSmall">{t('Max slippage')}</Text>
             <InfoCircle
-              color={theme.colors.DEP_textPrimary}
+              color={theme.colors.neutral1}
               height={theme.iconSizes.icon20}
               width={theme.iconSizes.icon20}
             />
@@ -141,14 +141,14 @@ export function SwapDetails({
         </TouchableArea>
         <Flex row gap="spacing8">
           {!customSlippageTolerance ? (
-            <Flex centered bg="DEP_accentActionSoft" borderRadius="roundedFull" px="spacing8">
-              <Text color="DEP_accentAction" variant="buttonLabelMicro">
+            <Flex centered bg="accent2" borderRadius="roundedFull" px="spacing8">
+              <Text color="accent1" variant="buttonLabelMicro">
                 {t('Auto')}
               </Text>
             </Flex>
           ) : null}
           <Text
-            color={showSlippageWarning ? 'DEP_accentWarning' : 'DEP_textPrimary'}
+            color={showSlippageWarning ? 'DEP_accentWarning' : 'neutral1'}
             variant="subheadSmall">
             {`${acceptedTrade.slippageTolerance.toFixed(2).toString()}%`}
           </Text>

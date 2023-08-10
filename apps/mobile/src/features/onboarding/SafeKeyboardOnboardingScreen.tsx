@@ -49,7 +49,7 @@ export function SafeKeyboardOnboardingScreen({
         {title}
       </Text>
       {subtitle ? (
-        <Text color="DEP_textSecondary" textAlign="center" variant={subtitleSize}>
+        <Text color="neutral2" textAlign="center" variant={subtitleSize}>
           {subtitle}
         </Text>
       ) : null}
@@ -70,7 +70,7 @@ export function SafeKeyboardOnboardingScreen({
 
   const topGradient = (
     <LinearGradient
-      colors={[theme.colors.DEP_background0, opacify(0, theme.colors.DEP_background0)]}
+      colors={[theme.colors.surface1, opacify(0, theme.colors.surface1)]}
       locations={[0.6, 0.8]}
       style={[
         styles.gradient,

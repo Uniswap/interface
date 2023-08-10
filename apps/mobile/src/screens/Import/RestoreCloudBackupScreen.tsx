@@ -54,8 +54,8 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
             return (
               <TouchableArea
                 key={backup.mnemonicId}
-                backgroundColor="DEP_background2"
-                borderColor="DEP_background3"
+                backgroundColor="surface2"
+                borderColor="surface2"
                 borderRadius="rounded16"
                 borderWidth={1}
                 p="spacing16"
@@ -67,21 +67,21 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                       <Text numberOfLines={1} variant="subheadSmall">
                         {t('Backup {{backupIndex}}', { backupIndex: sortedBackups.length - index })}
                       </Text>
-                      <Text color="DEP_textSecondary" variant="buttonLabelMicro">
+                      <Text color="neutral2" variant="buttonLabelMicro">
                         {shortenAddress(mnemonicId)}
                       </Text>
                     </Flex>
                   </Flex>
                   <Flex row gap="spacing12">
                     <Flex alignItems="flex-end" gap="spacing4">
-                      <Text color="DEP_textSecondary" variant="buttonLabelMicro">
+                      <Text color="neutral2" variant="buttonLabelMicro">
                         {t('Backed up on:')}
                       </Text>
                       <Text variant="buttonLabelMicro">
                         {dayjs.unix(createdAt).format('MMM D, YYYY, h:mma')}
                       </Text>
                     </Flex>
-                    <Chevron color={theme.colors.DEP_textPrimary} direction="e" />
+                    <Chevron color={theme.colors.neutral1} direction="e" />
                   </Flex>
                 </Flex>
               </TouchableArea>

@@ -69,8 +69,7 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
       title={
         <Stack paddingHorizontal="$spacing36">
           <Text variant="headlineMedium">
-            What's the{' '}
-            <Text color="$DEP_magentaVibrant">{getNumberWithOrdinal(nextWordNumber)} </Text> word of
+            What's the <Text color="$accent1">{getNumberWithOrdinal(nextWordNumber)} </Text> word of
             your recovery phrase?
           </Text>
         </Stack>
@@ -85,11 +84,7 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
       }
       onSubmit={onNext}>
       <XStack position="relative" width="100%">
-        <Text
-          color="$DEP_textTertiary"
-          padding="$spacing24"
-          position="absolute"
-          variant="headlineSmall">
+        <Text color="$neutral3" padding="$spacing24" position="absolute" variant="headlineSmall">
           {String(nextWordNumber).padStart(2, '0')}
         </Text>
         <OnboardingInput

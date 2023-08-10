@@ -118,7 +118,7 @@ export function TransactionReview({
         {currencyInInfo ? (
           <Flex centered gap={innerGap}>
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Text color="DEP_textTertiary" variant="bodyLarge">
+              <Text color="neutral3" variant="bodyLarge">
                 {recipient ? t('Sending') : t('You pay')}
               </Text>
               <AmountInput
@@ -141,12 +141,12 @@ export function TransactionReview({
                 value={formattedAmountIn}
               />
               {inputCurrencyUSDValue && !isUSDInput ? (
-                <Text color="DEP_textTertiary" variant={equivalentValueTextVariant}>
+                <Text color="neutral3" variant={equivalentValueTextVariant}>
                   {formattedInputUsdValue}
                 </Text>
               ) : null}
               {isUSDInput ? (
-                <Text color="DEP_textTertiary" variant={equivalentValueTextVariant}>
+                <Text color="neutral3" variant={equivalentValueTextVariant}>
                   {/* when sending a token with USD input, show the amount of the token being sent */}
                   {usdTokenEquivalentAmount}
                 </Text>
@@ -163,7 +163,7 @@ export function TransactionReview({
         {currencyOutInfo && formattedAmountOut ? (
           <Flex centered gap={innerGap} pb={{ xs: 'spacing4', sm: 'none' }}>
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Text color="DEP_textTertiary" variant="bodyLarge">
+              <Text color="neutral3" variant="bodyLarge">
                 {t('You receive')}
               </Text>
               <AmountInput
@@ -182,7 +182,7 @@ export function TransactionReview({
                 value={formattedAmountOut}
               />
               {outputCurrencyUSDValue ? (
-                <Text color="DEP_textTertiary" variant={equivalentValueTextVariant}>
+                <Text color="neutral3" variant={equivalentValueTextVariant}>
                   {formattedOutputUsdValue}
                 </Text>
               ) : null}
@@ -191,7 +191,7 @@ export function TransactionReview({
           </Flex>
         ) : recipient ? (
           <Flex centered gap="spacing12">
-            <Text color="DEP_textTertiary" variant="bodyLarge">
+            <Text color="neutral3" variant="bodyLarge">
               {t('To')}
             </Text>
             <Flex centered gap="spacing8">
@@ -211,11 +211,7 @@ export function TransactionReview({
         <Flex row gap="spacing8">
           <Button
             CustomIcon={
-              <Arrow
-                color={theme.colors.DEP_textPrimary}
-                direction="w"
-                size={theme.iconSizes.icon24}
-              />
+              <Arrow color={theme.colors.neutral1} direction="w" size={theme.iconSizes.icon24} />
             }
             emphasis={ButtonEmphasis.Tertiary}
             size={ButtonSize.Large}
@@ -248,7 +244,7 @@ function CurrencyLogoWithLabel({ currencyInfo }: { currencyInfo: CurrencyInfo })
   return (
     <Flex centered row gap={gap}>
       <CurrencyLogo currencyInfo={currencyInfo} size={size} />
-      <Text color="DEP_textPrimary" variant="buttonLabelLarge">
+      <Text color="neutral1" variant="buttonLabelLarge">
         {currencyInfo.currency.symbol}
       </Text>
     </Flex>

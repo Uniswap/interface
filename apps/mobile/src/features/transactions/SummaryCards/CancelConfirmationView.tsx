@@ -19,7 +19,7 @@ import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 const spacerProps: BoxProps = {
-  borderBottomColor: 'DEP_backgroundOutline',
+  borderBottomColor: 'surface3',
   borderBottomWidth: 1,
 }
 
@@ -63,34 +63,29 @@ export function CancelConfirmationView({
     <Flex
       centered
       grow
-      bg="DEP_background1"
+      bg="surface2"
       borderRadius="rounded20"
       gap="spacing24"
       p="spacing24"
       pb="spacing48">
       <Flex
         centered
-        backgroundColor="DEP_background2"
-        borderColor="DEP_textSecondary"
+        backgroundColor="surface2"
+        borderColor="neutral2"
         borderRadius="rounded12"
         padding="spacing12">
-        <SlashCircleIcon
-          color={theme.colors.DEP_textSecondary}
-          height={24}
-          strokeWidth="1"
-          width={24}
-        />
+        <SlashCircleIcon color={theme.colors.neutral2} height={24} strokeWidth="1" width={24} />
       </Flex>
       <Flex centered gap="spacing8">
         <Text variant="buttonLabelMedium">{t('Cancel this transaction?')}</Text>
-        <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
+        <Text color="neutral2" textAlign="center" variant="bodySmall">
           {t(
             'If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.'
           )}
         </Text>
       </Flex>
       <Flex
-        bg="DEP_background2"
+        bg="surface2"
         borderRadius="rounded16"
         gap="none"
         spacerProps={spacerProps}
@@ -107,7 +102,7 @@ export function CancelConfirmationView({
               horizontalGap="spacing8"
               variant="subheadSmall"
             />
-            <Text color="DEP_textSecondary" variant="subheadSmall">
+            <Text color="neutral2" variant="subheadSmall">
               {shortenAddress(transactionDetails.from)}
             </Text>
           </Flex>

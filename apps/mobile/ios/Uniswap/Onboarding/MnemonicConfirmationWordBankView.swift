@@ -83,8 +83,8 @@ struct MnemonicConfirmationWordBankView: View {
               .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
               .fixedSize()
               .padding(shouldShowSmallText ? EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12) : EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
-              .background(Colors.DEP_background1)
-              .foregroundColor(Colors.DEP_textPrimary)
+              .background(Colors.surface2)
+              .foregroundColor(Colors.neutral1)
               .clipShape(RoundedRectangle(cornerRadius: 100, style: .continuous))
               .onTapGesture {
                 labelCallback?(bankWord.word)

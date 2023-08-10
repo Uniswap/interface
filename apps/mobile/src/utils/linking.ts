@@ -26,7 +26,7 @@ export async function openUri(
   openExternalBrowser = false,
   isSafeUri = false,
   // NOTE: okay to use theme object directly as we want the same color for light/dark modes
-  controlsColor = theme.colors.DEP_magentaVibrant
+  controlsColor = theme.colors.accent1
 ): Promise<void> {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {

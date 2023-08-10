@@ -63,11 +63,11 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
   return (
     <Flex gap="$spacing12" paddingHorizontal="$spacing12">
       {loading ? (
-        <Text color="$DEP_textTertiary" fontWeight="600" variant="headlineLarge">
+        <Text color="$neutral3" fontWeight="600" variant="headlineLarge">
           $-,---.--
         </Text>
       ) : error ? (
-        <Text color="$DEP_accentCritical" variant="bodyLarge">
+        <Text color="$statusCritical" variant="bodyLarge">
           Error: {JSON.stringify(error)}
         </Text>
       ) : (

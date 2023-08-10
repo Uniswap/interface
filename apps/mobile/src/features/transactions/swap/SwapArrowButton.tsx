@@ -15,7 +15,7 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
     testID,
     onPress,
     disabled,
-    bg = 'DEP_background1',
+    bg = 'surface2',
     size = theme.iconSizes.icon20,
     ...rest
   } = props
@@ -26,7 +26,7 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
         alignItems="center"
         alignSelf="center"
         bg={bg}
-        borderColor="DEP_background1"
+        borderColor="surface1"
         borderRadius="rounded16"
         borderWidth={4}
         disabled={disabled}
@@ -37,10 +37,10 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
         {...rest}>
         {/* hack to add 2px more padding without adjusting design system values */}
         <Box alignItems="center" justifyContent="center" p="spacing2">
-          <Arrow color={theme.colors.DEP_textSecondary} direction="s" size={size} />
+          <Arrow color={theme.colors.neutral2} direction="s" size={size} />
         </Box>
       </TouchableArea>
     ),
-    [bg, disabled, onPress, testID, rest, theme.colors.DEP_textSecondary, size]
+    [bg, disabled, onPress, testID, rest, theme.colors.neutral2, size]
   )
 }

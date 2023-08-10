@@ -55,14 +55,14 @@ export function Locked(): JSX.Element {
         <Stack paddingBottom="$spacing8">
           <Stack
             alignItems="center"
-            backgroundColor="$DEP_white"
+            backgroundColor="$sporeWhite"
             borderRadius="$rounded24"
             justifyContent="center"
             padding="$spacing12">
             <Image height={ICON_SIZE} source={UNISWAP_LOGO} width={ICON_SIZE} />
           </Stack>
         </Stack>
-        <Text color="$DEP_textPrimary" textAlign="center" variant="headlineMedium">
+        <Text color="$neutral1" textAlign="center" variant="headlineMedium">
           Welcome back
         </Text>
         <Text color="$DEP_accentBranded" textAlign="center" variant="subheadLarge">
@@ -71,14 +71,14 @@ export function Locked(): JSX.Element {
       </YStack>
       <YStack alignItems="stretch" gap="$spacing12">
         {isIncorrectPassword && (
-          <Text color="$DEP_accentCritical" textAlign="center" variant="bodySmall">
+          <Text color="$statusCritical" textAlign="center" variant="bodySmall">
             Wrong password. Try again
           </Text>
         )}
         <Input
           autoFocus
           secureTextEntry
-          borderColor={isIncorrectPassword ? '$DEP_accentCritical' : '$DEP_backgroundOutline'}
+          borderColor={isIncorrectPassword ? '$statusCritical' : '$surface3'}
           borderRadius={100}
           borderWidth={0.5}
           fontSize={16}
@@ -87,11 +87,11 @@ export function Locked(): JSX.Element {
           paddingHorizontal="$spacing24"
           paddingVertical="$spacing16"
           placeholder="Enter password to unlock"
-          placeholderTextColor="$DEP_textTertiary"
+          placeholderTextColor="$neutral3"
           onSubmitEditing={onPress}
           {...passwordInputProps}
-          backgroundColor={isIncorrectPassword ? '$DEP_accentCriticalSoft' : '$DEP_backgroundScrim'}
-          color="$DEP_textPrimary"
+          backgroundColor={isIncorrectPassword ? '$DEP_accentCriticalSoft' : '$scrim'}
+          color="$neutral1"
         />
       </YStack>
       <Button size="large" theme="primary" onPress={onPress}>

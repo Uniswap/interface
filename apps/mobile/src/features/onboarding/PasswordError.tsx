@@ -16,12 +16,12 @@ export function PasswordError({ errorText, style }: PasswordErrorProps): JSX.Ele
   return (
     <AnimatedFlex centered row gap="spacing8" pt="spacing12" px="spacing8" style={style}>
       <AlertTriangle
-        color={theme.colors.DEP_accentCritical}
+        color={theme.colors.statusCritical}
         height={ERROR_ICON_HEIGHT}
         width={ERROR_ICON_HEIGHT}
       />
       <Flex>
-        <Text color="DEP_accentCritical" variant="bodySmall">
+        <Text color="statusCritical" variant="bodySmall">
           {errorText}
         </Text>
       </Flex>

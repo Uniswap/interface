@@ -159,49 +159,42 @@ export interface GlobalPalette {
 }
 
 export interface Palette {
-  DEP_background0: string
-  DEP_background1: string
-  DEP_background2: string
-  DEP_background3: string
-  DEP_backgroundOutline: string
-  DEP_backgroundScrim: string
+  none: string
+
+  sporeWhite: string
+  sporeBlack: string
+
+  surface1: string
+  surface2: string
+  surface3: string
+
+  neutral1: string
+  neutral2: string
+  neutral3: string
+
+  scrim: string
+
+  accent1: string
+  accent2: string
+
+  statusSuccess: string
+  statusCritical: string
+
   DEP_backgroundBranded: string
   DEP_backgroundOverlay: string
   DEP_backgroundActionButton: string
 
-  DEP_textPrimary: string
-  DEP_textSecondary: string
-  DEP_textTertiary: string
-
-  DEP_accentAction: string
-  DEP_accentActive: string
-  DEP_accentSuccess: string
   DEP_accentWarning: string
-  DEP_accentCritical: string
 
   DEP_accentBranded: string
   DEP_shadowBranded: string
 
-  DEP_accentActionSoft: string
-  DEP_accentActiveSoft: string
   DEP_accentSuccessSoft: string
   DEP_accentWarningSoft: string
   DEP_accentCriticalSoft: string
 
-  DEP_textOnBrightPrimary: string
-  DEP_textOnBrightSecondary: string
-  DEP_textOnBrightTertiary: string
-
-  DEP_textOnDimPrimary: string
-  DEP_textOnDimSecondary: string
-  DEP_textOnDimTertiary: string
-
-  DEP_white: string
-  DEP_black: string
-  none: string
   DEP_blue300: string
   DEP_brandedAccentSoft: string
-  DEP_magentaVibrant: string
   DEP_magentaDark: string
 
   chain_1: string

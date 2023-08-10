@@ -36,8 +36,8 @@ export function BottomBanner({
       alignContent="center"
       alignItems="center"
       alignSelf="stretch"
-      backgroundColor={backgroundColor ? backgroundColor : 'DEP_accentActive'}
-      borderColor="DEP_backgroundOutline"
+      backgroundColor={backgroundColor ? backgroundColor : 'accent1'}
+      borderColor="surface3"
       borderRadius="rounded8"
       borderWidth={1}
       bottom={0}

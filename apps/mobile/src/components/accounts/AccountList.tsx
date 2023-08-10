@@ -8,6 +8,7 @@ import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
 import { Box, Flex } from 'src/components/layout'
 import { Spacer } from 'src/components/layout/Spacer'
 import { Text } from 'src/components/Text'
+import { opacify } from 'ui/src/theme/color/utils'
 import { spacing } from 'ui/src/theme/spacing'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -33,9 +34,9 @@ type AccountWithPortfolioValue = {
 const ViewOnlyHeader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
-    <Flex row alignItems="center" borderBottomColor="DEP_backgroundOutline">
+    <Flex row alignItems="center" borderBottomColor="surface3">
       <Box flex={1} px="spacing24">
-        <Text color="DEP_textSecondary" variant="subheadSmall">
+        <Text color="neutral2" variant="subheadSmall">
           {t('View only')}
         </Text>
       </Box>
@@ -107,7 +108,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
     <Box flexShrink={1} position="relative">
       {/* TODO(MOB-646): attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
       <LinearGradient
-        colors={[theme.colors.clearBackground1Backdrop, theme.colors.DEP_background1]}
+        colors={[opacify(0, theme.colors.surface1), theme.colors.surface1]}
         end={{ x: 0, y: 0 }}
         start={{ x: 0, y: 1 }}
         style={ListSheet.topGradient}
@@ -126,7 +127,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
         )}
       </ScrollView>
       <LinearGradient
-        colors={[theme.colors.clearBackground1Backdrop, theme.colors.DEP_background1]}
+        colors={[opacify(0, theme.colors.surface1), theme.colors.surface1]}
         end={{ x: 0, y: 1 }}
         start={{ x: 0, y: 0 }}
         style={ListSheet.bottomGradient}

@@ -25,8 +25,8 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     change,
     variant = 'subheadSmall',
     semanticColor,
-    positiveChangeColor = 'DEP_accentSuccess',
-    negativeChangeColor = 'DEP_accentCritical',
+    positiveChangeColor = 'statusSuccess',
+    negativeChangeColor = 'statusCritical',
     arrowSize = theme.iconSizes.icon16,
     loading = false,
     alignRight = false,
@@ -52,13 +52,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
         <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
       )}
       <Text
-        color={
-          semanticColor
-            ? isPositiveChange
-              ? 'DEP_accentSuccess'
-              : 'DEP_accentCritical'
-            : 'DEP_textSecondary'
-        }
+        color={semanticColor ? (isPositiveChange ? 'statusSuccess' : 'statusCritical') : 'neutral2'}
         loading={loading}
         loadingPlaceholderText="$0.00 (0.00)%"
         variant={variant}>

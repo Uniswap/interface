@@ -24,8 +24,8 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
     <Flex
       centered
       row
-      backgroundColor="DEP_background1"
-      borderColor="DEP_backgroundOutline"
+      backgroundColor="surface2"
+      borderColor="surface3"
       borderRadius="rounded12"
       borderWidth={1}
       gap="none">
@@ -42,7 +42,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
           fontFamily={theme.textVariants.subheadSmall.fontFamily}
           fontSize={theme.textVariants.subheadSmall.fontSize}
           placeholder={placeholder}
-          placeholderTextColor={theme.colors.DEP_textTertiary}
+          placeholderTextColor={theme.colors.neutral3}
           returnKeyType={returnKeyType || 'done'}
           secureTextEntry={!showPassword}
           textContentType="none"
@@ -55,13 +55,13 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
           <TouchableArea p="spacing4" onPress={onPressEyeIcon}>
             {showPassword ? (
               <EyeIcon
-                color={theme.colors.DEP_textSecondary}
+                color={theme.colors.neutral2}
                 height={theme.iconSizes.icon20}
                 width={theme.iconSizes.icon20}
               />
             ) : (
               <EyeOffIcon
-                color={theme.colors.DEP_textSecondary}
+                color={theme.colors.neutral2}
                 height={theme.iconSizes.icon20}
                 width={theme.iconSizes.icon20}
               />

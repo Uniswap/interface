@@ -96,7 +96,7 @@ export function DappConnectionItem({
     <ContextMenu actions={menuActions} style={styles.container} onPress={onPress}>
       <Flex
         grow
-        bg="DEP_background2"
+        bg="surface2"
         borderRadius="rounded16"
         gap="spacing12"
         justifyContent="space-between"
@@ -114,7 +114,7 @@ export function DappConnectionItem({
             <AnimatedTouchableArea
               hapticFeedback
               alignItems="center"
-              backgroundColor="DEP_textTertiary"
+              backgroundColor="neutral3"
               borderRadius="roundedFull"
               entering={FadeIn}
               exiting={FadeOut}
@@ -123,12 +123,7 @@ export function DappConnectionItem({
               width={theme.iconSizes.icon28}
               zIndex="tooltip"
               onPress={onDisconnect}>
-              <Box
-                backgroundColor="DEP_background0"
-                borderRadius="rounded12"
-                height={2}
-                width={14}
-              />
+              <Box backgroundColor="surface1" borderRadius="rounded12" height={2} width={14} />
             </AnimatedTouchableArea>
           ) : (
             <Box height={theme.iconSizes.icon28} width={theme.iconSizes.icon28} />
@@ -139,11 +134,7 @@ export function DappConnectionItem({
           <Text numberOfLines={2} textAlign="center" variant="buttonLabelMedium">
             {dapp.name || dapp.url}
           </Text>
-          <Text
-            color="DEP_accentActive"
-            numberOfLines={1}
-            textAlign="center"
-            variant="buttonLabelMicro">
+          <Text color="accent1" numberOfLines={1} textAlign="center" variant="buttonLabelMicro">
             {dapp.url}
           </Text>
         </Flex>
@@ -158,7 +149,7 @@ export function DappConnectionItem({
             onPress={(): void => onPressChangeNetwork(session)}>
             <NetworkLogos
               showFirstChainLabel
-              backgroundColor="DEP_background3"
+              backgroundColor="surface2"
               borderRadius="roundedFull"
               chains={session.chains}
               p="spacing8"
@@ -188,7 +179,7 @@ function ChangeNetworkButton({
       <Flex
         row
         shrink
-        backgroundColor="DEP_background3"
+        backgroundColor="surface2"
         borderRadius="roundedFull"
         gap="none"
         justifyContent="space-between"
@@ -198,7 +189,7 @@ function ChangeNetworkButton({
             <NetworkLogo chainId={supportedChainId} />
             <Flex shrink>
               <Text
-                color="DEP_textSecondary"
+                color="neutral2"
                 numberOfLines={1}
                 textAlign="center"
                 variant="buttonLabelSmall">
@@ -207,12 +198,12 @@ function ChangeNetworkButton({
             </Flex>
           </Flex>
         ) : (
-          <Text color="DEP_textSecondary" textAlign="center" variant="buttonLabelSmall">
+          <Text color="neutral2" textAlign="center" variant="buttonLabelSmall">
             {t('Unsupported chain')}
           </Text>
         )}
         <Chevron
-          color={theme.colors.DEP_textTertiary}
+          color={theme.colors.neutral3}
           direction="s"
           height={theme.iconSizes.icon20}
           width={theme.iconSizes.icon20}

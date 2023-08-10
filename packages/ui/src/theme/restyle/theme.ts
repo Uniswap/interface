@@ -24,10 +24,9 @@ export const theme = createTheme({
   },
   colors: {
     // The following two colors are the same to accomodate incorrect colors in dark mode. See comment in the dark mode section
-    clearBackground1Backdrop: opacify(0, colorsLight.DEP_background1),
-    translucentBackgroundBackdrop: opacify(50, colorsLight.DEP_background0),
-    translucentBackground: opacify(50, colorsLight.DEP_background0),
-    imageTintBackground: opacify(80, colorsLight.DEP_background1),
+    translucentBackgroundBackdrop: opacify(50, colorsLight.surface1),
+    translucentBackground: opacify(50, colorsLight.surface1),
+    imageTintBackground: opacify(80, colorsLight.surface2),
     ...colorsLight,
   },
   iconSizes,
@@ -40,13 +39,12 @@ export const theme = createTheme({
 export const darkTheme: Theme = {
   ...theme,
   colors: {
-    clearBackground1Backdrop: opacify(0, colorsDark.DEP_background1),
-    translucentBackgroundBackdrop: opacify(5, colorsDark.DEP_background0),
+    translucentBackgroundBackdrop: opacify(5, colorsDark.surface1),
     // This color is incorrect for dark mode but we rely on the incorrect color right now.
     // The translucentBackgroundBackdrop is the correct translucent background in dark mode.
     // TODO: [MOB-252] come up with a better name for translucentBackground and add it to the theme.
-    translucentBackground: opacify(5, colorsDark.DEP_white),
-    imageTintBackground: opacify(80, colorsDark.DEP_background1),
+    translucentBackground: opacify(5, colorsDark.sporeWhite),
+    imageTintBackground: opacify(80, colorsDark.surface2),
     ...colorsDark,
   },
 }

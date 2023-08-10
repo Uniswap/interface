@@ -92,7 +92,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               style={
                 [
                   {
-                    "color": "#0E1524",
+                    "color": "#222222",
                     "display": "flex",
                     "fontFamily": "Inter-Medium",
                     "fontSize": 24,
@@ -123,7 +123,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               style={
                 [
                   {
-                    "color": "#5D6785",
+                    "color": "#7D7D7D",
                     "display": "flex",
                     "fontFamily": "Inter-Regular",
                     "fontSize": 15,
@@ -195,8 +195,8 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     [
                       {
                         "alignItems": "center",
-                        "backgroundColor": "#FFFFFF",
-                        "borderColor": "#F5F6FC",
+                        "backgroundColor": "#F9F9F9",
+                        "borderColor": "#F9F9F9",
                         "borderRadius": 20,
                         "borderWidth": 1,
                         "display": "flex",
@@ -236,17 +236,17 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       onChangeText={[Function]}
                       onFocus={[Function]}
                       onSubmitEditing={[Function]}
-                      placeholderTextColor="#888FAB"
+                      placeholderTextColor="#CECECE"
                       returnKeyType="done"
                       scrollEnabled={false}
-                      selectionColor="#0E1524"
+                      selectionColor="#222222"
                       spellCheck={false}
                       style={
                         [
                           {
                             "backgroundColor": "transparent",
                             "borderRadius": 12,
-                            "color": "#0E1524",
+                            "color": "#222222",
                             "fontSize": 17,
                             "justifyContent": "center",
                             "lineHeight": 17,
@@ -298,7 +298,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       style={
                         [
                           {
-                            "color": "#5D6785",
+                            "color": "#7D7D7D",
                             "display": "flex",
                             "fontFamily": "Inter-Medium",
                             "fontSize": 17,
@@ -352,7 +352,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       style={
                         {
                           "alignItems": "center",
-                          "backgroundColor": "#E8ECFB",
+                          "backgroundColor": "#F9F9F9",
                           "borderColor": "transparent",
                           "borderRadius": 8,
                           "borderWidth": 1,
@@ -377,7 +377,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                         }
                       >
                         <svg
-                          color="#0E1524"
+                          color="#222222"
                           data-file-name="SvgPaste"
                           height={16}
                           strokeWidth={2}
@@ -402,7 +402,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                           style={
                             [
                               {
-                                "color": "#0E1524",
+                                "color": "#222222",
                                 "display": "flex",
                                 "fontFamily": "Inter-SemiBold",
                                 "fontSize": 15,
@@ -437,7 +437,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       style={
                         [
                           {
-                            "color": "#5D6785",
+                            "color": "#7D7D7D",
                             "display": "flex",
                             "fontFamily": "Inter-Medium",
                             "fontSize": 17,

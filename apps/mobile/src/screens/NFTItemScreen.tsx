@@ -131,15 +131,11 @@ export function NFTItemScreen({
   const accentTextColor = useMemo(() => {
     if (
       colorLight &&
-      passesContrast(
-        colorLight,
-        darkTheme.colors.DEP_textOnDimTertiary,
-        MIN_COLOR_CONTRAST_THRESHOLD
-      )
+      passesContrast(colorLight, darkTheme.colors.sporeBlack, MIN_COLOR_CONTRAST_THRESHOLD)
     ) {
       return colorLight
     }
-    return darkTheme.colors.DEP_textSecondary
+    return darkTheme.colors.neutral2
   }, [colorLight])
 
   const onLongPressNFTImage = async (): Promise<void> => {
@@ -169,11 +165,11 @@ export function NFTItemScreen({
         <ExploreModalAwareView>
           <>
             <BlurredImageBackground
-              backgroundColor={colorDark ?? colorsDark.DEP_background3}
+              backgroundColor={colorDark ?? colorsDark.surface2}
               imageUri={imageUrl}
             />
             <HeaderScrollScreen
-              backButtonColor="DEP_textOnBrightPrimary"
+              backButtonColor="sporeWhite"
               backgroundColor="none"
               centerElement={
                 imageUrl ? (
@@ -186,7 +182,7 @@ export function NFTItemScreen({
                     <NFTViewer autoplay uri={imageUrl} />
                   </Box>
                 ) : (
-                  <Text color="DEP_textPrimary" numberOfLines={1} variant="bodyLarge">
+                  <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
                     {name}
                   </Text>
                 )
@@ -203,7 +199,7 @@ export function NFTItemScreen({
                 <Flex
                   gap="spacing12"
                   px="spacing24"
-                  shadowColor="DEP_black"
+                  shadowColor="sporeBlack"
                   shadowOffset={{ width: 0, height: 16 }}
                   shadowOpacity={0.2}
                   shadowRadius={16}>
@@ -219,7 +215,7 @@ export function NFTItemScreen({
                     ) : (
                       <Box
                         aspectRatio={1}
-                        style={{ backgroundColor: colorsDark.DEP_background2 }}
+                        style={{ backgroundColor: colorsDark.surface2 }}
                         width="100%">
                         <BaseCard.ErrorState
                           retryButtonLabel="Retry"
@@ -233,18 +229,14 @@ export function NFTItemScreen({
                   </Flex>
                   {nftLoading ? (
                     <Text
-                      color="DEP_textPrimary"
+                      color="neutral1"
                       loading={nftLoading}
                       loadingPlaceholderText="#0000 NFT Title"
                       mt="spacing4"
                       variant="subheadLarge"
                     />
                   ) : name ? (
-                    <Text
-                      color="DEP_textPrimary"
-                      mt="spacing4"
-                      numberOfLines={2}
-                      variant="subheadLarge">
+                    <Text color="neutral1" mt="spacing4" numberOfLines={2} variant="subheadLarge">
                       {name}
                     </Text>
                   ) : null}
@@ -270,7 +262,7 @@ export function NFTItemScreen({
                   ) : description ? (
                     <LongText
                       renderAsMarkdown
-                      color={darkTheme.colors.DEP_textPrimary}
+                      color={darkTheme.colors.neutral1}
                       initialDisplayedLines={3}
                       readMoreOrLessColor={accentTextColor}
                       text={description || '-'}
@@ -285,9 +277,9 @@ export function NFTItemScreen({
                       title={t('Current price')}
                       valueComponent={
                         <PriceAmount
-                          iconColor="DEP_white"
+                          iconColor="sporeWhite"
                           price={listingPrice}
-                          textColor="DEP_white"
+                          textColor="sporeWhite"
                           textVariant="buttonLabelSmall"
                         />
                       }
@@ -298,9 +290,9 @@ export function NFTItemScreen({
                       title={t('Last sale price')}
                       valueComponent={
                         <PriceAmount
-                          iconColor="DEP_white"
+                          iconColor="sporeWhite"
                           price={lastSaleData.price}
-                          textColor="DEP_white"
+                          textColor="sporeWhite"
                           textVariant="buttonLabelSmall"
                         />
                       }
@@ -317,7 +309,7 @@ export function NFTItemScreen({
                             hideAddressInSubtitle={true}
                             horizontalGap="spacing4"
                             size={darkTheme.iconSizes.icon20}
-                            textColor="DEP_textPrimary"
+                            textColor="neutral1"
                             variant="buttonLabelSmall"
                           />
                         </TouchableArea>
@@ -329,7 +321,7 @@ export function NFTItemScreen({
                 {/* Traits */}
                 {asset?.traits && asset?.traits?.length > 0 ? (
                   <Flex gap="spacing12">
-                    <Text color="DEP_textPrimary" ml="spacing24" variant="buttonLabelSmall">
+                    <Text color="neutral1" ml="spacing24" variant="buttonLabelSmall">
                       {t('Traits')}
                     </Text>
                     <NFTTraitList titleTextColor={accentTextColor} traits={asset.traits} />
@@ -354,7 +346,7 @@ function AssetMetadata({
   return (
     <Flex row alignItems="center" justifyContent="space-between" paddingLeft="spacing2">
       <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start" maxWidth="40%">
-        <Text color="DEP_textSecondary" variant="bodySmall">
+        <Text color="neutral2" variant="bodySmall">
           {title}
         </Text>
       </Flex>
@@ -390,7 +382,7 @@ function RightElement({
         onlyShare ? (
           <TouchableOpacity onPress={menuActions[0]?.onPress}>
             <ShareIcon
-              color={darkTheme.colors.DEP_textPrimary}
+              color={darkTheme.colors.neutral1}
               height={iconSizes.icon24}
               width={iconSizes.icon24}
             />
@@ -398,7 +390,7 @@ function RightElement({
         ) : (
           <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
             <EllipsisIcon
-              color={darkTheme.colors.DEP_textPrimary}
+              color={darkTheme.colors.neutral1}
               height={iconSizes.icon16}
               width={iconSizes.icon16}
             />

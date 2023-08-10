@@ -145,7 +145,7 @@ const specialCaseTokenColors: { [key: string]: string } = {
 
 export function useExtractedColors(
   imageUrl: Maybe<string>,
-  fallback: keyof Theme['colors'] = 'DEP_magentaVibrant',
+  fallback: keyof Theme['colors'] = 'accent1',
   cache = true
 ): { colors?: ExtractedColors; colorsLoading: boolean } {
   const getImageColors = useCallback(async () => {
@@ -196,8 +196,8 @@ function getSpecialCaseTokenColor(imageUrl: Maybe<string>): Nullable<string> {
  * ```ts
  * const { tokenColor, tokenColorLoading } = useExtractedTokenColor(
  *    tokenImageUrl,
- *    theme.colors.DEP_background0,
- *    theme.colors.DEP_textTertiary
+ *    theme.colors.surface1,
+ *    theme.colors.neutral3
  * )
  * ```
  *
@@ -247,17 +247,15 @@ export function useExtractedTokenColor(
  * Picks a contrast-passing text color to put on top of a given background color.
  * The threshold right now is 3.0, which is the WCAG AA standard.
  * @param backgroundColor The hex value of the background color to check contrast against
- * @returns either 'DEP_textOnBrightPrimary' or 'DEP_textOnDimPrimary'
+ * @returns either 'sporeWhite' or 'sporeBlack'
  */
-export function getContrastPassingTextColor(
-  backgroundColor: string
-): 'DEP_textOnBrightPrimary' | 'DEP_textOnDimPrimary' {
-  const lightText = FixedTheme.colors.DEP_textOnBrightPrimary
+export function getContrastPassingTextColor(backgroundColor: string): 'sporeWhite' | 'sporeBlack' {
+  const lightText = FixedTheme.colors.sporeWhite
 
   if (hex(lightText, backgroundColor) >= MIN_COLOR_CONTRAST_THRESHOLD) {
-    return 'DEP_textOnBrightPrimary'
+    return 'sporeWhite'
   }
-  return 'DEP_textOnDimPrimary'
+  return 'sporeBlack'
 }
 
 export function passesContrast(
@@ -306,7 +304,7 @@ function pickContrastPassingColor(extractedColors: ExtractedColors, backgroundHe
       return c
     }
   }
-  return FixedTheme.colors.DEP_magentaVibrant
+  return FixedTheme.colors.accent1
 }
 
 /**

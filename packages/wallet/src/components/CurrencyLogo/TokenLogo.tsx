@@ -36,7 +36,7 @@ export function TokenLogo({
       tokenImage = (
         <Box borderRadius={size / 2} overflow="hidden">
           <RemoteSvg
-            backgroundColor={theme.DEP_backgroundOutline.get()}
+            backgroundColor={theme.surface3.get()}
             borderRadius={size / 2}
             height={size}
             imageHttpUrl={httpUri}
@@ -51,11 +51,11 @@ export function TokenLogo({
           style={[
             style.image,
             {
-              backgroundColor: theme.DEP_backgroundOutline.get(),
+              backgroundColor: theme.surface3.get(),
               width: size,
               height: size,
               borderRadius: size / 2,
-              borderColor: theme.DEP_backgroundOutline.get(),
+              borderColor: theme.surface3.get(),
               borderWidth: THIN_BORDER,
             },
           ]}
@@ -71,7 +71,7 @@ export function TokenLogo({
       ) : (
         <Box
           alignItems="center"
-          bg="$DEP_backgroundOutline"
+          bg="$surface3"
           borderRadius="$roundedFull"
           height={size}
           justifyContent="center"
@@ -79,7 +79,7 @@ export function TokenLogo({
           width={size}>
           <Text
             adjustsFontSizeToFit
-            color="$DEP_textPrimary"
+            color="$neutral1"
             flex={0}
             numberOfLines={1}
             textAlign="center">

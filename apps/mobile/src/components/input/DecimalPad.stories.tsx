@@ -8,7 +8,7 @@ export default {
   component: DecimalPad,
   decorators: [
     (Story): JSX.Element => (
-      <Box bg="DEP_background3" height={300} width={300}>
+      <Box bg="surface2" height={300} width={300}>
         <Story />
       </Box>
     ),

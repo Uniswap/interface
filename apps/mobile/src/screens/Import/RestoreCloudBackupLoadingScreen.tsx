@@ -90,7 +90,7 @@ export function RestoreCloudBackupLoadingScreen({
           description={t(`It looks like you haven't backed up any of your seed phrases to iCloud.`)}
           icon={
             <CloudIcon
-              color={theme.colors.DEP_textTertiary}
+              color={theme.colors.neutral3}
               height={theme.imageSizes.image48}
               width={theme.imageSizes.image48}
             />

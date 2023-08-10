@@ -180,32 +180,28 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
   const { t } = useTranslation()
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.DEP_background1}
+      backgroundColor={theme.colors.surface2}
       hideHandlebar={true}
       isDismissible={false}
       name={ModalName.SeedPhraseWarningModal}>
       <Flex centered gap="spacing12" pb="spacing48" pt="spacing12" px="spacing24">
-        <Flex
-          centered
-          backgroundColor="DEP_background3"
-          borderRadius="roundedFull"
-          padding="spacing8">
+        <Flex centered backgroundColor="surface2" borderRadius="roundedFull" padding="spacing8">
           <LockIcon
-            color={theme.colors.DEP_textPrimary}
+            color={theme.colors.neutral1}
             height={theme.iconSizes.icon24}
             width={theme.iconSizes.icon24}
           />
         </Flex>
-        <Text color="DEP_textPrimary" variant="bodyLarge">
+        <Text color="neutral1" variant="bodyLarge">
           {t('Do this step in a private place')}
         </Text>
-        <Text color="DEP_textTertiary" textAlign="center" variant="bodySmall">
+        <Text color="neutral3" textAlign="center" variant="bodySmall">
           {t(
             'Your recovery phrase is what grants you (and anyone who has it) access to your funds. Be sure to store it in a memorable, safe space.'
           )}
         </Text>
         <TouchableOpacity onPress={onPress}>
-          <Text color="DEP_magentaVibrant" paddingTop="spacing24" variant="buttonLabelMedium">
+          <Text color="accent1" paddingTop="spacing24" variant="buttonLabelMedium">
             {t('I’m ready')}
           </Text>
         </TouchableOpacity>

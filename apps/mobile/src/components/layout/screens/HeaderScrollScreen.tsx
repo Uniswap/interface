@@ -33,7 +33,7 @@ export function HeaderScrollScreen({
   fullScreen = false,
   renderedInModal = false,
   showHandleBar = false,
-  backgroundColor = 'DEP_background0',
+  backgroundColor = 'surface1',
   backButtonColor,
   children,
 }: PropsWithChildren<HeaderScrollScreenProps>): JSX.Element {
@@ -60,7 +60,7 @@ export function HeaderScrollScreen({
 
   return (
     <Screen bg={backgroundColor} edges={['top', 'left', 'right']} noInsets={fullScreen}>
-      {showHandleBar ? <HandleBar backgroundColor={theme.colors.DEP_background0} /> : null}
+      {showHandleBar ? <HandleBar backgroundColor={theme.colors.surface1} /> : null}
       <ScrollHeader
         alwaysShowCenterElement={alwaysShowCenterElement}
         backButtonColor={backButtonColor}

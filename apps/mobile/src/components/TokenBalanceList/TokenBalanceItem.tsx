@@ -83,7 +83,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               {currency.name ?? currency.symbol}
             </Text>
             <Flex row alignItems="center" gap="spacing8" minHeight={20}>
-              <Text color="DEP_textSecondary" numberOfLines={1} variant="subheadSmall">
+              <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
                 {`${formatNumber(quantity)}`} {currency.symbol}
               </Text>
             </Flex>
@@ -93,22 +93,22 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
             {!portfolioBalance.balanceUSD ? (
               <Flex centered flex={1}>
-                <Text color="DEP_textSecondary">{t('N/A')}</Text>
+                <Text color="neutral2">{t('N/A')}</Text>
               </Flex>
             ) : (
               <Flex alignItems="flex-end" gap="spacing4" pl="spacing8">
                 <Text
-                  color={isWarmLoading ? 'DEP_textSecondary' : 'DEP_textPrimary'}
+                  color={isWarmLoading ? 'neutral2' : 'neutral1'}
                   numberOfLines={1}
                   variant="bodyLarge">
                   {formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
                 </Text>
-                <Text color="DEP_textSecondary">
+                <Text color="neutral2">
                   <RelativeChange
                     alignRight
                     change={relativeChange24 ?? undefined}
-                    negativeChangeColor={isWarmLoading ? 'DEP_textSecondary' : 'DEP_accentCritical'}
-                    positiveChangeColor={isWarmLoading ? 'DEP_textSecondary' : 'DEP_accentSuccess'}
+                    negativeChangeColor={isWarmLoading ? 'neutral2' : 'statusCritical'}
+                    positiveChangeColor={isWarmLoading ? 'neutral2' : 'statusSuccess'}
                     variant="subheadSmall"
                   />
                 </Text>

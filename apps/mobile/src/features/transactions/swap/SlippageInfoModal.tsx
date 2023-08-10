@@ -53,7 +53,7 @@ export default function SlippageInfoModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.DEP_background1}
+      backgroundColor={theme.colors.surface2}
       name={ModalName.SlippageInfo}
       onClose={onClose}>
       <Flex centered fill gap="spacing16" mb="spacing12" p="spacing24">
@@ -62,10 +62,10 @@ export default function SlippageInfoModal({
           borderRadius="rounded12"
           p="spacing12"
           style={{
-            backgroundColor: opacify(12, theme.colors.DEP_textTertiary),
+            backgroundColor: opacify(12, theme.colors.neutral3),
           }}>
           <SettingsIcon
-            color={theme.colors.DEP_textTertiary}
+            color={theme.colors.neutral3}
             height={theme.iconSizes.icon28}
             width={theme.iconSizes.icon28}
           />
@@ -73,7 +73,7 @@ export default function SlippageInfoModal({
         <Text textAlign="center" variant="bodyLarge">
           {t('Maximum slippage')}
         </Text>
-        <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
+        <Text color="neutral2" textAlign="center" variant="bodySmall">
           {tradeType === TradeType.EXACT_INPUT
             ? t(
                 'If the price slips any further, your transaction will revert. Below is the minimum amount you are guaranteed to receive.'
@@ -82,34 +82,34 @@ export default function SlippageInfoModal({
                 'If the price slips any further, your transaction will revert. Below is the maximum amount you would need to spend.'
               )}{' '}
           <TouchableArea height={18} onPress={onPressLearnMore}>
-            <Text color="DEP_accentActive" variant="buttonLabelSmall">
+            <Text color="accent1" variant="buttonLabelSmall">
               {t('Learn more')}
             </Text>
           </TouchableArea>
         </Text>
-        <Flex fill bg="DEP_background2" borderRadius="rounded20" p="spacing12" width="100%">
+        <Flex fill bg="surface2" borderRadius="rounded20" p="spacing12" width="100%">
           <Flex fill row justifyContent="space-between">
-            <Text color="DEP_textSecondary" variant="bodySmall">
+            <Text color="neutral2" variant="bodySmall">
               {t('Max slippage')}
             </Text>
             <Flex row gap="spacing8">
               {!isCustomSlippage ? (
-                <Flex centered bg="DEP_accentActionSoft" borderRadius="roundedFull" px="spacing8">
-                  <Text color="DEP_accentAction" variant="buttonLabelMicro">
+                <Flex centered bg="accent2" borderRadius="roundedFull" px="spacing8">
+                  <Text color="accent1" variant="buttonLabelMicro">
                     {t('Auto')}
                   </Text>
                 </Flex>
               ) : null}
               <Text
-                color={showSlippageWarning ? 'DEP_accentWarning' : 'DEP_textPrimary'}
+                color={showSlippageWarning ? 'DEP_accentWarning' : 'neutral1'}
                 variant="subheadSmall">{`${slippageTolerance.toFixed(2).toString()}%`}</Text>
             </Flex>
           </Flex>
           <Flex fill row justifyContent="space-between">
-            <Text color="DEP_textSecondary" variant="bodySmall">
+            <Text color="neutral2" variant="bodySmall">
               {tradeType === TradeType.EXACT_INPUT ? t('Receive at least') : t('Spend at most')}
             </Text>
-            <Text color="DEP_textPrimary" textAlign="center" variant="subheadSmall">
+            <Text color="neutral1" textAlign="center" variant="subheadSmall">
               {amount + ' ' + symbol}
             </Text>
           </Flex>

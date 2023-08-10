@@ -48,7 +48,7 @@ export function LinkButton({
           {label}
         </Text>
         <ExternalLinkIcon
-          color={iconColor ?? color ?? theme.colors.DEP_accentActive}
+          color={iconColor ?? color ?? theme.colors.accent1}
           height={size}
           strokeWidth={1.5}
           width={size}

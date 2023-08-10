@@ -87,12 +87,12 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         await menuActions[e.nativeEvent.index]?.action()
       }}>
       <TouchableArea
-        backgroundColor="DEP_textOnDimTertiary"
+        backgroundColor="sporeBlack"
         borderRadius="roundedFull"
         opacity={0.8}
         padding="spacing8">
         <Flex centered grow height={theme.iconSizes.icon16} width={theme.iconSizes.icon16}>
-          <TripleDot color="DEP_white" size={3.5} />
+          <TripleDot color="sporeWhite" size={3.5} />
         </Flex>
       </TouchableArea>
     </ContextMenu>

@@ -77,13 +77,13 @@ export function ForceUpgradeModal(): JSX.Element {
           title={t('Update the app to continue')}
           onClose={onClose}
           onConfirm={onPressConfirm}>
-          <Text color="DEP_textSecondary" textAlign="center" variant="bodySmall">
+          <Text color="neutral2" textAlign="center" variant="bodySmall">
             {t(
               'The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets.'
             )}
           </Text>
           {mnemonicId && (
-            <Text color="DEP_accentActive" variant="buttonLabelSmall" onPress={onPressViewRecovery}>
+            <Text color="accent1" variant="buttonLabelSmall" onPress={onPressViewRecovery}>
               {t('View recovery phrase')}
             </Text>
           )}
@@ -92,7 +92,7 @@ export function ForceUpgradeModal(): JSX.Element {
       {mnemonicId && showSeedPhrase && (
         <BottomSheetModal
           fullScreen
-          backgroundColor={theme.colors.DEP_background0}
+          backgroundColor={theme.colors.surface1}
           name={ModalName.ForceUpgradeModal}
           onClose={onDismiss}>
           <Box flex={1} px="spacing24" py="spacing24">

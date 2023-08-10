@@ -43,9 +43,9 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.E
 
   return (
     <LinkButton
-      backgroundColor="DEP_backgroundOutline"
+      backgroundColor="surface3"
       borderRadius="rounded12"
-      iconColor={theme.colors.DEP_textPrimary}
+      iconColor={theme.colors.neutral1}
       label={name || shortenAddress(address)}
       px="spacing8"
       py="spacing4"
@@ -74,7 +74,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
         if (typeof childValue === 'object') {
           return (
             <Flex key={objKey} gap="spacing4">
-              <Text color="DEP_textTertiary" style={{ marginLeft: depth * 10 }} variant="monospace">
+              <Text color="neutral3" style={{ marginLeft: depth * 10 }} variant="monospace">
                 {objKey}
               </Text>
               {getParsedObjectDisplay(chainId, childValue, depth + 1)}
@@ -90,7 +90,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
               alignItems="flex-start"
               gap="spacing8"
               style={{ marginLeft: depth * 10 }}>
-              <Text color="DEP_textTertiary" py="spacing4" variant="monospace">
+              <Text color="neutral3" py="spacing4" variant="monospace">
                 {objKey}
               </Text>
               <Flex flexShrink={1}>
@@ -161,22 +161,22 @@ function TransactionDetails({
       ) : null}
       {to ? (
         <Flex row alignItems="center" gap="spacing16">
-          <Text color="DEP_textSecondary" variant="bodySmall">
+          <Text color="neutral2" variant="bodySmall">
             {t('To')}:
           </Text>
           <AddressButton address={to} chainId={chainId} />
         </Flex>
       ) : null}
       <Flex row alignItems="center" gap="spacing16">
-        <Text color="DEP_textSecondary" variant="bodySmall">
+        <Text color="neutral2" variant="bodySmall">
           {t('Function')}:
         </Text>
         <Box
-          backgroundColor={isLoading ? 'none' : 'DEP_backgroundOutline'}
+          backgroundColor={isLoading ? 'none' : 'surface3'}
           borderRadius="rounded12"
           px="spacing8"
           py="spacing4">
-          <Text color="DEP_textPrimary" loading={isLoading} variant="monospace">
+          <Text color="neutral1" loading={isLoading} variant="monospace">
             {parsedData ? parsedData.name : t('Unknown')}
           </Text>
         </Box>
@@ -220,7 +220,7 @@ function RequestDetailsContent({ request }: Props): JSX.Element {
   return message ? (
     <Text variant="bodySmall">{message}</Text>
   ) : (
-    <Text color="DEP_textSecondary" variant="bodySmall">
+    <Text color="neutral2" variant="bodySmall">
       {t('No message found.')}
     </Text>
   )

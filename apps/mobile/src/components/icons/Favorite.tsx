@@ -21,13 +21,11 @@ const ANIMATION_CONFIG = { duration: DELAY }
 export const Favorite = ({ isFavorited, size }: FavoriteButtonProps): JSX.Element => {
   const theme = useAppTheme()
   const isDarkMode = useIsDarkMode()
-  const unfilledColor = isDarkMode
-    ? theme.colors.DEP_textTertiary
-    : theme.colors.DEP_backgroundOutline
+  const unfilledColor = isDarkMode ? theme.colors.neutral3 : theme.colors.surface3
 
   const getColor = useCallback(
-    () => (isFavorited ? theme.colors.DEP_accentAction : unfilledColor),
-    [isFavorited, theme.colors.DEP_accentAction, unfilledColor]
+    () => (isFavorited ? theme.colors.accent1 : unfilledColor),
+    [isFavorited, theme.colors.accent1, unfilledColor]
   )
 
   const [color, setColor] = useState(getColor())

@@ -144,7 +144,7 @@ export function NFTCollectionScreen({
     return (
       <Box
         aspectRatio={1}
-        backgroundColor="DEP_backgroundOutline"
+        backgroundColor="surface3"
         borderRadius="rounded16"
         flex={1}
         overflow="hidden"
@@ -171,12 +171,12 @@ export function NFTCollectionScreen({
               <ListPriceBadge
                 bottom={theme.spacing.spacing4}
                 gap="none"
-                iconColor="DEP_white"
+                iconColor="sporeWhite"
                 iconSize="icon12"
                 position="absolute"
                 price={item.listPrice}
                 right={theme.spacing.spacing4}
-                textColor="DEP_white"
+                textColor="sporeWhite"
               />
             )}
           </TouchableArea>

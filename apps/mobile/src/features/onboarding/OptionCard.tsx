@@ -46,8 +46,8 @@ export function OptionCard({
   return (
     <Trace logPress element={elementName}>
       <TouchableArea
-        backgroundColor="DEP_background1"
-        borderColor={isDarkMode ? 'none' : 'DEP_backgroundScrim'}
+        backgroundColor="surface2"
+        borderColor={isDarkMode ? 'none' : 'surface3'}
         borderRadius="rounded20"
         borderWidth={1}
         disabled={disabled}
@@ -79,13 +79,13 @@ export function OptionCard({
                     backgroundColor="DEP_magentaDark"
                     borderRadius="rounded8"
                     px="spacing8">
-                    <Text color="DEP_magentaVibrant" variant="buttonLabelMicro">
+                    <Text color="accent1" variant="buttonLabelMicro">
                       {badgeText}
                     </Text>
                   </Flex>
                 )}
               </Flex>
-              <Text allowFontScaling={false} color="DEP_textSecondary" variant="bodySmall">
+              <Text allowFontScaling={false} color="neutral2" variant="bodySmall">
                 {blurb}
               </Text>
             </Flex>

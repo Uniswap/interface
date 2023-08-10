@@ -116,7 +116,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         closeText={t('Dismiss')}
         icon={
           <EyeIcon
-            color={theme.colors.DEP_textSecondary}
+            color={theme.colors.neutral2}
             height={theme.iconSizes.icon24}
             strokeWidth={1.5}
             width={theme.iconSizes.icon24}
@@ -127,11 +127,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         title={t('This wallet is in view only mode')}
         onCancel={onClose}
         onClose={onClose}>
-        <Box
-          alignSelf="stretch"
-          backgroundColor="DEP_background2"
-          borderRadius="rounded16"
-          p="spacing16">
+        <Box alignSelf="stretch" backgroundColor="surface2" borderRadius="rounded16" p="spacing16">
           <AccountDetails address={currRequest.account} iconSize={theme.iconSizes.icon24} />
         </Box>
       </WarningModal>

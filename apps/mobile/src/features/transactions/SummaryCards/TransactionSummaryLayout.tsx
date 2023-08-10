@@ -94,11 +94,11 @@ function TransactionSummaryLayout({
 
   const formattedAddedTime = useFormattedTime(transaction.addedTime)
 
-  const statusIconFill = theme.colors.DEP_background0
+  const statusIconFill = theme.colors.surface1
 
   const rightBlock = inCancelling ? (
     <SlashCircleIcon
-      color={theme.colors.DEP_accentCritical}
+      color={theme.colors.statusCritical}
       fill={statusIconFill}
       fillOpacity={1}
       height={TXN_STATUS_ICON_SIZE}
@@ -114,7 +114,7 @@ function TransactionSummaryLayout({
       />
     </Box>
   ) : (
-    <Text color="DEP_textTertiary" variant="bodyMicro">
+    <Text color="neutral3" variant="bodyMicro">
       {formattedAddedTime}
     </Text>
   )
@@ -122,7 +122,7 @@ function TransactionSummaryLayout({
   return (
     <>
       <TouchableArea mb="spacing24" overflow="hidden" onPress={onPress}>
-        <Flex grow row bg="DEP_background0" gap="spacing12">
+        <Flex grow row bg="surface1" gap="spacing12">
           {icon && (
             <Flex centered width={TXN_HISTORY_ICON_SIZE}>
               {icon}
@@ -131,20 +131,20 @@ function TransactionSummaryLayout({
           <Flex grow shrink gap="none">
             <Flex grow gap="none">
               <Flex grow row alignItems="center" gap="spacing4" justifyContent="space-between">
-                <Text color="DEP_textSecondary" numberOfLines={1} variant="bodyLarge">
+                <Text color="neutral2" numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row>
                 <Box flexGrow={1} flexShrink={1}>
-                  <Text color="DEP_textPrimary" variant="subheadSmall">
+                  <Text color="neutral1" variant="subheadSmall">
                     {caption}
                   </Text>
                 </Box>
                 {status === TransactionStatus.Failed && onRetry && (
                   <Box flexShrink={0}>
-                    <Text color="DEP_accentActive" variant="buttonLabelSmall" onPress={onRetry}>
+                    <Text color="accent1" variant="buttonLabelSmall" onPress={onRetry}>
                       {t('Retry')}
                     </Text>
                   </Box>

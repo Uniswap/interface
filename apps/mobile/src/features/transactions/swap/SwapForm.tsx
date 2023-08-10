@@ -236,7 +236,7 @@ function _SwapForm({
           gap="spacing2"
           onLayout={onInputPanelLayout}>
           <Trace section={SectionName.CurrencyInputPanel}>
-            <Flex backgroundColor="DEP_background2" borderRadius="rounded20">
+            <Flex backgroundColor="surface2" borderRadius="rounded20">
               <CurrencyInputPanel
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
@@ -277,7 +277,7 @@ function _SwapForm({
                 position="absolute">
                 <Trace logPress element={ElementName.SwitchCurrenciesButton}>
                   <SwapArrowButton
-                    bg="DEP_background2"
+                    bg="surface2"
                     size={SWAP_DIRECTION_BUTTON_SIZE}
                     onPress={onSwitchCurrencies}
                   />
@@ -289,7 +289,7 @@ function _SwapForm({
           <Trace section={SectionName.CurrencyOutputPanel}>
             <Box>
               <Flex
-                backgroundColor="DEP_background2"
+                backgroundColor="surface2"
                 borderBottomLeftRadius={swapWarning || showRate || isBlocked ? 'none' : 'rounded20'}
                 borderBottomRightRadius={
                   swapWarning || showRate || isBlocked ? 'none' : 'rounded20'
@@ -325,10 +325,10 @@ function _SwapForm({
                       row
                       alignItems="center"
                       alignSelf="stretch"
-                      backgroundColor="DEP_background2"
+                      backgroundColor="surface2"
                       borderBottomLeftRadius="rounded16"
                       borderBottomRightRadius="rounded16"
-                      borderTopColor="DEP_background0"
+                      borderTopColor="surface1"
                       borderTopWidth={1}
                       flexGrow={1}
                       gap="spacing8"
@@ -352,7 +352,7 @@ function _SwapForm({
                     row
                     alignItems="center"
                     alignSelf="stretch"
-                    backgroundColor="DEP_background2"
+                    backgroundColor="surface2"
                     borderBottomLeftRadius="rounded16"
                     borderBottomRightRadius="rounded16"
                     flexGrow={1}
@@ -372,7 +372,7 @@ function _SwapForm({
                           : swapWarning.title}
                       </Text>
                       {isPriceImpactWarning(swapWarning) && (
-                        <Text color="DEP_textSecondary" variant="bodySmall">
+                        <Text color="neutral2" variant="bodySmall">
                           {rateUnitPrice &&
                             ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}
                         </Text>
@@ -386,7 +386,7 @@ function _SwapForm({
                   row
                   alignItems="center"
                   alignSelf="stretch"
-                  backgroundColor="DEP_background2"
+                  backgroundColor="surface2"
                   borderBottomLeftRadius="rounded16"
                   borderBottomRightRadius="rounded16"
                   flexGrow={1}
@@ -401,10 +401,10 @@ function _SwapForm({
                     row
                     alignItems="center"
                     alignSelf="stretch"
-                    backgroundColor="DEP_background2"
+                    backgroundColor="surface2"
                     borderBottomLeftRadius="rounded16"
                     borderBottomRightRadius="rounded16"
-                    borderTopColor="DEP_background0"
+                    borderTopColor="surface1"
                     borderTopWidth={1}
                     flexGrow={1}
                     gap="spacing8"
@@ -414,21 +414,21 @@ function _SwapForm({
                       <SpinningLoader size={theme.iconSizes.icon20} />
                     ) : (
                       <InfoCircle
-                        color={theme.colors.DEP_textPrimary}
+                        color={theme.colors.neutral1}
                         height={theme.iconSizes.icon20}
                         width={theme.iconSizes.icon20}
                       />
                     )}
                     <Flex row gap="none">
                       <Text
-                        color={swapDataRefreshing ? 'DEP_textTertiary' : undefined}
+                        color={swapDataRefreshing ? 'neutral3' : undefined}
                         variant="subheadSmall">
                         {trade.trade
                           ? getRateToDisplay(trade.trade, showInverseRate)
                           : t('Fetching price...')}
                       </Text>
                       <Text
-                        color={swapDataRefreshing ? 'DEP_textTertiary' : 'DEP_textSecondary'}
+                        color={swapDataRefreshing ? 'neutral3' : 'neutral2'}
                         variant="subheadSmall">
                         {rateUnitPrice &&
                           ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}

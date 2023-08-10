@@ -78,14 +78,14 @@ function AppearanceOption({
       py="spacing12"
       onPress={(): Action => dispatch(setSelectedAppearanceSettings(option))}>
       <Icon
-        color={theme.colors.DEP_textTertiary}
+        color={theme.colors.neutral3}
         height={theme.iconSizes.icon24}
         strokeWidth={1.5}
         width={theme.iconSizes.icon24}
       />
       <Flex gap="none" ml="spacing16">
         <Text variant="bodyLarge">{title}</Text>
-        <Text color="DEP_textSecondary" pr="spacing12" variant="bodySmall">
+        <Text color="neutral2" pr="spacing12" variant="bodySmall">
           {subtitle}
         </Text>
       </Flex>
@@ -93,7 +93,7 @@ function AppearanceOption({
         {active ? (
           <Flex row alignItems="center" gap="spacing4">
             <Check
-              color={theme.colors.DEP_accentAction}
+              color={theme.colors.accent1}
               height={theme.iconSizes.icon24}
               width={theme.iconSizes.icon24}
             />

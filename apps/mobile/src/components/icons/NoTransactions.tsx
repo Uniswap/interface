@@ -10,14 +10,9 @@ export const NoTransactions = memo(function _NoTransactions() {
     <Box mb="spacing24">
       <OverlayIcon
         bottom={-23}
-        icon={<NoTransactionBgIcon color={theme.colors.DEP_textSecondary} />}
+        icon={<NoTransactionBgIcon color={theme.colors.neutral2} />}
         left={5}
-        overlay={
-          <NoTransactionFgIcon
-            color={theme.colors.DEP_background3}
-            fill={theme.colors.DEP_accentAction}
-          />
-        }
+        overlay={<NoTransactionFgIcon color={theme.colors.surface2} fill={theme.colors.accent1} />}
       />
     </Box>
   )

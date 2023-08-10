@@ -71,13 +71,13 @@ export function ExploreScreen(): JSX.Element {
     setIsSearchMode(false)
   }
 
-  // Handle special case with design system light colors because DEP_background1 is the same as DEP_background0
+  // Handle special case with design system light colors because surface2 is the same as surface1
   const contrastBackgroundColor: keyof Theme['colors'] = isDarkMode
     ? 'DEP_backgroundOverlay'
-    : 'DEP_background1'
+    : 'surface2'
   const searchBarBackgroundColor: keyof Theme['colors'] = isDarkMode
     ? 'DEP_backgroundOverlay'
-    : 'DEP_background1'
+    : 'surface2'
 
   const onScroll = useCallback(() => {
     textInputRef.current?.blur()
@@ -156,14 +156,14 @@ const BlurredBackground = memo(function BlurredBackground({ isDarkMode }: { isDa
         blurAmount={5}
         blurType={isDarkMode ? 'dark' : 'xlight'}
         enabled={blurEnabled}
-        reducedTransparencyFallbackColor={isDarkMode ? 'DEP_black' : 'DEP_white'}
+        reducedTransparencyFallbackColor={isDarkMode ? 'sporeBlack' : 'sporeWhite'}
         style={BlurViewStyle.base}
       />
       {IS_ANDROID ? (
         <Animated.View
           style={[
             StyleSheet.absoluteFill,
-            { backgroundColor: theme.colors.DEP_background0 },
+            { backgroundColor: theme.colors.surface1 },
             overlayStyle,
           ]}
         />

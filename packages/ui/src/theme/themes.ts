@@ -17,16 +17,16 @@ const light = createTheme({
 
   // Tamagui Theme
   // Tamagui components expect the following
-  background: colorsLight.DEP_background0,
-  backgroundHover: colorsLight.DEP_background1,
-  backgroundPress: colorsLight.DEP_background1,
-  backgroundFocus: colorsLight.DEP_background1,
+  background: colorsLight.surface1,
+  backgroundHover: colorsLight.surface2,
+  backgroundPress: colorsLight.surface2,
+  backgroundFocus: colorsLight.surface2,
   borderColor: colorsLight.none,
   borderColorHover: colorsLight.none,
-  color: colorsLight.DEP_textPrimary,
-  colorHover: colorsLight.DEP_magentaVibrant,
-  colorPress: colorsLight.DEP_magentaVibrant,
-  colorFocus: colorsLight.DEP_magentaVibrant,
+  color: colorsLight.neutral1,
+  colorHover: colorsLight.accent1,
+  colorPress: colorsLight.accent1,
+  colorFocus: colorsLight.accent1,
   shadowColor: colorsLight.none,
   shadowColorHover: colorsLight.none,
 })
@@ -35,16 +35,16 @@ type BaseTheme = typeof light
 const dark: BaseTheme = {
   ...light,
   ...colorsDark,
-  background: colorsDark.DEP_background0,
-  backgroundHover: colorsDark.DEP_background1,
-  backgroundPress: colorsDark.DEP_background1,
-  backgroundFocus: colorsDark.DEP_background1,
+  background: colorsDark.surface1,
+  backgroundHover: colorsDark.surface2,
+  backgroundPress: colorsDark.surface2,
+  backgroundFocus: colorsDark.surface2,
   borderColor: colorsDark.none,
   borderColorHover: colorsDark.none,
-  color: colorsDark.DEP_textPrimary,
-  colorHover: colorsDark.DEP_magentaVibrant,
-  colorPress: colorsDark.DEP_magentaVibrant,
-  colorFocus: colorsDark.DEP_magentaVibrant,
+  color: colorsDark.neutral1,
+  colorHover: colorsDark.accent1,
+  colorPress: colorsDark.accent1,
+  colorFocus: colorsDark.accent1,
   shadowColor: colorsDark.none,
   shadowColorHover: colorsDark.none,
 }
@@ -68,11 +68,11 @@ const dark: BaseTheme = {
 
 const light_branded: BaseTheme = {
   ...light,
-  color: colorsLight.DEP_magentaVibrant,
+  color: colorsLight.accent1,
 }
 const dark_branded: BaseTheme = {
   ...dark,
-  color: colorsDark.DEP_magentaVibrant,
+  color: colorsDark.accent1,
 }
 const light_primary: BaseTheme = {
   ...light,
@@ -85,7 +85,7 @@ const light_secondary: BaseTheme = {
 }
 const dark_secondary: BaseTheme = {
   ...dark,
-  color: colorsDark.DEP_textSecondary,
+  color: colorsDark.neutral2,
 }
 const light_tertiary: BaseTheme = {
   ...light,
@@ -111,38 +111,38 @@ const dark_warning: BaseTheme = {
 // theme: light
 const light_primary_Button: BaseTheme = {
   ...light,
-  background: colorsLight.DEP_magentaVibrant,
-  backgroundHover: hoverColor(colorsLight.DEP_magentaVibrant),
-  backgroundPress: pressedColor(colorsLight.DEP_magentaVibrant),
-  color: colorsLight.DEP_white,
+  background: colorsLight.accent1,
+  backgroundHover: hoverColor(colorsLight.accent1),
+  backgroundPress: pressedColor(colorsLight.accent1),
+  color: colorsLight.sporeWhite,
 }
 
 // theme: dark
 const dark_primary_Button: BaseTheme = {
   ...dark,
-  background: colorsDark.DEP_magentaVibrant,
-  backgroundHover: hoverColor(colorsDark.DEP_magentaVibrant),
-  backgroundPress: pressedColor(colorsDark.DEP_magentaVibrant),
-  color: colorsDark.DEP_white,
+  background: colorsDark.accent1,
+  backgroundHover: hoverColor(colorsDark.accent1),
+  backgroundPress: pressedColor(colorsDark.accent1),
+  color: colorsDark.sporeWhite,
 }
 
 // secondary
 // theme: light
 const light_secondary_Button: BaseTheme = {
   ...light,
-  background: colorsLight.DEP_background3,
-  backgroundHover: hoverColor(colorsLight.DEP_background3),
-  backgroundPress: pressedColor(colorsLight.DEP_background3),
-  color: colorsLight.DEP_textOnDimPrimary,
+  background: colorsLight.surface2,
+  backgroundHover: hoverColor(colorsLight.surface2),
+  backgroundPress: pressedColor(colorsLight.surface2),
+  color: colorsLight.sporeBlack,
 }
 
 // theme: dark
 const dark_secondary_Button: BaseTheme = {
   ...dark,
-  background: colorsDark.DEP_background3,
-  backgroundHover: hoverColor(colorsDark.DEP_background3),
-  backgroundPress: pressedColor(colorsDark.DEP_background3),
-  color: colorsDark.DEP_textOnBrightPrimary,
+  background: colorsDark.surface2,
+  backgroundHover: hoverColor(colorsDark.surface2),
+  backgroundPress: pressedColor(colorsDark.surface2),
+  color: colorsDark.sporeWhite,
 }
 
 // tertiary
@@ -152,8 +152,8 @@ const light_tertiary_Button: BaseTheme = {
   background: colorsLight.none,
   backgroundHover: colorsLight.none,
   backgroundPress: colorsLight.none,
-  borderColor: colorsLight.DEP_backgroundOutline,
-  color: colorsLight.DEP_textOnBrightPrimary,
+  borderColor: colorsLight.surface3,
+  color: colorsLight.sporeWhite,
 }
 
 // theme: dark
@@ -162,8 +162,8 @@ const dark_tertiary_Button: BaseTheme = {
   background: colorsDark.none,
   backgroundHover: colorsDark.none,
   backgroundPress: colorsDark.none,
-  borderColor: colorsDark.DEP_backgroundOutline,
-  color: colorsDark.DEP_textOnBrightPrimary,
+  borderColor: colorsDark.surface3,
+  color: colorsDark.sporeWhite,
 }
 
 // detrimental
@@ -173,7 +173,7 @@ const light_detrimental_Button: BaseTheme = {
   background: colorsLight.DEP_accentCriticalSoft,
   backgroundHover: colorsLight.DEP_accentCriticalSoft,
   backgroundPress: colorsLight.DEP_accentCriticalSoft,
-  color: colorsLight.DEP_accentCritical,
+  color: colorsLight.statusCritical,
 }
 
 // theme: dark
@@ -182,7 +182,7 @@ const dark_detrimental_Button: BaseTheme = {
   background: colorsDark.DEP_accentCriticalSoft,
   backgroundHover: colorsLight.DEP_accentCriticalSoft,
   backgroundPress: colorsLight.DEP_accentCriticalSoft,
-  color: colorsDark.DEP_accentCritical,
+  color: colorsDark.statusCritical,
 }
 
 // warning

@@ -53,8 +53,8 @@ export function AccountIcon({
 
   return (
     <Box
-      backgroundColor={showBackground ? 'DEP_background0' : 'none'}
-      borderColor={showBackground ? 'DEP_background0' : 'none'}
+      backgroundColor={showBackground ? 'surface1' : 'none'}
+      borderColor={showBackground ? 'surface1' : 'none'}
       borderRadius="roundedFull"
       borderWidth={showBackground ? 2 : 0}
       position="relative"
@@ -76,7 +76,7 @@ export function AccountIcon({
         <Box
           alignContent="center"
           alignItems="center"
-          backgroundColor={isDarkMode ? 'DEP_background3' : 'DEP_background1'}
+          backgroundColor={isDarkMode ? 'surface2' : 'surface2'}
           borderRadius="roundedFull"
           bottom={0}
           height={iconEyeContainerSize}
@@ -84,12 +84,12 @@ export function AccountIcon({
           p="spacing4"
           position="absolute"
           right={0}
-          shadowColor="DEP_black"
+          shadowColor="sporeBlack"
           shadowOffset={{ width: 0, height: 0 }}
           shadowOpacity={0.2}
           shadowRadius={10}
           width={iconEyeContainerSize}>
-          <Eye color={theme.colors.DEP_textTertiary} width={iconEyeSize} />
+          <Eye color={theme.colors.neutral3} width={iconEyeSize} />
         </Box>
       )}
     </Box>

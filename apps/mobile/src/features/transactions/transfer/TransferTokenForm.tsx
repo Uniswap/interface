@@ -237,7 +237,7 @@ export function TransferTokenForm({
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
-            <Box backgroundColor="DEP_background2" borderRadius="rounded20" justifyContent="center">
+            <Box backgroundColor="surface2" borderRadius="rounded20" justifyContent="center">
               <CurrencyInputPanel
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
@@ -282,7 +282,7 @@ export function TransferTokenForm({
                 position="absolute">
                 <TransferArrowButton
                   disabled
-                  bg={recipient ? 'DEP_background2' : 'DEP_background1'}
+                  bg={recipient ? 'surface2' : 'surface2'}
                   padding="spacing8"
                 />
               </Box>
@@ -291,7 +291,7 @@ export function TransferTokenForm({
 
           <Box>
             <Flex
-              backgroundColor={recipient ? 'DEP_background2' : 'none'}
+              backgroundColor={recipient ? 'surface2' : 'none'}
               borderBottomLeftRadius={transferWarning || isBlocked ? 'none' : 'rounded20'}
               borderBottomRightRadius={transferWarning || isBlocked ? 'none' : 'rounded20'}
               borderTopLeftRadius="rounded20"
@@ -310,10 +310,10 @@ export function TransferTokenForm({
                     row
                     alignItems="center"
                     alignSelf="stretch"
-                    backgroundColor="DEP_background2"
+                    backgroundColor="surface2"
                     borderBottomLeftRadius="rounded16"
                     borderBottomRightRadius="rounded16"
-                    borderTopColor="DEP_background0"
+                    borderTopColor="surface1"
                     borderTopWidth={1}
                     flexGrow={1}
                     gap="spacing8"
@@ -361,7 +361,7 @@ export function TransferTokenForm({
                 row
                 alignItems="center"
                 alignSelf="stretch"
-                backgroundColor="DEP_background2"
+                backgroundColor="surface2"
                 borderBottomLeftRadius="rounded16"
                 borderBottomRightRadius="rounded16"
                 flexGrow={1}

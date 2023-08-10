@@ -113,7 +113,7 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
           <Box
             alignItems="center"
             aspectRatio={1}
-            backgroundColor="DEP_backgroundOutline"
+            backgroundColor="surface3"
             borderRadius="rounded12"
             overflow="hidden"
             width="100%">
@@ -227,11 +227,11 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
           insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
         }
         refreshing={refreshing ?? false}
-        tintColor={theme.colors.DEP_textTertiary}
+        tintColor={theme.colors.neutral3}
         onRefresh={onRefresh}
       />
     )
-  }, [refreshing, headerHeight, onRefresh, theme.colors.DEP_textTertiary, insets.top])
+  }, [refreshing, headerHeight, onRefresh, theme.colors.neutral3, insets.top])
 
   const onRetry = useCallback(() => refetch(), [refetch])
 
@@ -265,7 +265,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
                     ? t('When this wallet buys or receives NFTs, they’ll appear here.')
                     : t('Transfer NFTs from another wallet to get started.')
                 }
-                icon={<NoNFTsIcon color={theme.colors.DEP_textSecondary} />}
+                icon={<NoNFTsIcon color={theme.colors.neutral2} />}
                 title={t('No NFTs yet')}
                 onPress={onPressScan}
               />

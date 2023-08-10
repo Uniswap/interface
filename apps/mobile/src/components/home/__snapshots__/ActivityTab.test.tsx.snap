@@ -170,7 +170,7 @@ exports[`ActivityTab renders without error 1`] = `
             "refreshControl": <RefreshControlMock
               progressViewOffset={NaN}
               refreshing={false}
-              tintColor="#888FAB"
+              tintColor="#CECECE"
             />,
             "refreshing": undefined,
             "renderItem": [Function],
@@ -196,7 +196,7 @@ exports[`ActivityTab renders without error 1`] = `
         <RefreshControlMock
           progressViewOffset={NaN}
           refreshing={false}
-          tintColor="#888FAB"
+          tintColor="#CECECE"
         />
       }
       removeClippedSubviews={false}
@@ -220,7 +220,7 @@ exports[`ActivityTab renders without error 1`] = `
           "refreshControl": <RefreshControlMock
             progressViewOffset={NaN}
             refreshing={false}
-            tintColor="#888FAB"
+            tintColor="#CECECE"
           />,
           "style": {
             "minHeight": 1,
@@ -544,7 +544,7 @@ exports[`ActivityTab renders without error 2`] = `
             "refreshControl": <RefreshControlMock
               progressViewOffset={NaN}
               refreshing={false}
-              tintColor="#888FAB"
+              tintColor="#CECECE"
             />,
             "refreshing": undefined,
             "renderItem": [Function],
@@ -570,7 +570,7 @@ exports[`ActivityTab renders without error 2`] = `
         <RefreshControlMock
           progressViewOffset={NaN}
           refreshing={false}
-          tintColor="#888FAB"
+          tintColor="#CECECE"
         />
       }
       removeClippedSubviews={false}
@@ -594,7 +594,7 @@ exports[`ActivityTab renders without error 2`] = `
           "refreshControl": <RefreshControlMock
             progressViewOffset={NaN}
             refreshing={false}
-            tintColor="#888FAB"
+            tintColor="#CECECE"
           />,
           "style": {
             "minHeight": 1,

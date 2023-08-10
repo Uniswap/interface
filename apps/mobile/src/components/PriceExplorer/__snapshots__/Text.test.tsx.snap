@@ -16,7 +16,7 @@ exports[`DatetimeText renders without error 1`] = `
     [
       [
         {
-          "color": "#5D6785",
+          "color": "#7D7D7D",
           "fontFamily": "Inter-Medium",
           "fontSize": 17,
           "lineHeight": 24,
@@ -83,7 +83,7 @@ exports[`PriceText renders loading state 1`] = `
         style={
           [
             {
-              "backgroundColor": "#E8ECFB",
+              "backgroundColor": "#F9F9F9",
               "borderRadius": 4,
               "bottom": "5%",
               "display": "flex",
@@ -125,13 +125,13 @@ exports[`PriceText renders without error 1`] = `
       [
         [
           {
-            "color": "#0E1524",
+            "color": "#222222",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 40,
             "lineHeight": 48,
           },
           {
-            "color": "#0E1524",
+            "color": "#222222",
           },
         ],
       ]
@@ -153,13 +153,13 @@ exports[`PriceText renders without error 1`] = `
       [
         [
           {
-            "color": "#0E1524",
+            "color": "#222222",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 40,
             "lineHeight": 48,
           },
           {
-            "color": "#888FAB",
+            "color": "#CECECE",
           },
         ],
       ]
@@ -196,13 +196,13 @@ exports[`PriceText renders without error less than a dollar 1`] = `
       [
         [
           {
-            "color": "#0E1524",
+            "color": "#222222",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 40,
             "lineHeight": 48,
           },
           {
-            "color": "#0E1524",
+            "color": "#222222",
           },
         ],
       ]
@@ -224,13 +224,13 @@ exports[`PriceText renders without error less than a dollar 1`] = `
       [
         [
           {
-            "color": "#0E1524",
+            "color": "#222222",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 40,
             "lineHeight": 48,
           },
           {
-            "color": "#0E1524",
+            "color": "#222222",
           },
         ],
       ]
@@ -296,7 +296,7 @@ exports[`RelativeChangeText renders loading state 1`] = `
         style={
           [
             {
-              "backgroundColor": "#E8ECFB",
+              "backgroundColor": "#F9F9F9",
               "borderRadius": 4,
               "bottom": "5%",
               "display": "flex",
@@ -369,7 +369,7 @@ exports[`RelativeChangeText renders without error 1`] = `
       [
         [
           {
-            "color": "#0E1524",
+            "color": "#222222",
             "fontFamily": "Inter-Medium",
             "fontSize": 17,
             "lineHeight": 24,

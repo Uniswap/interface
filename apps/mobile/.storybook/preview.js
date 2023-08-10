@@ -20,11 +20,11 @@ export const parameters = {
     values: [
       {
         name: 'light',
-        value: theme.colors.DEP_background0,
+        value: theme.colors.surface1,
       },
       {
         name: 'dark',
-        value: darkTheme.colors.DEP_background0,
+        value: darkTheme.colors.surface1,
       },
     ],
   },
@@ -33,13 +33,13 @@ export const parameters = {
     // Override the default dark theme
     dark: {
       ...theme.dark,
-      barSelectedColor: darkTheme.colors.DEP_accentAction,
-      appBg: darkTheme.colors.DEP_background0,
-      appContentBg: darkTheme.colors.DEP_backgroundOutline,
-      barBg: darkTheme.colors.DEP_background1,
-      textColor: darkTheme.colors.DEP_textPrimary,
-      colorPrimary: darkTheme.colors.DEP_accentAction,
-      colorSecondary: darkTheme.colors.DEP_accentAction,
+      barSelectedColor: darkTheme.colors.accent1,
+      appBg: darkTheme.colors.surface1,
+      appContentBg: darkTheme.colors.surface3,
+      barBg: darkTheme.colors.surface2,
+      textColor: darkTheme.colors.neutral1,
+      colorPrimary: darkTheme.colors.accent1,
+      colorSecondary: darkTheme.colors.accent1,
     },
     docs: {
       inlineStories: false,
@@ -52,13 +52,13 @@ export const parameters = {
     // Override the default light theme
     light: {
       ...theme.light,
-      barSelectedColor: theme.colors.DEP_accentAction,
-      appBg: theme.colors.DEP_background0,
-      appContentBg: theme.colors.DEP_background1,
-      barBg: theme.colors.DEP_background1,
-      textColor: theme.colors.DEP_textPrimary,
-      colorPrimary: theme.colors.DEP_accentAction,
-      colorSecondary: theme.colors.DEP_accentAction,
+      barSelectedColor: theme.colors.accent1,
+      appBg: theme.colors.surface1,
+      appContentBg: theme.colors.surface2,
+      barBg: theme.colors.surface2,
+      textColor: theme.colors.neutral1,
+      colorPrimary: theme.colors.accent1,
+      colorSecondary: theme.colors.accent1,
     },
   },
   options: {

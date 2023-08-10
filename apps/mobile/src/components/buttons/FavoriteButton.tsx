@@ -26,10 +26,8 @@ export const FavoriteButton = ({
 }: FavoriteButtonProps): JSX.Element => {
   const theme = useAppTheme()
   const isDarkMode = useIsDarkMode()
-  const unfilledColor = isDarkMode
-    ? theme.colors.DEP_textTertiary
-    : theme.colors.DEP_backgroundOutline
-  const color = isFavorited ? theme.colors.DEP_accentAction : unfilledColor
+  const unfilledColor = isDarkMode ? theme.colors.neutral3 : theme.colors.surface3
+  const color = isFavorited ? theme.colors.accent1 : unfilledColor
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])

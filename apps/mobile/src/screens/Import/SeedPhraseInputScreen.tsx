@@ -136,7 +136,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
         <Flex centered>
           <Trace logPress element={ElementName.RecoveryHelpButton}>
             <TouchableArea onPress={onPressRecoveryHelpButton}>
-              <Text color="DEP_accentAction" variant={subtitleSize}>
+              <Text color="accent1" variant={subtitleSize}>
                 {t('How do I find my recovery phrase?')}
               </Text>
             </TouchableArea>

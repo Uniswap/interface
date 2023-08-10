@@ -202,10 +202,10 @@ export function SelectWallets(): JSX.Element {
             right={0}
             style={{ animation: `spin ${SPIN_SPEED}ms linear infinite` }}
             top={0}>
-            <Icons.LoadingSpinnerInner color="$DEP_magentaVibrant" size={80} />
+            <Icons.LoadingSpinnerInner color="$accent1" size={80} />
           </Stack>
         </Stack>
-        <Text color="$DEP_textSecondary" textAlign="center" variant="headlineSmall">
+        <Text color="$neutral2" textAlign="center" variant="headlineSmall">
           Finding your wallets...
         </Text>
       </YStack>
@@ -230,7 +230,7 @@ export function SelectWallets(): JSX.Element {
       <ScrollView maxHeight="55vh" showsVerticalScrollIndicator={false} width="100%">
         {showError ? (
           <Stack gap="$spacing24" p="$spacing12" width="100%">
-            <Text color="$DEP_accentCritical" textAlign="center" variant="buttonLabelMedium">
+            <Text color="$statusCritical" textAlign="center" variant="buttonLabelMedium">
               Couldn't load addresses
             </Text>
             <XStack justifyContent="center">

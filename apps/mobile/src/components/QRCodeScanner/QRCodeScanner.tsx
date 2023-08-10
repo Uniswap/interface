@@ -126,14 +126,14 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             top={0}
             width="100%"
             onLayout={(event: LayoutChangeEvent): void => setInfoLayout(event.nativeEvent.layout)}>
-            <Text color="DEP_textPrimary" variant="subheadLarge">
+            <Text color="neutral1" variant="subheadLarge">
               {t('Scan a QR code')}
             </Text>
           </Flex>
           {!shouldFreezeCamera ? (
             // camera isn't frozen (after seeing barcode) — show the camera scan icon (the four white corners)
             <CameraScan
-              color={theme.colors.DEP_white}
+              color={theme.colors.sporeWhite}
               height={SCANNER_SIZE}
               strokeWidth={5}
               width={SCANNER_SIZE}
@@ -151,10 +151,10 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                   left={SCANNER_SIZE / 2 - LOADER_SIZE / 2}
                   position="absolute"
                   top={SCANNER_SIZE / 2 - LOADER_SIZE / 2}>
-                  <SpinningLoader color="DEP_textPrimary" size={theme.iconSizes.icon40} />
+                  <SpinningLoader color="neutral1" size={theme.iconSizes.icon40} />
                 </Flex>
                 <Box style={{ marginTop: LOADER_SIZE + theme.spacing.spacing24 }} />
-                <Text color="DEP_textPrimary" textAlign="center" variant="bodyLarge">
+                <Text color="neutral1" textAlign="center" variant="bodyLarge">
                   {isWalletConnectModal ? t('Connecting...') : t('Loading...')}
                 </Text>
               </Flex>
@@ -169,13 +169,13 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                 style={[StyleSheet.absoluteFill]}
                 width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}>
                 <Flex
-                  backgroundColor="DEP_background1"
+                  backgroundColor="surface2"
                   borderRadius="rounded16"
                   gap="spacing24"
                   m="spacing12"
                   opacity={0.6}
                   p="spacing12">
-                  <Text color="DEP_textPrimary" textAlign="center" variant="bodyLarge">
+                  <Text color="neutral1" textAlign="center" variant="bodyLarge">
                     This paste button will only show up in development mode
                   </Text>
                   <PasteButton onPress={onScanCode} />

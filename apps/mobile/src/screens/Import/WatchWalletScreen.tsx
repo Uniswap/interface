@@ -150,9 +150,9 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           }}
         />
         <Flex>
-          <Text color="DEP_textTertiary" mx="spacing4" textAlign="center" variant={subtitleSize}>
+          <Text color="neutral3" mx="spacing4" textAlign="center" variant={subtitleSize}>
             Not sure? Try adding{' '}
-            <Text color="DEP_accentAction" variant={addressSize} onPress={onPressDemoWallet}>
+            <Text color="accent1" variant={addressSize} onPress={onPressDemoWallet}>
               uniswapdemo.eth
             </Text>
           </Text>

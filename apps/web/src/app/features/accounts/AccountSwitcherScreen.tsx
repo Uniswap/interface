@@ -50,7 +50,7 @@ export function AccountSwitcherScreen(): JSX.Element {
   return (
     <Theme name="dark">
       <LinearGradient
-        colors={['$DEP_background1', uniconAccentColor]}
+        colors={['$surface2', uniconAccentColor]}
         end={[0, 0]}
         height="100%"
         start={[0, 1]}
@@ -92,7 +92,7 @@ export function AccountSwitcherScreen(): JSX.Element {
           </YStack>
         </ScrollView>
         <Flex alignItems="center" cursor="pointer" paddingBottom="$spacing12">
-          <Text color="$DEP_textSecondary" variant="bodyLarge" onPress={onCreateWallet}>
+          <Text color="$neutral2" variant="bodyLarge" onPress={onCreateWallet}>
             Create another wallet
           </Text>
         </Flex>

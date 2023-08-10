@@ -36,9 +36,9 @@ export function useTokenSafetyLevelColors(safetyLevel: Maybe<SafetyLevel>): keyo
     case SafetyLevel.MediumWarning:
       return 'DEP_accentWarning'
     case SafetyLevel.StrongWarning:
-      return 'DEP_accentCritical'
+      return 'statusCritical'
     case SafetyLevel.Blocked:
     default:
-      return 'DEP_textSecondary'
+      return 'neutral2'
   }
 }

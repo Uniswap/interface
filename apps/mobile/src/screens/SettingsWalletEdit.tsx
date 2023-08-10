@@ -66,14 +66,14 @@ export function SettingsWalletEdit({
               <TextInput
                 autoFocus
                 autoCapitalize="none"
-                color={nickname === activeAccount?.name ? 'DEP_textTertiary' : 'DEP_textPrimary'}
+                color={nickname === activeAccount?.name ? 'neutral3' : 'neutral1'}
                 fontFamily={theme.textVariants.headlineMedium.fontFamily}
                 fontSize={theme.textVariants.headlineMedium.fontSize}
                 margin="none"
                 maxLength={NICKNAME_MAX_LENGTH}
                 numberOfLines={1}
                 placeholder={shortenAddress(address)}
-                placeholderTextColor={theme.colors.DEP_textTertiary}
+                placeholderTextColor={theme.colors.neutral3}
                 px="none"
                 py="none"
                 returnKeyType="done"
@@ -85,7 +85,7 @@ export function SettingsWalletEdit({
             ) : (
               <Flex row alignItems="center">
                 <Flex shrink>
-                  <Text color="DEP_textPrimary" variant="headlineMedium">
+                  <Text color="neutral1" variant="headlineMedium">
                     {nickname || shortenAddress(address)}
                   </Text>
                 </Flex>

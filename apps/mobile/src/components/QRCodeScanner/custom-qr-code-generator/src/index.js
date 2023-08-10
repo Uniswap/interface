@@ -57,8 +57,8 @@ const renderLogo = ({
 const QRCode = ({
   value = 'this is a QR code',
   size = 100,
-  color = 'DEP_black',
-  backgroundColor = 'DEP_white',
+  color = 'sporeBlack',
+  backgroundColor = 'sporeWhite',
   borderRadius = 24,
   logo,
   logoSize = size * 0.2,

@@ -18,7 +18,7 @@ export function CloseButton({ onPress, size, strokeWidth, color, ...rest }: Prop
   return (
     <TouchableArea onPress={onPress} {...rest}>
       <XIcon
-        color={theme.colors[color ?? 'DEP_white']}
+        color={theme.colors[color ?? 'sporeWhite']}
         height={size ?? 20}
         strokeWidth={strokeWidth ?? 2}
         width={size ?? 20}

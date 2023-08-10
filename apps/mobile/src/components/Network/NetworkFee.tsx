@@ -27,7 +27,7 @@ export function NetworkFee({
   const feeSectionContent = (
     <>
       <Text
-        color={gasFallbackUsed && gasFeeUSD ? 'DEP_accentWarning' : 'DEP_textPrimary'}
+        color={gasFallbackUsed && gasFeeUSD ? 'DEP_accentWarning' : 'neutral1'}
         variant="subheadSmall">
         {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
       </Text>

@@ -67,11 +67,11 @@ export function Complete(): JSX.Element {
             <YStack alignItems="center" gap="$spacing24">
               {/* TODO: use AddressDisplay here */}
               <Unicon address={address} size={iconSizes.icon64} />
-              <Text color="$DEP_textPrimary" variant="headlineLarge">
+              <Text color="$neutral1" variant="headlineLarge">
                 {nickname}
               </Text>
             </YStack>
-            <Text color="$DEP_textSecondary" variant="subheadSmall">
+            <Text color="$neutral2" variant="subheadSmall">
               {sanitizeAddressText(shortenAddress(address))}
             </Text>
           </YStack>
@@ -125,14 +125,14 @@ export function Complete(): JSX.Element {
         <Stack position="absolute" right={0} top={-60}>
           {/* pinning reminder popup container */}
           <Stack
-            backgroundColor="$DEP_background2"
+            backgroundColor="$surface2"
             borderRadius="$rounded20"
             gap="$spacing24"
             marginRight={POPUP_OFFSET}
             marginTop={POPUP_OFFSET}
             padding="$spacing24"
             // TODO(EXT-141): revisit design of shadow (tweak color, figure out why opacity doesn't apply, tweak radius)
-            shadowColor="$DEP_textTertiary"
+            shadowColor="$neutral3"
             shadowRadius={POPUP_SHADOW_RADIUS}
             width={POPUP_WIDTH}>
             {/* heading and puzzle icon */}
@@ -145,7 +145,7 @@ export function Complete(): JSX.Element {
                   by clicking on the
                 </Text>
                 {/* TODO(EXT-210): constant icon sizes */}
-                <Icons.Puzzle color="$DEP_magentaVibrant" size={iconSizes.icon20} />
+                <Icons.Puzzle color="$accent1" size={iconSizes.icon20} />
                 <Text numberOfLines={1} variant="bodySmall">
                   icon, and then the pin
                 </Text>
@@ -154,7 +154,7 @@ export function Complete(): JSX.Element {
             {/* mocked extension list item container */}
             <XStack
               alignItems="center"
-              backgroundColor="$DEP_background0"
+              backgroundColor="$surface1"
               borderRadius="$rounded4"
               paddingHorizontal="$spacing12"
               paddingVertical="$spacing8">
@@ -163,7 +163,7 @@ export function Complete(): JSX.Element {
                 {/* mocked extension icon */}
                 <Stack
                   alignItems="center"
-                  backgroundColor="$DEP_white"
+                  backgroundColor="$sporeWhite"
                   borderRadius="$roundedFull"
                   flexGrow={0}
                   justifyContent="center"
@@ -204,8 +204,8 @@ export function Complete(): JSX.Element {
       {/* instead of as a ternary, because we initialize the value as undefined instead of false, to avoid a flicker on re-render */}
       {isPinned && (
         <Toast
-          backgroundColor="$DEP_background2"
-          borderColor="$DEP_backgroundOutline"
+          backgroundColor="$surface2"
+          borderColor="$surface3"
           borderRadius="$roundedFull"
           borderWidth={1}
           duration={30_000}
@@ -218,7 +218,7 @@ export function Complete(): JSX.Element {
           paddingVertical="$spacing24"
           viewportName="onboarding">
           <Toast.Title alignItems="center" display="flex" flexDirection="row" gap="$spacing8">
-            <Icons.Checkmark color="$DEP_accentSuccess" size={iconSizes.icon24} />
+            <Icons.Checkmark color="$statusSuccess" size={iconSizes.icon24} />
             <Text variant="bodyLarge">{t("Pinned! It's safe to close this tab now")}</Text>
           </Toast.Title>
         </Toast>
@@ -253,7 +253,7 @@ function OnboardingCompleteCard({
       <Stack
         alignItems="flex-start"
         backgroundColor={backgroundColor}
-        borderColor="$DEP_backgroundOutline"
+        borderColor="$surface3"
         borderRadius="$rounded20"
         borderWidth={1}
         cursor={disabled ? 'not-allowed' : 'pointer'}
