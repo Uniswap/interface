@@ -21,22 +21,22 @@ export default async function getColor(image: string | undefined) {
 }
 
 function getAverageColor(arrayBuffer: Uint8Array, type?: string) {
+  let pixels
   switch (type) {
     case 'image/png': {
-      return getAverageColorFromPng(arrayBuffer)
+      const image = PNG.load(arrayBuffer)
+      pixels = image.decode()
+      break
     }
     case 'image/jpeg' || 'image/jpg': {
-      return getAverageColorFromJpeg(arrayBuffer)
+      const jpeg = JPEG.decode(arrayBuffer, { useTArray: true })
+      pixels = jpeg.data
+      break
     }
     default: {
       return DEFAULT_COLOR
     }
   }
-}
-
-function getAverageColorFromPng(arrayBuffer: Uint8Array) {
-  const image = PNG.load(arrayBuffer)
-  const pixels = image.decode()
 
   const pixelCount = pixels.length / 4
 
@@ -61,27 +61,4 @@ function getAverageColorFromPng(arrayBuffer: Uint8Array) {
   b = Math.floor(b / (pixelCount - transparentPixels))
 
   return [r, g, b]
-}
-
-function getAverageColorFromJpeg(arrayBuffer: Uint8Array) {
-  const jpeg = JPEG.decode(arrayBuffer, { useTArray: true })
-  const jpegPixels = jpeg.data
-
-  const jpegPixelCount = jpegPixels.length / 4
-
-  let jpegR = 0
-  let jpegG = 0
-  let jpegB = 0
-
-  for (let i = 0; i < jpegPixelCount; i++) {
-    jpegR += jpegPixels[i * 4]
-    jpegG += jpegPixels[i * 4 + 1]
-    jpegB += jpegPixels[i * 4 + 2]
-  }
-
-  jpegR = Math.floor(jpegR / jpegPixelCount)
-  jpegG = Math.floor(jpegG / jpegPixelCount)
-  jpegB = Math.floor(jpegB / jpegPixelCount)
-
-  return [jpegR, jpegG, jpegB]
 }
