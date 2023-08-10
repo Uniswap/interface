@@ -90,7 +90,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                     width: '144px',
                     height: '144px',
                     borderRadius: '100%',
-                    backgroundColor: '#293349',
+                    backgroundColor: 'rgba(255, 255, 255, 0.12)',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
