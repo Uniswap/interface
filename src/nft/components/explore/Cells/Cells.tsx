@@ -1,6 +1,6 @@
 import { formatEther } from '@ethersproject/units'
-import { ReactComponent as ArrowChangeDown } from 'assets/svg/arrow-change-down.svg'
-import { ReactComponent as ArrowChangeUp } from 'assets/svg/arrow-change-up.svg'
+import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
+import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'

@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { ReactComponent as Settings } from 'assets/svg/settings.svg'
+import { Settings } from 'components/Icons/Settings'
 import IconButton from 'components/AccountDrawer/IconButton'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'

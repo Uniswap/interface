@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { ReactComponent as Settings } from 'assets/svg/settings.svg'
+import { Settings } from 'components/Icons/Settings'
 import Row from 'components/Row'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
