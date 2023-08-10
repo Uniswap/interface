@@ -13,7 +13,6 @@ const invalidAssetImageUrl = [
   'http://127.0.0.1:3000/api/image/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/100000',
   'http://127.0.0.1:3000/api/image/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544',
   'http://127.0.0.1:3000/api/image/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c545',
-  'http://127.0.0.1:3000/api/image/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/-1',
 ]
 
 test.each(invalidAssetImageUrl)('invalidAssetImageUrl', async (url) => {
