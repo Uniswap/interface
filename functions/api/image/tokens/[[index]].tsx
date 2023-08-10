@@ -69,57 +69,56 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 color: 'white',
               }}
             >
-              {data.ogImage != '' && (
-              <img src={data.ogImage} width="144px" style={{ borderRadius: '100%' }}>
-                {networkLogo != '' && (
-                  <img
-                    src={networkLogo}
-                    width="48px"
-                    style={{
-                      position: 'absolute',
-                      right: '2px',
-                      bottom: '0px',
-                      borderRadius: '100%',
-                    }}
-                  />
-                )}
-              </img>
-              )}
-              {data.ogImage == '' && (
-              <div
-                style={{
-                  width: '144px',
-                  height: '144px',
-                  borderRadius: '100%',
-                  backgroundColor: '#293349',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
+              {data.ogImage != '' ? (
+                <img src={data.ogImage} width="144px" style={{ borderRadius: '100%' }}>
+                  {networkLogo != '' && (
+                    <img
+                      src={networkLogo}
+                      width="48px"
+                      style={{
+                        position: 'absolute',
+                        right: '2px',
+                        bottom: '0px',
+                        borderRadius: '100%',
+                      }}
+                    />
+                  )}
+                </img>
+              ) : (
                 <div
                   style={{
-                    fontFamily: 'Inter',
-                    fontSize: '48px',
-                    lineHeight: '58px',
-                    color: 'white',
+                    width: '144px',
+                    height: '144px',
+                    borderRadius: '100%',
+                    backgroundColor: '#293349',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                 >
-                  {data.name.slice(0, 3).toUpperCase()}
-                </div>
-                {networkLogo != '' && (
-                  <img
-                    src={networkLogo}
-                    width="48px"
+                  <div
                     style={{
-                      position: 'absolute',
-                      right: '2px',
-                      bottom: '0px',
-                      borderRadius: '100%',
+                      fontFamily: 'Inter',
+                      fontSize: '48px',
+                      lineHeight: '58px',
+                      color: 'white',
                     }}
-                  />
-                )}
-              </div>
+                  >
+                    {data.name.slice(0, 3).toUpperCase()}
+                  </div>
+                  {networkLogo != '' && (
+                    <img
+                      src={networkLogo}
+                      width="48px"
+                      style={{
+                        position: 'absolute',
+                        right: '2px',
+                        bottom: '0px',
+                        borderRadius: '100%',
+                      }}
+                    />
+                  )}
+                </div>
               )}
               <div
                 style={{
