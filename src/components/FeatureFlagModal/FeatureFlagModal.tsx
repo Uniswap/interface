@@ -2,6 +2,7 @@ import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'fe
 import { useBaseEnabledFlag } from 'featureFlags/flags/baseEnabled'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
+import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
@@ -248,6 +249,12 @@ export default function FeatureFlagModal() {
         value={useCurrencyConversionFlag()}
         featureFlag={FeatureFlag.currencyConversion}
         label="Enable currency conversion"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useMultichainUXFlag()}
+        featureFlag={FeatureFlag.multichainUX}
+        label="Updated Multichain UX"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

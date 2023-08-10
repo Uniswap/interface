@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -9,6 +8,7 @@ import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
+import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
   box-shadow: ${({ theme }) => theme.shallowShadow};
