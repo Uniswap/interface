@@ -7,7 +7,7 @@ import { useIsMobile } from 'nft/hooks'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Column, ColumnInstance, HeaderGroup, IdType, useSortBy, useTable } from 'react-table'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { GlowEffect, ThemedText } from 'theme'
 
 import { Box } from '../../components/Box'

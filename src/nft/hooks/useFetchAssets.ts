@@ -1,16 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
 import { useNftRouteLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { BagStatus, GenieAsset } from 'nft/types'
-import {
-  buildNftTradeInput,
-  buildNftTradeInputFromBagItems,
-  filterUpdatedAssetsByState,
-  recalculateBagUsingPooledAssets,
-} from 'nft/utils'
+import { BagStatus } from 'nft/types'
+import { buildNftTradeInputFromBagItems, recalculateBagUsingPooledAssets } from 'nft/utils'
 import { getNextBagState, getPurchasableAssets } from 'nft/utils/bag'
 import { buildRouteResponse } from 'nft/utils/nftRoute'
-import { compareAssetsWithTransactionRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { shallow } from 'zustand/shallow'
 
 import { useBag } from './useBag'
@@ -105,49 +99,4 @@ export function useFetchAssets(): () => Promise<void> {
     setItemsInBag,
     tokenTradeInput,
   ])
-}
-
-export const useBuyAssetCallback = () => {
-  const { account } = useWeb3React()
-  const [fetchGqlRoute] = useNftRouteLazyQuery()
-  const purchaseAssets = usePurchaseAssets()
-
-  const [isLoading, setIsLoading] = useState(false)
-
-  const fetchAndPurchaseSingleAsset = useCallback(
-    async (asset: GenieAsset) => {
-      setIsLoading(true)
-
-      fetchGqlRoute({
-        variables: {
-          senderAddress: account ? account : '',
-          nftTrades: buildNftTradeInput([asset]),
-          tokenTrades: undefined,
-        },
-        pollInterval: 0,
-        fetchPolicy: 'no-cache',
-        onCompleted: (data) => {
-          setIsLoading(false)
-
-          if (!data.nftRoute || !data.nftRoute.route) {
-            return
-          }
-
-          const { route, routeResponse } = buildRouteResponse(data.nftRoute, false)
-          const { updatedAssets } = compareAssetsWithTransactionRoute([asset], route)
-          const { priceChanged, unavailable } = filterUpdatedAssetsByState(updatedAssets)
-          const invalidData = priceChanged.length > 0 || unavailable.length > 0
-
-          if (invalidData) {
-            return
-          }
-
-          purchaseAssets(routeResponse, updatedAssets, false)
-        },
-      })
-    },
-    [account, fetchGqlRoute, purchaseAssets]
-  )
-
-  return useMemo(() => ({ fetchAndPurchaseSingleAsset, isLoading }), [fetchAndPurchaseSingleAsset, isLoading])
 }

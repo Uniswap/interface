@@ -1,18 +1,18 @@
 import { Group } from '@visx/group'
 import { LinePath } from '@visx/shape'
 import { easeSinOut } from 'd3'
-import ms from 'ms.macro'
+import ms from 'ms'
 import React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 
 import { LineChartProps } from './LineChart'
 
 type AnimatedInLineChartProps<T> = Omit<LineChartProps<T>, 'height' | 'width' | 'children'>
 
 const config = {
-  duration: ms`0.8s`,
+  duration: ms(`0.8s`),
   easing: easeSinOut,
 }
 

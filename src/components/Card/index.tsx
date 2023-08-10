@@ -1,5 +1,5 @@
 import { Box } from 'rebass/styled-components'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const Card = styled(Box)<{ width?: string; padding?: string; border?: string; $borderRadius?: string }>`
   width: ${({ width }) => width ?? '100%'};

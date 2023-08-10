@@ -2,7 +2,7 @@ import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_LIST_OF_LISTS, UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import useInterval from 'lib/hooks/useInterval'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useCallback, useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { useAllLists } from 'state/lists/hooks'
@@ -31,7 +31,7 @@ export default function Updater(): null {
   }, [fetchList, isWindowVisible])
 
   // fetch all lists every 10 minutes, but only after we initialize provider
-  useInterval(fetchAllListsCallback, provider ? ms`10m` : null)
+  useInterval(fetchAllListsCallback, provider ? ms(`10m`) : null)
 
   // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {

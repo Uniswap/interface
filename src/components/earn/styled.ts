@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import uImage from '../../assets/images/big_unicorn.png'
 import noise from '../../assets/images/noise.png'

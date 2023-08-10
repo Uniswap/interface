@@ -6,7 +6,7 @@ import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 
 import { Dropdown } from './Dropdown'
