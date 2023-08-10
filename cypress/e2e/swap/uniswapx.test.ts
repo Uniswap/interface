@@ -43,12 +43,13 @@ describe('UniswapX Toggle', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('300')
 
-    // UniswapX ui should not be visible
+    // UniswapX UI should not be visible
     cy.get(getTestSelector('gas-estimate-uniswapx-icon')).should('not.exist')
 
+    // Opt-in to UniswapX
     cy.contains('Try it now').click()
 
-    // UniswapX ui should not be visible
+    // UniswapX UI should be visible
     cy.get(getTestSelector('gas-estimate-uniswapx-icon')).should('exist')
   })
 
