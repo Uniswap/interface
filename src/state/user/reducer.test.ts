@@ -111,7 +111,7 @@ describe('swap reducer', () => {
   })
 
   describe('updateHideBaseWalletBanner', () => {
-    it('updates the hideUniswapWalletBanner', () => {
+    it('updates the updateHideBaseWalletBanner', () => {
       store.dispatch(updateHideBaseWalletBanner({ hideBaseWalletBanner: true }))
       expect(store.getState().hideBaseWalletBanner).toEqual(true)
     })

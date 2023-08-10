@@ -38,7 +38,7 @@ export default function BaseWalletBanner() {
         }}
       />
 
-      <BaseBackgroundImage src={baseLogoUrl} alt="" />
+      <BaseBackgroundImage src={baseLogoUrl} alt="transparent base background logo" />
 
       <ThemedText.HeadlineMedium fontSize="24px" lineHeight="28px" color="white" maxWidth="224px">
         <Trans>
@@ -80,7 +80,7 @@ export default function BaseWalletBanner() {
             </BannerButton>
           </>
         ) : (
-          <BannerButton backgroundColor="white" width="125px" onClick={openWalletMicrosite}>
+          <BannerButton backgroundColor="white" width="125px" onClick={() => openWalletMicrosite()}>
             <ThemedText.LabelSmall color="black">
               <Trans>Learn more</Trans>
             </ThemedText.LabelSmall>
