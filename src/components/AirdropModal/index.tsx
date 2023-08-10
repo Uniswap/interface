@@ -198,7 +198,7 @@ const AirdropModal = () => {
     setError(true)
     setTimeout(() => {
       setError(false)
-    }, 5350)
+    }, 5000)
   }
 
   useEffect(() => {

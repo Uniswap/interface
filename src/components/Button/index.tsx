@@ -405,7 +405,6 @@ function pickThemeButtonBackgroundColor({ theme, emphasis }: { theme: DefaultThe
     case ButtonEmphasis.high:
       return theme.accent1
     case ButtonEmphasis.promotional:
-      return theme.accent2
     case ButtonEmphasis.highSoft:
       return theme.accent2
     case ButtonEmphasis.low:

@@ -28,7 +28,7 @@ const ContainerRow = styled.div<{ error: boolean }>`
   border-radius: 1.25rem;
   border: 1px solid ${({ error, theme }) => (error ? theme.critical : theme.surface3)};
   transition: border-color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')},
-    color 535ms ${({ error }) => (error ? 'step-end' : 'step-start')};
+    color 500ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   background-color: ${({ theme }) => theme.surface1};
 `
 
