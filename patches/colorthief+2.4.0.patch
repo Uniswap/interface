@@ -1,8 +1,0 @@
-diff --git a/node_modules/colorthief/src/color-thief-node.d.ts b/node_modules/colorthief/src/color-thief-node.d.ts
-new file mode 100644
-index 0000000..af733cf
---- /dev/null
-+++ b/node_modules/colorthief/src/color-thief-node.d.ts
-@@ -0,0 +1,2 @@
-+declare module 'colorthief/src/color-thief-node'
-+
