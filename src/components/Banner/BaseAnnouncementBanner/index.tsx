@@ -80,7 +80,7 @@ export default function BaseWalletBanner() {
             </BannerButton>
           </>
         ) : (
-          <BannerButton backgroundColor="white" width="125px" onClick={() => openWalletMicrosite()}>
+          <BannerButton backgroundColor="white" width="125px" onClick={openWalletMicrosite}>
             <ThemedText.LabelSmall color="black">
               <Trans>Learn more</Trans>
             </ThemedText.LabelSmall>
