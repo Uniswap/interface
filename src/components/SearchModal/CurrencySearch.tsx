@@ -28,7 +28,7 @@ import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
 import CurrencyList from './CurrencyList'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { PaddedColumn, SearchInput, Separator } from './styled'
 
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.backgroundSurface};
