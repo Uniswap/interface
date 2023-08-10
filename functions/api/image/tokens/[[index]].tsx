@@ -69,6 +69,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 color: 'white',
               }}
             >
+              {data.ogImage != '' && (
               <img src={data.ogImage} width="144px" style={{ borderRadius: '100%' }}>
                 {networkLogo != '' && (
                   <img
@@ -83,6 +84,43 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                   />
                 )}
               </img>
+              )}
+              {data.ogImage == '' && (
+              <div
+                style={{
+                  width: '144px',
+                  height: '144px',
+                  borderRadius: '100%',
+                  backgroundColor: '#293349',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: 'Inter',
+                    fontSize: '48px',
+                    lineHeight: '58px',
+                    color: 'white',
+                  }}
+                >
+                  {data.name.slice(0, 3).toUpperCase()}
+                </div>
+                {networkLogo != '' && (
+                  <img
+                    src={networkLogo}
+                    width="48px"
+                    style={{
+                      position: 'absolute',
+                      right: '2px',
+                      bottom: '0px',
+                      borderRadius: '100%',
+                    }}
+                  />
+                )}
+              </div>
+              )}
               <div
                 style={{
                   fontFamily: 'Inter',
@@ -113,13 +151,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 >
                   {data.symbol}
                 </div>
-                <img
-                  src={WATERMARK_URL}
-                  height="72px"
-                  style={{
-                    opacity: 0.5,
-                  }}
-                />
+                <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
               </div>
             </div>
           </div>
