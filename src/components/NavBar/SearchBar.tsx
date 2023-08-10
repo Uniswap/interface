@@ -4,8 +4,8 @@ import { useLingui } from '@lingui/react'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
-import { ReactComponent as SearchIcon } from 'assets/svg/search.svg'
 import clsx from 'clsx'
+import { Search } from 'components/Icons/Search'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
@@ -170,7 +170,7 @@ export const SearchBar = () => {
         >
           <Box className={styles.searchContentLeftAlign}>
             <Box display={{ sm: 'none', md: 'flex' }}>
-              <SearchIcon width="20px" height="20px" />
+              <Search width="20px" height="20px" />
             </Box>
             <Box display={{ sm: 'flex', md: 'none' }} color="neutral3" onClick={toggleOpen}>
               <ChevronLeftIcon />

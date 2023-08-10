@@ -1,6 +1,7 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
+import { Gas } from 'components/Icons/Gas'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row, { RowFixed } from 'components/Row'
@@ -12,10 +13,9 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { formatNumber, NumberType } from 'utils/formatNumbers'
 
-import { ReactComponent as GasIcon } from '../../assets/svg/gas-icon.svg'
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 
-const StyledGasIcon = styled(GasIcon)`
+const StyledGasIcon = styled(Gas)`
   height: 16px;
   width: 16px;
   // We apply the following to all children of the SVG in order to override the default color

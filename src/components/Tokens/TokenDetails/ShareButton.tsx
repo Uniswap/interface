@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { Share as ShareIcon } from 'components/Icons/Share'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { chainIdToBackendName } from 'graphql/data/util'
 import useDisableScrolling from 'hooks/useDisableScrolling'
@@ -14,7 +15,6 @@ import { colors } from 'theme/colors'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
 
-import { ReactComponent as ShareIcon } from '../../../assets/svg/share.svg'
 import { CopyHelper } from '../../../theme'
 
 const TWITTER_WIDTH = 560

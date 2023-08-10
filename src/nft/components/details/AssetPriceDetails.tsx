@@ -1,8 +1,8 @@
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
-import { ReactComponent as Upload } from 'assets/svg/share.svg'
 import { OpacityHoverState } from 'components/Common'
+import { Share } from 'components/Icons/Share'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
 import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
@@ -362,7 +362,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             </CollectionHeader>
           </DefaultLink>
           <UploadLink onClick={shareTweet} target="_blank">
-            <Upload />
+            <Share />
           </UploadLink>
         </CollectionNameContainer>
         <AssetHeader>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
