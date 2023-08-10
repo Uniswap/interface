@@ -70,7 +70,7 @@ class RnEthersRs(applicationContext: Context) {
     return MNEMONIC_PREFIX + mnemonicId
   }
 
-  private fun retrieveMnemonic(mnemonicId: String): String? {
+  fun retrieveMnemonic(mnemonicId: String): String? {
     return keychain.getString(keychainKeyForMnemonicId(mnemonicId), null)
   }
 

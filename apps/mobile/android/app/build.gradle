@@ -5,8 +5,6 @@ plugins {
   id 'com.google.gms.google-services'
   id 'maven-publish'
   id 'kotlin-android'
-  id 'kotlin-kapt'
-  id 'com.google.dagger.hilt.android'
 }
 
 
@@ -250,9 +248,6 @@ dependencies {
 
     implementation "com.google.accompanist:accompanist-flowlayout:$flowlayout"
 
-    implementation "com.google.dagger:hilt-android:$hiltVersion"
-    kapt "com.google.dagger:hilt-compiler:$hiltVersion"
-
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }
@@ -273,11 +268,6 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-}
-
-// Allow references to generated code
-kapt {
-  correctErrorTypes true
 }
 
 // Run this once to be able to run the application with BUCK

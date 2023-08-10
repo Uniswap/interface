@@ -9,13 +9,11 @@ import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactNativeHost
 import com.facebook.react.ReactPackage
 import com.facebook.soloader.SoLoader
-import dagger.hilt.android.HiltAndroidApp
 import expo.modules.ApplicationLifecycleDispatcher.onApplicationCreate
 import expo.modules.ApplicationLifecycleDispatcher.onConfigurationChanged
 import expo.modules.ReactNativeHostWrapper
 import java.lang.reflect.InvocationTargetException
 
-@HiltAndroidApp
 class MainApplication : Application(), ReactApplication {
     private val mReactNativeHost: ReactNativeHost =
         ReactNativeHostWrapper(this, object : ReactNativeHost(this) {

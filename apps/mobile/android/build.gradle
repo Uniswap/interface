@@ -12,7 +12,6 @@ buildscript {
         appCompat = "1.6.1"
         compose = "1.1.1"
         flowlayout = "0.23.1"
-        hiltVersion = "2.44"
         lifecycle = "2.5.1"
     }
     repositories {
@@ -26,10 +25,6 @@ buildscript {
         // in the individual module build.gradle files
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
-}
-
-plugins {
-  id 'com.google.dagger.hilt.android' version "$hiltVersion" apply false
 }
 
 allprojects {

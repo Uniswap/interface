@@ -25,7 +25,7 @@ fun UniswapTheme(
     LocalCustomShapes provides customShapes,
     LocalExtendedColors provides extendedColors,
   ) {
-    ProvideTextStyle(value = customTypography.bodyLarge) {
+    ProvideTextStyle(value = customTypography.headlineLarge) {
       MaterialTheme( // TODO gary MOB-1011 move everything from MaterialTheme to UniswapTheme
         colors = if (darkTheme) DarkColors else LightColors,
         content = content

@@ -10,7 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uniswap.theme.UniswapTheme
 
 /**
@@ -19,8 +18,8 @@ import com.uniswap.theme.UniswapTheme
  */
 @Composable
 fun MnemonicConfirmation(
-  sourceWords: List<String>,
-  viewModel: MnemonicConfirmationViewModel = viewModel(),
+  viewModel: MnemonicConfirmationViewModel,
+  mnemonicId: String,
   onCompleted: () -> Unit,
 ) {
 
@@ -28,8 +27,8 @@ fun MnemonicConfirmation(
   val wordBankList by viewModel.wordBankList.collectAsState()
   val completed by viewModel.completed.collectAsState()
 
-  LaunchedEffect(Unit) {
-    viewModel.setup(sourceWords)
+  LaunchedEffect(mnemonicId) {
+    viewModel.setup(mnemonicId)
   }
 
   LaunchedEffect(completed) {
@@ -41,7 +40,7 @@ fun MnemonicConfirmation(
   Column(modifier = Modifier
     .fillMaxSize()
     .padding(horizontal = UniswapTheme.spacing.spacing16)) {
-    MnemonicDisplay(words = displayedWords) {
+    MnemonicWordsGroup(words = displayedWords) {
       viewModel.handleWordRowClick(it)
     }
     Spacer(modifier = Modifier.height(UniswapTheme.spacing.spacing24))

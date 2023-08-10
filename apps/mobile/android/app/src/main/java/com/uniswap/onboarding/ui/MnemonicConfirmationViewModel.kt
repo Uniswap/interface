@@ -2,9 +2,9 @@ package com.uniswap.onboarding.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.uniswap.RnEthersRs
 import com.uniswap.onboarding.ui.model.MnemonicWordBankCellUiState
 import com.uniswap.onboarding.ui.model.MnemonicWordUiState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
 
-@HiltViewModel
-class MnemonicConfirmationViewModel @Inject constructor() : ViewModel() {
+class MnemonicConfirmationViewModel(
+  private val ethersRs: RnEthersRs, // Move to repository layer if app gets more complex
+) : ViewModel() {
 
   private var sourceWords = emptyList<String>()
   private var shuffledWords = emptyList<String>()
@@ -44,12 +44,19 @@ class MnemonicConfirmationViewModel @Inject constructor() : ViewModel() {
   private val _completed = MutableStateFlow(false)
   val completed = _completed.asStateFlow()
 
-  fun setup(words: List<String>) {
-    if (sourceWords != words) {
-      sourceWords = words
-      shuffledWords = words.shuffled()
-      focusedIndex.update { 0 }
-      selectedWords.update { List(words.size) { null } }
+  private var currentMnemonicId = ""
+
+  fun setup(mnemonicId: String) {
+    if (mnemonicId.isNotEmpty() && mnemonicId != currentMnemonicId) {
+      currentMnemonicId = mnemonicId
+
+      ethersRs.retrieveMnemonic(mnemonicId)?.let { mnemonic ->
+        val words = mnemonic.split(" ")
+        sourceWords = words
+        shuffledWords = words.shuffled()
+        focusedIndex.update { 0 }
+        selectedWords.update { List(words.size) { null } }
+      }
     }
   }
 
