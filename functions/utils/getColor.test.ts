@@ -1,3 +1,4 @@
+import { DEFAULT_COLOR } from '../constants'
 import getColor from './getColor'
 
 test('should return the average color of a black PNG image', async () => {
@@ -23,4 +24,10 @@ test('should return the average color of a black JPG image', async () => {
     'https://imageio.forbes.com/specials-images/imageserve/5ed6636cdd5d320006caf841/0x0.jpg?format=jpg&width=1200'
   const color = await getColor(image)
   expect(color).toEqual([0, 0, 0])
+})
+
+test('should return default color for a gif image', async () => {
+  const image = 'https://thumbs.gfycat.com/AgitatedLiveAgouti-size_restricted.gif'
+  const color = await getColor(image)
+  expect(color).toEqual(DEFAULT_COLOR)
 })
