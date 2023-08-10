@@ -21217,10 +21217,10 @@ workerpool@6.2.1:
   resolved "https://registry.yarnpkg.com/workerpool/-/workerpool-6.2.1.tgz#46fc150c17d826b86a008e5a4508656777e9c343"
   integrity sha512-ILEIE97kDZvF9Wb9f6h5aXK4swSlKGUcOEGiIYb2OOu/IrDU9iwj0fD//SsA6E5ibwJxpEvhullJY4Sl4GcpAw==
 
-wrangler@0.0.0-6ccc4fa6:
-  version "0.0.0-6ccc4fa6"
-  resolved "https://registry.yarnpkg.com/wrangler/-/wrangler-0.0.0-6ccc4fa6.tgz#aad5355769f5c39c7ff1a8cf415b7cb2c0356ff1"
-  integrity sha512-Fx4ABXz3P7VrmagVVns+ODsml3tuhLHJTVLQe5Gh0zScPtt7yaSQvhp+YNdKO/WkMhvDAh9+Yz7yE9CjJzwhGQ==
+wrangler@^2.20:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/wrangler/-/wrangler-2.20.0.tgz#c4e2b18933f21b73fe5f1a9dd9406755aebae85d"
+  integrity sha512-UdKJ2LD7qgDxDvll/GkR1HnRP+bcEdqi/HJjDI+7eF4lv9V940jmm3orxCkSEosGyE14q0q6dBRM95+fBI8tdQ==
   dependencies:
     "@cloudflare/kv-asset-handler" "^0.2.0"
     "@esbuild-plugins/node-globals-polyfill" "^0.1.1"
