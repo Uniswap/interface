@@ -21217,7 +21217,7 @@ workerpool@6.2.1:
   resolved "https://registry.yarnpkg.com/workerpool/-/workerpool-6.2.1.tgz#46fc150c17d826b86a008e5a4508656777e9c343"
   integrity sha512-ILEIE97kDZvF9Wb9f6h5aXK4swSlKGUcOEGiIYb2OOu/IrDU9iwj0fD//SsA6E5ibwJxpEvhullJY4Sl4GcpAw==
 
-wrangler@^2.20:
+wrangler@2.20.0:
   version "2.20.0"
   resolved "https://registry.yarnpkg.com/wrangler/-/wrangler-2.20.0.tgz#c4e2b18933f21b73fe5f1a9dd9406755aebae85d"
   integrity sha512-UdKJ2LD7qgDxDvll/GkR1HnRP+bcEdqi/HJjDI+7eF4lv9V940jmm3orxCkSEosGyE14q0q6dBRM95+fBI8tdQ==
