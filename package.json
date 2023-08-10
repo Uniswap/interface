@@ -68,7 +68,6 @@
     "yaml": "2.2.2"
   },
   "scripts": {
-    "bootstrap": "yarn contracts:compile && yarn g:build",
     "contracts:compile": "typechain --target ethers-v5 --out-dir packages/wallet/src/abis/types './packages/wallet/src/abis/**/*.json'",
     "g:build": "turbo run build --concurrency=100%",
     "g:check:deps": "manypkg check",
@@ -81,6 +80,7 @@
     "g:typecheck": "turbo run typecheck --parallel",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "graphql:schema": "get-graphql-schema https://api.uniswap.org/v1/graphql -h Origin=https://app.uniswap.org > ./packages/wallet/src/data/__generated__/schema.graphql",
+    "lfg": "yarn contracts:compile && yarn mobile env:local:download && yarn web env:local:download && yarn g:build && yarn mobile pod && yarn mobile graphql:generate:swift && yarn mobile ios",
     "mobile": "yarn workspace @uniswap/mobile",
     "postinstall": "husky install",
     "staged:lint:fix": "eslint --fix",

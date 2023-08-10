@@ -2,29 +2,35 @@
 
 This repository contains code for the Uniswap Wallet and is in transition to a monorepo to share code across platforms!
 
-## Quickstart
+## Getting Started
 
-### Prerequisites
+### Prerequisites / Setup
 
-You must first read and follow the instructions of the individual apps in this repository before being able to run them:
+First, read and follow the instructions of the individual apps in this repository to install prerequisites to run these apps.
 
 - [Mobile](apps/mobile/README.md)
 - [Web](apps/web/README.md)
 
-### Installation
+### Quickstart
+
+There is a convenience command for setting up once you have installed the correct software. Before running ensure you installed and login to the [1Password CLI](https://1password.com/downloads/command-line/). Then run the following commands:
 
 ```bash
 yarn
+yarn lfg
 ```
+
+This will generate all files needed for both mobile and extension and build both projects (web code and iOS app to simulator)
 
 ### Running
 
 To run a product command, run `yarn {product} {command}`. e.g:
 
 ```bash
-## Mobile pod and launch iOS
+## Mobile pod installation, iOS installation and launching
 yarn mobile pod
 yarn mobile ios
+yarn mobile start
 
 # Extension start
 yarn web start
