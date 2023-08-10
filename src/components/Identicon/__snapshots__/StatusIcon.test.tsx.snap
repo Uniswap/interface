@@ -112,9 +112,9 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
     class="c1"
   >
     <img
-      alt="Install MetaMask icon"
+      alt="WalletConnect icon"
       class="c2"
-      src="metamask-icon.svg"
+      src="walletconnect-icon.svg"
     />
   </div>
   <div
@@ -240,9 +240,9 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
     class="c1"
   >
     <img
-      alt="Install MetaMask icon"
+      alt="WalletConnect icon"
       class="c2"
-      src="metamask-icon.svg"
+      src="walletconnect-icon.svg"
     />
   </div>
   <div

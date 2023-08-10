@@ -10,7 +10,6 @@ import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
-import { useSyncExternalStore } from 'react'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
@@ -44,7 +43,7 @@ const getIsGenericInjector = () => getIsInjected() && !getIsMetaMaskWallet() && 
 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
 
-export const injectedConnection: Connection = {
+const injectedConnection: Connection = {
   getName: () => getInjection().name,
   connector: web3Injected,
   hooks: web3InjectedHooks,
@@ -79,53 +78,17 @@ export const walletConnectV2Connection: Connection = new (class implements Conne
   getIcon = () => WALLET_CONNECT_ICON
   shouldDisplay = () => !getIsInjectedMobileBrowser()
 
-  private activeConnector = initializeConnector<WalletConnectV2>(this.initializer)
-  // The web3-react Provider requires referentially stable connectors, so we use proxies to allow lazy connections
-  // whilst maintaining referential equality.
-  private proxyConnector = new Proxy(
-    {},
-    {
-      get: (target, p, receiver) => Reflect.get(this.activeConnector[0], p, receiver),
-      getOwnPropertyDescriptor: (target, p) => Reflect.getOwnPropertyDescriptor(this.activeConnector[0], p),
-      getPrototypeOf: () => WalletConnectV2.prototype,
-      set: (target, p, receiver) => Reflect.set(this.activeConnector[0], p, receiver),
-    }
-  ) as (typeof this.activeConnector)[0]
-  private proxyHooks = new Proxy(
-    {},
-    {
-      get: (target, p, receiver) => {
-        return () => {
-          // Because our connectors are referentially stable (through proxying), we need a way to trigger React renders
-          // from outside of the React lifecycle when our connector is re-initialized. This is done via 'change' events
-          // with `useSyncExternalStore`:
-          const hooks = useSyncExternalStore(
-            (onChange) => {
-              this.onActivate = onChange
-              return () => (this.onActivate = undefined)
-            },
-            () => this.activeConnector[1]
-          )
-          return Reflect.get(hooks, p, receiver)()
-        }
-      },
-    }
-  ) as (typeof this.activeConnector)[1]
-
-  private onActivate?: () => void
-
+  private _connector = initializeConnector<WalletConnectV2>(this.initializer)
   overrideActivate = (chainId?: ChainId) => {
     // Always re-create the connector, so that the chainId is updated.
-    this.activeConnector = initializeConnector((actions) => this.initializer(actions, chainId))
-    this.onActivate?.()
+    this._connector = initializeConnector((actions) => this.initializer(actions, chainId))
     return false
   }
-
   get connector() {
-    return this.proxyConnector
+    return this._connector[0]
   }
   get hooks() {
-    return this.proxyHooks
+    return this._connector[1]
   }
 })()
 
@@ -172,18 +135,20 @@ const coinbaseWalletConnection: Connection = {
   },
 }
 
-export const connections = [
-  gnosisSafeConnection,
-  uniwalletWCV2ConnectConnection,
-  injectedConnection,
-  walletConnectV2Connection,
-  coinbaseWalletConnection,
-  networkConnection,
-]
+export function getConnections() {
+  return [
+    uniwalletWCV2ConnectConnection,
+    injectedConnection,
+    walletConnectV2Connection,
+    coinbaseWalletConnection,
+    gnosisSafeConnection,
+    networkConnection,
+  ]
+}
 
 export function getConnection(c: Connector | ConnectionType) {
   if (c instanceof Connector) {
-    const connection = connections.find((connection) => connection.connector === c)
+    const connection = getConnections().find((connection) => connection.connector === c)
     if (!connection) {
       throw Error('unsupported connector')
     }
