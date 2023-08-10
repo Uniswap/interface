@@ -3,7 +3,7 @@ import { BaseButton } from 'components/Button'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
 import { X } from 'react-feather'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
 
 export const PopupContainer = styled.div<{ show: boolean }>`
