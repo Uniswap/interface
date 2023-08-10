@@ -1,8 +1,8 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/utils/uriToHttp.test.ts
 
-import { uriToHttp } from './uriToHttp'
+import { isSVGUri, uriToHttp } from './urls'
 
-describe('uriToHttp', () => {
+describe(uriToHttp, () => {
   it('returns .eth.link for ens names', () => {
     expect(uriToHttp('t2crtokens.eth')).toEqual([])
   })
@@ -34,5 +34,18 @@ describe('uriToHttp', () => {
   })
   it('returns empty array for invalid scheme', () => {
     expect(uriToHttp('blah:test')).toEqual([])
+  })
+})
+
+describe(isSVGUri, () => {
+  it('detects svg', () => {
+    expect(isSVGUri('http://test.com/x.svg')).toEqual(true)
+  })
+  it(`doesn't see http`, () => {
+    expect(isSVGUri('http://test.com')).toEqual(false)
+  })
+  it('null and undefined handled the same way', () => {
+    expect(isSVGUri(null)).toEqual(false)
+    expect(isSVGUri(undefined)).toEqual(false)
   })
 })

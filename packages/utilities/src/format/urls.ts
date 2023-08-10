@@ -25,3 +25,7 @@ export function uriToHttp(uri: string): string[] {
 
   return []
 }
+
+export function isSVGUri(uri: Maybe<string>): boolean {
+  return uri?.includes('.svg') ?? false
+}

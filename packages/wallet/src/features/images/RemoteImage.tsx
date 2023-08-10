@@ -1,5 +1,5 @@
 import { Image, ImageResizeMode } from 'react-native'
-import { uriToHttp } from 'utilities/src/format/uriToHttp'
+import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { RemoteSvg } from './RemoteSvg'
 
@@ -29,7 +29,7 @@ export function RemoteImage({
     return fallback ?? null
   }
 
-  if (imageHttpUrl.includes('.svg')) {
+  if (isSVGUri(imageHttpUrl)) {
     return (
       <RemoteSvg
         backgroundColor={backgroundColor}

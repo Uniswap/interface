@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { Box } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text/Text'
-import { uriToHttp } from 'utilities/src/format/uriToHttp'
+import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { ImageUri, ImageUriProps } from './ImageUri'
 import { WebSvgUri } from './WebSvgUri'
 
@@ -54,7 +54,7 @@ export function NFTViewer({
     return fallback
   }
 
-  if (imageHttpUri.includes('.svg')) {
+  if (isSVGUri(imageHttpUri)) {
     return squareGridView ? (
       <WebSvgUri autoplay={autoplay} uri={imageHttpUri} />
     ) : (

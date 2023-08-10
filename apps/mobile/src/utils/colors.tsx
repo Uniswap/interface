@@ -6,6 +6,7 @@ import { colors as GlobalColors } from 'ui/src/theme/color'
 import { GlobalPalette } from 'ui/src/theme/color/types'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
 import { assert } from 'utilities/src/errors'
+import { isSVGUri } from 'utilities/src/format/urls'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
 import { hex } from 'wcag-contrast'
@@ -230,7 +231,7 @@ export function useExtractedTokenColor(
     return { tokenColor: specialCaseTokenColor, tokenColorLoading: false }
   }
 
-  if (imageUrl?.includes('.svg')) {
+  if (isSVGUri(imageUrl)) {
     // Fall back to a more neutral color for SVG's since they fail extraction but we can render them elsewhere
     return { tokenColor: theme.DEP_textPrimary?.get(), tokenColorLoading: false }
   }

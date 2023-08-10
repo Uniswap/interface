@@ -3,7 +3,7 @@ import { useTheme } from 'tamagui'
 import { Box } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { uriToHttp } from 'utilities/src/format/uriToHttp'
+import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { SHADOW_OFFSET, style, THIN_BORDER } from 'wallet/src/components/CurrencyLogo/styles'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -32,7 +32,7 @@ export function TokenLogo({
   let tokenImage = null
 
   if (httpUri) {
-    if (httpUri?.includes('.svg')) {
+    if (isSVGUri(httpUri)) {
       tokenImage = (
         <Box borderRadius={size / 2} overflow="hidden">
           <RemoteSvg
