@@ -37,7 +37,7 @@ export function FavoriteHeaderRow({
         </TouchableArea>
       ) : (
         <TouchableArea height={theme.iconSizes.icon20} onPress={onPress}>
-          <Text color="DEP_accentActive" variant="buttonLabelSmall">
+          <Text color="DEP_accentBranded" variant="buttonLabelSmall">
             {t('Done')}
           </Text>
         </TouchableArea>
