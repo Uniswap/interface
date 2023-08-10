@@ -110,12 +110,12 @@ public struct ColorExtraction {
     // BUSD
     "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x4Fabb145d64652a948d72533023f6E7A623C7C53/logo.png":
       UIColor(Color.BUSD),
-      // AI-X
-      "https://s2.coinmarketcap.com/static/img/coins/64x64/26984.png":
-        UIColor(Color.X),
-      // ETH
-      "https://token-icons.s3.amazonaws.com/eth.png":
-        UIColor(Color.ETH),
+    // AI-X
+    "https://s2.coinmarketcap.com/static/img/coins/64x64/26984.png":
+      UIColor(Color.X),
+    // ETH
+    "https://token-icons.s3.amazonaws.com/eth.png":
+      UIColor(Color.ETH),
     // HARRYPOTTERSHIBAINUBITCOIN
     "https://assets.coingecko.com/coins/images/30323/large/hpos10i_logo_casino_night-dexview.png?1684117567":
       UIColor(Color.HARRYPOTTERBITCOIN),
@@ -213,14 +213,17 @@ public struct ColorExtraction {
     return UIColor(defaultColor)
   }
   
-  public static func extractImageColor(imageURL: String) -> UIColor {
-    let image = UIImage(url: URL(string: imageURL)) ?? UIImage()
+  public static func extractImageColor(imageURL: String) -> UIColor? {
+    let image: UIImage? = UIImage(url: URL(string: imageURL))
+    guard let image = image else {
+      return nil
+    }
     let colors = image.getColors()
     let colorsArray = [colors?.background, colors?.primary, colors?.detail, colors?.secondary]
     return pickContrastPassingColor(colors: colorsArray)
   }
   
-  public static func extractImageColorWithSpecialCase(imageURL: String) -> UIColor {
+  public static func extractImageColorWithSpecialCase(imageURL: String) -> UIColor? {
     if let color = specialCaseTokenColors[imageURL] {
       return color
     }

@@ -8,7 +8,6 @@
 import WidgetKit
 import SwiftUI
 import Intents
-import OSLog
 import WidgetsCore
 import Apollo
 import Charts
@@ -111,7 +110,11 @@ struct TokenPriceWidgetEntryView: View {
   func widgetPriceHeader(isPlaceholder: Bool) -> some View {
     return HStack(alignment: .top) {
       if (!isPlaceholder) {
-        Image(uiImage: entry.logo ?? UIImage()).withIconStyle(background: .white)
+        if let logo = entry.logo {
+          Image(uiImage: logo).withIconStyle(background: .white)
+        } else {
+          Placeholder.Circle(width: 40, height: 40)
+        }
         Spacer()
         Text(entry.symbol)
           .withHeadlineSmallStyle()
@@ -154,15 +157,17 @@ struct TokenPriceWidgetEntryView: View {
     return ZStack {
       if let color = entry.backgroundColor {
         Color(color)
-        VStack(alignment: .leading, spacing: 0) {
-          widgetPriceHeader(isPlaceholder: false).padding(.bottom, 12)
-          Spacer()
-          priceSection(isPlaceholder: false).padding(.bottom, 4)
-          timeStamp()
-        }
-        .withMaxFrame()
-        .padding(12)
+      } else {
+        Color.UNI
       }
+      VStack(alignment: .leading, spacing: 0) {
+        widgetPriceHeader(isPlaceholder: false).padding(.bottom, 12)
+        Spacer()
+        priceSection(isPlaceholder: false).padding(.bottom, 4)
+        timeStamp()
+      }
+      .withMaxFrame()
+      .padding(12)
     }
   }
   
@@ -183,6 +188,8 @@ struct TokenPriceWidgetEntryView: View {
     return ZStack {
       if let color = entry.backgroundColor {
         Color(color)
+      } else {
+        Color.UNI
       }
       VStack(alignment: .leading, spacing: 0) {
         widgetPriceHeader(isPlaceholder: false).padding(.bottom, 8)
@@ -221,7 +228,7 @@ struct TokenPriceWidgetEntryView: View {
   }
   
   var body: some View {
-    let deeplinkURL = URL(string: "uniswap://widget/#/tokens/\(entry.configuration.selectedToken?.chain?.lowercased() ?? "ethereum")/\(entry.configuration.selectedToken?.address ?? "NATIVE")")
+    let deeplinkURL = URL(string: "uniswap://widget/#/tokens/\(entry.configuration.selectedToken?.chain?.lowercased() ?? "")/\(entry.configuration.selectedToken?.address ?? "NATIVE")")
     let shouldRenderPlaceholder = !reasons.isEmpty
     return ZStack {
       switch family {
