@@ -13,14 +13,14 @@ let APP_GROUP = "group.com.uniswap.widgets"
 
 public struct WidgetDataFavorites: Decodable {
   
-  public init(_ favorites: [Favorite]) {
+  public init(_ favorites: [TokenInput]) {
     self.favorites = favorites
   }
   
-  public var favorites: [Favorite]
+  public var favorites: [TokenInput]
 }
 
-public struct Favorite: Decodable {
+public struct TokenInput: Decodable {
   public var address: String?
   public var chain: String
 }

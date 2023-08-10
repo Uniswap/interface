@@ -30,22 +30,11 @@ class IntentHandler: INExtension, TokenPriceConfigurationIntentHandling {
   
   func provideSelectedTokenOptionsCollection(for intent: TokenPriceConfigurationIntent) async throws -> INObjectCollection<IntentToken> {
     let favorites = UniswapUserDefaults.readFavorites()
-    // TODO: MOB-967 fix to run a single query
-    let favoriteTokens = try await withThrowingTaskGroup(of: TokenResponse.self, returning: [IntentToken].self) { taskGroup in
-      for favorite in favorites.favorites {
-        taskGroup.addTask { try await DataQueries.fetchTokenData(chain: favorite.chain, address: favorite.address) }
-      }
-      
-      var tokens = [IntentToken]()
-      for try await result in taskGroup {
-        tokens.append(tokenResponseToIntentToken(result, section: Section.favorite))
-      }
-      return tokens
-      
-    }
+    async let pendingFavoriteTokenReponses = try DataQueries.fetchTokensData(tokenInputs: favorites.favorites)
+    async let pendingTopTokensResponse = try DataQueries.fetchTopTokensData()
+    let (favoriteTokenReponses, topTokensResponse) = await (try pendingFavoriteTokenReponses, try pendingTopTokensResponse)
     
-    let topTokensResponse = try await DataQueries.fetchTopTokensData()
-    
+    let favoriteTokens = favoriteTokenReponses.map {tokenResponseToIntentToken($0, section: Section.favorite)}
     let topTokens = topTokensResponse.map { (result) -> IntentToken in
       // replace wETH with ETH in the configuration
       if (result.address == WidgetConstants.WETHAddress && result.chain == WidgetConstants.ethereumSymbol) {

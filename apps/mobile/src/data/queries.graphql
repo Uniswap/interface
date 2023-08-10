@@ -724,3 +724,14 @@ query FavoriteTokenCard($chain: Chain!, $address: String) {
     }
   }
 }
+
+query Tokens($contracts: [ContractInput!]!) {
+  tokens(contracts: $contracts) {
+    symbol
+    chain
+    address
+    project {
+      name
+    }
+  }
+}

@@ -1288,6 +1288,13 @@ export type FavoriteTokenCardQueryVariables = Exact<{
 
 export type FavoriteTokenCardQuery = { __typename?: 'Query', token?: { __typename?: 'Token', symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null } | null } | null };
 
+export type TokensQueryVariables = Exact<{
+  contracts: Array<ContractInput> | ContractInput;
+}>;
+
+
+export type TokensQuery = { __typename?: 'Query', tokens?: Array<{ __typename?: 'Token', symbol?: string | null, chain: Chain, address?: string | null, project?: { __typename?: 'TokenProject', name?: string | null } | null } | null> | null };
+
 export type PortfolioBalanceQueryVariables = Exact<{
   owner: Scalars['String'];
 }>;
@@ -2307,7 +2314,7 @@ export const TransactionListDocument = gql`
   ) {
     id
     assetActivities(
-      pageSize: 50
+      pageSize: 100
       page: 1
       chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]
     ) {
@@ -2721,6 +2728,46 @@ export function useFavoriteTokenCardLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type FavoriteTokenCardQueryHookResult = ReturnType<typeof useFavoriteTokenCardQuery>;
 export type FavoriteTokenCardLazyQueryHookResult = ReturnType<typeof useFavoriteTokenCardLazyQuery>;
 export type FavoriteTokenCardQueryResult = Apollo.QueryResult<FavoriteTokenCardQuery, FavoriteTokenCardQueryVariables>;
+export const TokensDocument = gql`
+    query Tokens($contracts: [ContractInput!]!) {
+  tokens(contracts: $contracts) {
+    symbol
+    chain
+    address
+    project {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useTokensQuery__
+ *
+ * To run a query within a React component, call `useTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTokensQuery({
+ *   variables: {
+ *      contracts: // value for 'contracts'
+ *   },
+ * });
+ */
+export function useTokensQuery(baseOptions: Apollo.QueryHookOptions<TokensQuery, TokensQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TokensQuery, TokensQueryVariables>(TokensDocument, options);
+      }
+export function useTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TokensQuery, TokensQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TokensQuery, TokensQueryVariables>(TokensDocument, options);
+        }
+export type TokensQueryHookResult = ReturnType<typeof useTokensQuery>;
+export type TokensLazyQueryHookResult = ReturnType<typeof useTokensLazyQuery>;
+export type TokensQueryResult = Apollo.QueryResult<TokensQuery, TokensQueryVariables>;
 export const PortfolioBalanceDocument = gql`
     query PortfolioBalance($owner: String!) {
   portfolios(

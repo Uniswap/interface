@@ -122,6 +122,7 @@
 		0767E0362A61BBDC0042ADA2 /* Basel-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02E2A61BBDC0042ADA2 /* Basel-Bold.otf */; };
 		0767E0382A65C8330042ADA2 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0767E0372A65C8330042ADA2 /* Colors.swift */; };
 		0767E03B2A65D2550042ADA2 /* Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0767E03A2A65D2550042ADA2 /* Styling.swift */; };
+		077E60392A85587800ABC4B9 /* TokensQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077E60382A85587800ABC4B9 /* TokensQuery.graphql.swift */; };
 		0783F7B42A619E7C009ED617 /* UIComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0783F7B32A619E7C009ED617 /* UIComponents.swift */; };
 		078E79472A55EB3300F59CF2 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078E79462A55EB3300F59CF2 /* Intents.framework */; };
 		078E794E2A55EB3300F59CF2 /* WidgetIntentExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 078E79452A55EB3300F59CF2 /* WidgetIntentExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -397,6 +398,7 @@
 		0767E02E2A61BBDC0042ADA2 /* Basel-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Basel-Bold.otf"; sourceTree = "<group>"; };
 		0767E0372A65C8330042ADA2 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		0767E03A2A65D2550042ADA2 /* Styling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styling.swift; sourceTree = "<group>"; };
+		077E60382A85587800ABC4B9 /* TokensQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokensQuery.graphql.swift; sourceTree = "<group>"; };
 		0783F7B32A619E7C009ED617 /* UIComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIComponents.swift; sourceTree = "<group>"; };
 		078E79452A55EB3300F59CF2 /* WidgetIntentExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetIntentExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		078E79462A55EB3300F59CF2 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
@@ -672,6 +674,7 @@
 		0743218F2A83E3C900F8518D /* Queries */ = {
 			isa = PBXGroup;
 			children = (
+				077E60382A85587800ABC4B9 /* TokensQuery.graphql.swift */,
 				074321902A83E3C900F8518D /* TokenDetailsScreenQuery.graphql.swift */,
 				074321912A83E3C900F8518D /* SpotPricesQuery.graphql.swift */,
 				074321922A83E3C900F8518D /* ExploreTokensTabQuery.graphql.swift */,
@@ -1750,6 +1753,7 @@
 				074322172A83E3CA00F8518D /* NftTransfer.graphql.swift in Sources */,
 				074322202A83E3CA00F8518D /* NftAssetEdge.graphql.swift in Sources */,
 				0743222F2A83E3CA00F8518D /* Transaction.graphql.swift in Sources */,
+				077E60392A85587800ABC4B9 /* TokensQuery.graphql.swift in Sources */,
 				0743223D2A83E3CA00F8518D /* IAmount.graphql.swift in Sources */,
 				074321F32A83E3CA00F8518D /* FavoriteTokenCardQuery.graphql.swift in Sources */,
 				074322262A83E3CA00F8518D /* NftAsset.graphql.swift in Sources */,

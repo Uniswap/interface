@@ -13,15 +13,21 @@ public class DataQueries {
   
   static let cachePolicy: CachePolicy = CachePolicy.fetchIgnoringCacheData
   
-  public static func fetchTokenData(chain: String, address: String?) async throws -> TokenResponse {
+  public static func fetchTokensData(tokenInputs: [TokenInput]) async throws -> [TokenResponse] {
     return try await withCheckedThrowingContinuation { continuation in
-      Network.shared.apollo.fetch(query: MobileSchema.TokenQuery(chain: GraphQLEnum(rawValue: chain), address: address == nil ? GraphQLNullable.null : GraphQLNullable(stringLiteral: address!)), cachePolicy: cachePolicy) { result in
+      let contractInputs = tokenInputs.map {MobileSchema.ContractInput(chain: GraphQLEnum(rawValue: $0.chain), address: $0.address == nil ? GraphQLNullable.null: GraphQLNullable(stringLiteral: $0.address!))}
+      Network.shared.apollo.fetch(query: MobileSchema.TokensQuery(contracts: contractInputs)) { result in
         switch result {
         case .success(let graphQLResult):
-          let symbol = graphQLResult.data?.token?.symbol
-          let name = graphQLResult.data?.token?.project?.name
-          let token = TokenResponse(chain: chain, address: address, symbol: symbol ?? "", name: name ?? "")
-          continuation.resume(returning: token)
+          let tokens = graphQLResult.data?.tokens ?? []
+          let tokenResponses = tokens.map {
+            let symbol = $0?.symbol
+            let name = $0?.project?.name
+            let chain = $0?.chain
+            let address = $0?.address
+            return TokenResponse(chain: chain?.rawValue ?? "", address: address, symbol: symbol ?? "", name: name ?? "")
+          }
+          continuation.resume(returning: tokenResponses)
         case .failure(let error):
           continuation.resume(throwing: error)
         }
