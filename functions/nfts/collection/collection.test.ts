@@ -21,6 +21,7 @@ test.each(collections)('should inject metadata for valid collections', async (co
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).toMatchSnapshot()
   expect(body).toContain(`<meta property="og:title" content="${collection.collectionName} on Uniswap"/>`)
+  expect(body).not.toContain(`<meta property="og:description"`)
   expect(body).toContain(`<meta property="og:image" content="${collection.image}"/>`)
   expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
   expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
