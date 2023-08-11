@@ -198,7 +198,7 @@ export function FiatOnRampModal(): JSX.Element {
     <BottomSheetModal
       fullScreen
       hideKeyboardOnDismiss
-      backgroundColor={theme.colors.surface2}
+      backgroundColor={theme.colors.surface1}
       name={ModalName.FiatOnRamp}
       onClose={onClose}>
       {!showConnectingToMoonpayScreen && (
@@ -235,7 +235,7 @@ export function FiatOnRampModal(): JSX.Element {
                   mt="spacing48"
                   overflow="visible"
                   placeholder="$0"
-                  placeholderTextColor={theme.colors.surface2}
+                  placeholderTextColor={theme.colors.neutral3}
                   px="none"
                   py="none"
                   returnKeyType={showSoftInputOnFocus ? 'done' : undefined}

@@ -195,7 +195,7 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
         <Text color="neutral1" variant="bodyLarge">
           {t('Do this step in a private place')}
         </Text>
-        <Text color="neutral3" textAlign="center" variant="bodySmall">
+        <Text color="neutral2" textAlign="center" variant="bodySmall">
           {t(
             'Your recovery phrase is what grants you (and anyone who has it) access to your funds. Be sure to store it in a memorable, safe space.'
           )}

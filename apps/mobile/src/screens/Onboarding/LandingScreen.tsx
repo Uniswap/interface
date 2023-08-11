@@ -57,7 +57,9 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   useTimeout(hideSplashScreen, 1)
 
   return (
-    <Screen edges={['bottom']}>
+    // TODO(blocked by MOB-1082): delete bg prop
+    // dark mode onboarding asset needs to be re-exported with #131313 (surface1) as background color
+    <Screen bg={isDarkMode ? 'sporeBlack' : 'surface1'} edges={['bottom']}>
       <Flex shrink height="100%" width="100%">
         <LandingBackground />
       </Flex>
@@ -79,7 +81,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
             </TouchableArea>
           </Trace>
           <Box mx="spacing24" pb={pb}>
-            <Text color="neutral3" mx="spacing4" textAlign="center" variant="buttonLabelMicro">
+            <Text color="neutral2" mx="spacing4" textAlign="center" variant="buttonLabelMicro">
               <Trans t={t}>
                 By continuing, I agree to the{' '}
                 <Text

@@ -265,26 +265,26 @@ const GradientOverlay = memo(function GradientOverlay({
       <Svg height="100%" width="100%">
         <Defs>
           <LinearGradient id="scan-top-fadeout" x1="0" x2="0" y1="0" y2="1">
-            <Stop offset="0" stopColor={theme.colors.DEP_background1} stopOpacity="1" />
+            <Stop offset="0" stopColor={theme.colors.surface1} stopOpacity="1" />
             <Stop
               offset="0.4"
-              stopColor={theme.colors.DEP_background1}
+              stopColor={theme.colors.surface1}
               stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
             />
           </LinearGradient>
           <LinearGradient id="scan-bottom-fadeout" x1="0" x2="0" y1="1" y2="0">
-            <Stop offset="0" stopColor={theme.colors.DEP_background1} stopOpacity="1" />
+            <Stop offset="0" stopColor={theme.colors.surface1} stopOpacity="1" />
             <Stop
               offset="0.4"
-              stopColor={theme.colors.DEP_background1}
+              stopColor={theme.colors.surface1}
               stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
             />
           </LinearGradient>
         </Defs>
         {!shouldFreezeCamera ? (
-          <Path d={pathWithHole} fill={theme.colors.DEP_backgroundScrim} strokeWidth="32" />
+          <Path d={pathWithHole} fill={theme.colors.scrim} strokeWidth="32" />
         ) : (
-          <Rect fill={theme.colors.DEP_backgroundScrim} height="100%" width="100%" x="0" y="0" />
+          <Rect fill={theme.colors.scrim} height="100%" width="100%" x="0" y="0" />
         )}
         {/* gradient from top of modal to top of QR code, of color DEP_background1 to transparent */}
         <Rect fill="url(#scan-top-fadeout)" height="100%" width="100%" x="0" y="0" />

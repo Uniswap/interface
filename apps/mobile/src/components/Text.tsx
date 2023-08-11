@@ -29,7 +29,7 @@ const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.Element 
       <Box alignItems="center" flexDirection="row" position="relative">
         <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
         <Box
-          bg="surface2"
+          bg="surface3"
           borderRadius="rounded4"
           bottom="5%"
           left={0}

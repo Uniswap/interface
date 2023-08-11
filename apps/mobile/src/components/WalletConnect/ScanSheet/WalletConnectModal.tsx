@@ -180,7 +180,7 @@ export function WalletConnectModal({
   return (
     <BottomSheetModal
       fullScreen
-      backgroundColor={theme.colors.surface2}
+      backgroundColor={theme.colors.surface1}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
       <>

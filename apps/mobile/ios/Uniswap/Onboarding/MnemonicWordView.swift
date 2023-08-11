@@ -54,14 +54,14 @@ class MnemonicWordView: UIView {
     stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     
     if traitCollection.userInterfaceStyle == .light {
-      self.layer.borderColor = UIColor.init(red: 94/255.0, green: 104/255.0, blue: 135/255.0, alpha: 0.24).cgColor
-      self.layer.backgroundColor = UIColor.init(red: 237/255.0, green: 239/255.0, blue: 247/255.0, alpha: 1.0).cgColor
-      indexLabel.textColor = UIColor.lightGray
+      self.layer.backgroundColor = UIColor.init(red: 249/255.0, green: 249/255.0, blue: 249/255.0, alpha: 1.0).cgColor
+      self.layer.borderColor = UIColor.init(red: 34/255.0, green: 34/255.0, blue: 34/255.0, alpha: 0.05).cgColor
+      indexLabel.textColor = UIColor.init(red: 125/255.0, green: 125/255.0, blue: 125/255.0, alpha: 1.0)
       wordLabel.textColor = UIColor.black
     } else {
-      self.layer.backgroundColor = UIColor.init(red: 14/255.0, green: 17/255.0, blue: 26/255.0, alpha: 1.0).cgColor
-      self.layer.borderColor = UIColor.init(red: 153/255.0, green: 161/255.0, blue: 189/255.0, alpha: 0.24).cgColor
-      indexLabel.textColor = UIColor.init(red: 124/255.0, green: 133/255.0, blue: 162/255.0, alpha: 1.0)
+      self.layer.backgroundColor = UIColor.init(red: 27/255.0, green: 27/255.0, blue: 27/255.0, alpha: 1.0).cgColor
+      self.layer.borderColor = UIColor.init(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 0.12).cgColor
+      indexLabel.textColor = UIColor.init(red: 155/255.0, green: 155/255.0, blue: 155/255.0, alpha: 1.0)
       wordLabel.textColor = UIColor.white
     }
   }

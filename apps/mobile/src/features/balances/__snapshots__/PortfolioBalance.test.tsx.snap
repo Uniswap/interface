@@ -73,7 +73,7 @@ exports[`PortfolioBalance renders without error 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#F9F9F9",
+                  "backgroundColor": "#2222220D",
                   "borderRadius": 4,
                   "bottom": "5%",
                   "display": "flex",
@@ -166,7 +166,7 @@ exports[`PortfolioBalance renders without error 1`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#F9F9F9",
+                    "backgroundColor": "#2222220D",
                     "borderRadius": 4,
                     "bottom": "5%",
                     "display": "flex",

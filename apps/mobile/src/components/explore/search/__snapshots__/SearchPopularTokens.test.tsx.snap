@@ -63,7 +63,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#F9F9F9",
+                  "backgroundColor": "#2222220D",
                   "borderRadius": 999999,
                   "display": "flex",
                   "minHeight": 40,
@@ -150,7 +150,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
                   style={
                     [
                       {
-                        "backgroundColor": "#F9F9F9",
+                        "backgroundColor": "#2222220D",
                         "borderRadius": 4,
                         "bottom": "5%",
                         "display": "flex",
@@ -241,7 +241,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
                     style={
                       [
                         {
-                          "backgroundColor": "#F9F9F9",
+                          "backgroundColor": "#2222220D",
                           "borderRadius": 4,
                           "bottom": "5%",
                           "display": "flex",
@@ -306,7 +306,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#F9F9F9",
+                  "backgroundColor": "#2222220D",
                   "borderRadius": 999999,
                   "display": "flex",
                   "minHeight": 40,
@@ -393,7 +393,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
                   style={
                     [
                       {
-                        "backgroundColor": "#F9F9F9",
+                        "backgroundColor": "#2222220D",
                         "borderRadius": 4,
                         "bottom": "5%",
                         "display": "flex",
@@ -484,7 +484,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
                     style={
                       [
                         {
-                          "backgroundColor": "#F9F9F9",
+                          "backgroundColor": "#2222220D",
                           "borderRadius": 4,
                           "bottom": "5%",
                           "display": "flex",

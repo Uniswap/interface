@@ -7,7 +7,7 @@ exports[`renders wallet loader 1`] = `
     [
       {
         "alignItems": "center",
-        "borderColor": "#F9F9F9",
+        "borderColor": "#2222220D",
         "borderRadius": 20,
         "borderWidth": 1,
         "display": "flex",
@@ -39,7 +39,7 @@ exports[`renders wallet loader 1`] = `
       style={
         [
           {
-            "backgroundColor": "#F9F9F9",
+            "backgroundColor": "#2222220D",
             "borderRadius": 999999,
             "display": "flex",
             "height": 32,
@@ -128,7 +128,7 @@ exports[`renders wallet loader 1`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#F9F9F9",
+                    "backgroundColor": "#2222220D",
                     "borderRadius": 4,
                     "bottom": "5%",
                     "display": "flex",
@@ -208,7 +208,7 @@ exports[`renders wallet loader 1`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#F9F9F9",
+                    "backgroundColor": "#2222220D",
                     "borderRadius": 4,
                     "bottom": "5%",
                     "display": "flex",

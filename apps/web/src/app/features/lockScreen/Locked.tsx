@@ -90,7 +90,7 @@ export function Locked(): JSX.Element {
           placeholderTextColor="$neutral3"
           onSubmitEditing={onPress}
           {...passwordInputProps}
-          backgroundColor={isIncorrectPassword ? '$DEP_accentCriticalSoft' : '$scrim'}
+          backgroundColor={isIncorrectPassword ? '$DEP_accentCriticalSoft' : '$surface1'}
           color="$neutral1"
         />
       </YStack>
