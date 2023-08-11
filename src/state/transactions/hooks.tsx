@@ -70,7 +70,7 @@ export function useMultichainTransactions(): [TransactionDetails, ChainId][] {
 }
 
 // returns all the transactions for the current chain
-export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
+function useAllTransactions(): { [txHash: string]: TransactionDetails } {
   const { chainId } = useWeb3React()
 
   const state = useAppSelector((state) => state.transactions)

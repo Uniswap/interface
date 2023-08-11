@@ -4,18 +4,15 @@ import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import usePrevious from 'hooks/usePrevious'
 import { atom, useAtom } from 'jotai'
 import { PropsWithChildren, useCallback, useEffect } from 'react'
-import { usePendingOrders } from 'state/signatures/hooks'
-import { usePendingTransactions } from 'state/transactions/hooks'
+
+import { usePendingActivity } from './MiniPortfolio/Activity/hooks'
 
 /** Returns true if the number of pending activities has decreased */
 function useHasUpdatedTx() {
-  const numPendingTxs = usePendingTransactions().length
-  const numPendingOrders = usePendingOrders().length
+  const { pendingActivityCount } = usePendingActivity()
+  const prevPendingActivityCount = usePrevious(pendingActivityCount)
 
-  const totalPending = numPendingTxs + numPendingOrders
-  const prevPending = usePrevious(totalPending)
-
-  return !!prevPending && totalPending < prevPending
+  return !!prevPendingActivityCount && pendingActivityCount < prevPendingActivityCount
 }
 
 export function useCachedPortfolioBalancesQuery({ account }: { account?: string }) {
