@@ -86,7 +86,7 @@ interface TokenSelectorListProps {
   onSelectCurrency: OnSelectCurrency
   sections?: TokenSelectorListSections
   chainFilter: ChainId | null
-  showTokenWarnings?: boolean
+  showTokenWarnings: boolean
   refetch?: () => void
   loading?: boolean
   hasError?: boolean
@@ -139,7 +139,7 @@ function _TokenSelectorList({
             chainFilter={chainFilter}
             index={index}
             section={section}
-            showWarnings={Boolean(showTokenWarnings)}
+            showWarnings={showTokenWarnings}
             tokenOption={item}
             onSelectCurrency={onSelectCurrency}
           />

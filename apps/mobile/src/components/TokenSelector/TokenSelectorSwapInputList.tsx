@@ -83,6 +83,7 @@ function _TokenSelectorSwapInputList({
       loading={loading}
       refetch={refetch}
       sections={sections}
+      showTokenWarnings={true}
       onSelectCurrency={onSelectCurrency}
     />
   )

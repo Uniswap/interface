@@ -251,8 +251,10 @@ function TokenDetails({
 
   const onPressSwap = useCallback(
     (swapType: TransactionType.BUY | TransactionType.SELL) => {
-      // show warning modal speedbump if token has a warning level and user has not dismissed
-      if (safetyLevel !== SafetyLevel.Verified && !tokenWarningDismissed) {
+      if (safetyLevel === SafetyLevel.Blocked) {
+        setShowWarningModal(true)
+        // show warning modal speed bump if token has a warning level and user has not dismissed
+      } else if (safetyLevel !== SafetyLevel.Verified && !tokenWarningDismissed) {
         setActiveTransactionType(swapType)
         setShowWarningModal(true)
       } else {
@@ -359,11 +361,8 @@ function TokenDetails({
         <AnimatedFlex backgroundColor="surface1" entering={FadeInDown} pb={pb}>
           <TokenDetailsActionButtons
             tokenColor={tokenColor}
-            onPressSwap={
-              safetyLevel === SafetyLevel.Blocked
-                ? undefined
-                : (): void =>
-                    onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
+            onPressSwap={(): void =>
+              onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
             }
           />
         </AnimatedFlex>

@@ -118,6 +118,7 @@ function _TokenSelectorSendList({
       loading={loading}
       refetch={refetch}
       sections={sections}
+      showTokenWarnings={false}
       onSelectCurrency={onSelectCurrency}
     />
   )

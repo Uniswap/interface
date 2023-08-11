@@ -14,7 +14,7 @@ export function TokenDetailsActionButtons({
   onPressSwap,
   tokenColor,
 }: {
-  onPressSwap?: () => void
+  onPressSwap: () => void
   tokenColor?: Maybe<string>
 }): JSX.Element {
   const { t } = useTranslation()
@@ -42,7 +42,6 @@ export function TokenDetailsActionButtons({
           borderColor={borderColor}
           borderRadius={borderRadius}
           borderWidth={1}
-          disabled={!onPressSwap}
           flexGrow={1}
           px={paddingX}
           py={paddingY}
