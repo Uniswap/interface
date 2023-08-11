@@ -18,21 +18,35 @@ public class Network {
     let store = ApolloStore(cache: cache)
     let client = URLSessionClient()
     
-    let provider = NetworkInterceptorProvider(client: client, store: store)
+    let provider = NetworkInterceptorProvider(store: store, client: client)
     let url = URL(string: UNISWAP_API_URL)!
     let transport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: url)
     return ApolloClient(networkTransport: transport, store: store)
   }()
 }
 
-class NetworkInterceptorProvider: DefaultInterceptorProvider {
-  
-  override func interceptors<Operation>(for operation: Operation) -> [ApolloInterceptor] where Operation : GraphQLOperation {
-    var interceptors = super.interceptors(for: operation)
-    interceptors.insert(AuthorizationInterceptor(), at: 0)
-    return interceptors
-  }
-  
+class NetworkInterceptorProvider: InterceptorProvider {
+    private let store: ApolloStore
+    private let client: URLSessionClient
+    
+    init(store: ApolloStore, client: URLSessionClient) {
+        self.store = store
+        self.client = client
+    }
+    
+    func interceptors<Operation: GraphQLOperation>(for operation: Operation) -> [ApolloInterceptor] {
+        return [
+            AuthorizationInterceptor(),
+            MaxRetryInterceptor(),
+            CacheReadInterceptor(store: self.store),
+            NetworkFetchInterceptor(client: self.client),
+            ResponseCodeInterceptor(),
+            MultipartResponseParsingInterceptor(),
+            JSONResponseParsingInterceptor(),
+            AutomaticPersistedQueryInterceptor(),
+            CacheWriteInterceptor(store: self.store)
+        ]
+    }
 }
 
 class AuthorizationInterceptor: ApolloInterceptor {
