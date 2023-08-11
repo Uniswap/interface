@@ -362,6 +362,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           >
             <div
               class="c7"
+              style="height: 24px; width: 24px;"
             >
               <div
                 class="c8"

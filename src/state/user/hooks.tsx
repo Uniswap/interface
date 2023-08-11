@@ -16,8 +16,8 @@ import { AppState } from '../types'
 import {
   addSerializedPair,
   addSerializedToken,
+  updateHideBaseWalletBanner,
   updateHideClosedPositions,
-  updateHideUniswapWalletBanner,
   updateUserDeadline,
   updateUserLocale,
   updateUserRouterPreference,
@@ -211,15 +211,15 @@ export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
 }
 
-export function useHideUniswapWalletBanner(): [boolean, () => void] {
+export function useHideBaseWalletBanner(): [boolean, () => void] {
   const dispatch = useAppDispatch()
-  const hideUniswapWalletBanner = useAppSelector((state) => state.user.hideUniswapWalletBanner)
+  const hideBaseWalletBanner = useAppSelector((state) => state.user.hideBaseWalletBanner)
 
-  const toggleHideUniswapWalletBanner = useCallback(() => {
-    dispatch(updateHideUniswapWalletBanner({ hideUniswapWalletBanner: true }))
+  const toggleHideBaseWalletBanner = useCallback(() => {
+    dispatch(updateHideBaseWalletBanner({ hideBaseWalletBanner: true }))
   }, [dispatch])
 
-  return [hideUniswapWalletBanner, toggleHideUniswapWalletBanner]
+  return [hideBaseWalletBanner, toggleHideBaseWalletBanner]
 }
 
 export function useUserDisabledUniswapX(): boolean {

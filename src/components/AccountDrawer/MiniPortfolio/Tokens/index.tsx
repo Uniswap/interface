@@ -1,5 +1,4 @@
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { TraceEvent } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Row from 'components/Row'
@@ -12,6 +11,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 
 import { useToggleAccountDrawer } from '../..'
 import { PortfolioArrow } from '../../AuthenticatedHeader'
