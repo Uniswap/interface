@@ -27,7 +27,6 @@ const expectRouterMock = (state: TradeState) => {
   mocked(useRoutingAPITrade).mockReturnValue({
     state,
     trade: undefined,
-    swapQuoteLatency: 0,
   })
 }
 

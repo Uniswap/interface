@@ -31,7 +31,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 ): {
   state: TradeState
   trade?: ClassicTrade
-  swapQuoteLatency: number
+  swapQuoteLatency?: number
 }
 
 export function useRoutingAPITrade<TTradeType extends TradeType>(
@@ -44,7 +44,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 ): {
   state: TradeState
   trade?: InterfaceTrade
-  swapQuoteLatency: number
+  swapQuoteLatency?: number
 }
 
 /**
