@@ -18,6 +18,7 @@ import { restoreMnemonicFromICloud } from 'src/features/CloudBackup/RNICloudBack
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
+import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
@@ -79,6 +80,8 @@ export function RestoreCloudBackupPasswordScreen({
   const passwordAttemptCount = useAppSelector(selectPasswordAttempts)
   const lockoutEndTime = useAppSelector(selectLockoutEndTime)
 
+  const isRestoringPrivateKey = params.importType === ImportType.Restore
+
   const [enteredPassword, setEnteredPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
@@ -122,7 +125,10 @@ export function RestoreCloudBackupPasswordScreen({
           })
         )
         dispatch(resetPasswordAttempts())
-        navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
+        // restore flow is handled in saga after `restorePrivateKeyComplete` is dispatched
+        if (!isRestoringPrivateKey) {
+          navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
+        }
       } catch (error) {
         dispatch(incrementPasswordAttempts())
         const updatedLockoutEndTime = calculateLockoutEndTime(passwordAttemptCount + 1)

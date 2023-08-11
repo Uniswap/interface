@@ -20,6 +20,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
+import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
@@ -37,9 +38,17 @@ export function RestoreCloudBackupLoadingScreen({
   const { t } = useTranslation()
   const theme = useAppTheme()
   const entryPoint = params.entryPoint
+  const importType = params.importType
+
+  const isRestoringPrivateKey = importType === ImportType.Restore
 
   const [isLoading, setIsLoading] = useState(true)
-  const backups = useCloudBackups()
+
+  // when we are restoring after phone migration
+  const signerAccounts = useNonPendingSignerAccounts()
+  const mnemonicId = (isRestoringPrivateKey && signerAccounts[0]?.mnemonicId) || undefined
+
+  const backups = useCloudBackups(mnemonicId)
 
   useAddBackButton(navigation)
 
@@ -84,23 +93,32 @@ export function RestoreCloudBackupLoadingScreen({
 
   // Handle no backups found error state
   if (!isLoading && backups.length === 0) {
-    return (
-      <Box alignSelf="center" px="spacing16">
-        <BaseCard.ErrorState
-          description={t(`It looks like you haven't backed up any of your seed phrases to iCloud.`)}
-          icon={
-            <CloudIcon
-              color={theme.colors.neutral3}
-              height={theme.imageSizes.image48}
-              width={theme.imageSizes.image48}
-            />
-          }
-          retryButtonLabel={t('Retry')}
-          title={t('0 backups found')}
-          onRetry={fetchICloudBackupsWithTimeout}
-        />
-      </Box>
-    )
+    if (isRestoringPrivateKey) {
+      navigation.replace(OnboardingScreens.SeedPhraseInput, {
+        importType,
+        entryPoint,
+      })
+    } else {
+      return (
+        <Box alignSelf="center" px="spacing16">
+          <BaseCard.ErrorState
+            description={t(
+              `It looks like you haven't backed up any of your seed phrases to iCloud.`
+            )}
+            icon={
+              <CloudIcon
+                color={theme.colors.neutral3}
+                height={theme.imageSizes.image48}
+                width={theme.imageSizes.image48}
+              />
+            }
+            retryButtonLabel={t('Retry')}
+            title={t('0 backups found')}
+            onRetry={fetchICloudBackupsWithTimeout}
+          />
+        </Box>
+      )
+    }
   }
 
   return (

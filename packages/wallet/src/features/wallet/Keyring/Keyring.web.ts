@@ -31,6 +31,7 @@ export class WebKeyring implements IKeyring {
     private session = new PersistedStorage('session')
   ) {
     this.generateAndStoreMnemonic = this.generateAndStoreMnemonic.bind(this)
+    this.generateAddressForMnemonic = this.generateAddressForMnemonic.bind(this)
     this.generateAndStorePrivateKey = this.generateAndStorePrivateKey.bind(this)
     this.getMnemonicIds = this.getMnemonicIds.bind(this)
     this.importMnemonic = this.importMnemonic.bind(this)
@@ -214,6 +215,18 @@ export class WebKeyring implements IKeyring {
       .map((k) => k.replaceAll(entirePrivateKeyPrefix, ''))
 
     return addresses
+  }
+
+  /**
+   * Derives public address from mnemonic for a given `derivationIndex`.
+   * @param mnemonic mnemonic to generate public address for
+   * @param derivationIndex number used to specify a which derivation index to use for deriving a private key from the mnemonic
+   * @returns public address associated with private key generated from the mnemonic at given derivation index
+   */
+  async generateAddressForMnemonic(mnemonic: string, derivationIndex: number): Promise<string> {
+    const derivationPath = defaultPath + derivationIndex
+    const walletAtIndex = Wallet.fromMnemonic(mnemonic, derivationPath)
+    return walletAtIndex.address
   }
 
   /**

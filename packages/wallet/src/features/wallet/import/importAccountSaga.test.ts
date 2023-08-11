@@ -1,7 +1,12 @@
 import { runSaga } from '@redux-saga/core'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { addAccounts, setAccountAsActive, unlockWallet } from 'wallet/src/features/wallet/slice'
+import {
+  addAccounts,
+  restorePrivateKeyComplete,
+  setAccountAsActive,
+  unlockWallet,
+} from 'wallet/src/features/wallet/slice'
 import {
   SAMPLE_PASSWORD,
   SAMPLE_SEED,
@@ -37,6 +42,9 @@ describe(importAccount, () => {
         context: {
           accounts: signerManager,
         },
+        getState: () => ({
+          wallet: { accounts: [] },
+        }),
       },
       importAccount,
       params
@@ -69,6 +77,46 @@ describe(importAccount, () => {
       setAccountAsActive(SAMPLE_SEED_ADDRESS_1),
       unlockWallet(),
     ])
+  })
+
+  it('imports only private key', async () => {
+    const params: ImportMnemonicAccountParams = {
+      validatedMnemonic: SAMPLE_SEED,
+      validatedPassword: SAMPLE_PASSWORD,
+      name: 'WALLET',
+      type: ImportAccountType.Mnemonic,
+      indexes: [0, 1],
+    }
+
+    const dispatched: PayloadAction[] = []
+
+    await runSaga(
+      {
+        dispatch: (action: PayloadAction) => {
+          // collect dispatched actions to later assert
+          dispatched.push(action)
+        },
+        context: {
+          accounts: signerManager,
+        },
+        getState: () => ({
+          wallet: {
+            accounts: [
+              {
+                type: AccountType.SignerMnemonic,
+                derivationIndex: 0,
+                mnemonicId: SAMPLE_SEED_ADDRESS_1,
+              },
+            ],
+          },
+        }),
+      },
+      importAccount,
+      params
+    ).toPromise()
+
+    // assert on dispatched actions
+    expect(dispatched).toEqual([restorePrivateKeyComplete()])
   })
 
   it('imports readonly account', () => {

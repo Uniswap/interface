@@ -27,6 +27,14 @@ export function getAddressesForStoredPrivateKeys(): Promise<string[]> {
   return RNEthersRS.getAddressesForStoredPrivateKeys()
 }
 
+// returns the address for the mnemonic
+export function generateAddressForMnemonic(
+  mnemonic: string,
+  derivationIndex: number
+): Promise<string> {
+  return RNEthersRS.generateAddressForMnemonic(mnemonic, derivationIndex)
+}
+
 // returns the address of the generated key
 export function generateAndStorePrivateKey(
   mnemonicId: string,

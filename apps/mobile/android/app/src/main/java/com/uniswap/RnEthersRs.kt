@@ -86,6 +86,19 @@ class RnEthersRs(applicationContext: Context) {
   }
 
   /**
+   * Generates public address for a given mnemonic and returns the associated address.
+   * @param mnemonic Mmnemonic to generate the public address from.
+   * @param derivationIndex The index of the private key to generate.
+   * @return The address associated with the new private key.
+   */
+  fun generateAddressForMnemonic(mnemonic: String, derivationIndex: Int): String {
+    val privateKey = privateKeyFromMnemonic(mnemonic, derivationIndex)
+    val address = privateKey.address
+    privateKeyFree(privateKey)
+    return address
+  }
+
+  /**
    * Generates and stores a new private key for a given mnemonic and returns the associated address.
    * @param mnemonicId The id of the mnemonic to generate the private key from.
    * @param derivationIndex The index of the private key to generate.

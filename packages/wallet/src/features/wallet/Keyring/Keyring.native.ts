@@ -46,6 +46,11 @@ class NativeKeyring implements IKeyring {
     return RNEthersRS.getAddressesForStoredPrivateKeys()
   }
 
+  // returns the address for a given mnemonic
+  generateAddressForMnemonic(mnemonic: string, derivationIndex: number): Promise<string> {
+    return RNEthersRS.generateAddressForMnemonic(mnemonic, derivationIndex)
+  }
+
   // returns the address of the generated key
   generateAndStorePrivateKey(mnemonicId: string, derivationIndex: number): Promise<string> {
     return RNEthersRS.generateAndStorePrivateKey(mnemonicId, derivationIndex)

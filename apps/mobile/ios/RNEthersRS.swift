@@ -140,6 +140,25 @@ class RNEthersRS: NSObject {
   }
   
   /**
+   Derives public address from mnemonic for given `derivationIndex`.
+
+   - parameter mnemonic: mnemonic to generate public key for
+   - parameter derivationIndex: number used to specify a which derivation index to use for deriving a private key from the mnemonic
+   - returns: public address associated with private key generated from the mnemonic at given derivation index
+   */
+  @objc(generateAddressForMnemonic:derivationIndex:resolve:reject:)
+  func generateAddressForMnemonic(
+    mnemonic: String, derivationIndex: Int, resolve: RCTPromiseResolveBlock,
+    reject: RCTPromiseRejectBlock
+  ) {
+    let private_key = private_key_from_mnemonic(
+      mnemonic, UInt32(exactly: derivationIndex)!)
+    let address = String(cString: private_key.address!)
+    private_key_free(private_key)
+    resolve(address)
+  }
+
+  /**
    Derives private key and public address from mnemonic associated with `mnemonicId` for given `derivationIndex`. Stores the private key in native keychain with key.
    
    - parameter mnemonicId: key string associated with mnemonic to generate private key for (currently convention is to use public address associated with mnemonic)

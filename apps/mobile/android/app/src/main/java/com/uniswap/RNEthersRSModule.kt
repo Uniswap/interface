@@ -43,6 +43,10 @@ class RNEthersRSModule(reactContext: ReactApplicationContext) : ReactContextBase
     promise.resolve(ethersRs.addressesForStoredPrivateKeys)
   }
 
+  @ReactMethod fun generateAddressForMnemonic(mnemonic: String, derivationIndex: Int, promise: Promise) {
+    promise.resolve(ethersRs.generateAddressForMnemonic(mnemonic, derivationIndex))
+  }
+
   @ReactMethod fun generateAndStorePrivateKey(mnemonicId: String, derivationIndex: Int, promise: Promise) {
     promise.resolve(ethersRs.generateAndStorePrivateKey(mnemonicId, derivationIndex))
   }

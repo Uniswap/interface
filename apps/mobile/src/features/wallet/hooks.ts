@@ -78,7 +78,6 @@ export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
     const openRestoreWalletModalIfNeeded = async (): Promise<void> => {
       const addresses = await Keyring.getAddressesForStoredPrivateKeys()
       setWalletNeedsRestore(hasImportedSeedPhrase && !addresses.length)
-      setWalletNeedsRestore(true)
     }
     openRestoreWalletModalIfNeeded().catch((error) =>
       logger.error('Error at fetching addresses from Keyring', {

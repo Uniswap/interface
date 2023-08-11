@@ -6,6 +6,7 @@ import {
   CopiedNotification,
   DefaultNotification,
   ErrorNotification,
+  SuccessNotification,
   SwapNetworkNotification,
   SwapNotification,
   TransferCurrencyNotification,
@@ -40,6 +41,8 @@ export function NotificationToastRouter({
       return <ErrorNotification notification={notification} />
     case AppNotificationType.Default:
       return <DefaultNotification notification={notification} />
+    case AppNotificationType.Success:
+      return <SuccessNotification notification={notification} />
     case AppNotificationType.Copied:
       return <CopiedNotification notification={notification} />
     case AppNotificationType.SwapNetwork:

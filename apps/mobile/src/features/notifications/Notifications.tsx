@@ -455,26 +455,12 @@ export function DefaultNotification({
   return <NotificationToast address={address} hideDelay={hideDelay} title={title} />
 }
 
-export function CopiedNotification({
-  notification: { hideDelay = 2000, copyType },
+export function SuccessNotification({
+  notification: { hideDelay = 2000, title },
 }: {
-  notification: CopyNotification
+  notification: Pick<AppNotificationDefault, 'title' | 'hideDelay'>
 }): JSX.Element | null {
-  const { t } = useTranslation()
   const theme = useAppTheme()
-
-  let title
-  switch (copyType) {
-    case CopyNotificationType.Address:
-      title = t('Address copied')
-      break
-    case CopyNotificationType.TransactionId:
-      title = t('Transaction ID copied')
-      break
-    case CopyNotificationType.Image:
-      title = t('Image copied')
-      break
-  }
 
   return (
     <NotificationToast
@@ -491,6 +477,29 @@ export function CopiedNotification({
       title={title}
     />
   )
+}
+
+export function CopiedNotification({
+  notification: { hideDelay = 2000, copyType },
+}: {
+  notification: CopyNotification
+}): JSX.Element | null {
+  const { t } = useTranslation()
+
+  let title
+  switch (copyType) {
+    case CopyNotificationType.Address:
+      title = t('Address copied')
+      break
+    case CopyNotificationType.TransactionId:
+      title = t('Transaction ID copied')
+      break
+    case CopyNotificationType.Image:
+      title = t('Image copied')
+      break
+  }
+
+  return <SuccessNotification notification={{ title, hideDelay }} />
 }
 
 export function SwapNetworkNotification({

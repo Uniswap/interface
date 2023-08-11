@@ -6,7 +6,7 @@ import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import { closeModal } from 'src/features/modals/modalSlice'
+import { closeAllModals, closeModal } from 'src/features/modals/modalSlice'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
@@ -23,7 +23,7 @@ export function RestoreWalletModal(): JSX.Element | null {
   }
 
   const onRestore = (): void => {
-    onDismiss()
+    dispatch(closeAllModals())
     navigate(Screens.OnboardingStack, {
       screen: OnboardingScreens.RestoreCloudBackupLoading,
       params: {

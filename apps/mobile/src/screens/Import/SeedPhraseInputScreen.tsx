@@ -13,13 +13,16 @@ import { RECOVERY_PHRASE_HELP_URL } from 'src/constants/urls'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
+import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import {
   MnemonicValidationError,
   translateMnemonicErrorMessage,
@@ -28,7 +31,7 @@ import {
   validateSetOfWords,
 } from 'wallet/src/utils/mnemonics'
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
+type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>
 
 export function SeedPhraseInputScreen({ navigation, route: { params } }: Props): JSX.Element {
   const dispatch = useAppDispatch()
@@ -48,16 +51,29 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   const [showSuccess, setShowSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
+  const isRestoringPrivateKey = params.importType === ImportType.Restore
+
   useAddBackButton(navigation)
 
+  const signerAccounts = useNonPendingSignerAccounts()
+  const mnemonicId = (isRestoringPrivateKey && signerAccounts[0]?.mnemonicId) || undefined
+
   // Add all accounts from mnemonic.
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
     // Check phrase validation
     const { validMnemonic, error, invalidWord } = validateMnemonic(value)
 
     if (error) {
       setErrorMessage(translateMnemonicErrorMessage(error, invalidWord, t))
       return
+    }
+
+    if (mnemonicId && validMnemonic) {
+      const generatedMnemonicId = await Keyring.generateAddressForMnemonic(validMnemonic, 0)
+      if (generatedMnemonicId !== mnemonicId) {
+        setErrorMessage(t('Wrong recovery phrase'))
+        return
+      }
     }
 
     dispatch(
@@ -67,8 +83,11 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
         indexes: Array.from(Array(NUMBER_OF_WALLETS_TO_IMPORT).keys()),
       })
     )
-    navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
-  }, [value, t, dispatch, navigation, params])
+    // restore flow is handled in saga after `restorePrivateKeyComplete` is dispatched
+    if (!isRestoringPrivateKey) {
+      navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
+    }
+  }, [value, mnemonicId, dispatch, isRestoringPrivateKey, t, navigation, params])
 
   const onBlur = useCallback(() => {
     const { error, invalidWord } = validateMnemonic(value)
@@ -104,6 +123,10 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
 
   const onPressRecoveryHelpButton = (): Promise<void> => openUri(RECOVERY_PHRASE_HELP_URL)
 
+  const onPressTryAgainButton = (): void => {
+    navigation.replace(OnboardingScreens.RestoreCloudBackupLoading, params)
+  }
+
   const subtitleSize = useResponsiveProp({
     xs: 'bodyMicro',
     sm: 'subheadSmall',
@@ -116,8 +139,12 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
 
   return (
     <SafeKeyboardOnboardingScreen
-      subtitle={t('Your recovery phrase will only be stored locally on your device.')}
-      title={t('Enter your recovery phrase')}>
+      subtitle={
+        isRestoringPrivateKey
+          ? t('Enter your recovery phrase below, or try searching for backups again.')
+          : t('Your recovery phrase will only be stored locally on your device.')
+      }
+      title={isRestoringPrivateKey ? t('No backups found') : t('Enter your recovery phrase')}>
       <Flex gap={itemSpacing}>
         <GenericImportForm
           autoCorrect
@@ -135,9 +162,12 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
         />
         <Flex centered>
           <Trace logPress element={ElementName.RecoveryHelpButton}>
-            <TouchableArea onPress={onPressRecoveryHelpButton}>
+            <TouchableArea
+              onPress={isRestoringPrivateKey ? onPressTryAgainButton : onPressRecoveryHelpButton}>
               <Text color="accent1" variant={subtitleSize}>
-                {t('How do I find my recovery phrase?')}
+                {isRestoringPrivateKey
+                  ? t('Try searching again')
+                  : t('How do I find my recovery phrase?')}
               </Text>
             </TouchableArea>
           </Trace>

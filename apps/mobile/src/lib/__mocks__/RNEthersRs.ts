@@ -27,6 +27,15 @@ export function getAddressesForStoredPrivateKeys(): Promise<string[]> {
   return Promise.resolve(Object.keys(privateKeys))
 }
 
+// returns the address for the mnemonic
+export function generateAddressForMnemonic(
+  mnemonic: string,
+  derivationIndex: number
+): Promise<string> {
+  const wallet = Wallet.fromMnemonic(mnemonic, pathFromIndex(derivationIndex))
+  return Promise.resolve(wallet.address)
+}
+
 // returns the address of the generated key
 export function generateAndStorePrivateKey(
   mnemonicId: string,

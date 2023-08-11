@@ -1,6 +1,6 @@
 import { trimToLength } from 'utilities/src/primitives/string'
 import { useENSName } from 'wallet/src/features/ens/api'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAppSelector } from 'wallet/src/state'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import {
@@ -38,8 +38,8 @@ export function useSignerAccounts(): Account[] {
   return useAppSelector<Account[]>(selectSignerMnemonicAccounts)
 }
 
-export function useNonPendingSignerAccounts(): Account[] {
-  return useAppSelector<Account[]>(selectNonPendingSignerMnemonicAccounts)
+export function useNonPendingSignerAccounts(): SignerMnemonicAccount[] {
+  return useAppSelector<SignerMnemonicAccount[]>(selectNonPendingSignerMnemonicAccounts)
 }
 
 export function useViewOnlyAccounts(): Account[] {

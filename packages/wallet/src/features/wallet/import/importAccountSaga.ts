@@ -1,12 +1,18 @@
 import dayjs from 'dayjs'
-import { all, call, put } from 'typed-redux-saga'
+import { all, call, put, select } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { ImportAccountParams, ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { addAccounts, setAccountAsActive, unlockWallet } from 'wallet/src/features/wallet/slice'
+import { selectSignerMnemonicAccountExists } from 'wallet/src/features/wallet/selectors'
+import {
+  addAccounts,
+  restorePrivateKeyComplete,
+  setAccountAsActive,
+  unlockWallet,
+} from 'wallet/src/features/wallet/slice'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
-import { ImportAccountParams, ImportAccountType } from './types'
 
 export function* importAccount(params: ImportAccountParams) {
   const { type, name } = params
@@ -94,6 +100,13 @@ function* importMnemonicAccounts(
   if (indexes[0] === undefined)
     throw new Error('Cannot import account with undefined derivation index')
 
+  const isRestoringPrivateKey = yield* select(selectSignerMnemonicAccountExists)
+  // we do not need to add accounts as they are already exist
+  if (isRestoringPrivateKey) {
+    yield* put(restorePrivateKeyComplete())
+    return
+  }
+
   const accounts = addresses.slice(1, addresses.length).map((address, index) => {
     const account: Account = {
       type: AccountType.SignerMnemonic,
@@ -127,6 +140,13 @@ function* importRestoreBackupAccounts(mnemonicId: string, indexes = [0]) {
       return call([Keyring, Keyring.generateAndStorePrivateKey], mnemonicId, index)
     })
   )
+  const isRestoringPrivateKey = yield* select(selectSignerMnemonicAccountExists)
+  // we do not need to add accounts as they are already exist
+  if (isRestoringPrivateKey) {
+    yield* put(restorePrivateKeyComplete())
+    return
+  }
+
   const accounts = addresses.map((address, index) => {
     const account: Account = {
       type: AccountType.SignerMnemonic,

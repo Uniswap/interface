@@ -564,5 +564,10 @@
   "Failed to {{action}}": "Failed to {{action}}",
   "Invalid phrase": "Invalid phrase",
   "Invalid word: {{word}}": "Invalid word: {{word}}",
-  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words"
+  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
+  "Wallet restored!": "Wallet restored!",
+  "Wrong recovery phrase": "Wrong recovery phrase",
+  "Enter your recovery phrase below, or try searching for backups again.": "Enter your recovery phrase below, or try searching for backups again.",
+  "No backups found": "No backups found",
+  "Try searching again": "Try searching again"
 }

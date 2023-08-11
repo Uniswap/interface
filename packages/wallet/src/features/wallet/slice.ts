@@ -113,6 +113,7 @@ const slice = createSlice({
       state.settings.tokensOrderBy = newTokensOrderBy
     },
     resetWallet: () => initialWalletState,
+    restorePrivateKeyComplete: (state) => state,
   },
 })
 
@@ -130,6 +131,7 @@ export const {
   setFinishedOnboarding,
   setNFTViewType,
   setTokensOrderBy,
+  restorePrivateKeyComplete,
 } = slice.actions
 
 export const walletReducer = slice.reducer

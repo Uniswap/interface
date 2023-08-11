@@ -22,6 +22,11 @@ RCT_EXTERN_METHOD(generateAndStoreMnemonic: (RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(getAddressesForStoredPrivateKeys: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(generateAddressForMnemonic: (NSString *)mnemonic
+                  derivationIndex: (NSInteger)index
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(generateAndStorePrivateKey: (NSString *)mnemonicId
                   derivationIndex: (NSInteger)index
                   resolve: (RCTPromiseResolveBlock)resolve

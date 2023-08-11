@@ -24,6 +24,7 @@ import {
   transferTokenSaga,
   transferTokenSagaName,
 } from 'src/features/transactions/transfer/transferTokenSaga'
+import { restorePrivateKeyCompleteWatcher } from 'src/features/wallet/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/saga'
 import { initializeWeb3Wallet, walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
 import { call, spawn } from 'typed-redux-saga'
@@ -57,6 +58,7 @@ const sagas = [
   initFirebase,
   notificationWatcher,
   pendingAccountSaga,
+  restorePrivateKeyCompleteWatcher,
   signWcRequestSaga,
   telemetrySaga,
   transactionWatcher,

@@ -11,6 +11,7 @@ export enum AppNotificationType {
   Transaction,
   Favorites,
   Copied,
+  Success,
   SwapNetwork,
   AssetVisibility, // could be token or NFT
 }
@@ -132,6 +133,11 @@ export interface CopyNotification extends AppNotificationBase {
   copyType: CopyNotificationType
 }
 
+export interface SuccessNotification extends AppNotificationBase {
+  type: AppNotificationType.Success
+  title: string
+}
+
 export interface SwapNetworkNotification extends AppNotificationBase {
   type: AppNotificationType.SwapNetwork
   chainId: ChainId
@@ -151,3 +157,4 @@ export type AppNotification =
   | TransactionNotification
   | SwapNetworkNotification
   | ChangeAssetVisibilityNotification
+  | SuccessNotification
