@@ -15,9 +15,6 @@ export const MissingImageLogo = styled.div<{ size?: string }>`
   line-height: ${({ size }) => size ?? '24px'};
   text-align: center;
   width: ${({ size }) => size ?? '24px'};
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `
 
 const LogoImage = styled.img<{ size: string; imgLoaded?: boolean }>`
@@ -86,7 +83,7 @@ export default function AssetLogo({
   })
 
   return (
-    <LogoContainer style={{ height: size, width: size, ...style }}>
+    <LogoContainer style={style}>
       {src ? (
         <LogoImageWrapper size={size} imgLoaded={imgLoaded}>
           <LogoImage
