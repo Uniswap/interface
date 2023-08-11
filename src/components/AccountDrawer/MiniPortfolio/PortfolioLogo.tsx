@@ -64,8 +64,8 @@ const CircleLogoImage = styled.img<{ size: string }>`
   border-radius: 50%;
 `
 
-const L2LogoContainer = styled.div<{ hasChainLogo?: boolean }>`
-  background-color: ${({ theme, hasChainLogo }) => (hasChainLogo ? theme.backgroundSurface : theme.textPrimary)};
+const L2LogoContainer = styled.div<{ hasSquareLogo?: boolean }>`
+  background-color: ${({ theme, hasSquareLogo }) => (hasSquareLogo ? theme.backgroundSurface : theme.textPrimary)};
   border-radius: 2px;
   height: 16px;
   left: 60%;
@@ -78,7 +78,7 @@ const L2LogoContainer = styled.div<{ hasChainLogo?: boolean }>`
   justify-content: center;
 `
 
-type DoubleLogoProps = {
+interface DoubleLogoProps {
   logo1?: string
   logo2?: string
   size: string
@@ -95,10 +95,10 @@ function DoubleLogo({ logo1, onError1, logo2, onError2, size }: DoubleLogoProps)
   )
 }
 
-type DoubleCurrencyLogoProps = {
+interface DoubleCurrencyLogoProps {
   chainId: ChainId
   currencies: Array<Currency | undefined>
-  backupImages?: (string | undefined)[]
+  backupImages?: Array<string | undefined>
   size: string
 }
 
@@ -116,11 +116,13 @@ function DoubleCurrencyLogo({ chainId, currencies, backupImages, size }: DoubleC
     backupImages?.[1]
   )
 
-  return currencies.length > 1 ? (
-    <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} size={size} />
-  ) : currencies.length === 1 && src ? (
-    <CircleLogoImage size={size} src={src} onError={nextSrc} />
-  ) : (
+  if (currencies.length === 1 && src) {
+    return <CircleLogoImage size={size} src={src} onError={nextSrc} />
+  }
+  if (currencies.length > 1) {
+    return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} size={size} />
+  }
+  return (
     <MissingImageLogo size={size}>
       {currencies[0]?.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
     </MissingImageLogo>
@@ -130,20 +132,20 @@ function DoubleCurrencyLogo({ chainId, currencies, backupImages, size }: DoubleC
 function PortfolioAvatar({ accountAddress, size }: { accountAddress: string; size: string }) {
   const { avatar, loading } = useENSAvatar(accountAddress, false)
 
-  return loading ? (
-    <Loader size={size} />
-  ) : avatar ? (
-    <ENSAvatarImg src={avatar} alt="avatar" />
-  ) : (
-    <Unicon size={40} address={accountAddress} />
-  )
+  if (loading) {
+    return <Loader size={size} />
+  }
+  if (avatar) {
+    return <ENSAvatarImg src={avatar} alt="avatar" />
+  }
+  return <Unicon size={40} address={accountAddress} />
 }
 
-type PortfolioLogoProps = {
+interface PortfolioLogoProps {
   chainId: ChainId
   accountAddress?: string
   currencies?: Array<Currency | undefined>
-  images?: (string | undefined)[]
+  images?: Array<string | undefined>
   size?: string
   style?: React.CSSProperties
 }
@@ -155,7 +157,7 @@ function SquareL2Logo({ chainId }: { chainId: ChainId }) {
   const chainLogo = squareLogoUrl ?? logoUrl
 
   return (
-    <L2LogoContainer hasChainLogo={!!squareLogoUrl}>
+    <L2LogoContainer hasSquareLogo={!!squareLogoUrl}>
       {squareLogoUrl ? (
         <SquareChainLogo src={chainLogo} alt="chainLogo" />
       ) : (
@@ -168,24 +170,27 @@ function SquareL2Logo({ chainId }: { chainId: ChainId }) {
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback contract icon
  */
-export function PortfolioLogo({ chainId, accountAddress, currencies, images, size = '40px' }: PortfolioLogoProps) {
-  let logo
-  if (accountAddress) {
-    logo = <PortfolioAvatar accountAddress={accountAddress} size={size} />
-  } else if (currencies && currencies.length) {
-    logo = <DoubleCurrencyLogo chainId={chainId} currencies={currencies} backupImages={images} size={size} />
-  } else if (images?.length === 1) {
-    logo = <CircleLogoImage size={size} src={images[0] ?? blankTokenUrl} />
-  } else if (images && images?.length >= 2) {
-    logo = <DoubleLogo logo1={images[0]} logo2={images[images.length - 1]} size={size} />
-  } else {
-    logo = <UnknownContract width={size} height={size} />
-  }
-
+export function PortfolioLogo(props: PortfolioLogoProps) {
   return (
     <StyledLogoParentContainer>
-      {logo}
-      <SquareL2Logo chainId={chainId} />
+      {getLogo(props)}
+      <SquareL2Logo chainId={props.chainId} />
     </StyledLogoParentContainer>
   )
+}
+
+function getLogo({ chainId, accountAddress, currencies, images, size = '40px' }: PortfolioLogoProps) {
+  if (accountAddress) {
+    return <PortfolioAvatar accountAddress={accountAddress} size={size} />
+  }
+  if (currencies && currencies.length) {
+    return <DoubleCurrencyLogo chainId={chainId} currencies={currencies} backupImages={images} size={size} />
+  }
+  if (images?.length === 1) {
+    return <CircleLogoImage size={size} src={images[0] ?? blankTokenUrl} />
+  }
+  if (images && images?.length >= 2) {
+    return <DoubleLogo logo1={images[0]} logo2={images[images.length - 1]} size={size} />
+  }
+  return <UnknownContract width={size} height={size} />
 }
