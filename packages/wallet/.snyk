@@ -1,6 +1,9 @@
-# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+# Snyk (<https://snyk.io>) policy file, patches or ignores known vulnerabilities
+
 version: v1.25.0
+
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
+
 ignore:
   SNYK-JS-UNSETVALUE-2400660:
     - '*':
@@ -62,6 +65,11 @@ ignore:
         reason: Not applicable
         expires: 2023-12-31T00:00:00.000Z
         created: 2023-06-20T13:25:57.935Z  
+  SNYK-JS-OPENZEPPELINCONTRACTS-5838352:
+    - '*':
+        reason: No known fix
+        expires: 2023-11-30T00:00:00.000Z
+        created: 2023-05-23T16:25:57.347Z
   'snyk:lic:npm:eslint-plugin-turbo:MPL-2.0':
     - '*':
         reason: monorepo migration

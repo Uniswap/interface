@@ -57,6 +57,11 @@ ignore:
         reason: None Given
         expires: 2023-12-31T00:00:00.000Z
         created: 2023-05-23T16:25:57.347Z
+  SNYK-JS-OPENZEPPELINCONTRACTS-5838352:
+    - '*':
+        reason: No known fix
+        expires: 2023-11-30T00:00:00.000Z
+        created: 2023-05-23T16:25:57.347Z
   SNYK-JS-OPENZEPPELINCONTRACTS-5711902:
     - '*':
         reason: Not applicable

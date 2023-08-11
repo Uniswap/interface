@@ -35,6 +35,11 @@ ignore:
         reason: None Given
         expires: 2023-12-31T00:00:00.000Z
         created: 2023-05-23T16:26:17.702Z
+  SNYK-JS-OPENZEPPELINCONTRACTS-5838352:
+    - '*':
+        reason: No known fix
+        expires: 2023-11-30T00:00:00.000Z
+        created: 2023-05-23T16:25:57.347Z
   'snyk:lic:npm:uniswap:universal-router:GPL-2.0':
     - '*':
         reason: 'Internal library, GPL library is ok'
