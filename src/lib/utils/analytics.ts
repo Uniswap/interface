@@ -65,15 +65,18 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   allowedSlippage,
   fiatValues,
   txHash,
+  timeToSignSinceRequestMs,
 }: {
   trade: InterfaceTrade
   allowedSlippage: Percent
   fiatValues: { amountIn?: number; amountOut?: number }
   txHash?: string
+  timeToSignSinceRequestMs?: number
 }) => ({
   transaction_hash: txHash,
   token_in_amount_usd: fiatValues.amountIn,
   token_out_amount_usd: fiatValues.amountOut,
+  time_to_sign_since_request_ms: timeToSignSinceRequestMs,
   ...formatCommonPropertiesForTrade(trade, allowedSlippage),
 })
 

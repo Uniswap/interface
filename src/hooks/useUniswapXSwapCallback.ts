@@ -80,6 +80,7 @@ export function useUniswapXSwapCallback({
           }
         }
 
+        const beforeSign = Date.now()
         const { signature, updatedOrder } = await signDutchOrder()
 
         sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
@@ -87,6 +88,8 @@ export function useUniswapXSwapCallback({
             trade,
             allowedSlippage,
             fiatValues,
+            // measures the amount of time the user took to sign the permit message in their wallet
+            timeToSignSinceRequestMs: Date.now() - beforeSign,
           }),
           ...analyticsContext,
         })
