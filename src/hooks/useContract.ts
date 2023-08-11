@@ -11,6 +11,7 @@ import {
   V3_MIGRATOR_ADDRESSES,
 } from '@uniswap/sdk-core'
 import QuoterV2Json from '@uniswap/swap-router-contracts/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json'
+import UniversalRouterJson from '@uniswap/universal-router/artifacts/contracts/UniversalRouter.sol/UniversalRouter.json'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import QuoterJson from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
@@ -44,6 +45,7 @@ const { abi: TickLensABI } = TickLensJson
 const { abi: MulticallABI } = UniswapInterfaceMulticallJson
 const { abi: NFTPositionManagerABI } = NonfungiblePositionManagerJson
 const { abi: V2MigratorABI } = V3MigratorJson
+const { abi: UniversalRouterABI } = UniversalRouterJson
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
@@ -136,6 +138,10 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 
 export function useV2RouterContract(): Contract | null {
   return useContract(V2_ROUTER_ADDRESS, IUniswapV2Router02ABI, true)
+}
+
+export function useUniversalRouterContract(address: string): Contract | null {
+  return useContract(address, UniversalRouterABI, true)
 }
 
 export function useInterfaceMulticall() {
