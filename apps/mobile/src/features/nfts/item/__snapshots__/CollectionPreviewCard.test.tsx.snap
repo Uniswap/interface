@@ -38,7 +38,7 @@ exports[`renders collection preview card 1`] = `
       [
         {
           "alignItems": "center",
-          "backgroundColor": "#000000",
+          "backgroundColor": "#2222220D",
           "borderRadius": 16,
           "display": "flex",
           "flexDirection": "row",

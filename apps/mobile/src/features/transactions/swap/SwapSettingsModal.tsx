@@ -26,7 +26,6 @@ import { transactionStateActions } from 'src/features/transactions/transactionSt
 import { openUri } from 'src/utils/linking'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
-import { opacify } from 'ui/src/theme/color/utils'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import {
   DEFAULT_SLIPPAGE_TOLERANCE,
@@ -204,17 +203,14 @@ export default function SwapSettingsModal({
   )
 
   return (
-    <BottomSheetModal name={ModalName.SwapSettings} onClose={onClose}>
+    <BottomSheetModal
+      backgroundColor={theme.colors.surface1}
+      name={ModalName.SwapSettings}
+      onClose={onClose}>
       <Flex centered gap="spacing16" mb="spacing16" px="spacing24" py="spacing12">
-        <Flex
-          centered
-          borderRadius="rounded12"
-          p="spacing12"
-          style={{
-            backgroundColor: opacify(12, theme.colors.neutral3),
-          }}>
+        <Flex centered backgroundColor="surface3" borderRadius="rounded12" p="spacing12">
           <SettingsIcon
-            color={theme.colors.neutral3}
+            color={theme.colors.neutral2}
             height={theme.iconSizes.icon28}
             width={theme.iconSizes.icon28}
           />
@@ -273,7 +269,7 @@ export default function SwapSettingsModal({
                 onFocus={onFocusSlippageInput}
               />
               <Box width={theme.iconSizes.icon28}>
-                <Text color="neutral3" textAlign="center" variant="subheadLarge">
+                <Text color="neutral2" textAlign="center" variant="subheadLarge">
                   %
                 </Text>
               </Box>

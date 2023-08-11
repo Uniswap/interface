@@ -32,7 +32,7 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
         <Box
           alignItems="center"
           backgroundColor={checked ? 'neutral1' : 'surface2'}
-          borderColor={checked ? 'neutral1' : 'surface3'}
+          borderColor={checked ? 'neutral1' : 'neutral3'}
           borderRadius="roundedFull"
           borderWidth={1.5}
           height={theme.iconSizes.icon24}

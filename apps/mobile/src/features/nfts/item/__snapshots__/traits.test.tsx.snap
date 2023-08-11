@@ -7,7 +7,7 @@ exports[`renders trait card 1`] = `
     [
       {
         "alignItems": "stretch",
-        "backgroundColor": "#000000",
+        "backgroundColor": "#2222220D",
         "borderRadius": 16,
         "display": "flex",
         "flexDirection": "column",

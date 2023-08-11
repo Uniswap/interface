@@ -54,7 +54,7 @@ export function RecipientPrevTransfers({ recipient }: { recipient: string }): JS
   const prevTxnsCount = previousTransactions?.length ?? 0
 
   return (
-    <Text color="neutral3" textAlign="center" variant="subheadSmall">
+    <Text color="neutral2" textAlign="center" variant="subheadSmall">
       {prevTxnsCount === 1
         ? t('{{ prevTxnsCount }} previous transfer', { prevTxnsCount })
         : t('{{ prevTxnsCount }} previous transfers', { prevTxnsCount })}

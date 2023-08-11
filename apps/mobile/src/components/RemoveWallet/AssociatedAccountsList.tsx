@@ -62,7 +62,7 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
               size={24}
               variant="subheadSmall"
             />
-            <Text color="neutral3" loading={loading} numberOfLines={1} variant="buttonLabelMicro">
+            <Text color="neutral2" loading={loading} numberOfLines={1} variant="buttonLabelMicro">
               {formatUSDPrice(balance)}
             </Text>
           </Flex>

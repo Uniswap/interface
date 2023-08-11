@@ -10,9 +10,8 @@ import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { openUri } from 'src/utils/linking'
+import { Icons } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import SettingsIcon from 'ui/src/assets/icons/settings.svg'
-import { opacify } from 'ui/src/theme/color/utils'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
@@ -57,15 +56,9 @@ export default function SlippageInfoModal({
       name={ModalName.SlippageInfo}
       onClose={onClose}>
       <Flex centered fill gap="spacing16" mb="spacing12" p="spacing24">
-        <Flex
-          centered
-          borderRadius="rounded12"
-          p="spacing12"
-          style={{
-            backgroundColor: opacify(12, theme.colors.neutral3),
-          }}>
-          <SettingsIcon
-            color={theme.colors.neutral3}
+        <Flex centered backgroundColor="surface2" borderRadius="rounded12" p="spacing12">
+          <Icons.Settings
+            color={theme.colors.neutral2}
             height={theme.iconSizes.icon28}
             width={theme.iconSizes.icon28}
           />

@@ -265,7 +265,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
                     ? t('When this wallet buys or receives NFTs, they’ll appear here.')
                     : t('Transfer NFTs from another wallet to get started.')
                 }
-                icon={<NoNFTsIcon color={theme.colors.neutral2} />}
+                icon={<NoNFTsIcon color={theme.colors.neutral3} />}
                 title={t('No NFTs yet')}
                 onPress={onPressScan}
               />

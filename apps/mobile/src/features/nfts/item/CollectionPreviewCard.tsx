@@ -44,7 +44,7 @@ export function CollectionPreviewCard({
       <Flex
         row
         alignItems="center"
-        backgroundColor="sporeBlack"
+        backgroundColor="surface3"
         borderRadius="rounded16"
         gap="spacing8"
         justifyContent="space-between"

@@ -76,7 +76,7 @@ export function AccountIcon({
         <Box
           alignContent="center"
           alignItems="center"
-          backgroundColor={isDarkMode ? 'surface2' : 'surface2'}
+          backgroundColor="surface2"
           borderRadius="roundedFull"
           bottom={0}
           height={iconEyeContainerSize}
@@ -89,7 +89,7 @@ export function AccountIcon({
           shadowOpacity={0.2}
           shadowRadius={10}
           width={iconEyeContainerSize}>
-          <Eye color={theme.colors.neutral3} width={iconEyeSize} />
+          <Eye color={theme.colors.neutral2} width={iconEyeSize} />
         </Box>
       )}
     </Box>

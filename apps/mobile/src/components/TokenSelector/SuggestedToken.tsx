@@ -34,7 +34,7 @@ function _SuggestedToken({
       testID={`token-option-${currency.chainId}-${currency.symbol}`}
       onPress={onPress}>
       <Pill
-        backgroundColor="surface2"
+        backgroundColor="surface3"
         borderRadius="roundedFull"
         foregroundColor={theme.colors.neutral1}
         icon={<TokenLogo size={iconSizes.icon28} symbol={currency.symbol} url={logoUrl} />}

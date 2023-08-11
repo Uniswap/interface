@@ -126,7 +126,7 @@ export function RemoveWalletModal(): JSX.Element | null {
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.surface2}
+      backgroundColor={theme.colors.surface1}
       name={ModalName.RemoveSeedPhraseWarningModal}
       onClose={onClose}>
       <Flex centered gap="spacing16" height="100%" mb="spacing24" p="spacing24" paddingTop="none">

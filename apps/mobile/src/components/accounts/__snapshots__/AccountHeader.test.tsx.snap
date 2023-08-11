@@ -439,7 +439,7 @@ exports[`AccountHeader renders without error 1`] = `
     }
   >
     <svg
-      color="#CECECE"
+      color="#7D7D7D"
       data-file-name="SvgSettings"
       height={28}
       opacity="0.8"

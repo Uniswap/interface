@@ -24,7 +24,7 @@ export default function PlusMinusButton({
     <TouchableArea
       hapticFeedback
       alignItems="center"
-      backgroundColor={disabled ? 'surface3' : 'neutral3'}
+      backgroundColor={disabled ? 'surface3' : 'neutral2'}
       borderRadius="roundedFull"
       disabled={disabled}
       height={theme.iconSizes.icon28}

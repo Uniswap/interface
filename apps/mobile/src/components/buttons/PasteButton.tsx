@@ -26,7 +26,7 @@ export default function PasteButton({
   return (
     <Button
       IconName={PasteIcon}
-      emphasis={ButtonEmphasis.Secondary}
+      emphasis={ButtonEmphasis.Tertiary}
       label={t('Paste')}
       size={ButtonSize.Small}
       onPress={onPressButton}

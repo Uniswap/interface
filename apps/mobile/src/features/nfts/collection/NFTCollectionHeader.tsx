@@ -161,7 +161,7 @@ export function NFTCollectionHeader({
 
           <Flex row gap="spacing24" justifyContent="space-between">
             <Flex fill alignItems="flex-start" gap="spacing4">
-              <Text color="neutral3" variant="subheadSmall">
+              <Text color="neutral2" variant="subheadSmall">
                 {t('Items')}
               </Text>
               <Text loading={loading} variant="bodyLarge">
@@ -169,7 +169,7 @@ export function NFTCollectionHeader({
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="spacing4">
-              <Text color="neutral3" variant="subheadSmall">
+              <Text color="neutral2" variant="subheadSmall">
                 {t('Owners')}
               </Text>
               <Text loading={loading} variant="bodyLarge">
@@ -177,7 +177,7 @@ export function NFTCollectionHeader({
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="spacing4">
-              <Text color="neutral3" variant="subheadSmall">
+              <Text color="neutral2" variant="subheadSmall">
                 {t('Floor')}
               </Text>
               <Flex row alignItems="center" gap="none">
@@ -193,7 +193,7 @@ export function NFTCollectionHeader({
               </Flex>
             </Flex>
             <Flex fill alignItems="flex-start" gap="spacing4">
-              <Text color="neutral3" variant="subheadSmall">
+              <Text color="neutral2" variant="subheadSmall">
                 {t('Volume')}
               </Text>
               <Flex row alignItems="center" gap="spacing4">

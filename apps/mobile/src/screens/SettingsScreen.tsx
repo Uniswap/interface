@@ -58,7 +58,7 @@ export function SettingsScreen(): JSX.Element {
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
     const iconProps: SvgProps = {
-      color: theme.colors.neutral3,
+      color: theme.colors.neutral2,
       height: 24,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
@@ -160,7 +160,7 @@ export function SettingsScreen(): JSX.Element {
       },
     ]
   }, [
-    theme.colors.neutral3,
+    theme.colors.neutral2,
     t,
     currentAppearanceSetting,
     isTouchIdSupported,
@@ -349,6 +349,7 @@ function FooterSettings(): JSX.Element {
       <Text
         color="neutral3"
         mt="spacing8"
+        paddingBottom="spacing24"
         variant="bodySmall"
         onLongPress={(): void => {
           setShowSignature(true)

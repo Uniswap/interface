@@ -299,7 +299,7 @@ function TokenDetails({
 
   const isDarkMode = useIsDarkMode()
   // shall be the same color as heart icon in not favorited state next to it
-  const ellipsisColor = isDarkMode ? theme.colors.neutral3 : theme.colors.surface3
+  const ellipsisColor = isDarkMode ? theme.colors.neutral2 : theme.colors.surface3
 
   const ellipsisMenuVisible = menuActions.length > 0
 

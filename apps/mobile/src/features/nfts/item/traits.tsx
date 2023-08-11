@@ -15,7 +15,7 @@ export function NFTTraitCard({
 }): JSX.Element {
   const theme = useAppTheme()
   return (
-    <Flex bg="sporeBlack" borderRadius="rounded16" gap="spacing4" px="spacing16" py="spacing12">
+    <Flex bg="surface3" borderRadius="rounded16" gap="spacing4" px="spacing16" py="spacing12">
       <Text style={{ color: titleTextColor ?? theme.colors.neutral2 }} variant="buttonLabelMicro">
         {trait.name}
       </Text>
