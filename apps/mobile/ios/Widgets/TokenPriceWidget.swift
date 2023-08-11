@@ -149,7 +149,7 @@ struct TokenPriceWidgetEntryView: View {
   }
   
   func timeStamp() -> some View {
-    return Text("\(Date().formatted(date: .omitted, time: .shortened))")
+    return Text("\(Date().formatted(date: .omitted, time: .shortened).lowercased())")
       .withHeadlineSmallStyle()
   }
   
