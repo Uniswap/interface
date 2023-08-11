@@ -6,9 +6,9 @@ import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { mockWalletPreloadedState } from 'src/test/fixtures'
 import { renderWithProviders } from 'src/test/render'
 import { render } from 'src/test/test-utils'
+import { mockWalletPreloadedState } from 'wallet/src/test/fixtures'
 
 const navigationProp = {} as CompositeNavigationProp<
   StackNavigationProp<OnboardingStackParamList, OnboardingScreens.Backup, undefined>,

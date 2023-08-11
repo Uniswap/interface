@@ -7,35 +7,19 @@ import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import ERC721_ABI from 'wallet/src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'wallet/src/abis/types'
 import { ChainId } from 'wallet/src/constants/chains'
-import { AssetType, NFTAssetType } from 'wallet/src/entities/assets'
+import { AssetType } from 'wallet/src/entities/assets'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import {
+  TransferCurrencyParams,
+  TransferNFTParams,
+  TransferTokenParams,
+} from 'wallet/src/features/transactions/transfer/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { currencyAddress, isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
-
-export interface BaseTransferParams {
-  type: AssetType
-  txId?: string
-  account: Account
-  chainId: ChainId
-  toAddress: Address
-  tokenAddress: Address
-}
-
-export interface TransferCurrencyParams extends BaseTransferParams {
-  type: AssetType.Currency
-  amountInWei: string
-}
-
-export interface TransferNFTParams extends BaseTransferParams {
-  type: NFTAssetType
-  tokenId: string
-}
-
-export type TransferTokenParams = TransferCurrencyParams | TransferNFTParams
 
 export function useTransferTransactionRequest(
   derivedTransferInfo: DerivedTransferInfo

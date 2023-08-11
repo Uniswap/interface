@@ -2,11 +2,19 @@ import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   sendTransaction,
   signAndSendTransaction,
-} from 'src/features/transactions/sendTransactionSaga'
-import { addTransaction } from 'src/features/transactions/slice'
+} from 'wallet/src/features/transactions/sendTransactionSaga'
+import { addTransaction } from 'wallet/src/features/transactions/slice'
+import { TransactionStatus } from 'wallet/src/features/transactions/types'
+import { AccountType, ReadOnlyAccount } from 'wallet/src/features/wallet/accounts/types'
+import {
+  getProvider,
+  getProviderManager,
+  getSignerManager,
+} from 'wallet/src/features/wallet/context'
 import {
   account,
   provider,
@@ -15,15 +23,7 @@ import {
   txRequest,
   txResponse,
   txTypeInfo,
-} from 'src/test/fixtures'
-import { ChainId } from 'wallet/src/constants/chains'
-import { TransactionStatus } from 'wallet/src/features/transactions/types'
-import { AccountType, ReadOnlyAccount } from 'wallet/src/features/wallet/accounts/types'
-import {
-  getProvider,
-  getProviderManager,
-  getSignerManager,
-} from 'wallet/src/features/wallet/context'
+} from 'wallet/src/test/fixtures'
 
 const sendParams = {
   txId: '0',

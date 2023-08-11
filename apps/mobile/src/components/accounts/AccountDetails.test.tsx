@@ -1,7 +1,7 @@
 import React from 'react'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
-import { account } from 'src/test/fixtures'
 import { render } from 'src/test/test-utils'
+import { account } from 'wallet/src/test/fixtures'
 
 describe(AccountDetails, () => {
   it('renders without error', () => {

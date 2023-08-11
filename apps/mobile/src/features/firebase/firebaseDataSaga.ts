@@ -7,10 +7,10 @@ import {
   getFirestoreUidRef,
 } from 'src/features/firebase/utils'
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
-import { getKeys } from 'src/utils/objects'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
+import { getKeys } from 'utilities/src/primitives/objects'
 import { selectTestnetsAreEnabled } from 'wallet/src/features/chains/slice'
 import {
   EditAccountAction,

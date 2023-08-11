@@ -1,7 +1,7 @@
 import React from 'react'
-import { arbitrumDaiCurrencyInfo, uniCurrencyInfo } from 'src/test/fixtures'
 import { render } from 'src/test/test-utils'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
+import { arbitrumDaiCurrencyInfo, uniCurrencyInfo } from 'wallet/src/test/fixtures'
 
 jest.mock('ui/src/assets/', () => 'ethereum-logo.png')
 

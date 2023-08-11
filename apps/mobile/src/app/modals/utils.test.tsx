@@ -5,8 +5,8 @@ import { LazyModalRenderer } from 'src/app/modals/utils'
 import { MobileState } from 'src/app/reducer'
 import { initialModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { mockWalletPreloadedState } from 'src/test/fixtures'
 import { renderWithProviders } from 'src/test/render'
+import { mockWalletPreloadedState } from 'wallet/src/test/fixtures'
 
 const preloadedState = {
   ...mockWalletPreloadedState,

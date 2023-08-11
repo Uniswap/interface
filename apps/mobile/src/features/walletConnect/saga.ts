@@ -4,10 +4,6 @@ import { NativeEventEmitter, NativeModules } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
 import { i18n } from 'src/app/i18n'
 import {
-  sendTransaction,
-  SendTransactionParams,
-} from 'src/features/transactions/sendTransactionSaga'
-import {
   deregisterWcPushNotifications,
   registerWcPushNotifications,
 } from 'src/features/walletConnect/api'
@@ -32,6 +28,10 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import {
+  sendTransaction,
+  SendTransactionParams,
+} from 'wallet/src/features/transactions/sendTransactionSaga'
 import { TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getSignerManager } from 'wallet/src/features/wallet/context'

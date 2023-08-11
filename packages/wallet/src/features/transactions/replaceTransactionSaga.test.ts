@@ -4,13 +4,20 @@ import { BigNumber, providers } from 'ethers'
 import MockDate from 'mockdate'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransactionSaga'
+import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
 import {
   sendTransaction,
   signAndSendTransaction,
-} from 'src/features/transactions/sendTransactionSaga'
-import { addTransaction } from 'src/features/transactions/slice'
-import * as TxnUtils from 'src/features/transactions/utils'
+} from 'wallet/src/features/transactions/sendTransactionSaga'
+import { addTransaction } from 'wallet/src/features/transactions/slice'
+import { TransactionStatus } from 'wallet/src/features/transactions/types'
+import * as TxnUtils from 'wallet/src/features/transactions/utils'
+import {
+  getProvider,
+  getProviderManager,
+  getSignerManager,
+} from 'wallet/src/features/wallet/context'
+import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import {
   account,
   provider,
@@ -20,14 +27,7 @@ import {
   txRequest,
   txResponse,
   txTypeInfo,
-} from 'src/test/fixtures'
-import { TransactionStatus } from 'wallet/src/features/transactions/types'
-import {
-  getProvider,
-  getProviderManager,
-  getSignerManager,
-} from 'wallet/src/features/wallet/context'
-import { selectAccounts } from 'wallet/src/features/wallet/selectors'
+} from 'wallet/src/test/fixtures'
 
 const NEW_UNIQUE_ID = faker.datatype.uuid()
 

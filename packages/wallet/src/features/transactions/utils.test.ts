@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { hasSufficientFundsIncludingGas, isOffline } from 'src/features/transactions/utils'
-import { ETH, networkDown, networkUnknown, networkUp } from 'src/test/fixtures'
+import { hasSufficientFundsIncludingGas, isOffline } from 'wallet/src/features/transactions/utils'
+import { ETH, networkDown, networkUnknown, networkUp } from 'wallet/src/test/fixtures'
 
 const ZERO_ETH = CurrencyAmount.fromRawAmount(ETH, 0)
 const ONE_ETH = CurrencyAmount.fromRawAmount(ETH, 1e18)

@@ -2,10 +2,10 @@ import { call, put } from '@redux-saga/core/effects'
 import { expectSaga } from 'redux-saga-test-plan'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLinkSaga'
-import { forceFetchFiatOnRampTransactions } from 'src/features/transactions/slice'
 import { TabIndex } from 'src/screens/HomeScreen'
 import { Screens } from 'src/screens/Screens'
 import { dismissInAppBrowser } from 'src/utils/linking'
+import { forceFetchFiatOnRampTransactions } from 'wallet/src/features/transactions/slice'
 
 describe(handleMoonpayReturnLink, () => {
   it('Navigates to the home screen activity tab when coming back from moonpay', () => {

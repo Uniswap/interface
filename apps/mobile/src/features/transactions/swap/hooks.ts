@@ -11,7 +11,6 @@ import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { selectTransactions } from 'src/features/transactions/selectors'
 import { getBaseTradeAnalyticsProperties } from 'src/features/transactions/swap/analytics'
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
 import {
@@ -31,9 +30,9 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { toStringish } from 'src/utils/number'
-import { flattenObjectOfObjects } from 'src/utils/objects'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { logger } from 'utilities/src/logger/logger'
+import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20 } from 'wallet/src/abis/types'
@@ -51,6 +50,7 @@ import {
   useUSDCValue,
 } from 'wallet/src/features/routing/useUSDCPrice'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import { selectTransactions } from 'wallet/src/features/transactions/selectors'
 import { usePermit2Signature } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import {
   Trade,

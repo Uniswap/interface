@@ -5,8 +5,8 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Inset } from 'src/components/layout'
-import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { Text } from 'src/components/Text'
+import { SearchableRecipient } from 'wallet/src/features/address/types'
 
 interface RecipientListProps {
   sections: SectionListData<SearchableRecipient>[]

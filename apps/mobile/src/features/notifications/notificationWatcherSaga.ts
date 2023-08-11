@@ -1,14 +1,17 @@
 import { appSelect } from 'src/app/hooks'
 import { buildReceiveNotification } from 'src/features/notifications/utils'
-import { selectTransactions } from 'src/features/transactions/selectors'
-import { finalizeTransaction } from 'src/features/transactions/slice'
-import { getInputAmountFromTrade, getOutputAmountFromTrade } from 'src/features/transactions/utils'
 import { call, put, takeLatest } from 'typed-redux-saga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { selectTransactions } from 'wallet/src/features/transactions/selectors'
+import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionType } from 'wallet/src/features/transactions/types'
+import {
+  getInputAmountFromTrade,
+  getOutputAmountFromTrade,
+} from 'wallet/src/features/transactions/utils'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 
 export function* notificationWatcher() {

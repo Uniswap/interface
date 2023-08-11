@@ -5,7 +5,6 @@ import {
   createBalanceUpdate,
   formSwapNotificationTitle,
 } from 'src/features/notifications/utils'
-import { account } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC } from 'wallet/src/constants/tokens'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -16,7 +15,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import { account, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
 describe(formSwapNotificationTitle, () => {
   it('formats successful swap title', () => {

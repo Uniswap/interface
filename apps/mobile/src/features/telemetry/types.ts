@@ -1,5 +1,5 @@
 import { RenderPassReport } from '@shopify/react-native-performance'
-import { MoonpayEventName, SharedEventName, SwapEventName } from '@uniswap/analytics-events'
+import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { ImportType } from 'src/features/onboarding/utils'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { WidgetEvent, WidgetType } from 'src/features/widgets/widgets'
@@ -8,23 +8,6 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { EthMethod, WCEventType, WCRequestOutcome } from 'wallet/src/features/walletConnect/types'
 import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
-
-type SwapTransactionResultProperties = {
-  address: string
-  chain_id: number
-  hash: string
-  added_time: number
-  confirmed_time?: number
-  gas_used?: number
-  effective_gas_price?: number
-  tradeType: string
-  inputCurrencyId: string
-  outputCurrencyId: string
-  slippageTolerance?: number
-  gasUseEstimate?: string
-  route?: string
-  quoteId?: string
-}
 
 // Events related to Moonpay internal transactions
 // NOTE: we do not currently have access to the full life cycle of these txs
@@ -125,10 +108,6 @@ export type MobileEventProperties = {
     widget_type: WidgetType
     url: string
   }
-  [MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED]: {
-    success: boolean
-    networkError: boolean
-  } & TraceProps
   [SharedEventName.APP_LOADED]: TraceProps | undefined
   [SharedEventName.ELEMENT_CLICKED]: TraceProps
   [SharedEventName.PAGE_VIEWED]: TraceProps
@@ -145,6 +124,4 @@ export type MobileEventProperties = {
     is_auto_slippage?: boolean
     swap_quote_block_number?: string
   } & SwapTradeBaseProperties
-  [SwapEventName.SWAP_TRANSACTION_COMPLETED]: SwapTransactionResultProperties
-  [SwapEventName.SWAP_TRANSACTION_FAILED]: SwapTransactionResultProperties
 }

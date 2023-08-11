@@ -1,8 +1,8 @@
-import { GQLQueries } from 'src/data/queries'
-import { apolloClient } from 'src/data/usePersistedApolloClient'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { call, delay } from 'typed-redux-saga'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { GQLQueries } from 'wallet/src/data/queries'
 import {
   PortfolioBalancesDocument,
   PortfolioBalancesQuery,
@@ -24,10 +24,20 @@ type CurrencyIdToBalance = Record<CurrencyId, number>
 const REFETCH_INTERVAL = ONE_SECOND_MS
 const MAX_REFETCH_ATTEMPTS = PollingInterval.Fast / REFETCH_INTERVAL
 
-export function* refetchGQLQueries(transaction: TransactionDetails) {
+export function* refetchGQLQueries({
+  transaction,
+  apolloClient,
+}: {
+  transaction: TransactionDetails
+  apolloClient: ApolloClient<NormalizedCacheObject> | null
+}) {
   const owner = transaction.from
   const currenciesWithBalToUpdate = getCurrenciesWithExpectedUpdates(transaction)
-  const currencyIdToStartingBalance = readBalancesFromCache(owner, currenciesWithBalToUpdate)
+  const currencyIdToStartingBalance = readBalancesFromCache({
+    owner,
+    currencyIds: currenciesWithBalToUpdate,
+    apolloClient,
+  })
 
   // when there is a new local tx wait 1s then proactively refresh portfolio and activity queries
   yield* delay(REFETCH_INTERVAL)
@@ -42,7 +52,11 @@ export function* refetchGQLQueries(transaction: TransactionDetails) {
   let freshnessLag = REFETCH_INTERVAL
   // poll every second until the cache has updated balances for the relevant currencies
   for (let i = 0; i < MAX_REFETCH_ATTEMPTS; i += 1) {
-    const currencyIdToUpdatedBalance = readBalancesFromCache(owner, currenciesWithBalToUpdate)
+    const currencyIdToUpdatedBalance = readBalancesFromCache({
+      owner,
+      currencyIds: currenciesWithBalToUpdate,
+      apolloClient,
+    })
     if (checkIfBalancesUpdated(currencyIdToStartingBalance, currencyIdToUpdatedBalance)) break
 
     yield* delay(REFETCH_INTERVAL)
@@ -92,10 +106,15 @@ function getCurrenciesWithExpectedUpdates(
   return currenciesWithBalToUpdate
 }
 
-function readBalancesFromCache(
-  owner: string,
+function readBalancesFromCache({
+  owner,
+  currencyIds,
+  apolloClient,
+}: {
+  owner: string
   currencyIds: Set<CurrencyId> | undefined
-): CurrencyIdToBalance | undefined {
+  apolloClient: ApolloClient<NormalizedCacheObject> | null
+}): CurrencyIdToBalance | undefined {
   if (!currencyIds?.size) return undefined
   const currencyIdsToUpdate = new Set(currencyIds)
 

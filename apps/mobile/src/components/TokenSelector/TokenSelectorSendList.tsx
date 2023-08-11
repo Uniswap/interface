@@ -12,7 +12,7 @@ import {
   TokenSelectorList,
 } from 'src/components/TokenSelector/TokenSelectorList'
 import { getTokenOptionsSection } from 'src/components/TokenSelector/utils'
-import { useFiatOnRampIpAddressQuery } from 'src/features/fiatOnRamp/api'
+import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
 
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'

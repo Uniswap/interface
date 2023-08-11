@@ -1,18 +1,23 @@
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
 import appsFlyer from 'react-native-appsflyer'
-import { appSelect } from 'src/app/hooks'
-import { i18n } from 'src/app/i18n'
-import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { attemptCancelTransaction } from 'src/features/transactions/cancelTransactionSaga'
-import { refetchGQLQueries } from 'src/features/transactions/refetchGQLQueriesSaga'
-import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransactionSaga'
+import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
+import { serializeError } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
+import { ChainId } from 'wallet/src/constants/chains'
+import { PollingInterval } from 'wallet/src/constants/misc'
+import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
+import { pushNotification, setNotificationStatus } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
+import { refetchGQLQueries } from 'wallet/src/features/transactions/refetchGQLQueriesSaga'
+import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
 import {
   selectHasDoneASwap,
   selectIncompleteTransactions,
-} from 'src/features/transactions/selectors'
+} from 'wallet/src/features/transactions/selectors'
 import {
   addTransaction,
   cancelTransaction,
@@ -21,15 +26,7 @@ import {
   transactionActions,
   updateTransaction,
   upsertFiatOnRampTransaction,
-} from 'src/features/transactions/slice'
-import { getFinalizedTransactionStatus } from 'src/features/transactions/utils'
-import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
-import { logger } from 'utilities/src/logger/logger'
-import { ChainId } from 'wallet/src/constants/chains'
-import { PollingInterval } from 'wallet/src/constants/misc'
-import { pushNotification, setNotificationStatus } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
+} from 'wallet/src/features/transactions/slice'
 import {
   BaseSwapTransactionInfo,
   TransactionDetails,
@@ -37,9 +34,17 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { getFinalizedTransactionStatus } from 'wallet/src/features/transactions/utils'
 import { getProvider } from 'wallet/src/features/wallet/context'
+import i18n from 'wallet/src/i18n/i18n'
+import { appSelect } from 'wallet/src/state'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 
-export function* transactionWatcher() {
+export function* transactionWatcher({
+  apolloClient,
+}: {
+  apolloClient: ApolloClient<NormalizedCacheObject> | null
+}) {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
 
   // First, fork off watchers for any incomplete txs that are already in store
@@ -49,7 +54,7 @@ export function* transactionWatcher() {
     if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
       yield* fork(watchFiatOnRampTransaction, transaction)
     } else {
-      yield* fork(watchTransaction, transaction)
+      yield* fork(watchTransaction, { transaction, apolloClient })
     }
   }
 
@@ -63,7 +68,7 @@ export function* transactionWatcher() {
       if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
         yield* fork(watchFiatOnRampTransaction, transaction)
       } else {
-        yield* fork(watchTransaction, transaction)
+        yield* fork(watchTransaction, { transaction, apolloClient })
       }
     } catch (error) {
       logger.error('Failed to fork a transaction watcher', {
@@ -148,8 +153,13 @@ export function* watchFiatOnRampTransaction(transaction: TransactionDetails) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function* watchTransaction(transaction: TransactionDetails): Generator<any> {
+export function* watchTransaction({
+  transaction,
+  apolloClient,
+}: {
+  transaction: TransactionDetails
+  apolloClient: ApolloClient<NormalizedCacheObject> | null
+}): Generator<unknown> {
   const { chainId, id, hash, options } = transaction
 
   logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
@@ -164,7 +174,7 @@ export function* watchTransaction(transaction: TransactionDetails): Generator<an
 
   if (cancel) {
     // reset watcher for the current txn, as it can still be mined (or invalidated by the new txn)
-    yield* fork(watchTransaction, transaction)
+    yield* fork(watchTransaction, { transaction, apolloClient })
     // Cancel the current txn, which submits a new txn on chain and monitored in state
     yield* call(attemptCancelTransaction, transaction)
     return
@@ -172,7 +182,7 @@ export function* watchTransaction(transaction: TransactionDetails): Generator<an
 
   if (replace) {
     // Same logic as cancelation, but skip directly to replacement
-    yield* fork(watchTransaction, transaction)
+    yield* fork(watchTransaction, { transaction, apolloClient })
     yield* call(attemptReplaceTransaction, transaction, replace.newTxParams)
     return
   }
@@ -193,7 +203,7 @@ export function* watchTransaction(transaction: TransactionDetails): Generator<an
   }
 
   // Update the store with tx receipt details
-  yield* call(finalizeTransaction, transaction, receipt)
+  yield* call(finalizeTransaction, { transaction, ethersReceipt: receipt, apolloClient })
 }
 
 export async function waitForReceipt(
@@ -265,7 +275,7 @@ export function logTransactionEvent(
       status === TransactionStatus.Success
         ? SwapEventName.SWAP_TRANSACTION_COMPLETED
         : SwapEventName.SWAP_TRANSACTION_FAILED
-    sendMobileAnalyticsEvent(eventName, {
+    sendWalletAnalyticsEvent(eventName, {
       address: from,
       hash,
       chain_id: chainId,
@@ -289,11 +299,17 @@ type StatusOverride =
   | TransactionStatus.Failed
   | TransactionStatus.Cancelled
 
-function* finalizeTransaction(
-  transaction: TransactionDetails,
-  ethersReceipt?: providers.TransactionReceipt | null,
+function* finalizeTransaction({
+  apolloClient,
+  ethersReceipt,
+  statusOverride,
+  transaction,
+}: {
+  apolloClient: ApolloClient<NormalizedCacheObject> | null
+  ethersReceipt?: providers.TransactionReceipt | null
   statusOverride?: StatusOverride
-) {
+  transaction: TransactionDetails
+}) {
   const status =
     statusOverride ?? getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
 
@@ -320,7 +336,7 @@ function* finalizeTransaction(
   // Flip status to true so we can render Notification badge on home
   yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
   // Refetch data when a local tx has confirmed
-  yield* refetchGQLQueries(transaction)
+  yield* refetchGQLQueries({ transaction, apolloClient })
 
   if (transaction.typeInfo.type === TransactionType.Swap) {
     const hasDoneASwap = yield* select(selectHasDoneASwap)

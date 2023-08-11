@@ -8,9 +8,9 @@ import {
 } from 'src/components/modals/WarningModal/types'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
-import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
 import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { hasSufficientFundsIncludingGas } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function useTransactionGasWarning(

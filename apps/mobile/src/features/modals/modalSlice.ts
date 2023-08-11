@@ -4,7 +4,7 @@ import { MobileState } from 'src/app/reducer'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModal'
 import { ModalName } from 'src/features/telemetry/constants'
-import { getKeys } from 'src/utils/objects'
+import { getKeys } from 'utilities/src/primitives/objects'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 
 export interface AppModalState<T> {

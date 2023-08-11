@@ -1,6 +1,12 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { spawn } from 'typed-redux-saga'
 import { initProviders } from 'wallet/src/features/providers'
+import {
+  transferTokenActions,
+  transferTokenReducer,
+  transferTokenSaga,
+  transferTokenSagaName,
+} from 'wallet/src/features/transactions/transfer/transferTokenSaga'
 import { SagaState } from 'wallet/src/utils/saga'
 
 // Sagas that are spawned at startup
@@ -13,6 +19,7 @@ export interface MonitoredSaga {
 }
 
 export type MonitoredSagaReducer = Reducer<Record<string, SagaState>>
+
 export function getMonitoredSagaReducers(
   monitoredSagas: Record<string, MonitoredSaga>
 ): MonitoredSagaReducer {
@@ -29,8 +36,21 @@ export function getMonitoredSagaReducers(
   )
 }
 
+export const sharedMonitoredSagas: Record<string, MonitoredSaga> = {
+  [transferTokenSagaName]: {
+    name: transferTokenSagaName,
+    wrappedSaga: transferTokenSaga,
+    reducer: transferTokenReducer,
+    actions: transferTokenActions,
+  },
+}
+
 export function* rootSaga() {
   for (const s of sharedSagas) {
     yield* spawn(s)
+  }
+
+  for (const m of Object.values(sharedMonitoredSagas)) {
+    yield* spawn(m.wrappedSaga)
   }
 }

@@ -1,14 +1,10 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
-import { transactionActions } from 'src/features/transactions/slice'
-import {
-  createTransactionId,
-  getSerializableTransactionRequest,
-} from 'src/features/transactions/utils'
 import { call, put } from 'typed-redux-saga'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { transactionActions } from 'wallet/src/features/transactions/slice'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   TransactionDetails,
@@ -17,6 +13,10 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'wallet/src/features/transactions/types'
+import {
+  createTransactionId,
+  getSerializableTransactionRequest,
+} from 'wallet/src/features/transactions/utils'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'

@@ -10,11 +10,11 @@ import {
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
-import { isOffline } from 'src/features/transactions/utils'
 import { formatPriceImpact } from 'utilities/src/format/format'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { API_RATE_LIMIT_ERROR, SWAP_NO_ROUTE_ERROR } from 'wallet/src/features/routing/api'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { isOffline } from 'wallet/src/features/transactions/utils'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
 const PRICE_IMPACT_THRESHOLD_HIGH = new Percent(5, 100) // 5%

@@ -1,7 +1,6 @@
 import { MockedResponse } from '@apollo/client/testing'
 import React from 'react'
 import { ActivityTab } from 'src/components/home/ActivityTab'
-import { mockWalletPreloadedState } from 'src/test/fixtures'
 import { DaiAsset, Portfolios } from 'src/test/gqlFixtures'
 import { act, render } from 'src/test/test-utils'
 import { sleep } from 'utilities/src/time/timing'
@@ -12,7 +11,7 @@ import {
   TransactionListDocument,
   TransactionListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import { mockWalletPreloadedState, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
 const TransactionListMock: MockedResponse<TransactionListQuery> = {
   request: {

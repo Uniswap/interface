@@ -7,10 +7,10 @@ import dayjs from 'dayjs'
 import { AccountToNftData } from 'src/features/favorites/slice'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import { TransactionStateMap } from 'src/features/transactions/slice'
 import { ACTIVE_CHAINS, ChainId } from 'wallet/src/constants/chains'
 import { ChainsState } from 'wallet/src/features/chains/slice'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
+import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
 import {
   ChainIdToTxIdToDetails,
   TransactionStatus,

@@ -1,20 +1,20 @@
 import { BigNumber, providers } from 'ethers'
-import { appSelect } from 'src/app/hooks'
-import { i18n } from 'src/app/i18n'
-import { signAndSendTransaction } from 'src/features/transactions/sendTransactionSaga'
-import { addTransaction, deleteTransaction } from 'src/features/transactions/slice'
-import {
-  createTransactionId,
-  getSerializableTransactionRequest,
-} from 'src/features/transactions/utils'
 import { call, put } from 'typed-redux-saga'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { signAndSendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
+import { addTransaction, deleteTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
+import {
+  createTransactionId,
+  getSerializableTransactionRequest,
+} from 'wallet/src/features/transactions/utils'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
+import i18n from 'wallet/src/i18n/i18n'
+import { appSelect } from 'wallet/src/state'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export function* attemptReplaceTransaction(

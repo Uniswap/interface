@@ -32,7 +32,6 @@ import {
   useOnToggleShowRecipientSelector,
 } from 'src/features/transactions/transfer/hooks'
 import { TransferFormSpeedbumps } from 'src/features/transactions/transfer/TransferFormWarnings'
-import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
@@ -41,6 +40,7 @@ import { dimensions } from 'ui/src/theme/restyle/sizing'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 interface TransferTokenProps {

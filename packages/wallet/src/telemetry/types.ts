@@ -1,3 +1,4 @@
+import { MoonpayEventName, SwapEventName } from '@uniswap/analytics-events'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
 
@@ -14,7 +15,28 @@ export type SwapTradeBaseProperties = {
   token_out_amount: string
 } & TraceProps
 
+type SwapTransactionResultProperties = {
+  address: string
+  chain_id: number
+  hash: string
+  added_time: number
+  confirmed_time?: number
+  gas_used?: number
+  effective_gas_price?: number
+  tradeType: string
+  inputCurrencyId: string
+  outputCurrencyId: string
+  slippageTolerance?: number
+  gasUseEstimate?: string
+  route?: string
+  quoteId?: string
+}
+
 export type WalletEventProperties = {
+  [MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED]: {
+    success: boolean
+    networkError: boolean
+  } & TraceProps
   [WalletEventName.PortfolioBalanceFreshnessLag]: {
     freshnessLag: number
     updatedCurrencies: string[]
@@ -22,4 +44,6 @@ export type WalletEventProperties = {
   [WalletEventName.SwapSubmitted]: {
     transaction_hash: string
   } & SwapTradeBaseProperties
+  [SwapEventName.SWAP_TRANSACTION_COMPLETED]: SwapTransactionResultProperties
+  [SwapEventName.SWAP_TRANSACTION_FAILED]: SwapTransactionResultProperties
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
-import { mockWalletPreloadedState } from 'src/test/fixtures'
 import { render } from 'src/test/test-utils'
+import { mockWalletPreloadedState } from 'wallet/src/test/fixtures'
 
 describe(AccountHeader, () => {
   it('renders without error', () => {

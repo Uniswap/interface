@@ -1,7 +1,10 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import { call, delay } from 'redux-saga/effects'
-import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
-import { attemptCancelTransaction } from 'src/features/transactions/cancelTransactionSaga'
+import { sleep } from 'utilities/src/time/timing'
+import { ChainId } from 'wallet/src/constants/chains'
+import { PollingInterval } from 'wallet/src/constants/misc'
+import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
+import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import {
   addTransaction,
   cancelTransaction,
@@ -9,14 +12,16 @@ import {
   forceFetchFiatOnRampTransactions,
   transactionActions,
   updateTransaction,
-} from 'src/features/transactions/slice'
+} from 'wallet/src/features/transactions/slice'
 import {
   deleteTransaction,
   transactionWatcher,
   waitForTxnInvalidated,
   watchFiatOnRampTransaction,
   watchTransaction,
-} from 'src/features/transactions/transactionWatcherSaga'
+} from 'wallet/src/features/transactions/transactionWatcherSaga'
+import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
+import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
 import {
   fiatOnRampTxDetailsPending,
   finalizedTxAction,
@@ -24,16 +29,11 @@ import {
   mockProviderManager,
   txDetailsPending,
   txReceipt,
-} from 'src/test/fixtures'
-import { sleep } from 'utilities/src/time/timing'
-import { ChainId } from 'wallet/src/constants/chains'
-import { PollingInterval } from 'wallet/src/constants/misc'
-import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
-import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
+} from 'wallet/src/test/fixtures'
 
 describe(transactionWatcher, () => {
   it('Triggers watchers successfully', () => {
-    return expectSaga(transactionWatcher)
+    return expectSaga(transactionWatcher, { apolloClient: null })
       .withState({
         transactions: {
           byChainId: {
@@ -47,11 +47,11 @@ describe(transactionWatcher, () => {
         [call(getProvider, ChainId.Mainnet), mockProvider],
         [call(getProviderManager), mockProviderManager],
       ])
-      .fork(watchTransaction, txDetailsPending)
+      .fork(watchTransaction, { transaction: txDetailsPending, apolloClient: null })
       .dispatch(addTransaction(txDetailsPending))
-      .fork(watchTransaction, txDetailsPending)
+      .fork(watchTransaction, { transaction: txDetailsPending, apolloClient: null })
       .dispatch(updateTransaction(txDetailsPending))
-      .fork(watchTransaction, txDetailsPending)
+      .fork(watchTransaction, { transaction: txDetailsPending, apolloClient: null })
       .silentRun()
   })
 })
@@ -71,7 +71,7 @@ describe(watchTransaction, () => {
     const receiptProvider = {
       waitForTransaction: jest.fn(() => txReceipt),
     }
-    return expectSaga(watchTransaction, txDetailsPending)
+    return expectSaga(watchTransaction, { transaction: txDetailsPending, apolloClient: null })
       .provide([[call(getProvider, chainId), receiptProvider]])
       .put(finalizeTransaction(finalizedTxAction.payload))
       .silentRun()
@@ -85,7 +85,7 @@ describe(watchTransaction, () => {
       }),
     }
     const cancelRequest = { to: from, from, value: '0x0' }
-    return expectSaga(watchTransaction, txDetailsPending)
+    return expectSaga(watchTransaction, { transaction: txDetailsPending, apolloClient: null })
       .provide([
         [call(getProvider, chainId), receiptProvider],
         [call(attemptCancelTransaction, txDetailsPending), true],
@@ -102,7 +102,7 @@ describe(watchTransaction, () => {
         return null
       }),
     }
-    return expectSaga(watchTransaction, txDetailsPending)
+    return expectSaga(watchTransaction, { transaction: txDetailsPending, apolloClient: null })
       .provide([
         [call(getProvider, chainId), receiptProvider],
         [call(waitForTxnInvalidated, chainId, id, options.request.nonce), true],

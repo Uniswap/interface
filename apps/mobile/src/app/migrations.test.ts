@@ -63,13 +63,15 @@ import { initialModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { initialTelemetryState } from 'src/features/telemetry/slice'
 import { initialTokensState } from 'src/features/tokens/tokensSlice'
-import { initialTransactionsState, TransactionStateMap } from 'src/features/transactions/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
-import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test/fixtures'
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ACTIVE_CHAINS, ChainId } from 'wallet/src/constants/chains'
 import { ChainsState, initialChainsState } from 'wallet/src/features/chains/slice'
 import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
+import {
+  initialTransactionsState,
+  TransactionStateMap,
+} from 'wallet/src/features/transactions/slice'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -81,6 +83,7 @@ import {
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
+import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'wallet/src/test/fixtures'
 
 // helps with object assignment
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

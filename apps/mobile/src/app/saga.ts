@@ -1,3 +1,4 @@
+import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { accountCleanupWatcher } from 'src/features/accounts/accountWatcherSaga'
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
@@ -17,17 +18,11 @@ import {
   tokenWrapSaga,
   tokenWrapSagaName,
 } from 'src/features/transactions/swap/wrapSaga'
-import { transactionWatcher } from 'src/features/transactions/transactionWatcherSaga'
-import {
-  transferTokenActions,
-  transferTokenReducer,
-  transferTokenSaga,
-  transferTokenSagaName,
-} from 'src/features/transactions/transfer/transferTokenSaga'
 import { restorePrivateKeyCompleteWatcher } from 'src/features/wallet/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/saga'
 import { initializeWeb3Wallet, walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
 import { call, spawn } from 'typed-redux-saga'
+import { transactionWatcher } from 'wallet/src/features/transactions/transactionWatcherSaga'
 import {
   editAccountActions,
   editAccountReducer,
@@ -61,7 +56,6 @@ const sagas = [
   restorePrivateKeyCompleteWatcher,
   signWcRequestSaga,
   telemetrySaga,
-  transactionWatcher,
   walletConnectV2Saga,
 ]
 
@@ -84,12 +78,6 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: importAccountSaga,
     reducer: importAccountReducer,
     actions: importAccountActions,
-  },
-  [transferTokenSagaName]: {
-    name: transferTokenSagaName,
-    wrappedSaga: transferTokenSaga,
-    reducer: transferTokenReducer,
-    actions: transferTokenActions,
   },
   [swapSagaName]: {
     name: swapSagaName,
@@ -114,6 +102,9 @@ export function* mobileSaga() {
   for (const s of sagas) {
     yield* spawn(s)
   }
+
+  yield* spawn(transactionWatcher, { apolloClient })
+
   for (const m of Object.values(monitoredSagas)) {
     yield* spawn(m.wrappedSaga)
   }

@@ -3,24 +3,24 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { Delay } from 'src/components/layout/Delayed'
 
+import { Theme } from 'ui/src/theme/restyle/theme'
+import { useDebounce } from 'utilities/src/time/timing'
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   useFiatOnRampBuyQuoteQuery,
   useFiatOnRampIpAddressQuery,
   useFiatOnRampLimitsQuery,
   useFiatOnRampSupportedTokensQuery,
   useFiatOnRampWidgetUrlQuery,
-} from 'src/features/fiatOnRamp/api'
-import { addTransaction } from 'src/features/transactions/slice'
-import { createTransactionId } from 'src/features/transactions/utils'
-import { Theme } from 'ui/src/theme/restyle/theme'
-import { useDebounce } from 'utilities/src/time/timing'
-import { ChainId } from 'wallet/src/constants/chains'
+} from 'wallet/src/features/fiatOnRamp/api'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
+import { addTransaction } from 'wallet/src/features/transactions/slice'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 /** Returns a new externalTransactionId and a callback to store the transaction. */

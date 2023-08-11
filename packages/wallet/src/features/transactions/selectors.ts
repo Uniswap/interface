@@ -1,20 +1,20 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
-import { MobileState } from 'src/app/reducer'
-import { SearchableRecipient } from 'src/components/RecipientSelect/types'
-import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
-import { TransactionStateMap } from 'src/features/transactions/slice'
-import { flattenObjectOfObjects } from 'src/utils/objects'
 import { unique } from 'utilities/src/primitives/array'
+import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { ChainId } from 'wallet/src/constants/chains'
+import { SearchableRecipient } from 'wallet/src/features/address/types'
+import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
+import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
 import {
   SendTokenTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { RootState } from 'wallet/src/state'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
-export const selectTransactions = (state: MobileState): TransactionStateMap => state.transactions
+export const selectTransactions = (state: RootState): TransactionStateMap => state.transactions
 
 export const selectHasDoneASwap = createSelector(selectTransactions, (transactions) => {
   const txs = flattenObjectOfObjects(transactions)
@@ -24,7 +24,7 @@ export const selectHasDoneASwap = createSelector(selectTransactions, (transactio
 
 export const makeSelectAddressTransactions = (
   address: Address | null
-): Selector<MobileState, TransactionDetails[] | undefined> =>
+): Selector<RootState, TransactionDetails[] | undefined> =>
   createSelector(selectTransactions, (transactions) => {
     if (!address) return
 
@@ -55,7 +55,7 @@ export const makeSelectAddressTransactions = (
 
 export const makeSelectLocalTxCurrencyIds = (
   address: Address | null
-): Selector<MobileState, Record<string, boolean>> =>
+): Selector<RootState, Record<string, boolean>> =>
   createSelector(selectTransactions, (transactions) => {
     const addressTransactions = address && transactions[address]
     if (!addressTransactions) return {}
@@ -78,7 +78,7 @@ export const makeSelectTransaction = (
   address: Address | undefined,
   chainId: ChainId | undefined,
   txId: string | undefined
-): Selector<MobileState, TransactionDetails | undefined> =>
+): Selector<RootState, TransactionDetails | undefined> =>
   createSelector(selectTransactions, (transactions): TransactionDetails | undefined => {
     if (!address || !transactions[address] || !chainId || !txId) {
       return undefined
@@ -94,7 +94,7 @@ export const makeSelectTransaction = (
 
 // Returns a list of past recipients ordered from most to least recent
 // TODO: [MOB-232] either revert this to return addresses or keep but also return displayName so that it's searchable for RecipientSelect
-export const selectRecipientsByRecency = (state: MobileState): SearchableRecipient[] => {
+export const selectRecipientsByRecency = (state: RootState): SearchableRecipient[] => {
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   const sendTransactions = transactionsByChainId.reduce<TransactionDetails[]>(
     (accum, transactions) => {
@@ -116,7 +116,7 @@ export const selectRecipientsByRecency = (state: MobileState): SearchableRecipie
   return uniqueAddressesOnly(sortedRecipients)
 }
 
-export const selectIncompleteTransactions = (state: MobileState): TransactionDetails[] => {
+export const selectIncompleteTransactions = (state: RootState): TransactionDetails[] => {
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   return transactionsByChainId.reduce<TransactionDetails[]>((accum, transactions) => {
     const pendingTxs = Object.values(transactions).filter(

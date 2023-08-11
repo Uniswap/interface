@@ -7,7 +7,6 @@ import {
 } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { account } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, UNI } from 'wallet/src/constants/tokens'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -16,6 +15,7 @@ import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
+import { account } from 'wallet/src/test/fixtures'
 
 const formSwapUrl = (
   userAddress?: Address,

@@ -1,10 +1,10 @@
 import { Linking } from 'react-native'
 import OneSignal, { NotificationReceivedEvent, OpenedEvent } from 'react-native-onesignal'
-import { GQLQueries } from 'src/data/queries'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { config } from 'wallet/src/config'
+import { GQLQueries } from 'wallet/src/data/queries'
 
 export const initOneSignal = (): void => {
   OneSignal.setLogLevel(6, 0)

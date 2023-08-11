@@ -5,14 +5,13 @@ import { AccountSwitcher } from 'src/app/modals/AccountSwitcherModal'
 import { MobileState } from 'src/app/reducer'
 import { initialModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { mockWalletPreloadedState } from 'src/test/fixtures'
 import { Portfolios } from 'src/test/gqlFixtures'
 import { render } from 'src/test/test-utils'
 import {
   AccountListDocument,
   AccountListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import { mockWalletPreloadedState, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
 jest.useFakeTimers()
 

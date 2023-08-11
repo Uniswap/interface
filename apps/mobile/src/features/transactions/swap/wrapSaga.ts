@@ -1,12 +1,12 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Contract, providers } from 'ethers'
-import { sendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { call } from 'typed-redux-saga'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { Weth } from 'wallet/src/abis/types'
 import WETH_ABI from 'wallet/src/abis/weth.json'
 import { ChainId } from 'wallet/src/constants/chains'
+import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import {
   TransactionOptions,
   TransactionType,

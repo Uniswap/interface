@@ -3,7 +3,6 @@ import { fireEvent } from '@testing-library/react-native'
 import React from 'react'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { ON_PRESS_EVENT_PAYLOAD } from 'src/components/buttons/TouchableArea.test'
-import { account } from 'src/test/fixtures'
 import { Portfolios } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
@@ -11,6 +10,7 @@ import {
   AccountListDocument,
   AccountListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { account } from 'wallet/src/test/fixtures'
 
 jest.mock('@react-navigation/drawer', () => ({ useDrawerStatus: jest.fn(() => 'unknown') }))
 

@@ -4,18 +4,18 @@ import { TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { expectSaga } from 'redux-saga-test-plan'
-import { sendTransaction } from 'src/features/transactions/sendTransactionSaga'
 import { approveAndSwap, SwapParams } from 'src/features/transactions/swap/swapSaga'
-import { account, mockProvider } from 'src/test/fixtures'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   ExactInputSwapTransactionInfo,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
+import { account, mockProvider } from 'wallet/src/test/fixtures'
 import { currencyId } from 'wallet/src/utils/currencyId'
 
 const methodParameters: MethodParameters = {

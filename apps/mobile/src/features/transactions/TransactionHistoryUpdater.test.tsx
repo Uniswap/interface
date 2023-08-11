@@ -7,7 +7,6 @@ import {
   getReceiveNotificationFromData,
   TransactionHistoryUpdater,
 } from 'src/features/transactions/TransactionHistoryUpdater'
-import { account, account2 } from 'src/test/fixtures'
 import { MAX_FIXTURE_TIMESTAMP, Portfolios, PortfoliosWithReceive } from 'src/test/gqlFixtures'
 import { render } from 'src/test/test-utils'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -19,7 +18,7 @@ import { AssetType } from 'wallet/src/entities/assets'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import { account, account2, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
 const mockedRefetchQueries = jest.fn()
 jest.mock('src/data/usePersistedApolloClient', () => ({

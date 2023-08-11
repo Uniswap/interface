@@ -7,7 +7,7 @@
     "operationSearchPaths" : [
       "../../../apps/mobile/src/components/PriceExplorer/TokenPriceHistory.graphql",
       "../../../apps/mobile/src/components/explore/search/SearchPopularTokens.graphql",
-      "../../../apps/mobile/src/data/queries.graphql"
+      "../../../packages/wallet/src/data/queries.graphql"
     ],
     "schemaSearchPaths" : [
       "../../../packages/wallet/src/data/__generated__/schema.graphql"

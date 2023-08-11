@@ -1,6 +1,7 @@
 // Sets up global.chrome in jest environment
 //
 const storage = require('mem-storage-area')
+const mockRNCNetInfo = require('@react-native-community/netinfo/jest/netinfo-mock.js')
 
 global.chrome = {
     storage: {
@@ -14,6 +15,26 @@ global.chrome = {
     getURL: (path) => `chrome/path/to/${path}`
   }
 }
+
+jest.mock('react-native-appsflyer', () => {
+  return {
+    initSdk: jest.fn(),
+  }
+})
+
+// NetInfo mock does not export typescript types
+const NetInfoStateType = {
+  unknown: 'unknown',
+  none: 'none',
+  cellular: 'cellular',
+  wifi: 'wifi',
+  bluetooth: 'bluetooth',
+  ethernet: 'ethernet',
+  wimax: 'wimax',
+  vpn: 'vpn',
+  other: 'other',
+}
+jest.mock('@react-native-community/netinfo', () => ({ ...mockRNCNetInfo, NetInfoStateType }))
 
 jest.mock('statsig-react-native', () => {
   const StatsigMock = {

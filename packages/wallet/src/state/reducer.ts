@@ -1,11 +1,15 @@
 import { combineReducers } from 'redux'
 import { chainsReducer } from 'wallet/src/features/chains/slice'
+import { fiatOnRampApi } from 'wallet/src/features/fiatOnRamp/api'
 import { notificationReducer } from 'wallet/src/features/notifications/slice'
+import { transactionReducer } from 'wallet/src/features/transactions/slice'
 import { walletReducer } from 'wallet/src/features/wallet/slice'
 
 export const sharedReducers = {
+  [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,
   chains: chainsReducer,
   notifications: notificationReducer,
+  transactions: transactionReducer,
   wallet: walletReducer,
 } as const
 
