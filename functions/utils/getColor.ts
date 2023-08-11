@@ -2,11 +2,14 @@ import { Buffer } from 'buffer'
 import JPEG from 'jpeg-js'
 import PNG from 'png-ts'
 
-import { DEFAULT_COLOR } from '../constants'
+import { DEFAULT_COLOR, predefinedTokenColors } from '../constants'
 
 export default async function getColor(image: string | undefined) {
   if (!image) {
     return DEFAULT_COLOR
+  }
+  if (image in predefinedTokenColors) {
+    return predefinedTokenColors[image]
   }
   try {
     const data = await fetch(image)
