@@ -35,13 +35,6 @@ export function useSingleContractMultipleData(
   return multicall.hooks.useSingleContractMultipleData(chainId, latestBlock, ...args)
 }
 
-export function useSingleContractWithCallData(
-  ...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleContractWithCallData>
-) {
-  const { chainId, latestBlock } = useCallContext()
-  return multicall.hooks.useSingleContractWithCallData(chainId, latestBlock, ...args)
-}
-
 function useCallContext() {
   const { chainId } = useWeb3React()
   const latestBlock = useBlockNumber()
