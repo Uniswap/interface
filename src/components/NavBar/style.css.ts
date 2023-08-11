@@ -62,7 +62,7 @@ const baseMenuItem = style([
     paddingY: '8',
     paddingX: '14',
     marginY: '4',
-    borderRadius: '12',
+    borderRadius: '14',
     transition: '250',
     height: 'min',
     width: 'full',
@@ -73,7 +73,7 @@ const baseMenuItem = style([
     gap: '4',
   }),
   {
-    lineHeight: '24px',
+    lineHeight: '22px',
     textDecoration: 'none',
     ':hover': {
       background: vars.color.lightGrayOverlay,
