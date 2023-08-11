@@ -1,4 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
@@ -235,6 +236,12 @@ export default function FeatureFlagModal() {
         value={useRoutingAPIForPriceFlag()}
         featureFlag={FeatureFlag.routingAPIPrice}
         label="Use the routing-api v2 for price fetches"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useCurrencyConversionFlag()}
+        featureFlag={FeatureFlag.currencyConversion}
+        label="Enable currency conversion"
       />
       <FeatureFlagOption
         variant={BaseVariant}
