@@ -221,6 +221,9 @@ export default function PositionListItem({
 
       {priceLower && priceUpper ? (
         <RangeLineItem>
+          <ExtentsText>
+            <Trans>Min: </Trans>
+          </ExtentsText>
           <RangeText>
             <Trans>
               <span>
@@ -230,7 +233,7 @@ export default function PositionListItem({
                   direction: Bound.LOWER,
                 })}{' '}
               </span>
-              {/* <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} /> */}
+              <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
             </Trans>
           </RangeText>{' '}
           <HideSmall>
@@ -240,6 +243,9 @@ export default function PositionListItem({
             <DoubleArrow>↔</DoubleArrow>{' '}
           </SmallOnly>
           <RangeText>
+            <ExtentsText>
+              <Trans>Max:</Trans>
+            </ExtentsText>
             <Trans>
               <span>
                 {formatTickPrice({
@@ -248,10 +254,8 @@ export default function PositionListItem({
                   direction: Bound.UPPER,
                 })}{' '}
               </span>
-              <ExtentsText>
-                <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
-                <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
-              </ExtentsText>
+              <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
+              <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
             </Trans>
           </RangeText>
         </RangeLineItem>
