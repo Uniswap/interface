@@ -28,7 +28,7 @@ export function WebNavigation(): JSX.Element {
   const isLoggedIn = useAppSelector((state) => state.wallet.isUnlocked)
 
   return (
-    <YStack backgroundColor="$surface2">
+    <YStack backgroundColor="$surface2" minHeight="100vh">
       <YStack
         backgroundColor="$surface2"
         borderRadius="$rounded24"
