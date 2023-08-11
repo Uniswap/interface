@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
-          "client_id": "196753325723-be4i50p1a5n9sd2qd576pd8hmqknv9hr.apps.googleusercontent.com",
+          "client_id": "196753325723-1erv42tt619cshhqg87bhp7snq01qv3k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.uniswap",
-            "certificate_hash": "4398a04c09b6cc5e8d7560112d17527b8c966d2a"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "196753325723-be9ptee307usae6uqpnrfo3smnqq7c6b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uniswap",
+            "certificate_hash": "4882a08d68bc71538f38d5ed10d375b2fa86f851"
+          }
+        },
+        {
+          "client_id": "196753325723-o0nq070pfefob837j7ou0u3j25cfm50n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uniswap",
+            "certificate_hash": "50283357549f08c88a6908375001d9a2ba5e2ff1"
           }
         },
         {
@@ -28,7 +44,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC69qGmdncuT9rZu4CK3uP_1guLhgCCvJA"
+          "current_key": "AIzaSyDy7u4uz8btzckhZf5sVSpX2hve-4B3NiU"
         }
       ],
       "services": {
@@ -59,13 +75,37 @@
       },
       "oauth_client": [
         {
+          "client_id": "196753325723-0jfkji21bat9eokjhi0jddin8gs8n54s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uniswap.beta",
+            "certificate_hash": "fba68f64296ec8d0c993f5ff18b0c078163929db"
+          }
+        },
+        {
+          "client_id": "196753325723-6cvdf5p3n9dhltg2sfse4cq301jcra3e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uniswap.beta",
+            "certificate_hash": "e1cef26d07211b5b3a067d262617e67cf0d9b45e"
+          }
+        },
+        {
+          "client_id": "196753325723-ajh2m771qc6fj1249mq4su68sfedr1o0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uniswap.beta",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "196753325723-s1ilhafqk5qoek6rqrdfjh917m4bnvs5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC69qGmdncuT9rZu4CK3uP_1guLhgCCvJA"
+          "current_key": "AIzaSyDy7u4uz8btzckhZf5sVSpX2hve-4B3NiU"
         }
       ],
       "services": {
@@ -96,13 +136,37 @@
       },
       "oauth_client": [
         {
+          "client_id": "196753325723-8uto54kjpac3sl39eqk92v2d8ghssde8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uniswap.dev",
+            "certificate_hash": "f1ef853f0d883ef07583024ebd09bcf62ed7918c"
+          }
+        },
+        {
+          "client_id": "196753325723-acrlahuhiklhavfrpbkrab6ss1vbosva.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uniswap.dev",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "196753325723-etv34gv5b90li8sjkat9bgces1utojis.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uniswap.dev",
+            "certificate_hash": "55d5c1f113f013d3cfe6286d4b9520df35d4feed"
+          }
+        },
+        {
           "client_id": "196753325723-s1ilhafqk5qoek6rqrdfjh917m4bnvs5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC69qGmdncuT9rZu4CK3uP_1guLhgCCvJA"
+          "current_key": "AIzaSyDy7u4uz8btzckhZf5sVSpX2hve-4B3NiU"
         }
       ],
       "services": {
