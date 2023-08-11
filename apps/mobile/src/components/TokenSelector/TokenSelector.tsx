@@ -1,13 +1,15 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { memo, useCallback } from 'react'
+import { hasStringAsync } from 'expo-clipboard'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
+import PasteButton from 'src/components/buttons/PasteButton'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
+import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
 import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
-import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 import { SuggestedTokenSection, TokenSection } from 'src/components/TokenSelector/TokenSelectorList'
 import { TokenSelectorSearchResultsList } from 'src/components/TokenSelector/TokenSelectorSearchResultsList'
 import { TokenSelectorSendList } from 'src/components/TokenSelector/TokenSelectorSendList'
@@ -16,6 +18,7 @@ import { TokenSelectorSwapOutputList } from 'src/components/TokenSelector/TokenS
 import Trace from 'src/components/Trace/Trace'
 import { IS_IOS } from 'src/constants/globals'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
+import { getClipboard } from 'src/utils/clipboard'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
@@ -72,6 +75,18 @@ function _TokenSelectorModal({
     flow
   )
 
+  const [hasClipboardString, setHasClipboardString] = useState(false)
+
+  // Check if user clipboard has any text to show paste button
+  useEffect(() => {
+    async function checkClipboard(): Promise<void> {
+      const result = await hasStringAsync()
+      setHasClipboardString(result)
+    }
+
+    checkClipboard().catch(() => undefined)
+  }, [])
+
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -97,6 +112,13 @@ function _TokenSelectorModal({
     [currencyField, onSelectCurrency, searchFilter]
   )
 
+  const handlePaste = async (): Promise<void> => {
+    const clipboardContent = await getClipboard()
+    if (clipboardContent) {
+      onChangeText(clipboardContent)
+    }
+  }
+
   return (
     <BottomSheetModal
       extendOnKeyboardVisible
@@ -108,9 +130,11 @@ function _TokenSelectorModal({
       onClose={onClose}>
       <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
         <Flex grow pb={IS_IOS ? 'spacing16' : 'none'} px="spacing16">
-          <SearchBar
+          <SearchTextInput
             backgroundColor="surface2"
+            endAdornment={hasClipboardString ? <PasteButton onPress={handlePaste} /> : null}
             placeholder={t('Search tokens')}
+            py="spacing8"
             value={searchFilter ?? ''}
             onChangeText={onChangeText}
           />

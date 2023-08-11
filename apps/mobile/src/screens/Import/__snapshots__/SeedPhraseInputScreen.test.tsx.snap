@@ -366,7 +366,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                         style={
                           [
                             {
-                              "alignItems": "stretch",
+                              "alignItems": "center",
                               "display": "flex",
                               "flexDirection": "row",
                               "justifyContent": "flex-start",
@@ -603,7 +603,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 style={
                   [
                     {
-                      "alignItems": "stretch",
+                      "alignItems": "center",
                       "display": "flex",
                       "flexDirection": "row",
                       "justifyContent": "flex-start",

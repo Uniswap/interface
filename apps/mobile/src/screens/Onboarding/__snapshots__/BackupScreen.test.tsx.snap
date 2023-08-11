@@ -688,7 +688,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 style={
                   [
                     {
-                      "alignItems": "stretch",
+                      "alignItems": "center",
                       "display": "flex",
                       "flexDirection": "row",
                       "justifyContent": "flex-start",
@@ -1424,7 +1424,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 style={
                   [
                     {
-                      "alignItems": "stretch",
+                      "alignItems": "center",
                       "display": "flex",
                       "flexDirection": "row",
                       "justifyContent": "flex-start",

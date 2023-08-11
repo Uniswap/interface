@@ -104,7 +104,7 @@ const _Button = ({
       onLongPress={onLongPress}
       onPress={onPressHandler}
       onPressIn={onPressIn}>
-      <Flex row gap={iconPadding} px={paddingX} py={paddingY}>
+      <Flex row alignItems="center" gap={iconPadding} px={paddingX} py={paddingY}>
         {icon}
         {label && (
           <Text
