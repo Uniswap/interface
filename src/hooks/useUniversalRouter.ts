@@ -52,7 +52,7 @@ export function useUniversalRouterSwapCallback(
   const { account, chainId, provider } = useWeb3React()
   const analyticsContext = useTrace()
 
-  const universalRouter = useUniversalRouterContract(UNIVERSAL_ROUTER_ADDRESS(chainId ?? 1))
+  const universalRouter = useUniversalRouterContract(chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined)
 
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
