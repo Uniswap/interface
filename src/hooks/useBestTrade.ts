@@ -27,7 +27,7 @@ export function useBestTrade(
 ): {
   state: TradeState
   trade?: InterfaceTrade
-  swapQuoteLatency: PerformanceMeasure
+  swapQuoteLatency?: number
 }
 
 export function useBestTrade(
@@ -39,7 +39,7 @@ export function useBestTrade(
 ): {
   state: TradeState
   trade?: ClassicTrade
-  swapQuoteLatency: PerformanceMeasure
+  swapQuoteLatency?: number
 }
 /**
  * Returns the best v2+v3 trade for a desired swap.
@@ -57,7 +57,7 @@ export function useBestTrade(
   state: TradeState
   trade?: InterfaceTrade
   method?: QuoteMethod
-  swapQuoteLatency?: PerformanceMeasure
+  swapQuoteLatency?: number
 } {
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()

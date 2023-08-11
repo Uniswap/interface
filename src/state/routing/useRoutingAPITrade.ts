@@ -31,7 +31,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 ): {
   state: TradeState
   trade?: ClassicTrade
-  swapQuoteLatency: PerformanceMeasure
+  swapQuoteLatency: number
 }
 
 export function useRoutingAPITrade<TTradeType extends TradeType>(
@@ -44,7 +44,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 ): {
   state: TradeState
   trade?: InterfaceTrade
-  swapQuoteLatency: PerformanceMeasure
+  swapQuoteLatency: number
 }
 
 /**
@@ -64,7 +64,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   state: TradeState
   trade?: InterfaceTrade
   method?: QuoteMethod
-  swapQuoteLatency?: PerformanceMeasure
+  swapQuoteLatency?: number
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -99,7 +99,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   return useMemo(() => {
     if (skipFetch && amountSpecified) {
       // If we don't want to fetch new trades, but have valid inputs, return the stale trade.
-      return { state: TradeState.STALE, trade: tradeResult?.trade, swapQuoteLatency: tradeResult?.swapQuoteLatency }
+      return { state: TradeState.STALE, trade: tradeResult?.trade, swapQuoteLatency: tradeResult?.latencyMs }
     } else if (!amountSpecified || isError || !queryArgs) {
       return {
         state: TradeState.INVALID,
@@ -115,7 +115,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: isCurrent ? TradeState.VALID : TradeState.LOADING,
         trade: tradeResult.trade,
-        swapQuoteLatency: tradeResult.swapQuoteLatency,
+        swapQuoteLatency: tradeResult.latencyMs,
       }
     }
   }, [
@@ -126,7 +126,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     queryArgs,
     skipFetch,
     tradeResult?.state,
-    tradeResult?.swapQuoteLatency,
+    tradeResult?.latencyMs,
     tradeResult?.trade,
   ])
 }

@@ -24,7 +24,11 @@ jest.mock('state/user/hooks')
 
 // helpers to set mock expectations
 const expectRouterMock = (state: TradeState) => {
-  mocked(useRoutingAPITrade).mockReturnValue({ state, trade: undefined })
+  mocked(useRoutingAPITrade).mockReturnValue({
+    state,
+    trade: undefined,
+    swapQuoteLatency: 0,
+  })
 }
 
 const expectClientSideMock = (state: TradeState) => {

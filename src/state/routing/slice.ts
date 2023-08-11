@@ -119,7 +119,7 @@ export const routingApi = createApi({
       },
       async queryFn(args, _api, _extraOptions, fetch) {
         let fellBack = false
-        const quoteStartMark = performance.mark('quote-fetch-start')
+        const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
         if (shouldUseAPIRouter(args)) {
           fellBack = true
           try {
@@ -162,7 +162,7 @@ export const routingApi = createApi({
                   (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
                 ) {
                   return {
-                    data: { state: QuoteState.NOT_FOUND, latencyMeasure: getQuoteLatencyMeasure(quoteStartMark) },
+                    data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
                   }
                 }
               } catch {
@@ -172,8 +172,7 @@ export const routingApi = createApi({
 
             const uraQuoteResponse = response.data as URAQuoteResponse
             const tradeResult = await transformRoutesToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
-
-            return { data: { ...tradeResult, latencyMeasure: getQuoteLatencyMeasure(quoteStartMark) } }
+            return { data: { ...tradeResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
           } catch (error: any) {
             console.warn(
               `GetQuote failed on Unified Routing API, falling back to client: ${
@@ -189,10 +188,10 @@ export const routingApi = createApi({
           if (quoteResult.state === QuoteState.SUCCESS) {
             const trade = await transformRoutesToTrade(args, quoteResult.data, method)
             return {
-              data: { ...trade, latencyMeasure: getQuoteLatencyMeasure(quoteStartMark) },
+              data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
             }
           } else {
-            return { data: { ...quoteResult, latencyMeasure: getQuoteLatencyMeasure(quoteStartMark) } }
+            return { data: { ...quoteResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
           }
         } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)

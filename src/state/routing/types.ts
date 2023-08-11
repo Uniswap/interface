@@ -283,12 +283,12 @@ export type TradeResult =
   | {
       state: QuoteState.NOT_FOUND
       trade?: undefined
-      swapQuoteLatency?: PerformanceMeasure
+      latencyMs?: number
     }
   | {
       state: QuoteState.SUCCESS
       trade: InterfaceTrade
-      swapQuoteLatency?: PerformanceMeasure
+      latencyMs?: number
     }
 
 export enum PoolType {
