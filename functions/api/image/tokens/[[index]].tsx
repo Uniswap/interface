@@ -97,7 +97,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 >
                   <div
                     style={{
-                      fontFamily: 'Inter',
+                      fontFamily: 'Basel Medium',
                       fontSize: '48px',
                       lineHeight: '58px',
                       color: 'white',
@@ -121,11 +121,9 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
               )}
               <div
                 style={{
-                  fontFamily: 'Inter',
+                  fontFamily: 'Basel Medium',
                   fontSize: '72px',
-                  lineHeight: '58px',
-                  marginLeft: '-5px',
-                  marginTop: '24px',
+                  marginTop: '48px',
                 }}
               >
                 {name}
@@ -141,10 +139,10 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
               >
                 <div
                   style={{
-                    fontFamily: 'Inter',
+                    fontFamily: 'Basel Book',
                     fontSize: '168px',
-                    lineHeight: '133px',
-                    marginLeft: '-13px',
+                    marginLeft: '-8px',
+                    lineHeight: '168px',
                   }}
                 >
                   {data.symbol}
@@ -160,9 +158,12 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
         height: 630,
         fonts: [
           {
-            name: 'Inter',
+            name: 'Basel Book',
             data: fontData,
-            style: 'normal',
+          },
+          {
+            name: 'Basel Medium',
+            data: fontData,
           },
         ],
       }

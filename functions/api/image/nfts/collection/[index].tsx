@@ -80,18 +80,27 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                   style={{
                     gap: '12px',
                     fontSize: '72px',
-                    fontFamily: 'Inter',
+                    fontFamily: 'Basel Medium',
                     color: 'white',
                     display: 'flex',
                     flexDirection: 'row',
-                    alignItems: 'center',
+                    alignItems: 'flex-end',
                     flexWrap: 'wrap',
+                    lineHeight: '64px',
                   }}
                 >
                   {words.map((word: string) => (
                     <text key={word + index}>{word}</text>
                   ))}
-                  {data.isVerified && <img src={CHECK_URL} height="54px" />}
+                  {data.isVerified && (
+                    <img
+                      src={CHECK_URL}
+                      height="54px"
+                      style={{
+                        marginBottom: '-2px',
+                      }}
+                    />
+                  )}
                 </div>
                 <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
               </div>
@@ -104,9 +113,8 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
         height: 630,
         fonts: [
           {
-            name: 'Inter',
+            name: 'Basel Medium',
             data: fontData,
-            style: 'normal',
           },
         ],
       }

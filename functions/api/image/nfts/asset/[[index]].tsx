@@ -58,9 +58,8 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
         height: 630,
         fonts: [
           {
-            name: 'Inter',
+            name: 'Basel Medium',
             data: fontData,
-            style: 'normal',
           },
         ],
       }
