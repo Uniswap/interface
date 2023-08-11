@@ -39,9 +39,9 @@ export function TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element 
 
   if (!data && loading) {
     return (
-      <Flex marginTop="$spacing16" paddingHorizontal="$spacing16" width="100%">
-        <Text color="$neutral2" variant="bodyLarge">
-          Loading balances
+      <Flex centered minHeight={100} width="100%">
+        <Text color="$neutral3" variant="bodyLarge">
+          Loading token balances...
         </Text>
       </Flex>
     )
@@ -49,7 +49,7 @@ export function TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element 
 
   if (!data || data?.balances?.length === 0) {
     return (
-      <Flex marginTop="$spacing16" paddingHorizontal="$spacing16" width="100%">
+      <Flex centered minHeight={100} width="100%">
         <Text color="$neutral3" variant="bodyLarge">
           No tokens
         </Text>
@@ -58,12 +58,7 @@ export function TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element 
   }
 
   return (
-    <ScrollView
-      backgroundColor="$surface2"
-      marginTop="$spacing16"
-      paddingBottom="$spacing16"
-      showsVerticalScrollIndicator={false}
-      width="100%">
+    <ScrollView paddingTop="$spacing8" showsVerticalScrollIndicator={false} width="100%">
       {listItems?.map((balance: PortfolioBalance) => {
         return (
           <TokenBalanceItem

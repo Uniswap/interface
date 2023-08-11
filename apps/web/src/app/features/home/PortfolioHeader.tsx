@@ -6,7 +6,6 @@ import { useDappContext } from 'src/background/features/dapp/hooks'
 import { Icons, Popover, XStack } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 import { Chevron } from 'ui/src/components/icons/Chevron'
-import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { Unicon } from 'ui/src/components/Unicon'
 import { iconSizes } from 'ui/src/theme/iconSizes'
@@ -30,22 +29,26 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
   const { dappConnected } = useDappContext(undefined, updateConnectionStatus)
 
   return (
-    <XStack alignItems="center" justifyContent="space-between" padding="$spacing16">
-      <Flex
+    <XStack alignItems="center" justifyContent="space-between">
+      <XStack
         alignItems="center"
+        borderRadius="$rounded24"
+        cursor="pointer"
         flexDirection="row"
         gap="$spacing8"
         justifyContent="center"
         onPress={onPressAccount}>
         <Unicon address={address} size={iconSizes.icon36} />
-        <Text variant="subheadSmall">{displayName}</Text>
-        <Chevron
-          color="$neutral2"
-          direction="s"
-          height={iconSizes.icon20}
-          width={iconSizes.icon20}
-        />
-      </Flex>
+        <XStack gap="$spacing4" paddingVertical="$spacing16">
+          <Text variant="subheadSmall">{displayName}</Text>
+          <Chevron
+            color="$neutral2"
+            direction="s"
+            height={iconSizes.icon20}
+            width={iconSizes.icon20}
+          />
+        </XStack>
+      </XStack>
       <XStack alignItems="center" gap="$spacing16" justifyContent="space-around">
         {dappConnected ? (
           <Popover placement="left-start">

@@ -4,6 +4,7 @@ import { usePortfolioBalanceQuery } from 'wallet/src/data/__generated__/types-an
 
 export function usePortfolioUSDBalance(address: Address): {
   portfolioBalanceUSD: number | undefined
+  portfolioChange: number | undefined
   loading: boolean
   error: ApolloError | undefined
 } {
@@ -15,9 +16,8 @@ export function usePortfolioUSDBalance(address: Address): {
   })
 
   const portfolioBalance = data?.portfolios?.[0]
-  // const portfolioChange =
-  //   portfolioBalance?.tokensTotalDenominatedValueChange?.percentage?.value
+  const portfolioChange = portfolioBalance?.tokensTotalDenominatedValueChange?.percentage?.value
   const portfolioBalanceUSD = portfolioBalance?.tokensTotalDenominatedValue?.value
 
-  return { portfolioBalanceUSD, loading, error }
+  return { portfolioBalanceUSD, portfolioChange, loading, error }
 }

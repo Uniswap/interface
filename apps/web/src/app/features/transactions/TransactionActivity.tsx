@@ -54,12 +54,7 @@ export function TransactionActivity({ address }: { address: Address }): JSX.Elem
   }, [])
 
   return (
-    <ScrollView
-      backgroundColor="$surface2"
-      marginTop="$spacing16"
-      px="$spacing16"
-      showsVerticalScrollIndicator={false}
-      width="100%">
+    <ScrollView paddingTop="$spacing8" showsVerticalScrollIndicator={false} width="100%">
       {(isLoading ? loadingData : sectionData ?? []).map((item) => renderActivityItem({ item }))}
     </ScrollView>
   )

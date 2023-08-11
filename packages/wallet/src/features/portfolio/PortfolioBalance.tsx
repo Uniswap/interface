@@ -1,7 +1,8 @@
-import { ColorTokens, getTokenValue, Icons, validToken } from 'ui/src'
+import { ColorTokens, getTokenValue, Icons, validToken, XStack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { opacify } from 'ui/src/theme/color/utils'
+import { theme } from 'ui/src/theme/restyle/theme'
 import { usePortfolioUSDBalance } from 'wallet/src/features/portfolio/hooks'
 
 type WalletBalanceProps = {
@@ -58,10 +59,17 @@ const TempFakeButton = ({
 }
 
 export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
-  const { portfolioBalanceUSD, loading, error } = usePortfolioUSDBalance(address)
+  const { portfolioBalanceUSD, portfolioChange, loading, error } = usePortfolioUSDBalance(address)
 
+  // TODO (EXT-297): encapsulate to share better
+  const change = portfolioChange ?? 0
+
+  const isPositiveChange = change !== undefined ? change >= 0 : undefined
+  const arrowColor = isPositiveChange ? theme.colors.statusSuccess : theme.colors.statusCritical
+
+  const formattedChange = change !== undefined ? `${Math.abs(change).toFixed(2)}%` : '-'
   return (
-    <Flex gap="$spacing12" paddingHorizontal="$spacing12">
+    <Flex>
       {loading ? (
         <Text color="$neutral3" fontWeight="600" variant="headlineLarge">
           $-,---.--
@@ -71,12 +79,21 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
           Error: {JSON.stringify(error)}
         </Text>
       ) : (
-        <>
-          <Flex flexDirection="row">
-            <Text fontWeight="600" variant="headlineLarge">
-              ${portfolioBalanceUSD?.toFixed(2)}
-            </Text>
-          </Flex>
+        <YStack gap="$spacing12">
+          <YStack>
+            <Text variant="headlineLarge">${portfolioBalanceUSD?.toFixed(2)}</Text>
+            <XStack alignItems="center">
+              <Icons.ArrowChange
+                color={arrowColor}
+                rotation={isPositiveChange ? 180 : 0}
+                size={getTokenValue('$icon.20')}
+              />
+              <Text color="$neutral2" variant="bodyLarge">
+                {/* TODO(EXT-298): add absolute change here too, share from mobile */}
+                {formattedChange}
+              </Text>
+            </XStack>
+          </YStack>
           <Flex flexDirection="row" gap="$spacing8">
             {/* TODO(EXT-210): fix up passing of Icon to reuse color prop and constant icon size etc
              */}
@@ -106,7 +123,7 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
               label="Receive"
             />
           </Flex>
-        </>
+        </YStack>
       )}
     </Flex>
   )

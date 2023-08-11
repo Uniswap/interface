@@ -1,8 +1,9 @@
 import { memo } from 'react'
-import { Image, Stack, YStack } from 'ui/src'
+import { getTokenValue, Icons, Image, XStack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { theme } from 'ui/src/theme/restyle/theme'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
@@ -21,12 +22,20 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   onPressToken,
   loading,
 }: TokenBalanceItemProps) {
-  const { quantity, currencyInfo } = portfolioBalance
+  const { quantity, relativeChange24, balanceUSD, currencyInfo } = portfolioBalance
   const { currency } = currencyInfo
 
   const onPress = (): void => {
     onPressToken?.(currencyInfo.currencyId)
   }
+
+  // TODO (EXT-297): encapsulate to share better
+  const change = relativeChange24 ?? 0
+
+  const isPositiveChange = change !== undefined ? change >= 0 : undefined
+  const arrowColor = isPositiveChange ? theme.colors.statusSuccess : theme.colors.statusCritical
+
+  const formattedChange = change !== undefined ? `${Math.abs(change).toFixed(2)}%` : '-'
 
   return (
     <Flex
@@ -34,7 +43,6 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       alignItems="flex-start"
       justifyContent="space-between"
       minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
-      paddingHorizontal="$spacing16"
       paddingVertical="$spacing8"
       width="100%"
       onPress={onPress}>
@@ -49,30 +57,37 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
         <Flex row alignItems="center" gap="$spacing12" width="100%">
           {/* Currency logo */}
           <Image
-            height={iconSizes.icon36}
+            height={iconSizes.icon40}
             src={currencyInfo.logoUrl ?? ''}
-            width={iconSizes.icon36}
+            width={iconSizes.icon40}
           />
 
           {/* Currency name */}
-          <Stack flex={1.5} flexBasis={0}>
+          <YStack flex={1.5} flexBasis={0}>
             <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
               {currency.name ?? currency.symbol}
             </Text>
-          </Stack>
+            <Text color="$neutral2" numberOfLines={1} variant="bodyLarge">
+              {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
+            </Text>
+          </YStack>
 
           {/* Portfolio balance */}
           <YStack alignItems="flex-end" flex={1} justifyContent="flex-end" width={0}>
             <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
-              {portfolioBalance.balanceUSD === 0
-                ? 'N/A'
-                : formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
+              {balanceUSD === 0 ? 'N/A' : formatUSDPrice(balanceUSD, NumberType.FiatTokenQuantity)}
             </Text>
-            <Flex maxWidth={100}>
-              <Text color="$neutral3" numberOfLines={1} variant="subheadSmall">
-                {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
+            <XStack alignItems="center" gap="$spacing4">
+              <Icons.ArrowChange
+                color={arrowColor}
+                rotation={isPositiveChange ? 180 : 0}
+                size={getTokenValue('$icon.20')}
+              />
+              <Text color="$neutral2" numberOfLines={1} variant="bodyLarge">
+                {formattedChange}
               </Text>
-            </Flex>
+            </XStack>
+            <Flex maxWidth={100} />
           </YStack>
         </Flex>
       )}
