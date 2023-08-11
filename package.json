@@ -58,9 +58,8 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      ">0.5%",
+      "not dead"
     ],
     "development": [
       "last 1 chrome version",
@@ -114,7 +113,6 @@
     "babel-jest": "^29.6.1",
     "browser-cache-mock": "^0.1.7",
     "buffer": "^6.0.3",
-    "colorthief": "^2.4.0",
     "concurrently": "^8.0.1",
     "cypress": "12.12.0",
     "cypress-hardhat": "^2.5.0",
@@ -129,9 +127,11 @@
     "jest-fail-on-console": "^3.1.1",
     "jest-fetch-mock": "^3.0.3",
     "jest-styled-components": "^7.0.8",
+    "jpeg-js": "^0.4.4",
     "mini-css-extract-plugin": "^2.7.6",
     "patch-package": "^7.0.0",
     "path-browserify": "^1.0.1",
+    "png-ts": "^0.0.3",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.8.8",
     "process": "^0.11.10",
@@ -188,7 +188,7 @@
     "@uniswap/sdk-core": "^4.0.3",
     "@uniswap/smart-order-router": "^3.15.0",
     "@uniswap/token-lists": "^1.0.0-beta.33",
-    "@uniswap/uniswapx-sdk": "^1.1.0",
+    "@uniswap/uniswapx-sdk": "^1.2.0",
     "@uniswap/universal-router-sdk": "^1.5.6",
     "@uniswap/v2-core": "^1.0.1",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
