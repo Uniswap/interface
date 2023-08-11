@@ -8,6 +8,7 @@ import { favoritesReducer } from 'src/features/favorites/slice'
 import { modalsReducer } from 'src/features/modals/modalSlice'
 import { telemetryReducer } from 'src/features/telemetry/slice'
 import { tokensReducer } from 'src/features/tokens/tokensSlice'
+import { tweaksReducer } from 'src/features/tweaks/slice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 import { sharedReducers } from 'wallet/src/state/reducer'
 import { monitoredSagaReducers } from './saga'
@@ -24,6 +25,7 @@ const reducers = {
   searchHistory: searchHistoryReducer,
   telemetry: telemetryReducer,
   tokens: tokensReducer,
+  tweaks: tweaksReducer,
   walletConnect: walletConnectReducer,
 } as const
 export const mobileReducer = combineReducers(reducers)

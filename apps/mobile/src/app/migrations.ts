@@ -647,4 +647,12 @@ export const migrations = {
 
     return newState
   },
+
+  48: function addTweakStartingState(state: any) {
+    const newState = { ...state }
+
+    newState.tweaks = {}
+
+    return newState
+  },
 }

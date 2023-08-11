@@ -1,18 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Action } from 'redux'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
+import { TextInput } from 'src/components/input/TextInput'
 import { Flex } from 'src/components/layout/Flex'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
+import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import { Statsig } from 'statsig-react'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 
 export function ExperimentsModal(): JSX.Element {
   const dispatch = useAppDispatch()
+  const customEndpoint = useAppSelector(selectCustomEndpoint)
+
+  const [url, setUrl] = useState<string>(customEndpoint?.url || '')
+  const [key, setKey] = useState<string>(customEndpoint?.key || '')
+
+  const clearEndpoint = (): void => {
+    dispatch(setCustomEndpoint({}))
+    setUrl('')
+    setKey('')
+  }
+
+  const setEndpoint = (): void => {
+    if (url && key) {
+      dispatch(
+        setCustomEndpoint({
+          customEndpoint: { url, key },
+        })
+      )
+    } else {
+      clearEndpoint()
+    }
+  }
 
   return (
     <BottomSheetModal
@@ -25,6 +51,24 @@ export function ExperimentsModal(): JSX.Element {
         pt="spacing12"
         px="spacing24">
         <Flex gap="spacing8">
+          <Flex my="spacing16">
+            <Text variant="subheadLarge">⚙️ Custom GraphQL Endpoint</Text>
+            <Text variant="bodySmall">
+              You will need to restart the application to pick up any changes in this section.
+              Beware of client side caching!
+            </Text>
+            <Flex row alignItems="center">
+              <Text variant="bodySmall">URL</Text>
+              <TextInput flex={1} value={url} onChangeText={setUrl} />
+            </Flex>
+            <Flex row alignItems="center">
+              <Text variant="bodySmall">Key</Text>
+              <TextInput flex={1} value={key} onChangeText={setKey} />
+            </Flex>
+            <Button label="Set" size={ButtonSize.Small} onPress={setEndpoint} />
+            <Button label="Clear" size={ButtonSize.Small} onPress={clearEndpoint} />
+          </Flex>
+
           <Text variant="subheadLarge">⛳️ Feature Flags</Text>
           <Text variant="bodySmall">
             Overridden feature flags are reset when the app is restarted

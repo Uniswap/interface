@@ -82,8 +82,6 @@ initOneSignal()
 initAppsFlyer()
 
 function App(): JSX.Element | null {
-  const client = usePersistedApolloClient()
-
   // We want to ensure deviceID is used as the identifier to link with analytics
   const fetchAndSetDeviceId = useCallback(async () => {
     const uniqueId = await getUniqueId()
@@ -94,14 +92,6 @@ function App(): JSX.Element | null {
   }, [])
 
   const deviceId = useAsyncData(fetchAndSetDeviceId).data
-
-  const onReportPrepared = useCallback((report: RenderPassReport) => {
-    sendMobileAnalyticsEvent(MobileEventName.PerformanceReport, report)
-  }, [])
-
-  if (!client) {
-    return null
-  }
 
   const statSigOptions = {
     options: {
@@ -124,37 +114,54 @@ function App(): JSX.Element | null {
               <AnalyticsNavigationContextProvider
                 shouldLogScreen={shouldLogScreen}
                 useIsPartOfNavigationTree={useIsPartOfNavigationTree}>
-                <ApolloProvider client={client}>
-                  <PersistGate loading={null} persistor={persistor}>
-                    <DynamicThemeProvider>
-                      <ErrorBoundary>
-                        <GestureHandlerRootView style={flex.fill}>
-                          <WalletContextProvider>
-                            <BiometricContextProvider>
-                              <LockScreenContextProvider>
-                                <Sentry.TouchEventBoundary>
-                                  <DataUpdaters />
-                                  <BottomSheetModalProvider>
-                                    <AppModals />
-                                    <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                      <AppInner />
-                                    </PerformanceProfiler>
-                                  </BottomSheetModalProvider>
-                                </Sentry.TouchEventBoundary>
-                              </LockScreenContextProvider>
-                            </BiometricContextProvider>
-                          </WalletContextProvider>
-                        </GestureHandlerRootView>
-                      </ErrorBoundary>
-                    </DynamicThemeProvider>
-                  </PersistGate>
-                </ApolloProvider>
+                <AppOuter />
               </AnalyticsNavigationContextProvider>
             </SharedProvider>
           </SafeAreaProvider>
         </StatsigProvider>
       </StrictMode>
     </Trace>
+  )
+}
+
+// Ensures redux state is available inside usePersistedApolloClient for the custom endpoint
+function AppOuter(): JSX.Element | null {
+  const client = usePersistedApolloClient()
+
+  const onReportPrepared = useCallback((report: RenderPassReport) => {
+    sendMobileAnalyticsEvent(MobileEventName.PerformanceReport, report)
+  }, [])
+
+  if (!client) {
+    return null
+  }
+
+  return (
+    <ApolloProvider client={client}>
+      <PersistGate loading={null} persistor={persistor}>
+        <DynamicThemeProvider>
+          <ErrorBoundary>
+            <GestureHandlerRootView style={flex.fill}>
+              <WalletContextProvider>
+                <BiometricContextProvider>
+                  <LockScreenContextProvider>
+                    <Sentry.TouchEventBoundary>
+                      <DataUpdaters />
+                      <BottomSheetModalProvider>
+                        <AppModals />
+                        <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                          <AppInner />
+                        </PerformanceProfiler>
+                      </BottomSheetModalProvider>
+                    </Sentry.TouchEventBoundary>
+                  </LockScreenContextProvider>
+                </BiometricContextProvider>
+              </WalletContextProvider>
+            </GestureHandlerRootView>
+          </ErrorBoundary>
+        </DynamicThemeProvider>
+      </PersistGate>
+    </ApolloProvider>
   )
 }
 

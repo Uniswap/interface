@@ -46,6 +46,22 @@ export const getRestLink = (): ApolloLink => {
   })
 }
 
+export interface CustomEndpoint {
+  url: string
+  key: string
+}
+
+export const getCustomGraphqlHttpLink = (endpoint: CustomEndpoint): ApolloLink =>
+  createHttpLink({
+    uri: endpoint.url,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-KEY': endpoint.key,
+      // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
+      Origin: uniswapUrls.apiBaseUrl,
+    },
+  })
+
 export const getGraphqlHttpLink = (): ApolloLink =>
   createHttpLink({
     uri: uniswapUrls.graphQLUrl,

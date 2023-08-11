@@ -321,6 +321,8 @@ export const v46Schema = { ...v45SchemaIntermediate }
 // Remove reliance on env var config.activeChains
 export const v47Schema = { ...v46Schema, chains: { byChainId: ACTIVE_CHAINS } }
 
+export const v48Schema = { ...v46Schema, tweaks: {} }
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v47Schema => v47Schema
+export const getSchema = (): typeof v48Schema => v48Schema

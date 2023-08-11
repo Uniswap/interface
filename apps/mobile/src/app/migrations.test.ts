@@ -45,6 +45,7 @@ import {
   v44Schema,
   v45Schema,
   v46Schema,
+  v47Schema,
   v4Schema,
   v5Schema,
   v6Schema,
@@ -63,6 +64,7 @@ import { initialModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { initialTelemetryState } from 'src/features/telemetry/slice'
 import { initialTokensState } from 'src/features/tokens/tokensSlice'
+import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ACTIVE_CHAINS, ChainId } from 'wallet/src/constants/chains'
@@ -142,6 +144,7 @@ describe('Redux state migrations', () => {
       tokenLists: {},
       tokens: initialTokensState,
       transactions: initialTransactionsState,
+      tweaks: initialTweaksState,
       wallet: initialWalletState,
       walletConnect: initialWalletConnectState,
       _persist: {
@@ -1165,5 +1168,12 @@ describe('Redux state migrations', () => {
     const v47 = migrations[47](v46Stub)
 
     expect(v47.chains.byChainId).toBe(ACTIVE_CHAINS)
+  })
+
+  it('migrates from v47 to 48', () => {
+    const v47Stub = { ...v47Schema }
+    const v48 = migrations[48](v47Stub)
+
+    expect(v48.tweaks).toEqual({})
   })
 })
