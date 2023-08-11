@@ -156,7 +156,9 @@ function parseSwap(changes: TransactionChanges) {
       .join()
 
     return { title, descriptor }
-  } else if (changes.TokenTransfer.length >= 2) {
+  }
+  // Some swaps may have more than 2 transfers, e.g. swaps with fees on tranfer
+  if (changes.TokenTransfer.length >= 2) {
     const sent = changes.TokenTransfer.find((t) => t?.__typename === 'TokenTransfer' && t.direction === 'OUT')
     const received = changes.TokenTransfer.find((t) => t?.__typename === 'TokenTransfer' && t.direction === 'IN')
     if (sent && received) {
