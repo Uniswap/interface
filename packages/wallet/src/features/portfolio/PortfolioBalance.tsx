@@ -7,6 +7,8 @@ import { usePortfolioUSDBalance } from 'wallet/src/features/portfolio/hooks'
 
 type WalletBalanceProps = {
   address: Address
+  // TODO: remove this prop and move the buttons to a separate component
+  onSendClick: () => void
 }
 
 const disabledHoverStyle = { cursor: 'not-allowed' }
@@ -26,18 +28,18 @@ const CTA_COLORS_SOFT = {
 }
 
 // TODO(EXT-210): fix up passing of Icon to reuse color prop and constant icon size etc
-const TempFakeButton = ({
+const ActionButton = ({
   label,
   backgroundColor,
   color,
   Icon,
-  url,
+  onClick,
 }: {
   label: string
   backgroundColor: ColorTokens
   color: ColorTokens
   Icon: JSX.Element
-  url?: string
+  onClick?: () => void
 }): JSX.Element => {
   return (
     <Flex
@@ -47,9 +49,10 @@ const TempFakeButton = ({
       flex={1}
       flexBasis={1}
       gap="$spacing12"
-      hoverStyle={url ? enabledHoverStyle : disabledHoverStyle}
+      hoverStyle={onClick ? enabledHoverStyle : disabledHoverStyle}
       justifyContent="space-between"
-      padding="$spacing12">
+      padding="$spacing12"
+      onClick={onClick}>
       {Icon}
       <Text color={color} fontWeight="600" variant="bodyLarge">
         {label}
@@ -58,7 +61,7 @@ const TempFakeButton = ({
   )
 }
 
-export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
+export function PortfolioBalance({ address, onSendClick }: WalletBalanceProps): JSX.Element {
   const { portfolioBalanceUSD, portfolioChange, loading, error } = usePortfolioUSDBalance(address)
 
   // TODO (EXT-297): encapsulate to share better
@@ -97,13 +100,13 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
           <Flex flexDirection="row" gap="$spacing8">
             {/* TODO(EXT-210): fix up passing of Icon to reuse color prop and constant icon size etc
              */}
-            <TempFakeButton
+            <ActionButton
               Icon={<Icons.CoinConvert color={CTA_COLORS.PINK} size={getTokenValue('$icon.24')} />}
               backgroundColor={validToken(CTA_COLORS_SOFT.PINK)}
               color={validToken(CTA_COLORS.PINK)}
               label="Swap"
             />
-            <TempFakeButton
+            <ActionButton
               Icon={
                 <Icons.SendRoundedAirplane
                   color={CTA_COLORS.GREEN}
@@ -113,8 +116,9 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
               backgroundColor={validToken(CTA_COLORS_SOFT.GREEN)}
               color={validToken(CTA_COLORS.GREEN)}
               label="Send"
+              onClick={onSendClick}
             />
-            <TempFakeButton
+            <ActionButton
               Icon={
                 <Icons.ReceiveDots color={CTA_COLORS.YELLOW} size={getTokenValue('$icon.24')} />
               }

@@ -26,6 +26,7 @@ import { SettingsWalletEditNicknameScreen } from 'src/app/features/settings/Sett
 import { SettingsWalletScreen } from 'src/app/features/settings/SettingsWalletScreen'
 import { sendExtensionAnalyticsEvent } from 'src/app/features/telemetry'
 import { ExtensionEventName } from 'src/app/features/telemetry/constants'
+import { TransferFlowScreen } from 'src/app/features/transfer/TransferFlowScreen'
 import {
   AppRoutes,
   CreateOnboardingRoutes,
@@ -169,6 +170,10 @@ const router = createHashRouter([
             element: <SettingsViewRecoveryPhraseScreen />,
           },
         ],
+      },
+      {
+        path: AppRoutes.Transfer,
+        element: <TransferFlowScreen />,
       },
     ],
   },

@@ -44,6 +44,7 @@ export enum AppRoutes {
   Home = '',
   Requests = 'requests',
   Settings = 'settings',
+  Transfer = 'transfer',
 }
 
 export enum SettingsRoutes {
