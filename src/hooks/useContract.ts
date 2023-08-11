@@ -140,7 +140,7 @@ export function useV2RouterContract(): Contract | null {
   return useContract(V2_ROUTER_ADDRESS, IUniswapV2Router02ABI, true)
 }
 
-export function useUniversalRouterContract(address: string): Contract | null {
+export function useUniversalRouterContract(address: string | undefined): Contract | null {
   return useContract(address, UniversalRouterABI, true)
 }
 
