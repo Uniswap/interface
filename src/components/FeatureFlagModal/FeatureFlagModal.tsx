@@ -1,6 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { useBaseEnabledFlag } from 'featureFlags/flags/baseEnabled'
 import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
+import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
@@ -11,7 +11,7 @@ import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useS
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const StyledModal = styled.div`
   position: fixed;
@@ -238,9 +238,9 @@ export default function FeatureFlagModal() {
       />
       <FeatureFlagOption
         variant={BaseVariant}
-        value={useBaseEnabledFlag()}
-        featureFlag={FeatureFlag.baseEnabled}
-        label="Enable Base"
+        value={useMultichainUXFlag()}
+        featureFlag={FeatureFlag.multichainUX}
+        label="Updated Multichain UX"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

@@ -1,6 +1,6 @@
-import { MaxButton } from 'pages/Pool/styleds'
+import { MaxButton } from 'pages/Pool/styled'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   position: relative;

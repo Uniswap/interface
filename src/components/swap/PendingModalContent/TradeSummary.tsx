@@ -2,7 +2,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { ArrowRight } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { formatReviewSwapCurrencyAmount } from 'utils/formatNumbers'
 

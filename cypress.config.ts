@@ -1,4 +1,3 @@
-import codeCoverageTask from '@cypress/code-coverage/task'
 import { defineConfig } from 'cypress'
 import { setupHardhatEvents } from 'cypress-hardhat'
 
@@ -12,7 +11,6 @@ export default defineConfig({
   e2e: {
     async setupNodeEvents(on, config) {
       await setupHardhatEvents(on, config)
-      codeCoverageTask(on, config)
       return config
     },
     baseUrl: 'http://localhost:3000',
