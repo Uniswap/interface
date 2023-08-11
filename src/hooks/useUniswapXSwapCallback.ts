@@ -1,3 +1,5 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import * as Sentry from '@sentry/react'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { signTypedData } from '@uniswap/conedison/provider/signing'
 import { Percent } from '@uniswap/sdk-core'
@@ -25,6 +27,25 @@ if (UNISWAP_API_URL === undefined) {
   throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
 }
 
+// getUpdatedNonce queries the UniswapX service for the most up-to-date nonce for a user.
+// The `nonce` exists as part of the Swap quote response already, but if a user submits back-to-back
+// swaps without refreshing the quote (and therefore uses the same nonce), then the subsequent swaps will fail.
+//
+async function getUpdatedNonce(swapper: string, chainId: number): Promise<BigNumber | null> {
+  try {
+    const res = await fetch(`${UNISWAP_API_URL}/nonce?address=${swapper}&chainId=${chainId}`)
+    const { nonce } = await res.json()
+    return BigNumber.from(nonce)
+  } catch (e) {
+    Sentry.withScope(function (scope) {
+      scope.setTag('method', 'getUpdatedNonce')
+      scope.setLevel('warning')
+      Sentry.captureException(e)
+    })
+    return null
+  }
+}
+
 export function useUniswapXSwapCallback({
   trade,
   allowedSlippage,
@@ -46,6 +67,8 @@ export function useUniswapXSwapCallback({
 
         const signDutchOrder = async (): Promise<{ signature: string; updatedOrder: DutchOrder }> => {
           try {
+            const updatedNonce = await getUpdatedNonce(account, trade.order.chainId)
+
             const startTime = Math.floor(Date.now() / 1000) + DEFAULT_START_TIME_PADDING_SECONDS
             setTraceData('startTime', startTime)
 
@@ -62,6 +85,8 @@ export function useUniswapXSwapCallback({
               .deadline(deadline)
               .swapper(account)
               .nonFeeRecipient(account)
+              // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
+              .nonce(updatedNonce ?? trade.order.info.nonce)
               .build()
 
             const { domain, types, values } = updatedOrder.permitData()
