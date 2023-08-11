@@ -121,9 +121,9 @@ const specialCaseTokenColors: { [key: string]: string } = {
     '#29A1F1',
   // SIMPSON
   'https://assets.coingecko.com/coins/images/30243/large/1111.png?1683692033': '#E88F00',
-  // LUSD
+  // MAKER
   'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png':
-    '#FF7B4F',
+    '#50B197',
   // OX
   'https://assets.coingecko.com/coins/images/30604/large/Logo2.png?1685522119': '#2959D9',
   // ANGLE

@@ -38,7 +38,7 @@ public extension Color {
   static let AIDOGE = Color(red: 0.16, green: 0.63, blue: 0.94)
   static let SIMPSON = Color(red: 0.91, green: 0.57, blue: 0)
   static let RENQ = Color(red: 0.18, green: 0.52, blue: 1)
-  static let LUSD = Color(red: 1, green: 0.48, blue: 0.31)
+  static let MAKER = Color(red: 0.31, green: 0.7, blue: 0.59)
   static let OX = Color(red: 0.16, green: 0.35, blue: 0.85)
   static let ANGLE = Color(red: 1, green: 0.33, blue: 0.33)
   static let APE = Color(red: 0.01, green: 0.29, blue: 0.84)
@@ -164,9 +164,9 @@ public struct ColorExtraction {
     // SIMPSON
     "https://assets.coingecko.com/coins/images/30243/large/1111.png?1683692033":
       UIColor(Color.SIMPSON),
-    // LUSD
+    // MAKER
     "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png":
-      UIColor(Color.LUSD),
+      UIColor(Color.MAKER),
     // OX
     "https://assets.coingecko.com/coins/images/30604/large/Logo2.png?1685522119":
       UIColor(Color.OX),
