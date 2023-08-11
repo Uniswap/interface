@@ -153,7 +153,7 @@ const BlurredBackground = memo(function BlurredBackground({ isDarkMode }: { isDa
   return (
     <>
       <BlurView
-        blurAmount={5}
+        blurAmount={9}
         blurType={isDarkMode ? 'dark' : 'xlight'}
         enabled={blurEnabled}
         reducedTransparencyFallbackColor={isDarkMode ? 'sporeBlack' : 'sporeWhite'}
