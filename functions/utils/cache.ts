@@ -1,11 +1,7 @@
-export interface Data {
+interface Data {
   title: string
   image: string
   url: string
-  name?: string
-  ogImage?: string
-  isVerified?: boolean
-  symbol?: string
 }
 
 const CACHE_NAME = 'functions-cache' as const

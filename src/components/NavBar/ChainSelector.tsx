@@ -14,6 +14,7 @@ import {
   TESTNET_CHAIN_IDS,
   UniWalletSupportedChains,
 } from 'constants/chains'
+import { useBaseEnabled, useBaseEnabledChains } from 'featureFlags/flags/baseEnabled'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -59,11 +60,18 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const theme = useTheme()
 
+  const baseEnabled = useBaseEnabled()
   const showTestnets = useAtomValue(showTestnetsAtom)
   const walletSupportsChain = useWalletSupportedChains()
 
   const [supportedChains, unsupportedChains] = useMemo(() => {
     const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter((chain: number) => {
+      if (chain === ChainId.BASE) {
+        return baseEnabled
+      }
+      if (chain === ChainId.BASE_GOERLI) {
+        return showTestnets && baseEnabled
+      }
       return showTestnets || !TESTNET_CHAIN_IDS.includes(chain)
     })
       .sort((a, b) => getChainPriority(a) - getChainPriority(b))
@@ -79,13 +87,14 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
         { supported: [], unsupported: [] } as Record<string, ChainId[]>
       )
     return [supported, unsupported]
-  }, [showTestnets, walletSupportsChain])
+  }, [baseEnabled, showTestnets, walletSupportsChain])
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => setIsOpen(false), [modalRef])
 
-  const info = getChainInfo(chainId)
+  const baseEnabledChains = useBaseEnabledChains()
+  const info = getChainInfo(chainId, baseEnabledChains)
 
   const selectChain = useSelectChain()
   useSyncChainQuery()

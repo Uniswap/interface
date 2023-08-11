@@ -3,6 +3,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Icons/LoadingSpinner'
 import { getChainInfo } from 'constants/chainInfo'
+import { useBaseEnabledChains } from 'featureFlags/flags/baseEnabled'
 import { CheckMarkIcon } from 'nft/components/icons'
 import styled, { useTheme } from 'styled-components'
 
@@ -70,7 +71,8 @@ interface ChainSelectorRowProps {
 export default function ChainSelectorRow({ disabled, targetChain, onSelectChain, isPending }: ChainSelectorRowProps) {
   const { chainId } = useWeb3React()
   const active = chainId === targetChain
-  const chainInfo = getChainInfo(targetChain)
+  const baseEnabledChains = useBaseEnabledChains()
+  const chainInfo = getChainInfo(targetChain, baseEnabledChains)
   const label = chainInfo?.label
   const logoUrl = chainInfo?.logoUrl
 

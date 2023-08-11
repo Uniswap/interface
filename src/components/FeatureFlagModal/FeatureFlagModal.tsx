@@ -1,5 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
+import { useBaseEnabledFlag } from 'featureFlags/flags/baseEnabled'
 import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
@@ -239,9 +239,9 @@ export default function FeatureFlagModal() {
       />
       <FeatureFlagOption
         variant={BaseVariant}
-        value={useCurrencyConversionFlag()}
-        featureFlag={FeatureFlag.currencyConversion}
-        label="Enable currency conversion"
+        value={useBaseEnabledFlag()}
+        featureFlag={FeatureFlag.baseEnabled}
+        label="Enable Base"
       />
       <FeatureFlagOption
         variant={BaseVariant}

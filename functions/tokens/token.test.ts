@@ -3,25 +3,28 @@ const tokens = [
     address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     network: 'ethereum',
     symbol: 'USDC',
-    image: 'http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    image:
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
   },
   {
     address: 'NATIVE',
     network: 'ethereum',
     symbol: 'ETH',
-    image: 'http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE',
+    image: 'https://token-icons.s3.amazonaws.com/eth.png',
   },
   {
     address: 'NATIVE',
     network: 'polygon',
     symbol: 'MATIC',
-    image: 'http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE',
+    image:
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0/logo.png',
   },
   {
     address: '0x6982508145454ce325ddbe47a25d4ec3d2311933',
     network: 'ethereum',
     symbol: 'PEPE',
-    image: 'http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933',
+    image:
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6982508145454Ce325dDbE47a25d4ec3d2311933/logo.png',
   },
 ]
 
