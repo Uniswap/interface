@@ -58,9 +58,6 @@ export function useUniversalRouterSwapCallback(
         if (!chainId) throw new Error('missing chainId')
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
-        const urAddress = UNIVERSAL_ROUTER_ADDRESS(chainId)
-        const urCode = await provider.getCode(urAddress)
-        if (!urCode || urCode.length === 0 || urCode === '0x') throw new Error('UR contract not deployed')
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
@@ -72,7 +69,8 @@ export function useUniversalRouterSwapCallback(
 
         const tx = {
           from: account,
-          to: urAddress,
+          to: UNIVERSAL_ROUTER_ADDRESS(chainId),
+          chainId,
           data,
           // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
           ...(value && !isZero(value) ? { value: toHex(value) } : {}),
