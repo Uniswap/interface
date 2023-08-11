@@ -15,7 +15,6 @@ import { UserRejectedRequestError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
-import { useUniversalRouterContract } from './useContract'
 import { PermitSignature } from './usePermitAllowance'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
@@ -52,8 +51,6 @@ export function useUniversalRouterSwapCallback(
   const { account, chainId, provider } = useWeb3React()
   const analyticsContext = useTrace()
 
-  const universalRouter = useUniversalRouterContract(chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined)
-
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
       try {
@@ -61,9 +58,9 @@ export function useUniversalRouterSwapCallback(
         if (!chainId) throw new Error('missing chainId')
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
-        if (!universalRouter) throw new Error('wrong UR contract address')
-        const contractDeployed = await universalRouter.deployed()
-        if (!contractDeployed) throw new Error('UR contract not deployed')
+        const urAddress = UNIVERSAL_ROUTER_ADDRESS(chainId)
+        const urCode = await provider.getCode(urAddress)
+        if (!urCode || urCode.length === 0 || urCode === '0x') throw new Error('UR contract not deployed')
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
@@ -75,7 +72,7 @@ export function useUniversalRouterSwapCallback(
 
         const tx = {
           from: account,
-          to: universalRouter.address,
+          to: urAddress,
           data,
           // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
           ...(value && !isZero(value) ? { value: toHex(value) } : {}),
@@ -151,6 +148,5 @@ export function useUniversalRouterSwapCallback(
     options.slippageTolerance,
     provider,
     trade,
-    universalRouter,
   ])
 }
