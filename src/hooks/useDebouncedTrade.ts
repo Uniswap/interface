@@ -8,7 +8,6 @@ import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
 
 import useAutoRouterSupported from './useAutoRouterSupported'
-import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 
@@ -18,7 +17,7 @@ const DEBOUNCE_TIME = 350
 // Temporary until we remove the feature flag.
 const DEBOUNCE_TIME_INCREASED = 650
 
-export function useBestTrade(
+export function useDebouncedTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
@@ -29,7 +28,7 @@ export function useBestTrade(
   trade?: InterfaceTrade
 }
 
-export function useBestTrade(
+export function useDebouncedTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
@@ -40,12 +39,15 @@ export function useBestTrade(
   trade?: ClassicTrade
 }
 /**
- * Returns the best v2+v3 trade for a desired swap.
+ * Returns the debounced v2+v3 trade for a desired swap.
  * @param tradeType whether the swap is an exact in/out
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
+ * @param routerPreferenceOverride force useRoutingAPITrade to use a specific RouterPreference
+ * @param account the connected address
+ *
  */
-export function useBestTrade(
+export function useDebouncedTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
@@ -90,21 +92,12 @@ export function useBestTrade(
   const inDebounce =
     (!debouncedAmount && Boolean(amountSpecified)) || (!debouncedOtherCurrency && Boolean(otherCurrency))
   const isLoading = routingAPITrade.state === TradeState.LOADING || inDebounce
-  const useFallback = (!autoRouterSupported || routingAPITrade.state === TradeState.NO_ROUTE_FOUND) && shouldGetTrade
 
-  // only use client side router if routing api trade failed or is not supported
-  const bestV3Trade = useClientSideV3Trade(
-    tradeType,
-    useFallback ? debouncedAmount : undefined,
-    useFallback ? debouncedOtherCurrency : undefined
-  )
-
-  // only return gas estimate from api if routing api trade is used
   return useMemo(
     () => ({
-      ...(useFallback ? bestV3Trade : routingAPITrade),
+      ...routingAPITrade,
       ...(isLoading ? { state: TradeState.LOADING } : {}),
     }),
-    [bestV3Trade, isLoading, routingAPITrade, useFallback]
+    [isLoading, routingAPITrade]
   )
 }

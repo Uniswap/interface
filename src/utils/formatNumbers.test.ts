@@ -1,5 +1,5 @@
 import { CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
-import { renBTC, USDC_MAINNET } from 'constants/tokens'
+import { USDC_MAINNET, WBTC } from 'constants/tokens'
 
 import {
   currencyAmountToPreciseFloat,
@@ -217,19 +217,19 @@ describe('currencyAmountToPreciseFloat', () => {
 
 describe('priceToPreciseFloat', () => {
   it('small number', () => {
-    const price = new Price(renBTC, USDC_MAINNET, 1234, 1)
+    const price = new Price(WBTC, USDC_MAINNET, 1234, 1)
     expect(priceToPreciseFloat(price)).toEqual(0.0810373)
   })
   it('tiny number', () => {
-    const price = new Price(renBTC, USDC_MAINNET, 12345600, 1)
+    const price = new Price(WBTC, USDC_MAINNET, 12345600, 1)
     expect(priceToPreciseFloat(price)).toEqual(0.00000810005)
   })
   it('lots of decimals', () => {
-    const price = new Price(renBTC, USDC_MAINNET, 123, 7)
+    const price = new Price(WBTC, USDC_MAINNET, 123, 7)
     expect(priceToPreciseFloat(price)).toEqual(5.691056911)
   })
   it('integer', () => {
-    const price = new Price(renBTC, USDC_MAINNET, 1, 7)
+    const price = new Price(WBTC, USDC_MAINNET, 1, 7)
     expect(priceToPreciseFloat(price)).toEqual(700)
   })
 })
