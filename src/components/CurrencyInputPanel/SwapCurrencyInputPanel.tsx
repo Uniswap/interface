@@ -256,7 +256,9 @@ export default function SwapCurrencyInputPanel({
         </FixedContainer>
       )}
       <Container hideInput={hideInput}>
-        <ThemedText.SubHeaderSmall color="neutral3">{label}</ThemedText.SubHeaderSmall>
+        <ThemedText.SubHeaderSmall style={{ userSelect: 'none' }} color="neutral3">
+          {label}
+        </ThemedText.SubHeaderSmall>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
           {!hideInput && (
             <StyledNumericalInput
