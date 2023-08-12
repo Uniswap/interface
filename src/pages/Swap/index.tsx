@@ -32,7 +32,6 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
-import { useBaseEnabledChains } from 'featureFlags/flags/baseEnabled'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
@@ -136,11 +135,10 @@ function largerPercentValue(a?: Percent, b?: Percent) {
 export default function SwapPage({ className }: { className?: string }) {
   const { chainId: connectedChainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
-  const baseEnabledChains = useBaseEnabledChains()
 
   const location = useLocation()
 
-  const supportedChainId = asSupportedChain(connectedChainId, baseEnabledChains)
+  const supportedChainId = asSupportedChain(connectedChainId)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
