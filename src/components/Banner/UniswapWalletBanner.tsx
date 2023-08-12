@@ -9,7 +9,7 @@ import Row from 'components/Row'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
-import { useHideUniswapWalletBanner } from 'state/user/hooks'
+import { useHideBaseWalletBanner } from 'state/user/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
@@ -85,11 +85,11 @@ const BannerButton = styled(BaseButton)`
 `
 
 export default function UniswapWalletBanner() {
-  const [hideUniswapWalletBanner, toggleHideUniswapWalletBanner] = useHideUniswapWalletBanner()
+  const [hideBanner, toggleHideBanner] = useHideBaseWalletBanner()
   const location = useLocation()
   const isLandingScreen = location.search === '?intro=true' || location.pathname === '/'
 
-  const shouldDisplay = Boolean(!hideUniswapWalletBanner && !isLandingScreen)
+  const shouldDisplay = Boolean(!hideBanner && !isLandingScreen)
 
   const screenSize = useScreenSize()
 
@@ -104,7 +104,7 @@ export default function UniswapWalletBanner() {
           // prevent click from bubbling to UI on the page underneath, i.e. clicking a token row
           e.preventDefault()
           e.stopPropagation()
-          toggleHideUniswapWalletBanner()
+          toggleHideBanner()
         }}
       />
 

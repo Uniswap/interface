@@ -5,7 +5,6 @@ import { MissingImageLogo } from 'components/Logo/AssetLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { Unicon } from 'components/Unicon'
 import { getChainInfo } from 'constants/chainInfo'
-import { useBaseEnabledChains } from 'featureFlags/flags/baseEnabled'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import useENSAvatar from 'hooks/useENSAvatar'
 import React from 'react'
@@ -99,8 +98,7 @@ export function PortfolioLogo({
   size = '40px',
   style,
 }: MultiLogoProps) {
-  const baseEnabledChains = useBaseEnabledChains()
-  const chainInfo = getChainInfo(chainId, baseEnabledChains)
+  const chainInfo = getChainInfo(chainId)
   const squareLogoUrl = chainInfo?.squareLogoUrl
   const logoUrl = chainInfo?.logoUrl
   const chainLogo = squareLogoUrl ?? logoUrl

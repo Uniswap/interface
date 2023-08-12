@@ -1,4 +1,4 @@
-import { MaxButton } from 'pages/Pool/styleds'
+import { MaxButton } from 'pages/Pool/styled'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 

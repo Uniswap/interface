@@ -63,7 +63,7 @@ import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { Dots } from '../Pool/styleds'
+import { Dots } from '../Pool/styled'
 import { Review } from './Review'
 import {
   CurrencyDropdown,

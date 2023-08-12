@@ -23,7 +23,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { CardNoise } from '../earn/styled'
 import CurrencyLogo from '../Logo/CurrencyLogo'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
-import { Dots } from '../swap/styleds'
+import { Dots } from '../swap/styled'
 import { FixedHeightRow } from '.'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`

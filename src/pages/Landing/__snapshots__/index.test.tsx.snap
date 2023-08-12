@@ -4296,7 +4296,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
                             >
                               <div
                                 class="c29"
-                                style="margin-right: 2px;"
+                                style="height: 24px; width: 24px; margin-right: 2px;"
                               >
                                 <div
                                   class="c30"

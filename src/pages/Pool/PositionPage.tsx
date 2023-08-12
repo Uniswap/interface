@@ -15,7 +15,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/Row'
-import { Dots } from 'components/swap/styleds'
+import { Dots } from 'components/swap/styled'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
@@ -50,7 +50,7 @@ import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { LoadingRows } from './styleds'
+import { LoadingRows } from './styled'
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
   width: 228px;

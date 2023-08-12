@@ -4,7 +4,7 @@ module.exports = async function globalSetup() {
   globalThis.servers = await setup({
     command: `yarn start:cloud`,
     port: 3000,
-    launchTimeout: 50000,
+    launchTimeout: 80000,
   })
   // Wait for wrangler to return a request before running tests
   for (let i = 0; i < 3; i++) {

@@ -29,7 +29,7 @@ import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
 import Slider from '../../components/Slider'
-import { Dots } from '../../components/swap/styleds'
+import { Dots } from '../../components/swap/styled'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
@@ -47,7 +47,7 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
-import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
+import { ClickableText, MaxButton, Wrapper } from '../Pool/styled'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 

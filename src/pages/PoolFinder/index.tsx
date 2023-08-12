@@ -29,7 +29,7 @@ import { StyledInternalLink } from '../../theme'
 import { ThemedText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
-import { Dots } from '../Pool/styleds'
+import { Dots } from '../Pool/styled'
 
 enum Fields {
   TOKEN0 = 0,

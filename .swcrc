@@ -1,5 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/swcrc",
+  // has to duplicate from package.json, see swc issue: https://swc.rs/docs/configuration/compilation#env
+  "env": {
+    "targets": "> 0.5%, not dead"
+  },
   "jsc": {
     "keepClassNames": true,
     "experimental": {
