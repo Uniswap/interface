@@ -20,8 +20,8 @@ import {
 } from 'src/features/transactions/swap/wrapSaga'
 import { restorePrivateKeyCompleteWatcher } from 'src/features/wallet/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/saga'
-import { initializeWeb3Wallet, walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
-import { call, spawn } from 'typed-redux-saga'
+import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
+import { spawn } from 'typed-redux-saga'
 import { transactionWatcher } from 'wallet/src/features/transactions/transactionWatcherSaga'
 import {
   editAccountActions,
@@ -96,9 +96,6 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
 export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)
 
 export function* mobileSaga() {
-  // Ensure WalletConnect core is initialized before spawning any other sagas (deepLinkWatcher)
-  yield* call(initializeWeb3Wallet)
-
   for (const s of sagas) {
     yield* spawn(s)
   }

@@ -34,24 +34,39 @@ import { EthEvent, EthMethod } from 'wallet/src/features/walletConnect/types'
 
 export let wcWeb3Wallet: IWeb3Wallet
 
+let wcWeb3WalletReadyResolve: () => void
+let wcWeb3WalletReadyReject: (e: unknown) => void
+const wcWeb3WalletReady = new Promise<void>((resolve, reject) => {
+  wcWeb3WalletReadyResolve = resolve
+  wcWeb3WalletReadyReject = reject
+  resolve()
+})
+
+export const waitForWcWeb3WalletIsReady = () => wcWeb3WalletReady
+
 export async function initializeWeb3Wallet(): Promise<void> {
-  const wcCore = new Core({
-    projectId: config.walletConnectProjectId,
-  })
+  try {
+    const wcCore = new Core({
+      projectId: config.walletConnectProjectId,
+    })
 
-  wcWeb3Wallet = await Web3Wallet.init({
-    core: wcCore,
-    metadata: {
-      name: 'Uniswap Wallet',
-      description:
-        'Built by the most trusted team in DeFi, Uniswap Wallet allows you to maintain full custody and control of your assets.',
-      url: 'https://uniswap.org/app',
-      icons: ['https://gateway.pinata.cloud/ipfs/QmR1hYqhDMoyvJtwrQ6f1kVyfEKyK65XH3nbCimXBMkHJg'],
-    },
-  })
+    wcWeb3Wallet = await Web3Wallet.init({
+      core: wcCore,
+      metadata: {
+        name: 'Uniswap Wallet',
+        description:
+          'Built by the most trusted team in DeFi, Uniswap Wallet allows you to maintain full custody and control of your assets.',
+        url: 'https://uniswap.org/app',
+        icons: ['https://gateway.pinata.cloud/ipfs/QmR1hYqhDMoyvJtwrQ6f1kVyfEKyK65XH3nbCimXBMkHJg'],
+      },
+    })
 
-  const clientId = await wcCore.crypto.getClientId()
-  await registerWCv2ClientForPushNotifications(clientId)
+    const clientId = await wcCore.crypto.getClientId()
+    await registerWCv2ClientForPushNotifications(clientId)
+    wcWeb3WalletReadyResolve?.()
+  } catch (e) {
+    wcWeb3WalletReadyReject(e)
+  }
 }
 
 function createWalletConnectV2Channel(): EventChannel<AnyAction> {
@@ -349,6 +364,7 @@ function* fetchPendingSessionRequests() {
 }
 
 export function* walletConnectV2Saga() {
+  yield* call(initializeWeb3Wallet)
   yield* call(populateActiveSessions)
   yield* fork(fetchPendingSessionProposals)
   yield* fork(fetchPendingSessionRequests)

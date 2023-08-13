@@ -1,4 +1,5 @@
 import { expectSaga } from 'redux-saga-test-plan'
+import { call } from 'redux-saga/effects'
 import {
   handleDeepLink,
   handleUniswapAppDeepLink,
@@ -11,6 +12,7 @@ import { handleTransactionLink } from 'src/features/deepLinking/handleTransactio
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ModalName } from 'src/features/telemetry/constants'
+import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnectV2/saga'
 import { Screens } from 'src/screens/Screens'
 import { UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
@@ -107,6 +109,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
+      .provide([[call(waitForWcWeb3WalletIsReady), undefined]])
       .call(handleWalletConnectDeepLink, 'wc:123')
       .returns(undefined)
 
@@ -126,6 +129,7 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
+      .provide([[call(waitForWcWeb3WalletIsReady), undefined]])
       .call(handleWalletConnectDeepLink, 'wc:123')
       .returns(undefined)
       .silentRun()
