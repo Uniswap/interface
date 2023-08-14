@@ -23,7 +23,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     )
 
     if (!data) {
-      return new Response('Asset not found.', { status: 404 })
+      return new Response('Collection not found.', { status: 404 })
     }
 
     const [fontData, palette] = await Promise.all([getFont(), getColor(data.ogImage)])
