@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { AccountRowItem } from 'src/app/features/accounts/AccountRowItem'
-import { BackButtonHeader } from 'src/app/features/settings/BackButtonHeader'
 import { SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
@@ -31,8 +31,8 @@ export function SettingsScreen(): JSX.Element {
   }
 
   return (
-    <YStack backgroundColor="$surface1" flex={1}>
-      <BackButtonHeader headerText={t('Settings')} />
+    <YStack backgroundColor="$surface1" flex={1} gap="$spacing12">
+      <ScreenHeader title={t('Settings')} />
       <ScrollView padding="$spacing12" showsVerticalScrollIndicator={false}>
         <Text color="$neutral2" variant="subheadSmall">
           {t('Wallet settings')}

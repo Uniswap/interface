@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
-import { BackButtonHeader } from 'src/app/features/settings/BackButtonHeader'
+import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { SettingsWalletRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
@@ -54,7 +54,7 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
 
   return (
     <YStack backgroundColor="$surface1" flex={1}>
-      <BackButtonHeader headerText={displayName ?? 'Wallet'} />
+      <ScreenHeader title={displayName ?? t('Wallet')} />
       <YStack flexGrow={1} justifyContent="space-between" padding="$spacing12">
         <YStack>
           <XStack flexGrow={1} justifyContent="space-between" paddingVertical="$spacing12">

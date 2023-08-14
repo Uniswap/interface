@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { BackButtonHeader } from 'src/app/features/settings/BackButtonHeader'
+import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
 import { Input, Text, YStack } from 'ui/src'
@@ -41,8 +41,8 @@ function EditNicknameScreenContent({ address }: { address: Address }): JSX.Eleme
   }
 
   return (
-    <YStack backgroundColor="$surface1" flexGrow={1}>
-      <BackButtonHeader headerText={t('Edit nickname')} />
+    <YStack backgroundColor="$surface1" flexGrow={1} gap="$spacing12">
+      <ScreenHeader title={t('Edit nickname')} />
       <YStack flex={1} justifyContent="space-between" padding="$spacing12">
         <YStack flex={1} gap="$spacing24">
           <Input

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HideContentShield } from 'src/app/components/hideContent/HideContentShield'
-import { BackButtonHeader } from 'src/app/features/settings/BackButtonHeader'
+import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { Text, XStack, YStack } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { Flex } from 'ui/src/components/layout/Flex'
@@ -31,8 +31,8 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
   const [showPhrase, setShowPhrase] = useState(false)
 
   return (
-    <YStack backgroundColor="$surface1" flexGrow={1} padding="$spacing12">
-      <BackButtonHeader headerText={t('Recovery phrase')} />
+    <YStack backgroundColor="$surface1" flexGrow={1} gap="$spacing12">
+      <ScreenHeader title={t('Recovery phrase')} />
       <YStack gap="$spacing24" padding="$spacing12">
         <Flex position="relative" onHoverOut={(): void => setShowPhrase(false)}>
           <YStack
