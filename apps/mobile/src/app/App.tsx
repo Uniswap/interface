@@ -32,7 +32,11 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
-import { processWidgetEvents, setFavoritesUserDefaults } from 'src/features/widgets/widgets'
+import {
+  processWidgetEvents,
+  setAccountAddressesUserDefaults,
+  setFavoritesUserDefaults,
+} from 'src/features/widgets/widgets'
 import { DynamicThemeProvider } from 'src/theme/DynamicThemeProvider'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
@@ -42,9 +46,9 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { config } from 'wallet/src/config'
 import { useTrmQuery } from 'wallet/src/features/trm/api'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
-import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { useAccounts, useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { SharedProvider } from 'wallet/src/provider'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -190,6 +194,7 @@ function AppInner(): JSX.Element {
 function DataUpdaters(): JSX.Element {
   const activeAccount = useActiveAccount()
   const favoriteTokens: CurrencyId[] = useAppSelector(selectFavoriteTokens)
+  const accountsMap: Record<string, Account> = useAccounts()
 
   useTrmQuery(
     activeAccount && activeAccount.type === AccountType.SignerMnemonic
@@ -203,6 +208,10 @@ function DataUpdaters(): JSX.Element {
   useEffect(() => {
     setFavoritesUserDefaults(favoriteTokens)
   }, [favoriteTokens])
+
+  useEffect(() => {
+    setAccountAddressesUserDefaults(Object.values(accountsMap))
+  }, [accountsMap])
 
   return (
     <>

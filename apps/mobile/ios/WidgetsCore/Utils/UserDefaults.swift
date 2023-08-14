@@ -25,6 +25,21 @@ public struct TokenInput: Decodable {
   public var chain: String
 }
 
+public struct WidgetDataAccounts: Decodable {
+  
+  public init(_ accounts: [Account]) {
+    self.accounts = accounts
+  }
+  
+  public var accounts: [Account]
+}
+
+public struct Account: Decodable {
+  public var address: String
+  public var name: String?
+  public var isSigner: Bool
+}
+
 public struct WidgetDataConfiguration: Codable {
   
   public init(_ widgetInfos: [WidgetInfo]) {
@@ -71,6 +86,7 @@ public struct UniswapUserDefaults {
   static let eventsKey = "widgets.configuration.events"
   static let cacheKey = "widgets.configuration.cache"
   static let favoritesKey = "widgets.favorites"
+  static let accountsKey = "widgets.accounts"
   
   static let userDefaults = UserDefaults.init(suiteName: APP_GROUP)
   
@@ -84,6 +100,19 @@ public struct UniswapUserDefaults {
     }
     let data = savedData.data(using: .utf8)
     return data
+  }
+  
+  public static func readAccounts() -> WidgetDataAccounts {
+    let data = readData(key: accountsKey)
+    guard let data = data else {
+      return WidgetDataAccounts([])
+    }
+    let decoder = JSONDecoder()
+    guard let parsedData = try? decoder.decode(WidgetDataAccounts.self, from: data) else {
+      // case when failing to parse
+      return WidgetDataAccounts([])
+    }
+    return parsedData
   }
   
   public static func readFavorites() -> WidgetDataFavorites {
@@ -120,7 +149,6 @@ public struct UniswapUserDefaults {
       userDefaults!.set(json, forKey: cacheKey)
     }
   }
-  
   
   public static func readEventChanges() -> WidgetEvents {
     let data = readData(key: eventsKey)

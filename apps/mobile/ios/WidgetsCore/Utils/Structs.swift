@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct TokenResponse {
+public struct TokenResponse: Hashable {
   public init(chain: String, address: String? = nil, symbol: String, name: String) {
     self.chain = chain
     self.address = address

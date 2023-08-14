@@ -96,6 +96,34 @@ public class DataQueries {
       }
     }
   }
+  
+  public static func fetchWalletsTokensData(addresses: [String], maxLength: Int = 25) async throws -> [TokenResponse] {
+    return try await withCheckedThrowingContinuation { continuation in
+      Network.shared.apollo.fetch(query: MobileSchema.MultiplePortfolioBalancesQuery(ownerAddresses: addresses)){ result in
+        switch result {
+        case .success(let graphQLResult):
+          // Takes all the signer accounts and sums up the balances of the tokens, then sorts them by descending order, ignoring spam
+          var tokens: [TokenResponse: Double] = [:]
+          let portfolios = graphQLResult.data?.portfolios
+          portfolios?.forEach {
+            $0?.tokenBalances?.forEach { tokenBalance in
+              let value = tokenBalance?.denominatedValue?.value
+              let token = tokenBalance?.token
+              let tokenResponse = TokenResponse(chain: token?.chain.rawValue ?? "", address: token?.address, symbol: token?.symbol ?? "", name: token?.project?.name ?? "")
+              let isSpam = token?.project?.isSpam ?? false
+              if (!isSpam) {
+                tokens[tokenResponse] = (tokens[tokenResponse] ?? 0) + (value ?? 0)
+              }
+            }
+          }
+          let tokenResponses = tokens.keys.sorted { tokens[$0]! > tokens[$1]!}
+          continuation.resume(returning: Array(tokenResponses.prefix(maxLength)))
+        case .failure(let error):
+          continuation.resume(throwing: error)
+        }
+      }
+    }
+  }
 }
 
 

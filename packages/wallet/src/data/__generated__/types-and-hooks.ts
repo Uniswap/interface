@@ -1195,6 +1195,13 @@ export type PortfolioBalancesQueryVariables = Exact<{
 
 export type PortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null, tokensTotalDenominatedValueChange?: { __typename?: 'AmountChange', absolute?: { __typename?: 'Amount', id: string, value: number } | null, percentage?: { __typename?: 'Amount', id: string, value: number } | null } | null, tokenBalances?: Array<{ __typename?: 'TokenBalance', id: string, quantity?: number | null, denominatedValue?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', chain: Chain, address?: string | null, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', relativeChange24?: { __typename?: 'Amount', id: string, value: number } | null } | null } | null> | null } | null> | null };
 
+export type MultiplePortfolioBalancesQueryVariables = Exact<{
+  ownerAddresses: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type MultiplePortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null, tokensTotalDenominatedValueChange?: { __typename?: 'AmountChange', absolute?: { __typename?: 'Amount', id: string, value: number } | null, percentage?: { __typename?: 'Amount', id: string, value: number } | null } | null, tokenBalances?: Array<{ __typename?: 'TokenBalance', id: string, quantity?: number | null, denominatedValue?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', chain: Chain, address?: string | null, symbol?: string | null, decimals?: number | null, project?: { __typename?: 'TokenProject', id: string, name?: string | null, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null } | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', relativeChange24?: { __typename?: 'Amount', id: string, value: number } | null } | null } | null> | null } | null> | null };
+
 export type SelectWalletScreenQueryVariables = Exact<{
   ownerAddresses: Array<Scalars['String']> | Scalars['String'];
 }>;
@@ -2049,6 +2056,86 @@ export function usePortfolioBalancesLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type PortfolioBalancesQueryHookResult = ReturnType<typeof usePortfolioBalancesQuery>;
 export type PortfolioBalancesLazyQueryHookResult = ReturnType<typeof usePortfolioBalancesLazyQuery>;
 export type PortfolioBalancesQueryResult = Apollo.QueryResult<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>;
+export const MultiplePortfolioBalancesDocument = gql`
+    query MultiplePortfolioBalances($ownerAddresses: [String!]!) {
+  portfolios(
+    ownerAddresses: $ownerAddresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]
+  ) {
+    id
+    tokensTotalDenominatedValue {
+      id
+      value
+    }
+    tokensTotalDenominatedValueChange(duration: DAY) {
+      absolute {
+        id
+        value
+      }
+      percentage {
+        id
+        value
+      }
+    }
+    tokenBalances {
+      id
+      quantity
+      denominatedValue {
+        id
+        currency
+        value
+      }
+      token {
+        chain
+        address
+        symbol
+        decimals
+        project {
+          id
+          name
+          logoUrl
+          safetyLevel
+          isSpam
+        }
+      }
+      tokenProjectMarket {
+        relativeChange24: pricePercentChange(duration: DAY) {
+          id
+          value
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useMultiplePortfolioBalancesQuery__
+ *
+ * To run a query within a React component, call `useMultiplePortfolioBalancesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMultiplePortfolioBalancesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMultiplePortfolioBalancesQuery({
+ *   variables: {
+ *      ownerAddresses: // value for 'ownerAddresses'
+ *   },
+ * });
+ */
+export function useMultiplePortfolioBalancesQuery(baseOptions: Apollo.QueryHookOptions<MultiplePortfolioBalancesQuery, MultiplePortfolioBalancesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MultiplePortfolioBalancesQuery, MultiplePortfolioBalancesQueryVariables>(MultiplePortfolioBalancesDocument, options);
+      }
+export function useMultiplePortfolioBalancesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MultiplePortfolioBalancesQuery, MultiplePortfolioBalancesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MultiplePortfolioBalancesQuery, MultiplePortfolioBalancesQueryVariables>(MultiplePortfolioBalancesDocument, options);
+        }
+export type MultiplePortfolioBalancesQueryHookResult = ReturnType<typeof useMultiplePortfolioBalancesQuery>;
+export type MultiplePortfolioBalancesLazyQueryHookResult = ReturnType<typeof useMultiplePortfolioBalancesLazyQuery>;
+export type MultiplePortfolioBalancesQueryResult = Apollo.QueryResult<MultiplePortfolioBalancesQuery, MultiplePortfolioBalancesQueryVariables>;
 export const SelectWalletScreenDocument = gql`
     query SelectWalletScreen($ownerAddresses: [String!]!) {
   portfolios(

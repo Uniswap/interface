@@ -356,6 +356,58 @@ query PortfolioBalances($ownerAddress: String!) {
   }
 }
 
+query MultiplePortfolioBalances($ownerAddresses: [String!]!) {
+  portfolios(ownerAddresses: $ownerAddresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]) {
+    id
+
+    # Total portfolio balance for header
+    tokensTotalDenominatedValue {
+      id
+      value
+    }
+    tokensTotalDenominatedValueChange(duration: DAY) {
+      absolute {
+        id
+        value
+      }
+      percentage {
+        id
+        value
+      }
+    }
+
+    # Individual portfolio token balances
+    tokenBalances {
+      id
+      quantity
+      denominatedValue {
+        id
+        currency
+        value
+      }
+      token {
+        chain
+        address
+        symbol
+        decimals
+        project {
+          id
+          name
+          logoUrl
+          safetyLevel
+          isSpam
+        }
+      }
+      tokenProjectMarket {
+        relativeChange24: pricePercentChange(duration: DAY) {
+          id
+          value
+        }
+      }
+    }
+  }
+}
+
 query SelectWalletScreen($ownerAddresses: [String!]!) {
   portfolios(ownerAddresses: $ownerAddresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]) {
     id

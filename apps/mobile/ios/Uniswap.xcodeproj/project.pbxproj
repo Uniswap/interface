@@ -123,6 +123,7 @@
 		0767E0382A65C8330042ADA2 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0767E0372A65C8330042ADA2 /* Colors.swift */; };
 		0767E03B2A65D2550042ADA2 /* Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0767E03A2A65D2550042ADA2 /* Styling.swift */; };
 		077E60392A85587800ABC4B9 /* TokensQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077E60382A85587800ABC4B9 /* TokensQuery.graphql.swift */; };
+		077E603B2A86D06100ABC4B9 /* MultiplePortfolioBalancesQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077E603A2A86D06100ABC4B9 /* MultiplePortfolioBalancesQuery.graphql.swift */; };
 		0783F7B42A619E7C009ED617 /* UIComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0783F7B32A619E7C009ED617 /* UIComponents.swift */; };
 		078E79472A55EB3300F59CF2 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 078E79462A55EB3300F59CF2 /* Intents.framework */; };
 		078E794E2A55EB3300F59CF2 /* WidgetIntentExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 078E79452A55EB3300F59CF2 /* WidgetIntentExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -399,6 +400,7 @@
 		0767E0372A65C8330042ADA2 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		0767E03A2A65D2550042ADA2 /* Styling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styling.swift; sourceTree = "<group>"; };
 		077E60382A85587800ABC4B9 /* TokensQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokensQuery.graphql.swift; sourceTree = "<group>"; };
+		077E603A2A86D06100ABC4B9 /* MultiplePortfolioBalancesQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiplePortfolioBalancesQuery.graphql.swift; sourceTree = "<group>"; };
 		0783F7B32A619E7C009ED617 /* UIComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIComponents.swift; sourceTree = "<group>"; };
 		078E79452A55EB3300F59CF2 /* WidgetIntentExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetIntentExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		078E79462A55EB3300F59CF2 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
@@ -677,6 +679,7 @@
 				077E60382A85587800ABC4B9 /* TokensQuery.graphql.swift */,
 				074321902A83E3C900F8518D /* TokenDetailsScreenQuery.graphql.swift */,
 				074321912A83E3C900F8518D /* SpotPricesQuery.graphql.swift */,
+				077E603A2A86D06100ABC4B9 /* MultiplePortfolioBalancesQuery.graphql.swift */,
 				074321922A83E3C900F8518D /* ExploreTokensTabQuery.graphql.swift */,
 				074321932A83E3C900F8518D /* NftsTabQuery.graphql.swift */,
 				074321942A83E3C900F8518D /* TokenQuery.graphql.swift */,
@@ -1738,6 +1741,7 @@
 				074322162A83E3CA00F8518D /* TokenProject.graphql.swift in Sources */,
 				074321ED2A83E3CA00F8518D /* ExploreTokensTabQuery.graphql.swift in Sources */,
 				074322032A83E3CA00F8518D /* Currency.graphql.swift in Sources */,
+				077E603B2A86D06100ABC4B9 /* MultiplePortfolioBalancesQuery.graphql.swift in Sources */,
 				074322102A83E3CA00F8518D /* NftAssetTrait.graphql.swift in Sources */,
 				074322382A83E3CA00F8518D /* NftActivityFilterInput.graphql.swift in Sources */,
 				0743220D2A83E3CA00F8518D /* Image.graphql.swift in Sources */,

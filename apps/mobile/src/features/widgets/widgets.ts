@@ -4,12 +4,14 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 const APP_GROUP = 'group.com.uniswap.widgets'
 const WIDGET_EVENTS_KEY = 'widgets.configuration.events'
 const WIDGET_CACHE_KEY = 'widgets.configuration.cache'
 const FAVORITE_WIDGETS_KEY = 'widgets.favorites'
+const ACCOUNTS_WIDGETS_KEY = 'widgets.accounts'
 
 const { RNWidgets } = NativeModules
 
@@ -52,6 +54,21 @@ export const setFavoritesUserDefaults = (currencyIds: CurrencyId[]): void => {
     favorites,
   }
   setUserDefaults(data, FAVORITE_WIDGETS_KEY).catch(() => undefined)
+}
+
+export const setAccountAddressesUserDefaults = (accounts: Account[]): void => {
+  const userDefaultAccounts: Array<{ address: string; name: Maybe<string>; isSigner: boolean }> =
+    accounts.map((account: Account) => {
+      return {
+        address: account.address,
+        name: account.name,
+        isSigner: account.type === AccountType.SignerMnemonic,
+      }
+    })
+  const data = {
+    accounts: userDefaultAccounts,
+  }
+  setUserDefaults(data, ACCOUNTS_WIDGETS_KEY).catch(() => undefined)
 }
 
 // handles edge case where there is a widget left in the cache,
