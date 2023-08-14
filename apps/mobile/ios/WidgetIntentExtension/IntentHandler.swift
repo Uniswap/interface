@@ -37,7 +37,7 @@ class IntentHandler: INExtension, TokenPriceConfigurationIntentHandling {
     let favoriteTokens = favoriteTokenReponses.map {tokenResponseToIntentToken($0, section: Section.favorite)}
     let topTokens = topTokensResponse.map { (result) -> IntentToken in
       // replace wETH with ETH in the configuration
-      if (result.address == WidgetConstants.WETHAddress && result.chain == WidgetConstants.ethereumSymbol) {
+      if (result.address == WidgetConstants.WETHAddress && result.chain == WidgetConstants.ethereumChain) {
         return tokenResponseToIntentToken(ETHTokenResponse, section: Section.top)
       }
       return tokenResponseToIntentToken(result, section: Section.top)
