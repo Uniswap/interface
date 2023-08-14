@@ -17,7 +17,6 @@ import {
   DutchOrderTrade,
   GetQuoteArgs,
   InterfaceTrade,
-  INTERNAL_ROUTER_PREFERENCE_PRICE,
   isClassicQuoteResponse,
   PoolType,
   QuoteMethod,
@@ -326,12 +325,7 @@ export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrad
 }
 
 export function shouldUseAPIRouter(args: GetQuoteArgs): boolean {
-  const { routerPreference, isRoutingAPIPrice } = args
-  if (routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE && isRoutingAPIPrice) {
-    return true
-  }
-
-  return routerPreference === RouterPreference.API || routerPreference === RouterPreference.X
+  return args.routerPreference !== RouterPreference.CLIENT
 }
 
 export function getTransactionCount(trade: InterfaceTrade): number {

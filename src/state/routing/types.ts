@@ -47,7 +47,6 @@ export interface GetQuoteArgs {
   uniswapXEthOutputEnabled: boolean
   forceUniswapXOn: boolean
   userDisabledUniswapX: boolean
-  isRoutingAPIPrice?: boolean
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
