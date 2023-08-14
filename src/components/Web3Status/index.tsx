@@ -1,27 +1,26 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
+import { useHasPendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import { getConnection } from 'connection'
+import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useAppSelector } from 'state/hooks'
-import { usePendingOrders } from 'state/signatures/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
 import { shortenAddress } from 'utils'
 
-import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
-import { TransactionDetails } from '../../state/transactions/types'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import { RowBetween } from '../Row'
@@ -115,11 +114,6 @@ const Text = styled.p`
   font-weight: 500;
 `
 
-// we want the latest one to come first, so return negative if a is after b
-function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
-  return b.addedTime - a.addedTime
-}
-
 const StyledConnectButton = styled.button`
   background-color: transparent;
   border: none;
@@ -135,7 +129,8 @@ const StyledConnectButton = styled.button`
 function Web3StatusInner() {
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const ignoreWhileSwitchingChain = useCallback(() => !switchingChain, [switchingChain])
-  const { account, connector, ENSName } = useLast(useWeb3React(), ignoreWhileSwitchingChain)
+  const { account, connector } = useLast(useWeb3React(), ignoreWhileSwitchingChain)
+  const { ENSName } = useENSName(account)
   const connection = getConnection(connector)
 
   const [, toggleAccountDrawer] = useAccountDrawer()
@@ -145,18 +140,7 @@ function Web3StatusInner() {
   }, [toggleAccountDrawer])
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
-  const allTransactions = useAllTransactions()
-
-  const sortedRecentTransactions = useMemo(() => {
-    const txs = Object.values(allTransactions)
-    return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
-  }, [allTransactions])
-
-  const pendingOrders = usePendingOrders()
-
-  const pendingTxs = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
-
-  const hasPendingActivity = !!pendingTxs.length || !!pendingOrders.length
+  const { hasPendingActivity, pendingActivityCount } = useHasPendingActivity()
 
   if (account) {
     return (
@@ -178,7 +162,7 @@ function Web3StatusInner() {
           {hasPendingActivity ? (
             <RowBetween>
               <Text>
-                <Trans>{pendingTxs.length + pendingOrders.length} Pending</Trans>
+                <Trans>{pendingActivityCount} Pending</Trans>
               </Text>{' '}
               <Loader stroke="white" />
             </RowBetween>

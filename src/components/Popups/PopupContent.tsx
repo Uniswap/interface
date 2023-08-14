@@ -15,7 +15,7 @@ import useENSName from 'hooks/useENSName'
 import { X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -92,7 +92,7 @@ const Descriptor = styled(ThemedText.BodySmall)`
 
 type ActivityPopupContentProps = { activity: Activity; onClick: () => void; onClose: () => void }
 function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupContentProps) {
-  const success = activity.status === TransactionStatus.Confirmed
+  const success = activity.status === TransactionStatus.Confirmed && !activity.cancelled
   const { ENSName } = useENSName(activity?.otherAccount)
 
   return (

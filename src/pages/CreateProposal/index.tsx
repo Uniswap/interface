@@ -1,17 +1,19 @@
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { Trace } from 'analytics'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { Wrapper } from 'pages/Pool/styleds'
+import { Wrapper } from 'pages/Pool/styled'
 import { useCallback, useMemo, useState } from 'react'
+import { ArrowLeft } from 'react-feather'
+import { Link } from 'react-router-dom'
 import {
   CreateProposalData,
   ProposalState,
@@ -21,10 +23,9 @@ import {
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 
-import { CreateProposalTabs } from '../../components/NavigationTabs'
 import { LATEST_GOVERNOR_INDEX } from '../../constants/governance'
 import { UNI } from '../../constants/tokens'
 import AppBody from '../AppBody'
@@ -43,6 +44,19 @@ const PageWrapper = styled(AutoColumn)`
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     padding-top: 20px;
   }
+`
+
+const BackArrow = styled(ArrowLeft)`
+  cursor: pointer;
+  color: ${({ theme }) => theme.textPrimary};
+`
+const Nav = styled(Link)`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 1em 0 0 1em;
+  text-decoration: none;
 `
 
 const CreateProposalButton = ({
@@ -242,7 +256,10 @@ ${bodyValue}
     <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
       <PageWrapper>
         <AppBody $maxWidth="800px">
-          <CreateProposalTabs />
+          <Nav to="/vote">
+            <BackArrow />
+            <ThemedText.SubHeaderLarge>Create Proposal</ThemedText.SubHeaderLarge>
+          </Nav>
           <CreateProposalWrapper>
             <BlueCard>
               <AutoColumn gap="10px">

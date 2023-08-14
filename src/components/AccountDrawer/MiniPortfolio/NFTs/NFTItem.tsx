@@ -1,5 +1,5 @@
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
 import Row from 'components/Row'
@@ -10,7 +10,7 @@ import { VerifiedIcon } from 'nft/components/icons'
 import { WalletAsset } from 'nft/types'
 import { floorFormatter } from 'nft/utils'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 const FloorPrice = styled(Row)`

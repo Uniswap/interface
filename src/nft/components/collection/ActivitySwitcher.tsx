@@ -1,9 +1,9 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
+import { TraceEvent } from 'analytics'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useIsCollectionLoading } from 'nft/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import * as styles from './ActivitySwitcher.css'
 

@@ -1,10 +1,13 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { useForceUniswapXOn } from 'featureFlags/flags/forceUniswapXOn'
 import { useRoutingAPIForPrice } from 'featureFlags/flags/priceRoutingApi'
 import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
+import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useMemo } from 'react'
-import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
+import { useUserDisabledUniswapX } from 'state/user/hooks'
 
 /**
  * Returns query arguments for the Routing API query or undefined if the
@@ -28,7 +31,10 @@ export function useRoutingAPIArguments({
 }): GetQuoteArgs | undefined {
   const uniswapXEnabled = useUniswapXEnabled()
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
+  const forceUniswapXOn = useForceUniswapXOn()
+  const userDisabledUniswapX = useUserDisabledUniswapX()
   const isRoutingAPIPrice = useRoutingAPIForPrice()
+  const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
 
   return useMemo(
     () =>
@@ -51,6 +57,9 @@ export function useRoutingAPIArguments({
             needsWrapIfUniswapX: tokenIn.isNative,
             uniswapXEnabled,
             uniswapXForceSyntheticQuotes,
+            forceUniswapXOn,
+            userDisabledUniswapX,
+            uniswapXEthOutputEnabled,
           },
     [
       account,
@@ -59,9 +68,12 @@ export function useRoutingAPIArguments({
       tokenIn,
       tokenOut,
       tradeType,
-      uniswapXEnabled,
       isRoutingAPIPrice,
+      uniswapXEnabled,
       uniswapXForceSyntheticQuotes,
+      forceUniswapXOn,
+      userDisabledUniswapX,
+      uniswapXEthOutputEnabled,
     ]
   )
 }

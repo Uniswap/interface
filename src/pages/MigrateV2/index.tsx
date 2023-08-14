@@ -7,16 +7,18 @@ import { useWeb3React } from '@web3-react/core'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import { V2Unsupported } from 'components/V2Unsupported'
+import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 
 import { LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow } from '../../components/Row'
-import { Dots } from '../../components/swap/styleds'
+import { Dots } from '../../components/swap/styled'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { BackArrowLink, StyledInternalLink, ThemedText } from '../../theme'
@@ -109,6 +111,9 @@ export default function MigrateV2() {
 
   const v2Pairs = useV2Pairs(tokenPairsWithV2Balance)
   const v2IsLoading = fetchingPairBalances || v2Pairs.some(([pairState]) => pairState === PairState.LOADING)
+
+  const networkSupportsV2 = useNetworkSupportsV2()
+  if (!networkSupportsV2) return <V2Unsupported />
 
   return (
     <>

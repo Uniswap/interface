@@ -19,6 +19,8 @@ schema.graphql
 # testing
 /coverage
 /cache
+/functions/coverage
+/.swc
 
 # builds
 /build
@@ -46,7 +48,10 @@ notes.txt
 
 package-lock.json
 
+cypress/downloads
 cypress/videos
 cypress/screenshots
 
 .vercel
+
+.wrangler

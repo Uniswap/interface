@@ -3,7 +3,7 @@ import { getTestSelector } from '../../utils'
 describe('Mini Portfolio account drawer', () => {
   beforeEach(() => {
     cy.intercept(/api.uniswap.org\/v1\/graphql/, cy.spy().as('gqlSpy'))
-    cy.visit('/swap', { ethereum: 'hardhat' })
+    cy.visit('/swap')
   })
 
   it('fetches balances when account button is first hovered', () => {
@@ -41,6 +41,7 @@ describe('Mini Portfolio account drawer', () => {
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('NFTs').click()
     cy.get(getTestSelector('mini-portfolio-page')).contains('I Got Plenty')
 
+    cy.intercept(/graphql/, { fixture: 'mini-portfolio/pools.json' })
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('Pools').click()
     cy.get(getTestSelector('mini-portfolio-page')).contains('No pools yet')
 
@@ -74,6 +75,38 @@ describe('Mini Portfolio account drawer', () => {
           // The second account's portfolio balance should differ from the original balance
           cy.get(getTestSelector('portfolio-total-balance')).should('not.have.text', originalBalance)
         })
+    })
+  })
+
+  it('fetches ENS name', () => {
+    cy.hardhat().then(() => {
+      const haydenAccount = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
+      const haydenENS = 'hayden.eth'
+
+      // Opens the account drawer
+      cy.get(getTestSelector('web3-status-connected')).click()
+
+      // Simulate wallet changing to Hayden's account
+      cy.window().then((win) => win.ethereum.emit('accountsChanged', [haydenAccount]))
+
+      // Hayden's ENS name should be shown
+      cy.contains(haydenENS).should('exist')
+
+      // Close account drawer
+      cy.get(getTestSelector('close-account-drawer')).click()
+
+      // Switch chain to Polygon
+      cy.get(getTestSelector('chain-selector')).eq(1).click()
+      cy.contains('Polygon').click()
+
+      //Reopen account drawer
+      cy.get(getTestSelector('web3-status-connected')).click()
+
+      // Simulate wallet changing to Hayden's account
+      cy.window().then((win) => win.ethereum.emit('accountsChanged', [haydenAccount]))
+
+      // Hayden's ENS name should be shown
+      cy.contains(haydenENS).should('exist')
     })
   })
 })

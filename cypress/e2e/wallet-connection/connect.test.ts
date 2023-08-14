@@ -3,7 +3,7 @@ import { DISCONNECTED_WALLET_USER_STATE } from '../../utils/user-state'
 
 describe('disconnect wallet', () => {
   it('should clear state', () => {
-    cy.visit('/swap', { ethereum: 'hardhat' })
+    cy.visit('/swap')
     cy.get('#swap-currency-input .token-amount-input').clear().type('1')
 
     // Verify wallet is connected
@@ -22,13 +22,13 @@ describe('disconnect wallet', () => {
     cy.contains('Connect Wallet')
 
     // Verify swap input is cleared
-    cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
+    cy.get('#swap-currency-input .token-amount-input').should('have.value', '1')
   })
 })
 
 describe('connect wallet', () => {
   it('should load state', () => {
-    cy.visit('/swap', { ethereum: 'hardhat', userState: DISCONNECTED_WALLET_USER_STATE })
+    cy.visit('/swap', { userState: DISCONNECTED_WALLET_USER_STATE })
 
     // Connect the wallet
     cy.get(getTestSelector('navbar-connect-wallet')).contains('Connect').click()

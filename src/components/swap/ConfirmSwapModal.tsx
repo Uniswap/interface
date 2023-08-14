@@ -1,19 +1,19 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
 import {
   InterfaceEventName,
   InterfaceModalName,
   SwapEventName,
   SwapPriceUpdateUserResponse,
 } from '@uniswap/analytics-events'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
 import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
 import { USDT as USDT_MAINNET } from 'constants/tokens'
+import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
@@ -24,11 +24,12 @@ import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
-import { useIsTransactionConfirmed } from 'state/transactions/hooks'
-import styled from 'styled-components/macro'
+import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import invariant from 'tiny-invariant'
 import { isL2ChainId } from 'utils/chains'
+import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -161,17 +162,7 @@ function useConfirmModalState({
         case ConfirmModalState.APPROVING_TOKEN:
           setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
           invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
-          allowance
-            .approve()
-            .then(() => {
-              sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-                chain_id: chainId,
-                token_symbol: maximumAmountIn?.currency.symbol,
-                token_address: maximumAmountIn?.currency.address,
-                ...trace,
-              })
-            })
-            .catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
+          allowance.approve().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
           break
         case ConfirmModalState.PERMITTING:
           setConfirmModalState(ConfirmModalState.PERMITTING)
@@ -307,7 +298,13 @@ export default function ConfirmSwapModal({
       doesTradeDiffer: Boolean(doesTradeDiffer),
     })
 
-  const swapFailed = Boolean(swapError) && !didUserReject(swapError)
+  const swapStatus = useSwapTransactionStatus(swapResult)
+
+  // Swap was reverted onchain.
+  const swapReverted = swapStatus === TransactionStatus.Failed
+  // Swap failed locally and was not broadcast to the blockchain.
+  const localSwapFailure = Boolean(swapError) && !didUserReject(swapError)
+  const swapFailed = localSwapFailure || swapReverted
   useEffect(() => {
     // Reset the modal state if the user rejected the swap.
     if (swapError && !swapFailed) {

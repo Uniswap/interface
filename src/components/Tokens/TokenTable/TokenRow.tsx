@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
+import { sendAnalyticsEvent } from 'analytics'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -13,8 +12,9 @@ import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
-import styled, { css, useTheme } from 'styled-components/macro'
-import { ClickableStyle } from 'theme'
+import styled, { css, useTheme } from 'styled-components'
+import { BREAKPOINTS, ClickableStyle } from 'theme'
+import { formatNumber, formatUSDPrice, NumberType } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -163,6 +163,10 @@ const NameCell = styled(Cell)`
   padding: 0px 8px;
   min-width: 240px;
   gap: 8px;
+
+  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
+    min-width: 200px;
+  }
 `
 const PriceCell = styled(DataCell)`
   padding-right: 8px;

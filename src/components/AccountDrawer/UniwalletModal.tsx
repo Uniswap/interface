@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { WalletConnect as WalletConnectv2 } from '@web3-react/walletconnect-v2'
+import { sendAnalyticsEvent } from 'analytics'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
@@ -11,8 +11,9 @@ import { ConnectionType } from 'connection/types'
 import { UniwalletConnect as UniwalletConnectV2 } from 'connection/WalletConnectV2'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme'
+import { isIOS } from 'utils/userAgent'
 
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
@@ -41,8 +42,9 @@ export default function UniwalletModal() {
   const { activationState, cancelActivation } = useActivationState()
   const [uri, setUri] = useState<string>()
 
-  // Displays the modal if a Uniswap Wallet Connection is pending & qrcode URI is available
+  // Displays the modal if not on iOS, a Uniswap Wallet Connection is pending, & qrcode URI is available
   const open =
+    !isIOS &&
     activationState.status === ActivationStatus.PENDING &&
     activationState.connection.type === ConnectionType.UNISWAP_WALLET_V2 &&
     !!uri

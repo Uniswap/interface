@@ -1,12 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
+import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
@@ -58,6 +58,8 @@ export function useUniversalRouterSwapCallback(
         if (!chainId) throw new Error('missing chainId')
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
+        const connectedChainId = await provider.getSigner().getChainId()
+        if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
@@ -66,6 +68,7 @@ export function useUniversalRouterSwapCallback(
           inputTokenPermit: options.permit,
           fee: options.feeOptions,
         })
+
         const tx = {
           from: account,
           to: UNIVERSAL_ROUTER_ADDRESS(chainId),
@@ -80,6 +83,12 @@ export function useUniversalRouterSwapCallback(
         } catch (gasError) {
           setTraceStatus('failed_precondition')
           setTraceError(gasError)
+          sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+            ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
+            ...analyticsContext,
+            tx,
+            error: gasError,
+          })
           console.warn(gasError)
           throw new GasEstimationError()
         }

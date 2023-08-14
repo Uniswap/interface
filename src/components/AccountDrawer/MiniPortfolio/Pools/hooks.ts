@@ -36,7 +36,7 @@ function useContractMultichain<T extends BaseContract>(
       chainIds ??
       Object.keys(addressMap)
         .map((chainId) => parseInt(chainId))
-        .filter(isSupportedChain)
+        .filter((chainId) => isSupportedChain(chainId))
 
     return relevantChains.reduce((acc: ContractMap<T>, chainId) => {
       const provider =

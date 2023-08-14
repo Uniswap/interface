@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace } from '@uniswap/analytics'
+import { sendAnalyticsEvent, Trace } from 'analytics'
 import Column from 'components/Column'
 import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import { Arrow } from 'components/Popover'
@@ -13,18 +13,18 @@ import {
   UniswapXOptInLargeContainer,
   UniswapXOptInLargeContainerPositioner,
   UniswapXShine,
-} from 'components/swap/styleds'
+} from 'components/swap/styled'
 import { formatCommonPropertiesForTrade } from 'lib/utils/analytics'
 import { PropsWithChildren, useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { Text } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
-import { RouterPreference } from 'state/routing/slice'
+import { RouterPreference } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { SwapInfo } from 'state/swap/hooks'
 import { useRouterPreference, useUserDisabledUniswapX } from 'state/user/hooks'
 import { updateDisabledUniswapX } from 'state/user/reducer'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 export const UniswapXOptIn = (props: { swapInfo: SwapInfo; isSmall: boolean }) => {

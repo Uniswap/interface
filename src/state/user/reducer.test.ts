@@ -1,12 +1,12 @@
 import { createStore, Store } from 'redux'
-import { RouterPreference } from 'state/routing/slice'
+import { RouterPreference } from 'state/routing/types'
 
 import reducer, {
   addSerializedPair,
   addSerializedToken,
   initialState,
+  updateHideBaseWalletBanner,
   updateHideClosedPositions,
-  updateHideUniswapWalletBanner,
   updateSelectedWallet,
   updateUserDeadline,
   updateUserLocale,
@@ -77,10 +77,10 @@ describe('swap reducer', () => {
     })
   })
 
-  describe('updateHideUniswapWalletBanner', () => {
-    it('updates the hideUniswapWalletBanner', () => {
-      store.dispatch(updateHideUniswapWalletBanner({ hideUniswapWalletBanner: true }))
-      expect(store.getState().hideUniswapWalletBanner).toEqual(true)
+  describe('updateHideBaseWalletBanner', () => {
+    it('updates the updateHideBaseWalletBanner', () => {
+      store.dispatch(updateHideBaseWalletBanner({ hideBaseWalletBanner: true }))
+      expect(store.getState().hideBaseWalletBanner).toEqual(true)
     })
   })
 

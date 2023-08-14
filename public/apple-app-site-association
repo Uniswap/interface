@@ -1,0 +1,30 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "JH3UHGZD75.com.uniswap.mobile",
+          "JH3UHGZD75.com.uniswap.mobile.dev"
+        ],
+        "components": [
+          {
+            "#": "/nfts/asset/*",
+            "comment": "NFT Item"
+          },
+          {
+            "#": "/nfts/collection/*",
+            "comment": "NFT Collection"
+          },
+          {
+            "#": "/tokens/*",
+            "comment": "Token address"
+          },
+          {
+            "#": "/address/*",
+            "comment": "Wallet address"
+          }
+        ]
+      }
+    ]
+  }
+}

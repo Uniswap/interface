@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ConnectionType } from 'connection/types'
-import { SupportedLocale } from 'constants/locales'
-import { RouterPreference } from 'state/routing/slice'
 
+import { ConnectionType } from '../../connection/types'
+import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
+import { RouterPreference } from '../../state/routing/types'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
 const currentTimestamp = () => new Date().getTime()
@@ -46,7 +46,7 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
-  hideUniswapWalletBanner: boolean
+  hideBaseWalletBanner: boolean
   disabledUniswapX?: boolean
   // undefined means has not gone through A/B split yet
   showSurveyPopup?: boolean
@@ -68,7 +68,7 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
-  hideUniswapWalletBanner: false,
+  hideBaseWalletBanner: false,
   showSurveyPopup: undefined,
 }
 
@@ -97,8 +97,8 @@ const userSlice = createSlice({
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
     },
-    updateHideUniswapWalletBanner(state, action) {
-      state.hideUniswapWalletBanner = action.payload.hideUniswapWalletBanner
+    updateHideBaseWalletBanner(state, action) {
+      state.hideBaseWalletBanner = action.payload.hideBaseWalletBanner
     },
     updateDisabledUniswapX(state, action) {
       state.disabledUniswapX = action.payload.disabledUniswapX
@@ -134,7 +134,7 @@ export const {
   updateUserDeadline,
   updateUserLocale,
   updateUserSlippageTolerance,
-  updateHideUniswapWalletBanner,
+  updateHideBaseWalletBanner,
   updateDisabledUniswapX,
 } = userSlice.actions
 export default userSlice.reducer

@@ -13,7 +13,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
       >
         <div
           class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_12_sm__rgw6ez3tj"
-          data-cy="searchbar-dropdown"
+          data-testid="searchbar-dropdown"
         >
           <div
             class="reset_base__1klryar0 sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_4_sm__rgw6ez2o7 sprinkles_paddingBottom_4_sm__rgw6ez27p sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_gap_8_sm__rgw6ez3t7 sprinkles_color_gray300_default__rgw6ez4k1 common__127l8hd4 sprinkles_fontWeight_medium_sm__rgw6ezcv sprinkles_fontSize_14_sm__rgw6ezav sprinkles_lineHeight_14_sm__rgw6ezdv"
@@ -133,7 +133,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
       >
         <div
           class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_12_sm__rgw6ez3tj"
-          data-cy="searchbar-dropdown"
+          data-testid="searchbar-dropdown"
         >
           <div
             class="reset_base__1klryar0 sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_4_sm__rgw6ez2o7 sprinkles_paddingBottom_4_sm__rgw6ez27p sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_gap_8_sm__rgw6ez3t7 sprinkles_color_gray300_default__rgw6ez4k1 common__127l8hd4 sprinkles_fontWeight_medium_sm__rgw6ezcv sprinkles_fontSize_14_sm__rgw6ezav sprinkles_lineHeight_14_sm__rgw6ezdv"
@@ -236,7 +236,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
         </div>
         <div
           class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_gap_12_sm__rgw6ez3tj"
-          data-cy="searchbar-dropdown"
+          data-testid="searchbar-dropdown"
         >
           <div
             class="reset_base__1klryar0 sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_paddingTop_4_sm__rgw6ez2o7 sprinkles_paddingBottom_4_sm__rgw6ez27p sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_gap_8_sm__rgw6ez3t7 sprinkles_color_gray300_default__rgw6ez4k1 common__127l8hd4 sprinkles_fontWeight_medium_sm__rgw6ezcv sprinkles_fontSize_14_sm__rgw6ezav sprinkles_lineHeight_14_sm__rgw6ezdv"

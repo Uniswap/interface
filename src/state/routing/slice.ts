@@ -1,14 +1,17 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { ChainId, TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@uniswap/sdk-core'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { trace } from 'tracing/trace'
 
 import {
+  GetQuoteArgs,
+  INTERNAL_ROUTER_PREFERENCE_PRICE,
   QuoteMethod,
   QuoteState,
+  RouterPreference,
   RoutingConfig,
   SwapRouterNativeAssets,
   TradeResult,
@@ -22,37 +25,8 @@ if (UNISWAP_API_URL === undefined) {
   throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
 }
 
-export enum RouterPreference {
-  X = 'uniswapx',
-  API = 'api',
-  CLIENT = 'client',
-}
-
-// This is excluded from `RouterPreference` enum because it's only used
-// internally for token -> USDC trades to get a USD value.
-export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
-
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
-}
-
-export interface GetQuoteArgs {
-  tokenInAddress: string
-  tokenInChainId: ChainId
-  tokenInDecimals: number
-  tokenInSymbol?: string
-  tokenOutAddress: string
-  tokenOutChainId: ChainId
-  tokenOutDecimals: number
-  tokenOutSymbol?: string
-  amount: string
-  account?: string
-  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-  tradeType: TradeType
-  needsWrapIfUniswapX: boolean
-  uniswapXEnabled: boolean
-  uniswapXForceSyntheticQuotes: boolean
-  isRoutingAPIPrice?: boolean
 }
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
@@ -63,7 +37,15 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const { account, tradeType, tokenOutAddress, tokenInChainId, uniswapXForceSyntheticQuotes } = args
+  const {
+    account,
+    tradeType,
+    tokenOutAddress,
+    tokenInChainId,
+    uniswapXForceSyntheticQuotes,
+    uniswapXEthOutputEnabled,
+    routerPreference,
+  } = args
 
   const uniswapx = {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
@@ -85,7 +67,8 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
   if (
     !args.uniswapXEnabled ||
-    tokenOutIsNative ||
+    (args.userDisabledUniswapX && routerPreference !== RouterPreference.X) ||
+    (tokenOutIsNative && !uniswapXEthOutputEnabled) ||
     tradeType === TradeType.EXACT_OUTPUT ||
     !isUniswapXSupportedChain(tokenInChainId)
   ) {
@@ -130,10 +113,19 @@ export const routingApi = createApi({
         )
       },
       async queryFn(args, _api, _extraOptions, fetch) {
-        const fellBack = false
+        let fellBack = false
         if (shouldUseAPIRouter(args)) {
+          fellBack = true
           try {
-            const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
+            const {
+              tokenInAddress,
+              tokenInChainId,
+              tokenOutAddress,
+              tokenOutChainId,
+              amount,
+              tradeType,
+              forceUniswapXOn,
+            } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
 
             const requestBody = {
@@ -143,6 +135,8 @@ export const routingApi = createApi({
               tokenOut: tokenOutAddress,
               amount,
               type,
+              // if forceUniswapXOn is not ON, then use the backend's default value
+              useUniswapX: forceUniswapXOn || undefined,
               configs: getRoutingAPIConfig(args),
             }
 
@@ -196,7 +190,7 @@ export const routingApi = createApi({
           return { error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error } }
         }
       },
-      keepUnusedDataFor: ms`10s`,
+      keepUnusedDataFor: ms(`10s`),
       extraOptions: {
         maxRetries: 0,
       },

@@ -1,7 +1,7 @@
 import 'rc-slider/assets/index.css'
 
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent } from 'analytics'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
@@ -13,7 +13,7 @@ import { scrollToTop } from 'nft/utils/scrollToTop'
 import { default as Slider } from 'rc-slider'
 import { FocusEventHandler, FormEvent, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { darkTheme } from 'theme/colors'
 
 import * as styles from './PriceRange.css'

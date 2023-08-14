@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { formatPriceImpact } from '@uniswap/conedison/format'
 import { Percent } from '@uniswap/sdk-core'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'
 import { AlertTriangle } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme'
+import { formatPriceImpact } from 'utils/formatNumbers'
 
 import Modal from '../Modal'
 

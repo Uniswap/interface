@@ -1,17 +1,17 @@
 import { Trans } from '@lingui/macro'
-import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
+import { Trace, TraceEvent } from 'analytics'
 import Column from 'components/Column'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { AutoRow } from 'components/Row'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect, useState } from 'react'
-import { useHasPendingTransactions } from 'state/transactions/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { ActivityTab } from './Activity'
+import { useHasPendingActivity } from './Activity/hooks'
 import NFTs from './NFTs'
 import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'
@@ -103,11 +103,11 @@ export default function MiniPortfolio({ account }: { account: string }) {
 
   const { component: Page, key: currentKey } = Pages[currentPage]
 
-  const hasPendingTransactions = useHasPendingTransactions()
+  const { hasPendingActivity } = useHasPendingActivity()
 
   useEffect(() => {
-    if (hasPendingTransactions && currentKey !== 'activity') setActivityUnread(true)
-  }, [currentKey, hasPendingTransactions])
+    if (hasPendingActivity && currentKey !== 'activity') setActivityUnread(true)
+  }, [currentKey, hasPendingActivity])
 
   return (
     <Trace section={InterfaceSectionName.MINI_PORTFOLIO}>
@@ -116,7 +116,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
           {Pages.map(({ title, loggingElementName, key }, index) => {
             if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) return null
             const isUnselectedActivity = key === 'activity' && currentKey !== 'activity'
-            const showActivityIndicator = isUnselectedActivity && (hasPendingTransactions || activityUnread)
+            const showActivityIndicator = isUnselectedActivity && (hasPendingActivity || activityUnread)
             const handleNavItemClick = () => {
               setCurrentPage(index)
               if (key === 'activity') setActivityUnread(false)
@@ -133,7 +133,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
                   {showActivityIndicator && (
                     <>
                       &nbsp;
-                      {hasPendingTransactions ? (
+                      {hasPendingActivity ? (
                         <LoaderV2 />
                       ) : (
                         <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">

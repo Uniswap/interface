@@ -66,9 +66,27 @@ const transactionSlice = createSlice({
       tx.receipt = receipt
       tx.confirmedTime = Date.now()
     },
+    cancelTransaction(transactions, { payload: { hash, chainId, cancelHash } }) {
+      const tx = transactions[chainId]?.[hash]
+
+      if (tx) {
+        delete transactions[chainId]?.[hash]
+        transactions[chainId][cancelHash] = {
+          ...tx,
+          hash: cancelHash,
+          cancelled: true,
+        }
+      }
+    },
   },
 })
 
-export const { addTransaction, clearAllTransactions, checkedTransaction, finalizeTransaction, removeTransaction } =
-  transactionSlice.actions
+export const {
+  addTransaction,
+  clearAllTransactions,
+  checkedTransaction,
+  finalizeTransaction,
+  removeTransaction,
+  cancelTransaction,
+} = transactionSlice.actions
 export default transactionSlice.reducer

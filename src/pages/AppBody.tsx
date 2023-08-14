@@ -1,5 +1,5 @@
-import React, { PropsWithChildren } from 'react'
-import styled from 'styled-components/macro'
+import { PropsWithChildren } from 'react'
+import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 interface BodyWrapperProps {

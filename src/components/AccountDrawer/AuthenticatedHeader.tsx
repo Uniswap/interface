@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -12,6 +11,7 @@ import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
+import useENSName from 'hooks/useENSName'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
@@ -20,9 +20,10 @@ import { ArrowDownRight, ArrowUpRight, CreditCard, IconProps, Info, LogOut, Sett
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -39,7 +40,6 @@ const AuthenticatedHeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow: auto;
 `
 
 const HeaderButton = styled(ThemeButton)`
@@ -104,7 +104,7 @@ const StatusWrapper = styled.div`
   display: inline-block;
   width: 70%;
   max-width: 70%;
-  padding-right: 14px;
+  padding-right: 8px;
   display: inline-flex;
 `
 
@@ -161,7 +161,8 @@ const LogOutCentered = styled(LogOut)`
 `
 
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
-  const { connector, ENSName } = useWeb3React()
+  const { connector } = useWeb3React()
+  const { ENSName } = useENSName(account)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const closeModal = useCloseModal()
@@ -252,9 +253,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           )}
         </StatusWrapper>
         <IconContainer>
-          {!showDisconnectConfirm && (
-            <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings} />
-          )}
+          <IconButton
+            hideHorizontal={showDisconnectConfirm}
+            data-testid="wallet-settings"
+            onClick={openSettings}
+            Icon={Settings}
+          />
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
@@ -266,6 +270,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               onShowConfirm={setShowDisconnectConfirm}
               Icon={LogOutCentered}
               text="Disconnect"
+              dismissOnHoverOut
             />
           </TraceEvent>
         </IconContainer>

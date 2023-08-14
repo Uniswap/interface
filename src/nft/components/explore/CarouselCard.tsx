@@ -1,12 +1,12 @@
-import { formatNumberOrString, NumberType } from '@uniswap/conedison/format'
 import { loadingAnimation } from 'components/Loader/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollection } from 'graphql/data/nft/Collection'
 import { UniswapMagentaIcon, VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
+import { formatNumberOrString, NumberType } from 'utils/formatNumbers'
 
 const CarouselCardBorder = styled.div`
   width: 100%;
