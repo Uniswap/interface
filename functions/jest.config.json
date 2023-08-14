@@ -1,6 +1,7 @@
 {
   "globalSetup": "<rootDir>/global-setup.ts",
   "globalTeardown": "<rootDir>/global-teardown.ts",
+  "setupFilesAfterEnv": ["<rootDir>/setupAfterEnv.ts"],
   "preset": "ts-jest",
   "transform": {
     "'^.+\\.(ts|tsx)?$'": "ts-jest",

@@ -60,9 +60,10 @@ const baseMenuItem = style([
   subhead,
   sprinkles({
     paddingY: '8',
-    paddingX: '14',
+    paddingX: { sm: '6', md: '14' },
     marginY: '4',
     borderRadius: '14',
+    marginX: { sm: '4', md: '0' },
     transition: '250',
     height: 'min',
     width: 'full',
