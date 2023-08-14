@@ -30,7 +30,7 @@ flag_management:
     - name: unit-tests
     - name: cloud-tests
       statuses:
-        - type: patch
+        - type: project
           target: 80%
 
 comment:
