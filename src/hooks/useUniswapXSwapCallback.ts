@@ -105,6 +105,7 @@ export function useUniswapXSwapCallback({
           }
         }
 
+        const beforeSign = Date.now()
         const { signature, updatedOrder } = await signDutchOrder()
 
         sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
@@ -112,6 +113,7 @@ export function useUniswapXSwapCallback({
             trade,
             allowedSlippage,
             fiatValues,
+            timeToSignSinceRequestMs: Date.now() - beforeSign,
           }),
           ...analyticsContext,
         })

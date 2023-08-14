@@ -1,12 +1,12 @@
 import { t } from '@lingui/macro'
-import { ChainId, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { nativeOnChain } from 'constants/tokens'
 import {
   ActivityType,
   AssetActivityPartsFragment,
-  Currency,
+  Currency as GQLCurrency,
   NftApprovalPartsFragment,
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
@@ -17,7 +17,7 @@ import {
   TokenTransferPartsFragment,
   TransactionDetailsPartsFragment,
 } from 'graphql/data/__generated__/types-and-hooks'
-import { logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
@@ -142,7 +142,7 @@ function getSwapDescriptor({
  */
 function formatTransactedValue(transactedValue: TokenTransferPartsFragment['transactedValue']): string {
   if (!transactedValue) return '-'
-  const price = transactedValue?.currency === Currency.Usd ? transactedValue.value ?? undefined : undefined
+  const price = transactedValue?.currency === GQLCurrency.Usd ? transactedValue.value ?? undefined : undefined
   return formatFiatPrice(price)
 }
 
@@ -156,7 +156,9 @@ function parseSwap(changes: TransactionChanges) {
       .join()
 
     return { title, descriptor }
-  } else if (changes.TokenTransfer.length === 2) {
+  }
+  // Some swaps may have more than 2 transfers, e.g. swaps with fees on tranfer
+  if (changes.TokenTransfer.length >= 2) {
     const sent = changes.TokenTransfer.find((t) => t?.__typename === 'TokenTransfer' && t.direction === 'OUT')
     const received = changes.TokenTransfer.find((t) => t?.__typename === 'TokenTransfer' && t.direction === 'IN')
     if (sent && received) {
@@ -165,6 +167,7 @@ function parseSwap(changes: TransactionChanges) {
       return {
         title: getSwapTitle(sent, received),
         descriptor: getSwapDescriptor({ tokenIn: sent.asset, inputAmount, tokenOut: received.asset, outputAmount }),
+        currencies: [gqlToCurrency(sent.asset), gqlToCurrency(received.asset)],
       }
     }
   }
@@ -179,7 +182,8 @@ function parseApprove(changes: TransactionChanges) {
   if (changes.TokenApproval.length === 1) {
     const title = parseInt(changes.TokenApproval[0].quantity) === 0 ? t`Revoked Approval` : t`Approved`
     const descriptor = `${changes.TokenApproval[0].asset.symbol}`
-    return { title, descriptor }
+    const currencies = [gqlToCurrency(changes.TokenApproval[0].asset)]
+    return { title, descriptor, currencies }
   }
   return { title: t`Unknown Approval` }
 }
@@ -194,6 +198,7 @@ function parseLPTransfers(changes: TransactionChanges) {
   return {
     descriptor: `${tokenAQuanitity} ${poolTokenA.asset.symbol} and ${tokenBQuantity} ${poolTokenB.asset.symbol}`,
     logos: [poolTokenA.asset.project?.logo?.url, poolTokenB.asset.project?.logo?.url],
+    currencies: [gqlToCurrency(poolTokenA.asset), gqlToCurrency(poolTokenB.asset)],
   }
 }
 
@@ -210,6 +215,7 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: Transactio
   let transfer: NftTransferPartsFragment | TokenTransferPartsFragment | undefined
   let assetName: string | undefined
   let amount: string | undefined
+  let currencies: (Currency | undefined)[] | undefined
 
   if (changes.NftTransfer.length === 1) {
     transfer = changes.NftTransfer[0]
@@ -219,6 +225,7 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: Transactio
     transfer = changes.TokenTransfer[0]
     assetName = transfer.asset.symbol
     amount = formatNumberOrString(transfer.quantity, NumberType.TokenNonTx)
+    currencies = [gqlToCurrency(transfer.asset)]
   }
 
   if (transfer && assetName && amount) {
@@ -230,17 +237,20 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: Transactio
             title: t`Purchased`,
             descriptor: `${amount} ${assetName} ${t`for`} ${formatTransactedValue(transfer.transactedValue)}`,
             logos: [moonpayLogoSrc],
+            currencies,
           }
         : {
             title: t`Received`,
             descriptor: `${amount} ${assetName} ${t`from`} `,
             otherAccount: isAddress(transfer.sender) || undefined,
+            currencies,
           }
     } else {
       return {
         title: t`Sent`,
         descriptor: `${amount} ${assetName} ${t`to`} `,
         otherAccount: isAddress(transfer.recipient) || undefined,
+        currencies,
       }
     }
   }
@@ -276,7 +286,7 @@ const ActivityParserByType: { [key: string]: ActivityTypeParser | undefined } = 
   [ActivityType.Unknown]: parseUnknown,
 }
 
-function getLogoSrcs(changes: TransactionChanges): string[] {
+function getLogoSrcs(changes: TransactionChanges): Array<string | undefined> {
   // Uses set to avoid duplicate logos (e.g. nft's w/ same image url)
   const logoSet = new Set<string | undefined>()
   // Uses only NFT logos if they are present (will not combine nft image w/ token image)
@@ -286,7 +296,7 @@ function getLogoSrcs(changes: TransactionChanges): string[] {
     changes.TokenTransfer.forEach((tokenChange) => logoSet.add(tokenChange.asset.project?.logo?.url))
     changes.TokenApproval.forEach((tokenChange) => logoSet.add(tokenChange.asset.project?.logo?.url))
   }
-  return Array.from(logoSet).filter(Boolean) as string[]
+  return Array.from(logoSet)
 }
 
 function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity | undefined {
@@ -321,6 +331,7 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
     offchainOrderStatus: uniswapXOrderStatus,
     timestamp,
     logos: [inputToken.project?.logo?.url, outputToken.project?.logo?.url],
+    currencies: [gqlToCurrency(inputToken), gqlToCurrency(outputToken)],
     title,
     descriptor,
     from: details.offerer,

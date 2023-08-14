@@ -4,6 +4,9 @@ test.each(defaultUrls)('should inject metadata for valid collections', async (de
   const body = await fetch(new Request(defaultUrl)).then((res) => res.text())
   expect(body).toContain(`<meta property="og:title" content="Uniswap Interface"/>`)
   expect(body).toContain(
+    `<meta property="og:description" content="Swap or provide liquidity on the Uniswap Protocol"/>`
+  )
+  expect(body).toContain(
     `<meta property="og:image" content="http://127.0.0.1:3000/images/1200x630_Rich_Link_Preview_Image.png"/>`
   )
   expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
