@@ -226,11 +226,6 @@ jobs:
           key: ${{ runner.os }}-cloud-jest-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-cloud-jest-
       - run: yarn test:cloud --coverage --maxWorkers=100%
-      - if: failure() && github.ref_name == 'main'
-        uses: ./.github/actions/report
-        with:
-          name: Cloud tests
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
         
   pre:
     if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
