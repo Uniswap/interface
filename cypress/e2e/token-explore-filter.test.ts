@@ -5,7 +5,9 @@ describe('Token explore filter', () => {
 
   function aliasFilteredTokens(filter: string) {
     cy.get('[data-cy="token-name"]').then((tokens) => {
-      cy.wrap(Array.from(tokens).filter((token) => token.innerText.toLowerCase().includes(filter))).as('filteredTokens')
+      const filtered = Array.from(tokens).filter((token) => token.innerText.toLowerCase().includes(filter))
+      console.log('WTF1', filtered)
+      cy.wrap(filtered).as('filteredTokens')
     })
   }
 
@@ -18,7 +20,9 @@ describe('Token explore filter', () => {
     searchFor('dao')
 
     cy.get('@filteredTokens').then((filteredTokens) => {
-      cy.get('[data-cy="token-name"]').should('deep.equal', filteredTokens)
+      cy.get('[data-cy="token-name"]').then((tokens) => {
+        cy.wrap(Array.from(tokens)).should('deep.equal', Array.from(filteredTokens))
+      })
     })
   })
 })
