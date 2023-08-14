@@ -36,3 +36,14 @@ test('getData should not be called when request is cached', async () => {
   expect(Cache.match).toHaveBeenCalledWith(url)
   expect(getData).not.toHaveBeenCalled()
 })
+
+// test('should return formatted header when request is cached', async () => {
+//   const url = 'https://example.com'
+//   const data = {
+//     title: 'test',
+//     image: 'testImage',
+//     url: 'testUrl',
+//   }
+//   mocked(Cache.match).mockResolvedValueOnce(data)
+
+// })
