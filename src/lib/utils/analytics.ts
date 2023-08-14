@@ -81,7 +81,7 @@ function getQuoteMethod(trade: InterfaceTrade) {
 export const formatSwapQuoteReceivedEventProperties = (
   trade: InterfaceTrade,
   allowedSlippage: Percent,
-  swapQuoteLatency: number | undefined
+  swapQuoteLatencyMs: number | undefined
 ) => {
   return {
     ...formatCommonPropertiesForTrade(trade, allowedSlippage),
@@ -89,6 +89,6 @@ export const formatSwapQuoteReceivedEventProperties = (
     allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
     token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
     token_out_amount_min: trade.minimumAmountOut(allowedSlippage).toExact(),
-    quote_latency_milliseconds: swapQuoteLatency,
+    quote_latency_milliseconds: swapQuoteLatencyMs,
   }
 }
