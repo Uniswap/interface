@@ -46,4 +46,5 @@ initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
   defaultEventName: SharedEventName.PAGE_VIEWED,
   commitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
   isProductionEnv: isProductionEnv(),
+  debug: true,
 })
