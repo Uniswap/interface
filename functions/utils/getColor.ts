@@ -63,5 +63,13 @@ function getAverageColor(arrayBuffer: Uint8Array, type?: string) {
   g = Math.floor(g / (pixelCount - transparentPixels))
   b = Math.floor(b / (pixelCount - transparentPixels))
 
+  const distance = Math.sqrt(Math.pow(r - 255, 2) + Math.pow(g - 255, 2) + Math.pow(b - 255, 2))
+
+  if (distance < 50) {
+    r -= 20
+    g -= 20
+    b -= 20
+  }
+
   return [r, g, b]
 }
