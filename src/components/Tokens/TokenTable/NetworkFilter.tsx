@@ -1,11 +1,8 @@
+import { ChainId } from '@uniswap/sdk-core'
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
-import {
-  BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
-  BACKEND_SUPPORTED_CHAINS,
-  supportedChainIdFromGQLChain,
-  validateUrlChainParam,
-} from 'graphql/data/util'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
+import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
@@ -123,6 +120,9 @@ export default function NetworkFilter() {
 
   const chainInfo = getChainInfo(supportedChainIdFromGQLChain(currentChainName))
 
+  const SUPPORTED_CHAINS = [Chain.Ethereum, Chain.Polygon, Chain.Arbitrum, Chain.Optimism, Chain.Celo]
+  const UNSUPPORTED_CHAINS = [ChainId.AVALANCHE, ChainId.BASE, ChainId.BNB]
+
   return (
     <StyledMenu ref={node}>
       <NetworkFilterOption
@@ -146,8 +146,9 @@ export default function NetworkFilter() {
       </NetworkFilterOption>
       {open && (
         <MenuTimeFlyout>
-          {BACKEND_SUPPORTED_CHAINS.map((network) => {
+          {SUPPORTED_CHAINS.map((network) => {
             const chainInfo = getChainInfo(supportedChainIdFromGQLChain(network))
+            if (!chainInfo) return null
             return (
               <InternalLinkMenuItem
                 key={network}
@@ -169,8 +170,8 @@ export default function NetworkFilter() {
               </InternalLinkMenuItem>
             )
           })}
-          {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
-            const chainInfo = getChainInfo(network)
+          {UNSUPPORTED_CHAINS.map((network) => {
+            const chainInfo = getChainInfo(network as ChainId)
             return (
               <InternalLinkMenuItem
                 key={network}

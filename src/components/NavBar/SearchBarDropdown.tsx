@@ -10,7 +10,6 @@ import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-a
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
-import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'graphql/data/util'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
@@ -137,7 +136,8 @@ interface SearchBarDropdownProps {
 export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
   const { isLoading } = props
   const { chainId } = useWeb3React()
-  const showChainComingSoonBadge = chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) && !isLoading
+  const COMING_SOON_CHAINS = new Set([ChainId.BNB, ChainId.AVALANCHE])
+  const showChainComingSoonBadge = chainId && COMING_SOON_CHAINS.has(chainId) && !isLoading
   const logoUri = getChainInfo(chainId)?.logoUrl
 
   return (
