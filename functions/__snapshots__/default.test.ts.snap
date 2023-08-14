@@ -63,7 +63,7 @@ exports[`should inject metadata for valid collections 1`] = `
 
       @font-face {
         font-family: 'Basel';
-        font-weight: 435;
+        font-weight: 485;
         font-style: normal;
         font-display: block;
         font-named-instance: 'Book';
@@ -209,7 +209,7 @@ exports[`should inject metadata for valid collections 2`] = `
 
       @font-face {
         font-family: 'Basel';
-        font-weight: 435;
+        font-weight: 485;
         font-style: normal;
         font-display: block;
         font-named-instance: 'Book';
@@ -355,7 +355,7 @@ exports[`should inject metadata for valid collections 3`] = `
 
       @font-face {
         font-family: 'Basel';
-        font-weight: 435;
+        font-weight: 485;
         font-style: normal;
         font-display: block;
         font-named-instance: 'Book';

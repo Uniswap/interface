@@ -185,7 +185,7 @@ const CollectionNameContainer = styled.div`
 
 const CollectionHeader = styled.span`
   font-size: 16px;
-  font-weight: 435;
+  font-weight: 485;
   line-height: 24px;
   color: ${({ theme }) => theme.neutral1};
   text-decoration: none;

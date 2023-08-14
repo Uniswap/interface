@@ -419,7 +419,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
 const StyledMissingChart = styled.svg`
   text {
     font-size: 12px;
-    font-weight: 435;
+    font-weight: 485;
   }
 `
 const chartBottomPadding = 15

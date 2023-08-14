@@ -9,7 +9,7 @@ import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 const BodyRow = styled.div`
   color: ${({ theme }) => theme.neutral1};
   font-size: 12px;
-  font-weight: 435;
+  font-weight: 485;
   font-size: 14px;
   line-height: 20px;
 `

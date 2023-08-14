@@ -99,7 +99,7 @@ const ClaimContainer = styled.div`
 `
 
 const SuccessText = styled.div`
-  font-weight: 435;
+  font-weight: 485;
   font-size: 16px;
   line-height: 24px;
   margin-top: 24px;

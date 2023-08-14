@@ -71,7 +71,7 @@ const InputContainer = styled.input`
   border-radius: 8px;
   padding: 6px 8px;
   font-size: 16px;
-  font-weight: 435px;
+  font-weight: 485;
   line-height: 20px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {

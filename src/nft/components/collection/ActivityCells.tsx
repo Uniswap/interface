@@ -40,7 +40,7 @@ import * as styles from './Activity.css'
 const AddressLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral1};
   text-decoration: none;
-  font-weight: 435;
+  font-weight: 485;
   line-height: 20px;
   a {
     color: ${({ theme }) => theme.neutral1};

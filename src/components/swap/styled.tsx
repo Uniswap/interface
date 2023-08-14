@@ -44,7 +44,7 @@ export const SwapWrapper = styled.main<{ isDark?: boolean }>`
 export const UniswapPopoverContainer = styled.div`
   padding: 18px;
   color: ${({ theme }) => theme.neutral1};
-  font-weight: 435;
+  font-weight: 485;
   font-size: 12px;
   line-height: 16px;
   word-break: break-word;

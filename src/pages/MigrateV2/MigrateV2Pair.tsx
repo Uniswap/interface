@@ -516,7 +516,7 @@ function V2PairMigration({
                   </ThemedText.DeprecatedBlack>
                 </RowBetween>
               </AutoColumn>
-              <ThemedText.DeprecatedBody fontSize={14} style={{ marginTop: 8, fontWeight: 435 }}>
+              <ThemedText.DeprecatedBody fontSize={14} style={{ marginTop: 8, fontWeight: 485 }}>
                 <Trans>
                   You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <br />
                   If the price seems incorrect, you can either make a swap to move the price or wait for someone else to

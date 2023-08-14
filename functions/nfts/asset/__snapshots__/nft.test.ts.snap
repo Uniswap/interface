@@ -62,7 +62,7 @@ exports[`should inject metadata for valid assets 1`] = `
 
       @font-face {
         font-family: 'Basel';
-        font-weight: 435;
+        font-weight: 485;
         font-style: normal;
         font-display: block;
         font-named-instance: 'Book';
@@ -207,7 +207,7 @@ exports[`should inject metadata for valid assets 2`] = `
 
       @font-face {
         font-family: 'Basel';
-        font-weight: 435;
+        font-weight: 485;
         font-style: normal;
         font-display: block;
         font-named-instance: 'Book';
@@ -352,7 +352,7 @@ exports[`should inject metadata for valid assets 3`] = `
 
       @font-face {
         font-family: 'Basel';
-        font-weight: 435;
+        font-weight: 485;
         font-style: normal;
         font-display: block;
         font-named-instance: 'Book';

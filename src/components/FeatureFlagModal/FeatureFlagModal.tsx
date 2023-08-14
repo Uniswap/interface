@@ -25,7 +25,7 @@ const StyledModal = styled.div`
   color: ${({ theme }) => theme.neutral1};
   font-size: 18px;
   padding: 20px;
-  background-color: ${({ theme }) => theme.surface1};
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
   z-index: 100;

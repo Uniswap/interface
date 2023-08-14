@@ -11,7 +11,7 @@ import Resource from './Resource'
 
 const NoInfoAvailable = styled.span`
   color: ${({ theme }) => theme.neutral3};
-  font-weight: 435;
+  font-weight: 485;
   font-size: 16px;
 `
 const TokenDescriptionContainer = styled.div`
@@ -26,7 +26,7 @@ const TokenDescriptionContainer = styled.div`
 
 const TruncateDescriptionButton = styled.div`
   color: ${({ theme }) => theme.neutral2};
-  font-weight: 435;
+  font-weight: 485;
   font-size: 0.85em;
   padding-top: 0.5em;
 

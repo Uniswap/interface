@@ -27,7 +27,7 @@ const SearchInput = styled.input`
   height: 100%;
   width: min(200px, 100%);
   font-size: 16px;
-  font-weight: 435;
+  font-weight: 485;
   padding-left: 40px;
   color: ${({ theme }) => theme.neutral2};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
