@@ -18,7 +18,8 @@ import { MintState } from './mint/reducer'
 import { Field as FieldV3 } from './mint/v3/actions'
 import { FullRange, MintState as MintV3State } from './mint/v3/reducer'
 import { AppState } from './reducer'
-import { RouterPreference, routingApi } from './routing/slice'
+import { routingApi } from './routing/slice'
+import { RouterPreference } from './routing/types'
 import { SignatureState } from './signatures/reducer'
 import { TransactionState } from './transactions/reducer'
 import { TransactionDetails } from './transactions/types'
@@ -85,7 +86,7 @@ interface ExpectedUserState {
   }
   timestamp: number
   URLWarningVisible: boolean
-  hideUniswapWalletBanner: boolean
+  hideBaseWalletBanner: boolean
   showSurveyPopup?: boolean
   disabledUniswapX?: boolean
 }

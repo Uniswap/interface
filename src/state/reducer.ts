@@ -1,7 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import multicall from 'lib/state/multicall'
+import localForage from 'localforage'
 import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import application from './application/reducer'
 import burn from './burn/reducer'
@@ -39,13 +39,25 @@ const appReducer = combineReducers({
 
 export type AppState = ReturnType<typeof appReducer>
 
+function createStorage(dbName: string) {
+  const db = localForage.createInstance({
+    name: dbName,
+  })
+  return {
+    getItem: db.getItem,
+    setItem: db.setItem,
+    removeItem: db.removeItem,
+  }
+}
+
 const persistConfig = {
   key: 'root',
   version: 0, // see migrations.ts for more details about this version
-  storage,
+  storage: createStorage('redux'),
   migrate: customCreateMigrate(migrations, { debug: false }),
   whitelist: Object.keys(persistedReducers),
   throttle: 1000, // ms
+  serialize: false,
 }
 
 const persistedReducer = persistReducer(persistConfig, appReducer)
