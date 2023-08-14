@@ -88,7 +88,6 @@ export function useUniswapXSwapCallback({
             trade,
             allowedSlippage,
             fiatValues,
-            // measures the amount of time the user took to sign the permit message in their wallet
             timeToSignSinceRequestMs: Date.now() - beforeSign,
           }),
           ...analyticsContext,

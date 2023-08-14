@@ -76,6 +76,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   transaction_hash: txHash,
   token_in_amount_usd: fiatValues.amountIn,
   token_out_amount_usd: fiatValues.amountOut,
+  // measures the amount of time the user took to sign the permit message or swap tx in their wallet
   time_to_sign_since_request_ms: timeToSignSinceRequestMs,
   ...formatCommonPropertiesForTrade(trade, allowedSlippage),
 })
