@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
-import { Settings } from 'components/Icons/Settings'
 import IconButton from 'components/AccountDrawer/IconButton'
 import { AutoColumn } from 'components/Column'
+import { Settings } from 'components/Icons/Settings'
 import { AutoRow } from 'components/Row'
 import { connections, networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
