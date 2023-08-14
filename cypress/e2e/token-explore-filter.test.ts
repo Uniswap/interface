@@ -5,9 +5,7 @@ describe('Token explore filter', () => {
 
   function aliasFilteredTokens(filter: string) {
     cy.get('[data-cy="token-name"]').then((tokens) => {
-      const filtered = Array.from(tokens).filter((token) => token.innerText.toLowerCase().includes(filter))
-      console.log('WTF1', filtered)
-      cy.wrap(filtered).as('filteredTokens')
+      cy.wrap(Array.from(tokens).filter((token) => token.innerText.toLowerCase().includes(filter))).as('filteredTokens')
     })
   }
 
