@@ -1,4 +1,6 @@
+import { ButtonEmpty } from 'components/Button'
 import { Box } from 'rebass'
+import styled, { useTheme } from 'styled-components/macro'
 
 export interface SelectorItem {
   text: string
@@ -14,23 +16,31 @@ interface CustomSelectorProps {
   handleChange: (item: SelectorItem) => void
 }
 
+const SelectorLayout = styled.div`
+  width: 100%;
+  display: flex;
+`
+
 export default function CustomSelector({ height, items, selectedItem, handleChange }: CustomSelectorProps) {
+  const theme = useTheme()
+
   return (
-    <Box>
+    <SelectorLayout>
       {items.map((item) => (
-        <Box key={item.id} className="flex items-center">
-          {item.hasSeparator && <Box mr={1} height={height} className="customSelectorSeparator" />}
-          <Box
+        <Box key={item.text} className="flex items-center">
+          <ButtonEmpty
+            style={{
+              color: item.link === selectedItem.link ? theme.accentActive : theme.accentAction,
+            }}
             height={height}
-            className={`customSelector ${item.id === selectedItem.id ? 'selectedCustomSelector' : ''}`}
             onClick={() => {
               handleChange(item)
             }}
           >
             <small>{item.text}</small>
-          </Box>
+          </ButtonEmpty>
         </Box>
       ))}
-    </Box>
+    </SelectorLayout>
   )
 }

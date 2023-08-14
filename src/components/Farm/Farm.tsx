@@ -1,31 +1,53 @@
 import { useWeb3React } from '@web3-react/core'
 import CustomSelector, { SelectorItem } from 'components/CustomSelector/CustomSelector'
 import CustomSwitch from 'components/CustomSwitch/CustomSwitch'
+import CustomTabSwitch from 'components/CustomTabSwitch/CustomTabSwitch'
+import SearchInput from 'components/SearchInput/SearchInput'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useIsMobile } from 'nft/hooks'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import { Box } from 'rebass'
 import styled from 'styled-components/macro'
 
-import { GammaPair, GammaPairs } from './constants'
+import { GammaPair, GammaPairs, GlobalConst } from './constants'
+import SortColumns from './SortColumn'
 
 const FarmsLayout = styled.div`
   width: 100%;
-  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  padding: 0 10px 0 10px;
+  background: ${({ theme }) => theme.backgroundScrolledSurface};
 `
 const Header = styled.div`
   width: 100%;
-  padding-top: 4px;
+  padding-top: 10px;
   justify-content: space-between;
   display: flex;
 `
 
 const Switch = styled.div`
   display: flex;
-  width: 100%;
   align-items: center;
+`
+
+const TabSwitchLayout = styled.div`
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+  background: ${({ theme }) => theme.backgroundModule};
+  border-radius: 16px;
+`
+
+const TabFiltersLayout = styled.div`
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+`
+const ThemeToggleContainer = styled.div`
+  margin: 0 0 6px;
 `
 
 export function Farms() {
@@ -35,6 +57,7 @@ export function Farms() {
   const { chainId } = useWeb3React()
   const navigate = useNavigate()
   const location = useLocation()
+  const [searchValue, setSearchValue] = useState('')
 
   const allGammaFarms = useMemo(() => {
     if (!chainId) return []
@@ -70,11 +93,11 @@ export function Farms() {
             id: 0,
             link: 'my-farms',
           },
-          // {
-          //   text: 'pegasysFarms',
-          //   id: 1,
-          //   link: 'pegasys-farms',
-          // },
+          {
+            text: 'pegasysFarms',
+            id: 1,
+            link: 'pegasys-farms',
+          },
           {
             text: 'gammaFarms',
             id: 1,
@@ -89,7 +112,7 @@ export function Farms() {
             link: 'my-farms',
           },
           {
-            text: 'quickswapFarms',
+            text: 'pegasysFarms',
             id: 1,
             link: 'eternal-farms',
           },
@@ -114,20 +137,91 @@ export function Farms() {
 
   const farmStatusItems = [
     {
-      text: 'active',
+      text: 0,
       onClick: () => {
         redirectWithFarmStatus('active')
       },
       condition: farmStatus === 'active',
     },
     {
-      text: 'ended',
+      text: 1,
       onClick: () => {
         redirectWithFarmStatus('ended')
       },
       condition: farmStatus === 'ended',
     },
   ]
+
+  const farmFilters = useMemo(
+    () => [
+      {
+        text: 'allFarms',
+        id: GlobalConst.utils.v3FarmFilter.allFarms,
+      },
+      {
+        text: 'stablecoins',
+        id: GlobalConst.utils.v3FarmFilter.stableCoin,
+      },
+      {
+        text: 'blueChips',
+        id: GlobalConst.utils.v3FarmFilter.blueChip,
+      },
+      {
+        text: 'stableLPs',
+        id: GlobalConst.utils.v3FarmFilter.stableLP,
+      },
+      {
+        text: 'otherLPs',
+        id: GlobalConst.utils.v3FarmFilter.otherLP,
+      },
+    ],
+    []
+  )
+
+  const sortColumns = [
+    {
+      text: 'pool',
+      index: GlobalConst.utils.v3FarmSortBy.pool,
+      width: 0.3,
+      justify: 'flex-start',
+    },
+    {
+      text: 'tvl',
+      index: GlobalConst.utils.v3FarmSortBy.tvl,
+      width: 0.2,
+      justify: 'flex-start',
+    },
+    {
+      text: 'rewards',
+      index: GlobalConst.utils.v3FarmSortBy.rewards,
+      width: 0.3,
+      justify: 'flex-start',
+    },
+    {
+      text: 'apr',
+      index: GlobalConst.utils.v3FarmSortBy.apr,
+      width: 0.2,
+      justify: 'flex-start',
+    },
+  ]
+
+  const sortByDesktopItems = sortColumns.map((item) => {
+    return {
+      ...item,
+      onClick: () => {
+        if (sortBy === item.index) {
+          setSortDesc(!sortDesc)
+        } else {
+          setSortBy(item.index)
+          setSortDesc(false)
+        }
+      },
+    }
+  })
+
+  const [farmFilter, setFarmFilter] = useState(farmFilters[0])
+  const [sortBy, setSortBy] = useState(GlobalConst.utils.v3FarmSortBy.pool)
+  const [sortDesc, setSortDesc] = useState(false)
 
   return (
     <FarmsLayout>
@@ -141,31 +235,33 @@ export function Farms() {
         <Switch>
           {selectedFarmCategory.id !== 0 && (
             <div style={{ marginTop: isMobile ? 2 : 0, width: isMobile ? '100%' : 160 }}>
-              <CustomSwitch width="100%" height={40} items={farmStatusItems} />
+              <ThemeToggleContainer>
+                <CustomSwitch items={farmStatusItems} />
+              </ThemeToggleContainer>
             </div>
           )}
-          <div style={{ marginTop: isMobile ? 2 : 0, marginLeft: isMobile ? 0 : 2, width: isMobile ? '100%' : 200 }}>
-            {/* <SearchInput placeholder="Search" value={searchValue} setValue={setSearchValue} isIconAfter /> */}
+          <div style={{ marginTop: isMobile ? 2 : 0, marginLeft: isMobile ? 0 : 10, width: isMobile ? '100%' : 200 }}>
+            <ThemeToggleContainer>
+              <SearchInput placeholder="Search" value={searchValue} setValue={setSearchValue} isIconAfter />
+            </ThemeToggleContainer>
           </div>
         </Switch>
       </Header>
 
       {selectedFarmCategory.id !== 0 && (
         <>
-          <Box mt={2} pl="12px" className="bg-secondary1">
-            {/* <CustomTabSwitch
+          <TabSwitchLayout>
+            <CustomTabSwitch
               items={farmFilters}
               selectedItem={farmFilter}
               handleTabChange={setFarmFilter}
               height={50}
-            /> */}
-          </Box>
+            />
+          </TabSwitchLayout>
           {!isMobile && (
-            <Box mt={2} px={3.5}>
-              <Box width="90%">
-                {/* <SortColumns sortColumns={sortByDesktopItems} selectedSort={sortBy} sortDesc={sortDesc} /> */}
-              </Box>
-            </Box>
+            <TabFiltersLayout>
+              <SortColumns sortColumns={sortByDesktopItems} selectedSort={sortBy} sortDesc={sortDesc} />
+            </TabFiltersLayout>
           )}
         </>
       )}

@@ -916,3 +916,25 @@ export const GammaPairs: {
     ],
   },
 }
+
+export const GlobalConst = {
+  utils: {
+    v3FarmSortBy: {
+      pool: '1',
+      tvl: '2',
+      rewards: '3',
+      apr: '4',
+    },
+    v3FarmFilter: {
+      allFarms: '0',
+      stableCoin: '1',
+      blueChip: '2',
+      stableLP: '3',
+      otherLP: '4',
+    },
+  },
+  v3LiquidityRangeType: {
+    MANUAL_RANGE: '0',
+    GAMMA_RANGE: '1',
+  },
+}
