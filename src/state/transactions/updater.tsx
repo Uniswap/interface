@@ -7,7 +7,6 @@ import LibUpdater from 'lib/hooks/transactions/updater'
 import { useCallback, useMemo } from 'react'
 import { PopupType } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { SignedTransactionTimestampRegistry } from 'tracing/SignedTransactionTimestampRegistry'
 
 import { L2_CHAIN_IDS } from '../../constants/chains'
 import { useAddPopup } from '../application/hooks'
@@ -76,7 +75,6 @@ export default function Updater() {
       sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
         // if timeToSwap was already set, we already logged this session
         time_to_swap: hasReportedTimeToSwap ? undefined : elapsedTime,
-        time_to_sign: hasReportedTimeToSwap ? undefined : SignedTransactionTimestampRegistry.getInstance().get(hash),
         chainId,
         hash,
         ...analyticsContext,
