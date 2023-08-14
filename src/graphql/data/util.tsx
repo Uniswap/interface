@@ -130,14 +130,23 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   avalanche: Chain.Avalanche,
 }
 
+const SUPPORTED_CHAINS = new Set([
+  Chain.Arbitrum,
+  Chain.Avalanche,
+  Chain.Base,
+  Chain.Bnb,
+  Chain.Celo,
+  Chain.Ethereum,
+  Chain.Optimism,
+  Chain.Polygon,
+])
 /**
  * @param chainName parsed in chain name from url query parameter
  * @returns if chainName is a valid chain name supported by the backend, returns the backend chain name, otherwise returns Chain.Ethereum
  */
 export function validateUrlChainParam(chainName: string | undefined) {
   const isValidChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
-  const isValidBackEndChain =
-    isValidChainName && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(isValidChainName)
+  const isValidBackEndChain = isValidChainName && SUPPORTED_CHAINS.has(isValidChainName)
   return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
@@ -179,16 +188,6 @@ export function logSentryErrorForUnsupportedChain({
     Sentry.captureException(new Error(errorMessage))
   })
 }
-
-export const BACKEND_SUPPORTED_CHAINS = [
-  Chain.Ethereum,
-  Chain.Polygon,
-  Chain.Arbitrum,
-  Chain.Optimism,
-  Chain.Celo,
-  Chain.Base,
-] as const
-export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE] as const
 
 export function getTokenDetailsURL({
   address,
