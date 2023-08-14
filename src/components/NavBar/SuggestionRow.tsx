@@ -174,7 +174,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
           symbol={token.symbol}
           size="36px"
           backupImg={token.project?.logoUrl}
-          style={{ paddingRight: '8px' }}
+          style={{ marginRight: '8px' }}
         />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
