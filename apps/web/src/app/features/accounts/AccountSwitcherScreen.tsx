@@ -1,12 +1,13 @@
-import { LinearGradient } from '@tamagui/linear-gradient'
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
-import { Icons, ScrollView, Text, Theme, validToken, XStack, YStack } from 'ui/src'
+import { Icons, ScrollView, Text, validToken, XStack, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { adjustColor, useUniconColors } from 'ui/src/components/Unicon/utils'
+import { useUniconColors } from 'ui/src/components/Unicon/utils'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import {
   createAccountActions,
@@ -23,6 +24,7 @@ import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 export function AccountSwitcherScreen(): JSX.Element {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
 
   const activeAddress = useActiveAccountAddressWithThrow()
   const accounts = useAppSelector(selectAllAccountsSorted)
@@ -45,58 +47,50 @@ export function AccountSwitcherScreen(): JSX.Element {
   const onCreateWallet = async (): Promise<void> => {
     await dispatch(createAccountActions.trigger())
   }
-  const uniconAccentColor = adjustColor(glow, -100)
 
   return (
-    <Theme name="dark">
-      <LinearGradient
-        colors={['$surface2', uniconAccentColor]}
-        end={[0, 0]}
-        height="100%"
-        start={[0, 1]}
-        width="100%">
-        {/* TODO: generalize into a flexible header component */}
-        <XStack
-          alignItems="center"
-          paddingBottom="$spacing12"
-          paddingHorizontal="$spacing12"
-          paddingTop="$spacing16">
-          <Flex onPress={onClose}>
-            <Icons.X color="$textSecondary" height={iconSizes.icon20} width={iconSizes.icon20} />
+    <YStack
+      backgroundColor="$surface1"
+      gap="$spacing12"
+      paddingHorizontal="$spacing12"
+      paddingVertical="$spacing8">
+      <ScreenHeader title={t('Your wallets')} />
+      <ScrollView backgroundColor="$surface1" borderBottomEndRadius="$rounded16" height="auto">
+        <YStack gap="$spacing12">
+          {accountAddresses.map((address: string) => {
+            return (
+              <AccountItem
+                key={address}
+                accentColor={validToken(glow)}
+                address={address}
+                selected={activeAddress === address}
+                onAccountSelect={async (): Promise<void> => {
+                  await dispatch(setAccountAsActive(address))
+                  navigate(-1)
+                }}
+              />
+            )
+          })}
+        </YStack>
+        <XStack alignItems="center" cursor="pointer" gap="$spacing12" marginTop="$spacing12">
+          <Flex
+            centered
+            borderColor="$surface2"
+            borderRadius="$roundedFull"
+            borderWidth={1}
+            height={iconSizes.icon36}
+            width={iconSizes.icon36}>
+            <Icons.Plus color="$neutral2" height={iconSizes.icon20} width={iconSizes.icon20} />
           </Flex>
-          <Flex alignItems="center" flexGrow={1}>
-            <Text variant="bodyLarge">Your wallets</Text>
-          </Flex>
-          {/* have an invisible X component so the title is center aligned. */}
-          <Flex opacity={0}>
-            <Icons.X height={iconSizes.icon20} width={iconSizes.icon20} />
-          </Flex>
-        </XStack>
-
-        <ScrollView>
-          <YStack>
-            {accountAddresses.map((address: string) => {
-              return (
-                <AccountItem
-                  key={address}
-                  accentColor={validToken(glow)}
-                  address={address}
-                  selected={activeAddress === address}
-                  onAccountSelect={async (): Promise<void> => {
-                    await dispatch(setAccountAsActive(address))
-                    navigate(-1)
-                  }}
-                />
-              )
-            })}
-          </YStack>
-        </ScrollView>
-        <Flex alignItems="center" cursor="pointer" paddingBottom="$spacing12">
-          <Text color="$neutral2" variant="bodyLarge" onPress={onCreateWallet}>
-            Create another wallet
+          <Text
+            color="$neutral2"
+            paddingVertical="$spacing8"
+            variant="bodyLarge"
+            onPress={onCreateWallet}>
+            Add wallet
           </Text>
-        </Flex>
-      </LinearGradient>
-    </Theme>
+        </XStack>
+      </ScrollView>
+    </YStack>
   )
 }

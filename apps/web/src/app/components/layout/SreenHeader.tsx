@@ -18,16 +18,15 @@ export function ScreenHeader({
   return (
     <XStack alignItems="center" width="100%">
       <Button padding="$none" onPress={onBackClick ?? navigateBack}>
-        <Icons.BackArrow
-          color="$neutral2"
-          fillOpacity={1}
-          height={iconSizes.icon24}
-          width={iconSizes.icon24}
-        />
+        <Icons.BackArrow color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
       </Button>
 
       {/* When there's no right column, we adjust the margin to match the icon width. This is so that the title is centered on the screen. */}
-      <Flex centered flex={1} marginRight={rightColumn ? '$none' : iconSizes.icon24}>
+      <Flex
+        centered
+        flex={1}
+        marginRight={rightColumn ? '$none' : iconSizes.icon24}
+        paddingVertical="$spacing8">
         <Text variant="bodyLarge">{title}</Text>
       </Flex>
 

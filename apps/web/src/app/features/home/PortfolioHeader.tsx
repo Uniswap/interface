@@ -21,7 +21,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
   const displayName = useDisplayName(address)?.name
 
   const onPressAccount = (): void => {
-    navigate(AppRoutes.AccountSwitcher.valueOf())
+    navigate(AppRoutes.AccountSwitcher)
   }
 
   // Value does not matter, only used as a trigger to re-render the component when the dapp connection status changes

@@ -39,18 +39,21 @@ export function AccountItem({
   }
 
   return (
+    // TODO(EXT-248): Change to TouchableArea
+    // https://linear.app/uniswap/issue/EXT-248/need-web-equivalent-of-touchablearea
     <XStack
-      backgroundColor="rgba(255, 255, 255, 0.075)"
-      borderColor={accentColor}
+      backgroundColor="$surface1"
+      borderColor={selected ? accentColor : '$surface3'}
       borderRadius={16}
-      borderWidth={selected ? 1 : 0}
+      borderWidth={1.5}
+      cursor="pointer"
       gap="$spacing8"
       justifyContent="space-between"
-      marginBottom="$spacing12"
-      marginHorizontal="$spacing12"
       padding="$spacing12"
+      shadowColor="$surface3"
+      shadowRadius={10}
       onPress={onAccountSelect}>
-      <YStack flexGrow={1}>
+      <YStack flexGrow={1} gap="$spacing8">
         <XStack>
           <Flex flex={1}>
             <Unicon address={address} size={iconSizes.icon36} />
