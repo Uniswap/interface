@@ -28,9 +28,9 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       return new Response('Asset not found.', { status: 404 })
     }
 
-    const [fontData, palette] = await Promise.all([getFont(), getColor(data.ogImage)])
+    const [fontData, palette] = await Promise.all([getFont(origin), getColor(data.ogImage)])
 
-    const networkLogo = getNetworkLogoUrl(networkName.toUpperCase())
+    const networkLogo = getNetworkLogoUrl(networkName.toUpperCase(), origin)
 
     // Capitalize name such that each word starts with a capital letter
     let words = data.name.split(' ')
