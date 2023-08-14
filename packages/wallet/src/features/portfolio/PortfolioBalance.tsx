@@ -23,8 +23,6 @@ const CTA_COLORS = {
 
 const CTA_COLORS_SOFT = {
   PINK: opacify(20, CTA_COLORS.PINK),
-  GREEN: opacify(15, CTA_COLORS.GREEN),
-  YELLOW: opacify(15, CTA_COLORS.YELLOW),
 }
 
 // TODO(EXT-210): fix up passing of Icon to reuse color prop and constant icon size etc
@@ -97,36 +95,50 @@ export function PortfolioBalance({ address, onSendClick }: WalletBalanceProps): 
               </Text>
             </XStack>
           </YStack>
-          <Flex flexDirection="row" gap="$spacing8">
-            {/* TODO(EXT-210): fix up passing of Icon to reuse color prop and constant icon size etc
-             */}
-            <ActionButton
-              Icon={<Icons.CoinConvert color={CTA_COLORS.PINK} size={getTokenValue('$icon.24')} />}
-              backgroundColor={validToken(CTA_COLORS_SOFT.PINK)}
-              color={validToken(CTA_COLORS.PINK)}
-              label="Swap"
-            />
-            <ActionButton
-              Icon={
-                <Icons.SendRoundedAirplane
-                  color={CTA_COLORS.GREEN}
-                  size={getTokenValue('$icon.24')}
-                />
-              }
-              backgroundColor={validToken(CTA_COLORS_SOFT.GREEN)}
-              color={validToken(CTA_COLORS.GREEN)}
-              label="Send"
-              onClick={onSendClick}
-            />
-            <ActionButton
-              Icon={
-                <Icons.ReceiveDots color={CTA_COLORS.YELLOW} size={getTokenValue('$icon.24')} />
-              }
-              backgroundColor={validToken(CTA_COLORS_SOFT.YELLOW)}
-              color={validToken(CTA_COLORS.YELLOW)}
-              label="Receive"
-            />
-          </Flex>
+          <YStack gap="$spacing8">
+            <Flex flexDirection="row" gap="$spacing8">
+              {/* TODO(EXT-210): fix up passing of Icon to reuse color prop and constant icon size etc
+               */}
+              <ActionButton
+                Icon={
+                  <Icons.CoinConvert color={CTA_COLORS.PINK} size={getTokenValue('$icon.24')} />
+                }
+                backgroundColor={validToken(CTA_COLORS_SOFT.PINK)}
+                color={validToken(CTA_COLORS.PINK)}
+                label="Swap"
+              />
+              <ActionButton
+                Icon={<Icons.Buy color={CTA_COLORS.PINK} size={getTokenValue('$icon.24')} />}
+                backgroundColor={validToken(CTA_COLORS_SOFT.PINK)}
+                color={validToken(CTA_COLORS.PINK)}
+                label="Buy"
+              />
+            </Flex>
+            <Flex flexDirection="row" gap="$spacing8">
+              {/* TODO(EXT-210): fix up passing of Icon to reuse color prop and constant icon size etc
+               */}
+              <ActionButton
+                Icon={
+                  <Icons.SendRoundedAirplane
+                    color={CTA_COLORS.PINK}
+                    size={getTokenValue('$icon.24')}
+                  />
+                }
+                backgroundColor={validToken(CTA_COLORS_SOFT.PINK)}
+                color={validToken(CTA_COLORS.PINK)}
+                label="Send"
+                onClick={onSendClick}
+              />
+              <ActionButton
+                Icon={
+                  <Icons.ReceiveArrow color={CTA_COLORS.PINK} size={getTokenValue('$icon.24')} />
+                }
+                backgroundColor={validToken(CTA_COLORS_SOFT.PINK)}
+                color={validToken(CTA_COLORS.PINK)}
+                label="Receive"
+              />
+            </Flex>
+          </YStack>
         </YStack>
       )}
     </Flex>

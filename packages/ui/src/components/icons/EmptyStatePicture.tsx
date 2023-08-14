@@ -1,12 +1,12 @@
 import type { IconProps } from '@tamagui/helpers-icon'
 import { forwardRef, memo } from 'react'
 import { Circle as _Circle, Path, Rect, Svg } from 'react-native-svg'
-import { getTokenValue, useTheme } from 'tamagui'
+import { getTokenValue, isWeb, useTheme } from 'tamagui'
 
 const Icon = forwardRef<Svg, IconProps>((props, ref) => {
   // isWeb currentColor to maintain backwards compat a bit better, on native uses theme color
   const {
-    color: colorProp = '#404A67',
+    color: colorProp = isWeb ? 'currentColor' : undefined,
     size: sizeProp = '$true',
     strokeWidth: strokeWidthProp,
     ...restProps
@@ -52,7 +52,7 @@ const Icon = forwardRef<Svg, IconProps>((props, ref) => {
       <Path
         clipRule="evenodd"
         d="M23.857.982a6.817 6.817 0 0 0-8.085 5.25l-1.361 6.405h2.454l1.255-5.905a4.417 4.417 0 0 1 5.238-3.402L50.64 9.129a4.417 4.417 0 0 1 3.402 5.239l-8.51 40.038a4.417 4.417 0 0 1-4.74 3.479v1.301c0 .376-.037.743-.108 1.099a6.818 6.818 0 0 0 7.195-5.38l8.51-40.038a6.817 6.817 0 0 0-5.25-8.086L23.857.982Z"
-        fill={color ?? '#404A67'}
+        fill={color}
         fillRule="evenodd"
       />
       <_Circle cx="11.856" cy="27.716" fill={color} r="5.298" />
