@@ -39,9 +39,9 @@ const appReducer = combineReducers({
 
 export type AppState = ReturnType<typeof appReducer>
 
-function createStorage(dbName: string) {
+function createStorage() {
   const db = localForage.createInstance({
-    name: dbName,
+    name: 'redux',
   })
   return {
     getItem: db.getItem,
@@ -53,7 +53,7 @@ function createStorage(dbName: string) {
 const persistConfig = {
   key: 'root',
   version: 0, // see migrations.ts for more details about this version
-  storage: createStorage('redux'),
+  storage: createStorage(),
   migrate: customCreateMigrate(migrations, { debug: false }),
   whitelist: Object.keys(persistedReducers),
   throttle: 1000, // ms

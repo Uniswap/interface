@@ -54,13 +54,16 @@ Cypress.Commands.overwrite(
           onBeforeLoad(win) {
             options?.onBeforeLoad?.(win)
 
-            // We want to test from a clean state, so we clear the local storage (which clears redux).
-            win.localStorage.clear()
+            // We want to test from a clean state, so we clear the persisted state.
+            win.indexedDB.deleteDatabase('redux')
 
-            // Set initial user state.
+            // Since the IndexedDB state is clear, the first migration will run and pick up this legacy state from localStorage.
             win.localStorage.setItem(
-              'redux_localstorage_simple_user', // storage key for the user reducer using 'redux-localstorage-simple'
-              JSON.stringify({ ...CONNECTED_WALLET_USER_STATE, ...(options?.userState ?? {}) })
+              'redux_localstorage_simple_user',
+              JSON.stringify({
+                ...CONNECTED_WALLET_USER_STATE,
+                ...options?.userState,
+              })
             )
 
             // Set feature flags, if configured.
