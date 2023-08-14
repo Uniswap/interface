@@ -29,6 +29,9 @@ flag_management:
   individual_flags:
     - name: unit-tests
     - name: cloud-tests
+      statuses:
+        - type: patch
+          target: 80%
 
 comment:
   layout: flags
