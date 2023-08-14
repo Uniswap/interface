@@ -81,6 +81,7 @@ export type SwapInfo = {
     state: TradeState
     uniswapXGasUseEstimateUSD?: number
     error?: any
+    swapQuoteLatency?: number
   }
   allowedSlippage: Percent
   autoSlippage: Percent

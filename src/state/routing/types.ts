@@ -282,10 +282,12 @@ export type TradeResult =
   | {
       state: QuoteState.NOT_FOUND
       trade?: undefined
+      latencyMs?: number
     }
   | {
       state: QuoteState.SUCCESS
       trade: InterfaceTrade
+      latencyMs?: number
     }
 
 export enum PoolType {
