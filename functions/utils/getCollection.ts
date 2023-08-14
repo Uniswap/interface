@@ -1,8 +1,10 @@
-import { CollectionDocument } from '../../src/graphql/data/__generated__/types-and-hooks'
+import { CollectionDocument, CollectionQuery } from '../../src/graphql/data/__generated__/types-and-hooks'
 import client from '../client'
 
 export default async function getCollection(collectionAddress: string, url: string) {
-  const { data } = await client.query({
+  const origin = new URL(url).origin
+  const image = origin + '/api/image/nfts/collection/' + collectionAddress
+  const { data } = await client.query<CollectionQuery>({
     query: CollectionDocument,
     variables: {
       addresses: collectionAddress,
@@ -14,8 +16,11 @@ export default async function getCollection(collectionAddress: string, url: stri
   }
   const formattedAsset = {
     title: collection.name + ' on Uniswap',
-    image: collection.image?.url,
+    image,
     url,
+    name: collection.name ?? 'Collection',
+    ogImage: collection.image?.url ?? origin + '/images/192x192_App_Icon.png',
+    isVerified: collection.isVerified ?? false,
   }
   return formattedAsset
 }

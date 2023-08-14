@@ -4,7 +4,7 @@ import Badge, { BadgeVariant } from 'components/Badge'
 import { transparentize } from 'polished'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { useColor } from '../../hooks/useColor'
 import { unwrappedToken } from '../../utils/unwrappedToken'
@@ -14,7 +14,7 @@ import { AutoColumn } from '../Column'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { CardNoise } from '../earn/styled'
 import { AutoRow, RowFixed } from '../Row'
-import { Dots } from '../swap/styleds'
+import { Dots } from '../swap/styled'
 import { FixedHeightRow } from '.'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`

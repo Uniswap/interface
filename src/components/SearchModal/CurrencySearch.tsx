@@ -17,7 +17,7 @@ import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo,
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { UserAddedToken } from 'types/tokens'
 
 import { useDefaultActiveTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
@@ -28,7 +28,7 @@ import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
 import CurrencyList from './CurrencyList'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { PaddedColumn, SearchInput, Separator } from './styled'
 
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.backgroundSurface};

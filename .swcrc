@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/swcrc",
+  // has to duplicate from package.json, see swc issue: https://swc.rs/docs/configuration/compilation#env
+  // this breaks jest because jest is setting target for some reason
+  // "env": {
+  //   "targets": "> 0.5%, not dead"
+  // },
+  "jsc": {
+    // without this swc breaks WalletConnect class super() call
+    "target": "es2020",
+    "keepClassNames": true,
+    "experimental": {
+      "plugins": [
+        [
+          "@lingui/swc-plugin",
+          {}
+        ],
+        [
+          "@swc/plugin-styled-components",
+          {
+            "displayName": true
+          }
+        ]
+      ]
+    },
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true
+    },
+    "transform": {
+      "react": {
+        "runtime": "automatic"
+      }
+    }
+  }
+}

@@ -5,7 +5,7 @@ import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 

@@ -4,12 +4,19 @@ import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order
 import { sendTiming } from 'components/analytics'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useMemo } from 'react'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/slice'
-import { useGetQuoteQuery } from 'state/routing/slice'
 
-import { ClassicTrade, InterfaceTrade, QuoteMethod, QuoteState, RouterPreference, TradeState } from './types'
+import { useGetQuoteQuery } from './slice'
+import {
+  ClassicTrade,
+  InterfaceTrade,
+  INTERNAL_ROUTER_PREFERENCE_PRICE,
+  QuoteMethod,
+  QuoteState,
+  RouterPreference,
+  TradeState,
+} from './types'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
@@ -80,7 +87,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     currentData: currentTradeResult,
   } = useGetQuoteQuery(queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
-    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
+    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })
