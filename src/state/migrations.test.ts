@@ -108,6 +108,7 @@ describe('redux migrations', () => {
     persistStore(store)
     // wait for the migration to complete
     await new Promise((resolve) => setTimeout(resolve, 0))
+
     const state = store.getState()
     expect(state).toMatchObject(defaultState)
   })

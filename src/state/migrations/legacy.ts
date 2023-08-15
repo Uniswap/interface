@@ -1,17 +1,57 @@
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
+import { persistor } from 'state'
 
+import { initialState as initialListsState } from '../lists/reducer'
 import { RouterPreference } from '../routing/types'
 import { TransactionState } from '../transactions/reducer'
+import { initialState as initialTransactionsState } from '../transactions/reducer'
 import { UserState } from '../user/reducer'
+import { initialState as initialUserState } from '../user/reducer'
 import { SlippageTolerance } from '../user/types'
 
 const currentTimestamp = () => new Date().getTime()
+
+function tryParseOldState<T>(value: string | null, fallback: T): T {
+  try {
+    return value ? JSON.parse(value) : fallback
+  } catch (e) {
+    return fallback
+  }
+}
 
 /**
  * These functions handle all migrations that existed before we started tracking version numbers.
  */
 
-export function legacyTransactionMigrations(state: any): TransactionState {
+export const legacyLocalStorageMigration = async () => {
+  const oldTransactions = localStorage.getItem('redux_localstorage_simple_transactions')
+  const oldUser = localStorage.getItem('redux_localstorage_simple_user')
+  const oldLists = localStorage.getItem('redux_localstorage_simple_lists')
+  const oldSignatures = localStorage.getItem('redux_localstorage_simple_signatures')
+
+  const newTransactions = tryParseOldState(oldTransactions, initialTransactionsState)
+  const newUser = tryParseOldState(oldUser, initialUserState)
+  const newLists = tryParseOldState(oldLists, initialListsState)
+  const newSignatures = tryParseOldState(oldSignatures, {})
+
+  const result = {
+    user: legacyUserMigrations(newUser),
+    transactions: legacyTransactionMigrations(newTransactions),
+    lists: newLists,
+    signatures: newSignatures,
+    _persist: { version: 0, rehydrated: true },
+  }
+
+  await persistor.flush()
+
+  localStorage.removeItem('redux_localstorage_simple_transactions')
+  localStorage.removeItem('redux_localstorage_simple_user')
+  localStorage.removeItem('redux_localstorage_simple_lists')
+  localStorage.removeItem('redux_localstorage_simple_signatures')
+  return result
+}
+
+function legacyTransactionMigrations(state: any): TransactionState {
   // Make a copy of the object so we can mutate it.
   const result = JSON.parse(JSON.stringify(state))
   // in case there are any transactions in the store with the old format, remove them
@@ -27,14 +67,14 @@ export function legacyTransactionMigrations(state: any): TransactionState {
   return result
 }
 
-export function legacyUserMigrations(state: any): UserState {
+function legacyUserMigrations(state: any): UserState {
   // Make a copy of the object so we can mutate it.
   const result = JSON.parse(JSON.stringify(state))
   // If `selectedWallet` is a WalletConnect v1 wallet, reset to default.
-  if (state.selectedWallet) {
-    const selectedWallet = state.selectedWallet as string
+  if (result.selectedWallet) {
+    const selectedWallet = result.selectedWallet as string
     if (selectedWallet === 'UNIWALLET' || selectedWallet === 'UNISWAP_WALLET' || selectedWallet === 'WALLET_CONNECT') {
-      delete state.selectedWallet
+      delete result.selectedWallet
     }
   }
 
@@ -72,8 +112,8 @@ export function legacyUserMigrations(state: any): UserState {
   }
 
   // If `userRouterPreference` is `AUTO`, migrate to `API`
-  if ((state.userRouterPreference as string) === 'auto') {
-    state.userRouterPreference = RouterPreference.API
+  if ((result.userRouterPreference as string) === 'auto') {
+    result.userRouterPreference = RouterPreference.API
   }
 
   //If `buyFiatFlowCompleted` is present, delete it using filtering

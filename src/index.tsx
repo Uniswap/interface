@@ -13,6 +13,7 @@ import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter } from 'react-router-dom'
+import { PersistGate } from 'redux-persist/integration/react'
 import { SystemThemeUpdater } from 'theme/components/ThemeToggle'
 import { isBrowserRouterEnabled } from 'utils/env'
 
@@ -20,7 +21,7 @@ import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
-import store from './state'
+import store, { persistor } from './state'
 import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
 import LogsUpdater from './state/logs/updater'
@@ -57,25 +58,27 @@ const Router = isBrowserRouterEnabled() ? BrowserRouter : HashRouter
 createRoot(container).render(
   <StrictMode>
     <Provider store={store}>
-      <FeatureFlagsProvider>
-        <QueryClientProvider client={queryClient}>
-          <Router>
-            <LanguageProvider>
-              <Web3Provider>
-                <ApolloProvider client={apolloClient}>
-                  <BlockNumberProvider>
-                    <Updaters />
-                    <ThemeProvider>
-                      <ThemedGlobalStyle />
-                      <App />
-                    </ThemeProvider>
-                  </BlockNumberProvider>
-                </ApolloProvider>
-              </Web3Provider>
-            </LanguageProvider>
-          </Router>
-        </QueryClientProvider>
-      </FeatureFlagsProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <FeatureFlagsProvider>
+          <QueryClientProvider client={queryClient}>
+            <Router>
+              <LanguageProvider>
+                <Web3Provider>
+                  <ApolloProvider client={apolloClient}>
+                    <BlockNumberProvider>
+                      <Updaters />
+                      <ThemeProvider>
+                        <ThemedGlobalStyle />
+                        <App />
+                      </ThemeProvider>
+                    </BlockNumberProvider>
+                  </ApolloProvider>
+                </Web3Provider>
+              </LanguageProvider>
+            </Router>
+          </QueryClientProvider>
+        </FeatureFlagsProvider>
+      </PersistGate>
     </Provider>
   </StrictMode>
 )

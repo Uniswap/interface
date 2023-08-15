@@ -47,7 +47,7 @@ const persistConfig = {
   }),
   migrate: customCreateMigrate(migrations, { debug: false }),
   whitelist: Object.keys(persistedReducers),
-  throttle: 1000, // ms
+  throttle: 100, // ms
   serialize: false,
 }
 

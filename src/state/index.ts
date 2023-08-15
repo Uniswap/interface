@@ -23,6 +23,8 @@ export function createDefaultStore() {
             // ignore the redux-persist actions
             'persist/PERSIST',
             'persist/REHYDRATE',
+            'persist/PURGE',
+            'persist/FLUSH',
           ],
         },
       }).concat(routingApi.middleware),
@@ -35,6 +37,6 @@ store.dispatch(updateVersion())
 
 setupListeners(store.dispatch)
 
-persistStore(store)
+export const persistor = persistStore(store)
 
 export default store
