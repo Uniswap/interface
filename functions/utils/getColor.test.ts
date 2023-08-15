@@ -22,7 +22,7 @@ test('should return the average color of a white PNG image', async () => {
 test('should return the average color of a white PNG image with whiteness dimmed', async () => {
   const image = 'https://www.cac.cornell.edu/wiki/images/4/44/White_square.png'
   const color = await getColor(image, true)
-  expect(color).toEqual([235, 235, 235])
+  expect(color).toEqual([226, 226, 226])
 })
 
 test('should return the average color of a black JPG image', async () => {
