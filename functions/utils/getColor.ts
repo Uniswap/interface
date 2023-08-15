@@ -67,9 +67,9 @@ function getAverageColor(arrayBuffer: Uint8Array, type: string, checkDistance: b
     const distance = Math.sqrt(Math.pow(r - 255, 2) + Math.pow(g - 255, 2) + Math.pow(b - 255, 2))
 
     if (distance < 50) {
-      r -= 20
-      g -= 20
-      b -= 20
+      r = Math.max(0, r - 29)
+      g = Math.max(0, g - 29)
+      b = Math.max(0, b - 29)
     }
   }
 
