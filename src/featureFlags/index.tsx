@@ -12,7 +12,6 @@ export enum FeatureFlag {
   debounceSwapQuote = 'debounce_swap_quote',
   uniswapXEnabled = 'uniswapx_enabled', // enables sending dutch_limit config to routing-api
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
-  routingAPIPrice = 'routing_api_price',
   forceUniswapXOn = 'uniswapx_force_on', // forces routing-api's feature flag for uniswapx to turn on as well
   uniswapXEthOutputEnabled = 'uniswapx_eth_output_enabled',
   multichainUX = 'multichain_ux',

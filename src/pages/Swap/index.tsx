@@ -268,7 +268,7 @@ export function Swap({
 
   const swapInfo = useDerivedSwapInfo(state, chainId)
   const {
-    trade: { state: tradeState, trade },
+    trade: { state: tradeState, trade, swapQuoteLatency },
     allowedSlippage,
     autoSlippage,
     currencyBalances,
@@ -466,9 +466,6 @@ export function Swap({
     }
   }, [currencies, onUserInput, onWrap, wrapType])
 
-  // errors
-  const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
-
   // warnings on the greater of fiat value price impact and execution price impact
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
     if (isUniswapXTrade(trade)) {
@@ -528,13 +525,11 @@ export function Swap({
   useEffect(() => {
     if (!trade || prevTrade === trade) return // no new swap quote to log
 
-    const now = new Date()
-    setSwapQuoteReceivedDate(now)
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, now),
+      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, swapQuoteLatency),
       ...trace,
     })
-  }, [prevTrade, trade, trace, allowedSlippage])
+  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
@@ -569,7 +564,6 @@ export function Swap({
           allowance={allowance}
           swapError={swapError}
           onDismiss={handleConfirmDismiss}
-          swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
         />

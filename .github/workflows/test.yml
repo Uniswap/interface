@@ -225,7 +225,8 @@ jobs:
           path: node_modules/.cache
           key: ${{ runner.os }}-cloud-jest-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-cloud-jest-
-      - run: yarn test:cloud --coverage --maxWorkers=100%
+      # Only use 1 worker, so the other can be used for the proxy server under test.
+      - run: yarn test:cloud --coverage --maxWorkers=1
         
   pre:
     if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
