@@ -218,3 +218,138 @@ describe('UniswapX Eth Input', () => {
     cy.contains('Swapped')
   })
 })
+
+describe('UniswapX activity history', () => {
+  beforeEach(() => {
+    cy.intercept(QuoteEndpoint, { fixture: QuoteWhereUniswapXIsBetter })
+    cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/openStatusResponse.json' })
+
+    stubSwapTxReceipt()
+
+    cy.hardhat().then(async (hardhat) => {
+      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8))
+    })
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+  })
+
+  it('can view UniswapX order status progress in activity', () => {
+    // Setup a swap
+    cy.get('#swap-currency-input .token-amount-input').type('300')
+    cy.contains('Try it now').click()
+
+    // Submit uniswapx order signature
+    cy.get('#swap-button').click()
+    cy.contains('Confirm swap').click()
+    cy.wait('@eth_signTypedData_v4')
+    cy.get(getTestSelector('confirmation-close-icon')).click()
+
+    // Open mini portfolio and navigate to activity history
+    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.intercept(/graphql/, { fixture: 'mini-portfolio/empty_activity.json' })
+    cy.get(getTestSelector('mini-portfolio-navbar')).contains('Activity').click()
+
+    // Open pending order modal
+    cy.contains('Swapping').click()
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Swapping')
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Learn more about swapping with UniswapX')
+
+    // Return filled order status from uniswapx api
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
+
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Swapped')
+    cy.get(getTestSelector('offchain-activity-modal')).contains('View on Explorer')
+  })
+
+  it('can view UniswapX order status progress in activity upon expiry', () => {
+    // Setup a swap
+    cy.get('#swap-currency-input .token-amount-input').type('300')
+    cy.contains('Try it now').click()
+
+    // Submit uniswapx order signature
+    cy.get('#swap-button').click()
+    cy.contains('Confirm swap').click()
+    cy.wait('@eth_signTypedData_v4')
+    cy.get(getTestSelector('confirmation-close-icon')).click()
+
+    // Open mini portfolio and navigate to activity history
+    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.intercept(/graphql/, { fixture: 'mini-portfolio/empty_activity.json' })
+    cy.get(getTestSelector('mini-portfolio-navbar')).contains('Activity').click()
+
+    // Open pending order modal
+    cy.contains('Swapping').click()
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Swapping')
+
+    // Return filled order status from uniswapx api
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/expiredStatusResponse.json' })
+
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Swap expired')
+    cy.get(getTestSelector('offchain-activity-modal')).contains('learn more')
+  })
+
+  it('deduplicates remote vs local uniswapx orders', () => {
+    // Setup a swap
+    cy.get('#swap-currency-input .token-amount-input').type('300')
+    cy.contains('Try it now').click()
+
+    // Submit uniswapx order signature
+    cy.get('#swap-button').click()
+    cy.contains('Confirm swap').click()
+    cy.wait('@eth_signTypedData_v4')
+    cy.get(getTestSelector('confirmation-close-icon')).click()
+
+    // Return filled order status from uniswapx api
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
+
+    cy.contains('Swapped')
+
+    // Open mini portfolio
+    cy.get(getTestSelector('web3-status-connected')).click()
+
+    cy.fixture('mini-portfolio/uniswapx_activity.json').then((uniswapXActivity) => {
+      // Replace fixture's timestamp with current time
+      uniswapXActivity.data.portfolios[0].assetActivities[0].timestamp = Date.now() / 1000
+      cy.intercept(/graphql/, uniswapXActivity)
+    })
+
+    // Open activity history
+    cy.get(getTestSelector('mini-portfolio-navbar')).contains('Activity').click()
+
+    // Ensure gql and local order have been deduped, such that there is only one swap activity listed
+    cy.get(getTestSelector('activity-content')).contains('Swapped').should('have.length', 1)
+  })
+
+  it('balances should refetch after uniswapx swap', () => {
+    // Setup a swap
+    cy.get('#swap-currency-input .token-amount-input').type('300')
+    cy.contains('Try it now').click()
+
+    const gqlSpy = cy.spy().as('gqlSpy')
+    cy.intercept(/graphql/, (req) => {
+      // Spy on request frequency
+      req.on('response', gqlSpy)
+      // Reply with a fixture to speed up test
+      req.reply({
+        fixture: 'mini-portfolio/tokens.json',
+      })
+    })
+
+    // Expect balances to fetch upon opening mini portfolio
+    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.get('@gqlSpy').should('have.been.calledOnce')
+
+    // Submit uniswapx order signature
+    cy.get('#swap-button').click()
+    cy.contains('Confirm swap').click()
+
+    // Expect balances to refetch after approval
+    cy.get('@gqlSpy').should('have.been.calledTwice')
+
+    // Return filled order status from uniswapx api
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
+
+    // Expect balances to refetch after swap
+    cy.get('@gqlSpy').should('have.been.calledThrice')
+  })
+})

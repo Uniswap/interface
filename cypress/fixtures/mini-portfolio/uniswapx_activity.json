@@ -1,0 +1,102 @@
+{
+  "data": {
+    "portfolios": [
+      {
+        "id": "UG9ydGZvbGlvOjB4ZjM5RmQ2ZTUxYWFkODhGNkY0Y2U2YUI4ODI3Mjc5Y2ZmRmI5MjI2Ng==",
+        "assetActivities": [
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhnNE9EZGpOemN5TlRRNU1qWTVNVEkwWVRkbVpUTXlNams1TjJJNU0yUTJabUV3TjJObE1UQXhOamxrTjJJd1pXUXhObUV6TldabU16SmtOMk13TWpBeVh6QjRaREkzTXpnek1EUTRaalF4WldZMlpXRXhaV1EzWWpBeFltVTVOemRqTjJVME1HSXdaRGswTmw4d2VEUTNZVFF5TVdKalpXTTJORE5oWWpSallURmpZamc0TmpOaU4yWm1PV0ppWm1SaU5HVmlNVE09",
+            "timestamp": 1691001923,
+            "type": "SWAP_ORDER",
+            "chain": "ETHEREUM",
+            "details": {
+                "__typename": "TransactionDetails",
+                "id": "VHJhbnNhY3Rpb246MHg4ODdjNzcyNTQ5MjY5MTI0YTdmZTMyMjk5N2I5M2Q2ZmEwN2NlMTAxNjlkN2IwZWQxNmEzNWZmMzJkN2MwMjAyXzB4ZDI3MzgzMDQ4ZjQxZWY2ZWExZWQ3YjAxYmU5NzdjN2U0MGIwZDk0Nl8weDQ3YTQyMWJjZWM2NDNhYjRjYTFjYjg4NjNiN2ZmOWJiZmRiNGViMTM=",
+                "type": "SWAP_ORDER",
+                "from": "0xd27383048f41ef6ea1ed7b01be977c7e40b0d946",
+                "to": "0x47a421bcec643ab4ca1cb8863b7ff9bbfdb4eb13",
+                "hash": "0x9f8382a94ee80ca119bc690908ab5f69c4c72f7497ee10f37e9ede0ded83cca6",
+                "nonce": 439,
+                "status": "CONFIRMED"
+            },
+            "assetChanges": [
+                {
+                    "__typename": "TokenTransfer",
+                    "id": "VG9rZW5UcmFuc2ZlcjoweDgwYmVjYjgwOGJmYWRlNDE0MzE4M2U1OGQxOGYyMDgwZTg0ZTU3YTFfMHg0N2E0MjFiY2VjNjQzYWI0Y2ExY2I4ODYzYjdmZjliYmZkYjRlYjEzXzB4ODg3Yzc3MjU0OTI2OTEyNGE3ZmUzMjI5OTdiOTNkNmZhMDdjZTEwMTY5ZDdiMGVkMTZhMzVmZjMyZDdjMDIwMg==",
+                    "asset": {
+                        "id": "VG9rZW46RVRIRVJFVU1fMHhhMGI4Njk5MWM2MjE4YjM2YzFkMTlkNGEyZTllYjBjZTM2MDZlYjQ4",
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+                        "decimals": 6,
+                        "chain": "ETHEREUM",
+                        "standard": null,
+                        "project": {
+                            "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4YTBiODY5OTFjNjIxOGIzNmMxZDE5ZDRhMmU5ZWIwY2UzNjA2ZWI0OA==",
+                            "isSpam": false,
+                            "logo": {
+                                "id": "SW1hZ2U6aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1VuaXN3YXAvYXNzZXRzL21hc3Rlci9ibG9ja2NoYWlucy9ldGhlcmV1bS9hc3NldHMvMHhBMGI4Njk5MWM2MjE4YjM2YzFkMTlENGEyZTlFYjBjRTM2MDZlQjQ4L2xvZ28ucG5n",
+                                "url": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+                                "__typename": "Image"
+                            },
+                            "__typename": "TokenProject"
+                        },
+                        "__typename": "Token"
+                    },
+                    "tokenStandard": "ERC20",
+                    "quantity": "300.0",
+                    "sender": "0x80becb808bfade4143183e58d18f2080e84e57a1",
+                    "recipient": "0x47a421bcec643ab4ca1cb8863b7ff9bbfdb4eb13",
+                    "direction": "OUT",
+                    "transactedValue": {
+                        "id": "QW1vdW50OjMwMC4xNDkxNTIwOTE5NDE2M19VU0Q=",
+                        "currency": "USD",
+                        "value": 300.14915209194163,
+                        "__typename": "Amount"
+                    }
+                },
+                {
+                    "__typename": "TokenTransfer",
+                    "id": "VG9rZW5UcmFuc2ZlcjoweDQ3YTQyMWJjZWM2NDNhYjRjYTFjYjg4NjNiN2ZmOWJiZmRiNGViMTNfMHg4MGJlY2I4MDhiZmFkZTQxNDMxODNlNThkMThmMjA4MGU4NGU1N2ExXzB4ODg3Yzc3MjU0OTI2OTEyNGE3ZmUzMjI5OTdiOTNkNmZhMDdjZTEwMTY5ZDdiMGVkMTZhMzVmZjMyZDdjMDIwMg==",
+                    "asset": {
+                        "id": "VG9rZW46RVRIRVJFVU1fMHg2YjE3NTQ3NGU4OTA5NGM0NGRhOThiOTU0ZWVkZWFjNDk1MjcxZDBm",
+                        "name": "Dai Stablecoin",
+                        "symbol": "DAI",
+                        "address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+                        "decimals": 18,
+                        "chain": "ETHEREUM",
+                        "standard": null,
+                        "project": {
+                            "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4NmIxNzU0NzRlODkwOTRjNDRkYTk4Yjk1NGVlZGVhYzQ5NTI3MWQwZg==",
+                            "isSpam": false,
+                            "logo": {
+                                "id": "SW1hZ2U6aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL1VuaXN3YXAvYXNzZXRzL21hc3Rlci9ibG9ja2NoYWlucy9ldGhlcmV1bS9hc3NldHMvMHg2QjE3NTQ3NEU4OTA5NEM0NERhOThiOTU0RWVkZUFDNDk1MjcxZDBGL2xvZ28ucG5n",
+                                "url": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png",
+                                "__typename": "Image"
+                            },
+                            "__typename": "TokenProject"
+                        },
+                        "__typename": "Token"
+                    },
+                    "tokenStandard": "ERC20",
+                    "quantity": "280.573117586837733376",
+                    "sender": "0x47a421bcec643ab4ca1cb8863b7ff9bbfdb4eb13",
+                    "recipient": "0x80becb808bfade4143183e58d18f2080e84e57a1",
+                    "direction": "IN",
+                    "transactedValue": {
+                        "id": "QW1vdW50OjI4MC42ODc3OTU0NTg2ODE4X1VTRA==",
+                        "currency": "USD",
+                        "value": 280.6877954586818,
+                        "__typename": "Amount"
+                    }
+                }
+            ],
+            "__typename": "AssetActivity"
+        }
+        ],
+        "__typename": "Portfolio"
+      }
+    ]
+  },
+  "errors": []
+}

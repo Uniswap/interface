@@ -11,7 +11,7 @@ import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { ActivityTab } from './Activity'
-import { useHasPendingActivity } from './Activity/hooks'
+import { usePendingActivity } from './Activity/hooks'
 import NFTs from './NFTs'
 import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'
@@ -103,7 +103,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
 
   const { component: Page, key: currentKey } = Pages[currentPage]
 
-  const { hasPendingActivity } = useHasPendingActivity()
+  const { hasPendingActivity } = usePendingActivity()
 
   useEffect(() => {
     if (hasPendingActivity && currentKey !== 'activity') setActivityUnread(true)
