@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -39,18 +39,22 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
   // Reference pending accounts to avoid any lag in saga import.
   const pendingAccount = Object.values(usePendingAccounts())?.[0]
 
-  // Sets the default wallet nickname based on derivation index once the pendingAccount is set.
-  const defaultAccountName: string = useMemo(() => {
-    if (!pendingAccount || pendingAccount.type === AccountType.Readonly) {
-      return ''
+  useEffect(() => {
+    // Sets the default wallet nickname based on derivation index once the pendingAccount is set.
+    if (pendingAccount && pendingAccount.type !== AccountType.Readonly) {
+      setNewAccountName(
+        pendingAccount.name ||
+          t('Wallet {{ number }}', { number: pendingAccount.derivationIndex + 1 }) ||
+          ''
+      )
     }
-
-    const derivationIndex = pendingAccount.derivationIndex
-    return pendingAccount.name || t('Wallet {{ number }}', { number: derivationIndex + 1 }) || ''
   }, [pendingAccount, t])
 
-  const [newAccountName, setNewAccountName] = useState<string>(defaultAccountName)
-  const [focused, setFocused] = useState(false)
+  const [newAccountName, setNewAccountName] = useState<string>('')
+
+  // we default it to `true` to avoid flickering of a pencil icon,
+  // because CustomizationSection has `autoFocus=true`
+  const [focused, setFocused] = useState(true)
 
   useAddBackButton(navigation)
 
@@ -78,7 +82,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
         editAccountActions.trigger({
           type: EditAccountAction.Rename,
           address: pendingAccount?.address,
-          newName: newAccountName || pendingAccount.name,
+          newName: newAccountName,
         })
       )
     }
@@ -91,7 +95,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
       <Box my="spacing24">
         {pendingAccount ? (
           <CustomizationSection
-            accountName={newAccountName || pendingAccount.name || ''}
+            accountName={newAccountName}
             address={pendingAccount?.address}
             focused={focused}
             setAccountName={setNewAccountName}
@@ -158,7 +162,7 @@ function CustomizationSection({
             textAlign="center"
             value={accountName}
             onBlur={(): void => setFocused(false)}
-            onChangeText={(newName): void => setAccountName(newName)}
+            onChangeText={setAccountName}
             onFocus={(): void => setFocused(true)}
           />
           {!focused && (
