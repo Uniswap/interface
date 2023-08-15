@@ -199,4 +199,4 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   )
 }
 
-const renderItemSeparator = (): JSX.Element => <Box bg="surface3" height={1} my="spacing16" />
+const renderItemSeparator = (): JSX.Element => <Flex pt="spacing24" />
