@@ -1,8 +1,8 @@
 import { createMigrate, MigrationManifest, PersistedState, PersistMigrate } from 'redux-persist'
 import { MigrationConfig } from 'redux-persist/es/createMigrate'
 
-import { legacyTransactionMigrations, legacyUserMigrations } from './legacyMigrations'
 import { initialState as initialListsState } from './lists/reducer'
+import { legacyTransactionMigrations, legacyUserMigrations } from './migrations/legacy'
 import { initialState as initialTransactionsState } from './transactions/reducer'
 import { initialState as initialUserState } from './user/reducer'
 

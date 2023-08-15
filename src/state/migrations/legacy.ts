@@ -1,9 +1,9 @@
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 
-import { RouterPreference } from './routing/types'
-import { TransactionState } from './transactions/reducer'
-import { UserState } from './user/reducer'
-import { SlippageTolerance } from './user/types'
+import { RouterPreference } from '../routing/types'
+import { TransactionState } from '../transactions/reducer'
+import { UserState } from '../user/reducer'
+import { SlippageTolerance } from '../user/types'
 
 const currentTimestamp = () => new Date().getTime()
 

@@ -25,7 +25,6 @@ const persistedReducers = {
 }
 
 const appReducer = combineReducers({
-  ...persistedReducers,
   application,
   wallets,
   mint,
@@ -35,25 +34,17 @@ const appReducer = combineReducers({
   multicall: multicall.reducer,
   logs,
   [routingApi.reducerPath]: routingApi.reducer,
+  ...persistedReducers,
 })
 
 export type AppState = ReturnType<typeof appReducer>
 
-function createStorage() {
-  const db = localForage.createInstance({
-    name: 'redux',
-  })
-  return {
-    getItem: db.getItem,
-    setItem: db.setItem,
-    removeItem: db.removeItem,
-  }
-}
-
 const persistConfig = {
-  key: 'root',
+  key: 'interface',
   version: 0, // see migrations.ts for more details about this version
-  storage: createStorage(),
+  storage: localForage.createInstance({
+    name: 'redux',
+  }),
   migrate: customCreateMigrate(migrations, { debug: false }),
   whitelist: Object.keys(persistedReducers),
   throttle: 1000, // ms

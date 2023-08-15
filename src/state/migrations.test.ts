@@ -114,7 +114,7 @@ describe('redux migrations', () => {
 
   it('migrates from a previous version of the state type', async () => {
     localStorage.setItem(
-      'persist:root',
+      'persist:interface',
       JSON.stringify({
         user: { ...initialUserState, test: 'user' },
         transactions: initialTransactionsState,
