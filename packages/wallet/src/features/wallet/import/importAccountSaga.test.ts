@@ -3,7 +3,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {
   addAccounts,
-  restorePrivateKeyComplete,
+  restoreMnemonicComplete,
   setAccountAsActive,
   unlockWallet,
 } from 'wallet/src/features/wallet/slice'
@@ -116,7 +116,7 @@ describe(importAccount, () => {
     ).toPromise()
 
     // assert on dispatched actions
-    expect(dispatched).toEqual([restorePrivateKeyComplete()])
+    expect(dispatched).toEqual([restoreMnemonicComplete()])
   })
 
   it('imports readonly account', () => {

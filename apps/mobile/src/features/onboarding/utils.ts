@@ -5,6 +5,7 @@ export enum ImportType {
   SeedPhrase = 'SeedPhrase',
   Watch = 'Watch',
   Restore = 'Restore',
+  RestoreMnemonic = 'RestoreMnemonic',
 }
 
 export enum OnboardingEntryPoint {

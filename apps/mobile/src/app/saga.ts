@@ -18,7 +18,7 @@ import {
   tokenWrapSaga,
   tokenWrapSagaName,
 } from 'src/features/transactions/swap/wrapSaga'
-import { restorePrivateKeyCompleteWatcher } from 'src/features/wallet/saga'
+import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/saga'
 import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
 import { spawn } from 'typed-redux-saga'
@@ -53,7 +53,7 @@ const sagas = [
   initFirebase,
   notificationWatcher,
   pendingAccountSaga,
-  restorePrivateKeyCompleteWatcher,
+  restoreMnemonicCompleteWatcher,
   signWcRequestSaga,
   telemetrySaga,
   walletConnectV2Saga,

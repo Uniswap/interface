@@ -40,13 +40,13 @@ export function RestoreCloudBackupLoadingScreen({
   const entryPoint = params.entryPoint
   const importType = params.importType
 
-  const isRestoringPrivateKey = importType === ImportType.Restore
+  const isRestoringMnemonic = importType === ImportType.RestoreMnemonic
 
   const [isLoading, setIsLoading] = useState(true)
 
   // when we are restoring after phone migration
   const signerAccounts = useNonPendingSignerAccounts()
-  const mnemonicId = (isRestoringPrivateKey && signerAccounts[0]?.mnemonicId) || undefined
+  const mnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
   const backups = useCloudBackups(mnemonicId)
 
@@ -76,13 +76,13 @@ export function RestoreCloudBackupLoadingScreen({
       ? (): void => {
           if (backups.length === 1 && backups[0]) {
             navigation.replace(OnboardingScreens.RestoreCloudBackupPassword, {
-              importType: ImportType.Restore,
+              importType,
               entryPoint,
               mnemonicId: backups[0].mnemonicId,
             })
           } else {
             navigation.replace(OnboardingScreens.RestoreCloudBackup, {
-              importType: ImportType.Restore,
+              importType,
               entryPoint,
             })
           }
@@ -93,7 +93,7 @@ export function RestoreCloudBackupLoadingScreen({
 
   // Handle no backups found error state
   if (!isLoading && backups.length === 0) {
-    if (isRestoringPrivateKey) {
+    if (isRestoringMnemonic) {
       navigation.replace(OnboardingScreens.SeedPhraseInput, {
         importType,
         entryPoint,

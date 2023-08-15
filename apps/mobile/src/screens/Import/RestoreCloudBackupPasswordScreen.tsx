@@ -6,8 +6,10 @@ import { Keyboard, TextInput } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { Flex } from 'src/components/layout/Flex'
+import { Text } from 'src/components/Text'
 import {
   incrementPasswordAttempts,
   resetLockoutEndTime,
@@ -80,7 +82,7 @@ export function RestoreCloudBackupPasswordScreen({
   const passwordAttemptCount = useAppSelector(selectPasswordAttempts)
   const lockoutEndTime = useAppSelector(selectLockoutEndTime)
 
-  const isRestoringPrivateKey = params.importType === ImportType.Restore
+  const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 
   const [enteredPassword, setEnteredPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
@@ -125,8 +127,8 @@ export function RestoreCloudBackupPasswordScreen({
           })
         )
         dispatch(resetPasswordAttempts())
-        // restore flow is handled in saga after `restorePrivateKeyComplete` is dispatched
-        if (!isRestoringPrivateKey) {
+        // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
+        if (!isRestoringMnemonic) {
           navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
         }
       } catch (error) {
@@ -144,6 +146,10 @@ export function RestoreCloudBackupPasswordScreen({
     await checkCorrectPassword()
     setEnteredPassword('')
     Keyboard.dismiss()
+  }
+
+  const navigateToEnterRecoveryPhrase = (): void => {
+    navigation.replace(OnboardingScreens.SeedPhraseInput, params)
   }
 
   return (
@@ -167,12 +173,21 @@ export function RestoreCloudBackupPasswordScreen({
         />
         {errorMessage && <PasswordError errorText={errorMessage} />}
       </Flex>
-      <Button
-        disabled={!enteredPassword || isLockedOut}
-        label={t('Continue')}
-        testID={ElementName.Submit}
-        onPress={onPasswordSubmit}
-      />
+      <Flex>
+        {isRestoringMnemonic && (
+          <TouchableArea onPress={navigateToEnterRecoveryPhrase}>
+            <Text color="accent1" mb="spacing12" textAlign="center" variant="buttonLabelSmall">
+              {t('Enter your recovery phrase instead')}
+            </Text>
+          </TouchableArea>
+        )}
+        <Button
+          disabled={!enteredPassword || isLockedOut}
+          label={t('Continue')}
+          testID={ElementName.Submit}
+          onPress={onPasswordSubmit}
+        />
+      </Flex>
     </OnboardingScreen>
   )
 }

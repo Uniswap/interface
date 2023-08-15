@@ -569,5 +569,6 @@
   "Wrong recovery phrase": "Wrong recovery phrase",
   "Enter your recovery phrase below, or try searching for backups again.": "Enter your recovery phrase below, or try searching for backups again.",
   "No backups found": "No backups found",
-  "Try searching again": "Try searching again"
+  "Try searching again": "Try searching again",
+  "Enter your recovery phrase instead": "Enter your recovery phrase instead"
 }

@@ -108,6 +108,11 @@ export function TransferTokenForm({
 
   const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
 
+  const onRestorePress = (): void => {
+    setCurrencyFieldFocused(false)
+    openWalletRestoreModal()
+  }
+
   const actionButtonDisabled =
     warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
     transferSpeedbump.loading ||
@@ -305,7 +310,7 @@ export function TransferTokenForm({
                 />
               )}
               {walletNeedsRestore && (
-                <TouchableArea onPress={openWalletRestoreModal}>
+                <TouchableArea onPress={onRestorePress}>
                   <Flex
                     row
                     alignItems="center"

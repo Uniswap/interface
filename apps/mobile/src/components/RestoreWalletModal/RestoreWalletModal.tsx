@@ -28,7 +28,7 @@ export function RestoreWalletModal(): JSX.Element | null {
       screen: OnboardingScreens.RestoreCloudBackupLoading,
       params: {
         entryPoint: OnboardingEntryPoint.Sidebar,
-        importType: ImportType.Restore,
+        importType: ImportType.RestoreMnemonic,
       },
     })
   }

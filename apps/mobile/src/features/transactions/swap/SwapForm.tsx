@@ -93,6 +93,11 @@ function _SwapForm({
 
   const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
 
+  const onRestorePress = (): void => {
+    Keyboard.dismiss()
+    openWalletRestoreModal()
+  }
+
   const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
 
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -320,7 +325,7 @@ function _SwapForm({
                   onShowTokenSelector={onShowTokenSelectorOutput}
                 />
                 {walletNeedsRestore && (
-                  <TouchableArea onPress={openWalletRestoreModal}>
+                  <TouchableArea onPress={onRestorePress}>
                     <Flex
                       row
                       alignItems="center"

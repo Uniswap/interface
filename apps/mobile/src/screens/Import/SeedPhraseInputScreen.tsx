@@ -51,12 +51,12 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   const [showSuccess, setShowSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
-  const isRestoringPrivateKey = params.importType === ImportType.Restore
+  const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 
   useAddBackButton(navigation)
 
   const signerAccounts = useNonPendingSignerAccounts()
-  const mnemonicId = (isRestoringPrivateKey && signerAccounts[0]?.mnemonicId) || undefined
+  const mnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
   // Add all accounts from mnemonic.
   const onSubmit = useCallback(async () => {
@@ -83,11 +83,11 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
         indexes: Array.from(Array(NUMBER_OF_WALLETS_TO_IMPORT).keys()),
       })
     )
-    // restore flow is handled in saga after `restorePrivateKeyComplete` is dispatched
-    if (!isRestoringPrivateKey) {
+    // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
+    if (!isRestoringMnemonic) {
       navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
     }
-  }, [value, mnemonicId, dispatch, isRestoringPrivateKey, t, navigation, params])
+  }, [value, mnemonicId, dispatch, isRestoringMnemonic, t, navigation, params])
 
   const onBlur = useCallback(() => {
     const { error, invalidWord } = validateMnemonic(value)
@@ -140,11 +140,11 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   return (
     <SafeKeyboardOnboardingScreen
       subtitle={
-        isRestoringPrivateKey
+        isRestoringMnemonic
           ? t('Enter your recovery phrase below, or try searching for backups again.')
           : t('Your recovery phrase will only be stored locally on your device.')
       }
-      title={isRestoringPrivateKey ? t('No backups found') : t('Enter your recovery phrase')}>
+      title={isRestoringMnemonic ? t('No backups found') : t('Enter your recovery phrase')}>
       <Flex gap={itemSpacing}>
         <GenericImportForm
           autoCorrect
@@ -163,9 +163,9 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
         <Flex centered>
           <Trace logPress element={ElementName.RecoveryHelpButton}>
             <TouchableArea
-              onPress={isRestoringPrivateKey ? onPressTryAgainButton : onPressRecoveryHelpButton}>
+              onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}>
               <Text color="accent1" variant={subtitleSize}>
-                {isRestoringPrivateKey
+                {isRestoringMnemonic
                   ? t('Try searching again')
                   : t('How do I find my recovery phrase?')}
               </Text>

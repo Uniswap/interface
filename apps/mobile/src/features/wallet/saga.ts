@@ -5,16 +5,16 @@ import { Screens } from 'src/screens/Screens'
 import { call, put, takeEvery } from 'typed-redux-saga'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { restorePrivateKeyComplete } from 'wallet/src/features/wallet/slice'
+import { restoreMnemonicComplete } from 'wallet/src/features/wallet/slice'
 
 /**
- * Watch when we've restored a private key (new phone migration)
+ * Watch when we've restored a mnemonic (new phone migration)
  */
-export function* restorePrivateKeyCompleteWatcher() {
-  yield* takeEvery(restorePrivateKeyComplete, onRestorePrivateKeyComplete)
+export function* restoreMnemonicCompleteWatcher() {
+  yield* takeEvery(restoreMnemonicComplete, onRestoreMnemonicComplete)
 }
 
-function* onRestorePrivateKeyComplete() {
+function* onRestoreMnemonicComplete() {
   yield* put(
     pushNotification({
       type: AppNotificationType.Success,

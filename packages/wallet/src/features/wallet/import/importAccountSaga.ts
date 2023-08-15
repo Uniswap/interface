@@ -7,7 +7,7 @@ import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { selectSignerMnemonicAccountExists } from 'wallet/src/features/wallet/selectors'
 import {
   addAccounts,
-  restorePrivateKeyComplete,
+  restoreMnemonicComplete,
   setAccountAsActive,
   unlockWallet,
 } from 'wallet/src/features/wallet/slice'
@@ -100,10 +100,10 @@ function* importMnemonicAccounts(
   if (indexes[0] === undefined)
     throw new Error('Cannot import account with undefined derivation index')
 
-  const isRestoringPrivateKey = yield* select(selectSignerMnemonicAccountExists)
+  const isRestoringMnemonic = yield* select(selectSignerMnemonicAccountExists)
   // we do not need to add accounts as they are already exist
-  if (isRestoringPrivateKey) {
-    yield* put(restorePrivateKeyComplete())
+  if (isRestoringMnemonic) {
+    yield* put(restoreMnemonicComplete())
     return
   }
 
@@ -140,10 +140,10 @@ function* importRestoreBackupAccounts(mnemonicId: string, indexes = [0]) {
       return call([Keyring, Keyring.generateAndStorePrivateKey], mnemonicId, index)
     })
   )
-  const isRestoringPrivateKey = yield* select(selectSignerMnemonicAccountExists)
+  const isRestoringMnemonic = yield* select(selectSignerMnemonicAccountExists)
   // we do not need to add accounts as they are already exist
-  if (isRestoringPrivateKey) {
-    yield* put(restorePrivateKeyComplete())
+  if (isRestoringMnemonic) {
+    yield* put(restoreMnemonicComplete())
     return
   }
 
