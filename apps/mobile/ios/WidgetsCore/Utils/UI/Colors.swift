@@ -46,6 +46,7 @@ public extension Color {
   static let OGN = Color(red: 0.01, green: 0.29, blue: 0.84)
   static let GALA = Color.black
   static let RPL = Color(red: 1, green: 0.48, blue: 0.31)
+  static let FWB = Color.black
   
   static let magentaVibrant = Color(red: 0.99, green: 0.45, blue: 1.00)
   static let backgroundGray = Color.gray
@@ -184,8 +185,10 @@ public struct ColorExtraction {
       UIColor(Color.GALA),
     // RPL
     "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xD33526068D116cE69F19A9ee46F0bd304F21A51f/logo.png":
-      UIColor(Color.RPL)
-    
+      UIColor(Color.RPL),
+    // FWB
+    "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x35bD01FC9d6D5D81CA9E055Db88Dc49aa2c699A8/logo.png":
+      UIColor(Color.FWB)
   ]
   
   static func passesContrast(

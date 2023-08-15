@@ -2,6 +2,7 @@ import { useTheme } from '@tamagui/web'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ImageColors from 'react-native-image-colors'
 import { useAppTheme } from 'src/app/hooks'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { colors as GlobalColors } from 'ui/src/theme/color'
 import { GlobalPalette } from 'ui/src/theme/color/types'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
@@ -143,6 +144,15 @@ const specialCaseTokenColors: { [key: string]: string } = {
     '#FF7B4F',
 }
 
+const blackAndWhiteSpecialCase: Set<string> = new Set([
+  // QNT
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x4a220E6096B25EADb88358cb44068A3248254675/logo.png',
+  // Xen
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x06450dEe7FD2Fb8E39061434BAbCFC05599a6Fb8/logo.png',
+  // FWB
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x35bD01FC9d6D5D81CA9E055Db88Dc49aa2c699A8/logo.png',
+])
+
 export function useExtractedColors(
   imageUrl: Maybe<string>,
   fallback: keyof Theme['colors'] = 'accent1',
@@ -180,10 +190,15 @@ export function useExtractedColors(
   return { colors, colorsLoading }
 }
 
-function getSpecialCaseTokenColor(imageUrl: Maybe<string>): Nullable<string> {
+function getSpecialCaseTokenColor(imageUrl: Maybe<string>, isDarkMode: boolean): Nullable<string> {
+  if (imageUrl && blackAndWhiteSpecialCase.has(imageUrl)) {
+    return isDarkMode ? '#FFFFFF' : '#000000'
+  }
+
   if (!imageUrl || !specialCaseTokenColors[imageUrl]) {
     return null
   }
+
   return specialCaseTokenColors[imageUrl] ?? null
 }
 /**
@@ -215,6 +230,7 @@ export function useExtractedTokenColor(
   const { colors, colorsLoading } = useExtractedColors(imageUrl)
   const [tokenColor, setTokenColor] = useState(defaultColor)
   const [tokenColorLoading, setTokenColorLoading] = useState(true)
+  const isDarkMode = useIsDarkMode()
 
   useEffect(() => {
     if (!colorsLoading && !!colors) {
@@ -224,8 +240,8 @@ export function useExtractedTokenColor(
   }, [backgroundColor, colors, colorsLoading])
 
   const specialCaseTokenColor = useMemo(() => {
-    return getSpecialCaseTokenColor(imageUrl)
-  }, [imageUrl])
+    return getSpecialCaseTokenColor(imageUrl, isDarkMode)
+  }, [imageUrl, isDarkMode])
 
   if (specialCaseTokenColor) {
     return { tokenColor: specialCaseTokenColor, tokenColorLoading: false }
