@@ -55,6 +55,7 @@ import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } f
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
 import styled, { useTheme } from 'styled-components'
 import { LinkStyledButton, ThemedText } from 'theme'
+import { maybeLogFirstSwapInput } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -327,15 +328,17 @@ export function Swap({
 
   const handleTypeInput = useCallback(
     (value: string) => {
+      maybeLogFirstSwapInput(trace)
       onUserInput(Field.INPUT, value)
     },
-    [onUserInput]
+    [onUserInput, trace]
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
+      maybeLogFirstSwapInput(trace)
       onUserInput(Field.OUTPUT, value)
     },
-    [onUserInput]
+    [onUserInput, trace]
   )
 
   const navigate = useNavigate()
@@ -501,13 +504,15 @@ export function Swap({
         },
         [Field.OUTPUT]: state[Field.OUTPUT],
       })
+      maybeLogFirstSwapInput(trace)
     },
-    [onCurrencyChange, onCurrencySelection, state]
+    [onCurrencyChange, onCurrencySelection, state, trace]
   )
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-  }, [maxInputAmount, onUserInput])
+    maybeLogFirstSwapInput(trace)
+  }, [maxInputAmount, onUserInput, trace])
 
   const handleOutputSelect = useCallback(
     (outputCurrency: Currency) => {
@@ -518,8 +523,9 @@ export function Swap({
           currencyId: getSwapCurrencyId(outputCurrency),
         },
       })
+      maybeLogFirstSwapInput(trace)
     },
-    [onCurrencyChange, onCurrencySelection, state]
+    [onCurrencyChange, onCurrencySelection, state, trace]
   )
 
   const showPriceImpactWarning = isClassicTrade(trade) && largerPriceImpact && priceImpactSeverity > 3
@@ -614,7 +620,9 @@ export function Swap({
             <ArrowContainer
               data-testid="swap-currency-button"
               onClick={() => {
-                !disableTokenInputs && onSwitchTokens()
+                if (disableTokenInputs) return
+                onSwitchTokens()
+                maybeLogFirstSwapInput(trace)
               }}
               color={theme.textPrimary}
             >

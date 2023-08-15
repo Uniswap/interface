@@ -24,4 +24,14 @@ export function logSwapSuccess(hash: string, analyticsContext: any) {
   hasReportedTimeToSwap = true
 }
 
-
+let hasReportedFirstSwapInput = false
+export function maybeLogFirstSwapInput(analyticsContext: any) {
+  if (!hasReportedFirstSwapInput) {
+    hasReportedFirstSwapInput = true
+    // todo: get event name from shared package
+    sendAnalyticsEvent('SWAP_INPUT_FIRST_USED', {
+      time_to_first_swap_input: getElapsedTime('time-to-first-swap-input'),
+      ...analyticsContext,
+    })
+  }
+}
