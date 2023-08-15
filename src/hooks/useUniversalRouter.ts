@@ -94,6 +94,7 @@ export function useUniversalRouterSwapCallback(
         }
         const gasLimit = calculateGasMargin(gasEstimate)
         setTraceData('gasLimit', gasLimit.toNumber())
+        const beforeSign = Date.now()
         const response = await provider
           .getSigner()
           .sendTransaction({ ...tx, gasLimit })
@@ -101,6 +102,7 @@ export function useUniversalRouterSwapCallback(
             sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
               ...formatSwapSignedAnalyticsEventProperties({
                 trade,
+                timeToSignSinceRequestMs: Date.now() - beforeSign,
                 allowedSlippage: options.slippageTolerance,
                 fiatValues,
                 txHash: response.hash,
