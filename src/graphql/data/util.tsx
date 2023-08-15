@@ -87,6 +87,7 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [ChainId.OPTIMISM_GOERLI]: Chain.Optimism,
   [ChainId.BNB]: Chain.Bnb,
   [ChainId.AVALANCHE]: Chain.Avalanche,
+  [ChainId.BASE]: Chain.Base,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -128,6 +129,7 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   optimism: Chain.Optimism,
   bnb: Chain.Bnb,
   avalanche: Chain.Avalanche,
+  base: Chain.Base,
 }
 
 /**
