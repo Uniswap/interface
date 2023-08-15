@@ -14,6 +14,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
+import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
@@ -169,46 +170,49 @@ export function BottomSheetModal({
   )
 
   return (
-    <BaseModal
-      {...backdrop}
-      ref={modalRef}
-      // This is required for android to make scrollable containers work
-      // and allow closing the modal by dragging the content
-      // (adding this property on iOS breaks closing the modal by dragging the content)
-      activeOffsetY={IS_ANDROID ? [-DRAG_ACTIVATION_OFFSET, DRAG_ACTIVATION_OFFSET] : undefined}
-      animatedPosition={animatedPosition}
-      backgroundStyle={
-        hideHandlebar
-          ? BottomSheetStyle.modalTransparent
-          : {
-              backgroundColor: backgroundColorValue,
-            }
-      }
-      contentHeight={animatedContentHeight}
-      enableContentPanningGesture={isDismissible}
-      enableHandlePanningGesture={isDismissible}
-      handleComponent={renderHandleBar}
-      handleHeight={animatedHandleHeight}
-      snapPoints={animatedSnapPoints}
-      stackBehavior={stackBehavior}
-      topInset={renderBehindInset ? undefined : insets.top}
-      onAnimate={onAnimate}
-      onDismiss={onClose}>
-      <Trace logImpression modal={name}>
-        <BottomSheetView
-          style={[
-            {
-              height: fullScreen ? fullScreenContentHeight : undefined,
-              backgroundColor: backgroundColorValue,
-            },
-            BottomSheetStyle.view,
-            ...(renderBehindInset ? [BottomSheetStyle.behindInset, animatedBorderRadius] : []),
-          ]}
-          onLayout={handleContentLayout}>
-          {children}
-        </BottomSheetView>
-      </Trace>
-    </BaseModal>
+    <>
+      {fullScreen && <NotificationToastWrapper />}
+      <BaseModal
+        {...backdrop}
+        ref={modalRef}
+        // This is required for android to make scrollable containers work
+        // and allow closing the modal by dragging the content
+        // (adding this property on iOS breaks closing the modal by dragging the content)
+        activeOffsetY={IS_ANDROID ? [-DRAG_ACTIVATION_OFFSET, DRAG_ACTIVATION_OFFSET] : undefined}
+        animatedPosition={animatedPosition}
+        backgroundStyle={
+          hideHandlebar
+            ? BottomSheetStyle.modalTransparent
+            : {
+                backgroundColor: backgroundColorValue,
+              }
+        }
+        contentHeight={animatedContentHeight}
+        enableContentPanningGesture={isDismissible}
+        enableHandlePanningGesture={isDismissible}
+        handleComponent={renderHandleBar}
+        handleHeight={animatedHandleHeight}
+        snapPoints={animatedSnapPoints}
+        stackBehavior={stackBehavior}
+        topInset={renderBehindInset ? undefined : insets.top}
+        onAnimate={onAnimate}
+        onDismiss={onClose}>
+        <Trace logImpression modal={name}>
+          <BottomSheetView
+            style={[
+              {
+                height: fullScreen ? fullScreenContentHeight : undefined,
+                backgroundColor: backgroundColorValue,
+              },
+              BottomSheetStyle.view,
+              ...(renderBehindInset ? [BottomSheetStyle.behindInset, animatedBorderRadius] : []),
+            ]}
+            onLayout={handleContentLayout}>
+            {children}
+          </BottomSheetView>
+        </Trace>
+      </BaseModal>
+    </>
   )
 }
 
