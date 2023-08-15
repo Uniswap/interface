@@ -59,10 +59,11 @@ Cypress.Commands.overwrite(
 
             // Since the IndexedDB state is clear, the first migration will run and pick up this legacy state from localStorage.
             win.localStorage.setItem(
-              'redux_localstorage_simple_user',
+              'redux_localstorage_simple_user', // storage key for the user reducer using 'redux-localstorage-simple'
               JSON.stringify({
+                hideUniswapWalletBanner: true,
                 ...CONNECTED_WALLET_USER_STATE,
-                ...options?.userState,
+                ...(options?.userState ?? {}),
               })
             )
 
