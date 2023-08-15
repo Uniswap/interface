@@ -3,7 +3,7 @@ import { UNI } from 'constants/tokens'
 
 import { getTestSelector } from '../utils'
 
-const UNI_ADDRESS = UNI[ChainId.MAINNET]
+const UNI_ADDRESS = UNI[ChainId.MAINNET].address
 
 describe('Universal search bar', () => {
   function openSearch() {
