@@ -26,11 +26,11 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
   const openSettings = useCallback(() => setMenu(MenuState.SETTINGS), [])
   const closeSettings = useCallback(() => setMenu(MenuState.DEFAULT), [])
-  const closeLanguageSettings = useCallback(() => setMenu(MenuState.SETTINGS), [])
   const openLanguageSettings = useCallback(() => setMenu(MenuState.LANGUAGE_SETTINGS), [])
+  const closeLanguageSettings = useCallback(() => setMenu(MenuState.SETTINGS), [])
 
   useEffect(() => {
-    if (!drawerOpen && menu === MenuState.SETTINGS) {
+    if (!drawerOpen && menu !== MenuState.DEFAULT) {
       // wait for the drawer to close before resetting the menu
       const timer = setTimeout(() => {
         closeSettings()
