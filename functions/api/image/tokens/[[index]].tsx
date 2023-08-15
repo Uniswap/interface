@@ -25,7 +25,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     )
 
     if (!data) {
-      return new Response('Asset not found.', { status: 404 })
+      return new Response('Token not found.', { status: 404 })
     }
 
     const [fontData, palette] = await Promise.all([getFont(), getColor(data.ogImage)])
@@ -51,7 +51,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
           <div
             style={{
               display: 'flex',
-              backgroundColor: `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, 0.8)`,
+              backgroundColor: `rgba(${palette[0]}, ${palette[1]}, ${palette[2]})`,
               alignItems: 'center',
               height: '100%',
               padding: '72px',

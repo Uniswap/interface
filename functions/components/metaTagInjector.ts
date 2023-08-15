@@ -2,6 +2,7 @@ type MetaTagInjectorInput = {
   title: string
   image?: string
   url: string
+  description?: string
 }
 
 /**
@@ -18,6 +19,9 @@ export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
   element(element: Element) {
     //Open Graph Tags
     this.append(element, 'og:title', this.input.title)
+    if (this.input.description) {
+      this.append(element, 'og:description', this.input.description)
+    }
     if (this.input.image) {
       this.append(element, 'og:image', this.input.image)
       this.append(element, 'og:image:width', '1200')

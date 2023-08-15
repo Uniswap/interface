@@ -47,7 +47,6 @@ export interface GetQuoteArgs {
   uniswapXEthOutputEnabled: boolean
   forceUniswapXOn: boolean
   userDisabledUniswapX: boolean
-  isRoutingAPIPrice?: boolean
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
@@ -283,10 +282,12 @@ export type TradeResult =
   | {
       state: QuoteState.NOT_FOUND
       trade?: undefined
+      latencyMs?: number
     }
   | {
       state: QuoteState.SUCCESS
       trade: InterfaceTrade
+      latencyMs?: number
     }
 
 export enum PoolType {

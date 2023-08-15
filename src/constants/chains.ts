@@ -1,6 +1,12 @@
 import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
 
-export const UniWalletSupportedChains = [ChainId.MAINNET, ChainId.ARBITRUM_ONE, ChainId.OPTIMISM, ChainId.POLYGON]
+export const UniWalletSupportedChains = [
+  ChainId.MAINNET,
+  ChainId.ARBITRUM_ONE,
+  ChainId.OPTIMISM,
+  ChainId.POLYGON,
+  ChainId.BASE,
+]
 
 export const CHAIN_IDS_TO_NAMES = {
   [ChainId.MAINNET]: 'mainnet',

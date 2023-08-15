@@ -58,6 +58,8 @@ export function useUniversalRouterSwapCallback(
         if (!chainId) throw new Error('missing chainId')
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
+        const connectedChainId = await provider.getSigner().getChainId()
+        if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
@@ -66,6 +68,7 @@ export function useUniversalRouterSwapCallback(
           inputTokenPermit: options.permit,
           fee: options.feeOptions,
         })
+
         const tx = {
           from: account,
           to: UNIVERSAL_ROUTER_ADDRESS(chainId),
@@ -91,6 +94,7 @@ export function useUniversalRouterSwapCallback(
         }
         const gasLimit = calculateGasMargin(gasEstimate)
         setTraceData('gasLimit', gasLimit.toNumber())
+        const beforeSign = Date.now()
         const response = await provider
           .getSigner()
           .sendTransaction({ ...tx, gasLimit })
@@ -98,6 +102,7 @@ export function useUniversalRouterSwapCallback(
             sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
               ...formatSwapSignedAnalyticsEventProperties({
                 trade,
+                timeToSignSinceRequestMs: Date.now() - beforeSign,
                 allowedSlippage: options.slippageTolerance,
                 fiatValues,
                 txHash: response.hash,
