@@ -84,7 +84,7 @@ export function CloudBackupPasswordForm({
         <Flex gap="spacing8">
           <PasswordInput
             ref={passwordInputRef}
-            placeholder={t('Create password')}
+            placeholder={isConfirmation ? t('Confirm password') : t('Create password')}
             returnKeyType="next"
             value={password}
             onChangeText={(newText: string): void => {

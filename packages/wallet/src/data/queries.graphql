@@ -409,7 +409,7 @@ query MultiplePortfolioBalances($ownerAddresses: [String!]!) {
 }
 
 query SelectWalletScreen($ownerAddresses: [String!]!) {
-  portfolios(ownerAddresses: $ownerAddresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]) {
+  portfolios(ownerAddresses: $ownerAddresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]) {
     id
     ownerAddress
     tokensTotalDenominatedValue {
@@ -420,7 +420,7 @@ query SelectWalletScreen($ownerAddresses: [String!]!) {
 }
 
 query TransactionHistoryUpdater($addresses: [String!]!) {
-  portfolios(ownerAddresses: $addresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]) {
+  portfolios(ownerAddresses: $addresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]) {
     id
     ownerAddress
     assetActivities(pageSize: 1, page: 1) {

@@ -1418,7 +1418,7 @@ export const AccountListDocument = gql`
     query AccountList($addresses: [String!]!) {
   portfolios(
     ownerAddresses: $addresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]
   ) {
     id
     ownerAddress
@@ -2140,7 +2140,7 @@ export const SelectWalletScreenDocument = gql`
     query SelectWalletScreen($ownerAddresses: [String!]!) {
   portfolios(
     ownerAddresses: $ownerAddresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]
   ) {
     id
     ownerAddress
@@ -2183,7 +2183,7 @@ export const TransactionHistoryUpdaterDocument = gql`
     query TransactionHistoryUpdater($addresses: [String!]!) {
   portfolios(
     ownerAddresses: $addresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]
   ) {
     id
     ownerAddress
@@ -2859,7 +2859,7 @@ export const PortfolioBalanceDocument = gql`
     query PortfolioBalance($owner: String!) {
   portfolios(
     ownerAddresses: [$owner]
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]
   ) {
     id
     tokensTotalDenominatedValue {
@@ -2911,7 +2911,7 @@ export const PortfolioTokenBalancesDocument = gql`
     query PortfolioTokenBalances($ownerAddress: String!) {
   portfolios(
     ownerAddresses: [$ownerAddress]
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]
   ) {
     id
     tokenBalances {

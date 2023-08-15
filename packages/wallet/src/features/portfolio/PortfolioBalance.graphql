@@ -1,5 +1,5 @@
 query PortfolioBalance($owner: String!) {
-  portfolios(ownerAddresses: [$owner], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM]) {
+  portfolios(ownerAddresses: [$owner], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE]) {
     id
     tokensTotalDenominatedValue {
       id
