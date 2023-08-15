@@ -160,7 +160,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
 
   return (
     <Link
-      data-testid={`searchbar-token-row-${token.symbol}`}
+      data-testid={`searchbar-token-row-${token.chain}-${token.address ?? 'NATIVE'}`}
       to={tokenDetailsPath}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
@@ -174,7 +174,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
           symbol={token.symbol}
           size="36px"
           backupImg={token.project?.logoUrl}
-          style={{ paddingRight: '8px' }}
+          style={{ marginRight: '8px' }}
         />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
