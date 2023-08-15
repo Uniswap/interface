@@ -1,7 +1,8 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import multicall from 'lib/state/multicall'
 import localForage from 'localforage'
-import { persistReducer } from 'redux-persist'
+import { PersistConfig, persistReducer } from 'redux-persist'
+import { isDevelopmentEnv } from 'utils/env'
 
 import application from './application/reducer'
 import burn from './burn/reducer'
@@ -39,7 +40,7 @@ const appReducer = combineReducers({
 
 export type AppState = ReturnType<typeof appReducer>
 
-const persistConfig = {
+const persistConfig: PersistConfig<AppState> = {
   key: 'interface',
   version: 0, // see migrations.ts for more details about this version
   storage: localForage.createInstance({
@@ -47,8 +48,12 @@ const persistConfig = {
   }),
   migrate: customCreateMigrate(migrations, { debug: false }),
   whitelist: Object.keys(persistedReducers),
-  throttle: 100, // ms
+  throttle: 1000, // ms
   serialize: false,
+  // The typescript definitions are wrong - we need this to be false for unserialized storage to work.
+  // @ts-ignore
+  deserialize: false,
+  debug: isDevelopmentEnv(),
 }
 
 const persistedReducer = persistReducer(persistConfig, appReducer)

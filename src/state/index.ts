@@ -32,11 +32,10 @@ export function createDefaultStore() {
 }
 
 const store = createDefaultStore()
-
-store.dispatch(updateVersion())
+export const persistor = persistStore(store)
 
 setupListeners(store.dispatch)
 
-export const persistor = persistStore(store)
+store.dispatch(updateVersion())
 
 export default store
