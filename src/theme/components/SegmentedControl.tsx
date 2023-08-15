@@ -1,7 +1,7 @@
 import Row, { AutoRow } from 'components/Row'
 import { PropsWithChildren } from 'react'
 import { Icon } from 'react-feather'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme'
 
 const SegmentWrapper = styled(AutoRow)<{ active?: boolean }>`

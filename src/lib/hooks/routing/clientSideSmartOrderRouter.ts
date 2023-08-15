@@ -4,8 +4,7 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, AlphaRouterConfig } from '@uniswap/smart-order-router'
 import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
-import { GetQuoteArgs } from 'state/routing/slice'
-import { QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
+import { GetQuoteArgs, QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
 async function getQuote(

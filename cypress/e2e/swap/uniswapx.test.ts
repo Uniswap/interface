@@ -8,21 +8,14 @@ const QuoteWhereUniswapXIsBetter = 'uniswapx/quote1.json'
 const QuoteWithEthInput = 'uniswapx/quote2.json'
 
 const OrderSubmissionEndpoint = 'https://api.uniswap.org/v2/order'
-const OrderResponse = 'uniswapx/orderResponse.json'
 
 const OrderStatusEndpoint =
   'https://api.uniswap.org/v2/orders?swapper=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266&orderHashes=0xa9dd6f05ad6d6c79bee654c31ede4d0d2392862711be0f3bc4a9124af24a6a19'
-const OpenStatusResponse = 'uniswapx/openStatusResponse.json'
-const FilledStatusResponse = 'uniswapx/filledStatusResponse.json'
-const ExpiredStatusResponse = 'uniswapx/expiredStatusResponse.json'
-const TransactionReceipt = 'uniswapx/fillTransactionReceipt.json'
-
-const InsufficientFundsStatusResponse = 'uniswapx/insufficientFundsStatusResponse.json'
 
 /** Stubs the provider to return a tx receipt corresponding to the mock filled uniswapx order's txHash */
 function stubSwapTxReceipt() {
   cy.hardhat().then((hardhat) => {
-    cy.fixture(TransactionReceipt).then((mockTxReceipt) => {
+    cy.fixture('uniswapx/fillTransactionReceipt.json').then((mockTxReceipt) => {
       const getTransactionReceiptStub = cy.stub(hardhat.provider, 'getTransactionReceipt').log(false)
       getTransactionReceiptStub.withArgs(mockTxReceipt.transactionHash).resolves(mockTxReceipt)
       getTransactionReceiptStub.callThrough()
@@ -34,9 +27,6 @@ describe('UniswapX Toggle', () => {
   beforeEach(() => {
     cy.intercept(QuoteEndpoint, { fixture: QuoteWhereUniswapXIsBetter })
     cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
-
-    // Hide banner that partially covers UniswapX mustache
-    cy.get(getTestSelector('uniswap-wallet-banner')).click()
   })
 
   it('only displays uniswapx ui when setting is on', () => {
@@ -80,17 +70,13 @@ describe('UniswapX Toggle', () => {
 describe('UniswapX Orders', () => {
   beforeEach(() => {
     cy.intercept(QuoteEndpoint, { fixture: QuoteWhereUniswapXIsBetter })
-    cy.intercept(OrderSubmissionEndpoint, { fixture: OrderResponse })
-    cy.intercept(OrderStatusEndpoint, { fixture: OpenStatusResponse })
+    cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/openStatusResponse.json' })
 
     stubSwapTxReceipt()
 
-    cy.hardhat().then(async (hardhat) => {
-      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8))
-    })
+    cy.hardhat().then((hardhat) => hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8)))
     cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
-    // Hide banner that partially covers UniswapX mustache
-    cy.get(getTestSelector('uniswap-wallet-banner')).click()
   })
 
   it('can swap using uniswapX', () => {
@@ -106,7 +92,7 @@ describe('UniswapX Orders', () => {
     cy.contains('Learn more about swapping with UniswapX')
 
     // Return filled order status from uniswapx api
-    cy.intercept(OrderStatusEndpoint, { fixture: FilledStatusResponse })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
     // Verify swap success
     cy.contains('Swapped')
@@ -122,7 +108,7 @@ describe('UniswapX Orders', () => {
     cy.contains('Confirm swap').click()
 
     // Return expired order status from uniswapx api
-    cy.intercept(OrderStatusEndpoint, { fixture: ExpiredStatusResponse })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/expiredStatusResponse.json' })
 
     // Verify swap failure message
     cy.contains('Swap expired')
@@ -138,7 +124,7 @@ describe('UniswapX Orders', () => {
     cy.contains('Confirm swap').click()
 
     // Return insufficient_funds order status from uniswapx api
-    cy.intercept(OrderStatusEndpoint, { fixture: InsufficientFundsStatusResponse })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/insufficientFundsStatusResponse.json' })
 
     // Verify swap failure message
     cy.contains('Insufficient funds')
@@ -148,19 +134,18 @@ describe('UniswapX Orders', () => {
 describe('UniswapX Eth Input', () => {
   beforeEach(() => {
     cy.intercept(QuoteEndpoint, { fixture: QuoteWithEthInput })
-    cy.intercept(OrderSubmissionEndpoint, { fixture: OrderResponse })
-    cy.intercept(OrderStatusEndpoint, { fixture: OpenStatusResponse })
+    cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/openStatusResponse.json' })
 
     // Turn off automine so that intermediate screens are available to assert on.
     cy.hardhat({ automine: false }).then(async (hardhat) => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.MAINNET), 2e18))
+      await hardhat.mine()
     })
 
     stubSwapTxReceipt()
 
     cy.visit(`/swap/?inputCurrency=ETH&outputCurrency=${DAI.address}`)
-    // Hide banner that partially covers UniswapX mustache
-    cy.get(getTestSelector('uniswap-wallet-banner')).click()
   })
 
   it('can swap using uniswapX with ETH as input', () => {
@@ -189,7 +174,7 @@ describe('UniswapX Eth Input', () => {
     cy.contains('Learn more about swapping with UniswapX')
 
     // Return filled order status from uniswapx api
-    cy.intercept(OrderStatusEndpoint, { fixture: FilledStatusResponse })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
     // Verify swap success
     cy.contains('Swapped')
@@ -227,7 +212,7 @@ describe('UniswapX Eth Input', () => {
     cy.contains('Learn more about swapping with UniswapX')
 
     // Return filled order status from uniswapx api
-    cy.intercept(OrderStatusEndpoint, { fixture: FilledStatusResponse })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
     // Verify swap success
     cy.contains('Swapped')
@@ -237,8 +222,8 @@ describe('UniswapX Eth Input', () => {
 describe('UniswapX activity history', () => {
   beforeEach(() => {
     cy.intercept(QuoteEndpoint, { fixture: QuoteWhereUniswapXIsBetter })
-    cy.intercept(OrderSubmissionEndpoint, { fixture: OrderResponse })
-    cy.intercept(OrderStatusEndpoint, { fixture: OpenStatusResponse })
+    cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/openStatusResponse.json' })
 
     stubSwapTxReceipt()
 
@@ -246,8 +231,6 @@ describe('UniswapX activity history', () => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8))
     })
     cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
-    // Hide banner that partially covers UniswapX mustache
-    cy.get(getTestSelector('uniswap-wallet-banner')).click()
   })
 
   it('can view UniswapX order status progress in activity', () => {
@@ -272,7 +255,7 @@ describe('UniswapX activity history', () => {
     cy.get(getTestSelector('offchain-activity-modal')).contains('Learn more about swapping with UniswapX')
 
     // Return filled order status from uniswapx api
-    cy.intercept(OrderStatusEndpoint, { fixture: FilledStatusResponse })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
     cy.get(getTestSelector('offchain-activity-modal')).contains('Swapped')
     cy.get(getTestSelector('offchain-activity-modal')).contains('View on Explorer')
@@ -299,7 +282,7 @@ describe('UniswapX activity history', () => {
     cy.get(getTestSelector('offchain-activity-modal')).contains('Swapping')
 
     // Return filled order status from uniswapx api
-    cy.intercept(OrderStatusEndpoint, { fixture: ExpiredStatusResponse })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/expiredStatusResponse.json' })
 
     cy.get(getTestSelector('offchain-activity-modal')).contains('Swap expired')
     cy.get(getTestSelector('offchain-activity-modal')).contains('learn more')
@@ -317,7 +300,7 @@ describe('UniswapX activity history', () => {
     cy.get(getTestSelector('confirmation-close-icon')).click()
 
     // Return filled order status from uniswapx api
-    cy.intercept(OrderStatusEndpoint, { fixture: FilledStatusResponse })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
     cy.contains('Swapped')
 
@@ -364,7 +347,7 @@ describe('UniswapX activity history', () => {
     cy.get('@gqlSpy').should('have.been.calledTwice')
 
     // Return filled order status from uniswapx api
-    cy.intercept(OrderStatusEndpoint, { fixture: FilledStatusResponse })
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
     // Expect balances to refetch after swap
     cy.get('@gqlSpy').should('have.been.calledThrice')

@@ -10,7 +10,7 @@ import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { Wrapper } from 'pages/Pool/styleds'
+import { Wrapper } from 'pages/Pool/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -23,7 +23,7 @@ import {
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 
 import { LATEST_GOVERNOR_INDEX } from '../../constants/governance'

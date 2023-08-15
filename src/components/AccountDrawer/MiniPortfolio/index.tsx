@@ -7,7 +7,7 @@ import { AutoRow } from 'components/Row'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect, useState } from 'react'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { ActivityTab } from './Activity'

@@ -2,7 +2,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { DropDownOption } from 'nft/types'
 import { Check } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 
 const DropdownWrapper = styled(Column)<{ $width: number }>`

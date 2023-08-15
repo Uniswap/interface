@@ -1,18 +1,19 @@
 import { QueryResult } from '@apollo/client'
 import * as Sentry from '@sentry/react'
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useEffect } from 'react'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 import { Chain, ContractInput, HistoryDuration, TokenStandard } from './__generated__/types-and-hooks'
 
 export enum PollingInterval {
-  Slow = ms`5m`,
-  Normal = ms`1m`,
-  Fast = ms`12s`, // 12 seconds, block times for mainnet
-  LightningMcQueen = ms`3s`, // 3 seconds, approx block times for polygon
+  Slow = ms(`5m`),
+  Normal = ms(`1m`),
+  Fast = AVERAGE_L1_BLOCK_TIME,
+  LightningMcQueen = ms(`3s`), // approx block interval for polygon
 }
 
 // Polls a query only when the current component is mounted, as useQuery's pollInterval prop will continue to poll after unmount
@@ -64,6 +65,7 @@ export const GQL_MAINNET_CHAINS = [
   Chain.Arbitrum,
   Chain.Bnb,
   Chain.Avalanche,
+  Chain.Base,
 ] as const
 
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
@@ -149,6 +151,7 @@ const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
   [Chain.Arbitrum]: ChainId.ARBITRUM_ONE,
   [Chain.Bnb]: ChainId.BNB,
   [Chain.Avalanche]: ChainId.AVALANCHE,
+  [Chain.Base]: ChainId.BASE,
 }
 
 export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
@@ -183,8 +186,9 @@ export const BACKEND_SUPPORTED_CHAINS = [
   Chain.Arbitrum,
   Chain.Optimism,
   Chain.Celo,
+  Chain.Base,
 ] as const
-export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE, ChainId.BASE] as const
+export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE] as const
 
 export function getTokenDetailsURL({
   address,
