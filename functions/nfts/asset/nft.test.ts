@@ -22,7 +22,7 @@ test.each(assets)('should inject metadata for valid assets', async (nft) => {
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).toMatchSnapshot()
   expect(body).toContain(`<meta property="og:title" content="${nft.collectionName} #${nft.assetId}"/>`)
-  expect(body).toContain(`<meta property="og:description" content="${nft.description}"/>`)
+  expect(body).toContain(`<meta property="og:description" content="${nft.description}`)
   expect(body).toContain(`<meta property="og:image" content="${nft.image}"/>`)
   expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
   expect(body).toContain(`<meta property="og:image:height" content="630"/>`)

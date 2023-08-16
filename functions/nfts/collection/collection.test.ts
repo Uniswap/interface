@@ -10,7 +10,7 @@ const collections = [
     address: '0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b',
     collectionName: 'CLONE X - X TAKASHI MURAKAMI',
     image: 'http://127.0.0.1:3000/api/image/nfts/collection/0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b',
-    description: '🧬 CLONE X 🧬20,000 next-gen Avatars, by RTFKT and Takashi Murakami 🌸',
+    description: '🧬 CLONE X 🧬',
   },
 ]
 
@@ -19,7 +19,7 @@ test.each(collections)('should inject metadata for valid collections', async (co
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).toMatchSnapshot()
   expect(body).toContain(`<meta property="og:title" content="${collection.collectionName} on Uniswap"/>`)
-  expect(body).toContain(`<meta property="og:description" content="${collection.description}"/>`)
+  expect(body).toContain(`<meta property="og:description" content="${collection.description}`)
   expect(body).toContain(`<meta property="og:image" content="${collection.image}"/>`)
   expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
   expect(body).toContain(`<meta property="og:image:height" content="630"/>`)

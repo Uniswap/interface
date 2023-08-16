@@ -15,18 +15,11 @@ export default async function getCollection(collectionAddress: string, url: stri
     return undefined
   }
 
-  const description =
-    collection.description
-      ?.replace(/(\r\n|\n|\r)/gm, '')
-      .split('. ')
-      .slice(0, 2)
-      .join('. ') ?? 'Better prices. More listings. NFTs on Uniswap.'
-
   const formattedAsset = {
     title: collection.name + ' on Uniswap',
     image,
     url,
-    description,
+    description: collection.description ?? 'Better prices. More listings. NFTs on Uniswap.',
     name: collection.name ?? 'Collection',
     ogImage: collection.image?.url ?? origin + '/images/192x192_App_Icon.png',
     isVerified: collection.isVerified ?? false,

@@ -31,19 +31,12 @@ export default async function getAsset(collectionAddress: string, tokenId: strin
     return undefined
   }
 
-  const description =
-    asset.collection?.description
-      ?.replace(/(\r\n|\n|\r)/gm, '')
-      .split('. ')
-      .slice(0, 2)
-      .join('. ') ?? 'Better prices. More listings. NFTs on Uniswap.'
-
   const title = formatTitleName(asset.name, asset.collection?.name, asset.tokenId)
   const formattedAsset = {
     title,
     image,
     url,
-    description,
+    description: asset.collection?.description ?? 'Better prices. More listings. NFTs on Uniswap.',
     ogImage: asset.image?.url ?? origin + '/images/192x192_App_Icon.png',
   }
   return formattedAsset
