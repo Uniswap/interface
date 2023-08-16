@@ -1,10 +1,10 @@
-import { SwapEventTimestampTracker, SwapEventType } from './swapFlowLoggers'
+import { SwapEventTimestampTracker, SwapEventType } from './SwapEventTimestampTracker'
 
 // mock calculateElapsedTimeWithPerformanceMark in ./utils.ts:
 jest.mock('./utils', () => ({
   calculateElapsedTimeWithPerformanceMark: (mark: string) => {
     switch (mark) {
-      case SwapEventType.FIRST_SWAP_INPUT:
+      case SwapEventType.FIRST_SWAP_ACTION:
         return 100
       case SwapEventType.FIRST_QUOTE_FETCH_STARTED:
         return 200
@@ -40,8 +40,8 @@ describe('SwapEventTimestampTracker', () => {
 
   it('should get elapsed time between two events', () => {
     const instance = SwapEventTimestampTracker.getInstance()
-    expect(instance.setElapsedTime(SwapEventType.FIRST_SWAP_INPUT)).toEqual(100)
-    expect(instance.getElapsedTime(SwapEventType.FIRST_SWAP, SwapEventType.FIRST_SWAP_INPUT)).toEqual(400)
+    expect(instance.setElapsedTime(SwapEventType.FIRST_SWAP_ACTION)).toEqual(100)
+    expect(instance.getElapsedTime(SwapEventType.FIRST_SWAP, SwapEventType.FIRST_SWAP_ACTION)).toEqual(400)
   })
 
   it('should return undefined if event type not set', () => {

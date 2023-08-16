@@ -55,7 +55,7 @@ import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } f
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
 import styled, { useTheme } from 'styled-components'
 import { LinkStyledButton, ThemedText } from 'theme'
-import { maybeLogFirstSwapInput } from 'tracing/swapFlowLoggers'
+import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -328,14 +328,14 @@ export function Swap({
 
   const handleTypeInput = useCallback(
     (value: string) => {
-      maybeLogFirstSwapInput(trace)
+      maybeLogFirstSwapAction(trace)
       onUserInput(Field.INPUT, value)
     },
     [onUserInput, trace]
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
-      maybeLogFirstSwapInput(trace)
+      maybeLogFirstSwapAction(trace)
       onUserInput(Field.OUTPUT, value)
     },
     [onUserInput, trace]
@@ -501,14 +501,14 @@ export function Swap({
         },
         [Field.OUTPUT]: state[Field.OUTPUT],
       })
-      maybeLogFirstSwapInput(trace)
+      maybeLogFirstSwapAction(trace)
     },
     [onCurrencyChange, onCurrencySelection, state, trace]
   )
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-    maybeLogFirstSwapInput(trace)
+    maybeLogFirstSwapAction(trace)
   }, [maxInputAmount, onUserInput, trace])
 
   const handleOutputSelect = useCallback(
@@ -520,7 +520,7 @@ export function Swap({
           currencyId: getSwapCurrencyId(outputCurrency),
         },
       })
-      maybeLogFirstSwapInput(trace)
+      maybeLogFirstSwapAction(trace)
     },
     [onCurrencyChange, onCurrencySelection, state, trace]
   )
@@ -616,7 +616,7 @@ export function Swap({
               onClick={() => {
                 if (disableTokenInputs) return
                 onSwitchTokens()
-                maybeLogFirstSwapInput(trace)
+                maybeLogFirstSwapAction(trace)
               }}
               color={theme.textPrimary}
             >
