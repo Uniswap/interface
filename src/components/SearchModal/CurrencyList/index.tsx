@@ -65,8 +65,6 @@ const WarningContainer = styled.div`
   margin-left: 0.3em;
 `
 
-const ListWrapper = styled.div``
-
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
   return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
 }
@@ -163,9 +161,7 @@ export function CurrencyRow({
               <TokenSafetyIcon warning={warning} />
             </WarningContainer>
           </Row>
-          <ThemedText.BodySecondary ml="0px" fontSize="12px" fontWeight={485}>
-            {currency.symbol}
-          </ThemedText.BodySecondary>
+          <ThemedText.LabelMicro ml="0px">{currency.symbol}</ThemedText.LabelMicro>
         </AutoColumn>
         <Column>
           <RowFixed style={{ justifySelf: 'flex-end' }}>
@@ -311,7 +307,7 @@ export default function CurrencyList({
   }, [])
 
   return (
-    <ListWrapper data-testid="currency-list-wrapper">
+    <div data-testid="currency-list-wrapper">
       {isLoading ? (
         <FixedSizeList
           className={scrollbarStyle}
@@ -338,6 +334,6 @@ export default function CurrencyList({
           {Row}
         </FixedSizeList>
       )}
-    </ListWrapper>
+    </div>
   )
 }

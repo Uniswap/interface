@@ -10,7 +10,7 @@ const FilterOption = styled.button<{ active: boolean; highlight?: boolean }>`
   line-height: 24px;
   font-weight: 535;
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
-  border: 1px solid ${({ theme, active }) => (active ? theme.surface3 : theme.surface3)};
+  border: 1px solid ${({ theme }) => theme.surface3};
   outline: ${({ theme, active, highlight }) => (active && highlight ? `1px solid ${theme.accent1}` : 'none')};
 
   :hover {
