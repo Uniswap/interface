@@ -27,7 +27,6 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const openSettings = useCallback(() => setMenu(MenuState.SETTINGS), [])
   const closeSettings = useCallback(() => setMenu(MenuState.DEFAULT), [])
   const openLanguageSettings = useCallback(() => setMenu(MenuState.LANGUAGE_SETTINGS), [])
-  const closeLanguageSettings = useCallback(() => setMenu(MenuState.SETTINGS), [])
 
   useEffect(() => {
     if (!drawerOpen && menu !== MenuState.DEFAULT) {
@@ -51,7 +50,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
       {menu === MenuState.SETTINGS && (
         <SettingsMenu onClose={closeSettings} openLanguageSettings={openLanguageSettings} />
       )}
-      {menu === MenuState.LANGUAGE_SETTINGS && <LanguageMenu onClose={closeLanguageSettings} />}
+      {menu === MenuState.LANGUAGE_SETTINGS && <LanguageMenu onClose={openSettings} />}
     </DefaultMenuWrap>
   )
 }

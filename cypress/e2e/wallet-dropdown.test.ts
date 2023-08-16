@@ -23,23 +23,21 @@ describe('Wallet Dropdown', () => {
     })
   }
 
-  function itChangesLocale() {
+  function itChangesLocale(featureFlag = false) {
     it('should change locale', () => {
-      const testLanguageSettings = () => {
-        cy.contains('Uniswap available in: English').should('not.exist')
-        cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
-        cy.location('search').should('match', /\?lng=af-ZA$/)
-        cy.contains('Uniswap available in: English')
+      cy.contains('Uniswap available in: English').should('not.exist')
 
-        cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
-        cy.location('search').should('match', /\?lng=en-US$/)
-        cy.contains('Uniswap available in: English').should('not.exist')
+      if (featureFlag) {
+        cy.get(getTestSelector('language-settings-button')).click()
       }
 
-      testLanguageSettings()
-      cy.visit('/swap', { featureFlags: [FeatureFlag.currencyConversion] })
-      cy.get(getTestSelector('language-settings-button')).click()
-      testLanguageSettings()
+      cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
+      cy.location('search').should('match', /\?lng=af-ZA$/)
+      cy.contains('Uniswap available in: English')
+
+      cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
+      cy.location('search').should('match', /\?lng=en-US$/)
+      cy.contains('Uniswap available in: English').should('not.exist')
     })
   }
 
@@ -51,6 +49,15 @@ describe('Wallet Dropdown', () => {
     })
     itChangesTheme()
     itChangesLocale()
+  })
+
+  describe('should change locale with feature flag', () => {
+    beforeEach(() => {
+      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+    })
+    itChangesLocale(true)
   })
 
   describe('testnet toggle', () => {
