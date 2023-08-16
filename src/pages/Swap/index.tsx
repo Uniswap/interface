@@ -328,15 +328,15 @@ export function Swap({
 
   const handleTypeInput = useCallback(
     (value: string) => {
-      maybeLogFirstSwapAction(trace)
       onUserInput(Field.INPUT, value)
+      maybeLogFirstSwapAction(trace)
     },
     [onUserInput, trace]
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
-      maybeLogFirstSwapAction(trace)
       onUserInput(Field.OUTPUT, value)
+      maybeLogFirstSwapAction(trace)
     },
     [onUserInput, trace]
   )
