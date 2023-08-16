@@ -19,10 +19,13 @@ const MobileWrapper = styled(AutoColumn)`
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme }) => theme.surface3};
-  border-radius: 16px;
+  border-radius: 18px;
   display: flex;
   padding: 6px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   padding-right: 12px;
+  line-height: 0px;
 
   align-items: center;
   :hover {

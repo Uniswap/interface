@@ -42,7 +42,7 @@ export const SearchInput = styled.input`
   border-radius: 12px;
   color: ${({ theme }) => theme.neutral1};
   border-style: solid;
-  border: 1px solid ${({ theme }) => theme.surface2};
+  border: 1px solid ${({ theme }) => theme.surface3};
   -webkit-appearance: none;
   font-weight: 485;
 

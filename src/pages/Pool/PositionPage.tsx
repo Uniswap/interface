@@ -80,6 +80,7 @@ const PageWrapper = styled.div`
 const BadgeText = styled.div`
   font-weight: 535;
   font-size: 14px;
+  color: ${({ theme }) => theme.neutral2};
 `
 
 // responsive text
@@ -779,9 +780,9 @@ function PositionPageContent() {
                             </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <ThemedText.DeprecatedMain color={theme.neutral2} fontSize={11}>
+                                <BadgeText>
                                   <Trans>{inverted ? ratio : 100 - ratio}%</Trans>
-                                </ThemedText.DeprecatedMain>
+                                </BadgeText>
                               </Badge>
                             ) : null}
                           </RowFixed>
@@ -794,9 +795,9 @@ function PositionPageContent() {
                             </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <ThemedText.DeprecatedMain color={theme.neutral2} fontSize={11}>
+                                <BadgeText>
                                   <Trans>{inverted ? 100 - ratio : ratio}%</Trans>
-                                </ThemedText.DeprecatedMain>
+                                </BadgeText>
                               </Badge>
                             ) : null}
                           </RowFixed>
