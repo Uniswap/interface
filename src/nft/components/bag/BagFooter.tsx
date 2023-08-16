@@ -69,7 +69,7 @@ const CurrencyRow = styled(Row)`
 
 const TotalColumn = styled(Column)`
   text-align: end;
-  overflow-x: hidden;
+  overflow: hidden;
 `
 
 const WarningIcon = styled(AlertTriangle)`
@@ -485,7 +485,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
               )}
             </Column>
             <TotalColumn gap="xs">
-              <ThemedText.SubHeaderSmall marginBottom="4px">
+              <ThemedText.SubHeaderSmall>
                 <Trans>Total</Trans>
               </ThemedText.SubHeaderSmall>
               <InputCurrencyValue
