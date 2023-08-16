@@ -43,12 +43,27 @@ export default async function getToken(networkName: string, tokenAddress: string
     return undefined
   }
 
+  let description = 'Uniswap - Any token. Anytime. Anywhere.'
+
+  if (asset.symbol && asset.market?.price) {
+    const today = new Date().toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
+    description +=
+      '/n' + today + ': The current price of ' + asset.symbol + ' is $' + asset.market?.price.value + '. Swap now.'
+  }
+
+  console.log(description)
+
   const title = formatTitleName(asset.symbol, asset.name)
 
   const formattedAsset = {
     title,
     image,
     url,
+    description,
     symbol: asset.symbol ?? 'UNK',
     ogImage: asset.project?.logoUrl,
     name: asset.name ?? 'Token',

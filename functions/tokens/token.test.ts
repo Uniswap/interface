@@ -28,9 +28,8 @@ const tokens = [
 test.each(tokens)('should inject metadata for valid tokens', async (token) => {
   const url = 'http://127.0.0.1:3000/tokens/' + token.network + '/' + token.address
   const body = await fetch(new Request(url)).then((res) => res.text())
-  expect(body).toMatchSnapshot()
   expect(body).toContain(`<meta property="og:title" content="Get ${token.symbol} on Uniswap"/>`)
-  expect(body).not.toContain(`<meta property="og:description"`)
+  expect(body).toContain(`<meta property="og:description" content="Uniswap - Any token. Anytime. Anywhere.`)
   expect(body).toContain(`<meta property="og:image" content="${token.image}"/>`)
   expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
   expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
