@@ -26,8 +26,7 @@ export function customCreateMigrate(migrations: MigrationManifest, options: Migr
   return async (state: PersistedState, currentVersion: number) => {
     if (state === undefined) {
       // If no state exists, run the legacy migration to set initial state
-      const initialState = await legacyLocalStorageMigration()
-      return defaultMigrate(initialState, currentVersion)
+      state = await legacyLocalStorageMigration()
     }
 
     // Otherwise, use the default migration process

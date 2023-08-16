@@ -3,7 +3,7 @@ import 'cypress-hardhat/lib/browser'
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 
 import { FeatureFlag } from '../../src/featureFlags'
-import { UserState } from '../../src/state/user/reducer'
+import { initialState, UserState } from '../../src/state/user/reducer'
 import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
 
 declare global {
@@ -54,18 +54,31 @@ Cypress.Commands.overwrite(
           onBeforeLoad(win) {
             options?.onBeforeLoad?.(win)
 
-            // We want to test from a clean state, so we clear the persisted state.
             win.indexedDB.deleteDatabase('redux')
 
-            // Since the IndexedDB state is clear, the first migration will run and pick up this legacy state from localStorage.
-            win.localStorage.setItem(
-              'redux_localstorage_simple_user', // storage key for the user reducer using 'redux-localstorage-simple'
-              JSON.stringify({
-                hideUniswapWalletBanner: true,
-                ...CONNECTED_WALLET_USER_STATE,
-                ...(options?.userState ?? {}),
-              })
-            )
+            const dbRequest = win.indexedDB.open('redux')
+
+            dbRequest.onsuccess = function () {
+              const db = dbRequest.result
+              const transaction = db.transaction('keyvaluepairs', 'readwrite')
+              const store = transaction.objectStore('keyvaluepairs')
+              store.put(
+                {
+                  user: {
+                    ...initialState,
+                    hideUniswapWalletBanner: true,
+                    ...CONNECTED_WALLET_USER_STATE,
+                    ...(options?.userState ?? {}),
+                  },
+                },
+                'persist:interface'
+              )
+            }
+
+            dbRequest.onupgradeneeded = function () {
+              const db = dbRequest.result
+              db.createObjectStore('keyvaluepairs')
+            }
 
             // Set feature flags, if configured.
             if (options?.featureFlags) {

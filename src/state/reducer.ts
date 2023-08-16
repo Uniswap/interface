@@ -51,6 +51,7 @@ const persistConfig: PersistConfig<AppState> = {
   throttle: 1000, // ms
   serialize: false,
   // The typescript definitions are wrong - we need this to be false for unserialized storage to work.
+  // We need unserialized storage for inspectable db entries for debugging.
   // @ts-ignore
   deserialize: false,
   debug: isDevelopmentEnv(),
