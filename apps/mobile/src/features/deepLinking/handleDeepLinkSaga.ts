@@ -45,13 +45,13 @@ const UNISWAP_URL_SCHEME = 'uniswap://'
 const UNISWAP_URL_SCHEME_WALLETCONNECT = 'uniswap://wc?uri='
 const UNISWAP_URL_SCHEME_WIDGET = 'uniswap://widget/'
 
-const NFT_ITEM_SHARE_LINK_HASH_REGEX = /^#\/nfts\/asset\/(0x[a-fA-F0-9]{40})\/(\d+)$/
-const NFT_COLLECTION_SHARE_LINK_HASH_REGEX = /^#\/nfts\/collection\/(0x[a-fA-F0-9]{40})$/
+const NFT_ITEM_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/asset\/(0x[a-fA-F0-9]{40})\/(\d+)$/
+const NFT_COLLECTION_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/collection\/(0x[a-fA-F0-9]{40})$/
 const TOKEN_SHARE_LINK_HASH_REGEX = RegExp(
   // eslint-disable-next-line no-useless-escape
-  `^#\/tokens\/([\\w\\d]*)\/(0x[a-fA-F0-9]{40}|${UNISWAP_APP_NATIVE_TOKEN})$`
+  `^(#\/)?tokens\/([\\w\\d]*)\/(0x[a-fA-F0-9]{40}|${UNISWAP_APP_NATIVE_TOKEN})$`
 )
-const ADDRESS_SHARE_LINK_HASH_REGEX = /^#\/address\/(0x[a-fA-F0-9]{40})$/
+const ADDRESS_SHARE_LINK_HASH_REGEX = /^(#\/)?address\/(0x[a-fA-F0-9]{40})$/
 
 export const openDeepLink = createAction<DeepLink>('deeplink/open')
 
@@ -59,10 +59,10 @@ export function* deepLinkWatcher() {
   yield* takeLatest(openDeepLink.type, handleDeepLink)
 }
 
-export function* handleUniswapAppDeepLink(hash: string, url: string, linkSource: LinkSource) {
+export function* handleUniswapAppDeepLink(path: string, url: string, linkSource: LinkSource) {
   // Handle NFT Item share (ex. https://app.uniswap.org/#/nfts/asset/0x.../123)
-  if (NFT_ITEM_SHARE_LINK_HASH_REGEX.test(hash)) {
-    const [, contractAddress, tokenId] = hash.match(NFT_ITEM_SHARE_LINK_HASH_REGEX) || []
+  if (NFT_ITEM_SHARE_LINK_HASH_REGEX.test(path)) {
+    const [, , contractAddress, tokenId] = path.match(NFT_ITEM_SHARE_LINK_HASH_REGEX) || []
     if (!contractAddress || !tokenId) return
     yield* put(
       openModal({
@@ -85,8 +85,8 @@ export function* handleUniswapAppDeepLink(hash: string, url: string, linkSource:
   }
 
   // Handle NFT collection share (ex. https://app.uniswap.org/#/nfts/collection/0x...)
-  if (NFT_COLLECTION_SHARE_LINK_HASH_REGEX.test(hash)) {
-    const [, contractAddress] = hash.match(NFT_COLLECTION_SHARE_LINK_HASH_REGEX) || []
+  if (NFT_COLLECTION_SHARE_LINK_HASH_REGEX.test(path)) {
+    const [, , contractAddress] = path.match(NFT_COLLECTION_SHARE_LINK_HASH_REGEX) || []
     if (!contractAddress) return
     yield* put(
       openModal({
@@ -107,8 +107,8 @@ export function* handleUniswapAppDeepLink(hash: string, url: string, linkSource:
   }
 
   // Handle Token share (ex. https://app.uniswap.org/#/tokens/ethereum/0x...)
-  if (TOKEN_SHARE_LINK_HASH_REGEX.test(hash)) {
-    const [, network, contractAddress] = hash.match(TOKEN_SHARE_LINK_HASH_REGEX) || []
+  if (TOKEN_SHARE_LINK_HASH_REGEX.test(path)) {
+    const [, , network, contractAddress] = path.match(TOKEN_SHARE_LINK_HASH_REGEX) || []
     const chainId = network && fromUniswapWebAppLink(network)
     if (!chainId || !contractAddress) return
     const currencyId =
@@ -141,8 +141,8 @@ export function* handleUniswapAppDeepLink(hash: string, url: string, linkSource:
   }
 
   // Handle Address share (ex. https://app.uniswap.org/#/address/0x...)
-  if (ADDRESS_SHARE_LINK_HASH_REGEX.test(hash)) {
-    const [, accountAddress] = hash.match(ADDRESS_SHARE_LINK_HASH_REGEX) || []
+  if (ADDRESS_SHARE_LINK_HASH_REGEX.test(path)) {
+    const [, , accountAddress] = path.match(ADDRESS_SHARE_LINK_HASH_REGEX) || []
     if (!accountAddress) return
     const accounts = yield* appSelect(selectNonPendingAccounts)
     const activeAccountAddress = yield* appSelect(selectActiveAccountAddress)
@@ -222,7 +222,9 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     }
 
     if (url.hostname === UNISWAP_APP_HOSTNAME) {
-      yield* call(handleUniswapAppDeepLink, url.hash, action.payload.url, LinkSource.Share)
+      const urlParts = url.href.split(`${UNISWAP_APP_HOSTNAME}/`)
+      const urlPath = urlParts.length >= 1 ? (urlParts[1] as string) : ''
+      yield* call(handleUniswapAppDeepLink, urlPath, action.payload.url, LinkSource.Share)
       return
     }
 
