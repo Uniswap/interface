@@ -8,7 +8,6 @@ import { useGate } from 'statsig-react'
 export enum FeatureFlag {
   traceJsonRpc = 'traceJsonRpc',
   permit2 = 'permit2',
-  fiatOnRampButtonOnSwap = 'fiat_on_ramp_button_on_swap_page',
   debounceSwapQuote = 'debounce_swap_quote',
   uniswapXEnabled = 'uniswapx_enabled', // enables sending dutch_limit config to routing-api
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
