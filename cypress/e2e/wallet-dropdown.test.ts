@@ -23,7 +23,7 @@ describe('Wallet Dropdown', () => {
     })
   }
 
-  function itChangesLocale(featureFlag = false) {
+  function itChangesLocale({ featureFlag = false }: { featureFlag?: boolean } = {}) {
     it('should change locale', () => {
       cy.contains('Uniswap available in: English').should('not.exist')
 
@@ -57,7 +57,7 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
     })
-    itChangesLocale(true)
+    itChangesLocale({ featureFlag: true })
   })
 
   describe('testnet toggle', () => {
