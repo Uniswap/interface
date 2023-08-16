@@ -12,7 +12,6 @@ import { SlideOutMenu } from './SlideOutMenu'
 const InternalLinkMenuItem = styled(Link)`
   ${ClickableStyle}
   flex: 1;
-  color: ${({ theme }) => theme.textTertiary};
   display: flex;
   flex-direction: row;
   align-items: center;
