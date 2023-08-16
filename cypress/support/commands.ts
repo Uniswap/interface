@@ -4,7 +4,7 @@ import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 
 import { FeatureFlag } from '../../src/featureFlags'
 import { initialState, UserState } from '../../src/state/user/reducer'
-import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
+import { CONNECTED_WALLET_USER_STATE, setInitialUserState } from '../utils/user-state'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -54,31 +54,12 @@ Cypress.Commands.overwrite(
           onBeforeLoad(win) {
             options?.onBeforeLoad?.(win)
 
-            win.indexedDB.deleteDatabase('redux')
-
-            const dbRequest = win.indexedDB.open('redux')
-
-            dbRequest.onsuccess = function () {
-              const db = dbRequest.result
-              const transaction = db.transaction('keyvaluepairs', 'readwrite')
-              const store = transaction.objectStore('keyvaluepairs')
-              store.put(
-                {
-                  user: {
-                    ...initialState,
-                    hideUniswapWalletBanner: true,
-                    ...CONNECTED_WALLET_USER_STATE,
-                    ...(options?.userState ?? {}),
-                  },
-                },
-                'persist:interface'
-              )
-            }
-
-            dbRequest.onupgradeneeded = function () {
-              const db = dbRequest.result
-              db.createObjectStore('keyvaluepairs')
-            }
+            setInitialUserState(win, {
+              ...initialState,
+              hideUniswapWalletBanner: true,
+              ...CONNECTED_WALLET_USER_STATE,
+              ...(options?.userState ?? {}),
+            })
 
             // Set feature flags, if configured.
             if (options?.featureFlags) {
