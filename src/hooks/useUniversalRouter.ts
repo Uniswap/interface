@@ -36,6 +36,12 @@ class ModifiedSwapError extends Error {
   }
 }
 
+class WrongChainError extends Error {
+  constructor() {
+    super(t`Your wallet is connected to the wrong network.`)
+  }
+}
+
 interface SwapOptions {
   slippageTolerance: Percent
   deadline?: BigNumber
@@ -59,7 +65,7 @@ export function useUniversalRouterSwapCallback(
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
         const connectedChainId = await provider.getSigner().getChainId()
-        if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
+        if (chainId !== connectedChainId) throw new WrongChainError()
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
