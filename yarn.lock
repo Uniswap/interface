@@ -11734,10 +11734,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/analytics-events@npm:2.14.0":
-  version: 2.14.0
-  resolution: "@uniswap/analytics-events@npm:2.14.0"
-  checksum: 68e1de82ed62a275e3727e6170b6a9e29da83bf609cbc111893ef5b044aeae9f535da6a5f5062d9d31ad34a3dbbaff7157c38b3f4c0c153d3403a7850ad6947b
+"@uniswap/analytics-events@npm:2.15.0":
+  version: 2.15.0
+  resolution: "@uniswap/analytics-events@npm:2.15.0"
+  checksum: 492da0933d2beb569f429b0e86972587be3f78242360ddcf343a7e7015e63882c456030269e88bca6c4ce7dcc8162a4a67fbc236d1f2ce0c796042ff011e85cd
   languageName: node
   linkType: hard
 
@@ -11833,7 +11833,7 @@ __metadata:
     "@types/uuid": 9.0.1
     "@types/wcag-contrast": 3.0.0
     "@uniswap/analytics": 1.4.0
-    "@uniswap/analytics-events": 2.14.0
+    "@uniswap/analytics-events": 2.15.0
     "@uniswap/ethers-rs-mobile": 0.0.1
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/router-sdk": 1.6.0
@@ -12140,7 +12140,7 @@ __metadata:
     "@types/react-dom": ^18.0.0
     "@types/redux-logger": 3.0.9
     "@types/uuid": 9.0.1
-    "@uniswap/analytics-events": 2.14.0
+    "@uniswap/analytics-events": 2.15.0
     burnt: 0.11.4
     clean-webpack-plugin: ^4.0.0
     copy-webpack-plugin: ^11.0.0
@@ -37678,7 +37678,7 @@ __metadata:
     "@sentry/react-native": 5.5.0
     "@testing-library/react-hooks": 7.0.2
     "@types/react": ^18.0.15
-    "@uniswap/analytics-events": 2.14.0
+    "@uniswap/analytics-events": 2.15.0
     "@uniswap/sdk-core": 4.0.6
     dayjs: 1.11.7
     eslint: 8.44.0

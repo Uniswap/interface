@@ -132,7 +132,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const signerAccount = signerAccounts.find((account) =>
     areAddressesEqual(account.address, request.account)
   )
-  const gasFeeInfo = useTransactionGasFee(tx, GasSpeed.Urgent)
+  const gasFeeInfo = useTransactionGasFee(tx, GasSpeed.Urgent).data
   const gasFeeUSD = useUSDValue(chainId, gasFeeInfo?.gasFee)
   const hasSufficientFunds = useHasSufficientFunds({
     account: request.account,

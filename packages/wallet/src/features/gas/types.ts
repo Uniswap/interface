@@ -1,3 +1,5 @@
+import { ApolloError } from '@apollo/client'
+
 export enum GasSpeed {
   Normal = 'normal',
   Fast = 'fast',
@@ -69,4 +71,9 @@ export type TransactionGasFeeInfo = {
   // these are the values corresponding to gasFee that are eventually
   // passed to the transaction itself
   params: TransactionLegacyFeeParams | TransactionEip1559FeeParams
+}
+
+export type UseTransactionGasFeeResponse = {
+  data?: TransactionGasFeeInfo
+  error?: ApolloError
 }

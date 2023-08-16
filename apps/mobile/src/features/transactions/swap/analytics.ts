@@ -5,6 +5,7 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
 import { currencyAddress, getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
 
@@ -60,5 +61,33 @@ export function getBaseTradeAnalyticsProperties(
     token_in_amount: trade.inputAmount.toExact(),
     token_out_amount: formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount),
     allowed_slippage_basis_points: trade.slippageTolerance * 100,
+  }
+}
+
+export function getBaseTradeAnalyticsPropertiesFromSwapInfo(
+  derivedSwapInfo: DerivedSwapInfo
+): SwapTradeBaseProperties {
+  const { chainId, currencyAmounts } = derivedSwapInfo
+  const inputCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
+  const outputCurrencyAmount = currencyAmounts[CurrencyField.OUTPUT]
+  const slippageTolerance =
+    derivedSwapInfo.customSlippageTolerance ?? derivedSwapInfo.autoSlippageTolerance
+  return {
+    token_in_symbol: inputCurrencyAmount?.currency.symbol,
+    token_out_symbol: outputCurrencyAmount?.currency.symbol,
+    token_in_address: inputCurrencyAmount
+      ? getCurrencyAddressForAnalytics(inputCurrencyAmount?.currency)
+      : '',
+    token_out_address: outputCurrencyAmount
+      ? getCurrencyAddressForAnalytics(outputCurrencyAmount?.currency)
+      : '',
+    price_impact_basis_points: derivedSwapInfo.trade.trade?.priceImpact
+      .multiply(100)
+      .toSignificant(),
+    estimated_network_fee_usd: undefined,
+    chain_id: chainId,
+    token_in_amount: inputCurrencyAmount?.toExact() ?? '',
+    token_out_amount: formatCurrencyAmount(outputCurrencyAmount, NumberType.SwapTradeAmount),
+    allowed_slippage_basis_points: slippageTolerance ? slippageTolerance * 100 : undefined,
   }
 }

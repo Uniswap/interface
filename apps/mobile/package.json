@@ -85,7 +85,7 @@
     "@shopify/react-native-skia": "0.1.153",
     "@shopify/restyle": "1.6.1",
     "@uniswap/analytics": "1.4.0",
-    "@uniswap/analytics-events": "2.14.0",
+    "@uniswap/analytics-events": "2.15.0",
     "@uniswap/ethers-rs-mobile": "0.0.1",
     "@uniswap/permit2-sdk": "1.2.0",
     "@uniswap/router-sdk": "1.6.0",

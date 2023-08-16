@@ -11,7 +11,10 @@ import { AnyAction } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { getBaseTradeAnalyticsProperties } from 'src/features/transactions/swap/analytics'
+import {
+  getBaseTradeAnalyticsProperties,
+  getBaseTradeAnalyticsPropertiesFromSwapInfo,
+} from 'src/features/transactions/swap/analytics'
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
 import {
   getSwapMethodParameters,
@@ -581,8 +584,24 @@ export function useSwapTxAndGasInfo(
     tokenApprovalInfo?.txRequest,
     GasSpeed.Urgent,
     skipGasFeeQuery
+  ).data
+  const txFeeInfoResponse = useTransactionGasFee(
+    transactionRequest,
+    GasSpeed.Urgent,
+    skipGasFeeQuery
   )
-  const txFeeInfo = useTransactionGasFee(transactionRequest, GasSpeed.Urgent, skipGasFeeQuery)
+
+  useEffect(() => {
+    if (txFeeInfoResponse.error) {
+      sendMobileAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+        ...getBaseTradeAnalyticsPropertiesFromSwapInfo(derivedSwapInfo),
+        error: txFeeInfoResponse.error,
+        txRequest: transactionRequest,
+      })
+    }
+  }, [derivedSwapInfo, transactionRequest, txFeeInfoResponse.error])
+
+  const txFeeInfo = txFeeInfoResponse.data
   const totalGasFee = sumGasFees(approveFeeInfo?.gasFee, txFeeInfo?.gasFee)
 
   const txRequestWithGasSettings = useMemo(() => {
@@ -597,7 +616,10 @@ export function useSwapTxAndGasInfo(
   const approveTxWithGasSettings: providers.TransactionRequest | undefined = useMemo(() => {
     if (approveLoading || !tokenApprovalInfo?.txRequest) return
 
-    return { ...tokenApprovalInfo.txRequest, ...approveFeeInfo?.params }
+    return {
+      ...tokenApprovalInfo.txRequest,
+      ...approveFeeInfo?.params,
+    }
   }, [approveLoading, tokenApprovalInfo?.txRequest, approveFeeInfo?.params])
 
   return {

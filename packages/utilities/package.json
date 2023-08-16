@@ -9,7 +9,7 @@
     "@react-navigation/core": "6.2.2",
     "@sentry/react-native": "5.5.0",
     "@testing-library/react-hooks": "7.0.2",
-    "@uniswap/analytics-events": "2.14.0",
+    "@uniswap/analytics-events": "2.15.0",
     "@uniswap/sdk-core": "4.0.6",
     "dayjs": "1.11.7",
     "jsbi": "3.2.5",

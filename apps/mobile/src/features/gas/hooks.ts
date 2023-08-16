@@ -27,7 +27,7 @@ export function useCancelationGasFeeInfo(
     }
   }, [transaction])
 
-  const baseTxGasFee = useTransactionGasFee(cancelationRequest, GasSpeed.Urgent)
+  const baseTxGasFee = useTransactionGasFee(cancelationRequest, GasSpeed.Urgent).data
   return useMemo(() => {
     if (!baseTxGasFee) return
 

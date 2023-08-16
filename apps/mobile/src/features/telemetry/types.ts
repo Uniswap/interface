@@ -1,5 +1,7 @@
+import { ApolloError } from '@apollo/client'
 import { RenderPassReport } from '@shopify/react-native-performance'
 import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
+import { providers } from 'ethers'
 import { ImportType } from 'src/features/onboarding/utils'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { WidgetEvent, WidgetType } from 'src/features/widgets/widgets'
@@ -123,5 +125,9 @@ export type MobileEventProperties = {
     token_out_amount_usd?: number
     is_auto_slippage?: boolean
     swap_quote_block_number?: string
+  } & SwapTradeBaseProperties
+  [SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED]: {
+    error?: ApolloError
+    txRequest?: providers.TransactionRequest
   } & SwapTradeBaseProperties
 }

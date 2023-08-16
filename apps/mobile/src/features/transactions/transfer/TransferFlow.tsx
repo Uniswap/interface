@@ -49,7 +49,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
     // stop polling for gas once transaction is submitted
     step === TransactionStep.SUBMITTED ||
       warnings.some((warning) => warning.action === WarningAction.DisableReview)
-  )
+  ).data
 
   const gasFeeUSD = useUSDValue(derivedTransferInfo.chainId, gasFeeInfo?.gasFee)
   const transferTxWithGasSettings = useMemo(() => {
