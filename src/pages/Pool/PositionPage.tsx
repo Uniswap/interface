@@ -486,7 +486,7 @@ function PositionPageContent() {
 
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
-  const collect = useCallback(() => {
+  const collect = useCallback(async () => {
     if (
       !currency0ForFeeCollectionPurposes ||
       !currency1ForFeeCollectionPurposes ||
@@ -515,10 +515,13 @@ function PositionPageContent() {
       value,
     }
 
+    const connectedChainId = await provider.getSigner().getChainId()
+    if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
+
     provider
       .getSigner()
       .estimateGas(txn)
-      .then((estimate) => {
+      .then(async (estimate) => {
         const newTxn = {
           ...txn,
           gasLimit: calculateGasMargin(estimate),

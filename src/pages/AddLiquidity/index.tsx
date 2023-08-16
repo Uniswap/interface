@@ -278,12 +278,15 @@ function AddLiquidity() {
         }
       }
 
+      const connectedChainId = await provider.getSigner().getChainId()
+      if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
+
       setAttemptingTxn(true)
 
       provider
         .getSigner()
         .estimateGas(txn)
-        .then((estimate) => {
+        .then(async (estimate) => {
           const newTxn = {
             ...txn,
             gasLimit: calculateGasMargin(estimate),

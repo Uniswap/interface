@@ -140,6 +140,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       value,
     }
 
+    const connectedChainId = await provider.getSigner().getChainId()
+    if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
+
     provider
       .getSigner()
       .estimateGas(txn)
