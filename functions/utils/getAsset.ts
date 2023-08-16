@@ -1,5 +1,5 @@
-import { AssetDocument, AssetQuery } from '../../src/graphql/data/__generated__/types-and-hooks'
 import client from '../client'
+import { AssetDocument, AssetQuery } from './types'
 
 function formatTitleName(name: string | undefined, collectionName: string | undefined, tokenId: string) {
   if (name) {
@@ -30,11 +30,20 @@ export default async function getAsset(collectionAddress: string, tokenId: strin
   if (!asset) {
     return undefined
   }
+
+  const description =
+    asset.collection?.description
+      ?.replace(/(\r\n|\n|\r)/gm, '')
+      .split('. ')
+      .slice(0, 2)
+      .join('. ') ?? 'Better prices. More listings. NFTs on Uniswap.'
+
   const title = formatTitleName(asset.name, asset.collection?.name, asset.tokenId)
   const formattedAsset = {
     title,
     image,
     url,
+    description,
     ogImage: asset.image?.url ?? origin + '/images/192x192_App_Icon.png',
   }
   return formattedAsset
