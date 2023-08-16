@@ -3,8 +3,8 @@ import 'cypress-hardhat/lib/browser'
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 
 import { FeatureFlag } from '../../src/featureFlags'
-import { UserState } from '../../src/state/user/reducer'
-import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
+import { initialState, UserState } from '../../src/state/user/reducer'
+import { CONNECTED_WALLET_USER_STATE, setInitialUserState } from '../utils/user-state'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -54,18 +54,12 @@ Cypress.Commands.overwrite(
           onBeforeLoad(win) {
             options?.onBeforeLoad?.(win)
 
-            // We want to test from a clean state, so we clear the local storage (which clears redux).
-            win.localStorage.clear()
-
-            // Set initial user state.
-            win.localStorage.setItem(
-              'redux_localstorage_simple_user', // storage key for the user reducer using 'redux-localstorage-simple'
-              JSON.stringify({
-                hideUniswapWalletBanner: true,
-                ...CONNECTED_WALLET_USER_STATE,
-                ...(options?.userState ?? {}),
-              })
-            )
+            setInitialUserState(win, {
+              ...initialState,
+              hideUniswapWalletBanner: true,
+              ...CONNECTED_WALLET_USER_STATE,
+              ...(options?.userState ?? {}),
+            })
 
             // Set feature flags, if configured.
             if (options?.featureFlags) {

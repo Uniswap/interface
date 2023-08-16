@@ -12952,6 +12952,11 @@ image-q@^1.1.1:
   resolved "https://registry.npmjs.org/image-q/-/image-q-1.1.1.tgz"
   integrity sha1-/IQJlmRGC5DKhi2TALa/u7+/gFY=
 
+immediate@~3.0.5:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
+  integrity sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==
+
 immer@^9.0.21, immer@^9.0.6, immer@^9.0.7:
   version "9.0.21"
   resolved "https://registry.npmjs.org/immer/-/immer-9.0.21.tgz#1e025ea31a40f24fb064f1fef23e931496330176"
@@ -14896,6 +14901,13 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+lie@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/lie/-/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
+  integrity sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==
+  dependencies:
+    immediate "~3.0.5"
+
 lilconfig@^2.0.3, lilconfig@^2.0.5, lilconfig@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/lilconfig/-/lilconfig-2.1.0.tgz#78e23ac89ebb7e1bfbf25b18043de756548e7f52"
@@ -14998,6 +15010,13 @@ loader-utils@^3.2.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-3.2.1.tgz#4fb104b599daafd82ef3e1a41fb9265f87e1f576"
   integrity sha512-ZvFw1KWS3GVyYBYb7qkmRM/WwL2TQQBxgCK62rlvm4WpVQ23Nb4tYjApUlfjrEGvOs7KHEsmyUn75OHZrJMWPw==
+
+localforage@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/localforage/-/localforage-1.10.0.tgz#5c465dc5f62b2807c3a84c0c6a1b1b3212781dd4"
+  integrity sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==
+  dependencies:
+    lie "3.1.1"
 
 locate-path@^2.0.0:
   version "2.0.0"
@@ -15297,11 +15316,6 @@ merge2@^1.3.0, merge2@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
-
-merge@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.npmjs.org/merge/-/merge-2.1.0.tgz"
-  integrity sha512-TcuhVDV+e6X457MQAm7xIb19rWhZuEDEho7RrwxMpQ/3GhD5sDlnP188gjQQuweXHy9igdke5oUtVOXX1X8Sxg==
 
 merkletreejs@^0.3.9:
   version "0.3.9"
@@ -17861,12 +17875,10 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "^1.0.0"
 
-redux-localstorage-simple@^2.3.1:
-  version "2.4.0"
-  resolved "https://registry.npmjs.org/redux-localstorage-simple/-/redux-localstorage-simple-2.4.0.tgz"
-  integrity sha512-Zj28elJtO4fqXXC+gikonbKhFUkiwlalScYRn3EGUU44Pika1995AqUgzjIcsSPlBhIDV2WudFqa/YI9+3aE9Q==
-  dependencies:
-    merge "2.1.0"
+redux-persist@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-6.0.0.tgz#b4d2972f9859597c130d40d4b146fecdab51b3a8"
+  integrity sha512-71LLMbUq2r02ng2We9S215LtPu3fY0KgaGE0k8WRgl6RkqxtGfl7HUozz1Dftwsb0D/5mZ8dwAaPbtnzfvbEwQ==
 
 redux-thunk@^2.4.2:
   version "2.4.2"
@@ -19845,6 +19857,11 @@ ts-transform-graphql-tag@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/ts-transform-graphql-tag/-/ts-transform-graphql-tag-0.2.1.tgz#f596c491196b6a6a65b65a8b99bf6e2314c78017"
   integrity sha512-gciNzCpVafccayI/VQKU2ROaol4gMpz0t5sAW/jzG/J/wnjPYCn06yKzlM4mkQ5tjCvPmFuZnLYF4i0tUiIiMQ==
+
+tsafe@^1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-1.6.4.tgz#048a114761714538c72f16abd25bb247d4e3780e"
+  integrity sha512-l4Z54QFGHO8GF0gBpb3yPGHjkIkIirl8rwW+lMBmtEMzOJeRs8BdjkDEx6nU8Ak9PQVp/KNDtECxTja8MMIDoA==
 
 tsconfig-paths@^3.14.1:
   version "3.14.1"
