@@ -35,14 +35,22 @@ function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isAct
   )
 }
 
-export default function LanguageMenu({ onClose }: { onClose: () => void }) {
+export function LanguageMenuItems() {
   const activeLocale = useActiveLocale()
 
   return (
-    <SlideOutMenu title={<Trans>Language</Trans>} onClose={onClose}>
+    <>
       {SUPPORTED_LOCALES.map((locale) => (
         <LanguageMenuItem locale={locale} isActive={activeLocale === locale} key={locale} />
       ))}
+    </>
+  )
+}
+
+export default function LanguageMenu({ onClose }: { onClose: () => void }) {
+  return (
+    <SlideOutMenu title={<Trans>Language</Trans>} onClose={onClose}>
+      <LanguageMenuItems />
     </SlideOutMenu>
   )
 }

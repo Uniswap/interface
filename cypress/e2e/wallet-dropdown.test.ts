@@ -1,3 +1,5 @@
+import { FeatureFlag } from 'featureFlags'
+
 import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {
@@ -23,16 +25,21 @@ describe('Wallet Dropdown', () => {
 
   function itChangesLocale() {
     it('should change locale', () => {
-      cy.contains('Uniswap available in: English').should('not.exist')
+      const testLanguageSettings = () => {
+        cy.contains('Uniswap available in: English').should('not.exist')
+        cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
+        cy.location('search').should('match', /\?lng=af-ZA$/)
+        cy.contains('Uniswap available in: English')
 
+        cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
+        cy.location('search').should('match', /\?lng=en-US$/)
+        cy.contains('Uniswap available in: English').should('not.exist')
+      }
+
+      testLanguageSettings()
+      cy.visit('/swap', { featureFlags: [FeatureFlag.currencyConversion] })
       cy.get(getTestSelector('language-settings-button')).click()
-      cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
-      cy.location('search').should('match', /\?lng=af-ZA$/)
-      cy.contains('Uniswap available in: English')
-
-      cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
-      cy.location('search').should('match', /\?lng=en-US$/)
-      cy.contains('Uniswap available in: English').should('not.exist')
+      testLanguageSettings()
     })
   }
 

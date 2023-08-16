@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { LOCALE_LABEL } from 'constants/locales'
+import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
@@ -11,6 +12,7 @@ import ThemeToggle from 'theme/components/ThemeToggle'
 
 import { AnalyticsToggle } from './AnalyticsToggle'
 import { GitVersionRow } from './GitVersionRow'
+import { LanguageMenuItems } from './LanguageMenu'
 import { SlideOutMenu } from './SlideOutMenu'
 import { SmallBalanceToggle } from './SmallBalanceToggle'
 import { TestnetsToggle } from './TestnetsToggle'
@@ -67,6 +69,7 @@ export default function SettingsMenu({
   onClose: () => void
   openLanguageSettings: () => void
 }) {
+  const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
   const activeLocale = useActiveLocale()
 
   return (
@@ -82,13 +85,23 @@ export default function SettingsMenu({
             <AnalyticsToggle />
             <TestnetsToggle />
           </ToggleWrapper>
+          {!currencyConversionEnabled && (
+            <>
+              <SectionTitle data-testid="wallet-header">
+                <Trans>Language</Trans>
+              </SectionTitle>
+              <LanguageMenuItems />
+            </>
+          )}
 
-          <SettingsButton
-            title={<Trans>Language</Trans>}
-            currentState={LOCALE_LABEL[activeLocale]}
-            onClick={openLanguageSettings}
-            testId="language-settings-button"
-          />
+          {currencyConversionEnabled && (
+            <SettingsButton
+              title={<Trans>Language</Trans>}
+              currentState={LOCALE_LABEL[activeLocale]}
+              onClick={openLanguageSettings}
+              testId="language-settings-button"
+            />
+          )}
         </div>
         <GitVersionRow />
       </Container>
