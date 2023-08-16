@@ -18,6 +18,7 @@ export default async function getCollection(collectionAddress: string, url: stri
     title: collection.name + ' on Uniswap',
     image,
     url,
+    description: collection.description?.slice(0, 50) + '...' ?? undefined,
     name: collection.name ?? 'Collection',
     ogImage: collection.image?.url ?? origin + '/images/192x192_App_Icon.png',
     isVerified: collection.isVerified ?? false,

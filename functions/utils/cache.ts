@@ -2,6 +2,7 @@ export interface Data {
   title: string
   image: string
   url: string
+  description?: string
   name?: string
   ogImage?: string
   isVerified?: boolean
