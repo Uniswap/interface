@@ -1,15 +1,16 @@
 const collections = [
   {
-    address: '0xed5af388653567af2f388e6224dc7c4b3241c544',
-    collectionName: 'Azuki',
-    image: 'http://127.0.0.1:3000/api/image/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c544',
-    description: 'Take the red bean to join the garden. View the col...',
-  },
-  {
     address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
     collectionName: 'Bored Ape Yacht Club',
     image: 'http://127.0.0.1:3000/api/image/nfts/collection/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
-    description: 'The Bored Ape Yacht Club is a collection of 10,000...',
+    description:
+      'The Bored Ape Yacht Club is a collection of 10,000 unique Bored Ape NFTs— unique digital collectibles living on the Ethereum blockchain. Your Bored Ape doubles as your Yacht Club membership card, and grants access to members-only benefits, the first of which is access to THE BATHROOM, a collaborative graffiti board',
+  },
+  {
+    address: '0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b',
+    collectionName: 'CLONE X - X TAKASHI MURAKAMI',
+    image: 'http://127.0.0.1:3000/api/image/nfts/collection/0x49cf6f5d44e70224e2e23fdcdd2c053f30ada28b',
+    description: '🧬 CLONE X 🧬20,000 next-gen Avatars, by RTFKT and Takashi Murakami 🌸',
   },
 ]
 
