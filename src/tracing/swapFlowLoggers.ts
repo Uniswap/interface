@@ -39,5 +39,8 @@ export function logSwapQuoteRequest(chainId: number) {
     chainId,
     // We only log the time_to_first_quote_request metric for the first quote request of a session.
     time_to_first_quote_request: hasSetSwapQuote ? undefined : elapsedTime,
+    time_to_first_quote_request_since_first_input: hasSetSwapQuote
+      ? undefined
+      : tracker.getElapsedTime(SwapEventType.FIRST_QUOTE_FETCH_STARTED, SwapEventType.FIRST_SWAP_ACTION),
   })
 }

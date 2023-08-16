@@ -25,6 +25,9 @@ describe('swap flow logging', () => {
       cy.wrap(event.event_properties).should('have.property', 'time_to_first_quote_request')
       cy.wrap(event.event_properties.time_to_first_quote_request).should('be.a', 'number')
       cy.wrap(event.event_properties.time_to_first_quote_request).should('be.gte', 0)
+      cy.wrap(event.event_properties).should('have.property', 'time_to_first_quote_request_since_first_input')
+      cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.a', 'number')
+      cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.gte', 0)
     })
 
     // Submit transaction

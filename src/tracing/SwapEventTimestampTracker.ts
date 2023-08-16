@@ -1,5 +1,6 @@
 import { calculateElapsedTimeWithPerformanceMark } from './utils'
 
+// These events should happen in this order.
 export enum SwapEventType {
   FIRST_SWAP_ACTION = 'FIRST_SWAP_ACTION',
   FIRST_QUOTE_FETCH_STARTED = 'FIRST_QUOTE_FETCH_STARTED',
