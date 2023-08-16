@@ -221,10 +221,10 @@ export default function PositionListItem({
 
       {priceLower && priceUpper ? (
         <RangeLineItem>
-          <ExtentsText>
-            <Trans>Min: </Trans>
-          </ExtentsText>
           <RangeText>
+            <ExtentsText>
+              <Trans>Min: </Trans>
+            </ExtentsText>
             <Trans>
               <span>
                 {formatTickPrice({
