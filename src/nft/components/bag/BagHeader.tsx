@@ -62,7 +62,7 @@ interface BagHeaderProps {
   isProfilePage: boolean
 }
 
-const BASE_SIZING = 14
+const BASE_SIZING = 17
 const INCREMENTAL_SIZING = 6
 
 const getCircleSizing = (numberOfAssets: number): string => {

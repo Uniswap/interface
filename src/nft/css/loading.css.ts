@@ -1,7 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css'
-import { darken } from 'polished'
 
-import { sprinkles } from './sprinkles.css'
+import { sprinkles, vars } from './sprinkles.css'
 
 const loadingAnimation = keyframes({
   '0%': {
@@ -16,7 +15,7 @@ export const loadingBlock = style([
   {
     animation: `${loadingAnimation} 1.5s infinite`,
     animationFillMode: 'both',
-    background: `linear-gradient(to left, #2222220d 25%, ${darken(0.8, '#2222220d')} 50%, #2222220d 75%)`,
+    background: `linear-gradient(to left, ${vars.color.surface1} 25%, ${vars.color.surface2} 50%, ${vars.color.surface1} 75%)`,
     backgroundSize: '400%',
     willChange: 'background-position',
   },
