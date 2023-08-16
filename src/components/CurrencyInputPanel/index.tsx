@@ -108,11 +108,13 @@ const FiatRow = styled(LabelRow)`
   height: 32px;
 `
 
+// note the line height 0 ensures even if we change font/font-size it doesn't break centering
 const Aligner = styled.span`
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  line-height: 0px;
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
