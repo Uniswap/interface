@@ -17,6 +17,7 @@ fun MnemonicWordsGroup(
   modifier: Modifier = Modifier,
   words: List<MnemonicWordUiState>,
   columnCount: Int = DEFAULT_COLUMN_COUNT,
+  showCompact: Boolean = false,
   onClick: (word: MnemonicWordUiState) -> Unit = {},
 ) {
   Row(
@@ -24,7 +25,7 @@ fun MnemonicWordsGroup(
       .fillMaxWidth()
       .wrapContentHeight(),
     horizontalArrangement = Arrangement.spacedBy(
-      UniswapTheme.spacing.spacing12
+      if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12
     )
   ) {
     val size = words.size / columnCount
@@ -35,6 +36,7 @@ fun MnemonicWordsGroup(
         modifier = Modifier.weight(1f),
         words = words.subList(starting, ending),
         numberOffset = starting + 1,
+        showCompact = showCompact,
         onClick = onClick,
       )
     }

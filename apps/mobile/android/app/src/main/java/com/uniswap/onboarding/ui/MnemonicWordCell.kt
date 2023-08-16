@@ -30,10 +30,13 @@ fun MnemonicWordCell(
   modifier: Modifier = Modifier,
   index: Int,
   word: MnemonicWordUiState,
+  showCompact: Boolean = false,
   onClick: () -> Unit = {},
 ) {
-  val shape = UniswapTheme.shapes.large
+  val textStyle =
+    if (showCompact) UniswapTheme.typography.bodySmall else UniswapTheme.typography.bodyLarge
 
+  val shape = UniswapTheme.shapes.large
   var rowModifier = modifier
     .clip(shape)
     .shadow(1.dp, shape)
@@ -45,11 +48,12 @@ fun MnemonicWordCell(
     rowModifier = rowModifier.border(1.dp, UniswapTheme.extendedColors.DEP_accentActive, shape)
   }
 
+
   Row(
     modifier = rowModifier
       .clickable { onClick() }
-      .padding(horizontal = UniswapTheme.spacing.spacing16)
-      .padding(vertical = UniswapTheme.spacing.spacing12)
+      .padding(horizontal = if (showCompact) UniswapTheme.spacing.spacing12 else UniswapTheme.spacing.spacing16)
+      .padding(vertical = if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12)
   ) {
     Text(
       text = "$index",
@@ -58,9 +62,10 @@ fun MnemonicWordCell(
         .defaultMinSize(minWidth = 24.dp)
         .align(Alignment.CenterVertically),
       textAlign = TextAlign.Center,
+      style = textStyle,
     )
     Spacer(modifier = Modifier.width(UniswapTheme.spacing.spacing12))
-    Text(modifier = Modifier.weight(1f), text = word.text)
+    Text(modifier = Modifier.weight(1f), text = word.text, style = textStyle)
   }
 }
 

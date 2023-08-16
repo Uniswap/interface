@@ -15,16 +15,17 @@ fun MnemonicWordsColumn(
   modifier: Modifier = Modifier,
   words: List<MnemonicWordUiState>,
   numberOffset: Int,
+  showCompact: Boolean = false,
   onClick: (word: MnemonicWordUiState) -> Unit = {},
 ) {
   Column(
     modifier = modifier,
     verticalArrangement = Arrangement.spacedBy(
-      UniswapTheme.spacing.spacing12
+      if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12
     ),
   ) {
     words.forEachIndexed { index, word ->
-      MnemonicWordCell(index = index + numberOffset, word = word) {
+      MnemonicWordCell(index = index + numberOffset, word = word, showCompact = showCompact) {
         onClick(word)
       }
     }

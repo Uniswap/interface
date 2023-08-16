@@ -25,18 +25,19 @@ import com.uniswap.theme.UniswapTheme
 @Composable
 fun MnemonicWordBank(
   words: List<MnemonicWordBankCellUiState>,
+  showCompact: Boolean = false,
   onClick: (word: MnemonicWordBankCellUiState) -> Unit
 ) {
   FlowRow(
     modifier = Modifier
       .fillMaxWidth()
       .wrapContentHeight(),
-    mainAxisSpacing = UniswapTheme.spacing.spacing12,
-    crossAxisSpacing = UniswapTheme.spacing.spacing12,
+    mainAxisSpacing = if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12,
+    crossAxisSpacing = if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12,
     mainAxisAlignment = MainAxisAlignment.Center,
   ) {
     words.forEach {
-      MnemonicWordBankCell(word = it) {
+      MnemonicWordBankCell(word = it, showCompact = showCompact) {
         onClick(it)
       }
     }
@@ -44,21 +45,30 @@ fun MnemonicWordBank(
 }
 
 @Composable
-private fun MnemonicWordBankCell(word: MnemonicWordBankCellUiState, onClick: () -> Unit) {
-  val textColor = if (word.used) {
-    MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
-  } else {
-    MaterialTheme.colors.onSurface
-  }
+private fun MnemonicWordBankCell(
+  word: MnemonicWordBankCellUiState,
+  showCompact: Boolean,
+  onClick: () -> Unit
+) {
+
+  val textColor =
+    if (word.used) MaterialTheme.colors.onSurface.copy(alpha = 0.6f) else MaterialTheme.colors.onSurface
+  val textStyle =
+    if (showCompact) UniswapTheme.typography.bodySmall else UniswapTheme.typography.bodyLarge
+  val verticalPadding =
+    if (showCompact) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8
+  val horizontalPadding =
+    if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12
+
   Box(
     modifier = Modifier
       .clip(UniswapTheme.shapes.xlarge)
       .background(cellBackgroundColor())
       .clickable { onClick() }
-      .padding(vertical = UniswapTheme.spacing.spacing8)
-      .padding(horizontal = UniswapTheme.spacing.spacing12),
+      .padding(vertical = verticalPadding)
+      .padding(horizontal = horizontalPadding),
   ) {
-    Text(text = word.text, color = textColor)
+    Text(text = word.text, color = textColor, style = textStyle)
   }
 }
 
