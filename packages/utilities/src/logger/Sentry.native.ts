@@ -5,11 +5,11 @@ import { ISentry } from './Sentry'
 /**
  * Logs an exception to our Sentry Dashboard
  *
- * @param errorMessage A custom error message
+ * @param error A custom error
  * @param context Context from where this method is called
  */
-export function captureException(errorMessage: string, captureContext?: CaptureContext): void {
-  SentryRN.captureException(errorMessage, captureContext)
+export function captureException(error: unknown, captureContext?: CaptureContext): void {
+  SentryRN.captureException(error, captureContext)
 }
 
 /**

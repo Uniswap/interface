@@ -4,12 +4,12 @@ import { ISentry } from './Sentry'
 /**
  * Logs an exception to our Sentry Dashboard
  *
- * @param errorMessage A custom error message
+ * @param error A custom error message
  * @param context Context from where this method is called
  */
-export function captureException(errorMessage: string, captureContext?: CaptureContext): void {
+export function captureException(error: unknown, captureContext?: CaptureContext): void {
   // eslint-disable-next-line no-console
-  console.warn(errorMessage, captureContext)
+  console.warn(error, captureContext)
 }
 
 /**

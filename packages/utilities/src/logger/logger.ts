@@ -60,7 +60,7 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
     return
   }
 
-  Sentry.captureException(errorMessage, captureContext)
+  Sentry.captureException(error, captureContext)
 }
 
 function formatMessage(fileName: string, functionName: string, message: string): string {

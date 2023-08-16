@@ -4,7 +4,7 @@ import { LoggerErrorContext } from 'utilities/src/logger/logger'
 
 /** Dummy Sentry logging class. Overridden by mobile or extension related code. */
 export interface ISentry {
-  captureException(errorMessage: string, captureContext: LoggerErrorContext): void
+  captureException(error: unknown, captureContext: LoggerErrorContext): void
   captureMessage(
     level: SeverityLevel,
     context: string,

@@ -24,13 +24,18 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, E
     return { error }
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+  componentDidCatch(error: Error & { cause?: Error }, errorInfo: ErrorInfo): void {
+    // Based on https://github.com/getsentry/sentry-javascript/blob/develop/packages/react/src/errorboundary.tsx
+    const errorBoundaryError = new Error(error.message)
+    errorBoundaryError.name = `React ErrorBoundary ${errorBoundaryError.name}`
+    errorBoundaryError.stack = errorInfo.componentStack
+    error.cause = errorBoundaryError
+
     logger.error(error, {
       level: 'fatal',
       tags: {
         file: 'ErrorBoundary',
         function: 'componentDidCatch',
-        componentStack: errorInfo.componentStack,
       },
     })
   }
