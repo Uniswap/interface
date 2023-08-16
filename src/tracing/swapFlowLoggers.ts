@@ -31,3 +31,13 @@ export function maybeLogFirstSwapAction(analyticsContext: any) {
     })
   }
 }
+
+export function logSwapQuoteRequest(chainId: number) {
+  const hasSetSwapQuote = tracker.hasTimestamp(SwapEventType.FIRST_QUOTE_FETCH_STARTED)
+  const elapsedTime = tracker.setElapsedTime(SwapEventType.FIRST_QUOTE_FETCH_STARTED)
+  sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_FETCH, {
+    chainId,
+    // We only log the time_to_first_quote_request metric for the first quote request of a session.
+    time_to_first_quote_request: hasSetSwapQuote ? undefined : elapsedTime,
+  })
+}
