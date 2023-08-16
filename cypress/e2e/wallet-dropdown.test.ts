@@ -25,6 +25,7 @@ describe('Wallet Dropdown', () => {
     it('should change locale', () => {
       cy.contains('Uniswap available in: English').should('not.exist')
 
+      cy.get(getTestSelector('language-settings-button')).click()
       cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
       cy.location('search').should('match', /\?lng=af-ZA$/)
       cy.contains('Uniswap available in: English')

@@ -44,12 +44,14 @@ const SettingsButton = ({
   title,
   currentState,
   onClick,
+  testId,
 }: {
   title: ReactNode
   currentState: ReactNode
   onClick: () => void
+  testId?: string
 }) => (
-  <SettingsButtonWrapper align="center" justify="space-between" onClick={onClick}>
+  <SettingsButtonWrapper data-testid={testId} align="center" justify="space-between" onClick={onClick}>
     <ThemedText.SubHeaderSmall color="textPrimary">{title}</ThemedText.SubHeaderSmall>
     <Row gap="xs" align="center" width="min-content">
       <ThemedText.LabelMedium color="textPrimary">{currentState}</ThemedText.LabelMedium>
@@ -85,6 +87,7 @@ export default function SettingsMenu({
             title={<Trans>Language</Trans>}
             currentState={LOCALE_LABEL[activeLocale]}
             onClick={openLanguageSettings}
+            testId="language-settings-button"
           />
         </div>
         <GitVersionRow />
