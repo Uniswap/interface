@@ -293,7 +293,7 @@ export function Swap({
           }
         : {
             [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.postTaxOutputAmount,
           },
     [independentField, parsedAmount, showWrap, trade]
   )

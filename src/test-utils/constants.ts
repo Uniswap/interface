@@ -46,6 +46,7 @@ export const TEST_TRADE_EXACT_INPUT = new ClassicTrade({
   gasUseEstimateUSD: 1.0,
   approveInfo: { needsApprove: false },
   quoteMethod: QuoteMethod.CLIENT_SIDE,
+  outputTax: new Percent(0, 100),
 })
 
 export const TEST_TRADE_EXACT_INPUT_API = new ClassicTrade({
@@ -61,6 +62,7 @@ export const TEST_TRADE_EXACT_INPUT_API = new ClassicTrade({
   gasUseEstimateUSD: 1.0,
   approveInfo: { needsApprove: false },
   quoteMethod: QuoteMethod.ROUTING_API,
+  outputTax: new Percent(0, 100),
 })
 
 export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
@@ -75,6 +77,7 @@ export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
   tradeType: TradeType.EXACT_OUTPUT,
   quoteMethod: QuoteMethod.CLIENT_SIDE,
   approveInfo: { needsApprove: false },
+  outputTax: new Percent(0, 100),
 })
 
 export const TEST_ALLOWED_SLIPPAGE = new Percent(2, 100)

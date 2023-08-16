@@ -1,5 +1,5 @@
-import { MixedRouteSDK, Protocol, Trade } from '@uniswap/router-sdk'
-import { ChainId, Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
@@ -146,6 +146,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   isUniswapXBetter: boolean | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
+  outputTax: Percent
 
   constructor({
     gasUseEstimateUSD,
@@ -154,6 +155,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     requestId,
     quoteMethod,
     approveInfo,
+    outputTax,
     ...routes
   }: {
     gasUseEstimateUSD?: number
@@ -163,6 +165,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     requestId?: string
     quoteMethod: QuoteMethod
     approveInfo: ApproveInfo
+    outputTax: Percent
     v2Routes: {
       routev2: V2Route<Currency, Currency>
       inputAmount: CurrencyAmount<Currency>
@@ -187,6 +190,18 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     this.requestId = requestId
     this.quoteMethod = quoteMethod
     this.approveInfo = approveInfo
+    this.outputTax = outputTax
+  }
+
+  public minimumAmountOut(slippageTolerance: Percent, amountOut = this.outputAmount): CurrencyAmount<Currency> {
+    if (this.tradeType === TradeType.EXACT_OUTPUT) {
+      return amountOut
+    } else {
+      const slippageAdjustedAmountOut = new Fraction(ONE)
+        .subtract(slippageTolerance)
+        .multiply(this.postTaxOutputAmount.quotient).quotient
+      return CurrencyAmount.fromRawAmount(amountOut.currency, slippageAdjustedAmountOut)
+    }
   }
 
   // gas estimate for maybe approve + swap
@@ -196,6 +211,13 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     }
 
     return this.gasUseEstimateUSD
+  }
+
+  public get postTaxOutputAmount(): CurrencyAmount<Currency> {
+    const taxAdjustedAmountOut = new Fraction(ONE)
+      .subtract(this.outputTax)
+      .multiply(this.outputAmount.quotient).quotient
+    return CurrencyAmount.fromRawAmount(this.outputAmount.currency, taxAdjustedAmountOut)
   }
 }
 
@@ -258,6 +280,10 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     if (this.approveInfo.needsApprove) return this.approveInfo.approveGasEstimateUSD
 
     return 0
+  }
+
+  public get postTaxOutputAmount(): CurrencyAmount<Currency> {
+    return this.outputAmount
   }
 }
 

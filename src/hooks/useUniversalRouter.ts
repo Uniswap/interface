@@ -62,8 +62,13 @@ export function useUniversalRouterSwapCallback(
         if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
+
+        console.log('new outputamount', trade.outputAmount.toExact())
+        console.log('new minimumAmountOut', trade.minimumAmountOut(options.slippageTolerance).quotient.toString())
+        console.log('trade.inputAmount', trade.inputAmount.toExact())
+
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
-          slippageTolerance: options.slippageTolerance,
+          slippageTolerance: options.slippageTolerance.add(trade.outputTax),
           deadlineOrPreviousBlockhash: options.deadline?.toString(),
           inputTokenPermit: options.permit,
           fee: options.feeOptions,

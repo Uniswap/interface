@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MixedRouteSDK } from '@uniswap/router-sdk'
-import { ChainId, Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter } from '@uniswap/smart-order-router'
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
@@ -247,6 +247,7 @@ export async function transformRoutesToTrade(
     isUniswapXBetter,
     requestId: data.quote.requestId,
     quoteMethod,
+    outputTax: new Percent(6, 100),
   })
 
   // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,

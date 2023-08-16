@@ -135,8 +135,8 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <ThemedText.BodySmall>
-            {`${formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount)} ${
-              trade.outputAmount.currency.symbol
+            {`${formatCurrencyAmount(trade.postTaxOutputAmount, NumberType.SwapTradeAmount)} ${
+              trade.postTaxOutputAmount.currency.symbol
             }`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
