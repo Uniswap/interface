@@ -3,7 +3,6 @@ import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile } from 'nft/hooks'
 import { ActivityEventType } from 'nft/types'
 import { fetchPrice } from 'nft/utils/fetchPrice'
@@ -24,11 +23,11 @@ enum ColumnHeaders {
   To = 'To',
 }
 
-const FilterBox = styled.div<{ backgroundColor: string; color: string; border: string }>`
+const FilterBox = styled.div<{ isActive: boolean }>`
   display: flex;
-  color: ${({ color }) => color};
-  background: ${({ backgroundColor }) => backgroundColor};
-  border: ${({ border }) => border};
+  color: ${({ isActive, theme }) => (isActive ? theme.neutral1 : theme.neutral1)};
+  background: ${({ isActive, theme }) => (isActive ? theme.surface3 : theme.surface1)};
+  border: ${({ isActive, theme }) => `1px solid ${isActive ? theme.surface3 : theme.surface3}`};
   ${OpacityHoverState};
 `
 
@@ -100,13 +99,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
       const isActive = activeFilters[eventType]
 
       return (
-        <FilterBox
-          className={styles.filter}
-          backgroundColor={isActive ? themeVars.colors.surface3 : themeVars.colors.surface1}
-          color={isActive ? themeVars.colors.neutral1 : themeVars.colors.neutral1}
-          border={`1px solid ${isActive ? themeVars.colors.surface3 : themeVars.colors.surface3}`}
-          onClick={() => filtersDispatch({ eventType })}
-        >
+        <FilterBox className={styles.filter} isActive={isActive} onClick={() => filtersDispatch({ eventType })}>
           {eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
         </FilterBox>
       )
