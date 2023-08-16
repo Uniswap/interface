@@ -65,7 +65,7 @@ describe('signing', () => {
         expect(send).toHaveBeenCalledTimes(2)
         expect(send).toHaveBeenCalledWith(signingMethod, [wallet, expect.anything()])
         expect(send).toHaveBeenCalledWith('eth_sign', [wallet, expect.anything()])
-        const hash = send.mock.calls[send.mock.calls.length - 1][1]?.[1]
+        const hash = send.mock.lastCall[1]?.[1]
         expect(hash).toBe('0xbe609aee343fb3c4b28e1df9e632fca64fcfaede20f02e86244efddf30957bd2')
       })
     }
@@ -80,7 +80,7 @@ describe('signing', () => {
         await expect(async () => await signTypedData(signer, domain, types, value)).rejects.toThrow('User rejected')
         expect(send).toHaveBeenCalledTimes(1)
         expect(send).toHaveBeenCalledWith(signingMethod, [wallet, expect.anything()])
-        const data = send.mock.calls[send.mock.calls.length - 1][1]?.[1]
+        const data = send.mock.lastCall[1]?.[1]
         expect(JSON.parse(data)).toEqual(expect.objectContaining({ domain, message: value }))
       })
     }
@@ -94,7 +94,7 @@ describe('signing', () => {
       await signTypedData(signer, domain, types, value)
       expect(send).toHaveBeenCalledTimes(1)
       expect(send).toHaveBeenCalledWith('eth_signTypedData_v4', [wallet, expect.anything()])
-      const data = send.mock.calls[send.mock.calls.length - 1][1]?.[1]
+      const data = send.mock.lastCall[1]?.[1]
       expect(JSON.parse(data)).toEqual(expect.objectContaining({ domain, message: value }))
     })
 
@@ -120,7 +120,7 @@ describe('signing', () => {
           await signTypedData(signer, domain, types, value)
           expect(send).toHaveBeenCalledTimes(1)
           expect(send).toHaveBeenCalledWith('eth_signTypedData', [wallet, expect.anything()])
-          const data = send.mock.calls[send.mock.calls.length - 1][1]?.[1]
+          const data = send.mock.lastCall[1]?.[1]
           expect(JSON.parse(data)).toEqual(expect.objectContaining({ domain, message: value }))
         })
 
