@@ -45,7 +45,7 @@ describe('Mini Portfolio account drawer', () => {
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('Pools').click()
     cy.get(getTestSelector('mini-portfolio-page')).contains('No pools yet')
 
-    cy.intercept(/graphql/, { fixture: 'mini-portfolio/activity.json' })
+    cy.intercept(/graphql/, { fixture: 'mini-portfolio/full_activity.json' })
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('Activity').click()
     cy.get(getTestSelector('mini-portfolio-page')).contains('Contract Interaction')
   })

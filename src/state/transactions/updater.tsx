@@ -58,7 +58,7 @@ export default function Updater() {
         })
       )
 
-      logSwapSuccess(hash, analyticsContext)
+      logSwapSuccess(hash, chainId, analyticsContext)
 
       addPopup(
         {

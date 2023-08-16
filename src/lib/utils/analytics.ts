@@ -9,11 +9,6 @@ export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEp
   return futureTimestampInSecondsSinceEpoch - new Date().getTime() / 1000
 }
 
-export const getDurationFromDateMilliseconds = (start?: Date): number | undefined => {
-  if (!start) return undefined
-  return new Date().getTime() - start.getTime()
-}
-
 export const formatToDecimal = (
   intialNumberObject: Percent | CurrencyAmount<Token | Currency>,
   decimalPlace: number
@@ -90,14 +85,14 @@ function getQuoteMethod(trade: InterfaceTrade) {
 export const formatSwapQuoteReceivedEventProperties = (
   trade: InterfaceTrade,
   allowedSlippage: Percent,
-  swapQuoteReceivedDate: Date
+  swapQuoteLatencyMs: number | undefined
 ) => {
   return {
     ...formatCommonPropertiesForTrade(trade, allowedSlippage),
     swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
-    swap_quote_received_timestamp: swapQuoteReceivedDate.getTime(),
     allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
     token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
     token_out_amount_min: trade.minimumAmountOut(allowedSlippage).toExact(),
+    quote_latency_milliseconds: swapQuoteLatencyMs,
   }
 }

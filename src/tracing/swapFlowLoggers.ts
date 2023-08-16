@@ -51,7 +51,7 @@ export class SwapEventTimestampTracker {
 
 const tracker = SwapEventTimestampTracker.getInstance()
 
-export function logSwapSuccess(hash: string, analyticsContext: any) {
+export function logSwapSuccess(hash: string, chainId: number, analyticsContext: any) {
   const elapsedTime = tracker.getElapsedTime(SwapEventType.FIRST_SWAP)
   sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
     // We only log the time-to-swap metric for the first swap of a session,
@@ -59,6 +59,7 @@ export function logSwapSuccess(hash: string, analyticsContext: any) {
     time_to_swap: elapsedTime ? undefined : tracker.setElapsedTime(SwapEventType.FIRST_SWAP),
     time_to_swap_since_first_input: tracker.getElapsedTime(SwapEventType.FIRST_SWAP, SwapEventType.FIRST_SWAP_INPUT),
     hash,
+    chainId,
     ...analyticsContext,
   })
 }
