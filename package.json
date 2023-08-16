@@ -40,7 +40,7 @@
   },
   "lint-staged": {
     "yarn.lock": [
-      "yarn yarn-deduplicate --strategy=highest"
+      "yarn deduplicate"
     ]
   },
   "jest": {
