@@ -86,6 +86,7 @@ const UniswapXShineInner = styled.div`
 
 // overflow hidden to hide the SwapMustacheShadow
 export const SwapOptInSmallContainer = styled.div<{ visible: boolean; shouldAnimate: boolean }>`
+  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
   overflow: hidden;
   margin-top: -14px;
   transform: translateY(${({ visible }) => (visible ? 0 : -80)}px);
