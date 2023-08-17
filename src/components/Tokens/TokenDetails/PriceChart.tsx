@@ -177,7 +177,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
 
   const tooltipMessage = (
     <>
-      <Trans>Price may not be up-to-date due to recently low trading volume</Trans>
+      <Trans>This price may not be up-to-date due to low trading volume.</Trans>
     </>
   )
 
