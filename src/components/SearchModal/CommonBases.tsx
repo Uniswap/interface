@@ -1,5 +1,5 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { TraceEvent } from 'analytics'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -59,7 +59,7 @@ export default function CommonBases({
   searchQuery: string
   isAddressSearch: string | false
 }) {
-  const bases = chainId !== undefined ? COMMON_BASES[chainId] ?? [] : []
+  const bases = COMMON_BASES[chainId ?? ChainId.MAINNET]
 
   return bases.length > 0 ? (
     <MobileWrapper gap="md">
