@@ -5,6 +5,7 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { IS_ANDROID } from 'src/constants/globals'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
@@ -64,7 +65,7 @@ export function CloudBackupProcessingAnimation({
         })
       )
     } catch (error) {
-      logger.error('Unable to backup to iCloud', {
+      logger.error('Unable to backup to cloud storage', {
         tags: {
           file: 'CloudBackupProcessingScreen',
           function: 'onPressNext',
@@ -73,10 +74,14 @@ export function CloudBackupProcessingAnimation({
       })
 
       Alert.alert(
-        t('iCloud error'),
-        t(
-          'Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.'
-        ),
+        IS_ANDROID ? t('Google Drive error') : t('iCloud error'),
+        IS_ANDROID
+          ? t(
+              'Unable to backup recovery phrase to Google Drive. Please ensure you have Google Drive enabled with available storage space and try again.'
+            )
+          : t(
+              'Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.'
+            ),
         [
           {
             text: t('OK'),
@@ -93,7 +98,9 @@ export function CloudBackupProcessingAnimation({
   return processing ? (
     <Flex centered grow gap="spacing24">
       <ActivityIndicator size="large" />
-      <Text variant="headlineSmall">{t('Backing up to iCloud...')}</Text>
+      <Text variant="headlineSmall">
+        {IS_ANDROID ? t('Backing up to Google Drive...') : t('Backing up to iCloud...')}
+      </Text>
     </Flex>
   ) : (
     <Flex centered grow gap="spacing24">
@@ -104,7 +111,9 @@ export function CloudBackupProcessingAnimation({
         color={theme.colors.statusSuccess}
         size={theme.iconSizes.icon40}
       />
-      <Text variant="headlineSmall">{t('Backed up to iCloud')}</Text>
+      <Text variant="headlineSmall">
+        {IS_ANDROID ? t('Backed up to Google Drive') : t('Backed up to iCloud')}
+      </Text>
     </Flex>
   )
 }

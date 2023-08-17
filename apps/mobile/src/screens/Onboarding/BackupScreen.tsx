@@ -79,13 +79,17 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     })
   }
 
-  const onPressICloudBackup = (): void => {
+  const onPressCloudBackup = (): void => {
     if (!cloudStorageAvailable) {
       Alert.alert(
-        t('iCloud Drive not available'),
-        t(
-          'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
-        ),
+        IS_ANDROID ? t('Google Drive not available') : t('iCloud Drive not available'),
+        IS_ANDROID
+          ? t(
+              'Please verify that you are logged in to a Google account with Google Drive enabled on this device and try again.'
+            )
+          : t(
+              'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
+            ),
         [
           { text: t('Go to settings'), onPress: openSettings, style: 'default' },
           { text: t('Not now'), style: 'cancel' },
@@ -128,10 +132,10 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
           <OptionCard
             blurb={t('Safe, simple, and all you need to save is your password.')}
             disabled={hasCloudBackup}
-            elementName={ElementName.AddiCloudBackup}
+            elementName={ElementName.AddCloudBackup}
             icon={<CloudIcon color={theme.colors.accent1} height={theme.iconSizes.icon16} />}
             title={IS_ANDROID ? t('Backup with Google Drive') : t('Backup with iCloud')}
-            onPress={onPressICloudBackup}
+            onPress={onPressCloudBackup}
           />
           <OptionCard
             blurb={t("Top-notch security with no third parties. You're in control.")}

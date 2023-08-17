@@ -6,6 +6,7 @@ import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { IS_ANDROID } from 'src/constants/globals'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { dimensions } from 'ui/src/theme/restyle/sizing'
 
@@ -93,10 +94,17 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
     params={params}
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
-        <Trans>
-          Instead of memorizing your recovery phrase, you can{' '}
-          <Text color="accent1">back it up to iCloud</Text> and protect it with a password.
-        </Trans>
+        {IS_ANDROID ? (
+          <Trans>
+            Instead of memorizing your recovery phrase, you can{' '}
+            <Text color="accent1">back it up to Google Drive</Text> and protect it with a password.
+          </Trans>
+        ) : (
+          <Trans>
+            Instead of memorizing your recovery phrase, you can{' '}
+            <Text color="accent1">back it up to iCloud</Text> and protect it with a password.
+          </Trans>
+        )}
       </Text>
     }
   />,

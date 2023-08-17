@@ -10,6 +10,7 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
+import { IS_ANDROID } from 'src/constants/globals'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -45,7 +46,11 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
 
   return (
     <OnboardingScreen
-      subtitle={t('There are multiple recovery phrases backed up to your iCloud.')}
+      subtitle={
+        IS_ANDROID
+          ? t('There are multiple recovery phrases backed up to your Google Drive.')
+          : t('There are multiple recovery phrases backed up to your iCloud.')
+      }
       title={t('Select backup to restore')}>
       <ScrollView>
         <Flex gap="spacing8">

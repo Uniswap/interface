@@ -13,7 +13,7 @@ import { logger } from 'utilities/src/logger/logger'
 function createCloudStorageBackupManagerChannel(eventEmitter: NativeEventEmitter) {
   return eventChannel<Action>((emit) => {
     const foundCloudBackupHandler = (backup: CloudStorageMnemonicBackup): void => {
-      logger.debug('iCloudBackupSaga', 'foundCloudBackupHandler', 'Found account backup', backup)
+      logger.debug('CloudBackupSaga', 'foundCloudBackupHandler', 'Found account backup', backup)
       emit(foundCloudBackup({ backup }))
     }
 
@@ -43,17 +43,17 @@ export function* cloudBackupsManagerSaga() {
 }
 
 export function* watchCloudStorageBackupEvents() {
-  const iCloudManagerEvents = new NativeEventEmitter(
+  const CloudManagerEvents = new NativeEventEmitter(
     NativeModules.RNCloudStorageBackupsManager as unknown as NativeModule
   )
-  const channel = yield* call(createCloudStorageBackupManagerChannel, iCloudManagerEvents)
+  const channel = yield* call(createCloudStorageBackupManagerChannel, CloudManagerEvents)
 
   while (true) {
     try {
       const payload = yield* take(channel)
       yield* put(payload)
     } catch (error) {
-      logger.error('ICloud backup saga channel error', {
+      logger.error('Cloud backup saga channel error', {
         tags: {
           file: 'CloudBackup/saga',
           function: 'watchCloudStorageBackupEvents',

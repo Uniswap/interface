@@ -54,16 +54,20 @@ export function SettingsCloudBackupPasswordCreateScreen({
             {IS_ANDROID ? t('Back up to Google Drive') : t('Back up to iCloud')}
           </Text>
           <Text color="neutral2" textAlign="center" variant="bodySmall">
-            {t(
-              'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your iCloud account is ever compromised.'
-            )}
+            {IS_ANDROID
+              ? t(
+                  'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your Google Drive account is ever compromised.'
+                )
+              : t(
+                  'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your iCloud account is ever compromised.'
+                )}
           </Text>
         </Flex>
         <CloudBackupPasswordForm navigateToNextScreen={navigateToNextScreen} />
         {showCloudBackupInfoModal && (
           <BottomSheetModal
             backgroundColor={theme.colors.surface2}
-            name={ModalName.ICloudBackupInfo}>
+            name={ModalName.CloudBackupInfo}>
             <Flex gap="none" mb="spacing36" px="spacing16" py="spacing12">
               <Flex centered gap="spacing16">
                 <Box
@@ -74,12 +78,18 @@ export function SettingsCloudBackupPasswordCreateScreen({
                   <CloudIcon color={theme.colors.accent1} />
                 </Box>
                 <Text textAlign="center" variant="buttonLabelMedium">
-                  {t('Back up recovery phrase to iCloud?')}
+                  {IS_ANDROID
+                    ? t('Back up recovery phrase to Google Drive?')
+                    : t('Back up recovery phrase to iCloud?')}
                 </Text>
                 <Text color="neutral2" textAlign="center" variant="bodySmall">
-                  {t(
-                    'It looks like you haven’t backed up your recovery phrase to iCloud yet. By doing so, you can recover your wallet just by being logged into iCloud on any device.'
-                  )}
+                  {IS_ANDROID
+                    ? t(
+                        'It looks like you haven’t backed up your recovery phrase to Google Drive yet. By doing so, you can recover your wallet just by being logged into Google Drive on any device.'
+                      )
+                    : t(
+                        'It looks like you haven’t backed up your recovery phrase to iCloud yet. By doing so, you can recover your wallet just by being logged into iCloud on any device.'
+                      )}
                 </Text>
               </Flex>
               <Flex centered row gap="spacing12" pt="spacing24">

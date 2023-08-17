@@ -139,10 +139,14 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
       if (!cloudStorageAvailable) {
         Alert.alert(
-          t('iCloud Drive not available'),
-          t(
-            'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
-          ),
+          IS_ANDROID ? t('Google Drive not available') : t('iCloud Drive not available'),
+          IS_ANDROID
+            ? t(
+                'Please verify that you are logged in to a Google account with Google Drive enabled on this device and try again.'
+              )
+            : t(
+                'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
+              ),
           [
             { text: t('Go to settings'), onPress: openSettings, style: 'default' },
             { text: t('Not now'), style: 'cancel' },
@@ -191,7 +195,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
     if (!hasImportedSeedPhrase) {
       options.push({
-        key: ElementName.RestoreFromICloud,
+        key: ElementName.RestoreFromCloud,
         onPress: onPressRestore,
         render: () => (
           <Box alignItems="center" borderTopColor="surface3" borderTopWidth={1} p="spacing16">

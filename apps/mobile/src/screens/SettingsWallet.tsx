@@ -25,6 +25,7 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
+import { IS_ANDROID } from 'src/constants/globals'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
   NotificationPermission,
@@ -70,7 +71,7 @@ export function SettingsWallet({
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
 
-  const hasICloudBackup = currentAccount?.backups?.includes(BackupType.Cloud)
+  const hasCloudBackup = currentAccount?.backups?.includes(BackupType.Cloud)
 
   const { walletNeedsRestore } = useWalletRestore()
 
@@ -208,7 +209,7 @@ export function SettingsWallet({
         {
           screen: walletNeedsRestore
             ? Screens.OnboardingStack
-            : hasICloudBackup
+            : hasCloudBackup
             ? Screens.SettingsCloudBackupStatus
             : Screens.SettingsCloudBackupPasswordCreate,
           screenProps: walletNeedsRestore
@@ -220,7 +221,7 @@ export function SettingsWallet({
                 },
               }
             : { address },
-          text: t('iCloud backup'),
+          text: IS_ANDROID ? t('Google Drive Backup') : t('iCloud backup'),
           icon: <CloudIcon {...iconProps} />,
           isHidden: readonly,
         },

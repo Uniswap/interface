@@ -10,6 +10,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
+import { IS_ANDROID } from 'src/constants/globals'
 import {
   incrementPasswordAttempts,
   resetLockoutEndTime,
@@ -154,8 +155,16 @@ export function RestoreCloudBackupPasswordScreen({
 
   return (
     <OnboardingScreen
-      subtitle={t('This password is required to recover your recovery phrase backup from iCloud.')}
-      title={t('Enter your iCloud backup password')}>
+      subtitle={
+        IS_ANDROID
+          ? t('This password is required to recover your recovery phrase backup from Google Drive.')
+          : t('This password is required to recover your recovery phrase backup from iCloud.')
+      }
+      title={
+        IS_ANDROID
+          ? t('Enter your Google Drive backup password')
+          : t('Enter your iCloud backup password')
+      }>
       <Flex>
         <PasswordInput
           ref={inputRef}

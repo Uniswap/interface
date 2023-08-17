@@ -11,6 +11,7 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
+import { IS_ANDROID } from 'src/constants/globals'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -70,7 +71,7 @@ export function SettingsCloudBackupStatus({
       navigation.navigate(Screens.SettingsWallet, { address })
     } catch (error) {
       setShowBackupDeleteWarning(false)
-      logger.error('Unable to delete iCloud backup', {
+      logger.error('Unable to delete cloud storage backup', {
         tags: {
           file: 'SettingsCloudBackupStatus',
           function: 'deleteBackup',
@@ -78,9 +79,11 @@ export function SettingsCloudBackupStatus({
         },
       })
 
-      Alert.alert(t('iCloud error'), t('Unable to delete backup'), [
-        { text: t('OK'), style: 'default' },
-      ])
+      Alert.alert(
+        IS_ANDROID ? t('Google Drive error') : t('iCloud error'),
+        t('Unable to delete backup'),
+        [{ text: t('OK'), style: 'default' }]
+      )
     }
   }
 
@@ -94,15 +97,21 @@ export function SettingsCloudBackupStatus({
   return (
     <Screen mx="spacing16" my="spacing16">
       <BackHeader alignment="center" mb="spacing16" onPressBack={onPressBack}>
-        <Text variant="bodyLarge">{t('iCloud backup')}</Text>
+        <Text variant="bodyLarge">
+          {IS_ANDROID ? t('Google Drive backup') : t('iCloud backup')}
+        </Text>
       </BackHeader>
 
       <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="spacing16">
         <Flex grow gap="spacing24" justifyContent="flex-start">
           <Text color="neutral2" variant="bodySmall">
-            {t(
-              'By having your recovery phrase backed up to iCloud, you can recover your wallet just by being logged into your iCloud on any device.'
-            )}
+            {IS_ANDROID
+              ? t(
+                  'By having your recovery phrase backed up to Google Drive, you can recover your wallet just by being logged into your Google account on any device.'
+                )
+              : t(
+                  'By having your recovery phrase backed up to iCloud, you can recover your wallet just by being logged into your iCloud on any device.'
+                )}
           </Text>
           <Flex row justifyContent="space-between">
             <Text variant="bodyLarge">{t('Recovery phrase')}</Text>
@@ -118,7 +127,7 @@ export function SettingsCloudBackupStatus({
         </Flex>
         <Button
           emphasis={ButtonEmphasis.Detrimental}
-          label={t('Delete iCloud backup')}
+          label={IS_ANDROID ? t('Delete Google Drive backup') : t('Delete iCloud backup')}
           testID={ElementName.Remove}
           onPress={(): void => {
             setShowBackupDeleteWarning(true)

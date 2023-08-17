@@ -6,6 +6,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
+import { IS_ANDROID } from 'src/constants/globals'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import {
   startFetchingCloudStorageBackups,
@@ -52,7 +53,7 @@ export function RestoreCloudBackupLoadingScreen({
 
   useAddBackButton(navigation)
 
-  // Starts query for iCloud backup files, backup files found are streamed into Redux
+  // Starts query for cloud backup files, backup files found are streamed into Redux
   const fetchCloudStorageBackupsWithTimeout = useCallback(async () => {
     // Show loading state for max 10s, then show no backups found
     setIsLoading(true)
@@ -62,7 +63,7 @@ export function RestoreCloudBackupLoadingScreen({
       logger.debug(
         'RestoreCloudBackupLoadingScreen',
         'fetchCloudStorageBackupsWithTimeout',
-        `Timed out fetching iCloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
+        `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
       )
       setIsLoading(false)
       await stopFetchingCloudStorageBackups()
@@ -102,9 +103,11 @@ export function RestoreCloudBackupLoadingScreen({
       return (
         <Box alignSelf="center" px="spacing16">
           <BaseCard.ErrorState
-            description={t(
-              `It looks like you haven't backed up any of your seed phrases to iCloud.`
-            )}
+            description={
+              IS_ANDROID
+                ? t(`It looks like you haven't backed up any of your seed phrases to Google Drive.`)
+                : t(`It looks like you haven't backed up any of your seed phrases to iCloud.`)
+            }
             icon={
               <CloudIcon
                 color={theme.colors.neutral3}

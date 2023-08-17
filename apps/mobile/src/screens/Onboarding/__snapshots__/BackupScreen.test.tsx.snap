@@ -201,7 +201,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   "padding": 16,
                 }
               }
-              testID="add-icloud-backup"
+              testID="add-cloud-backup"
             >
               <View
                 sentry-label="Flex"
@@ -932,7 +932,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   "padding": 16,
                 }
               }
-              testID="add-icloud-backup"
+              testID="add-cloud-backup"
             >
               <View
                 sentry-label="Flex"

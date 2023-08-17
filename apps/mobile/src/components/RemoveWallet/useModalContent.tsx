@@ -4,6 +4,7 @@ import { SvgProps } from 'react-native-svg'
 import { ButtonEmphasis } from 'src/components/buttons/Button'
 import { concatListOfAccountNames } from 'src/components/RemoveWallet/utils'
 import { Text } from 'src/components/Text'
+import { IS_ANDROID } from 'src/constants/globals'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import TrashIcon from 'ui/src/assets/icons/trash.svg'
 import WalletIcon from 'ui/src/assets/icons/wallet-filled.svg'
@@ -90,7 +91,14 @@ export const useModalContent = ({
             You're removing your <Text color="statusCritical">recovery phrase</Text>
           </Trans>
         ),
-        description: (
+        description: IS_ANDROID ? (
+          <Trans t={t}>
+            Make sure you’ve written down your recovery phrase or backed it up on Google Drive.{' '}
+            <Text color="neutral2" maxFontSizeMultiplier={1.4} variant="buttonLabelSmall">
+              You will not be able to access your funds otherwise.
+            </Text>
+          </Trans>
+        ) : (
           <Trans t={t}>
             Make sure you’ve written down your recovery phrase or backed it up on iCloud.{' '}
             <Text color="neutral2" maxFontSizeMultiplier={1.4} variant="buttonLabelSmall">
