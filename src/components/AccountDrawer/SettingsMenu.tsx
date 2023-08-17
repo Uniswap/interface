@@ -42,6 +42,10 @@ const StyledChevron = styled(ChevronRight)`
   color: ${({ theme }) => theme.textSecondary};
 `
 
+const LanguageLabel = styled(Row)`
+  white-space: nowrap;
+`
+
 const SettingsButton = ({
   title,
   currentState,
@@ -55,10 +59,10 @@ const SettingsButton = ({
 }) => (
   <SettingsButtonWrapper data-testid={testId} align="center" justify="space-between" onClick={onClick}>
     <ThemedText.SubHeaderSmall color="textPrimary">{title}</ThemedText.SubHeaderSmall>
-    <Row gap="xs" align="center" width="min-content">
+    <LanguageLabel gap="xs" align="center" width="min-content">
       <ThemedText.LabelMedium color="textPrimary">{currentState}</ThemedText.LabelMedium>
       <StyledChevron size={20} />
-    </Row>
+    </LanguageLabel>
   </SettingsButtonWrapper>
 )
 
