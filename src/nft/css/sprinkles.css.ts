@@ -276,12 +276,8 @@ export const vars = createGlobalTheme(':root', {
     '44': '44px',
   },
   fontWeight: {
-    normal: '400',
     book: '485',
     medium: '535',
-    semibold: '600',
-    bold: '700',
-    black: '900',
   },
   time: {
     '125': '125ms',
