@@ -39,7 +39,7 @@ const SettingsButtonWrapper = styled(Row)`
 `
 
 const StyledChevron = styled(ChevronRight)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const LanguageLabel = styled(Row)`
