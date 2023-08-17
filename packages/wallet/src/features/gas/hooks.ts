@@ -30,10 +30,12 @@ export function useTransactionGasFee(
           }
 
     return {
-      type: data.type,
-      speed,
-      gasFee: data.gasFee[speed],
-      params,
+      data: {
+        type: data.type,
+        speed,
+        gasFee: data.gasFee[speed],
+        params,
+      },
     }
   }, [data, error, speed])
 }
