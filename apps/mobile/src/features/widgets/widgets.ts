@@ -1,5 +1,6 @@
 import { NativeModules } from 'react-native'
 import { getItem, reloadAllTimelines, setItem } from 'react-native-widgetkit'
+import { IS_ANDROID } from 'src/constants/globals'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
@@ -113,6 +114,7 @@ export async function processWidgetEvents(): Promise<void> {
 }
 
 async function hasWidgetsInstalled(): Promise<boolean> {
+  if (IS_ANDROID) return false
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return await RNWidgets.hasWidgetsInstalled()
 }
