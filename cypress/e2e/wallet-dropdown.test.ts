@@ -1,3 +1,5 @@
+import { FeatureFlag } from 'featureFlags'
+
 import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {
@@ -21,9 +23,13 @@ describe('Wallet Dropdown', () => {
     })
   }
 
-  function itChangesLocale() {
+  function itChangesLocale({ featureFlag = false }: { featureFlag?: boolean } = {}) {
     it('should change locale', () => {
       cy.contains('Uniswap available in: English').should('not.exist')
+
+      if (featureFlag) {
+        cy.get(getTestSelector('language-settings-button')).click()
+      }
 
       cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
       cy.location('search').should('match', /\?lng=af-ZA$/)
@@ -43,6 +49,15 @@ describe('Wallet Dropdown', () => {
     })
     itChangesTheme()
     itChangesLocale()
+  })
+
+  describe('should change locale with feature flag', () => {
+    beforeEach(() => {
+      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+    })
+    itChangesLocale({ featureFlag: true })
   })
 
   describe('testnet toggle', () => {

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import AuthenticatedHeader from './AuthenticatedHeader'
+import LanguageMenu from './LanguageMenu'
 import SettingsMenu from './SettingsMenu'
 
 const DefaultMenuWrap = styled(Column)`
@@ -15,6 +16,7 @@ const DefaultMenuWrap = styled(Column)`
 enum MenuState {
   DEFAULT,
   SETTINGS,
+  LANGUAGE_SETTINGS,
 }
 
 function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
@@ -24,9 +26,10 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
   const openSettings = useCallback(() => setMenu(MenuState.SETTINGS), [])
   const closeSettings = useCallback(() => setMenu(MenuState.DEFAULT), [])
+  const openLanguageSettings = useCallback(() => setMenu(MenuState.LANGUAGE_SETTINGS), [])
 
   useEffect(() => {
-    if (!drawerOpen && menu === MenuState.SETTINGS) {
+    if (!drawerOpen && menu !== MenuState.DEFAULT) {
       // wait for the drawer to close before resetting the menu
       const timer = setTimeout(() => {
         closeSettings()
@@ -44,7 +47,10 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
         ) : (
           <WalletModal openSettings={openSettings} />
         ))}
-      {menu === MenuState.SETTINGS && <SettingsMenu onClose={closeSettings} />}
+      {menu === MenuState.SETTINGS && (
+        <SettingsMenu onClose={closeSettings} openLanguageSettings={openLanguageSettings} />
+      )}
+      {menu === MenuState.LANGUAGE_SETTINGS && <LanguageMenu onClose={openSettings} />}
     </DefaultMenuWrap>
   )
 }

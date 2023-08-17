@@ -25,7 +25,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       return new Response('Asset not found.', { status: 404 })
     }
 
-    const fontData = await getFont()
+    const fontData = await getFont(origin)
 
     return new ImageResponse(
       (
