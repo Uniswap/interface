@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react'
 import noop from 'utils/noop'
 
-import { AppState } from './types'
+import { AppState } from './reducer'
 
 /* Utility type to mark all properties of a type as optional */
 type DeepPartial<T> = T extends object

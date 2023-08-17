@@ -18,7 +18,9 @@ describe('Token explore filter', () => {
     searchFor('dao')
 
     cy.get('@filteredTokens').then((filteredTokens) => {
-      cy.get('[data-cy="token-name"]').should('deep.equal', filteredTokens)
+      cy.get('[data-cy="token-name"]').then((tokens) => {
+        cy.wrap(Array.from(tokens)).should('deep.equal', Array.from(filteredTokens))
+      })
     })
   })
 })

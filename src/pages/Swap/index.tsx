@@ -55,6 +55,7 @@ import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } f
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
 import styled, { useTheme } from 'styled-components'
 import { LinkStyledButton, ThemedText } from 'theme'
+import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -268,7 +269,7 @@ export function Swap({
 
   const swapInfo = useDerivedSwapInfo(state, chainId)
   const {
-    trade: { state: tradeState, trade },
+    trade: { state: tradeState, trade, swapQuoteLatency },
     allowedSlippage,
     autoSlippage,
     currencyBalances,
@@ -328,14 +329,16 @@ export function Swap({
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
+      maybeLogFirstSwapAction(trace)
     },
-    [onUserInput]
+    [onUserInput, trace]
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
       onUserInput(Field.OUTPUT, value)
+      maybeLogFirstSwapAction(trace)
     },
-    [onUserInput]
+    [onUserInput, trace]
   )
 
   const navigate = useNavigate()
@@ -466,9 +469,6 @@ export function Swap({
     }
   }, [currencies, onUserInput, onWrap, wrapType])
 
-  // errors
-  const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
-
   // warnings on the greater of fiat value price impact and execution price impact
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
     if (isUniswapXTrade(trade)) {
@@ -501,13 +501,15 @@ export function Swap({
         },
         [Field.OUTPUT]: state[Field.OUTPUT],
       })
+      maybeLogFirstSwapAction(trace)
     },
-    [onCurrencyChange, onCurrencySelection, state]
+    [onCurrencyChange, onCurrencySelection, state, trace]
   )
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-  }, [maxInputAmount, onUserInput])
+    maybeLogFirstSwapAction(trace)
+  }, [maxInputAmount, onUserInput, trace])
 
   const handleOutputSelect = useCallback(
     (outputCurrency: Currency) => {
@@ -518,8 +520,9 @@ export function Swap({
           currencyId: getSwapCurrencyId(outputCurrency),
         },
       })
+      maybeLogFirstSwapAction(trace)
     },
-    [onCurrencyChange, onCurrencySelection, state]
+    [onCurrencyChange, onCurrencySelection, state, trace]
   )
 
   const showPriceImpactWarning = isClassicTrade(trade) && largerPriceImpact && priceImpactSeverity > 3
@@ -528,13 +531,11 @@ export function Swap({
   useEffect(() => {
     if (!trade || prevTrade === trade) return // no new swap quote to log
 
-    const now = new Date()
-    setSwapQuoteReceivedDate(now)
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, now),
+      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, swapQuoteLatency),
       ...trace,
     })
-  }, [prevTrade, trade, trace, allowedSlippage])
+  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
@@ -556,7 +557,7 @@ export function Swap({
         showCancel={true}
       />
       <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
-      {trade && showConfirm && (
+      {trade && showConfirm && allowance.state !== AllowanceState.LOADING && (
         <ConfirmSwapModal
           trade={trade}
           inputCurrency={inputCurrency}
@@ -569,7 +570,6 @@ export function Swap({
           allowance={allowance}
           swapError={swapError}
           onDismiss={handleConfirmDismiss}
-          swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
         />
@@ -614,7 +614,9 @@ export function Swap({
             <ArrowContainer
               data-testid="swap-currency-button"
               onClick={() => {
-                !disableTokenInputs && onSwitchTokens()
+                if (disableTokenInputs) return
+                onSwitchTokens()
+                maybeLogFirstSwapAction(trace)
               }}
               color={theme.textPrimary}
             >

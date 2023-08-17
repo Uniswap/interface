@@ -12,7 +12,7 @@ import { UserAddedToken } from 'types/tokens'
 
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
 import { useDefaultActiveTokens } from '../../hooks/Tokens'
-import { AppState } from '../types'
+import { AppState } from '../reducer'
 import {
   addSerializedPair,
   addSerializedToken,

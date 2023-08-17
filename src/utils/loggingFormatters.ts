@@ -5,7 +5,6 @@ import {
   formatPercentInBasisPointsNumber,
   formatPercentNumber,
   formatToDecimal,
-  getDurationFromDateMilliseconds,
   getDurationUntilTimestampSeconds,
   getTokenAddress,
 } from 'lib/utils/analytics'
@@ -66,7 +65,6 @@ interface AnalyticsEventProps {
   transactionDeadlineSecondsSinceEpoch?: number
   isAutoSlippage: boolean
   isAutoRouterApi: boolean
-  swapQuoteReceivedDate?: Date
   routes?: RoutingDiagramEntry[]
   fiatValueInput?: number
   fiatValueOutput?: number
@@ -79,7 +77,6 @@ export const formatSwapButtonClickEventProperties = ({
   transactionDeadlineSecondsSinceEpoch,
   isAutoSlippage,
   isAutoRouterApi,
-  swapQuoteReceivedDate,
   routes,
   fiatValueInput,
   fiatValueOutput,
@@ -106,9 +103,6 @@ export const formatSwapButtonClickEventProperties = ({
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
       ? trade.inputAmount.currency.chainId
       : undefined,
-  duration_from_first_quote_to_swap_submission_milliseconds: swapQuoteReceivedDate
-    ? getDurationFromDateMilliseconds(swapQuoteReceivedDate)
-    : undefined,
   swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
   ...formatRoutesEventProperties(routes),
 })

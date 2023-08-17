@@ -1,4 +1,9 @@
+import { ChainId } from '@uniswap/sdk-core'
+import { UNI } from 'constants/tokens'
+
 import { getTestSelector } from '../utils'
+
+const UNI_ADDRESS = UNI[ChainId.MAINNET].address.toLowerCase()
 
 describe('Universal search bar', () => {
   function openSearch() {
@@ -19,7 +24,7 @@ describe('Universal search bar', () => {
     openSearch()
     getSearchBar().clear().type('uni')
 
-    cy.get(getTestSelector('searchbar-token-row-UNI'))
+    cy.get(getTestSelector(`searchbar-token-row-ETHEREUM-${UNI_ADDRESS}`))
       .should('contain.text', 'Uniswap')
       .and('contain.text', 'UNI')
       .and('contain.text', '$')
@@ -30,7 +35,7 @@ describe('Universal search bar', () => {
     openSearch()
     cy.get(getTestSelector('searchbar-dropdown'))
       .contains(getTestSelector('searchbar-dropdown'), 'Recent searches')
-      .find(getTestSelector('searchbar-token-row-UNI'))
+      .find(getTestSelector(`searchbar-token-row-ETHEREUM-${UNI_ADDRESS}`))
       .should('exist')
   })
 
@@ -51,13 +56,13 @@ describe('Universal search bar', () => {
       // Seed recent results with UNI.
       openSearch()
       getSearchBar().type('uni')
-      cy.get(getTestSelector('searchbar-token-row-UNI'))
+      cy.get(getTestSelector(`searchbar-token-row-ETHEREUM-${UNI_ADDRESS}`))
       getSearchBar().clear().type('{esc}')
 
       // Search a different token by name.
       openSearch()
       getSearchBar().type('eth')
-      cy.get(getTestSelector('searchbar-token-row-ETH'))
+      cy.get(getTestSelector('searchbar-token-row-ETHEREUM-NATIVE'))
 
       // Validate that we go to the searched/selected result.
       getSearchBar().type('{enter}')

@@ -9,11 +9,6 @@ export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEp
   return futureTimestampInSecondsSinceEpoch - new Date().getTime() / 1000
 }
 
-export const getDurationFromDateMilliseconds = (start?: Date): number | undefined => {
-  if (!start) return undefined
-  return new Date().getTime() - start.getTime()
-}
-
 export const formatToDecimal = (
   intialNumberObject: Percent | CurrencyAmount<Token | Currency>,
   decimalPlace: number
@@ -65,15 +60,19 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   allowedSlippage,
   fiatValues,
   txHash,
+  timeToSignSinceRequestMs,
 }: {
   trade: InterfaceTrade
   allowedSlippage: Percent
   fiatValues: { amountIn?: number; amountOut?: number }
   txHash?: string
+  timeToSignSinceRequestMs?: number
 }) => ({
   transaction_hash: txHash,
   token_in_amount_usd: fiatValues.amountIn,
   token_out_amount_usd: fiatValues.amountOut,
+  // measures the amount of time the user took to sign the permit message or swap tx in their wallet
+  time_to_sign_since_request_ms: timeToSignSinceRequestMs,
   ...formatCommonPropertiesForTrade(trade, allowedSlippage),
 })
 
@@ -86,14 +85,14 @@ function getQuoteMethod(trade: InterfaceTrade) {
 export const formatSwapQuoteReceivedEventProperties = (
   trade: InterfaceTrade,
   allowedSlippage: Percent,
-  swapQuoteReceivedDate: Date
+  swapQuoteLatencyMs: number | undefined
 ) => {
   return {
     ...formatCommonPropertiesForTrade(trade, allowedSlippage),
     swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
-    swap_quote_received_timestamp: swapQuoteReceivedDate.getTime(),
     allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
     token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
     token_out_amount_min: trade.minimumAmountOut(allowedSlippage).toExact(),
+    quote_latency_milliseconds: swapQuoteLatencyMs,
   }
 }

@@ -267,7 +267,6 @@ export default function ConfirmSwapModal({
   onCurrencySelection,
   swapError,
   swapResult,
-  swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
 }: {
@@ -282,7 +281,6 @@ export default function ConfirmSwapModal({
   swapError?: Error
   onDismiss: () => void
   onCurrencySelection: (field: Field, currency: Currency) => void
-  swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
@@ -356,7 +354,6 @@ export default function ConfirmSwapModal({
           swapResult={swapResult}
           allowedSlippage={allowedSlippage}
           disabledConfirm={showAcceptChanges}
-          swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueInput}
           fiatValueOutput={fiatValueOutput}
           showAcceptChanges={showAcceptChanges}
@@ -386,7 +383,6 @@ export default function ConfirmSwapModal({
     wrapTxHash,
     allowance,
     allowedSlippage,
-    swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
     onAcceptChanges,

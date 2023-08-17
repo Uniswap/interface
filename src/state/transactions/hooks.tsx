@@ -70,7 +70,7 @@ export function useMultichainTransactions(): [TransactionDetails, ChainId][] {
 }
 
 // returns all the transactions for the current chain
-export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
+function useAllTransactions(): { [txHash: string]: TransactionDetails } {
   const { chainId } = useWeb3React()
 
   const state = useAppSelector((state) => state.transactions)
@@ -150,5 +150,10 @@ export function isPendingTx(tx: TransactionDetails): boolean {
 
 export function usePendingTransactions(): TransactionDetails[] {
   const allTransactions = useAllTransactions()
-  return useMemo(() => Object.values(allTransactions).filter(isPendingTx), [allTransactions])
+  const { account } = useWeb3React()
+
+  return useMemo(
+    () => Object.values(allTransactions).filter((tx) => tx.from === account && isPendingTx(tx)),
+    [account, allTransactions]
+  )
 }

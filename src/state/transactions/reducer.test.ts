@@ -1,7 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { createStore, Store } from 'redux'
 
-import { updateVersion } from '../global/actions'
 import reducer, {
   addTransaction,
   cancelTransaction,
@@ -18,32 +17,6 @@ describe('transaction reducer', () => {
 
   beforeEach(() => {
     store = createStore(reducer, initialState)
-  })
-
-  describe('updateVersion', () => {
-    it('clears old format transactions that do not have info', () => {
-      store = createStore(reducer, {
-        1: {
-          abc: {
-            hash: 'abc',
-          } as any,
-        },
-      })
-      store.dispatch(updateVersion())
-      expect(store.getState()[ChainId.MAINNET]['abc']).toBeUndefined()
-    })
-    it('keeps old format transactions that do have info', () => {
-      store = createStore(reducer, {
-        1: {
-          abc: {
-            hash: 'abc',
-            info: {},
-          } as any,
-        },
-      })
-      store.dispatch(updateVersion())
-      expect(store.getState()[ChainId.MAINNET]['abc']).toBeTruthy()
-    })
   })
 
   describe('addTransaction', () => {

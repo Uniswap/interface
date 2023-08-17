@@ -26,6 +26,7 @@ export function useDebouncedTrade(
 ): {
   state: TradeState
   trade?: InterfaceTrade
+  swapQuoteLatency?: number
 }
 
 export function useDebouncedTrade(
@@ -37,6 +38,7 @@ export function useDebouncedTrade(
 ): {
   state: TradeState
   trade?: ClassicTrade
+  swapQuoteLatency?: number
 }
 /**
  * Returns the debounced v2+v3 trade for a desired swap.
@@ -57,6 +59,7 @@ export function useDebouncedTrade(
   state: TradeState
   trade?: InterfaceTrade
   method?: QuoteMethod
+  swapQuoteLatency?: number
 } {
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
