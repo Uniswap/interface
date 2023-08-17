@@ -248,6 +248,11 @@ dependencies {
 
     implementation "com.google.accompanist:accompanist-flowlayout:$flowlayout"
 
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    kapt "com.google.dagger:hilt-compiler:$hiltVersion"
+
+    implementation 'com.lambdapioneer.argon2kt:argon2kt:1.3.0'
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }
