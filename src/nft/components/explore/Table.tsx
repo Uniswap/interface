@@ -165,9 +165,9 @@ export function Table<D extends Record<string, unknown>>({
                   <Box as="span" color="accent1" position="relative">
                     {column.isSorted ? (
                       column.isSortedDesc ? (
-                        <ArrowChangeUp width="16px" height="16px" style={{ position: 'absolute' }} />
+                        <ArrowChangeUp width="16px" height="16px" style={{ position: 'absolute', top: 3 }} />
                       ) : (
-                        <ArrowChangeDown width="16px" height="16px" style={{ position: 'absolute' }} />
+                        <ArrowChangeDown width="16px" height="16px" style={{ position: 'absolute', top: 3 }} />
                       )
                     ) : (
                       ''
