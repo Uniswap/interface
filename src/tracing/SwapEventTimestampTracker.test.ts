@@ -1,6 +1,5 @@
 import { SwapEventTimestampTracker, SwapEventType } from './SwapEventTimestampTracker'
 
-// mock calculateElapsedTimeWithPerformanceMark in ./utils.ts:
 jest.mock('./utils', () => ({
   calculateElapsedTimeWithPerformanceMark: (mark: string) => {
     switch (mark) {
@@ -12,7 +11,7 @@ jest.mock('./utils', () => ({
         return 300
       case SwapEventType.FIRST_SWAP_SIGNATURE_COMPLETED:
         return 400
-      case SwapEventType.FIRST_SWAP:
+      case SwapEventType.FIRST_SWAP_SUCCESS:
         return 500
       default:
         return 0
@@ -34,14 +33,14 @@ describe('SwapEventTimestampTracker', () => {
 
   it('should set and get elapsed time', () => {
     const instance = SwapEventTimestampTracker.getInstance()
-    expect(instance.setElapsedTime(SwapEventType.FIRST_SWAP)).toEqual(500)
-    expect(instance.getElapsedTime(SwapEventType.FIRST_SWAP)).toEqual(500)
+    expect(instance.setElapsedTime(SwapEventType.FIRST_SWAP_SUCCESS)).toEqual(500)
+    expect(instance.getElapsedTime(SwapEventType.FIRST_SWAP_SUCCESS)).toEqual(500)
   })
 
   it('should get elapsed time between two events', () => {
     const instance = SwapEventTimestampTracker.getInstance()
     expect(instance.setElapsedTime(SwapEventType.FIRST_SWAP_ACTION)).toEqual(100)
-    expect(instance.getElapsedTime(SwapEventType.FIRST_SWAP, SwapEventType.FIRST_SWAP_ACTION)).toEqual(400)
+    expect(instance.getElapsedTime(SwapEventType.FIRST_SWAP_SUCCESS, SwapEventType.FIRST_SWAP_ACTION)).toEqual(400)
   })
 
   it('should return undefined if event type not set', () => {

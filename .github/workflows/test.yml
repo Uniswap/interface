@@ -214,7 +214,6 @@ jobs:
           name: Cloud typecheck
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_REPORTER_WEBHOOK }}
 
-  # TODO(WEB-2537): Setup CodeCOV
   cloud-tests:
     runs-on: ubuntu-latest
     steps:
@@ -227,6 +226,11 @@ jobs:
           restore-keys: ${{ runner.os }}-cloud-jest-
       # Only use 1 worker, so the other can be used for the proxy server under test.
       - run: yarn test:cloud --coverage --maxWorkers=1
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          flags: cloud-tests
         
   pre:
     if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
