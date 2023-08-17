@@ -4,7 +4,7 @@ import PNG from 'png-ts'
 
 import { DEFAULT_COLOR, predefinedTokenColors } from '../constants'
 
-export default async function getColor(image: string | undefined) {
+export default async function getColor(image: string | undefined, checkDistance = false) {
   if (!image) {
     return DEFAULT_COLOR
   }
@@ -17,13 +17,13 @@ export default async function getColor(image: string | undefined) {
     const arrayBuffer = Buffer.from(buffer)
 
     const type = data.headers.get('content-type') ?? ''
-    return getAverageColor(arrayBuffer, type)
+    return getAverageColor(arrayBuffer, type, checkDistance)
   } catch (e) {
     return DEFAULT_COLOR
   }
 }
 
-function getAverageColor(arrayBuffer: Uint8Array, type?: string) {
+function getAverageColor(arrayBuffer: Uint8Array, type: string, checkDistance: boolean) {
   let pixels
   switch (type) {
     case 'image/png': {
@@ -62,6 +62,14 @@ function getAverageColor(arrayBuffer: Uint8Array, type?: string) {
   r = Math.floor(r / (pixelCount - transparentPixels))
   g = Math.floor(g / (pixelCount - transparentPixels))
   b = Math.floor(b / (pixelCount - transparentPixels))
+
+  if (checkDistance) {
+    const distance = Math.sqrt(Math.pow(r - 255, 2) + Math.pow(g - 255, 2) + Math.pow(b - 255, 2))
+
+    if (distance < 50) {
+      return DEFAULT_COLOR
+    }
+  }
 
   return [r, g, b]
 }

@@ -33,6 +33,16 @@
     "deduplicate": "yarn-deduplicate --strategy=highest",
     "postinstall": "yarn patch-package"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "yarn.lock": [
+      "yarn deduplicate"
+    ]
+  },
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.ts*",
@@ -121,6 +131,7 @@
     "eslint-plugin-import": "^2.27",
     "eslint-plugin-rulesdir": "^0.2.2",
     "hardhat": "^2.14.0",
+    "husky": "^8.0.3",
     "jest": "^29.6.1",
     "jest-dev-server": "^9.0.0",
     "jest-extended": "^4.0.1",
@@ -128,6 +139,7 @@
     "jest-fetch-mock": "^3.0.3",
     "jest-styled-components": "^7.0.8",
     "jpeg-js": "^0.4.4",
+    "lint-staged": "^14.0.0",
     "mini-css-extract-plugin": "^2.7.6",
     "patch-package": "^7.0.0",
     "path-browserify": "^1.0.1",

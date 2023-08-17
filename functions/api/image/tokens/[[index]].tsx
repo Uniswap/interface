@@ -28,7 +28,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       return new Response('Token not found.', { status: 404 })
     }
 
-    const [fontData, palette] = await Promise.all([getFont(), getColor(data.ogImage)])
+    const [fontData, palette] = await Promise.all([getFont(), getColor(data.ogImage, true)])
 
     const networkLogo = getNetworkLogoUrl(networkName.toUpperCase())
 

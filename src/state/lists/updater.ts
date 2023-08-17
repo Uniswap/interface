@@ -1,10 +1,11 @@
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_LIST_OF_LISTS, UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import TokenSafetyLookupTable from 'constants/tokenSafetyLookup'
 import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms'
 import { useCallback, useEffect } from 'react'
-import { useAppDispatch } from 'state/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { useAllLists } from 'state/lists/hooks'
 
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
@@ -19,6 +20,11 @@ export default function Updater(): null {
 
   // get all loaded lists, and the active urls
   const lists = useAllLists()
+  const listsState = useAppSelector((state) => state.lists)
+
+  useEffect(() => {
+    TokenSafetyLookupTable.update(listsState)
+  }, [listsState])
 
   const fetchList = useFetchListCallback()
   const fetchAllListsCallback = useCallback(() => {
