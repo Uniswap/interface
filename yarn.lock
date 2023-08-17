@@ -6173,10 +6173,10 @@
     "@typescript-eslint/types" "5.59.1"
     eslint-visitor-keys "^3.3.0"
 
-"@uniswap/analytics-events@^2.15.0":
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.15.0.tgz#46de9832a2b0b0d8a08e67c6502c327d74f122f1"
-  integrity sha512-hRYa4YzX/NNLcSgwpkJ5Ich1swFGNftGkfS7nU41XliVbqhDqNSCnAdeHu8mFOx/W8xzf4cb773bYk001nY4mQ==
+"@uniswap/analytics-events@^2.17.0":
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.17.0.tgz#cc0fab2737a673b740ba6d303f04eab365b1876e"
+  integrity sha512-8obHdI+YjfuFCcPH7XOqIDxYVMl30GSUBMZjTx9Ik5vZAXNFJpyOjBcb0aZbL5L6y3vzqkCR8HUpAgd3NuOBFA==
 
 "@uniswap/analytics@^1.4.0":
   version "1.4.0"
