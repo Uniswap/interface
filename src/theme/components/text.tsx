@@ -107,7 +107,7 @@ export const ThemedText = {
     return <TextWrapper fontWeight={485} color="neutral2" {...props} />
   },
   DeprecatedGray(props: TextProps) {
-    return <TextWrapper fontWeight={485} color="deprecated_bg3" {...props} />
+    return <TextWrapper fontWeight={485} color="surface2" {...props} />
   },
   DeprecatedItalic(props: TextProps) {
     return <TextWrapper fontWeight={485} fontSize={12} fontStyle="italic" color="neutral2" {...props} />

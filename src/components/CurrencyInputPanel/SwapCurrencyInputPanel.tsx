@@ -249,9 +249,9 @@ export default function SwapCurrencyInputPanel({
         <FixedContainer>
           <AutoColumn gap="sm" justify="center">
             <Lock />
-            <ThemedText.DeprecatedLabel fontSize="12px" textAlign="center" padding="0 12px">
+            <ThemedText.BodySecondary fontSize="12px" textAlign="center" padding="0 12px">
               <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
-            </ThemedText.DeprecatedLabel>
+            </ThemedText.BodySecondary>
           </AutoColumn>
         </FixedContainer>
       )}
