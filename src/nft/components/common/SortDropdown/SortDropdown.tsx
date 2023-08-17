@@ -60,7 +60,6 @@ export const SortDropdown = ({
     >
       <Box
         as="button"
-        fontSize="14"
         borderRadius="12"
         borderStyle="solid"
         background={mini ? 'none' : 'surface1'}
@@ -73,6 +72,7 @@ export const SortDropdown = ({
         whiteSpace="nowrap"
         display="flex"
         justifyContent="space-between"
+        height="44"
         alignItems="center"
         width={inFilters ? 'full' : 'inherit'}
         onClick={toggleOpen}
@@ -84,6 +84,7 @@ export const SortDropdown = ({
             <Box display="flex" alignItems="center" color="neutral1">
               {!isOpen && reversable && (
                 <Row
+                  marginRight="4"
                   onClick={(e) => {
                     e.stopPropagation()
 
