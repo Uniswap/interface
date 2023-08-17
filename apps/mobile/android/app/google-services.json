@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:196753325723:android:deae58ceb5a087450ed03e",
+        "mobilesdk_app_id": "1:196753325723:android:45dc3a82913359c80ed03e",
         "android_client_info": {
           "package_name": "com.uniswap"
         }
@@ -44,7 +44,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDy7u4uz8btzckhZf5sVSpX2hve-4B3NiU"
+          "current_key": "AIzaSyClPibETzdx02cLZtOW5oH7-nrpWDk77bI"
         }
       ],
       "services": {
@@ -105,7 +105,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDy7u4uz8btzckhZf5sVSpX2hve-4B3NiU"
+          "current_key": "AIzaSyClPibETzdx02cLZtOW5oH7-nrpWDk77bI"
         }
       ],
       "services": {
@@ -129,7 +129,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:196753325723:android:6521ebdae20512ba0ed03e",
+        "mobilesdk_app_id": "1:196753325723:android:40868387e9d53dd80ed03e",
         "android_client_info": {
           "package_name": "com.uniswap.dev"
         }
@@ -140,7 +140,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.uniswap.dev",
-            "certificate_hash": "f1ef853f0d883ef07583024ebd09bcf62ed7918c"
+            "certificate_hash": "74d6f71167b456a7d2c9156084ec881cac8d8520"
           }
         },
         {
@@ -166,7 +166,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDy7u4uz8btzckhZf5sVSpX2hve-4B3NiU"
+          "current_key": "AIzaSyClPibETzdx02cLZtOW5oH7-nrpWDk77bI"
         }
       ],
       "services": {
