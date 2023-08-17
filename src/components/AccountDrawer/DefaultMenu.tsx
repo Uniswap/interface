@@ -2,7 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
 import { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import AuthenticatedHeader from './AuthenticatedHeader'
 import SettingsMenu from './SettingsMenu'

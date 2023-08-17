@@ -8,4 +8,4 @@ export const SMALL_MEDIA_BREAKPOINT = '540px'
 export const MOBILE_MEDIA_BREAKPOINT = '420px'
 
 // includes chains that the backend does not current source off-chain metadata for
-export const UNSUPPORTED_METADATA_CHAINS = [ChainId.BNB, ChainId.AVALANCHE, ChainId.BASE_GOERLI, ChainId.BASE]
+export const UNSUPPORTED_METADATA_CHAINS = [ChainId.BNB, ChainId.AVALANCHE]

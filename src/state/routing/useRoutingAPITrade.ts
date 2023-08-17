@@ -4,12 +4,19 @@ import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order
 import { sendTiming } from 'components/analytics'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useMemo } from 'react'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/slice'
-import { useGetQuoteQuery } from 'state/routing/slice'
 
-import { ClassicTrade, InterfaceTrade, QuoteMethod, QuoteState, RouterPreference, TradeState } from './types'
+import { useGetQuoteQuery } from './slice'
+import {
+  ClassicTrade,
+  InterfaceTrade,
+  INTERNAL_ROUTER_PREFERENCE_PRICE,
+  QuoteMethod,
+  QuoteState,
+  RouterPreference,
+  TradeState,
+} from './types'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
@@ -24,6 +31,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 ): {
   state: TradeState
   trade?: ClassicTrade
+  swapQuoteLatency?: number
 }
 
 export function useRoutingAPITrade<TTradeType extends TradeType>(
@@ -36,6 +44,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 ): {
   state: TradeState
   trade?: InterfaceTrade
+  swapQuoteLatency?: number
 }
 
 /**
@@ -55,6 +64,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   state: TradeState
   trade?: InterfaceTrade
   method?: QuoteMethod
+  swapQuoteLatency?: number
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -80,7 +90,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     currentData: currentTradeResult,
   } = useGetQuoteQuery(queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
-    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
+    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })
@@ -89,7 +99,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   return useMemo(() => {
     if (skipFetch && amountSpecified) {
       // If we don't want to fetch new trades, but have valid inputs, return the stale trade.
-      return { state: TradeState.STALE, trade: tradeResult?.trade }
+      return { state: TradeState.STALE, trade: tradeResult?.trade, swapQuoteLatency: tradeResult?.latencyMs }
     } else if (!amountSpecified || isError || !queryArgs) {
       return {
         state: TradeState.INVALID,
@@ -105,9 +115,20 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       return {
         state: isCurrent ? TradeState.VALID : TradeState.LOADING,
         trade: tradeResult.trade,
+        swapQuoteLatency: tradeResult.latencyMs,
       }
     }
-  }, [amountSpecified, error, isCurrent, isError, queryArgs, skipFetch, tradeResult?.state, tradeResult?.trade])
+  }, [
+    amountSpecified,
+    error,
+    isCurrent,
+    isError,
+    queryArgs,
+    skipFetch,
+    tradeResult?.state,
+    tradeResult?.latencyMs,
+    tradeResult?.trade,
+  ])
 }
 
 // only want to enable this when app hook called

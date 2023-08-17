@@ -5,7 +5,6 @@ import {
   SwapEventName,
   SwapPriceUpdateUserResponse,
 } from '@uniswap/analytics-events'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
@@ -26,10 +25,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import invariant from 'tiny-invariant'
 import { isL2ChainId } from 'utils/chains'
+import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -267,7 +267,6 @@ export default function ConfirmSwapModal({
   onCurrencySelection,
   swapError,
   swapResult,
-  swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
 }: {
@@ -282,7 +281,6 @@ export default function ConfirmSwapModal({
   swapError?: Error
   onDismiss: () => void
   onCurrencySelection: (field: Field, currency: Currency) => void
-  swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
@@ -356,7 +354,6 @@ export default function ConfirmSwapModal({
           swapResult={swapResult}
           allowedSlippage={allowedSlippage}
           disabledConfirm={showAcceptChanges}
-          swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueInput}
           fiatValueOutput={fiatValueOutput}
           showAcceptChanges={showAcceptChanges}
@@ -386,7 +383,6 @@ export default function ConfirmSwapModal({
     wrapTxHash,
     allowance,
     allowedSlippage,
-    swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
     onAcceptChanges,

@@ -11,11 +11,11 @@ import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
 import { getApproveInfo, getWrapInfo } from './gas'
-import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE } from './slice'
 import {
   ClassicQuoteData,
   ClassicTrade,
   DutchOrderTrade,
+  GetQuoteArgs,
   InterfaceTrade,
   isClassicQuoteResponse,
   PoolType,
@@ -325,12 +325,7 @@ export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrad
 }
 
 export function shouldUseAPIRouter(args: GetQuoteArgs): boolean {
-  const { routerPreference, isRoutingAPIPrice } = args
-  if (routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE && isRoutingAPIPrice) {
-    return true
-  }
-
-  return routerPreference === RouterPreference.API || routerPreference === RouterPreference.X
+  return args.routerPreference !== RouterPreference.CLIENT
 }
 
 export function getTransactionCount(trade: InterfaceTrade): number {

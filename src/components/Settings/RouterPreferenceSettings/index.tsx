@@ -10,7 +10,7 @@ import { useAppDispatch } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference } from 'state/user/hooks'
 import { updateDisabledUniswapX } from 'state/user/reducer'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme'
 
 const InlineLink = styled(ThemedText.Caption)`

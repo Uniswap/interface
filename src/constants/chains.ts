@@ -1,6 +1,12 @@
 import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
 
-export const UniWalletSupportedChains = [ChainId.MAINNET, ChainId.ARBITRUM_ONE, ChainId.OPTIMISM, ChainId.POLYGON]
+export const UniWalletSupportedChains = [
+  ChainId.MAINNET,
+  ChainId.ARBITRUM_ONE,
+  ChainId.OPTIMISM,
+  ChainId.POLYGON,
+  ChainId.BASE,
+]
 
 export const CHAIN_IDS_TO_NAMES = {
   [ChainId.MAINNET]: 'mainnet',
@@ -101,10 +107,6 @@ export const L2_CHAIN_IDS = [
 ] as const
 
 export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
-
-export function isPolygonChain(chainId: number): chainId is ChainId.POLYGON | ChainId.POLYGON_MUMBAI {
-  return chainId === ChainId.POLYGON || chainId === ChainId.POLYGON_MUMBAI
-}
 
 /**
  * Get the priority of a chainId based on its relevance to the user.

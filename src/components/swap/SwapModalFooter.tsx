@@ -1,6 +1,5 @@
 import { Plural, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { formatNumber, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
@@ -11,12 +10,12 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { RouterPreference } from 'state/routing/types'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, RouterPreference } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
+import { formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
 import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
@@ -25,7 +24,7 @@ import { getPriceImpactWarning } from 'utils/prices'
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
-import { SwapCallbackError, SwapShowAcceptChanges } from './styleds'
+import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
 import { Label } from './SwapModalHeaderAmount'
 
 const DetailsContainer = styled(Column)`
@@ -54,7 +53,6 @@ export default function SwapModalFooter({
   onConfirm,
   swapErrorMessage,
   disabledConfirm,
-  swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
   showAcceptChanges,
@@ -66,7 +64,6 @@ export default function SwapModalFooter({
   onConfirm: () => void
   swapErrorMessage?: ReactNode
   disabledConfirm: boolean
-  swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
   showAcceptChanges: boolean
@@ -188,7 +185,6 @@ export default function SwapModalFooter({
               transactionDeadlineSecondsSinceEpoch,
               isAutoSlippage,
               isAutoRouterApi: routerPreference === RouterPreference.API,
-              swapQuoteReceivedDate,
               routes,
               fiatValueInput: fiatValueInput.data,
               fiatValueOutput: fiatValueOutput.data,

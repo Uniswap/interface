@@ -3,7 +3,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
-import { useHasPendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
@@ -16,7 +16,7 @@ import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
 import { useCallback } from 'react'
 import { useAppSelector } from 'state/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
 import { shortenAddress } from 'utils'
@@ -140,7 +140,7 @@ function Web3StatusInner() {
   }, [toggleAccountDrawer])
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
-  const { hasPendingActivity, pendingActivityCount } = useHasPendingActivity()
+  const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
 
   if (account) {
     return (

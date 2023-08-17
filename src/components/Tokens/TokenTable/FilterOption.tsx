@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 const FilterOption = styled.button<{ active: boolean; highlight?: boolean }>`
   height: 100%;
   color: ${({ theme, active }) => (active ? theme.accentActive : theme.textPrimary)};

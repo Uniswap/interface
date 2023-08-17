@@ -1,5 +1,4 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { formatUSDPrice } from '@uniswap/conedison/format'
 import { sendAnalyticsEvent } from 'analytics'
 import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
@@ -17,8 +16,9 @@ import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
+import { formatUSDPrice } from 'utils/formatNumbers'
 
 import { DeltaText, getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
@@ -160,7 +160,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
 
   return (
     <Link
-      data-testid={`searchbar-token-row-${token.symbol}`}
+      data-testid={`searchbar-token-row-${token.chain}-${token.address ?? 'NATIVE'}`}
       to={tokenDetailsPath}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
@@ -174,7 +174,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
           symbol={token.symbol}
           size="36px"
           backupImg={token.project?.logoUrl}
-          style={{ paddingRight: '8px' }}
+          style={{ marginRight: '8px' }}
         />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">

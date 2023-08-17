@@ -8,7 +8,6 @@ import {
   SharedEventName,
   SwapEventName,
 } from '@uniswap/analytics-events'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { ChainId, Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -25,7 +24,7 @@ import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWith
 import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
-import { ArrowWrapper, PageWrapper, SwapWrapper } from 'components/swap/styleds'
+import { ArrowWrapper, PageWrapper, SwapWrapper } from 'components/swap/styled'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import SwapHeader from 'components/swap/SwapHeader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -33,7 +32,6 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
-import { useBaseEnabledChains } from 'featureFlags/flags/baseEnabled'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
@@ -55,9 +53,10 @@ import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { Field, replaceSwapState } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { LinkStyledButton, ThemedText } from 'theme'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
+import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -136,11 +135,10 @@ function largerPercentValue(a?: Percent, b?: Percent) {
 export default function SwapPage({ className }: { className?: string }) {
   const { chainId: connectedChainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
-  const baseEnabledChains = useBaseEnabledChains()
 
   const location = useLocation()
 
-  const supportedChainId = asSupportedChain(connectedChainId, baseEnabledChains)
+  const supportedChainId = asSupportedChain(connectedChainId)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -270,7 +268,7 @@ export function Swap({
 
   const swapInfo = useDerivedSwapInfo(state, chainId)
   const {
-    trade: { state: tradeState, trade },
+    trade: { state: tradeState, trade, swapQuoteLatency },
     allowedSlippage,
     autoSlippage,
     currencyBalances,
@@ -468,9 +466,6 @@ export function Swap({
     }
   }, [currencies, onUserInput, onWrap, wrapType])
 
-  // errors
-  const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
-
   // warnings on the greater of fiat value price impact and execution price impact
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
     if (isUniswapXTrade(trade)) {
@@ -530,13 +525,11 @@ export function Swap({
   useEffect(() => {
     if (!trade || prevTrade === trade) return // no new swap quote to log
 
-    const now = new Date()
-    setSwapQuoteReceivedDate(now)
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, now),
+      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, swapQuoteLatency),
       ...trace,
     })
-  }, [prevTrade, trade, trace, allowedSlippage])
+  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
@@ -558,7 +551,7 @@ export function Swap({
         showCancel={true}
       />
       <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
-      {trade && showConfirm && (
+      {trade && showConfirm && allowance.state !== AllowanceState.LOADING && (
         <ConfirmSwapModal
           trade={trade}
           inputCurrency={inputCurrency}
@@ -571,7 +564,6 @@ export function Swap({
           allowance={allowance}
           swapError={swapError}
           onDismiss={handleConfirmDismiss}
-          swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
         />

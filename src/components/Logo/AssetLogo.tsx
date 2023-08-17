@@ -2,7 +2,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { getChainInfo } from 'constants/chainInfo'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import React, { useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 export const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};
@@ -15,6 +15,9 @@ export const MissingImageLogo = styled.div<{ size?: string }>`
   line-height: ${({ size }) => size ?? '24px'};
   text-align: center;
   width: ${({ size }) => size ?? '24px'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const LogoImage = styled.img<{ size: string; imgLoaded?: boolean }>`
@@ -83,7 +86,7 @@ export default function AssetLogo({
   })
 
   return (
-    <LogoContainer style={style}>
+    <LogoContainer style={{ height: size, width: size, ...style }}>
       {src ? (
         <LogoImageWrapper size={size} imgLoaded={imgLoaded}>
           <LogoImage
