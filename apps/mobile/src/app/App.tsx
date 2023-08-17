@@ -17,7 +17,6 @@ import { AppStackNavigator } from 'src/app/navigation/navigation'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
-import { Box } from 'src/components/layout'
 import Trace from 'src/components/Trace/Trace'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { usePersistedApolloClient } from 'src/data/usePersistedApolloClient'
@@ -179,16 +178,7 @@ function AppInner(): JSX.Element {
     NativeModules.ThemeModule.setColorScheme(themeSetting)
   }, [themeSetting])
 
-  return (
-    // This Flex ensures that the background color is set to the correct color
-    // and the native background color is not visible after the splash screen
-    // is hidden (there was an issue on Android where the native background
-    // used as a splash screen which was visible when changing screens with
-    // a transition)
-    <Box backgroundColor="surface1" flex={1}>
-      <NavStack isDarkMode={isDarkMode} />
-    </Box>
-  )
+  return <NavStack isDarkMode={isDarkMode} />
 }
 
 function DataUpdaters(): JSX.Element {
