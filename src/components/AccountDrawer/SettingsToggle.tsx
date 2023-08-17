@@ -6,6 +6,7 @@ import { ThemedText } from 'theme'
 
 const StyledColumn = styled(Column)`
   width: 100%;
+  margin-right: 10px;
 `
 
 interface SettingsToggleProps {

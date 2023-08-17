@@ -60,13 +60,13 @@ export function getDeltaArrow(delta: number | null | undefined, iconSize = 16, s
     return null
   } else if (Math.sign(delta) < 0) {
     return styled ? (
-      <StyledDownArrow size={iconSize} key="arrow-down" aria-label="down" />
+      <StyledDownArrow width={iconSize} height={iconSize} key="arrow-down" aria-label="down" />
     ) : (
       <DefaultDownArrow size={iconSize} key="arrow-down" aria-label="down" />
     )
   }
   return styled ? (
-    <StyledUpArrow size={iconSize} key="arrow-up" aria-label="up" />
+    <StyledUpArrow width={iconSize} height={iconSize} key="arrow-up" aria-label="up" />
   ) : (
     <DefaultUpArrow size={iconSize} key="arrow-up" aria-label="up" />
   )
