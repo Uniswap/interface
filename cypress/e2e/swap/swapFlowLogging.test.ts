@@ -3,8 +3,8 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
 
-describe('swap flow logging', () => {
-  it('completes two swaps and verifies the TTS logging for the first, plus all intermediate steps along the way', () => {
+describe('completes two swaps and verifies the swap flow logging', () => {
+  it('first swap action', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat()
 
@@ -19,7 +19,9 @@ describe('swap flow logging', () => {
       cy.wrap(event.event_properties.time_to_first_swap_action).should('be.a', 'number')
       cy.wrap(event.event_properties.time_to_first_swap_action).should('be.gte', 0)
     })
+  })
 
+  it('first swap quote', () => {
     // Verify Swap Quote
     cy.waitForAmplitudeEvent(SwapEventName.SWAP_QUOTE_FETCH).then((event: any) => {
       cy.wrap(event.event_properties).should('have.property', 'time_to_first_quote_request')
@@ -29,7 +31,9 @@ describe('swap flow logging', () => {
       cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.a', 'number')
       cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.gte', 0)
     })
+  })
 
+  it('first swap success', () => {
     // Submit transaction
     cy.get('#swap-button').click()
     cy.contains('Confirm swap').click()
@@ -46,7 +50,9 @@ describe('swap flow logging', () => {
       cy.wrap(event.event_properties.time_to_swap_since_first_input).should('be.a', 'number')
       cy.wrap(event.event_properties.time_to_swap_since_first_input).should('be.gte', 0)
     })
+  })
 
+  it('second swap', () => {
     // Second swap in the session:
     // Enter amount to swap
     cy.get('#swap-currency-output .token-amount-input').clear().type('1').should('have.value', '1')
