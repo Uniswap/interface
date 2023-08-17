@@ -1,9 +1,10 @@
+import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import { ArrowLeft } from 'react-feather'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme'
 
-const Menu = styled.div`
+const Menu = styled(Column)`
   width: 100%;
   overflow: auto;
   margin-top: 4px;
