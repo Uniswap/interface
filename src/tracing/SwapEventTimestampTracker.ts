@@ -1,11 +1,18 @@
 import { calculateElapsedTimeWithPerformanceMark } from './utils'
 
 export enum SwapEventType {
+  /**
+   * Full list of actions that can trigger the FIRST_SWAP_ACTION moment:
+   * - “max” clicked for an input amount
+   * - token selected (input or output)
+   * - token amount typed (input or output)
+   * - reverse button clicked
+   */
   FIRST_SWAP_ACTION = 'FIRST_SWAP_ACTION',
   FIRST_QUOTE_FETCH_STARTED = 'FIRST_QUOTE_FETCH_STARTED',
   FIRST_SWAP_SIGNATURE_REQUESTED = 'FIRST_SWAP_SIGNATURE_REQUESTED',
   FIRST_SWAP_SIGNATURE_COMPLETED = 'FIRST_SWAP_SIGNATURE_COMPLETED',
-  FIRST_SWAP = 'FIRST_SWAP',
+  FIRST_SWAP_SUCCESS = 'FIRST_SWAP_SUCCESS',
 }
 
 export class SwapEventTimestampTracker {
