@@ -55,8 +55,6 @@ export default async function getToken(networkName: string, tokenAddress: string
       '/n' + today + ': The current price of ' + asset.symbol + ' is $' + asset.market?.price.value + '. Swap now.'
   }
 
-  console.log(description)
-
   const title = formatTitleName(asset.symbol, asset.name)
 
   const formattedAsset = {
