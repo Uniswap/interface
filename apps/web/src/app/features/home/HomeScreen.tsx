@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { PortfolioActionButtons } from 'src/app/features/home/PortfolioActionButtons'
 import { PortfolioHeader } from 'src/app/features/home/PortfolioHeader'
 import { TransactionActivity } from 'src/app/features/transactions/TransactionActivity'
-import { AppRoutes } from 'src/app/navigation/constants'
 import { Tabs } from 'tamagui'
 import { Text, YStack } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
@@ -16,7 +15,6 @@ enum HomeTabs {
 }
 
 export function HomeScreen(): JSX.Element {
-  const navigate = useNavigate()
   const address = useActiveAccountAddressWithThrow()
   const [selectedTab, setSelectedTab] = useState<HomeTabs>(HomeTabs.Tokens)
 
@@ -31,10 +29,8 @@ export function HomeScreen(): JSX.Element {
         <Flex backgroundColor="$surface1" flexGrow={1} gap="$spacing8" width="100%">
           <YStack gap="$spacing12">
             <PortfolioHeader address={address} />
-            <PortfolioBalance
-              address={address}
-              onSendClick={(): void => navigate(AppRoutes.Transfer)}
-            />
+            <PortfolioBalance address={address} />
+            <PortfolioActionButtons />
             <Tabs
               defaultValue={HomeTabs.Tokens}
               onValueChange={(v: string): void => {

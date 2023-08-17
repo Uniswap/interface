@@ -184,6 +184,8 @@ const sporeLight = {
   accent1: '#FC72FF',
   accent2: '#FFEFFF',
 
+  accentSoft: '#FC72FF33', //33 = 20%
+
   statusActive: '#236EFF',
   statusSuccess: '#40B66B',
   statusCritical: '#FF5F52',
@@ -207,6 +209,8 @@ const sporeDark = {
 
   accent1: '#FC72FF',
   accent2: '#311C31',
+
+  accentSoft: '#FC72FF33', //33 = 20%
 
   statusActive: '#236EFF',
   statusSuccess: '#40B66B',
@@ -233,6 +237,8 @@ export const colorsLight = {
 
   accent1: sporeLight.accent1,
   accent2: sporeLight.accent2,
+
+  accentSoft: sporeLight.accentSoft,
 
   statusSuccess: sporeLight.statusSuccess,
   statusCritical: sporeLight.statusCritical,
@@ -285,6 +291,8 @@ export const colorsDark = {
 
   accent1: sporeDark.accent1,
   accent2: sporeDark.accent2,
+
+  accentSoft: sporeDark.accentSoft,
 
   statusSuccess: sporeDark.statusSuccess,
   statusCritical: sporeDark.statusCritical,
