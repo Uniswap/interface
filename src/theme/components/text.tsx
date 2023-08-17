@@ -25,9 +25,6 @@ export const ThemedText = {
   BodySmall(props: TextProps) {
     return <TextWrapper fontWeight={485} fontSize={14} color="neutral1" {...props} />
   },
-  Caption(props: TextProps) {
-    return <TextWrapper fontWeight={485} fontSize={14} color="neutral1" {...props} />
-  },
   HeadlineSmall(props: TextProps) {
     return <TextWrapper fontWeight={485} fontSize={20} lineHeight="28px" color="neutral1" {...props} />
   },

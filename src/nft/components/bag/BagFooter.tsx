@@ -86,7 +86,7 @@ const WarningText = styled(ThemedText.BodyPrimary)<{ $color: string }>`
   text-align: center;
 `
 
-const HelperText = styled(ThemedText.Caption)<{ $color: string }>`
+const HelperText = styled(ThemedText.BodySmall)<{ $color: string }>`
   color: ${({ $color }) => $color};
   display: flex;
   justify-content: center;

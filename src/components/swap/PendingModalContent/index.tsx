@@ -351,7 +351,7 @@ export function PendingModalContent({
           })}
         </AnimationWrapper>
         <Row justify="center" marginTop="32px" minHeight="24px">
-          <ThemedText.Caption color="neutral2">{stepContents[currentStep].bottomLabel}</ThemedText.Caption>
+          <ThemedText.BodySmall color="neutral2">{stepContents[currentStep].bottomLabel}</ThemedText.BodySmall>
         </Row>
       </HeaderContainer>
       {stepContents[currentStep].button && <Row justify="center">{stepContents[currentStep].button}</Row>}

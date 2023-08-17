@@ -101,7 +101,7 @@ const RarityText = styled(ThemedText.BodySmall)`
   display: flex;
 `
 
-const RarityInfo = styled(ThemedText.Caption)`
+const RarityInfo = styled(ThemedText.BodySmall)`
   flex-shrink: 0;
   color: ${({ theme }) => theme.neutral2};
   background: ${({ theme }) => theme.surface3};

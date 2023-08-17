@@ -59,9 +59,9 @@ const ButtonContent = () => {
 
   return (
     <IconContainerWithSlippage data-testid="settings-icon-with-slippage" gap="sm" displayWarning={isInvalidSlippage}>
-      <ThemedText.Caption>
+      <ThemedText.BodySmall>
         <Trans>{userSlippageTolerance.toFixed(2)}% slippage</Trans>
-      </ThemedText.Caption>
+      </ThemedText.BodySmall>
       <Icon />
     </IconContainerWithSlippage>
   )

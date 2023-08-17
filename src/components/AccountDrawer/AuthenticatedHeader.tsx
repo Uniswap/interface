@@ -89,7 +89,7 @@ const IconContainer = styled.div`
     }
   }
 `
-const FiatOnrampNotAvailableText = styled(ThemedText.Caption)`
+const FiatOnrampNotAvailableText = styled(ThemedText.BodySmall)`
   align-items: center;
   color: ${({ theme }) => theme.neutral2};
   display: flex;

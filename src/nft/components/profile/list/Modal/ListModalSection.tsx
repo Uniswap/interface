@@ -128,9 +128,9 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
         <SectionBody>
           {isCollectionApprovalSection && (
             <Row height="16px" marginBottom="16px">
-              <ThemedText.Caption lineHeight="16px" color="neutral2">
+              <ThemedText.BodySmall lineHeight="16px" color="neutral2">
                 <Trans>Why is a transaction required?</Trans>
-              </ThemedText.Caption>
+              </ThemedText.BodySmall>
               <MouseoverTooltip
                 text={<Trans>Listing an NFT requires a one-time marketplace approval for each NFT collection.</Trans>}
               >

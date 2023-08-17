@@ -26,9 +26,9 @@ export function SettingsToggle({ title, description, dataid, isActive, toggle }:
         </Row>
         {description && (
           <Row>
-            <ThemedText.Caption color="neutral2" lineHeight="16px">
+            <ThemedText.BodySmall color="neutral2" lineHeight="16px">
               {description}
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           </Row>
         )}
       </StyledColumn>

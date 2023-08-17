@@ -35,7 +35,7 @@ const CollectionIcon = styled.img`
   ${iconStyles}
 `
 
-const FeePercent = styled(ThemedText.Caption)`
+const FeePercent = styled(ThemedText.BodySmall)`
   line-height: 16px;
   color: ${({ theme }) => theme.neutral2};
   white-space: nowrap;
@@ -63,10 +63,10 @@ export const RoyaltyTooltip = ({
         <FeeWrap key={asset.collection?.address ?? '' + asset.tokenId + market.name + 'fee'}>
           <Row>
             <MarketIcon>{getMarketplaceIcon(market.name, '16')}</MarketIcon>
-            <ThemedText.Caption lineHeight="16px" marginRight="12px">
+            <ThemedText.BodySmall lineHeight="16px" marginRight="12px">
               {market.name}&nbsp;
               <Trans>fee</Trans>
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           </Row>
           <FeePercent>{market.fee}%</FeePercent>
         </FeeWrap>
@@ -74,19 +74,19 @@ export const RoyaltyTooltip = ({
       <FeeWrap>
         <Row>
           <CollectionIcon src={asset.collection?.imageUrl} />
-          <ThemedText.Caption lineHeight="16px" marginRight="12px">
+          <ThemedText.BodySmall lineHeight="16px" marginRight="12px">
             <Trans>Max creator royalties</Trans>
-          </ThemedText.Caption>
+          </ThemedText.BodySmall>
         </Row>
         <FeePercent>{maxRoyalty}%</FeePercent>
       </FeeWrap>
       <MaxFeeContainer>
-        <ThemedText.Caption lineHeight="16px">
+        <ThemedText.BodySmall lineHeight="16px">
           <Trans>Max fees</Trans>
-        </ThemedText.Caption>
-        <ThemedText.Caption lineHeight="16px" color={fees ? 'neutral1' : 'neutral2'}>
+        </ThemedText.BodySmall>
+        <ThemedText.BodySmall lineHeight="16px" color={fees ? 'neutral1' : 'neutral2'}>
           {fees ? formatEth(fees) : '-'} ETH
-        </ThemedText.Caption>
+        </ThemedText.BodySmall>
       </MaxFeeContainer>
     </RoyaltyContainer>
   )

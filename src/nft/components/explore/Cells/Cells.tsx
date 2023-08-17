@@ -159,7 +159,7 @@ export const VolumeCell = ({
 
 export const ChangeCell = ({ change, children }: { children?: ReactNode; change?: number }) => {
   const isMobile = useIsMobile()
-  const TextComponent = isMobile ? ThemedText.Caption : ThemedText.BodyPrimary
+  const TextComponent = isMobile ? ThemedText.BodySmall : ThemedText.BodyPrimary
   return (
     <ChangeCellContainer change={change ?? 0}>
       {!change || change > 0 ? (

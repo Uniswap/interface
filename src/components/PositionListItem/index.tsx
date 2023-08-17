@@ -68,7 +68,7 @@ const DoubleArrow = styled.span`
   color: ${({ theme }) => theme.neutral1};
 `
 
-const RangeText = styled(ThemedText.Caption)`
+const RangeText = styled(ThemedText.BodySmall)`
   font-size: 14px !important;
   word-break: break-word;
   padding: 0.25rem 0.25rem;
@@ -80,7 +80,7 @@ const FeeTierText = styled(ThemedText.UtilityBadge)`
   margin-left: 8px !important;
   color: ${({ theme }) => theme.neutral3};
 `
-const ExtentsText = styled(ThemedText.Caption)`
+const ExtentsText = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};
   display: inline-block;
   line-height: 16px;

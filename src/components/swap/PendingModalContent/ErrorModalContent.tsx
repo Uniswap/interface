@@ -64,7 +64,7 @@ export function ErrorModalContent({ errorType, onRetry }: ErrorModalContentProps
       <ColumnCenter gap="md">
         <ThemedText.HeadlineSmall>{title}</ThemedText.HeadlineSmall>
         <Row justify="center">
-          {label && <ThemedText.Caption color="neutral2">{label}</ThemedText.Caption>}
+          {label && <ThemedText.BodySmall color="neutral2">{label}</ThemedText.BodySmall>}
           {tooltipText && <QuestionHelper text={tooltipText} />}
         </Row>
       </ColumnCenter>

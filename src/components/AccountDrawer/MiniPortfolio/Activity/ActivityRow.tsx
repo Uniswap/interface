@@ -23,7 +23,7 @@ const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
   ${EllipsisStyle}
 `
 
-const StyledTimestamp = styled(ThemedText.Caption)`
+const StyledTimestamp = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};
   font-variant: small;
   font-feature-settings: 'tnum' on, 'lnum' on, 'ss02' on;

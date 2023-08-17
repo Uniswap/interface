@@ -108,11 +108,11 @@ function InfoSection() {
         <ThemedText.SubHeaderSmall color="neutral1">
           <Trans>Don&apos;t have Uniswap Wallet?</Trans>
         </ThemedText.SubHeaderSmall>
-        <ThemedText.Caption color="neutral2">
+        <ThemedText.BodySmall color="neutral2">
           <Trans>
             Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps.
           </Trans>
-        </ThemedText.Caption>
+        </ThemedText.BodySmall>
       </AutoColumn>
       <Column>
         <DownloadButton element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON} />

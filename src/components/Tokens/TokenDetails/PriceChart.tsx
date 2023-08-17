@@ -376,7 +376,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
         ) : (
           <>
             <MissingPrice>Price Unavailable</MissingPrice>
-            <ThemedText.Caption style={{ color: theme.neutral3 }}>{missingPricesMessage}</ThemedText.Caption>
+            <ThemedText.BodySmall style={{ color: theme.neutral3 }}>{missingPricesMessage}</ThemedText.BodySmall>
           </>
         )}
       </ChartHeader>

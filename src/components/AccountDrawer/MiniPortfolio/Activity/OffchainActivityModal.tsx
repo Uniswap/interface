@@ -136,11 +136,11 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
           </ThemedText.SubHeaderLarge>
           <Column>
             {amounts && <TradeSummary trade={amounts} />}
-            <ThemedText.Caption paddingTop="48px" textAlign="center">
+            <ThemedText.BodySmall paddingTop="48px" textAlign="center">
               <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
                 <Trans>Learn more about swapping with UniswapX</Trans>
               </ExternalLink>
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           </Column>
         </ContentContainer>
       )
@@ -154,13 +154,13 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
           </ThemedText.SubHeaderLarge>
           <Column>
             {amounts && <TradeSummary trade={amounts} />}
-            <ThemedText.Caption paddingTop="48px" textAlign="center">
+            <ThemedText.BodySmall paddingTop="48px" textAlign="center">
               {explorerLink && (
                 <ExternalLink href={explorerLink}>
                   <Trans>View on Explorer</Trans>
                 </ExternalLink>
               )}
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           </Column>
         </ContentContainer>
       )
