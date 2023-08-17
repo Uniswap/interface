@@ -16,7 +16,7 @@ import {
   resetPasswordAttempts,
   setLockoutEndTime,
 } from 'src/features/CloudBackup/passwordLockoutSlice'
-import { restoreMnemonicFromICloud } from 'src/features/CloudBackup/RNICloudBackupsManager'
+import { restoreMnemonicFromCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
@@ -118,7 +118,7 @@ export function RestoreCloudBackupPasswordScreen({
     // Attempt to restore backup with encrypted mnemonic using password
     async function checkCorrectPassword(): Promise<void> {
       try {
-        await restoreMnemonicFromICloud(params.mnemonicId, enteredPassword)
+        await restoreMnemonicFromCloudStorage(params.mnemonicId, enteredPassword)
         dispatch(
           importAccountActions.trigger({
             type: ImportAccountType.RestoreBackup,

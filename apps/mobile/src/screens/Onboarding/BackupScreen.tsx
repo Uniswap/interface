@@ -18,7 +18,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
-import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
+import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
 import { ImportType } from 'src/features/onboarding/utils'
@@ -42,7 +42,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const theme = useAppTheme()
   const { navigate } = useOnboardingStackNavigation()
 
-  const { data: iCloudAvailable } = useAsyncData(isICloudAvailable)
+  const { data: cloudStorageAvailable } = useAsyncData(isCloudStorageAvailable)
 
   const activeAccount = useActiveAccount()
   const activeAccountBackups = activeAccount?.backups
@@ -80,7 +80,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   const onPressICloudBackup = (): void => {
-    if (!iCloudAvailable) {
+    if (!cloudStorageAvailable) {
       Alert.alert(
         t('iCloud Drive not available'),
         t(

@@ -5,7 +5,7 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { backupMnemonicToICloud } from 'src/features/CloudBackup/RNICloudBackupsManager'
+import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -54,7 +54,7 @@ export function CloudBackupProcessingAnimation({
   const backup = useCallback(async () => {
     try {
       // Ensure processing state is shown for at least 1s
-      await promiseMinDelay(backupMnemonicToICloud(accountAddress, password), ONE_SECOND_MS)
+      await promiseMinDelay(backupMnemonicToCloudStorage(accountAddress, password), ONE_SECOND_MS)
 
       dispatch(
         editAccountActions.trigger({

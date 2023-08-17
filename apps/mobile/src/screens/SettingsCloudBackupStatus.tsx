@@ -12,7 +12,7 @@ import { Screen } from 'src/components/layout/Screen'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { deleteICloudMnemonicBackup } from 'src/features/CloudBackup/RNICloudBackupsManager'
+import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import Checkmark from 'ui/src/assets/icons/check.svg'
@@ -58,7 +58,7 @@ export function SettingsCloudBackupStatus({
 
   const deleteBackup = async (): Promise<void> => {
     try {
-      await deleteICloudMnemonicBackup(mnemonicId)
+      await deleteCloudStorageMnemonicBackup(mnemonicId)
       dispatch(
         editAccountActions.trigger({
           type: EditAccountAction.RemoveBackupMethod,

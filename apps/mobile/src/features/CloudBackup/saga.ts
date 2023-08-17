@@ -2,21 +2,24 @@ import { Action } from '@reduxjs/toolkit'
 import { NativeEventEmitter, NativeModule, NativeModules } from 'react-native'
 import { eventChannel } from 'redux-saga'
 import { foundCloudBackup } from 'src/features/CloudBackup/cloudBackupSlice'
-import { ICloudBackupsManagerEventType, ICloudMnemonicBackup } from 'src/features/CloudBackup/types'
+import {
+  CloudStorageBackupsManagerEventType,
+  CloudStorageMnemonicBackup,
+} from 'src/features/CloudBackup/types'
 import { call, fork, put, take } from 'typed-redux-saga'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 
-function createICloudBackupManagerChannel(eventEmitter: NativeEventEmitter) {
+function createCloudStorageBackupManagerChannel(eventEmitter: NativeEventEmitter) {
   return eventChannel<Action>((emit) => {
-    const foundCloudBackupHandler = (backup: ICloudMnemonicBackup): void => {
+    const foundCloudBackupHandler = (backup: CloudStorageMnemonicBackup): void => {
       logger.debug('iCloudBackupSaga', 'foundCloudBackupHandler', 'Found account backup', backup)
       emit(foundCloudBackup({ backup }))
     }
 
     const eventEmitters = [
       {
-        type: ICloudBackupsManagerEventType.FoundCloudBackup,
+        type: CloudStorageBackupsManagerEventType.FoundCloudBackup,
         handler: foundCloudBackupHandler,
       },
     ]
@@ -36,14 +39,14 @@ function createICloudBackupManagerChannel(eventEmitter: NativeEventEmitter) {
 }
 
 export function* cloudBackupsManagerSaga() {
-  yield* fork(watchICloudBackupEvents)
+  yield* fork(watchCloudStorageBackupEvents)
 }
 
-export function* watchICloudBackupEvents() {
+export function* watchCloudStorageBackupEvents() {
   const iCloudManagerEvents = new NativeEventEmitter(
-    NativeModules.RNICloudBackupsManager as unknown as NativeModule
+    NativeModules.RNCloudStorageBackupsManager as unknown as NativeModule
   )
-  const channel = yield* call(createICloudBackupManagerChannel, iCloudManagerEvents)
+  const channel = yield* call(createCloudStorageBackupManagerChannel, iCloudManagerEvents)
 
   while (true) {
     try {
@@ -53,7 +56,7 @@ export function* watchICloudBackupEvents() {
       logger.error('ICloud backup saga channel error', {
         tags: {
           file: 'CloudBackup/saga',
-          function: 'watchICloudBackupEvents',
+          function: 'watchCloudStorageBackupEvents',
           error: serializeError(error),
         },
       })

@@ -13,7 +13,7 @@ import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionShee
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { IS_ANDROID } from 'src/constants/globals'
-import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
+import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { closeModal, openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -135,9 +135,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     const onPressRestore = async (): Promise<void> => {
-      const iCloudAvailable = await isICloudAvailable()
+      const cloudStorageAvailable = await isCloudStorageAvailable()
 
-      if (!iCloudAvailable) {
+      if (!cloudStorageAvailable) {
         Alert.alert(
           t('iCloud Drive not available'),
           t(

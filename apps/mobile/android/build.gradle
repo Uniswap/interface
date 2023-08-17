@@ -27,11 +27,6 @@ buildscript {
     }
 }
 
-plugins {
-  id 'com.google.dagger.hilt.android' version "$hiltVersion" apply false
-  id("org.jetbrains.dokka") version "1.8.20"
-}
-
 allprojects {
     repositories {
         maven {

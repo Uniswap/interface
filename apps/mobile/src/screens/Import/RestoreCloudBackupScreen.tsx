@@ -11,7 +11,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
-import { ICloudMnemonicBackup } from 'src/features/CloudBackup/types'
+import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
@@ -30,7 +30,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
   const backups = useCloudBackups()
   const sortedBackups = backups.slice().sort((a, b) => b.createdAt - a.createdAt)
 
-  const onPressRestoreBackup = async (backup: ICloudMnemonicBackup): Promise<void> => {
+  const onPressRestoreBackup = async (backup: CloudStorageMnemonicBackup): Promise<void> => {
     // Clear any existing pending accounts
     dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
 

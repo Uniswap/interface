@@ -1,5 +1,5 @@
 //
-//  RNICloudBackupsManager.m
+//  RNCloudStorageBackupsManager.m
 //  Uniswap
 //
 //  Created by Spencer Yen on 7/13/22.
@@ -8,27 +8,27 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
 
-@interface RCT_EXTERN_MODULE(RNICloudBackupsManager, RCTEventEmitter)
+@interface RCT_EXTERN_MODULE(RNCloudStorageBackupsManager, RCTEventEmitter)
 
-RCT_EXTERN_METHOD(isICloudAvailable: (RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(isCloudStorageAvailable: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(backupMnemonicToICloud: (NSString *)mnemonicId
+RCT_EXTERN_METHOD(backupMnemonicToCloudStorage: (NSString *)mnemonicId
                   password: (NSString *)password
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(restoreMnemonicFromICloud: (NSString *)mnemonicId
+RCT_EXTERN_METHOD(restoreMnemonicFromCloudStorage: (NSString *)mnemonicId
                   password: (NSString *)password
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(deleteICloudMnemonicBackup: (NSString *)mnemonicId
+RCT_EXTERN_METHOD(deleteCloudStorageMnemonicBackup: (NSString *)mnemonicId
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(startFetchingICloudBackups)
+RCT_EXTERN_METHOD(startFetchingCloudStorageBackups)
 
-RCT_EXTERN_METHOD(stopFetchingICloudBackups)
+RCT_EXTERN_METHOD(stopFetchingCloudStorageBackups)
 
 @end

@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ICloudMnemonicBackup } from 'src/features/CloudBackup/types'
+import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 
 export interface CloudBackupState {
-  backupsFound: ICloudMnemonicBackup[]
+  backupsFound: CloudStorageMnemonicBackup[]
 }
 
 export const initialCloudBackupState: Readonly<CloudBackupState> = {
@@ -13,7 +13,7 @@ const slice = createSlice({
   name: 'cloudBackup',
   initialState: initialCloudBackupState,
   reducers: {
-    foundCloudBackup: (state, action: PayloadAction<{ backup: ICloudMnemonicBackup }>) => {
+    foundCloudBackup: (state, action: PayloadAction<{ backup: CloudStorageMnemonicBackup }>) => {
       const { backup } = action.payload
       const duplicateBackup = state.backupsFound.some((b) => b.mnemonicId === backup.mnemonicId)
       if (!duplicateBackup) state.backupsFound.push(backup)

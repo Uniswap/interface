@@ -148,8 +148,8 @@
 		6C13E36A28185E550065DBB1 /* WalletConnectAccountServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */; };
 		6C13E36C28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */; };
 		6C13E36E28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */; };
-		6C33CB452885E750006850A9 /* RNICloudBackupsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C33CB432885E74F006850A9 /* RNICloudBackupsManager.m */; };
-		6C33CB462885E750006850A9 /* RNICloudBackupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C33CB442885E750006850A9 /* RNICloudBackupsManager.swift */; };
+		6C33CB452885E750006850A9 /* RNCloudStorageBackupsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C33CB432885E74F006850A9 /* RNCloudStorageBackupsManager.m */; };
+		6C33CB462885E750006850A9 /* RNCloudStorageBackupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C33CB442885E750006850A9 /* RNCloudStorageBackupsManager.swift */; };
 		6C84F057283D83ED0071FA2E /* MnemonicDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F056283D83ED0071FA2E /* MnemonicDisplayView.swift */; };
 		6C84F05D283DB7050071FA2E /* RNTMnemonicDisplayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F05C283DB7050071FA2E /* RNTMnemonicDisplayManager.m */; };
 		6C84F05F283DB7150071FA2E /* MnemonicWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F05E283DB7150071FA2E /* MnemonicWordView.swift */; };
@@ -438,8 +438,8 @@
 		6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectAccountServer.swift; sourceTree = "<group>"; };
 		6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSwitchChainHandler.swift; sourceTree = "<group>"; };
 		6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSignRequestHandler.swift; sourceTree = "<group>"; };
-		6C33CB432885E74F006850A9 /* RNICloudBackupsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNICloudBackupsManager.m; sourceTree = "<group>"; };
-		6C33CB442885E750006850A9 /* RNICloudBackupsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNICloudBackupsManager.swift; sourceTree = "<group>"; };
+		6C33CB432885E74F006850A9 /* RNCloudStorageBackupsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNCloudStorageBackupsManager.m; sourceTree = "<group>"; };
+		6C33CB442885E750006850A9 /* RNCloudStorageBackupsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNCloudStorageBackupsManager.swift; sourceTree = "<group>"; };
 		6C84F056283D83ED0071FA2E /* MnemonicDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MnemonicDisplayView.swift; path = Uniswap/Onboarding/MnemonicDisplayView.swift; sourceTree = "<group>"; };
 		6C84F05C283DB7050071FA2E /* RNTMnemonicDisplayManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RNTMnemonicDisplayManager.m; path = Uniswap/Onboarding/RNTMnemonicDisplayManager.m; sourceTree = "<group>"; };
 		6C84F05E283DB7150071FA2E /* MnemonicWordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicWordView.swift; path = Uniswap/Onboarding/MnemonicWordView.swift; sourceTree = "<group>"; };
@@ -865,8 +865,8 @@
 				A3F0A5AD272B01C800895B25 /* RNEthersRS-Bridging-Header.h */,
 				A3F0A5AE272B01FD00895B25 /* RnEthersRS.m */,
 				A3F0A5B2272B1E9A00895B25 /* RNEthersRS.swift */,
-				6C33CB432885E74F006850A9 /* RNICloudBackupsManager.m */,
-				6C33CB442885E750006850A9 /* RNICloudBackupsManager.swift */,
+				6C33CB432885E74F006850A9 /* RNCloudStorageBackupsManager.m */,
+				6C33CB442885E750006850A9 /* RNCloudStorageBackupsManager.swift */,
 				A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */,
 				6C8EFC2A28909EDF00FBD8EB /* EncryptionHelper.swift */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -1831,8 +1831,8 @@
 				FD7304CA28A364E70085BDEA /* MnemonicConfirmationWordBankView.swift in Sources */,
 				6C84F05D283DB7050071FA2E /* RNTMnemonicDisplayManager.m in Sources */,
 				6C13E36A28185E550065DBB1 /* WalletConnectAccountServer.swift in Sources */,
-				6C33CB452885E750006850A9 /* RNICloudBackupsManager.m in Sources */,
-				6C33CB462885E750006850A9 /* RNICloudBackupsManager.swift in Sources */,
+				6C33CB452885E750006850A9 /* RNCloudStorageBackupsManager.m in Sources */,
+				6C33CB462885E750006850A9 /* RNCloudStorageBackupsManager.swift in Sources */,
 				6C13E36E28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift in Sources */,
 				6C84F05F283DB7150071FA2E /* MnemonicWordView.swift in Sources */,
 				FDB23E4F289D935800248737 /* RNMnemonicConfirmationManager.m in Sources */,

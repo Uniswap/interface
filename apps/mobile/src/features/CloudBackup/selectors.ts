@@ -1,7 +1,7 @@
 import { MobileState } from 'src/app/reducer'
-import { ICloudMnemonicBackup } from 'src/features/CloudBackup/types'
+import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 
-export const selectCloudBackups = (state: MobileState): ICloudMnemonicBackup[] => {
+export const selectCloudBackups = (state: MobileState): CloudStorageMnemonicBackup[] => {
   return state.cloudBackup.backupsFound
 }
 

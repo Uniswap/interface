@@ -8,9 +8,9 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import {
-  startFetchingICloudBackups,
-  stopFetchingICloudBackups,
-} from 'src/features/CloudBackup/RNICloudBackupsManager'
+  startFetchingCloudStorageBackups,
+  stopFetchingCloudStorageBackups,
+} from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { OnboardingScreens } from 'src/screens/Screens'
@@ -53,23 +53,23 @@ export function RestoreCloudBackupLoadingScreen({
   useAddBackButton(navigation)
 
   // Starts query for iCloud backup files, backup files found are streamed into Redux
-  const fetchICloudBackupsWithTimeout = useCallback(async () => {
+  const fetchCloudStorageBackupsWithTimeout = useCallback(async () => {
     // Show loading state for max 10s, then show no backups found
     setIsLoading(true)
-    await startFetchingICloudBackups()
+    await startFetchingCloudStorageBackups()
 
     setTimeout(async () => {
       logger.debug(
         'RestoreCloudBackupLoadingScreen',
-        'fetchICloudBackupsWithTimeout',
+        'fetchCloudStorageBackupsWithTimeout',
         `Timed out fetching iCloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
       )
       setIsLoading(false)
-      await stopFetchingICloudBackups()
+      await stopFetchingCloudStorageBackups()
     }, MAX_LOADING_TIMEOUT_MS)
   }, [])
 
-  useAsyncData(fetchICloudBackupsWithTimeout)
+  useAsyncData(fetchCloudStorageBackupsWithTimeout)
   // After finding backups, show loading state for minimum 1s to prevent screen changing too quickly
   useTimeout(
     backups.length > 0
@@ -114,7 +114,7 @@ export function RestoreCloudBackupLoadingScreen({
             }
             retryButtonLabel={t('Retry')}
             title={t('0 backups found')}
-            onRetry={fetchICloudBackupsWithTimeout}
+            onRetry={fetchCloudStorageBackupsWithTimeout}
           />
         </Box>
       )
