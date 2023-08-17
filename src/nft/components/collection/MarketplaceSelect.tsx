@@ -21,7 +21,7 @@ const FilterItemWrapper = styled(Row)`
   cursor: pointer;
   border-radius: 12px;
   &:hover {
-    background: ${({ theme }) => theme.surface1};
+    background: ${({ theme }) => theme.surface2};
   }
 `
 
