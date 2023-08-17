@@ -18,7 +18,6 @@ import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link as RouterLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { shortenAddress } from 'utils/addresses'
 
 import AssetActivity, { LoadingAssetActivity } from './AssetActivity'
@@ -288,13 +287,10 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
       const isActive = activeFilters[eventType]
-      const isDarkMode = useIsDarkMode()
 
       return (
         <FilterBox
-          backgroundColor={
-            isActive ? (isDarkMode ? vars.color.surface1 : vars.color.surface1) : themeVars.colors.surface3
-          }
+          backgroundColor={isActive ? vars.color.surface1 : themeVars.colors.surface3}
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType === ActivityEventType.CancelListing

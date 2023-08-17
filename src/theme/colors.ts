@@ -171,6 +171,9 @@ export const darkTheme = {
 
   accent1: colors.accent1_dark,
   accent2: colors.accent2_dark,
+  success: colors.success,
+  critical: colors.critical,
+  scrim: colors.scrim,
 }
 
 export const lightTheme: Theme = {
@@ -190,4 +193,8 @@ export const lightTheme: Theme = {
 
   accent1: colors.accent1_light,
   accent2: colors.accent2_light,
+
+  success: colors.success,
+  critical: colors.critical,
+  scrim: colors.scrim,
 }
