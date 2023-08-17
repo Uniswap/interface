@@ -21,6 +21,12 @@ exports[`DatetimeText renders without error 1`] = `
           "fontSize": 17,
           "lineHeight": 24,
         },
+        [
+          {
+            "padding": 0,
+          },
+          undefined,
+        ],
       ],
     ]
   }
@@ -130,9 +136,14 @@ exports[`PriceText renders without error 1`] = `
             "fontSize": 40,
             "lineHeight": 48,
           },
-          {
-            "color": "#222222",
-          },
+          [
+            {
+              "padding": 0,
+            },
+            {
+              "color": "#222222",
+            },
+          ],
         ],
       ]
     }
@@ -158,9 +169,14 @@ exports[`PriceText renders without error 1`] = `
             "fontSize": 40,
             "lineHeight": 48,
           },
-          {
-            "color": "#CECECE",
-          },
+          [
+            {
+              "padding": 0,
+            },
+            {
+              "color": "#CECECE",
+            },
+          ],
         ],
       ]
     }
@@ -201,9 +217,14 @@ exports[`PriceText renders without error less than a dollar 1`] = `
             "fontSize": 40,
             "lineHeight": 48,
           },
-          {
-            "color": "#222222",
-          },
+          [
+            {
+              "padding": 0,
+            },
+            {
+              "color": "#222222",
+            },
+          ],
         ],
       ]
     }
@@ -229,9 +250,14 @@ exports[`PriceText renders without error less than a dollar 1`] = `
             "fontSize": 40,
             "lineHeight": 48,
           },
-          {
-            "color": "#222222",
-          },
+          [
+            {
+              "padding": 0,
+            },
+            {
+              "color": "#222222",
+            },
+          ],
         ],
       ]
     }
@@ -374,9 +400,14 @@ exports[`RelativeChangeText renders without error 1`] = `
             "fontSize": 17,
             "lineHeight": 24,
           },
-          {
-            "color": "#40B66B",
-          },
+          [
+            {
+              "padding": 0,
+            },
+            {
+              "color": "#40B66B",
+            },
+          ],
         ],
       ]
     }

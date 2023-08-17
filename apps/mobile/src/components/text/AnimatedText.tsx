@@ -10,6 +10,7 @@ import {
 } from '@shopify/restyle'
 import React from 'react'
 import {
+  StyleSheet,
   TextInput,
   TextInputProps,
   TextProps as RNTextProps,
@@ -77,6 +78,13 @@ export const AnimatedText = (
       {...props}
       allowFontScaling={enableFontScaling}
       maxFontSizeMultiplier={multiplier}
+      style={[styles.input, props.style]}
     />
   )
 }
+
+const styles = StyleSheet.create({
+  input: {
+    padding: 0, // inputs have default padding on Android
+  },
+})

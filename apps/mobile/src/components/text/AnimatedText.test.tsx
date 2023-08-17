@@ -20,6 +20,12 @@ describe(AnimatedText, () => {
           [
             [
               {},
+              [
+                {
+                  "padding": 0,
+                },
+                undefined,
+              ],
             ],
           ]
         }

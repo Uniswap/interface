@@ -6,6 +6,7 @@ import { AnimatedCaretChange } from 'src/components/icons/Caret'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { AnimatedText } from 'src/components/text/AnimatedText'
+import { IS_ANDROID } from 'src/constants/globals'
 import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
@@ -45,7 +46,7 @@ export function RelativeChangeText({
   }
 
   return (
-    <Flex row alignItems="flex-end" gap="spacing2">
+    <Flex row alignItems={IS_ANDROID ? 'center' : 'flex-end'} gap="spacing2">
       <AnimatedCaretChange
         height={theme.iconSizes.icon16}
         strokeWidth={2}
