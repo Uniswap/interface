@@ -62,7 +62,7 @@ const sagasInitializedOnStartup = [
   dappRequestWatcher,
   extensionRequestWatcher,
   initProviders,
-  keepAliveSaga,
+  keepAliveSaga, // TODO(EXT:285): remove this and replace with session storage
   navigationSaga,
   pendingAccountSaga,
 ] as const

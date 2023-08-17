@@ -16,6 +16,7 @@ import { initializeStore, WebState } from './store'
 let isInitialized = false
 
 // Allows users to open the side panel by clicking on the action toolbar icon
+// TODO(EXT-311): move this until after onboarding is completed so the sidepanel doesn't flash when clicking the action item when the onboarding page is open.
 chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error) =>
   logger.error(error, {
     tags: {
@@ -25,12 +26,10 @@ chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error
   })
 )
 
+// TODO(EXT-285): if the service worker goes to sleep mid onboarding then we get an error.
+// it likely needs to wait for the store to be initialized.
 /** Main entrypoint for intializing the app. */
-const initApp = async ({
-  openOnboardingIfNotOnboarded = false,
-}: {
-  openOnboardingIfNotOnboarded?: boolean
-}): Promise<void> => {
+const initApp = async (): Promise<void> => {
   if (isInitialized) {
     notifyStoreInitialized()
     return
@@ -47,18 +46,27 @@ const initApp = async ({
   initMessageBridge(store.dispatch)
   notifyStoreInitialized()
 
-  if (openOnboardingIfNotOnboarded) {
-    await maybeOpenOnboarding({
-      state: store.getState() as unknown as WebState,
-      dispatch: store.dispatch,
-    })
-  }
+  await maybeOpenOnboarding({
+    state: store.getState() as unknown as WebState,
+    dispatch: store.dispatch,
+  })
 }
+
+initApp().catch((err) =>
+  logger.error(err, {
+    tags: {
+      file: 'background/index.ts',
+      function: 'initApp',
+    },
+  })
+)
 
 // onInstalled is triggered when the extension is installed or updated. We want to
 // open full screen onboarding when the extension is installed so this listener handles that.
+// There is no guarantee that the initApp call at the top level will finish before this handler
+// is executed so initApp is called in both places.
 chrome.runtime.onInstalled.addListener(async () => {
-  await initApp({ openOnboardingIfNotOnboarded: true })
+  await initApp()
 })
 
 // Listen to incoming connections from content scripts or popup.
@@ -70,8 +78,7 @@ chrome.runtime.onConnect.addListener(async (port) => {
     return
   }
 
-  // The popup will handle opening the onboarding page if needed, so we do not need to open it here.
-  await initApp({})
+  notifyStoreInitialized()
 })
 
 async function maybeOpenOnboarding({
