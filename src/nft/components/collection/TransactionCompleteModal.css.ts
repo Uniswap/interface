@@ -61,7 +61,7 @@ export const uniLogo = style([
 
 export const title = style([
   sprinkles({
-    fontWeight: 'bold',
+    fontWeight: 'medium',
     color: 'neutral1',
     fontSize: '20',
     marginLeft: 'auto',
@@ -191,7 +191,7 @@ export const button = style([
   sprinkles({
     height: '40',
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontWeight: 'medium',
     fontSize: '14',
     color: 'neutral1',
     display: 'flex',
@@ -238,7 +238,7 @@ export const mixedRefundModal = style([
 export const subtitle = style([
   sprinkles({
     color: 'neutral1',
-    fontWeight: 'bold',
+    fontWeight: 'medium',
     fontSize: '16',
     marginLeft: '4',
     marginRight: 'auto',
@@ -350,7 +350,7 @@ export const returnButton = style([
   sprinkles({
     height: '40',
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontWeight: 'medium',
     fontSize: '14',
     color: 'white',
     backgroundColor: 'accent1',

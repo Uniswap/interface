@@ -151,7 +151,7 @@ export const ProfilePage = () => {
         >
           {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
           <Box
-            fontWeight="semibold"
+            fontWeight="medium"
             fontSize="14"
             cursor="pointer"
             color="neutral2"

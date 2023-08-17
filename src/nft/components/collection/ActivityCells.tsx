@@ -174,7 +174,7 @@ export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCel
 const PriceTooltip = ({ price }: { price: string }) => (
   <MouseoverTooltip
     text={
-      <Box textAlign="left" fontSize="14" fontWeight="normal" color="neutral2">
+      <Box textAlign="left" fontSize="14" fontWeight="book" color="neutral2">
         {`${price} ETH`}
       </Box>
     }
@@ -270,7 +270,7 @@ export const EventCell = ({
           {eventTransactionHash && <ExternalLinkIcon transactionHash={eventTransactionHash} />}
         </Row>
       )}
-      {isMobile && price && <Row fontSize="16" fontWeight="normal" color="neutral1">{`${formattedPrice} ETH`}</Row>}
+      {isMobile && price && <Row fontSize="16" fontWeight="book" color="neutral1">{`${formattedPrice} ETH`}</Row>}
     </Column>
   )
 }
@@ -299,7 +299,7 @@ const NoContentContainer = () => (
       style={{ transform: 'translate3d(-50%, -50%, 0)' }}
       color="gray500"
       fontSize="12"
-      fontWeight="normal"
+      fontWeight="book"
     >
       Image
       <br />

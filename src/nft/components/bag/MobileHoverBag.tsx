@@ -44,7 +44,7 @@ export const MobileHoverBag = () => {
           })}
         </Box>
         <Column>
-          <Box className={body} fontWeight="semibold">
+          <Box className={body} fontWeight="medium">
             {roundAndPluralize(itemsInBag.length, 'NFT')}
           </Box>
           <Row gap="8">

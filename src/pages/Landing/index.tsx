@@ -142,7 +142,7 @@ const SubText = styled.div`
   line-height: 24px;
   font-weight: 535;
   text-align: center;
-  max-width: 535px;
+  max-width: 500px;
   margin: 0 0 32px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {

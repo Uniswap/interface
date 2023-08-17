@@ -31,7 +31,7 @@ const EmptyState = () => {
           <Center data-testid="nft-empty-bag" className={subhead} style={{ lineHeight: '24px' }}>
             Your bag is empty
           </Center>
-          <Center fontSize="12" fontWeight="normal" color="neutral2" style={{ lineHeight: '16px' }}>
+          <Center fontSize="12" fontWeight="book" color="neutral2" style={{ lineHeight: '16px' }}>
             Selected NFTs will appear here
           </Center>
         </Column>

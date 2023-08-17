@@ -178,7 +178,7 @@ const TxCompleteModal = () => {
                       <Box>{formatEthPrice(totalPurchaseValue.toString())} ETH</Box>
                     </Row>
                     <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                      <Box color="neutral2" fontWeight="normal">
+                      <Box color="neutral2" fontWeight="book">
                         <Trans>View on Etherscan</Trans>
                       </Box>
                     </a>
@@ -242,7 +242,7 @@ const TxCompleteModal = () => {
                           width={{ sm: 'half', md: 'auto' }}
                         >
                           <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                            <Box fontWeight="normal" marginTop="16" color="neutral2" className={styles.totalEthCost}>
+                            <Box fontWeight="book" marginTop="16" color="neutral2" className={styles.totalEthCost}>
                               View on Etherscan
                             </Box>
                           </a>
