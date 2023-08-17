@@ -123,7 +123,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 style={{
                   fontFamily: 'Inter',
                   fontSize: '72px',
-                  lineHeight: '58px',
+                  lineHeight: '72px',
                   marginLeft: '-5px',
                   marginTop: '24px',
                 }}
@@ -145,6 +145,10 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                     fontSize: '168px',
                     lineHeight: '133px',
                     marginLeft: '-13px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    width: '100%',
                   }}
                 >
                   {data.symbol}
