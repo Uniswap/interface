@@ -1285,7 +1285,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
   line-height: 24px;
   font-weight: 535;
   text-align: center;
-  max-width: 535px;
+  max-width: 500px;
   margin: 0 0 32px;
 }
 
@@ -3801,7 +3801,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   line-height: 24px;
   font-weight: 535;
   text-align: center;
-  max-width: 535px;
+  max-width: 500px;
   margin: 0 0 32px;
 }
 
