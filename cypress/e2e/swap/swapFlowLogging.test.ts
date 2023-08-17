@@ -3,8 +3,8 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
 
-describe('completes two swaps and verifies the swap flow logging', () => {
-  it('first swap action', () => {
+describe('swap flow logging', () => {
+  it('completes two swaps and verifies the TTS logging for the first, plus all intermediate steps along the way', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat()
 
@@ -19,21 +19,18 @@ describe('completes two swaps and verifies the swap flow logging', () => {
       cy.wrap(event.event_properties.time_to_first_swap_action).should('be.a', 'number')
       cy.wrap(event.event_properties.time_to_first_swap_action).should('be.gte', 0)
     })
-  })
 
-  it('first swap quote', () => {
     // Verify Swap Quote
     cy.waitForAmplitudeEvent(SwapEventName.SWAP_QUOTE_FETCH).then((event: any) => {
-      cy.wrap(event.event_properties).should('have.property', 'time_to_first_quote_request')
-      cy.wrap(event.event_properties.time_to_first_quote_request).should('be.a', 'number')
-      cy.wrap(event.event_properties.time_to_first_quote_request).should('be.gte', 0)
-      cy.wrap(event.event_properties).should('have.property', 'time_to_first_quote_request_since_first_input')
-      cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.a', 'number')
-      cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.gte', 0)
+      // Price quotes don't include these values, so we only verify the types if they exist
+      if (event.event_properties.time_to_first_quote_request) {
+        cy.wrap(event.event_properties.time_to_first_quote_request).should('be.a', 'number')
+        cy.wrap(event.event_properties.time_to_first_quote_request).should('be.gte', 0)
+        cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.a', 'number')
+        cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.gte', 0)
+      }
     })
-  })
 
-  it('first swap success', () => {
     // Submit transaction
     cy.get('#swap-button').click()
     cy.contains('Confirm swap').click()
@@ -50,13 +47,20 @@ describe('completes two swaps and verifies the swap flow logging', () => {
       cy.wrap(event.event_properties.time_to_swap_since_first_input).should('be.a', 'number')
       cy.wrap(event.event_properties.time_to_swap_since_first_input).should('be.gte', 0)
     })
-  })
 
-  it('second swap', () => {
     // Second swap in the session:
-    // Enter amount to swap
-    cy.get('#swap-currency-output .token-amount-input').clear().type('1').should('have.value', '1')
+    // Enter amount to swap (different from first trade, to trigger a new quote request)
+    cy.get('#swap-currency-output .token-amount-input').clear().type('10').should('have.value', '10')
     cy.get('#swap-currency-input .token-amount-input').should('not.have.value', '')
+
+    // Verify second Swap Quote
+    cy.waitForAmplitudeEvent(SwapEventName.SWAP_QUOTE_FETCH).then((event: any) => {
+      // Price quotes don't include these values, so we only verify the types if they exist
+      if (event.event_properties.time_to_first_quote_request) {
+        cy.wrap(event.event_properties.time_to_first_quote_request).should('be.undefined')
+        cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.undefined')
+      }
+    })
 
     // Submit transaction
     cy.get('#swap-button').click()
