@@ -123,7 +123,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 style={{
                   fontFamily: 'Inter',
                   fontSize: '72px',
-                  lineHeight: '58px',
+                  lineHeight: '72px',
                   marginLeft: '-5px',
                   marginTop: '24px',
                 }}
@@ -147,7 +147,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                     marginLeft: '-13px',
                   }}
                 >
-                  {data.symbol}
+                  {data.symbol.slice(0, 6)}
                 </div>
                 <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
               </div>
