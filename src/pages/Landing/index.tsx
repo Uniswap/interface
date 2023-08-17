@@ -224,7 +224,7 @@ const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
   ${({ isDarkMode }) =>
     isDarkMode
       ? css`
-          background: linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #053526 99.85%);
+          background: linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #050026 99.85%);
         `
       : css`
           background: linear-gradient(179.82deg, rgba(255, 255, 255, 0) 0.16%, #eaeaea 99.85%);

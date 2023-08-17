@@ -378,6 +378,11 @@ export default function PositionPage() {
   }
 }
 
+const PositionLabelRow = styled(RowFixed)({
+  flexWrap: 'wrap',
+  gap: 8,
+})
+
 function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
@@ -672,7 +677,7 @@ function PositionPageContent() {
                 </HoverText>
               </Link>
               <ResponsiveRow>
-                <RowFixed style={{ flexWrap: 'wrap', gap: '8px' }}>
+                <PositionLabelRow>
                   <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
                   <ThemedText.DeprecatedLabel fontSize="24px" mr="10px">
                     &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
@@ -683,7 +688,7 @@ function PositionPageContent() {
                     </BadgeText>
                   </Badge>
                   <RangeBadge removed={removed} inRange={inRange} />
-                </RowFixed>
+                </PositionLabelRow>
                 {ownsNFT && (
                   <ActionButtonResponsiveRow>
                     {currency0 && currency1 && feeAmount && tokenId ? (
