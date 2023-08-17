@@ -3,6 +3,8 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.WritableArray
+import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.soloader.SoLoader
 
@@ -40,7 +42,15 @@ class RNEthersRSModule(reactContext: ReactApplicationContext) : ReactContextBase
   }
 
   @ReactMethod fun getAddressesForStoredPrivateKeys(promise: Promise) {
-    promise.resolve(ethersRs.addressesForStoredPrivateKeys)
+    val addresses = ethersRs.addressesForStoredPrivateKeys
+
+    // Convert the List<String> to a WritableArray for passing over the bridge
+    val writableArray: WritableArray = WritableNativeArray()
+    for (address in addresses) {
+      writableArray.pushString(address)
+    }
+
+    promise.resolve(writableArray)
   }
 
   @ReactMethod fun generateAddressForMnemonic(mnemonic: String, derivationIndex: Int, promise: Promise) {
@@ -51,8 +61,8 @@ class RNEthersRSModule(reactContext: ReactApplicationContext) : ReactContextBase
     promise.resolve(ethersRs.generateAndStorePrivateKey(mnemonicId, derivationIndex))
   }
 
-  @ReactMethod fun signTransactionForAddress(address: String, hash: String, chainId: Int, promise: Promise) {
-    promise.resolve(ethersRs.signTransactionForAddress(address, hash, chainId.toLong()))
+  @ReactMethod fun signTransactionHashForAddress(address: String, hash: String, chainId: Int, promise: Promise) {
+    promise.resolve(ethersRs.signTransactionHashForAddress(address, hash, chainId.toLong()))
   }
 
   @ReactMethod fun signMessageForAddress(address: String, message: String, promise: Promise) {

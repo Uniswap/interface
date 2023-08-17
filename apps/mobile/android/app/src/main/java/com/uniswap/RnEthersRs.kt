@@ -74,11 +74,10 @@ class RnEthersRs(applicationContext: Context) {
     return keychain.getString(keychainKeyForMnemonicId(mnemonicId), null)
   }
 
-  val addressesForStoredPrivateKeys: Array<String>
+  val addressesForStoredPrivateKeys: List<String>
     get() = keychain.all.keys
       .filter { key -> key.contains(PRIVATE_KEY_PREFIX) }
-      .map { key -> key.replace(ENTIRE_PRIVATE_KEY_PREFIX, "") }
-      .toTypedArray()
+      .map { key -> key.replace(PRIVATE_KEY_PREFIX, "") }
 
   private fun storeNewPrivateKey(address: String, privateKey: String?) {
     val newKey = keychainKeyForPrivateKey(address)
@@ -121,10 +120,9 @@ class RnEthersRs(applicationContext: Context) {
    * @param chainId The id of the blockchain network.
    * @return The signed transaction hash.
    */
-  fun signTransactionForAddress(address: String, hash: String, chainId: Long): String {
+  fun signTransactionHashForAddress(address: String, hash: String, chainId: Long): String {
     val wallet = retrieveOrCreateWalletForAddress(address)
-    val signedHash = signTxWithWallet(wallet, hash, chainId)
-    return signedHash.signature
+    return signTxWithWallet(wallet, hash, chainId)
   }
 
   /**
@@ -188,8 +186,6 @@ class RnEthersRs(applicationContext: Context) {
     private const val MNEMONIC_PREFIX = ".mnemonic."
     private const val PRIVATE_KEY_PREFIX = ".privateKey."
     private const val ENTIRE_MNEMONIC_PREFIX = PREFIX + MNEMONIC_PREFIX
-    private const val ENTIRE_PRIVATE_KEY_PREFIX = PREFIX + PRIVATE_KEY_PREFIX
-
 
     /**
      * Generates a mnemonic and its associated address.
@@ -236,13 +232,13 @@ class RnEthersRs(applicationContext: Context) {
      * @param localWallet The wallet to sign the transaction with.
      * @param txHash The transaction hash to sign.
      * @param chainId The id of the blockchain network.
-     * @return A CSignedTransaction object containing the signed transaction.
+     * @return A signed transaction hash.
      */
     private external fun signTxWithWallet(
       localWallet: Long,
       txHash: String,
       chainId: Long
-    ): CSignedTransaction // walletPtr is a pointer to a LocalWallet, represented as a long in Java.
+    ): String
 
     /**
      * Signs a message with a wallet.
