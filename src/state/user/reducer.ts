@@ -4,7 +4,6 @@ import { ConnectionType } from '../../connection/types'
 import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { RouterPreference } from '../../state/routing/types'
-import { updateVersion } from '../global/actions'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
 const currentTimestamp = () => new Date().getTime()
@@ -123,85 +122,6 @@ const userSlice = createSlice({
       }
       state.timestamp = currentTimestamp()
     },
-  },
-  extraReducers: (builder) => {
-    // After adding a new property to the state, its value will be `undefined` (instead of the default)
-    // for all existing users with a previous version of the state in their localStorage.
-    // In order to avoid this, we need to set a default value for each new property manually during hydration.
-    builder.addCase(updateVersion, (state) => {
-      // If `selectedWallet` is a WalletConnect v1 wallet, reset to default.
-      if (state.selectedWallet) {
-        const selectedWallet = state.selectedWallet as string
-        if (
-          selectedWallet === 'UNIWALLET' ||
-          selectedWallet === 'UNISWAP_WALLET' ||
-          selectedWallet === 'WALLET_CONNECT'
-        ) {
-          delete state.selectedWallet
-        }
-      }
-
-      // If `userSlippageTolerance` is not present or its value is invalid, reset to default
-      if (
-        typeof state.userSlippageTolerance !== 'number' ||
-        !Number.isInteger(state.userSlippageTolerance) ||
-        state.userSlippageTolerance < 0 ||
-        state.userSlippageTolerance > 5000
-      ) {
-        state.userSlippageTolerance = SlippageTolerance.Auto
-      } else {
-        if (
-          !state.userSlippageToleranceHasBeenMigratedToAuto &&
-          [10, 50, 100].indexOf(state.userSlippageTolerance) !== -1
-        ) {
-          state.userSlippageTolerance = SlippageTolerance.Auto
-          state.userSlippageToleranceHasBeenMigratedToAuto = true
-        }
-      }
-
-      // If `userDeadline` is not present or its value is invalid, reset to default
-      if (
-        typeof state.userDeadline !== 'number' ||
-        !Number.isInteger(state.userDeadline) ||
-        state.userDeadline < 60 ||
-        state.userDeadline > 180 * 60
-      ) {
-        state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
-      }
-
-      // If `userRouterPreference` is not present, reset to default
-      if (typeof state.userRouterPreference !== 'string') {
-        state.userRouterPreference = RouterPreference.API
-      }
-
-      // If `userRouterPreference` is `AUTO`, migrate to `API`
-      if ((state.userRouterPreference as string) === 'auto') {
-        state.userRouterPreference = RouterPreference.API
-      }
-
-      //If `buyFiatFlowCompleted` is present, delete it using filtering
-      if ('buyFiatFlowCompleted' in state) {
-        //ignoring due to type errors occuring since we now remove this state
-        //@ts-ignore
-        delete state.buyFiatFlowCompleted
-      }
-
-      // If `buyFiatFlowCompleted` is present, delete it using filtering
-      if ('buyFiatFlowCompleted' in state) {
-        //ignoring due to type errors occuring since we now remove this state
-        //@ts-ignore
-        delete state.buyFiatFlowCompleted
-      }
-
-      //If `buyFiatFlowCompleted` is present, delete it using filtering
-      if ('buyFiatFlowCompleted' in state) {
-        //ignoring due to type errors occuring since we now remove this state
-        //@ts-ignore
-        delete state.buyFiatFlowCompleted
-      }
-
-      state.lastUpdateVersionTimestamp = currentTimestamp()
-    })
   },
 })
 

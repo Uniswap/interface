@@ -8,12 +8,12 @@ import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
 import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
 import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
-import { PricePoint } from 'graphql/data/util'
-import { TimePeriod } from 'graphql/data/util'
+import { PricePoint, TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { TrendingUp } from 'react-feather'
+import { ArrowDownRight, ArrowUpRight, Info, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
@@ -43,18 +43,33 @@ const StyledDownArrow = styled(ArrowChangeDown)`
   color: ${({ theme }) => theme.critical};
 `
 
+const DefaultUpArrow = styled(ArrowUpRight)`
+  color: ${({ theme }) => theme.neutral3};
+`
+const DefaultDownArrow = styled(ArrowDownRight)`
+  color: ${({ theme }) => theme.neutral3};
+`
+
 function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
 
-export function getDeltaArrow(delta: number | null | undefined, iconSize = 16) {
+export function getDeltaArrow(delta: number | null | undefined, iconSize = 16, styled = true) {
   // Null-check not including zero
   if (delta === null || delta === undefined) {
     return null
   } else if (Math.sign(delta) < 0) {
-    return <StyledDownArrow width={iconSize} height={iconSize} key="arrow-down" aria-label="down" />
+    return styled ? (
+      <StyledDownArrow size={iconSize} key="arrow-down" aria-label="down" />
+    ) : (
+      <DefaultDownArrow size={iconSize} key="arrow-down" aria-label="down" />
+    )
   }
-  return <StyledUpArrow width={iconSize} height={iconSize} key="arrow-up" aria-label="up" />
+  return styled ? (
+    <StyledUpArrow size={iconSize} key="arrow-up" aria-label="up" />
+  ) : (
+    <DefaultUpArrow size={iconSize} key="arrow-up" aria-label="up" />
+  )
 }
 
 export function formatDelta(delta: number | null | undefined) {
@@ -87,6 +102,10 @@ const MissingPrice = styled(TokenPrice)`
   color: ${({ theme }) => theme.neutral3};
 `
 
+const OutdatedContainer = styled.div`
+  color: ${({ theme }) => theme.neutral2};
+`
+
 const DeltaContainer = styled.div`
   height: 16px;
   display: flex;
@@ -97,6 +116,13 @@ const DeltaContainer = styled.div`
 export const ArrowCell = styled.div`
   padding-right: 3px;
   display: flex;
+`
+
+const OutdatedPriceContainer = styled.div`
+  display: flex;
+  gap: 6px;
+  font-size: 24px;
+  line-height: 44px;
 `
 
 function fixChart(prices: PricePoint[] | undefined | null) {
@@ -151,6 +177,34 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
       <Trans>Missing chart data</Trans>
     )
   ) : null
+
+  const tooltipMessage = (
+    <>
+      <Trans>This price may not be up-to-date due to low trading volume.</Trans>
+    </>
+  )
+
+  //get the last non-zero price point
+  const lastPrice = useMemo(() => {
+    if (!prices) return DATA_EMPTY
+    for (let i = prices.length - 1; i >= 0; i--) {
+      if (prices[i].value !== 0) return prices[i]
+    }
+    return DATA_EMPTY
+  }, [prices])
+
+  //get the first non-zero price point
+  const firstPrice = useMemo(() => {
+    if (!prices) return DATA_EMPTY
+    for (let i = 0; i < prices.length; i++) {
+      if (prices[i].value !== 0) return prices[i]
+    }
+    return DATA_EMPTY
+  }, [prices])
+
+  const totalDelta = calculateDelta(firstPrice.value, lastPrice.value)
+  const formattedTotalDelta = formatDelta(totalDelta)
+  const defaultArrow = getDeltaArrow(totalDelta, 20, false)
 
   // first price point on the x-axis of the current time period's chart
   const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
@@ -306,6 +360,19 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
               <ArrowCell>{arrow}</ArrowCell>
             </DeltaContainer>
           </>
+        ) : lastPrice.value ? (
+          <OutdatedContainer>
+            <OutdatedPriceContainer>
+              <TokenPrice>{formatUSDPrice(lastPrice.value)}</TokenPrice>
+              <MouseoverTooltip text={tooltipMessage}>
+                <Info size={16} />
+              </MouseoverTooltip>
+            </OutdatedPriceContainer>
+            <DeltaContainer>
+              {formattedTotalDelta}
+              <ArrowCell>{defaultArrow}</ArrowCell>
+            </DeltaContainer>
+          </OutdatedContainer>
         ) : (
           <>
             <MissingPrice>Price Unavailable</MissingPrice>
