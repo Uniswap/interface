@@ -17,7 +17,7 @@ describe('Token explore filter', () => {
     })
   }
 
-  it.only('should filter correctly by dao search term', () => {
+  it('should filter correctly by dao search term', () => {
     aliasFilteredTokens('dao')
     searchFor('dao')
 
