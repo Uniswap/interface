@@ -8,7 +8,7 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { useGesture } from 'react-use-gesture'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { isMobile } from 'utils/userAgent'
@@ -58,7 +58,7 @@ const ScrimBackground = styled.div<{ open: boolean }>`
     transition: opacity ${({ theme }) => theme.transition.duration.medium} ease-in-out;
   }
 `
-const Scrim = ({ onClick, open }: { onClick: () => void; open: boolean }) => {
+export const Scrim = ({ onClick, open, testId }: { onClick: () => void; open: boolean; testId?: string }) => {
   const { width } = useWindowSize()
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const Scrim = ({ onClick, open }: { onClick: () => void; open: boolean }) => {
     }
   }, [open, width])
 
-  return <ScrimBackground onClick={onClick} open={open} />
+  return <ScrimBackground data-testid={testId} onClick={onClick} open={open} />
 }
 
 const AccountDrawerScrollWrapper = styled.div`
@@ -213,14 +213,14 @@ function AccountDrawer() {
       }
     },
     // reset the yPosition when the user stops dragging
-    onDragEnd: (state) => {
+    onDragEnd: () => {
       setYPosition(0)
       if (scrollRef.current) {
         scrollRef.current.style.overflowY = 'auto'
       }
     },
     // set dragStartTop to true if the user starts dragging from the top of the drawer
-    onDragStart: (state) => {
+    onDragStart: () => {
       if (!scrollRef.current?.scrollTop || scrollRef.current?.scrollTop < 30) {
         setDragStartTop(true)
       } else {

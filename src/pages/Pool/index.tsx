@@ -17,12 +17,12 @@ import { useMemo } from 'react'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useUserHideClosedPositions } from 'state/user/hooks'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components'
 import { HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
 import CTACards from './CTACards'
-import { LoadingRows } from './styleds'
+import { LoadingRows } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;

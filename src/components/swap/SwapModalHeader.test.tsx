@@ -1,4 +1,3 @@
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import {
   ETH_MAINNET,
   TEST_ALLOWED_SLIPPAGE,
@@ -7,6 +6,7 @@ import {
   TEST_TRADE_EXACT_OUTPUT,
 } from 'test-utils/constants'
 import { render, screen } from 'test-utils/render'
+import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 
 import SwapModalHeader from './SwapModalHeader'
 

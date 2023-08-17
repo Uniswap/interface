@@ -1,5 +1,4 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
@@ -9,8 +8,9 @@ import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 
 import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
@@ -44,7 +44,7 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
     >
       <LoadingOpacityContainer $loading={loading}>
         <RowFixed gap="xs">
-          {isUniswapXTrade(trade) ? <UniswapXRouterIcon /> : <StyledGasIcon />}
+          {isUniswapXTrade(trade) ? <UniswapXRouterIcon testId="gas-estimate-uniswapx-icon" /> : <StyledGasIcon />}
           <ThemedText.BodySmall color="textSecondary">
             <Row gap="xs">
               <div>{formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}</div>

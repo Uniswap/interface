@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { ReactComponent as DiscordI } from './images/discord.svg'
 import { ReactComponent as GithubI } from './images/github.svg'

@@ -1,4 +1,4 @@
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { colors } from 'theme/colors'
 
 type SVGProps = React.SVGProps<SVGSVGElement> & { fill?: string }

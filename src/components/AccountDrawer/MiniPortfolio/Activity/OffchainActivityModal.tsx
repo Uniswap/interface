@@ -16,7 +16,7 @@ import { X } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { useOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -77,6 +77,7 @@ function Loader() {
 }
 
 const Success = styled(AnimatedEntranceConfirmationIcon)`
+  position: relative;
   margin-bottom: 10px;
 `
 
@@ -248,7 +249,7 @@ export function OffchainActivityModal() {
 
   return (
     <Modal isOpen={!!syncedSelectedOrder?.modalOpen} onDismiss={reset}>
-      <Wrapper>
+      <Wrapper data-testid="offchain-activity-modal">
         <StyledXButton onClick={reset} />
         {syncedSelectedOrder && <OrderContent order={syncedSelectedOrder} />}
       </Wrapper>
