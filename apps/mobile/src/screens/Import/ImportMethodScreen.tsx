@@ -9,6 +9,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
+import { IS_ANDROID } from 'src/constants/globals'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
@@ -139,7 +140,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
             onPress={(): Promise<void> =>
               handleOnPress(OnboardingScreens.RestoreCloudBackup, ImportType.Restore)
             }>
-            {t('Restore from iCloud')}
+            {IS_ANDROID ? t('Restore from Google Drive') : t('Restore from iCloud')}
           </Text>
         </TouchableArea>
       </Trace>

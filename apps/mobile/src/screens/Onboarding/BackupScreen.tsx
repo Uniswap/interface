@@ -17,6 +17,7 @@ import { EducationContentType } from 'src/components/education'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
+import { IS_ANDROID } from 'src/constants/globals'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
@@ -129,7 +130,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
             disabled={hasCloudBackup}
             elementName={ElementName.AddiCloudBackup}
             icon={<CloudIcon color={theme.colors.accent1} height={theme.iconSizes.icon16} />}
-            title={t('Backup with iCloud')}
+            title={IS_ANDROID ? t('Backup with Google Drive') : t('Backup with iCloud')}
             onPress={onPressICloudBackup}
           />
           <OptionCard

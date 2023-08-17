@@ -12,6 +12,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
+import { IS_ANDROID } from 'src/constants/globals'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { closeModal, openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -194,7 +195,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         onPress: onPressRestore,
         render: () => (
           <Box alignItems="center" borderTopColor="surface3" borderTopWidth={1} p="spacing16">
-            <Text variant="bodyLarge">{t('Restore from iCloud')}</Text>
+            <Text variant="bodyLarge">
+              {IS_ANDROID ? t('Restore from Google Drive') : t('Restore from iCloud')}
+            </Text>
           </Box>
         ),
       })

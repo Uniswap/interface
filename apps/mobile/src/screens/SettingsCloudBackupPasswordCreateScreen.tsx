@@ -11,6 +11,7 @@ import { Flex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
+import { IS_ANDROID } from 'src/constants/globals'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
@@ -49,7 +50,9 @@ export function SettingsCloudBackupPasswordCreateScreen({
       <BackHeader mb="spacing16" />
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
         <Flex alignItems="center" justifyContent="space-between" mb="spacing24" mx="spacing12">
-          <Text variant="headlineSmall">{t('Back up to iCloud')}</Text>
+          <Text variant="headlineSmall">
+            {IS_ANDROID ? t('Back up to Google Drive') : t('Back up to iCloud')}
+          </Text>
           <Text color="neutral2" textAlign="center" variant="bodySmall">
             {t(
               'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your iCloud account is ever compromised.'
