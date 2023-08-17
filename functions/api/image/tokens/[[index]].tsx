@@ -145,9 +145,13 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                     fontSize: '168px',
                     lineHeight: '133px',
                     marginLeft: '-13px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    width: '100%',
                   }}
                 >
-                  {data.symbol.slice(0, 6)}
+                  {data.symbol}
                 </div>
                 <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
               </div>
