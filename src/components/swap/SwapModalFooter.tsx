@@ -53,7 +53,6 @@ export default function SwapModalFooter({
   onConfirm,
   swapErrorMessage,
   disabledConfirm,
-  swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
   showAcceptChanges,
@@ -65,7 +64,6 @@ export default function SwapModalFooter({
   onConfirm: () => void
   swapErrorMessage?: ReactNode
   disabledConfirm: boolean
-  swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
   showAcceptChanges: boolean
@@ -187,7 +185,6 @@ export default function SwapModalFooter({
               transactionDeadlineSecondsSinceEpoch,
               isAutoSlippage,
               isAutoRouterApi: routerPreference === RouterPreference.API,
-              swapQuoteReceivedDate,
               routes,
               fiatValueInput: fiatValueInput.data,
               fiatValueOutput: fiatValueOutput.data,

@@ -1,3 +1,4 @@
+import { SwapEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 
 import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
@@ -63,6 +64,13 @@ describe('Swap', () => {
         // Enter amount to swap
         cy.get('#swap-currency-output .token-amount-input').type('1').should('have.value', '1')
         cy.get('#swap-currency-input .token-amount-input').should('not.have.value', '')
+
+        // Verify logging
+        cy.waitForAmplitudeEvent(SwapEventName.SWAP_QUOTE_RECEIVED).then((event: any) => {
+          cy.wrap(event.event_properties).should('have.property', 'quote_latency_milliseconds')
+          cy.wrap(event.event_properties.quote_latency_milliseconds).should('be.a', 'number')
+          cy.wrap(event.event_properties.quote_latency_milliseconds).should('be.gte', 0)
+        })
 
         // Submit transaction
         cy.get('#swap-button').click()

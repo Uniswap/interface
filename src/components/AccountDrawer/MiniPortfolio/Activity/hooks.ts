@@ -86,7 +86,7 @@ export function useAllActivities(account: string) {
   return { loading, activities: combinedActivities, refetch }
 }
 
-export function useHasPendingActivity() {
+export function usePendingActivity() {
   const pendingTransactions = usePendingTransactions()
   const pendingOrders = usePendingOrders()
 

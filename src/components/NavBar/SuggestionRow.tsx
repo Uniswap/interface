@@ -160,7 +160,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
 
   return (
     <Link
-      data-testid={`searchbar-token-row-${token.symbol}`}
+      data-testid={`searchbar-token-row-${token.chain}-${token.address ?? 'NATIVE'}`}
       to={tokenDetailsPath}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}

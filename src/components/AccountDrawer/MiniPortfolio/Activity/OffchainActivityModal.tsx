@@ -249,7 +249,7 @@ export function OffchainActivityModal() {
 
   return (
     <Modal isOpen={!!syncedSelectedOrder?.modalOpen} onDismiss={reset}>
-      <Wrapper>
+      <Wrapper data-testid="offchain-activity-modal">
         <StyledXButton onClick={reset} />
         {syncedSelectedOrder && <OrderContent order={syncedSelectedOrder} />}
       </Wrapper>
