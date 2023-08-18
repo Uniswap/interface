@@ -23,25 +23,6 @@ export function isAppUniswapStagingOrg({ hostname }: { hostname: string }): bool
   return hostname === 'app.uniswap-staging.org'
 }
 
-export function isBrowserRouterEnabled(): boolean {
-  if (isProductionEnv()) {
-    if (
-      isAppUniswapOrg(window.location) ||
-      isAppUniswapStagingOrg(window.location) ||
-      // Cypress tests
-      isLocalhost(window.location)
-    ) {
-      return true
-    }
-    return false
-  }
-  return true
-}
-
-function isLocalhost({ hostname }: { hostname: string }): boolean {
-  return hostname === 'localhost'
-}
-
 export function isSentryEnabled(): boolean {
   // Disable in e2e test environments
   if (isStagingEnv() && !isAppUniswapStagingOrg(window.location)) return false

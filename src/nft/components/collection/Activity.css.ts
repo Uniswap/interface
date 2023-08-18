@@ -38,7 +38,6 @@ export const eventRow = style([
     borderBottomColor: 'backgroundOutline',
   }),
   {
-    textDecoration: 'none',
     height: '84px',
     ':hover': {
       background: themeVars.colors.backgroundSurface,

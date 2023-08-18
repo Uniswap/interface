@@ -30,7 +30,7 @@ describe('Universal search bar', () => {
       .and('contain.text', '$')
       .and('contain.text', '%')
       .click()
-    cy.location('pathname').should('equal', '/tokens/ethereum/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984')
+    cy.location('hash').should('equal', '#/tokens/ethereum/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984')
 
     openSearch()
     cy.get(getTestSelector('searchbar-dropdown'))

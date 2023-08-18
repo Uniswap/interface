@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
-import { useHref } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
@@ -80,8 +79,6 @@ export default function FiatOnrampModal() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const swapUrl = useHref('/swap')
-
   const fetchSignedIframeUrl = useCallback(async () => {
     if (!account) {
       setError('Please connect an account before making a purchase.')
@@ -101,7 +98,7 @@ export default function FiatOnrampModal() {
           theme: isDarkMode ? 'dark' : 'light',
           colorCode: theme.accentAction,
           defaultCurrencyCode: 'eth',
-          redirectUrl: swapUrl,
+          redirectUrl: 'https://app.uniswap.org/#/swap',
           walletAddresses: JSON.stringify(
             MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
               (acc, currencyCode) => ({
@@ -121,7 +118,7 @@ export default function FiatOnrampModal() {
     } finally {
       setLoading(false)
     }
-  }, [account, isDarkMode, swapUrl, theme.accentAction])
+  }, [account, isDarkMode, theme.accentAction])
 
   useEffect(() => {
     fetchSignedIframeUrl()

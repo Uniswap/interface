@@ -95,7 +95,7 @@ const ActionButton = ({
     <StyledActionButton
       selected={isSelected}
       isDisabled={isDisabled}
-      onClick={(e) => (isDisabled ? undefined : clickActionButton(e))}
+      onClick={(e: React.MouseEvent) => (isDisabled ? undefined : clickActionButton(e))}
     >
       {children}
     </StyledActionButton>
