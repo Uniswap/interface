@@ -11,7 +11,7 @@ import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { UserRejectedRequestError } from 'utils/errors'
+import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
@@ -33,12 +33,6 @@ class ModifiedSwapError extends Error {
     super(
       t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
     )
-  }
-}
-
-class WrongChainError extends Error {
-  constructor() {
-    super(t`Your wallet is connected to the wrong network.`)
   }
 }
 
