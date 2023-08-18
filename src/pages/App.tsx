@@ -106,14 +106,6 @@ const LazyLoadSpinner = () => (
   </SpinnerSVG>
 )
 
-const RedirectHashToPath = ({ children }: { children: JSX.Element }) => {
-  const { hash } = useLocation()
-  if (hash) {
-    return <Navigate to={hash.replace('#', '')} replace />
-  }
-  return children
-}
-
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const [shouldDisableNFTRoutes, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
@@ -217,16 +209,7 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  <Route
-                    path="/"
-                    element={
-                      // if react-router-dom matches "/" with window.location.hash defined, it means that we're
-                      // using BrowserRouter and can safely redirect to a path route
-                      <RedirectHashToPath>
-                        <Landing />
-                      </RedirectHashToPath>
-                    }
-                  />
+                  <Route path="/" element={<Landing />} />
 
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
