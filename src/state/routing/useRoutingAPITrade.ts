@@ -93,7 +93,13 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const isFetching = currentData !== tradeResult || !currentData
 
   return useMemo(() => {
-    if (!amountSpecified || isError || queryArgs === skipToken) {
+    if (amountSpecified && queryArgs === skipToken) {
+      return {
+        state: TradeState.STALE,
+        trade: tradeResult?.trade,
+        swapQuoteLatency: tradeResult?.latencyMs,
+      }
+    } else if (!amountSpecified || isError || queryArgs === skipToken) {
       return {
         state: TradeState.INVALID,
         trade: undefined,
