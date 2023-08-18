@@ -209,3 +209,4 @@ export const routingApi = createApi({
 })
 
 export const { useGetQuoteQuery } = routingApi
+export const useGetQuoteQueryState = routingApi.endpoints.getQuote.useQueryState
