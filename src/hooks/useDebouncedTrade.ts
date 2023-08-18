@@ -70,39 +70,27 @@ export function useDebouncedTrade(
     [amountSpecified, otherCurrency]
   )
   const debouncedSwapQuoteFlagEnabled = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled
-  const debouncedInputs = useDebounce(inputs, debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME)
-  const isDebouncing = debouncedInputs !== inputs
-  const [debouncedAmount, debouncedOtherCurrency] = debouncedInputs
+  const isDebouncing =
+    useDebounce(inputs, debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME) !== inputs
 
   const isWrap = useMemo(() => {
-    if (!chainId || !amountSpecified || !debouncedOtherCurrency) return false
+    if (!chainId || !amountSpecified || !otherCurrency) return false
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
     return (
-      (amountSpecified.currency.isNative && weth?.equals(debouncedOtherCurrency)) ||
-      (debouncedOtherCurrency.isNative && weth?.equals(amountSpecified.currency))
+      (amountSpecified.currency.isNative && weth?.equals(otherCurrency)) ||
+      (otherCurrency.isNative && weth?.equals(amountSpecified.currency))
     )
-  }, [amountSpecified, chainId, debouncedOtherCurrency])
+  }, [amountSpecified, chainId, otherCurrency])
 
-  const shouldGetTrade = !isWrap && isWindowVisible
+  const skipFetch = isDebouncing || !autoRouterSupported || !isWindowVisible || isWrap
 
   const [routerPreference] = useRouterPreference()
-  const routingAPITrade = useRoutingAPITrade(
+  return useRoutingAPITrade(
     tradeType,
-    amountSpecified ? debouncedAmount : undefined,
-    debouncedOtherCurrency,
+    amountSpecified,
+    otherCurrency,
     routerPreferenceOverride ?? routerPreference,
-    !(autoRouterSupported && shouldGetTrade), // skip fetching
+    skipFetch,
     account
-  )
-
-  // If the user is debouncing, we want to show the loading state until the debounce is complete.
-  const isLoading = (routingAPITrade.state === TradeState.LOADING || isDebouncing) && !isWrap
-
-  return useMemo(
-    () => ({
-      ...routingAPITrade,
-      ...(isLoading ? { state: TradeState.LOADING } : {}),
-    }),
-    [isLoading, routingAPITrade]
   )
 }
