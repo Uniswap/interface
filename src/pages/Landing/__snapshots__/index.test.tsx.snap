@@ -753,8 +753,8 @@ exports[`disable nft on landing page does not render nft information and card 1`
   -webkit-filter: none;
   filter: none;
   opacity: 1;
-  -webkit-transition: opacity 0.2s ease-in-out;
-  transition: opacity 0.2s ease-in-out;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
 }
 
 .c31 {
@@ -1063,8 +1063,8 @@ exports[`disable nft on landing page does not render nft information and card 1`
   -webkit-filter: none;
   filter: none;
   opacity: 1;
-  -webkit-transition: opacity 0.2s ease-in-out;
-  transition: opacity 0.2s ease-in-out;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
   text-align: left;
   font-size: 36px;
   line-height: 44px;
@@ -3315,8 +3315,8 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   -webkit-filter: none;
   filter: none;
   opacity: 1;
-  -webkit-transition: opacity 0.2s ease-in-out;
-  transition: opacity 0.2s ease-in-out;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
 }
 
 .c31 {
@@ -3625,8 +3625,8 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   -webkit-filter: none;
   filter: none;
   opacity: 1;
-  -webkit-transition: opacity 0.2s ease-in-out;
-  transition: opacity 0.2s ease-in-out;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
   text-align: left;
   font-size: 36px;
   line-height: 44px;
