@@ -115,7 +115,7 @@
     "@types/ua-parser-js": "^0.7.36",
     "@types/uuid": "^8.3.4",
     "@types/wcag-contrast": "^3.0.0",
-    "@uniswap/default-token-list": "^11.2.0",
+    "@uniswap/default-token-list": "^11.5.0",
     "@uniswap/eslint-config": "^1.2.0",
     "@vanilla-extract/jest-transform": "^1.1.1",
     "@vanilla-extract/webpack-plugin": "^2.2.0",
