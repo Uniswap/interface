@@ -2362,19 +2362,19 @@ exports[`disable nft on landing page does not render nft information and card 1`
               App
             </span>
             <a
-              class="1 c94 c95"
+              class="c94 c95"
               href="#/swap"
             >
               Swap
             </a>
             <a
-              class="1 c94 c95"
+              class="c94 c95"
               href="#/tokens"
             >
               Tokens
             </a>
             <a
-              class="1 c94 c95"
+              class="c94 c95"
               href="#/pools"
             >
               Pools
@@ -4962,25 +4962,25 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
               App
             </span>
             <a
-              class="1 c95 c96"
+              class="c95 c96"
               href="#/swap"
             >
               Swap
             </a>
             <a
-              class="1 c95 c96"
+              class="c95 c96"
               href="#/tokens"
             >
               Tokens
             </a>
             <a
-              class="1 c95 c96"
+              class="c95 c96"
               href="#/nfts"
             >
               NFTs
             </a>
             <a
-              class="1 c95 c96"
+              class="c95 c96"
               href="#/pools"
             >
               Pools
