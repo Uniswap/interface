@@ -25,6 +25,9 @@ describe('time-to-swap logging', () => {
       cy.wrap(event.event_properties).should('have.property', 'time_to_swap')
       cy.wrap(event.event_properties.time_to_swap).should('be.a', 'number')
       cy.wrap(event.event_properties.time_to_swap).should('be.gte', 0)
+      cy.wrap(event.event_properties).should('have.property', 'time_to_swap_since_first_input')
+      cy.wrap(event.event_properties.time_to_swap_since_first_input).should('be.a', 'number')
+      cy.wrap(event.event_properties.time_to_swap_since_first_input).should('be.gte', 0)
     })
 
     // Second swap in the session:
@@ -40,6 +43,7 @@ describe('time-to-swap logging', () => {
     cy.get(getTestSelector('popups')).contains('Swapped')
     cy.waitForAmplitudeEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED).then((event: any) => {
       cy.wrap(event.event_properties).should('not.have.property', 'time_to_swap')
+      cy.wrap(event.event_properties).should('not.have.property', 'time_to_swap_since_first_input')
     })
   })
 })

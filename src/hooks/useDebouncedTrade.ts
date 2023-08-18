@@ -65,13 +65,16 @@ export function useDebouncedTrade(
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
 
-  const debouncedSwapQuoteFlagEnabled = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled
-  const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
-    useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
-    debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME
+  const inputs = useMemo<[CurrencyAmount<Currency> | undefined, Currency | undefined]>(
+    () => [amountSpecified, otherCurrency],
+    [amountSpecified, otherCurrency]
   )
+  const debouncedSwapQuoteFlagEnabled = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled
+  const debouncedInputs = useDebounce(inputs, debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME)
+  const isDebouncing = debouncedInputs !== inputs
+  const [debouncedAmount, debouncedOtherCurrency] = debouncedInputs
 
-  const isAWrapTransaction = useMemo(() => {
+  const isWrap = useMemo(() => {
     if (!chainId || !amountSpecified || !debouncedOtherCurrency) return false
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
     return (
@@ -80,7 +83,7 @@ export function useDebouncedTrade(
     )
   }, [amountSpecified, chainId, debouncedOtherCurrency])
 
-  const shouldGetTrade = !isAWrapTransaction && isWindowVisible
+  const shouldGetTrade = !isWrap && isWindowVisible
 
   const [routerPreference] = useRouterPreference()
   const routingAPITrade = useRoutingAPITrade(
@@ -92,9 +95,8 @@ export function useDebouncedTrade(
     account
   )
 
-  const inDebounce =
-    (!debouncedAmount && Boolean(amountSpecified)) || (!debouncedOtherCurrency && Boolean(otherCurrency))
-  const isLoading = routingAPITrade.state === TradeState.LOADING || inDebounce
+  // If the user is debouncing, we want to show the loading state until the debounce is complete.
+  const isLoading = (routingAPITrade.state === TradeState.LOADING || isDebouncing) && !isWrap
 
   return useMemo(
     () => ({

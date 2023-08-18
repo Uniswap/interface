@@ -24,11 +24,12 @@ export default function useEagerlyConnect() {
   const rehydrated = useAppSelector((state) => state._persist.rehydrated)
 
   useEffect(() => {
-    if (!selectedWallet) return
     try {
-      const selectedConnection = getConnection(selectedWallet)
       connect(gnosisSafeConnection.connector)
       connect(networkConnection.connector)
+
+      if (!selectedWallet) return
+      const selectedConnection = getConnection(selectedWallet)
 
       if (selectedConnection) {
         connect(selectedConnection.connector)
