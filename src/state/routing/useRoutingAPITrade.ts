@@ -19,6 +19,7 @@ import {
 } from './types'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
+const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
 
 export function useRoutingAPITrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
@@ -89,7 +90,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })
-  const isFetching = currentData !== tradeResult
+  const isFetching = currentData !== tradeResult || !currentData
 
   return useMemo(() => {
     if (!amountSpecified || isError || !queryArgs) {
@@ -100,6 +101,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       }
     } else if (tradeResult?.state === QuoteState.NOT_FOUND && !isFetching) {
       return TRADE_NOT_FOUND
+    } else if (!tradeResult?.trade) {
+      return TRADE_LOADING
     } else {
       return {
         state: isFetching ? TradeState.LOADING : TradeState.VALID,
