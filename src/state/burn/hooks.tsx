@@ -6,11 +6,11 @@ import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { AppState } from 'state/reducer'
 
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useV2Pair } from '../../hooks/useV2Pairs'
 import { useTokenBalances } from '../connection/hooks'
-import { AppState } from '../types'
 import { Field, typeInput } from './actions'
 
 export function useBurnState(): AppState['burn'] {

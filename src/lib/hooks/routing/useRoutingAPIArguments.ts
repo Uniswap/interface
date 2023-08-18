@@ -1,3 +1,4 @@
+import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useForceUniswapXOn } from 'featureFlags/flags/forceUniswapXOn'
 import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
@@ -27,7 +28,7 @@ export function useRoutingAPIArguments({
   amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-}): GetQuoteArgs | undefined {
+}): GetQuoteArgs | SkipToken {
   const uniswapXEnabled = useUniswapXEnabled()
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
   const forceUniswapXOn = useForceUniswapXOn()
@@ -37,7 +38,7 @@ export function useRoutingAPIArguments({
   return useMemo(
     () =>
       !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut) || tokenIn.wrapped.equals(tokenOut.wrapped)
-        ? undefined
+        ? skipToken
         : {
             account,
             amount: amount.quotient.toString(),

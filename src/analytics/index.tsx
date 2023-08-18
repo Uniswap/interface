@@ -6,7 +6,14 @@ import {
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { memo } from 'react'
 
-export { getDeviceId, initializeAnalytics, OriginApplication, user, useTrace } from '@uniswap/analytics'
+export {
+  type ITraceContext,
+  getDeviceId,
+  initializeAnalytics,
+  OriginApplication,
+  user,
+  useTrace,
+} from '@uniswap/analytics'
 
 const allowAnalyticsAtomKey = 'allow_analytics'
 export const allowAnalyticsAtom = atomWithStorage<boolean>(allowAnalyticsAtomKey, true)
