@@ -87,19 +87,24 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   useGetQuoteQuery(skipFetch ? skipToken : queryArgs, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : AVERAGE_L1_BLOCK_TIME,
-    // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
+    // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period.
     refetchOnMountOrArgChange: 2 * 60,
   })
   const isFetching = currentData !== tradeResult || !currentData
+  // Only "progressive" trades - those with the same currencies as the last trade - should show the last trade while loading.
+  const isProgressive =
+    tradeResult?.trade &&
+    currencyIn?.equals(tradeResult.trade.inputAmount.currency) &&
+    currencyOut?.equals(tradeResult.trade.outputAmount.currency)
 
   return useMemo(() => {
     if (amountSpecified && queryArgs === skipToken) {
       return {
         state: TradeState.STALE,
-        trade: tradeResult?.trade,
+        trade: isProgressive ? tradeResult?.trade : undefined,
         swapQuoteLatency: tradeResult?.latencyMs,
       }
-    } else if (!amountSpecified || isError || queryArgs === skipToken) {
+    } else if (queryArgs === skipToken || isError) {
       return {
         state: TradeState.INVALID,
         trade: undefined,
@@ -112,7 +117,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     } else {
       return {
         state: isFetching ? TradeState.LOADING : TradeState.VALID,
-        trade: tradeResult?.trade,
+        trade: isProgressive ? tradeResult?.trade : undefined,
         swapQuoteLatency: tradeResult?.latencyMs,
       }
     }
@@ -121,6 +126,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     error,
     isError,
     isFetching,
+    isProgressive,
     queryArgs,
     tradeResult?.latencyMs,
     tradeResult?.state,
