@@ -82,26 +82,15 @@ export function useDebouncedTrade(
     )
   }, [amountSpecified, chainId, otherCurrency])
 
-  const shouldGetTrade = !isWrap && isWindowVisible
+  const skipFetch = isDebouncing || !autoRouterSupported || !isWindowVisible || isWrap
 
   const [routerPreference] = useRouterPreference()
-  const routingAPITrade = useRoutingAPITrade(
+  return useRoutingAPITrade(
     tradeType,
     amountSpecified,
     otherCurrency,
     routerPreferenceOverride ?? routerPreference,
-    isDebouncing || !(autoRouterSupported && shouldGetTrade), // skip fetching
+    skipFetch,
     account
-  )
-
-  // If the user is debouncing, we want to show the loading state until the debounce is complete.
-  const isLoading = (routingAPITrade.state === TradeState.LOADING || isDebouncing) && !isWrap
-
-  return useMemo(
-    () => ({
-      ...routingAPITrade,
-      ...(isLoading ? { state: TradeState.LOADING } : {}),
-    }),
-    [isLoading, routingAPITrade]
   )
 }
