@@ -10,7 +10,7 @@ import { NFTCollectionData } from 'src/features/nfts/collection/NFTCollectionHea
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { getNftCollectionUrl, getTwitterLink, openUri } from 'src/utils/linking'
-import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
+import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 

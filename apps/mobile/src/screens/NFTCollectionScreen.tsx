@@ -25,8 +25,7 @@ import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import { dimensions } from 'ui/src/theme/restyle/sizing'
-import { theme } from 'ui/src/theme/restyle/theme'
+import { dimensions, theme } from 'ui/src/theme/restyle'
 import { isError } from 'wallet/src/data/utils'
 import {
   NftCollectionScreenQuery,

@@ -8,10 +8,9 @@ import {
 } from 'src/app/navigation/constants'
 import { useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
-import { Image, Stack, Text, XStack, YStack } from 'ui/src'
+import { Button, Image, Stack, Text, XStack, YStack } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
-import { Button } from 'ui/src/components/button/Button'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { iconSizes } from 'ui/src/theme'
 
 const INTRO_SCREEN_WIDTH = 320
 

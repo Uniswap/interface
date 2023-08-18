@@ -1,8 +1,7 @@
 import { useMemo } from 'react'
 import TransactionSummaryLayout from 'src/app/components/transactions/TransactionSummaryLayout'
-import { ScrollView, Text } from 'ui/src'
-import { Box } from 'ui/src/components/layout'
-import { Loader } from 'ui/src/components/loading'
+import { Box, ScrollView, Text } from 'ui/src'
+import { Loader } from 'ui/src/loading'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
 import {
   ActivityItem,

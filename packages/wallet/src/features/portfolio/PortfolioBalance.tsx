@@ -1,7 +1,5 @@
-import { getTokenValue, Icons, XStack, YStack } from 'ui/src'
-import { Flex } from 'ui/src/components/layout/Flex'
-import { Text } from 'ui/src/components/text/Text'
-import { theme } from 'ui/src/theme/restyle/theme'
+import { Flex, getTokenValue, Icons, Text, XStack, YStack } from 'ui/src'
+import { theme } from 'ui/src/theme/restyle'
 import { usePortfolioUSDBalance } from 'wallet/src/features/portfolio/hooks'
 
 type WalletBalanceProps = {

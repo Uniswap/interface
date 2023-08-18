@@ -9,7 +9,7 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { IS_IOS } from 'src/constants/globals'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 type OnboardingScreenProps = {
   subtitle?: string

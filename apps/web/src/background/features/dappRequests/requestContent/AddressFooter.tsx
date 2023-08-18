@@ -1,6 +1,4 @@
-import { XStack, YStack } from 'ui/src'
-import { Text } from 'ui/src/components/text/Text'
-import { Unicon } from 'ui/src/components/Unicon'
+import { Text, Unicon, XStack, YStack } from 'ui/src'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 

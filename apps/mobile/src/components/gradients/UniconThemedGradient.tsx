@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 function _UniconThemedGradient({
   gradientStartColor,

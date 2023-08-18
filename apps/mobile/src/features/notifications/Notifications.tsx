@@ -24,7 +24,7 @@ import { useCreateSwapFormState, useCreateWrapFormState } from 'src/features/tra
 import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { iconSizes } from 'ui/src/theme'
 import {
   DappLogoWithTxStatus,
   LogoWithTxStatus,

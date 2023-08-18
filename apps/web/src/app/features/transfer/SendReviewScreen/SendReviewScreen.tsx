@@ -1,9 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { TransferScreen, useTransferContext } from 'src/app/features/transfer/TransferContext'
-import { Icons, Text } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
-import { Flex } from 'ui/src/components/layout'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Button, Flex, Icons, Text } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { AmountAndRecipientSummary } from './AmountAndRecipientSummary'
 import { NetworkAndWalletSummary } from './NetworkAndWalletSummary'
 

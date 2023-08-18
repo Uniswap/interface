@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
-import { Text, XStack } from 'ui/src'
-import { Unicon } from 'ui/src/components/Unicon'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Text, Unicon, XStack } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 

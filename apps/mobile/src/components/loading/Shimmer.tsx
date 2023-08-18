@@ -12,7 +12,7 @@ import Reanimated, {
 import { Box } from 'src/components/layout'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { opacify } from 'src/utils/colors'
-import { theme } from 'ui/src/theme/restyle/theme'
+import { theme } from 'ui/src/theme/restyle'
 
 const SHIMMER_DURATION = 2000 // 2 seconds
 

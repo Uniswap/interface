@@ -1,7 +1,6 @@
 import { forwardRef } from 'react'
-import { GetRef, Input } from 'ui/src'
-import { inputStyles } from 'ui/src/components/input/utils'
-import { fonts } from 'ui/src/theme/fonts'
+import { GetRef, Input, inputStyles } from 'ui/src'
+import { fonts } from 'ui/src/theme'
 
 interface OnboardingInputProps {
   hideInput?: boolean

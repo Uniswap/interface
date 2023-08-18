@@ -4,7 +4,7 @@ import {
   addDismissedWarningToken,
   dismissedWarningTokensSelector,
 } from 'src/features/tokens/tokensSlice'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 

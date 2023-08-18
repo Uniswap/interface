@@ -1,7 +1,7 @@
 import React from 'react'
 import { Extrapolate, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
-import { dimensions } from 'ui/src/theme/restyle/sizing'
+import { dimensions } from 'ui/src/theme/restyle'
 
 const { fullWidth } = dimensions
 const INDICATOR_WIDTH = (200 / 375) * fullWidth

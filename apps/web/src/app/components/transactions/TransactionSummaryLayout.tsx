@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Icons, Text } from 'ui/src'
-import { Box, Flex } from 'ui/src/components/layout'
+import { Box, Flex, Icons, Text } from 'ui/src'
 import { TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import {
   getTransactionSummaryTitle,

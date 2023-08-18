@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react'
 import { SvgProps } from 'react-native-svg'
 import { ButtonEmphasis } from 'src/components/buttons/Button'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 export enum WarningSeverity {
   None = 0,

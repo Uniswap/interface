@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import { Box } from 'ui/src/components/layout'
-import { Loader } from 'ui/src/components/loading'
+import { Box } from 'ui/src'
+import { Loader } from 'ui/src/loading'
 import { ImageUriProps } from 'wallet/src/features/images/ImageUri'
 
 export function ImageUri({

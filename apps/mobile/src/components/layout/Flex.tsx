@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { withAnimated } from 'src/components/animated'
 import { Box, BoxProps } from 'src/components/layout/Box'
 import { Spacer, SpacerProps } from 'src/components/layout/Spacer'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 type CenteredProps =
   | {

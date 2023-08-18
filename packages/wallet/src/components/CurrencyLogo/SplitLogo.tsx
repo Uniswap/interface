@@ -1,4 +1,4 @@
-import { Box } from 'ui/src/components/layout'
+import { Box } from 'ui/src'
 import { CurrencyLogo, STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { ChainId } from 'wallet/src/constants/chains'

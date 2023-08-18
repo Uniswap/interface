@@ -34,9 +34,8 @@ import {
 } from 'src/utils/colors'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
-import { colorsDark } from 'ui/src/theme/color'
-import { iconSizes } from 'ui/src/theme/iconSizes'
-import { darkTheme } from 'ui/src/theme/restyle/theme'
+import { colorsDark, iconSizes } from 'ui/src/theme'
+import { darkTheme } from 'ui/src/theme/restyle'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   NftActivityType,

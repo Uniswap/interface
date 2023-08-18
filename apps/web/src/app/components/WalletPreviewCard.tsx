@@ -1,8 +1,6 @@
-import { Circle, Stack, Text, validToken, XStack, YStack } from 'ui/src'
+import { Circle, Stack, Text, Unicon, useUniconColors, validToken, XStack, YStack } from 'ui/src'
 import { CheckmarkIcon } from 'ui/src/assets/icons/CheckmarkIcon'
-import { Unicon } from 'ui/src/components/Unicon'
-import { useUniconColors } from 'ui/src/components/Unicon/utils'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 

@@ -13,8 +13,7 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import SearchIcon from 'ui/src/assets/icons/search.svg'
 import X from 'ui/src/assets/icons/x.svg'
-import { dimensions } from 'ui/src/theme/restyle/sizing'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { dimensions, Theme } from 'ui/src/theme/restyle'
 
 export const springConfig = {
   stiffness: 1000,

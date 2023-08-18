@@ -5,7 +5,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Logos } from 'ui/src'
-import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle/theme'
+import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { Amount } from 'wallet/src/data/__generated__/types-and-hooks'
 

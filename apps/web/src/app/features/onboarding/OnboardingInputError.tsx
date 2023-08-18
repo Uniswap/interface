@@ -1,5 +1,5 @@
 import { Text } from 'ui/src'
-import { spacing } from 'ui/src/theme/spacing'
+import { spacing } from 'ui/src/theme'
 
 const ERROR_MESSAGE_OFFSET = -spacing.spacing24
 

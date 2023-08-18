@@ -4,8 +4,7 @@ import { useParams } from 'react-router-dom'
 import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
-import { Input, Text, YStack } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
+import { Button, Input, Text, YStack } from 'ui/src'
 import {
   EditAccountAction,
   editAccountActions,

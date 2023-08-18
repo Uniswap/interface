@@ -7,7 +7,7 @@ import {
 import React, { memo } from 'react'
 import { Path, Svg } from 'react-native-svg'
 import { CenterBox } from 'src/components/layout/CenterBox'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 type Props = {
   width?: string | number

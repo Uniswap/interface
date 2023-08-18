@@ -11,7 +11,7 @@ import {
 } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
 import { Circle, Icons } from 'ui/src'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { iconSizes } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import {
   PendingAccountActions,

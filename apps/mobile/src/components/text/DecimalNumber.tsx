@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text, TextProps } from 'src/components/Text'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 type DecimalNumberProps = TextProps & {
   number?: number

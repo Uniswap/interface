@@ -11,8 +11,7 @@ import { useNetworkOptions } from 'src/components/Network/hooks'
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
-import { colors } from 'ui/src/theme/color'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { colors, iconSizes } from 'ui/src/theme'
 import {
   NetworkLogo,
   SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,

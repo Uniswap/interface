@@ -1,8 +1,6 @@
 import { useExtensionNavigation } from 'src/app/navigation/utils'
-import { Icons, Text, XStack } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
-import { Flex } from 'ui/src/components/layout'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Button, Flex, Icons, Text, XStack } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 export function ScreenHeader({
   onBackClick,

@@ -6,7 +6,7 @@ import {
   hexToRGB,
   opacify,
 } from 'src/utils/colors'
-import { theme } from 'ui/src/theme/restyle/theme'
+import { theme } from 'ui/src/theme/restyle'
 
 it('returns an hex color with opacity', () => {
   expect(opacify(10, '#000000')).toEqual('#0000001a')

@@ -8,7 +8,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { IS_ANDROID } from 'src/constants/globals'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { dimensions } from 'ui/src/theme/restyle/sizing'
+import { dimensions } from 'ui/src/theme/restyle'
 
 const { fullWidth } = dimensions
 

@@ -5,7 +5,7 @@ import {
   TransferScreen,
   useTransferContext,
 } from 'src/app/features/transfer/TransferContext'
-import { Flex } from 'ui/src/components/layout'
+import { Flex } from 'ui/src'
 
 export function TransferFlowScreen(): JSX.Element {
   return (

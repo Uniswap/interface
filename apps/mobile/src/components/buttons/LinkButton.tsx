@@ -5,8 +5,8 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { openUri } from 'src/utils/linking'
 import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
-import { iconSizes } from 'ui/src/theme/iconSizes'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { iconSizes } from 'ui/src/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 interface LinkButtonProps extends Omit<BaseButtonProps, 'onPress'> {
   label: string

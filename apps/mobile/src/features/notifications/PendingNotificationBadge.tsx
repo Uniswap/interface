@@ -10,7 +10,7 @@ import { useSelectAddressHasNotifications } from 'src/features/notifications/hoo
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
-import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
+import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'

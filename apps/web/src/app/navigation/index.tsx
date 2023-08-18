@@ -6,8 +6,7 @@ import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { DappRequestContent } from 'src/background/features/dappRequests/DappRequestContent'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { isOnboardedSelector } from 'src/background/utils/onboardingUtils'
-import { YStack } from 'ui/src'
-import { Flex } from 'ui/src/components/layout/Flex'
+import { Flex, YStack } from 'ui/src'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 export function MainContent(): JSX.Element {

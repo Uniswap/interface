@@ -1,8 +1,8 @@
 import React, { memo } from 'react'
 import { getToken } from 'ui/src'
 import { Flex } from 'ui/src/components/layout'
-import { BoxLoader } from 'ui/src/components/loading/BoxLoader'
-import { Shimmer } from 'ui/src/components/loading/Shimmer'
+import { BoxLoader } from 'ui/src/loading/BoxLoader'
+import { Shimmer } from 'ui/src/loading/Shimmer'
 import { TransactionLoader } from './TransactionLoader'
 
 export const Transaction = memo(function _Transaction({

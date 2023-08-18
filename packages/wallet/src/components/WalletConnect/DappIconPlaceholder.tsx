@@ -1,6 +1,5 @@
-import { Text } from 'ui/src'
-import { Flex } from 'ui/src/components/layout/Flex'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Flex, Text } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 export function DappIconPlaceholder({
   name,

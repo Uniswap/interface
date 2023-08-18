@@ -5,7 +5,7 @@ import { CloseButton } from 'src/components/buttons/CloseButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 interface Props extends ModalProps {
   position?: 'top' | 'center' | 'bottom'

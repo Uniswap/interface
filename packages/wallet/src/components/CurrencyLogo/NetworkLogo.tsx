@@ -1,12 +1,12 @@
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
-import { Box, BoxProps } from 'ui/src/components/layout/Box'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Box, BoxProps } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 import { ShadowProps } from '@shopify/restyle'
 import { ImageResizeMode } from 'react-native'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 type NetworkLogoProps = BoxProps & {
   chainId: ChainId

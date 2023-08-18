@@ -3,7 +3,7 @@ import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 type Props = {
   size?: number

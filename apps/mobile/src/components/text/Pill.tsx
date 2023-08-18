@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { Flex, FlexProps } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 type PillProps = {
   customBackgroundColor?: string

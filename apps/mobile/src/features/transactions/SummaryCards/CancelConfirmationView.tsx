@@ -11,7 +11,7 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { useCancelationGasFeeInfo } from 'src/features/gas/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
-import { theme } from 'ui/src/theme/restyle/theme'
+import { theme } from 'ui/src/theme/restyle'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'

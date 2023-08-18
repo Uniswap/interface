@@ -3,7 +3,7 @@ import React from 'react'
 import { TextProps } from 'react-native'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 interface TextWithFuseMatchesProps {
   text: string

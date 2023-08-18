@@ -9,7 +9,7 @@ import {
 import { TextInput } from 'src/components/input/TextInput'
 import { Box } from 'src/components/layout'
 import { IS_ANDROID } from 'src/constants/globals'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 interface Props {
   autoCorrect: boolean

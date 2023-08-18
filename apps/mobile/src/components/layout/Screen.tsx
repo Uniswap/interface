@@ -3,7 +3,7 @@ import React, { useMemo } from 'react'
 import { View } from 'react-native'
 import { NativeSafeAreaViewProps, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BoxProps } from 'src/components/layout/Box'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 const SafeAreaBox = createBox<Theme>(View)
 

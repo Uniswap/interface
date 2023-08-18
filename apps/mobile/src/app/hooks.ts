@@ -3,7 +3,7 @@ import { useTheme } from '@shopify/restyle'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch } from 'src/app/store'
 import { SagaGenerator, select } from 'typed-redux-saga'
-import type { Theme } from 'ui/src/theme/restyle/theme'
+import type { Theme } from 'ui/src/theme/restyle'
 import type { MobileState } from './reducer'
 
 // Use throughout the app instead of plain `useDispatch` and `useSelector`

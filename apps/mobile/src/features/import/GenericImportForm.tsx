@@ -15,7 +15,7 @@ import Trace from 'src/components/Trace/Trace'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { SectionName } from 'src/features/telemetry/constants'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 interface Props {
   value: string | undefined

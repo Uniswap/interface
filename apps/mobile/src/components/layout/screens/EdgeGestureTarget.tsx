@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box } from 'src/components/layout'
-import { dimensions } from 'ui/src/theme/restyle/sizing'
+import { dimensions } from 'ui/src/theme/restyle'
 
 /**
  * Adds a transparent box to the specific edge as a gesture target.

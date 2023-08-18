@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Text } from 'ui/src'
-import { Flex } from 'ui/src/components/layout'
+import { Flex, Text } from 'ui/src'
 
 export function RecipientSelector(): JSX.Element {
   const { t } = useTranslation()

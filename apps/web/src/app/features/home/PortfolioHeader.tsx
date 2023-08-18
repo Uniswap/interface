@@ -3,12 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { useDappContext } from 'src/background/features/dapp/hooks'
-import { Icons, Popover, XStack } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
-import { Chevron } from 'ui/src/components/icons/Chevron'
-import { Text } from 'ui/src/components/text/Text'
-import { Unicon } from 'ui/src/components/Unicon'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Button, Icons, Popover, Text, Unicon, XStack } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type PortfolioHeaderProps = {
@@ -41,7 +37,7 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
         <Unicon address={address} size={iconSizes.icon36} />
         <XStack gap="$spacing4" paddingVertical="$spacing16">
           <Text variant="subheadSmall">{displayName}</Text>
-          <Chevron
+          <Icons.Chevron
             color="$neutral2"
             direction="s"
             height={iconSizes.icon20}

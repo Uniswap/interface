@@ -4,10 +4,9 @@ import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { SettingsWalletRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
-import { Switch, Text, XStack, YStack } from 'ui/src'
+import { Button, Switch, Text, XStack, YStack } from 'ui/src'
 import PencilIcon from 'ui/src/assets/icons/pencil.svg'
-import { Button } from 'ui/src/components/button/Button'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { iconSizes } from 'ui/src/theme'
 import {
   EditAccountAction,
   editAccountActions,

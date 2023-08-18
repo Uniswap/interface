@@ -1,4 +1,4 @@
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 

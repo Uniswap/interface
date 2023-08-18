@@ -3,7 +3,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { Caret } from 'src/components/icons/Caret'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 
 interface RelativeChangeProps {

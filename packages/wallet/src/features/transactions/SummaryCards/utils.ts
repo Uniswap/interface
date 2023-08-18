@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 import { createElement, useMemo, useState } from 'react'
-import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src/components/loading/TransactionLoader'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src/loading/TransactionLoader'
+import { iconSizes } from 'ui/src/theme'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import {

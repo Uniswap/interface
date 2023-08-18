@@ -6,7 +6,7 @@ import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 const DEFAULT_ICON_SIZE = 20
 

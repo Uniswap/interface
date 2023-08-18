@@ -1,7 +1,5 @@
-import { Icons } from 'ui/src'
-import { Flex } from 'ui/src/components/layout/Flex'
-import { Unicon } from 'ui/src/components/Unicon'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Flex, Icons, Unicon } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 export function UniconWithLockIcon({ address }: { address: Address }): JSX.Element {
   return (

@@ -5,10 +5,8 @@ import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
-import { Icons, ScrollView, Text, validToken, XStack, YStack } from 'ui/src'
-import { Flex } from 'ui/src/components/layout/Flex'
-import { useUniconColors } from 'ui/src/components/Unicon/utils'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Flex, Icons, ScrollView, Text, useUniconColors, validToken, XStack, YStack } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import {
   createAccountActions,
   createAccountSagaName,

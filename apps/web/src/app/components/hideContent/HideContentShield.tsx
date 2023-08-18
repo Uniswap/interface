@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { ColorTokens, getTokenValue, Icons } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
-import { Flex } from 'ui/src/components/layout/Flex'
+import { Button, ColorTokens, Flex, getTokenValue, Icons } from 'ui/src'
 
 export function HideContentShield({
   color,

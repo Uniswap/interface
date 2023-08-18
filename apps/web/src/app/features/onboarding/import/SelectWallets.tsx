@@ -9,8 +9,7 @@ import {
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
-import { Icons, ScrollView, Stack, Text, XStack, YStack } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
+import { Button, Icons, ScrollView, Stack, Text, XStack, YStack } from 'ui/src'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { useSelectWalletScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'

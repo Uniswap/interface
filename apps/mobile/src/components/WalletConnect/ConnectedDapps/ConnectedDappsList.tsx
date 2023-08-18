@@ -12,7 +12,7 @@ import { DappConnectedNetworkModal } from 'src/components/WalletConnect/Connecte
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { DappSwitchNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappSwitchNetworkModal'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { dimensions } from 'ui/src/theme/restyle/sizing'
+import { dimensions } from 'ui/src/theme/restyle'
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]

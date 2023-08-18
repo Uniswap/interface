@@ -7,7 +7,7 @@ import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import Eye from 'ui/src/assets/icons/eye.svg'
-import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
+import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 interface Props {

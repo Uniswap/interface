@@ -4,7 +4,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { TextProps } from 'src/components/Text'
 import { AnimatedText } from 'src/components/text/AnimatedText'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 import { ValueAndFormatted } from './usePrice'
 
 type AnimatedDecimalNumberProps = TextProps & {

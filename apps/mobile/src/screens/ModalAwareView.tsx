@@ -8,7 +8,7 @@ import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeG
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { flex } from 'ui/src/theme/restyle/flex'
+import { flex } from 'ui/src/theme/restyle'
 /**
  * Wrapper view to correctly render screens within BottomSheetModal as needed. This is required
  * to enable both full screen, and bottom sheet drag gestures on a screen within a modal.

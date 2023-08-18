@@ -11,7 +11,7 @@ import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
-import { opacify } from 'ui/src/theme/color/utils'
+import { opacify } from 'ui/src/theme'
 
 export function RestoreWalletModal(): JSX.Element | null {
   const { t } = useTranslation()

@@ -9,8 +9,8 @@ import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
-import { opacify } from 'ui/src/theme/color/utils'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { opacify } from 'ui/src/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
 export const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }

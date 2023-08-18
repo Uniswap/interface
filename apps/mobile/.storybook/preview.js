@@ -5,7 +5,7 @@ import React from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { useDarkMode } from 'storybook-dark-mode'
 import { i18n } from '../src/app/i18n'
-import { darkTheme, theme } from '../../../packages/ui/src/theme/restyle/theme'
+import { darkTheme, theme } from '../../../packages/ui/src/theme/restyle'
 import { ReduxDecorator } from './ReduxDecorator'
 import { NavigationDecorator } from './StoryNavigator'
 

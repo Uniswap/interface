@@ -1,8 +1,7 @@
 import { SignTypedDataRequest } from 'src/background/features/dappRequests/dappRequestTypes'
 import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
 import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
-import { Text, XStack, YStack } from 'ui/src'
-import { Flex } from 'ui/src/components/layout/Flex'
+import { Flex, Text, XStack, YStack } from 'ui/src'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { EthTypedMessage } from 'wallet/src/features/wallet/signing/types'
 

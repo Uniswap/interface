@@ -3,7 +3,7 @@ import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
+import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { NftAssetTrait } from 'wallet/src/data/__generated__/types-and-hooks'
 
 export function NFTTraitCard({

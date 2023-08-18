@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Image, Text } from 'ui/src'
-import { Flex } from 'ui/src/components/layout'
-import { Unicon } from 'ui/src/components/Unicon'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Flex, Image, Text, Unicon } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 export function AmountAndRecipientSummary(): JSX.Element {
   const { t } = useTranslation()

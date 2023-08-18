@@ -7,7 +7,7 @@ import { TransactionLoader } from 'src/components/loading/TransactionLoader'
 import { WalletLoader } from 'src/components/loading/WalletLoader'
 import { WaveLoader } from 'src/components/loading/WaveLoader'
 import { getToken } from 'ui/src'
-import { BoxLoader, BoxLoaderProps } from 'ui/src/components/loading/BoxLoader'
+import { BoxLoader, BoxLoaderProps } from 'ui/src/loading'
 
 function Graph(): JSX.Element {
   return (

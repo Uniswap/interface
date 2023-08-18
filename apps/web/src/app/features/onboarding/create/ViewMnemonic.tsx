@@ -9,9 +9,8 @@ import {
   OnboardingRoutes,
   TopLevelRoutes,
 } from 'src/app/navigation/constants'
-import { Circle, Text, XStack, YStack } from 'ui/src'
-import { Flex } from 'ui/src/components/layout/Flex'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Circle, Flex, Text, XStack, YStack } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'

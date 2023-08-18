@@ -1,7 +1,6 @@
 import { OnboardingInputError } from 'src/app/features/onboarding/OnboardingInputError'
-import { Icons, Stack, Text, XStack, YStack } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Button, Icons, Stack, Text, XStack, YStack } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 export const ONBOARDING_CONTENT_WIDTH = 450
 

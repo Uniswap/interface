@@ -13,7 +13,7 @@ import {
   UNISWAP_LOGO_LARGE,
 } from 'ui/src/assets'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
-import { theme } from 'ui/src/theme/restyle/theme'
+import { theme } from 'ui/src/theme/restyle'
 
 const ICON_SIZE = 90
 

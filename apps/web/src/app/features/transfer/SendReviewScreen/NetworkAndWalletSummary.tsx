@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Text } from 'ui/src'
-import { Flex } from 'ui/src/components/layout'
-import { Unicon } from 'ui/src/components/Unicon'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { Flex, Text, Unicon } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export function NetworkAndWalletSummary(): JSX.Element {

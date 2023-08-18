@@ -25,7 +25,7 @@ import {
   isEthAddress,
 } from 'src/components/unicons/utils'
 import { useSelectedColorScheme } from 'src/features/appearance/hooks'
-import { flex } from 'ui/src/theme/restyle/flex'
+import { flex } from 'ui/src/theme/restyle'
 
 // HACK: Add 1 to effectively increase margin between svg and surrounding box, otherwise get a cropping issue
 const ORIGINAL_SVG_SIZE = 36 + 1

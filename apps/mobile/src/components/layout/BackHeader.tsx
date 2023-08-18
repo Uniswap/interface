@@ -2,7 +2,7 @@ import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React, { PropsWithChildren } from 'react'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Box, Flex } from 'src/components/layout'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 const BACK_BUTTON_SIZE = 24
 

@@ -1,11 +1,8 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRouteError } from 'react-router-dom'
-import { Stack } from 'ui/src'
+import { Button, Flex, Stack, Text } from 'ui/src'
 import DeadLuni from 'ui/src/assets/graphics/dead-luni.svg'
-import { Button } from 'ui/src/components/button/Button'
-import { Flex } from 'ui/src/components/layout'
-import { Text } from 'ui/src/components/text/Text'
 
 export function ErrorBoundary({ children }: PropsWithChildren<unknown>): JSX.Element {
   const error = useRouteError()

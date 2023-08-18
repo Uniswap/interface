@@ -16,9 +16,8 @@ import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
-import { dimensions } from 'ui/src/theme/restyle/sizing'
-import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
-import { spacing } from 'ui/src/theme/spacing'
+import { spacing } from 'ui/src/theme'
+import { dimensions, theme as FixedTheme } from 'ui/src/theme/restyle'
 
 type Props = PropsWithChildren<{
   disableSwipe?: boolean

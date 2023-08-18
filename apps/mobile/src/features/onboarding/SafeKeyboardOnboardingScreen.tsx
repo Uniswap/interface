@@ -11,9 +11,8 @@ import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { IS_IOS } from 'src/constants/globals'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
-import { opacify } from 'ui/src/theme/color/utils'
-import { flex } from 'ui/src/theme/restyle/flex'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { opacify } from 'ui/src/theme'
+import { flex, Theme } from 'ui/src/theme/restyle'
 
 type OnboardingScreenProps = {
   subtitle?: string

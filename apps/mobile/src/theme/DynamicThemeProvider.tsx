@@ -3,7 +3,7 @@ import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useS
 import { Appearance, ColorSchemeName } from 'react-native'
 import { useCurrentAppearanceSetting } from 'src/features/appearance/hooks'
 import { AppearanceSettingType } from 'src/features/appearance/slice'
-import { darkTheme, theme as lightTheme, Theme } from 'ui/src/theme/restyle/theme'
+import { darkTheme, theme as lightTheme, Theme } from 'ui/src/theme/restyle'
 
 const COLOR_SCHEME_FLICKER_DELAY_MS = 250
 

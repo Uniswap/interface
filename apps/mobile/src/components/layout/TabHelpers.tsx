@@ -15,7 +15,7 @@ import { Route } from 'react-native-tab-view/lib/typescript/types'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
-import { theme as FixedTheme } from 'ui/src/theme/restyle/theme'
+import { theme as FixedTheme } from 'ui/src/theme/restyle'
 
 export const TAB_VIEW_SCROLL_THROTTLE = 16
 export const TAB_BAR_HEIGHT = 48

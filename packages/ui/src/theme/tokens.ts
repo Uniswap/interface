@@ -1,6 +1,6 @@
 import { createTokens } from 'tamagui'
 import { borderRadii } from 'ui/src/theme/borderRadii'
-import { colors as color } from 'ui/src/theme/color'
+import { colors as color } from 'ui/src/theme/color/colors'
 import { fonts } from 'ui/src/theme/fonts'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { imageSizes } from 'ui/src/theme/imageSizes'

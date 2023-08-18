@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Image } from 'react-native'
-import { Box } from 'ui/src/components/layout'
-import { Loader } from 'ui/src/components/loading'
+import { Box } from 'ui/src'
+import { Loader } from 'ui/src/loading'
 import { ImageUriProps } from 'wallet/src/features/images/ImageUri'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
