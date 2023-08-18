@@ -70,18 +70,18 @@ export function useUSDPrice(
   const chain = chainId ? chainIdToBackendName(chainId) : undefined
 
   // Use ETH-based pricing if available.
-  const { data: ethValue, isLoading: isEthValueLoading } = useETHPrice(currency)
-  const isEthPriced = Boolean(ethValue || isEthValueLoading)
+  const { data: tokenEthPrice, isLoading: isTokenEthPriceLoading } = useETHPrice(currency)
+  const isTokenEthPriced = Boolean(tokenEthPrice || isTokenEthPriceLoading)
   const { data, networkStatus } = useTokenSpotPriceQuery({
     variables: { chain: chain ?? Chain.Ethereum, address: getNativeTokenDBAddress(chain ?? Chain.Ethereum) },
-    skip: !isEthPriced,
+    skip: !isTokenEthPriced,
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-first',
   })
 
   // Use USDC-based pricing for chains not yet supported by backend (for ETH-based pricing).
-  const stablecoinPrice = useStablecoinPrice(isEthPriced ? undefined : currency)
+  const stablecoinPrice = useStablecoinPrice(isTokenEthPriced ? undefined : currency)
 
   return useMemo(() => {
     if (!currencyAmount) {
@@ -89,13 +89,20 @@ export function useUSDPrice(
     } else if (stablecoinPrice) {
       return { data: parseFloat(stablecoinPrice.quote(currencyAmount).toSignificant()), isLoading: false }
     } else {
-      // Otherwise, get the price of the token in ETH, and then multiple by the price of ETH
+      // Otherwise, get the price of the token in ETH, and then multiply by the price of ETH.
       const ethUSDPrice = data?.token?.project?.markets?.[0]?.price?.value
-      if (ethUSDPrice && ethValue) {
-        return { data: parseFloat(ethValue.quote(currencyAmount).toExact()) * ethUSDPrice, isLoading: false }
+      if (ethUSDPrice && tokenEthPrice) {
+        return { data: parseFloat(tokenEthPrice.quote(currencyAmount).toExact()) * ethUSDPrice, isLoading: false }
       } else {
-        return { data: undefined, isLoading: isEthValueLoading || networkStatus === NetworkStatus.loading }
+        return { data: undefined, isLoading: isTokenEthPriceLoading || networkStatus === NetworkStatus.loading }
       }
     }
-  }, [currencyAmount, data?.token?.project?.markets, ethValue, isEthValueLoading, networkStatus, stablecoinPrice])
+  }, [
+    currencyAmount,
+    data?.token?.project?.markets,
+    tokenEthPrice,
+    isTokenEthPriceLoading,
+    networkStatus,
+    stablecoinPrice,
+  ])
 }
