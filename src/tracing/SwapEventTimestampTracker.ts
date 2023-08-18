@@ -1,5 +1,6 @@
 import { calculateElapsedTimeWithPerformanceMark } from './utils'
 
+// These events should happen in this order.
 export enum SwapEventType {
   /**
    * Full list of actions that can trigger the FIRST_SWAP_ACTION moment:
