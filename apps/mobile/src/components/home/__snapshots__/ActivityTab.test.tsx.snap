@@ -30,8 +30,12 @@ exports[`ActivityTab renders without error 1`] = `
           <Memo(_Transaction)
             repeat={4}
           />
-          <ForwardRef
-            height={0.1}
+          <View
+            style={
+              {
+                "height": 1334,
+              }
+            }
           />
         </React.Fragment>
       }
@@ -137,8 +141,12 @@ exports[`ActivityTab renders without error 1`] = `
               <Memo(_Transaction)
                 repeat={4}
               />
-              <ForwardRef
-                height={0.1}
+              <View
+                style={
+                  {
+                    "height": 1334,
+                  }
+                }
               />
             </React.Fragment>,
             "data": [
@@ -319,8 +327,12 @@ exports[`ActivityTab renders without error 2`] = `
       }
       ListFooterComponent={
         <React.Fragment>
-          <ForwardRef
-            height={0.1}
+          <View
+            style={
+              {
+                "height": 1334,
+              }
+            }
           />
         </React.Fragment>
       }
@@ -485,8 +497,12 @@ exports[`ActivityTab renders without error 2`] = `
               />
             </ForwardRef>,
             "ListFooterComponent": <React.Fragment>
-              <ForwardRef
-                height={0.1}
+              <View
+                style={
+                  {
+                    "height": 1334,
+                  }
+                }
               />
             </React.Fragment>,
             "data": [

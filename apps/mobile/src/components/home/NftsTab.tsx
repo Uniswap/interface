@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Box } from 'src/components/layout/Box'
@@ -37,7 +38,6 @@ import { GQLQueries } from 'wallet/src/data/queries'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { NftsTabQuery, useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
-import { useAdaptiveFooterHeight } from './hooks'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
 
@@ -137,10 +137,10 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
     owner,
     containerProps,
     scrollHandler,
-    headerHeight,
     isExternalProfile = false,
     refreshing,
     onRefresh,
+    headerHeight = 0,
   },
   ref
 ) {
@@ -151,9 +151,9 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
 
   const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
 
-  const { onContentSizeChange, footerHeight, setFooterHeight } = useAdaptiveFooterHeight({
-    headerHeight,
-  })
+  const { onContentSizeChange, footerHeight, adaptiveFooter } = useAdaptiveFooter(
+    containerProps?.contentContainerStyle
+  )
 
   const { data, fetchMore, refetch, networkStatus } = useNftsTabQuery({
     variables: { ownerAddress: owner, first: 30, filter: { filterSpam: false } },
@@ -188,10 +188,10 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
 
   const onHiddenRowPressed = useCallback((): void => {
     if (hiddenNftsExpanded) {
-      setFooterHeight(dimensions.fullHeight)
+      footerHeight.value = dimensions.fullHeight
     }
     setHiddenNftsExpanded(!hiddenNftsExpanded)
-  }, [hiddenNftsExpanded, setFooterHeight])
+  }, [hiddenNftsExpanded, footerHeight])
 
   useEffect(() => {
     if (numHidden === 0 && hiddenNftsExpanded) {
@@ -276,7 +276,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
         ListFooterComponent={
           <>
             {networkStatus === NetworkStatus.fetchMore && <Loader.NFT repeat={4} />}
-            <Box height={footerHeight} />
+            {adaptiveFooter}
           </>
         }
         data={shouldAddInLoadingItem ? [...nfts, LOADING_ITEM] : nfts}

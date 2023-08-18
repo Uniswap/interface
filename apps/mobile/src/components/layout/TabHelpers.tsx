@@ -81,10 +81,10 @@ export type TabProps = {
   owner: string
   containerProps?: TabContentProps
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
-  headerHeight?: number
   isExternalProfile?: boolean
   refreshing?: boolean
   onRefresh?: () => void
+  headerHeight?: number
 }
 
 export type TabContentProps = Partial<FlatListProps<unknown>> & {

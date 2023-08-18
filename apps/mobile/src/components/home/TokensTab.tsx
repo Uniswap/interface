@@ -26,9 +26,9 @@ export const TokensTab = forwardRef<FlashList<any>, TabProps & { isExternalProfi
       containerProps,
       scrollHandler,
       isExternalProfile = false,
-      headerHeight,
       onRefresh,
       refreshing,
+      headerHeight,
     },
     ref
   ) {

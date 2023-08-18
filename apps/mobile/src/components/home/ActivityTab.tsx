@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { RefreshControl } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { useAdaptiveFooterHeight } from 'src/components/home/hooks'
+import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Box, Flex } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
@@ -63,9 +63,9 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
 
-  const { onContentSizeChange, footerHeight } = useAdaptiveFooterHeight({
-    headerHeight,
-  })
+  const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(
+    containerProps?.contentContainerStyle
+  )
 
   // Hide all spam transactions if active wallet has enabled setting.
   const activeAccount = useActiveAccountWithThrow()
@@ -167,7 +167,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
         ListFooterComponent={
           <>
             {isLoading && <Loader.Transaction repeat={4} />}
-            <Box height={footerHeight} />
+            {adaptiveFooter}
           </>
         }
         data={sectionData}

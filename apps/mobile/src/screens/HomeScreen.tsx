@@ -439,7 +439,6 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       activeAccount?.address,
       activityTabScrollHandler,
       activityTabScrollRef,
-      headerHeight,
       nftsTabScrollHandler,
       nftsTabScrollRef,
       sharedProps,
@@ -447,6 +446,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       tokensTabScrollRef,
       refreshing,
       onRefreshHomeData,
+      headerHeight,
     ]
   )
 

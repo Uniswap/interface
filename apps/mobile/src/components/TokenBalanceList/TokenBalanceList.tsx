@@ -6,7 +6,7 @@ import { RefreshControl } from 'react-native'
 import { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
-import { useAdaptiveFooterHeight } from 'src/components/home/hooks'
+import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { AnimatedBox, Box } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
@@ -50,8 +50,8 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
       containerProps,
       scrollHandler,
       isExternalProfile = false,
-      headerHeight,
       refreshing,
+      headerHeight = 0,
       onRefresh,
     },
     ref
@@ -60,9 +60,9 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
     const theme = useAppTheme()
     const insets = useSafeAreaInsets()
 
-    const { onContentSizeChange, footerHeight, setFooterHeight } = useAdaptiveFooterHeight({
-      headerHeight,
-    })
+    const { onContentSizeChange, adaptiveFooter, footerHeight } = useAdaptiveFooter(
+      containerProps?.contentContainerStyle
+    )
 
     // This function gets passed down through:
     // usePortfolioBalances -> the usePortfolioBalancesQuery query's onCompleted argument.
@@ -157,7 +157,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
               </Box>
             }
             // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
-            ListFooterComponent={<Box height={footerHeight} />}
+            ListFooterComponent={adaptiveFooter}
             // add negative z index to prevent footer from covering hidden tokens row when minimized
             ListFooterComponentStyle={{ zIndex: zIndices.negative }}
             ListHeaderComponent={
@@ -184,7 +184,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
                     numHidden={hiddenTokens?.length ?? 0}
                     onPress={(): void => {
                       if (hiddenTokensExpanded) {
-                        setFooterHeight(dimensions.fullHeight)
+                        footerHeight.value = dimensions.fullHeight
                       }
                       setHiddenTokensExpanded(!hiddenTokensExpanded)
                     }}

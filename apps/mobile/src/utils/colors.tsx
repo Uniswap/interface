@@ -249,7 +249,7 @@ export function useExtractedTokenColor(
 
   if (isSVGUri(imageUrl)) {
     // Fall back to a more neutral color for SVG's since they fail extraction but we can render them elsewhere
-    return { tokenColor: theme.DEP_textPrimary?.get(), tokenColorLoading: false }
+    return { tokenColor: theme.neutral1?.get(), tokenColorLoading: false }
   }
 
   if (!imageUrl) {
