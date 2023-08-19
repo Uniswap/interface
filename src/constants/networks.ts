@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@kinetix/sdk-core'
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 if (typeof INFURA_KEY === 'undefined') {
@@ -113,6 +113,7 @@ export const FALLBACK_URLS = {
     'https://api.avax.network/ext/bc/C/rpc',
     'https://avalanche-c-chain.publicnode.com',
   ],
+  [ChainId.KAVA]: ['https://evm.kava.io'],
   [ChainId.BASE]: [
     // "Safe" URLs
     'https://mainnet.base.org',
@@ -136,6 +137,7 @@ export const FALLBACK_URLS = {
  * These are the URLs used by the interface when there is not another available source of chain data.
  */
 export const RPC_URLS = {
+  [ChainId.KAVA]: [`https://evm.kava.io`, ...FALLBACK_URLS[ChainId.KAVA]],
   [ChainId.MAINNET]: [`https://mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.MAINNET]],
   [ChainId.GOERLI]: [`https://goerli.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.GOERLI]],
   [ChainId.SEPOLIA]: [`https://sepolia.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.SEPOLIA]],

@@ -1,4 +1,4 @@
-import { ChainId, Currency, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, Currency, V3_CORE_FACTORY_ADDRESSES } from '@kinetix/sdk-core'
 import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { ZERO_ADDRESS } from 'constants/misc'

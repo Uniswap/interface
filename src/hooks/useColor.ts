@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { ChainId, Token } from '@kinetix/sdk-core'
 import uriToHttp from 'lib/utils/uriToHttp'
 import Vibrant from 'node-vibrant/lib/bundle.js'
 import { shade } from 'polished'

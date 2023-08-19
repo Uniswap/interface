@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@kinetix/sdk-core'
 import { OutlineCard } from 'components/Card'
 import styled, { useTheme } from 'styled-components'
 import { opacify } from 'theme/utils'

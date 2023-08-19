@@ -1,6 +1,6 @@
 import { Plural, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent, TradeType } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Column from 'components/Column'

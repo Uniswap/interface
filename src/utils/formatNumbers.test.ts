@@ -1,4 +1,4 @@
-import { CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Price } from '@kinetix/sdk-core'
 import { USDC_MAINNET, WBTC } from 'constants/tokens'
 
 import {

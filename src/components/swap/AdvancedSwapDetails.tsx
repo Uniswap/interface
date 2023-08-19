@@ -1,6 +1,6 @@
 import { Plural, Trans } from '@lingui/macro'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent, TradeType } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { LoadingRows } from 'components/Loader/styled'

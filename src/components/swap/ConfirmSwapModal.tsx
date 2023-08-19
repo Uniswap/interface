@@ -5,7 +5,7 @@ import {
   SwapEventName,
   SwapPriceUpdateUserResponse,
 } from '@uniswap/analytics-events'
-import { Currency, Percent } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
 import Badge from 'components/Badge'

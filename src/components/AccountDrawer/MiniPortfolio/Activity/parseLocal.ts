@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@kinetix/sdk-core'
 import { nativeOnChain } from '@uniswap/smart-order-router'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'

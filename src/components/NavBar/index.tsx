@@ -8,7 +8,6 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
-import { UniIcon } from 'nft/components/icons'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { ReactNode, useCallback } from 'react'
@@ -19,7 +18,6 @@ import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputV
 import { Bag } from './Bag'
 import Blur from './Blur'
 import { ChainSelector } from './ChainSelector'
-import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
@@ -80,9 +78,9 @@ export const PageTabs = () => {
           <Trans>Pools</Trans>
         </MenuItem>
       </Box>
-      <Box marginY={{ sm: '4', md: 'unset' }}>
+      {/* <Box marginY={{ sm: '4', md: 'unset' }}>
         <MenuDropdown />
-      </Box>
+      </Box> */}
     </>
   )
 }
@@ -95,7 +93,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
 
   const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
 
-  const handleUniIconClick = useCallback(() => {
+  const handleLogoClick = useCallback(() => {
     if (accountDrawerOpen) {
       toggleAccountDrawer()
     }
@@ -112,13 +110,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <UniIcon
-                width="48"
-                height="48"
-                data-testid="uniswap-logo"
-                className={styles.logo}
-                onClick={handleUniIconClick}
-              />
+              <div onClick={handleLogoClick}>Kinetix V3</div>
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>

@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@kinetix/sdk-core'
 import { useMemo } from 'react'
 import { ClassicTrade } from 'state/routing/types'
 import { useTheme } from 'styled-components'

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, NativeCurrency, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, NativeCurrency, Percent, Token, TradeType } from '@kinetix/sdk-core'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import { useMemo } from 'react'

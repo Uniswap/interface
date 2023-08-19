@@ -3606,6 +3606,18 @@
   resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.4.0.tgz#08d6c5e20cf7e4cc02fd181c4b0c225cd31dbb60"
   integrity sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==
 
+"@kinetix/sdk-core@^1.0.0":
+  version "1.0.0"
+  resolved "http://localhost:4873/@kinetix/sdk-core/-/sdk-core-1.0.0.tgz#4879a42f08440d31ad57f99d5c7713ecf649855d"
+  integrity sha512-hcXo6m88kO7ZLsaXkMUA0nrcsK5R5bvjd6DtRWWKhho9WrgYOSqx6a6xMgR1vLHyMLHsgQxJl5EcS6VTDK0dxQ==
+  dependencies:
+    "@ethersproject/address" "^5.0.2"
+    big.js "^5.2.2"
+    decimal.js-light "^2.5.0"
+    jsbi "^3.1.4"
+    tiny-invariant "^1.1.0"
+    toformat "^2.0.0"
+
 "@kinetix/token-lists@^1.0.0":
   version "1.0.0"
   resolved "http://localhost:4873/@kinetix/token-lists/-/token-lists-1.0.0.tgz#d6d80d62ef6a33e9eadccab5002845196ff75ffd"

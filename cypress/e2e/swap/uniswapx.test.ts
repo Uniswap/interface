@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount } from '@kinetix/sdk-core'
 
 import { DAI, nativeOnChain, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'

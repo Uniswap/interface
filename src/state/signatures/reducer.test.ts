@@ -1,4 +1,4 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@kinetix/sdk-core'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { createStore, Store } from 'redux'
 

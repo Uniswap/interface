@@ -1,5 +1,5 @@
 import { Tags, TokenInfo, TokenList } from '@kinetix/token-lists'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@kinetix/sdk-core'
 
 import { isAddress } from '../../utils'
 

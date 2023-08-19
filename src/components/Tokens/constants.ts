@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@kinetix/sdk-core'
 
 export const MAX_WIDTH_MEDIA_BREAKPOINT = '1200px'
 export const XLARGE_MEDIA_BREAKPOINT = '960px'

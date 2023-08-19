@@ -1,5 +1,5 @@
 import { ApolloClient, ApolloLink, concat, HttpLink, InMemoryCache } from '@apollo/client'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@kinetix/sdk-core'
 
 import store from '../../state/index'
 

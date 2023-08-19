@@ -4,18 +4,11 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
+import { ChainId, CurrencyAmount, Token } from '@kinetix/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJSON from '@uniswap/governance/build/Uni.json'
-import {
-  ChainId,
-  CurrencyAmount,
-  GOVERNANCE_ALPHA_V0_ADDRESSES,
-  GOVERNANCE_ALPHA_V1_ADDRESSES,
-  GOVERNANCE_BRAVO_ADDRESSES,
-  Token,
-} from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
@@ -40,15 +33,15 @@ import { TransactionType } from '../transactions/types'
 import { VoteOption } from './types'
 
 function useGovernanceV0Contract(): Contract | null {
-  return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GovernorAlphaJSON.abi, false)
+  return useContract('GOVERNANCE_ALPHA_V0_ADDRESSES', GovernorAlphaJSON.abi, false)
 }
 
 function useGovernanceV1Contract(): Contract | null {
-  return useContract(GOVERNANCE_ALPHA_V1_ADDRESSES, GovernorAlphaJSON.abi, false)
+  return useContract('GOVERNANCE_ALPHA_V1_ADDRESSES', GovernorAlphaJSON.abi, false)
 }
 
 function useGovernanceBravoContract(): Contract | null {
-  return useContract(GOVERNANCE_BRAVO_ADDRESSES, GOVERNOR_BRAVO_ABI, true)
+  return useContract('GOVERNANCE_BRAVO_ADDRESSES', GOVERNOR_BRAVO_ABI, true)
 }
 
 const useLatestGovernanceContract = useGovernanceBravoContract

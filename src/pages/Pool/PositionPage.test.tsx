@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { CurrencyAmount, WETH9 } from '@kinetix/sdk-core'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'

@@ -1,4 +1,4 @@
-import { SupportedChainsType } from '@uniswap/sdk-core'
+import { SupportedChainsType } from '@kinetix/sdk-core'
 import type { SessionTypes } from '@walletconnect/types'
 
 // Helper function to extract chainId from string in format 'eip155:{chainId}'

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price } from '@kinetix/sdk-core'
 import { DEFAULT_LOCALE } from 'constants/locales'
 
 type Nullish<T> = T | null | undefined

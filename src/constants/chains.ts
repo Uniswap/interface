@@ -1,4 +1,4 @@
-import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
+import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@kinetix/sdk-core'
 
 export const UniWalletSupportedChains = [
   ChainId.MAINNET,
@@ -24,6 +24,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.AVALANCHE]: 'avalanche',
   [ChainId.BASE]: 'base',
   [ChainId.BASE_GOERLI]: 'base_goerli',
+  [ChainId.KAVA]: 'kava',
 } as const
 
 // Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.

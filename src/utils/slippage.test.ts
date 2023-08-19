@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@kinetix/sdk-core'
 
 import { toSlippagePercent } from './slippage'
 

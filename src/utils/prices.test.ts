@@ -1,5 +1,5 @@
 import { Trade } from '@uniswap/router-sdk'
-import { CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, TradeType } from '@kinetix/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'

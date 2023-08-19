@@ -1,5 +1,5 @@
 import { TokenInfo } from '@kinetix/token-lists'
-import { NativeCurrency, Token } from '@uniswap/sdk-core'
+import { NativeCurrency, Token } from '@kinetix/sdk-core'
 
 import { isAddress } from '../../../utils'
 

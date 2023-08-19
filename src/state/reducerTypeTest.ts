@@ -1,5 +1,5 @@
 import { TokenList } from '@kinetix/token-lists'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@kinetix/sdk-core'
 import { ConnectionType } from 'connection/types'
 import { SupportedLocale } from 'constants/locales'
 import multicall from 'lib/state/multicall'

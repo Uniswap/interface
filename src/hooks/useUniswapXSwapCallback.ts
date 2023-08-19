@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import * as Sentry from '@sentry/react'
 import { SwapEventName } from '@uniswap/analytics-events'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@kinetix/sdk-core'
 import { DutchOrder, DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
