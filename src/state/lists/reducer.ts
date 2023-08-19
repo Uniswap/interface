@@ -1,5 +1,5 @@
+import { getVersionUpgrade, TokenList, VersionUpgrade } from '@kinetix/token-lists'
 import { createReducer } from '@reduxjs/toolkit'
-import { getVersionUpgrade, TokenList, VersionUpgrade } from '@uniswap/token-lists'
 import tokenSafetyLookup from 'constants/tokenSafetyLookup'
 
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'

@@ -5,7 +5,7 @@ const path = require('path')
 const Ajv = require('ajv')
 const standaloneCode = require('ajv/dist/standalone').default
 const addFormats = require('ajv-formats')
-const schema = require('@uniswap/token-lists/dist/tokenlist.schema.json')
+const schema = require('@kinetix/token-lists/dist/tokenlist.schema.json')
 
 const tokenListAjv = new Ajv({ code: { source: true, esm: true } })
 addFormats(tokenListAjv)

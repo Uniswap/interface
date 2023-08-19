@@ -1,5 +1,5 @@
+import { TokenInfo } from '@kinetix/token-lists'
 import { Currency } from '@uniswap/sdk-core'
-import { TokenInfo } from '@uniswap/token-lists'
 
 import AssetLogo, { AssetLogoBaseProps } from './AssetLogo'
 

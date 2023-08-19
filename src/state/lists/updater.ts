@@ -1,4 +1,4 @@
-import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
+import { getVersionUpgrade, VersionUpgrade } from '@kinetix/token-lists'
 import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_LIST_OF_LISTS, UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import TokenSafetyLookupTable from 'constants/tokenSafetyLookup'
