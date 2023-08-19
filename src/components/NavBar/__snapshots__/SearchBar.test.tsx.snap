@@ -26,17 +26,17 @@ exports[`disable nft on searchbar should render text with nfts 1`] = `
 
 <div>
   <div
-    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_position_relative_sm__rgw6ez491 sprinkles_width_auto_sm__rgw6ez17v sprinkles_width_auto_md__rgw6ez17w SearchBar_searchBarContainerNft__1fbf9sz4 SearchBar__1fbf9sz3 sprinkles_right_0_sm__rgw6ez39p sprinkles_top_0_sm__rgw6ez3f7 sprinkles_zIndex_3_sm__rgw6ez3qj sprinkles_display_flex_sm__rgw6ez44v sprinkles_maxHeight_searchResultsMaxHeight_sm__rgw6ez1zd sprinkles_overflow_hidden_default__rgw6ez7m3 searchBarContainerDisableBlur"
+    class="reset_base__t5hxrh0 sprinkles_display_flex_sm__ze2bfo44v sprinkles_flexDirection_column_sm__ze2bfo477 sprinkles_position_relative_sm__ze2bfo491 sprinkles_width_auto_sm__ze2bfo17v sprinkles_width_auto_md__ze2bfo17w SearchBar_searchBarContainerNft__1xxub864 SearchBar__1xxub863 sprinkles_right_0_sm__ze2bfo39p sprinkles_top_0_sm__ze2bfo3f7 sprinkles_zIndex_3_sm__ze2bfo3qj sprinkles_display_flex_sm__ze2bfo44v sprinkles_maxHeight_searchResultsMaxHeight_sm__ze2bfo1zd sprinkles_overflow_hidden_default__ze2bfo7m3 searchBarContainerDisableBlur"
     data-cy="search-bar"
   >
     <div
-      class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_borderRadius_12_default__rgw6ez7bj sprinkles_borderBottomWidth_1px_default__rgw6ez7kj sprinkles_backgroundColor_searchBackground_default__rgw6ez6d1 sprinkles_gap_12_sm__rgw6ez3tj SearchBar_nftSearchBar__1fbf9sz9 SearchBar_baseSearchNftStyle__1fbf9sz2 SearchBar_baseSearchStyle__1fbf9sz1 SearchBar__1fbf9sz0 sprinkles_paddingTop_12_sm__rgw6ez2ov sprinkles_paddingBottom_12_sm__rgw6ez28d sprinkles_width_viewWidth_sm__rgw6ez17p sprinkles_borderStyle_solid_default__rgw6ez7ab sprinkles_borderWidth_1px_default__rgw6ez7jr sprinkles_borderColor_searchOutline_default__rgw6ez51v SearchBar__1fbf9sz8 sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_color_textSecondary_default__rgw6ez4ep common_magicalGradientOnHover__127l8hdb common_magicalGradient__127l8hda"
+      class="reset_base__t5hxrh0 sprinkles_display_flex_sm__ze2bfo44v sprinkles_flexDirection_row_sm__ze2bfo471 sprinkles_alignItems_center_sm__ze2bfo3j sprinkles_borderRadius_12_default__ze2bfo7bj sprinkles_borderBottomWidth_1px_default__ze2bfo7kj sprinkles_backgroundColor_searchBackground_default__ze2bfo6d1 sprinkles_gap_12_sm__ze2bfo3tj SearchBar_nftSearchBar__1xxub869 SearchBar_baseSearchNftStyle__1xxub862 SearchBar_baseSearchStyle__1xxub861 SearchBar__1xxub860 sprinkles_paddingTop_12_sm__ze2bfo2ov sprinkles_paddingBottom_12_sm__ze2bfo28d sprinkles_width_viewWidth_sm__ze2bfo17p sprinkles_borderStyle_solid_default__ze2bfo7ab sprinkles_borderWidth_1px_default__ze2bfo7jr sprinkles_borderColor_searchOutline_default__ze2bfo51v SearchBar__1xxub868 sprinkles_paddingLeft_16_sm__ze2bfo2e7 sprinkles_paddingRight_16_sm__ze2bfo2jp sprinkles_color_textSecondary_default__ze2bfo4ep common_magicalGradientOnHover__15hcykb common_magicalGradient__15hcyka"
     >
       <div
-        class="reset_base__1klryar0 SearchBar_searchContentLeftAlign__1fbf9sz10"
+        class="reset_base__t5hxrh0 SearchBar_searchContentLeftAlign__1xxub8610"
       >
         <div
-          class="reset_base__1klryar0 sprinkles_display_none_sm__rgw6ez44j sprinkles_display_flex_md__rgw6ez44w"
+          class="reset_base__t5hxrh0 sprinkles_display_none_sm__ze2bfo44j sprinkles_display_flex_md__ze2bfo44w"
         >
           <svg
             fill="none"
@@ -55,7 +55,7 @@ exports[`disable nft on searchbar should render text with nfts 1`] = `
           </svg>
         </div>
         <div
-          class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_display_none_md__rgw6ez44k sprinkles_color_textTertiary_default__rgw6ez4ev"
+          class="reset_base__t5hxrh0 sprinkles_display_flex_sm__ze2bfo44v sprinkles_display_none_md__ze2bfo44k sprinkles_color_textTertiary_default__ze2bfo4ev"
         >
           <svg
             fill="none"
@@ -75,7 +75,7 @@ exports[`disable nft on searchbar should render text with nfts 1`] = `
         </div>
       </div>
       <input
-        class="reset_base__1klryar0 reset_input__1klryar8 reset_field__1klryar5 reset_appearance__1klryar4 sprinkles_width_full_sm__rgw6ez16v SearchBar_searchBarInput__1fbf9szb SearchBar__1fbf9sza sprinkles_padding_0_sm__rgw6ez2t7 sprinkles_fontWeight_normal_sm__rgw6ezcp sprinkles_fontSize_16_sm__rgw6ezb1 sprinkles_color_textPrimary_default__rgw6ez4ej sprinkles_color_textSecondary_placeholder__rgw6ez4eu sprinkles_border_none_default__rgw6ez7iz sprinkles_background_none_default__rgw6ez4sj sprinkles_lineHeight_24_sm__rgw6ezed sprinkles_height_full_sm__rgw6ez1dv SearchBar_searchContentLeftAlign__1fbf9sz10"
+        class="reset_base__t5hxrh0 reset_input__t5hxrh8 reset_field__t5hxrh5 reset_appearance__t5hxrh4 sprinkles_width_full_sm__ze2bfo16v SearchBar_searchBarInput__1xxub86b SearchBar__1xxub86a sprinkles_padding_0_sm__ze2bfo2t7 sprinkles_fontWeight_normal_sm__ze2bfocp sprinkles_fontSize_16_sm__ze2bfob1 sprinkles_color_textPrimary_default__ze2bfo4ej sprinkles_color_textSecondary_placeholder__ze2bfo4eu sprinkles_border_none_default__ze2bfo7iz sprinkles_background_none_default__ze2bfo4sj sprinkles_lineHeight_24_sm__ze2bfoed sprinkles_height_full_sm__ze2bfo1dv SearchBar_searchContentLeftAlign__1xxub8610"
         data-cy="search-bar-input"
         placeholder="Search tokens and NFT collections"
         value=""
@@ -87,7 +87,7 @@ exports[`disable nft on searchbar should render text with nfts 1`] = `
       </div>
     </div>
     <div
-      class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_overflow_hidden_default__rgw6ez7m3 SearchBar_hidden__1fbf9szx SearchBar__1fbf9szw sprinkles_visibility_hidden_sm__rgw6ez46v sprinkles_opacity_0_sm__rgw6ez4ad sprinkles_padding_0_sm__rgw6ez2t7 sprinkles_height_0_sm__rgw6ez187"
+      class="reset_base__t5hxrh0 sprinkles_display_flex_sm__ze2bfo44v sprinkles_flexDirection_column_sm__ze2bfo477 sprinkles_overflow_hidden_default__ze2bfo7m3 SearchBar_hidden__1xxub86x SearchBar__1xxub86w sprinkles_visibility_hidden_sm__ze2bfo46v sprinkles_opacity_0_sm__ze2bfo4ad sprinkles_padding_0_sm__ze2bfo2t7 sprinkles_height_0_sm__ze2bfo187"
     />
   </div>
 </div>
@@ -119,17 +119,17 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
 
 <div>
   <div
-    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_position_relative_sm__rgw6ez491 sprinkles_width_auto_sm__rgw6ez17v sprinkles_width_auto_md__rgw6ez17w SearchBar_searchBarContainerNft__1fbf9sz4 SearchBar__1fbf9sz3 sprinkles_right_0_sm__rgw6ez39p sprinkles_top_0_sm__rgw6ez3f7 sprinkles_zIndex_3_sm__rgw6ez3qj sprinkles_display_flex_sm__rgw6ez44v sprinkles_maxHeight_searchResultsMaxHeight_sm__rgw6ez1zd sprinkles_overflow_hidden_default__rgw6ez7m3 searchBarContainerDisableBlur"
+    class="reset_base__t5hxrh0 sprinkles_display_flex_sm__ze2bfo44v sprinkles_flexDirection_column_sm__ze2bfo477 sprinkles_position_relative_sm__ze2bfo491 sprinkles_width_auto_sm__ze2bfo17v sprinkles_width_auto_md__ze2bfo17w SearchBar_searchBarContainerNft__1xxub864 SearchBar__1xxub863 sprinkles_right_0_sm__ze2bfo39p sprinkles_top_0_sm__ze2bfo3f7 sprinkles_zIndex_3_sm__ze2bfo3qj sprinkles_display_flex_sm__ze2bfo44v sprinkles_maxHeight_searchResultsMaxHeight_sm__ze2bfo1zd sprinkles_overflow_hidden_default__ze2bfo7m3 searchBarContainerDisableBlur"
     data-cy="search-bar"
   >
     <div
-      class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_row_sm__rgw6ez471 sprinkles_alignItems_center_sm__rgw6ez3j sprinkles_borderRadius_12_default__rgw6ez7bj sprinkles_borderBottomWidth_1px_default__rgw6ez7kj sprinkles_backgroundColor_searchBackground_default__rgw6ez6d1 sprinkles_gap_12_sm__rgw6ez3tj SearchBar_nftSearchBar__1fbf9sz9 SearchBar_baseSearchNftStyle__1fbf9sz2 SearchBar_baseSearchStyle__1fbf9sz1 SearchBar__1fbf9sz0 sprinkles_paddingTop_12_sm__rgw6ez2ov sprinkles_paddingBottom_12_sm__rgw6ez28d sprinkles_width_viewWidth_sm__rgw6ez17p sprinkles_borderStyle_solid_default__rgw6ez7ab sprinkles_borderWidth_1px_default__rgw6ez7jr sprinkles_borderColor_searchOutline_default__rgw6ez51v SearchBar__1fbf9sz8 sprinkles_paddingLeft_16_sm__rgw6ez2e7 sprinkles_paddingRight_16_sm__rgw6ez2jp sprinkles_color_textSecondary_default__rgw6ez4ep common_magicalGradientOnHover__127l8hdb common_magicalGradient__127l8hda"
+      class="reset_base__t5hxrh0 sprinkles_display_flex_sm__ze2bfo44v sprinkles_flexDirection_row_sm__ze2bfo471 sprinkles_alignItems_center_sm__ze2bfo3j sprinkles_borderRadius_12_default__ze2bfo7bj sprinkles_borderBottomWidth_1px_default__ze2bfo7kj sprinkles_backgroundColor_searchBackground_default__ze2bfo6d1 sprinkles_gap_12_sm__ze2bfo3tj SearchBar_nftSearchBar__1xxub869 SearchBar_baseSearchNftStyle__1xxub862 SearchBar_baseSearchStyle__1xxub861 SearchBar__1xxub860 sprinkles_paddingTop_12_sm__ze2bfo2ov sprinkles_paddingBottom_12_sm__ze2bfo28d sprinkles_width_viewWidth_sm__ze2bfo17p sprinkles_borderStyle_solid_default__ze2bfo7ab sprinkles_borderWidth_1px_default__ze2bfo7jr sprinkles_borderColor_searchOutline_default__ze2bfo51v SearchBar__1xxub868 sprinkles_paddingLeft_16_sm__ze2bfo2e7 sprinkles_paddingRight_16_sm__ze2bfo2jp sprinkles_color_textSecondary_default__ze2bfo4ep common_magicalGradientOnHover__15hcykb common_magicalGradient__15hcyka"
     >
       <div
-        class="reset_base__1klryar0 SearchBar_searchContentLeftAlign__1fbf9sz10"
+        class="reset_base__t5hxrh0 SearchBar_searchContentLeftAlign__1xxub8610"
       >
         <div
-          class="reset_base__1klryar0 sprinkles_display_none_sm__rgw6ez44j sprinkles_display_flex_md__rgw6ez44w"
+          class="reset_base__t5hxrh0 sprinkles_display_none_sm__ze2bfo44j sprinkles_display_flex_md__ze2bfo44w"
         >
           <svg
             fill="none"
@@ -148,7 +148,7 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
           </svg>
         </div>
         <div
-          class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_display_none_md__rgw6ez44k sprinkles_color_textTertiary_default__rgw6ez4ev"
+          class="reset_base__t5hxrh0 sprinkles_display_flex_sm__ze2bfo44v sprinkles_display_none_md__ze2bfo44k sprinkles_color_textTertiary_default__ze2bfo4ev"
         >
           <svg
             fill="none"
@@ -168,7 +168,7 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
         </div>
       </div>
       <input
-        class="reset_base__1klryar0 reset_input__1klryar8 reset_field__1klryar5 reset_appearance__1klryar4 sprinkles_width_full_sm__rgw6ez16v SearchBar_searchBarInput__1fbf9szb SearchBar__1fbf9sza sprinkles_padding_0_sm__rgw6ez2t7 sprinkles_fontWeight_normal_sm__rgw6ezcp sprinkles_fontSize_16_sm__rgw6ezb1 sprinkles_color_textPrimary_default__rgw6ez4ej sprinkles_color_textSecondary_placeholder__rgw6ez4eu sprinkles_border_none_default__rgw6ez7iz sprinkles_background_none_default__rgw6ez4sj sprinkles_lineHeight_24_sm__rgw6ezed sprinkles_height_full_sm__rgw6ez1dv SearchBar_searchContentLeftAlign__1fbf9sz10"
+        class="reset_base__t5hxrh0 reset_input__t5hxrh8 reset_field__t5hxrh5 reset_appearance__t5hxrh4 sprinkles_width_full_sm__ze2bfo16v SearchBar_searchBarInput__1xxub86b SearchBar__1xxub86a sprinkles_padding_0_sm__ze2bfo2t7 sprinkles_fontWeight_normal_sm__ze2bfocp sprinkles_fontSize_16_sm__ze2bfob1 sprinkles_color_textPrimary_default__ze2bfo4ej sprinkles_color_textSecondary_placeholder__ze2bfo4eu sprinkles_border_none_default__ze2bfo7iz sprinkles_background_none_default__ze2bfo4sj sprinkles_lineHeight_24_sm__ze2bfoed sprinkles_height_full_sm__ze2bfo1dv SearchBar_searchContentLeftAlign__1xxub8610"
         data-cy="search-bar-input"
         placeholder="Search tokens"
         value=""
@@ -180,7 +180,7 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
       </div>
     </div>
     <div
-      class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44v sprinkles_flexDirection_column_sm__rgw6ez477 sprinkles_overflow_hidden_default__rgw6ez7m3 SearchBar_hidden__1fbf9szx SearchBar__1fbf9szw sprinkles_visibility_hidden_sm__rgw6ez46v sprinkles_opacity_0_sm__rgw6ez4ad sprinkles_padding_0_sm__rgw6ez2t7 sprinkles_height_0_sm__rgw6ez187"
+      class="reset_base__t5hxrh0 sprinkles_display_flex_sm__ze2bfo44v sprinkles_flexDirection_column_sm__ze2bfo477 sprinkles_overflow_hidden_default__ze2bfo7m3 SearchBar_hidden__1xxub86x SearchBar__1xxub86w sprinkles_visibility_hidden_sm__ze2bfo46v sprinkles_opacity_0_sm__ze2bfo4ad sprinkles_padding_0_sm__ze2bfo2t7 sprinkles_height_0_sm__ze2bfo187"
     />
   </div>
 </div>

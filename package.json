@@ -1,7 +1,7 @@
 {
-  "name": "@uniswap/interface",
-  "version": "1.1.0",
-  "description": "Uniswap Interface",
+  "name": "@kinetix/interface",
+  "version": "1.0.0",
+  "description": "Kinetix V3 Interface",
   "license": "GPL-3.0-or-later",
   "scripts": {
     "ajv": "node scripts/compile-ajv-validators.js",
@@ -176,6 +176,7 @@
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@graphql-codegen/typescript-resolvers": "^3.2.1",
     "@juggle/resize-observer": "^3.4.0",
+    "@kinetix/token-lists": "^1.0.0",
     "@lingui/core": "^4.3.0",
     "@lingui/macro": "^4.3.0",
     "@lingui/react": "^4.3.0",
