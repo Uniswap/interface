@@ -202,6 +202,7 @@ describe(parseNFTMintTransaction, () => {
       purchaseCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',
       transactedUSDValue: 1,
+      isSpam: false,
     })
   })
   it('NFT Mint: parse 721 mint purchased with native asset', () => {
@@ -216,6 +217,7 @@ describe(parseNFTMintTransaction, () => {
       purchaseCurrencyId: `1-${NATIVE_ADDRESS}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',
       transactedUSDValue: 1,
+      isSpam: false,
     })
   })
 })

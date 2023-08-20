@@ -124,6 +124,7 @@ export enum TransactionType {
 export interface BaseTransactionInfo {
   type: TransactionType
   transactedUSDValue?: number
+  isSpam?: boolean
 }
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
@@ -172,7 +173,6 @@ export interface SendTokenTransactionInfo extends BaseTransactionInfo {
   currencyAmountRaw?: string
   tokenId?: string // optional. NFT token id
   nftSummaryInfo?: NFTSummaryInfo // optional. NFT metadata
-  isSpam?: boolean
 }
 
 export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
@@ -183,7 +183,6 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   tokenAddress: string
   tokenId?: string // optional. NFT token id
   nftSummaryInfo?: NFTSummaryInfo
-  isSpam?: boolean
 }
 
 export interface FiatPurchaseTransactionInfo extends BaseTransactionInfo {

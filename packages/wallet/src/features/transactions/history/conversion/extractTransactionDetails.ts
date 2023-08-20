@@ -1,4 +1,5 @@
 import { ChainId } from 'wallet/src/constants/chains'
+import { SpamCode } from 'wallet/src/data/types'
 import {
   ActivityType,
   TransactionStatus as RemoteTransactionStatus,
@@ -61,9 +62,21 @@ export default function extractTransactionDetails(
 
   // No match found, default to unknown.
   if (!typeInfo) {
+    // If a parsing util returns undefined type info, we still want to check if its spam
+    const isSpam = transaction.assetChanges.some((change) => {
+      switch (change?.__typename) {
+        case 'NftTransfer':
+          return change.asset?.isSpam
+        case 'TokenTransfer':
+          return change.asset.project?.isSpam || change.asset.project?.spamCode === SpamCode.HIGH
+        default:
+          return false
+      }
+    })
     typeInfo = {
       type: TransactionType.Unknown,
       tokenAddress: transaction.transaction.to,
+      isSpam,
     }
   }
 

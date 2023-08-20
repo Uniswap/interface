@@ -26,6 +26,8 @@ export default function parseNFTMintTransaction(
   const imageURL = nftChange.asset.image?.url
   const tokenId = nftChange.asset.tokenId
   const chainId = fromGraphQLChain(transaction?.chain)
+  const isSpam = nftChange.asset?.isSpam ?? false
+
   let transactedUSDValue: number | undefined
 
   if (!name || !collectionName || !imageURL || !tokenId || !chainId) return undefined
@@ -61,5 +63,6 @@ export default function parseNFTMintTransaction(
     purchaseCurrencyId,
     purchaseCurrencyAmountRaw,
     transactedUSDValue,
+    isSpam,
   }
 }

@@ -10,11 +10,7 @@ import {
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
-import {
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
@@ -96,11 +92,7 @@ export function parseDataResponseToTransactionDetails(
   if (data.portfolios?.[0]?.assetActivities) {
     return data.portfolios[0].assetActivities.reduce((accum: TransactionDetails[], t) => {
       const parsed = extractTransactionDetails(t)
-
-      // Filter out spam if desired, currently only for send/receive transactions
-      const isSpam =
-        (parsed?.typeInfo.type === TransactionType.Receive && parsed.typeInfo.isSpam) ||
-        (parsed?.typeInfo.type === TransactionType.Send && parsed.typeInfo.isSpam)
+      const isSpam = parsed?.typeInfo.isSpam
 
       if (parsed && !(hideSpamTokens && isSpam)) {
         accum.push(parsed)
