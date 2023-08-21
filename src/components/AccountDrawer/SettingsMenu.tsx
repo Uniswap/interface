@@ -27,15 +27,16 @@ const SectionTitle = styled(ThemedText.SubHeader)`
   padding-bottom: 24px;
 `
 
-const ToggleWrapper = styled.div`
+const ToggleWrapper = styled.div<{ currencyConversionEnabled?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: ${({ currencyConversionEnabled }) => (currencyConversionEnabled ? `10px` : `24px`)};
 `
 
 const SettingsButtonWrapper = styled(Row)`
   ${ClickableStyle}
+  padding: 16px 0px;
 `
 
 const StyledChevron = styled(ChevronRight)`
@@ -69,9 +70,11 @@ const SettingsButton = ({
 export default function SettingsMenu({
   onClose,
   openLanguageSettings,
+  openCurrencySettings,
 }: {
   onClose: () => void
   openLanguageSettings: () => void
+  openCurrencySettings: () => void
 }) {
   const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
   const activeLocale = useActiveLocale()
@@ -83,7 +86,7 @@ export default function SettingsMenu({
           <SectionTitle data-testid="wallet-header">
             <Trans>Preferences</Trans>
           </SectionTitle>
-          <ToggleWrapper>
+          <ToggleWrapper currencyConversionEnabled={currencyConversionEnabled}>
             <ThemeToggle />
             <SmallBalanceToggle />
             <AnalyticsToggle />
@@ -99,12 +102,20 @@ export default function SettingsMenu({
           )}
 
           {currencyConversionEnabled && (
-            <SettingsButton
-              title={<Trans>Language</Trans>}
-              currentState={LOCALE_LABEL[activeLocale]}
-              onClick={openLanguageSettings}
-              testId="language-settings-button"
-            />
+            <Column>
+              <SettingsButton
+                title={<Trans>Language</Trans>}
+                currentState={LOCALE_LABEL[activeLocale]}
+                onClick={openLanguageSettings}
+                testId="language-settings-button"
+              />
+              <SettingsButton
+                title={<Trans>Currency</Trans>}
+                currentState="USD"
+                onClick={openCurrencySettings}
+                testId="currency-settings-button"
+              />
+            </Column>
           )}
         </div>
         <GitVersionRow />
