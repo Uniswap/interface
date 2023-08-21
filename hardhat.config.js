@@ -1,5 +1,5 @@
 import { ChainId } from '@kinetix/sdk-core'
-import { UNIVERSAL_ROUTER_CREATION_BLOCK } from '@uniswap/universal-router-sdk'
+import { UNIVERSAL_ROUTER_CREATION_BLOCK } from '@kinetix/universal-router-sdk'
 
 /* eslint-env node */
 require('dotenv').config()

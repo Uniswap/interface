@@ -70,7 +70,7 @@ function useMainnetContract<T extends Contract = Contract>(address: string | und
   return useMemo(() => {
     if (isMainnet) return contract
     if (!address) return null
-    const provider = RPC_PROVIDERS[ChainId.MAINNET]
+    const provider = RPC_PROVIDERS[ChainId.KAVA]
     try {
       return getContract(address, ABI, provider)
     } catch (error) {

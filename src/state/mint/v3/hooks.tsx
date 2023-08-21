@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Price, Rounding, Token } from '@kinetix/sdk-core'
 import {
   encodeSqrtRatioX96,
@@ -11,6 +10,7 @@ import {
   TickMath,
   tickToPrice,
 } from '@kinetix/v3-sdk'
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'

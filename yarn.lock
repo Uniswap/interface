@@ -3611,10 +3611,10 @@
   resolved "http://localhost:4873/@kinetix/default-token-list/-/default-token-list-1.0.0.tgz#8d1b07ef618bf601433c6bf83f440540277c15f2"
   integrity sha512-k+GZx1wIUWcyGKpTERz/UghswduXjd/Hhdeyt1IzOPomwEdK1MhYDWWYzyxo0NOLaixiMaXsEAi4uIa6zu95rw==
 
-"@kinetix/merkle-distributor@^1.0.0":
-  version "1.0.0"
-  resolved "http://localhost:4873/@kinetix/merkle-distributor/-/merkle-distributor-1.0.0.tgz#c603a9b1f897468ecf5b2c319b6352bf9bd30f54"
-  integrity sha512-o+HbJm3yQOR/SUnO0qt486QF+u/kxRusNlqVVBO6lUl964nrknv2C7SjDDa6NbcS3asmsIOH5HEWBg4H20KFEw==
+"@kinetix/merkle-distributor@^1.0.3":
+  version "1.0.3"
+  resolved "http://localhost:4873/@kinetix/merkle-distributor/-/merkle-distributor-1.0.3.tgz#cf8614392b1e59f575819ba662be8ff63be79558"
+  integrity sha512-XiKR2iv9FJ6UKToH3kh7c9cIakvQoab9TgUoHbQ9yGWE8VXJEgHaDcCiwRxPsd4M+ATsJKXvNtxH9UgfQva7ow==
   dependencies:
     "@openzeppelin/contracts" "4.7.0"
 
@@ -3627,6 +3627,17 @@
     "@kinetix/sdk-core" "^1.0.0"
     "@kinetix/swap-router-contracts" "^1.0.0"
     "@kinetix/v2-sdk" "^1.0.0"
+    "@kinetix/v3-sdk" "^1.0.0"
+
+"@kinetix/router-sdk@^1.0.1":
+  version "1.0.1"
+  resolved "http://localhost:4873/@kinetix/router-sdk/-/router-sdk-1.0.1.tgz#0d5839a162bb7e2e6a9b5876e2ccda642eea627d"
+  integrity sha512-KWvDzBWsJHfyF7jKW1EGRCyNDTZ4h4z/1QXANY37Z+PKd0K6RghVvMx/GBQsKHDlRnxFJ6hqRoOr4qCpOexXKA==
+  dependencies:
+    "@ethersproject/abi" "^5.5.0"
+    "@kinetix/sdk-core" "^1.0.0"
+    "@kinetix/swap-router-contracts" "^1.0.0"
+    "@kinetix/v2-sdk" "^1.0.1"
     "@kinetix/v3-sdk" "^1.0.0"
 
 "@kinetix/sdk-core@^1.0.0":
@@ -3713,6 +3724,20 @@
     bignumber.js "^9.0.2"
     ethers "^5.3.1"
 
+"@kinetix/universal-router-sdk@^1.0.1":
+  version "1.0.1"
+  resolved "http://localhost:4873/@kinetix/universal-router-sdk/-/universal-router-sdk-1.0.1.tgz#354a19cbff7baf2b1a7367787156ed0f32d1fe62"
+  integrity sha512-qKzv3W2WP3xSdPhvrmqZFgOUPFblwHN7HlnGRQxZS/7JkucB4OL+cAesihOlQBrKbUosUBYHZw8QlcpKqEOuvw==
+  dependencies:
+    "@kinetix/router-sdk" "^1.0.0"
+    "@kinetix/sdk-core" "^1.0.0"
+    "@kinetix/universal-router" "^1.0.1"
+    "@kinetix/v2-sdk" "^1.0.0"
+    "@kinetix/v3-sdk" "^1.0.0"
+    "@uniswap/permit2-sdk" "^1.2.0"
+    bignumber.js "^9.0.2"
+    ethers "^5.3.1"
+
 "@kinetix/universal-router@^1.0.0":
   version "1.0.0"
   resolved "http://localhost:4873/@kinetix/universal-router/-/universal-router-1.0.0.tgz#9898fb08574ad33d274f9fa91822269338b050fd"
@@ -3726,7 +3751,20 @@
     "@openzeppelin/contracts" "4.7.0"
     "@uniswap/v2-core" "1.0.1"
 
-"@kinetix/v2-core@^1.0.0":
+"@kinetix/universal-router@^1.0.1":
+  version "1.0.1"
+  resolved "http://localhost:4873/@kinetix/universal-router/-/universal-router-1.0.1.tgz#ad23c7b815223dd136af3250fa962a1d7ce03cf2"
+  integrity sha512-lelMUar6wr5VOh8VDf13y8o5iXaM51vdR8oWdRiLJMYe+1nP+a5kHS1qX+DE80bCzWALecoWBQevwWWY6iRUgQ==
+  dependencies:
+    "@kinetix/router-sdk" "^1.0.0"
+    "@kinetix/sdk-core" "^1.0.0"
+    "@kinetix/v2-core" "1.0.1"
+    "@kinetix/v2-sdk" "^1.0.0"
+    "@kinetix/v3-core" "1.0.0"
+    "@kinetix/v3-sdk" "^1.0.0"
+    "@openzeppelin/contracts" "4.7.0"
+
+"@kinetix/v2-core@1.0.1", "@kinetix/v2-core@^1.0.0":
   version "1.0.0"
   resolved "http://localhost:4873/@kinetix/v2-core/-/v2-core-1.0.0.tgz#f2f3126d9bc24ed6214347f67d757e4068ed9ff6"
   integrity sha512-ygLZQAB6OkPxhnh7VGKzOFdEiECaptxCnxNaoJbY3A8SRalbkUrQTsdrnCKlnFOEk/+O1p1fdEPNdShHPSpHPw==
@@ -3747,6 +3785,18 @@
     "@ethersproject/address" "^5.0.0"
     "@ethersproject/solidity" "^5.0.0"
     "@kinetix/sdk-core" "^1.0.0"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+
+"@kinetix/v2-sdk@^1.0.1":
+  version "1.0.1"
+  resolved "http://localhost:4873/@kinetix/v2-sdk/-/v2-sdk-1.0.1.tgz#c24f869a8bdbb4b1ffcbbfbd66c17dbc267ee6e9"
+  integrity sha512-3+AYYzCA6B56YegDNwtR+UELyDyIqkasBWdUexNYwqYyILMn1rrHHJFWCQCAihC/NUKOuI+p7LMBwiPXKvtXqw==
+  dependencies:
+    "@ethersproject/address" "^5.0.0"
+    "@ethersproject/solidity" "^5.0.0"
+    "@kinetix/sdk-core" "^1.0.0"
+    "@kinetix/v2-core" "^1.0.0"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
 

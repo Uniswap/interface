@@ -94,7 +94,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (mainnetBlock === undefined) {
-      RPC_PROVIDERS[ChainId.MAINNET]
+      RPC_PROVIDERS[ChainId.KAVA]
         .getBlockNumber()
         .then((block) => {
           onChainBlock(ChainId.MAINNET, block)
