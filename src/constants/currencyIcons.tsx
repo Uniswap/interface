@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 type SVGProps = React.SVGProps<SVGSVGElement>
 
 export const USD_ICON = (props: SVGProps) => (
