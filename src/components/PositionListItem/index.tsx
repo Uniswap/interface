@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Percent, Price, Token } from '@kinetix/sdk-core'
-import { Trans } from '@lingui/macro'
 import { Position } from '@kinetix/v3-sdk'
+import { Trans } from '@lingui/macro'
 import RangeBadge from 'components/Badge/RangeBadge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'

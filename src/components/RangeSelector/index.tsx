@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@kinetix/sdk-core'
+import { Trans } from '@lingui/macro'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { AutoRow } from 'components/Row'
 import { Bound } from 'state/mint/v3/actions'

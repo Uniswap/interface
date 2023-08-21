@@ -1,5 +1,5 @@
-import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, TradeType } from '@kinetix/sdk-core'
+import { renderHook } from '@testing-library/react'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { RouterPreference, TradeState } from 'state/routing/types'
 import { useRouterPreference } from 'state/user/hooks'

@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Percent } from '@kinetix/sdk-core'
+import { Trans } from '@lingui/macro'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'

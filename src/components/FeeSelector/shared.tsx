@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import { ChainId, SUPPORTED_CHAINS } from '@kinetix/sdk-core'
 import { FeeAmount } from '@kinetix/v3-sdk'
+import { Trans } from '@lingui/macro'
 import type { ReactNode } from 'react'
 
 export const FEE_AMOUNT_DETAIL: Record<

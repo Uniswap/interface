@@ -1,5 +1,5 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@kinetix/sdk-core'
+import { SwapEventName } from '@uniswap/analytics-events'
 
 import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'

@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import { Currency } from '@kinetix/sdk-core'
 import { FeeAmount } from '@kinetix/v3-sdk'
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import { ButtonGray } from 'components/Button'

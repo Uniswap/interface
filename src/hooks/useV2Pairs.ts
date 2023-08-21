@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, V2_FACTORY_ADDRESSES } from '@kinetix/sdk-core'
-import { computePairAddress, Pair } from '@kinetix/v2-sdk'
 import IUniswapV2PairJSON from '@kinetix/v2-core/build/IUniswapV2Pair.json'
+import { computePairAddress, Pair } from '@kinetix/v2-sdk'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 

@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { FeeAmount } from '@kinetix/v3-sdk'
+import { Trans } from '@lingui/macro'
 import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
