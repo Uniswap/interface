@@ -1,7 +1,7 @@
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@kinetix/sdk-core'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line no-restricted-imports
-import { AlphaRouter, AlphaRouterConfig } from '@uniswap/smart-order-router'
+import { AlphaRouter, AlphaRouterConfig } from '@kinetix/smart-order-router'
 import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { GetQuoteArgs, QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'

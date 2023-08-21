@@ -3611,6 +3611,17 @@
   resolved "http://localhost:4873/@kinetix/default-token-list/-/default-token-list-1.0.0.tgz#8d1b07ef618bf601433c6bf83f440540277c15f2"
   integrity sha512-k+GZx1wIUWcyGKpTERz/UghswduXjd/Hhdeyt1IzOPomwEdK1MhYDWWYzyxo0NOLaixiMaXsEAi4uIa6zu95rw==
 
+"@kinetix/router-sdk@^1.0.0":
+  version "1.0.0"
+  resolved "http://localhost:4873/@kinetix/router-sdk/-/router-sdk-1.0.0.tgz#316d916e891cf1118f653a48897deaee02167fc3"
+  integrity sha512-AKc5z7FSBKmsSlUk95y5PPT3lHN2ERTGpGpQzilLQz/3WT9+N/KfcaCaJlryO8UAt2zakjfC9E4UUjgtP0E1xQ==
+  dependencies:
+    "@ethersproject/abi" "^5.5.0"
+    "@kinetix/sdk-core" "^1.0.0"
+    "@kinetix/swap-router-contracts" "^1.0.0"
+    "@kinetix/v2-sdk" "^1.0.0"
+    "@kinetix/v3-sdk" "^1.0.0"
+
 "@kinetix/sdk-core@^1.0.0":
   version "1.0.0"
   resolved "http://localhost:4873/@kinetix/sdk-core/-/sdk-core-1.0.0.tgz#4879a42f08440d31ad57f99d5c7713ecf649855d"
@@ -3622,6 +3633,34 @@
     jsbi "^3.1.4"
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
+
+"@kinetix/smart-order-router@^1.0.1":
+  version "1.0.0"
+  resolved "http://localhost:4873/@kinetix/smart-order-router/-/smart-order-router-1.0.0.tgz#9c374ef96fae89daa416dcfafe47c4f66dbff126"
+  integrity sha512-v6AEZuUJZzGzd/BnD+6hT7TLE3vtUqvydwM2vOJ/ScuuZPwd07PO/N7InoaiLvdGoyx9HCPBCuoUawJviMbxkQ==
+  dependencies:
+    "@kinetix/default-token-list" "^1.0.0"
+    "@kinetix/router-sdk" "^1.0.0"
+    "@kinetix/sdk-core" "^1.0.0"
+    "@kinetix/swap-router-contracts" "^1.0.0"
+    "@kinetix/token-lists" "^1.0.0"
+    "@kinetix/universal-router-sdk" "^1.0.0"
+    "@kinetix/v2-sdk" "^1.0.0"
+    "@kinetix/v3-sdk" "^1.0.0"
+    "@uniswap/permit2-sdk" "^1.2.0"
+    "@uniswap/universal-router" "^1.0.1"
+    async-retry "^1.3.1"
+    await-timeout "^1.1.1"
+    axios "^0.21.1"
+    bunyan "^1.8.15"
+    bunyan-blackhole "^1.1.1"
+    ethers "^5.7.2"
+    graphql "^15.5.0"
+    graphql-request "^3.4.0"
+    lodash "^4.17.21"
+    mnemonist "^0.38.3"
+    node-cache "^5.1.2"
+    stats-lite "^2.2.0"
 
 "@kinetix/swap-router-contracts@^1.0.0":
   version "1.0.0"
@@ -3650,6 +3689,20 @@
   version "1.0.0"
   resolved "http://localhost:4873/@kinetix/token-lists/-/token-lists-1.0.0.tgz#d6d80d62ef6a33e9eadccab5002845196ff75ffd"
   integrity sha512-fsA2Zi1zbqH/miRa8UpopF+0LPNxODZJwWv9ulOy6mBCFenOCZY8pYzmlVVSMmDPjjwV98aIGbMV/wwSksn2FQ==
+
+"@kinetix/universal-router-sdk@^1.0.0":
+  version "1.0.0"
+  resolved "http://localhost:4873/@kinetix/universal-router-sdk/-/universal-router-sdk-1.0.0.tgz#09524c67602f404ddd8bd8f37da41bea629321d5"
+  integrity sha512-KEWFMSEuV+KHAxw32ZUWsS0ZtVzLoB3ZFkvpJyd59/NtvAZJ9SdfV+4qaio44IQ2wRmWQeXjdbIutNkEIK9gEA==
+  dependencies:
+    "@kinetix/router-sdk" "^1.0.0"
+    "@kinetix/sdk-core" "^1.0.0"
+    "@kinetix/v2-sdk" "^1.0.0"
+    "@kinetix/v3-sdk" "^1.0.0"
+    "@uniswap/permit2-sdk" "^1.2.0"
+    "@uniswap/universal-router" "1.4.3"
+    bignumber.js "^9.0.2"
+    ethers "^5.3.1"
 
 "@kinetix/v2-sdk@^1.0.0":
   version "1.0.0"
@@ -6363,7 +6416,7 @@
     "@uniswap/v2-sdk" "^3.2.0"
     "@uniswap/v3-sdk" "^3.10.0"
 
-"@uniswap/sdk-core@>= 3", "@uniswap/sdk-core@^4", "@uniswap/sdk-core@^4.0.0", "@uniswap/sdk-core@^4.0.2", "@uniswap/sdk-core@^4.0.6":
+"@uniswap/sdk-core@>= 3", "@uniswap/sdk-core@^4", "@uniswap/sdk-core@^4.0.0", "@uniswap/sdk-core@^4.0.2":
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-4.0.6.tgz#7b6d562f54293bbe0a9d101fb84e619db325f7b6"
   integrity sha512-6GzCVfnOiJtvo91zlF/VjnC2OEbBRThVclzrh7+Zmo8dBovXwSlXwqn3RkSWACn/XEOzAKH70TficfOWm6mWJA==
@@ -6374,34 +6427,6 @@
     jsbi "^3.1.4"
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
-
-"@uniswap/smart-order-router@^3.15.0":
-  version "3.15.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-3.15.0.tgz#f9e1f7ecdf48b9bae7c182acb99289e3ee1acce3"
-  integrity sha512-H2IY4U+gQQ9E5mqYbv6uJWpTBGMkQ/tLKCdwfyL875bhTrGXunur0/7HurCW0BFIN3aEz6PqzJG+6QKg3hVCAQ==
-  dependencies:
-    "@uniswap/default-token-list" "^11.2.0"
-    "@uniswap/permit2-sdk" "^1.2.0"
-    "@uniswap/router-sdk" "^1.6.0"
-    "@uniswap/sdk-core" "^4.0.6"
-    "@uniswap/swap-router-contracts" "^1.3.0"
-    "@uniswap/token-lists" "^1.0.0-beta.31"
-    "@uniswap/universal-router" "^1.0.1"
-    "@uniswap/universal-router-sdk" "^1.5.4"
-    "@uniswap/v2-sdk" "^3.2.0"
-    "@uniswap/v3-sdk" "^3.10.0"
-    async-retry "^1.3.1"
-    await-timeout "^1.1.1"
-    axios "^0.21.1"
-    bunyan "^1.8.15"
-    bunyan-blackhole "^1.1.1"
-    ethers "^5.7.2"
-    graphql "^15.5.0"
-    graphql-request "^3.4.0"
-    lodash "^4.17.21"
-    mnemonist "^0.38.3"
-    node-cache "^5.1.2"
-    stats-lite "^2.2.0"
 
 "@uniswap/swap-router-contracts@1.1.0":
   version "1.1.0"
@@ -6414,7 +6439,7 @@
     "@uniswap/v3-periphery" "1.3.0"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/swap-router-contracts@^1.2.1", "@uniswap/swap-router-contracts@^1.3.0":
+"@uniswap/swap-router-contracts@^1.2.1":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@uniswap/swap-router-contracts/-/swap-router-contracts-1.3.0.tgz#8d555ca6d74b888d6e02a26ebb806ce315605f1f"
   integrity sha512-iKvCuRkHXEe0EMjOf8HFUISTIhlxI57kKFllf3C3PUIE0HmwxrayyoflwAz5u/TRsFGYqJ9IjX2UgzLCsrNa5A==
@@ -6425,11 +6450,6 @@
     "@uniswap/v3-periphery" "1.4.1"
     dotenv "^14.2.0"
     hardhat-watcher "^2.1.1"
-
-"@uniswap/token-lists@^1.0.0-beta.31":
-  version "1.0.0-beta.33"
-  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.33.tgz#966ba96c9ccc8f0e9e09809890b438203f2b1911"
-  integrity sha512-JQkXcpRI3jFG8y3/CGC4TS8NkDgcxXaOQuYW8Qdvd6DcDiIyg2vVYCG9igFEzF0G6UvxgHkBKC7cWCgzZNYvQg==
 
 "@uniswap/universal-router-sdk@^1.5.4", "@uniswap/universal-router-sdk@^1.5.6":
   version "1.5.6"

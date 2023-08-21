@@ -4,9 +4,9 @@ import {
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDRESSES,
   Token,
 } from '@kinetix/sdk-core'
+import { AddressMap } from '@kinetix/smart-order-router'
 import MulticallJSON from '@kinetix/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import NFTPositionManagerJSON from '@kinetix/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
-import { AddressMap } from '@uniswap/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'

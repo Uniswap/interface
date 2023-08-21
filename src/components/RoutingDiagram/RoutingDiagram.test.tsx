@@ -1,4 +1,4 @@
-import { Protocol } from '@uniswap/router-sdk'
+import { Protocol } from '@kinetix/router-sdk'
 import { Currency, Percent } from '@kinetix/sdk-core'
 import { FeeAmount } from '@kinetix/v3-sdk'
 import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'

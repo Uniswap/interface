@@ -1,6 +1,6 @@
-import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@kinetix/sdk-core'
-import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
+import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@kinetix/smart-order-router'
+import { skipToken } from '@reduxjs/toolkit/query/react'
 import { sendTiming } from 'components/analytics'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'

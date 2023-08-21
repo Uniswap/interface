@@ -1,6 +1,6 @@
-import { Protocol } from '@uniswap/router-sdk'
+import { Protocol } from '@kinetix/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@kinetix/sdk-core'
-import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
+import { routeAmountsToString, SwapRoute } from '@kinetix/smart-order-router'
 import { Pool } from '@kinetix/v3-sdk'
 import { QuoteResult, QuoteState, URAQuoteType } from 'state/routing/types'
 import { ClassicQuoteData, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
