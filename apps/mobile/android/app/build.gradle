@@ -183,14 +183,17 @@ android {
       dev {
         isDefault(true)
         applicationIdSuffix ".dev"
+        versionName "0.1"
         dimension "variant"
       }
       beta {
         applicationIdSuffix ".beta"
+        versionName "0.1"
         dimension "variant"
       }
       prod {
         dimension "variant"
+        versionName "0.1"
       }
     }
 

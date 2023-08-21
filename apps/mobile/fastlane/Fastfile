@@ -7,8 +7,89 @@ WIDGET_TARGET_NAME = "Widgets"
 WIDGET_INTENT_TARGET_NAME = "WidgetIntentExtension"
 XCODE_PROJECT = "./ios/#{PROJECT_NAME}.xcodeproj"
 XCODE_WORKSPACE = "./ios/#{PROJECT_NAME}.xcworkspace"
+ANDROID_GRADLE_BUILD_FILE = "./android/app/build.gradle"
 OUTPUT_DIRECTORY = "./fastlane/builds/"
 BUILD_ONLY = false
+
+platform :android do
+
+  lane :buildAndUpload do
+    # Ensure flavor, package name, and json key data are set
+    if ENV["ANDROID_FLAVOR"].nil? || ENV["ANDROID_PACKAGE_NAME"].nil? || ENV["ANDROID_JSON_KEY_DATA"].nil?
+      UI.user_error!("Flavor, package name, and json key data must be set")
+    end
+
+    flavor = ENV["ANDROID_FLAVOR"]
+    package_name = ENV["ANDROID_PACKAGE_NAME"]
+    json_key_data = ENV["ANDROID_JSON_KEY_DATA"]
+
+    version_name = get_version_name_for_flavor(flavor, "./../#{ANDROID_GRADLE_BUILD_FILE}")
+
+    # Convert the version string to the corresponding decimal number 
+    # (e.g. 1.0.0 -> 10000000, where 1.000.00.00 represents major.minor.patch.build)
+    version_name_decimal = version_name.to_f
+    major_minor_patch_number = version_name_decimal * 10000000 / 100 
+
+    version_codes = google_play_track_version_codes(
+      json_key_data: json_key_data,
+      package_name: package_name,
+      track: "internal" # Will be first uploaded to internal track
+    )
+    
+    matching_version_codes = []
+    for version_code in version_codes
+      if (version_code.to_s.start_with?(major_minor_patch_number.to_i.to_s)) 
+        matching_version_codes.push(version_code)
+      end
+    end
+
+    # If there are no matching version codes, then this is the first time uploading to the internal track
+    next_version_code = major_minor_patch_number * 100 + 1
+    if !matching_version_codes.empty?
+      max_version_code = matching_version_codes.max
+      next_version_code = max_version_code + 1
+    end
+    
+    # Set the version code in the build.gradle file before building. 
+    # This sets the value under defaultConfig because the flavors don't have a versionCode property specified, 
+    # and we usually don't need to record it in our codebase after building.
+    android_set_version_code(
+      gradle_file: ANDROID_GRADLE_BUILD_FILE,
+      version_code: next_version_code.to_i
+    )
+
+    gradle(
+      task: 'bundle',
+      build_type: 'Release',
+      flavor: flavor,
+      gradle_path: './gradlew',
+      project_dir: './android'
+    )
+
+    aab_path = "./android/app/build/outputs/bundle/#{flavor}Release/app-#{flavor}-release.aab"
+
+    upload_to_play_store(
+      track: 'internal', 
+      aab: aab_path,
+      skip_upload_apk: true, # only uplaod aab, not apk
+      release_status: 'draft',
+      json_key_data: json_key_data, 
+      package_name: package_name
+    )
+  end
+
+  def get_version_name_for_flavor(flavor, build_gradle_path)
+    # Read the build.gradle file
+    content = File.read(build_gradle_path)
+    
+    # Use regex with named capture group to capture the versionName after the productFlavor declaration
+    match = content.match(/#{flavor}\s*{[^}]*versionName\s+"(?<versionName>[^"]+)"/m)
+    
+    # If matched, return the captured versionName, otherwise return nil
+    match ? match[:versionName] : nil
+  end
+
+end
 
 platform :ios do
   before_all do

@@ -33,6 +33,7 @@ local.properties
 *.hprof
 *.jks
 keystore.properties
+*.aab
 
 # node.js
 #
@@ -62,9 +63,7 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/.env
-fastlane/.env.dev
-fastlane/.env.beta
-fastlane/.env.prod
+fastlane/.env.*
 fastlane/builds
 
 # firebase
