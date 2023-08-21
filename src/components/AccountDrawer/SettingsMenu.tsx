@@ -3,6 +3,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { LOCALE_LABEL } from 'constants/locales'
 import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
+import { useActiveCurrency } from 'hooks/useActiveCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
@@ -78,6 +79,7 @@ export default function SettingsMenu({
 }) {
   const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
   const activeLocale = useActiveLocale()
+  const activeCurrency = useActiveCurrency()
 
   return (
     <SlideOutMenu title={<Trans>Settings</Trans>} onClose={onClose}>
@@ -111,7 +113,7 @@ export default function SettingsMenu({
               />
               <SettingsButton
                 title={<Trans>Currency</Trans>}
-                currentState="USD"
+                currentState={activeCurrency}
                 onClick={openCurrencySettings}
                 testId="currency-settings-button"
               />
