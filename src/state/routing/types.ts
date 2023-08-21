@@ -198,8 +198,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   }
 
   public get totalTaxRate(): Percent {
-    // Total tax = input_tax + (1 - input_tax) * output_tax (considering output_tax is applied after the input tax has been applied)
-    return this.inputTax.add(new Fraction(ONE).subtract(this.inputTax).multiply(this.outputTax))
+    return this.inputTax.add(this.outputTax)
   }
 
   public get postTaxOutputAmount() {
