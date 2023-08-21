@@ -12,7 +12,7 @@ function CurrencyMenuItem({ currency, isActive }: { currency: SupportedCurrency;
 
   if (!to) return null
 
-  return <MenuItem label={currency} isActive={isActive} to={to} onClick={onClick} />
+  return <MenuItem label={currency} isActive={isActive} to={to} onClick={onClick} testId="wallet-currency-item" />
 }
 
 export default function CurrencyMenu({ onClose }: { onClose: () => void }) {
