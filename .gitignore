@@ -37,6 +37,9 @@ yarn-error.log*
 
 dist/out-tsc/*
 
+# Locale backup files
+packages/wallet/src/i18n/locales/*_old.json
+
 # ci
 .ci-cache/
 

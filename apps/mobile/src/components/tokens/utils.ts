@@ -1,9 +1,9 @@
-import { TFunction } from 'i18next'
+import { AppTFunction } from 'ui/src/i18n/types'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 
 export function getTokenSafetyHeaderText(
   safetyLevel: Maybe<SafetyLevel>,
-  t: TFunction
+  t: AppTFunction
 ): string | undefined {
   switch (safetyLevel) {
     case SafetyLevel.MediumWarning:

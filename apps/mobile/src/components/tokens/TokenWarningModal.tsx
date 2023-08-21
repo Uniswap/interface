@@ -1,4 +1,3 @@
-import { TFunction } from 'i18next'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
@@ -13,13 +12,14 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
 import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
+import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { TOKEN_WARNING_HELP_PAGE_URL } from 'wallet/src/constants/urls'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
-function getTokenSafetyBodyText(safetyLevel: Maybe<SafetyLevel>, t: TFunction): string {
+function getTokenSafetyBodyText(safetyLevel: Maybe<SafetyLevel>, t: AppTFunction): string {
   switch (safetyLevel) {
     case SafetyLevel.MediumWarning:
       return t(

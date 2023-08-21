@@ -1,5 +1,5 @@
-import { TFunction } from 'i18next'
 import { TokenItemData } from 'src/components/explore/TokenItem'
+import { AppTFunction } from 'ui/src/i18n/types'
 import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   ClientTokensOrderBy,
@@ -89,7 +89,7 @@ export function getTokenMetadataDisplayType(orderBy: TokensOrderBy): TokenMetada
 }
 
 // Label shown in the popover context menu.
-export function getTokensOrderByMenuLabel(orderBy: TokensOrderBy, t: TFunction): string {
+export function getTokensOrderByMenuLabel(orderBy: TokensOrderBy, t: AppTFunction): string {
   switch (orderBy) {
     case TokenSortableField.MarketCap:
       return t('Market cap')
@@ -107,7 +107,7 @@ export function getTokensOrderByMenuLabel(orderBy: TokensOrderBy, t: TFunction):
 }
 
 // Label shown when option is selected in dropdown.
-export function getTokensOrderBySelectedLabel(orderBy: TokensOrderBy, t: TFunction): string {
+export function getTokensOrderBySelectedLabel(orderBy: TokensOrderBy, t: AppTFunction): string {
   switch (orderBy) {
     case TokenSortableField.MarketCap:
       return t('Market cap')

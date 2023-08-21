@@ -1,10 +1,10 @@
-import { TFunction } from 'i18next'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { goBack } from 'src/app/navigation/rootNavigation'
 import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
+import { AppTFunction } from 'ui/src/i18n/types'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {
@@ -21,7 +21,7 @@ type TransferStatusProps = {
 }
 
 const getTextFromTransferStatus = (
-  t: TFunction,
+  t: AppTFunction,
   derivedTransferInfo: DerivedTransferInfo,
   recipient: string | undefined,
   transactionDetails?: TransactionDetails

@@ -43,7 +43,7 @@ export function* createAccount(params: CreateAccountParams = {}) {
       derivationIndex: nextDerivationIndex,
       mnemonicId,
       backups: existingBackups,
-      name: `Wallet ${nextDerivationIndex + 1}`, // TODO(EXT-255): add translation
+      name: `Wallet ${nextDerivationIndex + 1}`,
     })
   )
 

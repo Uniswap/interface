@@ -1,12 +1,12 @@
-import { TFunction } from 'i18next'
 import {
   WarningAction,
   WarningLabel,
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
+import { AppTFunction } from 'ui/src/i18n/types'
 
 export const getNetworkWarning = (
-  t: TFunction
+  t: AppTFunction
 ): {
   type: WarningLabel
   severity: WarningSeverity

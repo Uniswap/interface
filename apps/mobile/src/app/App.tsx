@@ -48,6 +48,7 @@ import { useTrmQuery } from 'wallet/src/features/trm/api'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts, useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { initializeTranslation } from 'wallet/src/i18n/i18n'
 import { SharedProvider } from 'wallet/src/provider'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -84,6 +85,7 @@ if (!__DEV__) {
 
 initOneSignal()
 initAppsFlyer()
+initializeTranslation()
 
 function App(): JSX.Element | null {
   // We want to ensure deviceID is used as the identifier to link with analytics

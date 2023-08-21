@@ -15,9 +15,14 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { initializeTranslation } from 'wallet/src/i18n/i18n'
 import { account, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
 describe(formSwapNotificationTitle, () => {
+  beforeAll(() => {
+    initializeTranslation()
+  })
+
   it('formats successful swap title', () => {
     expect(
       formSwapNotificationTitle(

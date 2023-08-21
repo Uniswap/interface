@@ -1,5 +1,4 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { i18n } from 'src/app/i18n'
 import { SpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { formatUSDPrice } from 'utilities/src/format/format'
@@ -18,6 +17,7 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
+import i18n from 'wallet/src/i18n/i18n'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'

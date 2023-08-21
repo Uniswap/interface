@@ -7,7 +7,6 @@ import { IWeb3Wallet, Web3Wallet, Web3WalletTypes } from '@walletconnect/web3wal
 import { Alert } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
 import { appSelect } from 'src/app/hooks'
-import { i18n } from 'src/app/i18n'
 import { store } from 'src/app/store'
 import { registerWCv2ClientForPushNotifications } from 'src/features/walletConnect/api'
 import {
@@ -31,6 +30,7 @@ import { config } from 'wallet/src/config'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { EthEvent, EthMethod } from 'wallet/src/features/walletConnect/types'
+import i18n from 'wallet/src/i18n/i18n'
 
 export let wcWeb3Wallet: IWeb3Wallet
 

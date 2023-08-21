@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { TFunction } from 'i18next'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
@@ -20,6 +19,7 @@ import { openSettings } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import ImportIcon from 'ui/src/assets/icons/paper-stack.svg'
+import { AppTFunction } from 'ui/src/i18n/types'
 import { Theme } from 'ui/src/theme/restyle'
 import {
   PendingAccountActions,
@@ -27,30 +27,30 @@ import {
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 
 interface ImportMethodOption {
-  title: (t: TFunction) => string
-  blurb: (t: TFunction) => string
+  title: (t: AppTFunction) => string
+  blurb: (t: AppTFunction) => string
   icon: (theme: Theme) => React.ReactNode
   nav: OnboardingScreens
   importType: ImportType
   name: ElementName
-  badgeText?: (t: TFunction) => string
+  badgeText?: (t: AppTFunction) => string
 }
 
 const options: ImportMethodOption[] = [
   {
-    title: (t: TFunction) => t('Import a wallet'),
-    blurb: (t: TFunction) => t('Enter your recovery phrase from another crypto wallet'),
+    title: (t: AppTFunction) => t('Import a wallet'),
+    blurb: (t: AppTFunction) => t('Enter your recovery phrase from another crypto wallet'),
     icon: (theme: Theme) => (
       <ImportIcon color={theme.colors.accent1} height={18} strokeWidth="1.5" width={18} />
     ),
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
-    badgeText: (t: TFunction) => t('Recommended'),
+    badgeText: (t: AppTFunction) => t('Recommended'),
   },
   {
-    title: (t: TFunction) => t('Watch a wallet'),
-    blurb: (t: TFunction) =>
+    title: (t: AppTFunction) => t('Watch a wallet'),
+    blurb: (t: AppTFunction) =>
       t('Explore the contents of a wallet by entering any address or ENS name '),
     icon: (theme: Theme) => (
       <EyeIcon color={theme.colors.accent1} height={24} strokeWidth="1.5" width={24} />

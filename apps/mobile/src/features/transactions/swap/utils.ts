@@ -4,9 +4,9 @@ import {
   SwapRouter as UniversalSwapRouter,
 } from '@uniswap/universal-router-sdk'
 import { BigNumber } from 'ethers'
-import { TFunction } from 'i18next'
 import { ElementName } from 'src/features/telemetry/constants'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
+import { AppTFunction } from 'ui/src/i18n/types'
 import { formatPrice, NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -112,7 +112,7 @@ export const getRateToDisplay = (trade: Trade, showInverseRate: boolean): string
   return showInverseRate ? rate : inverseRate
 }
 
-export const getActionName = (t: TFunction, wrapType: WrapType): string => {
+export const getActionName = (t: AppTFunction, wrapType: WrapType): string => {
   switch (wrapType) {
     case WrapType.Unwrap:
       return t('Unwrap')
@@ -134,7 +134,7 @@ export const getActionElementName = (wrapType: WrapType): ElementName => {
   }
 }
 
-export const getReviewActionName = (t: TFunction, wrapType: WrapType): string => {
+export const getReviewActionName = (t: AppTFunction, wrapType: WrapType): string => {
   switch (wrapType) {
     case WrapType.Unwrap:
       return t('Review unwrap')

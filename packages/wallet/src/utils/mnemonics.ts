@@ -1,5 +1,5 @@
 import { utils, wordlists } from 'ethers'
-import { TFunction } from 'i18next'
+import { AppTFunction } from 'ui/src/i18n/types'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { MNEMONIC_LENGTH_MAX, MNEMONIC_LENGTH_MIN } from 'wallet/src/constants/accounts'
 
@@ -10,18 +10,16 @@ export enum MnemonicValidationError {
   InvalidPhrase = 'InvalidPhrase',
 }
 
-// TODO EXT-260: Add dynamic translation for web to be able to share translation
 export function translateMnemonicErrorMessage(
   error: MnemonicValidationError,
   invalidWord: string | undefined,
-  t: TFunction
+  t: AppTFunction
 ): string {
   switch (error) {
     case MnemonicValidationError.InvalidPhrase:
       return t('Invalid phrase')
     case MnemonicValidationError.InvalidWord:
-      return `Invalid word: ${invalidWord}`
-    // return t('Invalid word: {{word}}', { word: invalidWord })
+      return t('Invalid word: {{word}}', { word: invalidWord })
     case MnemonicValidationError.TooManyWords:
     case MnemonicValidationError.NotEnoughWords:
       return t('Recovery phrase must be 12-24 words')

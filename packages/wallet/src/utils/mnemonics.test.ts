@@ -11,7 +11,7 @@ describe(translateMnemonicErrorMessage, () => {
 
   it('correct invalid word message', () => {
     expect(translateMnemonicErrorMessage(MnemonicValidationError.InvalidWord, 't', t)).toBe(
-      'Invalid word: t'
+      'Invalid word: {{word}}'
     )
   })
 

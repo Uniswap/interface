@@ -4,6 +4,7 @@
 import React, { lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import { logger } from 'utilities/src/logger/logger'
+import { initializeTranslation } from 'wallet/src/i18n/i18n'
 import { Store } from 'webext-redux'
 import { WebState } from './background/store'
 import { PortName } from './types'
@@ -36,6 +37,8 @@ async function initContentWindow(): Promise<void> {
   })
 
   await store.ready()
+
+  initializeTranslation()
 
   container = window.document.querySelector('#root')
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

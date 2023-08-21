@@ -1,4 +1,5 @@
 import { createElement, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -31,6 +32,8 @@ export function TransferTokenSummaryItem({
     typeInfo: ReceiveTokenTransactionInfo | SendTokenTransactionInfo
   }
 }): JSX.Element {
+  const { t } = useTranslation()
+
   const currencyInfo = useCurrencyInfo(
     transaction.typeInfo.assetType === AssetType.Currency
       ? buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
@@ -87,13 +90,10 @@ export function TransferTokenSummaryItem({
   }
 
   let caption = ''
-  // TODO EXT-260: Add dynamic translation for web to be able to share translation
   if (transactionType === TransactionType.Send) {
-    caption = `${translateOptions.what} to ${personDisplayName}`
-    // caption = t('{{what}} to {{recipient}}', { recipient: personDisplayName, ...translateOptions })
+    caption = t('{{what}} to {{recipient}}', { recipient: personDisplayName, ...translateOptions })
   } else {
-    caption = `${translateOptions.what} from ${personDisplayName}`
-    // caption = t('{{what}} from {{sender}}', { sender: personDisplayName, ...translateOptions })
+    caption = t('{{what}} from {{sender}}', { sender: personDisplayName, ...translateOptions })
   }
 
   return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {

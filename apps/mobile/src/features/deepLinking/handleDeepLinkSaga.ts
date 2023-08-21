@@ -3,7 +3,6 @@ import { parseUri } from '@walletconnect/utils'
 import { Alert } from 'react-native'
 import { URL } from 'react-native-url-polyfill'
 import { appSelect } from 'src/app/hooks'
-import { i18n } from 'src/app/i18n'
 import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLinkSaga'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
@@ -29,6 +28,7 @@ import {
   selectNonPendingAccounts,
 } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import i18n from 'wallet/src/i18n/i18n'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 export interface DeepLink {

@@ -77,4 +77,9 @@ ignore:
         reason: monorepo migration
         expires: 2023-08-30T00:00:00.000Z
         created: 2023-04-19T21:55:29.637Z
+  SNYK-JS-GLOBPARENT-1016905:
+    - '*':
+        reason: i18next parsing
+        expires: 2023-08-30T00:00:00.000Z
+        created: 2023-04-19T21:55:29.637Z
 patch: {}

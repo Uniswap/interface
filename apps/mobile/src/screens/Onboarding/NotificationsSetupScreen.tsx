@@ -3,7 +3,6 @@ import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Image, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { i18n } from 'src/app/i18n'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
@@ -27,6 +26,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
+import i18n from 'wallet/src/i18n/i18n'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
 

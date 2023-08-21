@@ -2,7 +2,6 @@ import { Action } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
 import { NativeEventEmitter, NativeModules } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
-import { i18n } from 'src/app/i18n'
 import {
   deregisterWcPushNotifications,
   registerWcPushNotifications,
@@ -52,6 +51,7 @@ import {
   WCErrorType,
   WCEventType,
 } from 'wallet/src/features/walletConnect/types'
+import i18n from 'wallet/src/i18n/i18n'
 import { createSaga } from 'wallet/src/utils/saga'
 
 function createWalletConnectChannel(

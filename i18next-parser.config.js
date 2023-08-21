@@ -51,7 +51,8 @@ module.exports = {
   // Supports $LOCALE and $NAMESPACE injection
   // Supports JSON (.json) and YAML (.yml) file formats
   // Where to write the locale files relative to process.cwd()
-  output: 'src/locales/$LOCALE/$NAMESPACE.json',
+  output: 'packages/wallet/src/i18n/locales/$LOCALE.json',
+  
 
   // Plural separator used in your translation keys
   // If you want to use plain english keys, separators such as `_` might conflict. You might want to set `pluralSeparator` to a different string that does not occur in your keys.
@@ -59,12 +60,13 @@ module.exports = {
 
   // An array of globs that describe where to look for source files
   // relative to the location of the configuration file
-  // TODO EXT-260: Add dynamic translation in wallet package
   input: [
-    'src/**/*.tsx',
-    'src/**/*.ts',
-    '../../packages/wallet/src/**/*.ts',
-    '../../packages/wallet/src/**/*.tsx',
+    'apps/mobile/src/**/*.tsx',
+    'apps/mobile/src/**/*.ts',
+    'apps/web/src/**/*.tsx',
+    'apps/web/src/**/*.ts',
+    'packages/wallet/src/**/*.ts',
+    'packages/wallet/src/**/*.tsx',
   ],
 
   // Whether or not to sort the catalog. Can also be a [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)

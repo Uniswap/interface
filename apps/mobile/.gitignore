@@ -81,9 +81,6 @@ artifacts/
 # CocoaPods
 /ios/Pods/
 
-# Locale backup files
-src/locales/**/*_old.json
-
 # ccache
 .ccache
 
