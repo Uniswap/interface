@@ -32,7 +32,7 @@ export async function focusOrCreateOnboardingTab({
   const tabIndex = tabs[0]?.index
   const windowId = tabs[0]?.windowId
 
-  if (tabIndex && windowId) {
+  if (tabIndex !== undefined && windowId) {
     await chrome.tabs.highlight({ windowId, tabs: tabIndex })
     await chrome.windows.update(windowId, { focused: true })
     return
