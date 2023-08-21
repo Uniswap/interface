@@ -36,7 +36,7 @@ export const SearchInput = styled.input`
   align-items: center;
   width: 100%;
   white-space: nowrap;
-  background-color: ${({ theme }) => theme.surface1};
+  background-color: ${({ theme }) => theme.surface2};
   border: none;
   outline: none;
   border-radius: 12px;
