@@ -4,7 +4,6 @@ import { calculateCardIndex } from 'nft/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { opacify } from 'theme/utils'
 
 import { Carousel, LoadingCarousel } from './Carousel'
 import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
@@ -19,33 +18,6 @@ const BannerContainer = styled.div`
   @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     padding: 32px 16px;
   }
-`
-
-const AbsoluteFill = styled.div`
-  position: absolute;
-  top: -96px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-`
-
-// Safari has issues with blur / overflow, forcing GPU rendering with `translate3d` fixes it
-// https://stackoverflow.com/a/71353198
-const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
-  transform: translate3d(0, 0, 0) scaleY(1.1);
-
-  background-image: ${(props) => `url(${props.backgroundImage})`};
-  filter: blur(20px);
-
-  opacity: ${({ theme }) => (theme.darkMode ? 0.2 : 0.4)};
-`
-
-const PlainBackground = styled(AbsoluteFill)`
-  background: ${({ theme }) => `linear-gradient(${opacify(10, theme.accent1)}, transparent)`};
-`
-
-const BannerMask = styled(AbsoluteFill)`
--webkit-mask-image: radial-gradient(ellipse 100% 130% at 65% 55%, black 7%, transparent 36%);;
 `
 
 const BannerMainArea = styled.div`
@@ -138,19 +110,8 @@ const Banner = () => {
     [collections]
   )
 
-  const activeCollection = collections?.[activeCollectionIdx]
-
   return (
     <BannerContainer>
-      <BannerMask>
-      {activeCollection ? (
-        activeCollection.bannerImageUrl ? (
-          <BannerBackground backgroundImage={activeCollection.bannerImageUrl} />
-        ) : (
-          <PlainBackground />
-        )
-      ) : null}
-      </BannerMask>
       <BannerMainArea>
         <HeaderContainer>
           Better prices. <br />
