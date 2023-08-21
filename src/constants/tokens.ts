@@ -1,4 +1,5 @@
-import { ChainId, Currency, Ether, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@kinetix/sdk-core'
+/* eslint-disable import/no-unused-modules */
+import { ChainId, Currency, Ether, NativeCurrency, Token, WETH9 } from '@kinetix/sdk-core'
 import invariant from 'tiny-invariant'
 
 export const NATIVE_CHAIN_ID = 'NATIVE'
@@ -250,16 +251,62 @@ export const DAI_AVALANCHE = new Token(
   'Dai.e Token'
 )
 
+export const WKAVA_KAVA = new Token(
+  ChainId.KAVA,
+  '0xc86c7C0eFbd6A49B35E8714C5f59D99De09A225b',
+  18,
+  'WKAVA',
+  'Wrapped KAVA'
+)
+
+export const USDT_KAVA = new Token(ChainId.KAVA, '0x919C1c267BC06a7039e03fcc2eF738525769109c', 6, 'USDt', 'TetherUSDt')
+
+export const axlUSDC_KAVA = new Token(
+  ChainId.KAVA,
+  '0xEB466342C4d449BC9f53A865D5Cb90586f405215',
+  6,
+  'axlUSDC',
+  'Axelar Wrapped USDC'
+)
+
+export const axlWBTC_KAVA = new Token(
+  ChainId.KAVA,
+  '0x1a35EE4640b0A3B87705B0A4B45D227Ba60Ca2ad',
+  8,
+  'axlUSDC',
+  'Axelar Wrapped Bitcoin'
+)
+
+export const axlETH_KAVA = new Token(
+  ChainId.KAVA,
+  '0xb829b68f57CC546dA7E5806A929e53bE32a4625D',
+  18,
+  'axlETH',
+  'Axelar Wrapped Ethereum'
+)
+
+export const ATOM_KAVA = new Token(ChainId.KAVA, '0x15932E26f5BD4923d46a2b205191C4b5d5f43FE3', 6, 'ATOM', 'ATOM')
+
+export const MIM_KAVA = new Token(
+  ChainId.KAVA,
+  '0x471EE749bA270eb4c1165B5AD95E614947f6fCeb',
+  18,
+  'MIM',
+  'Magic Internet Money'
+)
+
+console.log('TEST')
+
 export const UNI: { [chainId: number]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESSES[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),
-  [ChainId.GOERLI]: new Token(ChainId.GOERLI, UNI_ADDRESSES[ChainId.GOERLI], 18, 'UNI', 'Uniswap'),
-  [ChainId.SEPOLIA]: new Token(ChainId.SEPOLIA, UNI_ADDRESSES[ChainId.SEPOLIA], 18, 'UNI', 'Uniswap'),
+  // [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESSES[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),
+  // [ChainId.GOERLI]: new Token(ChainId.GOERLI, UNI_ADDRESSES[ChainId.GOERLI], 18, 'UNI', 'Uniswap'),
+  // [ChainId.SEPOLIA]: new Token(ChainId.SEPOLIA, UNI_ADDRESSES[ChainId.SEPOLIA], 18, 'UNI', 'Uniswap'),
 }
-
+console.log('TEST1')
 export const ARB = new Token(ChainId.ARBITRUM_ONE, '0x912CE59144191C1204E64559FE8253a0e49E6548', 18, 'ARB', 'Arbitrum')
-
+console.log('TEST2')
 export const OP = new Token(ChainId.OPTIMISM, '0x4200000000000000000000000000000000000042', 18, 'OP', 'Optimism')
-
+console.log('TEST3')
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
   ...(WETH9 as Record<ChainId, Token>),
   [ChainId.OPTIMISM]: new Token(
@@ -341,7 +388,10 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WAVAX',
     'Wrapped AVAX'
   ),
+  [ChainId.KAVA]: new Token(ChainId.KAVA, '0xc86c7C0eFbd6A49B35E8714C5f59D99De09A225b', 18, 'WKAVA', 'Wrapped KAVA'),
 }
+
+console.log('TEST 4')
 
 export function isCelo(chainId: number): chainId is ChainId.CELO | ChainId.CELO_ALFAJORES {
   return chainId === ChainId.CELO_ALFAJORES || chainId === ChainId.CELO
