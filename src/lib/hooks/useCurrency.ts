@@ -1,7 +1,9 @@
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
@@ -46,6 +48,11 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
   const symbol = useSingleCallResult(tokenContract, 'symbol', undefined, NEVER_RELOAD)
   const symbolBytes32 = useSingleCallResult(tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
   const decimals = useSingleCallResult(tokenContract, 'decimals', undefined, NEVER_RELOAD)
+  sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
+    source: 'useTokenFromActiveNetwork',
+    tokenAddress: formattedAddress,
+    tokenName,
+  })
 
   const isLoading = useMemo(
     () => decimals.loading || symbol.loading || tokenName.loading,
