@@ -1,0 +1,512 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`button for selecting a network filter defaults to showing all networks with logo pile 1`] = `
+.c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c0 {
+  height: 100%;
+  margin: 0;
+  padding: 6px 10px 6px 12px;
+  border-radius: 12px;
+  border: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #E8ECFB;
+  overflow: hidden;
+}
+
+.c0::before {
+  content: '';
+  position: absolute;
+  border-radius: inherit;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #98A1C014;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.c0:hover::before {
+  opacity: 1;
+}
+
+.c3 {
+  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  outline: 2px solid #E8ECFB;
+  margin-left: -2px;
+}
+
+.c4 {
+  height: 100%;
+  width: 100%;
+  background: #505a78;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+}
+
+<div>
+  <button
+    aria-label="Toggle Network Options"
+    class="c0"
+    data-testid="network-selector"
+  >
+    <div
+      class="c1 c2"
+      data-testid="all-networks-selected"
+    >
+      <div
+        class="c3"
+      >
+        <img
+          alt="Ethereum"
+          class="c4"
+          src="ethereum_square_logo.svg"
+        />
+      </div>
+      <div
+        class="c3"
+      >
+        <img
+          alt="Optimism"
+          class="c4"
+          src="optimism_square_logo.svg"
+        />
+      </div>
+      <div
+        class="c3"
+      >
+        <img
+          alt="Polygon"
+          class="c4"
+          src="polygon_square_logo.svg"
+        />
+      </div>
+      <div
+        class="c3"
+      >
+        <img
+          alt="More network options"
+          class="c4"
+          src="ellipsis.svg"
+        />
+      </div>
+    </div>
+  </button>
+</div>
+`;
+
+exports[`button for selecting a network filter non-idle styling changes when active and hovered 1`] = `
+.c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c0 {
+  height: 100%;
+  margin: 0;
+  padding: 6px 10px 6px 12px;
+  border-radius: 12px;
+  border: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #E8ECFB;
+  overflow: hidden;
+}
+
+.c0::before {
+  content: '';
+  position: absolute;
+  border-radius: inherit;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #B8C0DC3d;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.c0:hover::before {
+  opacity: 0;
+}
+
+.c3 {
+  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  outline: 2px solid #E8ECFB;
+  margin-left: -2px;
+}
+
+.c4 {
+  height: 100%;
+  width: 100%;
+  background: #505a78;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+}
+
+<div>
+  <button
+    aria-label="Toggle Network Options"
+    class="c0"
+    data-testid="network-selector"
+  >
+    <div
+      class="c1 c2"
+      data-testid="all-networks-selected"
+    >
+      <div
+        class="c3"
+      >
+        <img
+          alt="Ethereum"
+          class="c4"
+          src="ethereum_square_logo.svg"
+        />
+      </div>
+      <div
+        class="c3"
+      >
+        <img
+          alt="Optimism"
+          class="c4"
+          src="optimism_square_logo.svg"
+        />
+      </div>
+      <div
+        class="c3"
+      >
+        <img
+          alt="Polygon"
+          class="c4"
+          src="polygon_square_logo.svg"
+        />
+      </div>
+      <div
+        class="c3"
+      >
+        <img
+          alt="More network options"
+          class="c4"
+          src="ellipsis.svg"
+        />
+      </div>
+    </div>
+  </button>
+</div>
+`;
+
+exports[`button for selecting a network filter non-idle styling changes when hovered 1`] = `
+.c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c0 {
+  height: 100%;
+  margin: 0;
+  padding: 6px 10px 6px 12px;
+  border-radius: 12px;
+  border: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #E8ECFB;
+  overflow: hidden;
+}
+
+.c0::before {
+  content: '';
+  position: absolute;
+  border-radius: inherit;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #98A1C014;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.c0:hover::before {
+  opacity: 1;
+}
+
+.c3 {
+  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  outline: 2px solid #E8ECFB;
+  margin-left: -2px;
+}
+
+.c4 {
+  height: 100%;
+  width: 100%;
+  background: #505a78;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+}
+
+<div>
+  <button
+    aria-label="Toggle Network Options"
+    class="c0"
+    data-testid="network-selector"
+  >
+    <div
+      class="c1 c2"
+      data-testid="all-networks-selected"
+    >
+      <div
+        class="c3"
+      >
+        <img
+          alt="Ethereum"
+          class="c4"
+          src="ethereum_square_logo.svg"
+        />
+      </div>
+      <div
+        class="c3"
+      >
+        <img
+          alt="Optimism"
+          class="c4"
+          src="optimism_square_logo.svg"
+        />
+      </div>
+      <div
+        class="c3"
+      >
+        <img
+          alt="Polygon"
+          class="c4"
+          src="polygon_square_logo.svg"
+        />
+      </div>
+      <div
+        class="c3"
+      >
+        <img
+          alt="More network options"
+          class="c4"
+          src="ellipsis.svg"
+        />
+      </div>
+    </div>
+  </button>
+</div>
+`;
+
+exports[`button for selecting a network filter shows single network logo and chevron when selected 1`] = `
+.c0 {
+  height: 100%;
+  margin: 0;
+  padding: 6px 4px 6px 12px;
+  border-radius: 12px;
+  border: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #E8ECFB;
+  overflow: hidden;
+}
+
+.c0::before {
+  content: '';
+  position: absolute;
+  border-radius: inherit;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #98A1C014;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.c0:hover::before {
+  opacity: 1;
+}
+
+.c1 {
+  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  outline: 2px solid #E8ECFB;
+  margin-left: -2px;
+}
+
+.c2 {
+  height: 100%;
+  width: 100%;
+  background: #505a78;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+}
+
+.c3 {
+  padding-top: 1px;
+  color: #7780A0;
+}
+
+<div>
+  <button
+    aria-label="Toggle Network Options"
+    class="c0"
+    data-testid="network-selector"
+  >
+    <div
+      class="c1"
+    >
+      <img
+        alt="Ethereum"
+        class="c2"
+        data-testid="network-1-selected"
+        src="ethereum_square_logo.svg"
+      />
+    </div>
+    <span
+      class="c3"
+    >
+      <svg
+        data-testid="network-options-chevron-down"
+        fill="none"
+        height="15"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 20"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <polyline
+          points="6 9 12 15 18 9"
+        />
+      </svg>
+    </span>
+  </button>
+</div>
+`;
