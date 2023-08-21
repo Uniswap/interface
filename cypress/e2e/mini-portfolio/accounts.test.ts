@@ -2,30 +2,45 @@ import { getTestSelector } from '../../utils'
 
 describe('Mini Portfolio account drawer', () => {
   beforeEach(() => {
-    cy.intercept(/api.uniswap.org\/v1\/graphql/, cy.spy().as('gqlSpy'))
+    cy.intercept(/api.uniswap.org\/v1\/graphql/, cy.spy().as('graphqlSpy')).as('graphql')
     cy.visit('/swap')
   })
 
   it('fetches balances when account button is first hovered', () => {
     // The balances should not be fetched before the account button is hovered
-    cy.get('@gqlSpy').should('not.have.been.called')
+    cy.wait('@graphql')
+    cy.get('@graphqlSpy')
+      .should('have.been.calledWith', Cypress.sinon.match({ body: { operationName: 'TokenSpotPrice' } }))
+      .should('not.have.been.calledWith', Cypress.sinon.match({ body: { operationName: 'PortfolioBalances' } }))
 
     // Balances should have been fetched once after hover
     cy.get(getTestSelector('web3-status-connected')).trigger('mouseover')
-    cy.get('@gqlSpy').should('have.been.calledOnce')
+    cy.wait('@graphql')
+    cy.get('@graphqlSpy').should(
+      'have.been.calledWith',
+      Cypress.sinon.match({ body: { operationName: 'TokenSpotPrice' } })
+    )
 
     // Balances should not be refetched upon second hover
     cy.get(getTestSelector('web3-status-connected')).trigger('mouseover')
-    cy.get('@gqlSpy').should('have.been.calledOnce')
+    cy.get('@graphqlSpy').should(
+      'have.been.calledWith',
+      Cypress.sinon.match({ body: { operationName: 'TokenSpotPrice' } })
+    )
 
     // Balances should not be refetched upon opening drawer
     cy.get(getTestSelector('web3-status-connected')).click()
-    cy.get('@gqlSpy').should('have.been.calledOnce')
+    cy.get('@graphqlSpy').should(
+      'have.been.calledWith',
+      Cypress.sinon.match({ body: { operationName: 'TokenSpotPrice' } })
+    )
 
     // Balances should not be refetched upon closing & reopening drawer
     cy.get(getTestSelector('close-account-drawer')).click()
     cy.get(getTestSelector('web3-status-connected')).click()
-    cy.get('@gqlSpy').should('have.been.calledOnce')
+    cy.get('@graphqlSpy')
+      .should('have.been.calledWith', Cypress.sinon.match({ body: { operationName: 'TokenSpotPrice' } }))
+      .should('have.been.calledTwice')
   })
 
   it('fetches account information', () => {
