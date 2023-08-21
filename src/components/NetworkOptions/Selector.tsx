@@ -42,7 +42,7 @@ const SquareChainLogoContainer = styled.div<{ isActive?: boolean }>`
   outline: 2px solid ${({ theme }) => theme.backgroundInteractive};
   margin-left: -2px;
 `
-export const SquareChainLogo = styled.img`
+const SquareChainLogo = styled.img`
   height: 100%;
   width: 100%;
   background: #505a78;
