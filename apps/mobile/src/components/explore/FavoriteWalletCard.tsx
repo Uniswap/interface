@@ -90,7 +90,12 @@ export default function FavoriteWalletCard({
           <Flex row gap="spacing4" justifyContent="space-between">
             <Flex row shrink alignItems="center" gap="spacing8">
               {icon}
-              <Text color="neutral1" numberOfLines={1} style={flex.shrink} variant="bodyLarge">
+              <Text
+                adjustsFontSizeToFit={displayName?.type === 'address'}
+                color="neutral1"
+                numberOfLines={1}
+                style={flex.shrink}
+                variant="bodyLarge">
                 {displayName?.name}
               </Text>
             </Flex>

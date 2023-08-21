@@ -5,7 +5,6 @@ import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import Eye from 'ui/src/assets/icons/eye.svg'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
@@ -41,8 +40,6 @@ export function AccountIcon({
   const iconPadding = FixedTheme.spacing.spacing2
   const iconEyeContainerSize = size * 0.45
   const iconEyeSize = iconEyeContainerSize - iconPadding
-
-  const isDarkMode = useIsDarkMode()
 
   const defaultImage = (
     <>
