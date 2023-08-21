@@ -1,3 +1,4 @@
+import Row from 'components/Row'
 import { ReactNode } from 'react'
 import { Check } from 'react-feather'
 import type { To } from 'react-router-dom'
@@ -20,12 +21,14 @@ const InternalLinkMenuItem = styled(Link)`
 
 export function MenuItem({
   label,
+  logo,
   to,
   onClick,
   isActive,
   testId,
 }: {
   label: ReactNode
+  logo?: ReactNode
   to?: To
   onClick?: () => void
   isActive: boolean
@@ -37,7 +40,10 @@ export function MenuItem({
 
   return (
     <InternalLinkMenuItem onClick={onClick} to={to}>
-      <ThemedText.BodySmall data-testid={testId}>{label}</ThemedText.BodySmall>
+      <Row gap="md">
+        {logo && logo}
+        <ThemedText.BodySmall data-testid={testId}>{label}</ThemedText.BodySmall>
+      </Row>
       {isActive && <Check color={theme.accentActive} opacity={1} size={20} />}
     </InternalLinkMenuItem>
   )
