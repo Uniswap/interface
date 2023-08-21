@@ -3,6 +3,7 @@ import bnbCircleLogoUrl from 'assets/images/bnbCircle.svg'
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
 import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
+import arbitrumSquareLogoUrl from 'assets/svg/arbitrum_square_logo.svg'
 import avaxLogo from 'assets/svg/avax_logo.svg'
 import avaxSquareLogo from 'assets/svg/avax_square_logo.svg'
 import baseLogo from 'assets/svg/base_logo.svg'
@@ -11,6 +12,7 @@ import bnbSquareLogoUrl from 'assets/svg/bnb_square_logo.svg'
 import bnbLogo from 'assets/svg/bnb-logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
 import celoSquareLogoUrl from 'assets/svg/celo_square_logo.svg'
+import ethereumSquareLogoUrl from 'assets/svg/ethereum_square_logo.svg'
 import optimismSquareLogoUrl from 'assets/svg/optimism_square_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import polygonSquareLogoUrl from 'assets/svg/polygon_square_logo.svg'
@@ -72,6 +74,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ethereum',
     logoUrl: ethereumLogoUrl,
+    squareLogoUrl: ethereumSquareLogoUrl,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_1,
   },
@@ -82,6 +85,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Görli',
     logoUrl: ethereumLogoUrl,
+    squareLogoUrl: ethereumSquareLogoUrl,
     nativeCurrency: { name: 'Görli Ether', symbol: 'görETH', decimals: 18 },
     color: darkTheme.chain_5,
   },
@@ -92,6 +96,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Sepolia',
     logoUrl: ethereumLogoUrl,
+    squareLogoUrl: ethereumSquareLogoUrl,
     nativeCurrency: { name: 'Sepolia Ether', symbol: 'SepoliaETH', decimals: 18 },
     color: darkTheme.chain_5,
   },
@@ -139,6 +144,7 @@ const CHAIN_INFO: ChainInfoMap = {
     label: 'Arbitrum',
     logoUrl: arbitrumLogoUrl,
     circleLogoUrl: arbitrumCircleLogoUrl,
+    squareLogoUrl: arbitrumSquareLogoUrl,
     defaultListUrl: ARBITRUM_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
@@ -154,6 +160,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
     label: 'Arbitrum Goerli',
     logoUrl: arbitrumLogoUrl,
+    squareLogoUrl: arbitrumSquareLogoUrl,
     defaultListUrl: ARBITRUM_LIST, // TODO: use arbitrum goerli token list
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     nativeCurrency: { name: 'Goerli Arbitrum Ether', symbol: 'goerliArbETH', decimals: 18 },
