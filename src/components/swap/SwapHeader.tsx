@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Percent } from '@kinetix/sdk-core'
+import { Trans } from '@lingui/macro'
 import { useFiatOnRampButtonEnabled } from 'featureFlags/flags/fiatOnRampButton'
 import { InterfaceTrade } from 'state/routing/types'
 import styled from 'styled-components'

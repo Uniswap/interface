@@ -184,16 +184,8 @@ export function logSentryErrorForUnsupportedChain({
   })
 }
 
-export const BACKEND_SUPPORTED_CHAINS = [
-  Chain.Ethereum,
-  Chain.Polygon,
-  Chain.Arbitrum,
-  Chain.Optimism,
-  Chain.Celo,
-  Chain.Base,
-  Chain.Kava,
-] as const
-export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE] as const
+export const BACKEND_SUPPORTED_CHAINS = [Chain.Ethereum, Chain.Arbitrum, Chain.Kava] as const
+export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB] as const
 
 export function getTokenDetailsURL({
   address,

@@ -5,5 +5,5 @@ function useFiatOnRampButtonFlag(): BaseVariant {
 }
 
 export function useFiatOnRampButtonEnabled(): boolean {
-  return useFiatOnRampButtonFlag() === BaseVariant.Enabled
+  return useFiatOnRampButtonFlag() === BaseVariant.Control
 }

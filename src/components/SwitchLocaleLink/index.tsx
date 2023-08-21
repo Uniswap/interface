@@ -1,11 +1,10 @@
-import { Trans } from '@lingui/macro'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from '../../constants/locales'
+import { DEFAULT_LOCALE, SupportedLocale } from '../../constants/locales'
 import { navigatorLocale, useActiveLocale } from '../../hooks/useActiveLocale'
-import { StyledInternalLink, ThemedText } from '../../theme'
+import { ThemedText } from '../../theme'
 
 const Container = styled(ThemedText.DeprecatedSmall)`
   opacity: ${({ theme }) => theme.opacity.hover};
@@ -36,14 +35,16 @@ export function SwitchLocaleLink() {
 
   if (!targetLocale || !to) return null
 
-  return (
-    <Container>
-      <Trans>
-        Uniswap available in:{' '}
-        <StyledInternalLink onClick={onClick} to={to}>
-          {LOCALE_LABEL[targetLocale]}
-        </StyledInternalLink>
-      </Trans>
-    </Container>
-  )
+  return null
+
+  // return (
+  //   <Container>
+  //     <Trans>
+  //       Kinetix available in:{' '}
+  //       <StyledInternalLink onClick={onClick} to={to}>
+  //         {LOCALE_LABEL[targetLocale]}
+  //       </StyledInternalLink>
+  //     </Trans>
+  //   </Container>
+  // )
 }
