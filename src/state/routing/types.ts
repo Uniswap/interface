@@ -198,6 +198,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   }
 
   public get totalTaxRate(): Percent {
+    // Total tax = input_tax + (1 - input_tax) * output_tax (considering output_tax is applied after the input tax has been applied)
     return this.inputTax.add(new Fraction(ONE).subtract(this.inputTax).multiply(this.outputTax))
   }
 
@@ -206,7 +207,9 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   }
 
   public minimumAmountOut(slippageTolerance: Percent, amountOut = this.outputAmount): CurrencyAmount<Currency> {
-    // This matches the minimumAmountOut that will be submitted on-chain, since the slippageTolerance we pass into universal-router-sdk = slippageTolerance + totalTaxRate
+    // Since universal-router-sdk reconstructs V2Trade objects, overriding this method does not actually change the minimumAmountOut that gets submitted on-chain
+    // Our current workaround is to add tax rate to slippage tolerance before we submit the trade to universal-router-sdk in useUniversalRouter.ts
+    // So the purpose of this override is so the UI displays the same minimum amount out as what is submitted on-chain
     return super.minimumAmountOut(slippageTolerance.add(this.totalTaxRate), amountOut)
   }
 
@@ -281,6 +284,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     return 0
   }
 
+  /** For UniswapX, handling token taxes in the output amount is outsourced to quoters */
   public get postTaxOutputAmount() {
     return this.outputAmount
   }
