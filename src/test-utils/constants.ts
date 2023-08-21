@@ -1,6 +1,7 @@
 import { ChainId, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { V3Route } from '@uniswap/smart-order-router'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { ZERO_PERCENT } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
@@ -46,6 +47,8 @@ export const TEST_TRADE_EXACT_INPUT = new ClassicTrade({
   gasUseEstimateUSD: 1.0,
   approveInfo: { needsApprove: false },
   quoteMethod: QuoteMethod.CLIENT_SIDE,
+  inputTax: ZERO_PERCENT,
+  outputTax: ZERO_PERCENT,
 })
 
 export const TEST_TRADE_EXACT_INPUT_API = new ClassicTrade({
@@ -61,6 +64,8 @@ export const TEST_TRADE_EXACT_INPUT_API = new ClassicTrade({
   gasUseEstimateUSD: 1.0,
   approveInfo: { needsApprove: false },
   quoteMethod: QuoteMethod.ROUTING_API,
+  inputTax: ZERO_PERCENT,
+  outputTax: ZERO_PERCENT,
 })
 
 export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
@@ -75,6 +80,8 @@ export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
   tradeType: TradeType.EXACT_OUTPUT,
   quoteMethod: QuoteMethod.CLIENT_SIDE,
   approveInfo: { needsApprove: false },
+  inputTax: ZERO_PERCENT,
+  outputTax: ZERO_PERCENT,
 })
 
 export const TEST_ALLOWED_SLIPPAGE = new Percent(2, 100)

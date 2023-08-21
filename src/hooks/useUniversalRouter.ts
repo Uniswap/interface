@@ -62,8 +62,12 @@ export function useUniversalRouterSwapCallback(
         if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
+
+        // We include tax in slippage here as a workaround to get router to account for tax
+        const taxAdjustedSlippageTolerance = options.slippageTolerance.add(trade.totalTaxRate)
+
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
-          slippageTolerance: options.slippageTolerance,
+          slippageTolerance: taxAdjustedSlippageTolerance,
           deadlineOrPreviousBlockhash: options.deadline?.toString(),
           inputTokenPermit: options.permit,
           fee: options.feeOptions,
