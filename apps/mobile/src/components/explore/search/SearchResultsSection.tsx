@@ -226,7 +226,6 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
         }
         data={sortedSearchResults}
         keyExtractor={getSearchResultId}
-        listKey="wallets"
         renderItem={(props): JSX.Element | null => {
           // Find position of search result in list, but exclude header items
           const position =

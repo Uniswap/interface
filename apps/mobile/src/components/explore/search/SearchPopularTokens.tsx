@@ -54,12 +54,7 @@ export function SearchPopularTokens(): JSX.Element {
   }
 
   return (
-    <FlatList
-      data={popularTokens}
-      keyExtractor={getSearchResultId}
-      listKey="tokens"
-      renderItem={renderTokenItem}
-    />
+    <FlatList data={popularTokens} keyExtractor={getSearchResultId} renderItem={renderTokenItem} />
   )
 }
 

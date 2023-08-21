@@ -1,15 +1,13 @@
 #import "AppDelegate.h"
 
-#import <React/RCTBridge.h>
-#import <React/RCTBundleURLProvider.h>
-#import <React/RCTLinkingManager.h>
-#import <React/RCTRootView.h>
+#import <Firebase.h>
 
 #import "Uniswap-Swift.h"
 
-#import <Firebase.h>
-
+#import <React/RCTBundleURLProvider.h>
 #import <ReactNativePerformance/ReactNativePerformance.h>
+
+#import "RNSplashScreen.h"
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -36,8 +34,8 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-// must be first line in startup routine
-[ReactNativePerformance onAppStarted];
+  // must be first line in startup routine
+  [ReactNativePerformance onAppStarted];
 
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
@@ -45,39 +43,35 @@ static void InitializeFlipper(UIApplication *application) {
 
  [FIRApp configure];
 
-  // This is needed so universal links opened from OneSignal notifications navigate to the proper page. More details here: 
+  // This is needed so universal links opened from OneSignal notifications navigate to the proper page.
+  // More details here:
   // https://documentation.onesignal.com/v7.0/docs/react-native-sdk in the deep linking warning section.
   NSMutableDictionary *newLaunchOptions = [NSMutableDictionary dictionaryWithDictionary:launchOptions];
-    if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]) {
-      NSDictionary *remoteNotif = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-      if (remoteNotif[@"custom"] && remoteNotif[@"custom"][@"u"]) {
-          NSString *initialURL = remoteNotif[@"custom"][@"u"];
-          if (!launchOptions[UIApplicationLaunchOptionsURLKey]) {
-              newLaunchOptions[UIApplicationLaunchOptionsURLKey] = [NSURL URLWithString:initialURL];
-          }
-      }
+  if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]) {
+    NSDictionary *remoteNotif = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (remoteNotif[@"custom"] && remoteNotif[@"custom"][@"u"]) {
+        NSString *initialURL = remoteNotif[@"custom"][@"u"];
+        if (!launchOptions[UIApplicationLaunchOptionsURLKey]) {
+            newLaunchOptions[UIApplicationLaunchOptionsURLKey] = [NSURL URLWithString:initialURL];
+        }
     }
-
-  RCTBridge *bridge = [self.reactDelegate createBridgeWithDelegate:self launchOptions:newLaunchOptions];
-  RCTRootView *rootView = [self.reactDelegate createRootViewWithBridge:bridge
-                                                   moduleName:@"Uniswap"
-                                            initialProperties:nil];
-
-  if (@available(iOS 13.0, *)) {
-      rootView.backgroundColor = [UIColor systemBackgroundColor];
-  } else {
-      rootView.backgroundColor = [UIColor whiteColor];
   }
-
-  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UIViewController *rootViewController = [self.reactDelegate createRootViewController];
-  rootViewController.view = rootView;
-  self.window.rootViewController = rootViewController;
+  
+  self.moduleName = @"Uniswap";
+  self.initialProps = @{};
+  
   [self.window makeKeyAndVisible];
-
+  
+  if (@available(iOS 13.0, *)) {
+    self.window.rootViewController.view.backgroundColor = [UIColor systemBackgroundColor];
+  } else {
+    self.window.rootViewController.view.backgroundColor = [UIColor whiteColor];
+  }
+  
   [super application:application didFinishLaunchingWithOptions:newLaunchOptions];
+  
+  [RNSplashScreen show];
 
-  [super application:application didFinishLaunchingWithOptions:launchOptions];
   return YES;
 }
 
@@ -88,6 +82,16 @@ static void InitializeFlipper(UIApplication *application) {
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+/// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
+///
+/// @see: https://reactjs.org/blog/2022/03/29/react-v18.html
+/// @note: This requires to be rendering on Fabric (i.e. on the New Architecture).
+/// @return: `true` if the `concurrentRoot` feature is enabled. Otherwise, it returns `false`.
+- (BOOL)concurrentRootEnabled
+{
+  return true;
 }
 
 // Enable deep linking

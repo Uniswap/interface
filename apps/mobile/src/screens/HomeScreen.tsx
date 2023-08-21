@@ -269,9 +269,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         SWAP_BUTTON_HEIGHT +
         TAB_STYLES.tabListInner.paddingBottom +
         listBottomPadding,
-      minHeight: dimensions.fullHeight + headerHeightDiff,
     }),
-    [headerHeight, insets.bottom, listBottomPadding, headerHeightDiff]
+    [headerHeight, insets.bottom, listBottomPadding]
   )
 
   const loadingContainerStyle = useMemo<StyleProp<ViewStyle>>(

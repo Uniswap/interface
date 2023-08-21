@@ -54,7 +54,7 @@ export function SwitchNetworksModal(): JSX.Element {
                 <Image
                   borderRadius="$roundedFull"
                   height={iconSizes.icon28}
-                  source={CHAIN_INFO[chain].logo}
+                  source={CHAIN_INFO[chain].logo ?? { uri: '' }}
                   width={iconSizes.icon28}
                 />
                 <Text color="$neutral1" variant="subheadSmall">

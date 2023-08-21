@@ -32,7 +32,7 @@ module.exports = {
     '\\.svg$': 'jest-transformer-svg',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|react-native-reanimated|@react-native|@react-native-firebase|react-native-webview|@gorhom|expo.*|react-native-flipper|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash|@walletconnect)/)',
+    'node_modules/(?!(react-native|uuid|react-native-reanimated|react-native-splash-screen|statsig-js|statsig-react-native|@react-native|@react-native-firebase|react-native-webview|@gorhom|expo.*|react-native-flipper|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash|@walletconnect)/)',
   ],
   ...globals,
 }

@@ -5,7 +5,7 @@ import { RemoteSvg } from './RemoteSvg'
 
 type Props = {
   backgroundColor?: string
-  borderRadius: number
+  borderRadius?: number
   uri: string
   height: number
   width: number
@@ -16,7 +16,7 @@ const RESIZE_MODE_CONTAIN: ImageResizeMode = 'contain'
 
 export function RemoteImage({
   backgroundColor,
-  borderRadius,
+  borderRadius = 0,
   uri,
   height,
   width,

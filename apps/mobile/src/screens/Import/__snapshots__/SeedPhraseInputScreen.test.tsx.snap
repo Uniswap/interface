@@ -328,7 +328,19 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     <View
                       accessibilityState={
                         {
+                          "busy": undefined,
+                          "checked": undefined,
                           "disabled": false,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
                         }
                       }
                       accessible={true}
@@ -505,6 +517,23 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 }
               >
                 <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
                   accessible={true}
                   collapsable={false}
                   focusable={true}
@@ -565,7 +594,19 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
             <View
               accessibilityState={
                 {
+                  "busy": undefined,
+                  "checked": undefined,
                   "disabled": true,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
                 }
               }
               accessible={true}

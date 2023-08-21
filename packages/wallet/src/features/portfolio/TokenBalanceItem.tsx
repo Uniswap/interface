@@ -1,9 +1,10 @@
 import { memo } from 'react'
-import { Flex, getTokenValue, Icons, Image, Text, XStack, YStack } from 'ui/src'
+import { Flex, getTokenValue, Icons, Text, XStack, YStack } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { theme } from 'ui/src/theme/restyle'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface TokenBalanceItemProps {
@@ -54,9 +55,9 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       ) : (
         <Flex row alignItems="center" gap="$spacing12" width="100%">
           {/* Currency logo */}
-          <Image
+          <RemoteImage
             height={iconSizes.icon40}
-            src={currencyInfo.logoUrl ?? ''}
+            uri={currencyInfo.logoUrl ?? ''}
             width={iconSizes.icon40}
           />
 

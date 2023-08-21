@@ -135,7 +135,6 @@
 		07F136422A5763480067004F /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F136412A5763480067004F /* Network.swift */; };
 		07F5CF712A6AD97D00C648A5 /* Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F5CF702A6AD97D00C648A5 /* Chart.swift */; };
 		07F5CF752A7020FD00C648A5 /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F5CF742A7020FD00C648A5 /* Format.swift */; };
-		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */; };
@@ -159,11 +158,13 @@
 		8385A47D3C765B841F450090 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */; };
 		9293C688E2BC4F0791E544E7 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3155C0CF238C4436932B207D /* Inter-Regular.ttf */; };
 		9C9285C0639E520B3453B9C0 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A82B0304EEE753C6DEB3943E /* libPods-OneSignalNotificationServiceExtension.a */; };
+		9F3500842A8AAAF50077BFC5 /* libreact-native-splash-screen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F3500832A8AAAF50077BFC5 /* libreact-native-splash-screen.a */; };
 		9F78980B2A819CC4004D5A98 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072F6C222A44A32E00DA720A /* SwiftUI.framework */; };
 		9F78980E2A819D2B004D5A98 /* WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; };
 		9F7898112A819D32004D5A98 /* WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; };
 		9F7898142A819D62004D5A98 /* WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; };
 		9F7898152A819D62004D5A98 /* WidgetsCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9FEC9B8B2A858CF1003CD019 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FEC9B8A2A858CF1003CD019 /* AppDelegate.m */; };
 		A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */; };
 		A3F0A5AF272B01FD00895B25 /* RnEthersRS.m in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5AE272B01FD00895B25 /* RnEthersRS.m */; };
 		A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */; };
@@ -415,7 +416,6 @@
 		07F5CF742A7020FD00C648A5 /* Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Format.swift; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Uniswap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Uniswap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Uniswap/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Uniswap/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Uniswap/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Uniswap/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Uniswap/main.m; sourceTree = "<group>"; };
@@ -450,6 +450,9 @@
 		811E7ED33487936333408382 /* Pods-OneSignalNotificationServiceExtension.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.beta.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.beta.xcconfig"; sourceTree = "<group>"; };
 		8816FB4EC77AF22919705454 /* Pods-WidgetsCoreTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.beta.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.beta.xcconfig"; sourceTree = "<group>"; };
 		9BF90CF492394DF50D3BAF76 /* Pods-WidgetsCoreTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.debug.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.debug.xcconfig"; sourceTree = "<group>"; };
+		9F3500812A8AA5890077BFC5 /* EXSplashScreen.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = EXSplashScreen.xcframework; path = "../../../node_modules/expo-splash-screen/ios/EXSplashScreen.xcframework"; sourceTree = "<group>"; };
+		9F3500832A8AAAF50077BFC5 /* libreact-native-splash-screen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-splash-screen.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9FEC9B8A2A858CF1003CD019 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Uniswap/AppDelegate.m; sourceTree = "<group>"; };
 		A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A3F0A5AD272B01C800895B25 /* RNEthersRS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNEthersRS-Bridging-Header.h"; sourceTree = "<group>"; };
 		A3F0A5AE272B01FD00895B25 /* RnEthersRS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RnEthersRS.m; sourceTree = "<group>"; };
@@ -551,6 +554,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9F3500842A8AAAF50077BFC5 /* libreact-native-splash-screen.a in Frameworks */,
 				F2867EBF8C9DE41CF466D17C /* libPods-Uniswap.a in Frameworks */,
 				9F7898142A819D62004D5A98 /* WidgetsCore.framework in Frameworks */,
 			);
@@ -858,7 +862,7 @@
 				E3C8C9DD291C4D2C000E00EA /* RiveAssets */,
 				F35AFD3627EE49230011A725 /* Uniswap.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
-				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				9FEC9B8A2A858CF1003CD019 /* AppDelegate.m */,
 				6C84F055283D83CF0071FA2E /* Onboarding */,
 				6CE631B928186D4500716D29 /* WalletConnect */,
 				A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */,
@@ -882,6 +886,8 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9F3500832A8AAAF50077BFC5 /* libreact-native-splash-screen.a */,
+				9F3500812A8AA5890077BFC5 /* EXSplashScreen.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				072F6C202A44A32E00DA720A /* WidgetKit.framework */,
 				072F6C222A44A32E00DA720A /* SwiftUI.framework */,
@@ -1821,11 +1827,11 @@
 			files = (
 				6C13E36C28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift in Sources */,
 				FD7304D028A3650A0085BDEA /* Colors.swift in Sources */,
+				9FEC9B8B2A858CF1003CD019 /* AppDelegate.m in Sources */,
 				072F6C2E2A44A32F00DA720A /* TokenPriceWidget.intentdefinition in Sources */,
 				D63928FA27D704350004F5CC /* RNWalletConnect.swift in Sources */,
 				6C8EFC2B28909EDF00FBD8EB /* EncryptionHelper.swift in Sources */,
 				A3F0A5AF272B01FD00895B25 /* RnEthersRS.m in Sources */,
-				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				07B0676D2A7D6EC8001DD9B9 /* RNWidgets.m in Sources */,
 				07B0676C2A7D6EC8001DD9B9 /* RNWidgets.swift in Sources */,
 				FD7304CA28A364E70085BDEA /* MnemonicConfirmationWordBankView.swift in Sources */,
@@ -2799,7 +2805,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2858,7 +2864,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
-				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3006,7 +3012,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
-				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3176,7 +3182,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
-				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

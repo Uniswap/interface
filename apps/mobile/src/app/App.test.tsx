@@ -1,5 +1,6 @@
 import React from 'react'
 import 'react-native'
+import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock'
 import mockRNLocalize from 'react-native-localize/mock'
 import App from 'src/app/App'
 import { render } from 'src/test/test-utils'
@@ -11,14 +12,7 @@ jest.mock('src/data/usePersistedApolloClient', () => {
 })
 
 jest.mock('react-native-localize', () => mockRNLocalize)
-
-// HACK:(jest output hygiene): skips setting state in component mount useEffect to prevent re-render
-jest.mock('react-native-device-info', () => ({
-  getUniqueId: (): Promise<string> => {
-    throw new Error('Prevent re-render')
-  },
-  getBundleId: (): string => '.dev',
-}))
+jest.mock('react-native-device-info', () => mockRNDeviceInfo)
 
 it('renders correctly', () => {
   render(<App />)

@@ -20,6 +20,7 @@ exports[`ActivityTab renders without error 1`] = `
     style={
       {
         "flex": 1,
+        "overflow": "hidden",
       }
     }
   >
@@ -46,6 +47,8 @@ exports[`ActivityTab renders without error 1`] = `
           "backgroundColor": undefined,
           "minHeight": 1,
           "minWidth": 1,
+          "paddingLeft": 0,
+          "paddingRight": 0,
         }
       }
       contentHeight={0}
@@ -116,6 +119,7 @@ exports[`ActivityTab renders without error 1`] = `
           "_getHeightOrWidth": [Function],
           "_getLayoutTypeForIndex": [Function],
           "_getSpan": [Function],
+          "_hasExpired": false,
           "_maxSpan": 1,
           "_setLayoutForType": [Function],
           "_tempDim": {
@@ -185,6 +189,10 @@ exports[`ActivityTab renders without error 1`] = `
             "sentry-label": "ReanimatedFlashList",
             "showsVerticalScrollIndicator": false,
           },
+          "renderWindowInsets": {
+            "height": 0,
+            "width": 0,
+          },
           "shouldRefreshWithAnchoring": true,
         }
       }
@@ -222,6 +230,8 @@ exports[`ActivityTab renders without error 1`] = `
             "backgroundColor": undefined,
             "minHeight": 1,
             "minWidth": 1,
+            "paddingLeft": 0,
+            "paddingRight": 0,
           },
           "onLayout": [Function],
           "onScrollBeginDrag": [Function],
@@ -308,6 +318,7 @@ exports[`ActivityTab renders without error 2`] = `
     style={
       {
         "flex": 1,
+        "overflow": "hidden",
       }
     }
   >
@@ -343,6 +354,8 @@ exports[`ActivityTab renders without error 2`] = `
           "backgroundColor": undefined,
           "minHeight": 1,
           "minWidth": 1,
+          "paddingLeft": 0,
+          "paddingRight": 0,
         }
       }
       contentHeight={0}
@@ -465,6 +478,7 @@ exports[`ActivityTab renders without error 2`] = `
           "_getHeightOrWidth": [Function],
           "_getLayoutTypeForIndex": [Function],
           "_getSpan": [Function],
+          "_hasExpired": false,
           "_maxSpan": 1,
           "_setLayoutForType": [Function],
           "_tempDim": {
@@ -567,6 +581,10 @@ exports[`ActivityTab renders without error 2`] = `
             "sentry-label": "ReanimatedFlashList",
             "showsVerticalScrollIndicator": false,
           },
+          "renderWindowInsets": {
+            "height": 0,
+            "width": 0,
+          },
           "shouldRefreshWithAnchoring": true,
         }
       }
@@ -604,6 +622,8 @@ exports[`ActivityTab renders without error 2`] = `
             "backgroundColor": undefined,
             "minHeight": 1,
             "minWidth": 1,
+            "paddingLeft": 0,
+            "paddingRight": 0,
           },
           "onLayout": [Function],
           "onScrollBeginDrag": [Function],

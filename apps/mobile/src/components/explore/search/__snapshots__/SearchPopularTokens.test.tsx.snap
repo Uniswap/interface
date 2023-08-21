@@ -532,7 +532,6 @@ exports[`SearchPopularTokens renders without error 2`] = `
   getItem={[Function]}
   getItemCount={[Function]}
   keyExtractor={[Function]}
-  listKey="tokens"
   onContentSizeChange={[Function]}
   onLayout={[Function]}
   onMomentumScrollBegin={[Function]}
@@ -548,10 +547,28 @@ exports[`SearchPopularTokens renders without error 2`] = `
 >
   <View>
     <View
+      onFocusCapture={[Function]}
       onLayout={[Function]}
       style={null}
     >
       <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         accessible={true}
         collapsable={false}
         focusable={true}
@@ -750,10 +767,28 @@ exports[`SearchPopularTokens renders without error 2`] = `
       </View>
     </View>
     <View
+      onFocusCapture={[Function]}
       onLayout={[Function]}
       style={null}
     >
       <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         accessible={true}
         collapsable={false}
         focusable={true}

@@ -4,7 +4,7 @@
   "dependencies": {
     "@amplitude/analytics-browser": "1.12.1",
     "@amplitude/analytics-core": "0.11.0",
-    "@amplitude/analytics-react-native": "0.5.0",
+    "@amplitude/analytics-react-native": "1.4.0",
     "@amplitude/analytics-types": "0.13.0",
     "@react-navigation/core": "6.2.2",
     "@sentry/react-native": "5.5.0",
@@ -14,7 +14,7 @@
     "dayjs": "1.11.7",
     "jsbi": "3.2.5",
     "react": "18.2.0",
-    "react-native": "0.70.8",
+    "react-native": "0.71.11",
     "react-native-device-info": "10.0.2",
     "react-test-renderer": "18.2.0"
   },

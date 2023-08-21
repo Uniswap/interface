@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v2-beta
         with:
-          node-version: "16.10"
+          node-version: "18.12.1"
 
       - name: Download bundle artifact
         uses: actions/download-artifact@v3

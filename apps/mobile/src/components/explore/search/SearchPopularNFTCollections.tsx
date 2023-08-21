@@ -44,7 +44,6 @@ export function SearchPopularNFTCollections(): JSX.Element {
     <FlatList
       data={formattedItems}
       keyExtractor={getSearchResultId}
-      listKey="collections"
       renderItem={renderNFTCollectionItem}
     />
   )

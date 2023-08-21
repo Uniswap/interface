@@ -78,7 +78,6 @@ export function SearchEmptySection(): JSX.Element {
         }
         data={SUGGESTED_WALLETS}
         keyExtractor={walletKey}
-        listKey="wallets"
         renderItem={renderSearchItem}
       />
     </AnimatedFlex>

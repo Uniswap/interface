@@ -2,7 +2,6 @@ import { ApolloProvider } from '@apollo/client'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
-import * as SplashScreen from 'expo-splash-screen'
 import { default as React, StrictMode, useCallback, useEffect } from 'react'
 import { NativeModules, StatusBar } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
@@ -41,6 +40,7 @@ import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { StatsigProvider } from 'statsig-react-native'
 import { flex } from 'ui/src/theme/restyle'
+import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { config } from 'wallet/src/config'
@@ -51,8 +51,9 @@ import { useAccounts, useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { SharedProvider } from 'wallet/src/provider'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
-// Keep the splash screen visible while we fetch resources until one of our landing pages loads
-SplashScreen.preventAutoHideAsync().catch(() => undefined)
+if (__DEV__) {
+  registerConsoleOverrides()
+}
 
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
