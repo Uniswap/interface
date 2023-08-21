@@ -1,11 +1,11 @@
 import { Plural, Trans } from '@lingui/macro'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { ZERO } from '@uniswap/router-sdk'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { ZERO_PERCENT } from 'constants/misc'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
@@ -183,16 +183,10 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
 }
 
 function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' | 'output' }) {
-  let currency, percentage
-  if (type === 'input' && !trade.inputTax.equalTo(ZERO)) {
-    currency = trade.inputAmount.currency
-    percentage = trade.inputTax
-  } else if (type === 'output' && !trade.outputTax.equalTo(ZERO)) {
-    currency = trade.outputAmount.currency
-    percentage = trade.outputTax
-  } else {
-    return null
-  }
+  const [currency, percentage] =
+    type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
+
+  if (percentage.equalTo(ZERO_PERCENT)) return null
 
   return (
     <RowBetween>

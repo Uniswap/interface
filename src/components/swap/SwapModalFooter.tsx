@@ -1,11 +1,11 @@
 import { Plural, t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { ZERO } from '@uniswap/router-sdk'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Column from 'components/Column'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { ZERO_PERCENT } from 'constants/misc'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useWarningColor } from 'hooks/useWarningColor'
@@ -219,18 +219,12 @@ export default function SwapModalFooter({
 }
 
 function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' | 'output' }) {
-  let currency, percentage
-  if (type === 'input' && !trade.inputTax.equalTo(ZERO)) {
-    currency = trade.inputAmount.currency
-    percentage = trade.inputTax
-  } else if (type === 'output' && !trade.outputTax.equalTo(ZERO)) {
-    currency = trade.outputAmount.currency
-    percentage = trade.outputTax
-  }
+  const [currency, percentage] =
+    type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
 
   const color = useWarningColor(percentage)
 
-  if (!currency || !percentage) return null
+  if (percentage.equalTo(ZERO_PERCENT)) return null
 
   return (
     <ThemedText.BodySmall>
