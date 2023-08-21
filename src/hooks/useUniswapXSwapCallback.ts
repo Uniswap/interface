@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import * as Sentry from '@sentry/react'
 import { SwapEventName } from '@uniswap/analytics-events'
-import { signTypedData } from '@uniswap/conedison/provider/signing'
 import { Percent } from '@uniswap/sdk-core'
 import { DutchOrder, DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -11,6 +10,7 @@ import { useCallback } from 'react'
 import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { UserRejectedRequestError } from 'utils/errors'
+import { signTypedData } from 'utils/signing'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 const DEFAULT_START_TIME_PADDING_SECONDS = 30

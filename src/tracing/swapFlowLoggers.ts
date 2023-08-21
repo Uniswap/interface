@@ -1,6 +1,7 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { ITraceContext } from 'analytics'
 import { sendAnalyticsEvent } from 'analytics'
+import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 
 import { SwapEventTimestampTracker, SwapEventType } from './SwapEventTimestampTracker'
 
@@ -31,4 +32,26 @@ export function maybeLogFirstSwapAction(analyticsContext: ITraceContext) {
       ...analyticsContext,
     })
   }
+}
+
+export function logSwapQuoteRequest(
+  chainId: number,
+  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+) {
+  let performanceMetrics = {}
+  if (routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE) {
+    const hasSetSwapQuote = tracker.hasTimestamp(SwapEventType.FIRST_QUOTE_FETCH_STARTED)
+    const elapsedTime = tracker.setElapsedTime(SwapEventType.FIRST_QUOTE_FETCH_STARTED)
+    performanceMetrics = {
+      // We only log the time_to_first_quote_request metric for the first quote request of a session.
+      time_to_first_quote_request: hasSetSwapQuote ? undefined : elapsedTime,
+      time_to_first_quote_request_since_first_input: hasSetSwapQuote
+        ? undefined
+        : tracker.getElapsedTime(SwapEventType.FIRST_QUOTE_FETCH_STARTED, SwapEventType.FIRST_SWAP_ACTION),
+    }
+  }
+  sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_FETCH, {
+    chainId,
+    ...performanceMetrics,
+  })
 }

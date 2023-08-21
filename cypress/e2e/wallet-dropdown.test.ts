@@ -32,11 +32,11 @@ describe('Wallet Dropdown', () => {
       }
 
       cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
-      cy.location('search').should('match', /\?lng=af-ZA$/)
+      cy.location('hash').should('match', /\?lng=af-ZA$/)
       cy.contains('Uniswap available in: English')
 
       cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
-      cy.location('search').should('match', /\?lng=en-US$/)
+      cy.location('hash').should('match', /\?lng=en-US$/)
       cy.contains('Uniswap available in: English').should('not.exist')
     })
   }
