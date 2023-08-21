@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import { sendAnalyticsEvent } from 'analytics'
 import { SupportedCurrency } from 'constants/currencies'
 import useParsedQueryString from 'hooks/useParsedQueryString'
