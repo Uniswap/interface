@@ -2,36 +2,23 @@ import { Trans } from '@lingui/macro'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
-import { Check } from 'react-feather'
-import { Link } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components'
-import { ClickableStyle, ThemedText } from 'theme'
 
+import { MenuItem } from './shared'
 import { SlideOutMenu } from './SlideOutMenu'
-
-const InternalLinkMenuItem = styled(Link)`
-  ${ClickableStyle}
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 12px 0;
-  justify-content: space-between;
-  text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
-`
 
 function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isActive: boolean }) {
   const { to, onClick } = useLocationLinkProps(locale)
-  const theme = useTheme()
 
   if (!to) return null
 
   return (
-    <InternalLinkMenuItem onClick={onClick} to={to}>
-      <ThemedText.BodySmall data-testid="wallet-language-item">{LOCALE_LABEL[locale]}</ThemedText.BodySmall>
-      {isActive && <Check color={theme.accentActive} opacity={1} size={20} />}
-    </InternalLinkMenuItem>
+    <MenuItem
+      label={LOCALE_LABEL[locale]}
+      onClick={onClick}
+      to={to}
+      isActive={isActive}
+      testId="wallet-language-item"
+    />
   )
 }
 
