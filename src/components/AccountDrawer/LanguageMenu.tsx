@@ -9,8 +9,6 @@ import { SlideOutMenu } from './SlideOutMenu'
 function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isActive: boolean }) {
   const { to, onClick } = useLocationLinkProps(locale)
 
-  if (!to) return null
-
   return (
     <MenuItem
       label={LOCALE_LABEL[locale]}
