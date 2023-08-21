@@ -1,7 +1,7 @@
 import { Trade } from '@kinetix/router-sdk'
 import { CurrencyAmount, Percent, TradeType } from '@kinetix/sdk-core'
+import { Pair, Route as V2Route } from '@kinetix/v2-sdk'
 import { Route as V3Route } from '@kinetix/v3-sdk'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 import {
   TEST_POOL_12,

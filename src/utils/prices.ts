@@ -1,7 +1,7 @@
 import { Trade } from '@kinetix/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@kinetix/sdk-core'
+import { Pair } from '@kinetix/v2-sdk'
 import { FeeAmount } from '@kinetix/v3-sdk'
-import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 
 import {

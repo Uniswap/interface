@@ -1,5 +1,5 @@
 import type { TransactionResponse } from '@ethersproject/providers'
-import MerkleDistributorJSON from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
+import MerkleDistributorJSON from '@kinetix/merkle-distributor/build/MerkleDistributor.json'
 import { CurrencyAmount, MERKLE_DISTRIBUTOR_ADDRESS, Token } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'

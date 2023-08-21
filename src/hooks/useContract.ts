@@ -9,8 +9,8 @@ import {
   V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
 } from '@kinetix/sdk-core'
-import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import IUniswapV2PairJson from '@kinetix/v2-core/build/IUniswapV2Pair.json'
+import IUniswapV2Router02Json from '@kinetix/v2-periphery/build/IUniswapV2Router02.json'
 import TickLensJson from '@kinetix/v3-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json'
 import UniswapInterfaceMulticallJson from '@kinetix/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import NonfungiblePositionManagerJson from '@kinetix/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'

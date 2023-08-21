@@ -1,7 +1,7 @@
 import { Protocol } from '@kinetix/router-sdk'
 import { Currency, Percent, TradeType } from '@kinetix/sdk-core'
+import { Pair } from '@kinetix/v2-sdk'
 import { FeeAmount } from '@kinetix/v3-sdk'
-import { Pair } from '@uniswap/v2-sdk'
 import { ClassicTrade } from 'state/routing/types'
 
 export interface RoutingDiagramEntry {

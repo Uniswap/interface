@@ -1,7 +1,7 @@
 import { IRoute, Protocol } from '@kinetix/router-sdk'
 import { Currency, CurrencyAmount } from '@kinetix/sdk-core'
+import { Pair } from '@kinetix/v2-sdk'
 import { Pool } from '@kinetix/v3-sdk'
-import { Pair } from '@uniswap/v2-sdk'
 import { TokenAmountInput, TokenTradeRouteInput, TradePoolInput } from 'graphql/data/__generated__/types-and-hooks'
 import { ClassicTrade } from 'state/routing/types'
 
