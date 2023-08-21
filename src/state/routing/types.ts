@@ -1,8 +1,8 @@
 import { MixedRouteSDK, Protocol, Trade } from '@uniswap/router-sdk'
 import { ChainId, Currency, CurrencyAmount, Percent, Token, TradeType } from '@kinetix/sdk-core'
-import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
+import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@kinetix/swapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
-import { Route as V3Route } from '@uniswap/v3-sdk'
+import { Route as V3Route } from '@kinetix/v3-sdk'
 
 export enum TradeState {
   LOADING,

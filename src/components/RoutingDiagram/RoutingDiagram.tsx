@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency } from '@kinetix/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@kinetix/v3-sdk'
 import Badge from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'

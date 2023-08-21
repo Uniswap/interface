@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@kinetix/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@kinetix/v3-sdk'
 import { AutoColumn, ColumnCenter } from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import { format } from 'd3'

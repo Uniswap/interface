@@ -1,5 +1,5 @@
 import { Currency, Token } from '@kinetix/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@kinetix/v3-sdk'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
 import { useMemo } from 'react'

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@kinetix/sdk-core'
-import { Position } from '@uniswap/v3-sdk'
+import { Position } from '@kinetix/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useToken } from 'hooks/Tokens'
 import { usePool } from 'hooks/usePools'

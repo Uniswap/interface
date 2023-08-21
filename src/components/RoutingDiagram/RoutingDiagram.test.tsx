@@ -1,6 +1,6 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent } from '@kinetix/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@kinetix/v3-sdk'
 import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'
 import { render } from 'test-utils/render'
 import { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'

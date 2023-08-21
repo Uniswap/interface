@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, Price } from '@kinetix/sdk-core'
-import { Position } from '@uniswap/v3-sdk'
+import { Position } from '@kinetix/v3-sdk'
 import { AutoColumn } from 'components/Column'
 import { PositionPreview } from 'components/PositionPreview'
 import styled from 'styled-components'

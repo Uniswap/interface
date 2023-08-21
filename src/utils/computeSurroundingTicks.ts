@@ -1,5 +1,5 @@
 import { Token } from '@kinetix/sdk-core'
-import { tickToPrice } from '@uniswap/v3-sdk'
+import { tickToPrice } from '@kinetix/v3-sdk'
 import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 

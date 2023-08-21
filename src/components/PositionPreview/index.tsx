@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@kinetix/sdk-core'
-import { Position } from '@uniswap/v3-sdk'
+import { Position } from '@kinetix/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'

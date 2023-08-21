@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: 'daily'
     allow:
-      - dependency-name: '@uniswap/default-token-list'
-      - dependency-name: '@uniswap/token-lists'
+      - dependency-name: '@kinetix/default-token-list'
+      - dependency-name: '@kinetix/token-lists'
     reviewers:
       - 'Uniswap/dependabot-reviewers'

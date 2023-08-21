@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, WETH9 } from '@kinetix/sdk-core'
-import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool, Position } from '@kinetix/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'

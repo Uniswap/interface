@@ -1,5 +1,5 @@
 import { ChainId, Token } from '@kinetix/sdk-core'
-import { Pool, Position } from '@uniswap/v3-sdk'
+import { Pool, Position } from '@kinetix/v3-sdk'
 import { useAllTokensMultichain } from 'hooks/Tokens'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'

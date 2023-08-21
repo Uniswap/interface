@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { Position } from '@uniswap/v3-sdk'
+import { Position } from '@kinetix/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
