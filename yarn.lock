@@ -3724,10 +3724,10 @@
     bignumber.js "^9.0.2"
     ethers "^5.3.1"
 
-"@kinetix/universal-router-sdk@^1.0.1":
-  version "1.0.1"
-  resolved "http://localhost:4873/@kinetix/universal-router-sdk/-/universal-router-sdk-1.0.1.tgz#354a19cbff7baf2b1a7367787156ed0f32d1fe62"
-  integrity sha512-qKzv3W2WP3xSdPhvrmqZFgOUPFblwHN7HlnGRQxZS/7JkucB4OL+cAesihOlQBrKbUosUBYHZw8QlcpKqEOuvw==
+"@kinetix/universal-router-sdk@^1.0.2":
+  version "1.0.2"
+  resolved "http://localhost:4873/@kinetix/universal-router-sdk/-/universal-router-sdk-1.0.2.tgz#65e5219d31c42ce187a068ca1ac8a14e9a5b89c8"
+  integrity sha512-xSWdYScWdS7W5IBUpHU5AkyvmpmU6q7uRwQSBWrXXhM5IatLdc0Ebc1kU4yu/TqzPruyExeETIZrfReutY14cA==
   dependencies:
     "@kinetix/router-sdk" "^1.0.0"
     "@kinetix/sdk-core" "^1.0.0"
@@ -6526,7 +6526,7 @@
     dotenv "^14.2.0"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/universal-router-sdk@^1.5.4", "@uniswap/universal-router-sdk@^1.5.6":
+"@uniswap/universal-router-sdk@^1.5.4":
   version "1.5.6"
   resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.5.6.tgz#274a6ac5df032c34544005fe329aa9e2aac9ade6"
   integrity sha512-ZD27U+kugMRJRVEX0oWZsRCw1n5vBN3I17Q22IWE+w/WhOJSppUr6PLo9u4HRdqXTZET7gubnlRc0LOAEkkSkQ==

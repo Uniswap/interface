@@ -11,6 +11,7 @@ import bnbSquareLogoUrl from 'assets/svg/bnb_square_logo.svg'
 import bnbLogo from 'assets/svg/bnb-logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
 import celoSquareLogoUrl from 'assets/svg/celo_square_logo.svg'
+import kavaLogo from 'assets/svg/kava-logo.png'
 import optimismSquareLogoUrl from 'assets/svg/optimism_square_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import polygonSquareLogoUrl from 'assets/svg/polygon_square_logo.svg'
@@ -19,7 +20,7 @@ import ms from 'ms'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { ARBITRUM_LIST, AVALANCHE_LIST, BASE_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
+import { ARBITRUM_LIST, AVALANCHE_LIST, BASE_LIST, CELO_LIST, KAVA_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
 
@@ -274,6 +275,22 @@ const CHAIN_INFO: ChainInfoMap = {
     squareLogoUrl: baseSquareLogo,
     nativeCurrency: { name: 'Base Goerli Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_84531,
+  },
+  [ChainId.KAVA]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms(`10m`),
+    bridge: 'https://cbridge.celer.network/1/2222',
+    docs: 'https://docs.kava.io/',
+    explorer: 'https://kavascan.com/',
+    infoLink: 'https://info.kinetix.finance/#/kava',
+    label: 'KAVA',
+    logoUrl: kavaLogo,
+    circleLogoUrl: kavaLogo,
+    squareLogoUrl: kavaLogo,
+    nativeCurrency: { name: 'KAVA', symbol: 'KAVA', decimals: 18 },
+    defaultListUrl: KAVA_LIST,
+    color: darkTheme.chain_2222,
+    backgroundColor: darkTheme.chain_2222_background,
   },
 } as const
 

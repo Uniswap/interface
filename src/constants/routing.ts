@@ -3,6 +3,10 @@ import { ChainId, Currency, Token } from '@kinetix/sdk-core'
 
 import {
   ARB,
+  ATOM_KAVA,
+  axlETH_KAVA,
+  axlUSDC_KAVA,
+  axlWBTC_KAVA,
   BTC_BSC,
   BUSD_BSC,
   CEUR_CELO,
@@ -17,6 +21,7 @@ import {
   DAI_OPTIMISM,
   DAI_POLYGON,
   ETH_BSC,
+  MIM_KAVA,
   nativeOnChain,
   OP,
   PORTAL_ETH_CELO,
@@ -33,6 +38,7 @@ import {
   USDT_ARBITRUM_ONE,
   USDT_AVALANCHE,
   USDT_BSC,
+  USDT_KAVA,
   USDT_OPTIMISM,
   USDT_POLYGON,
   WBTC,
@@ -115,6 +121,15 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDC_AVALANCHE,
     USDT_AVALANCHE,
     WETH_AVALANCHE,
+  ],
+  [ChainId.KAVA]: [
+    nativeOnChain(ChainId.KAVA),
+    axlUSDC_KAVA,
+    axlETH_KAVA,
+    axlWBTC_KAVA,
+    ATOM_KAVA,
+    MIM_KAVA,
+    USDT_KAVA,
   ],
 }
 

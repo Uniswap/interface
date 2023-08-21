@@ -1,6 +1,6 @@
 import { QueryResult } from '@apollo/client'
-import * as Sentry from '@sentry/react'
 import { ChainId, Currency, Token } from '@kinetix/sdk-core'
+import * as Sentry from '@sentry/react'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms'
@@ -66,6 +66,7 @@ export const GQL_MAINNET_CHAINS = [
   Chain.Bnb,
   Chain.Avalanche,
   Chain.Base,
+  Chain.Kava,
 ] as const
 
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
@@ -154,6 +155,7 @@ const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
   [Chain.Bnb]: ChainId.BNB,
   [Chain.Avalanche]: ChainId.AVALANCHE,
   [Chain.Base]: ChainId.BASE,
+  [Chain.Kava]: ChainId.KAVA,
 }
 
 export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
@@ -189,6 +191,7 @@ export const BACKEND_SUPPORTED_CHAINS = [
   Chain.Optimism,
   Chain.Celo,
   Chain.Base,
+  Chain.Kava,
 ] as const
 export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE] as const
 

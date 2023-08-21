@@ -125,7 +125,9 @@ const commonTheme = {
   chain_42161_background: colors.blue900,
   chain_84531: colors.networkBase,
   chain_56_background: colors.networkBsc,
+  chain_2222_background: colors.red200,
   promotional: colors.magenta300,
+  chain_2222: colors.red300,
 
   brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
   promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',

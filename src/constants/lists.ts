@@ -27,6 +27,8 @@ export const AVALANCHE_LIST =
 export const BASE_LIST =
   'https://raw.githubusercontent.com/ethereum-optimism/ethereum-optimism.github.io/master/optimism.tokenlist.json'
 
+export const KAVA_LIST =
+  'https://raw.githubusercontent.com/kinetixfi/default-token-list/main/build/kinetix-default.tokenlist.json'
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST, UNI_UNSUPPORTED_LIST]
 
 // default lists to be 'active' aka searched across
@@ -53,6 +55,7 @@ export const DEFAULT_INACTIVE_LIST_URLS: string[] = [
   PLASMA_BNB_LIST,
   AVALANCHE_LIST,
   BASE_LIST,
+  KAVA_LIST,
   ...UNSUPPORTED_LIST_URLS,
 ]
 

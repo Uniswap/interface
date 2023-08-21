@@ -456,6 +456,28 @@ export function isAvalanche(chainId: number): chainId is ChainId.AVALANCHE {
   return chainId === ChainId.AVALANCHE
 }
 
+export function isKava(chainId: number): chainId is ChainId.KAVA {
+  return chainId === ChainId.KAVA
+}
+
+class KavaNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isKava(this.chainId)) throw new Error('Not kava')
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isKava(chainId)) throw new Error('Not kava')
+    super(chainId, 18, 'KAVA', 'KAVA')
+  }
+}
+
 class AvaxNativeCurrency extends NativeCurrency {
   equals(other: Currency): boolean {
     return other.isNative && other.chainId === this.chainId
@@ -500,6 +522,8 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = new BscNativeCurrency(chainId)
   } else if (isAvalanche(chainId)) {
     nativeCurrency = new AvaxNativeCurrency(chainId)
+  } else if (isKava(chainId)) {
+    nativeCurrency = new KavaNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }
@@ -528,5 +552,6 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: s
     [ChainId.GOERLI]: USDC_GOERLI.address,
     [ChainId.SEPOLIA]: USDC_SEPOLIA.address,
     [ChainId.AVALANCHE]: USDC_AVALANCHE.address,
+    [ChainId.KAVA]: axlUSDC_KAVA.address,
   },
 }
