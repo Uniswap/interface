@@ -49,7 +49,7 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
           ) : null}
         </Box>
         <Box flexShrink={1}>
-          <Text variant={fontSize}>{text}</Text>
+          {typeof text === 'string' ? <Text variant={fontSize}>{text}</Text> : text}
         </Box>
       </Flex>
     </TouchableArea>
