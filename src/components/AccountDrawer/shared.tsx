@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { Check } from 'react-feather'
-import { Link, To } from 'react-router-dom'
+import type { To } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme'
 
