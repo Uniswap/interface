@@ -35,13 +35,17 @@ const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
   transform: translate3d(0, 0, 0) scaleY(1.1);
 
   background-image: ${(props) => `url(${props.backgroundImage})`};
-  filter: blur(62px);
+  filter: blur(20px);
 
-  opacity: ${({ theme }) => (theme.darkMode ? 0.2 : 0.1)};
+  opacity: ${({ theme }) => (theme.darkMode ? 0.2 : 0.4)};
 `
 
 const PlainBackground = styled(AbsoluteFill)`
   background: ${({ theme }) => `linear-gradient(${opacify(10, theme.accent1)}, transparent)`};
+`
+
+const BannerMask = styled(AbsoluteFill)`
+-webkit-mask-image: radial-gradient(ellipse 100% 130% at 65% 55%, black 7%, transparent 36%);;
 `
 
 const BannerMainArea = styled.div`
@@ -138,6 +142,7 @@ const Banner = () => {
 
   return (
     <BannerContainer>
+      <BannerMask>
       {activeCollection ? (
         activeCollection.bannerImageUrl ? (
           <BannerBackground backgroundImage={activeCollection.bannerImageUrl} />
@@ -145,6 +150,7 @@ const Banner = () => {
           <PlainBackground />
         )
       ) : null}
+      </BannerMask>
       <BannerMainArea>
         <HeaderContainer>
           Better prices. <br />
