@@ -15,9 +15,9 @@ import {
   TRY_ICON,
   USD_ICON,
   VND_ICON,
-} from './currencyIcons'
+} from './localCurrencyIcons'
 
-export const SUPPORTED_CURRENCIES = [
+export const SUPPORTED_LOCAL_CURRENCIES = [
   'USD',
   'EUR',
   'RUB',
@@ -38,11 +38,11 @@ export const SUPPORTED_CURRENCIES = [
   'THB',
 ]
 
-export type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number]
+export type SupportedLocalCurrency = (typeof SUPPORTED_LOCAL_CURRENCIES)[number]
 
-export const DEFAULT_CURRENCY: SupportedCurrency = 'USD'
+export const DEFAULT_LOCAL_CURRENCY: SupportedLocalCurrency = 'USD'
 
-export function getCurrencyIcon(currency: SupportedCurrency, size = 20): ReactNode {
+export function getLocalCurrencyIcon(currency: SupportedLocalCurrency, size = 20): ReactNode {
   switch (currency) {
     case 'USD':
       return <USD_ICON width={size} height={size} />

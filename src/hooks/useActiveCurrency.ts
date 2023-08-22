@@ -1,24 +1,27 @@
-import { DEFAULT_CURRENCY, SUPPORTED_CURRENCIES, SupportedCurrency } from 'constants/currencies'
+import { DEFAULT_LOCAL_CURRENCY, SUPPORTED_LOCAL_CURRENCIES, SupportedLocalCurrency } from 'constants/localCurrencies'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 
 import useParsedQueryString from './useParsedQueryString'
 
-export const activeCurrencyAtom = atomWithStorage<SupportedCurrency>('activeCurrency', DEFAULT_CURRENCY)
+export const activeLocalCurrencyAtom = atomWithStorage<SupportedLocalCurrency>(
+  'activeLocalCurrency',
+  DEFAULT_LOCAL_CURRENCY
+)
 
-function useUrlCurrency() {
+function useUrlLocalCurrency() {
   const parsed = useParsedQueryString()
-  const parsedCurrency = parsed.cur
+  const parsedLocalCurrency = parsed.cur
 
-  if (typeof parsedCurrency !== 'string') return undefined
+  if (typeof parsedLocalCurrency !== 'string') return undefined
 
-  const lowerCaseSupportedCurrency = parsedCurrency.toLowerCase()
-  return SUPPORTED_CURRENCIES.find((currency) => currency.toLowerCase() === lowerCaseSupportedCurrency)
+  const lowerCaseSupportedLocalCurrency = parsedLocalCurrency.toLowerCase()
+  return SUPPORTED_LOCAL_CURRENCIES.find((currency) => currency.toLowerCase() === lowerCaseSupportedLocalCurrency)
 }
 
-export function useActiveCurrency(): SupportedCurrency {
-  const activeCurrency = useAtomValue(activeCurrencyAtom)
-  const urlCurrency = useUrlCurrency()
+export function useActiveLocalCurrency(): SupportedLocalCurrency {
+  const activeLocalCurrency = useAtomValue(activeLocalCurrencyAtom)
+  const urlLocalCurrency = useUrlLocalCurrency()
 
-  return useMemo(() => urlCurrency ?? activeCurrency, [activeCurrency, urlCurrency])
+  return useMemo(() => urlLocalCurrency ?? activeLocalCurrency, [activeLocalCurrency, urlLocalCurrency])
 }

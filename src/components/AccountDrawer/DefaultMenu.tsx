@@ -5,8 +5,8 @@ import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import AuthenticatedHeader from './AuthenticatedHeader'
-import CurrencyMenu from './CurrencyMenu'
 import LanguageMenu from './LanguageMenu'
+import LocalCurrencyMenu from './LocalCurrencyMenu'
 import SettingsMenu from './SettingsMenu'
 
 const DefaultMenuWrap = styled(Column)`
@@ -18,7 +18,7 @@ enum MenuState {
   DEFAULT,
   SETTINGS,
   LANGUAGE_SETTINGS,
-  CURRENCY_SETTINGS,
+  LOCAL_CURRENCY_SETTINGS,
 }
 
 function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
@@ -29,7 +29,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const openSettings = useCallback(() => setMenu(MenuState.SETTINGS), [])
   const closeSettings = useCallback(() => setMenu(MenuState.DEFAULT), [])
   const openLanguageSettings = useCallback(() => setMenu(MenuState.LANGUAGE_SETTINGS), [])
-  const openCurrencySettings = useCallback(() => setMenu(MenuState.CURRENCY_SETTINGS), [])
+  const openLocalCurrencySettings = useCallback(() => setMenu(MenuState.LOCAL_CURRENCY_SETTINGS), [])
 
   useEffect(() => {
     if (!drawerOpen && menu !== MenuState.DEFAULT) {
@@ -54,11 +54,11 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
         <SettingsMenu
           onClose={closeSettings}
           openLanguageSettings={openLanguageSettings}
-          openCurrencySettings={openCurrencySettings}
+          openLocalCurrencySettings={openLocalCurrencySettings}
         />
       )}
       {menu === MenuState.LANGUAGE_SETTINGS && <LanguageMenu onClose={openSettings} />}
-      {menu === MenuState.CURRENCY_SETTINGS && <CurrencyMenu onClose={openSettings} />}
+      {menu === MenuState.LOCAL_CURRENCY_SETTINGS && <LocalCurrencyMenu onClose={openSettings} />}
     </DefaultMenuWrap>
   )
 }

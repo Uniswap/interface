@@ -162,12 +162,12 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('wallet-settings')).click()
       cy.contains('USD')
 
-      cy.get(getTestSelector('currency-settings-button')).click()
-      cy.get(getTestSelector('wallet-currency-item')).contains('AUD').click({ force: true })
+      cy.get(getTestSelector('local-currency-settings-button')).click()
+      cy.get(getTestSelector('wallet-local-currency-item')).contains('AUD').click({ force: true })
       cy.location('hash').should('match', /\?cur=AUD$/)
       cy.contains('AUD')
 
-      cy.get(getTestSelector('wallet-currency-item')).contains('USD').click({ force: true })
+      cy.get(getTestSelector('wallet-local-currency-item')).contains('USD').click({ force: true })
       cy.location('hash').should('match', /\?cur=USD$/)
       cy.contains('USD')
     })
