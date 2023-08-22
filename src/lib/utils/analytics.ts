@@ -35,6 +35,7 @@ export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSli
     type: trade.tradeType,
     ura_quote_id: isUniswapXTrade(trade) ? trade.quoteId : undefined,
     ura_request_id: trade.requestId,
+    ura_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
     token_in_symbol: trade.inputAmount.currency.symbol,
