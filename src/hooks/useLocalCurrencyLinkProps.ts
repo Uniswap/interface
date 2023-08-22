@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 import type { To } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 
-import { activeLocalCurrencyAtom, useActiveLocalCurrency } from './useActiveCurrency'
+import { activeLocalCurrencyAtom, useActiveLocalCurrency } from './useLocalActiveCurrency'
 
 export function useLocalCurrencyLinkProps(localCurrency?: SupportedLocalCurrency): {
   to?: To

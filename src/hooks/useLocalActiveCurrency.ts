@@ -16,7 +16,9 @@ function useUrlLocalCurrency() {
   if (typeof parsedLocalCurrency !== 'string') return undefined
 
   const lowerCaseSupportedLocalCurrency = parsedLocalCurrency.toLowerCase()
-  return SUPPORTED_LOCAL_CURRENCIES.find((currency) => currency.toLowerCase() === lowerCaseSupportedLocalCurrency)
+  return SUPPORTED_LOCAL_CURRENCIES.find(
+    (localCurrency) => localCurrency.toLowerCase() === lowerCaseSupportedLocalCurrency
+  )
 }
 
 export function useActiveLocalCurrency(): SupportedLocalCurrency {

@@ -42,8 +42,8 @@ export type SupportedLocalCurrency = (typeof SUPPORTED_LOCAL_CURRENCIES)[number]
 
 export const DEFAULT_LOCAL_CURRENCY: SupportedLocalCurrency = 'USD'
 
-export function getLocalCurrencyIcon(currency: SupportedLocalCurrency, size = 20): ReactNode {
-  switch (currency) {
+export function getLocalCurrencyIcon(localCurrency: SupportedLocalCurrency, size = 20): ReactNode {
+  switch (localCurrency) {
     case 'USD':
       return <USD_ICON width={size} height={size} />
     case 'EUR':

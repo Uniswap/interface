@@ -145,8 +145,8 @@ describe('Wallet Dropdown', () => {
     })
   })
 
-  describe('currency', () => {
-    it('loads currency from the query param', () => {
+  describe('local currency', () => {
+    it('loads local currency from the query param', () => {
       cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
@@ -156,7 +156,7 @@ describe('Wallet Dropdown', () => {
       cy.contains('AUD')
     })
 
-    it('loads currency from menu', () => {
+    it('loads local currency from menu', () => {
       cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
