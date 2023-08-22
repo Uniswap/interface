@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 
 import {
+  AUD_ICON,
   BRL_ICON,
   CAD_ICON,
   EUR_ICON,
@@ -10,9 +11,12 @@ import {
   INR_ICON,
   JPY_ICON,
   NGN_ICON,
+  PKR_ICON,
   RUB_ICON,
   SGD_ICON,
+  THB_ICON,
   TRY_ICON,
+  UAH_ICON,
   USD_ICON,
   VND_ICON,
 } from './localCurrencyIcons'
@@ -72,6 +76,14 @@ export function getLocalCurrencyIcon(localCurrency: SupportedLocalCurrency, size
       return <TRY_ICON width={size} height={size} />
     case 'NGN':
       return <NGN_ICON width={size} height={size} />
+    case 'AUD':
+      return <AUD_ICON width={size} height={size} />
+    case 'PKR':
+      return <PKR_ICON width={size} height={size} />
+    case 'UAH':
+      return <UAH_ICON width={size} height={size} />
+    case 'THB':
+      return <THB_ICON width={size} height={size} />
     default:
       return null
   }

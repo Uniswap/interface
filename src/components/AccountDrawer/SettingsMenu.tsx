@@ -62,7 +62,7 @@ const SettingsButton = ({
   <SettingsButtonWrapper data-testid={testId} align="center" justify="space-between" onClick={onClick}>
     <ThemedText.SubHeaderSmall color="textPrimary">{title}</ThemedText.SubHeaderSmall>
     <LanguageLabel gap="xs" align="center" width="min-content">
-      <ThemedText.LabelMedium color="textPrimary">{currentState}</ThemedText.LabelMedium>
+      <ThemedText.LabelSmall color="textPrimary">{currentState}</ThemedText.LabelSmall>
       <StyledChevron size={20} />
     </LanguageLabel>
   </SettingsButtonWrapper>
