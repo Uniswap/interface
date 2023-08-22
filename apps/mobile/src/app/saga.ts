@@ -19,8 +19,8 @@ import {
   tokenWrapSagaName,
 } from 'src/features/transactions/swap/wrapSaga'
 import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
-import { signWcRequestSaga } from 'src/features/walletConnect/saga'
-import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
+import { walletConnectSaga } from 'src/features/walletConnect/saga'
+import { signWcRequestSaga } from 'src/features/walletConnect/signWcRequestSaga'
 import { spawn } from 'typed-redux-saga'
 import { transactionWatcher } from 'wallet/src/features/transactions/transactionWatcherSaga'
 import {
@@ -56,7 +56,7 @@ const sagas = [
   restoreMnemonicCompleteWatcher,
   signWcRequestSaga,
   telemetrySaga,
-  walletConnectV2Saga,
+  walletConnectSaga,
 ]
 
 // All monitored sagas must be included here

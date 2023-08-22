@@ -4,64 +4,7 @@ import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
 
-const WC_PUSH_SERVER_BASE_URL = 'https://us-central1-uniswap-mobile.cloudfunctions.net'
-const WC_REGISTER_ENDPOINT = 'onWalletConnectRegistration'
-const WC_DEREGISTER_ENDPOINT = 'onWalletConnectDeregistration'
-
-const WCV2_HOSTED_PUSH_SERVER_URL = `https://echo.walletconnect.com/${config.walletConnectProjectId}`
-
-export type RegisterWcPushNotificationParams = {
-  bridge: string
-  topic: string
-  address: string
-  peerName: string
-  language: string
-}
-
-export type DeregisterWcPushNotificationParams = {
-  topic: string
-}
-
-export async function registerWcPushNotifications(
-  params: RegisterWcPushNotificationParams
-): Promise<void> {
-  const request = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(params),
-  }
-
-  try {
-    await fetch(`${WC_PUSH_SERVER_BASE_URL}/${WC_REGISTER_ENDPOINT}`, request)
-  } catch (error) {
-    logger.debug(
-      'walletConnectApi',
-      'registerWcPushNotifications',
-      `Error registering session ${params.topic} for WalletConnect Push Notifications`,
-      error
-    )
-  }
-}
-
-export async function deregisterWcPushNotifications(
-  params: DeregisterWcPushNotificationParams
-): Promise<void> {
-  const request = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(params),
-  }
-  try {
-    await fetch(`${WC_PUSH_SERVER_BASE_URL}/${WC_DEREGISTER_ENDPOINT}`, request)
-  } catch (error) {
-    logger.debug(
-      'walletConnectApi',
-      'deregisterWcPushNotifications',
-      `Error deregistering session ${params.topic} for WalletConnect Push Notifications`,
-      error
-    )
-  }
-}
+const WC_HOSTED_PUSH_SERVER_URL = `https://echo.walletconnect.com/${config.walletConnectProjectId}`
 
 /**
  * Registers client and device push token with hosted WalletConnect 2.0 Echo Server.
@@ -70,7 +13,7 @@ export async function deregisterWcPushNotifications(
  *
  * @param clientId WalletConnect 2.0 clientId
  */
-export async function registerWCv2ClientForPushNotifications(clientId: string): Promise<void> {
+export async function registerWCClientForPushNotifications(clientId: string): Promise<void> {
   try {
     const pushToken = await getOnesignalPushTokenOrError()
     const apnsEnvironment = await getIosPushNotificationServiceEnvironmentAsync()
@@ -85,7 +28,7 @@ export async function registerWCv2ClientForPushNotifications(clientId: string): 
       }),
     }
 
-    await fetch(`${WCV2_HOSTED_PUSH_SERVER_URL}/clients`, request)
+    await fetch(`${WC_HOSTED_PUSH_SERVER_URL}/clients`, request)
   } catch (error) {
     logger.error('Error registering client for WalletConnect 2.0 Push Notifications', {
       tags: {

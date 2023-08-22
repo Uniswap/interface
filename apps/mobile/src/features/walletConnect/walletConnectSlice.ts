@@ -3,38 +3,24 @@ import { ProposalTypes, SessionTypes } from '@walletconnect/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
   DappInfo,
-  DappInfoV1,
-  DappInfoV2,
   EthMethod,
   EthSignMethod,
   EthTransaction,
 } from 'wallet/src/features/walletConnect/types'
 
-export type WalletConnectSessionV1 = {
-  id: string
-  dapp: DappInfoV1
-  version: '1'
-}
-
-export type WalletConnectPendingSessionV2 = {
+export type WalletConnectPendingSession = {
   id: string
   chains: ChainId[]
-  dapp: DappInfoV2
+  dapp: DappInfo
   proposalNamespaces: ProposalTypes.RequiredNamespaces
-  version: '2'
 }
 
-export type WalletConnectSessionV2 = {
+export type WalletConnectSession = {
   id: string
   chains: ChainId[]
-  dapp: DappInfoV2
+  dapp: DappInfo
   namespaces: SessionTypes.Namespaces
-  version: '2'
 }
-
-export type WalletConnectSession = WalletConnectSessionV1 | WalletConnectSessionV2
-
-export type WalletConnectPendingSession = WalletConnectSessionV1 | WalletConnectPendingSessionV2
 
 interface SessionMapping {
   [sessionId: string]: WalletConnectSession
@@ -46,7 +32,6 @@ interface BaseRequest {
   account: string
   dapp: DappInfo
   chainId: ChainId
-  version: '1' | '2'
 }
 
 export interface SignRequest extends BaseRequest {
@@ -60,14 +45,7 @@ export interface TransactionRequest extends BaseRequest {
   transaction: EthTransaction
 }
 
-export interface SwitchChainRequest extends BaseRequest {
-  type: EthMethod.SwitchChain | EthMethod.AddChain
-  newChainId: number
-  dapp: DappInfoV1
-  version: '1'
-}
-
-export type WalletConnectRequest = SignRequest | TransactionRequest | SwitchChainRequest
+export type WalletConnectRequest = SignRequest | TransactionRequest
 
 export const isTransactionRequest = (
   request: WalletConnectRequest

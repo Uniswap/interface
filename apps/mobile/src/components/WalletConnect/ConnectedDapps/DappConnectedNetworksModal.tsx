@@ -9,11 +9,8 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { ModalName } from 'src/features/telemetry/constants'
-import {
-  removeSession,
-  WalletConnectSessionV2,
-} from 'src/features/walletConnect/walletConnectSlice'
-import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
+import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
+import { removeSession, WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -24,7 +21,7 @@ import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 interface DappConnectedNetworkModalProps {
-  session: WalletConnectSessionV2
+  session: WalletConnectSession
   onClose: () => void
 }
 
@@ -71,7 +68,7 @@ export function DappConnectedNetworkModal({
     <BottomSheetModal name={ModalName.WCDappConnectedNetworks} onClose={onClose}>
       <Flex centered gap="spacing16" mb="spacing24" px="spacing24" py="spacing12">
         <Flex alignItems="center" gap="spacing8">
-          <DappHeaderIcon dapp={dapp} showChain={false} />
+          <DappHeaderIcon dapp={dapp} />
           <Text textAlign="center" variant="buttonLabelMedium">
             <Text variant="bodyLarge">{t('Connected to ')}</Text>
             {dapp.name || dapp.url}

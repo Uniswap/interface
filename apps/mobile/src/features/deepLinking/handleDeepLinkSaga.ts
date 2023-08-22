@@ -9,14 +9,13 @@ import { handleTransactionLink } from 'src/features/deepLinking/handleTransactio
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ModalName, ShareableEntity } from 'src/features/telemetry/constants'
-import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
+import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
+import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
-import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnectV2/saga'
-import { pairWithWalletConnectURI } from 'src/features/walletConnectV2/utils'
 import { WidgetType } from 'src/features/widgets/widgets'
 import { Screens } from 'src/screens/Screens'
 import { openUri, UNISWAP_APP_NATIVE_TOKEN } from 'src/utils/linking'
-import { call, fork, put, takeLatest } from 'typed-redux-saga'
+import { call, put, takeLatest } from 'typed-redux-saga'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
@@ -268,11 +267,6 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
 
 export function* handleWalletConnectDeepLink(wcUri: string) {
   yield* call(waitForWcWeb3WalletIsReady)
-
-  const isValidWcUri = yield* call(isValidWCUrl, wcUri)
-  if (isValidWcUri) {
-    yield* fork(connectToApp, wcUri)
-  }
 
   if (parseUri(wcUri).version === 2) {
     try {

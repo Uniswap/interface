@@ -2,7 +2,7 @@ import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
-} from 'src/features/walletConnectV2/utils'
+} from 'src/features/walletConnect/utils'
 import { ChainId } from 'wallet/src/constants/chains'
 
 const EIP155_MAINNET = 'eip155:1'

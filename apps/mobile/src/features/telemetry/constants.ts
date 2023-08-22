@@ -129,7 +129,6 @@ export const enum ModalName {
   WCDappConnectedNetworks = 'wc-dapp-connected-networks-modal',
   WCPendingConnection = 'wc-pending-connection-modal',
   WCSignRequest = 'wc-sign-request-modal',
-  WCSwitchChainRequest = 'wc-switch-chain-request-modal',
   WCViewOnlyWarning = 'wc-view-only-warning-modal',
   // alphabetize additional values.
 }
@@ -224,7 +223,7 @@ export const enum ElementName {
   TokenWarningAccept = 'token-warning-accept',
   Unwrap = 'unwrap',
   WCDappSwitchAccount = 'wc-dapp-switch-account',
-  WCDappSwitchNetwork = 'wc-dapp-switch-network',
+  WCDappNetworks = 'wc-dapp-networks',
   WCOpenDapp = 'wc-open-dapp',
   WalletCard = 'wallet-card',
   WalletConnectScan = 'wallet-connect-scan',

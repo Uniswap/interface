@@ -10,7 +10,6 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { DappConnectedNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
-import { DappSwitchNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappSwitchNetworkModal'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { dimensions } from 'ui/src/theme/restyle'
 
@@ -73,18 +72,12 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           </Flex>
         )}
       </AnimatedFlex>
-      {selectedSession &&
-        (selectedSession.version === '1' ? (
-          <DappSwitchNetworkModal
-            selectedSession={selectedSession}
-            onClose={(): void => setSelectedSession(undefined)}
-          />
-        ) : (
-          <DappConnectedNetworkModal
-            session={selectedSession}
-            onClose={(): void => setSelectedSession(undefined)}
-          />
-        ))}
+      {selectedSession && (
+        <DappConnectedNetworkModal
+          session={selectedSession}
+          onClose={(): void => setSelectedSession(undefined)}
+        />
+      )}
     </>
   )
 }

@@ -101,7 +101,8 @@ export type MobileEventProperties = {
     eth_method?: EthMethod
     dapp_url: string
     dapp_name: string
-    wc_version: '1' | '2'
+    wc_version: string
+    connection_chain_ids?: number[]
     chain_id?: number
     outcome: WCRequestOutcome
   }

@@ -36,7 +36,6 @@ target 'Uniswap' do
   end
 
   pod 'EthersRS', :path =>  '../../../node_modules/@uniswap/ethers-rs-mobile'
-  pod 'WalletConnectSwift' => '1.6.0'
   pod 'Argon2Swift'
 
   permissions_path = '../../../node_modules/react-native-permissions/ios'

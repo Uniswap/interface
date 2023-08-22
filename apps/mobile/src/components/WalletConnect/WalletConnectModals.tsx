@@ -6,7 +6,6 @@ import { Box } from 'src/components/layout'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { WalletConnectRequestModal } from 'src/components/WalletConnect/RequestModal/WalletConnectRequestModal'
-import { WalletConnectSwitchChainModal } from 'src/components/WalletConnect/RequestModal/WalletConnectSwitchChainModal'
 import { PendingConnectionModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionModal'
 import { WalletConnectModal } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { closeModal } from 'src/features/modals/modalSlice'
@@ -16,7 +15,6 @@ import {
   removePendingSession,
   removeRequest,
   setDidOpenFromDeepLink,
-  SwitchChainRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
@@ -26,7 +24,6 @@ import {
   useActiveAccountAddressWithThrow,
   useSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
-import { EthMethod } from 'wallet/src/features/walletConnect/types'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function WalletConnectModals(): JSX.Element {
@@ -99,10 +96,6 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
     )
   }
 
-  if (isSwitchNetworkRequest(currRequest)) {
-    return <WalletConnectSwitchChainModal request={currRequest} onClose={onClose} />
-  }
-
   const isRequestFromSignerAccount = signerAccounts.some((account) =>
     areAddressesEqual(account.address, currRequest.account)
   )
@@ -135,8 +128,4 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
   }
 
   return <WalletConnectRequestModal request={currRequest} onClose={onClose} />
-}
-
-function isSwitchNetworkRequest(request: WalletConnectRequest): request is SwitchChainRequest {
-  return request.type === EthMethod.SwitchChain || request.type === EthMethod.AddChain
 }

@@ -1,5 +1,4 @@
 import { parseUri } from '@walletconnect/utils'
-import { isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export enum URIType {
@@ -64,10 +63,6 @@ async function getCustomUniswapWcCode(uri: string): Promise<{ uri: string; type:
   }
 
   const maybeWcUri = uri.slice(CUSTOM_UNI_QR_CODE_PREFIX.length)
-
-  if (await isValidWCUrl(maybeWcUri)) {
-    return { uri: maybeWcUri, type: URIType.WalletConnectURL }
-  }
 
   if (parseUri(maybeWcUri).version === 2) {
     return { uri: maybeWcUri, type: URIType.WalletConnectV2URL }

@@ -1,8 +1,8 @@
 import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes } from '@walletconnect/types'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { utils } from 'ethers'
+import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -103,9 +103,7 @@ export const parseSignRequest = (
         name: dapp.name,
         url: dapp.url,
         icon: dapp.icons[0] ?? null,
-        version: '2',
       },
-      version: '2',
     },
   }
 }
@@ -153,9 +151,7 @@ export const parseTransactionRequest = (
         name: dapp.name,
         url: dapp.url,
         icon: dapp.icons[0] ?? null,
-        version: '2',
       },
-      version: '2',
     },
   }
 }

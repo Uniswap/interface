@@ -20,16 +20,16 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
-import { signWcRequestActions } from 'src/features/walletConnect/saga'
+import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
-import { rejectRequest, returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
+import { signWcRequestActions } from 'src/features/walletConnect/signWcRequestSaga'
+import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import {
   isTransactionRequest,
   SignRequest,
   TransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { serializeError } from 'utilities/src/errors'
@@ -168,18 +168,14 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const rejectOnCloseRef = useRef(true)
 
   const onReject = async (): Promise<void> => {
-    if (request.version === '1') {
-      rejectRequest(request.internalId)
-    } else {
-      await wcWeb3Wallet.respondSessionRequest({
-        topic: request.sessionId,
-        response: {
-          id: Number(request.internalId),
-          jsonrpc: '2.0',
-          error: getSdkError('USER_REJECTED'),
-        },
-      })
-    }
+    await wcWeb3Wallet.respondSessionRequest({
+      topic: request.sessionId,
+      response: {
+        id: Number(request.internalId),
+        jsonrpc: '2.0',
+        error: getSdkError('USER_REJECTED'),
+      },
+    })
 
     rejectOnCloseRef.current = false
 
@@ -190,9 +186,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       eth_method: request.type,
       dapp_url: request.dapp.url,
       dapp_name: request.dapp.name,
+      wc_version: '2',
       chain_id: chainId,
       outcome: WCRequestOutcome.Reject,
-      wc_version: request.version,
     })
 
     onClose()
@@ -214,7 +210,6 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           account: signerAccount,
           dapp: request.dapp,
           chainId,
-          version: request.version,
         })
       )
     } else {
@@ -228,7 +223,6 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           account: signerAccount,
           dapp: request.dapp,
           chainId,
-          version: request.version,
         })
       )
     }
@@ -242,9 +236,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       eth_method: request.type,
       dapp_url: request.dapp.url,
       dapp_name: request.dapp.name,
+      wc_version: '2',
       chain_id: chainId,
       outcome: WCRequestOutcome.Confirm,
-      wc_version: request.version,
     })
 
     onClose()

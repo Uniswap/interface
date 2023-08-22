@@ -354,7 +354,6 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.7):
     - BoringSSL-GRPC/Interface (= 0.0.7)
   - BoringSSL-GRPC/Interface (0.0.7)
-  - CryptoSwift (1.6.0)
   - DoubleConversion (1.1.6)
   - EthersRS (0.0.1)
   - EXApplication (5.1.1):
@@ -1005,11 +1004,7 @@ PODS:
   - Sentry/HybridSDK (8.7.1):
     - SentryPrivate (= 8.7.1)
   - SentryPrivate (8.7.1)
-  - Starscream (3.1.1)
   - UIImageColors (2.1.0)
-  - WalletConnectSwift (1.6.0):
-    - CryptoSwift (~> 1.4)
-    - Starscream (~> 3.1)
   - Yoga (1.14.0)
   - ZXingObjC/Core (3.6.5)
   - ZXingObjC/OneD (3.6.5):
@@ -1111,7 +1106,6 @@ DEPENDENCIES:
   - "RNSentry (from `../../../node_modules/@sentry/react-native`)"
   - RNSVG (from `../../../node_modules/react-native-svg`)
   - UIImageColors
-  - WalletConnectSwift (= 1.6.0)
   - Yoga (from `../../../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1121,7 +1115,6 @@ SPEC REPOS:
     - AppsFlyerFramework
     - Argon2Swift
     - BoringSSL-GRPC
-    - CryptoSwift
     - Firebase
     - FirebaseABTesting
     - FirebaseAuth
@@ -1149,9 +1142,7 @@ SPEC REPOS:
     - SDWebImageWebPCoder
     - Sentry
     - SentryPrivate
-    - Starscream
     - UIImageColors
-    - WalletConnectSwift
     - ZXingObjC
 
 EXTERNAL SOURCES:
@@ -1340,7 +1331,6 @@ SPEC CHECKSUMS:
   Argon2Swift: 99482c1b8122a03524b61e41c4903a9548e7c33b
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
-  CryptoSwift: 562f8eceb40e80796fffc668b0cad9313284cfa6
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EthersRS: fcaf94e30ebdd795bfe1f9332cec8175566ba066
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
@@ -1453,12 +1443,10 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   Sentry: 11776f6a25a128808d793d0d41bb7ad873b5ae4f
   SentryPrivate: b3c448eacdabe9eab7679a2e0af609c608f91572
-  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   UIImageColors: d2ef3b0877d203cbb06489eeb78ea8b7788caabe
-  WalletConnectSwift: 1fbff8f5315bd8d41596773ca1b384aa873b6824
-  Yoga: f7decafdc5e8c125e6fa0da38a687e35238420fa
+  Yoga: d6133108734e69e8c0becc6ba587294b94829687
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 99e99710a4e02945dca0ef1f9bfceefb20ade08f
+PODFILE CHECKSUM: 8a653916aee34467b75bdb1df41c2cff71038c9e
 
 COCOAPODS: 1.11.3
