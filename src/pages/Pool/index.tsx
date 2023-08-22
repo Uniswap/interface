@@ -22,7 +22,6 @@ import styled, { css, useTheme } from 'styled-components'
 import { /*HideSmall,*/ ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
-import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 //import CTACards from './CTACards'
 import { LoadingRows } from './styled'
 

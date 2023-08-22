@@ -1,7 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'

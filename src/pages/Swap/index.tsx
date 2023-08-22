@@ -15,13 +15,11 @@ import { useWeb3React } from '@web3-react/core'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
-import { AutoRow } from 'components/Row'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
@@ -57,7 +55,7 @@ import { Field, replaceSwapState } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
 import styled, { useTheme } from 'styled-components'
-import { LinkStyledButton, ThemedText } from 'theme'
+import { ThemedText } from 'theme'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
@@ -65,14 +63,14 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
-import { useScreenSize } from '../../hooks/useScreenSize'
-import { UniswapXOptIn } from './UniswapXOptIn'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { RowFixed } from '../../components/Row'
 import SmartPoolSearchModal from '../../components/SearchModal/SmartPoolSearchModal'
+import { useScreenSize } from '../../hooks/useScreenSize'
 //import { PoolInitParams, PoolWithAddress } from '../../hooks/useSmartPools'
 import { useMultipleContractSingleData } from '../../lib/hooks/multicall'
 import { useAllPoolsData /*, useRegisteredPools*/ } from '../../state/pool/hooks'
+import { UniswapXOptIn } from './UniswapXOptIn'
 
 const Aligner = styled.span`
   display: flex;
@@ -344,7 +342,7 @@ export function Swap({
 
   // swap state
   const [state, dispatch] = useReducer(swapReducer, { ...initialSwapState, ...prefilledState })
-  const { typedValue, recipient, independentField } = state
+  const { typedValue, independentField } = state
   const { address: smartPoolAddress, name: smartPoolName } = useActiveSmartPool()
   const smartPool = useCurrency(smartPoolAddress)
 
@@ -435,7 +433,7 @@ export function Swap({
     [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers(dispatch)
+  const { onSwitchTokens, onCurrencySelection, onUserInput } = useSwapActionHandlers(dispatch)
   const onPoolSelect = useSelectActiveSmartPool()
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -657,7 +655,7 @@ export function Swap({
       ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, swapQuoteLatency),
       ...trace,
     })
-  }, [prevTrade, trade, trace, onPoolSelect, defaultPool, smartPoolAddress])
+  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency, onPoolSelect, defaultPool, smartPoolAddress])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)

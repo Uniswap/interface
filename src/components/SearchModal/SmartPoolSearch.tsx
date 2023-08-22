@@ -1,9 +1,9 @@
 // eslint-disable-next-line no-restricted-imports
 import { /*t,*/ Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { Trace } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import { sendEvent } from 'components/analytics'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
@@ -17,7 +17,6 @@ import { /*ChangeEvent, KeyboardEvent, RefObject,*/ useCallback, useEffect, useM
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { useTokenBalances } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components'
 import { UserAddedToken } from 'types/tokens'
 
@@ -129,7 +128,15 @@ export function SmartPoolSearch({
             })
             .sort(tokenComparator.bind(null, balances))
         : [],
-    [balances, balancesAreLoading, debouncedQuery, filteredTokens, otherSelectedCurrency, selectedCurrency]
+    [
+      balances,
+      balancesAreLoading,
+      onlyShowCurrenciesWithBalance,
+      debouncedQuery,
+      filteredTokens,
+      otherSelectedCurrency,
+      selectedCurrency,
+    ]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
 

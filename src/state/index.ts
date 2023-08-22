@@ -7,7 +7,6 @@ import { sentryEnhancer } from './logging'
 import reducer from './reducer'
 import { routingApi } from './routing/slice'
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists', 'poolsList']
 export function createDefaultStore() {
   return configureStore({
     reducer,
