@@ -19,7 +19,7 @@ export default function BaseWalletBanner() {
   const location = useLocation()
   const isLandingScreen = location.search === '?intro=true' || location.pathname === '/'
 
-  const shouldDisplay = Boolean(!hideBaseWalletBanner && !isLandingScreen && chainId === ChainId.BASE)
+  const shouldDisplay = Boolean(!hideBaseWalletBanner && !isLandingScreen && chainId === ChainId.SEPOLIA)
 
   const screenSize = useScreenSize()
 
