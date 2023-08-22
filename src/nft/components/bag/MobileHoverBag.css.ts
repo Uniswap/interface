@@ -12,6 +12,9 @@ export const bagContainer = style([
     padding: '8',
     zIndex: 'dropdown',
     borderRadius: '8',
+    borderStyle: 'solid',
+    borderColor: 'surface3',
+    borderWidth: '1px',
     justifyContent: 'space-between',
   }),
 ])
