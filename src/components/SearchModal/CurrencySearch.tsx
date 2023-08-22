@@ -17,6 +17,7 @@ import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo,
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
+import { useActiveSmartPool } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components'
 import { UserAddedToken } from 'types/tokens'
 
@@ -62,7 +63,7 @@ export function CurrencySearch({
   isOpen,
   onlyShowCurrenciesWithBalance,
 }: CurrencySearchProps) {
-  const { chainId, account } = useWeb3React()
+  const { chainId } = useWeb3React()
   const theme = useTheme()
 
   const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
@@ -91,7 +92,10 @@ export function CurrencySearch({
     return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
   }, [defaultTokens, debouncedQuery])
 
-  const { data, loading: balancesAreLoading } = useCachedPortfolioBalancesQuery({ account })
+  const { address: smartPoolAddress } = useActiveSmartPool()
+  const { data, loading: balancesAreLoading } = useCachedPortfolioBalancesQuery({
+    account: smartPoolAddress ?? '',
+  })
   const balances: TokenBalances = useMemo(() => {
     return (
       data?.portfolios?.[0].tokenBalances?.reduce((balanceMap, tokenBalance) => {
@@ -229,6 +233,7 @@ export function CurrencySearch({
     return () => clearTimeout(tokenLoaderTimer)
   }, [])
 
+  // TODO: use showCurrencyAmount={showCurrencyAmount} when we can correctly prefetch pool balances.
   return (
     <ContentWrapper>
       <Trace
@@ -296,7 +301,7 @@ export function CurrencySearch({
                   otherCurrency={otherSelectedCurrency}
                   selectedCurrency={selectedCurrency}
                   fixedListRef={fixedList}
-                  showCurrencyAmount={showCurrencyAmount}
+                  showCurrencyAmount={false}
                   isLoading={isLoading}
                   searchQuery={searchQuery}
                   isAddressSearch={isAddressSearch}

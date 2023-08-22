@@ -1,9 +1,10 @@
-import { useWeb3React } from '@web3-react/core'
+//import { useWeb3React } from '@web3-react/core'
 import { usePortfolioBalancesLazyQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import usePrevious from 'hooks/usePrevious'
 import { atom, useAtom } from 'jotai'
 import { PropsWithChildren, useCallback, useEffect } from 'react'
+import { useActiveSmartPool } from 'state/application/hooks'
 
 import { usePendingActivity } from './MiniPortfolio/Activity/hooks'
 
@@ -26,12 +27,14 @@ export function useCachedPortfolioBalancesQuery({ account }: { account?: string 
 
 const hasUnfetchedBalancesAtom = atom<boolean>(true)
 
+// TODO: should correctly prefetch pool balances
 /* Prefetches & caches portfolio balances when the wrapped component is hovered or the user completes a transaction */
 export default function PrefetchBalancesWrapper({
   children,
   shouldFetchOnAccountUpdate,
 }: PropsWithChildren<{ shouldFetchOnAccountUpdate: boolean }>) {
-  const { account } = useWeb3React()
+  //const { account } = useWeb3React()
+  const { address: account } = useActiveSmartPool()
   const [prefetchPortfolioBalances] = usePortfolioBalancesLazyQuery()
 
   // Use an atom to track unfetched state to avoid duplicating fetches if this component appears multiple times on the page.
