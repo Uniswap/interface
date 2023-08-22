@@ -40,8 +40,8 @@ const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.deprecat
 }px)`
 
 type TopDistanceModifiers = {
-  bannerVisible: boolean;
-  drawerOpen: boolean;
+  bannerVisible: boolean
+  drawerOpen: boolean
 }
 
 const getTopDistance = ({ drawerOpen, bannerVisible }: TopDistanceModifiers) => {
@@ -68,7 +68,7 @@ const FixedPopupColumn = styled(AutoColumn)<TopDistanceModifiers>`
 
 export default function Popups() {
   const [isAccountDrawerOpen] = useAccountDrawer()
-  
+
   // get all popups
   const activePopups = useActivePopups()
 
@@ -80,7 +80,12 @@ export default function Popups() {
 
   return (
     <>
-      <FixedPopupColumn gap="20px" drawerOpen={isAccountDrawerOpen} bannerVisible={isNotOnMainnet || urlWarningActive} data-testid="popups">
+      <FixedPopupColumn
+        gap="20px"
+        drawerOpen={isAccountDrawerOpen}
+        bannerVisible={isNotOnMainnet || urlWarningActive}
+        data-testid="popups"
+      >
         <ClaimPopup />
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
