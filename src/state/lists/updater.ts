@@ -1,6 +1,6 @@
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
-import { DEFAULT_LIST_OF_LISTS, UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { DEFAULT_LIST_OF_LISTS, UNI_EXTENDED_LIST, UNI_LIST, UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import TokenSafetyLookupTable from 'constants/tokenSafetyLookup'
 import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms'
@@ -23,7 +23,8 @@ export default function Updater(): null {
   const listsState = useAppSelector((state) => state.lists)
 
   useEffect(() => {
-    TokenSafetyLookupTable.update(listsState)
+    const keysArePresent = [UNI_EXTENDED_LIST, UNI_LIST, ...UNSUPPORTED_LIST_URLS].every((key) => listsState.byUrl[key])
+    if (keysArePresent) TokenSafetyLookupTable.update(listsState)
   }, [listsState])
 
   const fetchList = useFetchListCallback()
