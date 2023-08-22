@@ -1,4 +1,4 @@
-import { OnboardingInputError } from 'src/app/features/onboarding/OnboardingInputError'
+import { InputError } from 'src/app/components/InputError'
 import { Button, Icons, Stack, Text, XStack, YStack } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
@@ -51,7 +51,7 @@ export function OnboardingScreen({
       </YStack>
       <YStack alignItems="center" gap="$spacing8" width="100%">
         {children}
-        {inputError && <OnboardingInputError error={inputError} />}
+        {inputError && <InputError error={inputError} />}
       </YStack>
       <XStack gap="$spacing12" width="100%">
         {onBack && (

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Input } from 'src/app/components/Input'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
-import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { UniconWithLockIcon } from 'src/app/features/onboarding/UniconWithLockIcon'
 import { useAppDispatch } from 'src/background/store'
@@ -61,10 +61,11 @@ export function NameWallet({ previousPath }: { previousPath: string }): JSX.Elem
         })
       }
       onSubmit={onSubmit}>
-      <OnboardingInput
-        placeholderText={defaultName}
+      <Input
+        large
+        placeholder={defaultName}
         onChangeText={setWalletName}
-        onSubmit={onSubmit}
+        onSubmitEditing={onSubmit}
       />
     </OnboardingScreen>
   )

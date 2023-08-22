@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+import { Input } from 'src/app/components/Input'
 import { useAppDispatch } from 'src/background/store'
 import { useSagaStatus } from 'src/background/utils/useSagaStatus'
-import { Button, Image, Input, InputProps, Stack, Text, YStack } from 'ui/src'
+import { Button, Image, InputProps, Stack, Text, YStack } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { authActions, authSagaName } from 'wallet/src/features/auth/saga'
 import { AuthActionType, AuthSagaError } from 'wallet/src/features/auth/types'
@@ -27,7 +28,16 @@ export function usePasswordInput(
 
 export function Locked(): JSX.Element {
   const dispatch = useAppDispatch()
-  const passwordInputProps = usePasswordInput()
+  const { value: enteredPassword, onChangeText: onChangePasswordText } = usePasswordInput()
+
+  const onChangeText = useCallback(
+    (text: string) => {
+      if (onChangePasswordText) {
+        onChangePasswordText?.(text)
+      }
+    },
+    [onChangePasswordText]
+  )
 
   const { status, error } = useSagaStatus(authSagaName, undefined, false)
 
@@ -35,7 +45,7 @@ export function Locked(): JSX.Element {
     await dispatch(
       authActions.trigger({
         type: AuthActionType.Unlock,
-        password: passwordInputProps.value,
+        password: enteredPassword,
       })
     )
   }
@@ -44,53 +54,46 @@ export function Locked(): JSX.Element {
     status === SagaStatus.Failure && error === AuthSagaError.InvalidPassword
 
   return (
-    <Stack flexGrow={1} padding="$spacing24" space="$spacing12">
+    <Stack backgroundColor="$surface1" flex={1} padding="$spacing24" space="$spacing12">
       <YStack
         alignContent="flex-end"
         alignItems="center"
         flexGrow={1}
         gap="$spacing8"
         justifyContent="center">
-        <Stack paddingBottom="$spacing8">
+        <Stack paddingTop="$spacing60">
           <Stack
             alignItems="center"
-            backgroundColor="$sporeWhite"
+            backgroundColor="$surface2"
             borderRadius="$rounded24"
             justifyContent="center"
             padding="$spacing12">
             <Image height={ICON_SIZE} source={UNISWAP_LOGO} width={ICON_SIZE} />
           </Stack>
         </Stack>
-        <Text color="$neutral1" textAlign="center" variant="headlineMedium">
-          Welcome back
-        </Text>
-        <Text color="$DEP_accentBranded" textAlign="center" variant="subheadLarge">
-          Uniswap Wallet
-        </Text>
-      </YStack>
-      <YStack alignItems="stretch" gap="$spacing12">
-        {isIncorrectPassword && (
-          <Text color="$statusCritical" textAlign="center" variant="bodySmall">
-            Wrong password. Try again
+        <YStack paddingBottom="$spacing32" paddingTop="$spacing24">
+          <Text color="$neutral1" textAlign="center" variant="headlineMedium">
+            Welcome back
           </Text>
+          <Text color="$DEP_accentBranded" textAlign="center" variant="headlineMedium">
+            Uniswap Wallet
+          </Text>
+        </YStack>
+      </YStack>
+      <YStack alignItems="stretch" gap="$spacing12" paddingTop="$spacing32">
+        {isIncorrectPassword && (
+          <Stack position="absolute" top={0} width="100%">
+            <Text color="$statusCritical" textAlign="center" variant="bodySmall">
+              Wrong password. Try again
+            </Text>
+          </Stack>
         )}
         <Input
-          autoFocus
-          secureTextEntry
-          borderColor={isIncorrectPassword ? '$statusCritical' : '$surface3'}
-          borderRadius={100}
-          borderWidth={0.5}
-          fontSize={16}
-          fontWeight="400"
-          height={56}
-          paddingHorizontal="$spacing24"
-          paddingVertical="$spacing16"
-          placeholder="Enter password to unlock"
-          placeholderTextColor="$neutral3"
+          hideInput
+          placeholder="Password"
+          value={enteredPassword}
+          onChangeText={onChangeText}
           onSubmitEditing={onPress}
-          {...passwordInputProps}
-          backgroundColor={isIncorrectPassword ? '$DEP_accentCriticalSoft' : '$surface1'}
-          color="$neutral1"
         />
       </YStack>
       <Button size="large" theme="primary" onPress={onPress}>

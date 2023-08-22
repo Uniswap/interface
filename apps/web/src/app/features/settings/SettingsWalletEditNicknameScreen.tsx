@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+import { Input } from 'src/app/components/Input'
 import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
-import { Button, Input, Text, YStack } from 'ui/src'
+import { Button, Text, YStack } from 'ui/src'
 import {
   EditAccountAction,
   editAccountActions,
@@ -45,14 +46,8 @@ function EditNicknameScreenContent({ address }: { address: Address }): JSX.Eleme
       <YStack flex={1} justifyContent="space-between" padding="$spacing12">
         <YStack flex={1} gap="$spacing24">
           <Input
-            backgroundColor="$surface2"
-            borderRadius="$rounded20"
-            fontSize={20}
-            fontWeight="400"
-            justifyContent="center"
-            minHeight={80}
-            textAlign="center"
-            width="100%"
+            centered
+            large
             onBlur={(): void => setShowNicknamePlaceholder(true)}
             onChangeText={(value: string): void => setNicknameField(value)}
             onFocus={(): void => setShowNicknamePlaceholder(false)}

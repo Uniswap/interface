@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { Input } from 'src/app/components/Input'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
-import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import {
   ImportOnboardingRoutes,
@@ -93,11 +93,12 @@ export function ImportMnemonic(): JSX.Element {
         )
       }
       onSubmit={onSubmit}>
-      <OnboardingInput
-        placeholderText="Recovery phrase (12 words)"
+      <Input
+        large
+        placeholder="Recovery phrase (12 words)"
         value={mnemonic}
         onChangeText={onChangeText}
-        onSubmit={onSubmit}
+        onSubmitEditing={onSubmit}
       />
     </OnboardingScreen>
   )

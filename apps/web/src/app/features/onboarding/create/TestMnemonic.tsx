@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useReducer, useRef, useState } from 'react'
 import { TextInput } from 'react-native'
 import { useNavigate } from 'react-router-dom'
+import { Input } from 'src/app/components/Input'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
-import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { UniconWithLockIcon } from 'src/app/features/onboarding/UniconWithLockIcon'
 import {
@@ -87,13 +87,14 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
         <Text color="$neutral3" padding="$spacing24" position="absolute" variant="headlineSmall">
           {String(nextWordNumber).padStart(2, '0')}
         </Text>
-        <OnboardingInput
+        <Input
           ref={inputRef}
           centered
-          placeholderText=""
+          large
+          placeholder=""
           value={userWordInput}
           onChangeText={setUserWordInput}
-          onSubmit={onNext}
+          onSubmitEditing={onNext}
         />
       </XStack>
     </OnboardingScreen>

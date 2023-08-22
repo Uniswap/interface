@@ -4,8 +4,7 @@ import { ScreenHeader } from 'src/app/components/layout/SreenHeader'
 import { SettingsWalletRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch } from 'src/background/store'
-import { Button, Switch, Text, XStack, YStack } from 'ui/src'
-import PencilIcon from 'ui/src/assets/icons/pencil.svg'
+import { Button, Icons, Switch, Text, XStack, YStack } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import {
   EditAccountAction,
@@ -62,7 +61,7 @@ function WalletScreenContent({ address }: { address: Address }): JSX.Element {
               <Text variant="bodyMicro">{displayName}</Text>
             </YStack>
             <Button onPress={(): void => navigate(SettingsWalletRoutes.EditNickname.valueOf())}>
-              <PencilIcon height={iconSizes.icon24} width={iconSizes.icon24} />
+              <Icons.Pencil color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
             </Button>
           </XStack>
           <XStack flexGrow={1} justifyContent="space-between" paddingVertical="$spacing12">

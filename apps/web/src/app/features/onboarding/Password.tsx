@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Input } from 'src/app/components/Input'
 import { usePasswordInput } from 'src/app/features/lockScreen/Locked'
 import { useOnboardingContext } from 'src/app/features/onboarding/OnboardingContextProvider'
-import { OnboardingInput } from 'src/app/features/onboarding/OnboardingInput'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { useAppDispatch } from 'src/background/store'
@@ -84,12 +84,13 @@ export function Password({
       title="First, set a password"
       onBack={(): void => navigate(`/${TopLevelRoutes.Onboarding}`, { replace: true })}
       onSubmit={onSubmit}>
-      <OnboardingInput
+      <Input
         hideInput
-        placeholderText="New password"
+        large
+        placeholder="New password"
         value={enteredPassword}
         onChangeText={onChangeText}
-        onSubmit={onSubmit}
+        onSubmitEditing={onSubmit}
       />
     </OnboardingScreen>
   )
