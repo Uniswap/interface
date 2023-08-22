@@ -11,7 +11,7 @@ import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { Arrow } from 'src/components/icons/Arrow'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { RecipientPrevTransfers } from 'src/components/input/RecipientInputPanel'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
@@ -86,10 +86,11 @@ export function TransactionReview({
     sm: theme.textVariants.headlineLarge.fontSize,
   })
 
-  const lineHeight = useResponsiveProp({
-    xs: theme.textVariants.headlineSmall.lineHeight,
-    sm: theme.textVariants.headlineLarge.lineHeight,
-  })
+  const lineHeight =
+    useResponsiveProp({
+      xs: theme.textVariants.headlineSmall.lineHeight,
+      sm: theme.textVariants.headlineLarge.lineHeight,
+    }) ?? theme.textVariants.headlineLarge.lineHeight
 
   const maxFontSizeMultiplier = useResponsiveProp({
     xs: theme.textVariants.headlineSmall.maxFontSizeMultiplier,
@@ -166,21 +167,23 @@ export function TransactionReview({
               <Text color="neutral3" variant="bodyLarge">
                 {t('You receive')}
               </Text>
-              <AmountInput
-                alignSelf="stretch"
-                backgroundColor="none"
-                borderWidth={0}
-                editable={false}
-                fontFamily={fontFamily}
-                fontSize={fontSize}
-                height={lineHeight}
-                maxFontSizeMultiplier={maxFontSizeMultiplier}
-                showCurrencySign={isUSDInput}
-                showSoftInputOnFocus={false}
-                testID="amount-input-out"
-                textAlign="center"
-                value={formattedAmountOut}
-              />
+              <Box height={lineHeight} justifyContent="center" overflow="hidden">
+                <AmountInput
+                  alignSelf="stretch"
+                  backgroundColor="none"
+                  borderWidth={0}
+                  editable={false}
+                  fontFamily={fontFamily}
+                  fontSize={fontSize}
+                  maxFontSizeMultiplier={maxFontSizeMultiplier}
+                  minHeight={2 * lineHeight}
+                  showCurrencySign={isUSDInput}
+                  showSoftInputOnFocus={false}
+                  testID="amount-input-out"
+                  textAlign="center"
+                  value={formattedAmountOut}
+                />
+              </Box>
               {outputCurrencyUSDValue ? (
                 <Text color="neutral3" variant={equivalentValueTextVariant}>
                   {formattedOutputUsdValue}
