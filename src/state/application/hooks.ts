@@ -1,11 +1,11 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { MoonpayEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
+import { sendAnalyticsEvent } from 'analytics'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { AppState } from 'state/reducer'
 
-import { AppState } from '../types'
 import {
   addPopup,
   ApplicationModal,

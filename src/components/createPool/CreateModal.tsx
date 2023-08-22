@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { isSupportedChain } from '../../constants/chains'

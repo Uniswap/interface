@@ -6,7 +6,7 @@ import { ChevronUpIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { isSentryEnabled } from 'utils/env'
 
 import { CopyToClipboard, ExternalLink, ThemedText } from '../../theme'

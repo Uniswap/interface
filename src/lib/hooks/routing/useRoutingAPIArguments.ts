@@ -1,7 +1,13 @@
+import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { useForceUniswapXOn } from 'featureFlags/flags/forceUniswapXOn'
+import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
+import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
+import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useMemo } from 'react'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
+import { useUserDisabledUniswapX } from 'state/user/hooks'
 
 /**
  * Returns query arguments for the Routing API query or undefined if the
@@ -9,26 +15,35 @@ import { currencyAddressForSwapQuote } from 'state/routing/utils'
  * be destructured.
  */
 export function useRoutingAPIArguments({
+  account,
   tokenIn,
   tokenOut,
   amount,
   tradeType,
   routerPreference,
 }: {
+  account?: string
   tokenIn?: Currency
   tokenOut?: Currency
   amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-}) {
+}): GetQuoteArgs | SkipToken {
+  const uniswapXEnabled = useUniswapXEnabled()
+  const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
+  const forceUniswapXOn = useForceUniswapXOn()
+  const userDisabledUniswapX = useUserDisabledUniswapX()
+  const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
+
   return useMemo(
     () =>
       !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut) || tokenIn.wrapped.equals(tokenOut.wrapped)
-        ? undefined
+        ? skipToken
         : {
+            account,
             amount: amount.quotient.toString(),
             tokenInAddress: currencyAddressForSwapQuote(tokenIn),
-            tokenInChainId: tokenIn.wrapped.chainId,
+            tokenInChainId: tokenIn.chainId,
             tokenInDecimals: tokenIn.wrapped.decimals,
             tokenInSymbol: tokenIn.wrapped.symbol,
             tokenOutAddress: currencyAddressForSwapQuote(tokenOut),
@@ -37,7 +52,25 @@ export function useRoutingAPIArguments({
             tokenOutSymbol: tokenOut.wrapped.symbol,
             routerPreference,
             tradeType,
+            needsWrapIfUniswapX: tokenIn.isNative,
+            uniswapXEnabled,
+            uniswapXForceSyntheticQuotes,
+            forceUniswapXOn,
+            userDisabledUniswapX,
+            uniswapXEthOutputEnabled,
           },
-    [amount, routerPreference, tokenIn, tokenOut, tradeType]
+    [
+      account,
+      amount,
+      routerPreference,
+      tokenIn,
+      tokenOut,
+      tradeType,
+      uniswapXEnabled,
+      uniswapXForceSyntheticQuotes,
+      forceUniswapXOn,
+      userDisabledUniswapX,
+      uniswapXEthOutputEnabled,
+    ]
   )
 }

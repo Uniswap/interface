@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount /*, Token*/ } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 //import useTransactionDeadline from '../../hooks/useTransactionDeadline'

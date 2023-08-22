@@ -11,8 +11,13 @@ function useGetAndTrackApproval(getApproval: ReturnType<typeof useApproval>[1]) 
   return useCallback(() => {
     return getApproval().then((pending) => {
       if (pending) {
-        const { response, tokenAddress, spenderAddress: spender } = pending
-        addTransaction(response, { type: TransactionType.APPROVAL, tokenAddress, spender })
+        const { response, tokenAddress, spenderAddress: spender, amount } = pending
+        addTransaction(response, {
+          type: TransactionType.APPROVAL,
+          tokenAddress,
+          spender,
+          amount: amount.quotient.toString(),
+        })
       }
     })
   }, [addTransaction, getApproval])

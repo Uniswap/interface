@@ -1,15 +1,25 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
+
+export enum PopupType {
+  Transaction = 'transaction',
+  Order = 'order',
+  FailedSwitchNetwork = 'failedSwitchNetwork',
+}
 
 export type PopupContent =
   | {
-      txn: {
-        hash: string
-      }
+      type: PopupType.Transaction
+      hash: string
     }
   | {
-      failedSwitchNetwork: SupportedChainId
+      type: PopupType.Order
+      orderHash: string
+    }
+  | {
+      type: PopupType.FailedSwitchNetwork
+      failedSwitchNetwork: ChainId
     }
 
 export enum ApplicationModal {
@@ -38,7 +48,7 @@ export enum ApplicationModal {
   UNISWAP_NFT_AIRDROP_CLAIM,
 }
 
-type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
+export type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
 export interface ApplicationState {
   readonly chainId: number | null
@@ -76,20 +86,23 @@ const applicationSlice = createSlice({
       state.openModal = action.payload
     },
     addPopup(state, { payload: { content, key, removeAfterMs = DEFAULT_TXN_DISMISS_MS } }) {
-      state.popupList = (key ? state.popupList.filter((popup) => popup.key !== key) : state.popupList).concat([
+      key = key || nanoid()
+      state.popupList = [
+        ...state.popupList.filter((popup) => popup.key !== key),
         {
-          key: key || nanoid(),
+          key,
           show: true,
           content,
           removeAfterMs,
         },
-      ])
+      ]
     },
     removePopup(state, { payload: { key } }) {
-      state.popupList.forEach((p) => {
-        if (p.key === key) {
-          p.show = false
+      state.popupList = state.popupList.map((popup) => {
+        if (popup.key === key) {
+          popup.show = false
         }
+        return popup
       })
     },
   },

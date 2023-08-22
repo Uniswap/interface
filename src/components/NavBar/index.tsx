@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
 import Web3Status from 'components/Web3Status'
-//import { chainIdToBackendName } from 'graphql/data/util'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
-import { useAtomValue } from 'jotai/utils'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { GrgIcon } from 'nft/components/icons'
@@ -11,9 +10,9 @@ import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
+import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
 import { Bag } from './Bag'
 import Blur from './Blur'
 import { ChainSelector } from './ChainSelector'
@@ -22,7 +21,7 @@ import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
 const Nav = styled.nav`
-  padding: 20px 12px;
+  padding: ${({ theme }) => `${theme.navVerticalPad}px 12px`};
   width: 100%;
   height: ${({ theme }) => theme.navHeight}px;
   z-index: 2;
@@ -56,7 +55,7 @@ export const PageTabs = () => {
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
 
-  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   return (
     <>
@@ -94,6 +93,7 @@ export const PageTabs = () => {
 const Navbar = ({ blur }: { blur: boolean }) => {
   const isNftPage = useIsNftPage()
   const sellPageState = useProfilePageState((state) => state.state)
+  const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
   return (
     <>
@@ -113,12 +113,17 @@ const Navbar = ({ blur }: { blur: boolean }) => {
               <PageTabs />
             </Row>
           </Box>
-          <Box className={styles.searchContainer}>
+          <Box
+            className={styles.searchContainer}
+            {...(isNavSearchInputVisible && {
+              display: 'flex',
+            })}
+          >
             <SearchBar />
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box position="relative" display={{ sm: 'flex', navSearchInputVisible: 'none' }}>
+              <Box position="relative" display={isNavSearchInputVisible ? 'none' : { sm: 'flex' }}>
                 <SearchBar />
               </Box>
               {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}

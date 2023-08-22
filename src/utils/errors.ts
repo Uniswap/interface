@@ -6,3 +6,11 @@ export class UserRejectedRequestError extends Error {
     this.name = 'UserRejectedRequestError'
   }
 }
+
+export function toReadableError(errorText: string, error: unknown) {
+  if (typeof error === 'object' && error !== null) {
+    const e = error as Error & { reason?: string }
+    return new Error(`${errorText} 👺 ${e.message ?? e.reason ?? 'unknown'}`)
+  }
+  return new Error(`${errorText} 👺 ${error}`)
+}

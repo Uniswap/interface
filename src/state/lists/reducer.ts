@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, TokenList, VersionUpgrade } from '@uniswap/token-lists'
+import tokenSafetyLookup from 'constants/tokenSafetyLookup'
 
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
@@ -29,7 +30,7 @@ const NEW_LIST_STATE: ListState = {
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U> ? U[] : T[P] }
 
-const initialState: ListsState = {
+export const initialState: ListsState = {
   lastInitializedDefaultListOfLists: DEFAULT_LIST_OF_LISTS,
   byUrl: {
     ...DEFAULT_LIST_OF_LISTS.reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
@@ -76,6 +77,7 @@ export default createReducer(initialState, (builder) =>
           loadingRequestId: null,
           error: null,
         }
+        tokenSafetyLookup.update(state)
       }
     })
     .addCase(fetchTokenList.rejected, (state, { payload: { url, requestId, errorMessage } }) => {

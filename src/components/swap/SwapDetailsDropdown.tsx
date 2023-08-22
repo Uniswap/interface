@@ -1,17 +1,16 @@
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { TraceEvent, useTrace } from 'analytics'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowBetween, RowFixed } from 'components/Row'
-import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { formatCommonPropertiesForTrade } from 'lib/utils/analytics'
 import { useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
-import styled, { keyframes, useTheme } from 'styled-components/macro'
+import styled, { keyframes, useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
@@ -100,8 +99,8 @@ interface SwapDetailsInlineProps {
 
 export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage }: SwapDetailsInlineProps) {
   const theme = useTheme()
-  const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
+  const trace = useTrace()
 
   return (
     <Wrapper>
@@ -109,6 +108,10 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
         events={[BrowserEvent.onClick]}
         name={SwapEventName.SWAP_DETAILS_EXPANDED}
         element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
+        properties={{
+          ...(trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : {}),
+          ...trace,
+        }}
         shouldLogImpression={!showDetails}
       >
         <StyledHeaderRow
@@ -136,12 +139,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
             ) : null}
           </RowFixed>
           <RowFixed>
-            {!trade?.gasUseEstimateUSD ||
-            showDetails ||
-            !chainId ||
-            !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
-              <GasEstimateTooltip trade={trade} loading={syncing || loading} disabled={showDetails} />
-            )}
+            {!showDetails && <GasEstimateTooltip trade={trade} loading={syncing || loading} />}
             <RotatingArrow
               stroke={trade ? theme.textTertiary : theme.deprecated_bg3}
               open={Boolean(trade && showDetails)}

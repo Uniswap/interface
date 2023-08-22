@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool } from '@uniswap/v3-sdk'
 import { TokenAmountInput, TokenTradeRouteInput, TradePoolInput } from 'graphql/data/__generated__/types-and-hooks'
-import { InterfaceTrade } from 'state/routing/types'
+import { ClassicTrade } from 'state/routing/types'
 
 interface SwapAmounts {
   inputAmount: CurrencyAmount<Currency>
@@ -108,7 +108,7 @@ function buildTradeRouteInput(swap: Swap): TokenTradeRouteInput {
   }
 }
 
-export function buildAllTradeRouteInputs(trade: InterfaceTrade): {
+export function buildAllTradeRouteInputs(trade: ClassicTrade): {
   mixedTokenTradeRouteInputs?: TokenTradeRouteInput[]
   v2TokenTradeRouteInputs?: TokenTradeRouteInput[]
   v3TokenTradeRouteInputs?: TokenTradeRouteInput[]

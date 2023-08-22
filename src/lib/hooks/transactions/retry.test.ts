@@ -1,4 +1,4 @@
-import { retry, RetryableError } from './retry'
+import { CanceledError, retry, RetryableError } from './retry'
 
 describe('retry', () => {
   function makeFn<T>(fails: number, result: T, retryable = true): () => Promise<T> {
@@ -32,7 +32,7 @@ describe('retry', () => {
   it('cancel causes promise to reject', async () => {
     const { promise, cancel } = retry(makeFn(2, 'abc'), { n: 3, minWait: 100, maxWait: 100 })
     cancel()
-    await expect(promise).rejects.toThrow('Cancelled')
+    await expect(promise).rejects.toThrow(expect.any(CanceledError))
   })
 
   it('cancel no-op after complete', async () => {

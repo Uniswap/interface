@@ -2,10 +2,9 @@ import 'cypress-hardhat/lib/browser'
 
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 
-import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
-import { UserState } from '../../src/state/user/reducer'
-import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
-import { injected } from './ethereum'
+import { FeatureFlag } from '../../src/featureFlags'
+import { initialState, UserState } from '../../src/state/user/reducer'
+import { CONNECTED_WALLET_USER_STATE, setInitialUserState } from '../utils/user-state'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -13,15 +12,19 @@ declare global {
     interface ApplicationWindow {
       ethereum: Eip1193Bridge
     }
+    interface Chainable<Subject> {
+      /**
+       * Wait for a specific event to be sent to amplitude. If the event is found, the subject will be the event.
+       *
+       * @param {string} eventName - The type of the event to search for e.g. SwapEventName.SWAP_TRANSACTION_COMPLETED
+       * @param {number} timeout - The maximum amount of time (in ms) to wait for the event.
+       * @returns {Chainable<Subject>}
+       */
+      waitForAmplitudeEvent(eventName: string, timeout?: number): Chainable<Subject>
+    }
     interface VisitOptions {
       serviceWorker?: true
       featureFlags?: Array<FeatureFlag>
-      /**
-       * The mock ethereum provider to inject into the page.
-       * @default 'goerli'
-       */
-      // TODO(INFRA-175): Migrate all usage of 'goerli' to 'hardhat'.
-      ethereum?: 'goerli' | 'hardhat'
       /**
        * Initial user state.
        * @default {@type import('../utils/user-state').CONNECTED_WALLET_USER_STATE}
@@ -39,8 +42,7 @@ Cypress.Commands.overwrite(
     if (typeof url !== 'string') throw new Error('Invalid arguments. The first argument to cy.visit must be the path.')
 
     // Add a hash in the URL if it is not present (to use hash-based routing correctly with queryParams).
-    let hashUrl = url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url
-    if (options?.ethereum === 'goerli') hashUrl += `${url.includes('?') ? '&' : '?'}chain=goerli`
+    const hashUrl = url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url
 
     return cy
       .intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 })
@@ -52,14 +54,12 @@ Cypress.Commands.overwrite(
           onBeforeLoad(win) {
             options?.onBeforeLoad?.(win)
 
-            // We want to test from a clean state, so we clear the local storage (which clears redux).
-            win.localStorage.clear()
-
-            // Set initial user state.
-            win.localStorage.setItem(
-              'redux_localstorage_simple_user', // storage key for the user reducer using 'redux-localstorage-simple'
-              JSON.stringify(options?.userState ?? CONNECTED_WALLET_USER_STATE)
-            )
+            setInitialUserState(win, {
+              ...initialState,
+              hideUniswapWalletBanner: true,
+              ...CONNECTED_WALLET_USER_STATE,
+              ...(options?.userState ?? {}),
+            })
 
             // Set feature flags, if configured.
             if (options?.featureFlags) {
@@ -68,13 +68,29 @@ Cypress.Commands.overwrite(
             }
 
             // Inject the mock ethereum provider.
-            if (options?.ethereum === 'hardhat') {
-              win.ethereum = provider
-            } else {
-              win.ethereum = injected
-            }
+            win.ethereum = provider
           },
         })
       )
   }
 )
+
+Cypress.Commands.add('waitForAmplitudeEvent', (eventName, timeout = 5000 /* 5s */) => {
+  const startTime = new Date().getTime()
+
+  function checkRequest() {
+    return cy.wait('@amplitude', { timeout }).then((interception) => {
+      const events = interception.request.body.events
+      const event = events.find((event: any) => event.event_type === eventName)
+
+      if (event) {
+        return cy.wrap(event)
+      } else if (new Date().getTime() - startTime > timeout) {
+        throw new Error(`Event ${eventName} not found within the specified timeout`)
+      } else {
+        return checkRequest()
+      }
+    })
+  }
+  return checkRequest()
+})

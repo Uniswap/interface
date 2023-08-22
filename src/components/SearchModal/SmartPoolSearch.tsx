@@ -4,19 +4,21 @@ import { Trace } from '@uniswap/analytics'
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import { sendEvent } from 'components/analytics'
+import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 //import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
-import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
+import { TokenBalances, tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import { /*ChangeEvent, KeyboardEvent, RefObject,*/ useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { useAllTokenBalances } from 'state/connection/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import { useTokenBalances } from 'state/connection/hooks'
+import styled, { useTheme } from 'styled-components'
 import { UserAddedToken } from 'types/tokens'
 
 import { /*useAllTokens,*/ useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
@@ -27,7 +29,7 @@ import { /*Row,*/ RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
 import CurrencyList from './CurrencyList'
-import { PaddedColumn, /*SearchInput,*/ Separator } from './styleds'
+import { PaddedColumn, /*SearchInput,*/ Separator } from './styled'
 
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -46,6 +48,7 @@ interface SmartPoolSearchProps {
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
+  onlyShowCurrenciesWithBalance?: boolean
 }
 
 export function SmartPoolSearch({
@@ -58,8 +61,9 @@ export function SmartPoolSearch({
   disableNonToken,
   onDismiss,
   isOpen,
+  onlyShowCurrenciesWithBalance,
 }: SmartPoolSearchProps) {
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   const theme = useTheme()
 
   const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
@@ -85,16 +89,41 @@ export function SmartPoolSearch({
 
   const filteredTokens = operatedPools
 
-  const [balances, balancesAreLoading] = useAllTokenBalances()
+  // TODO: check we are passing correct balances
+  //const [balances, balancesAreLoading] = useTokenBalances()
+  const { data, loading: balancesAreLoading } = useCachedPortfolioBalancesQuery({ account })
+  const balances: TokenBalances = useMemo(() => {
+    return (
+      data?.portfolios?.[0].tokenBalances?.reduce((balanceMap, tokenBalance) => {
+        if (
+          tokenBalance.token?.chain &&
+          supportedChainIdFromGQLChain(tokenBalance.token?.chain) === chainId &&
+          tokenBalance.token?.address !== undefined &&
+          tokenBalance.denominatedValue?.value !== undefined
+        ) {
+          const address = tokenBalance.token?.standard === 'ERC20' ? tokenBalance.token?.address?.toLowerCase() : 'ETH'
+          const usdValue = tokenBalance.denominatedValue?.value
+          const balance = tokenBalance.quantity
+          balanceMap[address] = { usdValue, balance: balance ?? 0 }
+        }
+        return balanceMap
+      }, {} as TokenBalances) ?? {}
+    )
+  }, [chainId, data?.portfolios])
+
   const sortedTokens: Token[] = useMemo(
     () =>
       !balancesAreLoading
         ? filteredTokens
             .filter((token) => {
+              if (onlyShowCurrenciesWithBalance) {
+                return balances[token.address?.toLowerCase()]?.usdValue > 0
+              }
+
               // If there is no query, filter out unselected user-added tokens with no balance.
               if (!debouncedQuery && token instanceof UserAddedToken) {
                 if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
-                return balances[token.address]?.greaterThan(0)
+                return balances[token.address.toLowerCase()]?.usdValue > 0
               }
               return true
             })
@@ -218,6 +247,7 @@ export function SmartPoolSearch({
                   isLoading={isLoading}
                   searchQuery={searchQuery}
                   isAddressSearch={isAddressSearch}
+                  balances={balances}
                 />
               )}
             </AutoSizer>

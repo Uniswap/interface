@@ -1,18 +1,19 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import { WalletConnect } from '@web3-react/walletconnect'
+import { WalletConnect as WalletConnectv2 } from '@web3-react/walletconnect-v2'
+import { sendAnalyticsEvent } from 'analytics'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
-import { uniwalletConnectConnection } from 'connection'
+import { uniwalletWCV2ConnectConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { ConnectionType } from 'connection/types'
-import { UniwalletConnect } from 'connection/WalletConnect'
+import { UniwalletConnect as UniwalletConnectV2 } from 'connection/WalletConnectV2'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme'
+import { isIOS } from 'utils/userAgent'
 
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
@@ -41,19 +42,18 @@ export default function UniwalletModal() {
   const { activationState, cancelActivation } = useActivationState()
   const [uri, setUri] = useState<string>()
 
-  // Displays the modal if a Uniswap Wallet Connection is pending & qrcode URI is available
+  // Displays the modal if not on iOS, a Uniswap Wallet Connection is pending, & qrcode URI is available
   const open =
+    !isIOS &&
     activationState.status === ActivationStatus.PENDING &&
-    activationState.connection.type === ConnectionType.UNIWALLET &&
+    activationState.connection.type === ConnectionType.UNISWAP_WALLET_V2 &&
     !!uri
 
   useEffect(() => {
-    ;(uniwalletConnectConnection.connector as WalletConnect).events.addListener(
-      UniwalletConnect.UNI_URI_AVAILABLE,
-      (uri) => {
-        uri && setUri(uri)
-      }
-    )
+    const connectorV2 = uniwalletWCV2ConnectConnection.connector as WalletConnectv2
+    connectorV2.events.addListener(UniwalletConnectV2.UNI_URI_AVAILABLE, (uri: string) => {
+      uri && setUri(uri)
+    })
   }, [])
 
   useEffect(() => {

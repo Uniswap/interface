@@ -1,4 +1,3 @@
-import { signTypedData } from '@uniswap/conedison/provider/signing'
 import { AllowanceTransfer, MaxAllowanceTransferAmount, PERMIT2_ADDRESS, PermitSingle } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -6,13 +5,14 @@ import PERMIT2_ABI from 'abis/permit2.json'
 import { Permit2 } from 'abis/types'
 import { useContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { UserRejectedRequestError } from 'utils/errors'
+import { toReadableError, UserRejectedRequestError } from 'utils/errors'
+import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
-const PERMIT_EXPIRATION = ms`30d`
-const PERMIT_SIG_EXPIRATION = ms`30m`
+const PERMIT_EXPIRATION = ms(`30d`)
+const PERMIT_SIG_EXPIRATION = ms(`30m`)
 
 function toDeadline(expiration: number): number {
   return Math.floor((Date.now() + expiration) / 1000)
@@ -77,7 +77,6 @@ export function useUpdatePermitAllowance(
       }
 
       const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
-      // Use conedison's signTypedData for better x-wallet compatibility.
       const signature = await signTypedData(provider.getSigner(account), domain, types, values)
       onPermitSignature?.({ ...permit, signature })
       return
@@ -86,7 +85,7 @@ export function useUpdatePermitAllowance(
       if (didUserReject(e)) {
         throw new UserRejectedRequestError(`${symbol} permit allowance failed: User rejected signature`)
       }
-      throw new Error(`${symbol} permit allowance failed: ${e instanceof Error ? e.message : e}`)
+      throw toReadableError(`${symbol} permit allowance failed:`, e)
     }
   }, [account, chainId, nonce, onPermitSignature, provider, spender, token])
 }

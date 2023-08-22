@@ -1,8 +1,16 @@
 import { Contract } from '@ethersproject/contracts'
-import QuoterV2Json from '@uniswap/swap-router-contracts/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json'
+import {
+  ARGENT_WALLET_DETECTOR_ADDRESS,
+  ChainId,
+  ENS_REGISTRAR_ADDRESSES,
+  MULTICALL_ADDRESSES,
+  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  TICK_LENS_ADDRESSES,
+  V2_ROUTER_ADDRESS,
+  V3_MIGRATOR_ADDRESSES,
+} from '@uniswap/sdk-core'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import QuoterJson from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
 import TickLensJson from '@uniswap/v3-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json'
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
@@ -28,27 +36,15 @@ import {
   Weth,
 } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
-import {
-  ARGENT_WALLET_DETECTOR_ADDRESS,
-  ENS_REGISTRAR_ADDRESSES,
-  MULTICALL_ADDRESS,
-  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
-  QUOTER_ADDRESSES,
-  TICK_LENS_ADDRESSES,
-  V2_ROUTER_ADDRESS,
-  V3_MIGRATOR_ADDRESSES,
-} from 'constants/addresses'
+import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMemo } from 'react'
-import { NonfungiblePositionManager, Quoter, QuoterV2, TickLens, UniswapInterfaceMulticall } from 'types/v3'
+import { NonfungiblePositionManager, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
-
-import { getContract } from '../utils'
+import { getContract } from 'utils'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
 const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json
-const { abi: QuoterABI } = QuoterJson
-const { abi: QuoterV2ABI } = QuoterV2Json
 const { abi: TickLensABI } = TickLensJson
 const { abi: MulticallABI } = UniswapInterfaceMulticallJson
 const { abi: NFTPositionManagerABI } = NonfungiblePositionManagerJson
@@ -75,6 +71,23 @@ export function useContract<T extends Contract = Contract>(
       return null
     }
   }, [addressOrAddressMap, ABI, provider, chainId, withSignerIfPossible, account]) as T
+}
+
+function useMainnetContract<T extends Contract = Contract>(address: string | undefined, ABI: any): T | null {
+  const { chainId } = useWeb3React()
+  const isMainnet = chainId === ChainId.MAINNET
+  const contract = useContract(isMainnet ? address : undefined, ABI, false)
+  return useMemo(() => {
+    if (isMainnet) return contract
+    if (!address) return null
+    const provider = RPC_PROVIDERS[ChainId.MAINNET]
+    try {
+      return getContract(address, ABI, provider)
+    } catch (error) {
+      console.error('Failed to get mainnet contract', error)
+      return null
+    }
+  }, [address, ABI, contract, isMainnet]) as T
 }
 
 export function useV2MigratorContract() {
@@ -110,12 +123,12 @@ export function useArgentWalletDetectorContract() {
   return useContract<ArgentWalletDetector>(ARGENT_WALLET_DETECTOR_ADDRESS, ARGENT_WALLET_DETECTOR_ABI, false)
 }
 
-export function useENSRegistrarContract(withSignerIfPossible?: boolean) {
-  return useContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES, ENS_ABI, withSignerIfPossible)
+export function useENSRegistrarContract() {
+  return useMainnetContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES[ChainId.MAINNET], ENS_ABI)
 }
 
-export function useENSResolverContract(address: string | undefined, withSignerIfPossible?: boolean) {
-  return useContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI, withSignerIfPossible)
+export function useENSResolverContract(address: string | undefined) {
+  return useMainnetContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI)
 }
 
 export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
@@ -135,7 +148,14 @@ export function useV2RouterContract(): Contract | null {
 }
 
 export function useInterfaceMulticall() {
-  return useContract<UniswapInterfaceMulticall>(MULTICALL_ADDRESS, MulticallABI, false) as UniswapInterfaceMulticall
+  return useContract<UniswapInterfaceMulticall>(MULTICALL_ADDRESSES, MulticallABI, false) as UniswapInterfaceMulticall
+}
+
+export function useMainnetInterfaceMulticall() {
+  return useMainnetContract<UniswapInterfaceMulticall>(
+    MULTICALL_ADDRESSES[ChainId.MAINNET],
+    MulticallABI
+  ) as UniswapInterfaceMulticall
 }
 
 export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
@@ -144,10 +164,6 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
     NFTPositionManagerABI,
     withSignerIfPossible
   )
-}
-
-export function useQuoter(useQuoterV2: boolean) {
-  return useContract<Quoter | QuoterV2>(QUOTER_ADDRESSES, useQuoterV2 ? QuoterV2ABI : QuoterABI)
 }
 
 export function useTickLens(): TickLens | null {

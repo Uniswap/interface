@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { ReactNode, /*useCallback,*/ useState } from 'react'
 import { X } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { TextButton } from '../../components/vote/DelegateModal'

@@ -1,4 +1,4 @@
-name: Slack notifications for releases/* merges
+name: Slack notification on pushes to releases/*
 
 # This CI job will push notifications to Slack whenever code is merged into any releases/* branch
 #
@@ -25,7 +25,6 @@ on:
 
 jobs:
   notify-slack:
-    name: 'Emit Slack notification(s)'
     runs-on: ubuntu-latest
     environment:
       name: notify/releases
@@ -45,9 +44,7 @@ jobs:
           | awk '{print substr($0,0,3000);}' \
           > /tmp/parsed_github_context
           echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> "$GITHUB_OUTPUT"
-      - name: Send custom JSON data to Slack workflow
-        id: slack
-        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+      - uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
         with:
           payload: |
             {

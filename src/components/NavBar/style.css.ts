@@ -41,7 +41,7 @@ export const searchContainer = style([
     flex: '1',
     flexShrink: '1',
     justifyContent: { lg: 'flex-end', xl: 'center' },
-    display: { sm: 'none', navSearchInputVisible: 'flex' },
+    display: { sm: 'none' },
     alignSelf: 'center',
     height: '48',
     alignItems: 'flex-start',
@@ -60,8 +60,9 @@ const baseMenuItem = style([
   subhead,
   sprinkles({
     paddingY: '8',
-    paddingX: '14',
+    paddingX: { sm: '6', md: '14' },
     marginY: '4',
+    marginX: { sm: '4', md: '0' },
     borderRadius: '12',
     transition: '250',
     height: 'min',
@@ -69,7 +70,6 @@ const baseMenuItem = style([
     textAlign: 'center',
     display: 'flex',
     alignItems: 'center',
-    gap: '4',
   }),
   {
     lineHeight: '24px',

@@ -115,13 +115,6 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
   height: inherit;
 }
 
-.c5 {
-  height: 8px;
-  width: 8px;
-  background-color: #4C82FB;
-  border-radius: 50%;
-}
-
 .c4 {
   color: #7780A0;
   gap: 4px;
@@ -146,10 +139,6 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
         data-testid="buy-fiat-button"
       >
         Buy
-        <div
-          class="c5"
-          data-testid="buy-fiat-flow-incomplete-indicator"
-        />
       </button>
     </div>
   </div>

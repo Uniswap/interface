@@ -6,7 +6,7 @@ import Row, { RowBetween, RowFixed } from 'components/Row'
 //import { useToken } from 'hooks/Tokens'
 //import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PoolPositionDetails } from 'types/position'
 

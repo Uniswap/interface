@@ -1,5 +1,5 @@
 import { WARNING_LEVEL } from 'constants/tokenSafety'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 
 export const useTokenWarningTextColor = (level: WARNING_LEVEL) => {
   const theme = useTheme()
@@ -19,7 +19,7 @@ export const useTokenWarningColor = (level: WARNING_LEVEL) => {
 
   switch (level) {
     case WARNING_LEVEL.MEDIUM:
-      return theme.accentWarningSoft
+      return theme.backgroundFloating
     case WARNING_LEVEL.UNKNOWN:
       return theme.accentFailureSoft
     case WARNING_LEVEL.BLOCKED:

@@ -25,7 +25,7 @@ describe('SwapDetailsDropdown.tsx', () => {
   })
 
   it('is interactive once loaded', async () => {
-    TEST_TRADE_EXACT_INPUT.gasUseEstimateUSD = '1.00'
+    TEST_TRADE_EXACT_INPUT.gasUseEstimateUSD = 1.0
     render(
       <SwapDetailsDropdown
         trade={TEST_TRADE_EXACT_INPUT}

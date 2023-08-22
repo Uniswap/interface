@@ -20,7 +20,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useReducer, useRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { useToggleModal } from 'state/application/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
 //import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg'
@@ -131,13 +131,13 @@ export const MenuDropdown = () => {
 
   return (
     <>
-      <Box position="relative" ref={ref}>
+      <Box position="relative" ref={ref} marginRight="4">
         <NavIcon isActive={isOpen} onClick={toggleOpen} label={isOpen ? t`Show resources` : t`Hide resources`}>
           <EllipsisIcon viewBox="0 0 20 20" width={24} height={24} />
         </NavIcon>
 
         {isOpen && (
-          <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '56', lg: 'unset' }} right="0">
+          <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '50', lg: 'unset' }} right="0">
             <Column gap="16">
               <Column paddingX="8" gap="4">
                 <Box display={{ sm: 'none', lg: 'flex', xxl: 'none' }}>

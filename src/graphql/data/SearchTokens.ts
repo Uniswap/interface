@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import invariant from 'tiny-invariant'
 
 import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
-import { chainIdToBackendName } from './util'
+import { BACKEND_SUPPORTED_CHAINS, chainIdToBackendName } from './util'
 
 gql`
   query SearchTokens($searchQuery: String!) {
@@ -96,7 +96,10 @@ export function useSearchTokens(searchQuery: string, chainId: number) {
     const searchChain = chainIdToBackendName(chainId)
     // Stores results, allowing overwriting cross-chain tokens w/ more 'relevant token'
     const selectionMap: { [projectId: string]: SearchToken } = {}
-    data?.searchTokens?.forEach((token) => {
+    const filteredTokens = data?.searchTokens?.filter((token) =>
+      (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(token.chain)
+    )
+    filteredTokens?.forEach((token) => {
       if (token.project?.id) {
         const existing = selectionMap[token.project.id]
         selectionMap[token.project.id] = dedupeCrosschainTokens(token, existing, searchChain)

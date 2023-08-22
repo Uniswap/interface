@@ -1,17 +1,20 @@
 import { transparentize } from 'polished'
 import { PropsWithChildren, ReactNode, useEffect, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import noop from 'utils/noop'
 
 import Popover, { PopoverProps } from '../Popover'
 
 export enum TooltipSize {
+  ExtraSmall = '200px',
   Small = '256px',
   Large = '400px',
 }
 
 const getPaddingForSize = (size: TooltipSize) => {
   switch (size) {
+    case TooltipSize.ExtraSmall:
+      return '8px'
     case TooltipSize.Small:
       return '12px'
     case TooltipSize.Large:
@@ -47,7 +50,7 @@ type TooltipProps = Omit<PopoverProps, 'content'> & {
   timeout?: number
 }
 
-// TODO(WEB-3305)
+// TODO(WEB-2024)
 // Migrate to MouseoverTooltip and move this component inline to MouseoverTooltip
 export default function Tooltip({ text, open, close, disabled, size = TooltipSize.Small, ...rest }: TooltipProps) {
   return (
@@ -64,7 +67,7 @@ export default function Tooltip({ text, open, close, disabled, size = TooltipSiz
   )
 }
 
-// TODO(WEB-3305)
+// TODO(WEB-2024)
 // Do not pass through PopoverProps. Prefer higher-level interface to control MouseoverTooltip.
 type MouseoverTooltipProps = Omit<PopoverProps, 'content' | 'show'> &
   PropsWithChildren<{

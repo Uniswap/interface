@@ -3,7 +3,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { PropsWithChildren } from 'react'
 import { ChevronDown } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`
@@ -30,7 +30,7 @@ const Wrapper = styled(Column)<{ numItems: number; isExpanded: boolean }>`
   overflow: hidden;
 `
 
-// TODO(WEB-3288): Replace this component to use `components/Expand` under the hood
+// TODO(WEB-1982): Replace this component to use `components/Expand` under the hood
 type ExpandoRowProps = PropsWithChildren<{ title?: string; numItems: number; isExpanded: boolean; toggle: () => void }>
 export function ExpandoRow({ title = t`Hidden`, numItems, isExpanded, toggle, children }: ExpandoRowProps) {
   if (numItems === 0) return null

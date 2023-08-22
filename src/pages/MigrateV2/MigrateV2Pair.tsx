@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
@@ -13,9 +13,11 @@ import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
 import SettingsTab from 'components/Settings'
-import { Dots } from 'components/swap/styleds'
+import { Dots } from 'components/swap/styled'
+import { V2Unsupported } from 'components/V2Unsupported'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PoolState, usePool } from 'hooks/usePools'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
@@ -30,7 +32,7 @@ import { Bound, resetMintState } from 'state/mint/v3/actions'
 import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } from 'state/mint/v3/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -38,7 +40,6 @@ import { AutoColumn } from '../../components/Column'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import CurrencyLogo from '../../components/Logo/CurrencyLogo'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useToken } from '../../hooks/Tokens'
 import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
@@ -263,6 +264,8 @@ function V2PairMigration({
   const addTransaction = useTransactionAdder()
   const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)
 
+  const networkSupportsV2 = useNetworkSupportsV2()
+
   const migrate = useCallback(() => {
     if (
       !migrator ||
@@ -273,7 +276,8 @@ function V2PairMigration({
       typeof tickUpper !== 'number' ||
       !v3Amount0Min ||
       !v3Amount1Min ||
-      !chainId
+      !chainId ||
+      !networkSupportsV2
     )
       return
 
@@ -355,30 +359,33 @@ function V2PairMigration({
         setConfirmingMigration(false)
       })
   }, [
-    chainId,
-    isNotUniswap,
     migrator,
-    noLiquidity,
-    blockTimestamp,
-    token0,
-    token1,
-    feeAmount,
-    pairBalance,
-    tickLower,
-    tickUpper,
-    sqrtPrice,
-    v3Amount0Min,
-    v3Amount1Min,
     account,
     deadline,
+    blockTimestamp,
+    tickLower,
+    tickUpper,
+    v3Amount0Min,
+    v3Amount1Min,
+    chainId,
+    networkSupportsV2,
     signatureData,
-    addTransaction,
-    pair,
+    noLiquidity,
+    pair.address,
+    pairBalance.quotient,
+    token0.address,
+    token1.address,
+    feeAmount,
+    sqrtPrice,
+    isNotUniswap,
     currency0,
     currency1,
+    addTransaction,
   ])
 
   const isSuccessfullyMigrated = !!pendingMigrationHash && JSBI.equal(pairBalance.quotient, ZERO)
+
+  if (!networkSupportsV2) return <V2Unsupported />
 
   return (
     <AutoColumn gap="20px">
@@ -729,7 +736,7 @@ export default function MigrateV2Pair() {
           <ThemedText.DeprecatedMediumHeader>
             <Trans>Migrate V2 Liquidity</Trans>
           </ThemedText.DeprecatedMediumHeader>
-          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} />
+          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={chainId} />
         </AutoRow>
 
         {!account ? (

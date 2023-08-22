@@ -6,7 +6,7 @@ import { updateVersion } from '../../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
 
 // TODO: check unique state
-export interface ListsState {
+export interface PoolsListsState {
   readonly byUrl: {
     readonly [url: string]: {
       readonly current: TokenList | null
@@ -19,9 +19,9 @@ export interface ListsState {
   readonly lastInitializedPoolsList?: string[]
 }
 
-type ListState = ListsState['byUrl'][string]
+type PoolsListState = PoolsListsState['byUrl'][string]
 
-const NEW_LIST_STATE: ListState = {
+const NEW_LIST_STATE: PoolsListState = {
   error: null,
   current: null,
   loadingRequestId: null,
@@ -30,10 +30,10 @@ const NEW_LIST_STATE: ListState = {
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U> ? U[] : T[P] }
 
-const initialState: ListsState = {
+const initialState: PoolsListsState = {
   lastInitializedPoolsList: POOLS_LIST,
   byUrl: {
-    ...POOLS_LIST.reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
+    ...POOLS_LIST.reduce<Mutable<PoolsListsState['byUrl']>>((memo, listUrl) => {
       memo[listUrl] = NEW_LIST_STATE
       return memo
     }, {}),

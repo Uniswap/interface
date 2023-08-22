@@ -1,6 +1,6 @@
 import { readableColor } from 'polished'
 import { PropsWithChildren } from 'react'
-import styled, { DefaultTheme } from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 
 export enum BadgeVariant {
   DEFAULT = 'DEFAULT',
@@ -83,8 +83,3 @@ const Badge = styled.div<PropsWithChildren<BadgeProps>>`
 `
 
 export default Badge
-
-export const SmallBadge = styled(Badge)`
-  border-radius: 5px;
-  padding: 2px 4px;
-`

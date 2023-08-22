@@ -3,7 +3,7 @@
  */
 
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const TextWrapper = styled(Text).withConfig({
   shouldForwardProp: (prop) => prop !== 'color',
@@ -43,8 +43,14 @@ export const ThemedText = {
   Hero(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={48} color="textPrimary" {...props} />
   },
+  LabelMedium(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={16} color="textPrimary" lineHeight="20px" {...props} />
+  },
   LabelSmall(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={14} color="textSecondary" {...props} />
+  },
+  LabelMicro(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={12} color="textSecondary" {...props} />
   },
   Link(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={14} color="accentAction" {...props} />

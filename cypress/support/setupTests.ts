@@ -1,5 +1,6 @@
 // @ts-ignore
 import TokenListJSON from '@uniswap/default-token-list'
+import { CyHttpMessages } from 'cypress/types/net-stubbing'
 
 beforeEach(() => {
   // Many API calls enforce that requests come from our app, so we must mock Origin and Referer.
@@ -8,18 +9,17 @@ beforeEach(() => {
     req.headers['origin'] = 'https://app.uniswap.org'
   })
 
-  // Infura uses a test endpoint, which allow-lists http://localhost:3000 instead.
-  cy.intercept(/infura.io/, (req) => {
-    req.headers['referer'] = 'http://localhost:3000'
-    req.headers['origin'] = 'http://localhost:3000'
-    req.alias = req.body.method
-    req.continue()
-  })
+  // Infura is disabled for cypress tests - calls should be routed through the connected wallet instead.
+  cy.intercept(/infura.io/, { statusCode: 404 })
+
+  // Log requests to hardhat.
+  cy.intercept(/:8545/, logJsonRpc)
 
   // Mock analytics responses to avoid analytics in tests.
   cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
     const requestBody = JSON.stringify(req.body)
     const byteSize = new Blob([requestBody]).size
+    req.alias = 'amplitude'
     req.reply(
       JSON.stringify({
         code: 200,
@@ -39,3 +39,21 @@ beforeEach(() => {
   // This resets the fork, as well as options like automine.
   cy.hardhat().then((hardhat) => hardhat.reset())
 })
+
+function logJsonRpc(req: CyHttpMessages.IncomingHttpRequest) {
+  req.alias = req.body.method
+  const log = Cypress.log({
+    autoEnd: false,
+    name: req.body.method,
+    message: req.body.params?.map((param: any) =>
+      typeof param === 'object' ? '{...}' : param?.toString().substring(0, 10)
+    ),
+  })
+  req.on('after:response', (res) => {
+    if (res.statusCode === 200) {
+      log.end()
+    } else {
+      log.error(new Error(`${res.statusCode}: ${res.statusMessage}`))
+    }
+  })
+}

@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import { ThemedText } from '../../theme'

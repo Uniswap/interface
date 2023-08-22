@@ -1,21 +1,21 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { Trace } from 'analytics'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
@@ -153,13 +153,13 @@ function getDateFromBlockOrTime(
   if (targetBlockOrTime && currentBlock && averageBlockTimeInSeconds && currentTimestamp) {
     const date = new Date()
     if (isTimestamp) {
-      date.setTime(BigNumber.from(targetBlockOrTime).toNumber() * ms`1 second`)
+      date.setTime(BigNumber.from(targetBlockOrTime).toNumber() * ms(`1s`))
       return date
     }
     date.setTime(
       currentTimestamp
         .add(BigNumber.from(averageBlockTimeInSeconds).mul(BigNumber.from(targetBlockOrTime - currentBlock)))
-        .toNumber() * ms`1 second`
+        .toNumber() * ms(`1s`)
     )
     return date
   }

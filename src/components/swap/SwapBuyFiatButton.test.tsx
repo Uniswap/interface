@@ -75,7 +75,6 @@ describe('SwapBuyFiatButton.tsx', () => {
     mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     mockUseOpenModal.mockImplementation(() => useOpenModal)
     render(<SwapBuyFiatButton />)
-    expect(screen.getByTestId('buy-fiat-flow-incomplete-indicator')).toBeInTheDocument()
     await act(() => userEvent.click(screen.getByTestId('buy-fiat-button')))
     expect(toggleWalletDrawer).toHaveBeenCalledTimes(0)
     expect(useOpenModal).toHaveBeenCalledTimes(1)

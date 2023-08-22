@@ -1,4 +1,4 @@
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 
 import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'

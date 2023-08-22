@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { useSetSpreadCallback } from '../../state/pool/hooks'
 import { ThemedText } from '../../theme'

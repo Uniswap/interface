@@ -4,7 +4,7 @@ import { ColumnCenter } from 'components/Column'
 import QuestionHelper from 'components/QuestionHelper'
 import Row from 'components/Row'
 import { AlertTriangle } from 'react-feather'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 
 import { PendingModalContainer } from '.'
@@ -13,6 +13,7 @@ export enum PendingModalError {
   TOKEN_APPROVAL_ERROR,
   PERMIT_ERROR,
   CONFIRMATION_ERROR,
+  WRAP_ERROR,
 }
 
 interface ErrorModalContentProps {
@@ -45,6 +46,10 @@ function getErrorContent(errorType: PendingModalError) {
       return {
         title: <Trans>Swap failed</Trans>,
       }
+    case PendingModalError.WRAP_ERROR:
+      return {
+        title: <Trans>Wrap failed</Trans>,
+      }
   }
 }
 
@@ -64,7 +69,7 @@ export function ErrorModalContent({ errorType, onRetry }: ErrorModalContentProps
         </Row>
       </ColumnCenter>
       <Row justify="center">
-        <ButtonPrimary marginX="24px" onClick={onRetry}>
+        <ButtonPrimary marginX="24px" marginBottom="16px" onClick={onRetry}>
           <Trans>Retry</Trans>
         </ButtonPrimary>
       </Row>

@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { Trace } from 'analytics'
 import { SmallButtonPrimary } from 'components/Button'
 import { useIsMobile } from 'nft/hooks'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 

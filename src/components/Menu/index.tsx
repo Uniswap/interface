@@ -1,6 +1,6 @@
 import { FunctionComponent, PropsWithChildren, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -53,11 +53,6 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
       : css`
           left: 0rem;
         `};
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-    bottom: unset;
-    right: 0;
-    left: unset;
-  `};
 `
 
 const MenuItem = styled(ExternalLink)`

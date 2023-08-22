@@ -10,7 +10,6 @@ import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
-import { shortenAddress } from 'nft/utils/address'
 import { formatEth } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
@@ -18,8 +17,9 @@ import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link as RouterLink } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { shortenAddress } from 'utils/addresses'
 
 import AssetActivity, { LoadingAssetActivity } from './AssetActivity'
 import * as styles from './AssetDetails.css'
@@ -427,7 +427,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {shortenAddress(asset.creator.address, 2, 4)}
+              {shortenAddress(asset.creator.address, 2)}
             </AddressTextLink>
           )}
 

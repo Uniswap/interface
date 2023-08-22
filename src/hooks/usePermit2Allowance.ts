@@ -3,10 +3,11 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from 'hooks/usePermitAllowance'
-import { useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
+import { useRevokeTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
 import useInterval from 'lib/hooks/useInterval'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
+import { TradeFillType } from 'state/routing/types'
+import { useHasPendingApproval, useHasPendingRevocation, useTransactionAdder } from 'state/transactions/hooks'
 
 enum ApprovalState {
   PENDING,
@@ -25,11 +26,14 @@ interface AllowanceRequired {
   token: Token
   isApprovalLoading: boolean
   isApprovalPending: boolean
+  isRevocationPending: boolean
   approveAndPermit: () => Promise<void>
   approve: () => Promise<void>
   permit: () => Promise<void>
-  needsPermit2Approval: boolean
-  needsSignature: boolean
+  revoke: () => Promise<void>
+  needsSetupApproval: boolean
+  needsPermitSignature: boolean
+  allowedAmount?: CurrencyAmount<Token>
 }
 
 export type Allowance =
@@ -43,6 +47,7 @@ export type Allowance =
 export default function usePermit2Allowance(
   amount?: CurrencyAmount<Token>,
   spender?: string,
+  tradeFillType?: TradeFillType,
   isPool?: boolean
 ): Allowance {
   const { account } = useWeb3React()
@@ -50,6 +55,7 @@ export default function usePermit2Allowance(
 
   const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance(token, account, PERMIT2_ADDRESS)
   const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
+  const revokeTokenAllowance = useRevokeTokenAllowance(token, PERMIT2_ADDRESS)
   const isApproved = useMemo(() => {
     if (!amount || !tokenAllowance) return false
     return tokenAllowance.greaterThan(amount) || tokenAllowance.equalTo(amount)
@@ -61,6 +67,8 @@ export default function usePermit2Allowance(
   const [approvalState, setApprovalState] = useState(ApprovalState.SYNCED)
   const isApprovalLoading = approvalState !== ApprovalState.SYNCED
   const isApprovalPending = useHasPendingApproval(token, PERMIT2_ADDRESS)
+  const isRevocationPending = useHasPendingRevocation(token, PERMIT2_ADDRESS)
+
   useEffect(() => {
     if (isApprovalPending) {
       setApprovalState(ApprovalState.PENDING)
@@ -98,7 +106,10 @@ export default function usePermit2Allowance(
   }, [amount, now, permitAllowance, permitExpiration])
 
   const shouldRequestApproval = !(isApproved || isApprovalLoading)
-  const shouldRequestSignature = !(isPermitted || isSigned)
+
+  // UniswapX trades do not need a permit signature step in between because the swap step _is_ the permit signature
+  const shouldRequestSignature = tradeFillType !== TradeFillType.UniswapX && !(isPermitted || isSigned)
+
   const addTransaction = useTransactionAdder()
   const approveAndPermit = useCallback(async () => {
     if (shouldRequestApproval) {
@@ -111,17 +122,14 @@ export default function usePermit2Allowance(
   }, [addTransaction, shouldRequestApproval, shouldRequestSignature, updatePermitAllowance, updateTokenAllowance])
 
   const approve = useCallback(async () => {
-    if (shouldRequestApproval) {
-      const { response, info } = await updateTokenAllowance()
-      addTransaction(response, info)
-    }
-  }, [addTransaction, shouldRequestApproval, updateTokenAllowance])
+    const { response, info } = await updateTokenAllowance()
+    addTransaction(response, info)
+  }, [addTransaction, updateTokenAllowance])
 
-  const permit = useCallback(async () => {
-    if (shouldRequestSignature) {
-      await updatePermitAllowance()
-    }
-  }, [shouldRequestSignature, updatePermitAllowance])
+  const revoke = useCallback(async () => {
+    const { response, info } = await revokeTokenAllowance()
+    addTransaction(response, info)
+  }, [addTransaction, revokeTokenAllowance])
 
   return useMemo(() => {
     if (token) {
@@ -133,11 +141,14 @@ export default function usePermit2Allowance(
           state: AllowanceState.REQUIRED,
           isApprovalLoading: false,
           isApprovalPending,
+          isRevocationPending,
           approveAndPermit,
           approve,
-          permit,
-          needsPermit2Approval: !isApproved,
-          needsSignature: shouldRequestSignature,
+          permit: updatePermitAllowance,
+          revoke,
+          needsSetupApproval: !isApproved,
+          needsPermitSignature: shouldRequestSignature,
+          allowedAmount: tokenAllowance,
         }
       } else if (!isApproved && !isPool) {
         return {
@@ -145,11 +156,14 @@ export default function usePermit2Allowance(
           state: AllowanceState.REQUIRED,
           isApprovalLoading,
           isApprovalPending,
+          isRevocationPending,
           approveAndPermit,
           approve,
-          permit,
-          needsPermit2Approval: true,
-          needsSignature: shouldRequestSignature,
+          permit: updatePermitAllowance,
+          revoke,
+          needsSetupApproval: true,
+          needsPermitSignature: shouldRequestSignature,
+          allowedAmount: tokenAllowance,
         }
       }
     }
@@ -157,8 +171,8 @@ export default function usePermit2Allowance(
       token,
       state: AllowanceState.ALLOWED,
       permitSignature: !isPermitted && isSigned ? signature : undefined,
-      needsPermit2Approval: false,
-      needsSignature: false,
+      needsSetupApproval: false,
+      needsPermitSignature: false,
     }
   }, [
     approve,
@@ -169,8 +183,10 @@ export default function usePermit2Allowance(
     isPermitted,
     isPool,
     isSigned,
-    permit,
+    updatePermitAllowance,
     permitAllowance,
+    revoke,
+    isRevocationPending,
     shouldRequestSignature,
     signature,
     token,

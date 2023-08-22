@@ -1,65 +1,64 @@
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
 import { isAddress } from 'utils'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import AvaxLogo from '../../assets/svg/avax_logo.svg'
 import BnbLogo from '../../assets/svg/bnb-logo.svg'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
 import { isCelo, NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'smartchain'
+type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'smartchain' | 'celo' | 'avalanchec'
 
-export function chainIdToNetworkName(networkId: SupportedChainId): Network {
+export function chainIdToNetworkName(networkId: ChainId): Network {
   switch (networkId) {
-    case SupportedChainId.MAINNET:
+    case ChainId.MAINNET:
       return 'ethereum'
-    case SupportedChainId.ARBITRUM_ONE:
+    case ChainId.ARBITRUM_ONE:
       return 'arbitrum'
-    case SupportedChainId.OPTIMISM:
+    case ChainId.OPTIMISM:
       return 'optimism'
-    case SupportedChainId.POLYGON:
+    case ChainId.POLYGON:
       return 'polygon'
-    case SupportedChainId.BNB:
+    case ChainId.BNB:
       return 'smartchain'
+    case ChainId.CELO:
+      return 'celo'
+    case ChainId.AVALANCHE:
+      return 'avalanchec'
     default:
       return 'ethereum'
   }
 }
 
-export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET): string {
+export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
   switch (chainId) {
-    case SupportedChainId.POLYGON:
-    case SupportedChainId.POLYGON_MUMBAI:
+    case ChainId.POLYGON:
+    case ChainId.POLYGON_MUMBAI:
       return MaticLogo
-    case SupportedChainId.BNB:
+    case ChainId.BNB:
       return BnbLogo
-    case SupportedChainId.CELO:
-    case SupportedChainId.CELO_ALFAJORES:
+    case ChainId.CELO:
+    case ChainId.CELO_ALFAJORES:
       return CeloLogo
+    case ChainId.AVALANCHE:
+      return AvaxLogo
     default:
       return EthereumLogo
   }
 }
 
-function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.MAINNET): string | void {
+function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): string | void {
   const networkName = chainIdToNetworkName(chainId)
-  const networksWithUrls = [
-    SupportedChainId.ARBITRUM_ONE,
-    SupportedChainId.MAINNET,
-    SupportedChainId.OPTIMISM,
-    SupportedChainId.BNB,
-  ]
-  if (networksWithUrls.includes(chainId)) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
+  const networksWithUrls = [ChainId.ARBITRUM_ONE, ChainId.MAINNET, ChainId.OPTIMISM, ChainId.BNB, ChainId.AVALANCHE]
+  if (isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
+    return CeloLogo
   }
 
-  // Celo logo logo is hosted elsewhere.
-  if (isCelo(chainId)) {
-    if (address === nativeOnChain(chainId).wrapped.address) {
-      return 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_CELO.png'
-    }
+  if (networksWithUrls.includes(chainId)) {
+    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
   }
 }
 

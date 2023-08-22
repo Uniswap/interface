@@ -1,7 +1,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useMemo } from 'react'
 
 import useFeeTierDistributionQuery from '../graphql/thegraph/FeeTierDistributionQuery'
@@ -75,7 +75,7 @@ export function useFeeTierDistribution(
 
 function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
   const latestBlock = useBlockNumber()
-  const { isLoading, error, data } = useFeeTierDistributionQuery(token0?.address, token1?.address, ms`30s`)
+  const { isLoading, error, data } = useFeeTierDistributionQuery(token0?.address, token1?.address, ms(`30s`))
 
   const { asToken0, asToken1, _meta } = data ?? {}
 

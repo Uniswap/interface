@@ -6,21 +6,15 @@ function waitRandom(min: number, max: number): Promise<void> {
   return wait(min + Math.round(Math.random() * Math.max(0, max - min)))
 }
 
-/**
- * This error is thrown if the function is cancelled before completing
- */
-class CancelledError extends Error {
-  public isCancelledError = true as const
-  constructor() {
-    super('Cancelled')
-  }
+/** Thrown if the function is canceled before resolving. */
+export class CanceledError extends Error {
+  name = 'CanceledError'
+  message = 'Retryable was canceled'
 }
 
-/**
- * Throw this error if the function should retry
- */
+/** May be thrown to force a retry. */
 export class RetryableError extends Error {
-  public isRetryableError = true as const
+  name = 'RetryableError'
 }
 
 export interface RetryOptions {
@@ -30,7 +24,7 @@ export interface RetryOptions {
 }
 
 /**
- * Retries the function that returns the promise until the promise successfully resolves up to n retries
+ * Retries a function until its returned promise successfully resolves, up to n times.
  * @param fn function to retry
  * @param n how many times to retry
  * @param minWait min wait between retries in ms
@@ -59,7 +53,7 @@ export function retry<T>(
         if (completed) {
           break
         }
-        if (n <= 0 || !error.isRetryableError) {
+        if (n <= 0 || !(error instanceof RetryableError)) {
           reject(error)
           completed = true
           break
@@ -74,7 +68,7 @@ export function retry<T>(
     cancel: () => {
       if (completed) return
       completed = true
-      rejectCancelled(new CancelledError())
+      rejectCancelled(new CanceledError())
     },
   }
 }

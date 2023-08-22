@@ -19,10 +19,16 @@ interface Window {
     // set by the Rabby browser extension
     isRabby?: true
     // set by the Trust Wallet browser extension
-    isTrustWallet?: true
+    isTrust?: true
     // set by the Ledger Extension Web 3 browser extension
     isLedgerConnect?: true
     autoRefreshOnNetworkChange?: boolean
+  }
+  // set by the Phantom Wallet browser extension
+  phantom?: {
+    ethereum?: {
+      isPhantom?: true
+    }
   }
   web3?: Record<string, unknown>
 }

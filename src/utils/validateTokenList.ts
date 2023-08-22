@@ -1,8 +1,6 @@
 import type { TokenInfo, TokenList } from '@uniswap/token-lists'
 import type { ValidateFunction } from 'ajv'
 
-import { retry } from './retry'
-
 enum ValidationSchema {
   LIST = 'list',
   TOKENS = 'tokens',
@@ -19,16 +17,16 @@ async function validate(schema: ValidationSchema, data: unknown): Promise<unknow
   let validatorImport
   switch (schema) {
     case ValidationSchema.LIST:
-      validatorImport = await retry(() => import('utils/__generated__/validateTokenList'))
+      validatorImport = await import('utils/__generated__/validateTokenList')
       break
     case ValidationSchema.TOKENS:
-      validatorImport = await retry(() => import('utils/__generated__/validateTokens'))
+      validatorImport = await import('utils/__generated__/validateTokens')
       break
     default:
       throw new Error('No validation function specified for token list schema')
   }
 
-  const [, validatorModule] = await Promise.all([retry(() => import('ajv')), validatorImport])
+  const [, validatorModule] = await Promise.all([import('ajv'), validatorImport])
   const validator = validatorModule.default as ValidateFunction
   if (validator?.(data)) {
     return data

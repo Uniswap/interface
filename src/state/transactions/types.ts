@@ -79,6 +79,7 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.APPROVAL
   tokenAddress: string
   spender: string
+  amount: string
 }
 
 interface BaseSwapTransactionInfo extends BaseTransactionInfo {
@@ -86,6 +87,7 @@ interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   tradeType: TradeType
   inputCurrencyId: string
   outputCurrencyId: string
+  isUniswapXOrder: boolean
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
@@ -93,6 +95,7 @@ export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
   inputCurrencyAmountRaw: string
   expectedOutputCurrencyAmountRaw: string
   minimumOutputCurrencyAmountRaw: string
+  settledOutputCurrencyAmountRaw?: string
 }
 export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo {
   tradeType: TradeType.EXACT_OUTPUT
@@ -203,7 +206,9 @@ export interface TransactionDetails {
   lastCheckedBlockNumber?: number
   addedTime: number
   confirmedTime?: number
+  deadline?: number
   from: string
   info: TransactionInfo
   nonce?: number
+  cancelled?: boolean
 }

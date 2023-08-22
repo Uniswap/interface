@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { OutlineCard } from 'components/Card'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { opacify } from 'theme/utils'
 import formatPriceImpact from 'utils/formatPriceImpact'
 
@@ -39,7 +39,7 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
                 <Trans>Price impact warning</Trans>
               </ThemedText.DeprecatedSubHeader>
             </RowFixed>
-            <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color={theme.accentFailure}>
+            <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color="accentFailure">
               {formatPriceImpact(priceImpact)}
             </ThemedText.DeprecatedLabel>
           </RowBetween>

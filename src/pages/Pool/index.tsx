@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { Trace, TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -11,68 +11,61 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
+import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useMemo } from 'react'
 import { AlertTriangle, BookOpen, ChevronDown, Inbox, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components'
 import { /*HideSmall,*/ ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 //import CTACards from './CTACards'
-import { LoadingRows } from './styleds'
+import { LoadingRows } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
   max-width: 870px;
   width: 100%;
 
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     max-width: 800px;
-  `};
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    max-width: 500px;
-  `};
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding-top: 48px;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    max-width: 500px;
     padding-top: 20px;
   }
 `
 const TitleRow = styled(RowBetween)`
   color: ${({ theme }) => theme.textSecondary};
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     flex-wrap: wrap;
     gap: 12px;
     width: 100%;
-  `};
+  }
 `
 const ButtonRow = styled(RowFixed)`
   & > *:not(:last-child) {
     margin-left: 8px;
   }
 
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
-    flex-direction: row-reverse;
-  `};
+  }
 `
 const PoolMenu = styled(Menu)`
   margin-left: 0;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     flex: 1 1 auto;
-    width: 49%;
-    right: 0px;
-  `};
+    width: 50%;
+  }
 
   a {
     width: 100%;
@@ -94,7 +87,7 @@ const MoreOptionsButton = styled(ButtonGray)`
   margin-right: 8px;
 `
 
-const MoreOptionsText = styled(ThemedText.DeprecatedBody)`
+const MoreOptionsText = styled(ThemedText.BodyPrimary)`
   align-items: center;
   display: flex;
 `
@@ -128,10 +121,10 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   font-size: 16px;
   padding: 6px 8px;
   width: fit-content;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     flex: 1 1 auto;
-    width: 100%;
-  `};
+    width: 50%;
+  }
 `
 
 const MainContentWrapper = styled.main`
@@ -143,6 +136,7 @@ const MainContentWrapper = styled.main`
   flex-direction: column;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
+  overflow: hidden;
 `
 
 function PositionsLoadingPlaceholder() {
@@ -180,12 +174,12 @@ function WrongNetworkCard() {
 
             <MainContentWrapper>
               <ErrorContainer>
-                <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                <ThemedText.BodyPrimary color={theme.textTertiary} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
                   <div data-testid="pools-unsupported-err">
                     <Trans>Your connected network is unsupported.</Trans>
                   </div>
-                </ThemedText.DeprecatedBody>
+                </ThemedText.BodyPrimary>
               </ErrorContainer>
             </MainContentWrapper>
           </AutoColumn>
@@ -198,6 +192,7 @@ function WrongNetworkCard() {
 
 export default function Pool() {
   const { account, chainId } = useWeb3React()
+  const networkSupportsV2 = useNetworkSupportsV2()
   const toggleWalletDrawer = useToggleAccountDrawer()
 
   const theme = useTheme()
@@ -227,7 +222,6 @@ export default function Pool() {
   }
 
   const showConnectAWallet = Boolean(!account)
-  const showV2Features = Boolean(V2_FACTORY_ADDRESSES[chainId])
 
   const menuItems = [
     {
@@ -262,7 +256,7 @@ export default function Pool() {
                 <Trans>Pools</Trans>
               </ThemedText.LargeHeader>
               <ButtonRow>
-                {showV2Features && (
+                {networkSupportsV2 && (
                   <PoolMenu
                     menuItems={menuItems}
                     flyoutAlignment={FlyoutAlignment.LEFT}
@@ -293,12 +287,12 @@ export default function Pool() {
                 />
               ) : (
                 <ErrorContainer>
-                  <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                  <ThemedText.BodyPrimary color={theme.textTertiary} textAlign="center">
                     <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} />
                     <div>
                       <Trans>Your active V3 liquidity positions will appear here.</Trans>
                     </div>
-                  </ThemedText.DeprecatedBody>
+                  </ThemedText.BodyPrimary>
                   {!showConnectAWallet && closedPositions.length > 0 && (
                     <ButtonText
                       style={{ marginTop: '.5rem' }}

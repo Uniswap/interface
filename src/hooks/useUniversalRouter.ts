@@ -1,16 +1,16 @@
-import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { MulticallExtended, PaymentsExtended, SwapRouter, Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 //import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { FeeOptions } from '@uniswap/v3-sdk'
+import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import JSBI from 'jsbi'
-import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
+import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
+import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UserRejectedRequestError } from 'utils/errors'
@@ -47,20 +47,22 @@ interface SwapOptions {
 }
 
 export function useUniversalRouterSwapCallback(
-  trade: Trade<Currency, Currency, TradeType> | undefined,
+  trade: ClassicTrade | undefined,
   fiatValues: { amountIn?: number; amountOut?: number },
   options: SwapOptions
 ) {
   const { account, chainId, provider } = useWeb3React()
   const analyticsContext = useTrace()
 
-  return useCallback(async (): Promise<TransactionResponse> => {
+  return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
       try {
         if (!account) throw new Error('missing account')
         if (!chainId) throw new Error('missing chainId')
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
+        const connectedChainId = await provider.getSigner().getChainId()
+        if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
         const { calldata: data, value } = SwapRouter.swapCallParameters(trade, {
@@ -69,6 +71,7 @@ export function useUniversalRouterSwapCallback(
           fee: options.feeOptions,
           recipient: account,
         })
+
         const tx = {
           from: account,
           to: options.smartPoolAddress,
@@ -82,11 +85,18 @@ export function useUniversalRouterSwapCallback(
         } catch (gasError) {
           setTraceStatus('failed_precondition')
           setTraceError(gasError)
+          sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+            ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
+            ...analyticsContext,
+            tx,
+            error: gasError,
+          })
           console.warn(gasError)
           throw new GasEstimationError()
         }
         const gasLimit = calculateGasMargin(gasEstimate)
         setTraceData('gasLimit', gasLimit.toNumber())
+        const beforeSign = Date.now()
         const response = await provider
           .getSigner()
           .sendTransaction({ ...tx, gasLimit })
@@ -94,6 +104,8 @@ export function useUniversalRouterSwapCallback(
             sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
               ...formatSwapSignedAnalyticsEventProperties({
                 trade,
+                timeToSignSinceRequestMs: Date.now() - beforeSign,
+                allowedSlippage: options.slippageTolerance,
                 fiatValues,
                 txHash: response.hash,
               }),
@@ -108,7 +120,10 @@ export function useUniversalRouterSwapCallback(
             }
             return response
           })
-        return response
+        return {
+          type: TradeFillType.Classic as const,
+          response,
+        }
       } catch (swapError: unknown) {
         if (swapError instanceof ModifiedSwapError) throw swapError
 

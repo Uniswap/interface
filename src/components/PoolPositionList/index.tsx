@@ -9,7 +9,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import React, { useMemo } from 'react'
 import { Info } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PoolPositionDetails } from 'types/position'
 

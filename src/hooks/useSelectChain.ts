@@ -1,33 +1,45 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useGetConnection } from 'connection'
-import { SupportedChainId } from 'constants/chains'
+import { getConnection } from 'connection'
+import { didUserReject } from 'connection/utils'
+import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
 import { useCallback } from 'react'
-import { addPopup } from 'state/application/reducer'
-import { updateConnectionError } from 'state/connection/reducer'
+import { useSearchParams } from 'react-router-dom'
+import { addPopup, PopupType } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
-import { switchChain } from 'utils/switchChain'
+
+import { useSwitchChain } from './useSwitchChain'
 
 export default function useSelectChain() {
   const dispatch = useAppDispatch()
   const { connector } = useWeb3React()
-  const getConnection = useGetConnection()
+  const switchChain = useSwitchChain()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   return useCallback(
-    async (targetChain: SupportedChainId) => {
+    async (targetChain: ChainId) => {
       if (!connector) return
 
-      const connectionType = getConnection(connector).type
+      const connection = getConnection(connector)
 
       try {
-        dispatch(updateConnectionError({ connectionType, error: undefined }))
         await switchChain(connector, targetChain)
+        if (isSupportedChain(targetChain)) {
+          searchParams.set('chain', CHAIN_IDS_TO_NAMES[targetChain])
+          setSearchParams(searchParams)
+        }
       } catch (error) {
-        console.error('Failed to switch networks', error)
-
-        dispatch(updateConnectionError({ connectionType, error: error.message }))
-        dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: 'failed-network-switch' }))
+        if (!didUserReject(connection, error) && error.code !== -32002 /* request already pending */) {
+          console.error('Failed to switch networks', error)
+          dispatch(
+            addPopup({
+              content: { failedSwitchNetwork: targetChain, type: PopupType.FailedSwitchNetwork },
+              key: 'failed-network-switch',
+            })
+          )
+        }
       }
     },
-    [connector, dispatch, getConnection]
+    [connector, dispatch, searchParams, setSearchParams, switchChain]
   )
 }

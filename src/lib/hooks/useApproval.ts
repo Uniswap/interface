@@ -1,9 +1,9 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
 import { useTokenContract } from 'hooks/useContract'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { getTokenAddress } from 'lib/utils/analytics'
@@ -54,7 +54,10 @@ export function useApproval(
   isRbPool: boolean | undefined
 ): [
   ApprovalState,
-  () => Promise<{ response: TransactionResponse; tokenAddress: string; spenderAddress: string } | undefined>
+  () => Promise<
+    | { response: TransactionResponse; tokenAddress: string; spenderAddress: string; amount: CurrencyAmount<Currency> }
+    | undefined
+  >
 ] {
   const { chainId } = useWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
@@ -107,6 +110,7 @@ export function useApproval(
           response,
           tokenAddress: token.address,
           spenderAddress: spender,
+          amount: amountToApprove,
         }
       })
       .catch((error: Error) => {
