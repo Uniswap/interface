@@ -147,13 +147,15 @@
 		6C13E36A28185E550065DBB1 /* WalletConnectAccountServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */; };
 		6C13E36C28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */; };
 		6C13E36E28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */; };
-		6C33CB452885E750006850A9 /* RNCloudStorageBackupsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C33CB432885E74F006850A9 /* RNCloudStorageBackupsManager.m */; };
-		6C33CB462885E750006850A9 /* RNCloudStorageBackupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C33CB442885E750006850A9 /* RNCloudStorageBackupsManager.swift */; };
 		6C84F057283D83ED0071FA2E /* MnemonicDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F056283D83ED0071FA2E /* MnemonicDisplayView.swift */; };
 		6C84F05D283DB7050071FA2E /* RNTMnemonicDisplayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F05C283DB7050071FA2E /* RNTMnemonicDisplayManager.m */; };
 		6C84F05F283DB7150071FA2E /* MnemonicWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F05E283DB7150071FA2E /* MnemonicWordView.swift */; };
-		6C8EFC2B28909EDF00FBD8EB /* EncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8EFC2A28909EDF00FBD8EB /* EncryptionHelper.swift */; };
 		6C8EFC2D2891B99100FBD8EB /* EncryptionHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8EFC2C2891B99100FBD8EB /* EncryptionHelperTests.swift */; };
+		6CA91BDB2A95223C00C4063E /* RNEthersRS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA91BD92A95223C00C4063E /* RNEthersRS.swift */; };
+		6CA91BDC2A95223C00C4063E /* RnEthersRS.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CA91BDA2A95223C00C4063E /* RnEthersRS.m */; };
+		6CA91BE12A95226200C4063E /* RNCloudStorageBackupsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CA91BDE2A95226200C4063E /* RNCloudStorageBackupsManager.m */; };
+		6CA91BE22A95226200C4063E /* EncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA91BDF2A95226200C4063E /* EncryptionHelper.swift */; };
+		6CA91BE32A95226200C4063E /* RNCloudStorageBackupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA91BE02A95226200C4063E /* RNCloudStorageBackupsManager.swift */; };
 		77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */; };
 		8385A47D3C765B841F450090 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */; };
 		9293C688E2BC4F0791E544E7 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3155C0CF238C4436932B207D /* Inter-Regular.ttf */; };
@@ -166,9 +168,7 @@
 		9F7898152A819D62004D5A98 /* WidgetsCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9FEC9B8B2A858CF1003CD019 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FEC9B8A2A858CF1003CD019 /* AppDelegate.m */; };
 		A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */; };
-		A3F0A5AF272B01FD00895B25 /* RnEthersRS.m in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5AE272B01FD00895B25 /* RnEthersRS.m */; };
 		A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */; };
-		A3F0A5B3272B1E9A00895B25 /* RNEthersRS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B2272B1E9A00895B25 /* RNEthersRS.swift */; };
 		A5EA9E9AE02E45D38A5829D7 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD04BDB5970E41149622BF7D /* Inter-Medium.ttf */; };
 		B8649A8D70B018E583494128 /* libPods-WidgetsCoreTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F9B12416ED2E83444B0936B2 /* libPods-WidgetsCoreTests.a */; };
 		C9E623221156415BD176C348 /* libPods-Widgets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0750E42001CAEA9359159B7F /* libPods-Widgets.a */; };
@@ -438,13 +438,16 @@
 		6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectAccountServer.swift; sourceTree = "<group>"; };
 		6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSwitchChainHandler.swift; sourceTree = "<group>"; };
 		6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSignRequestHandler.swift; sourceTree = "<group>"; };
-		6C33CB432885E74F006850A9 /* RNCloudStorageBackupsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNCloudStorageBackupsManager.m; sourceTree = "<group>"; };
-		6C33CB442885E750006850A9 /* RNCloudStorageBackupsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNCloudStorageBackupsManager.swift; sourceTree = "<group>"; };
 		6C84F056283D83ED0071FA2E /* MnemonicDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MnemonicDisplayView.swift; path = Uniswap/Onboarding/MnemonicDisplayView.swift; sourceTree = "<group>"; };
 		6C84F05C283DB7050071FA2E /* RNTMnemonicDisplayManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RNTMnemonicDisplayManager.m; path = Uniswap/Onboarding/RNTMnemonicDisplayManager.m; sourceTree = "<group>"; };
 		6C84F05E283DB7150071FA2E /* MnemonicWordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicWordView.swift; path = Uniswap/Onboarding/MnemonicWordView.swift; sourceTree = "<group>"; };
-		6C8EFC2A28909EDF00FBD8EB /* EncryptionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionHelper.swift; sourceTree = "<group>"; };
 		6C8EFC2C2891B99100FBD8EB /* EncryptionHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionHelperTests.swift; sourceTree = "<group>"; };
+		6CA91BD82A95223C00C4063E /* RNEthersRS-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RNEthersRS-Bridging-Header.h"; sourceTree = "<group>"; };
+		6CA91BD92A95223C00C4063E /* RNEthersRS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNEthersRS.swift; sourceTree = "<group>"; };
+		6CA91BDA2A95223C00C4063E /* RnEthersRS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RnEthersRS.m; sourceTree = "<group>"; };
+		6CA91BDE2A95226200C4063E /* RNCloudStorageBackupsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNCloudStorageBackupsManager.m; sourceTree = "<group>"; };
+		6CA91BDF2A95226200C4063E /* EncryptionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncryptionHelper.swift; sourceTree = "<group>"; };
+		6CA91BE02A95226200C4063E /* RNCloudStorageBackupsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNCloudStorageBackupsManager.swift; sourceTree = "<group>"; };
 		76700FCF2F2249D9C52E6A4C /* libPods-Uniswap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Uniswap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78C41378CE69EDD92DFAD177 /* Pods-OneSignalNotificationServiceExtension.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; sourceTree = "<group>"; };
 		811E7ED33487936333408382 /* Pods-OneSignalNotificationServiceExtension.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.beta.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.beta.xcconfig"; sourceTree = "<group>"; };
@@ -454,10 +457,7 @@
 		9F3500832A8AAAF50077BFC5 /* libreact-native-splash-screen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-splash-screen.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FEC9B8A2A858CF1003CD019 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Uniswap/AppDelegate.m; sourceTree = "<group>"; };
 		A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		A3F0A5AD272B01C800895B25 /* RNEthersRS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNEthersRS-Bridging-Header.h"; sourceTree = "<group>"; };
-		A3F0A5AE272B01FD00895B25 /* RnEthersRS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RnEthersRS.m; sourceTree = "<group>"; };
 		A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSwiftDistrib.swift; sourceTree = "<group>"; };
-		A3F0A5B2272B1E9A00895B25 /* RNEthersRS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNEthersRS.swift; sourceTree = "<group>"; };
 		A721D9DBF345F037F45E92BE /* Pods-WidgetsCore.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.beta.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.beta.xcconfig"; sourceTree = "<group>"; };
 		A82B0304EEE753C6DEB3943E /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A87B4C3727F6D91B4DAABF14 /* Pods-Uniswap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.debug.xcconfig"; sourceTree = "<group>"; };
@@ -866,13 +866,8 @@
 				6C84F055283D83CF0071FA2E /* Onboarding */,
 				6CE631B928186D4500716D29 /* WalletConnect */,
 				A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */,
-				A3F0A5AD272B01C800895B25 /* RNEthersRS-Bridging-Header.h */,
-				A3F0A5AE272B01FD00895B25 /* RnEthersRS.m */,
-				A3F0A5B2272B1E9A00895B25 /* RNEthersRS.swift */,
-				6C33CB432885E74F006850A9 /* RNCloudStorageBackupsManager.m */,
-				6C33CB442885E750006850A9 /* RNCloudStorageBackupsManager.swift */,
-				A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */,
-				6C8EFC2A28909EDF00FBD8EB /* EncryptionHelper.swift */,
+				6CA91BD72A95223C00C4063E /* RNEthersRs */,
+				6CA91BDD2A95226200C4063E /* RNCloudBackupsManager */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -933,6 +928,29 @@
 				6C84F05C283DB7050071FA2E /* RNTMnemonicDisplayManager.m */,
 			);
 			name = Onboarding;
+			sourceTree = "<group>";
+		};
+		6CA91BD72A95223C00C4063E /* RNEthersRs */ = {
+			isa = PBXGroup;
+			children = (
+				A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */,
+				6CA91BD82A95223C00C4063E /* RNEthersRS-Bridging-Header.h */,
+				6CA91BD92A95223C00C4063E /* RNEthersRS.swift */,
+				6CA91BDA2A95223C00C4063E /* RnEthersRS.m */,
+			);
+			name = RNEthersRs;
+			path = Uniswap/RNEthersRs;
+			sourceTree = "<group>";
+		};
+		6CA91BDD2A95226200C4063E /* RNCloudBackupsManager */ = {
+			isa = PBXGroup;
+			children = (
+				6CA91BDE2A95226200C4063E /* RNCloudStorageBackupsManager.m */,
+				6CA91BDF2A95226200C4063E /* EncryptionHelper.swift */,
+				6CA91BE02A95226200C4063E /* RNCloudStorageBackupsManager.swift */,
+			);
+			name = RNCloudBackupsManager;
+			path = Uniswap/RNCloudBackupsManager;
 			sourceTree = "<group>";
 		};
 		6CE631B928186D4500716D29 /* WalletConnect */ = {
@@ -1828,24 +1846,24 @@
 				6C13E36C28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift in Sources */,
 				FD7304D028A3650A0085BDEA /* Colors.swift in Sources */,
 				9FEC9B8B2A858CF1003CD019 /* AppDelegate.m in Sources */,
+				6CA91BDB2A95223C00C4063E /* RNEthersRS.swift in Sources */,
 				072F6C2E2A44A32F00DA720A /* TokenPriceWidget.intentdefinition in Sources */,
 				D63928FA27D704350004F5CC /* RNWalletConnect.swift in Sources */,
-				6C8EFC2B28909EDF00FBD8EB /* EncryptionHelper.swift in Sources */,
-				A3F0A5AF272B01FD00895B25 /* RnEthersRS.m in Sources */,
 				07B0676D2A7D6EC8001DD9B9 /* RNWidgets.m in Sources */,
 				07B0676C2A7D6EC8001DD9B9 /* RNWidgets.swift in Sources */,
 				FD7304CA28A364E70085BDEA /* MnemonicConfirmationWordBankView.swift in Sources */,
 				6C84F05D283DB7050071FA2E /* RNTMnemonicDisplayManager.m in Sources */,
 				6C13E36A28185E550065DBB1 /* WalletConnectAccountServer.swift in Sources */,
-				6C33CB452885E750006850A9 /* RNCloudStorageBackupsManager.m in Sources */,
-				6C33CB462885E750006850A9 /* RNCloudStorageBackupsManager.swift in Sources */,
+				6CA91BE22A95226200C4063E /* EncryptionHelper.swift in Sources */,
 				6C13E36E28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift in Sources */,
 				6C84F05F283DB7150071FA2E /* MnemonicWordView.swift in Sources */,
 				FDB23E4F289D935800248737 /* RNMnemonicConfirmationManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				A3F0A5B3272B1E9A00895B25 /* RNEthersRS.swift in Sources */,
+				6CA91BE32A95226200C4063E /* RNCloudStorageBackupsManager.swift in Sources */,
 				FD7304CC28A364EF0085BDEA /* MnemonicTextField.swift in Sources */,
 				034F01A92A4F11D4008CB8BF /* RCTThemeModule.m in Sources */,
+				6CA91BDC2A95223C00C4063E /* RnEthersRS.m in Sources */,
+				6CA91BE12A95226200C4063E /* RNCloudStorageBackupsManager.m in Sources */,
 				D63452452821BD540018ED83 /* WalletConnectSendTransactionHandler.swift in Sources */,
 				FDDCC725289AE92600BCD4F3 /* MnemonicConfirmationView.swift in Sources */,
 				A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */,
@@ -2698,7 +2716,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
 				PRODUCT_NAME = Uniswap;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "RNEthersRS-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Uniswap/RNEthersRs/RNEthersRS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2737,7 +2755,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
 				PRODUCT_NAME = Uniswap;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile";
-				SWIFT_OBJC_BRIDGING_HEADER = "RNEthersRS-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Uniswap/RNEthersRs/RNEthersRS-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -3050,7 +3068,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
 				PRODUCT_NAME = Uniswap;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.beta";
-				SWIFT_OBJC_BRIDGING_HEADER = "RNEthersRS-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Uniswap/RNEthersRs/RNEthersRS-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -3220,7 +3238,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
 				PRODUCT_NAME = Uniswap;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev";
-				SWIFT_OBJC_BRIDGING_HEADER = "RNEthersRS-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Uniswap/RNEthersRs/RNEthersRS-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
