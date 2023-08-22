@@ -314,12 +314,16 @@ export function Swap({
 
   const fiatValueTradeInput = useUSDPrice(trade?.inputAmount)
   const fiatValueTradeOutput = useUSDPrice(trade?.postTaxOutputAmount)
-  const stablecoinPriceImpact = useMemo(
+  const preTaxFiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
+  const [stablecoinPriceImpact, preTaxStablecoinPriceImpact] = useMemo(
     () =>
       routeIsSyncing || !isClassicTrade(trade)
-        ? undefined
-        : computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
-    [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
+        ? [undefined, undefined]
+        : [
+            computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
+            computeFiatValuePriceImpact(fiatValueTradeInput.data, preTaxFiatValueTradeOutput.data),
+          ],
+    [fiatValueTradeInput, fiatValueTradeOutput, preTaxFiatValueTradeOutput, routeIsSyncing, trade]
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers(dispatch)
@@ -473,9 +477,9 @@ export function Swap({
     }
 
     const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
-    const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
+    const largerPriceImpact = largerPercentValue(marketPriceImpact, preTaxStablecoinPriceImpact)
     return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
-  }, [stablecoinPriceImpact, trade])
+  }, [preTaxStablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
     setSwapState((currentState) => ({ ...currentState, showConfirm: false }))
