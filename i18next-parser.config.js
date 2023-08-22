@@ -70,16 +70,11 @@ module.exports = {
   ],
 
   // Whether or not to sort the catalog. Can also be a [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)
-  sort: false,
+  sort: true,
 
-  // Whether to ignore default values
-  // You may also specify a function accepting the locale and namespace as arguments
-  skipDefaultValues: false,
-
-  // Whether to use the keys as the default value; ex. "Hello": "Hello", "World": "World"
-  // This option takes precedence over the `defaultValue` and `skipDefaultValues` options
-  // You may also specify a function accepting the locale and namespace as arguments
-  useKeysAsDefaultValue: true,
+  defaultValue: function (locale, namespace, key, value) {
+    return key
+  },
 
   // Display info about the parsing including some stats
   verbose: false,
