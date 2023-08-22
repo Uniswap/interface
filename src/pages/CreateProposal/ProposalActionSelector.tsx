@@ -26,9 +26,10 @@ const ContentWrapper = styled(Column)`
   position: relative;
 `
 const ActionSelectorHeader = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   font-weight: 500;
-  color: ${({ theme }) => theme.textSecondary};
+  margin-bottom: 10px;
 `
 
 const ActionDropdown = styled(ButtonDropdown)`
@@ -56,11 +57,11 @@ const ProposalActionSelectorFlex = styled.div`
 `
 
 const ProposalActionSelectorContainer = styled.div`
+  display: flex;
   flex: 1;
-  padding: 1rem;
-  display: grid;
-  grid-auto-rows: auto;
-  grid-row-gap: 10px;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 1em;
 `
 
 export const ProposalActionSelector = ({
