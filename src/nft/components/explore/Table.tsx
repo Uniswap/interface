@@ -162,7 +162,7 @@ export function Table<D extends Record<string, unknown>>({
                   disabled={column.disableSortBy}
                   key={index}
                 >
-                  <Box as="span" color="accent1" position="relative">
+                  <Box as="span" color="neutral2" position="relative">
                     {column.isSorted ? (
                       column.isSortedDesc ? (
                         <ArrowChangeUp width="16px" height="16px" style={{ position: 'absolute', top: 3 }} />
