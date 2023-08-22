@@ -136,7 +136,7 @@ export function SelectWallets(): JSX.Element {
 
   const isFirstAccountActive = useRef(false) // to keep track of first account activated from the selected accounts
   const onSubmit = useCallback(async () => {
-    addresses.forEach(async (address) => {
+    for (const address of addresses) {
       // Remove unselected accounts from store.
       if (!selectedAddresses.includes(address)) {
         await dispatch(
@@ -162,7 +162,7 @@ export function SelectWallets(): JSX.Element {
           )
         }
       }
-    })
+    }
     // Activating an account will automatically redirect to the complete screen using the useOnboardingCompleteRedirect() hook
     await dispatch(pendingAccountActions.trigger(PendingAccountActions.Activate))
   }, [addresses, selectedAddresses, dispatch, pendingAccounts])
