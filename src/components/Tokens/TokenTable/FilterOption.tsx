@@ -2,7 +2,7 @@ import styled from 'styled-components'
 const FilterOption = styled.button<{ active: boolean; highlight?: boolean }>`
   height: 100%;
   color: ${({ theme, active }) => (active ? theme.accent1 : theme.neutral1)};
-  background-color: ${({ theme, active }) => (active ? theme.accent2 : theme.surface1)};
+  background-color: ${({ theme, active }) => (active ? theme.accent2 : theme.surface3)};
   margin: 0;
   padding: 6px 6px 6px 14px;
   border-radius: 12px;
