@@ -184,7 +184,7 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
       hideHandlebar={true}
       isDismissible={false}
       name={ModalName.SeedPhraseWarningModal}>
-      <Flex centered gap="spacing12" pb="spacing48" pt="spacing12" px="spacing24">
+      <Flex centered gap="spacing12" pb="spacing48" pt="spacing36" px="spacing24">
         <Flex centered backgroundColor="surface2" borderRadius="roundedFull" padding="spacing8">
           <LockIcon
             color={theme.colors.neutral1}

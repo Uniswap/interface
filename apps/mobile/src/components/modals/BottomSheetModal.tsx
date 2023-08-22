@@ -141,6 +141,11 @@ export function BottomSheetModal({
     sm: theme.borderRadii.rounded24,
   })
 
+  const hiddenHandlebarStyle = {
+    borderTopLeftRadius: borderRadius,
+    borderTopRightRadius: borderRadius,
+  }
+
   const animatedBorderRadius = useAnimatedStyle(() => {
     const interpolatedRadius = interpolate(
       animatedPosition.value,
@@ -201,7 +206,11 @@ export function BottomSheetModal({
               backgroundColor: backgroundColorValue,
             },
             BottomSheetStyle.view,
-            ...(renderBehindInset ? [BottomSheetStyle.behindInset, animatedBorderRadius] : []),
+            ...(renderBehindInset
+              ? [BottomSheetStyle.behindInset, animatedBorderRadius]
+              : hideHandlebar
+              ? [hiddenHandlebarStyle]
+              : []),
           ]}
           onLayout={handleContentLayout}>
           {children}
