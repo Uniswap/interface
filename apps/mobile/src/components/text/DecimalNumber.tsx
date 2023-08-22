@@ -31,7 +31,7 @@ export function DecimalNumber({
     <Text loading={loading} loadingPlaceholderText="$000.00" variant={variant} {...rest}>
       {pre}
       {post && (
-        <Text color={decimalPartColor} variant={variant}>
+        <Text color={decimalPartColor} fontSize={rest.fontSize} variant={variant}>
           {separator}
           {post}
         </Text>

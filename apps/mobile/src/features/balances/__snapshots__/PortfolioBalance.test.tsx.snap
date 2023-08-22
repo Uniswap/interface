@@ -231,7 +231,7 @@ exports[`PortfolioBalance renders without error 2`] = `
               "color": "#7D7D7D",
               "display": "flex",
               "fontFamily": "Inter-SemiBold",
-              "fontSize": 40,
+              "fontSize": 48,
               "lineHeight": 48,
             },
           ]
