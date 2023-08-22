@@ -20,7 +20,7 @@ interface ListPriceProps extends BoxProps {
 
 export function ListPriceBadge(props: ListPriceProps): JSX.Element {
   return (
-    <Box alignItems="center" style={styles.blurWrapper} {...props}>
+    <Flex alignItems="center" style={styles.blurWrapper} {...props}>
       <BlurView blurAmount={20} blurType="light" reducedTransparencyFallbackColor="black">
         <Box style={styles.blurView}>
           <Flex
@@ -35,7 +35,7 @@ export function ListPriceBadge(props: ListPriceProps): JSX.Element {
           <PriceAmount {...props} />
         </Box>
       </BlurView>
-    </Box>
+    </Flex>
   )
 }
 
