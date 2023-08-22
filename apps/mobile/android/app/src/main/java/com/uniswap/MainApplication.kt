@@ -21,6 +21,7 @@ class MainApplication : MultiDexApplication(), ReactApplication {
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           add(UniswapPackage())
+          add(RNCloudStorageBackupsManagerModule())
         }
 
       override fun getJSMainModuleName(): String {

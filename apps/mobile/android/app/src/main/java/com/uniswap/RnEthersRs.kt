@@ -56,7 +56,7 @@ class RnEthersRs(applicationContext: Context) {
    * @param address The address associated with the mnemonic.
    * @return The address.
    */
-  private fun storeNewMnemonic(mnemonic: String?, address: String): String {
+  fun storeNewMnemonic(mnemonic: String?, address: String): String {
     val checkStored = retrieveMnemonic(address)
     if (checkStored == null) {
       val newMnemonicKey = keychainKeyForMnemonicId(address)

@@ -38,7 +38,6 @@ export function CloudBackupProcessingAnimation({
   const theme = useAppTheme()
 
   const account = useAccount(accountAddress)
-
   const [processing, doneProcessing] = useReducer(() => false, true)
 
   // Handle finished backing up to Cloud

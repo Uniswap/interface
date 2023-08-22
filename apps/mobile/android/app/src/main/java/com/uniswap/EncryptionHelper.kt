@@ -94,6 +94,7 @@ fun keyFromPassword(password: String, salt: String): ByteArray {
     )
     return hash.rawHashAsByteArray()
 }
+
 /**
  * Generates a Base64-encoded string to be used as a security salt.
  *

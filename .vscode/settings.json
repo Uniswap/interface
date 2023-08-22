@@ -55,4 +55,5 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.updateImportsOnFileMove.enabled": "always",
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

@@ -92,10 +92,10 @@ android {
             keyPassword 'android'
         }
         release {
-          storeFile file(System.getenv("KEYSTORE_FILE") ?: 'keystore.jks')
-          storePassword System.getenv("STORE_PASSWORD") ?: keystoreProperties.getProperty("STORE_PASSWORD")
-          keyAlias System.getenv("KEYSTORE_ALIAS") ?: keystoreProperties.getProperty("KEYSTORE_ALIAS")
-          keyPassword System.getenv("KEY_PASSWORD") ?: keystoreProperties.getProperty("KEY_PASSWORD")
+            storeFile file(System.getenv("KEYSTORE_FILE") ?: 'keystore.jks')
+            storePassword System.getenv("STORE_PASSWORD") ?: keystoreProperties.getProperty("STORE_PASSWORD")
+            keyAlias System.getenv("KEYSTORE_ALIAS") ?: keystoreProperties.getProperty("KEYSTORE_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD") ?: keystoreProperties.getProperty("KEY_PASSWORD")
         }
     }
 
@@ -121,7 +121,7 @@ android {
 
     buildTypes {
         debug {
-          signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug
         }
         release {
             signingConfig signingConfigs.release
@@ -146,6 +146,9 @@ android {
         }
     }
 
+    packagingOptions {
+      resources.excludes.add("META-INF/*")
+    }
     buildFeatures {
         compose true
     }
@@ -165,6 +168,27 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
 
+    // Guava
+    implementation "com.google.guava:guava:24.1-jre"
+    // Guava fix
+    implementation "com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava"
+
+    //TODO: Revisit dependencies during security audit
+    //Drive
+    implementation('com.google.api-client:google-api-client-android:2.1.0') {
+      exclude group: 'org.apache.httpcomponents'
+      exclude module: 'guava-jdk5'
+    }
+    implementation('com.google.apis:google-api-services-drive:v3-rev20221023-2.0.0') {
+      exclude group: 'org.apache.httpcomponents'
+      exclude module: 'guava-jdk5'
+    }
+    implementation 'com.google.android.gms:play-services-auth:20.4.0'
+
+    implementation 'com.google.api-client:google-api-client-jackson2:1.31.1'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.11.0'
+
+    implementation 'com.lambdapioneer.argon2kt:argon2kt:1.3.0'
     implementation "androidx.compose.foundation:foundation:$compose"
     implementation "androidx.compose.material:material:$compose"
     implementation "androidx.security:security-crypto:1.0.0"
