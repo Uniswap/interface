@@ -1,3 +1,5 @@
+import { enableMasca, isError } from '@blockchain-lab-um/masca-connector'
+import { ArrowPathIcon } from '@heroicons/react/24/solid'
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
@@ -19,8 +21,9 @@ import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, CreditCard, IconProps, Info, LogOut, Settings } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
+import { useMascaStore } from 'state/masca/mascaStore'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled, { useTheme } from 'styled-components'
+import styled, { keyframes, useTheme } from 'styled-components'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 import { formatNumber, NumberType } from 'utils/formatNumbers'
@@ -34,6 +37,38 @@ import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButt
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
 import { useCachedPortfolioBalancesQuery } from './PrefetchBalancesWrapper'
+
+const MascaWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  align-items: center;
+`
+
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`
+
+const RefreshIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  animation: ${rotate} 2s linear infinite;
+  transform-origin: center center;
+`
+
+const RefreshIconStatic = styled.div`
+  width: 16px;
+  height: 16px;
+  transform-origin: center center;
+  &:hover {
+    cursor: pointer;
+  }
+`
 
 const AuthenticatedHeaderWrapper = styled.div`
   padding: 20px 16px;
@@ -170,6 +205,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
+  const [querying, setQuerying] = useState(false)
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
@@ -196,6 +232,45 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     navigate('/nfts/profile')
     closeModal()
   }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, toggleWalletDrawer])
+
+  const { setEnabled, mascaEnabled, mascaApi, setMascaApi, credentials, setCredentials } = useMascaStore((state) => ({
+    mascaApi: state.mascaApi,
+    mascaEnabled: state.isEnabled,
+    setEnabled: state.changeIsEnabled,
+    setMascaApi: state.changeMascaApi,
+    credentials: state.vcs,
+    setCredentials: state.changeVcs,
+  }))
+
+  const handleEnableMasca = useCallback(async () => {
+    const mascaResult = await enableMasca(account, {
+      snapId: 'npm:@blockchain-lab-um/masca',
+      version: '1.0.0-beta.0',
+    })
+    if (isError(mascaResult)) {
+      // FIXME: This error is shown as [Object object]
+      throw new Error(mascaResult.error)
+    }
+    const mascaApi = mascaResult.data.getMascaApi()
+    setMascaApi(mascaApi)
+    setEnabled(true)
+    setQuerying(true)
+    const credentialsResult = await mascaApi.queryCredentials()
+    if (!isError(credentialsResult)) setCredentials(credentialsResult.data)
+    setQuerying(false)
+  }, [])
+
+  const handleQueryCredentials = useCallback(async () => {
+    setQuerying(true)
+    if (!mascaApi) {
+      await handleEnableMasca()
+      setQuerying(false)
+      return
+    }
+    const credentialsResult = await mascaApi.queryCredentials()
+    if (!isError(credentialsResult)) setCredentials(credentialsResult.data)
+    setQuerying(false)
+  }, [])
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
@@ -226,7 +301,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const openFiatOnrampUnavailableTooltip = useCallback(() => setShow(true), [setShow])
   const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
-  const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account })
+  const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({
+    account,
+  })
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
@@ -292,6 +369,19 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                   </ThemedText.BodySecondary>
                 </>
               )}
+              {mascaEnabled && (
+                <MascaWrap>
+                  <Trans>Total credentials: {credentials.length}</Trans>{' '}
+                  <RefreshIcon hidden={!querying}>
+                    <ArrowPathIcon />
+                  </RefreshIcon>
+                  {!querying && (
+                    <RefreshIconStatic onClick={handleQueryCredentials}>
+                      <ArrowPathIcon />
+                    </RefreshIconStatic>
+                  )}
+                </MascaWrap>
+              )}
             </AutoRow>
           </FadeInColumn>
         ) : (
@@ -300,6 +390,15 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
           </Column>
         )}
+        <HeaderButton
+          size={ButtonSize.medium}
+          disabled={mascaEnabled}
+          emphasis={ButtonEmphasis.medium}
+          onClick={handleEnableMasca}
+        >
+          <Trans>{mascaEnabled ? 'Masca Enabled' : 'Enable Masca'}</Trans>
+        </HeaderButton>
+
         {!shouldDisableNFTRoutes && (
           <HeaderButton
             data-testid="nft-view-self-nfts"

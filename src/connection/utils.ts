@@ -28,7 +28,7 @@ export function getInjection(isDarkMode?: boolean): { name: string; icon: string
   }
 
   // Check for MetaMask last, as other injectors will also set this flag, i.e. Brave browser and Phantom wallet
-  if (window.ethereum?.isMetaMask) return { name: 'MetaMask', icon: METAMASK_ICON }
+  if (window.ethereum?.isMetaMask) return { name: 'MetaMask Flask', icon: METAMASK_ICON }
 
   // Prompt metamask installation when there is no injection present or the only injection detected is coinbase (CB has separate entry point in UI)
   if (!window.ethereum || window.ethereum.isCoinbaseWallet) return { name: 'Install MetaMask', icon: METAMASK_ICON }
