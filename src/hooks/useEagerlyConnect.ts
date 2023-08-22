@@ -5,6 +5,8 @@ import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 
+import { useStateRehydrated } from './useStateRehydrated'
+
 async function connect(connector: Connector) {
   try {
     if (connector.connectEagerly) {
@@ -21,7 +23,7 @@ export default function useEagerlyConnect() {
   const dispatch = useAppDispatch()
 
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
-  const rehydrated = useAppSelector((state) => state._persist.rehydrated)
+  const rehydrated = useStateRehydrated()
 
   useEffect(() => {
     try {
