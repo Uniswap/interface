@@ -24,7 +24,7 @@ import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { PoolRegisteredLog, useBscPools, useRegisteredPools, useRegistryContract } from 'state/pool/hooks'
+import { PoolRegisteredLog, usePoolsFromList, useRegisteredPools, useRegistryContract } from 'state/pool/hooks'
 import styled from 'styled-components'
 
 import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
@@ -72,11 +72,13 @@ export const SearchBar = () => {
   // TODO: check if we already store all pools' data in state, so can return a richer pool struct
   const smartPoolsLogs = useRegisteredPools()
   const registry = useRegistryContract()
-  const bscPools = useBscPools(registry)
+  const poolsFromList = usePoolsFromList(registry, chainId)
   const allPools: PoolRegisteredLog[] = useMemo(() => {
-    if (chainId === ChainId.BNB) return [...(smartPoolsLogs ?? []), ...(bscPools ?? [])]
+    if (chainId === ChainId.BNB || chainId === ChainId.BASE || chainId === ChainId.OPTIMISM) {
+      return [...(smartPoolsLogs ?? []), ...(poolsFromList ?? [])]
+    }
     return [...(smartPoolsLogs ?? [])]
-  }, [chainId, smartPoolsLogs, bscPools])
+  }, [chainId, smartPoolsLogs, poolsFromList])
 
   const smartPools: Token[] = useMemo(() => {
     const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')

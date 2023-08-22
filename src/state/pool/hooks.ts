@@ -19,7 +19,7 @@ import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useStakingContract } from 'state/governance/hooks'
 import { useAppSelector } from 'state/hooks'
-import { useBscPoolsList } from 'state/lists/poolsList/hooks'
+import { usePoolsFromUrl } from 'state/lists/poolsList/hooks'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { CallStateResult, useSingleContractMultipleData } from '../../lib/hooks/multicall'
@@ -67,7 +67,7 @@ function useStartBlock(chainId: number | undefined): number | undefined {
   } else if (chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
   } else if (chainId === ChainId.BASE) {
-    registryStartBlock = 2570151
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 1000 : blockNumber //2570151
   } else if (chainId === ChainId.BNB) {
     registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : blockNumber //28843676
   } else {
@@ -136,7 +136,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
   } else if (chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
   } else if (chainId === ChainId.BASE) {
-    registryStartBlock = 2570151
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 1000 : 2963000 //2570151
   } else if (chainId === ChainId.BNB) {
     registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : 28843676
   } else {
@@ -150,7 +150,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     registryStartBlock
   )
 
-  const bscPools = useBscPools(registry)
+  const poolsFromList = usePoolsFromList(registry, chainId)
 
   // early return until events are fetched
   return useMemo(() => {
@@ -162,9 +162,9 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     }
 
     // TODO: we might have temporary duplicate non-identical pools as group is empty in pools from endpoint
-    if (chainId === ChainId.BNB && registry) {
+    if ((chainId === ChainId.BNB || chainId === ChainId.BASE || chainId === ChainId.OPTIMISM) && registry) {
       // eslint-disable-next-line
-      const pools: PoolRegisteredLog[] = ([...(formattedLogsV1 ?? []), ...(bscPools ?? [])])
+      const pools: PoolRegisteredLog[] = ([...(formattedLogsV1 ?? []), ...(poolsFromList ?? [])])
       return { data: pools, loading: false }
     }
 
@@ -173,13 +173,16 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     }
 
     return { data: formattedLogsV1, loading: false }
-  }, [account, chainId, formattedLogsV1, registry, bscPools])
+  }, [account, chainId, formattedLogsV1, registry, poolsFromList])
 }
 
 // Bsc endpoints have eth_getLogs limit, so we query pools before recent history from pools list endpoint
-export function useBscPools(regitry: Contract | null): PoolRegisteredLog[] | undefined {
-  const bscPools = useBscPoolsList(POOLS_LIST)
-  const poolAddresses = useMemo(() => (bscPools ? bscPools.map((p) => [p.address]) : []), [bscPools])
+export function usePoolsFromList(
+  regitry: Contract | null,
+  chainId: number | undefined
+): PoolRegisteredLog[] | undefined {
+  const poolsFromList = usePoolsFromUrl(POOLS_LIST, Number(chainId))
+  const poolAddresses = useMemo(() => (poolsFromList ? poolsFromList.map((p) => [p.address]) : []), [poolsFromList])
   const result = useSingleContractMultipleData(regitry, 'getPoolIdFromAddress', poolAddresses)
   const poolsLoading = useMemo(() => result.some(({ loading }) => loading), [result])
   const poolsError = useMemo(() => result.some(({ error }) => error), [result])
@@ -189,7 +192,7 @@ export function useBscPools(regitry: Contract | null): PoolRegisteredLog[] | und
       const result = call.result as CallStateResult
       return result[0]
     })
-    return bscPools?.map((p, i) => {
+    return poolsFromList?.map((p, i) => {
       const pool = p.address
       const name = p.name
       const symbol = p.symbol
@@ -197,7 +200,7 @@ export function useBscPools(regitry: Contract | null): PoolRegisteredLog[] | und
 
       return { pool, name, symbol, id }
     })
-  }, [bscPools, poolsLoading, poolsError, result])
+  }, [poolsFromList, poolsLoading, poolsError, result])
 }
 
 export function useCreateCallback(): (
