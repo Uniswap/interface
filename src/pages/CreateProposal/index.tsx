@@ -60,7 +60,7 @@ const Nav = styled(Link)`
 `
 
 const HeaderText = styled(ThemedText.SubHeaderLarge)`
-  margin: auto;
+  margin: auto !important;
 `
 
 const CreateProposalButton = ({
