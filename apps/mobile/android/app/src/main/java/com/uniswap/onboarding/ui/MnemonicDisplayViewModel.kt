@@ -31,8 +31,11 @@ class MnemonicDisplayViewModel(
           _longPhrase.update { mnemonic }
         } else {
           _words.update {
-            phraseList.map { phrase ->
-              MnemonicWordUiState(phrase)
+            phraseList.mapIndexed { index, phrase ->
+              MnemonicWordUiState(
+                num = index + 1,
+                text = phrase,
+              )
             }
           }
         }

@@ -29,6 +29,7 @@ class MnemonicConfirmationViewModel(
   val displayWords: StateFlow<List<MnemonicWordUiState>> = combine(focusedIndex, selectedWords) { focusedIndexValue, words ->
     words.mapIndexed { index, word ->
       MnemonicWordUiState(
+        num = index + 1,
         text = word ?: "",
         focused = index == focusedIndexValue,
         hasError = word != null && word != sourceWords[index],

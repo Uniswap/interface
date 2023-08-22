@@ -3,7 +3,6 @@ package com.uniswap.onboarding.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -15,11 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.uniswap.onboarding.ui.model.MnemonicWordUiState
-import com.uniswap.theme.UniswapColors
 import com.uniswap.theme.UniswapTheme
 
 /**
@@ -28,7 +25,6 @@ import com.uniswap.theme.UniswapTheme
 @Composable
 fun MnemonicWordCell(
   modifier: Modifier = Modifier,
-  index: Int,
   word: MnemonicWordUiState,
   showCompact: Boolean = false,
   onClick: () -> Unit = {},
@@ -40,12 +36,12 @@ fun MnemonicWordCell(
   var rowModifier = modifier
     .clip(shape)
     .shadow(1.dp, shape)
-    .background(cellBackgroundColor(word.focused))
+    .background(UniswapTheme.colors.surface2)
 
   if (word.hasError) {
-    rowModifier = rowModifier.border(1.dp, UniswapTheme.extendedColors.DEP_accentCritical, shape)
+    rowModifier = rowModifier.border(1.dp, UniswapTheme.colors.statusCritical, shape)
   } else if (word.focused) {
-    rowModifier = rowModifier.border(1.dp, UniswapTheme.extendedColors.DEP_accentActive, shape)
+    rowModifier = rowModifier.border(1.dp, UniswapTheme.colors.accent1, shape)
   }
 
 
@@ -56,8 +52,8 @@ fun MnemonicWordCell(
       .padding(vertical = if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12)
   ) {
     Text(
-      text = "$index",
-      color = indexTextColor(),
+      text = "${word.num}",
+      color = UniswapTheme.colors.neutral3,
       modifier = Modifier
         .defaultMinSize(minWidth = 24.dp)
         .align(Alignment.CenterVertically),
@@ -68,21 +64,3 @@ fun MnemonicWordCell(
     Text(modifier = Modifier.weight(1f), text = word.text, style = textStyle)
   }
 }
-
-@Composable
-private fun cellBackgroundColor(focused: Boolean): Color =
-  if (focused) {
-    UniswapTheme.extendedColors.DEP_background3
-  } else if (isSystemInDarkTheme()) { // TODO gary verify if this reflects ThemeModule overrides
-    UniswapColors.Gray900
-  } else {
-    UniswapColors.Gray100
-  }
-
-@Composable
-private fun indexTextColor(): Color =
-  if (isSystemInDarkTheme()) { // TODO gary verify if this reflects ThemeModule overrides
-    UniswapColors.Gray350
-  } else {
-    UniswapColors.Gray250
-  }

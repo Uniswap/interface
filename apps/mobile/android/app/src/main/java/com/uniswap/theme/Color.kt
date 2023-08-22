@@ -161,64 +161,89 @@ object UniswapColors {
   val Transparent = Color.Transparent
 }
 
+data class CustomColors(
+  val white: Color = UniswapColors.White,
+  val black: Color = UniswapColors.Black,
+  val surface1: Color,
+  val surface2: Color,
+  val surface3: Color,
+  val surface4: Color,
+  val surface5: Color,
+  val scrim: Color,
+  val neutral1: Color,
+  val neutral2: Color,
+  val neutral3: Color,
+  val accent1: Color,
+  val accent2: Color,
+  val statusActive: Color,
+  val statusSuccess: Color,
+  val statusCritical: Color,
+)
+
+val lightCustomColors = CustomColors(
+  surface1 = Color(0xFFFFFFFF),
+  surface2 = Color(0xFFF9F9F9),
+  surface3 = Color(0x2222220D),
+  surface4 = Color(0xFFFFFFA3),
+  surface5 = Color(0x0000000A),
+
+  scrim = Color(0x00000099),
+
+  neutral1 = Color(0xFF222222),
+  neutral2 = Color(0xFF7D7D7D),
+  neutral3 = Color(0xFFCECECE),
+
+  accent1 = Color(0xFFFC72FF),
+  accent2 = Color(0xFFFFEFFF),
+
+  statusActive = Color(0xFF236EFF),
+  statusSuccess = Color(0xFF40B66B),
+  statusCritical = Color(0xFFFF5F52),
+)
+
+val darkCustomColors = CustomColors(
+  surface1 = Color(0xFF131313),
+  surface2 = Color(0xFF1B1B1B),
+  surface3 = Color(0xFFFFFF1F),
+  surface4 = Color(0xFFFFFF33),
+  surface5 = Color(0x0000000A),
+
+  scrim = Color(0x00000099),
+
+  neutral1 = Color(0xFFFFFFFF),
+  neutral2 = Color(0xFF9B9B9B),
+  neutral3 = Color(0xFF5E5E5E),
+
+  accent1 = Color(0xFFFC72FF),
+  accent2 = Color(0xFF311C31),
+
+  statusActive = Color(0xFF236EFF),
+  statusSuccess = Color(0xFF40B66B),
+  statusCritical = Color(0xFFFF5F52),
+)
+
 val LightColors = lightColors(
-    background = UniswapColors.White,
-    surface = UniswapColors.White,
-    error = UniswapColors.Red400,
-    onPrimary = UniswapColors.White,
-    onSecondary = UniswapColors.Gray50,
-    onBackground = UniswapColors.Gray900,
-    onSurface = UniswapColors.Gray900,
-    onError = UniswapColors.White,
+  primary = lightCustomColors.accent1,
+  background = lightCustomColors.surface1,
+  surface = lightCustomColors.surface1,
+  error = lightCustomColors.statusCritical,
+  onPrimary = lightCustomColors.white,
+  onBackground = lightCustomColors.neutral1,
+  onSurface = lightCustomColors.neutral1,
+  onError = lightCustomColors.white,
 )
 
 val DarkColors = darkColors(
-    background = UniswapColors.Black,
-    surface = UniswapColors.Black,
-    error = UniswapColors.Red400,
-    onPrimary = UniswapColors.White,
-    onSecondary = UniswapColors.Gray100,
-    onBackground = UniswapColors.White,
-    onSurface = UniswapColors.White,
-    onError = UniswapColors.White,
+  primary = darkCustomColors.accent1,
+  background = darkCustomColors.surface1,
+  surface = darkCustomColors.surface1,
+  error = darkCustomColors.statusCritical,
+  onPrimary = darkCustomColors.white,
+  onBackground = darkCustomColors.neutral1,
+  onSurface = darkCustomColors.neutral1,
+  onError = darkCustomColors.white,
 )
 
-data class ExtendedColors(
-  val DEP_background0: Color,
-  val DEP_background1: Color,
-  val DEP_background2: Color,
-  val DEP_background3: Color,
-  val DEP_accentAction: Color,
-  val DEP_accentActive: Color,
-  val DEP_accentSuccess: Color,
-  val DEP_accentWarning: Color,
-  val DEP_accentCritical: Color,
-)
-
-val lightExtendedColors = ExtendedColors(
-  DEP_background0 = UniswapColors.White,
-  DEP_background1 = UniswapColors.White,
-  DEP_background2 = UniswapColors.Gray50,
-  DEP_background3 = UniswapColors.Gray100,
-  DEP_accentAction = UniswapColors.Pink400,
-  DEP_accentActive = UniswapColors.Blue400,
-  DEP_accentSuccess = UniswapColors.Lime300,
-  DEP_accentWarning = UniswapColors.GoldVibrant,
-  DEP_accentCritical = UniswapColors.Red400,
-)
-
-val darkExtendedColors = ExtendedColors(
-  DEP_background0 = UniswapColors.Black,
-  DEP_background1 = UniswapColors.Gray900,
-  DEP_background2 = UniswapColors.Gray800,
-  DEP_background3 = UniswapColors.Gray700,
-  DEP_accentAction = UniswapColors.Pink400,
-  DEP_accentActive = UniswapColors.Blue400,
-  DEP_accentSuccess = UniswapColors.Lime300,
-  DEP_accentWarning = UniswapColors.GoldVibrant,
-  DEP_accentCritical = UniswapColors.Red400,
-)
-
-val LocalExtendedColors = staticCompositionLocalOf {
-  lightExtendedColors
+val LocalCustomColors = staticCompositionLocalOf {
+  lightCustomColors
 }

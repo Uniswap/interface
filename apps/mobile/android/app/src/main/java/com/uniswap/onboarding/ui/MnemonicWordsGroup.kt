@@ -35,7 +35,6 @@ fun MnemonicWordsGroup(
       MnemonicWordsColumn(
         modifier = Modifier.weight(1f),
         words = words.subList(starting, ending),
-        numberOffset = starting + 1,
         showCompact = showCompact,
         onClick = onClick,
       )

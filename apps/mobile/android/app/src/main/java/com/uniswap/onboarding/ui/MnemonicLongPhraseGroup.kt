@@ -21,7 +21,7 @@ fun MnemonicLongPhraseGroup(mnemonic: String) {
         .fillMaxWidth()
         .wrapContentHeight()
         .clip(UniswapTheme.shapes.large)
-        .background(UniswapTheme.extendedColors.DEP_background2)
+        .background(UniswapTheme.colors.surface2)
         .padding(UniswapTheme.spacing.spacing24),
       text = mnemonic,
       textAlign = TextAlign.Center,

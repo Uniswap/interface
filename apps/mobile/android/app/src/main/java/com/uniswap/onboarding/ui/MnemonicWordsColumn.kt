@@ -14,7 +14,6 @@ import com.uniswap.theme.UniswapTheme
 fun MnemonicWordsColumn(
   modifier: Modifier = Modifier,
   words: List<MnemonicWordUiState>,
-  numberOffset: Int,
   showCompact: Boolean = false,
   onClick: (word: MnemonicWordUiState) -> Unit = {},
 ) {
@@ -25,7 +24,7 @@ fun MnemonicWordsColumn(
     ),
   ) {
     words.forEachIndexed { index, word ->
-      MnemonicWordCell(index = index + numberOffset, word = word, showCompact = showCompact) {
+      MnemonicWordCell(word = word, showCompact = showCompact) {
         onClick(word)
       }
     }

@@ -51,8 +51,6 @@ private fun MnemonicWordBankCell(
   onClick: () -> Unit
 ) {
 
-  val textColor =
-    if (word.used) MaterialTheme.colors.onSurface.copy(alpha = 0.6f) else MaterialTheme.colors.onSurface
   val textStyle =
     if (showCompact) UniswapTheme.typography.bodySmall else UniswapTheme.typography.bodyLarge
   val verticalPadding =
@@ -63,19 +61,15 @@ private fun MnemonicWordBankCell(
   Box(
     modifier = Modifier
       .clip(UniswapTheme.shapes.xlarge)
-      .background(cellBackgroundColor())
+      .background(UniswapTheme.colors.surface2)
       .clickable { onClick() }
       .padding(vertical = verticalPadding)
       .padding(horizontal = horizontalPadding),
   ) {
-    Text(text = word.text, color = textColor, style = textStyle)
+    Text(
+      text = word.text,
+      style = textStyle,
+      color = UniswapTheme.colors.neutral1.copy(if (word.used) 0.6f else 1f),
+    )
   }
 }
-
-@Composable
-private fun cellBackgroundColor(): Color =
-  if (isSystemInDarkTheme()) {
-    UniswapColors.Gray900
-  } else {
-    UniswapColors.Gray100
-  }

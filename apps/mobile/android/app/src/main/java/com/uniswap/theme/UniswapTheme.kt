@@ -15,17 +15,17 @@ fun UniswapTheme(
   val customSpacing = CustomSpacing()
   val customTypography = CustomTypography()
   val customShapes = CustomShapes()
-  val extendedColors = remember {
-    if (darkTheme) darkExtendedColors else lightExtendedColors
+  val customColors = remember {
+    if (darkTheme) darkCustomColors else lightCustomColors
   }
 
   CompositionLocalProvider(
     LocalCustomSpacing provides customSpacing,
     LocalCustomTypography provides customTypography,
     LocalCustomShapes provides customShapes,
-    LocalExtendedColors provides extendedColors,
+    LocalCustomColors provides customColors,
   ) {
-    MaterialTheme( // TODO gary MOB-1011 move everything from MaterialTheme to UniswapTheme
+    MaterialTheme(
       colors = if (darkTheme) DarkColors else LightColors
     ) {
       ProvideTextStyle(value = customTypography.bodyLarge) {
@@ -48,7 +48,7 @@ object UniswapTheme {
     @Composable
     get() = LocalCustomShapes.current
 
-  val extendedColors: ExtendedColors
+  val colors: CustomColors
     @Composable
-    get() = LocalExtendedColors.current
+    get() = LocalCustomColors.current
 }
