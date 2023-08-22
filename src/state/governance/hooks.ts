@@ -310,7 +310,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   } else if (chainId === ChainId.POLYGON) {
     govStartBlock = 39249858
   } else if (chainId === ChainId.BASE) {
-    govStartBlock = 2570523
+    // quicknode returns only a very limited number of logs, therefore we won't see proposal details
+    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 1000 : blockNumber //2570523
   } else if (chainId === ChainId.BNB) {
     // since bsc enpoints will return an end on historical logs, we try to get proposal logs in the last 40k blocks
     govStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : blockNumber //29095808
