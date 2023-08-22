@@ -5,6 +5,8 @@ import { MEDIA_WIDTHS } from 'theme'
 
 import { useActivePopups } from '../../state/application/hooks'
 import { useURLWarningVisible } from '../../state/user/hooks'
+import { Z_INDEX } from '../../theme/zIndex'
+import { useAccountDrawer } from '../AccountDrawer'
 import { AutoColumn } from '../Column'
 import ClaimPopup from './ClaimPopup'
 import PopupItem from './PopupItem'
@@ -37,24 +39,36 @@ const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.deprecat
   MEDIA_WIDTHS.deprecated_upToMedium + 500
 }px)`
 
-const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: boolean }>`
+type TopDistanceModifiers = {
+  bannerVisible: boolean;
+  drawerOpen: boolean;
+}
+
+const getTopDistance = ({ drawerOpen, bannerVisible }: TopDistanceModifiers) => {
+  return 64 + (drawerOpen ? -50 : 0) + (bannerVisible ? 8 : 0)
+}
+
+const FixedPopupColumn = styled(AutoColumn)<TopDistanceModifiers>`
   position: fixed;
-  top: ${({ extraPadding }) => (extraPadding ? '72px' : '64px')};
+  top: ${(modifiers) => `${getTopDistance(modifiers)}px`};
   right: 1rem;
   max-width: 348px !important;
   width: 100%;
-  z-index: 3;
+  z-index: ${Z_INDEX.modal};
+  transition: top ease-in-out 500ms;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: none;
   `};
 
   ${StopOverflowQuery} {
-    top: ${({ extraPadding, xlPadding }) => (xlPadding ? '72px' : extraPadding ? '72px' : '64px')};
+    top: ${(modifiers) => `${getTopDistance(modifiers)}px`};
   }
 `
 
 export default function Popups() {
+  const [isAccountDrawerOpen] = useAccountDrawer()
+  
   // get all popups
   const activePopups = useActivePopups()
 
@@ -66,7 +80,7 @@ export default function Popups() {
 
   return (
     <>
-      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet} data-testid="popups">
+      <FixedPopupColumn gap="20px" drawerOpen={isAccountDrawerOpen} bannerVisible={isNotOnMainnet || urlWarningActive} data-testid="popups">
         <ClaimPopup />
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
