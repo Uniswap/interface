@@ -1,24 +1,23 @@
-import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { getDeviceId, sendAnalyticsEvent, Trace, user } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
+import { useRouterPreference } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { SpinnerSVG } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
 import { getEnvName } from 'utils/env'
-import { retry } from 'utils/retry'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
@@ -29,7 +28,6 @@ import { PageTabs } from '../components/NavBar'
 import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
-import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
@@ -51,12 +49,12 @@ import Swap from './Swap'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
-const TokenDetails = lazy(() => retry(() => import('./TokenDetails')))
-const Vote = lazy(() => retry(() => import('./Vote')))
-const NftExplore = lazy(() => retry(() => import('nft/pages/explore')))
-const Collection = lazy(() => retry(() => import('nft/pages/collection')))
-const Profile = lazy(() => retry(() => import('nft/pages/profile/profile')))
-const Asset = lazy(() => retry(() => import('nft/pages/asset/Asset')))
+const TokenDetails = lazy(() => import('./TokenDetails'))
+const Vote = lazy(() => import('./Vote'))
+const NftExplore = lazy(() => import('nft/pages/explore'))
+const Collection = lazy(() => import('nft/pages/collection'))
+const Profile = lazy(() => import('nft/pages/profile/profile'))
+const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -119,7 +117,7 @@ export default function App() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
-  const isExpertMode = useIsExpertMode()
+  const [routerPreference] = useRouterPreference()
   const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
@@ -168,8 +166,8 @@ export default function App() {
   }, [isDarkMode])
 
   useEffect(() => {
-    user.set(CustomUserProperties.EXPERT_MODE, isExpertMode)
-  }, [isExpertMode])
+    user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
+  }, [routerPreference])
 
   useEffect(() => {
     const scrollListener = () => {
@@ -194,7 +192,6 @@ export default function App() {
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
-      <ApeModeQueryParamReader />
       <Trace page={currentPage}>
         <StatsigProvider
           user={statsigUser}

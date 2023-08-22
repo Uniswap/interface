@@ -9,17 +9,28 @@ import { BREAKPOINTS } from 'theme'
 
 const isClient = typeof window !== 'undefined'
 
-function getScreenSize(): Record<keyof typeof BREAKPOINTS, boolean> {
-  return Object.keys(BREAKPOINTS).reduce(
+export const navSearchInputVisibleSize = 1100
+
+// for breakpoints that are not meant to be used except for in marginal areas of the app
+// we don't want to expose the types everywhere, just make them available via this hook
+const BREAKPOINTS_ADDITIONAL = {
+  ...BREAKPOINTS,
+  navSearchInputVisible: navSearchInputVisibleSize,
+}
+
+function getScreenSize(): Record<keyof typeof BREAKPOINTS_ADDITIONAL, boolean> {
+  return Object.keys(BREAKPOINTS_ADDITIONAL).reduce(
     (obj, key) =>
       Object.assign(obj, {
-        [key]: isClient ? window.innerWidth >= BREAKPOINTS[key as keyof typeof BREAKPOINTS] : false,
+        [key]: isClient
+          ? window.innerWidth >= BREAKPOINTS_ADDITIONAL[key as keyof typeof BREAKPOINTS_ADDITIONAL]
+          : false,
       }),
-    {} as Record<keyof typeof BREAKPOINTS, boolean>
+    {} as Record<keyof typeof BREAKPOINTS_ADDITIONAL, boolean>
   )
 }
 
-export function useScreenSize(): Record<keyof typeof BREAKPOINTS, boolean> {
+export function useScreenSize(): Record<keyof typeof BREAKPOINTS_ADDITIONAL, boolean> {
   const [screenSize, setScreenSize] = useState(getScreenSize())
 
   useEffect(() => {

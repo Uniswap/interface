@@ -4,6 +4,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { parseBytes32String } from '@ethersproject/strings'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
@@ -21,7 +22,6 @@ import { useAppSelector } from 'state/hooks'
 import { useBscPoolsList } from 'state/lists/poolsList/hooks'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
-import { SupportedChainId } from '../../constants/chains'
 import { CallStateResult, useSingleContractMultipleData } from '../../lib/hooks/multicall'
 import { useLogs } from '../logs/hooks'
 import { filterToKey } from '../logs/utils'
@@ -56,17 +56,19 @@ function useStartBlock(chainId: number | undefined): number | undefined {
   let registryStartBlock
   const blockNumber = useBlockNumber()
 
-  if (chainId === SupportedChainId.MAINNET) {
+  if (chainId === ChainId.MAINNET) {
     registryStartBlock = 15834693
-  } else if (chainId === SupportedChainId.GOERLI) {
+  } else if (chainId === ChainId.GOERLI) {
     registryStartBlock = 7807806
-  } else if (chainId === SupportedChainId.ARBITRUM_ONE) {
+  } else if (chainId === ChainId.ARBITRUM_ONE) {
     registryStartBlock = 35439804
-  } else if (chainId === SupportedChainId.OPTIMISM) {
+  } else if (chainId === ChainId.OPTIMISM) {
     registryStartBlock = 34629059
-  } else if (chainId === SupportedChainId.POLYGON) {
+  } else if (chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
-  } else if (chainId === SupportedChainId.BNB) {
+  } else if (chainId === ChainId.BASE) {
+    registryStartBlock = 2570151
+  } else if (chainId === ChainId.BNB) {
     registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : blockNumber //28843676
   } else {
     registryStartBlock = undefined
@@ -123,17 +125,19 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
   // get metadata from past events
   let registryStartBlock
 
-  if (chainId === SupportedChainId.MAINNET) {
+  if (chainId === ChainId.MAINNET) {
     registryStartBlock = 15834693
-  } else if (chainId === SupportedChainId.GOERLI) {
+  } else if (chainId === ChainId.GOERLI) {
     registryStartBlock = 7807806
-  } else if (chainId === SupportedChainId.ARBITRUM_ONE) {
+  } else if (chainId === ChainId.ARBITRUM_ONE) {
     registryStartBlock = 35439804
-  } else if (chainId === SupportedChainId.OPTIMISM) {
+  } else if (chainId === ChainId.OPTIMISM) {
     registryStartBlock = 34629059
-  } else if (chainId === SupportedChainId.POLYGON) {
+  } else if (chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
-  } else if (chainId === SupportedChainId.BNB) {
+  } else if (chainId === ChainId.BASE) {
+    registryStartBlock = 2570151
+  } else if (chainId === ChainId.BNB) {
     registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : 28843676
   } else {
     registryStartBlock = 1
@@ -158,7 +162,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     }
 
     // TODO: we might have temporary duplicate non-identical pools as group is empty in pools from endpoint
-    if (chainId === SupportedChainId.BNB && registry) {
+    if (chainId === ChainId.BNB && registry) {
       // eslint-disable-next-line
       const pools: PoolRegisteredLog[] = ([...(formattedLogsV1 ?? []), ...(bscPools ?? [])])
       return { data: pools, loading: false }

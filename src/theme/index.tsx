@@ -1,8 +1,9 @@
 import { rootCssString } from 'nft/css/cssStringFromTheme'
 import React, { useMemo } from 'react'
-import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components/macro'
+import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
+import { navDimensions } from '../nft/css/sprinkles.css'
 import { darkTheme, lightTheme } from './colors'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from './deprecatedColors'
 
@@ -35,7 +36,6 @@ export const BREAKPOINTS = {
   sm: 640,
   md: 768,
   lg: 1024,
-  navSearchInputVisible: 1100,
   xl: 1280,
   xxl: 1536,
   xxxl: 1920,
@@ -87,7 +87,8 @@ function getSettings(darkMode: boolean) {
     // media queries
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
 
-    navHeight: 72,
+    navHeight: navDimensions.height,
+    navVerticalPad: navDimensions.verticalPad,
     mobileBottomBarHeight: 52,
     maxWidth: MAX_CONTENT_WIDTH,
 

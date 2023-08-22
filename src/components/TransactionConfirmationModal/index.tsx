@@ -1,14 +1,14 @@
-import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
+import { t, Trans } from '@lingui/macro'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import { SupportedL2ChainId } from 'constants/chains'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { isL2ChainId } from 'utils/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -120,6 +120,8 @@ function TransactionSubmittedContent({
       .catch(() => setSuccess(false))
   }, [connector, logoURL, token])
 
+  const explorerText = chainId === ChainId.MAINNET ? t`View on  Etherscan` : t`View on Block Explorer`
+
   return (
     <Wrapper>
       <AutoColumn>
@@ -157,9 +159,7 @@ function TransactionSubmittedContent({
           </ButtonPrimary>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <ThemedText.Link color={theme.accentAction}>
-                <Trans>View on {chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
-              </ThemedText.Link>
+              <ThemedText.Link color={theme.accentAction}>{explorerText}</ThemedText.Link>
             </ExternalLink>
           )}
         </ConfirmationModalContentWrapper>

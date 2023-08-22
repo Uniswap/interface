@@ -53,6 +53,11 @@ export type Theme = typeof themeContractValues
 
 export const themeVars = createGlobalThemeContract(themeContractValues, (_, path) => `genie-${path.join('-')}`)
 
+export const navDimensions = {
+  height: 72,
+  verticalPad: 20,
+}
+
 const dimensions = {
   '0': '0',
   '2': '2',
@@ -91,6 +96,7 @@ const dimensions = {
   full: '100%',
   min: 'min-content',
   max: 'max-content',
+  searchResultsMaxHeight: `calc(100vh - ${navDimensions.verticalPad * 2}px)`,
   viewHeight: '100vh',
   viewWidth: '100vw',
   auto: 'auto',
@@ -290,7 +296,6 @@ export const breakpoints = {
   sm: 640,
   md: 768,
   lg: 1024,
-  navSearchInputVisible: 1100,
   xl: 1280,
   xxl: 1536,
   xxxl: 1920,
@@ -302,7 +307,6 @@ const layoutStyles = defineProperties({
     md: { '@media': `screen and (min-width: ${breakpoints.sm}px)` },
     lg: { '@media': `screen and (min-width: ${breakpoints.md}px)` },
     xl: { '@media': `screen and (min-width: ${breakpoints.lg}px)` },
-    navSearchInputVisible: { '@media': `screen and (min-width: ${breakpoints.navSearchInputVisible}px)` },
     xxl: { '@media': `screen and (min-width: ${breakpoints.xl}px)` },
     xxxl: { '@media': `screen and (min-width: ${breakpoints.xxl}px)` },
   },

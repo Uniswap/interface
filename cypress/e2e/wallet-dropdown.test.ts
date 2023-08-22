@@ -1,8 +1,10 @@
+import { FeatureFlag } from 'featureFlags'
+
 import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {
-  function itShouldChangeTheTheme() {
-    it('should change the theme', () => {
+  function itChangesTheme() {
+    it('should change theme', () => {
       cy.get(getTestSelector('theme-lightmode')).click()
 
       cy.get(getTestSelector('theme-lightmode')).should('not.have.css', 'background-color', 'rgba(0, 0, 0, 0)')
@@ -21,13 +23,21 @@ describe('Wallet Dropdown', () => {
     })
   }
 
-  function itShouldChangeTheLanguage() {
-    it('should select a language', () => {
-      cy.get(getTestSelector('wallet-language-item')).contains('Deutsch').click({ force: true })
-      cy.get(getTestSelector('wallet-header')).should('contain', 'Sprache')
+  function itChangesLocale({ featureFlag = false }: { featureFlag?: boolean } = {}) {
+    it('should change locale', () => {
+      cy.contains('Uniswap available in: English').should('not.exist')
+
+      if (featureFlag) {
+        cy.get(getTestSelector('language-settings-button')).click()
+      }
+
+      cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
+      cy.location('hash').should('match', /\?lng=af-ZA$/)
+      cy.contains('Uniswap available in: English')
+
       cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
-      cy.get(getTestSelector('wallet-header')).should('contain', 'Language')
-      cy.get(getTestSelector('wallet-back')).click()
+      cy.location('hash').should('match', /\?lng=en-US$/)
+      cy.contains('Uniswap available in: English').should('not.exist')
     })
   }
 
@@ -37,19 +47,48 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
     })
-    itShouldChangeTheTheme()
-    itShouldChangeTheLanguage()
+    itChangesTheme()
+    itChangesLocale()
+  })
+
+  describe('should change locale with feature flag', () => {
+    beforeEach(() => {
+      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+    })
+    itChangesLocale({ featureFlag: true })
+  })
+
+  describe('testnet toggle', () => {
+    beforeEach(() => {
+      cy.visit('/swap')
+    })
+    it('should toggle testnet visibility', () => {
+      cy.get(getTestSelector('chain-selector')).last().click()
+      cy.get(getTestSelector('chain-selector-options')).should('not.contain.text', 'Sepolia')
+
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+      cy.get('#testnets-toggle').click()
+      cy.get(getTestSelector('close-account-drawer')).click()
+      cy.get(getTestSelector('chain-selector')).last().click()
+      cy.get(getTestSelector('chain-selector-options')).should('contain.text', 'Sepolia')
+    })
   })
 
   describe('disconnected', () => {
     beforeEach(() => {
       cy.visit('/')
       cy.get(getTestSelector('web3-status-connected')).click()
+      // click twice, first time to show confirmation, second to confirm
+      cy.get(getTestSelector('wallet-disconnect')).click()
+      cy.get(getTestSelector('wallet-disconnect')).should('contain', 'Disconnect')
       cy.get(getTestSelector('wallet-disconnect')).click()
       cy.get(getTestSelector('wallet-settings')).click()
     })
-    itShouldChangeTheTheme()
-    itShouldChangeTheLanguage()
+    itChangesTheme()
+    itChangesLocale()
   })
 
   describe('with color theme', () => {

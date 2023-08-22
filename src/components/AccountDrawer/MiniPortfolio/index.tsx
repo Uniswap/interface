@@ -1,16 +1,17 @@
 import { Trans } from '@lingui/macro'
-import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
+import { Trace, TraceEvent } from 'analytics'
 import Column from 'components/Column'
+import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { AutoRow } from 'components/Row'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
-import { useAtomValue } from 'jotai/utils'
-import { useState } from 'react'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { useEffect, useState } from 'react'
+import styled, { useTheme } from 'styled-components'
+import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { ActivityTab } from './Activity'
+import { usePendingActivity } from './Activity/hooks'
 import NFTs from './NFTs'
 //import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'
@@ -22,6 +23,10 @@ const Wrapper = styled(Column)`
   flex-direction: column;
   height: 100%;
   gap: 12px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    margin-bottom: 48px;
+  }
 
   ${PortfolioRowWrapper} {
     &:hover {
@@ -35,12 +40,15 @@ const Nav = styled(AutoRow)`
 `
 
 const NavItem = styled(ThemedText.SubHeader)<{ active?: boolean }>`
+  align-items: center;
   color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textTertiary)};
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} color`};
 
   &:hover {
     ${({ theme, active }) => !active && `color: ${theme.textSecondary}`};
-    cursor: pointer;
   }
 `
 
@@ -89,17 +97,32 @@ const Pages: Array<Page> = [
 
 export default function MiniPortfolio({ account }: { account: string }) {
   const isNftPage = useIsNftPage()
+  const theme = useTheme()
   // TODO: change initial state when adding back tabs
   const [currentPage, setCurrentPage] = useState(isNftPage ? 0 : 1)
-  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
+  const [activityUnread, setActivityUnread] = useState(false)
 
-  const Page = Pages[currentPage].component
+  const { component: Page, key: currentKey } = Pages[currentPage]
+
+  const { hasPendingActivity } = usePendingActivity()
+
+  useEffect(() => {
+    if (hasPendingActivity && currentKey !== 'activity') setActivityUnread(true)
+  }, [currentKey, hasPendingActivity])
+
   return (
     <Trace section={InterfaceSectionName.MINI_PORTFOLIO}>
       <Wrapper>
-        <Nav>
+        <Nav data-testid="mini-portfolio-navbar">
           {Pages.map(({ title, loggingElementName, key }, index) => {
             if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) return null
+            const isUnselectedActivity = key === 'activity' && currentKey !== 'activity'
+            const showActivityIndicator = isUnselectedActivity && (hasPendingActivity || activityUnread)
+            const handleNavItemClick = () => {
+              setCurrentPage(index)
+              if (key === 'activity') setActivityUnread(false)
+            }
             return (
               <TraceEvent
                 events={[BrowserEvent.onClick]}
@@ -107,19 +130,26 @@ export default function MiniPortfolio({ account }: { account: string }) {
                 element={loggingElementName}
                 key={index}
               >
-                <NavItem
-                  data-testid={`mini-portfolio-nav-${key}`}
-                  onClick={() => setCurrentPage(index)}
-                  active={currentPage === index}
-                  key={`Mini Portfolio page ${index}`}
-                >
-                  {title}
+                <NavItem onClick={handleNavItemClick} active={currentPage === index} key={key}>
+                  <span>{title}</span>
+                  {showActivityIndicator && (
+                    <>
+                      &nbsp;
+                      {hasPendingActivity ? (
+                        <LoaderV2 />
+                      ) : (
+                        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="4" cy="4" r="4" fill={theme.accentAction} />
+                        </svg>
+                      )}
+                    </>
+                  )}
                 </NavItem>
               </TraceEvent>
             )
           })}
         </Nav>
-        <PageWrapper>
+        <PageWrapper data-testid="mini-portfolio-page">
           <Page account={account} />
         </PageWrapper>
       </Wrapper>

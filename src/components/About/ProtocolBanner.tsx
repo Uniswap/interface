@@ -1,5 +1,5 @@
 import { ButtonEmpty } from 'components/Button'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 

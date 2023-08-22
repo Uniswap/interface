@@ -1,19 +1,19 @@
 import { t } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { switchChain } from 'utils/switchChain'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -126,11 +126,12 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleAccountDrawer()
   const { chainId: walletChainId, connector } = useWeb3React()
+  const switchChain = useSwitchChain()
   const onClick = useCallback(async () => {
     if (walletChainId !== chainId) await switchChain(connector, chainId)
     toggleWalletDrawer()
     navigate('/pool/' + details.tokenId)
-  }, [walletChainId, chainId, connector, toggleWalletDrawer, navigate, details.tokenId])
+  }, [walletChainId, chainId, switchChain, connector, toggleWalletDrawer, navigate, details.tokenId])
   const analyticsEventProperties = useMemo(
     () => ({
       chain_id: chainId,

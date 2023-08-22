@@ -32,7 +32,7 @@ function buildRoutingItem(routingItem: NftTrade): RoutingItem {
   }
 }
 
-function buildRoutingItems(routingItems: NftTrade[]): RoutingItem[] {
+function buildRoutingItems(routingItems: readonly NftTrade[]): RoutingItem[] {
   return routingItems.map(buildRoutingItem)
 }
 

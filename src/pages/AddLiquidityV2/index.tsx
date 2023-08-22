@@ -1,19 +1,21 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import { V2Unsupported } from 'components/V2Unsupported'
+import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useCallback, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -36,14 +38,14 @@ import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
-import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
+import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
-import { Dots, Wrapper } from '../Pool/styleds'
+import { Dots, Wrapper } from '../Pool/styled'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { PoolPriceBar } from './PoolPriceBar'
 
@@ -68,8 +70,6 @@ export default function AddLiquidity() {
   )
 
   const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
-
-  const expertMode = useIsExpertMode()
 
   // mint state
   const { independentField, typedValue, otherTypedValue } = useMintState()
@@ -135,9 +135,10 @@ export default function AddLiquidity() {
   const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], router?.address, isRbPool)
 
   const addTransaction = useTransactionAdder()
+  const networkSupportsV2 = useNetworkSupportsV2()
 
   async function onAdd() {
-    if (!chainId || !provider || !account || !router) return
+    if (!chainId || !provider || !account || !router || !networkSupportsV2) return
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
@@ -321,6 +322,8 @@ export default function AddLiquidity() {
 
   const addIsUnsupported = useIsSwapUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
 
+  if (!networkSupportsV2) return <V2Unsupported />
+
   return (
     <>
       <AppBody>
@@ -488,7 +491,7 @@ export default function AddLiquidity() {
                   )}
                 <ButtonError
                   onClick={() => {
-                    expertMode ? onAdd() : setShowConfirm(true)
+                    setShowConfirm(true)
                   }}
                   disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
                   error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}

@@ -3,7 +3,7 @@ import JSBI from 'jsbi'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-// TODO(WEB-3290): Convert the deadline to minutes and remove unecessary conversions from
+// TODO(WEB-1984): Convert the deadline to minutes and remove unecessary conversions from
 // seconds to minutes in the codebase.
 // 30 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 30

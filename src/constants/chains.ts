@@ -1,119 +1,149 @@
-/**
- * SupportedChainId must be defined inline, without using @uniswap/sdk-core, so that its members are their own types
- * {@see https://www.typescriptlang.org/docs/handbook/enums.html#union-enums-and-enum-member-types}. This allows the
- * derived const arrays and their types (eg {@link L1_CHAIN_IDS}, {@link SupportedL1ChainId}) to be narrowed and used
- * to enforce chain typing.
- *
- * Because this is not explicitly derived from @uniswap/sdk-core, there is a unit test to enforce conformance.
- */
-export enum SupportedChainId {
-  MAINNET = 1,
-  GOERLI = 5,
-
-  ARBITRUM_ONE = 42161,
-  ARBITRUM_GOERLI = 421613,
-
-  OPTIMISM = 10,
-  OPTIMISM_GOERLI = 420,
-
-  POLYGON = 137,
-  POLYGON_MUMBAI = 80001,
-
-  CELO = 42220,
-  CELO_ALFAJORES = 44787,
-
-  BNB = 56,
-}
+import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
 
 export const UniWalletSupportedChains = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.POLYGON,
+  ChainId.MAINNET,
+  ChainId.ARBITRUM_ONE,
+  ChainId.OPTIMISM,
+  ChainId.POLYGON,
+  ChainId.BASE,
 ]
 
 export const CHAIN_IDS_TO_NAMES = {
-  [SupportedChainId.MAINNET]: 'mainnet',
-  [SupportedChainId.GOERLI]: 'goerli',
-  [SupportedChainId.POLYGON]: 'polygon',
-  [SupportedChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
-  [SupportedChainId.CELO]: 'celo',
-  [SupportedChainId.CELO_ALFAJORES]: 'celo_alfajores',
-  [SupportedChainId.ARBITRUM_ONE]: 'arbitrum',
-  [SupportedChainId.ARBITRUM_GOERLI]: 'arbitrum_goerli',
-  [SupportedChainId.OPTIMISM]: 'optimism',
-  [SupportedChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
-  [SupportedChainId.BNB]: 'bnb',
+  [ChainId.MAINNET]: 'mainnet',
+  [ChainId.GOERLI]: 'goerli',
+  [ChainId.SEPOLIA]: 'sepolia',
+  [ChainId.POLYGON]: 'polygon',
+  [ChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
+  [ChainId.CELO]: 'celo',
+  [ChainId.CELO_ALFAJORES]: 'celo_alfajores',
+  [ChainId.ARBITRUM_ONE]: 'arbitrum',
+  [ChainId.ARBITRUM_GOERLI]: 'arbitrum_goerli',
+  [ChainId.OPTIMISM]: 'optimism',
+  [ChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
+  [ChainId.BNB]: 'bnb',
+  [ChainId.AVALANCHE]: 'avalanche',
+  [ChainId.BASE]: 'base',
+  [ChainId.BASE_GOERLI]: 'base_goerli',
+} as const
+
+// Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.
+const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = []
+
+export function isSupportedChain(
+  chainId: number | null | undefined | ChainId,
+  featureFlags?: Record<number, boolean>
+): chainId is SupportedChainsType {
+  if (featureFlags && chainId && chainId in featureFlags) {
+    return featureFlags[chainId]
+  }
+  return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) !== -1 && NOT_YET_UX_SUPPORTED_CHAIN_IDS.indexOf(chainId) === -1
 }
 
-/**
- * Array of all the supported chain IDs
- */
-export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(SupportedChainId).filter(
-  (id) => typeof id === 'number'
-) as SupportedChainId[]
-
-export function isSupportedChain(chainId: number | null | undefined): chainId is SupportedChainId {
-  return !!chainId && !!SupportedChainId[chainId]
+export function asSupportedChain(
+  chainId: number | null | undefined | ChainId,
+  featureFlags?: Record<number, boolean>
+): SupportedChainsType | undefined {
+  if (!chainId) return undefined
+  if (featureFlags && chainId in featureFlags && !featureFlags[chainId]) {
+    return undefined
+  }
+  return isSupportedChain(chainId) ? chainId : undefined
 }
 
 export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-  SupportedChainId.CELO,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.BNB,
+  ChainId.MAINNET,
+  ChainId.POLYGON,
+  ChainId.CELO,
+  ChainId.OPTIMISM,
+  ChainId.ARBITRUM_ONE,
+  ChainId.BNB,
+  ChainId.AVALANCHE,
+  ChainId.BASE,
 ] as const
 
 /**
- * Unsupported networks for V2 pool behavior.
+ * Supported networks for V2 pool behavior.
  */
-export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
-  SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.BNB,
-  SupportedChainId.ARBITRUM_GOERLI,
-] as const
+export const SUPPORTED_V2POOL_CHAIN_IDS = [ChainId.MAINNET, ChainId.GOERLI] as const
 
 export const TESTNET_CHAIN_IDS = [
-  SupportedChainId.GOERLI,
-  SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.ARBITRUM_GOERLI,
-  SupportedChainId.OPTIMISM_GOERLI,
+  ChainId.GOERLI,
+  ChainId.SEPOLIA,
+  ChainId.POLYGON_MUMBAI,
+  ChainId.ARBITRUM_GOERLI,
+  ChainId.OPTIMISM_GOERLI,
+  ChainId.CELO_ALFAJORES,
+  ChainId.BASE_GOERLI,
 ] as const
-
-export type SupportedTestnetChainId = typeof TESTNET_CHAIN_IDS[number]
 
 /**
  * All the chain IDs that are running the Ethereum protocol.
  */
 export const L1_CHAIN_IDS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.GOERLI,
-  SupportedChainId.POLYGON,
-  SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.CELO,
-  SupportedChainId.CELO_ALFAJORES,
-  SupportedChainId.BNB,
+  ChainId.MAINNET,
+  ChainId.GOERLI,
+  ChainId.SEPOLIA,
+  ChainId.POLYGON,
+  ChainId.POLYGON_MUMBAI,
+  ChainId.CELO,
+  ChainId.CELO_ALFAJORES,
+  ChainId.BNB,
+  ChainId.AVALANCHE,
 ] as const
 
-export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
+export type SupportedL1ChainId = (typeof L1_CHAIN_IDS)[number]
 
 /**
  * Controls some L2 specific behavior, e.g. slippage tolerance, special UI behavior.
  * The expectation is that all of these networks have immediate transaction confirmation.
  */
 export const L2_CHAIN_IDS = [
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_GOERLI,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.OPTIMISM_GOERLI,
+  ChainId.ARBITRUM_ONE,
+  ChainId.ARBITRUM_GOERLI,
+  ChainId.OPTIMISM,
+  ChainId.OPTIMISM_GOERLI,
+  ChainId.BASE,
+  ChainId.BASE_GOERLI,
 ] as const
 
-export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
+export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
 
-export function isPolygonChain(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
-  return chainId === SupportedChainId.POLYGON || chainId === SupportedChainId.POLYGON_MUMBAI
+/**
+ * Get the priority of a chainId based on its relevance to the user.
+ * @param {ChainId} chainId - The chainId to determine the priority for.
+ * @returns {number} The priority of the chainId, the lower the priority, the earlier it should be displayed, with base of MAINNET=0.
+ */
+export function getChainPriority(chainId: ChainId): number {
+  switch (chainId) {
+    case ChainId.MAINNET:
+    case ChainId.GOERLI:
+    case ChainId.SEPOLIA:
+      return 0
+    case ChainId.ARBITRUM_ONE:
+    case ChainId.ARBITRUM_GOERLI:
+      return 1
+    case ChainId.OPTIMISM:
+    case ChainId.OPTIMISM_GOERLI:
+      return 2
+    case ChainId.POLYGON:
+    case ChainId.POLYGON_MUMBAI:
+      return 3
+    case ChainId.BASE:
+    case ChainId.BASE_GOERLI:
+      return 4
+    case ChainId.BNB:
+      return 5
+    case ChainId.AVALANCHE:
+      return 6
+    case ChainId.CELO:
+    case ChainId.CELO_ALFAJORES:
+      return 7
+    default:
+      return 8
+  }
+}
+
+// TODO: amend when adding UniswapX
+export function isUniswapXSupportedChain(chainId: number) {
+  return chainId === 0
 }

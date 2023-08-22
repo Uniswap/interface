@@ -1,22 +1,24 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { Trace } from 'analytics'
+import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import { sendEvent } from 'components/analytics'
+import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
-import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
+import { TokenBalances, tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { useAllTokenBalances } from 'state/connection/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import { useActiveSmartPool } from 'state/application/hooks'
+import styled, { useTheme } from 'styled-components'
 import { UserAddedToken } from 'types/tokens'
 
 import { useDefaultActiveTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
@@ -27,7 +29,7 @@ import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
 import CurrencyList from './CurrencyList'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { PaddedColumn, SearchInput, Separator } from './styled'
 
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -90,33 +92,55 @@ export function CurrencySearch({
     return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
   }, [defaultTokens, debouncedQuery])
 
-  const [balances, balancesAreLoading] = useAllTokenBalances()
+  const { address: smartPoolAddress } = useActiveSmartPool()
+  const { data, loading: balancesAreLoading } = useCachedPortfolioBalancesQuery({
+    account: smartPoolAddress ?? '',
+  })
+  const balances: TokenBalances = useMemo(() => {
+    return (
+      data?.portfolios?.[0].tokenBalances?.reduce((balanceMap, tokenBalance) => {
+        if (
+          tokenBalance.token?.chain &&
+          supportedChainIdFromGQLChain(tokenBalance.token?.chain) === chainId &&
+          tokenBalance.token?.address !== undefined &&
+          tokenBalance.denominatedValue?.value !== undefined
+        ) {
+          const address = tokenBalance.token?.standard === 'ERC20' ? tokenBalance.token?.address?.toLowerCase() : 'ETH'
+          const usdValue = tokenBalance.denominatedValue?.value
+          const balance = tokenBalance.quantity
+          balanceMap[address] = { usdValue, balance: balance ?? 0 }
+        }
+        return balanceMap
+      }, {} as TokenBalances) ?? {}
+    )
+  }, [chainId, data?.portfolios])
+
   const sortedTokens: Token[] = useMemo(
     () =>
       !balancesAreLoading
         ? filteredTokens
             .filter((token) => {
               if (onlyShowCurrenciesWithBalance) {
-                return balances[token.address]?.greaterThan(0)
+                return balances[token.address?.toLowerCase()]?.usdValue > 0
               }
 
               // If there is no query, filter out unselected user-added tokens with no balance.
               if (!debouncedQuery && token instanceof UserAddedToken) {
                 if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
-                return balances[token.address]?.greaterThan(0)
+                return balances[token.address.toLowerCase()]?.usdValue > 0
               }
               return true
             })
             .sort(tokenComparator.bind(null, balances))
-        : [],
+        : filteredTokens,
     [
-      balances,
       balancesAreLoading,
-      debouncedQuery,
       filteredTokens,
-      otherSelectedCurrency,
-      selectedCurrency,
+      balances,
       onlyShowCurrenciesWithBalance,
+      debouncedQuery,
+      selectedCurrency,
+      otherSelectedCurrency,
     ]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
@@ -131,7 +155,7 @@ export function CurrencySearch({
 
     const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
     const shouldShowWrapped =
-      !onlyShowCurrenciesWithBalance || (!balancesAreLoading && balances[wrapped.address]?.greaterThan(0))
+      !onlyShowCurrenciesWithBalance || (!balancesAreLoading && balances[wrapped.address]?.usdValue > 0)
     const natives = (
       disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
     ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
@@ -209,6 +233,7 @@ export function CurrencySearch({
     return () => clearTimeout(tokenLoaderTimer)
   }, [])
 
+  // TODO: use showCurrencyAmount={showCurrencyAmount} when we can correctly prefetch pool balances.
   return (
     <ContentWrapper>
       <Trace
@@ -276,10 +301,11 @@ export function CurrencySearch({
                   otherCurrency={otherSelectedCurrency}
                   selectedCurrency={selectedCurrency}
                   fixedListRef={fixedList}
-                  showCurrencyAmount={showCurrencyAmount}
+                  showCurrencyAmount={false}
                   isLoading={isLoading}
                   searchQuery={searchQuery}
                   isAddressSearch={isAddressSearch}
+                  balances={balances}
                 />
               )}
             </AutoSizer>

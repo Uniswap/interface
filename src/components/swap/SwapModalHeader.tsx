@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Column, { AutoColumn } from 'components/Column'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { InterfaceTrade } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { Divider, ThemedText } from 'theme'
 
 import { SwapModalHeaderAmount } from './SwapModalHeaderAmount'
@@ -19,9 +19,11 @@ const HeaderContainer = styled(AutoColumn)`
 
 export default function SwapModalHeader({
   trade,
+  inputCurrency,
   allowedSlippage,
 }: {
   trade: InterfaceTrade
+  inputCurrency?: Currency
   allowedSlippage: Percent
 }) {
   const fiatValueInput = useUSDPrice(trade.inputAmount)
@@ -34,12 +36,14 @@ export default function SwapModalHeader({
           field={Field.INPUT}
           label={<Trans>You pay</Trans>}
           amount={trade.inputAmount}
+          currency={inputCurrency ?? trade.inputAmount.currency}
           usdAmount={fiatValueInput.data}
         />
         <SwapModalHeaderAmount
           field={Field.OUTPUT}
           label={<Trans>You receive</Trans>}
           amount={trade.outputAmount}
+          currency={trade.outputAmount.currency}
           usdAmount={fiatValueOutput.data}
           tooltipText={
             trade.tradeType === TradeType.EXACT_INPUT ? (

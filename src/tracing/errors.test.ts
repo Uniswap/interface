@@ -54,9 +54,9 @@ describe('beforeSend', () => {
     expect(beforeSend(ERROR, { originalException })).toBe(ERROR)
   })
 
-  it('propagates user rejected request errors', () => {
+  it('filters user rejected request errors', () => {
     const originalException = new Error('user rejected transaction')
-    expect(beforeSend(ERROR, { originalException })).toBe(ERROR)
+    expect(beforeSend(ERROR, { originalException })).toBeNull()
   })
 
   it('filters block number polling errors', () => {
@@ -76,15 +76,39 @@ describe('beforeSend', () => {
     expect(beforeSend(ERROR, { originalException })).toBeNull()
   })
 
-  it('filters chrome-extension errors', () => {
-    const originalException = new Error()
-    originalException.stack = ` 
-      TypeError: Cannot create proxy with a non-object as target or handler
-        at pa(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:216604)
-        at da(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:212968)
-        at a(../../../../src/helpers.ts:98:1)
-    `
-    expect(beforeSend(ERROR, { originalException })).toBeNull()
+  describe('filters browser extension errors', () => {
+    it('filters chrome-extension errors', () => {
+      const originalException = new Error()
+      originalException.stack = `
+        TypeError: Cannot create proxy with a non-object as target or handler
+          at pa(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:216604)
+          at da(chrome-extension://kbjhmlgclljgdhmhffjofbobmficicjp/proxy-window-evm.a5430696.js:22:212968)
+          at a(../../../../src/helpers.ts:98:1)
+      `
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
+    it('filters moz-extension errors', () => {
+      const originalException = new Error()
+      originalException.stack = `
+        Error: Permission denied to access property "apply"
+          at WINDOW.onunhandledrejection(../node_modules/@sentry/src/instrument.ts:610:1)
+          at y/h.onunhandledrejection(moz-extension://95cafb7b-6038-4bdd-b832-d3a58544601d/content_script/inpage_sol.js:143:16274)
+      `
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
+    it('filters non-Error objects thrown from an extension', () => {
+      const originalException = {
+        message: '',
+        stack: `
+        Error: Permission denied to access property "apply"
+          at WINDOW.onunhandledrejection(../node_modules/@sentry/src/instrument.ts:610:1)
+          at y/h.onunhandledrejection(moz-extension://95cafb7b-6038-4bdd-b832-d3a58544601d/content_script/inpage_sol.js:143:16274)
+      `,
+      }
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
   })
 
   describe('OneKey', () => {
@@ -113,6 +137,18 @@ describe('beforeSend', () => {
       const originalException = new Error(
         "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inlin..."
       )
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
+    it('filters blocked frame errors', () => {
+      const originalException = new Error(
+        'Blocked a frame with origin "https://app.uniswap.org" from accessing a cross-origin frame.'
+      )
+      expect(beforeSend(ERROR, { originalException })).toBeNull()
+    })
+
+    it('fiters write permission denied errors', () => {
+      const originalException = new Error('NotAllowedError: Write permission denied.')
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
 

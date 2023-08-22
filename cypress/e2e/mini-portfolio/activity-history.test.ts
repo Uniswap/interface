@@ -94,9 +94,7 @@ describe('mini-portfolio activity history', () => {
   })
 
   it('should deduplicate activity history by nonce', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, { ethereum: 'hardhat' }).hardhat({
-      automine: false,
-    })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`).hardhat({ automine: false })
 
     // Input swap info.
     cy.get('#swap-currency-input .token-amount-input').clear().type('1').should('have.value', '1')
@@ -108,7 +106,7 @@ describe('mini-portfolio activity history', () => {
 
     // Check activity history tab.
     cy.get(getTestSelector('web3-status-connected')).click()
-    cy.get(getTestSelector('mini-portfolio-nav-activity')).click()
+    cy.get(getTestSelector('mini-portfolio-navbar')).contains('Activity').click()
 
     // Assert that the local pending transaction is replaced by a remote transaction with the same nonce.
     cy.contains('Swapping').should('not.exist')

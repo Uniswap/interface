@@ -1,7 +1,8 @@
 import { darken } from 'polished'
+import { forwardRef } from 'react'
 import { Check, ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
-import styled, { DefaultTheme, useTheme } from 'styled-components/macro'
+import styled, { DefaultTheme, useTheme } from 'styled-components'
 
 import { RowBetween } from '../Row'
 
@@ -391,6 +392,7 @@ export enum ButtonEmphasis {
   low,
   warning,
   destructive,
+  failure,
 }
 interface BaseThemeButtonProps {
   size: ButtonSize
@@ -411,6 +413,8 @@ function pickThemeButtonBackgroundColor({ theme, emphasis }: { theme: DefaultThe
       return theme.accentWarningSoft
     case ButtonEmphasis.destructive:
       return theme.accentCritical
+    case ButtonEmphasis.failure:
+      return theme.accentFailureSoft
     case ButtonEmphasis.medium:
     default:
       return theme.backgroundInteractive
@@ -465,6 +469,8 @@ function pickThemeButtonTextColor({ theme, emphasis }: { theme: DefaultTheme; em
       return theme.accentWarning
     case ButtonEmphasis.destructive:
       return theme.accentTextDarkPrimary
+    case ButtonEmphasis.failure:
+      return theme.accentFailure
     case ButtonEmphasis.medium:
     default:
       return theme.textPrimary
@@ -519,15 +525,19 @@ const BaseThemeButton = styled.button<BaseThemeButtonProps>`
 `
 
 interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseThemeButtonProps {}
+type ThemeButtonRef = HTMLButtonElement
 
-export const ThemeButton = ({ children, ...rest }: ThemeButtonProps) => {
+export const ThemeButton = forwardRef<ThemeButtonRef, ThemeButtonProps>(function ThemeButton(
+  { children, ...rest },
+  ref
+) {
   return (
-    <BaseThemeButton {...rest}>
+    <BaseThemeButton {...rest} ref={ref}>
       <ButtonOverlay />
       {children}
     </BaseThemeButton>
   )
-}
+})
 
 export const ButtonLight = ({ children, ...rest }: BaseButtonProps) => {
   return (

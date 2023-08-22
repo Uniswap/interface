@@ -1,7 +1,22 @@
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
 import { useGate } from 'statsig-react'
-export { FeatureFlag } from './flags/featureFlags'
+
+/**
+ * The value here must match the value in the statsig dashboard, if you plan to use statsig.
+ */
+export enum FeatureFlag {
+  traceJsonRpc = 'traceJsonRpc',
+  permit2 = 'permit2',
+  fiatOnRampButtonOnSwap = 'fiat_on_ramp_button_on_swap_page',
+  debounceSwapQuote = 'debounce_swap_quote',
+  uniswapXEnabled = 'uniswapx_enabled', // enables sending dutch_limit config to routing-api
+  uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
+  forceUniswapXOn = 'uniswapx_force_on', // forces routing-api's feature flag for uniswapx to turn on as well
+  uniswapXEthOutputEnabled = 'uniswapx_eth_output_enabled',
+  multichainUX = 'multichain_ux',
+  currencyConversion = 'currency_conversion',
+}
 
 interface FeatureFlagsContextType {
   isLoaded: boolean

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/smart-order-router'
+import { ChainId } from '@uniswap/sdk-core'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { NftActivityType, NftMarketplace, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
@@ -25,14 +25,14 @@ import {
   TokenRarity,
 } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
-import { shortenAddress } from 'nft/utils/address'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { formatEth } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
 import { MouseEvent, ReactNode, useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink } from 'theme'
+import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import * as styles from './Activity.css'
@@ -165,7 +165,7 @@ export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCel
         href={getExplorerLink(chainId ?? ChainId.MAINNET, address ?? '', ExplorerDataType.ADDRESS)}
         style={{ textDecoration: 'none' }}
       >
-        <Box onClick={(e) => e.stopPropagation()}>{address ? shortenAddress(address, 2, 4) : '-'}</Box>
+        <Box onClick={(e) => e.stopPropagation()}>{address ? shortenAddress(address, 2) : '-'}</Box>
       </AddressLink>
     </Column>
   )

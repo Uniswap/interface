@@ -1,7 +1,6 @@
 import { Interface } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -10,6 +9,7 @@ import TOKEN_ABI from 'abis/erc20.json'
 import GOVERNANCE_RB_ABI from 'abis/governance.json'
 import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
 import STAKING_PROXY_ABI from 'abis/staking-proxy.json'
+import { Trace } from 'analytics'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -21,18 +21,19 @@ import {
 } from 'constants/addresses'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { Wrapper } from 'pages/Pool/styleds'
+import { Wrapper } from 'pages/Pool/styled'
 import { useCallback, useMemo, useState } from 'react'
+import { ArrowLeft } from 'react-feather'
+import { Link } from 'react-router-dom'
 import {
   CreateProposalData,
   useCreateProposalCallback,
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme'
 
-import { CreateProposalTabs } from '../../components/NavigationTabs'
 import { GRG } from '../../constants/tokens'
 import AppBody from '../AppBody'
 import { ProposalActionDetail } from './ProposalActionDetail'
@@ -50,6 +51,19 @@ const PageWrapper = styled(AutoColumn)`
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     padding-top: 20px;
   }
+`
+
+const BackArrow = styled(ArrowLeft)`
+  cursor: pointer;
+  color: ${({ theme }) => theme.textPrimary};
+`
+const Nav = styled(Link)`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 1em 0 0 1em;
+  text-decoration: none;
 `
 
 const CreateProposalButton = ({
@@ -302,7 +316,10 @@ ${bodyValue}
     <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
       <PageWrapper>
         <AppBody $maxWidth="800px">
-          <CreateProposalTabs />
+          <Nav to="/vote">
+            <BackArrow />
+            <ThemedText.SubHeaderLarge>Create Proposal</ThemedText.SubHeaderLarge>
+          </Nav>
           <CreateProposalWrapper>
             <BlueCard>
               <AutoColumn gap="10px">

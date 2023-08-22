@@ -1,26 +1,26 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
+import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { useActiveSmartPool } from 'state/application/hooks'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
-import { useCurrencyBalance } from '../../../state/connection/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
 import { ThemedText } from '../../../theme'
 import Column, { AutoColumn } from '../../Column'
 import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
 import { MouseoverTooltip } from '../../Tooltip'
-import { LoadingRows, MenuItem } from '../styleds'
+import { LoadingRows, MenuItem } from '../styled'
 import { scrollbarStyle } from './index.css'
 
 function currencyKey(currency: Currency): string {
@@ -108,6 +108,7 @@ function TokenTags({ currency }: { currency: Currency }) {
   )
 }
 
+// TODO: we should pass balance instead of defining poolBalance
 export function CurrencyRow({
   currency,
   onSelect,
@@ -117,6 +118,7 @@ export function CurrencyRow({
   style,
   showCurrencyAmount,
   eventProperties,
+  balance,
 }: {
   currency: Currency
   onSelect: (hasWarning: boolean) => void
@@ -126,12 +128,11 @@ export function CurrencyRow({
   style?: CSSProperties
   showCurrencyAmount?: boolean
   eventProperties: Record<string, unknown>
+  balance?: CurrencyAmount<Currency>
 }) {
   const { account } = useWeb3React()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
-  const { address: smartPoolAddress } = useActiveSmartPool()
-  const balance = useCurrencyBalance(smartPoolAddress ?? undefined, currency)
   const warning = currency.isNative || isSmartPool ? null : checkWarning(currency.address)
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
@@ -179,7 +180,7 @@ export function CurrencyRow({
         </Column>
         {showCurrencyAmount ? (
           <RowFixed style={{ justifySelf: 'flex-end' }}>
-            {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
+            {account ? balance ? <Balance balance={balance} /> : <Loader /> : null}
             {isSelected && <CheckIcon />}
           </RowFixed>
         ) : (
@@ -240,6 +241,7 @@ export default function CurrencyList({
   isLoading,
   searchQuery,
   isAddressSearch,
+  balances,
 }: {
   height: number
   currencies: Currency[]
@@ -253,6 +255,7 @@ export default function CurrencyList({
   isLoading: boolean
   searchQuery: string
   isAddressSearch: string | false
+  balances: TokenBalances
 }) {
   const itemData: Currency[] = useMemo(() => {
     if (otherListTokens && otherListTokens?.length > 0) {
@@ -266,6 +269,12 @@ export default function CurrencyList({
       const row: Currency = data[index]
 
       const currency = row
+
+      const balance =
+        tryParseCurrencyAmount(
+          String(balances[currency.isNative ? 'ETH' : currency.address?.toLowerCase()]?.balance ?? 0),
+          currency
+        ) ?? CurrencyAmount.fromRawAmount(currency, 0)
 
       const isSelected = Boolean(currency && selectedCurrency && selectedCurrency.equals(currency))
       const otherSelected = Boolean(currency && otherCurrency && otherCurrency.equals(currency))
@@ -286,6 +295,7 @@ export default function CurrencyList({
             otherSelected={otherSelected}
             showCurrencyAmount={showCurrencyAmount}
             eventProperties={formatAnalyticsEventProperties(token, index, data, searchQuery, isAddressSearch)}
+            balance={balance}
           />
         )
       } else {
@@ -301,6 +311,7 @@ export default function CurrencyList({
       isSmartPool,
       isAddressSearch,
       searchQuery,
+      balances,
     ]
   )
 

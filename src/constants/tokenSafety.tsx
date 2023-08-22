@@ -4,7 +4,7 @@ import { SearchToken } from 'graphql/data/SearchTokens'
 
 import { ZERO_ADDRESS } from './misc'
 import { NATIVE_CHAIN_ID } from './tokens'
-import WarningCache, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
+import tokenSafetyLookup, { TOKEN_LIST_TYPES } from './tokenSafetyLookup'
 
 export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
 
@@ -78,11 +78,17 @@ const BlockedWarning: Warning = {
   canProceed: false,
 }
 
-export function checkWarning(tokenAddress: string) {
+export const NotFoundWarning: Warning = {
+  level: WARNING_LEVEL.UNKNOWN,
+  message: <Trans>Token not found</Trans>,
+  canProceed: false,
+}
+
+export function checkWarning(tokenAddress: string, chainId?: number | null) {
   if (tokenAddress === NATIVE_CHAIN_ID || tokenAddress === ZERO_ADDRESS) {
     return null
   }
-  switch (WarningCache.checkToken(tokenAddress.toLowerCase())) {
+  switch (tokenSafetyLookup.checkToken(tokenAddress.toLowerCase(), chainId)) {
     case TOKEN_LIST_TYPES.UNI_DEFAULT:
       return null
     case TOKEN_LIST_TYPES.RB_DEFAULT:
@@ -104,4 +110,8 @@ export function checkSearchTokenWarning(token: SearchToken) {
     return token.standard === TokenStandard.Native ? null : StrongWarning
   }
   return checkWarning(token.address)
+}
+
+export function displayWarningLabel(warning: Warning | null) {
+  return warning && warning.level !== WARNING_LEVEL.MEDIUM
 }

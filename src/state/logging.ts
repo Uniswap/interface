@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react'
 import noop from 'utils/noop'
 
-import { AppState } from './types'
+import { AppState } from './reducer'
 
 /* Utility type to mark all properties of a type as optional */
 type DeepPartial<T> = T extends object
@@ -25,7 +25,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
    * calls and deep object traversals.
    */
   stateTransformer: (state: AppState): DeepPartial<AppState> => {
-    const { application, user, connection, transactions } = state
+    const { application, user, transactions } = state
     return {
       application: {
         fiatOnramp: application.fiatOnramp,
@@ -37,7 +37,6 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
         selectedWallet: user.selectedWallet,
         lastUpdateVersionTimestamp: user.lastUpdateVersionTimestamp,
         userLocale: user.userLocale,
-        userExpertMode: user.userExpertMode,
         userRouterPreference: user.userRouterPreference,
         userHideClosedPositions: user.userHideClosedPositions,
         userSlippageTolerance: user.userSlippageTolerance,
@@ -46,9 +45,6 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
         timestamp: user.timestamp,
         URLWarningVisible: user.URLWarningVisible,
         showSurveyPopup: user.showSurveyPopup,
-      },
-      connection: {
-        errorByConnectionType: connection.errorByConnectionType,
       },
       transactions,
     }

@@ -1,25 +1,24 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { formatPrice, NumberType } from '@uniswap/conedison/format'
-import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { Trace } from 'analytics'
 import { sendEvent } from 'components/analytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import Loader from 'components/Icons/LoadingSpinner'
+import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/Row'
-import { Dots } from 'components/swap/styleds'
+import { Dots } from 'components/swap/styled'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { CHAIN_IDS_TO_NAMES, isSupportedChain, SupportedChainId } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
 import { isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
@@ -35,10 +34,11 @@ import { Link, useParams } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideExtraSmall, HideSmall, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { formatPrice, NumberType } from 'utils/formatNumbers'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -51,9 +51,9 @@ import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { LoadingRows } from './styleds'
+import { LoadingRows } from './styled'
 
-const getTokenLink = (chainId: SupportedChainId, address: string) => {
+const getTokenLink = (chainId: ChainId, address: string) => {
   if (isGqlSupportedChain(chainId)) {
     const chainName = CHAIN_IDS_TO_NAMES[chainId]
     return `${window.location.origin}/#/tokens/${chainName}/${address}`
@@ -542,8 +542,12 @@ function PositionPageContent() {
               type: TransactionType.COLLECT_FEES,
               currencyId0: currencyId(currency0ForFeeCollectionPurposes),
               currencyId1: currencyId(currency1ForFeeCollectionPurposes),
-              expectedCurrencyOwed0: CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
-              expectedCurrencyOwed1: CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
+              expectedCurrencyOwed0:
+                feeValue0?.quotient.toString() ??
+                CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
+              expectedCurrencyOwed1:
+                feeValue1?.quotient.toString() ??
+                CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
             })
           })
       })
@@ -604,7 +608,7 @@ function PositionPageContent() {
         <ThemedText.DeprecatedItalic>
           <Trans>Collecting fees will withdraw currently available fees for you.</Trans>
         </ThemedText.DeprecatedItalic>
-        <ButtonPrimary onClick={collect}>
+        <ButtonPrimary data-testid="modal-collect-fees-button" onClick={collect}>
           <Trans>Collect</Trans>
         </ButtonPrimary>
       </AutoColumn>
@@ -716,7 +720,8 @@ function PositionPageContent() {
             <ResponsiveRow align="flex-start">
               <HideSmall
                 style={{
-                  marginRight: '12px',
+                  height: '100%',
+                  marginRight: 12,
                 }}
               >
                 {'result' in metadata ? (
@@ -744,9 +749,11 @@ function PositionPageContent() {
                     height="100%"
                     style={{
                       minWidth: '340px',
+                      position: 'relative',
+                      overflow: 'hidden',
                     }}
                   >
-                    <Loader />
+                    <LoadingFullscreen />
                   </DarkCard>
                 )}
               </HideSmall>
@@ -832,6 +839,7 @@ function PositionPageContent() {
                         {ownsNFT &&
                         (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
                           <ResponsiveButtonConfirmed
+                            data-testid="collect-fees-button"
                             disabled={collecting || !!collectMigrationHash}
                             confirmed={!!collectMigrationHash && !isCollectPending}
                             width="fit-content"

@@ -7,7 +7,7 @@ import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/st
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import UniJSON from '@uniswap/governance/build/Uni.json'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import GOVERNANCE_RB_ABI from 'abis/governance.json'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
@@ -15,7 +15,6 @@ import RB_REGISTRY_ABI from 'abis/rb-registry.json'
 import STAKING_ABI from 'abis/staking-impl.json'
 import STAKING_PROXY_ABI from 'abis/staking-proxy.json'
 import { GOVERNANCE_PROXY_ADDRESSES, RB_REGISTRY_ADDRESSES, STAKING_PROXY_ADDRESSES } from 'constants/addresses'
-import { SupportedChainId } from 'constants/chains'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
@@ -300,17 +299,19 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   // get metadata from past events
   let govStartBlock
 
-  if (chainId === SupportedChainId.MAINNET) {
+  if (chainId === ChainId.MAINNET) {
     govStartBlock = 16620590
-  } else if (chainId === SupportedChainId.GOERLI) {
+  } else if (chainId === ChainId.GOERLI) {
     govStartBlock = 8485377
-  } else if (chainId === SupportedChainId.ARBITRUM_ONE) {
+  } else if (chainId === ChainId.ARBITRUM_ONE) {
     govStartBlock = 60590354
-  } else if (chainId === SupportedChainId.OPTIMISM) {
+  } else if (chainId === ChainId.OPTIMISM) {
     govStartBlock = 74115128
-  } else if (chainId === SupportedChainId.POLYGON) {
+  } else if (chainId === ChainId.POLYGON) {
     govStartBlock = 39249858
-  } else if (chainId === SupportedChainId.BNB) {
+  } else if (chainId === ChainId.BASE) {
+    govStartBlock = 2570523
+  } else if (chainId === ChainId.BNB) {
     // since bsc enpoints will return an end on historical logs, we try to get proposal logs in the last 40k blocks
     govStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : blockNumber //29095808
   }
@@ -404,7 +405,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   if (
     !latestGovernanceContract ||
     !quorumVotes ||
-    //chainId !== SupportedChainId.MAINNET ||
+    //chainId !== ChainId.MAINNET ||
     !grg ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   )

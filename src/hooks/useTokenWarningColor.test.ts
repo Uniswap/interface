@@ -8,7 +8,7 @@ describe('Token Warning Colors', () => {
   describe('useTokenWarningColor', () => {
     it('medium', () => {
       const { result } = renderHook(() => useTokenWarningColor(WARNING_LEVEL.MEDIUM))
-      expect(result.current).toEqual(lightTheme.accentWarningSoft)
+      expect(result.current).toEqual(lightTheme.backgroundFloating)
     })
 
     it('strong', () => {

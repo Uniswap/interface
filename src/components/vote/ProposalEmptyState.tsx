@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 const EmptyProposals = styled.div`
@@ -40,11 +40,13 @@ export default function ProposalEmptyState() {
   const { chainId } = useWeb3React()
   // TODO: add bsc support
   if (
-    (chainId && chainId === SupportedChainId.MAINNET) ||
-    (chainId && chainId === SupportedChainId.GOERLI) ||
-    (chainId && chainId === SupportedChainId.ARBITRUM_ONE) ||
-    (chainId && chainId === SupportedChainId.OPTIMISM) ||
-    (chainId && chainId === SupportedChainId.POLYGON)
+    (chainId && chainId === ChainId.MAINNET) ||
+    (chainId && chainId === ChainId.GOERLI) ||
+    (chainId && chainId === ChainId.ARBITRUM_ONE) ||
+    (chainId && chainId === ChainId.OPTIMISM) ||
+    (chainId && chainId === ChainId.POLYGON) ||
+    (chainId && chainId === ChainId.BASE) ||
+    (chainId && chainId === ChainId.BNB)
   ) {
     return (
       <EmptyState

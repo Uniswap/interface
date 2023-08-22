@@ -1,8 +1,7 @@
 import { TokenAddressMap, tokensToChainTokenMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
-
-import { AppState } from '../../types'
+import { AppState } from 'state/reducer'
 
 type Mutable<T> = {
   -readonly [P in keyof T]: Mutable<T[P]>

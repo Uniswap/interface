@@ -1,6 +1,6 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
+import { TraceEvent } from 'analytics'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'
@@ -8,7 +8,7 @@ import { COMMON_BASES } from 'constants/routing'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { currencyId } from 'utils/currencyId'
 
 const MobileWrapper = styled(AutoColumn)`
@@ -59,7 +59,7 @@ export default function CommonBases({
   searchQuery: string
   isAddressSearch: string | false
 }) {
-  const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
+  const bases = chainId !== undefined ? COMMON_BASES[chainId] ?? [] : []
 
   return bases.length > 0 ? (
     <MobileWrapper gap="md">
@@ -81,6 +81,7 @@ export default function CommonBases({
                 onClick={() => !isSelected && onSelect(currency)}
                 disable={isSelected}
                 key={currencyId(currency)}
+                data-testid={`common-base-${currency.symbol}`}
               >
                 <CurrencyLogoFromList currency={currency} />
                 <Text fontWeight={500} fontSize={16}>

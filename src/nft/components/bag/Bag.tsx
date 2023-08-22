@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent } from 'analytics'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import { Box } from 'nft/components/Box'
@@ -11,7 +11,7 @@ import { useBag, useIsMobile, useProfilePageState, useSellAsset, useSubscribeScr
 import { BagStatus, ProfilePageStateType } from 'nft/types'
 import { formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 import { shallow } from 'zustand/shallow'
 
