@@ -1,5 +1,6 @@
 import { useDappContext } from 'src/background/features/dapp/hooks'
 import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
+import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
 import { Image } from 'tamagui'
 import { Button, Text, XStack, YStack } from 'ui/src'
@@ -50,16 +51,10 @@ export function DappRequestContent(): JSX.Element {
   let displayDetails = null
   switch (request.dappRequest.type) {
     case DappRequestType.SignMessage:
-      displayDetails = <SignMessageDetails activeAccount={activeAccount} request={request} />
+      displayDetails = <SignMessageDetails request={request} />
       break
     case DappRequestType.SignTypedData:
-      displayDetails = (
-        <SignTypedDataDetails
-          activeAccount={activeAccount}
-          chainId={activeChainId}
-          request={request}
-        />
-      )
+      displayDetails = <SignTypedDataDetails chainId={activeChainId} request={request} />
       break
     case DappRequestType.SendTransaction:
       displayDetails = (
@@ -68,18 +63,24 @@ export function DappRequestContent(): JSX.Element {
       break
   }
   let title = 'Confirm?'
+  let callToAction = 'Approve'
+
   switch (request?.dappRequest.type) {
     case DappRequestType.SignMessage:
-      title = `Signature request from ${dappName}?`
+      title = `Signature request from ${dappName}`
+      callToAction = 'Sign'
       break
     case DappRequestType.SignTypedData:
       title = `Signature request from ${dappName}`
+      callToAction = 'Sign'
       break
     case DappRequestType.SendTransaction:
       title = `Approve transaction from ${dappName}`
+      callToAction = 'Approve'
       break
     case DappRequestType.GetAccount:
       title = `Connect to ${dappName}?`
+      callToAction = 'Connect'
       break
   }
 
@@ -87,41 +88,48 @@ export function DappRequestContent(): JSX.Element {
     <YStack
       key={request.dappRequest.requestId}
       alignItems="stretch"
-      backgroundColor="$background"
+      backgroundColor="$surface1"
       flex={1}
       gap="$spacing12"
-      justifyContent="center"
-      padding="$spacing24"
+      justifyContent="space-between"
+      paddingHorizontal="$spacing24"
+      paddingVertical="$spacing12"
       width="100%">
-      <Image
-        alignSelf="center"
-        height={iconSizes.icon40}
-        source={{ uri: dappIconUrl }}
-        width={iconSizes.icon40}
-      />
-      <Text textAlign="center" variant="headlineSmall">
-        {title}
-      </Text>
-      <Text color="$DEP_accentBranded" textAlign="center" variant="bodyMicro">
-        {dappUrl}
-      </Text>
-      <YStack alignItems="stretch" flexShrink={1} width="100%">
-        {displayDetails}
+      <YStack gap="$spacing16" paddingTop="$spacing32">
+        <Image height={iconSizes.icon40} source={{ uri: dappIconUrl }} width={iconSizes.icon40} />
+        <YStack gap="$spacing8">
+          <Text textAlign="left" variant="headlineSmall">
+            {title}
+          </Text>
+          <Text color="$accent1" textAlign="left" variant="bodySmall">
+            {dappUrl}
+          </Text>
+        </YStack>
+        <YStack alignItems="stretch" flexShrink={1} width="100%">
+          {displayDetails}
+        </YStack>
       </YStack>
-      <XStack gap="$spacing12">
-        <Button
-          flex={1}
-          theme="secondary"
-          onPress={async (): Promise<void> => await onCancel(request)}>
-          Cancel
-        </Button>
-        <Button
-          flex={1}
-          theme="primary"
-          onPress={async (): Promise<void> => await onConfirm(request)}>
-          Approve
-        </Button>
-      </XStack>
+
+      <YStack>
+        <XStack borderColor="$surface3" borderWidth={1} marginBottom="$spacing8" width="100%" />
+        <YStack gap="$spacing12" paddingBottom="$spacing12">
+          <AddressFooter account={activeAccount} />
+          <XStack gap="$spacing12">
+            <Button
+              theme="secondary"
+              width="50%"
+              onPress={async (): Promise<void> => await onCancel(request)}>
+              Cancel
+            </Button>
+            <Button
+              theme="primary"
+              width="50%"
+              onPress={async (): Promise<void> => await onConfirm(request)}>
+              {callToAction}
+            </Button>
+          </XStack>
+        </YStack>
+      </YStack>
     </YStack>
   )
 }

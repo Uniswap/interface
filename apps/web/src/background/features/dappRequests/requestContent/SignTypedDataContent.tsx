@@ -1,16 +1,12 @@
 import { SignTypedDataRequest } from 'src/background/features/dappRequests/dappRequestTypes'
-import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
 import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
-import { Flex, Text, XStack, YStack } from 'ui/src'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { Text, XStack, YStack } from 'ui/src'
 import { EthTypedMessage } from 'wallet/src/features/wallet/signing/types'
 
 export const SignTypedDataDetails = ({
-  activeAccount,
   chainId,
   request,
 }: {
-  activeAccount: Account
   chainId: number
   request: DappRequestStoreItem
 }): JSX.Element => {
@@ -18,13 +14,10 @@ export const SignTypedDataDetails = ({
   const typedData: EthTypedMessage = JSON.parse(rawTypedData)
 
   return (
-    <YStack backgroundColor="$scrim" borderRadius="$rounded16" flex={1}>
+    <YStack backgroundColor="$surface2" borderRadius="$rounded16" flex={1}>
       <YStack flexShrink={1} gap="$spacing16" margin="$none" overflow="scroll" padding="$spacing16">
         {getParsedObjectDisplay(chainId, typedData.message)}
       </YStack>
-      <Flex>
-        <AddressFooter account={activeAccount} />
-      </Flex>
     </YStack>
   )
 }

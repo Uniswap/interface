@@ -1,6 +1,5 @@
 import { selectChainByDappAndWallet } from 'src/background/features/dapp/selectors'
 import { SendTransactionRequest } from 'src/background/features/dappRequests/dappRequestTypes'
-import { AddressFooter } from 'src/background/features/dappRequests/requestContent/AddressFooter'
 import { DappRequestStoreItem } from 'src/background/features/dappRequests/slice'
 import { useAppSelector } from 'src/background/store'
 import { Text, XStack, YStack } from 'ui/src'
@@ -35,7 +34,7 @@ export const SendTransactionDetails = ({
   return (
     <YStack>
       <YStack
-        backgroundColor="$scrim"
+        backgroundColor="$surface2"
         borderTopLeftRadius="$rounded16"
         borderTopRightRadius="$rounded16"
         gap="$spacing16"
@@ -77,7 +76,7 @@ export const SendTransactionDetails = ({
         ) : null}
       </YStack>
       <YStack
-        backgroundColor="$scrim"
+        backgroundColor="$surface2"
         borderBottomLeftRadius="$rounded16"
         borderBottomRightRadius="$rounded16">
         <XStack
@@ -94,7 +93,6 @@ export const SendTransactionDetails = ({
             {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
           </Text>
         </XStack>
-        <AddressFooter account={activeAccount} />
       </YStack>
     </YStack>
   )
