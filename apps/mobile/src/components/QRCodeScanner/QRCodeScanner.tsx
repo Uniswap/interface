@@ -95,6 +95,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       overflow="hidden">
       <Box justifyContent="center" style={StyleSheet.absoluteFill}>
         <Box
+          bg="sporeBlack"
           height={Math.min((4 / 3) * dimensions.fullWidth, dimensions.fullHeight)}
           overflow="hidden">
           {permissionStatus === PermissionStatus.GRANTED && (
@@ -281,9 +282,9 @@ const GradientOverlay = memo(function GradientOverlay({
           </LinearGradient>
         </Defs>
         {!shouldFreezeCamera ? (
-          <Path d={pathWithHole} fill={theme.colors.scrim} strokeWidth="32" />
+          <Path d={pathWithHole} fill={theme.colors.DEP_scrimSoft} strokeWidth="32" />
         ) : (
-          <Rect fill={theme.colors.scrim} height="100%" width="100%" x="0" y="0" />
+          <Rect fill={theme.colors.DEP_scrimSoft} height="100%" width="100%" x="0" y="0" />
         )}
         {/* gradient from top of modal to top of QR code, of color DEP_background1 to transparent */}
         <Rect fill="url(#scan-top-fadeout)" height="100%" width="100%" x="0" y="0" />

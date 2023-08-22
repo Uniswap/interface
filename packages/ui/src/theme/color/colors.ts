@@ -175,7 +175,7 @@ const sporeLight = {
   surface4: '#FFFFFFA3', //A3 = 64%
   surface5: '#0000000A', //0A = 4%
 
-  scrim: '#00000099', //99 = 40%
+  scrim: '#00000099', //99 = 40%,
 
   neutral1: '#222222',
   neutral2: '#7D7D7D',
@@ -230,6 +230,8 @@ export const colorsLight = {
   surface5: sporeLight.surface5,
 
   scrim: sporeLight.scrim,
+  // TODO: Revisit Spore colors
+  DEP_scrimSoft: opacify(50, colors.gray150),
 
   neutral1: sporeLight.neutral1,
   neutral2: sporeLight.neutral2,
@@ -284,6 +286,8 @@ export const colorsDark = {
   surface5: sporeDark.surface5,
 
   scrim: sporeDark.scrim,
+  // TODO: Revisit Spore colors
+  DEP_scrimSoft: opacify(50, colors.gray750),
 
   neutral1: sporeDark.neutral1,
   neutral2: sporeDark.neutral2,
