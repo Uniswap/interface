@@ -78,7 +78,7 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: ChainI
           </ThemedText.SubHeader>
 
           <ThemedText.BodySmall color="textSecondary">
-            <Trans>To use Uniswap on {chainInfo.label}, switch the network in your wallet’s settings.</Trans>
+            <Trans>To use Rigoblock on {chainInfo.label}, switch the network in your wallet’s settings.</Trans>
           </ThemedText.BodySmall>
         </ColumnContainer>
       </RowNoFlex>
