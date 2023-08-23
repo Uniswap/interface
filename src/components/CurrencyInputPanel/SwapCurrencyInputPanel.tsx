@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -312,7 +312,13 @@ export default function SwapCurrencyInputPanel({
           <FiatRow>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
-                {fiatValue && <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />}
+                {fiatValue && (
+                  <FiatValue
+                    fiatValue={fiatValue}
+                    priceImpact={priceImpact}
+                    testId={`fiat-value-${id === InterfaceSectionName.CURRENCY_INPUT_PANEL ? 'input' : 'output'}-panel`}
+                  />
+                )}
               </LoadingOpacityContainer>
               {account ? (
                 <RowFixed style={{ height: '17px' }}>

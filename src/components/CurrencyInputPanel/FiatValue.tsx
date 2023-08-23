@@ -18,9 +18,11 @@ const FiatLoadingBubble = styled(LoadingBubble)`
 export function FiatValue({
   fiatValue,
   priceImpact,
+  testId,
 }: {
   fiatValue: { data?: number; isLoading: boolean }
   priceImpact?: Percent
+  testId?: string
 }) {
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
@@ -37,7 +39,7 @@ export function FiatValue({
 
   return (
     <Row gap="sm">
-      <ThemedText.BodySmall color="textSecondary">
+      <ThemedText.BodySmall color="textSecondary" data-testid={testId}>
         {fiatValue.data ? (
           formatNumber(fiatValue.data, NumberType.FiatTokenPrice)
         ) : (
