@@ -8,19 +8,19 @@ import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { ZERO_PERCENT } from 'constants/misc'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { useWarningColor } from 'hooks/useWarningColor'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { ClassicTrade, InterfaceTrade, RouterPreference } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components'
+import styled, { DefaultTheme, useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
 import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
+import { getPriceImpactColor } from 'utils/prices'
 
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
@@ -42,10 +42,10 @@ const ConfirmButton = styled(ButtonError)`
   margin-top: 10px;
 `
 
-const DetailRowValue = styled(ThemedText.BodySmall)<{ color?: string }>`
+const DetailRowValue = styled(ThemedText.BodySmall)<{ warningColor?: keyof DefaultTheme }>`
   text-align: right;
   overflow-wrap: break-word;
-  ${({ color }) => color && `color: ${color};`};
+  ${({ warningColor, theme }) => warningColor && `color: ${theme[warningColor]};`};
 `
 
 export default function SwapModalFooter({
@@ -83,8 +83,6 @@ export default function SwapModalFooter({
   const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
   const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
   const txCount = getTransactionCount(trade)
-
-  const priceImpactColor = useWarningColor(isClassicTrade(trade) ? trade.priceImpact : undefined)
 
   return (
     <>
@@ -126,7 +124,7 @@ export default function SwapModalFooter({
                     <Trans>Price impact</Trans>
                   </Label>
                 </MouseoverTooltip>
-                <DetailRowValue color={priceImpactColor}>
+                <DetailRowValue warningColor={getPriceImpactColor(trade.priceImpact)}>
                   {trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
                 </DetailRowValue>
               </Row>
@@ -222,8 +220,6 @@ function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' 
   const [currency, percentage] =
     type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
 
-  const color = useWarningColor(percentage)
-
   if (percentage.equalTo(ZERO_PERCENT)) return null
 
   return (
@@ -239,7 +235,7 @@ function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' 
         >
           <Label cursor="help">{t`${currency.symbol} fee`}</Label>
         </MouseoverTooltip>
-        <DetailRowValue color={color}>{formatPriceImpact(percentage)}</DetailRowValue>
+        <DetailRowValue warningColor={getPriceImpactColor(percentage)}>{formatPriceImpact(percentage)}</DetailRowValue>
       </Row>
     </ThemedText.BodySmall>
   )
