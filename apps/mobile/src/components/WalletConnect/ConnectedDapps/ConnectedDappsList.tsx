@@ -38,7 +38,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
               setIsEditing(!isEditing)
             }}>
             <Text
-              color={isEditing ? 'accent1' : 'neutral3'}
+              color={isEditing ? 'accent1' : 'neutral2'}
               textAlign="right"
               variant="subheadSmall">
               {isEditing ? t('Done') : t('Edit')}
