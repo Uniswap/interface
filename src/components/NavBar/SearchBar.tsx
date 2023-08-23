@@ -153,6 +153,9 @@ export const SearchBar = () => {
           position: 'relative',
           display: 'flex',
         })}
+        {...(isOpen && {
+          boxShadow: 'deep',
+        })}
       >
         <Row
           className={clsx(

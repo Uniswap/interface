@@ -77,9 +77,10 @@ const CardHeaderColumn = styled.div`
   z-index: 1;
 `
 const IconContainer = styled.div`
-  display: inline;
+  display: inline-flex;
   vertical-align: text-bottom;
   margin-left: 2px;
+  transform: translateY(-2px) translateX(2px);
 `
 const CollectionNameContainer = styled.div`
   display: -webkit-box;
