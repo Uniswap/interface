@@ -16,6 +16,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { Icons } from 'ui/src'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -109,11 +110,19 @@ export function RestoreCloudBackupLoadingScreen({
                 : t(`It looks like you haven't backed up any of your seed phrases to iCloud.`)
             }
             icon={
-              <CloudIcon
-                color={theme.colors.neutral3}
-                height={theme.imageSizes.image48}
-                width={theme.imageSizes.image48}
-              />
+              IS_ANDROID ? (
+                <Icons.GoogleDrive
+                  color={theme.colors.neutral3}
+                  height={theme.imageSizes.image48}
+                  width={theme.imageSizes.image48}
+                />
+              ) : (
+                <CloudIcon
+                  color={theme.colors.neutral3}
+                  height={theme.imageSizes.image48}
+                  width={theme.imageSizes.image48}
+                />
+              )
             }
             retryButtonLabel={t('Retry')}
             title={t('0 backups found')}

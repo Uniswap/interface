@@ -15,6 +15,7 @@ import { IS_ANDROID } from 'src/constants/globals'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
+import { Icons } from 'ui/src'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 
 type Props = NativeStackScreenProps<
@@ -75,7 +76,15 @@ export function SettingsCloudBackupPasswordCreateScreen({
                   borderRadius="rounded12"
                   borderWidth={1}
                   padding="spacing12">
-                  <CloudIcon color={theme.colors.accent1} />
+                  {IS_ANDROID ? (
+                    <Icons.GoogleDrive
+                      color={theme.colors.accent1}
+                      height={theme.iconSizes.icon20}
+                      width={theme.iconSizes.icon20}
+                    />
+                  ) : (
+                    <CloudIcon color={theme.colors.accent1} />
+                  )}
                 </Box>
                 <Text textAlign="center" variant="buttonLabelMedium">
                   {IS_ANDROID

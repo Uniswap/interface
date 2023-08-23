@@ -25,6 +25,7 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
+import { Icons } from 'ui/src'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
@@ -133,7 +134,17 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
             blurb={t('Safe, simple, and all you need to save is your password.')}
             disabled={hasCloudBackup}
             elementName={ElementName.AddCloudBackup}
-            icon={<CloudIcon color={theme.colors.accent1} height={theme.iconSizes.icon16} />}
+            icon={
+              IS_ANDROID ? (
+                <Icons.GoogleDrive
+                  color={theme.colors.accent1}
+                  height={theme.iconSizes.icon16}
+                  width={theme.iconSizes.icon16}
+                />
+              ) : (
+                <CloudIcon color={theme.colors.accent1} height={theme.iconSizes.icon16} />
+              )
+            }
             title={IS_ANDROID ? t('Backup with Google Drive') : t('Backup with iCloud')}
             onPress={onPressCloudBackup}
           />

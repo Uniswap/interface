@@ -37,6 +37,7 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { Icons } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import ChartIcon from 'ui/src/assets/icons/chart.svg'
 import CloudIcon from 'ui/src/assets/icons/cloud.svg'
@@ -148,11 +149,11 @@ export function SettingsWallet({
 
   const iconProps: SvgProps = {
     color: theme.colors.neutral3,
-    height: 24,
+    height: theme.iconSizes.icon24,
     strokeLinecap: 'round',
     strokeLinejoin: 'round',
     strokeWidth: '2',
-    width: 24,
+    width: theme.iconSizes.icon24,
   }
 
   const sections: SettingsSection[] = [
@@ -222,7 +223,15 @@ export function SettingsWallet({
               }
             : { address },
           text: IS_ANDROID ? t('Google Drive Backup') : t('iCloud backup'),
-          icon: <CloudIcon {...iconProps} />,
+          icon: IS_ANDROID ? (
+            <Icons.GoogleDrive
+              color={theme.colors.neutral3}
+              height={theme.iconSizes.icon24}
+              width={theme.iconSizes.icon24}
+            />
+          ) : (
+            <CloudIcon {...iconProps} />
+          ),
           isHidden: readonly,
         },
       ],
