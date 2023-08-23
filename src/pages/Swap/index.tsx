@@ -418,7 +418,7 @@ export function Swap({
     if (!swapCallback) {
       return
     }
-    if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
+    if (preTaxStablecoinPriceImpact && !confirmPriceImpactWithoutFee(preTaxStablecoinPriceImpact)) {
       return
     }
     setSwapState((currentState) => ({
