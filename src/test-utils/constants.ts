@@ -123,3 +123,37 @@ export const TEST_DUTCH_TRADE_ETH_INPUT = new DutchOrderTrade({
   deadlineBufferSecs: 30,
   slippageTolerance: new Percent(5, 100),
 })
+
+export const TEST_TRADE_FEE_ON_SELL = new ClassicTrade({
+  v3Routes: [
+    {
+      routev3: new V3Route([TEST_POOL_12], TEST_TOKEN_1, TEST_TOKEN_2),
+      inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+      outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
+    },
+  ],
+  v2Routes: [],
+  tradeType: TradeType.EXACT_INPUT,
+  gasUseEstimateUSD: 1.0,
+  approveInfo: { needsApprove: false },
+  quoteMethod: QuoteMethod.ROUTING_API,
+  inputTax: new Percent(3, 100),
+  outputTax: ZERO_PERCENT,
+})
+
+export const TEST_TRADE_FEE_ON_BUY = new ClassicTrade({
+  v3Routes: [
+    {
+      routev3: new V3Route([TEST_POOL_12], TEST_TOKEN_1, TEST_TOKEN_2),
+      inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+      outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
+    },
+  ],
+  v2Routes: [],
+  tradeType: TradeType.EXACT_INPUT,
+  gasUseEstimateUSD: 1.0,
+  approveInfo: { needsApprove: false },
+  quoteMethod: QuoteMethod.ROUTING_API,
+  inputTax: ZERO_PERCENT,
+  outputTax: new Percent(3, 100),
+})
