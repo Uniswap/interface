@@ -54,3 +54,40 @@ export interface FormattedRewardInterface {
   symbol: string
   trueAmount: string
 }
+
+export interface FormattedEternalFarming {
+  tvl?: number
+  bonusReward: string
+  bonusRewardRate: string
+  bonusRewardToken: TokenSubgraph
+  endTime: string
+  id: string
+  pool: PoolChartSubgraph
+  reward: string
+  rewardRate: string
+  rewardToken: TokenSubgraph
+  startTime: string
+  tokenAmountForTier1: string
+  tokenAmountForTier2: string
+  tokenAmountForTier3: string
+  tier1Multiplier: string
+  tier2Multiplier: string
+  tier3Multiplier: string
+  multiplierToken: TokenSubgraph
+  isDetached: boolean
+}
+
+export interface Aprs {
+  [type: string]: number
+}
+
+export interface Position {
+  id: string
+  owner: string
+  pool: string | PoolSubgraph
+  L2tokenId: string
+  limitFarming: string | null
+  eternalFarming: string | null
+  onFarmingCenter: boolean
+  enteredInEternalFarming: string
+}

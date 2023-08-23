@@ -6,7 +6,7 @@ import { ChevronDown } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`
+export const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`
   color: ${({ theme }) => theme.accentActive};
   transform: ${({ $expanded }) => ($expanded ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform ${({ theme }) => theme.transition.duration.medium};

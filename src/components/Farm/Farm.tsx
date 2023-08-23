@@ -11,6 +11,7 @@ import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { GammaPair, GammaPairs, GlobalConst } from './constants'
+import FarmingMyFarms from './MyFarms/FarmMyFarms'
 import SortColumns from './SortColumn'
 
 const FarmsLayout = styled.div`
@@ -89,17 +90,17 @@ export function Farms() {
     return allGammaFarms.length > 0
       ? [
           {
-            text: 'myFarms',
+            text: 'My Farms',
             id: 0,
             link: 'my-farms',
           },
           {
-            text: 'pegasysFarms',
+            text: 'Pegasys Farms',
             id: 1,
             link: 'pegasys-farms',
           },
           {
-            text: 'gammaFarms',
+            text: 'Gamma Farms',
             id: 1,
             link: 'gamma-farms',
             hasSeparator: true,
@@ -107,12 +108,12 @@ export function Farms() {
         ]
       : [
           {
-            text: 'myFarms',
+            text: 'My Farms',
             id: 0,
             link: 'my-farms',
           },
           {
-            text: 'pegasysFarms',
+            text: 'Pegasys Farms',
             id: 1,
             link: 'eternal-farms',
           },
@@ -155,23 +156,23 @@ export function Farms() {
   const farmFilters = useMemo(
     () => [
       {
-        text: 'allFarms',
+        text: 'All Farms',
         id: GlobalConst.utils.v3FarmFilter.allFarms,
       },
       {
-        text: 'stablecoins',
+        text: 'Stablecoins',
         id: GlobalConst.utils.v3FarmFilter.stableCoin,
       },
       {
-        text: 'blueChips',
+        text: 'Blue Chips',
         id: GlobalConst.utils.v3FarmFilter.blueChip,
       },
       {
-        text: 'stableLPs',
+        text: 'Stable LPs',
         id: GlobalConst.utils.v3FarmFilter.stableLP,
       },
       {
-        text: 'otherLPs',
+        text: 'Other LPs',
         id: GlobalConst.utils.v3FarmFilter.otherLP,
       },
     ],
@@ -266,10 +267,8 @@ export function Farms() {
         </>
       )}
 
-      {
-        selectedFarmCategory?.id === 0 && <></>
-        // <FarmingMyFarms search={searchValue} chainId={chainIdToUse} />
-      }
+      {selectedFarmCategory?.id === 0 && chainId && <FarmingMyFarms search={searchValue} chainId={chainId} />}
+
       {/* {selectedFarmCategory?.id === 1 && (
         <EternalFarmsPage
           farmFilter={farmFilter.id}
