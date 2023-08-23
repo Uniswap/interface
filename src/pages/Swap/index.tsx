@@ -441,7 +441,7 @@ export function Swap({
           swapResult: undefined,
         }))
       })
-  }, [swapCallback, stablecoinPriceImpact])
+  }, [swapCallback, preTaxStablecoinPriceImpact])
 
   const handleOnWrap = useCallback(async () => {
     if (!onWrap) return
