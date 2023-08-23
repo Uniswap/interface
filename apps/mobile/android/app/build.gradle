@@ -25,7 +25,7 @@ react {
     cliFile = file("$nodeModulesPath/react-native/cli.js")
     debuggableVariants = ["devDebug", "betaDebug", "prodDebug"]
     hermesCommand = "../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc" // This is relative to the project root.
-
+}
 /**
  * Set this to true to create four separate APKs instead of one,
  * one for each native architecture. This is useful if you don't
