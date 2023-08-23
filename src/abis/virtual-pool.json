@@ -1,0 +1,418 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_farmingCenterAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_farmingAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_pool",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "token0Amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "token1Amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "addRewards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint32",
+        "name": "currentTimestamp",
+        "type": "uint32"
+      },
+      {
+        "internalType": "int24",
+        "name": "bottomTick",
+        "type": "int24"
+      },
+      {
+        "internalType": "int24",
+        "name": "topTick",
+        "type": "int24"
+      },
+      {
+        "internalType": "int128",
+        "name": "liquidityDelta",
+        "type": "int128"
+      },
+      {
+        "internalType": "int24",
+        "name": "currentTick",
+        "type": "int24"
+      }
+    ],
+    "name": "applyLiquidityDeltaToPosition",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int24",
+        "name": "nextTick",
+        "type": "int24"
+      },
+      {
+        "internalType": "bool",
+        "name": "zeroToOne",
+        "type": "bool"
+      }
+    ],
+    "name": "cross",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "currentLiquidity",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "farmingAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "farmingCenterAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int24",
+        "name": "bottomTick",
+        "type": "int24"
+      },
+      {
+        "internalType": "int24",
+        "name": "topTick",
+        "type": "int24"
+      }
+    ],
+    "name": "getInnerRewardsGrowth",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "rewardGrowthInside0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rewardGrowthInside1",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int24",
+        "name": "bottomTick",
+        "type": "int24"
+      },
+      {
+        "internalType": "int24",
+        "name": "topTick",
+        "type": "int24"
+      }
+    ],
+    "name": "getInnerSecondsPerLiquidity",
+    "outputs": [
+      {
+        "internalType": "uint160",
+        "name": "innerSecondsSpentPerLiquidity",
+        "type": "uint160"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "globalSecondsPerLiquidityCumulative",
+    "outputs": [
+      {
+        "internalType": "uint160",
+        "name": "",
+        "type": "uint160"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "globalTick",
+    "outputs": [
+      {
+        "internalType": "int24",
+        "name": "",
+        "type": "int24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint32",
+        "name": "currentTimestamp",
+        "type": "uint32"
+      }
+    ],
+    "name": "increaseCumulative",
+    "outputs": [
+      {
+        "internalType": "enum IAlgebraVirtualPool.Status",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pool",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "prevTimestamp",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardRate0",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardRate1",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardReserve0",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardReserve1",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint128",
+        "name": "rate0",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "rate1",
+        "type": "uint128"
+      }
+    ],
+    "name": "setRates",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int24",
+        "name": "",
+        "type": "int24"
+      }
+    ],
+    "name": "ticks",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "liquidityTotal",
+        "type": "uint128"
+      },
+      {
+        "internalType": "int128",
+        "name": "liquidityDelta",
+        "type": "int128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "outerFeeGrowth0Token",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "outerFeeGrowth1Token",
+        "type": "uint256"
+      },
+      {
+        "internalType": "int56",
+        "name": "outerTickCumulative",
+        "type": "int56"
+      },
+      {
+        "internalType": "uint160",
+        "name": "outerSecondsPerLiquidity",
+        "type": "uint160"
+      },
+      {
+        "internalType": "uint32",
+        "name": "outerSecondsSpent",
+        "type": "uint32"
+      },
+      {
+        "internalType": "bool",
+        "name": "initialized",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "timeOutside",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalRewardGrowth0",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalRewardGrowth1",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
