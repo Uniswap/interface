@@ -2092,7 +2092,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
       >
         <a
           class="c2 c15 c59 c60"
-          href="/swap"
+          href="#/swap"
         >
           <p
             class="c61"
