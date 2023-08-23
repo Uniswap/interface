@@ -9,7 +9,7 @@ while IFS= read -r -d $'\0' file; do
     name="$(basename "$file")"
     grep -rn -F -q "$name" ./src ./functions ./public
     if [ $? -ne 0 ]; then
-      rm $file
+      unreferenced_files+=("$file")
     fi
 done < <(find ./src ./public -type f \( -name "*.png" -o -name "*.svg" -o -name "*.jpg" \) -print0)
 
