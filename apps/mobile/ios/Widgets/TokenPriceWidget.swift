@@ -161,9 +161,9 @@ struct TokenPriceWidgetEntryView: View {
         Color.UNI
       }
       VStack(alignment: .leading, spacing: 0) {
-        widgetPriceHeader(isPlaceholder: false).padding(.bottom, 12)
+        widgetPriceHeader(isPlaceholder: false).padding(.bottom, 2)
         Spacer()
-        priceSection(isPlaceholder: false).padding(.bottom, 4)
+        priceSection(isPlaceholder: false).padding(.bottom, 2)
         timeStamp()
       }
       .withMaxFrame()
@@ -192,7 +192,7 @@ struct TokenPriceWidgetEntryView: View {
         Color.UNI
       }
       VStack(alignment: .leading, spacing: 0) {
-        widgetPriceHeader(isPlaceholder: false).padding(.bottom, 8)
+        widgetPriceHeader(isPlaceholder: false).padding(.bottom, 4)
         Spacer()
         HStack(alignment: .top, spacing: 32) {
           if let spotPrice = entry.spotPrice {
@@ -203,7 +203,7 @@ struct TokenPriceWidgetEntryView: View {
           }
           priceSection(isPlaceholder: false)
         }
-        .padding(.bottom, 4)
+        .padding(.bottom, 2)
         timeStamp()
       }
       .withMaxFrame()
