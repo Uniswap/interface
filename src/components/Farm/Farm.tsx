@@ -269,16 +269,7 @@ export function Farms() {
 
       {selectedFarmCategory?.id === 0 && chainId && <FarmingMyFarms search={searchValue} chainId={chainId} />}
 
-      {/* {selectedFarmCategory?.id === 1 && (
-        <EternalFarmsPage
-          farmFilter={farmFilter.id}
-          search={searchValue}
-          sortBy={sortBy}
-          sortDesc={sortDesc}
-          chainId={chainIdToUse}
-        />
-      )}
-      {selectedFarmCategory?.id === 2 && (
+      {/* {selectedFarmCategory?.id === 2 && (
         <GammaFarmsPage farmFilter={farmFilter.id} search={searchValue} sortBy={sortBy} sortDesc={sortDesc} />
       )} */}
     </FarmsLayout>

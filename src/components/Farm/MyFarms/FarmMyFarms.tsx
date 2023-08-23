@@ -1,9 +1,11 @@
-import { Token } from '@pollum-io/sdk-core'
-import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
-import { ButtonPrimary } from 'components/Button'
+import LoadingGifLight from 'assets/images/lightLoading.gif'
+import LoadingGif from 'assets/images/loading.gif'
+import { SmallButtonPrimary } from 'components/Button'
 import Divider from 'components/Divider/Divider'
+import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import SubTitleContainer from 'components/SubTitleContainer/SubTitleContainer'
 import { GAMMA_MASTERCHEF_ADDRESSES } from 'constants/addresses'
 import { getGammaData, getGammaRewards } from 'graphql/utils/util'
 import { FormattedRewardInterface } from 'models/interface/farming'
@@ -13,10 +15,19 @@ import { Frown, Loader } from 'react-feather'
 import { useQuery } from 'react-query'
 import { Box } from 'rebass'
 import { useCombinedActiveList } from 'state/lists/hooks'
+import styled from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { formatReward } from 'utils/farmUtils'
 
 import { GammaPair, GlobalConst } from '../constants'
 import SortColumns from '../SortColumn'
+
+const RewardContainer = styled.div`
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`
 
 export default function FarmingMyFarms({ search, chainId }: { search: string; chainId: number }) {
   const { account } = useWeb3React()
@@ -48,7 +59,27 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
 
   // const [shallowPositions, setShallowPositions] = useState<Deposit[] | null>(null)
 
-  const [shallowRewards, setShallowRewards] = useState<FormattedRewardInterface[] | null>()
+  const [shallowRewards, setShallowRewards] = useState<FormattedRewardInterface[]>([
+    {
+      amount: 100,
+      id: 'reward1',
+      name: 'Reward One',
+      owner: 'Alice',
+      rewardAddress: '0x1234567890abcdef',
+      symbol: 'RWD1',
+      trueAmount: '100.00',
+    },
+    {
+      amount: 200,
+      id: 'reward2',
+      name: 'Reward Two',
+      owner: 'Bob',
+      rewardAddress: '0xfedcba0987654321',
+      symbol: 'RWD2',
+      trueAmount: '200.00',
+    },
+  ])
+
   // const { hash } = useLocation()
 
   // const rewardTokenAddresses = useMemo(() => {
@@ -590,64 +621,68 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
   //     return 1
   //   })
 
+  const isDarkMode = useIsDarkMode()
+
   return (
     <Box mt={2}>
-      <Divider />
-      {shallowRewards?.length ? (
-        <Box px={2} my={2}>
-          <h6>Unclaimed Rewards</h6>
-          <Box my={2} className="flex">
-            {shallowRewards?.map((reward, index) =>
-              reward.trueAmount ? (
-                <Box key={index} className="flex items-center" mr={2}>
-                  <CurrencyLogo
-                    size="28px"
-                    currency={new Token(chainId ?? ChainId.ROLLUX, reward.rewardAddress, 18, reward.symbol)}
-                  />
-                  <Box mx={2}>
-                    <Box>{reward.name}</Box>
-                    <Box>{formatReward(reward.amount)}</Box>
-                  </Box>
-                  <ButtonPrimary
-                    disabled={
-                      // selectedTokenId === reward.id && txType === 'eternalOnlyCollectReward' && !txConfirmed && !txError
-                      true
-                    }
-                    onClick={() => {
-                      // eternalOnlyCollectRewardHandler(reward)
-                    }}
-                  >
-                    {
-                      // selectedTokenId === reward.id &&
-                      // txType === 'eternalOnlyCollectReward' &&
-                      // !txConfirmed &&
-                      // !txError
-                      // eslint-disable-next-line no-constant-condition
-                      true === true ? (
-                        <>
-                          <Loader size="1rem" stroke="var(--white)" />
-                          <Box ml="5px">
-                            <small>claiming</small>
-                          </Box>
-                        </>
-                      ) : (
-                        <>
-                          <small>claim</small>
-                        </>
-                      )
-                    }
-                  </ButtonPrimary>
-                </Box>
-              ) : null
-            )}
-          </Box>
-          <Divider />
-        </Box>
-      ) : null}
+      {
+        // eslint-disable-next-line no-constant-condition
+        true ? (
+          <Box px={2} my={2}>
+            <SubTitleContainer
+              text={"Unclaimed Rewards displays the rewards you've earned but haven't collected yet. Click to claim."}
+              description="Unclaimed Rewards"
+            />
 
+            <Box my={2} className="flex">
+              {shallowRewards?.map(
+                (reward, index) =>
+                  reward.trueAmount && (
+                    <RewardContainer key={index}>
+                      <CurrencyLogo
+                        size="28px"
+                        // currency={add currency to get symbol}
+                      />
+                      <Box mx={2} minWidth="fit-content">
+                        <Box>{reward.name}</Box>
+                        <Box>{formatReward(reward.amount)}</Box>
+                      </Box>
+                      <SmallButtonPrimary
+                        disabled={
+                          // selectedTokenId === reward.id && txType === 'eternalOnlyCollectReward' && !txConfirmed && !txError
+                          true
+                        }
+                        onClick={() => {
+                          // eternalOnlyCollectRewardHandler(reward)
+                        }}
+                      >
+                        {
+                          // TODO: review logic to claiming
+                          // selectedTokenId === reward.id &&
+                          // txType === 'eternalOnlyCollectReward' &&
+                          // !txConfirmed &&
+                          // !txError
+                          // eslint-disable-next-line no-constant-condition
+                          true === true ? (
+                            <>
+                              <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="1.5rem" />
+                              Claiming
+                            </>
+                          ) : (
+                            <>Claim</>
+                          )
+                        }
+                      </SmallButtonPrimary>
+                    </RewardContainer>
+                  )
+              )}
+            </Box>
+          </Box>
+        ) : null
+      }
       {/* {allGammaFarms.length > 0 && ( */}
       {true && (
-        <Box my={2}>
+        <Box>
           <Divider />
           <Box px={2} mt={2}>
             <h6>Gamma farms</h6>
