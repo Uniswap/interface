@@ -18,9 +18,9 @@
     <meta
       http-equiv="Content-Security-Policy"
       <% if (process.env.REACT_APP_CSP_ALLOW_UNSAFE_EVAL) { %>
-        content="script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+        content="script-src 'self' 'unsafe-eval'"
       <% } else { %>
-        content="script-src 'self' 'unsafe-inline'"
+        content="script-src 'self'"
       <% } %>
     />
 
