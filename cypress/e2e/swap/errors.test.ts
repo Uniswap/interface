@@ -116,18 +116,14 @@ describe('Swap errors', () => {
       getBalance(DAI).should('be.closeTo', initialBalance + 200, 1)
     })
   })
-})
 
-describe('no liquidity', () => {
-  beforeEach(() => {
+  it('no liquidity', () => {
     // The API response is too variable so stubbing a 404.
     cy.intercept('POST', 'https://api.uniswap.org/v2/quote', {
       statusCode: 404,
       fixture: 'insufficientLiquidity.json',
     })
-  })
 
-  it('insufficient liquidity', () => {
     cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
     cy.get('#swap-currency-output .token-amount-input').type('100000000000000').should('have.value', '100000000000000') // 100 trillion
     cy.contains('Insufficient liquidity for this trade.')
