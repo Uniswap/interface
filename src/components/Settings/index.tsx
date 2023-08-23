@@ -10,7 +10,7 @@ import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsMobile } from 'nft/hooks'
-import { useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -32,9 +32,11 @@ const CloseButton = styled.button`
   border: none;
   padding: 0;
 `
+
 const Menu = styled.div`
   position: relative;
 `
+
 const MenuFlyout = styled(AutoColumn)`
   min-width: 20.125rem;
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -107,7 +109,8 @@ export default function SettingsTab({
   const node = useRef<HTMLDivElement | null>(null)
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)
 
-  const closeMenu = useCloseModal()
+  const closeModal = useCloseModal()
+  const closeMenu = useCallback(() => closeModal(ApplicationModal.SETTINGS), [closeModal])
   const toggleMenu = useToggleSettingsMenu()
 
   const isMobile = useIsMobile()
@@ -149,10 +152,10 @@ export default function SettingsTab({
       <Portal>
         {isOpenMobile && (
           <MobileMenuContainer data-testid="mobile-settings-menu">
-            <Scrim onClick={() => closeMenu(ApplicationModal.SETTINGS)} $open={isOpenMobile} />
+            <Scrim onClick={closeMenu} $open={isOpenMobile} />
             <MobileMenuWrapper open={isOpenMobile}>
               <MobileMenuHeader padding="8px 0px 4px">
-                <CloseButton data-testid="mobile-settings-close" onClick={() => closeMenu(ApplicationModal.SETTINGS)}>
+                <CloseButton data-testid="mobile-settings-close" onClick={closeMenu}>
                   <X size={24} />
                 </CloseButton>
                 <Row padding="0px 24px 0px 0px" justify="center">
