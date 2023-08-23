@@ -1,3 +1,5 @@
+import { Currency } from '@pollum-io/sdk-core'
+
 export enum Chain {
   Arbitrum = 'ARBITRUM',
   Avalanche = 'AVALANCHE',
@@ -25,4 +27,10 @@ type InputMaybe<T> = T
 export type ContractInput = {
   address?: InputMaybe<Scalars['String']>
   chain: Chain
+}
+
+export type TokenAmount = {
+  id: string
+  value: string
+  currency: Currency
 }

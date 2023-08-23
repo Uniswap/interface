@@ -1,4 +1,5 @@
 import { Currency } from '@pollum-io/sdk-core'
+import { ChainId } from '@pollum-io/smart-order-router'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
@@ -163,5 +164,80 @@ export function unwrapTokenRollux<
     ...nativeToken,
     address: NATIVE_CHAIN_ID,
     extensions: undefined, // prevents marking cross-chain wrapped tokens as native
+  }
+}
+
+const gammaChainName = (chainId?: ChainId) => {
+  switch (chainId) {
+    case ChainId.ROLLUX:
+      return 'rollux'
+    default:
+      return 'rollux'
+  }
+}
+
+export const getGammaData = async (chainId?: ChainId) => {
+  if (!chainId) return null
+  try {
+    const data = await fetch(
+      `${process.env.REACT_APP_GAMMA_API_ENDPOINT}/quickswap/${gammaChainName(chainId)}/hypervisors/allData`
+    )
+    const gammaData = await data.json()
+    return gammaData
+  } catch {
+    try {
+      const data = await fetch(
+        `${process.env.REACT_APP_GAMMA_API_ENDPOINT_BACKUP}/quickswap/${gammaChainName(chainId)}/hypervisors/allData`
+      )
+      const gammaData = await data.json()
+      return gammaData
+    } catch (e) {
+      console.log(e)
+      return null
+    }
+  }
+}
+
+// export const getGammaPositions = async (account?: string, chainId?: ChainId) => {
+//   if (!account || !chainId) return null
+//   try {
+//     const data = await fetch(
+//       `${process.env.REACT_APP_GAMMA_API_ENDPOINT}/quickswap/${gammaChainName(chainId)}/user/${account}`
+//     )
+//     const positions = await data.json()
+//     return positions[account.toLowerCase()]
+//   } catch {
+//     try {
+//       const data = await fetch(
+//         `${process.env.REACT_APP_GAMMA_API_ENDPOINT_BACKUP}/quickswap/${gammaChainName(chainId)}/user/${account}`
+//       )
+//       const positions = await data.json()
+//       return positions[account.toLowerCase()]
+//     } catch (e) {
+//       console.log(e)
+//       return null
+//     }
+//   }
+// }
+
+export const getGammaRewards = async (chainId?: ChainId) => {
+  if (!chainId) return null
+  try {
+    const data = await fetch(
+      `${process.env.REACT_APP_GAMMA_API_ENDPOINT}/quickswap/${gammaChainName(chainId)}/allRewards2`
+    )
+    const gammaData = await data.json()
+    return gammaData
+  } catch {
+    try {
+      const data = await fetch(
+        `${process.env.REACT_APP_GAMMA_API_ENDPOINT_BACKUP}/quickswap/${gammaChainName(chainId)}/allRewards2`
+      )
+      const gammaData = await data.json()
+      return gammaData
+    } catch (e) {
+      console.log(e)
+      return null
+    }
   }
 }

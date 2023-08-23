@@ -1,5 +1,71 @@
+// import { Price } from '@pollum-io/sdk-core'
+import { Currency, Price } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
+import { Pair } from '@pollum-io/v1-sdk'
+import { TokenAmount } from 'graphql/utils/types'
 import { Presets } from 'state/mint/v3/reducer'
+import { Token } from 'types/v3'
+
+interface CommonStakingInfo {
+  // the address of the reward contract
+  stakingRewardAddress: string
+  // the tokens involved in this pair
+  tokens: [Token, Token]
+  // the amount of token currently staked, or undefined if no account
+  stakedAmount?: TokenAmount
+  // the total amount of token staked in the contract
+  totalStakedAmount?: TokenAmount
+  ended: boolean
+  name: string
+  lp: string
+  baseToken: Token
+  pair: string
+  oneYearFeeAPY?: number
+  oneDayFee?: number
+  accountFee?: number
+  tvl?: string
+  perMonthReturnInRewards?: number
+  totalSupply?: TokenAmount
+  usdPrice?: Price<Currency, Currency>
+  stakingTokenPair?: Pair | null
+  sponsored: boolean
+  sponsorLink: string
+}
+
+export interface StakingInfo extends CommonStakingInfo {
+  // the amount of reward token earned by the active account, or undefined if no account
+  earnedAmount?: TokenAmount
+  // the amount of token distributed per second to all LPs, constant
+  totalRewardRate?: TokenAmount
+  // the current amount of token distributed to the active account per second.
+  // equivalent to percent of total supply * reward rate
+  rewardRate?: TokenAmount
+  rewardToken: Token
+  rewardTokenPrice: number
+  rate: number
+  valueOfTotalStakedAmountInBaseToken?: TokenAmount
+}
+
+export interface DualStakingInfo extends CommonStakingInfo {
+  rewardTokenA: Token
+  rewardTokenB: Token
+  rewardTokenBBase: Token
+  // the amount of reward token earned by the active account, or undefined if no account
+  earnedAmountA?: TokenAmount
+  earnedAmountB?: TokenAmount
+  // the amount of token distributed per second to all LPs, constant
+  totalRewardRateA: TokenAmount
+  totalRewardRateB: TokenAmount
+  // the current amount of token distributed to the active account per second.
+  // equivalent to percent of total supply * reward rate
+  rewardRateA?: TokenAmount
+  rewardRateB?: TokenAmount
+
+  rateA: number
+  rateB: number
+  rewardTokenAPrice: number
+  rewardTokenBPrice: number
+}
 
 export interface GammaPair {
   address: string
@@ -937,4 +1003,9 @@ export const GlobalConst = {
     MANUAL_RANGE: '0',
     GAMMA_RANGE: '1',
   },
+}
+
+export enum FarmingType {
+  ETERNAL = 0,
+  LIMIT = 1,
 }
