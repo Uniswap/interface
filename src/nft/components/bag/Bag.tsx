@@ -13,7 +13,6 @@ import { formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
-import { shallow } from 'zustand/shallow'
 
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
@@ -98,20 +97,18 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
 )
 
 const Bag = () => {
-  const { resetSellAssets, sellAssets } = useSellAsset(
-    ({ reset, sellAssets }) => ({
-      resetSellAssets: reset,
-      sellAssets,
-    }),
-    shallow
-  )
+  const { resetSellAssets, sellAssets } = useSellAsset(({ reset, sellAssets }) => ({
+    resetSellAssets: reset,
+    sellAssets,
+  }))
 
   const { setProfilePageState } = useProfilePageState(({ setProfilePageState }) => ({ setProfilePageState }))
 
-  const { bagStatus, bagIsLocked, reset, bagExpanded, toggleBag, setBagExpanded } = useBag(
-    (state) => ({ ...state, bagIsLocked: state.isLocked, uncheckedItemsInBag: state.itemsInBag }),
-    shallow
-  )
+  const { bagStatus, bagIsLocked, reset, bagExpanded, toggleBag, setBagExpanded } = useBag((state) => ({
+    ...state,
+    bagIsLocked: state.isLocked,
+    uncheckedItemsInBag: state.itemsInBag,
+  }))
   const { uncheckedItemsInBag } = useBag(({ itemsInBag }) => ({ uncheckedItemsInBag: itemsInBag }))
 
   const isProfilePage = useIsNftProfilePage()

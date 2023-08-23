@@ -16,7 +16,6 @@ import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
-import { shallow } from 'zustand/shallow'
 
 import { TitleRow } from '../shared'
 import { ListModalSection, Section } from './ListModalSection'
@@ -63,8 +62,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
         getLooksRareNonce,
         collectionsRequiringApproval,
         listings,
-      }),
-      shallow
+      })
     )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
