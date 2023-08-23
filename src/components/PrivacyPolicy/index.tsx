@@ -63,7 +63,7 @@ const EXTERNAL_APIS = [
           The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance
           reasons.
         </Trans>{' '}
-        <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
+        <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8671777747597-Address-Screening-Guide">
           <Trans>Learn more</Trans>
         </ExternalLink>
       </>

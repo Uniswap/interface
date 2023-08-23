@@ -59,6 +59,10 @@ const Nav = styled(Link)`
   text-decoration: none;
 `
 
+const HeaderText = styled(ThemedText.SubHeaderLarge)`
+  margin: auto !important;
+`
+
 const CreateProposalButton = ({
   proposalThreshold,
   hasActiveOrPendingProposal,
@@ -258,7 +262,7 @@ ${bodyValue}
         <AppBody $maxWidth="800px">
           <Nav to="/vote">
             <BackArrow />
-            <ThemedText.SubHeaderLarge>Create Proposal</ThemedText.SubHeaderLarge>
+            <HeaderText>Create Proposal</HeaderText>
           </Nav>
           <CreateProposalWrapper>
             <BlueCard>
