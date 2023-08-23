@@ -19,6 +19,12 @@ test('should return the average color of a white PNG image', async () => {
   expect(color).toEqual([255, 255, 255])
 })
 
+test('should return the average color of a white PNG image with whiteness dimmed', async () => {
+  const image = 'https://www.cac.cornell.edu/wiki/images/4/44/White_square.png'
+  const color = await getColor(image, true)
+  expect(color).toEqual(DEFAULT_COLOR)
+})
+
 test('should return the average color of a black JPG image', async () => {
   const image =
     'https://imageio.forbes.com/specials-images/imageserve/5ed6636cdd5d320006caf841/0x0.jpg?format=jpg&width=1200'

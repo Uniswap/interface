@@ -56,10 +56,10 @@ module.exports = {
           '\\.css\\.ts$': '@vanilla-extract/jest-transform',
           '\\.(t|j)sx?$': '@swc/jest',
         },
-        // Use @uniswap/conedison's build directly, as jest does not support its exports.
-        transformIgnorePatterns: ['@uniswap/conedison/provider'],
+        // Use d3-arrays's build directly, as jest does not support its exports.
+        transformIgnorePatterns: ['d3-array'],
         moduleNameMapper: {
-          '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
+          'd3-array': 'd3-array/dist/d3-array.min.js',
         },
       })
     },

@@ -26,7 +26,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       return new Response('Collection not found.', { status: 404 })
     }
 
-    const [fontData, palette] = await Promise.all([getFont(), getColor(data.ogImage)])
+    const [fontData, palette] = await Promise.all([getFont(origin), getColor(data.ogImage)])
 
     // Split name into words to wrap them since satori does not support inline text wrapping
     const words = data.name.split(' ')

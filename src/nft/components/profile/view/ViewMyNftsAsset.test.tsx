@@ -5,6 +5,8 @@ import { ViewMyNftsAsset } from './ViewMyNftsAsset'
 
 describe('NftCard', () => {
   it('renders correctly', () => {
+    // todo: remove once zustand usage has been update such that `shallow` is no longer used
+    jest.spyOn(console, 'warn').mockImplementation(jest.fn)
     const { asFragment } = render(
       <ViewMyNftsAsset
         asset={TEST_NFT_WALLET_ASSET}

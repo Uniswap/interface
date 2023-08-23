@@ -6,12 +6,13 @@ import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { UserRejectedRequestError } from 'utils/errors'
+import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
@@ -50,6 +51,7 @@ export function useUniversalRouterSwapCallback(
 ) {
   const { account, chainId, provider } = useWeb3React()
   const analyticsContext = useTrace()
+  const blockNumber = useBlockNumber()
 
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
@@ -59,7 +61,7 @@ export function useUniversalRouterSwapCallback(
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
         const connectedChainId = await provider.getSigner().getChainId()
-        if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
+        if (chainId !== connectedChainId) throw new WrongChainError()
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
@@ -86,6 +88,7 @@ export function useUniversalRouterSwapCallback(
           sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
             ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
             ...analyticsContext,
+            client_block_number: blockNumber,
             tx,
             error: gasError,
           })
