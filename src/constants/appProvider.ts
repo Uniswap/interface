@@ -1,12 +1,7 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import { Network } from '@ethersproject/networks'
-import { deepCopy, defineReadOnly } from '@ethersproject/properties'
-import { BaseProvider, StaticJsonRpcProvider } from '@ethersproject/providers'
-import { isPlain } from '@reduxjs/toolkit'
-
-import { AVERAGE_L1_BLOCK_TIME } from './chainInfo'
-import { CHAIN_IDS_TO_NAMES } from './chains'
-import { RPC_URLS } from './networks'
+import { defineReadOnly } from '@ethersproject/properties'
+import { BaseProvider } from '@ethersproject/providers'
 
 function now() {
   return new Date().getTime()
@@ -53,10 +48,11 @@ interface FallbackProviderEvaluation {
   performance: ProviderPerformance
 }
 
-export default class AppJsonRpcProvider extends StaticJsonRpcProvider {
+export default class AppRpcProvider extends BaseProvider {
   readonly providerEvaluations: ReadonlyArray<FallbackProviderEvaluation>
   readonly evaluationInterval: number
-  _highestBlockNumber: number
+  _highestBlockNumber = -1
+  primaryProvider: Provider
 
   private _blockCache = new Map<string, Promise<any>>()
   get blockCache() {
@@ -68,19 +64,16 @@ export default class AppJsonRpcProvider extends StaticJsonRpcProvider {
     return this._blockCache
   }
   constructor(providers: BaseProvider[], evaluationInterval = 60000) {
-    if (providers.length === 0) {
-      console.warn('missing providers', 'providers', providers)
-      throw new Error('providers array empty')
-    }
-
-    providers.forEach((provider) => {
-      if (!Provider.isProvider(provider)) {
-        console.warn('invalid provider', 'providers', providers)
-        throw new Error('invalid provider')
-      }
+    if (providers.length === 0) throw new Error('providers array empty')
+    const agreedUponNetwork = checkNetworks(providers.map((p) => p.network))
+    if (!agreedUponNetwork) throw new Error('networks mismatch')
+    providers.forEach((provider, i) => {
+      if (!Provider.isProvider(provider)) throw new Error(`invalid provider ${i}`)
     })
 
-    const providerEvaluations = providers.map((provider) => {
+    super(agreedUponNetwork)
+    this.primaryProvider = providers[0]
+    this.providerEvaluations = providers.map((provider) => {
       return Object.freeze({
         provider,
         performance: {
@@ -90,22 +83,9 @@ export default class AppJsonRpcProvider extends StaticJsonRpcProvider {
         },
       })
     })
-    const agreedUponNetwork = checkNetworks(providers.map((p) => p.network))
-    if (!agreedUponNetwork) {
-      console.error('invalid provider', 'providers', providers)
-      throw new Error('networks mismatch')
-    }
 
-    super(agreedUponNetwork)
-    // Including networkish allows ethers to skip the initial detectNetwork call.
-    super(RPC_URLS[chainId][0], /* networkish= */ { chainId, name: CHAIN_IDS_TO_NAMES[chainId] })
     this.evaluationInterval = evaluationInterval
-    defineReadOnly(this, 'providerEvaluations', Object.freeze(providerEvaluations))
-
-    // NB: Third-party providers (eg MetaMask) will have their own polling intervals,
-    // which should be left as-is to allow operations (eg transaction confirmation) to resolve faster.
-    // Network providers (eg AppJsonRpcProvider) need to update less frequently to be considered responsive.
-    this.pollingInterval = AVERAGE_L1_BLOCK_TIME
+    defineReadOnly(this, 'providerEvaluations', Object.freeze(this.providerEvaluations))
   }
 
   async perform(method: string, params: { [name: string]: any }): Promise<any> {
@@ -116,7 +96,7 @@ export default class AppJsonRpcProvider extends StaticJsonRpcProvider {
       return scoreA - scoreB
     })
 
-    const primaryProvider = sortedEvaluations[0].provider
+    this.primaryProvider = sortedEvaluations[0].provider
 
     // Periodically evaluate all providers
     const currentTime = now()
@@ -147,12 +127,13 @@ export default class AppJsonRpcProvider extends StaticJsonRpcProvider {
     }
 
     // We need to make sure we are in sync with our backends, so we need
-    // to know this before we can make a lot of calls
-    if (this._highestBlockNumber === -1 && method !== 'getBlockNumber') {
-      await this.getBlockNumber()
+    // @ts-expect-error
+    if (!this.primaryProvider[method]) {
+      throw new Error('method not supported')
     }
 
-    return primaryProvider[method](params)
+    // @ts-expect-error
+    return this.primaryProvider[method](params)
   }
 
   private async evaluateProvider(config: FallbackProviderEvaluation): Promise<void> {
@@ -166,28 +147,5 @@ export default class AppJsonRpcProvider extends StaticJsonRpcProvider {
       config.performance.failureRate += 1 // Increase failure rate on failed request
     }
     config.performance.lastEvaluated = now()
-  }
-
-  send(method: string, params: Array<any>): Promise<any> {
-    // Only cache eth_call's.
-    if (method !== 'eth_call') return super.send(method, params)
-
-    // Only cache if params are serializable.
-    if (!isPlain(params)) return super.send(method, params)
-
-    const key = `call:${JSON.stringify(params)}`
-    const cached = this.blockCache.get(key)
-    if (cached) {
-      this.emit('debug', {
-        action: 'request',
-        request: deepCopy({ method, params, id: 'cache' }),
-        provider: this,
-      })
-      return cached
-    }
-
-    const result = super.send(method, params)
-    this.blockCache.set(key, result)
-    return result
   }
 }
