@@ -3,7 +3,7 @@
 # Array to hold the list of unreferenced files
 unreferenced_files=()
 
-# We look for assets in the /src and /public and for then, check if they are referenced in
+# We look for assets in the /src and /public and then, check if they are referenced in
 # the code, typically in either /src, /public (manifest.json) or /functions
 while IFS= read -r -d $'\0' file; do
     name="$(basename "$file")"
