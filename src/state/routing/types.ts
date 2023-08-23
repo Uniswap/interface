@@ -203,6 +203,9 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   }
 
   public get postTaxOutputAmount() {
+    // Ideally we should calculate the final output amount by ammending the inputAmount based on the input tax and then applying the output tax,
+    // but this isn't currently possible because V2Trade reconstructs the total inputAmount based on the swap routes
+    // TODO(WEB-2761): Amend V2Trade objects in the v2-sdk to have a separate field for post-input tax routes
     return this.outputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
   }
 
