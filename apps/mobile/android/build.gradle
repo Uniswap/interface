@@ -29,3 +29,13 @@ buildscript {
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
   }
 }
+
+
+allprojects {
+  project.pluginManager.withPlugin("com.facebook.react") {
+    react {
+      reactNativeDir = rootProject.file("../../../node_modules/react-native/")
+      codegenDir = rootProject.file("../../../node_modules/react-native-codegen/")
+    }
+  }
+}
