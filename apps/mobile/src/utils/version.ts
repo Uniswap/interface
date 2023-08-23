@@ -16,6 +16,22 @@ export function getFullAppVersion(): string {
   return version
 }
 
+export enum BuildVariant {
+  Production = 'prod',
+  Beta = 'beta',
+  Development = 'dev',
+}
+
+export function getBuildVariant(): BuildVariant {
+  if (isDevBuild()) {
+    return BuildVariant.Development
+  } else if (isBetaBuild()) {
+    return BuildVariant.Beta
+  } else {
+    return BuildVariant.Production
+  }
+}
+
 export function isDevBuild(): boolean {
   return DeviceInfo.getBundleId().endsWith('.dev')
 }

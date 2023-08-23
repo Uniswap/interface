@@ -82,11 +82,12 @@ public enum Change: String, Codable {
 
 
 public struct UniswapUserDefaults {
+  private static var buildString = getBuildVariantString(bundleId: Bundle.main.bundleIdentifier!)
   
-  static let eventsKey = "widgets.configuration.events"
-  static let cacheKey = "widgets.configuration.cache"
-  static let favoritesKey = "widgets.favorites"
-  static let accountsKey = "widgets.accounts"
+  static let eventsKey = buildString + ".widgets.configuration.events"
+  static let cacheKey = buildString + ".widgets.configuration.cache"
+  static let favoritesKey = buildString + ".widgets.favorites"
+  static let accountsKey = buildString + ".widgets.accounts"
   
   static let userDefaults = UserDefaults.init(suiteName: APP_GROUP)
   

@@ -3,16 +3,17 @@ import { getItem, reloadAllTimelines, setItem } from 'react-native-widgetkit'
 import { IS_ANDROID } from 'src/constants/globals'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
+import { getBuildVariant } from 'src/utils/version'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 const APP_GROUP = 'group.com.uniswap.widgets'
-const WIDGET_EVENTS_KEY = 'widgets.configuration.events'
-const WIDGET_CACHE_KEY = 'widgets.configuration.cache'
-const FAVORITE_WIDGETS_KEY = 'widgets.favorites'
-const ACCOUNTS_WIDGETS_KEY = 'widgets.accounts'
+const WIDGET_EVENTS_KEY = getBuildVariant() + '.widgets.configuration.events'
+const WIDGET_CACHE_KEY = getBuildVariant() + '.widgets.configuration.cache'
+const FAVORITE_WIDGETS_KEY = getBuildVariant() + '.widgets.favorites'
+const ACCOUNTS_WIDGETS_KEY = getBuildVariant() + '.widgets.accounts'
 
 const { RNWidgets } = NativeModules
 
