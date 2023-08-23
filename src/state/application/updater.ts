@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useAppDispatch } from 'state/hooks'
 
 import { useCloseModal } from './hooks'
-import { updateChainId } from './reducer'
+import { ApplicationModal, updateChainId } from './reducer'
 
 export default function Updater(): null {
   const { account, chainId, provider } = useWeb3React()
@@ -20,7 +20,7 @@ export default function Updater(): null {
   useEffect(() => {
     if (account && account !== previousAccountValue.current) {
       previousAccountValue.current = account
-      closeModal()
+      closeModal(ApplicationModal.WALLET)
     }
   }, [account, closeModal])
 
