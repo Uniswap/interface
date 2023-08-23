@@ -73,6 +73,8 @@ export const SearchBar = () => {
   const smartPoolsLogs = useRegisteredPools()
   const registry = useRegistryContract()
   const poolsFromList = usePoolsFromList(registry, chainId)
+
+  // TODO: we might remove the condition and append pools from url as fallback in case endpoint is down or slow on all chains
   const allPools: PoolRegisteredLog[] = useMemo(() => {
     if (chainId === ChainId.BNB || chainId === ChainId.BASE || chainId === ChainId.OPTIMISM) {
       return [...(smartPoolsLogs ?? []), ...(poolsFromList ?? [])]
@@ -80,15 +82,19 @@ export const SearchBar = () => {
     return [...(smartPoolsLogs ?? [])]
   }, [chainId, smartPoolsLogs, poolsFromList])
 
+  const uniquePools = allPools.filter((obj, index) => {
+    return index === allPools.findIndex((o) => obj.pool === o.pool)
+  })
+
   const smartPools: Token[] = useMemo(() => {
     const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
-    if (!allPools || !chainId) return [mockToken]
-    return allPools.map((p) => {
+    if (!uniquePools || !chainId) return [mockToken]
+    return uniquePools.map((p) => {
       const { name, symbol, pool: address } = p
       //if (!name || !symbol || !address) return
       return new Token(chainId ?? 1, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
     })
-  }, [chainId, allPools])
+  }, [chainId, uniquePools])
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])
