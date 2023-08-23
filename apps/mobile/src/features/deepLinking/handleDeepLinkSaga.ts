@@ -268,7 +268,24 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
 export function* handleWalletConnectDeepLink(wcUri: string) {
   yield* call(waitForWcWeb3WalletIsReady)
 
-  if (parseUri(wcUri).version === 2) {
+  const wcUriVersion = parseUri(wcUri).version
+
+  if (wcUriVersion === 1) {
+    Alert.alert(
+      i18n.t('Invalid QR Code'),
+      i18n.t(
+        "WalletConnect v1 is no longer supported. The application you're trying to connect to needs to upgrade to WalletConnect v2."
+      ),
+      [
+        {
+          text: i18n.t('OK'),
+        },
+      ]
+    )
+    return
+  }
+
+  if (wcUriVersion === 2) {
     try {
       yield* call(pairWithWalletConnectURI, wcUri)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
