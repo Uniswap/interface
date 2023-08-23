@@ -28,6 +28,10 @@ flag_management:
         target: 50%
   individual_flags:
     - name: unit-tests
+    - name: cloud-tests
+      statuses:
+        - type: project
+          target: 80%
 
 comment:
   layout: flags
