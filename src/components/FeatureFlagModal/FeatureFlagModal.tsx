@@ -1,6 +1,7 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
+import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
@@ -241,6 +242,12 @@ export default function FeatureFlagModal() {
         value={useMultichainUXFlag()}
         featureFlag={FeatureFlag.multichainUX}
         label="Updated Multichain UX"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useFotAdjustmentsFlag()}
+        featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
+        label="Enable fee-on-transfer UI and slippage adjustments"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

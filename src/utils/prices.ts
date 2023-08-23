@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
+import { DefaultTheme } from 'styled-components'
 
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
@@ -103,4 +104,15 @@ export function getPriceImpactWarning(priceImpact: Percent): 'warning' | 'error'
   if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) return 'error'
   if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 'warning'
   return
+}
+
+export function getPriceImpactColor(priceImpact: Percent): keyof DefaultTheme | undefined {
+  switch (getPriceImpactWarning(priceImpact)) {
+    case 'error':
+      return 'accentFailure'
+    case 'warning':
+      return 'accentWarning'
+    default:
+      return undefined
+  }
 }
