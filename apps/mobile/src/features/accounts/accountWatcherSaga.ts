@@ -17,5 +17,5 @@ export function* accountCleanupWatcher() {
 
 function* removeAccountCleanup(action: ReturnType<typeof removeAccount>) {
   const address = action.payload
-  const id = yield* call(getValidAddress, address, true)
+  yield* call(getValidAddress, address, true)
 }
