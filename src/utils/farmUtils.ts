@@ -247,3 +247,33 @@ export function getV3TokenFromAddress(tokenAddress: string, chainId: ChainId, to
   const token = Object.values(tokenMap[chainId])[tokenIndex]
   return token
 }
+
+const getAPIURL = (chainId: ChainId, url: string) => {
+  //TODO: review get api url
+  const apiBaseURL = process.env.REACT_APP_V3_APR_API_BASE_URL
+  // const config = getConfig(chainId)
+  const aprAPINetwork = undefined
+  const networkKey = aprAPINetwork ? `?network=${aprAPINetwork}` : ''
+  const apiURL = `${apiBaseURL}${url}${networkKey}`
+  return apiURL
+}
+
+export async function fetchPoolsAPR(chainId: ChainId) {
+  const apiURL = getAPIURL(chainId, '/APR/pools/')
+
+  try {
+    return await fetch(apiURL).then((v) => v.json())
+  } catch (error) {
+    return {}
+  }
+}
+
+export async function fetchEternalFarmAPR(chainId: ChainId) {
+  const apiURL = getAPIURL(chainId, '/APR/eternalFarmings/')
+
+  try {
+    return await fetch(apiURL).then((v) => v.json())
+  } catch (error) {
+    return {}
+  }
+}

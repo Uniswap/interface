@@ -6,15 +6,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { useIsMobile } from 'nft/hooks'
 import { useState } from 'react'
 import { Box } from 'rebass'
-import {
-  formatAPY,
-  formatTokenAmount,
-  getAPYWithFee,
-  getEarnedUSDDualFarm,
-  getEarnedUSDLPFarm,
-  getRewardRate,
-  getStakedAmountStakingInfo,
-} from 'utils/farmUtils'
+import { formatAPY, getAPYWithFee } from 'utils/farmUtils'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { DualStakingInfo, StakingInfo } from './constants'
@@ -40,7 +32,7 @@ export default function FarmCard({
   const currency0 = unwrappedToken(token0)
   const currency1 = unwrappedToken(token1)
 
-  const stakedAmounts = getStakedAmountStakingInfo(stakingInfo)
+  // const stakedAmounts = getStakedAmountStakingInfo(stakingInfo)
 
   let apyWithFee: number | string = 0
 
@@ -49,19 +41,24 @@ export default function FarmCard({
   }
 
   const tvl = 0
-  // getTVLStaking(stakedAmounts?.totalStakedUSD, stakedAmounts?.totalStakedBase)
+  // // getTVLStaking(stakedAmounts?.totalStakedUSD, stakedAmounts?.totalStakedBase)
 
-  const lpPoolRate = getRewardRate(lpStakingInfo.totalRewardRate, lpStakingInfo.rewardToken)
+  const lpPoolRate = 0
+  // getRewardRate(lpStakingInfo.totalRewardRate, lpStakingInfo.rewardToken)
 
-  const dualPoolRateA = getRewardRate(dualStakingInfo.totalRewardRateA, dualStakingInfo.rewardTokenA)
-  const dualPoolRateB = getRewardRate(dualStakingInfo.totalRewardRateB, dualStakingInfo.rewardTokenB)
+  const dualPoolRateA = 0
+  // getRewardRate(dualStakingInfo.totalRewardRateA, dualStakingInfo.rewardTokenA)
+  const dualPoolRateB = 0
+  // getRewardRate(dualStakingInfo.totalRewardRateB, dualStakingInfo.rewardTokenB)
 
-  const earnedUSDStr = isLPFarm ? getEarnedUSDLPFarm(lpStakingInfo) : getEarnedUSDDualFarm(dualStakingInfo)
+  const earnedUSDStr = isLPFarm ? 0 : 1
+  //  getEarnedUSDLPFarm(lpStakingInfo) : getEarnedUSDDualFarm(dualStakingInfo)
 
-  const lpRewards = lpStakingInfo.rewardTokenPrice * lpStakingInfo.rate
-  const dualRewards =
-    dualStakingInfo.rateA * dualStakingInfo.rewardTokenAPrice +
-    dualStakingInfo.rateB * dualStakingInfo.rewardTokenBPrice
+  const lpRewards = 321
+  // lpStakingInfo.rewardTokenPrice * lpStakingInfo.rate
+  const dualRewards = 123123
+  //   dualStakingInfo.rateA * dualStakingInfo.rewardTokenAPrice +
+  //   dualStakingInfo.rateB * dualStakingInfo.rewardTokenBPrice
 
   const renderPool = (width: number) => (
     <Box className="flex items-center" width={width}>
@@ -128,14 +125,15 @@ export default function FarmCard({
             <Box width={0.2} textAlign="right">
               <small>{earnedUSDStr}</small>
               {isLPFarm ? (
-                <Box className="flex items-center justify-end">
-                  <CurrencyLogo currency={lpStakingInfo.rewardToken} size="16px" />
-                  {/* <small style={{ marginLeft: 5 }}> */}
-                  {formatTokenAmount(lpStakingInfo.earnedAmount)}
-                  &nbsp;{lpStakingInfo.rewardToken.symbol}
-                  {/* </small> */}
-                </Box>
+                <></>
               ) : (
+                // <Box className="flex items-center justify-end">
+                //   <CurrencyLogo currency={lpStakingInfo.rewardToken} size="16px" />
+                //   {/* <small style={{ marginLeft: 5 }}> */}
+                //   {formatTokenAmount(lpStakingInfo.earnedAmount)}
+                //   &nbsp;{lpStakingInfo.rewardToken.symbol}
+                //   {/* </small> */}
+                // </Box>
                 <>
                   <Box className="flex items-center justify-end">
                     <CurrencyLogo
@@ -145,10 +143,10 @@ export default function FarmCard({
                       }
                       size="16px"
                     />
-                    <small style={{ marginLeft: 5 }}>
+                    {/* <small style={{ marginLeft: 5 }}>
                       {formatTokenAmount(dualStakingInfo.earnedAmountA)}
                       &nbsp;{dualStakingInfo.rewardTokenA.symbol}
-                    </small>
+                    </small> */}
                   </Box>
                   <Box className="flex items-center justify-end">
                     <CurrencyLogo
@@ -158,10 +156,10 @@ export default function FarmCard({
                       }
                       size="16px"
                     />
-                    <small style={{ marginLeft: 5 }}>
+                    {/* <small style={{ marginLeft: 5 }}>
                       {formatTokenAmount(dualStakingInfo.earnedAmountB)}
                       &nbsp;{dualStakingInfo.rewardTokenB.symbol}
-                    </small>
+                    </small> */}
                   </Box>
                 </>
               )}
