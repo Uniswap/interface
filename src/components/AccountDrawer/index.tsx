@@ -59,7 +59,7 @@ const ScrimBackground = styled.div<{ $open: boolean }>`
   }
 `
 
-type ScrimBackgroundProps = React.ComponentPropsWithRef<'div'> & {
+interface ScrimBackgroundProps extends React.ComponentPropsWithRef<'div'> {
   $open: boolean
 }
 
