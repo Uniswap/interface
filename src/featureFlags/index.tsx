@@ -16,6 +16,7 @@ export enum FeatureFlag {
   uniswapXEthOutputEnabled = 'uniswapx_eth_output_enabled',
   multichainUX = 'multichain_ux',
   currencyConversion = 'currency_conversion',
+  fotAdjustedmentsEnabled = 'fot_adjustments_enabled',
 }
 
 interface FeatureFlagsContextType {

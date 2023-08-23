@@ -6,6 +6,7 @@ import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { asSupportedChain } from 'constants/chains'
+import { ZERO_PERCENT } from 'constants/misc'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { getInputTax, getOutputTax } from 'constants/tax'
 import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
@@ -214,8 +215,8 @@ export async function transformRoutesToTrade(
 
   const approveInfo = await getApproveInfo(account, currencyIn, amount, usdCostPerGas)
 
-  const inputTax = getInputTax(currencyIn)
-  const outputTax = getOutputTax(currencyOut)
+  const inputTax = args.fotAdjustmentsEnabled ? getInputTax(currencyIn) : ZERO_PERCENT
+  const outputTax = args.fotAdjustmentsEnabled ? getOutputTax(currencyOut) : ZERO_PERCENT
 
   const classicTrade = new ClassicTrade({
     v2Routes:
