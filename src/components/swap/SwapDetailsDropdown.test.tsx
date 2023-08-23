@@ -60,7 +60,7 @@ describe('SwapDetailsDropdown.tsx', () => {
 
     expect(
       screen.getByText(
-        'Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any share of these fees.'
+        'Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.'
       )
     ).toBeInTheDocument()
     expect(screen.getByText(`${TEST_TOKEN_1.symbol} fee`)).toBeInTheDocument()
@@ -79,7 +79,7 @@ describe('SwapDetailsDropdown.tsx', () => {
 
     expect(
       screen.getByText(
-        'Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any share of these fees.'
+        'Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.'
       )
     ).toBeInTheDocument()
     expect(screen.getByText(`${TEST_TOKEN_2.symbol} fee`)).toBeInTheDocument()

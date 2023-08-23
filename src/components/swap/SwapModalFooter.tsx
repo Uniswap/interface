@@ -233,7 +233,7 @@ function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' 
           text={
             <Trans>
               Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
-              receive any share of these fees.
+              receive any of these fees.
             </Trans>
           }
         >
