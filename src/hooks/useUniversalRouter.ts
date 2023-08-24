@@ -117,7 +117,7 @@ export function useUniversalRouterSwapCallback(
               }),
               ...analyticsContext,
             })
-            if (tx.data !== response.data) {
+            if (!response.data || response.data.length === 0 || response.data === '0x') {
               sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
                 txHash: response.hash,
                 ...analyticsContext,
