@@ -294,7 +294,7 @@ export function Swap({
           }
         : {
             [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.postTaxOutputAmount,
           },
     [independentField, parsedAmount, showWrap, trade]
   )
@@ -314,13 +314,17 @@ export function Swap({
   )
 
   const fiatValueTradeInput = useUSDPrice(trade?.inputAmount)
-  const fiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
-  const stablecoinPriceImpact = useMemo(
+  const fiatValueTradeOutput = useUSDPrice(trade?.postTaxOutputAmount)
+  const preTaxFiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
+  const [stablecoinPriceImpact, preTaxStablecoinPriceImpact] = useMemo(
     () =>
       routeIsSyncing || !isClassicTrade(trade)
-        ? undefined
-        : computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
-    [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
+        ? [undefined, undefined]
+        : [
+            computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
+            computeFiatValuePriceImpact(fiatValueTradeInput.data, preTaxFiatValueTradeOutput.data),
+          ],
+    [fiatValueTradeInput, fiatValueTradeOutput, preTaxFiatValueTradeOutput, routeIsSyncing, trade]
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers(dispatch)
@@ -417,7 +421,7 @@ export function Swap({
     if (!swapCallback) {
       return
     }
-    if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
+    if (preTaxStablecoinPriceImpact && !confirmPriceImpactWithoutFee(preTaxStablecoinPriceImpact)) {
       return
     }
     setSwapState((currentState) => ({
@@ -440,7 +444,7 @@ export function Swap({
           swapResult: undefined,
         }))
       })
-  }, [swapCallback, stablecoinPriceImpact])
+  }, [swapCallback, preTaxStablecoinPriceImpact])
 
   const handleOnWrap = useCallback(async () => {
     if (!onWrap) return
@@ -476,9 +480,9 @@ export function Swap({
     }
 
     const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
-    const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
+    const largerPriceImpact = largerPercentValue(marketPriceImpact, preTaxStablecoinPriceImpact)
     return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
-  }, [stablecoinPriceImpact, trade])
+  }, [preTaxStablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
     setSwapState((currentState) => ({ ...currentState, showConfirm: false }))
