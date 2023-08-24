@@ -28,7 +28,7 @@ const CollectionNameText = styled.div<{ isVerified: boolean }>`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-right: ${({ isVerified }) => (isVerified ? '12px' : '0px')};
+  margin-right: ${({ isVerified }) => (isVerified ? '6px' : '0px')};
 `
 
 const CollectionNameTextLoading = styled.div`

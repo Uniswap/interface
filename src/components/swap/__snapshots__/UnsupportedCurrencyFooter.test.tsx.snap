@@ -134,7 +134,7 @@ exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   color: #7D7D7D;
-  background-color: #FFFFFF;
+  background-color: #F9F9F9;
   z-index: 0;
   -webkit-transform: translateY(0%);
   -ms-transform: translateY(0%);
