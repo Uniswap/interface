@@ -6,10 +6,11 @@ import {
 } from 'wallet/src/features/transactions/types'
 
 export default function parseApproveTransaction(
-  transaction: TransactionListQueryResponse
+  transaction: NonNullable<TransactionListQueryResponse>
 ): ApproveTransactionInfo | NFTApproveTransactionInfo | undefined {
-  const change = transaction?.assetChanges[0]
+  const change = transaction.assetChanges[0]
   if (!change) return undefined
+
   if (change.__typename === 'TokenApproval' && change.tokenStandard === 'ERC20') {
     const tokenAddress = change.asset?.address
     const spender = change.approvedAddress

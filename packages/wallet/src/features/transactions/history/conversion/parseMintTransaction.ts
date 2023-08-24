@@ -11,12 +11,12 @@ import {
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 export default function parseNFTMintTransaction(
-  transaction: TransactionListQueryResponse
+  transaction: NonNullable<TransactionListQueryResponse>
 ): NFTMintTransactionInfo | undefined {
-  const tokenChange = transaction?.assetChanges.find(
+  const tokenChange = transaction.assetChanges.find(
     (change) => change?.__typename === 'TokenTransfer'
   )
-  const nftChange = transaction?.assetChanges.find((change) => change?.__typename === 'NftTransfer')
+  const nftChange = transaction.assetChanges.find((change) => change?.__typename === 'NftTransfer')
 
   // Mints must include the NFT minted
   if (!nftChange || nftChange.__typename !== 'NftTransfer') return undefined
@@ -25,7 +25,7 @@ export default function parseNFTMintTransaction(
   const collectionName = nftChange.asset.collection?.name
   const imageURL = nftChange.asset.image?.url
   const tokenId = nftChange.asset.tokenId
-  const chainId = fromGraphQLChain(transaction?.chain)
+  const chainId = fromGraphQLChain(transaction.chain)
   const isSpam = nftChange.asset?.isSpam ?? false
 
   let transactedUSDValue: number | undefined

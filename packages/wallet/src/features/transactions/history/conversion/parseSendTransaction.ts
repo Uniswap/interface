@@ -12,10 +12,9 @@ import {
 } from 'wallet/src/features/transactions/types'
 
 export default function parseSendTransaction(
-  transaction: TransactionListQueryResponse
+  transaction: NonNullable<TransactionListQueryResponse>
 ): SendTokenTransactionInfo | undefined {
-  const change = transaction?.assetChanges[0]
-
+  const change = transaction.assetChanges[0]
   if (!change) return undefined
 
   // Found NFT transfer

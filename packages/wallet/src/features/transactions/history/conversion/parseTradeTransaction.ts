@@ -21,24 +21,22 @@ import {
 } from 'wallet/src/utils/currencyId'
 
 export default function parseTradeTransaction(
-  transaction: TransactionListQueryResponse
+  transaction: NonNullable<TransactionListQueryResponse>
 ): ExactInputSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
-  const chainId = fromGraphQLChain(transaction?.chain)
-  if (!chainId) {
-    return undefined
-  }
+  const chainId = fromGraphQLChain(transaction.chain)
+  if (!chainId) return undefined
 
   // for detecting wraps
   const nativeCurrencyID = buildNativeCurrencyId(chainId).toLocaleLowerCase()
   const wrappedCurrencyID = buildWrappedNativeCurrencyId(chainId).toLocaleLowerCase()
 
-  const sent = transaction?.assetChanges.find((t) => {
+  const sent = transaction.assetChanges.find((t) => {
     return (
       (t?.__typename === 'TokenTransfer' && t.direction === 'OUT') ||
       (t?.__typename === 'NftTransfer' && t.direction === 'OUT')
     )
   })
-  const received = transaction?.assetChanges.find((t) => {
+  const received = transaction.assetChanges.find((t) => {
     return (
       (t?.__typename === 'TokenTransfer' && t.direction === 'IN') ||
       (t?.__typename === 'NftTransfer' && t.direction === 'IN')

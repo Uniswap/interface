@@ -18,13 +18,19 @@ import parseReceiveTransaction from './parseReceiveTransaction'
 import parseSendTransaction from './parseSendTransaction'
 import parseTradeTransaction from './parseTradeTransaction'
 
-function remoteTxStatusToLocalTxStatus(status: RemoteTransactionStatus): TransactionStatus {
+function remoteTxStatusToLocalTxStatus(
+  type: ActivityType,
+  status: RemoteTransactionStatus
+): TransactionStatus {
   switch (status) {
     case RemoteTransactionStatus.Failed:
+      if (type === ActivityType.Cancel) return TransactionStatus.FailedCancel
       return TransactionStatus.Failed
     case RemoteTransactionStatus.Pending:
+      if (type === ActivityType.Cancel) return TransactionStatus.Cancelling
       return TransactionStatus.Pending
     case RemoteTransactionStatus.Confirmed:
+      if (type === ActivityType.Cancel) return TransactionStatus.Cancelled
       return TransactionStatus.Success
   }
 }
@@ -88,7 +94,7 @@ export default function extractTransactionDetails(
     chainId: chainId ?? ChainId.Mainnet,
     hash: transaction.transaction.hash,
     addedTime: transaction.timestamp * 1000, // convert to ms
-    status: remoteTxStatusToLocalTxStatus(transaction.transaction.status),
+    status: remoteTxStatusToLocalTxStatus(transaction.type, transaction.transaction.status),
     from: transaction.transaction.from,
     typeInfo,
     options: { request: {} }, // Empty request is okay, gate re-submissions on txn type and status.

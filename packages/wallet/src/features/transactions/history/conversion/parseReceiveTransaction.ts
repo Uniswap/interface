@@ -23,10 +23,9 @@ const MOONPAY_SENDER_ADDRESSES = [
 ]
 
 export default function parseReceiveTransaction(
-  transaction: TransactionListQueryResponse
+  transaction: NonNullable<TransactionListQueryResponse>
 ): ReceiveTokenTransactionInfo | FiatPurchaseTransactionInfo | undefined {
-  const change = transaction?.assetChanges[0]
-
+  const change = transaction.assetChanges[0]
   if (!change) return undefined
 
   // Found NFT transfer
