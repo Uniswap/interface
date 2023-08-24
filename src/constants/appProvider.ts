@@ -1,7 +1,6 @@
-import { Provider } from '@ethersproject/abstract-provider'
 import { Network } from '@ethersproject/networks'
 import { defineReadOnly } from '@ethersproject/properties'
-import { BaseProvider } from '@ethersproject/providers'
+import { JsonRpcProvider, Provider } from '@ethersproject/providers'
 
 function now() {
   return new Date().getTime()
@@ -44,26 +43,17 @@ interface ProviderPerformance {
 }
 
 interface FallbackProviderEvaluation {
-  provider: Provider
+  provider: JsonRpcProvider
   performance: ProviderPerformance
 }
 
-export default class AppRpcProvider extends BaseProvider {
+export default class AppRpcProvider extends JsonRpcProvider {
   readonly providerEvaluations: ReadonlyArray<FallbackProviderEvaluation>
   readonly evaluationInterval: number
   _highestBlockNumber = -1
-  primaryProvider: Provider
+  primaryProvider: JsonRpcProvider
 
-  private _blockCache = new Map<string, Promise<any>>()
-  get blockCache() {
-    // If the blockCache has not yet been initialized this block, do so by
-    // setting a listener to clear it on the next block.
-    if (!this._blockCache.size) {
-      this.once('block', () => this._blockCache.clear())
-    }
-    return this._blockCache
-  }
-  constructor(providers: BaseProvider[], evaluationInterval = 60000) {
+  constructor(providers: JsonRpcProvider[], evaluationInterval = 60000) {
     if (providers.length === 0) throw new Error('providers array empty')
     const agreedUponNetwork = checkNetworks(providers.map((p) => p.network))
     if (!agreedUponNetwork) throw new Error('networks mismatch')
@@ -71,8 +61,9 @@ export default class AppRpcProvider extends BaseProvider {
       if (!Provider.isProvider(provider)) throw new Error(`invalid provider ${i}`)
     })
 
-    super(agreedUponNetwork)
-    this.primaryProvider = providers[0]
+    const primaryProvider = providers[0]
+    super(primaryProvider.connection)
+    this.primaryProvider = primaryProvider
     this.providerEvaluations = providers.map((provider) => {
       return Object.freeze({
         provider,
@@ -126,14 +117,7 @@ export default class AppRpcProvider extends BaseProvider {
       throw results[0]
     }
 
-    // We need to make sure we are in sync with our backends, so we need
-    // @ts-expect-error
-    if (!this.primaryProvider[method]) {
-      throw new Error('method not supported')
-    }
-
-    // @ts-expect-error
-    return this.primaryProvider[method](params)
+    return this.primaryProvider.perform(method, params)
   }
 
   private async evaluateProvider(config: FallbackProviderEvaluation): Promise<void> {
