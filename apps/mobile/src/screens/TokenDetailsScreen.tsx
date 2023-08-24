@@ -6,6 +6,7 @@ import ContextMenu from 'react-native-context-menu-view'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
@@ -312,11 +313,15 @@ function TokenDetails({
           <Flex row alignItems="center">
             {ellipsisMenuVisible && (
               <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
-                <EllipsisIcon
-                  color={ellipsisColor}
-                  height={iconSizes.icon16}
-                  width={iconSizes.icon16}
-                />
+                <TouchableArea
+                  hapticFeedback
+                  style={{ padding: theme.spacing.spacing8, marginRight: -theme.spacing.spacing8 }}>
+                  <EllipsisIcon
+                    color={ellipsisColor}
+                    height={iconSizes.icon16}
+                    width={iconSizes.icon16}
+                  />
+                </TouchableArea>
               </ContextMenu>
             )}
             <TokenDetailsFavoriteButton currencyId={_currencyId} />
