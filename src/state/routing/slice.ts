@@ -176,7 +176,6 @@ export const routingApi = createApi({
               tokenOutChainId,
               tokenOut: tokenOutAddress,
               amount,
-              quoteSpeed: 'fast',
               type,
               // if forceUniswapXOn is not ON, then use the backend's default value
               useUniswapX: forceUniswapXOn || undefined,
