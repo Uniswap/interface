@@ -10,7 +10,6 @@ export enum FeatureFlag {
   permit2 = 'permit2',
   fiatOnRampButtonOnSwap = 'fiat_on_ramp_button_on_swap_page',
   debounceSwapQuote = 'debounce_swap_quote',
-  uniswapXEnabled = 'uniswapx_enabled', // enables sending dutch_limit config to routing-api
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
   forceUniswapXOn = 'uniswapx_force_on', // forces routing-api's feature flag for uniswapx to turn on as well
   uniswapXEthOutputEnabled = 'uniswapx_eth_output_enabled',

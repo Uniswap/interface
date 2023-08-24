@@ -4,7 +4,6 @@ import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
 import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
 import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useUpdateAtom } from 'jotai/utils'
@@ -207,12 +206,6 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FeatureFlagOption
-        variant={UniswapXVariant}
-        value={useUniswapXFlag()}
-        featureFlag={FeatureFlag.uniswapXEnabled}
-        label="Enable UniswapX on interface"
-      />
       <FeatureFlagOption
         variant={BaseVariant}
         value={useForceUniswapXOnFlag()}

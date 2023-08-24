@@ -2,7 +2,6 @@ import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useForceUniswapXOn } from 'featureFlags/flags/forceUniswapXOn'
 import { useFotAdjustmentsEnabled } from 'featureFlags/flags/fotAdjustments'
-import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useMemo } from 'react'
@@ -30,7 +29,6 @@ export function useRoutingAPIArguments({
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
 }): GetQuoteArgs | SkipToken {
-  const uniswapXEnabled = useUniswapXEnabled()
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
   const forceUniswapXOn = useForceUniswapXOn()
   const userDisabledUniswapX = useUserDisabledUniswapX()
@@ -55,7 +53,6 @@ export function useRoutingAPIArguments({
             routerPreference,
             tradeType,
             needsWrapIfUniswapX: tokenIn.isNative,
-            uniswapXEnabled,
             uniswapXForceSyntheticQuotes,
             forceUniswapXOn,
             userDisabledUniswapX,
@@ -69,7 +66,6 @@ export function useRoutingAPIArguments({
       tokenIn,
       tokenOut,
       tradeType,
-      uniswapXEnabled,
       uniswapXForceSyntheticQuotes,
       forceUniswapXOn,
       userDisabledUniswapX,
