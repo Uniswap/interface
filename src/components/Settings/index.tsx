@@ -26,11 +26,13 @@ import RouterPreferenceSettings from './RouterPreferenceSettings'
 import TransactionDeadlineSettings from './TransactionDeadlineSettings'
 
 const CloseButton = styled.button`
-  cursor: pointer;
-  color: ${({ theme }) => theme.textPrimary};
   background: transparent;
   border: none;
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+  height: 24px;
   padding: 0;
+  width: 24px;
 `
 
 const Menu = styled.div`
