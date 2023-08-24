@@ -2,6 +2,10 @@ import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'fe
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
 import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
+import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
+import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
+import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
+import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
@@ -249,6 +253,32 @@ export default function FeatureFlagModal() {
         featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
         label="Enable fee-on-transfer UI and slippage adjustments"
       />
+      <FeatureFlagGroup name="Info Site Migration">
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useInfoExploreFlag()}
+          featureFlag={FeatureFlag.infoExplore}
+          label="Info site migration - Updating Token Explore Page"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useInfoTDPFlag()}
+          featureFlag={FeatureFlag.infoTDP}
+          label="Info site migration - Updating Token Details Page"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useInfoPoolPageFlag()}
+          featureFlag={FeatureFlag.infoPoolPage}
+          label="Info site migration - Adding Pool Details Page"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useInfoLiveViewsFlag()}
+          featureFlag={FeatureFlag.infoLiveViews}
+          label="Info site migration - Support live view graphs"
+        />
+      </FeatureFlagGroup>
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
           variant={TraceJsonRpcVariant}
