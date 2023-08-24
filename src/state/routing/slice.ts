@@ -78,7 +78,8 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     (args.userDisabledUniswapX && routerPreference !== RouterPreference.X) ||
     (tokenOutIsNative && !uniswapXEthOutputEnabled) ||
     (!uniswapXExactOutputEnabled && tradeType === TradeType.EXACT_OUTPUT) ||
-    !isUniswapXSupportedChain(tokenInChainId)
+    !isUniswapXSupportedChain(tokenInChainId) ||
+    routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE
   ) {
     return [classic]
   }
