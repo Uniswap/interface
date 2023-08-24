@@ -5,7 +5,7 @@ import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useMemo } from 'react'
-import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, QuoteSpeed, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
 import { useUserDisabledUniswapX } from 'state/user/hooks'
 
@@ -21,6 +21,7 @@ export function useRoutingAPIArguments({
   amount,
   tradeType,
   routerPreference,
+  quoteSpeed,
 }: {
   account?: string
   tokenIn?: Currency
@@ -28,6 +29,7 @@ export function useRoutingAPIArguments({
   amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+  quoteSpeed: QuoteSpeed
 }): GetQuoteArgs | SkipToken {
   const uniswapXEnabled = useUniswapXEnabled()
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
@@ -58,6 +60,7 @@ export function useRoutingAPIArguments({
             forceUniswapXOn,
             userDisabledUniswapX,
             uniswapXEthOutputEnabled,
+            quoteSpeed,
           },
     [
       account,
@@ -71,6 +74,7 @@ export function useRoutingAPIArguments({
       forceUniswapXOn,
       userDisabledUniswapX,
       uniswapXEthOutputEnabled,
+      quoteSpeed,
     ]
   )
 }

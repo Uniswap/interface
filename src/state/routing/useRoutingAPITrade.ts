@@ -13,6 +13,7 @@ import {
   InterfaceTrade,
   INTERNAL_ROUTER_PREFERENCE_PRICE,
   QuoteMethod,
+  QuoteSpeed,
   QuoteState,
   RouterPreference,
   TradeState,
@@ -74,32 +75,64 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const queryArgs = useRoutingAPIArguments({
+  const fastQueryArgs = useRoutingAPIArguments({
     account,
     tokenIn: currencyIn,
     tokenOut: currencyOut,
     amount: amountSpecified,
     tradeType,
     routerPreference,
+    quoteSpeed: QuoteSpeed.FAST,
   })
 
-  const { isError, data: tradeResult, error, currentData } = useGetQuoteQueryState(queryArgs)
-  useGetQuoteQuery(skipFetch ? skipToken : queryArgs, {
+  const standardQueryArgs = useRoutingAPIArguments({
+    account,
+    tokenIn: currencyIn,
+    tokenOut: currencyOut,
+    amount: amountSpecified,
+    tradeType,
+    routerPreference,
+    quoteSpeed: QuoteSpeed.STANDARD,
+  })
+
+  const {
+    isError: isFastTradeError,
+    data: fastTradeResult,
+    error: fastTradeError,
+    currentData: fastTradeCurrentData,
+  } = useGetQuoteQueryState(fastQueryArgs)
+  useGetQuoteQuery(skipFetch ? skipToken : fastQueryArgs) // no polling interval on the fast quotes
+
+  const {
+    isError: isStandardTradeError,
+    data: standardTradeResult,
+    error: standardTradeError,
+    currentData: standardTradeCurrentData,
+  } = useGetQuoteQueryState(standardQueryArgs)
+  useGetQuoteQuery(skipFetch ? skipToken : standardQueryArgs, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })
-  const isFetching = currentData !== tradeResult || !currentData
+
+  const tradeResult = standardTradeResult ?? fastTradeResult
+  const isFastTradeFetching = fastTradeCurrentData !== fastTradeResult || !fastTradeCurrentData
+  const isStandardTradeFetching = standardTradeCurrentData !== standardTradeResult || !standardTradeCurrentData
+
+  const [isError, error, isFetching] =
+    tradeResult === fastTradeResult
+      ? [isFastTradeError, fastTradeError, isFastTradeFetching]
+      : [isStandardTradeError, standardTradeError, isStandardTradeFetching]
 
   return useMemo(() => {
-    if (amountSpecified && queryArgs === skipToken) {
+    if (amountSpecified && standardQueryArgs === skipToken) {
       return {
         state: TradeState.STALE,
         trade: tradeResult?.trade,
         swapQuoteLatency: tradeResult?.latencyMs,
       }
-    } else if (!amountSpecified || isError || queryArgs === skipToken) {
+    } else if (!amountSpecified || isError || standardQueryArgs === skipToken) {
       return {
         state: TradeState.INVALID,
         trade: undefined,
@@ -121,7 +154,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     error,
     isError,
     isFetching,
-    queryArgs,
+    standardQueryArgs,
     tradeResult?.latencyMs,
     tradeResult?.state,
     tradeResult?.trade,

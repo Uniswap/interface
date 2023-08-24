@@ -28,6 +28,11 @@ export enum RouterPreference {
   CLIENT = 'client',
 }
 
+export enum QuoteSpeed {
+  FAST = 'fast',
+  STANDARD = 'standard',
+}
+
 export interface GetQuoteArgs {
   tokenInAddress: string
   tokenInChainId: ChainId
@@ -47,6 +52,7 @@ export interface GetQuoteArgs {
   uniswapXEthOutputEnabled: boolean
   forceUniswapXOn: boolean
   userDisabledUniswapX: boolean
+  quoteSpeed: QuoteSpeed
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
