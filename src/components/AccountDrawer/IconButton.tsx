@@ -110,7 +110,6 @@ const TextWrapper = styled.div`
   flex-shrink: 0;
   overflow: hidden;
   min-width: min-content;
-  padding-right: 8px;
   font-weight: 485;
 `
 
@@ -210,7 +209,7 @@ export const IconWithConfirmTextButton = ({
       {...rest}
       style={{
         width,
-        paddingLeft: xPad / 2,
+        paddingLeft: xPad,
         paddingRight: xPad,
       }}
       // @ts-ignore MouseEvent is valid, its a subset of the two mouse events,
@@ -236,7 +235,7 @@ export const IconWithConfirmTextButton = ({
         },
       })}
     >
-      <Row height="100%" gap={showText ? 'xs' : 'none'}>
+      <Row height="100%" gap="xs">
         <IconWrapper>
           <Icon width={24} height={24} />
         </IconWrapper>

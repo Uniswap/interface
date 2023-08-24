@@ -285,7 +285,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         hash={txnHash ?? ''}
         reviewContent={() => (
           <ConfirmationModalContent
-            title={<Trans>Remove liquidity</Trans>}
+            title={<Trans>Remove Liquidity</Trans>}
             onDismiss={handleDismissConfirmation}
             topContent={modalHeader}
           />

@@ -106,9 +106,9 @@ export function AddRemoveTabs({
           {creating ? (
             <Trans>Create a pair</Trans>
           ) : adding ? (
-            <Trans>Add liquidity</Trans>
+            <Trans>Add Liquidity</Trans>
           ) : (
-            <Trans>Remove liquidity</Trans>
+            <Trans>Remove Liquidity</Trans>
           )}
         </AddRemoveTitleText>
         {children && <Box style={{ marginRight: '.5rem' }}>{children}</Box>}

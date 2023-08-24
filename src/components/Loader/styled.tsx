@@ -26,15 +26,7 @@ export const LoadingRows = styled.div`
   display: grid;
 
   & > div {
-    animation: ${loadingAnimation} 1.5s infinite;
-    animation-fill-mode: both;
-    background: linear-gradient(
-      to left,
-      ${({ theme }) => theme.surface1} 25%,
-      ${({ theme }) => theme.surface3} 50%,
-      ${({ theme }) => theme.surface1} 75%
-    );
-    background-size: 400%;
+    ${shimmerMixin}
     border-radius: 12px;
     height: 2.4em;
   }
