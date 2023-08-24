@@ -122,19 +122,19 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const isFastTradeFetching = fastTradeCurrentData !== fastTradeResult || !fastTradeCurrentData
   const isStandardTradeFetching = standardTradeCurrentData !== standardTradeResult || !standardTradeCurrentData
 
-  const [isError, error, isFetching] =
+  const [isError, error, isFetching, queryArgs] =
     tradeResult === fastTradeResult
-      ? [isFastTradeError, fastTradeError, isFastTradeFetching]
-      : [isStandardTradeError, standardTradeError, isStandardTradeFetching]
+      ? [isFastTradeError, fastTradeError, isFastTradeFetching, fastQueryArgs]
+      : [isStandardTradeError, standardTradeError, isStandardTradeFetching, standardQueryArgs]
 
   return useMemo(() => {
-    if (amountSpecified && standardQueryArgs === skipToken) {
+    if (amountSpecified && queryArgs === skipToken) {
       return {
         state: TradeState.STALE,
         trade: tradeResult?.trade,
         swapQuoteLatency: tradeResult?.latencyMs,
       }
-    } else if (!amountSpecified || isError || standardQueryArgs === skipToken) {
+    } else if (!amountSpecified || isError || queryArgs === skipToken) {
       return {
         state: TradeState.INVALID,
         trade: undefined,
@@ -156,7 +156,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     error,
     isError,
     isFetching,
-    standardQueryArgs,
+    queryArgs,
     tradeResult?.latencyMs,
     tradeResult?.state,
     tradeResult?.trade,
