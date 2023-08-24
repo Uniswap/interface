@@ -58,14 +58,14 @@ export async function getWrapInfo(
 ): Promise<WrapInfo> {
   if (!needsWrap) return { needsWrap: false }
 
-  const provider = RPC_PROVIDERS[chainId].primaryProvider
+  const provider = RPC_PROVIDERS[chainId]
   const wethAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address
 
   // If any of these arguments aren't provided, then we cannot generate wrap cost info
   if (!wethAddress || !usdCostPerGas) return { needsWrap: false }
   let wrapGasUseEstimate
   try {
-    const wethContract = getContract(wethAddress, WETH_ABI, provider) as Weth
+    const wethContract = getContract(wethAddress, WETH_ABI, provider, account) as Weth
     const wethTx = await wethContract.populateTransaction.deposit({ value: amount })
 
     // estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway

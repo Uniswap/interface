@@ -19,7 +19,7 @@ export function useTokenAllowance(
   tokenAllowance?: CurrencyAmount<Token>
   isSyncing: boolean
 } {
-  const contract = useTokenContract(token?.address)
+  const contract = useTokenContract(token?.address, false)
   const inputs = useMemo(() => [owner, spender], [owner, spender])
 
   // If there is no allowance yet, re-check next observed block.
