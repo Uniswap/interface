@@ -92,13 +92,12 @@ export function useCloseModal() {
   const dispatch = useAppDispatch()
   const currentlyOpenModal = useAppSelector((state: AppState) => state.application.openModal)
   return useCallback(
-    (modal?: ApplicationModal) => {
-      // Check if modal is defined and either matches the currently open modal
-      // or is not a valid instance of ApplicationModal enum (i.e., if it is passed a click event)
-      if ((modal && currentlyOpenModal === modal) || (modal && !Object.values(ApplicationModal).includes(modal))) {
+    (modalToClose?: ApplicationModal) => {
+      if (!modalToClose) {
+        // Close any open modal if no modal is specified.
         dispatch(setOpenModal(null))
-      } else if (!modal) {
-        // Close any open modal if no modal is specified
+      } else if (currentlyOpenModal === modalToClose) {
+        // Close the currently open modal if it is the one specified.
         dispatch(setOpenModal(null))
       }
     },

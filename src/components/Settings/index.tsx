@@ -73,14 +73,14 @@ const MobileMenuContainer = styled(Row)`
   z-index: ${Z_INDEX.fixed};
 `
 
-const MobileMenuWrapper = styled(Column)<{ open: boolean }>`
+const MobileMenuWrapper = styled(Column)<{ $open: boolean }>`
   height: min-content;
   width: 100%;
   padding: 8px 16px 24px;
   background-color: ${({ theme }) => theme.backgroundSurface};
   overflow: hidden;
   position: absolute;
-  bottom: ${({ open }) => (open ? `100vh` : 0)};
+  bottom: ${({ $open }) => ($open ? `100vh` : 0)};
   transition: bottom ${({ theme }) => theme.transition.duration.medium};
   border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   border-radius: 12px;
@@ -149,11 +149,11 @@ export default function SettingsTab({
     <Menu ref={node}>
       <MenuButton disabled={!isChainSupported || chainId !== connectedChainId} isActive={isOpen} onClick={toggleMenu} />
       {isOpenDesktop && <MenuFlyout>{Settings}</MenuFlyout>}
-      <Portal>
-        {isOpenMobile && (
+      {isOpenMobile && (
+        <Portal>
           <MobileMenuContainer data-testid="mobile-settings-menu">
-            <Scrim onClick={closeMenu} $open={isOpenMobile} />
-            <MobileMenuWrapper open={isOpenMobile}>
+            <Scrim onClick={closeMenu} $open />
+            <MobileMenuWrapper $open>
               <MobileMenuHeader padding="8px 0px 4px">
                 <CloseButton data-testid="mobile-settings-close" onClick={closeMenu}>
                   <X size={24} />
@@ -167,8 +167,8 @@ export default function SettingsTab({
               {Settings}
             </MobileMenuWrapper>
           </MobileMenuContainer>
-        )}
-      </Portal>
+        </Portal>
+      )}
     </Menu>
   )
 }
