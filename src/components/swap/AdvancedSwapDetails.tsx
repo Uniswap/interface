@@ -5,8 +5,9 @@ import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { ZERO_PERCENT } from 'constants/misc'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { InterfaceTrade } from 'state/routing/types'
+import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { formatCurrencyAmount, formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
 
@@ -82,16 +83,20 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowBetween>
       )}
       {isClassicTrade(trade) && (
-        <RowBetween>
-          <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
-            <ThemedText.BodySmall color="textSecondary">
-              <Trans>Price Impact</Trans>
-            </ThemedText.BodySmall>
-          </MouseoverTooltip>
-          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            <ThemedText.BodySmall>{formatPriceImpact(trade.priceImpact)}</ThemedText.BodySmall>
-          </TextWithLoadingPlaceholder>
-        </RowBetween>
+        <>
+          <TokenTaxLineItem trade={trade} type="input" />
+          <TokenTaxLineItem trade={trade} type="output" />
+          <RowBetween>
+            <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
+              <ThemedText.BodySmall color="textSecondary">
+                <Trans>Price Impact</Trans>
+              </ThemedText.BodySmall>
+            </MouseoverTooltip>
+            <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+              <ThemedText.BodySmall>{formatPriceImpact(trade.priceImpact)}</ThemedText.BodySmall>
+            </TextWithLoadingPlaceholder>
+          </RowBetween>
+        </>
       )}
       <RowBetween>
         <RowFixed>
@@ -135,7 +140,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <ThemedText.BodySmall>
-            {`${formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount)} ${
+            {`${formatCurrencyAmount(trade.postTaxOutputAmount, NumberType.SwapTradeAmount)} ${
               trade.outputAmount.currency.symbol
             }`}
           </ThemedText.BodySmall>
@@ -174,5 +179,28 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         )}
       </RowBetween>
     </Column>
+  )
+}
+
+function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' | 'output' }) {
+  const [currency, percentage] =
+    type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
+
+  if (percentage.equalTo(ZERO_PERCENT)) return null
+
+  return (
+    <RowBetween>
+      <MouseoverTooltip
+        text={
+          <Trans>
+            Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
+            receive any of these fees.
+          </Trans>
+        }
+      >
+        <ThemedText.BodySmall color="textSecondary">{`${currency.symbol} fee`}</ThemedText.BodySmall>
+      </MouseoverTooltip>
+      <ThemedText.BodySmall>{formatPriceImpact(percentage)}</ThemedText.BodySmall>
+    </RowBetween>
   )
 }

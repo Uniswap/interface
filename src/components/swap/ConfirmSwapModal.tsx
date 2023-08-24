@@ -97,6 +97,7 @@ function useConfirmModalState({
     // See the `approve` function here: https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7#code
     if (
       allowance.state === AllowanceState.REQUIRED &&
+      allowance.needsSetupApproval &&
       allowance.token.equals(USDT_MAINNET) &&
       allowance.allowedAmount.greaterThan(0)
     ) {
@@ -303,6 +304,7 @@ export default function ConfirmSwapModal({
   // Swap failed locally and was not broadcast to the blockchain.
   const localSwapFailure = Boolean(swapError) && !didUserReject(swapError)
   const swapFailed = localSwapFailure || swapReverted
+
   useEffect(() => {
     // Reset the modal state if the user rejected the swap.
     if (swapError && !swapFailed) {

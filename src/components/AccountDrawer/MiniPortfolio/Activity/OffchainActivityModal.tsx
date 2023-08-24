@@ -90,7 +90,7 @@ const DescriptionText = styled(ThemedText.LabelMicro)`
 
 function useOrderAmounts(
   orderDetails?: UniswapXOrderDetails
-): Pick<InterfaceTrade, 'inputAmount' | 'outputAmount'> | undefined {
+): Pick<InterfaceTrade, 'inputAmount' | 'postTaxOutputAmount'> | undefined {
   const inputCurrency = useCurrency(orderDetails?.swapInfo?.inputCurrencyId, orderDetails?.chainId)
   const outputCurrency = useCurrency(orderDetails?.swapInfo?.outputCurrencyId, orderDetails?.chainId)
 
@@ -106,7 +106,7 @@ function useOrderAmounts(
   if (swapInfo.tradeType === TradeType.EXACT_INPUT) {
     return {
       inputAmount: CurrencyAmount.fromRawAmount(inputCurrency, swapInfo.inputCurrencyAmountRaw),
-      outputAmount: CurrencyAmount.fromRawAmount(
+      postTaxOutputAmount: CurrencyAmount.fromRawAmount(
         outputCurrency,
         swapInfo.settledOutputCurrencyAmountRaw ?? swapInfo.expectedOutputCurrencyAmountRaw
       ),
@@ -114,7 +114,7 @@ function useOrderAmounts(
   } else {
     return {
       inputAmount: CurrencyAmount.fromRawAmount(inputCurrency, swapInfo.expectedInputCurrencyAmountRaw),
-      outputAmount: CurrencyAmount.fromRawAmount(outputCurrency, swapInfo.outputCurrencyAmountRaw),
+      postTaxOutputAmount: CurrencyAmount.fromRawAmount(outputCurrency, swapInfo.outputCurrencyAmountRaw),
     }
   }
 }
