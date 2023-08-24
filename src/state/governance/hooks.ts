@@ -40,15 +40,15 @@ import { TransactionType } from '../transactions/types'
 import { VoteOption } from './types'
 
 function useGovernanceV0Contract(): Contract | null {
-  return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GovernorAlphaJSON.abi, false)
+  return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GovernorAlphaJSON.abi)
 }
 
 function useGovernanceV1Contract(): Contract | null {
-  return useContract(GOVERNANCE_ALPHA_V1_ADDRESSES, GovernorAlphaJSON.abi, false)
+  return useContract(GOVERNANCE_ALPHA_V1_ADDRESSES, GovernorAlphaJSON.abi)
 }
 
 function useGovernanceBravoContract(): Contract | null {
-  return useContract(GOVERNANCE_BRAVO_ADDRESSES, GOVERNOR_BRAVO_ABI, true)
+  return useContract(GOVERNANCE_BRAVO_ADDRESSES, GOVERNOR_BRAVO_ABI)
 }
 
 const useLatestGovernanceContract = useGovernanceBravoContract
@@ -56,7 +56,7 @@ const useLatestGovernanceContract = useGovernanceBravoContract
 function useUniContract() {
   const { chainId } = useWeb3React()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
-  return useContract(uniAddress, UniJSON.abi, true)
+  return useContract(uniAddress, UniJSON.abi)
 }
 
 interface ProposalDetail {

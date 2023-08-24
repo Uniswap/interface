@@ -8,9 +8,5 @@ import useIsArgentWallet from './useIsArgentWallet'
 export function useArgentWalletContract(): ArgentWalletContract | null {
   const { account } = useWeb3React()
   const isArgentWallet = useIsArgentWallet()
-  return useContract(
-    isArgentWallet ? account ?? undefined : undefined,
-    ArgentWalletContractABI,
-    true
-  ) as ArgentWalletContract
+  return useContract(isArgentWallet ? account ?? undefined : undefined, ArgentWalletContractABI) as ArgentWalletContract
 }

@@ -1,3 +1,4 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { ChainId } from '@uniswap/sdk-core'
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
 import { initializeConnector } from '@web3-react/core'
@@ -24,7 +25,8 @@ function onError(error: Error) {
 }
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
-  (actions) => new Network({ actions, urlMap: RPC_PROVIDERS, defaultChainId: 1 })
+  (actions) =>
+    new Network({ actions, urlMap: RPC_PROVIDERS as unknown as Record<number, JsonRpcProvider>, defaultChainId: 1 })
 )
 export const networkConnection: Connection = {
   getName: () => 'Network',

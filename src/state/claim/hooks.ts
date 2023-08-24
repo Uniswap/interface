@@ -14,7 +14,7 @@ import { useTransactionAdder } from '../transactions/hooks'
 import { TransactionType } from '../transactions/types'
 
 function useMerkleDistributorContract() {
-  return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MerkleDistributorJSON.abi, true)
+  return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MerkleDistributorJSON.abi)
 }
 
 interface UserClaimData {

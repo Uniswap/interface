@@ -36,8 +36,8 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
   const { chainId } = useWeb3React()
 
   const formattedAddress = isAddress(tokenAddress)
-  const tokenContract = useTokenContract(formattedAddress ? formattedAddress : undefined, false)
-  const tokenContractBytes32 = useBytes32TokenContract(formattedAddress ? formattedAddress : undefined, false)
+  const tokenContract = useTokenContract(formattedAddress ? formattedAddress : undefined)
+  const tokenContractBytes32 = useBytes32TokenContract(formattedAddress ? formattedAddress : undefined)
 
   // TODO (WEB-1709): reduce this to one RPC call instead of 5
   // TODO: Fix redux-multicall so that these values do not reload.
