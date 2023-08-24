@@ -12,6 +12,7 @@ import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
   useActiveAccount,
   useNonPendingSignerAccounts,
+  useSwapProtectionSetting,
   useViewOnlyAccounts,
 } from 'wallet/src/features/wallet/hooks'
 
@@ -23,6 +24,7 @@ export function TraceUserProperties(): null {
   const signerAccounts = useNonPendingSignerAccounts()
   const biometricsAppSettingsState = useBiometricAppSettings()
   const { touchId, faceId } = useDeviceSupportsBiometricAuth()
+  const swapProtectionSetting = useSwapProtectionSetting()
 
   useEffect(() => {
     setUserProperty(UserPropertyName.AppVersion, getFullAppVersion())
@@ -30,6 +32,10 @@ export function TraceUserProperties(): null {
       analytics.flushEvents()
     }
   }, [])
+
+  useEffect(() => {
+    setUserProperty(UserPropertyName.WalletSwapProtectionSetting, swapProtectionSetting)
+  }, [swapProtectionSetting])
 
   useEffect(() => {
     setUserProperty(UserPropertyName.DarkMode, isDarkMode)

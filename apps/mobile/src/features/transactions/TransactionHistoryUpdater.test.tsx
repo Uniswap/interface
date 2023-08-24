@@ -18,6 +18,7 @@ import { AssetType } from 'wallet/src/entities/assets'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { account, account2, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
 const mockedRefetchQueries = jest.fn()
@@ -38,7 +39,9 @@ const walletSlice = {
   accounts,
   activeAccountAddress: null,
   isUnlocked: false,
-  settings: {},
+  settings: {
+    swapProtection: SwapProtectionSetting.Auto,
+  },
   replaceAccountOptions: {
     isReplacingAccount: false,
     skipToSeedPhrase: false,

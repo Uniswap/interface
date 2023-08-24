@@ -17,6 +17,7 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 export const OLD_DEMO_ACCOUNT_ADDRESS = '0xdd0E380579dF30E38524F9477808d9eE37E2dEa6'
 
@@ -653,6 +654,15 @@ export const migrations = {
 
     newState.tweaks = {}
 
+    return newState
+  },
+
+  49: function addSwapProtectionSetting(state: any) {
+    const newState = { ...state }
+    newState.wallet.settings = {
+      ...state.wallet.settings,
+      swapProtection: SwapProtectionSetting.Auto,
+    }
     return newState
   },
 }

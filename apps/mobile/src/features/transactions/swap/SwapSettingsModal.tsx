@@ -1,9 +1,10 @@
+/* eslint-disable max-lines */
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { AnyAction } from '@reduxjs/toolkit'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { impactAsync } from 'expo-haptics'
-import React, { Dispatch, useCallback, useState } from 'react'
+import React, { Dispatch, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Easing,
@@ -15,25 +16,38 @@ import {
 import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PlusMinusButton, { PlusMinusButtonType } from 'src/components/buttons/PlusMinusButton'
+import { Switch } from 'src/components/buttons/Switch'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
+import { SwapProtectionInfoModal } from 'src/features/transactions/swap/SwapProtectionModal'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import { openUri } from 'src/utils/linking'
+import { Icons } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import SettingsIcon from 'ui/src/assets/icons/settings.svg'
+import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import {
   DEFAULT_SLIPPAGE_TOLERANCE,
   MAX_CUSTOM_SLIPPAGE_TOLERANCE,
 } from 'wallet/src/constants/transactions'
 import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
+import { setSwapProtectionSetting, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
+import { useAppDispatch } from 'wallet/src/state'
 
 const SLIPPAGE_INCREMENT = 0.1
+
+enum SwapSettingsModalView {
+  Options,
+  Slippage,
+}
 
 export type SwapSettingsModalProps = {
   derivedSwapInfo: DerivedSwapInfo
@@ -46,6 +60,165 @@ export default function SwapSettingsModal({
   dispatch,
   onClose,
 }: SwapSettingsModalProps): JSX.Element {
+  const theme = useAppTheme()
+  const { t } = useTranslation()
+  const [view, setView] = useState(SwapSettingsModalView.Options)
+
+  const { customSlippageTolerance, autoSlippageTolerance } = derivedSwapInfo
+  const isCustomSlippage = !!customSlippageTolerance
+  const currentSlippage =
+    customSlippageTolerance ?? autoSlippageTolerance ?? DEFAULT_SLIPPAGE_TOLERANCE
+
+  const getTitle = (): string => {
+    switch (view) {
+      case SwapSettingsModalView.Options:
+        return t('Swap Settings')
+      case SwapSettingsModalView.Slippage:
+        return t('Slippage Settings')
+    }
+  }
+
+  const innerContent = useMemo(() => {
+    switch (view) {
+      case SwapSettingsModalView.Options:
+        return (
+          <SwapSettingsOptions
+            isCustomSlippage={isCustomSlippage}
+            setView={setView}
+            slippage={currentSlippage}
+          />
+        )
+      case SwapSettingsModalView.Slippage:
+        return <SlippageSettings derivedSwapInfo={derivedSwapInfo} dispatch={dispatch} />
+    }
+  }, [currentSlippage, derivedSwapInfo, dispatch, isCustomSlippage, view])
+
+  return (
+    <BottomSheetModal
+      backgroundColor={theme.colors.surface1}
+      name={ModalName.SwapSettings}
+      onClose={onClose}>
+      <Flex mb="spacing28" px="spacing24" py="spacing12">
+        <Flex row justifyContent="space-between">
+          <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Options)}>
+            <Icons.Chevron
+              color={
+                view === SwapSettingsModalView.Options ? theme.colors.none : theme.colors.neutral3
+              }
+              direction="w"
+              height={theme.iconSizes.icon24}
+              width={theme.iconSizes.icon24}
+            />
+          </TouchableArea>
+          <Text textAlign="center" variant="bodyLarge">
+            {getTitle()}
+          </Text>
+          <Box width={theme.iconSizes.icon24} />
+        </Flex>
+        {innerContent}
+        <Flex centered row>
+          <Button fill emphasis={ButtonEmphasis.Secondary} label={t('Close')} onPress={onClose} />
+        </Flex>
+      </Flex>
+    </BottomSheetModal>
+  )
+}
+
+function SwapSettingsOptions({
+  slippage,
+  isCustomSlippage,
+  setView,
+}: {
+  slippage: number
+  isCustomSlippage: boolean
+  setView: (newView: SwapSettingsModalView) => void
+}): JSX.Element {
+  const theme = useAppTheme()
+  const { t } = useTranslation()
+  const isMevBlockerFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.MevBlocker)
+
+  return (
+    <Flex fill gap="spacing16" py="spacing12">
+      <Flex fill row justifyContent="space-between">
+        <Text color="neutral1" variant="subheadSmall">
+          {t('Max slippage')}
+        </Text>
+        <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Slippage)}>
+          <Flex row gap="spacing8">
+            {!isCustomSlippage ? (
+              <Flex centered bg="accent2" borderRadius="roundedFull" px="spacing8">
+                <Text color="accent1" variant="buttonLabelMicro">
+                  {t('Auto')}
+                </Text>
+              </Flex>
+            ) : null}
+            <Text color="neutral2" variant="subheadSmall">{`${slippage
+              .toFixed(2)
+              .toString()}%`}</Text>
+            <Icons.Chevron
+              color={theme.colors.neutral3}
+              direction="e"
+              height={theme.iconSizes.icon24}
+              width={theme.iconSizes.icon24}
+            />
+          </Flex>
+        </TouchableArea>
+      </Flex>
+      {isMevBlockerFeatureEnabled && <SwapProtectionSettingsRow />}
+    </Flex>
+  )
+}
+
+function SwapProtectionSettingsRow(): JSX.Element {
+  const { t } = useTranslation()
+  const theme = useAppTheme()
+  const dispatch = useAppDispatch()
+  const swapProtectionSetting = useSwapProtectionSetting()
+
+  const toggleSwapProtectionSetting = useCallback(() => {
+    if (swapProtectionSetting === SwapProtectionSetting.Auto) {
+      dispatch(setSwapProtectionSetting({ newSwapProtectionSetting: SwapProtectionSetting.Off }))
+    }
+    if (swapProtectionSetting === SwapProtectionSetting.Off) {
+      dispatch(setSwapProtectionSetting({ newSwapProtectionSetting: SwapProtectionSetting.Auto }))
+    }
+  }, [dispatch, swapProtectionSetting])
+
+  const [showInfoModal, setShowInfoModal] = useState(false)
+  return (
+    <>
+      {showInfoModal && <SwapProtectionInfoModal onClose={(): void => setShowInfoModal(false)} />}
+      <Flex fill gap="spacing16">
+        <Flex fill bg="surface3" height={1} />
+        <Flex fill row justifyContent="space-between">
+          <TouchableArea onPress={(): void => setShowInfoModal(true)}>
+            <Flex gap="spacing4">
+              <Flex centered row gap="spacing4">
+                <Text color="neutral1" variant="subheadSmall">
+                  {t('Swap protection')}
+                </Text>
+                <InfoCircle
+                  color={theme.colors.neutral1}
+                  height={theme.iconSizes.icon16}
+                  width={theme.iconSizes.icon16}
+                />
+              </Flex>
+              <Text color="neutral2" variant="bodyMicro">
+                {t('Ethereum Network')}
+              </Text>
+            </Flex>
+          </TouchableArea>
+          <Switch
+            value={swapProtectionSetting === SwapProtectionSetting.Auto}
+            onValueChange={toggleSwapProtectionSetting}
+          />
+        </Flex>
+      </Flex>
+    </>
+  )
+}
+
+function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -203,95 +376,75 @@ export default function SwapSettingsModal({
   )
 
   return (
-    <BottomSheetModal
-      backgroundColor={theme.colors.surface1}
-      name={ModalName.SwapSettings}
-      onClose={onClose}>
-      <Flex centered gap="spacing16" mb="spacing16" px="spacing24" py="spacing12">
-        <Flex centered backgroundColor="surface3" borderRadius="rounded12" p="spacing12">
-          <SettingsIcon
-            color={theme.colors.neutral2}
-            height={theme.iconSizes.icon28}
-            width={theme.iconSizes.icon28}
+    <Flex gap="spacing16">
+      <Text color="neutral2" textAlign="center" variant="bodySmall">
+        {t('Your transaction will revert if the price changes more than the slippage percentage.')}{' '}
+        <TouchableArea height={18} onPress={onPressLearnMore}>
+          <Text color="accent1" variant="buttonLabelSmall">
+            {t('Learn more')}
+          </Text>
+        </TouchableArea>
+      </Text>
+      <Flex gap="spacing12">
+        <Flex centered row mt="spacing12">
+          <PlusMinusButton
+            disabled={currentSlippageToleranceNum === 0}
+            type={PlusMinusButtonType.Minus}
+            onPress={onPressPlusMinusButton}
+          />
+          <AnimatedFlex
+            row
+            alignItems="center"
+            bg={isEditingSlippage ? 'surface2' : 'surface1'}
+            borderColor="surface3"
+            borderRadius="roundedFull"
+            borderWidth={1}
+            gap="spacing12"
+            p="spacing16"
+            style={inputAnimatedStyle}>
+            <TouchableArea hapticFeedback onPress={onPressAutoSlippage}>
+              <Text color="accent1" variant="buttonLabelSmall">
+                {t('Auto')}
+              </Text>
+            </TouchableArea>
+            <BottomSheetTextInput
+              keyboardType="numeric"
+              style={{
+                color: autoSlippageEnabled ? theme.colors.neutral2 : theme.colors.neutral1,
+                fontSize: theme.textVariants.subheadLarge.fontSize,
+                fontFamily: theme.textVariants.subheadLarge.fontFamily,
+                width: theme.textVariants.subheadLarge.fontSize * 4,
+              }}
+              textAlign="center"
+              value={
+                autoSlippageEnabled
+                  ? autoSlippageTolerance.toFixed(2).toString()
+                  : inputSlippageTolerance
+              }
+              onBlur={onBlurSlippageInput}
+              onChangeText={onChangeSlippageInput}
+              onFocus={onFocusSlippageInput}
+            />
+            <Box width={theme.iconSizes.icon28}>
+              <Text color="neutral2" textAlign="center" variant="subheadLarge">
+                %
+              </Text>
+            </Box>
+          </AnimatedFlex>
+          <PlusMinusButton
+            disabled={currentSlippageToleranceNum === MAX_CUSTOM_SLIPPAGE_TOLERANCE}
+            type={PlusMinusButtonType.Plus}
+            onPress={onPressPlusMinusButton}
           />
         </Flex>
-        <Text textAlign="center" variant="bodyLarge">
-          {t('Maximum slippage')}
-        </Text>
-        <Text color="neutral2" textAlign="center" variant="bodySmall">
-          {t(
-            'Your transaction will revert if the price changes more than the slippage percentage.'
-          )}{' '}
-          <TouchableArea height={18} onPress={onPressLearnMore}>
-            <Text color="accent1" variant="buttonLabelSmall">
-              {t('Learn more')}
-            </Text>
-          </TouchableArea>
-        </Text>
-        <Flex gap="spacing12">
-          <Flex centered row mt="spacing12">
-            <PlusMinusButton
-              disabled={currentSlippageToleranceNum === 0}
-              type={PlusMinusButtonType.Minus}
-              onPress={onPressPlusMinusButton}
-            />
-            <AnimatedFlex
-              row
-              alignItems="center"
-              bg={isEditingSlippage ? 'surface2' : 'surface1'}
-              borderColor="surface3"
-              borderRadius="roundedFull"
-              borderWidth={1}
-              gap="spacing12"
-              p="spacing16"
-              style={inputAnimatedStyle}>
-              <TouchableArea hapticFeedback onPress={onPressAutoSlippage}>
-                <Text color="accent1" variant="buttonLabelSmall">
-                  {t('Auto')}
-                </Text>
-              </TouchableArea>
-              <BottomSheetTextInput
-                keyboardType="numeric"
-                style={{
-                  color: autoSlippageEnabled ? theme.colors.neutral2 : theme.colors.neutral1,
-                  fontSize: theme.textVariants.subheadLarge.fontSize,
-                  fontFamily: theme.textVariants.subheadLarge.fontFamily,
-                  width: theme.textVariants.subheadLarge.fontSize * 4,
-                }}
-                textAlign="center"
-                value={
-                  autoSlippageEnabled
-                    ? autoSlippageTolerance.toFixed(2).toString()
-                    : inputSlippageTolerance
-                }
-                onBlur={onBlurSlippageInput}
-                onChangeText={onChangeSlippageInput}
-                onFocus={onFocusSlippageInput}
-              />
-              <Box width={theme.iconSizes.icon28}>
-                <Text color="neutral2" textAlign="center" variant="subheadLarge">
-                  %
-                </Text>
-              </Box>
-            </AnimatedFlex>
-            <PlusMinusButton
-              disabled={currentSlippageToleranceNum === MAX_CUSTOM_SLIPPAGE_TOLERANCE}
-              type={PlusMinusButtonType.Plus}
-              onPress={onPressPlusMinusButton}
-            />
-          </Flex>
-          <BottomLabel
-            inputWarning={inputWarning}
-            showSlippageWarning={showSlippageWarning}
-            slippageTolerance={currentSlippageToleranceNum}
-            trade={trade}
-          />
-        </Flex>
-        <Flex centered row>
-          <Button fill emphasis={ButtonEmphasis.Secondary} label={t('Close')} onPress={onClose} />
-        </Flex>
+        <BottomLabel
+          inputWarning={inputWarning}
+          showSlippageWarning={showSlippageWarning}
+          slippageTolerance={currentSlippageToleranceNum}
+          trade={trade}
+        />
       </Flex>
-    </BottomSheetModal>
+    </Flex>
   )
 }
 

@@ -4,7 +4,15 @@ import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { isStale } from 'utilities/src/time/time'
 import { config } from 'wallet/src/config'
-import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'wallet/src/constants/chains'
+import {
+  AlternativeRpcType,
+  ALT_RPC_URLS_BY_CHAIN,
+  ChainId,
+  CHAIN_INFO,
+  L1ChainInfo,
+  L2ChainInfo,
+} from 'wallet/src/constants/chains'
+
 import {
   getEthersProvider,
   getEthersProviderFromRpcUrl,
@@ -101,7 +109,13 @@ export class ProviderManager {
     return provider.provider
   }
 
-  getProvider(chainId: ChainId): ethersProviders.JsonRpcProvider {
+  getProvider(
+    chainId: ChainId,
+    alternativeRpcType?: AlternativeRpcType
+  ): ethersProviders.JsonRpcProvider {
+    if (alternativeRpcType) {
+      return this.getAlternativeRpcProvider(chainId, alternativeRpcType)
+    }
     if (!this._providers[chainId]) {
       throw new Error(`No provider initialized for chain: ${chainId}`)
     }
@@ -161,6 +175,15 @@ export class ProviderManager {
         return null
       }
     }
+  }
+
+  private getAlternativeRpcProvider(
+    chainId: ChainId,
+    alternativeRpcType: AlternativeRpcType
+  ): ethersProviders.JsonRpcProvider {
+    const rpcUrl = ALT_RPC_URLS_BY_CHAIN[chainId]?.[alternativeRpcType]
+    if (!rpcUrl) throw new Error(`${chainId} is not supported by rpc type: ${alternativeRpcType}`)
+    return new ethersProviders.JsonRpcProvider(rpcUrl)
   }
 
   private isProviderSynced(

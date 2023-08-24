@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { providers } from 'ethers'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -14,6 +15,7 @@ import {
 } from 'src/features/transactions/swap/hooks'
 import SlippageInfoModal from 'src/features/transactions/swap/SlippageInfoModal'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
+import { SwapProtectionInfoModal } from 'src/features/transactions/swap/SwapProtectionModal'
 import {
   getActionElementName,
   getActionName,
@@ -61,6 +63,7 @@ export function SwapReview({
   const [showSlippageModal, setShowSlippageModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
+  const [showSwapProtectionModal, setShowSwapProtectionModal] = useState(false)
 
   const {
     chainId,
@@ -156,6 +159,13 @@ export function SwapReview({
     setShowSlippageModal(false)
   }, [])
 
+  const onShowSwapProtectionModal = useCallback(() => {
+    setShowSwapProtectionModal(true)
+  }, [])
+  const onCloseSwapProtectionModal = useCallback(() => {
+    setShowSwapProtectionModal(false)
+  }, [])
+
   const actionButtonDisabled =
     noValidSwap ||
     blockingWarning ||
@@ -200,6 +210,7 @@ export function SwapReview({
         onAcceptTrade={onAcceptTrade}
         onShowGasWarning={onShowGasWarning}
         onShowSlippageModal={onShowSlippageModal}
+        onShowSwapProtectionModal={onShowSwapProtectionModal}
         onShowWarning={onShowWarning}
       />
     )
@@ -271,6 +282,7 @@ export function SwapReview({
           onClose={onCloseSlippageModal}
         />
       )}
+      {showSwapProtectionModal && <SwapProtectionInfoModal onClose={onCloseSwapProtectionModal} />}
       <Trace logImpression section={SectionName.SwapReview}>
         <TransactionReview
           actionButtonProps={actionButtonProps}

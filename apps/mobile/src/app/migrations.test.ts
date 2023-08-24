@@ -46,6 +46,7 @@ import {
   v45Schema,
   v46Schema,
   v47Schema,
+  v48Schema,
   v4Schema,
   v5Schema,
   v6Schema,
@@ -84,7 +85,7 @@ import {
   AccountType,
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
-import { initialWalletState } from 'wallet/src/features/wallet/slice'
+import { initialWalletState, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'wallet/src/test/fixtures'
 
 // helps with object assignment
@@ -1175,5 +1176,12 @@ describe('Redux state migrations', () => {
     const v48 = migrations[48](v47Stub)
 
     expect(v48.tweaks).toEqual({})
+  })
+
+  it('migrates from v48 to 49', () => {
+    const v48Stub = { ...v48Schema }
+    const v49 = migrations[49](v48Stub)
+
+    expect(v49.wallet.settings.swapProtection).toEqual(SwapProtectionSetting.Auto)
   })
 })

@@ -176,6 +176,16 @@ export const CHAIN_INFO: ChainInfo = {
   },
 }
 
+export enum AlternativeRpcType {
+  MevBlocker = 'MevBlocker',
+}
+
+export const ALT_RPC_URLS_BY_CHAIN: Partial<Record<ChainId, Record<AlternativeRpcType, string>>> = {
+  [ChainId.Mainnet]: {
+    [AlternativeRpcType.MevBlocker]: 'https://rpc.mevblocker.io',
+  },
+}
+
 export function isPolygonChain(
   chainId: number
 ): chainId is ChainId.Polygon | ChainId.PolygonMumbai {

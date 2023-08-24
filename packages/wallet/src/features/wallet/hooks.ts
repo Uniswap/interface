@@ -1,6 +1,7 @@
 import { trimToLength } from 'utilities/src/primitives/string'
 import { useENSName } from 'wallet/src/features/ens/api'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { useAppSelector } from 'wallet/src/state'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import {
@@ -16,6 +17,7 @@ import {
   selectSignerMnemonicAccountExists,
   selectSignerMnemonicAccounts,
   selectViewOnlyAccounts,
+  selectWalletSwapProtectionSetting,
 } from './selectors'
 
 const ENS_TRIM_LENGTH = 8
@@ -68,6 +70,10 @@ export function useActiveAccountWithThrow(): Account {
   const activeAccount = useAppSelector(selectActiveAccount)
   if (!activeAccount) throw new Error('No active account')
   return activeAccount
+}
+
+export function useSwapProtectionSetting(): SwapProtectionSetting {
+  return useAppSelector(selectWalletSwapProtectionSetting)
 }
 
 export function useSelectAccountNotificationSetting(address: Address): boolean {

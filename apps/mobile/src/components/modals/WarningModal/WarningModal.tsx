@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, ReactNode } from 'react'
+import { ColorValue } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
@@ -24,6 +25,7 @@ export type WarningModalProps = {
   isDismissible?: boolean
   hideHandlebar?: boolean
   icon?: ReactNode
+  backgroundIconColor?: ColorValue
 }
 
 export default function WarningModal({
@@ -41,6 +43,7 @@ export default function WarningModal({
   isDismissible = true,
   hideHandlebar = false,
   icon,
+  backgroundIconColor,
 }: PropsWithChildren<WarningModalProps>): JSX.Element {
   const { requiredForTransactions } = useBiometricAppSettings()
   const { trigger } = useBiometricPrompt(onConfirm)
@@ -70,7 +73,7 @@ export default function WarningModal({
           mb="spacing8"
           p="spacing8"
           style={{
-            backgroundColor: opacify(12, theme.colors[alertColor.text]),
+            backgroundColor: backgroundIconColor ?? opacify(12, theme.colors[alertColor.text]),
           }}>
           {icon ?? (
             <AlertTriangleIcon

@@ -1,5 +1,6 @@
 import { ModalName } from 'src/features/telemetry/constants'
 import { ACTIVE_CHAINS } from 'wallet/src/constants/chains'
+import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 // only add fields that are persisted
 export const initialSchema = {
@@ -323,6 +324,17 @@ export const v47Schema = { ...v46Schema, chains: { byChainId: ACTIVE_CHAINS } }
 
 export const v48Schema = { ...v46Schema, tweaks: {} }
 
+export const v49Schema = {
+  ...v48Schema,
+  wallet: {
+    ...v48Schema.wallet,
+    settings: {
+      ...v48Schema.wallet.settings,
+      swapProtection: SwapProtectionSetting.Auto,
+    },
+  },
+}
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v48Schema => v48Schema
+export const getSchema = (): typeof v49Schema => v49Schema

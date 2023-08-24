@@ -1,7 +1,7 @@
 import { NetworkStatus } from '@apollo/client'
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
-import { MixedRouteSDK, Trade as RouterSDKTrade } from '@uniswap/router-sdk'
+import { MixedRouteSDK, Protocol, Trade as RouterSDKTrade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
@@ -10,12 +10,15 @@ import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import { isL2Chain } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
+  AGGRESIVE_AUTO_SLIPPAGE_TOLERANCE,
   MAX_AUTO_SLIPPAGE_TOLERANCE,
+  MAX_TRADE_SIZE_FOR_AGGRESIVE_SLIPPAGE_USD,
   MIN_AUTO_SLIPPAGE_TOLERANCE,
 } from 'wallet/src/constants/transactions'
 import { useRouterQuote } from 'wallet/src/features/routing/hooks'
 import { QuoteResult } from 'wallet/src/features/routing/types'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
+import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
 import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/routeUtils'
 import { clearStaleTrades } from 'wallet/src/features/transactions/swap/utils'
 
@@ -189,8 +192,11 @@ function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
   const chainId = trade?.quote?.route?.[0]?.[0]?.tokenIn.chainId
   const gasCostUSD = trade?.quote?.gasUseEstimateUSD
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
+  const shouldUseAggresiveSlippage = useIsAggressiveSlippageEnabledOnTrade(trade)
 
   return useMemo(() => {
+    if (shouldUseAggresiveSlippage) return AGGRESIVE_AUTO_SLIPPAGE_TOLERANCE
+
     const onL2 = isL2Chain(chainId)
     if (onL2 || !gasCostUSD || !outputAmountUSD) return MIN_AUTO_SLIPPAGE_TOLERANCE
 
@@ -205,5 +211,25 @@ function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
     }
 
     return Number(suggestedSlippageTolerance.toFixed(2))
-  }, [chainId, gasCostUSD, outputAmountUSD])
+  }, [shouldUseAggresiveSlippage, chainId, gasCostUSD, outputAmountUSD])
+}
+
+// Checks if MEV blocker settings are enabled, and if trade qualifies for aggresive slippage
+export function useIsAggressiveSlippageEnabledOnTrade(trade: Maybe<Trade>): boolean {
+  const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
+  const inputAmountUSD = useUSDCValue(trade?.inputAmount)?.toExact()
+  const isV2Trade = trade?.routes.every((route) => route.protocol === Protocol.V2)
+
+  const shouldUseMevBlocker = useShouldUseMEVBlocker(trade?.inputAmount.currency.chainId)
+
+  // We need to check both input and output, as long tail tokens will likely fail durng quote fetching
+  let isTradeUnderDollarThreshold = false
+  if (inputAmountUSD) {
+    isTradeUnderDollarThreshold = Number(inputAmountUSD) < MAX_TRADE_SIZE_FOR_AGGRESIVE_SLIPPAGE_USD
+  } else {
+    isTradeUnderDollarThreshold =
+      Number(outputAmountUSD) < MAX_TRADE_SIZE_FOR_AGGRESIVE_SLIPPAGE_USD
+  }
+
+  return Boolean(shouldUseMevBlocker && isTradeUnderDollarThreshold && isV2Trade)
 }

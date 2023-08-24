@@ -13,6 +13,8 @@ export type SwapTradeBaseProperties = {
   chain_id: number
   token_in_amount: string
   token_out_amount: string
+  custom_rpc?: string
+  contains_v2_routes?: boolean
 } & TraceProps
 
 type SwapTransactionResultProperties = {
@@ -30,6 +32,8 @@ type SwapTransactionResultProperties = {
   gasUseEstimate?: string
   route?: string
   quoteId?: string
+  custom_rpc?: string
+  contains_v2_routes?: boolean
 }
 
 export type WalletEventProperties = {

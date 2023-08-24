@@ -47,4 +47,6 @@ export const TOKEN_WARNING_HELP_PAGE_URL = `${uniswapUrls.helpUrl}/hc/en-us/arti
 
 export const SWAP_SLIPPAGE_HELP_PAGE_URL = `${uniswapUrls.helpUrl}/hc/en-us/articles/8643879653261-What-is-Price-Slippage-`
 
+export const SWAP_PROTECTION_HELP_URL = `${uniswapUrls.helpUrl}/hc/en-us/articles/18814993155853`
+
 export const SUPPORTED_NETWORKS_PAGE_URL = `${uniswapUrls.helpUrl}/hc/en-us/articles/14569415293325`

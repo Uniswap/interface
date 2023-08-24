@@ -270,6 +270,8 @@ export function logTransactionEvent(
       inputCurrencyId,
       outputCurrencyId,
       tradeType,
+      customRpc,
+      containsV2Routes,
     } = swapTypeInfo
     const eventName =
       status === TransactionStatus.Success
@@ -290,6 +292,8 @@ export function logTransactionEvent(
       gasUseEstimate,
       route: routeString,
       quoteId,
+      custom_rpc: customRpc,
+      contains_v2_routes: Boolean(containsV2Routes),
     })
   }
 }

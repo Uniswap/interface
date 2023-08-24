@@ -3,6 +3,7 @@ import { tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
 import { call } from 'typed-redux-saga'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
+import { AlternativeRpcType } from 'wallet/src/constants/chains'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
@@ -16,11 +17,12 @@ export type SwapParams = {
   trade: Trade
   approveTxRequest?: providers.TransactionRequest
   swapTxRequest: providers.TransactionRequest
+  shouldUseMevBlocker?: boolean
 }
 
 export function* approveAndSwap(params: SwapParams) {
   try {
-    const { account, approveTxRequest, swapTxRequest, txId, trade } = params
+    const { account, approveTxRequest, swapTxRequest, txId, trade, shouldUseMevBlocker } = params
     if (!swapTxRequest.chainId || !swapTxRequest.to || (approveTxRequest && !approveTxRequest.to)) {
       throw new Error('approveAndSwap received incomplete transaction request details')
     }
@@ -42,6 +44,7 @@ export function* approveAndSwap(params: SwapParams) {
         options: { request: approveTxRequest },
         typeInfo,
         trade,
+        shouldUseMevBlocker,
       })
     }
 
@@ -51,6 +54,8 @@ export function* approveAndSwap(params: SwapParams) {
     }
 
     const swapTypeInfo = tradeToTransactionInfo(trade)
+    swapTypeInfo.customRpc = shouldUseMevBlocker ? AlternativeRpcType.MevBlocker : undefined
+
     yield* call(sendTransaction, {
       txId,
       chainId,
@@ -58,6 +63,7 @@ export function* approveAndSwap(params: SwapParams) {
       options: { request },
       typeInfo: swapTypeInfo,
       trade,
+      shouldUseMevBlocker,
     })
   } catch (error) {
     logger.error('Swap failed', {

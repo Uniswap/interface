@@ -7,6 +7,7 @@ import { NotificationToastRouter } from 'src/features/notifications/Notification
 import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { account } from 'wallet/src/test/fixtures'
 
@@ -15,7 +16,9 @@ const store = setupStore({
     activeAccountAddress: account.address,
     accounts: { [account.address]: account },
     isUnlocked: true,
-    settings: {},
+    settings: {
+      swapProtection: SwapProtectionSetting.Auto,
+    },
   },
   notifications: {
     notificationQueue: [

@@ -1,4 +1,4 @@
-import { ChainId } from 'wallet/src/constants/chains'
+import { AlternativeRpcType, ALT_RPC_URLS_BY_CHAIN, ChainId } from 'wallet/src/constants/chains'
 
 export function getInfuraChainName(
   chainId: ChainId
@@ -21,4 +21,11 @@ export function getInfuraChainName(
     default:
       throw new Error(`Unsupported eth infura chainId for ${chainId}`)
   }
+}
+
+export function isAlternativeRpcSupportedOnChain(
+  chainId: ChainId,
+  alternativeRpcType: AlternativeRpcType
+): boolean {
+  return Object.keys(ALT_RPC_URLS_BY_CHAIN[chainId] ?? {}).includes(alternativeRpcType)
 }

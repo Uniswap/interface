@@ -6,6 +6,7 @@ import {
   removeAccounts,
   setAccountAsActive,
   setAccountsNonPending,
+  SwapProtectionSetting,
   walletReducer,
   WalletState,
 } from './slice'
@@ -32,7 +33,9 @@ describe(walletReducer, () => {
       accounts: {},
       activeAccountAddress: null,
       isUnlocked: false,
-      settings: {},
+      settings: {
+        swapProtection: SwapProtectionSetting.Auto,
+      },
     })
   })
 

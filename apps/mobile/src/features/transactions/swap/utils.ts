@@ -1,3 +1,4 @@
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import {
   SwapOptions as UniversalRouterSwapOptions,
@@ -74,6 +75,7 @@ export function tradeToTransactionInfo(
     quoteId,
     gasUseEstimate,
     routeString,
+    containsV2Routes: trade.routes.some((t) => t.protocol === Protocol.V2),
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT

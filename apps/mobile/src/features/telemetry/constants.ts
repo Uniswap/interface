@@ -119,6 +119,7 @@ export const enum ModalName {
   Swap = 'swap-modal',
   SwapSettings = 'swap-settings-modal',
   SwapWarning = 'swap-warning-modal',
+  SwapProtection = 'swap-protection-modal',
   GasEstimateWarning = 'gas-estimate-warning-modal',
   TokenSelector = 'token-selector',
   TokenWarningModal = 'token-warning-modal',
@@ -249,6 +250,7 @@ export enum UserPropertyName {
   TransactionAuthMethod = 'transaction_auth_method',
   WalletSignerAccounts = `wallet_signer_accounts`,
   WalletSignerCount = 'wallet_signer_count',
+  WalletSwapProtectionSetting = 'wallet_swap_protection_setting',
   WalletViewOnlyCount = 'wallet_view_only_count',
   // alphabetize additional values.
 }

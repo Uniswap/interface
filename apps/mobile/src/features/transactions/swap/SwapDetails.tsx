@@ -11,9 +11,11 @@ import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
+import { Icons } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { formatPrice, NumberType } from 'utilities/src/format/format'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
+import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 
 interface SwapDetailsProps {
@@ -29,6 +31,7 @@ interface SwapDetailsProps {
   onShowWarning?: () => void
   onShowGasWarning: () => void
   onShowSlippageModal: () => void
+  onShowSwapProtectionModal: () => void
 }
 
 export function SwapDetails({
@@ -44,6 +47,7 @@ export function SwapDetails({
   onShowWarning,
   onShowGasWarning,
   onShowSlippageModal,
+  onShowSwapProtectionModal,
 }: SwapDetailsProps): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
@@ -58,6 +62,8 @@ export function SwapDetails({
   const showSlippageWarning = autoSlippageTolerance
     ? acceptedTrade.slippageTolerance > autoSlippageTolerance
     : false
+
+  const shouldUseMevBlocker = useShouldUseMEVBlocker(trade?.inputAmount.currency.chainId)
 
   return (
     <TransactionDetails
@@ -128,6 +134,30 @@ export function SwapDetails({
           </TouchableOpacity>
         </Flex>
       </Flex>
+      {shouldUseMevBlocker && (
+        <Flex row alignItems="center" justifyContent="space-between">
+          <TouchableArea onPress={onShowSwapProtectionModal}>
+            <Flex row gap="spacing4">
+              <Text variant="subheadSmall">{t('Swap protection')}</Text>
+              <InfoCircle
+                color={theme.colors.neutral1}
+                height={theme.iconSizes.icon20}
+                width={theme.iconSizes.icon20}
+              />
+            </Flex>
+          </TouchableArea>
+          <Flex row gap="spacing8">
+            <Icons.ShieldCheck
+              color={theme.colors.neutral3}
+              height={theme.iconSizes.icon16}
+              width={theme.iconSizes.icon16}
+            />
+            <Text color="neutral1" variant="subheadSmall">
+              {t('On')}
+            </Text>
+          </Flex>
+        </Flex>
+      )}
       <Flex row alignItems="center" justifyContent="space-between">
         <TouchableArea onPress={onShowSlippageModal}>
           <Flex row gap="spacing4">
