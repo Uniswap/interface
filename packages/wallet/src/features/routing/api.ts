@@ -119,6 +119,7 @@ export function useQuoteQuery(
     ['quote', 'routing'],
     {
       pollInterval,
+      ttlMs: ONE_MINUTE_MS,
       skip: !request,
       notifyOnNetworkStatusChange: true,
     }
@@ -136,12 +137,6 @@ export function useQuoteQuery(
     }
 
     if (result.data) {
-      // Since there is no cachettl if the cached query being returned is more than a minute old then refetch
-      if (result.data?.timestamp && Date.now() - result.data.timestamp > ONE_MINUTE_MS) {
-        result.refetch?.()
-        return { ...result, data: undefined }
-      }
-
       const tradeType = request?.type === 'exactIn' ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
       const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(
         request?.tokenInAddress as SwapRouterNativeAssets

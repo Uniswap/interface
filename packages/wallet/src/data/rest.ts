@@ -1,4 +1,4 @@
-import { gql, OperationVariables, QueryHookOptions, useQuery } from '@apollo/client'
+import { gql, NetworkStatus, OperationVariables, QueryHookOptions, useQuery } from '@apollo/client'
 import { useEffect, useMemo } from 'react'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
 
@@ -14,61 +14,55 @@ export function useRestQuery<
   variables: TVariables,
   // Fields requested from the endpoint
   fields: string[],
-  options?: Omit<QueryHookOptions<{ data: TData }, { input: TVariables }>, 'variables'> & {
-    ttlMs?: number
+  options: Omit<
+    QueryHookOptions<{ data: TData }, { input: TVariables }>,
+    'variables' | 'fetchPolicy'
+  > & {
+    ttlMs: number
   },
   method: 'GET' | 'POST' = 'POST'
 ): GqlResult<TData> {
-  const document = useMemo(
-    () =>
-      gql`
+  const document = gql`
     query Query($input: REST!) {
       data(input: $input) @rest(type: "${path}Response", path: "${path}", method: "${method}") {
-        ${fields
-          // always add `timestamp` to fields to invalidate (no dedupe required)
-          .concat(options?.ttlMs ? 'timestamp' : [])
-          .join('\n')}
+        ${fields.join('\n')}
+          timestamp
       }
     }
-  `,
-    [fields, method, options?.ttlMs, path]
-  )
+  `
 
-  const queryOptions = useMemo(
-    (): QueryHookOptions<{ data: TData }, { input: TVariables }> => ({
-      variables: { input: variables },
-      fetchPolicy: 'cache-first',
-      ...options,
-    }),
-    [options, variables]
-  )
+  const queryOptions: QueryHookOptions<{ data: TData }, { input: TVariables }> = {
+    variables: { input: variables },
+    fetchPolicy: 'cache-first',
+    ...options,
+  }
 
   const queryResult = useQuery(document, queryOptions)
 
+  // @ts-expect-error timestamp is provided by useQuery
+  const lastFetchedTimestamp: number | undefined = queryResult.data?.data?.timestamp
+  const cacheExpired = getCacheExpired(lastFetchedTimestamp, options.ttlMs)
+
   // re-export query result with easier data access
-  const result = useMemo(() => {
-    const { data, ...rest } = queryResult
-    return {
-      data: data?.data,
-      ...rest,
-    }
-  }, [queryResult])
+  const result = useMemo(
+    // invalidate old query results if beyond TTL
+    () => ({ ...queryResult, data: cacheExpired ? undefined : queryResult.data?.data }),
+    [cacheExpired, queryResult]
+  )
 
-  // invalidate old query results if beyond TTL
   useEffect(() => {
-    // @ts-expect-error tiemstamp is provided by useQuery
-    const lastFetchedTimestamp = result.data?.timestamp
-    if (
-      !lastFetchedTimestamp || // never fetched handled by `cache-first` policy
-      !options?.ttlMs
-    )
-      return
+    // avoid triggering refetch when a request is in flight
+    if (result.networkStatus !== NetworkStatus.ready) return
 
-    const age = Date.now() - lastFetchedTimestamp
-    if (age > options?.ttlMs) {
-      result.refetch().catch(() => undefined)
-    }
-  }, [options?.ttlMs, result])
+    if (cacheExpired) result.refetch().catch(() => undefined)
+  }, [cacheExpired, result])
 
   return result
+}
+
+const getCacheExpired = (lastFetchedTimestamp: number | undefined, ttl: number): boolean => {
+  // if there is no timestamp, then it's the first ever query and there is no cache to expire
+  if (!lastFetchedTimestamp) return false
+
+  return Date.now() - lastFetchedTimestamp > ttl
 }

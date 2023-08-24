@@ -71,6 +71,7 @@ export function useOnChainCurrencyBalance(
     ['balance'],
     {
       pollInterval: getPollingIntervalByBlocktime(currency?.chainId),
+      ttlMs: getPollingIntervalByBlocktime(currency?.chainId),
       skip: !currency,
     }
   )

@@ -17,7 +17,7 @@ export function useGasFeeQuery(
     {
       pollInterval: getPollingIntervalByBlocktime(tx?.chainId),
       skip: skip || !tx,
-      fetchPolicy: 'no-cache',
+      ttlMs: getPollingIntervalByBlocktime(tx?.chainId),
     }
   )
 }
