@@ -51,6 +51,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     tokenInChainId,
     uniswapXForceSyntheticQuotes,
     uniswapXEthOutputEnabled,
+    uniswapXExactOutputEnabled,
     routerPreference,
   } = args
 
@@ -76,7 +77,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     !args.uniswapXEnabled ||
     (args.userDisabledUniswapX && routerPreference !== RouterPreference.X) ||
     (tokenOutIsNative && !uniswapXEthOutputEnabled) ||
-    tradeType === TradeType.EXACT_OUTPUT ||
+    (!uniswapXExactOutputEnabled && tradeType === TradeType.EXACT_OUTPUT) ||
     !isUniswapXSupportedChain(tokenInChainId)
   ) {
     return [classic]

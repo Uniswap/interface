@@ -6,6 +6,7 @@ import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
 import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
+import { useUniswapXExactOutputFlag } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -230,6 +231,12 @@ export default function FeatureFlagModal() {
         value={useUniswapXEthOutputFlag()}
         featureFlag={FeatureFlag.uniswapXEthOutputEnabled}
         label="Enable eth output for UniswapX orders"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useUniswapXExactOutputFlag()}
+        featureFlag={FeatureFlag.uniswapXExactOutputEnabled}
+        label="Enable exact output for UniswapX orders"
       />
       <FeatureFlagOption
         variant={BaseVariant}
