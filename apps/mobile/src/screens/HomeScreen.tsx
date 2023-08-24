@@ -329,26 +329,25 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
             {contentHeader}
           </Animated.View>
           <Animated.View style={[TAB_STYLES.header, tabBarStyle]}>
-            <Box bg="surface1" paddingLeft="spacing12">
-              <TabBar
-                {...sceneProps}
-                indicatorStyle={TAB_STYLES.activeTabIndicator}
-                navigationState={{ index: tabIndex, routes }}
-                pressColor={theme.colors.surface3} // Android only
-                renderLabel={renderTabLabel}
-                style={[
-                  TAB_STYLES.tabBar,
-                  {
-                    backgroundColor: theme.colors.surface1,
-                    borderBottomColor: theme.colors.surface3,
-                  },
-                ]}
-                tabStyle={style}
-                onTabPress={async (): Promise<void> => {
-                  await impactAsync()
-                }}
-              />
-            </Box>
+            <TabBar
+              {...sceneProps}
+              indicatorStyle={TAB_STYLES.activeTabIndicator}
+              navigationState={{ index: tabIndex, routes }}
+              pressColor={theme.colors.surface3} // Android only
+              renderLabel={renderTabLabel}
+              style={[
+                TAB_STYLES.tabBar,
+                {
+                  backgroundColor: theme.colors.surface1,
+                  borderBottomColor: theme.colors.surface3,
+                  paddingLeft: theme.spacing.spacing12,
+                },
+              ]}
+              tabStyle={style}
+              onTabPress={async (): Promise<void> => {
+                await impactAsync()
+              }}
+            />
           </Animated.View>
         </>
       )
@@ -362,6 +361,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       tabIndex,
       theme.colors.surface1,
       theme.colors.surface3,
+      theme.spacing.spacing12,
     ]
   )
 
