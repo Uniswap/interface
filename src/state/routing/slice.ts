@@ -11,7 +11,6 @@ import {
   GetQuoteArgs,
   INTERNAL_ROUTER_PREFERENCE_PRICE,
   QuoteMethod,
-  QuoteSpeed,
   QuoteState,
   RouterPreference,
   RoutingConfig,
@@ -36,37 +35,6 @@ const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 // routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const DEFAULT_QUERY_PARAMS = {
   protocols,
-}
-
-const FAST_QUOTE_PARAMS = {
-  // TODO: remove for prod
-  unicornSecrets: process.env.REACT_APP_DEBUG_SECRET,
-  debugRoutingConfig: JSON.stringify({
-    useCachedRoutes: true,
-    writeToCachedRoutes: 'true',
-    optimisticCachedRoutes: true,
-    v2PoolSelection: {
-      topN: 3,
-      topNDirectSwaps: 1,
-      topNTokenInOut: 5,
-      topNSecondHop: 2,
-      topNWithEachBaseToken: 2,
-      topNWithBaseToken: 6,
-    },
-    v3PoolSelection: {
-      topN: 2,
-      topNDirectSwaps: 2,
-      topNTokenInOut: 3,
-      topNSecondHop: 1,
-      topNWithEachBaseToken: 3,
-      topNWithBaseToken: 5,
-      topNSecondHopForTokenAddress: {},
-    },
-    maxSwapsPerPath: 1,
-    minSplits: 1,
-    maxSplits: 1,
-    distributionPercent: 5,
-  }),
 }
 
 function getQuoteLatencyMeasure(mark: PerformanceMark): PerformanceMeasure {
@@ -98,7 +66,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   const classic = {
     ...DEFAULT_QUERY_PARAMS,
     routingType: URAQuoteType.CLASSIC,
-    ...(quoteSpeed === QuoteSpeed.FAST ? FAST_QUOTE_PARAMS : {}),
+    quoteSpeed,
   }
 
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)

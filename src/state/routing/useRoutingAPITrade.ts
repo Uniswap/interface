@@ -119,6 +119,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   })
 
   const tradeResult = standardTradeResult ?? fastTradeResult
+
   const isFastTradeFetching = fastTradeCurrentData !== fastTradeResult || !fastTradeCurrentData
   const isStandardTradeFetching = standardTradeCurrentData !== standardTradeResult || !standardTradeCurrentData
 
