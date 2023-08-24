@@ -1,25 +1,26 @@
-import { Plural, Trans } from '@lingui/macro'
+import { Plural, t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Column from 'components/Column'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { ZERO_PERCENT } from 'constants/misc'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { InterfaceTrade, RouterPreference } from 'state/routing/types'
+import { ClassicTrade, InterfaceTrade, RouterPreference } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components'
+import styled, { DefaultTheme, useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
 import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
-import { getPriceImpactWarning } from 'utils/prices'
+import { getPriceImpactColor } from 'utils/prices'
 
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
@@ -41,9 +42,10 @@ const ConfirmButton = styled(ButtonError)`
   margin-top: 10px;
 `
 
-const DetailRowValue = styled(ThemedText.BodySmall)`
+const DetailRowValue = styled(ThemedText.BodySmall)<{ warningColor?: keyof DefaultTheme }>`
   text-align: right;
   overflow-wrap: break-word;
+  ${({ warningColor, theme }) => warningColor && `color: ${theme[warningColor]};`};
 `
 
 export default function SwapModalFooter({
@@ -112,18 +114,22 @@ export default function SwapModalFooter({
           </Row>
         </ThemedText.BodySmall>
         {isClassicTrade(trade) && (
-          <ThemedText.BodySmall>
-            <Row align="flex-start" justify="space-between" gap="sm">
-              <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
-                <Label cursor="help">
-                  <Trans>Price impact</Trans>
-                </Label>
-              </MouseoverTooltip>
-              <DetailRowValue color={getPriceImpactWarning(trade.priceImpact)}>
-                {trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
-              </DetailRowValue>
-            </Row>
-          </ThemedText.BodySmall>
+          <>
+            <TokenTaxLineItem trade={trade} type="input" />
+            <TokenTaxLineItem trade={trade} type="output" />
+            <ThemedText.BodySmall>
+              <Row align="flex-start" justify="space-between" gap="sm">
+                <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
+                  <Label cursor="help">
+                    <Trans>Price impact</Trans>
+                  </Label>
+                </MouseoverTooltip>
+                <DetailRowValue warningColor={getPriceImpactColor(trade.priceImpact)}>
+                  {trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
+                </DetailRowValue>
+              </Row>
+            </ThemedText.BodySmall>
+          </>
         )}
         <ThemedText.BodySmall>
           <Row align="flex-start" justify="space-between" gap="sm">
@@ -207,5 +213,30 @@ export default function SwapModalFooter({
         </AutoRow>
       )}
     </>
+  )
+}
+
+function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' | 'output' }) {
+  const [currency, percentage] =
+    type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
+
+  if (percentage.equalTo(ZERO_PERCENT)) return null
+
+  return (
+    <ThemedText.BodySmall>
+      <Row align="flex-start" justify="space-between" gap="sm">
+        <MouseoverTooltip
+          text={
+            <Trans>
+              Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
+              receive any of these fees.
+            </Trans>
+          }
+        >
+          <Label cursor="help">{t`${currency.symbol} fee`}</Label>
+        </MouseoverTooltip>
+        <DetailRowValue warningColor={getPriceImpactColor(percentage)}>{formatPriceImpact(percentage)}</DetailRowValue>
+      </Row>
+    </ThemedText.BodySmall>
   )
 }

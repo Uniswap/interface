@@ -304,6 +304,7 @@ export default function ConfirmSwapModal({
   // Swap failed locally and was not broadcast to the blockchain.
   const localSwapFailure = Boolean(swapError) && !didUserReject(swapError)
   const swapFailed = localSwapFailure || swapReverted
+
   useEffect(() => {
     // Reset the modal state if the user rejected the swap.
     if (swapError && !swapFailed) {
