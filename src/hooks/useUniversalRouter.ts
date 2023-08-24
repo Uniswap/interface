@@ -127,6 +127,7 @@ export function useUniversalRouterSwapCallback(
                 throw new ModifiedSwapError()
               }
             }
+            return response
           })
         return {
           type: TradeFillType.Classic as const,
