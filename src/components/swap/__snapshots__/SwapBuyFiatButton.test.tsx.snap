@@ -28,6 +28,7 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
 .c2 {
   padding: 16px;
   width: 100%;
+  line-height: 24px;
   font-weight: 535;
   text-align: center;
   border-radius: 16px;
