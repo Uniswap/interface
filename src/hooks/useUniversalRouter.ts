@@ -12,7 +12,7 @@ import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { UserRejectedRequestError } from 'utils/errors'
+import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
@@ -61,7 +61,7 @@ export function useUniversalRouterSwapCallback(
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
         const connectedChainId = await provider.getSigner().getChainId()
-        if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
+        if (chainId !== connectedChainId) throw new WrongChainError()
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
