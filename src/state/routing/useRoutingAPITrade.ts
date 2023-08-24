@@ -95,13 +95,15 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     quoteSpeed: QuoteSpeed.STANDARD,
   })
 
+  // skip double quoting if it's just a price lookup
+  const skipFastFetch = skipFetch || routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE
   const {
     isError: isFastTradeError,
     data: fastTradeResult,
     error: fastTradeError,
     currentData: fastTradeCurrentData,
   } = useGetQuoteQueryState(fastQueryArgs)
-  useGetQuoteQuery(skipFetch ? skipToken : fastQueryArgs) // no polling interval on the fast quotes
+  useGetQuoteQuery(skipFastFetch ? skipToken : fastQueryArgs) // no polling interval on the fast quotes
 
   const {
     isError: isStandardTradeError,
