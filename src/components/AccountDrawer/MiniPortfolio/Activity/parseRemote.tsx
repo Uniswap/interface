@@ -160,7 +160,7 @@ function parseSwap(changes: TransactionChanges) {
   // Some swaps may have more than 2 transfers, e.g. swaps with fees on tranfer
   if (changes.TokenTransfer.length >= 2) {
     const sent = changes.TokenTransfer.find((t) => t.direction === 'OUT')
-    // Any leftover native token is refunded on exact_out swaps where the output token is native
+    // Any leftover native token is refunded on exact_out swaps where the input token is native
     const refund = changes.TokenTransfer.find(
       (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === 'NATIVE'
     )
