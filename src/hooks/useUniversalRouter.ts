@@ -117,14 +117,16 @@ export function useUniversalRouterSwapCallback(
               }),
               ...analyticsContext,
             })
-            if (!response.data || response.data.length === 0 || response.data === '0x') {
+            if (tx.data !== response.data) {
               sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
                 txHash: response.hash,
                 ...analyticsContext,
               })
-              throw new ModifiedSwapError()
+
+              if (!response.data || response.data.length === 0 || response.data === '0x') {
+                throw new ModifiedSwapError()
+              }
             }
-            return response
           })
         return {
           type: TradeFillType.Classic as const,
