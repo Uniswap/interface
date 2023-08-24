@@ -33,6 +33,7 @@ type BaseButtonProps = {
 export const BaseButton = styled(RebassButton)<BaseButtonProps>`
   padding: ${({ padding }) => padding ?? '16px'};
   width: ${({ width }) => width ?? '100%'};
+  line-height: 24px;
   font-weight: 535;
   text-align: center;
   border-radius: ${({ $borderRadius }) => $borderRadius ?? '16px'};
