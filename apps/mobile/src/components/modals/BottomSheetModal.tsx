@@ -73,13 +73,18 @@ export function BottomSheetModal({
 }: Props): JSX.Element {
   const insets = useSafeAreaInsets()
   const modalRef = useRef<BaseModal>(null)
-
   const keyboard = useKeyboardLayout()
+
   useEffect(() => {
     if (extendOnKeyboardVisible && keyboard.isVisible) {
       modalRef.current?.expand()
     }
   }, [extendOnKeyboardVisible, keyboard.isVisible])
+
+  useEffect(() => {
+    // Close modal when it is unmounted
+    return modalRef.current?.close
+  }, [])
 
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints)
