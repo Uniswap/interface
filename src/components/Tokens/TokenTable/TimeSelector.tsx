@@ -30,7 +30,7 @@ export const ORDERED_TIMES: TimePeriod[] = [
 const InternalMenuItem = styled.div`
   flex: 1;
   padding: 8px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   border-radius: 8px;
 
   :hover {
@@ -48,7 +48,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   cursor: pointer;
 
   :hover {
-    background-color: ${({ theme }) => theme.hoverState};
+    background-color: ${({ theme }) => theme.surface3};
     text-decoration: none;
   }
 `
@@ -56,9 +56,9 @@ const MenuTimeFlyout = styled.span`
   min-width: 240px;
   max-height: 300px;
   overflow: auto;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  box-shadow: ${({ theme }) => theme.deepShadow};
-  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface1};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
+  border: 0.5px solid ${({ theme }) => theme.surface3};
   border-radius: 12px;
   padding: 8px;
   display: flex;
@@ -97,7 +97,7 @@ const StyledMenuContent = styled.div`
 `
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
-  color: ${({ open, theme }) => (open ? theme.accentActive : theme.textSecondary)};
+  color: ${({ open, theme }) => (open ? theme.accent1 : theme.neutral2)};
 `
 
 // TODO: change this to reflect data pipeline
@@ -135,7 +135,7 @@ export default function TimeSelector() {
               }}
             >
               <div>{DISPLAYS[time]}</div>
-              {time === activeTime && <Check color={theme.accentAction} size={16} />}
+              {time === activeTime && <Check color={theme.accent1} size={16} />}
             </InternalLinkMenuItem>
           ))}
         </MenuTimeFlyout>

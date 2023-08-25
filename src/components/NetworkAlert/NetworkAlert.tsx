@@ -125,7 +125,7 @@ const ContentWrapper = styled.div<{ chainId: NetworkAlertChains; darkMode: boole
   }
 `
 const Header = styled.h2`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   margin: 0;
 `

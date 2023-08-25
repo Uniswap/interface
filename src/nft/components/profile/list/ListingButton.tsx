@@ -10,9 +10,9 @@ import { shallow } from 'zustand/shallow'
 import { findListingIssues } from './utils'
 
 const StyledListingButton = styled(BaseButton)<{ showResolveIssues: boolean; missingPrices: boolean }>`
-  background: ${({ showResolveIssues, theme }) => (showResolveIssues ? theme.accentFailure : theme.accentAction)};
-  color: ${({ theme }) => theme.accentTextLightPrimary};
-  font-weight: 600;
+  background: ${({ showResolveIssues, theme }) => (showResolveIssues ? theme.critical : theme.accent1)};
+  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
+  font-weight: 535;
   font-size: 20px;
   line-height: 24px;
   padding: 16px;

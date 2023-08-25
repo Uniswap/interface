@@ -109,9 +109,9 @@ export function getPriceImpactWarning(priceImpact: Percent): 'warning' | 'error'
 export function getPriceImpactColor(priceImpact: Percent): keyof DefaultTheme | undefined {
   switch (getPriceImpactWarning(priceImpact)) {
     case 'error':
-      return 'accentFailure'
+      return 'deprecated_accentFailureSoft'
     case 'warning':
-      return 'accentWarning'
+      return 'deprecated_accentWarning'
     default:
       return undefined
   }

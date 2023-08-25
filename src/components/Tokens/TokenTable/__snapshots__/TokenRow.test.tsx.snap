@@ -30,7 +30,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 .c8 {
   width: 24px;
   height: 24px;
-  background: #E8ECFB;
+  background: #22222212;
   -webkit-transition: background-color 250ms ease-in;
   transition: background-color 250ms ease-in;
   box-shadow: 0 0 1px white;
@@ -105,7 +105,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   display: flex;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: #0D111C;
+  color: #222222;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -119,7 +119,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 .c3 {
-  color: #7780A0;
+  color: #7D7D7D;
   min-width: 32px;
   font-size: 14px;
 }
@@ -207,7 +207,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 .c13 {
-  color: #98A1C0;
+  color: #7D7D7D;
   text-transform: uppercase;
 }
 
@@ -237,7 +237,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   .c1 {
     grid-template-columns: 2fr 3fr;
     min-width: unset;
-    border-bottom: 0.5px solid #F5F6FC;
+    border-bottom: 0.5px solid #F9F9F9;
   }
 
   .c1:last-of-type {
@@ -279,7 +279,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
     -webkit-justify-content: flex-end;
     -ms-flex-pack: end;
     justify-content: flex-end;
-    color: #7780A0;
+    color: #7D7D7D;
     font-size: 12px;
     line-height: 16px;
   }
@@ -316,7 +316,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
     width: -webkit-max-content;
     width: -moz-max-content;
     width: max-content;
-    font-weight: 500;
+    font-weight: 535;
   }
 }
 
@@ -416,22 +416,13 @@ exports[`LoadedRow.tsx renders a row 1`] = `
                     class="c19"
                     fill="none"
                     height="14"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
                     viewBox="0 0 24 24"
                     width="14"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <line
-                      x1="7"
-                      x2="17"
-                      y1="17"
-                      y2="7"
-                    />
-                    <polyline
-                      points="7 7 17 7 17 17"
+                    <path
+                      d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+                      fill="currentColor"
                     />
                   </svg>
                 </div>
@@ -458,23 +449,14 @@ exports[`LoadedRow.tsx renders a row 1`] = `
                 aria-label="up"
                 class="c19"
                 fill="none"
-                height="20"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                height="16"
                 viewBox="0 0 24 24"
-                width="20"
+                width="16"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <line
-                  x1="7"
-                  x2="17"
-                  y1="17"
-                  y2="7"
-                />
-                <polyline
-                  points="7 7 17 7 17 17"
+                <path
+                  d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+                  fill="currentColor"
                 />
               </svg>
             </div>
