@@ -166,7 +166,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   const shouldGetQuote = !isWrapAction(wrapType)
 
-  // Fetch the trade quote. If customSlippageTolerance is undefined, then the quote is fetched with DEFAULT_SLIPPAGE_TOLERANCE
+  // Fetch the trade quote. If customSlippageTolerance is undefined, then the quote is fetched with MAX_AUTO_SLIPPAGE_TOLERANCE
   const tradeWithoutSlippage = useTrade({
     amountSpecified: shouldGetQuote ? amountSpecified : null,
     otherCurrency,

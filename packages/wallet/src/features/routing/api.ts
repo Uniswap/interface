@@ -6,7 +6,7 @@ import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
-import { DEFAULT_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
+import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { useRestQuery } from 'wallet/src/data/rest'
 import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/routeUtils'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
@@ -46,9 +46,7 @@ export function useQuoteQuery(
   { pollInterval }: QueryHookOptions
 ): ReturnType<typeof useRestQuery<TradeQuoteResult>> {
   const params: QuoteRequest | undefined = useMemo(() => {
-    if (!request) {
-      return undefined
-    }
+    if (!request) return undefined
 
     const {
       amount,
@@ -57,7 +55,7 @@ export function useQuoteQuery(
       fetchSimulatedGasLimit,
       recipient,
       permitSignatureInfo,
-      slippageTolerance = DEFAULT_SLIPPAGE_TOLERANCE,
+      slippageTolerance = MAX_AUTO_SLIPPAGE_TOLERANCE,
       tokenInAddress,
       tokenInChainId,
       tokenOutAddress,
@@ -178,10 +176,7 @@ export function useQuoteQuery(
       }
     }
 
-    return {
-      ...result,
-      data: undefined,
-    }
+    return { ...result, data: undefined }
   }, [
     result,
     request?.loggingProperties?.isUSDQuote,

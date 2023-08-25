@@ -32,7 +32,7 @@ import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import {
-  DEFAULT_SLIPPAGE_TOLERANCE,
+  MAX_AUTO_SLIPPAGE_TOLERANCE,
   MAX_CUSTOM_SLIPPAGE_TOLERANCE,
 } from 'wallet/src/constants/transactions'
 import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
@@ -67,7 +67,7 @@ export default function SwapSettingsModal({
   const { customSlippageTolerance, autoSlippageTolerance } = derivedSwapInfo
   const isCustomSlippage = !!customSlippageTolerance
   const currentSlippage =
-    customSlippageTolerance ?? autoSlippageTolerance ?? DEFAULT_SLIPPAGE_TOLERANCE
+    customSlippageTolerance ?? autoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
 
   const getTitle = (): string => {
     switch (view) {
@@ -238,7 +238,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
 
   // Fall back to default slippage if there is no trade specified.
   // Separate from inputSlippageTolerance since autoSlippage updates when the trade quote updates
-  const autoSlippageTolerance = derivedAutoSlippageTolerance ?? DEFAULT_SLIPPAGE_TOLERANCE
+  const autoSlippageTolerance = derivedAutoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
 
   // Determine numerical currentSlippage value to use based on inputSlippageTolerance string value
   // ex. if inputSlippageTolerance is '' or '.', currentSlippage is set to autoSlippageTolerance

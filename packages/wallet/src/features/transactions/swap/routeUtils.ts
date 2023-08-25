@@ -2,7 +2,7 @@ import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { DEFAULT_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
+import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
   PoolType,
   QuoteResult,
@@ -26,7 +26,7 @@ export function transformQuoteToTrade(
   return new Trade({
     quote: quoteResult,
     deadline,
-    slippageTolerance: slippageTolerance ?? DEFAULT_SLIPPAGE_TOLERANCE,
+    slippageTolerance: slippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE,
     v2Routes:
       routes
         ?.filter((r) => r.routev2 !== null)
