@@ -30,7 +30,7 @@ export function IntroScreen(): JSX.Element {
         width={ONBOARDING_CONTENT_WIDTH}>
         <YStack alignItems="center" gap="$spacing12">
           <Text color="$neutral1" variant="subheadLarge">
-            {t('You‘ve already completed onboarding')}
+            {t('You’ve already completed onboarding')}
           </Text>
           <Text color="$neutral2" textAlign="center" variant="bodySmall">
             {t(
