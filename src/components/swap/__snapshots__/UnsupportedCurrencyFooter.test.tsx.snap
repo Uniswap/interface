@@ -27,18 +27,19 @@ exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
 }
 
 .c5 {
-  color: #FB118E;
+  color: #FC72FF;
 }
 
 .c2 {
   padding: 0;
   width: 100%;
-  font-weight: 500;
+  line-height: 24px;
+  font-weight: 535;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 16px;
   outline: none;
   border: 1px solid transparent;
-  color: #0D111C;
+  color: #222222;
   -webkit-text-decoration: none;
   text-decoration: none;
   display: -webkit-box;
@@ -88,7 +89,7 @@ exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
 
 .c3 {
   background-color: transparent;
-  color: #FB118E;
+  color: #FC72FF;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -133,8 +134,8 @@ exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
   max-width: 400px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  color: #7780A0;
-  background-color: #FFFFFF99;
+  color: #7D7D7D;
+  background-color: #F9F9F9;
   z-index: 0;
   -webkit-transform: translateY(0%);
   -ms-transform: translateY(0%);
@@ -158,7 +159,7 @@ exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
       data-testid="read-more-button"
     >
       <div
-        class="c5 css-8mokm4"
+        class="c5 css-1aulwug"
       >
         Read more about unsupported assets
       </div>

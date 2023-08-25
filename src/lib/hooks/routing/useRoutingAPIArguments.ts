@@ -1,5 +1,7 @@
+import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useForceUniswapXOn } from 'featureFlags/flags/forceUniswapXOn'
+import { useFotAdjustmentsEnabled } from 'featureFlags/flags/fotAdjustments'
 import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
@@ -27,17 +29,18 @@ export function useRoutingAPIArguments({
   amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-}): GetQuoteArgs | undefined {
+}): GetQuoteArgs | SkipToken {
   const uniswapXEnabled = useUniswapXEnabled()
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
   const forceUniswapXOn = useForceUniswapXOn()
   const userDisabledUniswapX = useUserDisabledUniswapX()
   const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
+  const fotAdjustmentsEnabled = useFotAdjustmentsEnabled()
 
   return useMemo(
     () =>
       !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut) || tokenIn.wrapped.equals(tokenOut.wrapped)
-        ? undefined
+        ? skipToken
         : {
             account,
             amount: amount.quotient.toString(),
@@ -57,6 +60,7 @@ export function useRoutingAPIArguments({
             forceUniswapXOn,
             userDisabledUniswapX,
             uniswapXEthOutputEnabled,
+            fotAdjustmentsEnabled,
           },
     [
       account,
@@ -70,6 +74,7 @@ export function useRoutingAPIArguments({
       forceUniswapXOn,
       userDisabledUniswapX,
       uniswapXEthOutputEnabled,
+      fotAdjustmentsEnabled,
     ]
   )
 }

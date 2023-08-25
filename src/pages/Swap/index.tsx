@@ -55,6 +55,7 @@ import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } f
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
 import styled, { useTheme } from 'styled-components'
 import { LinkStyledButton, ThemedText } from 'theme'
+import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -62,6 +63,7 @@ import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
+import { useIsDarkMode } from '../../theme/components/ThemeToggle'
 import { UniswapXOptIn } from './UniswapXOptIn'
 
 export const ArrowContainer = styled.div`
@@ -74,9 +76,9 @@ export const ArrowContainer = styled.div`
 `
 
 const SwapSection = styled.div`
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 16px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   font-weight: 500;
   height: 120px;
@@ -97,20 +99,20 @@ const SwapSection = styled.div`
     height: 100%;
     pointer-events: none;
     content: '';
-    border: 1px solid ${({ theme }) => theme.backgroundModule};
+    border: 1px solid ${({ theme }) => theme.surface2};
   }
 
   &:hover:before {
-    border-color: ${({ theme }) => theme.stateOverlayHover};
+    border-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
   }
 
   &:focus-within:before {
-    border-color: ${({ theme }) => theme.stateOverlayPressed};
+    border-color: ${({ theme }) => theme.deprecated_stateOverlayPressed};
   }
 `
 
 const OutputSwapSection = styled(SwapSection)`
-  border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
+  border-bottom: ${({ theme }) => `1px solid ${theme.surface1}`};
 `
 
 function getIsValidSwapQuote(
@@ -293,13 +295,13 @@ export function Swap({
           }
         : {
             [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.postTaxOutputAmount,
           },
     [independentField, parsedAmount, showWrap, trade]
   )
 
-  const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT])
-  const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT])
+  const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT], currencies[Field.INPUT] ?? undefined)
+  const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT], currencies[Field.OUTPUT] ?? undefined)
   const showFiatValueInput = Boolean(parsedAmounts[Field.INPUT])
   const showFiatValueOutput = Boolean(parsedAmounts[Field.OUTPUT])
 
@@ -313,13 +315,17 @@ export function Swap({
   )
 
   const fiatValueTradeInput = useUSDPrice(trade?.inputAmount)
-  const fiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
-  const stablecoinPriceImpact = useMemo(
+  const fiatValueTradeOutput = useUSDPrice(trade?.postTaxOutputAmount)
+  const preTaxFiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
+  const [stablecoinPriceImpact, preTaxStablecoinPriceImpact] = useMemo(
     () =>
       routeIsSyncing || !isClassicTrade(trade)
-        ? undefined
-        : computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
-    [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
+        ? [undefined, undefined]
+        : [
+            computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
+            computeFiatValuePriceImpact(fiatValueTradeInput.data, preTaxFiatValueTradeOutput.data),
+          ],
+    [fiatValueTradeInput, fiatValueTradeOutput, preTaxFiatValueTradeOutput, routeIsSyncing, trade]
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers(dispatch)
@@ -328,14 +334,16 @@ export function Swap({
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
+      maybeLogFirstSwapAction(trace)
     },
-    [onUserInput]
+    [onUserInput, trace]
   )
   const handleTypeOutput = useCallback(
     (value: string) => {
       onUserInput(Field.OUTPUT, value)
+      maybeLogFirstSwapAction(trace)
     },
-    [onUserInput]
+    [onUserInput, trace]
   )
 
   const navigate = useNavigate()
@@ -414,7 +422,7 @@ export function Swap({
     if (!swapCallback) {
       return
     }
-    if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
+    if (preTaxStablecoinPriceImpact && !confirmPriceImpactWithoutFee(preTaxStablecoinPriceImpact)) {
       return
     }
     setSwapState((currentState) => ({
@@ -437,7 +445,7 @@ export function Swap({
           swapResult: undefined,
         }))
       })
-  }, [swapCallback, stablecoinPriceImpact])
+  }, [swapCallback, preTaxStablecoinPriceImpact])
 
   const handleOnWrap = useCallback(async () => {
     if (!onWrap) return
@@ -473,9 +481,9 @@ export function Swap({
     }
 
     const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
-    const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
+    const largerPriceImpact = largerPercentValue(marketPriceImpact, preTaxStablecoinPriceImpact)
     return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
-  }, [stablecoinPriceImpact, trade])
+  }, [preTaxStablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
     setSwapState((currentState) => ({ ...currentState, showConfirm: false }))
@@ -498,13 +506,15 @@ export function Swap({
         },
         [Field.OUTPUT]: state[Field.OUTPUT],
       })
+      maybeLogFirstSwapAction(trace)
     },
-    [onCurrencyChange, onCurrencySelection, state]
+    [onCurrencyChange, onCurrencySelection, state, trace]
   )
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-  }, [maxInputAmount, onUserInput])
+    maybeLogFirstSwapAction(trace)
+  }, [maxInputAmount, onUserInput, trace])
 
   const handleOutputSelect = useCallback(
     (outputCurrency: Currency) => {
@@ -515,8 +525,9 @@ export function Swap({
           currencyId: getSwapCurrencyId(outputCurrency),
         },
       })
+      maybeLogFirstSwapAction(trace)
     },
-    [onCurrencyChange, onCurrencySelection, state]
+    [onCurrencyChange, onCurrencySelection, state, trace]
   )
 
   const showPriceImpactWarning = isClassicTrade(trade) && largerPriceImpact && priceImpactSeverity > 3
@@ -539,9 +550,10 @@ export function Swap({
   const switchChain = useSwitchChain()
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const showOptInSmall = !useScreenSize().navSearchInputVisible
+  const isDark = useIsDarkMode()
 
   const swapElement = (
-    <SwapWrapper chainId={chainId} className={className} id="swap-page">
+    <SwapWrapper isDark={isDark} className={className} id="swap-page">
       <TokenSafetyModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
         tokenAddress={importTokensNotInDefault[0]?.address}
@@ -608,11 +620,13 @@ export function Swap({
             <ArrowContainer
               data-testid="swap-currency-button"
               onClick={() => {
-                !disableTokenInputs && onSwitchTokens()
+                if (disableTokenInputs) return
+                onSwitchTokens()
+                maybeLogFirstSwapAction(trace)
               }}
-              color={theme.textPrimary}
+              color={theme.neutral1}
             >
-              <ArrowDown size="16" color={theme.textPrimary} />
+              <ArrowDown size="16" color={theme.neutral1} />
             </ArrowContainer>
           </TraceEvent>
         </ArrowWrapper>
@@ -642,7 +656,7 @@ export function Swap({
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                   <ArrowWrapper clickable={false}>
-                    <ArrowDown size="16" color={theme.textSecondary} />
+                    <ArrowDown size="16" color={theme.neutral2} />
                   </ArrowWrapper>
                   <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
                     <Trans>- Remove recipient</Trans>
@@ -680,7 +694,7 @@ export function Swap({
               properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
-              <ButtonLight onClick={toggleWalletDrawer} fontWeight={600} $borderRadius="16px">
+              <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
                 <Trans>Connect Wallet</Trans>
               </ButtonLight>
             </TraceEvent>
@@ -707,7 +721,7 @@ export function Swap({
               $borderRadius="16px"
               disabled={Boolean(wrapInputError)}
               onClick={handleOnWrap}
-              fontWeight={600}
+              fontWeight={535}
               data-testid="wrap-button"
             >
               {wrapInputError ? (
@@ -739,7 +753,7 @@ export function Swap({
                 disabled={!getIsValidSwapQuote(trade, tradeState, swapInputError)}
                 error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
               >
-                <Text fontSize={20} fontWeight={600}>
+                <Text fontSize={20}>
                   {swapInputError ? (
                     swapInputError
                   ) : routeIsSyncing || routeIsLoading ? (

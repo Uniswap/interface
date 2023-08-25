@@ -11,6 +11,10 @@ describe('Token explore filter', () => {
 
   function searchFor(filter: string) {
     cy.get('[data-cy="explore-tokens-search-input"]').clear().type(filter).type('{enter}')
+    // wait for it to finish the filtered render
+    cy.get('[data-cy="token-name"]').first().contains(filter, {
+      matchCase: false,
+    })
   }
 
   it('should filter correctly by dao search term', () => {

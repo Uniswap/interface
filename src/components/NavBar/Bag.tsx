@@ -7,9 +7,9 @@ import styled from 'styled-components'
 import { shallow } from 'zustand/shallow'
 
 const CounterDot = styled.div`
-  background-color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.accent1};
   border-radius: 100px;
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
   font-size: 10px;
   line-height: 12px;
   min-height: 16px;

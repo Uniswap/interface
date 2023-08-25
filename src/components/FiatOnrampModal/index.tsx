@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
-import { useHref } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
@@ -16,7 +15,7 @@ const Wrapper = styled.div<{ isDarkMode: boolean }>`
   // #1c1c1e is the background color for the darkmode moonpay iframe as of 2/16/2023
   background-color: ${({ isDarkMode, theme }) => (isDarkMode ? MOONPAY_DARK_BACKGROUND : theme.white)};
   border-radius: 20px;
-  box-shadow: ${({ theme }) => theme.deepShadow};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
@@ -27,7 +26,7 @@ const Wrapper = styled.div<{ isDarkMode: boolean }>`
 `
 
 const ErrorText = styled(ThemedText.BodyPrimary)`
-  color: ${({ theme }) => theme.accentFailure};
+  color: ${({ theme }) => theme.critical};
   margin: auto !important;
   text-align: center;
   width: 90%;
@@ -80,8 +79,6 @@ export default function FiatOnrampModal() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const swapUrl = useHref('/swap')
-
   const fetchSignedIframeUrl = useCallback(async () => {
     if (!account) {
       setError('Please connect an account before making a purchase.')
@@ -99,9 +96,9 @@ export default function FiatOnrampModal() {
         method: 'POST',
         body: JSON.stringify({
           theme: isDarkMode ? 'dark' : 'light',
-          colorCode: theme.accentAction,
+          colorCode: theme.accent1,
           defaultCurrencyCode: 'eth',
-          redirectUrl: swapUrl,
+          redirectUrl: 'https://app.uniswap.org/#/swap',
           walletAddresses: JSON.stringify(
             MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
               (acc, currencyCode) => ({
@@ -121,7 +118,7 @@ export default function FiatOnrampModal() {
     } finally {
       setLoading(false)
     }
-  }, [account, isDarkMode, swapUrl, theme.accentAction])
+  }, [account, isDarkMode, theme.accent1])
 
   useEffect(() => {
     fetchSignedIframeUrl()

@@ -46,8 +46,8 @@ const StepCircle = styled.div<{ active: boolean }>`
   height: 10px;
   width: 10px;
   border-radius: 50%;
-  background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.textTertiary)};
-  outline: 3px solid ${({ theme, active }) => (active ? theme.accentActionSoft : theme.accentTextLightTertiary)};
+  background-color: ${({ theme, active }) => (active ? theme.accent1 : theme.neutral3)};
+  outline: 3px solid ${({ theme, active }) => (active ? theme.accent2 : theme.deprecated_accentTextLightPrimary)};
   transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `
 
@@ -146,7 +146,7 @@ function getPendingConfirmationContent({
       title,
       subtitle: tradeSummary,
       bottomLabel: (
-        <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501" color="textSecondary">
+        <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501" color="neutral2">
           <Trans>Learn more about swapping with UniswapX</Trans>
         </ExternalLink>
       ),
@@ -155,7 +155,7 @@ function getPendingConfirmationContent({
     const explorerLink = (
       <ExternalLink
         href={getExplorerLink(chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)}
-        color="textSecondary"
+        color="neutral2"
       >
         <Trans>View on Explorer</Trans>
       </ExternalLink>
@@ -351,7 +351,7 @@ export function PendingModalContent({
           })}
         </AnimationWrapper>
         <Row justify="center" marginTop="32px" minHeight="24px">
-          <ThemedText.Caption color="textSecondary">{stepContents[currentStep].bottomLabel}</ThemedText.Caption>
+          <ThemedText.BodySmall color="neutral2">{stepContents[currentStep].bottomLabel}</ThemedText.BodySmall>
         </Row>
       </HeaderContainer>
       {stepContents[currentStep].button && <Row justify="center">{stepContents[currentStep].button}</Row>}

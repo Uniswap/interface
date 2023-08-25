@@ -57,12 +57,12 @@ const SearchBarDropdownSection = ({
   eventProperties,
 }: SearchBarDropdownSectionProps) => {
   return (
-    <Column gap="12" data-testid="searchbar-dropdown">
-      <Row paddingX="16" paddingY="4" gap="8" color="gray300" className={subheadSmall} style={{ lineHeight: '20px' }}>
+    <Column gap="4" data-testid="searchbar-dropdown">
+      <Row paddingX="16" paddingY="4" gap="8" color="neutral2" className={subheadSmall} style={{ lineHeight: '20px' }}>
         {headerIcon ? headerIcon : null}
         <Box>{header}</Box>
       </Row>
-      <Column gap="12">
+      <Column gap="4">
         {suggestions.map((suggestion, index) =>
           isLoading || !suggestion ? (
             <SkeletonRow key={index} />
@@ -114,8 +114,8 @@ const ChainLogo = styled.img`
 `
 const ChainComingSoonBadge = styled(Badge)`
   align-items: center;
-  background-color: ${({ theme }) => theme.backgroundModule};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface2};
+  color: ${({ theme }) => theme.neutral2};
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -151,7 +151,7 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
         {showChainComingSoonBadge && (
           <ChainComingSoonBadge>
             <ChainLogo src={logoUri} />
-            <ThemedText.BodySmall color="textSecondary" fontSize="14px" fontWeight="400" lineHeight="20px">
+            <ThemedText.BodySmall color="neutral2" fontSize="14px" fontWeight="400" lineHeight="20px">
               <ComingSoonText chainId={chainId} />
             </ThemedText.BodySmall>
           </ChainComingSoonBadge>
@@ -246,7 +246,11 @@ function SearchBarDropdownContents({
 
   const trace = JSON.stringify(useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH }))
 
-  const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, ...JSON.parse(trace) }
+  const eventProperties = {
+    total_suggestions: totalSuggestions,
+    query_text: queryText,
+    ...JSON.parse(trace),
+  }
 
   const tokenSearchResults =
     tokens.length > 0 ? (

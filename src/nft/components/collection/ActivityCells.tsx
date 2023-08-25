@@ -38,21 +38,21 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import * as styles from './Activity.css'
 
 const AddressLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   text-decoration: none;
-  font-weight: 400;
+  font-weight: 485;
   line-height: 20px;
   a {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     text-decoration: none;
   }
   a:hover {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     text-decoration: none;
     opacity: ${({ theme }) => theme.opacity.hover};
   }
   a:focus {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     text-decoration: none;
     opacity: ${({ theme }) => theme.opacity.click};
   }
@@ -174,7 +174,7 @@ export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCel
 const PriceTooltip = ({ price }: { price: string }) => (
   <MouseoverTooltip
     text={
-      <Box textAlign="left" fontSize="14" fontWeight="normal" color="textSecondary">
+      <Box textAlign="left" fontSize="14" fontWeight="book" color="neutral2">
         {`${price} ETH`}
       </Box>
     }
@@ -240,13 +240,13 @@ const ExternalLinkIcon = ({ transactionHash }: { transactionHash: string }) => (
 
 const eventColors = (eventType: NftActivityType) => {
   const activityEvents = {
-    [NftActivityType.Listing]: 'gold',
-    [NftActivityType.Sale]: 'green',
-    [NftActivityType.Transfer]: 'violet',
-    [NftActivityType.CancelListing]: 'accentFailure',
+    [NftActivityType.Listing]: 'deprecated_gold',
+    [NftActivityType.Sale]: 'success',
+    [NftActivityType.Transfer]: 'deprecated_violet',
+    [NftActivityType.CancelListing]: 'critical',
   }
 
-  return activityEvents[eventType] as 'gold' | 'green' | 'violet' | 'accentFailure'
+  return activityEvents[eventType] as 'deprecated_gold' | 'success' | 'deprecated_violet' | 'critical'
 }
 
 export const EventCell = ({
@@ -270,7 +270,7 @@ export const EventCell = ({
           {eventTransactionHash && <ExternalLinkIcon transactionHash={eventTransactionHash} />}
         </Row>
       )}
-      {isMobile && price && <Row fontSize="16" fontWeight="normal" color="textPrimary">{`${formattedPrice} ETH`}</Row>}
+      {isMobile && price && <Row fontSize="16" fontWeight="book" color="neutral1">{`${formattedPrice} ETH`}</Row>}
     </Column>
   )
 }
@@ -299,7 +299,7 @@ const NoContentContainer = () => (
       style={{ transform: 'translate3d(-50%, -50%, 0)' }}
       color="gray500"
       fontSize="12"
-      fontWeight="normal"
+      fontWeight="book"
     >
       Image
       <br />
