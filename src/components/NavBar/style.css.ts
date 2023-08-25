@@ -15,7 +15,7 @@ export const logoContainer = style([
 export const logo = style([
   sprinkles({
     display: 'block',
-    color: 'textPrimary',
+    color: 'accent1',
   }),
 ])
 
@@ -62,17 +62,19 @@ const baseMenuItem = style([
     paddingY: '8',
     paddingX: { sm: '6', md: '14' },
     marginY: '4',
+    borderRadius: '14',
     marginX: { sm: '4', md: '0' },
-    borderRadius: '12',
     transition: '250',
     height: 'min',
     width: 'full',
     textAlign: 'center',
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: '4',
   }),
   {
-    lineHeight: '24px',
+    lineHeight: '22px',
     textDecoration: 'none',
     ':hover': {
       background: vars.color.lightGrayOverlay,
@@ -83,14 +85,14 @@ const baseMenuItem = style([
 export const menuItem = style([
   baseMenuItem,
   sprinkles({
-    color: 'textSecondary',
+    color: 'neutral2',
   }),
 ])
 
 export const activeMenuItem = style([
   baseMenuItem,
   sprinkles({
-    color: 'textPrimary',
-    background: 'backgroundFloating',
+    color: 'neutral1',
+    background: 'none',
   }),
 ])

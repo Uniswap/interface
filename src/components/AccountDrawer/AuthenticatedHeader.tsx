@@ -5,6 +5,10 @@ import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
+import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
+import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
+import { Power } from 'components/Icons/Power'
+import { Settings } from 'components/Icons/Settings'
 import { AutoRow } from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
@@ -16,7 +20,7 @@ import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hoo
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, CreditCard, IconProps, Info, LogOut, Settings } from 'react-feather'
+import { CreditCard, IconProps, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -85,9 +89,9 @@ const IconContainer = styled.div`
     }
   }
 `
-const FiatOnrampNotAvailableText = styled(ThemedText.Caption)`
+const FiatOnrampNotAvailableText = styled(ThemedText.BodySmall)`
   align-items: center;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   display: flex;
   justify-content: center;
 `
@@ -124,7 +128,7 @@ const StyledInfoIcon = styled(Info)`
   flex: 1 1 auto;
 `
 const StyledLoadingButtonSpinner = styled(LoadingButtonSpinner)`
-  fill: ${({ theme }) => theme.accentAction};
+  fill: ${({ theme }) => theme.accent1};
 `
 
 const HeaderWrapper = styled.div`
@@ -150,15 +154,11 @@ const PortfolioDrawerContainer = styled(Column)`
 export function PortfolioArrow({ change, ...rest }: { change: number } & IconProps) {
   const theme = useTheme()
   return change < 0 ? (
-    <ArrowDownRight color={theme.accentCritical} size={20} {...rest} />
+    <ArrowChangeDown color={theme.critical} width={16} {...rest} />
   ) : (
-    <ArrowUpRight color={theme.accentSuccess} size={20} {...rest} />
+    <ArrowChangeUp color={theme.success} width={16} {...rest} />
   )
 }
-
-const LogOutCentered = styled(LogOut)`
-  transform: translateX(2px);
-`
 
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { connector } = useWeb3React()
@@ -245,7 +245,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               </ThemedText.SubHeader>
               {/* Displays smaller view of account if ENS name was rendered above */}
               {ENSName && (
-                <ThemedText.BodySmall color="textTertiary">
+                <ThemedText.BodySmall color="neutral2">
                   <CopyText toCopy={account}>{shortenAddress(account)}</CopyText>
                 </ThemedText.BodySmall>
               )}
@@ -268,7 +268,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               data-testid="wallet-disconnect"
               onConfirm={disconnect}
               onShowConfirm={setShowDisconnectConfirm}
-              Icon={LogOutCentered}
+              Icon={Power}
               text="Disconnect"
               dismissOnHoverOut
             />
@@ -278,7 +278,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
       <PortfolioDrawerContainer>
         {totalBalance !== undefined ? (
           <FadeInColumn gap="xs">
-            <ThemedText.HeadlineLarge fontWeight={500} data-testid="portfolio-total-balance">
+            <ThemedText.HeadlineLarge fontWeight={535} data-testid="portfolio-total-balance">
               {formatNumber(totalBalance, NumberType.PortfolioBalance)}
             </ThemedText.HeadlineLarge>
             <AutoRow marginBottom="20px">
@@ -305,14 +305,14 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             data-testid="nft-view-self-nfts"
             onClick={navigateToProfile}
             size={ButtonSize.medium}
-            emphasis={ButtonEmphasis.medium}
+            emphasis={ButtonEmphasis.highSoft}
           >
             <Trans>View and sell NFTs</Trans>
           </HeaderButton>
         )}
         <HeaderButton
           size={ButtonSize.medium}
-          emphasis={ButtonEmphasis.medium}
+          emphasis={ButtonEmphasis.highSoft}
           onClick={handleBuyCryptoClick}
           disabled={disableBuyCryptoButton}
           data-testid="wallet-buy-crypto"

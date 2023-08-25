@@ -11,7 +11,7 @@ import { Loader } from 'react-feather'
 import styled from 'styled-components'
 
 const UnknownContract = styled(UnknownStatus)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const DoubleLogoContainer = styled.div`
@@ -65,13 +65,13 @@ const CircleLogoImage = styled.img<{ size: string }>`
 `
 
 const L2LogoContainer = styled.div<{ hasSquareLogo?: boolean }>`
-  background-color: ${({ theme, hasSquareLogo }) => (hasSquareLogo ? theme.backgroundSurface : theme.textPrimary)};
+  background-color: ${({ theme, hasSquareLogo }) => (hasSquareLogo ? theme.surface2 : theme.neutral1)};
   border-radius: 2px;
   height: 16px;
   left: 60%;
   position: absolute;
   top: 60%;
-  outline: 2px solid ${({ theme }) => theme.backgroundSurface};
+  outline: 2px solid ${({ theme }) => theme.surface1};
   width: 16px;
   display: flex;
   align-items: center;

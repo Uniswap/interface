@@ -25,8 +25,9 @@ enum BuyFiatFlowState {
 }
 
 const StyledTextButton = styled(ButtonText)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   gap: 4px;
+  font-weight: 485;
   &:focus {
     text-decoration: none;
   }

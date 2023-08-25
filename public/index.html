@@ -36,31 +36,43 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
 
+   
     <style>
       * {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Basel', sans-serif;
         box-sizing: border-box;
       }
 
       /**
-          Explicitly load Inter var from public/ so it does not block LCP's critical path.
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
         */
       @font-face {
-        font-family: 'Inter custom';
-        font-weight: 100 900;
+        font-family: 'Basel';
+        font-weight: 535;
         font-style: normal;
         font-display: block;
-        font-named-instance: 'Regular';
-        src: url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
-          url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2-variations'),
-          url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2');
+        font-named-instance: 'Book';
+        src: 
+          url(%PUBLIC_URL%/fonts/Basel-Medium.woff) format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Book';
+        src: 
+          url(%PUBLIC_URL%/fonts/Basel-Book.woff) format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
-          font-family: 'Inter custom', sans-serif;
+          font-family: 'Basel', sans-serif;
+          
         }
       }
 
@@ -76,9 +88,11 @@
 
       html {
         font-size: 16px;
+        font-weight: 485;
         font-variant: none;
         font-smooth: always;
-        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
       }
