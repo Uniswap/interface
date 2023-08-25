@@ -1,4 +1,6 @@
 import { ApolloError } from '@apollo/client'
+import { SerializedError } from '@reduxjs/toolkit'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery'
 import { RenderPassReport } from '@shopify/react-native-performance'
 import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { providers } from 'ethers'
@@ -128,7 +130,7 @@ export type MobileEventProperties = {
     swap_quote_block_number?: string
   } & SwapTradeBaseProperties
   [SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED]: {
-    error?: ApolloError
+    error?: ApolloError | FetchBaseQueryError | SerializedError | Error
     txRequest?: providers.TransactionRequest
   } & SwapTradeBaseProperties
 }

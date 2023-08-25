@@ -1,4 +1,6 @@
 import { ApolloError } from '@apollo/client'
+import { SerializedError } from '@reduxjs/toolkit'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery'
 
 export enum GasSpeed {
   Normal = 'normal',
@@ -76,4 +78,11 @@ export type TransactionGasFeeInfo = {
 export type UseTransactionGasFeeResponse = {
   data?: TransactionGasFeeInfo
   error?: ApolloError
+}
+
+export interface SimulatedGasEstimationInfo {
+  isLoading: boolean
+  simulatedGasLimit: string
+  gasFallbackUsed: boolean
+  error?: boolean | FetchBaseQueryError | SerializedError
 }
