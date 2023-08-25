@@ -68,7 +68,7 @@ export function CollectionPreviewCard({
               {/* Width chosen to ensure truncation of collection name on both small
                 and large screens with sufficient padding */}
               <Box flexShrink={1}>
-                <Text color="sporeWhite" numberOfLines={1} variant="bodyLarge">
+                <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
                   {collection?.name || fallbackData?.name || '-'}
                 </Text>
               </Box>
@@ -101,7 +101,7 @@ export function CollectionPreviewCard({
         </Flex>
         {isViewableCollection ? (
           <Chevron
-            color={theme.colors.sporeWhite}
+            color={theme.colors.neutral1}
             direction="e"
             height={theme.iconSizes.icon24}
             width={theme.iconSizes.icon24}

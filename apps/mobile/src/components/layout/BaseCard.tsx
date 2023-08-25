@@ -41,9 +41,9 @@ export function Container({
 export function Shadow({ children, ...rest }: BoxProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const theme = useAppTheme()
+
   return (
     <Box
-      // bg={rest?.bg ?? isDarkMode ? 'surface3' : 'surface2'}
       borderRadius="rounded16"
       p="spacing12"
       shadowColor={isDarkMode ? 'sporeBlack' : 'none'}

@@ -19,7 +19,7 @@ export function NFTTraitCard({
       <Text style={{ color: titleTextColor ?? theme.colors.neutral2 }} variant="buttonLabelMicro">
         {trait.name}
       </Text>
-      <Text color="sporeWhite" variant="subheadSmall">
+      <Text color="neutral1" variant="subheadSmall">
         {trait.value}
       </Text>
     </Flex>

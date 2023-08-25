@@ -1,5 +1,5 @@
-import { BlurView } from '@react-native-community/blur'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { BlurView } from 'expo-blur'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Image, StyleSheet } from 'react-native'
@@ -11,6 +11,7 @@ import { Box, Flex } from 'src/components/layout'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
+import { IS_IOS } from 'src/constants/globals'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import {
@@ -36,6 +37,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
+  const isDarkMode = useIsDarkMode()
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { touchId: isTouchIdDevice } = useDeviceSupportsBiometricAuth()
@@ -117,10 +119,9 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             }}
             top={0}>
             <BlurView
-              blurAmount={5}
-              blurType="dark"
-              reducedTransparencyFallbackColor="black"
+              intensity={isDarkMode ? (IS_IOS ? 20 : 80) : 40}
               style={styles.blurView}
+              tint="dark"
             />
             {isTouchIdDevice ? (
               <FingerprintIcon

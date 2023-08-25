@@ -15,6 +15,7 @@ import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
+import { IS_IOS } from 'src/constants/globals'
 import { ListPriceBadge } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import {
@@ -139,6 +140,7 @@ export function NFTCollectionScreen({
       marginRight: middle ? theme.spacing.spacing8 : last ? theme.spacing.spacing16 : 0,
       marginBottom: theme.spacing.spacing8,
     }
+    const priceColor = IS_IOS ? 'sporeWhite' : 'neutral1'
 
     return (
       <Box
@@ -170,12 +172,12 @@ export function NFTCollectionScreen({
               <ListPriceBadge
                 bottom={theme.spacing.spacing4}
                 gap="none"
-                iconColor="sporeWhite"
+                iconColor={priceColor}
                 iconSize="icon12"
                 position="absolute"
                 price={item.listPrice}
                 right={theme.spacing.spacing4}
-                textColor="sporeWhite"
+                textColor={priceColor}
               />
             )}
           </TouchableArea>

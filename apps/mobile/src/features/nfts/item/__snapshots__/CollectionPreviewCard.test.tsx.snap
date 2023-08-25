@@ -181,7 +181,7 @@ exports[`renders collection preview card 1`] = `
               style={
                 [
                   {
-                    "color": "#FFFFFF",
+                    "color": "#222222",
                     "display": "flex",
                     "fontFamily": "Inter-Medium",
                     "fontSize": 17,
@@ -300,7 +300,7 @@ exports[`renders collection preview card 1`] = `
             }
             stroke={
               {
-                "payload": 4294967295,
+                "payload": 4280427042,
                 "type": 0,
               }
             }

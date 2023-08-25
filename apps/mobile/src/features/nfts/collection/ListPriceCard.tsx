@@ -1,40 +1,46 @@
-import { BlurView } from '@react-native-community/blur'
+import { BlurView } from 'expo-blur'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { Box, BoxProps, Flex } from 'src/components/layout'
+import { Box, Flex, FlexProps } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { IS_IOS } from 'src/constants/globals'
 import { Logos } from 'ui/src'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { Amount } from 'wallet/src/data/__generated__/types-and-hooks'
 
-interface ListPriceProps extends BoxProps {
+type ListPriceProps = FlexProps & {
   price: Amount
   gap?: keyof Theme['spacing']
   iconSize?: keyof Theme['iconSizes']
+  textVariant?: keyof Theme['textVariants']
   iconColor?: keyof Theme['colors']
   textColor?: keyof Theme['colors']
-  textVariant?: keyof Theme['textVariants']
 }
 
-export function ListPriceBadge(props: ListPriceProps): JSX.Element {
+export function ListPriceBadge({
+  iconColor,
+  textColor,
+  iconSize,
+  price,
+  gap,
+  ...flexProps
+}: ListPriceProps): JSX.Element {
+  const theme = useAppTheme()
+  const priceAmountProps = { iconColor, textColor, iconSize, price, gap }
+
   return (
-    <Flex alignItems="center" style={styles.blurWrapper} {...props}>
-      <BlurView blurAmount={20} blurType="light" reducedTransparencyFallbackColor="black">
-        <Box style={styles.blurView}>
-          <Flex
-            bg="sporeBlack"
-            bottom={0}
-            left={0}
-            opacity={0.25}
-            position="absolute"
-            right={0}
-            top={0}
-          />
-          <PriceAmount {...props} />
+    <Flex alignItems="center" style={styles.blurWrapper} {...flexProps}>
+      {IS_IOS ? (
+        <BlurView intensity={50} style={styles.background} tint="dark">
+          <PriceAmount {...priceAmountProps} />
+        </BlurView>
+      ) : (
+        <Box style={[styles.background, { backgroundColor: theme.colors.surface2 }]}>
+          <PriceAmount {...priceAmountProps} />
         </Box>
-      </BlurView>
+      )}
     </Flex>
   )
 }
@@ -43,15 +49,16 @@ export function PriceAmount({
   price,
   gap = 'spacing4',
   iconSize = 'icon16',
-  iconColor,
-  textColor = 'neutral1',
   textVariant = 'buttonLabelMicro',
+  iconColor = 'neutral1',
+  textColor = 'neutral1',
 }: ListPriceProps): JSX.Element {
   const theme = useAppTheme()
   const isUSD = price.currency === 'USD'
   const formattedAmount = isUSD
     ? formatNumber(price.value, NumberType.FiatTokenPrice)
     : formatNumber(price.value, NumberType.NFTTokenFloorPrice)
+
   return (
     <Flex centered row gap={gap} overflow="hidden">
       {!isUSD && (
@@ -69,9 +76,10 @@ export function PriceAmount({
 }
 
 const styles = StyleSheet.create({
-  blurView: {
+  background: {
     alignItems: 'center',
     backgroundColor: 'transparent',
+    flex: 1,
     justifyContent: 'center',
     paddingHorizontal: FixedTheme.spacing.spacing8,
     paddingVertical: FixedTheme.spacing.spacing2,

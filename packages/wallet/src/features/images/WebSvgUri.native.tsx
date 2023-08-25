@@ -71,6 +71,8 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Elemen
       <Box maxHeight={maxHeight ?? '100%'}>
         <WebView
           scalesPageToFit
+          androidLayerType="hardware"
+          geolocationEnabled={false}
           javaScriptEnabled={false}
           originWhitelist={['*']}
           pointerEvents="none"

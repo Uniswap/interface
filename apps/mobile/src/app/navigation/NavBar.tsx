@@ -1,6 +1,6 @@
-import { BlurView } from '@react-native-community/blur'
 import { ShadowProps, useResponsiveProp } from '@shopify/restyle'
 import { SharedEventName } from '@uniswap/analytics-events'
+import { BlurView } from 'expo-blur'
 import { impactAsync } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,9 +19,9 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedBox, AnimatedFlex, Box, Flex, FlexProps } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { IS_ANDROID } from 'src/constants/globals'
+import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
@@ -213,6 +213,17 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
     },
   })
 
+  const contentProps: FlexProps = IS_IOS
+    ? {
+        bg: 'surface2',
+        opacity: isDarkMode ? 0.6 : 0.8,
+      }
+    : {
+        bg: 'surface1',
+        borderWidth: 1,
+        borderColor: 'surface3',
+      }
+
   return (
     <TouchableArea
       hapticFeedback
@@ -221,17 +232,16 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
       onPress={onPress}>
       <TapGestureHandler onGestureEvent={onGestureEvent}>
         <AnimatedFlex borderRadius="roundedFull" overflow="hidden" style={animatedStyle}>
-          <BlurView blurAmount={32} blurType={isDarkMode ? 'dark' : 'light'}>
+          <BlurView intensity={IS_IOS ? 100 : 0}>
             <Flex
+              {...contentProps}
               grow
               row
               alignItems="center"
-              bg={isDarkMode ? 'surface2' : 'surface2'}
               borderRadius="roundedFull"
               flex={1}
               gap="spacing8"
               justifyContent="flex-start"
-              opacity={isDarkMode ? 0.6 : 0.8}
               p="spacing16"
               shadowColor={isDarkMode ? 'surface2' : 'neutral3'}
               shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}

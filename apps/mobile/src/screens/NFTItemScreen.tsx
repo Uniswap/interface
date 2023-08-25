@@ -1,12 +1,13 @@
+/* eslint-disable complexity */
 import { ApolloQueryResult } from '@apollo/client'
 import { ThemeProvider } from '@shopify/restyle'
 import { isAddress } from 'ethers/lib/utils'
 import { impactAsync } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StatusBar, TouchableOpacity } from 'react-native'
+import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -17,6 +18,7 @@ import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import Trace from 'src/components/Trace/Trace'
+import { IS_IOS } from 'src/constants/globals'
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { GQLNftAsset, useNFTMenu } from 'src/features/nfts/hooks'
@@ -61,6 +63,8 @@ export function NFTItemScreen({
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const dispatch = useAppDispatch()
 
+  const appTheme = useAppTheme()
+  const theme = IS_IOS ? darkTheme : appTheme
   const navigation = useAppStackNavigation()
 
   const {
@@ -130,12 +134,12 @@ export function NFTItemScreen({
   const accentTextColor = useMemo(() => {
     if (
       colorLight &&
-      passesContrast(colorLight, darkTheme.colors.sporeBlack, MIN_COLOR_CONTRAST_THRESHOLD)
+      passesContrast(colorLight, theme.colors.surface1, MIN_COLOR_CONTRAST_THRESHOLD)
     ) {
       return colorLight
     }
-    return darkTheme.colors.neutral2
-  }, [colorLight])
+    return theme.colors.neutral2
+  }, [colorLight, theme.colors.neutral2, theme.colors.surface1])
 
   const onLongPressNFTImage = async (): Promise<void> => {
     await setClipboardImage(imageUrl)
@@ -154,8 +158,10 @@ export function NFTItemScreen({
   )
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+    <ThemeProvider theme={theme}>
+      {IS_IOS ? (
+        <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+      ) : null}
       <Trace
         directFromPage
         logImpression={!!traceProperties}
@@ -163,19 +169,23 @@ export function NFTItemScreen({
         screen={Screens.NFTItem}>
         <ExploreModalAwareView>
           <>
-            <BlurredImageBackground
-              backgroundColor={colorDark ?? colorsDark.surface2}
-              imageUri={imageUrl}
-            />
+            {IS_IOS ? (
+              <BlurredImageBackground
+                backgroundColor={colorDark ?? colorsDark.surface2}
+                imageUri={imageUrl}
+              />
+            ) : (
+              <Box bg="surface2" style={StyleSheet.absoluteFill} />
+            )}
             <HeaderScrollScreen
-              backButtonColor="sporeWhite"
+              backButtonColor="neutral1"
               backgroundColor="none"
               centerElement={
                 imageUrl ? (
                   <Box
                     borderRadius="rounded8"
-                    maxHeight={darkTheme.iconSizes.icon40}
-                    maxWidth={darkTheme.iconSizes.icon40}
+                    maxHeight={theme.iconSizes.icon40}
+                    maxWidth={theme.iconSizes.icon40}
                     ml="spacing16"
                     overflow="hidden">
                     <NFTViewer autoplay uri={imageUrl} />
@@ -252,7 +262,7 @@ export function NFTItemScreen({
                   {nftLoading ? (
                     <Box mt="spacing12">
                       <Loader.Box
-                        height={darkTheme.textVariants.bodySmall.lineHeight}
+                        height={theme.textVariants.bodySmall.lineHeight}
                         // TODO EXT-259 make work with shortcut props like "mb", etc
                         marginBottom="$spacing4"
                         repeat={3}
@@ -261,7 +271,7 @@ export function NFTItemScreen({
                   ) : description ? (
                     <LongText
                       renderAsMarkdown
-                      color={darkTheme.colors.neutral1}
+                      color={theme.colors.neutral1}
                       initialDisplayedLines={3}
                       readMoreOrLessColor={accentTextColor}
                       text={description || '-'}
@@ -276,9 +286,9 @@ export function NFTItemScreen({
                       title={t('Current price')}
                       valueComponent={
                         <PriceAmount
-                          iconColor="sporeWhite"
+                          iconColor="neutral1"
                           price={listingPrice}
-                          textColor="sporeWhite"
+                          textColor="neutral1"
                           textVariant="buttonLabelSmall"
                         />
                       }
@@ -289,9 +299,9 @@ export function NFTItemScreen({
                       title={t('Last sale price')}
                       valueComponent={
                         <PriceAmount
-                          iconColor="sporeWhite"
+                          iconColor="neutral1"
                           price={lastSaleData.price}
-                          textColor="sporeWhite"
+                          textColor="neutral1"
                           textVariant="buttonLabelSmall"
                         />
                       }
@@ -307,7 +317,7 @@ export function NFTItemScreen({
                             address={owner}
                             hideAddressInSubtitle={true}
                             horizontalGap="spacing4"
-                            size={darkTheme.iconSizes.icon20}
+                            size={theme.iconSizes.icon20}
                             textColor="neutral1"
                             variant="buttonLabelSmall"
                           />
@@ -363,6 +373,8 @@ function RightElement({
   owner?: string
   isSpam?: boolean
 }): JSX.Element {
+  const theme = useAppTheme()
+
   const { menuActions, onContextMenuPress, onlyShare } = useNFTMenu({
     contractAddress: asset?.nftContract?.address,
     tokenId: asset?.tokenId,
@@ -374,14 +386,14 @@ function RightElement({
   return (
     <Box
       alignItems="center"
-      height={darkTheme.iconSizes.icon40}
+      height={theme.iconSizes.icon40}
       justifyContent="center"
-      width={darkTheme.iconSizes.icon40}>
+      width={theme.iconSizes.icon40}>
       {menuActions.length > 0 ? (
         onlyShare ? (
           <TouchableOpacity onPress={menuActions[0]?.onPress}>
             <ShareIcon
-              color={darkTheme.colors.neutral1}
+              color={theme.colors.neutral1}
               height={iconSizes.icon24}
               width={iconSizes.icon24}
             />
@@ -389,7 +401,7 @@ function RightElement({
         ) : (
           <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
             <EllipsisIcon
-              color={darkTheme.colors.neutral1}
+              color={theme.colors.neutral1}
               height={iconSizes.icon16}
               width={iconSizes.icon16}
             />

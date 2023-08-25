@@ -55,7 +55,7 @@ jest.mock('expo-clipboard', () => ({
   setStringAsync: jest.fn(),
   getStringAsync: () => Promise.resolve(),
 }))
-jest.mock('@react-native-community/blur', () => ({ BlurView: {} }))
+jest.mock('expo-blur', () => ({ BlurView: {} }))
 jest.mock('expo-barcode-scanner', () => ({}))
 jest.mock('expo-av', () => ({}))
 jest.mock('expo-haptics', () => ({ impactAsync: jest.fn(), ImpactFeedbackStyle: jest.fn() }))

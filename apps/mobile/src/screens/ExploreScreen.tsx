@@ -1,17 +1,10 @@
-import { BlurView } from '@react-native-community/blur'
 import { useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView, StyleSheet, TextInput } from 'react-native'
-import Animated, {
-  FadeIn,
-  FadeOut,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { KeyboardAvoidingView, TextInput } from 'react-native'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useAppSelector } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
@@ -21,7 +14,6 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
-import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
@@ -73,10 +65,10 @@ export function ExploreScreen(): JSX.Element {
   // Handle special case with design system light colors because surface2 is the same as surface1
   const contrastBackgroundColor: keyof Theme['colors'] = isDarkMode
     ? 'DEP_backgroundOverlay'
-    : 'surface2'
+    : 'surface1'
   const searchBarBackgroundColor: keyof Theme['colors'] = isDarkMode
     ? 'DEP_backgroundOverlay'
-    : 'surface2'
+    : 'surface1'
 
   const onScroll = useCallback(() => {
     textInputRef.current?.blur()
@@ -84,7 +76,6 @@ export function ExploreScreen(): JSX.Element {
 
   return (
     <Screen bg="none" edges={['top']}>
-      <BlurredBackground isDarkMode={isDarkMode} />
       <HandleBar backgroundColor="none" />
       <Box backgroundColor="none" p="spacing16">
         <SearchTextInput
@@ -120,60 +111,3 @@ export function ExploreScreen(): JSX.Element {
     </Screen>
   )
 }
-
-const BlurredBackground = memo(function BlurredBackground({ isDarkMode }: { isDarkMode: boolean }) {
-  const [blurEnabled, setBlurEnabled] = useState(true)
-  const overlayOpacity = useSharedValue(0)
-  const navigation = useExploreStackNavigation()
-  const theme = useAppTheme()
-
-  useEffect(() => {
-    if (IS_IOS) return
-    return navigation.addListener('transitionStart', () => {
-      overlayOpacity.value = 0.95
-      setBlurEnabled(false)
-    })
-  }, [navigation, overlayOpacity])
-
-  useEffect(() => {
-    if (IS_IOS) return
-    return navigation.addListener('transitionEnd', (e) => {
-      if (!e.data.closing) {
-        setBlurEnabled(true)
-        overlayOpacity.value = withTiming(0, { duration: 500 })
-      }
-    })
-  }, [navigation, overlayOpacity])
-
-  const overlayStyle = useAnimatedStyle(() => ({
-    opacity: overlayOpacity.value,
-  }))
-
-  return (
-    <>
-      <BlurView
-        blurAmount={9}
-        blurType={isDarkMode ? 'dark' : 'xlight'}
-        enabled={blurEnabled}
-        reducedTransparencyFallbackColor={isDarkMode ? 'sporeBlack' : 'sporeWhite'}
-        style={BlurViewStyle.base}
-      />
-      {IS_ANDROID ? (
-        <Animated.View
-          style={[
-            StyleSheet.absoluteFill,
-            { backgroundColor: theme.colors.surface1 },
-            overlayStyle,
-          ]}
-        />
-      ) : null}
-    </>
-  )
-})
-
-const BlurViewStyle = StyleSheet.create({
-  base: {
-    ...StyleSheet.absoluteFillObject,
-    overflow: 'hidden',
-  },
-})

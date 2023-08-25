@@ -56,7 +56,7 @@ exports[`renders trait card 1`] = `
     style={
       [
         {
-          "color": "#FFFFFF",
+          "color": "#222222",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,
