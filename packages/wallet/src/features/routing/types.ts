@@ -35,8 +35,10 @@ export interface QuoteRequest {
 }
 
 export type QuoteResponse = {
-  routing: RouterPreference.API
-  quote: QuoteResult
+  // This can be null when there's a 404.
+  routing: RouterPreference.API | null
+  // This can be null when there's a 404.
+  quote: QuoteResult | null
   timestamp: number // used as a cache ttl
 }
 

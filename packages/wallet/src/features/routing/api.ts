@@ -23,7 +23,7 @@ export const SWAP_NO_ROUTE_ERROR = 'NO_ROUTE'
 // https://github.com/Uniswap/api/blob/main/bin/stacks/api-v1.ts#L234
 export const API_RATE_LIMIT_ERROR = 'TOO_MANY_REQUESTS'
 
-interface TradeQuoteRequest {
+export interface TradeQuoteRequest {
   amount: string
   deadline?: number
   enableUniversalRouter: boolean
@@ -45,9 +45,11 @@ export function useQuoteQuery(
   request: TradeQuoteRequest | undefined,
   { pollInterval }: QueryHookOptions
 ): ReturnType<typeof useRestQuery<TradeQuoteResult>> {
-  let params: QuoteRequest | Record<string, never> = {}
+  const params: QuoteRequest | undefined = useMemo(() => {
+    if (!request) {
+      return undefined
+    }
 
-  if (request) {
     const {
       amount,
       deadline = DEFAULT_DEADLINE_S,
@@ -89,7 +91,7 @@ export function useQuoteQuery(
         }
       : undefined
 
-    params = {
+    return {
       tokenInChainId,
       tokenIn: tokenInAddress,
       tokenOutChainId,
@@ -111,11 +113,11 @@ export function useQuoteQuery(
         },
       ],
     }
-  }
+  }, [request])
 
   const result = useRestQuery<QuoteResponse, QuoteRequest | Record<string, never>>(
     '/v2/quote',
-    params,
+    params ?? {},
     ['quote', 'routing'],
     {
       pollInterval,
@@ -127,7 +129,7 @@ export function useQuoteQuery(
 
   return useMemo(() => {
     if (result.error && request?.loggingProperties?.isUSDQuote) {
-      logger.error('Error in Routing API response', {
+      logger.error(new Error('Error in Routing API response'), {
         tags: {
           file: 'routingApi',
           function: 'quote',
@@ -136,7 +138,19 @@ export function useQuoteQuery(
       })
     }
 
-    if (result.data) {
+    if (result.data && !result.data.quote) {
+      logger.error(new Error('Unexpected empty Routing API response'), {
+        tags: {
+          file: 'routingApi',
+          function: 'quote',
+        },
+        extra: {
+          quoteRequestParams: params,
+        },
+      })
+    }
+
+    if (result.data?.quote) {
       const tradeType = request?.type === 'exactIn' ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
       const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(
         request?.tokenInAddress as SwapRouterNativeAssets
@@ -170,11 +184,12 @@ export function useQuoteQuery(
     }
   }, [
     result,
-    request?.deadline,
     request?.loggingProperties?.isUSDQuote,
-    request?.slippageTolerance,
+    request?.type,
     request?.tokenInAddress,
     request?.tokenOutAddress,
-    request?.type,
+    request?.deadline,
+    request?.slippageTolerance,
+    params,
   ])
 }

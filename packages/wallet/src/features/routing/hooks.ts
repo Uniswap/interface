@@ -6,7 +6,7 @@ import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
-import { useQuoteQuery } from 'wallet/src/features/routing/api'
+import { TradeQuoteRequest, useQuoteQuery } from 'wallet/src/features/routing/api'
 import { TradeQuoteResult } from 'wallet/src/features/routing/types'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
@@ -67,29 +67,45 @@ export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResul
     !tokenOutChainId ||
     currencyInEqualsCurrencyOut
 
-  const result = useQuoteQuery(
-    skipQuery
-      ? undefined
-      : {
-          enableUniversalRouter: true,
-          tokenInAddress,
-          tokenInChainId,
-          tokenOutAddress,
-          tokenOutChainId,
-          amount: amountSpecified.quotient.toString(),
-          type: tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut',
-          recipient: recipient?.address,
-          fetchSimulatedGasLimit,
-          permitSignatureInfo,
-          slippageTolerance: customSlippageTolerance,
-          loggingProperties: {
-            isUSDQuote,
-          },
-        },
-    {
-      pollInterval: pollingInterval,
+  const request: TradeQuoteRequest | undefined = useMemo(() => {
+    if (skipQuery) {
+      return undefined
     }
-  )
+
+    return {
+      enableUniversalRouter: true,
+      tokenInAddress,
+      tokenInChainId,
+      tokenOutAddress,
+      tokenOutChainId,
+      amount: amountSpecified.quotient.toString(),
+      type: tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut',
+      recipient: recipient?.address,
+      fetchSimulatedGasLimit,
+      permitSignatureInfo,
+      slippageTolerance: customSlippageTolerance,
+      loggingProperties: {
+        isUSDQuote,
+      },
+    }
+  }, [
+    amountSpecified?.quotient,
+    customSlippageTolerance,
+    fetchSimulatedGasLimit,
+    isUSDQuote,
+    permitSignatureInfo,
+    recipient?.address,
+    skipQuery,
+    tokenInAddress,
+    tokenInChainId,
+    tokenOutAddress,
+    tokenOutChainId,
+    tradeType,
+  ])
+
+  const result = useQuoteQuery(request, {
+    pollInterval: pollingInterval,
+  })
 
   return result
 }
