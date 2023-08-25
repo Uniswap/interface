@@ -6,9 +6,9 @@ import styled from 'styled-components'
 import { ButtonText, ThemedText } from 'theme'
 
 const ClearButton = styled(ButtonText)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 14px;
   line-height: 16px;
 
@@ -22,7 +22,7 @@ const IconWrapper = styled.button`
   background-color: transparent;
   border-radius: 8px;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
   display: flex;
   flex-direction: row;
@@ -35,10 +35,10 @@ const IconWrapper = styled.button`
 `
 const CounterDot = styled.div<{ sizing: string }>`
   align-items: center;
-  background-color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.accent1};
   border-radius: 100px;
   font-weight: bold;
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
   display: flex;
   font-size: 10px;
   justify-content: center;
@@ -62,7 +62,7 @@ interface BagHeaderProps {
   isProfilePage: boolean
 }
 
-const BASE_SIZING = 14
+const BASE_SIZING = 17
 const INCREMENTAL_SIZING = 6
 
 const getCircleSizing = (numberOfAssets: number): string => {

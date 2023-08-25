@@ -22,16 +22,16 @@ const StyledModal = styled.div`
   transform: translate(-50%, -50%);
   width: 400px;
   height: fit-content;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 18px;
   padding: 20px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   z-index: 100;
   flex-direction: column;
   gap: 8px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
 `
 
 function Modal({ open, children }: { open: boolean; children: ReactNode }) {
@@ -49,52 +49,52 @@ const CloseButton = styled.button`
   cursor: pointer;
   background: transparent;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 const ToggleButton = styled.button`
   cursor: pointer;
   background: transparent;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 const Header = styled(Row)`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.surface3};
   margin-bottom: 8px;
 `
 const FlagName = styled.span`
   font-size: 16px;
   line-height: 20px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 const FlagGroupName = styled.span`
   font-size: 20px;
   line-height: 24px;
-  color: ${({ theme }) => theme.textPrimary};
-  font-weight: 600;
+  color: ${({ theme }) => theme.neutral1};
+  font-weight: 535;
 `
 const FlagDescription = styled.span`
   font-size: 12px;
   line-height: 16px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   display: flex;
   align-items: center;
 `
 const FlagVariantSelection = styled.select`
   border-radius: 12px;
   padding: 8px;
-  background: ${({ theme }) => theme.backgroundInteractive};
-  font-weight: 600;
+  background: ${({ theme }) => theme.surface3};
+  font-weight: 535;
   font-size: 16px;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
 
   :hover {
-    background: ${({ theme }) => theme.backgroundOutline};
+    background: ${({ theme }) => theme.surface3};
   }
 `
 
@@ -107,15 +107,15 @@ const FlagInfo = styled.div`
 const SaveButton = styled.button`
   border-radius: 12px;
   padding: 8px;
-  background: ${({ theme }) => theme.backgroundInteractive};
-  font-weight: 600;
+  background: ${({ theme }) => theme.surface3};
+  font-weight: 535;
   font-size: 16px;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
 
   :hover {
-    background: ${({ theme }) => theme.backgroundOutline};
+    background: ${({ theme }) => theme.surface3};
   }
 `
 

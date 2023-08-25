@@ -27,7 +27,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c2 {
-  color: #0D111C;
+  color: #222222;
 }
 
 .c0 {
@@ -51,13 +51,13 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c5 {
-  color: #7780A0;
+  color: #7D7D7D;
   margin-right: 8px;
 }
 
 .c8 {
   cursor: help;
-  color: #7780A0;
+  color: #7D7D7D;
   margin-right: 8px;
 }
 
@@ -74,25 +74,25 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
     class="c0 c1"
   >
     <div
-      class="c2 css-zhpkf8"
+      class="c2 css-142zc9n"
     >
       <div
         class="c3 c4"
       >
         <div
-          class="c2 c5 css-zhpkf8"
+          class="c2 c5 css-142zc9n"
         >
           Exchange rate
         </div>
         <div
-          class="c2 c6 css-zhpkf8"
+          class="c2 c6 css-142zc9n"
         >
           1 DEF = 1.00 ABC 
         </div>
       </div>
     </div>
     <div
-      class="c2 css-zhpkf8"
+      class="c2 css-142zc9n"
     >
       <div
         class="c3 c4"
@@ -102,7 +102,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
         >
           <div>
             <div
-              class="c2 c8 css-zhpkf8"
+              class="c2 c8 css-142zc9n"
               cursor="help"
             >
               Network fee
@@ -114,7 +114,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
         >
           <div>
             <div
-              class="c2 c6 css-zhpkf8"
+              class="c2 c6 css-142zc9n"
             >
               $1.00
             </div>
@@ -123,7 +123,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
       </div>
     </div>
     <div
-      class="c2 css-zhpkf8"
+      class="c2 css-142zc9n"
     >
       <div
         class="c3 c4"
@@ -133,7 +133,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
         >
           <div>
             <div
-              class="c2 c8 css-zhpkf8"
+              class="c2 c8 css-142zc9n"
               cursor="help"
             >
               Price impact
@@ -141,14 +141,14 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
           </div>
         </div>
         <div
-          class="c2 c6 css-zhpkf8"
+          class="c2 c6 css-142zc9n"
         >
           105566.373%
         </div>
       </div>
     </div>
     <div
-      class="c2 css-zhpkf8"
+      class="c2 css-142zc9n"
     >
       <div
         class="c3 c4"
@@ -158,7 +158,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
         >
           <div>
             <div
-              class="c2 c8 css-zhpkf8"
+              class="c2 c8 css-142zc9n"
               cursor="help"
             >
               Minimum received
@@ -166,7 +166,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
           </div>
         </div>
         <div
-          class="c2 c6 css-zhpkf8"
+          class="c2 c6 css-142zc9n"
         >
           0.00000000000000098 DEF
         </div>
@@ -236,12 +236,13 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 .c4 {
   padding: 16px;
   width: 100%;
-  font-weight: 500;
+  line-height: 24px;
+  font-weight: 535;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 16px;
   outline: none;
   border: 1px solid transparent;
-  color: #0D111C;
+  color: #222222;
   -webkit-text-decoration: none;
   text-decoration: none;
   display: -webkit-box;
@@ -290,30 +291,30 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c5 {
-  background-color: #FB118E;
+  background-color: #FC72FF;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 535;
   padding: 16px;
-  color: #F5F6FC;
+  color: #FFFFFF;
 }
 
 .c5:focus {
-  box-shadow: 0 0 0 1pt #ee0481;
-  background-color: #ee0481;
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
 }
 
 .c5:hover {
-  background-color: #ee0481;
+  background-color: #fb58ff;
 }
 
 .c5:active {
-  box-shadow: 0 0 0 1pt #d50474;
-  background-color: #d50474;
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
 }
 
 .c5:disabled {
-  background-color: #E8ECFB;
-  color: #7780A0;
+  background-color: #22222212;
+  color: #7D7D7D;
   cursor: auto;
   box-shadow: none;
   border: 1px solid transparent;
@@ -334,7 +335,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
       id="confirm-swap-or-send"
     >
       <div
-        class="c7 css-iapcxi"
+        class="c7 css-1jyz67g"
       >
         Confirm swap
       </div>

@@ -37,10 +37,10 @@ const BagContainer = styled.div<{ raiseZIndex: boolean; isProfilePage: boolean }
   right: 20px;
   width: ${BAG_WIDTH}px;
   height: calc(100vh - 108px);
-  background: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  background: ${({ theme }) => theme.surface1};
+  border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 16px;
-  box-shadow: ${({ theme }) => theme.shallowShadow};
+  box-shadow: ${({ theme }) => theme.deprecated_shallowShadow};
   z-index: ${({ raiseZIndex, isProfilePage }) =>
     raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop - 1) : 3};
 
@@ -67,14 +67,14 @@ const DetailsPageBackground = styled.div`
 `
 
 const ContinueButton = styled.div`
-  background: ${({ theme }) => theme.accentAction};
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  background: ${({ theme }) => theme.accent1};
+  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
   margin: 32px 28px 16px;
   padding: 10px 0px;
   border-radius: 12px;
   text-align: center;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 535;
   line-height: 20px;
   cursor: pointer;
   transition: ${({ theme }) => theme.transition.duration.medium};
@@ -90,8 +90,8 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
     borderWidth="1px"
     borderStyle="solid"
     borderColor="transparent"
-    borderTopColor={top ? 'transparent' : 'backgroundOutline'}
-    borderBottomColor={top ? 'backgroundOutline' : 'transparent'}
+    borderTopColor={top ? 'transparent' : 'surface3'}
+    borderBottomColor={top ? 'surface3' : 'transparent'}
     opacity={show ? '1' : '0'}
     transition="250"
   />

@@ -11,14 +11,14 @@ const BadgeWrapper = styled.div`
 `
 
 const BadgeText = styled.div`
-  font-weight: 500;
+  font-weight: 535;
   font-size: 12px;
   line-height: 14px;
   margin-right: 8px;
 `
 
 const ActiveDot = styled.span`
-  background-color: ${({ theme }) => theme.accentSuccess};
+  background-color: ${({ theme }) => theme.success};
   border-radius: 50%;
   height: 8px;
   width: 8px;
@@ -38,7 +38,7 @@ export default function RangeBadge({ removed, inRange }: { removed?: boolean; in
     <BadgeWrapper>
       {removed ? (
         <MouseoverTooltip text={<Trans>Your position has 0 liquidity, and is not earning fees.</Trans>}>
-          <LabelText color={theme.textSecondary}>
+          <LabelText color={theme.neutral2}>
             <BadgeText>
               <Trans>Closed</Trans>
             </BadgeText>
@@ -53,7 +53,7 @@ export default function RangeBadge({ removed, inRange }: { removed?: boolean; in
             </Trans>
           }
         >
-          <LabelText color={theme.accentSuccess}>
+          <LabelText color={theme.success}>
             <BadgeText>
               <Trans>In Range</Trans>
             </BadgeText>
@@ -68,7 +68,7 @@ export default function RangeBadge({ removed, inRange }: { removed?: boolean; in
             </Trans>
           }
         >
-          <LabelText color={theme.accentWarning}>
+          <LabelText color={theme.deprecated_accentWarning}>
             <BadgeText>
               <Trans>Out of range</Trans>
             </BadgeText>

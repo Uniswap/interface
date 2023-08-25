@@ -33,9 +33,9 @@ const HeaderText = styled.div`
   ${flexRowNoWrap};
   align-items: center;
   justify-content: center;
-  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.accentAction : ({ theme }) => theme.textPrimary)};
+  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.accent1 : ({ theme }) => theme.neutral1)};
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 535;
   padding: 0 8px;
 `
 const IconWrapper = styled.div`
@@ -43,7 +43,7 @@ const IconWrapper = styled.div`
   align-items: center;
   justify-content: center;
   img {
-    ${({ theme }) => !theme.darkMode && `border: 1px solid ${theme.backgroundOutline}`};
+    ${({ theme }) => !theme.darkMode && `border: 1px solid ${theme.surface3}`};
     border-radius: 12px;
   }
   & > img,
@@ -64,14 +64,14 @@ const Wrapper = styled.div<{ disabled: boolean }>`
   position: relative;
   width: 100%;
 
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.surface2};
 
   &:hover {
     cursor: ${({ disabled }) => !disabled && 'pointer'};
-    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
+    background-color: ${({ theme, disabled }) => !disabled && theme.surface3};
   }
   &:focus {
-    background-color: ${({ theme, disabled }) => !disabled && theme.hoverState};
+    background-color: ${({ theme, disabled }) => !disabled && theme.surface3};
   }
 `
 

@@ -26,16 +26,16 @@ const ContentWrapper = styled(Column)`
   position: relative;
 `
 const ActionSelectorHeader = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 535;
+  color: ${({ theme }) => theme.neutral2};
   margin-bottom: 10px;
 `
 
 const ActionDropdown = styled(ButtonDropdown)`
   padding: 0px;
   background-color: transparent;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 1.25rem;
 
   :hover,
@@ -52,8 +52,8 @@ const ProposalActionSelectorFlex = styled.div`
   display: flex;
   flex-flow: column nowrap;
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  border: 1px solid ${({ theme }) => theme.surface3};
+  background-color: ${({ theme }) => theme.surface1};
 `
 
 const ProposalActionSelectorContainer = styled.div`
@@ -103,7 +103,7 @@ export function ProposalActionSelectorModal({
       <ContentWrapper>
         <PaddedColumn gap="16px">
           <RowBetween>
-            <Text fontWeight={500} fontSize={16}>
+            <Text fontWeight={535} fontSize={16}>
               <Trans>Select an action</Trans>
             </Text>
             <CloseIcon onClick={onDismiss} />
@@ -112,14 +112,14 @@ export function ProposalActionSelectorModal({
         <Separator />
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.TRANSFER_TOKEN)}>
           <Column>
-            <Text fontWeight={500}>
+            <Text fontWeight={535}>
               <Trans>Transfer Token</Trans>
             </Text>
           </Column>
         </MenuItem>
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.APPROVE_TOKEN)}>
           <Column>
-            <Text fontWeight={500}>
+            <Text fontWeight={535}>
               <Trans>Approve Token</Trans>
             </Text>
           </Column>

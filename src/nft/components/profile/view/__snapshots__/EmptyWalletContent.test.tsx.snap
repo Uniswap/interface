@@ -3,11 +3,11 @@
 exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
 <DocumentFragment>
   .c1 {
-  color: #0D111C;
+  color: #222222;
 }
 
 .c3 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c0 {
@@ -46,7 +46,7 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
 }
 
 .c5 {
-  background-color: #FB118E;
+  background-color: #FC72FF;
   padding: 10px 24px;
   color: #FFFFFF;
   width: -webkit-min-content;
@@ -58,7 +58,7 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
   white-space: nowrap;
   cursor: pointer;
   margin-top: 20px;
-  font-weight: 500;
+  font-weight: 535;
   font-size: 16px;
   line-height: 24px;
 }
@@ -88,12 +88,12 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
         />
       </svg>
       <div
-        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_semibold_sm__rgw6ezd1 sprinkles_fontSize_28_sm__rgw6ezbj sprinkles_lineHeight_36_sm__rgw6ezep css-rjqmed"
+        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_medium_sm__rgw6ezd9 sprinkles_fontSize_28_sm__rgw6ezbx sprinkles_lineHeight_36_sm__rgw6ezel css-n8z49y"
       >
         No NFTs yet
       </div>
       <div
-        class="c3 c4 css-zhpkf8"
+        class="c3 c4 css-142zc9n"
       >
         Buy or transfer NFTs to this wallet to get started.
       </div>
@@ -128,12 +128,12 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
         />
       </svg>
       <div
-        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_semibold_sm__rgw6ezd1 sprinkles_fontSize_28_sm__rgw6ezbj sprinkles_lineHeight_36_sm__rgw6ezep css-rjqmed"
+        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_medium_sm__rgw6ezd9 sprinkles_fontSize_28_sm__rgw6ezbx sprinkles_lineHeight_36_sm__rgw6ezel css-n8z49y"
       >
         No tokens yet
       </div>
       <div
-        class="c3 c4 css-zhpkf8"
+        class="c3 c4 css-142zc9n"
       >
         Buy or transfer tokens to this wallet to get started.
       </div>
@@ -174,12 +174,12 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
         />
       </svg>
       <div
-        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_semibold_sm__rgw6ezd1 sprinkles_fontSize_28_sm__rgw6ezbj sprinkles_lineHeight_36_sm__rgw6ezep css-rjqmed"
+        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_medium_sm__rgw6ezd9 sprinkles_fontSize_28_sm__rgw6ezbx sprinkles_lineHeight_36_sm__rgw6ezel css-n8z49y"
       >
         No activity yet
       </div>
       <div
-        class="c3 c4 css-zhpkf8"
+        class="c3 c4 css-142zc9n"
       >
         Your onchain transactions and crypto purchases will appear here.
       </div>
@@ -209,12 +209,12 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
         />
       </svg>
       <div
-        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_semibold_sm__rgw6ezd1 sprinkles_fontSize_28_sm__rgw6ezbj sprinkles_lineHeight_36_sm__rgw6ezep css-rjqmed"
+        class="c1 c2 common__127l8hd1 sprinkles_fontWeight_medium_sm__rgw6ezd9 sprinkles_fontSize_28_sm__rgw6ezbx sprinkles_lineHeight_36_sm__rgw6ezel css-n8z49y"
       >
         No pools yet
       </div>
       <div
-        class="c3 c4 css-zhpkf8"
+        class="c3 c4 css-142zc9n"
       >
         Open a new position or create a pool to get started.
       </div>

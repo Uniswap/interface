@@ -5,6 +5,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectio
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
 import clsx from 'clsx'
+import { Search } from 'components/Icons/Search'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
@@ -21,20 +22,20 @@ import { ChangeEvent, useCallback, useEffect, useReducer, useRef, useState } fro
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
+import { ChevronLeftIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
 
 const KeyShortCut = styled.div`
-  background-color: ${({ theme }) => theme.hoverState};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface3};
+  color: ${({ theme }) => theme.neutral2};
   padding: 0px 8px;
   width: 20px;
   height: 20px;
   border-radius: 4px;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 535;
   line-height: 16px;
   display: flex;
   align-items: center;
@@ -152,6 +153,9 @@ export const SearchBar = () => {
           position: 'relative',
           display: 'flex',
         })}
+        {...(isOpen && {
+          boxShadow: 'deep',
+        })}
       >
         <Row
           className={clsx(
@@ -163,15 +167,15 @@ export const SearchBar = () => {
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
           borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '1px'}
-          backgroundColor={isOpen ? 'backgroundSurface' : 'searchBackground'}
+          backgroundColor={isOpen ? 'surface1' : 'surface2'}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
           <Box className={styles.searchContentLeftAlign}>
             <Box display={{ sm: 'none', md: 'flex' }}>
-              <MagnifyingGlassIcon />
+              <Search width="20px" height="20px" />
             </Box>
-            <Box display={{ sm: 'flex', md: 'none' }} color="textTertiary" onClick={toggleOpen}>
+            <Box display={{ sm: 'flex', md: 'none' }} color="neutral3" onClick={toggleOpen}>
               <ChevronLeftIcon />
             </Box>
           </Box>

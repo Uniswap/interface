@@ -50,7 +50,7 @@ const StyledXButton = styled(X)`
   cursor: pointer;
   justify-self: flex-end;
 
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   ${OpacityHoverState};
 `
 
@@ -82,7 +82,7 @@ const Success = styled(AnimatedEntranceConfirmationIcon)`
 `
 
 const LearnMoreLink = styled(ExternalLink)`
-  font-weight: 600;
+  font-weight: 535;
 `
 const DescriptionText = styled(ThemedText.LabelMicro)`
   text-align: center;
@@ -136,11 +136,11 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
           </ThemedText.SubHeaderLarge>
           <Column>
             {amounts && <TradeSummary trade={amounts} />}
-            <ThemedText.Caption paddingTop="48px" textAlign="center">
+            <ThemedText.BodySmall paddingTop="48px" textAlign="center">
               <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
                 <Trans>Learn more about swapping with UniswapX</Trans>
               </ExternalLink>
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           </Column>
         </ContentContainer>
       )
@@ -154,13 +154,13 @@ export function OrderContent({ order }: { order: SelectedOrderInfo }) {
           </ThemedText.SubHeaderLarge>
           <Column>
             {amounts && <TradeSummary trade={amounts} />}
-            <ThemedText.Caption paddingTop="48px" textAlign="center">
+            <ThemedText.BodySmall paddingTop="48px" textAlign="center">
               {explorerLink && (
                 <ExternalLink href={explorerLink}>
                   <Trans>View on Explorer</Trans>
                 </ExternalLink>
               )}
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           </Column>
         </ContentContainer>
       )

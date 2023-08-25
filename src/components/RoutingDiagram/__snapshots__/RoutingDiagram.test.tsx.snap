@@ -8,7 +8,7 @@ exports[`renders multi route 1`] = `
   min-width: 0;
 }
 
-.c11 {
+.c13 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -32,7 +32,7 @@ exports[`renders multi route 1`] = `
   justify-content: flex-start;
 }
 
-.c12 {
+.c14 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -50,15 +50,23 @@ exports[`renders multi route 1`] = `
   gap: 1px;
 }
 
-.c13 {
+.c15 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c13 > * {
+.c15 > * {
   margin: 1px !important;
+}
+
+.c10 {
+  color: #222222;
+}
+
+.c12 {
+  color: #7D7D7D;
 }
 
 .c7 {
@@ -66,7 +74,7 @@ exports[`renders multi route 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background: #E8ECFB;
+  background: #F9F9F9;
   border: unset;
   border-radius: 0.5rem;
   color: #000;
@@ -79,7 +87,7 @@ exports[`renders multi route 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  font-weight: 500;
+  font-weight: 535;
 }
 
 .c0 {
@@ -128,34 +136,33 @@ exports[`renders multi route 1`] = `
 }
 
 .c6 path {
-  stroke: #98A1C0;
+  stroke: #22222212;
 }
 
 .c8 {
-  background-color: #E8ECFB;
+  background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
-  font-size: 12px;
   grid-gap: 4px;
   grid-auto-flow: column;
   -webkit-box-pack: start;
   -webkit-justify-content: start;
   -ms-flex-pack: start;
   justify-content: start;
-  padding: 4px 6px 4px 4px;
+  padding: 4px 6px;
   z-index: 1020;
 }
 
 .c9 {
-  background-color: #B8C0DC;
+  background-color: #F9F9F9;
   border-radius: 4px;
-  color: #7780A0;
+  color: #7D7D7D;
   font-size: 10px;
   padding: 2px 4px;
   z-index: 1021;
 }
 
-.c10 {
+.c11 {
   word-break: normal;
 }
 
@@ -185,20 +192,20 @@ exports[`renders multi route 1`] = `
             class="c7 c9"
           >
             <div
-              class="c10 css-15li2d9"
+              class="c10 c11 css-1m65e73"
             >
               V2
             </div>
           </div>
           <div
-            class="c10 css-1aekuku"
+            class="c12 c11 css-1m65e73"
             style="min-width: auto;"
           >
             75%
           </div>
         </div>
         <div
-          class="c11 c12 c13"
+          class="c13 c14 c15"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
@@ -230,20 +237,20 @@ exports[`renders multi route 1`] = `
             class="c7 c9"
           >
             <div
-              class="c10 css-15li2d9"
+              class="c10 c11 css-1m65e73"
             >
               V3
             </div>
           </div>
           <div
-            class="c10 css-1aekuku"
+            class="c12 c11 css-1m65e73"
             style="min-width: auto;"
           >
             25%
           </div>
         </div>
         <div
-          class="c11 c12 c13"
+          class="c13 c14 c15"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
@@ -264,7 +271,7 @@ exports[`renders single route 1`] = `
   min-width: 0;
 }
 
-.c11 {
+.c13 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -288,7 +295,7 @@ exports[`renders single route 1`] = `
   justify-content: flex-start;
 }
 
-.c12 {
+.c14 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -306,15 +313,23 @@ exports[`renders single route 1`] = `
   gap: 1px;
 }
 
-.c13 {
+.c15 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c13 > * {
+.c15 > * {
   margin: 1px !important;
+}
+
+.c10 {
+  color: #222222;
+}
+
+.c12 {
+  color: #7D7D7D;
 }
 
 .c7 {
@@ -322,7 +337,7 @@ exports[`renders single route 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background: #E8ECFB;
+  background: #F9F9F9;
   border: unset;
   border-radius: 0.5rem;
   color: #000;
@@ -335,7 +350,7 @@ exports[`renders single route 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  font-weight: 500;
+  font-weight: 535;
 }
 
 .c0 {
@@ -384,34 +399,33 @@ exports[`renders single route 1`] = `
 }
 
 .c6 path {
-  stroke: #98A1C0;
+  stroke: #22222212;
 }
 
 .c8 {
-  background-color: #E8ECFB;
+  background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
-  font-size: 12px;
   grid-gap: 4px;
   grid-auto-flow: column;
   -webkit-box-pack: start;
   -webkit-justify-content: start;
   -ms-flex-pack: start;
   justify-content: start;
-  padding: 4px 6px 4px 4px;
+  padding: 4px 6px;
   z-index: 1020;
 }
 
 .c9 {
-  background-color: #B8C0DC;
+  background-color: #F9F9F9;
   border-radius: 4px;
-  color: #7780A0;
+  color: #7D7D7D;
   font-size: 10px;
   padding: 2px 4px;
   z-index: 1021;
 }
 
-.c10 {
+.c11 {
   word-break: normal;
 }
 
@@ -441,20 +455,20 @@ exports[`renders single route 1`] = `
             class="c7 c9"
           >
             <div
-              class="c10 css-15li2d9"
+              class="c10 c11 css-1m65e73"
             >
               V3
             </div>
           </div>
           <div
-            class="c10 css-1aekuku"
+            class="c12 c11 css-1m65e73"
             style="min-width: auto;"
           >
             100%
           </div>
         </div>
         <div
-          class="c11 c12 c13"
+          class="c13 c14 c15"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
