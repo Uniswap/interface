@@ -2,11 +2,10 @@ import { NFTEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent, Trace } from 'analytics'
 import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
 import { Column } from 'nft/components/Flex'
-import { useBag, useIsMobile } from 'nft/hooks'
+import { useBag, useIsMobile, useNativeUsdPrice } from 'nft/hooks'
 import { BagItemStatus, BagStatus } from 'nft/types'
-import { fetchPrice, formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft/utils'
+import { formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft/utils'
 import { useEffect, useMemo } from 'react'
-import { useQuery } from 'react-query'
 
 export const BagContent = () => {
   const bagStatus = useBag((s) => s.bagStatus)
@@ -24,7 +23,7 @@ export const BagContent = () => {
     return recalculateBagUsingPooledAssets(uncheckedItemsInBag)
   }, [uncheckedItemsInBag])
 
-  const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
+  const ethUsdPrice = useNativeUsdPrice()
 
   const { unchangedAssets, priceChangedAssets, unavailableAssets, availableItems } = useMemo(() => {
     const unchangedAssets = itemsInBag
@@ -47,7 +46,7 @@ export const BagContent = () => {
 
     if (hasAssetsInReview)
       sendAnalyticsEvent(NFTEventName.NFT_BUY_BAG_CHANGED, {
-        usd_value: fetchedPriceData,
+        usd_value: ethUsdPrice,
         bag_quantity: itemsInBag,
         ...formatAssetEventProperties(priceChangedAssets),
       })
@@ -60,7 +59,7 @@ export const BagContent = () => {
     if (bagStatus === BagStatus.CONFIRM_REVIEW && !hasAssets) {
       setBagStatus(BagStatus.ADDING_TO_BAG)
     }
-  }, [bagStatus, itemsInBag, priceChangedAssets, setBagStatus, fetchedPriceData])
+  }, [bagStatus, itemsInBag, priceChangedAssets, setBagStatus, ethUsdPrice])
 
   return (
     <>
@@ -69,7 +68,7 @@ export const BagContent = () => {
           <Trace
             name={NFTEventName.NFT_BUY_BAG_CHANGED}
             properties={{
-              usd_value: fetchedPriceData,
+              usd_value: ethUsdPrice,
               bag_quantity: itemsInBag.length,
               ...formatAssetEventProperties(unavailableAssets),
             }}
@@ -77,7 +76,7 @@ export const BagContent = () => {
           >
             <UnavailableAssetsHeaderRow
               assets={unavailableAssets}
-              usdPrice={fetchedPriceData}
+              usdPrice={ethUsdPrice}
               clearUnavailableAssets={() => setItemsInBag(availableItems)}
               didOpenUnavailableAssets={didOpenUnavailableAssets}
               setDidOpenUnavailableAssets={setDidOpenUnavailableAssets}
@@ -89,7 +88,7 @@ export const BagContent = () => {
           <PriceChangeBagRow
             key={asset.id}
             asset={asset}
-            usdPrice={fetchedPriceData}
+            usdPrice={ethUsdPrice}
             markAssetAsReviewed={markAssetAsReviewed}
             top={index === 0 && unavailableAssets.length === 0}
             isMobile={isMobile}
@@ -104,7 +103,7 @@ export const BagContent = () => {
             <BagRow
               key={asset.id}
               asset={asset}
-              usdPrice={fetchedPriceData}
+              usdPrice={ethUsdPrice}
               removeAsset={removeAssetsFromBag}
               showRemove={true}
               isMobile={isMobile}
