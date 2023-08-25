@@ -154,13 +154,13 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
     withSignerIfPossible
   )
   useEffect(() => {
-    if (contract && withSignerIfPossible !== false && account) {
+    if (contract && account) {
       sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
         source: 'useV3NFTPositionManagerContract',
         contract,
       })
     }
-  }, [account, contract, withSignerIfPossible])
+  }, [account, contract])
   return contract
 }
 
