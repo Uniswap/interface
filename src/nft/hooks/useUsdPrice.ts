@@ -1,6 +1,6 @@
 import { formatEther } from '@ethersproject/units'
 import { ChainId } from '@uniswap/sdk-core'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { GenieAsset } from 'nft/types'
@@ -8,9 +8,8 @@ import { GenieAsset } from 'nft/types'
 export const useNativeUsdPrice = (chainId: number = ChainId.MAINNET): number => {
   const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount('1', nativeCurrency)
-  const usdcValue = useStablecoinValue(parsedAmount)?.toExact()
-  const usdPrice = parseFloat(usdcValue ?? '')
-  return usdPrice
+  const usdcValue = useUSDPrice(parsedAmount)?.data ?? 0
+  return usdcValue
 }
 
 export function useUsdPrice(asset: GenieAsset): string | undefined {
