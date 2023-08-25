@@ -25,7 +25,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boo
     overflow-y: ${({ $scrollOverlay }) => $scrollOverlay && 'scroll'};
     justify-content: center;
 
-    background-color: ${({ theme }) => theme.backgroundScrim};
+    background-color: ${({ theme }) => theme.scrim};
   }
 `
 
@@ -43,9 +43,9 @@ const StyledDialogContent = styled(AnimatedDialogContent)<StyledDialogProps>`
 
   &[data-reach-dialog-content] {
     margin: auto;
-    background-color: ${({ theme }) => theme.backgroundSurface};
-    border: ${({ theme, $hideBorder }) => !$hideBorder && `1px solid ${theme.backgroundOutline}`};
-    box-shadow: ${({ theme }) => theme.deepShadow};
+    background-color: ${({ theme }) => theme.surface2};
+    border: ${({ theme, $hideBorder }) => !$hideBorder && `1px solid ${theme.surface3}`};
+    box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
     padding: 0px;
     width: 50vw;
     overflow-y: auto;

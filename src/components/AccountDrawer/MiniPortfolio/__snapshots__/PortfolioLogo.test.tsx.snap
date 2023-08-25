@@ -49,7 +49,7 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
 }
 
 .c3 {
-  background-color: #0D111C;
+  background-color: #222222;
   border-radius: 2px;
   height: 16px;
   left: 60%;

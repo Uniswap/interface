@@ -1,8 +1,6 @@
 import { createStore, Store } from 'redux'
 import { RouterPreference } from 'state/routing/types'
 
-import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
-import { updateVersion } from '../global/actions'
 import reducer, {
   addSerializedPair,
   addSerializedToken,
@@ -16,7 +14,6 @@ import reducer, {
   updateUserSlippageTolerance,
   UserState,
 } from './reducer'
-import { SlippageTolerance } from './types'
 
 function buildSerializedPair(token0Address: string, token1Address: string, chainId: number) {
   return {
@@ -36,36 +33,6 @@ describe('swap reducer', () => {
 
   beforeEach(() => {
     store = createStore(reducer, initialState)
-  })
-
-  describe('updateVersion', () => {
-    it('has no timestamp originally', () => {
-      expect(store.getState().lastUpdateVersionTimestamp).toBeUndefined()
-    })
-    it('sets the lastUpdateVersionTimestamp', () => {
-      const time = new Date().getTime()
-      store.dispatch(updateVersion())
-      expect(store.getState().lastUpdateVersionTimestamp).toBeGreaterThanOrEqual(time)
-    })
-    it('sets allowed slippage and deadline', () => {
-      store = createStore(reducer, {
-        ...initialState,
-        userDeadline: undefined,
-        userSlippageTolerance: undefined,
-      } as any)
-      store.dispatch(updateVersion())
-      expect(store.getState().userDeadline).toEqual(DEFAULT_DEADLINE_FROM_NOW)
-      expect(store.getState().userSlippageTolerance).toEqual(SlippageTolerance.Auto)
-    })
-    it('sets allowed slippage and deadline to auto', () => {
-      store = createStore(reducer, {
-        ...initialState,
-        userSlippageTolerance: 10,
-        userSlippageToleranceHasBeenMigratedToAuto: undefined,
-      } as any)
-      store.dispatch(updateVersion())
-      expect(store.getState().userSlippageToleranceHasBeenMigratedToAuto).toEqual(true)
-    })
   })
 
   describe('updateSelectedWallet', () => {

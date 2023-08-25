@@ -13,17 +13,30 @@ describe('Mini Portfolio account drawer', () => {
     // Balances should have been fetched once after hover
     cy.get(getTestSelector('web3-status-connected')).trigger('mouseover')
     cy.get('@gqlSpy').should('have.been.calledOnce')
+  })
+
+  it('should not re-fetch balances on second hover', () => {
+    // The balances should not be fetched before the account button is hovered
+    cy.get('@gqlSpy').should('not.have.been.called')
+
+    // Balances should have been fetched once after hover
+    cy.get(getTestSelector('web3-status-connected')).trigger('mouseover')
+    cy.get('@gqlSpy').should('have.been.calledOnce')
 
     // Balances should not be refetched upon second hover
     cy.get(getTestSelector('web3-status-connected')).trigger('mouseover')
     cy.get('@gqlSpy').should('have.been.calledOnce')
+  })
 
-    // Balances should not be refetched upon opening drawer
-    cy.get(getTestSelector('web3-status-connected')).click()
+  it('should not re-fetch balances when the account drawer is opened', () => {
+    // The balances should not be fetched before the account button is hovered
+    cy.get('@gqlSpy').should('not.have.been.called')
+
+    // Balances should have been fetched once after hover
+    cy.get(getTestSelector('web3-status-connected')).trigger('mouseover')
     cy.get('@gqlSpy').should('have.been.calledOnce')
 
-    // Balances should not be refetched upon closing & reopening drawer
-    cy.get(getTestSelector('close-account-drawer')).click()
+    // Balances should not be refetched upon opening drawer
     cy.get(getTestSelector('web3-status-connected')).click()
     cy.get('@gqlSpy').should('have.been.calledOnce')
   })

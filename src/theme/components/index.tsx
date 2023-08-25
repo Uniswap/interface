@@ -31,7 +31,7 @@ import { anonymizeLink } from '../../utils/anonymizeLink'
 // TODO: Break this file into a components folder
 
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
 `
 
@@ -45,7 +45,7 @@ export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRi
   margin-right: ${({ marginRight }) => marginRight ?? 0};
   margin-left: ${({ marginLeft }) => marginLeft ?? 0};
   & > * {
-    stroke: ${({ theme, stroke }) => stroke ?? theme.accentActive};
+    stroke: ${({ theme, stroke }) => stroke ?? theme.accent1};
   }
 `
 
@@ -56,7 +56,7 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   background: none;
 
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-  color: ${({ theme, disabled }) => (disabled ? theme.textSecondary : theme.accentAction)};
+  color: ${({ theme, disabled }) => (disabled ? theme.neutral2 : theme.accent1)};
   font-weight: 500;
 
   :hover {
@@ -114,8 +114,8 @@ export const ClickableStyle = css`
 `
 
 export const LinkStyle = css`
-  color: ${({ theme }) => theme.accentAction};
-  stroke: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
+  stroke: ${({ theme }) => theme.accent1};
   font-weight: 500;
 `
 
@@ -147,7 +147,7 @@ const CopyIcon = styled(Copy)`
   ${IconStyle}
   ${ClickableStyle}
   ${LinkStyle}
-  stroke: ${({ theme }) => theme.accentAction};
+  stroke: ${({ theme }) => theme.accent1};
 `
 
 const rotateImg = keyframes`
@@ -362,7 +362,7 @@ const CopyHelperText = styled.div<{ fontSize?: number; offset: number }>`
 `
 
 const StyledCheckCircle = styled(CheckCircle)`
-  color: ${({ theme }) => theme.accentSuccess};
+  color: ${({ theme }) => theme.success};
   stroke-width: 1.5px;
 `
 
@@ -468,7 +468,7 @@ export const SpinnerSVG = styled.svg`
 `
 
 const BackArrowIcon = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 export function BackArrowLink({ to }: { to: string }) {
@@ -513,16 +513,16 @@ export const MediumOnly = styled.span`
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface3};
 `
 
 export const GlowEffect = styled.div`
   border-radius: 32px;
-  box-shadow: ${({ theme }) => theme.networkDefaultShadow};
+  box-shadow: ${({ theme }) => theme.deprecated_networkDefaultShadow};
 `
 
 export const CautionTriangle = styled(AlertTriangle)`
-  color: ${({ theme }) => theme.accentWarning};
+  color: ${({ theme }) => theme.deprecated_accentWarning};
 `
 
 export const Divider = styled.div`
@@ -530,5 +530,5 @@ export const Divider = styled.div`
   height: 1px;
   border-width: 0;
   margin: 0;
-  background-color: ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface3};
 `

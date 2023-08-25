@@ -28,9 +28,9 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       return new Response('Token not found.', { status: 404 })
     }
 
-    const [fontData, palette] = await Promise.all([getFont(), getColor(data.ogImage)])
+    const [fontData, palette] = await Promise.all([getFont(origin), getColor(data.ogImage, true)])
 
-    const networkLogo = getNetworkLogoUrl(networkName.toUpperCase())
+    const networkLogo = getNetworkLogoUrl(networkName.toUpperCase(), origin)
 
     // Capitalize name such that each word starts with a capital letter
     let words = data.name.split(' ')
@@ -123,7 +123,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 style={{
                   fontFamily: 'Inter',
                   fontSize: '72px',
-                  lineHeight: '58px',
+                  lineHeight: '72px',
                   marginLeft: '-5px',
                   marginTop: '24px',
                 }}
@@ -145,6 +145,10 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                     fontSize: '168px',
                     lineHeight: '133px',
                     marginLeft: '-13px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    width: '100%',
                   }}
                 >
                   {data.symbol}

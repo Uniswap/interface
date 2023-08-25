@@ -108,7 +108,7 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
         rel={href ? 'noopener noreferrer' : undefined}
         display="flex"
         flexDirection="column"
-        color="textPrimary"
+        color="neutral1"
         background="none"
         border="none"
         justifyContent="center"
@@ -143,7 +143,7 @@ export const MenuDropdown = () => {
                 <Box display={{ sm: 'none', lg: 'flex', xxl: 'none' }}>
                   <PrimaryMenuRow to="/pool" close={toggleOpen}>
                     <Icon>
-                      <PoolIcon width={24} height={24} fill={theme.textPrimary} />
+                      <PoolIcon width={24} height={24} fill={theme.neutral1} />
                     </Icon>
                     <PrimaryMenuRow.Text>
                       <Trans>Pool</Trans>
@@ -159,7 +159,7 @@ export const MenuDropdown = () => {
                 >
                   <PrimaryMenuRow close={toggleOpen}>
                     <Icon>
-                      <AppleLogo width="24px" height="24px" fill={theme.textPrimary} />
+                      <AppleLogo width="24px" height="24px" fill={theme.neutral1} />
                     </Icon>
                     <PrimaryMenuRow.Text>
                       <Trans>Download Uniswap Wallet</Trans>
@@ -168,7 +168,7 @@ export const MenuDropdown = () => {
                 </Box>
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
-                    <GovernanceIcon width={24} height={24} color={theme.textPrimary} />
+                    <GovernanceIcon width={24} height={24} color={theme.neutral1} />
                   </Icon>
                   <PrimaryMenuRow.Text>
                     <Trans>Vote in governance</Trans>
@@ -176,7 +176,7 @@ export const MenuDropdown = () => {
                 </PrimaryMenuRow>
                 <PrimaryMenuRow href="https://info.uniswap.org/#/">
                   <Icon>
-                    <BarChartIcon width={24} height={24} color={theme.textPrimary} />
+                    <BarChartIcon width={24} height={24} color={theme.neutral1} />
                   </Icon>
                   <PrimaryMenuRow.Text>
                     <Trans>View more analytics</Trans>
@@ -216,28 +216,13 @@ export const MenuDropdown = () => {
               </Box>
               <IconRow>
                 <Icon href="https://discord.com/invite/FCfyBSbCU5">
-                  <DiscordIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.textSecondary}
-                  />
+                  <DiscordIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
                 <Icon href="https://twitter.com/Uniswap">
-                  <TwitterIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.textSecondary}
-                  />
+                  <TwitterIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
                 <Icon href="https://github.com/Uniswap">
-                  <GithubIconMenu
-                    className={styles.hover}
-                    width={24}
-                    height={24}
-                    color={themeVars.colors.textSecondary}
-                  />
+                  <GithubIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
               </IconRow>
             </Column>

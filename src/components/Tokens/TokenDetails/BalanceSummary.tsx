@@ -11,11 +11,10 @@ import { ThemedText } from 'theme'
 import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
-  box-shadow: ${({ theme }) => theme.shallowShadow};
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  background-color: ${({ theme }) => theme.surface1};
+  border: ${({ theme }) => `1px solid ${theme.surface3}`};
   border-radius: 16px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   display: none;
   height: fit-content;
   padding: 20px;
@@ -77,7 +76,7 @@ export default function BalanceSummary({ token }: { token: Currency }) {
   return (
     <BalancesCard>
       <BalanceSection>
-        <ThemedText.SubHeaderSmall color={theme.textPrimary}>
+        <ThemedText.SubHeaderSmall color={theme.neutral1}>
           <Trans>Your balance on {label}</Trans>
         </ThemedText.SubHeaderSmall>
         <BalanceRow>

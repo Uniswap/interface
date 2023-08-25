@@ -1,5 +1,5 @@
-import { MixedRouteSDK, Protocol, Trade } from '@uniswap/router-sdk'
-import { ChainId, Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
@@ -47,6 +47,7 @@ export interface GetQuoteArgs {
   uniswapXEthOutputEnabled: boolean
   forceUniswapXOn: boolean
   userDisabledUniswapX: boolean
+  fotAdjustmentsEnabled: boolean
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
@@ -146,6 +147,8 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   isUniswapXBetter: boolean | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
+  inputTax: Percent
+  outputTax: Percent
 
   constructor({
     gasUseEstimateUSD,
@@ -154,6 +157,8 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     requestId,
     quoteMethod,
     approveInfo,
+    inputTax,
+    outputTax,
     ...routes
   }: {
     gasUseEstimateUSD?: number
@@ -163,6 +168,8 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     requestId?: string
     quoteMethod: QuoteMethod
     approveInfo: ApproveInfo
+    inputTax: Percent
+    outputTax: Percent
     v2Routes: {
       routev2: V2Route<Currency, Currency>
       inputAmount: CurrencyAmount<Currency>
@@ -187,6 +194,26 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     this.requestId = requestId
     this.quoteMethod = quoteMethod
     this.approveInfo = approveInfo
+    this.inputTax = inputTax
+    this.outputTax = outputTax
+  }
+
+  public get totalTaxRate(): Percent {
+    return this.inputTax.add(this.outputTax)
+  }
+
+  public get postTaxOutputAmount() {
+    // Ideally we should calculate the final output amount by ammending the inputAmount based on the input tax and then applying the output tax,
+    // but this isn't currently possible because V2Trade reconstructs the total inputAmount based on the swap routes
+    // TODO(WEB-2761): Amend V2Trade objects in the v2-sdk to have a separate field for post-input tax routes
+    return this.outputAmount.multiply(new Fraction(ONE).subtract(this.totalTaxRate))
+  }
+
+  public minimumAmountOut(slippageTolerance: Percent, amountOut = this.outputAmount): CurrencyAmount<Currency> {
+    // Since universal-router-sdk reconstructs V2Trade objects, overriding this method does not actually change the minimumAmountOut that gets submitted on-chain
+    // Our current workaround is to add tax rate to slippage tolerance before we submit the trade to universal-router-sdk in useUniversalRouter.ts
+    // So the purpose of this override is so the UI displays the same minimum amount out as what is submitted on-chain
+    return super.minimumAmountOut(slippageTolerance.add(this.totalTaxRate), amountOut)
   }
 
   // gas estimate for maybe approve + swap
@@ -258,6 +285,11 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     if (this.approveInfo.needsApprove) return this.approveInfo.approveGasEstimateUSD
 
     return 0
+  }
+
+  /** For UniswapX, handling token taxes in the output amount is outsourced to quoters */
+  public get postTaxOutputAmount() {
+    return this.outputAmount
   }
 }
 

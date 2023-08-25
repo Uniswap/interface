@@ -50,7 +50,7 @@ export function SubmittedView({ children, onDismiss, hash }: { children: any; on
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
-        <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
+        <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accent1} />
       </ConfirmedIcon>
       <AutoColumn gap="100px" justify="center">
         {children}

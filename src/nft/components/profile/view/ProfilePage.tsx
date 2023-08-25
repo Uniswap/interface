@@ -37,11 +37,11 @@ const ProfilePageColumn = styled(Column)`
 
 const ProfileHeader = styled.div`
   font-size: 28px;
-  font-weight: 500;
+  font-weight: 535;
   line-height: 38px;
   padding-bottom: 16px;
   margin-bottom: 8px;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.surface3};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     font-size: 20px;
@@ -142,19 +142,19 @@ export const ProfilePage = () => {
           borderRadius="12"
           paddingX="16"
           paddingY="12"
-          background="backgroundSurface"
+          background="surface1"
           borderStyle="solid"
-          borderColor="backgroundOutline"
+          borderColor="surface3"
           borderWidth="1px"
           style={{ bottom: '68px', width: 'calc(100% - 32px)', lineHeight: '24px' }}
           className={subhead}
         >
           {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
           <Box
-            fontWeight="semibold"
+            fontWeight="medium"
             fontSize="14"
             cursor="pointer"
-            color="textSecondary"
+            color="neutral2"
             marginRight="20"
             marginLeft="auto"
             onClick={resetSellAssets}
@@ -168,7 +168,7 @@ export const ProfilePage = () => {
             fontWeight="medium"
             fontSize="14"
             cursor="pointer"
-            backgroundColor="accentAction"
+            backgroundColor="accent1"
             onClick={toggleBag}
             lineHeight="16"
             borderRadius="12"
@@ -325,7 +325,7 @@ const CollectionFilterItem = ({
       paddingBottom="6"
       paddingLeft="12"
       borderRadius="8"
-      background="backgroundOutline"
+      background="surface3"
       fontSize="14"
     >
       <Box as="img" borderRadius="round" width="20" height="20" src={collection.image} />
@@ -333,7 +333,7 @@ const CollectionFilterItem = ({
         {collection?.name}
       </Box>
       <Box
-        color="textSecondary"
+        color="neutral2"
         background="none"
         height="28"
         width="28"

@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { ReactComponent as Settings } from 'assets/svg/settings.svg'
+import { Settings } from 'components/Icons/Settings'
 import Row from 'components/Row'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
@@ -11,7 +11,7 @@ const Icon = styled(Settings)`
   height: 24px;
   width: 24px;
   > * {
-    fill: ${({ theme }) => theme.textSecondary};
+    fill: ${({ theme }) => theme.neutral2};
   }
 `
 
@@ -37,11 +37,11 @@ const IconContainer = styled(Row)`
 
 const IconContainerWithSlippage = styled(IconContainer)<{ displayWarning?: boolean }>`
   div {
-    color: ${({ theme, displayWarning }) => (displayWarning ? theme.accentWarning : theme.textSecondary)};
+    color: ${({ theme, displayWarning }) => (displayWarning ? theme.deprecated_accentWarning : theme.neutral2)};
   }
 
   background-color: ${({ theme, displayWarning }) =>
-    displayWarning ? theme.accentWarningSoft : theme.backgroundModule};
+    displayWarning ? theme.deprecated_accentWarningSoft : theme.surface2};
 `
 
 const ButtonContent = () => {
@@ -59,9 +59,9 @@ const ButtonContent = () => {
 
   return (
     <IconContainerWithSlippage data-testid="settings-icon-with-slippage" gap="sm" displayWarning={isInvalidSlippage}>
-      <ThemedText.Caption>
+      <ThemedText.BodySmall>
         <Trans>{userSlippageTolerance.toFixed(2)}% slippage</Trans>
-      </ThemedText.Caption>
+      </ThemedText.BodySmall>
       <Icon />
     </IconContainerWithSlippage>
   )

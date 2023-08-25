@@ -30,8 +30,8 @@ const Menu = styled.div`
 
 const MenuFlyout = styled(AutoColumn)`
   min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface1};
+  border: 1px solid ${({ theme }) => theme.surface3};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
@@ -40,7 +40,7 @@ const MenuFlyout = styled(AutoColumn)`
   margin-top: 10px;
   right: 0;
   z-index: 100;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     min-width: 18.125rem;
   `};
@@ -68,12 +68,12 @@ const MobileMenuWrapper = styled(Column)<{ open: boolean }>`
   height: min-content;
   width: 100%;
   padding: 8px 16px 24px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   overflow: hidden;
   position: absolute;
   bottom: ${({ open }) => (open ? `100vh` : 0)};
   transition: bottom ${({ theme }) => theme.transition.duration.medium};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  border: ${({ theme }) => `1px solid ${theme.surface3}`};
   border-radius: 12px;
   border-bottom-right-radius: 0px;
   border-bottom-left-radius: 0px;

@@ -40,7 +40,7 @@ const buttonStyle = css`
   cursor: pointer;
   padding: 12px 0px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   line-height: 20px;
   border-radius: 12px;
@@ -57,14 +57,14 @@ const buttonStyle = css`
 `
 
 const ReturnButton = styled.button`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
-  color: ${({ theme }) => theme.textPrimary};
+  background-color: ${({ theme }) => theme.surface3};
+  color: ${({ theme }) => theme.neutral1};
   ${buttonStyle}
 `
 
 const TweetButton = styled.a`
-  background-color: ${({ theme }) => theme.accentAction};
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  background-color: ${({ theme }) => theme.accent1};
+  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
   text-decoration: none;
   ${buttonStyle}
 `
@@ -109,7 +109,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
         <ProceedsColumn>
           <ThemedText.SubHeader>{formatEth(totalEthListingValue)} ETH</ThemedText.SubHeader>
           {usdcValue && (
-            <ThemedText.BodySmall lineHeight="20px" color="textSecondary">
+            <ThemedText.BodySmall lineHeight="20px" color="neutral2">
               {formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)}
             </ThemedText.BodySmall>
           )}
@@ -121,7 +121,12 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
         </ReturnButton>
         <TweetButton href={generateTweetForList(sellAssets)} target="_blank" rel="noreferrer">
           <TweetRow>
-            <Twitter height={20} width={20} color={theme.accentTextLightPrimary} fill={theme.accentTextLightPrimary} />
+            <Twitter
+              height={20}
+              width={20}
+              color={theme.deprecated_accentTextLightPrimary}
+              fill={theme.deprecated_accentTextLightPrimary}
+            />
             <Trans>Share on Twitter</Trans>
           </TweetRow>
         </TweetButton>
