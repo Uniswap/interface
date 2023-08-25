@@ -47,8 +47,8 @@ const GasCostItem = ({
 
 export function GasBreakdownTooltip({
   trade,
-  hideFees = false,
-  hideUniswapXDescription = false,
+  hideFees = true,
+  hideUniswapXDescription = true,
 }: {
   trade: InterfaceTrade
   hideFees?: boolean
@@ -93,7 +93,7 @@ export function GasBreakdownTooltip({
       ) : (
         <ThemedText.Caption color="textSecondary">
           <Trans>Network Fees are paid to the Ethereum network to secure transactions.</Trans>{' '}
-          <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
+          <ExternalLink href="https://ethereum.org/en/developers/docs/gas/">
             <InlineLink>
               <Trans>Learn more</Trans>
             </InlineLink>
