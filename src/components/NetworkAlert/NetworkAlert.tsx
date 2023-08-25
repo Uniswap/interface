@@ -8,7 +8,7 @@ import { ExternalLink, HideSmall } from 'theme'
 import { colors } from 'theme/colors'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
 
-import { AutoRow } from '../Row'
+import Column from '../Column'
 
 const L2Icon = styled.img`
   width: 24px;
@@ -23,6 +23,7 @@ const BodyText = styled.div`
   justify-content: flex-start;
   margin: 8px;
   font-size: 14px;
+  line-height: 20px;
 `
 const RootWrapper = styled.div`
   margin-top: 16px;
@@ -188,14 +189,14 @@ export function NetworkAlert() {
         <LinkOutToBridge href={bridge}>
           <BodyText color={textColor}>
             <L2Icon src={logoUrl} />
-            <AutoRow>
+            <Column>
               <Header>
                 <Trans>{label} token bridge</Trans>
               </Header>
               <HideSmall>
                 <Trans>Deposit tokens to the {label} network.</Trans>
               </HideSmall>
-            </AutoRow>
+            </Column>
           </BodyText>
           <StyledArrowUpRight color={textColor} />
         </LinkOutToBridge>
