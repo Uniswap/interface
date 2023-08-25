@@ -36,6 +36,7 @@ import { useIsTransactionPending, useTransactionAdder } from 'state/transactions
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideExtraSmall, HideSmall, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
+import { WrongChainError } from 'utils/errors'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { formatPrice, NumberType } from 'utils/formatNumbers'
 import { formatTickPrice } from 'utils/formatTickPrice'
@@ -517,7 +518,7 @@ function PositionPageContent() {
     }
 
     const connectedChainId = await provider.getSigner().getChainId()
-    if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
+    if (chainId !== connectedChainId) throw new WrongChainError()
 
     provider
       .getSigner()

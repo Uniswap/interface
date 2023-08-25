@@ -33,6 +33,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
+import { WrongChainError } from 'utils/errors'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -141,7 +142,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     }
 
     const connectedChainId = await provider.getSigner().getChainId()
-    if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
+    if (chainId !== connectedChainId) throw new WrongChainError()
 
     provider
       .getSigner()
