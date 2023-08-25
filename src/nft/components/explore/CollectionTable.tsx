@@ -148,6 +148,7 @@ const CollectionTable = ({ data, timePeriod }: { data: CollectionTableColumn[]; 
     ],
     [floorChangeSort, floorSort, volumeChangeSort, volumeSort, timePeriod]
   )
+
   return (
     <>
       <Table

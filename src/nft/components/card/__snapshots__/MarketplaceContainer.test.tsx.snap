@@ -55,7 +55,7 @@ exports[`MarketplaceContainer should render with list price 1`] = `
   gap: 6px;
   color: #F5F6FC;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 535;
   line-height: 16px;
   text-shadow: 1px 1px 3px rgba(51,53,72,0.54);
 }

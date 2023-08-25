@@ -23,7 +23,7 @@ const Container = styled(Column)`
 `
 
 const SectionTitle = styled(ThemedText.SubHeader)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   padding-bottom: 24px;
 `
 
@@ -39,7 +39,7 @@ const SettingsButtonWrapper = styled(Row)`
 `
 
 const StyledChevron = styled(ChevronRight)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const LanguageLabel = styled(Row)`

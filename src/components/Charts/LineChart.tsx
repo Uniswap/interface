@@ -36,7 +36,7 @@ function LineChart<T>({
       <Group top={marginTop}>
         <LinePath
           curve={curve}
-          stroke={color ?? theme.accentAction}
+          stroke={color ?? theme.accent1}
           strokeWidth={strokeWidth}
           data={data}
           x={getX}

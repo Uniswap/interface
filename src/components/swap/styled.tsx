@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -23,32 +22,35 @@ export const PageWrapper = styled.div`
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-export const SwapWrapper = styled.main<{ chainId?: number }>`
+export const SwapWrapper = styled.main<{ isDark?: boolean }>`
   position: relative;
-  background: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.surface1};
   border-radius: 24px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   padding: 8px;
   padding-top: 12px;
-  box-shadow: ${({ chainId }) => !!chainId && chainId === ChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
+  box-shadow: ${({ isDark }) =>
+    `0px 0px 10px 0px rgba(252, 114, 255, ${isDark ? '0.08' : '0.04'}), 0px 40px 120px 0px rgba(252, 114, 255, ${
+      isDark ? '0.18' : '0.12'
+    })`};
   z-index: ${Z_INDEX.default};
   transition: transform 250ms ease;
 
   &:hover {
-    border: 1px solid ${({ theme }) => theme.backgroundOutline};
+    border: 1px solid ${({ theme }) => theme.surface3};
   }
 `
 
 export const UniswapPopoverContainer = styled.div`
   padding: 18px;
-  color: ${({ theme }) => theme.textPrimary};
-  font-weight: 400;
+  color: ${({ theme }) => theme.neutral1};
+  font-weight: 485;
   font-size: 12px;
   line-height: 16px;
   word-break: break-word;
-  background: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.surface1};
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
+  border: 1px solid ${({ theme }) => theme.surface3};
   box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
   position: relative;
   overflow: hidden;
@@ -80,7 +82,7 @@ const UniswapXShineInner = styled.div`
   bottom: 0;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(130deg, transparent 20%, ${({ theme }) => theme.accentAction}, transparent 80%);
+  background: linear-gradient(130deg, transparent 20%, ${({ theme }) => theme.accent1}, transparent 80%);
   opacity: 0.15;
 `
 
@@ -119,11 +121,11 @@ export const UniswapXOptInLargeContainer = styled.div<{ visible: boolean }>`
 
 export const SwapMustache = styled.main`
   position: relative;
-  background: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.surface1};
   border-radius: 16px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   border-top-width: 0;
   padding: 18px;
   padding-top: calc(12px + 18px);
@@ -139,7 +141,7 @@ export const SwapMustacheShadow = styled.main`
   height: 100%;
   width: 100%;
   transform: translateY(-100%);
-  box-shadow: 0 0 20px 20px ${({ theme }) => theme.backgroundBackdrop};
+  box-shadow: 0 0 20px 20px ${({ theme }) => theme.surface2};
   background: red;
 `
 
@@ -152,9 +154,9 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   margin-bottom: -18px;
   margin-left: auto;
   margin-right: auto;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.surface2};
   border: 4px solid;
-  border-color: ${({ theme }) => theme.backgroundSurface};
+  border-color: ${({ theme }) => theme.surface1};
 
   z-index: 2;
   ${({ clickable }) =>
@@ -191,7 +193,7 @@ export const Dots = styled.span`
 `
 
 const SwapCallbackErrorInner = styled.div`
-  background-color: ${({ theme }) => transparentize(0.9, theme.accentFailure)};
+  background-color: ${({ theme }) => transparentize(0.9, theme.critical)};
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -199,17 +201,17 @@ const SwapCallbackErrorInner = styled.div`
   width: 100%;
   padding: 3rem 1.25rem 1rem 1rem;
   margin-top: -2rem;
-  color: ${({ theme }) => theme.accentFailure};
+  color: ${({ theme }) => theme.critical};
   z-index: -1;
   p {
     padding: 0;
     margin: 0;
-    font-weight: 500;
+    font-weight: 535;
   }
 `
 
 const SwapCallbackErrorInnerAlertTriangle = styled.div`
-  background-color: ${({ theme }) => transparentize(0.9, theme.accentFailure)};
+  background-color: ${({ theme }) => transparentize(0.9, theme.critical)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -231,8 +233,8 @@ export function SwapCallbackError({ error }: { error: ReactNode }) {
 }
 
 export const SwapShowAcceptChanges = styled(AutoColumn)`
-  background-color: ${({ theme }) => transparentize(0.95, theme.deprecated_primary3)};
-  color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => transparentize(0.95, theme.accent1)};
+  color: ${({ theme }) => theme.accent1};
   padding: 12px;
   border-radius: 12px;
   margin-top: 8px;

@@ -35,7 +35,7 @@ const UploadLink = styled.a`
   position: absolute;
   right: 32px;
   top: 32px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   cursor: pointer;
 
   ${OpacityHoverState}
@@ -133,7 +133,7 @@ const TxCompleteModal = () => {
                     </p>
                   </Box>
                   <UploadLink onClick={shareTweet} target="_blank">
-                    <TwitterIcon width={32} height={32} color={themeVars.colors.textSecondary} />
+                    <TwitterIcon width={32} height={32} color={themeVars.colors.neutral2} />
                   </UploadLink>
                   <Box
                     className={styles.successAssetsContainer}
@@ -178,7 +178,7 @@ const TxCompleteModal = () => {
                       <Box>{formatEthPrice(totalPurchaseValue.toString())} ETH</Box>
                     </Row>
                     <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                      <Box color="textSecondary" fontWeight="normal">
+                      <Box color="neutral2" fontWeight="book">
                         <Trans>View on Etherscan</Trans>
                       </Box>
                     </a>
@@ -212,7 +212,7 @@ const TxCompleteModal = () => {
                       <p className={styles.subtitle}>Instant Refund</p>
                       <p className={styles.interStd}>
                         Uniswap returned{' '}
-                        <span style={{ fontWeight: '700' }}>{formatEthPrice(totalRefundValue.toString())} ETH</span>{' '}
+                        <span style={{ fontWeight: '535' }}>{formatEthPrice(totalRefundValue.toString())} ETH</span>{' '}
                         back to your wallet for unavailable items.
                       </p>
                       <Box
@@ -242,12 +242,7 @@ const TxCompleteModal = () => {
                           width={{ sm: 'half', md: 'auto' }}
                         >
                           <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                            <Box
-                              fontWeight="normal"
-                              marginTop="16"
-                              color="textSecondary"
-                              className={styles.totalEthCost}
-                            >
+                            <Box fontWeight="book" marginTop="16" color="neutral2" className={styles.totalEthCost}>
                               View on Etherscan
                             </Box>
                           </a>
@@ -311,10 +306,7 @@ const TxCompleteModal = () => {
                               ))}
                             </Box>
                           )}
-                          <Box
-                            color={showUnavailable ? 'textPrimary' : 'textSecondary'}
-                            className={styles.unavailableText}
-                          >
+                          <Box color={showUnavailable ? 'neutral1' : 'neutral2'} className={styles.unavailableText}>
                             Unavailable
                             <Box className={styles.unavailableItems}>
                               {nftsNotPurchased.length} item{nftsNotPurchased.length === 1 ? '' : 's'}
@@ -326,7 +318,7 @@ const TxCompleteModal = () => {
                       {(showUnavailable || nftsNotPurchased.length < 3) &&
                         nftsNotPurchased.map((asset, index) => (
                           <Box
-                            backgroundColor="backgroundSurface"
+                            backgroundColor="surface1"
                             display="flex"
                             padding="4"
                             marginBottom="1"
@@ -345,7 +337,7 @@ const TxCompleteModal = () => {
                                   ETH
                                 </p>
                               </Box>
-                              <Box color="textPrimary" className={styles.totalUsdRefund}>
+                              <Box color="neutral1" className={styles.totalUsdRefund}>
                                 {txState === TxStateType.Success ? 'Refunded' : asset.name}
                               </Box>
                             </Box>
@@ -369,7 +361,7 @@ const TxCompleteModal = () => {
                     <Box
                       as="button"
                       border="none"
-                      backgroundColor="accentAction"
+                      backgroundColor="accent1"
                       cursor="pointer"
                       className={styles.returnButton}
                       type="button"

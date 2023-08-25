@@ -27,10 +27,10 @@ const ExploreContainer = styled.div`
 `
 
 const StyledHeader = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 36px;
   line-height: 44px;
-  font-weight: 500;
+  font-weight: 535;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     font-size: 20px;
@@ -52,7 +52,7 @@ const FiltersRow = styled.div`
 
 const Filter = styled.div`
   display: flex;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 16px;
   padding: 4px;
 `
@@ -60,14 +60,14 @@ const Filter = styled.div`
 const Selector = styled.div<{ active: boolean }>`
   padding: 8px 12px;
   border-radius: 12px;
-  background: ${({ active, theme }) => (active ? theme.backgroundInteractive : 'none')};
+  background: ${({ active, theme }) => (active ? theme.surface3 : 'none')};
   cursor: pointer;
 
   ${OpacityHoverState}
 `
 
 const StyledSelectorText = styled(ThemedText.SubHeader)<{ active: boolean }>`
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
 `
 
 function convertTimePeriodToHistoryDuration(timePeriod: TimePeriod): HistoryDuration {

@@ -108,7 +108,7 @@ describe('Token details', () => {
 
     it('should automatically navigate to the new TDP', () => {
       cy.get(`#swap-currency-output .open-currency-select-button`).click()
-      cy.contains('WETH').click()
+      cy.get('[data-reach-dialog-content]').contains('WETH').click()
       cy.url().should('include', `${WETH9[1].address}`)
       cy.url().should('not.include', `${UNI_MAINNET.address}`)
     })

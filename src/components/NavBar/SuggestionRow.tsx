@@ -30,8 +30,8 @@ const PriceChangeContainer = styled.div`
 `
 
 const ArrowCell = styled.span`
-  padding-top: 5px;
-  padding-right: 3px;
+  padding-top: 4px;
+  padding-right: 2px;
 `
 
 interface CollectionRowProps {
@@ -156,7 +156,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
-  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 18)
+  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 16)
 
   return (
     <Link
@@ -213,13 +213,13 @@ export const SkeletonRow = () => {
         <Box className={styles.imageHolder} />
         <Column gap="4" width="full">
           <Row justifyContent="space-between">
-            <Box borderRadius="round" height="20" background="backgroundModule" style={{ width: '180px' }} />
-            <Box borderRadius="round" height="20" width="48" background="backgroundModule" />
+            <Box borderRadius="round" height="20" background="surface2" style={{ width: '180px' }} />
+            <Box borderRadius="round" height="20" width="48" background="surface2" />
           </Row>
 
           <Row justifyContent="space-between">
-            <Box borderRadius="round" height="16" width="120" background="backgroundModule" />
-            <Box borderRadius="round" height="16" width="48" background="backgroundModule" />
+            <Box borderRadius="round" height="16" width="120" background="surface2" />
+            <Box borderRadius="round" height="16" width="48" background="surface2" />
           </Row>
         </Column>
       </Row>

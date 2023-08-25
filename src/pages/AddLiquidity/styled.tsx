@@ -37,7 +37,7 @@ export const CurrencyDropdown = styled(CurrencyInputPanel)`
 `
 
 export const StyledInput = styled(Input)`
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   text-align: left;
   font-size: 18px;
   width: 100%;
@@ -49,7 +49,8 @@ export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
   flex-direction: column;
   gap: 20px;
   padding-top: 20px;
-  border-top: 1px solid ${({ theme }) => theme.backgroundInteractive};
+
+  border-top: 1px solid ${({ theme }) => theme.surface3};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     margin-top: 0;

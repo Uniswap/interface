@@ -13,8 +13,8 @@ import { updateDisabledUniswapX } from 'state/user/reducer'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme'
 
-const InlineLink = styled(ThemedText.Caption)`
-  color: ${({ theme }) => theme.accentAction};
+const InlineLink = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.accent1};
   display: inline;
   cursor: pointer;
   &:hover {
@@ -38,12 +38,12 @@ export default function RouterPreferenceSettings() {
                 <ThemedText.BodySecondary>
                   <UniswapXBrandMark />
                 </ThemedText.BodySecondary>
-                <ThemedText.Caption color="textSecondary">
+                <ThemedText.BodySmall color="neutral2">
                   <Trans>When available, aggregates liquidity sources for better prices and gas free swaps.</Trans>{' '}
                   <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
                     <InlineLink>Learn more</InlineLink>
                   </ExternalLink>
-                </ThemedText.Caption>
+                </ThemedText.BodySmall>
               </Column>
             </RowFixed>
             <Toggle

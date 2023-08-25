@@ -4,7 +4,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 export const scrollbarStyle = style([
   {
     scrollbarWidth: 'thin',
-    scrollbarColor: `${themeVars.colors.backgroundOutline} transparent`,
+    scrollbarColor: `${themeVars.colors.surface3} transparent`,
     height: '100%',
     selectors: {
       '&::-webkit-scrollbar': {
@@ -12,7 +12,7 @@ export const scrollbarStyle = style([
         width: '4px',
       },
       '&::-webkit-scrollbar-thumb': {
-        background: `${themeVars.colors.backgroundOutline}`,
+        background: `${themeVars.colors.surface3}`,
         borderRadius: '8px',
       },
     },
