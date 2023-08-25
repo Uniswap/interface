@@ -12,6 +12,7 @@ import {
   GetQuoteArgs,
   INTERNAL_ROUTER_PREFERENCE_PRICE,
   QuoteMethod,
+  QuoteSpeed,
   QuoteState,
   RouterPreference,
   RoutingConfig,
@@ -31,12 +32,9 @@ const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
 }
 
-const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
-
 // routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
-const DEFAULT_QUERY_PARAMS = {
-  protocols,
-}
+const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
+const fastQuoteProtocols: Protocol[] = [Protocol.V2, Protocol.V3]
 
 function getQuoteLatencyMeasure(mark: PerformanceMark): PerformanceMeasure {
   performance.mark('quote-fetch-end')
@@ -65,9 +63,9 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   }
 
   const classic = {
-    ...DEFAULT_QUERY_PARAMS,
     routingType: URAQuoteType.CLASSIC,
     quoteSpeed,
+    protocols: quoteSpeed === QuoteSpeed.FAST ? fastQuoteProtocols : protocols,
   }
 
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
