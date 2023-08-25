@@ -1,3 +1,4 @@
+import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { AlternativeRpcType, ChainId, ChainIdTo } from 'wallet/src/constants/chains'
@@ -70,6 +71,7 @@ export interface FinalizedTransactionDetails extends TransactionDetails {
 export interface TransactionOptions {
   request: providers.TransactionRequest
   timeoutMs?: number
+  alternativeRpc?: AlternativeRpcType
 }
 
 export interface TransactionReceipt {
@@ -143,8 +145,7 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   quoteId?: string
   routeString?: string
   gasUseEstimate?: string
-  customRpc?: AlternativeRpcType
-  containsV2Routes?: boolean
+  protocol?: Protocol
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {

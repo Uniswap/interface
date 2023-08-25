@@ -330,7 +330,7 @@ export const v49Schema = {
     ...v48Schema.wallet,
     settings: {
       ...v48Schema.wallet.settings,
-      swapProtection: SwapProtectionSetting.Auto,
+      swapProtection: SwapProtectionSetting.On,
     },
   },
 }

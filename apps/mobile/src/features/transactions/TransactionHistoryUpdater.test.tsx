@@ -40,7 +40,7 @@ const walletSlice = {
   activeAccountAddress: null,
   isUnlocked: false,
   settings: {
-    swapProtection: SwapProtectionSetting.Auto,
+    swapProtection: SwapProtectionSetting.On,
   },
   replaceAccountOptions: {
     isReplacingAccount: false,

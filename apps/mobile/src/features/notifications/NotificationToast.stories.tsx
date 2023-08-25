@@ -17,7 +17,7 @@ const store = setupStore({
     accounts: { [account.address]: account },
     isUnlocked: true,
     settings: {
-      swapProtection: SwapProtectionSetting.Auto,
+      swapProtection: SwapProtectionSetting.On,
     },
   },
   notifications: {

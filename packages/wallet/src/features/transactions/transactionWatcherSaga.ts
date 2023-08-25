@@ -255,7 +255,16 @@ export function logTransactionEvent(
   actionData: ReturnType<typeof transactionActions.finalizeTransaction>
 ): void {
   const { payload } = actionData
-  const { hash, chainId, addedTime, from, typeInfo, receipt, status } = payload
+  const {
+    hash,
+    chainId,
+    addedTime,
+    from,
+    typeInfo,
+    receipt,
+    status,
+    options: { alternativeRpc },
+  } = payload
   const { gasUsed, effectiveGasPrice, confirmedTime } = receipt ?? {}
   const { type } = typeInfo
 
@@ -270,8 +279,7 @@ export function logTransactionEvent(
       inputCurrencyId,
       outputCurrencyId,
       tradeType,
-      customRpc,
-      containsV2Routes,
+      protocol,
     } = swapTypeInfo
     const eventName =
       status === TransactionStatus.Success
@@ -292,8 +300,8 @@ export function logTransactionEvent(
       gasUseEstimate,
       route: routeString,
       quoteId,
-      custom_rpc: customRpc,
-      contains_v2_routes: Boolean(containsV2Routes),
+      alternativeRpc,
+      protocol,
     })
   }
 }

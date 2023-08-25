@@ -54,7 +54,6 @@ import {
 } from 'wallet/src/features/routing/useUSDCPrice'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { selectTransactions } from 'wallet/src/features/transactions/selectors'
-import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
 import { usePermit2Signature } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import {
   Trade,
@@ -646,7 +645,6 @@ export function useSwapCallback(
 ): () => void {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
-  const shouldUseMevBlocker = useShouldUseMEVBlocker(trade?.inputAmount.currency.chainId)
 
   return useMemo(() => {
     if (!account || !swapTxRequest || !trade || !totalGasFee) {
@@ -671,7 +669,6 @@ export function useSwapCallback(
           currencyOutAmountUSD,
           approveTxRequest,
           swapTxRequest,
-          shouldUseMevBlocker,
         })
       )
       onSubmit()
@@ -701,7 +698,6 @@ export function useSwapCallback(
     currencyInAmountUSD,
     currencyOutAmountUSD,
     approveTxRequest,
-    shouldUseMevBlocker,
     onSubmit,
     isAutoSlippage,
   ])

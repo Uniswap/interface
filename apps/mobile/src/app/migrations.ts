@@ -661,7 +661,7 @@ export const migrations = {
     const newState = { ...state }
     newState.wallet.settings = {
       ...state.wallet.settings,
-      swapProtection: SwapProtectionSetting.Auto,
+      swapProtection: SwapProtectionSetting.On,
     }
     return newState
   },

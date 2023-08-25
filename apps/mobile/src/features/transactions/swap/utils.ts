@@ -75,7 +75,7 @@ export function tradeToTransactionInfo(
     quoteId,
     gasUseEstimate,
     routeString,
-    containsV2Routes: trade.routes.some((t) => t.protocol === Protocol.V2),
+    protocol: getProtocolVersionFromTrade(trade),
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT
@@ -205,4 +205,10 @@ export const getSwapMethodParameters = ({
       }
     : baseOptions
   return UniversalSwapRouter.swapERC20CallParameters(trade, universalRouterSwapOptions)
+}
+
+export function getProtocolVersionFromTrade(trade: Trade): Protocol {
+  if (trade.routes.every((r) => r.protocol === Protocol.V2)) return Protocol.V2
+  if (trade.routes.every((r) => r.protocol === Protocol.V3)) return Protocol.V3
+  return Protocol.MIXED
 }

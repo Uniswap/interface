@@ -1,4 +1,5 @@
 import { MoonpayEventName, SwapEventName } from '@uniswap/analytics-events'
+import { Protocol } from '@uniswap/router-sdk'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
 
@@ -13,8 +14,6 @@ export type SwapTradeBaseProperties = {
   chain_id: number
   token_in_amount: string
   token_out_amount: string
-  custom_rpc?: string
-  contains_v2_routes?: boolean
 } & TraceProps
 
 type SwapTransactionResultProperties = {
@@ -32,8 +31,8 @@ type SwapTransactionResultProperties = {
   gasUseEstimate?: string
   route?: string
   quoteId?: string
-  custom_rpc?: string
-  contains_v2_routes?: boolean
+  alternativeRpc?: string
+  protocol?: Protocol
 }
 
 export type WalletEventProperties = {

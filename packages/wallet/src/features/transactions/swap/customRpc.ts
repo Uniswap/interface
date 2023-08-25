@@ -16,7 +16,7 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 export function useShouldUseMEVBlocker(chainId: Maybe<ChainId>): boolean {
   const isMevBlockerFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.MevBlocker)
 
-  const isSwapProtectionSettingEnabled = useSwapProtectionSetting() === SwapProtectionSetting.Auto
+  const isSwapProtectionSettingEnabled = useSwapProtectionSetting() === SwapProtectionSetting.On
 
   const isMevBlockerSupportedOnChain = chainId
     ? isAlternativeRpcSupportedOnChain(chainId, AlternativeRpcType.MevBlocker)

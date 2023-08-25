@@ -1182,6 +1182,6 @@ describe('Redux state migrations', () => {
     const v48Stub = { ...v48Schema }
     const v49 = migrations[49](v48Stub)
 
-    expect(v49.wallet.settings.swapProtection).toEqual(SwapProtectionSetting.Auto)
+    expect(v49.wallet.settings.swapProtection).toEqual(SwapProtectionSetting.On)
   })
 })

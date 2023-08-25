@@ -60,7 +60,7 @@ describe('TraceUserProperties', () => {
       showSpamTokens: false,
     })
     mockFn(walletHooks, 'useViewOnlyAccounts', ['address1', 'address2'])
-    mockFn(walletHooks, 'useSwapProtectionSetting', SwapProtectionSetting.Auto)
+    mockFn(walletHooks, 'useSwapProtectionSetting', SwapProtectionSetting.On)
     mockFn(walletHooks, 'useNonPendingSignerAccounts', [
       signerAccount1,
       signerAccount2,
@@ -106,7 +106,7 @@ describe('TraceUserProperties', () => {
     ])
     expect(mocked).toHaveBeenCalledWith(
       UserPropertyName.WalletSwapProtectionSetting,
-      SwapProtectionSetting.Auto
+      SwapProtectionSetting.On
     )
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.AppOpenAuthMethod, AuthMethod.FaceId)
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.TransactionAuthMethod, AuthMethod.FaceId)
@@ -121,7 +121,7 @@ describe('TraceUserProperties', () => {
     mockedUsedColorScheme.mockReturnValue('dark')
     mockFn(walletHooks, 'useActiveAccount', null)
     mockFn(walletHooks, 'useViewOnlyAccounts', [])
-    mockFn(walletHooks, 'useSwapProtectionSetting', SwapProtectionSetting.Auto)
+    mockFn(walletHooks, 'useSwapProtectionSetting', SwapProtectionSetting.On)
     mockFn(walletHooks, 'useNonPendingSignerAccounts', [])
     mockFn(biometricHooks, 'useBiometricAppSettings', {
       requiredForAppAccess: false,

@@ -34,7 +34,7 @@ describe(walletReducer, () => {
       activeAccountAddress: null,
       isUnlocked: false,
       settings: {
-        swapProtection: SwapProtectionSetting.Auto,
+        swapProtection: SwapProtectionSetting.On,
       },
     })
   })

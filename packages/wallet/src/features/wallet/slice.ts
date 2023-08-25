@@ -6,7 +6,7 @@ import { areAddressesEqual, getValidAddress } from 'wallet/src/utils/addresses'
 export const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
 export enum SwapProtectionSetting {
-  Auto = 'auto',
+  On = 'on',
   Off = 'off',
 }
 
@@ -29,7 +29,7 @@ export const initialWalletState: WalletState = {
   activeAccountAddress: null,
   isUnlocked: false,
   settings: {
-    swapProtection: SwapProtectionSetting.Auto,
+    swapProtection: SwapProtectionSetting.On,
   },
 }
 

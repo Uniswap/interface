@@ -192,7 +192,7 @@ function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
   const chainId = trade?.quote?.route?.[0]?.[0]?.tokenIn.chainId
   const gasCostUSD = trade?.quote?.gasUseEstimateUSD
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
-  const shouldUseAggresiveSlippage = useIsAggressiveSlippageEnabledOnTrade(trade)
+  const shouldUseAggresiveSlippage = useShouldSetAggressiveAutoSlippage(trade)
 
   return useMemo(() => {
     if (shouldUseAggresiveSlippage) return AGGRESIVE_AUTO_SLIPPAGE_TOLERANCE
@@ -215,21 +215,17 @@ function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
 }
 
 // Checks if MEV blocker settings are enabled, and if trade qualifies for aggresive slippage
-export function useIsAggressiveSlippageEnabledOnTrade(trade: Maybe<Trade>): boolean {
+export function useShouldSetAggressiveAutoSlippage(trade: Maybe<Trade>): boolean {
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
   const inputAmountUSD = useUSDCValue(trade?.inputAmount)?.toExact()
-  const isV2Trade = trade?.routes.every((route) => route.protocol === Protocol.V2)
+  const isV2Trade = trade?.routes.every((route) => route.protocol === Protocol.V2) ?? false
 
   const shouldUseMevBlocker = useShouldUseMEVBlocker(trade?.inputAmount.currency.chainId)
 
-  // We need to check both input and output, as long tail tokens will likely fail durng quote fetching
-  let isTradeUnderDollarThreshold = false
-  if (inputAmountUSD) {
-    isTradeUnderDollarThreshold = Number(inputAmountUSD) < MAX_TRADE_SIZE_FOR_AGGRESIVE_SLIPPAGE_USD
-  } else {
-    isTradeUnderDollarThreshold =
-      Number(outputAmountUSD) < MAX_TRADE_SIZE_FOR_AGGRESIVE_SLIPPAGE_USD
-  }
+  const tradeAmountUSD = inputAmountUSD ?? outputAmountUSD
+  const isTradeUnderDollarThreshold = tradeAmountUSD
+    ? Number(tradeAmountUSD) < MAX_TRADE_SIZE_FOR_AGGRESIVE_SLIPPAGE_USD
+    : false
 
-  return Boolean(shouldUseMevBlocker && isTradeUnderDollarThreshold && isV2Trade)
+  return shouldUseMevBlocker && isTradeUnderDollarThreshold && isV2Trade
 }

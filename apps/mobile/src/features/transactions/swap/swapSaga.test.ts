@@ -1,5 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { call } from '@redux-saga/core/effects'
+import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { MethodParameters } from '@uniswap/v3-sdk'
@@ -34,6 +35,7 @@ const transactionTypeInfo: ExactInputSwapTransactionInfo = {
   inputCurrencyAmountRaw: '10000',
   expectedOutputCurrencyAmountRaw: '200000',
   minimumOutputCurrencyAmountRaw: '300000',
+  protocol: Protocol.V3,
 }
 
 const mockTrade = {

@@ -1,10 +1,9 @@
-import { Protocol } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { logger } from 'utilities/src/logger/logger'
-import { AlternativeRpcType, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
@@ -35,24 +34,21 @@ export interface SendTransactionParams {
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
   trade?: Trade<Currency, Currency, TradeType>
-  shouldUseMevBlocker?: boolean
 }
 
 // A utility for sagas to send transactions
 // All outgoing transactions should go through here
 
 export function* sendTransaction(params: SendTransactionParams) {
-  const { chainId, account, options, shouldUseMevBlocker } = params
+  const { chainId, account, options } = params
   const request = options.request
 
   logger.debug('sendTransaction', '', `Sending tx on ${CHAIN_INFO[chainId].label} to ${request.to}`)
 
   if (account.type === AccountType.Readonly) throw new Error('Account must support signing')
 
-  const alternativeRpcType = shouldUseMevBlocker ? AlternativeRpcType.MevBlocker : undefined
-
   // Sign and send the transaction
-  const provider = yield* call(getProvider, chainId, alternativeRpcType)
+  const provider = yield* call(getProvider, chainId, options.alternativeRpc)
 
   const signerManager = yield* call(getSignerManager)
   const { transactionResponse, populatedRequest } = yield* call(
@@ -88,7 +84,7 @@ export async function signAndSendTransaction(
 }
 
 function* addTransaction(
-  { chainId, typeInfo, account, options, txId, trade, shouldUseMevBlocker }: SendTransactionParams,
+  { chainId, typeInfo, account, options, txId, trade }: SendTransactionParams,
   hash: string,
   populatedRequest: providers.TransactionRequest
 ) {
@@ -121,8 +117,6 @@ function* addTransaction(
       token_out_symbol: trade.outputAmount.currency.symbol,
       token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
       trade_type: trade.tradeType,
-      custom_rpc: shouldUseMevBlocker ? AlternativeRpcType.MevBlocker : undefined,
-      contains_v2_routes: trade.routes.some((t) => t.protocol === Protocol.V2),
     })
   }
   yield* put(transactionActions.addTransaction(transaction))

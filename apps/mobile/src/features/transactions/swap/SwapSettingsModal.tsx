@@ -176,11 +176,11 @@ function SwapProtectionSettingsRow(): JSX.Element {
   const swapProtectionSetting = useSwapProtectionSetting()
 
   const toggleSwapProtectionSetting = useCallback(() => {
-    if (swapProtectionSetting === SwapProtectionSetting.Auto) {
+    if (swapProtectionSetting === SwapProtectionSetting.On) {
       dispatch(setSwapProtectionSetting({ newSwapProtectionSetting: SwapProtectionSetting.Off }))
     }
     if (swapProtectionSetting === SwapProtectionSetting.Off) {
-      dispatch(setSwapProtectionSetting({ newSwapProtectionSetting: SwapProtectionSetting.Auto }))
+      dispatch(setSwapProtectionSetting({ newSwapProtectionSetting: SwapProtectionSetting.On }))
     }
   }, [dispatch, swapProtectionSetting])
 
@@ -209,7 +209,7 @@ function SwapProtectionSettingsRow(): JSX.Element {
             </Flex>
           </TouchableArea>
           <Switch
-            value={swapProtectionSetting === SwapProtectionSetting.Auto}
+            value={swapProtectionSetting === SwapProtectionSetting.On}
             onValueChange={toggleSwapProtectionSetting}
           />
         </Flex>
