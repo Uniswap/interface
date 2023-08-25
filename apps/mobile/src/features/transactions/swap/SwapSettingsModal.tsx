@@ -414,6 +414,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
                 fontSize: theme.textVariants.subheadLarge.fontSize,
                 fontFamily: theme.textVariants.subheadLarge.fontFamily,
                 width: theme.textVariants.subheadLarge.fontSize * 4,
+                padding: theme.spacing.none,
               }}
               textAlign="center"
               value={
