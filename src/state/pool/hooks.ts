@@ -155,32 +155,25 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
 
   // early return until events are fetched
   return useMemo(() => {
-    //const formattedLogs = [...(formattedLogsV1 ?? [])]
-
     // prevent display if wallet not connected
     if (!account) {
       return { loading: false }
     }
 
-    // TODO: we might attach pools from url and filter duplicates on all chains to allow display if log response
-    //  is slow or returns an error.
-    if ((chainId === ChainId.BNB || chainId === ChainId.BASE || chainId === ChainId.OPTIMISM) && registry) {
-      // eslint-disable-next-line
-      const pools: PoolRegisteredLog[] = ([...(formattedLogsV1 ?? []), ...(poolsFromList ?? [])])
+    // we append pools from url and filter for duplicates in case the rpc endpoint is down or slow.
+    // eslint-disable-next-line
+    const pools: PoolRegisteredLog[] = ([...(formattedLogsV1 ?? []), ...(poolsFromList ?? [])])
 
-      const uniquePools = pools.filter((obj, index) => {
-        return index === pools.findIndex((o) => obj.pool === o.pool)
-      })
+    const uniquePools = pools.filter((obj, index) => {
+      return index === pools.findIndex((o) => obj.pool === o.pool)
+    })
 
-      return { data: uniquePools, loading: false }
-    }
-
-    if (registry && !formattedLogsV1) {
+    if (registry && !uniquePools) {
       return { data: [], loading: true }
     }
 
-    return { data: formattedLogsV1, loading: false }
-  }, [account, chainId, formattedLogsV1, registry, poolsFromList])
+    return { data: uniquePools, loading: false }
+  }, [account, formattedLogsV1, registry, poolsFromList])
 }
 
 // Bsc endpoints have eth_getLogs limit, so we query pools before recent history from pools list endpoint

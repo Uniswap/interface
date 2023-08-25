@@ -2,7 +2,7 @@
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
 import clsx from 'clsx'
@@ -74,13 +74,10 @@ export const SearchBar = () => {
   const registry = useRegistryContract()
   const poolsFromList = usePoolsFromList(registry, chainId)
 
-  // TODO: we might remove the condition and append pools from url as fallback in case endpoint is down or slow on all chains
+  // we append pools from url as fallback in case endpoint is down or slow.
   const allPools: PoolRegisteredLog[] = useMemo(() => {
-    if (chainId === ChainId.BNB || chainId === ChainId.BASE || chainId === ChainId.OPTIMISM) {
-      return [...(smartPoolsLogs ?? []), ...(poolsFromList ?? [])]
-    }
-    return [...(smartPoolsLogs ?? [])]
-  }, [chainId, smartPoolsLogs, poolsFromList])
+    return [...(smartPoolsLogs ?? []), ...(poolsFromList ?? [])]
+  }, [smartPoolsLogs, poolsFromList])
 
   const uniquePools = allPools.filter((obj, index) => {
     return index === allPools.findIndex((o) => obj.pool === o.pool)
