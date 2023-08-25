@@ -16,6 +16,7 @@ interface MascaStore {
   lastFetch?: number
   popups?: boolean
   isEnabled?: boolean
+  isAuthenticated: boolean
 
   changeAvailableCredentialStores: (availableCredentialStores: Record<string, boolean>) => void
   changeMascaApi: (mascaApi: MascaApi) => void
@@ -27,6 +28,7 @@ interface MascaStore {
   changeLastFetch: (lastFetch: number) => void
   changePopups: (enabled: boolean) => void
   changeIsEnabled: (enabled: boolean) => void
+  changeIsAuthenticated: (isAuthenticated: boolean) => void
 }
 
 const mascaStoreInitialState = {
@@ -40,6 +42,7 @@ const mascaStoreInitialState = {
   lastFetch: undefined,
   popups: undefined,
   isEnabled: false,
+  isAuthenticated: false,
 }
 
 export const useMascaStore = create<MascaStore>()((set) => ({
@@ -56,4 +59,5 @@ export const useMascaStore = create<MascaStore>()((set) => ({
   changeLastFetch: (lastFetch: number) => set({ lastFetch }),
   changePopups: (enabled: boolean) => set({ popups: enabled }),
   changeIsEnabled: (enabled: boolean) => set({ isEnabled: enabled }),
+  changeIsAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
 }))

@@ -14,6 +14,7 @@ import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import AddressInputPanel from 'components/AddressInputPanel'
+import AuthenticationModal from 'components/AuthenticationModal'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -48,6 +49,7 @@ import { ArrowDown } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
+import { useMascaStore } from 'state/masca/mascaStore'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { Field, replaceSwapState } from 'state/swap/actions'
@@ -196,6 +198,11 @@ export function Swap({
 
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const [showPriceImpactModal, setShowPriceImpactModal] = useState<boolean>(false)
+  const [showAuthenticationModal, setShowAuthenticationModal] = useState<boolean>(false)
+  const { isAuthenticated, setIsAuthenticated } = useMascaStore((state) => ({
+    isAuthenticated: state.isAuthenticated,
+    setIsAuthenticated: state.changeIsAuthenticated,
+  }))
 
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
@@ -347,6 +354,11 @@ export function Swap({
     navigate('/swap/')
   }, [navigate])
 
+  const handleDismissAuthenticationModal = useCallback(() => {
+    setShowAuthenticationModal(false)
+    navigate('/swap/')
+  }, [navigate])
+
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapError, swapResult }, setSwapState] = useState<{
     showConfirm: boolean
@@ -409,6 +421,10 @@ export function Swap({
       swapResult: undefined,
     })
   }, [trade])
+
+  const handleAuthentication = useCallback(() => {
+    setShowAuthenticationModal(true)
+  }, [])
 
   const handleSwap = useCallback(() => {
     if (!swapCallback) {
@@ -551,6 +567,15 @@ export function Swap({
         showCancel={true}
       />
       <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
+      {showAuthenticationModal && (
+        <AuthenticationModal
+          onSuccess={() => {
+            setIsAuthenticated(true)
+            setShowAuthenticationModal(false)
+          }}
+          onCancel={handleDismissAuthenticationModal}
+        />
+      )}
       {trade && showConfirm && allowance.state !== AllowanceState.LOADING && (
         <ConfirmSwapModal
           trade={trade}
@@ -732,7 +757,11 @@ export function Swap({
             >
               <ButtonError
                 onClick={() => {
-                  showPriceImpactWarning ? setShowPriceImpactModal(true) : handleContinueToReview()
+                  isAuthenticated
+                    ? showPriceImpactWarning
+                      ? setShowPriceImpactModal(true)
+                      : handleContinueToReview()
+                    : handleAuthentication()
                 }}
                 id="swap-button"
                 data-testid="swap-button"
@@ -743,11 +772,11 @@ export function Swap({
                   {swapInputError ? (
                     swapInputError
                   ) : routeIsSyncing || routeIsLoading ? (
-                    <Trans>Swap</Trans>
+                    <Trans>{isAuthenticated ? 'Swap' : 'Authenticate'}</Trans>
                   ) : priceImpactSeverity > 2 ? (
-                    <Trans>Swap Anyway</Trans>
+                    <Trans>{isAuthenticated ? 'Swap Anyway' : 'Authenticate'}</Trans>
                   ) : (
-                    <Trans>Swap</Trans>
+                    <Trans>{isAuthenticated ? 'Swap' : 'Authenticate'}</Trans>
                   )}
                 </Text>
               </ButtonError>

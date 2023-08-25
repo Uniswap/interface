@@ -258,7 +258,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     const credentialsResult = await mascaApi.queryCredentials()
     if (!isError(credentialsResult)) setCredentials(credentialsResult.data)
     setQuerying(false)
-  }, [])
+  }, [account, setCredentials, setEnabled, setMascaApi])
 
   const handleQueryCredentials = useCallback(async () => {
     setQuerying(true)
@@ -270,7 +270,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     const credentialsResult = await mascaApi.queryCredentials()
     if (!isError(credentialsResult)) setCredentials(credentialsResult.data)
     setQuerying(false)
-  }, [])
+  }, [handleEnableMasca, mascaApi, setCredentials])
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
