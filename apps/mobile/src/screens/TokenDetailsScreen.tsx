@@ -7,9 +7,10 @@ import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedBox, AnimatedFlex, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { Separator } from 'src/components/layout/Separator'
 import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { Text } from 'src/components/Text'
@@ -300,7 +301,8 @@ function TokenDetails({
 
   const isDarkMode = useIsDarkMode()
   // shall be the same color as heart icon in not favorited state next to it
-  const ellipsisColor = isDarkMode ? theme.colors.neutral2 : theme.colors.surface3
+  const ellipsisColor = isDarkMode ? theme.colors.neutral2 : theme.colors.neutral2
+  const loadingColor = isDarkMode ? theme.colors.neutral3 : theme.colors.surface3
 
   const ellipsisMenuVisible = menuActions.length > 0
 
@@ -337,9 +339,7 @@ function TokenDetails({
             />
             <PriceExplorer
               currencyId={_currencyId}
-              tokenColor={
-                tokenColorLoading ? theme.colors.neutral3 : tokenColor ?? theme.colors.accent1
-              }
+              tokenColor={tokenColorLoading ? loadingColor : tokenColor ?? theme.colors.accent1}
               onRetry={onPriceChartRetry}
             />
           </Flex>
@@ -348,15 +348,14 @@ function TokenDetails({
               <BaseCard.InlineErrorState onRetry={retry} />
             </AnimatedBox>
           ) : null}
-          <Flex gap="spacing24" mb="spacing8">
+          <Flex gap="spacing24" mb="spacing8" px="spacing16">
             <TokenBalances
               currentChainBalance={currentChainBalance}
               otherChainBalances={otherChainBalances}
               onPressSend={onPressSend}
             />
-            <Box mx="spacing16">
-              <TokenDetailsStats data={data} tokenColor={tokenColor} />
-            </Box>
+            <Separator />
+            <TokenDetailsStats data={data} tokenColor={tokenColor} />
             <TokenDetailsLinks currencyId={_currencyId} data={data} />
           </Flex>
         </Flex>

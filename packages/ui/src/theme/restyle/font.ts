@@ -1,109 +1,112 @@
 import { fonts } from 'ui/src/theme/fonts'
 
-export const fontFamily = {
+const fontFamily = {
   serif: 'serif',
   sansSerif: {
-    regular: 'Inter-Regular',
-    medium: 'Inter-Medium',
-    semibold: 'Inter-SemiBold',
-    bold: 'Inter-Bold',
+    // ios uses the name embedded in the font
+    book: 'Basel-Book',
+    medium: 'Basel-Medium',
     monospace: 'InputMono-Regular',
   },
 }
 
-// to make React Native's font rendering more consistent and more visually similar to the web and Figma
-const addVisualFontAdjustment = (fontSize: number): number => {
-  return fontSize + 1
-}
-
 export const textVariants = {
   headlineLarge: {
-    fontFamily: fontFamily.sansSerif.semibold,
+    fontFamily: fontFamily.sansSerif[fonts.headlineLarge.family],
     fontSize: fonts.headlineLarge.fontSize,
     lineHeight: fonts.headlineLarge.lineHeight,
+    fontWeight: fonts.headlineLarge.fontWeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.2,
   },
   headlineMedium: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif[fonts.headlineMedium.family],
     fontSize: fonts.headlineMedium.fontSize,
     lineHeight: fonts.headlineMedium.lineHeight,
+    fontWeight: fonts.headlineMedium.fontWeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.2,
   },
   headlineSmall: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif[fonts.headlineSmall.family],
     fontSize: fonts.headlineSmall.fontSize,
     lineHeight: fonts.headlineSmall.lineHeight,
+    fontWeight: fonts.headlineSmall.fontWeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.2,
   },
   subheadLarge: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif[fonts.subheadLarge.family],
     fontSize: fonts.subheadLarge.fontSize,
     lineHeight: fonts.subheadLarge.lineHeight,
+    fontWeight: fonts.subheadLarge.fontWeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.4,
   },
   subheadSmall: {
-    fontFamily: fontFamily.sansSerif.medium,
-    fontSize: addVisualFontAdjustment(fonts.subheadSmall.fontSize), // 14 -> 15
+    fontFamily: fontFamily.sansSerif[fonts.subheadSmall.family],
+    fontSize: fonts.subheadSmall.fontSize,
     lineHeight: fonts.subheadSmall.lineHeight,
+    fontWeight: fonts.subheadSmall.fontWeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.4,
   },
   bodyLarge: {
-    fontFamily: fontFamily.sansSerif.medium,
-    fontSize: addVisualFontAdjustment(fonts.bodyLarge.fontSize), // 16 -> 17
+    fontFamily: fontFamily.sansSerif[fonts.bodyLarge.family],
+    fontSize: fonts.bodyLarge.fontSize,
     lineHeight: fonts.bodyLarge.lineHeight,
+    fontWeight: fonts.bodyLarge.fontWeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.4,
   },
   bodySmall: {
-    fontFamily: fontFamily.sansSerif.regular,
-    fontSize: addVisualFontAdjustment(fonts.bodySmall.fontSize), // 14 -> 15
+    fontFamily: fontFamily.sansSerif[fonts.bodySmall.family],
+    fontSize: fonts.bodySmall.fontSize,
     lineHeight: fonts.bodySmall.lineHeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.4,
   },
   bodyMicro: {
-    fontFamily: fontFamily.sansSerif.regular,
+    fontFamily: fontFamily.sansSerif[fonts.bodyMicro.family],
     fontSize: fonts.bodyMicro.fontSize,
-    lineHeight: addVisualFontAdjustment(fonts.bodyMicro.lineHeight), // 16 -> 17
+    lineHeight: fonts.bodyMicro.lineHeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.4,
   },
   buttonLabelLarge: {
-    fontFamily: fontFamily.sansSerif.semibold,
+    fontFamily: fontFamily.sansSerif[fonts.buttonLabelLarge.family],
     fontSize: fonts.buttonLabelLarge.fontSize,
     lineHeight: fonts.buttonLabelLarge.lineHeight,
+    fontWeight: fonts.buttonLabelLarge.fontWeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabelMedium: {
-    fontFamily: fontFamily.sansSerif.semibold,
-    fontSize: addVisualFontAdjustment(fonts.buttonLabelMedium.fontSize), // 16 -> 17
+    fontFamily: fontFamily.sansSerif[fonts.buttonLabelMedium.family],
+    fontSize: fonts.buttonLabelMedium.fontSize,
     lineHeight: fonts.buttonLabelMedium.lineHeight,
+    fontWeight: fonts.buttonLabelMedium.fontWeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabelSmall: {
-    fontFamily: fontFamily.sansSerif.semibold,
-    fontSize: addVisualFontAdjustment(fonts.buttonLabelSmall.fontSize), // 14 -> 15
+    fontFamily: fontFamily.sansSerif[fonts.buttonLabelSmall.family],
+    fontSize: fonts.buttonLabelSmall.fontSize,
     lineHeight: fonts.buttonLabelSmall.lineHeight,
+    fontWeight: fonts.buttonLabelSmall.fontWeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabelMicro: {
-    fontFamily: fontFamily.sansSerif.semibold,
+    fontFamily: fontFamily.sansSerif[fonts.buttonLabelMicro.family],
     fontSize: fonts.buttonLabelMicro.fontSize,
-    lineHeight: addVisualFontAdjustment(fonts.buttonLabelMicro.lineHeight), // 16 -> 17
+    lineHeight: fonts.buttonLabelMicro.lineHeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.2,
   },
   monospace: {
-    fontFamily: fontFamily.sansSerif.monospace,
-    fontSize: addVisualFontAdjustment(fonts.monospace.fontSize), // 14 -> 15
+    fontFamily: fontFamily.sansSerif[fonts.monospace.family],
+    fontSize: fonts.monospace.fontSize,
     lineHeight: fonts.monospace.lineHeight,
     color: 'neutral1',
     maxFontSizeMultiplier: 1.2,

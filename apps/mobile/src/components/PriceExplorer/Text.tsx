@@ -46,11 +46,16 @@ export function RelativeChangeText({
   }
 
   return (
-    <Flex row alignItems={IS_ANDROID ? 'center' : 'flex-end'} gap="spacing2">
+    <Flex row alignItems={IS_ANDROID ? 'center' : 'flex-end'} gap="spacing2" mt="spacing2">
       <AnimatedCaretChange
         height={theme.iconSizes.icon16}
         strokeWidth={2}
-        style={caretStyle}
+        style={[
+          caretStyle,
+          // fix vertical centering
+          // eslint-disable-next-line react-native/no-inline-styles
+          { translateY: relativeChange.value.value > 0 ? -1 : 1 },
+        ]}
         width={theme.iconSizes.icon16}
       />
       <AnimatedText

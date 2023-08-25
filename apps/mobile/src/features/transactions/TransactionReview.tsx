@@ -104,7 +104,7 @@ export function TransactionReview({
 
   const arrowPadding = useResponsiveProp({ xs: 'spacing4', sm: 'spacing8' })
 
-  const amountAndEquivalentValueGap = useResponsiveProp({ xs: 'spacing4', sm: 'none' })
+  const amountAndEquivalentValueGap = useResponsiveProp({ xs: 'spacing4', sm: 'spacing4' })
 
   const formattedInputUsdValue = inputCurrencyUSDValue
     ? formatNumberOrString(inputCurrencyUSDValue?.toExact(), NumberType.FiatTokenQuantity)
@@ -119,7 +119,7 @@ export function TransactionReview({
         {currencyInInfo ? (
           <Flex centered gap={innerGap}>
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Text color="neutral3" variant="bodyLarge">
+              <Text color="neutral2" variant="bodyLarge">
                 {recipient ? t('Sending') : t('You pay')}
               </Text>
               <AmountInput
@@ -142,12 +142,12 @@ export function TransactionReview({
                 value={formattedAmountIn}
               />
               {inputCurrencyUSDValue && !isUSDInput ? (
-                <Text color="neutral3" variant={equivalentValueTextVariant}>
+                <Text color="neutral2" variant={equivalentValueTextVariant}>
                   {formattedInputUsdValue}
                 </Text>
               ) : null}
               {isUSDInput ? (
-                <Text color="neutral3" variant={equivalentValueTextVariant}>
+                <Text color="neutral2" variant={equivalentValueTextVariant}>
                   {/* when sending a token with USD input, show the amount of the token being sent */}
                   {usdTokenEquivalentAmount}
                 </Text>
@@ -164,7 +164,7 @@ export function TransactionReview({
         {currencyOutInfo && formattedAmountOut ? (
           <Flex centered gap={innerGap} pb={{ xs: 'spacing4', sm: 'none' }}>
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Text color="neutral3" variant="bodyLarge">
+              <Text color="neutral2" variant="bodyLarge">
                 {t('You receive')}
               </Text>
               <Box height={lineHeight} justifyContent="center" overflow="hidden">
@@ -185,7 +185,7 @@ export function TransactionReview({
                 />
               </Box>
               {outputCurrencyUSDValue ? (
-                <Text color="neutral3" variant={equivalentValueTextVariant}>
+                <Text color="neutral2" variant={equivalentValueTextVariant}>
                   {formattedOutputUsdValue}
                 </Text>
               ) : null}
@@ -194,7 +194,7 @@ export function TransactionReview({
           </Flex>
         ) : recipient ? (
           <Flex centered gap="spacing12">
-            <Text color="neutral3" variant="bodyLarge">
+            <Text color="neutral2" variant="bodyLarge">
               {t('To')}
             </Text>
             <Flex centered gap="spacing8">

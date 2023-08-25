@@ -19,7 +19,7 @@ export function BackButtonView({ size, color, showButtonLabel }: Props): JSX.Ele
   return (
     <Flex row alignItems="center" gap="spacing8">
       <Chevron
-        color={color ? theme.colors[color] : theme.colors.neutral3}
+        color={color ? theme.colors[color] : theme.colors.neutral2}
         height={size}
         width={size}
       />

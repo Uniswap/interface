@@ -18,8 +18,8 @@ struct MnemonicTextField: View {
   
   @Environment(\.colorScheme) var colorScheme
 
-  let smallFont = UIFont(name: "Inter-Regular", size: 14)
-  let mediumFont = UIFont(name: "Inter-Regular", size: 16)
+  let smallFont = UIFont(name: "Basel-Book", size: 14)
+  let mediumFont = UIFont(name: "Basel-Book", size: 16)
   
   var index: Int
   var initialText = ""

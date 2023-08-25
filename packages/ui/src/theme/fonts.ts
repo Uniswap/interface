@@ -1,66 +1,104 @@
+import { Platform } from 'react-native'
 import { createFont, isWeb } from 'tamagui'
+
+// make React Native font rendering more visually similar to the web and Figma
+const adjustedSize = (fontSize: number): number => {
+  if (Platform.OS === 'web') {
+    return fontSize
+  }
+  return fontSize + 1
+}
 
 export const fonts = {
   headlineLarge: {
-    fontSize: 40,
-    lineHeight: 48,
+    family: 'book',
+    fontSize: adjustedSize(52),
+    lineHeight: 60,
+    fontWeight: '400',
   },
   headlineMedium: {
-    fontSize: 32,
-    lineHeight: 38,
+    family: 'book',
+    fontSize: adjustedSize(36),
+    lineHeight: 44,
+    fontWeight: '400',
   },
   headlineSmall: {
-    fontSize: 24,
-    lineHeight: 28,
+    family: 'book',
+    fontSize: adjustedSize(24),
+    lineHeight: 32,
+    fontWeight: '400',
   },
   subheadLarge: {
-    fontSize: 20,
+    family: 'book',
+    fontSize: adjustedSize(18),
     lineHeight: 24,
+    fontWeight: '400',
   },
   subheadSmall: {
-    fontSize: 14,
-    lineHeight: 20,
+    family: 'book',
+    fontSize: adjustedSize(16),
+    lineHeight: 24,
+    fontWeight: '400',
   },
   bodyLarge: {
-    fontSize: 16,
+    family: 'book',
+    fontSize: adjustedSize(18),
     lineHeight: 24,
+    fontWeight: '400',
   },
   bodySmall: {
-    fontSize: 14,
-    lineHeight: 20,
+    family: 'book',
+    fontSize: adjustedSize(16),
+    lineHeight: 24,
+    fontWeight: '400',
   },
   bodyMicro: {
-    fontSize: 12,
+    family: 'book',
+    fontSize: adjustedSize(14),
     lineHeight: 16,
+    fontWeight: '400',
   },
   buttonLabelLarge: {
-    fontSize: 20,
+    family: 'medium',
+    fontSize: adjustedSize(20),
     lineHeight: 24,
+    fontWeight: '500',
   },
   buttonLabelMedium: {
-    fontSize: 16,
-    lineHeight: 20,
+    family: 'medium',
+    fontSize: adjustedSize(18),
+    lineHeight: 24,
+    fontWeight: '500',
   },
   buttonLabelSmall: {
-    fontSize: 14,
-    lineHeight: 20,
+    family: 'medium',
+    fontSize: adjustedSize(16),
+    lineHeight: 24,
+    fontWeight: '500',
   },
   buttonLabelMicro: {
-    fontSize: 12,
+    family: 'medium',
+    fontSize: adjustedSize(12),
     lineHeight: 16,
+    fontWeight: '500',
   },
   monospace: {
-    fontSize: 14,
+    family: 'monospace',
+    fontSize: adjustedSize(14),
     lineHeight: 20,
   },
-}
+} as const
 
-const interFontFamily = isWeb
-  ? 'Inter, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
-  : 'Inter'
+const baselMedium = isWeb
+  ? 'Basel-Medium, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+  : 'Basel-Medium'
+
+const baselBook = isWeb
+  ? 'Basel-Book, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+  : 'Basel-Book'
 
 export const headingFont = createFont({
-  family: interFontFamily,
+  family: baselMedium,
   face: {},
   size: {
     small: fonts.headlineSmall.fontSize,
@@ -80,7 +118,7 @@ export const headingFont = createFont({
 })
 
 export const subHeadingFont = createFont({
-  family: interFontFamily,
+  family: baselMedium,
   face: {},
   size: {
     small: fonts.subheadSmall.fontSize,
@@ -101,7 +139,7 @@ export const subHeadingFont = createFont({
 // so i'm filling in blanks (adding medium here), but will need to fix this properly in tamagui...
 
 export const bodyFont = createFont({
-  family: interFontFamily,
+  family: baselBook,
   face: {},
   size: {
     small: fonts.bodySmall.fontSize,
@@ -123,7 +161,7 @@ export const bodyFont = createFont({
 })
 
 export const buttonFont = createFont({
-  family: interFontFamily,
+  family: baselBook,
   face: {},
   size: {
     small: fonts.buttonLabelSmall.fontSize,

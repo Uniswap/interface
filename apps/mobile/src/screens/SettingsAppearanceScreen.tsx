@@ -78,7 +78,7 @@ function AppearanceOption({
       py="spacing12"
       onPress={(): Action => dispatch(setSelectedAppearanceSettings(option))}>
       <Icon
-        color={theme.colors.neutral3}
+        color={theme.colors.neutral2}
         height={theme.iconSizes.icon24}
         strokeWidth={1.5}
         width={theme.iconSizes.icon24}

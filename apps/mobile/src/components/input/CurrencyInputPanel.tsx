@@ -50,8 +50,8 @@ type CurrentInputPanelProps = {
   isOnScreen?: boolean
 } & RestyleProps
 
-const MAX_INPUT_FONT_SIZE = 36
-const MIN_INPUT_FONT_SIZE = 32
+const MAX_INPUT_FONT_SIZE = 42
+const MIN_INPUT_FONT_SIZE = 28
 
 // if font changes from `fontFamily.sansSerif.regular` or `MAX_INPUT_FONT_SIZE`
 // changes from 36 then width value must be adjusted

@@ -81,7 +81,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         backgroundColor={isDarkMode ? 'DEP_backgroundOverlay' : 'surface1'}
         borderRadius="roundedFull"
         flexDirection="row"
-        px="spacing12"
+        px="spacing16"
         py="spacing8">
         <Flex row gap="spacing4">
           {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}

@@ -188,7 +188,7 @@ export function NFTCollectionHeader({
                   )} `}
                 </Text>
                 {collectionStats?.floorPrice?.value !== undefined ? (
-                  <Logos.Ethereum color={theme.colors.neutral1} />
+                  <Logos.Ethereum color={theme.colors.neutral1} size={iconSizes.icon16} />
                 ) : null}
               </Flex>
             </Flex>
@@ -204,7 +204,7 @@ export function NFTCollectionHeader({
                   )}`}
                 </Text>
                 {collectionStats?.totalVolume?.value !== undefined ? (
-                  <Logos.Ethereum color={theme.colors.neutral1} />
+                  <Logos.Ethereum color={theme.colors.neutral1} size={iconSizes.icon16} />
                 ) : null}
               </Flex>
             </Flex>
@@ -217,7 +217,6 @@ export function NFTCollectionHeader({
               initialDisplayedLines={3}
               lineBreakMode="tail"
               mt="spacing4"
-              readMoreOrLessColor={theme.colors.neutral3}
               renderAsMarkdown={true}
               text={data?.description}
             />

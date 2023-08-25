@@ -16,7 +16,10 @@ export function NFTTraitCard({
   const theme = useAppTheme()
   return (
     <Flex bg="surface3" borderRadius="rounded16" gap="spacing4" px="spacing16" py="spacing12">
-      <Text style={{ color: titleTextColor ?? theme.colors.neutral2 }} variant="buttonLabelMicro">
+      <Text
+        fontSize={14}
+        style={{ color: titleTextColor ?? theme.colors.neutral2 }}
+        variant="buttonLabelMicro">
         {trait.name}
       </Text>
       <Text color="neutral1" variant="subheadSmall">

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { EtherscanIcon } from 'src/components/icons/EtherscanIcon'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -31,48 +31,51 @@ export function TokenDetailsLinks({
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
 
   return (
-    <Flex gap="spacing8">
-      <Text color="neutral2" mx="spacing16" variant="subheadSmall">
-        {t('Links')}
-      </Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <Flex row gap="spacing8" px="spacing16">
-          {tokenData?.address && (
+    // eslint-disable-next-line react-native/no-inline-styles
+    <View style={{ marginHorizontal: -14 }}>
+      <Flex gap="spacing8">
+        <Text color="neutral2" mx="spacing16" variant="subheadSmall">
+          {t('Links')}
+        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <Flex row gap="spacing8" px="spacing16">
+            {tokenData?.address && (
+              <LinkButton
+                Icon={AddressIcon}
+                buttonType={LinkButtonType.Copy}
+                element={ElementName.TokenAddress}
+                label={sanitizeAddressText(shortenAddress(tokenData?.address)) ?? ''}
+                value={tokenData?.address}
+              />
+            )}
+            {tokenProjectData?.homepageUrl && (
+              <LinkButton
+                Icon={GlobeIcon}
+                buttonType={LinkButtonType.Link}
+                element={ElementName.TokenLinkWebsite}
+                label={t('Website')}
+                value={tokenProjectData.homepageUrl}
+              />
+            )}
+            {tokenProjectData?.twitterName && (
+              <LinkButton
+                Icon={TwitterIcon}
+                buttonType={LinkButtonType.Link}
+                element={ElementName.TokenLinkTwitter}
+                label={t('Twitter')}
+                value={getTwitterLink(tokenProjectData.twitterName)}
+              />
+            )}
             <LinkButton
-              Icon={AddressIcon}
-              buttonType={LinkButtonType.Copy}
-              element={ElementName.TokenAddress}
-              label={sanitizeAddressText(shortenAddress(tokenData?.address)) ?? ''}
-              value={tokenData?.address}
-            />
-          )}
-          {tokenProjectData?.homepageUrl && (
-            <LinkButton
-              Icon={GlobeIcon}
+              Icon={EtherscanIcon}
               buttonType={LinkButtonType.Link}
-              element={ElementName.TokenLinkWebsite}
-              label={t('Website')}
-              value={tokenProjectData.homepageUrl}
+              element={ElementName.TokenLinkEtherscan}
+              label={t('Etherscan')}
+              value={explorerLink}
             />
-          )}
-          {tokenProjectData?.twitterName && (
-            <LinkButton
-              Icon={TwitterIcon}
-              buttonType={LinkButtonType.Link}
-              element={ElementName.TokenLinkTwitter}
-              label={t('Twitter')}
-              value={getTwitterLink(tokenProjectData.twitterName)}
-            />
-          )}
-          <LinkButton
-            Icon={EtherscanIcon}
-            buttonType={LinkButtonType.Link}
-            element={ElementName.TokenLinkEtherscan}
-            label={t('Etherscan')}
-            value={explorerLink}
-          />
-        </Flex>
-      </ScrollView>
-    </Flex>
+          </Flex>
+        </ScrollView>
+      </Flex>
+    </View>
   )
 }

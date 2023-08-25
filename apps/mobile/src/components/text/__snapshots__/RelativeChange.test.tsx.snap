@@ -51,9 +51,10 @@ exports[`renders a relative change 1`] = `
         {
           "color": "#7D7D7D",
           "display": "flex",
-          "fontFamily": "Inter-Medium",
-          "fontSize": 15,
-          "lineHeight": 20,
+          "fontFamily": "Basel-Book",
+          "fontSize": 17,
+          "fontWeight": "400",
+          "lineHeight": 24,
         },
       ]
     }
@@ -114,9 +115,10 @@ exports[`renders placeholders with absolute change 1`] = `
         {
           "color": "#7D7D7D",
           "display": "flex",
-          "fontFamily": "Inter-Medium",
-          "fontSize": 15,
-          "lineHeight": 20,
+          "fontFamily": "Basel-Book",
+          "fontSize": 17,
+          "fontWeight": "400",
+          "lineHeight": 24,
         },
       ]
     }
@@ -148,9 +150,10 @@ exports[`renders placeholders without a change 1`] = `
         {
           "color": "#7D7D7D",
           "display": "flex",
-          "fontFamily": "Inter-Medium",
-          "fontSize": 15,
-          "lineHeight": 20,
+          "fontFamily": "Basel-Book",
+          "fontSize": 17,
+          "fontWeight": "400",
+          "lineHeight": 24,
         },
       ]
     }

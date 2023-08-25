@@ -249,7 +249,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const contentHeader = useMemo(() => {
     return (
-      <Flex bg="surface1" gap="spacing16" pb="spacing16" px="spacing24">
+      <Flex bg="surface1" gap="spacing12" pb="spacing16" px="spacing24">
         <Box pb="spacing12">
           <AccountHeader />
         </Box>
@@ -510,6 +510,7 @@ function QuickActions(): JSX.Element {
           Icon={BuyIcon}
           eventName={MobileEventName.FiatOnRampQuickActionButtonPressed}
           flex={1}
+          iconScale={1.2}
           label={t('Buy')}
           name={ElementName.Buy}
           sentry-label="BuyActionButton"
@@ -519,6 +520,7 @@ function QuickActions(): JSX.Element {
       <ActionButton
         Icon={SendIcon}
         flex={1}
+        iconScale={1.1}
         label={t('Send')}
         name={ElementName.Send}
         sentry-label="SendActionButton"
@@ -544,6 +546,7 @@ function ActionButton({
   onPress,
   flex,
   activeScale = 0.96,
+  iconScale = 1,
 }: {
   eventName?: MobileEventName
   name: ElementName
@@ -552,10 +555,16 @@ function ActionButton({
   onPress: () => void
   flex: number
   activeScale?: number
+  iconScale?: number
 }): JSX.Element {
   const theme = useAppTheme()
   const scale = useSharedValue(1)
-  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])
+  const animatedStyle = useAnimatedStyle(
+    () => ({
+      transform: [{ scale: scale.value }],
+    }),
+    [scale]
+  )
 
   const onGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
     onStart: () => {
@@ -578,17 +587,23 @@ function ActionButton({
             borderRadius="roundedFull"
             gap="none"
             px="spacing12"
-            py="spacing16"
             shadowColor="sporeWhite"
             shadowOffset={SHADOW_OFFSET_SMALL}
             shadowOpacity={0.1}
             shadowRadius={6}
-            style={animatedStyle}>
+            style={[
+              animatedStyle,
+              // eslint-disable-next-line react-native/no-inline-styles
+              {
+                // doing specific padding here because we need exact styles and spacing12 vs 16 either too small/big
+                paddingVertical: 14.5,
+              },
+            ]}>
             <Icon
               color={theme.colors.accent1}
-              height={theme.iconSizes.icon20}
+              height={theme.iconSizes.icon20 * iconScale}
               strokeWidth={2}
-              width={theme.iconSizes.icon20}
+              width={theme.iconSizes.icon20 * iconScale}
             />
             <Text color="accent1" marginLeft="spacing8" variant="buttonLabelMedium">
               {label}

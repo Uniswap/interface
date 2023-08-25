@@ -25,13 +25,17 @@ export function DecimalNumber({
   const [pre, post] = formattedNumber.split(separator)
 
   const decimalPartColor =
-    number === undefined || number >= decimalThreshold ? 'neutral2' : 'neutral1'
+    number === undefined || number >= decimalThreshold ? 'neutral3' : 'neutral1'
 
   return (
     <Text loading={loading} loadingPlaceholderText="$000.00" variant={variant} {...rest}>
       {pre}
       {post && (
-        <Text color={decimalPartColor} fontSize={rest.fontSize} variant={variant}>
+        <Text
+          color={decimalPartColor}
+          fontSize={rest.fontSize}
+          fontWeight={rest.fontWeight}
+          variant={variant}>
           {separator}
           {post}
         </Text>

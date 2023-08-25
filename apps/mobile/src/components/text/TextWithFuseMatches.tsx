@@ -1,14 +1,13 @@
 import Fuse from 'fuse.js'
 import React from 'react'
-import { TextProps } from 'react-native'
+
 import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
-import { Theme } from 'ui/src/theme/restyle'
+import { Text, TextProps } from 'src/components/Text'
 
 interface TextWithFuseMatchesProps {
   text: string
   matches?: readonly Fuse.FuseResultMatch[]
-  variant?: keyof Theme['textVariants']
+  variant?: TextProps['variant']
   numberOfLines?: TextProps['numberOfLines']
 }
 

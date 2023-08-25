@@ -48,8 +48,6 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
           adjustsFontSizeToFit={!isLoading}
           // initially set color to textSecondary when isWarm because the shimmer mask takes a second to load, resulting in a flash of the underlying color
           color={isWarmLoading ? 'neutral2' : undefined}
-          fontSize={48}
-          fontWeight="600"
           formattedNumber={formatUSDPrice(totalBalance, NumberType.PortfolioBalance)}
           loading={isLoading}
           number={totalBalance}

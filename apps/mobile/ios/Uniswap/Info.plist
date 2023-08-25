@@ -40,7 +40,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationCategoryType</key>
-	<string></string>
+	<string/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>itms-apps</string>
@@ -91,11 +91,9 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Inter-Bold.ttf</string>
-		<string>Inter-Medium.ttf</string>
-		<string>Inter-Regular.ttf</string>
-		<string>Inter-SemiBold.ttf</string>
 		<string>InputMono-Regular.ttf</string>
+		<string>Basel-Book.ttf</string>
+		<string>Basel-Medium.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

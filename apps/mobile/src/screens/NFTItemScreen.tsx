@@ -273,7 +273,6 @@ export function NFTItemScreen({
                       renderAsMarkdown
                       color={theme.colors.neutral1}
                       initialDisplayedLines={3}
-                      readMoreOrLessColor={accentTextColor}
                       text={description || '-'}
                     />
                   ) : null}

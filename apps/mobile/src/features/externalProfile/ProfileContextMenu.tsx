@@ -87,7 +87,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         await menuActions[e.nativeEvent.index]?.action()
       }}>
       <TouchableArea
-        backgroundColor="sporeBlack"
+        backgroundColor="surface3"
         borderRadius="roundedFull"
         opacity={0.8}
         padding="spacing8">

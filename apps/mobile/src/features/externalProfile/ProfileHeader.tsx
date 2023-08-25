@@ -142,6 +142,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               borderColor="surface3"
               borderRadius="rounded20"
               borderWidth={1}
+              height={46}
               padding="spacing12"
               testID={ElementName.Favorite}
               onPress={onPressFavorite}>
@@ -154,6 +155,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
               borderColor="surface3"
               borderRadius="rounded20"
               borderWidth={1}
+              height={46}
               padding="spacing12"
               testID={ElementName.Send}
               onPress={onPressSend}>
@@ -163,7 +165,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
                   height={theme.iconSizes.icon20}
                   width={theme.iconSizes.icon20}
                 />
-                <Text color="neutral2" variant="buttonLabelMedium">
+                <Text color="neutral2" lineHeight={20} variant="buttonLabelMedium">
                   {t('Send')}
                 </Text>
               </Flex>

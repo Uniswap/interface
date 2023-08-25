@@ -146,7 +146,7 @@ function FavoriteTokenCard({
         <BaseCard.Shadow>
           <Flex alignItems="flex-start" gap="spacing8">
             <Flex row gap="spacing4" justifyContent="space-between">
-              <Flex grow row alignItems="center" gap="spacing4">
+              <Flex grow row alignItems="center" gap="spacing8">
                 <TokenLogo
                   chainId={chainId ?? undefined}
                   size={theme.imageSizes.image20}
@@ -162,11 +162,11 @@ function FavoriteTokenCard({
               )}
             </Flex>
             <Flex gap="spacing2">
-              <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadLarge">
+              <Text adjustsFontSizeToFit numberOfLines={1} variant="headlineSmall">
                 {formatUSDPrice(usdPrice)}
               </Text>
               <RelativeChange
-                arrowSize={theme.iconSizes.icon20}
+                arrowSize={theme.iconSizes.icon16}
                 change={pricePercentChange ?? undefined}
                 semanticColor={true}
                 variant="subheadSmall"

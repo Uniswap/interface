@@ -140,14 +140,14 @@ function EmptyState({
       <Flex row>
         {buttonLabel && (
           <TouchableArea hapticFeedback onPress={onPress}>
-            <Text color="accent1" variant="buttonLabelSmall">
+            <Text color="accent1" variant="buttonLabelMedium">
               {buttonLabel}
             </Text>
           </TouchableArea>
         )}
         {additionalButtonLabel && (
           <TouchableArea onPress={onPressAdditional}>
-            <Text color="accent1" variant="buttonLabelSmall">
+            <Text color="accent1" variant="buttonLabelMedium">
               {additionalButtonLabel}
             </Text>
           </TouchableArea>

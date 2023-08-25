@@ -32,7 +32,7 @@ class MnemonicDisplayView: UIView {
       let wordLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 50))
       wordLabel.text = "Error loading recovery phrase"
       wordLabel.textColor = UIColor.lightGray
-      wordLabel.font = UIFont.init(name: "Inter-Regular", size: 16)
+      wordLabel.font = UIFont.init(name: "Basel-Book", size: 16)
       wordLabel.textAlignment = .center
       self.addSubview(wordLabel)
       
@@ -45,7 +45,7 @@ class MnemonicDisplayView: UIView {
       // Show alternate display for >12 word seed phrases
       let seedPhraseView = UITextView()
       seedPhraseView.text =  mnemonic
-      seedPhraseView.font = UIFont.init(name: "Inter-Regular", size: 16)
+      seedPhraseView.font = UIFont.init(name: "Basel-Book", size: 16)
       seedPhraseView.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
       seedPhraseView.textAlignment = .center
       seedPhraseView.layer.cornerRadius = 100

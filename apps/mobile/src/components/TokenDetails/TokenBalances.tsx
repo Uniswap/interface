@@ -53,18 +53,21 @@ export function TokenBalances({
   if (!hasCurrentChainBalances && !hasOtherChainBalances) return null
 
   return (
-    <Flex borderRadius="rounded8" gap="spacing24" px="spacing16">
+    <Flex borderRadius="rounded8" gap="spacing24">
       {currentChainBalance && (
-        <CurrentChainBalance
-          balance={currentChainBalance}
-          displayName={displayName}
-          isReadonly={isReadonly}
-          onPressSend={onPressSend}
-        />
+        <Flex gap="spacing24">
+          <Separator />
+          <CurrentChainBalance
+            balance={currentChainBalance}
+            displayName={displayName}
+            isReadonly={isReadonly}
+            onPressSend={onPressSend}
+          />
+        </Flex>
       )}
       {hasOtherChainBalances && otherChainBalances ? (
         <Flex>
-          <Text color="neutral3" variant="subheadSmall">
+          <Text color="neutral2" variant="subheadSmall">
             {t('Balances on other networks')}
           </Text>
           <Flex gap="spacing12">
@@ -80,7 +83,6 @@ export function TokenBalances({
           </Flex>
         </Flex>
       ) : null}
-      <Separator />
     </Flex>
   )
 }
@@ -114,7 +116,7 @@ export function CurrentChainBalance({
         </Text>
       </Flex>
       <Flex alignItems="flex-end" justifyContent="center">
-        <SendButton color={theme.colors.neutral1} onPress={onPressSend} />
+        <SendButton color={theme.colors.neutral1} size={28} onPress={onPressSend} />
       </Flex>
     </Flex>
   )

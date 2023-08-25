@@ -30,8 +30,8 @@ export function LongText(props: LongTextProps): JSX.Element {
     text,
     gap = 'spacing8',
     color = theme.colors.neutral1,
-    linkColor = theme.colors.accent1,
-    readMoreOrLessColor = theme.colors.accent1,
+    linkColor = theme.colors.neutral2,
+    readMoreOrLessColor = theme.colors.neutral2,
     renderAsMarkdown = false,
     variant = 'bodySmall',
     ...rest

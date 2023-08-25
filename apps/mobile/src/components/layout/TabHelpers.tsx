@@ -108,7 +108,7 @@ export const renderTabLabel = ({
 }): JSX.Element => {
   return (
     <Flex row alignItems="center" gap="spacing4">
-      <Text color={focused ? 'neutral1' : 'neutral2'} fontSize={18} variant="bodyLarge">
+      <Text color={focused ? 'neutral1' : 'neutral2'} variant="bodyLarge">
         {route.title}
       </Text>
       {/* Streamline UI by hiding the Activity tab spinner when focused

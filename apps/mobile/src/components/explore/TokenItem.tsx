@@ -188,7 +188,9 @@ export const TokenItem = memo(function _TokenItem({
           </Flex>
           <Flex row alignItems="center" justifyContent="flex-end">
             <TokenMetadata>
-              <Text variant="bodyLarge">{formatUSDPrice(price)}</Text>
+              <Text lineHeight={24} variant="bodyLarge">
+                {formatUSDPrice(price)}
+              </Text>
               <RelativeChange change={pricePercentChange24h} variant="subheadSmall" />
             </TokenMetadata>
           </Flex>

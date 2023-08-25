@@ -34,12 +34,12 @@ class MnemonicWordView: UIView {
     let indexLabel = UILabel()
     indexLabel.text = String(describing: self.index!)
     indexLabel.adjustsFontSizeToFitWidth = true
-    indexLabel.font = UIFont.init(name: "Inter-Regular", size: 16)
+    indexLabel.font = UIFont.init(name: "Basel-Book", size: 16)
     
     let wordLabel = UILabel()
     wordLabel.text = self.word
     wordLabel.adjustsFontSizeToFitWidth = true
-    wordLabel.font = UIFont.init(name: "Inter-Regular", size: 16)
+    wordLabel.font = UIFont.init(name: "Basel-Book", size: 16)
     
     let stackView = UIStackView(arrangedSubviews: [indexLabel, wordLabel])
     stackView.axis = .horizontal

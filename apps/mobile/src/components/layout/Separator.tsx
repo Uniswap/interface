@@ -9,7 +9,7 @@ type SeparatorProps = {
 } & SpacingShorthandProps<Theme>
 
 export function Separator({
-  color = 'surface3',
+  color = 'neutral3',
   width = 0.25,
   ...rest
 }: SeparatorProps): JSX.Element {

@@ -72,16 +72,16 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
           safeAreaColor="surface1"
           size={QR_CODE_SIZE}
         />
-        <Text color="neutral2" textAlign="center" variant="bodySmall">
+        <Text color="neutral2" lineHeight={20} textAlign="center" variant="bodyMicro">
           {t(
             'Only send tokens on Ethereum, Arbitrum, Optimism, Polygon, Base networks to this address.'
           )}{' '}
-          <TouchableArea height={18} onPress={onPressLearnMore}>
-            <Text color="accent1" variant="buttonLabelSmall">
-              {t('Learn more')}
-            </Text>
-          </TouchableArea>
         </Text>
+        <TouchableArea height={18} onPress={onPressLearnMore}>
+          <Text color="accent1" variant="buttonLabelSmall">
+            {t('Learn more')}
+          </Text>
+        </TouchableArea>
       </AnimatedFlex>
     </>
   )

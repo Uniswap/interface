@@ -2,14 +2,14 @@ import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { Caret } from 'src/components/icons/Caret'
 import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
-import { Theme } from 'ui/src/theme/restyle'
+import { Text, TextProps } from 'src/components/Text'
+import { Theme } from 'ui/src/theme/restyle/theme'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 
 interface RelativeChangeProps {
   change?: number
   absoluteChange?: number
-  variant?: keyof Theme['textVariants']
+  variant?: TextProps['variant']
   semanticColor?: boolean // If true, entire % change text will render green or red
   positiveChangeColor?: keyof Theme['colors']
   negativeChangeColor?: keyof Theme['colors']

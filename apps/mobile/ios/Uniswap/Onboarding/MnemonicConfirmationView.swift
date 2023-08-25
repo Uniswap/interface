@@ -49,7 +49,7 @@ struct MnemonicConfirmation: View {
   @ObservedObject var props = MnemonicConfirmationProps()
   
   let rnEthersRS = RNEthersRS()
-  let interFont = UIFont(name: "Inter-SemiBold", size: 20)
+  let interFont = UIFont(name: "Basel-Semibold", size: 20)
   
   func setMnemonicId(mnemonicId: String) {
     props.mnemonicId = mnemonicId
@@ -96,7 +96,7 @@ struct MnemonicConfirmation: View {
     VStack(alignment: HorizontalAlignment.leading, spacing: 0) {
       if (props.mnemonicWords.count > 12) {
         Text(props.mnemonicWords.joined(separator: " "))
-          .font(Font(UIFont(name: "Inter-Regular", size: 16)!))
+          .font(Font(UIFont(name: "Basel-Book", size: 16)!))
           .multilineTextAlignment(TextAlignment.center)
           .padding(EdgeInsets(top: 20, leading: 24, bottom: 20, trailing: 24))
           .foregroundColor(Colors.neutral1)

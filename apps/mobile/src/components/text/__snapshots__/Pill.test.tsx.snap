@@ -53,12 +53,13 @@ exports[`renders a Pill with border 1`] = `
         {
           "color": "#222222",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
-          "fontSize": 15,
-          "lineHeight": 20,
+          "fontFamily": "Basel-Book",
+          "fontSize": 17,
+          "lineHeight": 24,
         },
         {
           "color": undefined,
+          "paddingTop": 1,
         },
       ]
     }
@@ -97,12 +98,13 @@ exports[`renders a Pill without image 1`] = `
         {
           "color": "#222222",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
-          "fontSize": 15,
-          "lineHeight": 20,
+          "fontFamily": "Basel-Book",
+          "fontSize": 17,
+          "lineHeight": 24,
         },
         {
           "color": "accent1",
+          "paddingTop": 1,
         },
       ]
     }

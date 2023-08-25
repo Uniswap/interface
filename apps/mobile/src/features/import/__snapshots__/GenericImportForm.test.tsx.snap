@@ -73,9 +73,9 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               "backgroundColor": "transparent",
               "borderRadius": 12,
               "color": "#222222",
-              "fontSize": 17,
+              "fontSize": 19,
               "justifyContent": "center",
-              "lineHeight": 17,
+              "lineHeight": 19,
               "paddingHorizontal": 0,
               "paddingVertical": 0,
               "textAlign": "left",
@@ -126,8 +126,9 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             {
               "color": "#7D7D7D",
               "display": "flex",
-              "fontFamily": "Inter-Medium",
-              "fontSize": 17,
+              "fontFamily": "Basel-Book",
+              "fontSize": 19,
+              "fontWeight": "400",
               "lineHeight": 24,
             },
             {
@@ -242,9 +243,10 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
                 {
                   "color": "#222222",
                   "display": "flex",
-                  "fontFamily": "Inter-SemiBold",
-                  "fontSize": 15,
-                  "lineHeight": 20,
+                  "fontFamily": "Basel-Medium",
+                  "fontSize": 17,
+                  "fontWeight": "500",
+                  "lineHeight": 24,
                   "textAlign": "center",
                 },
               ]
@@ -277,8 +279,9 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             {
               "color": "#7D7D7D",
               "display": "flex",
-              "fontFamily": "Inter-Medium",
-              "fontSize": 17,
+              "fontFamily": "Basel-Book",
+              "fontSize": 19,
+              "fontWeight": "400",
               "lineHeight": 24,
             },
             {

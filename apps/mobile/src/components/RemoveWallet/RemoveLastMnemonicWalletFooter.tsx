@@ -35,7 +35,7 @@ export function RemoveLastMnemonicWalletFooter({
                 <Text color="neutral1" variant="subheadSmall">
                   I backed up my recovery phrase
                 </Text>
-                <Text color="neutral2" variant="bodySmall">
+                <Text color="neutral2" variant="bodyMicro">
                   I understand that Uniswap Labs can’t help me recover my wallets if I failed to do
                   so
                 </Text>

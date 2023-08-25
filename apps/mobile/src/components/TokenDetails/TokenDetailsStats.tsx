@@ -56,7 +56,7 @@ export function TokenDetailsMarketData({
   const FormattedValue = useCallback(
     ({ value, numberType }: { value?: number; numberType: NumberType }) => {
       return (
-        <Text loading={isLoading} variant="buttonLabelSmall">
+        <Text loading={isLoading} variant="bodySmall">
           {formatNumber(value, numberType)}
         </Text>
       )
@@ -111,7 +111,7 @@ export function TokenDetailsStats({
               gap="spacing2"
               initialDisplayedLines={5}
               linkColor={tokenColor ?? theme.colors.neutral1}
-              readMoreOrLessColor={tokenColor ?? theme.colors.accent1}
+              readMoreOrLessColor={tokenColor ?? theme.colors.neutral2}
               text={tokenProjectData.description.trim()}
             />
           </Flex>
