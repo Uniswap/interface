@@ -28,7 +28,7 @@ import TransactionDeadlineSettings from './TransactionDeadlineSettings'
 const CloseButton = styled.button`
   background: transparent;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
   height: 24px;
   padding: 0;
