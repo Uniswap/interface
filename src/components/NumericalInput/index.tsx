@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import { escapeRegExp } from 'utils'
 
 const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
-  color: ${({ error, theme }) => (error ? theme.accentFailure : theme.textPrimary)};
+  color: ${({ error, theme }) => (error ? theme.critical : theme.neutral1)};
   width: 0;
   position: relative;
-  font-weight: 400;
+  font-weight: 485;
   outline: none;
   border: none;
   flex: 1 1 auto;
@@ -34,7 +34,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.textTertiary};
+    color: ${({ theme }) => theme.neutral3};
   }
 `
 

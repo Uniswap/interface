@@ -14,17 +14,18 @@ export const CollectionSearch = () => {
     <Box
       as="input"
       flex="1"
-      borderColor={{ default: 'backgroundOutline', focus: 'accentAction' }}
+      borderColor={{ default: 'surface3', focus: 'accent1' }}
       borderWidth="1.5px"
       borderStyle="solid"
       borderRadius="12"
       padding="12"
-      backgroundColor="backgroundSurface"
+      backgroundColor="surface1"
       maxWidth="332"
       minWidth="0"
       fontSize="16"
+      fontWeight="book"
       height="44"
-      color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
+      color={{ placeholder: 'neutral3', default: 'neutral1' }}
       value={searchByNameText}
       placeholder={iscollectionStatsLoading ? '' : 'Search by name'}
       className={clsx(iscollectionStatsLoading && styles.filterButtonLoading)}

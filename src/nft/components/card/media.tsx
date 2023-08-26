@@ -47,7 +47,7 @@ export const StyledImage = styled.img<{
   object-fit: contain;
   visibility: ${({ $hidden }) => ($hidden ? 'hidden' : 'visible')};
   background: ${({ theme, imageLoading }) =>
-    imageLoading && `linear-gradient(270deg, ${theme.backgroundOutline} 0%, ${theme.backgroundSurface} 100%)`};
+    imageLoading && `linear-gradient(270deg, ${theme.surface3} 0%, ${theme.surface1} 100%)`};
 `
 
 export const NftImage = ({
@@ -91,7 +91,7 @@ interface MediaProps {
 
 const PlaybackButton = styled.div<{ pauseButton?: boolean }>`
   display: ${({ pauseButton }) => (pauseButton ? 'block' : 'none')};
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
   position: absolute;
   height: 40px;
   width: 40px;
@@ -230,8 +230,7 @@ const NoContentContainerBackground = styled.div<{ $height?: number }>`
   width: 100%;
   height: ${({ $height }) => ($height ? `${$height}px` : 'auto')};
   padding-top: 100%;
-  background: ${({ theme }) =>
-    `linear-gradient(90deg, ${theme.backgroundSurface} 0%, ${theme.backgroundInteractive} 95.83%)`};
+  background: ${({ theme }) => `linear-gradient(90deg, ${theme.surface1} 0%, ${theme.surface3} 95.83%)`};
 `
 
 const NoContentText = styled(ThemedText.BodyPrimary)`

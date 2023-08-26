@@ -69,7 +69,7 @@ const NoContentContainer = () => (
       style={{ transform: 'translate3d(-50%, -50%, 0)' }}
       color="gray500"
       fontSize="12"
-      fontWeight="normal"
+      fontWeight="book"
     >
       Image
       <br />
@@ -137,7 +137,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
           {!loadedImage && <Box position="absolute" className={`${styles.bagRowImage} ${loadingBlock}`} />}
           {noImageAvailable && <NoContentContainer />}
         </Box>
-        <Column overflow="hidden" width="full" color={grayscale ? 'textSecondary' : 'textPrimary'}>
+        <Column overflow="hidden" width="full" color={grayscale ? 'neutral2' : 'neutral1'}>
           <Row overflow="hidden" width="full" whiteSpace="nowrap">
             <Box className={styles.assetName}>{asset.name ?? `#${asset.tokenId}`}</Box>
             {asset.susFlag && <Suspicious />}
@@ -195,7 +195,7 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
     [asset, markAssetAsReviewed]
   )
   return (
-    <Column className={styles.priceChangeColumn} borderTopColor={top ? 'backgroundOutline' : 'transparent'}>
+    <Column className={styles.priceChangeColumn} borderTopColor={top ? 'surface3' : 'transparent'}>
       <Row className={styles.priceChangeRow}>
         {isPriceIncrease ? <SquareArrowUpIcon /> : <SquareArrowDownIcon />}
         <Box>{`Price ${isPriceIncrease ? 'increased' : 'decreased'} from ${formatWeiToDecimal(
@@ -250,7 +250,7 @@ const UnavailableAssetsPreview = ({ assets }: UnavailableAssetsPreviewProps) => 
         height="32"
         borderStyle="solid"
         borderWidth="1px"
-        borderColor="backgroundSurface"
+        borderColor="surface1"
         borderRadius="4"
         style={{ zIndex: index }}
         className={styles.grayscaleImage}
@@ -306,19 +306,19 @@ export const UnavailableAssetsHeaderRow = ({
             }
           }}
         >
-          <Row gap="12" color="textSecondary" className={bodySmall}>
+          <Row gap="12" color="neutral2" className={bodySmall}>
             {!isShowingAssets && <UnavailableAssetsPreview assets={assets.slice(0, 5)} />}
             No longer available
           </Row>
           {moreThanOneUnavailable && (
-            <Row color="textSecondary">{isOpen ? <ChevronUpBagIcon /> : <ChevronDownBagIcon />}</Row>
+            <Row color="neutral2">{isOpen ? <ChevronUpBagIcon /> : <ChevronDownBagIcon />}</Row>
           )}
           {!didOpenUnavailableAssets && (
             <Row
               position="relative"
               width="20"
               height="20"
-              color="textPrimary"
+              color="neutral1"
               justifyContent="center"
               cursor="pointer"
               onClick={clearUnavailableAssets}

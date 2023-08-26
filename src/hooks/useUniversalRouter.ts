@@ -122,7 +122,10 @@ export function useUniversalRouterSwapCallback(
                 txHash: response.hash,
                 ...analyticsContext,
               })
-              throw new ModifiedSwapError()
+
+              if (!response.data || response.data.length === 0 || response.data === '0x') {
+                throw new ModifiedSwapError()
+              }
             }
             return response
           })

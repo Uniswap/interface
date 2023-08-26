@@ -57,7 +57,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
           {title}
 
           <Box display="flex" alignItems="center">
-            <Box color="textTertiary" display="inline-block" marginRight="12">
+            <Box color="neutral2" display="inline-block" marginRight="12">
               {props.numTraits}
             </Box>
             <Box

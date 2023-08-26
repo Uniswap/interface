@@ -19,7 +19,7 @@ export const subRowHover = style([
   subheadSmall,
   {
     ':hover': {
-      background: themeVars.colors.backgroundInteractive,
+      background: themeVars.colors.surface3,
     },
   },
 ])

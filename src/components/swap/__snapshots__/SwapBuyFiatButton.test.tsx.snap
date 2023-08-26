@@ -28,12 +28,13 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
 .c2 {
   padding: 16px;
   width: 100%;
-  font-weight: 500;
+  line-height: 24px;
+  font-weight: 535;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 16px;
   outline: none;
   border: 1px solid transparent;
-  color: #0D111C;
+  color: #222222;
   -webkit-text-decoration: none;
   text-decoration: none;
   display: -webkit-box;
@@ -116,8 +117,9 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
 }
 
 .c4 {
-  color: #7780A0;
+  color: #7D7D7D;
   gap: 4px;
+  font-weight: 485;
 }
 
 .c4:focus {
