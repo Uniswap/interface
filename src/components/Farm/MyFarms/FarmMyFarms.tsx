@@ -534,7 +534,23 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
   //   })
   // })
 
-  const myGammaFarms = [] as Token[]
+  const myGammaFarms = [
+    {
+      chainId: 570, // chainId
+      address: '0x1234567890123456789012345678901234567890', // endereço
+      decimals: 18, // casas decimais
+      symbol: 'TOKEN1', // símbolo
+      name: 'Token One',
+    }, // nome}
+    {
+      chainId: 570, // chainId
+      address: '0x1234567890123456789012345678901234567890', // endereço
+      decimals: 18, // casas decimais
+      symbol: 'TOKEN2', // símbolo
+      name: 'Token two',
+    }, // nome}
+  ] as Token[]
+
   // const myGammaFarms = allGammaPairsToFarm
   //   .map((item) => {
   //     const masterChefIndex = item.masterChefIndex ?? 0
@@ -702,7 +718,7 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
             <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '10px', paddingBottom: '30px' }}>
               <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="3.5rem" />
             </div>
-          ) : myGammaFarms.length !== 0 ? (
+          ) : myGammaFarms.length === 0 ? (
             <NoFarmsContainer>
               <Frown size={35} stroke="white" />
               <Box mt={1}>noFarms</Box>
