@@ -1,11 +1,9 @@
 import { OpacityHoverState } from 'components/Common'
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
-import ms from 'ms'
+import { useNativeUsdPrice } from 'nft/hooks'
 import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
-import { fetchPrice } from 'nft/utils'
 import { useMemo, useState } from 'react'
-import { useQuery } from 'react-query'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
@@ -94,12 +92,7 @@ const TrendingCollections = () => {
     convertTimePeriodToHistoryDuration(timePeriod)
   )
 
-  const { data: usdPrice } = useQuery(['fetchPrice', {}], () => fetchPrice(), {
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchInterval: ms(`1m`),
-  })
+  const ethUsdPrice = useNativeUsdPrice()
 
   const trendingCollectionColumns = useMemo(() => {
     if (!trendingCollectionsAreLoading && trendingCollections) {
@@ -126,10 +119,10 @@ const TrendingCollections = () => {
         sales: d.sales,
         totalSupply: d.totalSupply,
         denomination: isEthToggled ? Denomination.ETH : Denomination.USD,
-        usdPrice,
+        usdPrice: ethUsdPrice,
       }))
     } else return [] as CollectionTableColumn[]
-  }, [trendingCollections, trendingCollectionsAreLoading, isEthToggled, usdPrice])
+  }, [trendingCollections, trendingCollectionsAreLoading, isEthToggled, ethUsdPrice])
 
   return (
     <ExploreContainer>

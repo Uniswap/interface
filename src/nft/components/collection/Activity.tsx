@@ -5,9 +5,9 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile } from 'nft/hooks'
+import { useNativeUsdPrice } from 'nft/hooks/useUsdPrice'
 import { ActivityEvent, ActivityEventType } from 'nft/types'
-import { fetchPrice } from 'nft/utils/fetchPrice'
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { useCallback, useReducer } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -87,14 +87,8 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
   const cartExpanded = useBag((state) => state.bagExpanded)
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
-  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
   const isDarkMode = useIsDarkMode()
-
-  useEffect(() => {
-    fetchPrice().then((price) => {
-      setEthPriceInUSD(price || 0)
-    })
-  }, [])
+  const ethPriceInUSD = useNativeUsdPrice()
 
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {

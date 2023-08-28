@@ -5,10 +5,10 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
 import { getRoyalty, useHandleGlobalPriceToggle, useSyncPriceWithGlobalMethod } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
+import { useNativeUsdPrice } from 'nft/hooks/useUsdPrice'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
-import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, DispatchWithoutAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -248,12 +248,7 @@ export const MarketplaceRow = ({
 }
 
 const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
-  const [ethConversion, setEthConversion] = useState(3000)
-  useEffect(() => {
-    fetchPrice().then((price) => {
-      setEthConversion(price ?? 0)
-    })
-  }, [])
+  const ethUsdPrice = useNativeUsdPrice()
 
   return (
     <Row width="100%" justify="flex-end">
@@ -262,7 +257,7 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
           <Column>
             <span>{formatEth(ethPrice)} ETH</span>
             <ThemedText.BodyPrimary color="textSecondary">
-              {formatUsdPrice(ethPrice * ethConversion)}
+              {formatUsdPrice(ethPrice * ethUsdPrice)}
             </ThemedText.BodyPrimary>
           </Column>
         ) : (

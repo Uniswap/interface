@@ -10,10 +10,9 @@ import { Row } from 'nft/components/Flex'
 import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, TwitterIcon, UniIcon } from 'nft/components/icons'
 import { Overlay, stopPropagation } from 'nft/components/modals/Overlay'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
-import { useIsMobile, useSendTransaction, useTransactionResponse } from 'nft/hooks'
+import { useIsMobile, useNativeUsdPrice, useSendTransaction, useTransactionResponse } from 'nft/hooks'
 import { TxResponse, TxStateType } from 'nft/types'
 import {
-  fetchPrice,
   formatEthPrice,
   formatUsdPrice,
   formatUSDPriceWithCommas,
@@ -47,7 +46,7 @@ const UploadLink = styled.a`
 `
 
 const TxCompleteModal = () => {
-  const [ethPrice, setEthPrice] = useState(3000)
+  const ethUsdPrice = useNativeUsdPrice()
   const [showUnavailable, setShowUnavailable] = useState(false)
   const txHash = useSendTransaction((state) => state.txHash)
   const purchasedWithErc20 = useSendTransaction((state) => state.purchasedWithErc20)
@@ -70,8 +69,8 @@ const TxCompleteModal = () => {
     totalUSDRefund,
     txFeeFiat,
   } = useMemo(() => {
-    return parseTransactionResponse(transactionResponse, ethPrice)
-  }, [transactionResponse, ethPrice])
+    return parseTransactionResponse(transactionResponse, ethUsdPrice)
+  }, [transactionResponse, ethUsdPrice])
 
   const toggleShowUnavailable = () => {
     setShowUnavailable(!showUnavailable)
@@ -81,12 +80,6 @@ const TxCompleteModal = () => {
     setTransactionResponse({} as TxResponse)
     setTxState(TxStateType.New)
   }
-
-  useEffect(() => {
-    fetchPrice().then((price) => {
-      setEthPrice(price ?? 0)
-    })
-  }, [])
 
   useEffect(() => {
     useSendTransaction.subscribe((state) => (transactionStateRef.current = state.state))
@@ -114,7 +107,7 @@ const TxCompleteModal = () => {
                 name={NFTEventName.NFT_BUY_BAG_SUCCEEDED}
                 properties={{
                   buy_quantity: nftsPurchased.length,
-                  usd_value: parseFloat(formatEther(totalPurchaseValue)) * ethPrice,
+                  usd_value: parseFloat(formatEther(totalPurchaseValue)) * ethUsdPrice,
                   transaction_hash: txHash,
                   using_erc20: purchasedWithErc20,
                   ...formatAssetEventProperties(nftsPurchased),
