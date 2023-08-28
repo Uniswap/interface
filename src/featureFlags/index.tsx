@@ -18,6 +18,10 @@ export enum FeatureFlag {
   multichainUX = 'multichain_ux',
   currencyConversion = 'currency_conversion',
   fotAdjustedmentsEnabled = 'fot_adjustments_enabled',
+  infoExplore = 'info_explore',
+  infoTDP = 'info_tdp',
+  infoPoolPage = 'info_pool_page',
+  infoLiveViews = 'info_live_views',
 }
 
 interface FeatureFlagsContextType {

@@ -1,7 +1,12 @@
+import Column from 'components/Column'
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
 import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
+import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
+import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
+import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
+import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
@@ -14,6 +19,7 @@ import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
+import { BREAKPOINTS } from 'theme'
 
 const StyledModal = styled.div`
   position: fixed;
@@ -25,7 +31,7 @@ const StyledModal = styled.div`
   height: fit-content;
   color: ${({ theme }) => theme.neutral1};
   font-size: 18px;
-  padding: 20px;
+  padding: 20px 0px;
   background-color: ${({ theme }) => theme.surface2};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
@@ -33,11 +39,25 @@ const StyledModal = styled.div`
   flex-direction: column;
   gap: 8px;
   border: 1px solid ${({ theme }) => theme.surface3};
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    max-height: 100vh;
+  }
 `
 
 function Modal({ open, children }: { open: boolean; children: ReactNode }) {
   return open ? <StyledModal>{children}</StyledModal> : null
 }
+
+const FlagsColumn = styled(Column)`
+  max-height: 600px;
+  overflow-y: auto;
+  padding: 0px 20px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    max-height: unset;
+  }
+`
 
 const Row = styled.div`
   display: flex;
@@ -108,6 +128,7 @@ const FlagInfo = styled.div`
 const SaveButton = styled.button`
   border-radius: 12px;
   padding: 8px;
+  margin: 0px 20px;
   background: ${({ theme }) => theme.surface3};
   font-weight: 535;
   font-size: 16px;
@@ -202,68 +223,96 @@ export default function FeatureFlagModal() {
 
   return (
     <Modal open={open}>
-      <Header>
-        Feature Flag Settings
-        <CloseButton onClick={toggle}>
-          <X size={24} />
-        </CloseButton>
-      </Header>
-      <FeatureFlagOption
-        variant={UniswapXVariant}
-        value={useUniswapXFlag()}
-        featureFlag={FeatureFlag.uniswapXEnabled}
-        label="Enable UniswapX on interface"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useForceUniswapXOnFlag()}
-        featureFlag={FeatureFlag.forceUniswapXOn}
-        label="Force routing api to enable UniswapX"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useUniswapXSyntheticQuoteFlag()}
-        featureFlag={FeatureFlag.uniswapXSyntheticQuote}
-        label="Force synthetic quotes for UniswapX"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useUniswapXEthOutputFlag()}
-        featureFlag={FeatureFlag.uniswapXEthOutputEnabled}
-        label="Enable eth output for UniswapX orders"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useUniswapXExactOutputFlag()}
-        featureFlag={FeatureFlag.uniswapXExactOutputEnabled}
-        label="Enable exact output for UniswapX orders"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useCurrencyConversionFlag()}
-        featureFlag={FeatureFlag.currencyConversion}
-        label="Enable currency conversion"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useMultichainUXFlag()}
-        featureFlag={FeatureFlag.multichainUX}
-        label="Updated Multichain UX"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useFotAdjustmentsFlag()}
-        featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
-        label="Enable fee-on-transfer UI and slippage adjustments"
-      />
-      <FeatureFlagGroup name="Debug">
+      <FlagsColumn>
+        <Header>
+          Feature Flag Settings
+          <CloseButton onClick={toggle}>
+            <X size={24} />
+          </CloseButton>
+        </Header>
         <FeatureFlagOption
-          variant={TraceJsonRpcVariant}
-          value={useTraceJsonRpcFlag()}
-          featureFlag={FeatureFlag.traceJsonRpc}
-          label="Enables JSON-RPC tracing"
+          variant={UniswapXVariant}
+          value={useUniswapXFlag()}
+          featureFlag={FeatureFlag.uniswapXEnabled}
+          label="Enable UniswapX on interface"
         />
-      </FeatureFlagGroup>
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useForceUniswapXOnFlag()}
+          featureFlag={FeatureFlag.forceUniswapXOn}
+          label="Force routing api to enable UniswapX"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useUniswapXSyntheticQuoteFlag()}
+          featureFlag={FeatureFlag.uniswapXSyntheticQuote}
+          label="Force synthetic quotes for UniswapX"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useUniswapXEthOutputFlag()}
+          featureFlag={FeatureFlag.uniswapXEthOutputEnabled}
+          label="Enable eth output for UniswapX orders"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useUniswapXExactOutputFlag()}
+          featureFlag={FeatureFlag.uniswapXExactOutputEnabled}
+          label="Enable exact output for UniswapX orders"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useCurrencyConversionFlag()}
+          featureFlag={FeatureFlag.currencyConversion}
+          label="Enable currency conversion"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useMultichainUXFlag()}
+          featureFlag={FeatureFlag.multichainUX}
+          label="Updated Multichain UX"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useFotAdjustmentsFlag()}
+          featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
+          label="Enable fee-on-transfer UI and slippage adjustments"
+        />
+        <FeatureFlagGroup name="Info Site Migration">
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoExploreFlag()}
+            featureFlag={FeatureFlag.infoExplore}
+            label="Info site migration - Updating Token Explore Page"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoTDPFlag()}
+            featureFlag={FeatureFlag.infoTDP}
+            label="Info site migration - Updating Token Details Page"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoPoolPageFlag()}
+            featureFlag={FeatureFlag.infoPoolPage}
+            label="Info site migration - Adding Pool Details Page"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoLiveViewsFlag()}
+            featureFlag={FeatureFlag.infoLiveViews}
+            label="Info site migration - Support live view graphs"
+          />
+        </FeatureFlagGroup>
+        <FeatureFlagGroup name="Debug">
+          <FeatureFlagOption
+            variant={TraceJsonRpcVariant}
+            value={useTraceJsonRpcFlag()}
+            featureFlag={FeatureFlag.traceJsonRpc}
+            label="Enables JSON-RPC tracing"
+          />
+        </FeatureFlagGroup>
+      </FlagsColumn>
       <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
     </Modal>
   )
