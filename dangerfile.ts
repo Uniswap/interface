@@ -50,6 +50,20 @@ async function processAddChanges() {
   })
 }
 
+async function checkCocoaPodsVersion() {
+  const updatedPodFileLock = danger.git.modified_files.find((file) => file.includes('ios/Podfile.lock'))
+  if (updatedPodFileLock) {
+    const structuredDiff = await danger.git.structuredDiffForFile(updatedPodFileLock);
+    const changedLines = (structuredDiff?.chunks || []).flatMap((chunk) => {
+      return chunk.changes.filter((change) => change.type === 'add')
+    })
+    const changedCocoaPodsVersion = changedLines.some((change) => change.content.includes('COCOAPODS: '))
+    if (changedCocoaPodsVersion) {
+      warn(`You're changing the Podfile version! Ensure you are using the correct version / this change is intentional.`)
+    }
+  }
+}
+
 /* Warn about storing credentials in GH and uploading env.local to 1Password */
 const envChanged = danger.git.modified_files.includes('.env.defaults')
 if (envChanged) {
@@ -60,6 +74,9 @@ if (envChanged) {
 
 // Run checks on added changes
 processAddChanges()
+
+// Check for cocoapods version change
+checkCocoaPodsVersion()
 
 // Stories for new components
 const createdComponents = danger.git.created_files.filter(
@@ -101,6 +118,7 @@ if (danger.github.pr.additions < danger.github.pr.deletions) {
   )
 }
 
+// Stories congratulations
 const stories = danger.git.fileMatch('**/*stories*')
 if (stories.edited) {
   message('🙌 Thanks for keeping stories up to date!')
