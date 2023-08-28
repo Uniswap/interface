@@ -1,3 +1,4 @@
+import { Token } from '@pollum-io/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'
@@ -11,7 +12,7 @@ import { getGammaData, getGammaRewards } from 'graphql/utils/util'
 import { FormattedRewardInterface } from 'models/interface/farming'
 import { useIsMobile } from 'nft/hooks'
 import { useState } from 'react'
-import { Frown, Loader } from 'react-feather'
+import { Frown } from 'react-feather'
 import { useQuery } from 'react-query'
 import { Box } from 'rebass'
 import { useCombinedActiveList } from 'state/lists/hooks'
@@ -19,7 +20,8 @@ import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { formatReward } from 'utils/farmUtils'
 
-import { GammaPair, GlobalConst } from '../constants'
+import { GlobalConst } from '../constants'
+import GammaFarmCard from '../GammaFarms/GammaFarmCard'
 import SortColumns from '../SortColumn'
 
 const RewardContainer = styled.div`
@@ -27,6 +29,15 @@ const RewardContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+`
+
+const NoFarmsContainer = styled.div`
+  display: 'flex';
+  justifycontent: 'center';
+  paddingtop: '10px';
+  paddingbottom: '30px';
+  flexdirection: 'column';
+  alignitems: 'center';
 `
 
 export default function FarmingMyFarms({ search, chainId }: { search: string; chainId: number }) {
@@ -523,7 +534,7 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
   //   })
   // })
 
-  const myGammaFarms = [] as GammaPair[]
+  const myGammaFarms = [] as Token[]
   // const myGammaFarms = allGammaPairsToFarm
   //   .map((item) => {
   //     const masterChefIndex = item.masterChefIndex ?? 0
@@ -627,7 +638,7 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
     <Box mt={2}>
       {
         // eslint-disable-next-line no-constant-condition
-        true ? (
+        true && (
           <Box px={2} my={2}>
             <SubTitleContainer
               text={"Unclaimed Rewards displays the rewards you've earned but haven't collected yet. Click to claim."}
@@ -678,32 +689,30 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
               )}
             </Box>
           </Box>
-        ) : null
+        )
       }
       {/* {allGammaFarms.length > 0 && ( */}
       {true && (
         <Box>
           <Divider />
           <Box px={2} mt={2}>
-            <h6>Gamma farms</h6>
+            <SubTitleContainer text="Displays to show your positions." description="Gamma farms" />
           </Box>
           {gammaFarmsLoading || gammaRewardsLoading ? (
-            <Box py={5} className="flex justify-center">
-              <Loader stroke="white" size="1.5rem" />
-            </Box>
-          ) : myGammaFarms.length === 0 ? (
-            <Box py={5} className="flex flex-col items-center">
+            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '10px', paddingBottom: '30px' }}>
+              <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="3.5rem" />
+            </div>
+          ) : myGammaFarms.length !== 0 ? (
+            <NoFarmsContainer>
               <Frown size={35} stroke="white" />
-              <Box mb={3} mt={1}>
-                noFarms
-              </Box>
-            </Box>
+              <Box mt={1}>noFarms</Box>
+            </NoFarmsContainer>
           ) : (
             chainId && (
               <Box padding="24px">
                 {!isMobile && (
                   <Box px={1.5}>
-                    <Box width="90%">
+                    <Box>
                       <SortColumns
                         sortColumns={sortByDesktopItemsGamma}
                         selectedSort={sortByGamma}
@@ -714,14 +723,17 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
                 )}
                 <Box pb={2}>
                   {myGammaFarms.map((farm) => {
-                    const gmMasterChef = GAMMA_MASTERCHEF_ADDRESSES[farm.masterChefIndex ?? 0][chainId]
-                      ? GAMMA_MASTERCHEF_ADDRESSES[farm.masterChefIndex ?? 0][chainId].toLowerCase()
+                    // const gmMasterChef = GAMMA_MASTERCHEF_ADDRESSES[farm.masterChefIndex ?? 0][chainId]
+                    //   ? GAMMA_MASTERCHEF_ADDRESSES[farm.masterChefIndex ?? 0][chainId].toLowerCase()
+                    //   : undefined
+                    const gmMasterChef = GAMMA_MASTERCHEF_ADDRESSES[0][chainId]
+                      ? GAMMA_MASTERCHEF_ADDRESSES[0][chainId].toLowerCase()
                       : undefined
                     return (
                       <Box mt={2} key={farm.address}>
-                        {/* <GammaFarmCard
-                          token0={farm.token0}
-                          token1={farm.token1}
+                        <GammaFarmCard
+                          token0={farm}
+                          token1={farm}
                           pairData={farm}
                           data={gammaData ? gammaData[farm.address.toLowerCase()] : undefined}
                           rewardData={
@@ -732,7 +744,7 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
                               ? gammaRewards[gmMasterChef]['pools'][farm.address.toLowerCase()]
                               : undefined
                           }
-                        /> */}
+                        />
                       </Box>
                     )
                   })}

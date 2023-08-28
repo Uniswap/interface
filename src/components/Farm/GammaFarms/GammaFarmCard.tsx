@@ -1,6 +1,6 @@
 import { Token } from '@pollum-io/sdk-core'
 import { formatNumber } from '@uniswap/conedison/format'
-import CircleInfoIcon from 'assets/images/circleinfo.svg'
+// import CircleInfoIcon from 'assets/images/circleinfo.svg'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import TotalAPRTooltip from 'components/TotalAPRTooltip/TotalAPRTooltip'
 import { useIsMobile } from 'nft/hooks'
@@ -75,7 +75,8 @@ const GammaFarmCard: React.FC<{
               <small className="text-success">{formatNumber((poolAPR + farmAPR) * 100)}%</small>
               <div style={{ marginLeft: 0.5, height: 16 }}>
                 <TotalAPRTooltip farmAPR={farmAPR * 100} poolAPR={poolAPR * 100}>
-                  <img src={CircleInfoIcon} alt="arrow up" />
+                  {/* <img src={CircleInfoIcon} alt="arrow up" /> */}
+                  imagem aqui
                 </TotalAPRTooltip>
               </div>
             </Box>
