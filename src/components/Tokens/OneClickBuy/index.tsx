@@ -52,6 +52,7 @@ import { formatUSDPrice } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
+import { LoadingBubble } from '../loading'
 import { usePriceHistory } from '../TokenDetails/ChartSection'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
@@ -460,7 +461,9 @@ export function OneClickBuy({
               {amounts.map((amount, index) =>
                 amount === selectedAmount ? (
                   <ButtonPrimary key={index} onClick={() => setSelectedAmount('0')} height="48px" $borderRadius="16px">
-                    {amount} ETH
+                    <Text fontSize={16} fontWeight={600}>
+                      {amount} ETH
+                    </Text>
                   </ButtonPrimary>
                 ) : (
                   <ButtonLight
@@ -472,7 +475,9 @@ export function OneClickBuy({
                     height="48px"
                     $borderRadius="16px"
                   >
-                    {amount} ETH
+                    <Text fontSize={16} fontWeight={600}>
+                      {amount} ETH
+                    </Text>
                   </ButtonLight>
                 )
               )}
@@ -570,9 +575,13 @@ export function OneClickBuy({
                         )}
                       </Text>
                     </ButtonError>
-                    <Text fontSize={14} fontWeight={600}>
-                      You will receive {trade?.outputAmount.toSignificant(8)} {token?.symbol}
-                    </Text>
+                    {!swapInputError && getIsValidSwapQuote(trade, tradeState, swapInputError) ? (
+                      <Text fontSize={14} fontWeight={600}>
+                        You will receive {trade?.outputAmount.toSignificant(8)} {token?.symbol}
+                      </Text>
+                    ) : (
+                      <LoadingBubble height="18px" />
+                    )}
                   </AutoColumn>
                 </TraceEvent>
               )}
