@@ -127,6 +127,7 @@ const FlagInfo = styled.div`
 const SaveButton = styled.button`
   border-radius: 12px;
   padding: 8px;
+  margin: 0px 20px;
   background: ${({ theme }) => theme.surface3};
   font-weight: 535;
   font-size: 16px;
