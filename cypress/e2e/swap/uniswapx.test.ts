@@ -79,9 +79,28 @@ describe('UniswapX Orders', () => {
     cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
   })
 
-  it('can swap using uniswapX', () => {
+  it('can swap exact-in trades using uniswapX', () => {
     // Setup a swap
     cy.get('#swap-currency-input .token-amount-input').type('300')
+    cy.contains('Try it now').click()
+
+    // Submit uniswapx order signature
+    cy.get('#swap-button').click()
+    cy.contains('Confirm swap').click()
+    cy.wait('@eth_signTypedData_v4')
+    cy.contains('Swap submitted')
+    cy.contains('Learn more about swapping with UniswapX')
+
+    // Return filled order status from uniswapx api
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
+
+    // Verify swap success
+    cy.contains('Swapped')
+  })
+
+  it('can swap exact-out trades using uniswapX', () => {
+    // Setup a swap
+    cy.get('#swap-currency-output .token-amount-input').type('300')
     cy.contains('Try it now').click()
 
     // Submit uniswapx order signature

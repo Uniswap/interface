@@ -22,14 +22,14 @@ const Option = styled(Row)<{ isActive: boolean }>`
   text-align: center;
   gap: 4px;
   border-radius: 12px;
-  background: ${({ isActive, theme }) => (isActive ? theme.backgroundInteractive : 'transparent')};
+  background: ${({ isActive, theme }) => (isActive ? theme.surface3 : 'transparent')};
   pointer-events: ${({ isActive }) => isActive && 'none'};
 `
 
 const Switch = styled(Row)`
   width: auto;
   padding: 4px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 16px;
 `
 
@@ -164,7 +164,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
       {tooLow || tooHigh ? (
         <RowBetween gap="md">
           <CautionTriangle />
-          <ThemedText.Caption color="accentWarning">
+          <ThemedText.BodySmall color="deprecated_accentWarning">
             {tooLow ? (
               <Trans>
                 Slippage below {MINIMUM_RECOMMENDED_SLIPPAGE.toFixed(2)}% may result in a failed transaction
@@ -172,7 +172,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
             ) : (
               <Trans>Your transaction may be frontrun and result in an unfavorable trade.</Trans>
             )}
-          </ThemedText.Caption>
+          </ThemedText.BodySmall>
         </RowBetween>
       ) : null}
     </Expand>

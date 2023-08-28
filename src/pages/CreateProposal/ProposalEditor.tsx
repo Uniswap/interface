@@ -7,8 +7,8 @@ import styled from 'styled-components'
 
 const ProposalEditorHeader = styled(Text)`
   font-size: 14px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.textSecondary};
+  font-weight: 535;
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const ProposalTitle = memo(styled(TextInput)`
@@ -20,8 +20,8 @@ const ProposalEditorContainer = styled.div`
   margin-top: 10px;
   padding: 0.75rem 1rem 0.75rem 1rem;
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  border: 1px solid ${({ theme }) => theme.surface3};
+  background-color: ${({ theme }) => theme.surface1};
 `
 
 export const ProposalEditor = ({

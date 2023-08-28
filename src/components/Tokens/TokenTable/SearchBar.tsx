@@ -21,28 +21,30 @@ const SearchInput = styled.input`
   background-image: url(${searchIcon});
   background-size: 20px 20px;
   background-position: 12px center;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.surface1};
   border-radius: 12px;
-  border: 1.5px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   height: 100%;
   width: min(200px, 100%);
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 485;
   padding-left: 40px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   :hover {
-    background-color: ${({ theme }) => theme.backgroundSurface};
+    background-color: ${({ theme }) => theme.surface1};
   }
 
   :focus {
     outline: none;
-    background-color: ${({ theme }) => theme.backgroundSurface};
-    border-color: ${({ theme }) => theme.accentActionSoft};
+    background-color: ${({ theme }) => theme.surface1};
+    border-color: ${({ theme }) => theme.accent1};
+    color: ${({ theme }) => theme.neutral1};
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.textTertiary};
+    color: ${({ theme }) => theme.neutral3};
   }
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;

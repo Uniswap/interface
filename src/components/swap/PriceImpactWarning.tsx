@@ -12,7 +12,7 @@ import { MouseoverTooltip } from '../Tooltip'
 
 const StyledCard = styled(OutlineCard)`
   padding: 12px;
-  border: 1px solid ${({ theme }) => opacify(24, theme.accentFailure)};
+  border: 1px solid ${({ theme }) => opacify(24, theme.critical)};
 `
 
 interface PriceImpactWarningProps {
@@ -35,11 +35,11 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
         >
           <RowBetween>
             <RowFixed>
-              <ThemedText.DeprecatedSubHeader color={theme.accentFailure}>
+              <ThemedText.DeprecatedSubHeader color={theme.critical}>
                 <Trans>Price impact warning</Trans>
               </ThemedText.DeprecatedSubHeader>
             </RowFixed>
-            <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color="accentFailure">
+            <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color="critical">
               {formatPriceImpact(priceImpact)}
             </ThemedText.DeprecatedLabel>
           </RowBetween>

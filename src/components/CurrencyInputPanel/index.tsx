@@ -27,7 +27,8 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${flexColumnNoWrap};
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.backgroundInteractive)};
+  background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.surface2)};
+
   z-index: 1;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   transition: height 1s ease;
@@ -36,15 +37,15 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
 
 const Container = styled.div<{ hideInput: boolean; disabled: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  border: 1px solid ${({ theme }) => theme.backgroundSurface};
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  border: 1px solid ${({ theme }) => theme.surface3};
+  background-color: ${({ theme }) => theme.surface2};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   ${({ theme, hideInput, disabled }) =>
     !disabled &&
     `
     :focus,
     :hover {
-      border: 1px solid ${hideInput ? ' transparent' : theme.deprecated_bg3};
+      border: 1px solid ${hideInput ? ' transparent' : theme.surface2};
     }
   `}
 `
@@ -57,16 +58,17 @@ const CurrencySelect = styled(ButtonGray)<{
   pointerEvents?: string
 }>`
   align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
+  background-color: ${({ selected, theme }) => (selected ? theme.surface1 : theme.accent1)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
-  color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
+  box-shadow: ${({ theme }) => theme.deprecated_shallowShadow};
+  color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
   cursor: pointer;
   border-radius: 16px;
   outline: none;
   user-select: none;
   border: none;
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 535;
   height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.4rem')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   padding: 0 8px;
@@ -74,7 +76,7 @@ const CurrencySelect = styled(ButtonGray)<{
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.deprecated_bg3 : darken(0.05, theme.accentAction))};
+    background-color: ${({ selected, theme }) => (selected ? theme.surface2 : darken(0.05, theme.accent1))};
   }
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
   ${({ pointerEvents }) => pointerEvents && `pointer-events: none`}
@@ -90,13 +92,13 @@ const InputRow = styled.div<{ selected: boolean }>`
 const LabelRow = styled.div`
   ${flexRowNoWrap};
   align-items: center;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0 1rem 1rem;
   span:hover {
     cursor: pointer;
-    color: ${({ theme }) => darken(0.2, theme.textSecondary)};
+    color: ${({ theme }) => darken(0.2, theme.neutral2)};
   }
 `
 
@@ -106,11 +108,13 @@ const FiatRow = styled(LabelRow)`
   height: 32px;
 `
 
+// note the line height 0 ensures even if we change font/font-size it doesn't break centering
 const Aligner = styled.span`
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  line-height: 0px;
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
@@ -118,7 +122,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
+    stroke: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
     stroke-width: 1.5px;
   }
 `
@@ -130,13 +134,13 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   background-color: transparent;
-  background-color: ${({ theme }) => theme.deprecated_primary5};
+  background-color: ${({ theme }) => theme.accent2};
   border: none;
   border-radius: 12px;
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
   cursor: pointer;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 535;
   margin-left: 0.25rem;
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   padding: 4px 6px;
@@ -276,8 +280,8 @@ export default function CurrencyInputPanel({
                     <RowFixed style={{ height: '17px' }}>
                       <ThemedText.DeprecatedBody
                         onClick={onMax}
-                        color={theme.textTertiary}
-                        fontWeight={500}
+                        color={theme.neutral3}
+                        fontWeight={535}
                         fontSize={14}
                         style={{ display: 'inline', cursor: 'pointer' }}
                       >

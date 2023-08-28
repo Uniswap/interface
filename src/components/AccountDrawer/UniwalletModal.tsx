@@ -34,7 +34,7 @@ const QRCodeWrapper = styled(RowBetween)`
   padding: 10px;
 `
 const Divider = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.surface3};
   width: 100%;
 `
 
@@ -77,7 +77,7 @@ export default function UniwalletModal() {
               width="100%"
               height="100%"
               level="M"
-              fgColor={theme.darkMode ? theme.backgroundSurface : theme.black}
+              fgColor={theme.darkMode ? theme.surface1 : theme.black}
               imageSettings={{
                 src: uniPng,
                 height: 33,
@@ -105,14 +105,14 @@ function InfoSection() {
   return (
     <InfoSectionWrapper>
       <AutoColumn gap="4px">
-        <ThemedText.SubHeaderSmall color="textPrimary">
+        <ThemedText.SubHeaderSmall color="neutral1">
           <Trans>Don&apos;t have Uniswap Wallet?</Trans>
         </ThemedText.SubHeaderSmall>
-        <ThemedText.Caption color="textSecondary">
+        <ThemedText.BodySmall color="neutral2">
           <Trans>
             Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps.
           </Trans>
-        </ThemedText.Caption>
+        </ThemedText.BodySmall>
       </AutoColumn>
       <Column>
         <DownloadButton element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON} />

@@ -18,7 +18,7 @@ export const SmallMaxButton = styled(MaxButton)`
 
 export const ResponsiveHeaderText = styled(Text)`
   font-size: 40px;
-  font-weight: 500;
+  font-weight: 535;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
      font-size: 24px
   `};

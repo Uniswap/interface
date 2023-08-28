@@ -48,7 +48,7 @@ const PageWrapper = styled(AutoColumn)`
 
 const BackArrow = styled(ArrowLeft)`
   cursor: pointer;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 const Nav = styled(Link)`
   align-items: center;
@@ -267,7 +267,7 @@ ${bodyValue}
           <CreateProposalWrapper>
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
+                <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
                   <Trans>
                     <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
                     cannot be modified after submission, so please verify all information before submitting. The voting
