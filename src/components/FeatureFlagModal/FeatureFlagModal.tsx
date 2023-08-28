@@ -30,7 +30,7 @@ const StyledModal = styled.div`
   height: fit-content;
   color: ${({ theme }) => theme.neutral1};
   font-size: 18px;
-  padding: 20px;
+  padding: 20px 0px;
   background-color: ${({ theme }) => theme.surface2};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
@@ -51,6 +51,7 @@ function Modal({ open, children }: { open: boolean; children: ReactNode }) {
 const FlagsColumn = styled(Column)`
   max-height: 600px;
   overflow-y: auto;
+  padding: 0px 20px;
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     max-height: unset;
