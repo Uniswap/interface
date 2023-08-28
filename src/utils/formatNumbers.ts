@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
-import { DEFAULT_LOCAL_CURRENCY, LOCAL_CURRENCY_SYMBOL, SupportedLocalCurrency } from 'constants/localCurrencies'
+import { DEFAULT_LOCAL_CURRENCY, SupportedLocalCurrency, USE_NARROW_CURRENCY_SYMBOL } from 'constants/localCurrencies'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 
 type Nullish<T> = T | null | undefined
@@ -336,15 +336,20 @@ export function formatNumber({
   }
 
   const formatterOptions = getFormatterRule(input, type)
-  const formattedInput =
-    typeof formatterOptions === 'string'
-      ? formatterOptions
-      : new Intl.NumberFormat(locale, formatterOptions).format(input)
 
-  // we have to replace the currency symbol instead of using the currency option
-  // becuase some of the currency symbols do not correctly populate unless the
-  // correct locale is specified
-  return formattedInput.replace('$', LOCAL_CURRENCY_SYMBOL[localCurrency])
+  if (typeof formatterOptions === 'string') {
+    return formatterOptions
+  }
+
+  if (formatterOptions.currency) {
+    formatterOptions.currency = localCurrency
+
+    if (USE_NARROW_CURRENCY_SYMBOL[localCurrency]) {
+      formatterOptions.currencyDisplay = 'narrowSymbol'
+    }
+  }
+
+  return new Intl.NumberFormat(locale, formatterOptions).format(input)
 }
 
 export function formatCurrencyAmount(

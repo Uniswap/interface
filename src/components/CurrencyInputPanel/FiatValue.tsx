@@ -4,6 +4,7 @@ import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
@@ -24,6 +25,7 @@ export function FiatValue({
   priceImpact?: Percent
 }) {
   const activeLocalCurrency = useActiveLocalCurrency()
+  const activeLocale = useActiveLocale()
 
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
@@ -42,7 +44,12 @@ export function FiatValue({
     <Row gap="sm">
       <ThemedText.BodySmall color="neutral2">
         {fiatValue.data ? (
-          formatNumber({ input: fiatValue.data, type: NumberType.FiatTokenPrice, localCurrency: activeLocalCurrency })
+          formatNumber({
+            input: fiatValue.data,
+            type: NumberType.FiatTokenPrice,
+            locale: activeLocale,
+            localCurrency: activeLocalCurrency,
+          })
         ) : (
           <MouseoverTooltip text={<Trans>Not enough liquidity to show accurate USD value.</Trans>}>-</MouseoverTooltip>
         )}
