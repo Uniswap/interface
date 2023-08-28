@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { BlurView } from 'expo-blur'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, Image, StyleSheet } from 'react-native'
+import { Alert, Image, Platform, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
@@ -165,7 +165,11 @@ const SecurityBackgroundImage = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
   return (
     <Image
-      source={isDarkMode ? SECURITY_SCREEN_BACKGROUND_DARK : SECURITY_SCREEN_BACKGROUND_LIGHT}
+      source={
+        isDarkMode
+          ? Platform.select(SECURITY_SCREEN_BACKGROUND_DARK)
+          : Platform.select(SECURITY_SCREEN_BACKGROUND_LIGHT)
+      }
       style={styles.image}
     />
   )
