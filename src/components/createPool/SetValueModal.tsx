@@ -101,7 +101,7 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
               <Trans>New value must be between 1/5th and 5 times the current value.</Trans>
             </ThemedText.DeprecatedBody>
             <ThemedText.DeprecatedBody>
-              <Trans>Pool base token liquidity must be at least 3% of new unitary value.</Trans>
+              <Trans>Pool base token balance must be at least 3% of new pool value.</Trans>
             </ThemedText.DeprecatedBody>
             <NameInputPanel value={typed} onChange={onUserInput} label="Unitary Value" placeholder="New Value" />
             {/* TODO: disables if same as current */}

@@ -2,7 +2,7 @@
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
 import clsx from 'clsx'
@@ -73,22 +73,25 @@ export const SearchBar = () => {
   const smartPoolsLogs = useRegisteredPools()
   const registry = useRegistryContract()
   const poolsFromList = usePoolsFromList(registry, chainId)
+
+  // we append pools from url as fallback in case endpoint is down or slow.
   const allPools: PoolRegisteredLog[] = useMemo(() => {
-    if (chainId === ChainId.BNB || chainId === ChainId.BASE || chainId === ChainId.OPTIMISM) {
-      return [...(smartPoolsLogs ?? []), ...(poolsFromList ?? [])]
-    }
-    return [...(smartPoolsLogs ?? [])]
-  }, [chainId, smartPoolsLogs, poolsFromList])
+    return [...(smartPoolsLogs ?? []), ...(poolsFromList ?? [])]
+  }, [smartPoolsLogs, poolsFromList])
+
+  const uniquePools = allPools.filter((obj, index) => {
+    return index === allPools.findIndex((o) => obj.pool === o.pool)
+  })
 
   const smartPools: Token[] = useMemo(() => {
     const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
-    if (!allPools || !chainId) return [mockToken]
-    return allPools.map((p) => {
+    if (!uniquePools || !chainId) return [mockToken]
+    return uniquePools.map((p) => {
       const { name, symbol, pool: address } = p
       //if (!name || !symbol || !address) return
       return new Token(chainId ?? 1, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
     })
-  }, [chainId, allPools])
+  }, [chainId, uniquePools])
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])

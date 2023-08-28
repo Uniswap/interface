@@ -43,6 +43,7 @@ export function usePoolExtendedContract(poolAddress: string | undefined): Contra
   return useContract(poolAddress, POOL_EXTENDED_ABI, true)
 }
 
+// TODO: id should be optional as not returned in pools from url
 export interface PoolRegisteredLog {
   group?: string
   pool: string
@@ -154,26 +155,25 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
 
   // early return until events are fetched
   return useMemo(() => {
-    //const formattedLogs = [...(formattedLogsV1 ?? [])]
-
     // prevent display if wallet not connected
     if (!account) {
       return { loading: false }
     }
 
-    // TODO: we might have temporary duplicate non-identical pools as group is empty in pools from endpoint
-    if ((chainId === ChainId.BNB || chainId === ChainId.BASE || chainId === ChainId.OPTIMISM) && registry) {
-      // eslint-disable-next-line
-      const pools: PoolRegisteredLog[] = ([...(formattedLogsV1 ?? []), ...(poolsFromList ?? [])])
-      return { data: pools, loading: false }
-    }
+    // we append pools from url and filter for duplicates in case the rpc endpoint is down or slow.
+    // eslint-disable-next-line
+    const pools: PoolRegisteredLog[] = ([...(formattedLogsV1 ?? []), ...(poolsFromList ?? [])])
 
-    if (registry && !formattedLogsV1) {
+    const uniquePools = pools.filter((obj, index) => {
+      return index === pools.findIndex((o) => obj.pool === o.pool)
+    })
+
+    if (registry && !uniquePools) {
       return { data: [], loading: true }
     }
 
-    return { data: formattedLogsV1, loading: false }
-  }, [account, chainId, formattedLogsV1, registry, poolsFromList])
+    return { data: uniquePools, loading: false }
+  }, [account, formattedLogsV1, registry, poolsFromList])
 }
 
 // Bsc endpoints have eth_getLogs limit, so we query pools before recent history from pools list endpoint
