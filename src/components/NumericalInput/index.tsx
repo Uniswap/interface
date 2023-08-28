@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { escapeRegExp } from 'utils'
 
-const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
+const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; disabled?: boolean }>`
   color: ${({ error, theme }) => (error ? theme.critical : theme.neutral1)};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
   width: 0;
   position: relative;
   font-weight: 485;
@@ -45,6 +46,7 @@ export const Input = React.memo(function InnerInput({
   onUserInput,
   placeholder,
   prependSymbol,
+  id,
   ...rest
 }: {
   value: string | number
@@ -53,6 +55,7 @@ export const Input = React.memo(function InnerInput({
   fontSize?: string
   align?: 'right' | 'left'
   prependSymbol?: string
+  forceFocusEventId?: string
 } & Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'onChange' | 'as'>) {
   const enforcer = (nextUserInput: string) => {
     if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
@@ -60,9 +63,23 @@ export const Input = React.memo(function InnerInput({
     }
   }
 
+  const numericalInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (!id) return
+
+    function focusInput() {
+      numericalInputRef.current?.focus()
+    }
+
+    window.addEventListener(`forceInputFocus:${id}`, focusInput)
+    return () => window.removeEventListener(`forceInputFocus:${id}`, focusInput)
+  }, [id])
+
   return (
     <StyledInput
       {...rest}
+      ref={numericalInputRef}
       value={prependSymbol && value ? prependSymbol + value : value}
       onChange={(event) => {
         if (prependSymbol) {
