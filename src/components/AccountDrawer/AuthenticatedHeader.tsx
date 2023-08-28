@@ -14,6 +14,8 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import useENSName from 'hooks/useENSName'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
@@ -170,6 +172,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
+  const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
@@ -279,7 +283,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         {totalBalance !== undefined ? (
           <FadeInColumn gap="xs">
             <ThemedText.HeadlineLarge fontWeight={535} data-testid="portfolio-total-balance">
-              {formatNumber({ input: totalBalance, type: NumberType.PortfolioBalance })}
+              {formatNumber({
+                input: totalBalance,
+                type: NumberType.PortfolioBalance,
+                locale: activeLocale,
+                localCurrency: activeLocalCurrency,
+              })}
             </ThemedText.HeadlineLarge>
             <AutoRow marginBottom="20px">
               {absoluteChange !== 0 && percentChange && (
@@ -289,6 +298,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                     {`${formatNumber({
                       input: Math.abs(absoluteChange as number),
                       type: NumberType.PortfolioBalance,
+                      locale: activeLocale,
+                      localCurrency: activeLocalCurrency,
                     })} (${formatDelta(percentChange)})`}
                   </ThemedText.BodySecondary>
                 </>

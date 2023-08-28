@@ -5,6 +5,8 @@ import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
@@ -80,6 +82,8 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
     navigate(getTokenDetailsURL(token))
     toggleWalletDrawer()
   }, [navigate, token, toggleWalletDrawer])
+  const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
 
   const currency = gqlToCurrency(token)
   if (!currency) {
@@ -109,7 +113,12 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
           denominatedValue && (
             <>
               <ThemedText.SubHeader>
-                {formatNumber({ input: denominatedValue?.value, type: NumberType.PortfolioBalance })}
+                {formatNumber({
+                  input: denominatedValue?.value,
+                  type: NumberType.PortfolioBalance,
+                  locale: activeLocale,
+                  localCurrency: activeLocalCurrency,
+                })}
               </ThemedText.SubHeader>
               <Row justify="flex-end">
                 <PortfolioArrow change={percentChange} size={20} strokeWidth={1.75} />

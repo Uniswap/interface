@@ -6,6 +6,8 @@ import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
@@ -124,6 +126,8 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   const liquidityValue = calculcateLiquidityValue(priceA, priceB, position)
 
   const navigate = useNavigate()
+  const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
   const toggleWalletDrawer = useToggleAccountDrawer()
   const { chainId: walletChainId, connector } = useWeb3React()
   const switchChain = useSwitchChain()
@@ -170,15 +174,24 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
                   <ThemedText.BodySmall>{`${formatNumber({
                     input: liquidityValue,
                     type: NumberType.PortfolioBalance,
+                    locale: activeLocale,
+                    localCurrency: activeLocalCurrency,
                   })} (liquidity) + ${formatNumber({
                     input: feeValue,
                     type: NumberType.PortfolioBalance,
+                    locale: activeLocale,
+                    localCurrency: activeLocalCurrency,
                   })} (fees)`}</ThemedText.BodySmall>
                 </div>
               }
             >
               <ThemedText.SubHeader>
-                {formatNumber({ input: (liquidityValue ?? 0) + (feeValue ?? 0), type: NumberType.PortfolioBalance })}
+                {formatNumber({
+                  input: (liquidityValue ?? 0) + (feeValue ?? 0),
+                  type: NumberType.PortfolioBalance,
+                  locale: activeLocale,
+                  localCurrency: activeLocalCurrency,
+                })}
               </ThemedText.SubHeader>
             </MouseoverTooltip>
 
