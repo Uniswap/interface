@@ -24,8 +24,6 @@ export const PageWrapper = styled.div`
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
 export const SwapWrapper = styled.main<{ isDark?: boolean }>`
   position: relative;
-  padding: 8px;
-  padding-top: 12px;
   z-index: ${Z_INDEX.default};
   border: 1px solid ${({ theme }) => theme.surface3};
   transition: transform 250ms ease;
@@ -46,15 +44,23 @@ export const SwapWrapper = styled.main<{ isDark?: boolean }>`
     content: ' ';
     display: flex;
     position: absolute;
-    inset: 0;
-    border-radius: 24px;
-    background: ${({ theme }) => theme.surface1};
+    inset: -700px;
     z-index: -1;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3C!-- svg: first layer --%3E%3Csvg viewBox='0 0 235 235' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4.76' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
   &:hover {
     border: 1px solid ${({ theme }) => theme.surface3};
   }
+`
+
+export const SwapWrapperInner = styled.div`
+  border-radius: 24px;
+  background: ${({ theme }) => theme.surface1};
+  z-index: -1;
+  padding: 8px;
+  padding-top: 12px;
 `
 
 export const UniswapPopoverContainer = styled.div`
