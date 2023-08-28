@@ -3,6 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
@@ -22,6 +23,8 @@ export function FiatValue({
   fiatValue: { data?: number; isLoading: boolean }
   priceImpact?: Percent
 }) {
+  const activeLocalCurrency = useActiveLocalCurrency()
+
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
     if (priceImpact.lessThan('0')) return 'success'
@@ -39,7 +42,7 @@ export function FiatValue({
     <Row gap="sm">
       <ThemedText.BodySmall color="neutral2">
         {fiatValue.data ? (
-          formatNumber(fiatValue.data, NumberType.FiatTokenPrice)
+          formatNumber(fiatValue.data, NumberType.FiatTokenPrice, undefined, undefined, activeLocalCurrency)
         ) : (
           <MouseoverTooltip text={<Trans>Not enough liquidity to show accurate USD value.</Trans>}>-</MouseoverTooltip>
         )}

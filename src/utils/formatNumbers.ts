@@ -328,11 +328,12 @@ export function formatNumber(
   }
 
   const formatterOptions = getFormatterRule(input, type)
-  if (typeof formatterOptions === 'string') {
-    return formatterOptions.replace('$', LOCAL_CURRENCY_SYMBOL[localCurrency])
-  }
+  const formattedInput =
+    typeof formatterOptions === 'string'
+      ? formatterOptions
+      : new Intl.NumberFormat(locale, formatterOptions).format(input)
 
-  return new Intl.NumberFormat(locale, formatterOptions).format(input)
+  return formattedInput.replace('$', LOCAL_CURRENCY_SYMBOL[localCurrency])
 }
 
 export function formatCurrencyAmount(
