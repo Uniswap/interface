@@ -14,6 +14,7 @@ export enum FeatureFlag {
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
   forceUniswapXOn = 'uniswapx_force_on', // forces routing-api's feature flag for uniswapx to turn on as well
   uniswapXEthOutputEnabled = 'uniswapx_eth_output_enabled',
+  uniswapXExactOutputEnabled = 'uniswapx_exact_output_enabled',
   multichainUX = 'multichain_ux',
   currencyConversion = 'currency_conversion',
   fotAdjustedmentsEnabled = 'fot_adjustments_enabled',
