@@ -1,11 +1,15 @@
+import { TransactionReceipt } from '@ethersproject/providers'
 import { Currency, CurrencyAmount } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import { DualStakingInfo, StakingInfo } from 'components/Farm/constants'
 import { EMPTY } from 'constants/addresses'
 import { TokenAmount } from 'graphql/utils/types'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useAddPopup } from 'state/application/hooks'
 import { TokenAddressMap } from 'state/lists/hooks'
+import { finalizeTransaction } from 'state/transactions/reducer'
 import { Token } from 'types/v3'
 
 import { unwrappedToken } from './unwrappedToken'
@@ -276,4 +280,65 @@ export async function fetchEternalFarmAPR(chainId: ChainId) {
   } catch (error) {
     return {}
   }
+}
+
+export function useTransactionFinalizer(): (
+  receipt: TransactionReceipt,
+  customData?: {
+    summary?: string
+    approval?: { tokenAddress: string; spender: string }
+    claim?: { recipient: string }
+  }
+) => void {
+  const { chainId, account } = useWeb3React()
+  const dispatch = useDispatch()
+  const addPopup = useAddPopup()
+
+  return useCallback(
+    (
+      receipt: TransactionReceipt,
+      {
+        summary,
+      }: {
+        summary?: string
+        claim?: { recipient: string }
+        approval?: { tokenAddress: string; spender: string }
+      } = {}
+    ) => {
+      if (!account) return
+      if (!chainId) return
+
+      const { transactionHash } = receipt
+      if (!transactionHash) {
+        throw Error('No transaction hash found.')
+      }
+      dispatch(
+        finalizeTransaction({
+          chainId,
+          hash: transactionHash,
+          receipt: {
+            blockHash: receipt.blockHash,
+            blockNumber: receipt.blockNumber,
+            contractAddress: receipt.contractAddress,
+            from: receipt.from,
+            status: receipt.status,
+            to: receipt.to,
+            transactionHash: receipt.transactionHash,
+            transactionIndex: receipt.transactionIndex,
+          },
+        })
+      )
+      addPopup(
+        {
+          txn: {
+            hash: transactionHash,
+            // success: receipt.status === 1,
+            // summary,
+          },
+        },
+        transactionHash
+      )
+    },
+    [dispatch, chainId, account, addPopup]
+  )
 }
