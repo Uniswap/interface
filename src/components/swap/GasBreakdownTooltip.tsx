@@ -2,6 +2,8 @@ import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row from 'components/Row'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
@@ -35,11 +37,20 @@ const GasCostItem = ({
   itemValue?: React.ReactNode
   amount?: number
 }) => {
+  const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
+
   return (
     <Row justify="space-between">
       <ThemedText.SubHeaderSmall>{title}</ThemedText.SubHeaderSmall>
       <ThemedText.SubHeaderSmall color="neutral1">
-        {itemValue ?? formatNumber({ input: amount, type: NumberType.FiatGasPrice })}
+        {itemValue ??
+          formatNumber({
+            input: amount,
+            type: NumberType.FiatGasPrice,
+            locale: activeLocale,
+            localCurrency: activeLocalCurrency,
+          })}
       </ThemedText.SubHeaderSmall>
     </Row>
   )

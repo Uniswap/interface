@@ -3,6 +3,8 @@ import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { PropsWithChildren, ReactNode } from 'react'
 import { TextProps } from 'rebass'
@@ -45,6 +47,9 @@ interface AmountProps {
 }
 
 export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field, currency }: AmountProps) {
+  const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
+
   return (
     <Row align="center" justify="space-between" gap="md">
       <Column gap="xs">
@@ -59,7 +64,12 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
           </ResponsiveHeadline>
           {usdAmount && (
             <ThemedText.BodySmall color="neutral2">
-              {formatNumber({ input: usdAmount, type: NumberType.FiatTokenQuantity })}
+              {formatNumber({
+                input: usdAmount,
+                type: NumberType.FiatTokenQuantity,
+                locale: activeLocale,
+                localCurrency: activeLocalCurrency,
+              })}
             </ThemedText.BodySmall>
           )}
         </Column>

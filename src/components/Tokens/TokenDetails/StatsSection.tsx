@@ -2,6 +2,8 @@ import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
@@ -59,10 +61,20 @@ function Stat({
   title: ReactNode
   description?: ReactNode
 }) {
+  const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
+
   return (
     <StatWrapper data-cy={`${dataCy}`}>
       <MouseoverTooltip text={description}>{title}</MouseoverTooltip>
-      <StatPrice>{formatNumber({ input: value, type: NumberType.FiatTokenStats })}</StatPrice>
+      <StatPrice>
+        {formatNumber({
+          input: value,
+          type: NumberType.FiatTokenStats,
+          locale: activeLocale,
+          localCurrency: activeLocalCurrency,
+        })}
+      </StatPrice>
     </StatWrapper>
   )
 }
