@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
-import { DEFAULT_LOCAL_CURRENCY, LOCAL_CURRENCY_SYMBOL } from 'constants/localCurrencies'
-import { DEFAULT_LOCALE } from 'constants/locales'
+import { DEFAULT_LOCAL_CURRENCY, LOCAL_CURRENCY_SYMBOL, SupportedLocalCurrency } from 'constants/localCurrencies'
+import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 
 type Nullish<T> = T | null | undefined
 type NumberFormatOptions = Intl.NumberFormatOptions
@@ -316,13 +316,21 @@ function getFormatterRule(input: number, type: NumberType): FormatOptions {
   throw new Error(`formatter for type ${type} not configured correctly`)
 }
 
-export function formatNumber(
-  input: Nullish<number>,
-  type: NumberType = NumberType.TokenNonTx,
+interface FormatNumberOptions {
+  input: Nullish<number>
+  type?: NumberType
+  placeholder?: string
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+}
+
+export function formatNumber({
+  input,
+  type = NumberType.TokenNonTx,
   placeholder = '-',
   locale = DEFAULT_LOCALE,
-  localCurrency = DEFAULT_LOCAL_CURRENCY
-): string {
+  localCurrency = DEFAULT_LOCAL_CURRENCY,
+}: FormatNumberOptions): string {
   if (input === null || input === undefined) {
     return placeholder
   }
@@ -333,6 +341,9 @@ export function formatNumber(
       ? formatterOptions
       : new Intl.NumberFormat(locale, formatterOptions).format(input)
 
+  // we have to replace the currency symbol instead of using the currency option
+  // becuase some of the currency symbols do not correctly populate unless the
+  // correct locale is specified
   return formattedInput.replace('$', LOCAL_CURRENCY_SYMBOL[localCurrency])
 }
 
@@ -341,7 +352,7 @@ export function formatCurrencyAmount(
   type: NumberType = NumberType.TokenNonTx,
   placeholder?: string
 ): string {
-  return formatNumber(amount ? parseFloat(amount.toSignificant()) : undefined, type, placeholder)
+  return formatNumber({ input: amount ? parseFloat(amount.toSignificant()) : undefined, type, placeholder })
 }
 
 export function formatPriceImpact(priceImpact: Percent | undefined): string {
@@ -364,13 +375,13 @@ export function formatPrice(
     return '-'
   }
 
-  return formatNumber(parseFloat(price.toSignificant()), type)
+  return formatNumber({ input: parseFloat(price.toSignificant()), type })
 }
 
 export function formatNumberOrString(price: Nullish<number | string>, type: NumberType): string {
   if (price === null || price === undefined) return '-'
-  if (typeof price === 'string') return formatNumber(parseFloat(price), type)
-  return formatNumber(price, type)
+  if (typeof price === 'string') return formatNumber({ input: parseFloat(price), type })
+  return formatNumber({ input: price, type })
 }
 
 export function formatUSDPrice(price: Nullish<number | string>, type: NumberType = NumberType.FiatTokenPrice): string {
