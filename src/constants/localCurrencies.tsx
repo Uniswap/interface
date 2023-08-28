@@ -46,6 +46,27 @@ export type SupportedLocalCurrency = (typeof SUPPORTED_LOCAL_CURRENCIES)[number]
 
 export const DEFAULT_LOCAL_CURRENCY: SupportedLocalCurrency = 'USD'
 
+export const LOCAL_CURRENCY_SYMBOL: Record<SupportedLocalCurrency, string> = {
+  USD: '$',
+  EUR: '€',
+  RUB: '₽',
+  INR: '₹',
+  GBP: '£',
+  JPY: '¥',
+  VND: '₫',
+  SGD: 'S$',
+  BRL: 'R$',
+  HKD: 'HK$',
+  CAD: 'C$',
+  IDR: 'Rp',
+  TRY: '₺',
+  NGN: '₦',
+  UAH: '₴',
+  PKR: '₨',
+  AUD: 'A$',
+  THB: '฿',
+}
+
 export function getLocalCurrencyIcon(localCurrency: SupportedLocalCurrency, size = 20): ReactNode {
   switch (localCurrency) {
     case 'USD':
