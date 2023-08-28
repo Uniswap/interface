@@ -12,7 +12,7 @@ export const useNativeUsdPrice = (chainId: number = ChainId.MAINNET): number => 
   return usdcValue
 }
 
-export function useUsdPrice(asset: GenieAsset): string | undefined {
+export function useUsdPriceofNftAsset(asset: GenieAsset): string | undefined {
   const fetchedPriceData = useNativeUsdPrice()
 
   return fetchedPriceData && asset?.priceInfo?.ETHPrice

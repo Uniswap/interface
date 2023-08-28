@@ -5,7 +5,7 @@ import { OpacityHoverState } from 'components/Common'
 import { Share } from 'components/Icons/Share'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
-import { useBag, useNativeUsdPrice, useProfilePageState, useSellAsset, useUsdPrice } from 'nft/hooks'
+import { useBag, useNativeUsdPrice, useProfilePageState, useSellAsset, useUsdPriceofNftAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
 import {
   ethNumberStandardFormatter,
@@ -321,7 +321,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const toggleBag = useBag((s) => s.toggleBag)
   const bagExpanded = useBag((s) => s.bagExpanded)
 
-  const USDPrice = useUsdPrice(asset)
+  const USDPrice = useUsdPriceofNftAsset(asset)
 
   const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
   const { walletAssets: ownerAssets } = useNftBalance(account ?? '', [], assetsFilter, 1)
