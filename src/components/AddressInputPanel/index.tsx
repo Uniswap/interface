@@ -16,7 +16,7 @@ const InputPanel = styled.div`
   ${flexColumnNoWrap};
   position: relative;
   border-radius: 1.25rem;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.surface1};
   z-index: 1;
   width: 100%;
 `
@@ -26,10 +26,10 @@ const ContainerRow = styled.div<{ error: boolean }>`
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
-  border: 1px solid ${({ error, theme }) => (error ? theme.accentFailure : theme.backgroundInteractive)};
+  border: 1px solid ${({ error, theme }) => (error ? theme.critical : theme.surface3)};
   transition: border-color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')},
     color 500ms ${({ error }) => (error ? 'step-end' : 'step-start')};
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.surface1};
 `
 
 const InputContainer = styled.div`
@@ -43,15 +43,15 @@ const Input = styled.input<{ error?: boolean }>`
   border: none;
   flex: 1 1 auto;
   width: 0;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.surface1};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
-  color: ${({ error, theme }) => (error ? theme.accentFailure : theme.textPrimary)};
+  color: ${({ error, theme }) => (error ? theme.critical : theme.neutral1)};
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 500;
+  font-weight: 535;
   width: 100%;
   ::placeholder {
-    color: ${({ theme }) => theme.deprecated_text4};
+    color: ${({ theme }) => theme.neutral3};
   }
   padding: 0px;
   -webkit-appearance: textfield;
@@ -66,7 +66,7 @@ const Input = styled.input<{ error?: boolean }>`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.deprecated_text4};
+    color: ${({ theme }) => theme.neutral3};
   }
 `
 
@@ -109,7 +109,7 @@ export default function AddressInputPanel({
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
-              <ThemedText.DeprecatedBlack color={theme.textSecondary} fontWeight={500} fontSize={14}>
+              <ThemedText.DeprecatedBlack color={theme.neutral2} fontWeight={535} fontSize={14}>
                 {label ?? <Trans>Recipient</Trans>}
               </ThemedText.DeprecatedBlack>
               {address && chainId && (

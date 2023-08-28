@@ -48,7 +48,7 @@ const ScrimBackground = styled.div<{ open: boolean }>`
   position: fixed;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.backgroundScrim};
+  background-color: ${({ theme }) => theme.scrim};
 
   opacity: 0;
   pointer-events: none;
@@ -129,15 +129,15 @@ const AccountDrawerWrapper = styled.div<{ open: boolean }>`
   border-radius: 12px;
   width: ${DRAWER_WIDTH};
   font-size: 16px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  background-color: ${({ theme }) => theme.surface1};
+  border: ${({ theme }) => `1px solid ${theme.surface3}`};
 
-  box-shadow: ${({ theme }) => theme.deepShadow};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   transition: margin-right ${({ theme }) => theme.transition.duration.medium};
 `
 
 const CloseIcon = styled(ChevronsRight).attrs({ size: 24 })`
-  stroke: ${({ theme }) => theme.textSecondary};
+  stroke: ${({ theme }) => theme.neutral2};
 `
 
 const CloseDrawer = styled.div`
@@ -152,7 +152,7 @@ const CloseDrawer = styled.div`
   &:hover {
     z-index: -1;
     margin: 0 -8px 0 0;
-    background-color: ${({ theme }) => theme.stateOverlayHover};
+    background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
   }
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     display: none;

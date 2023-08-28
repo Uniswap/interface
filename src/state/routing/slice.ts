@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
+import * as Sentry from '@sentry/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { isUniswapXSupportedChain } from 'constants/chains'
@@ -50,6 +51,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     tokenInChainId,
     uniswapXForceSyntheticQuotes,
     uniswapXEthOutputEnabled,
+    uniswapXExactOutputEnabled,
     routerPreference,
   } = args
 
@@ -75,8 +77,9 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     !args.uniswapXEnabled ||
     (args.userDisabledUniswapX && routerPreference !== RouterPreference.X) ||
     (tokenOutIsNative && !uniswapXEthOutputEnabled) ||
-    tradeType === TradeType.EXACT_OUTPUT ||
-    !isUniswapXSupportedChain(tokenInChainId)
+    (!uniswapXExactOutputEnabled && tradeType === TradeType.EXACT_OUTPUT) ||
+    !isUniswapXSupportedChain(tokenInChainId) ||
+    routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE
   ) {
     return [classic]
   }
@@ -163,6 +166,11 @@ export const routingApi = createApi({
                   typeof errorData === 'object' &&
                   (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
                 ) {
+                  Sentry.withScope((scope) => {
+                    scope.setExtra('requestBody', requestBody)
+                    scope.setExtra('response', response)
+                    Sentry.captureException(new Error("No routes found for user's quote request, alert Routing Team"))
+                  })
                   return {
                     data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
                   }

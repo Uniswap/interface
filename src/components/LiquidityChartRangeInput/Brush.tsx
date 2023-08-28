@@ -28,13 +28,13 @@ const LabelGroup = styled.g<{ visible: boolean }>`
 `
 
 const TooltipBackground = styled.rect`
-  fill: ${({ theme }) => theme.backgroundInteractive};
+  fill: ${({ theme }) => theme.surface3};
 `
 
 const Tooltip = styled.text`
   text-anchor: middle;
   font-size: 13px;
-  fill: ${({ theme }) => theme.textPrimary};
+  fill: ${({ theme }) => theme.neutral1};
 `
 
 // flips the handles draggers when close to the container edges

@@ -46,8 +46,8 @@ const FooterContainer = styled.div`
 `
 
 const Footer = styled.div`
-  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
-  color: ${({ theme }) => theme.textPrimary};
+  border-top: 1px solid ${({ theme }) => theme.surface3};
+  color: ${({ theme }) => theme.neutral1};
   display: flex;
   flex-direction: column;
   margin: 0px 16px 8px;
@@ -69,7 +69,7 @@ const CurrencyRow = styled(Row)`
 
 const TotalColumn = styled(Column)`
   text-align: end;
-  overflow-x: hidden;
+  overflow: hidden;
 `
 
 const WarningIcon = styled(AlertTriangle)`
@@ -86,7 +86,7 @@ const WarningText = styled(ThemedText.BodyPrimary)<{ $color: string }>`
   text-align: center;
 `
 
-const HelperText = styled(ThemedText.Caption)<{ $color: string }>`
+const HelperText = styled(ThemedText.BodySmall)<{ $color: string }>`
   color: ${({ $color }) => $color};
   display: flex;
   justify-content: center;
@@ -103,7 +103,7 @@ const ActionButton = styled.button<{ $backgroundColor: string; $color: string }>
   display: flex;
   background: ${({ $backgroundColor }) => $backgroundColor};
   color: ${({ $color }) => $color};
-  font-weight: 600;
+  font-weight: 535;
   line-height: 24px;
   font-size: 16px;
   gap: 16px;
@@ -139,7 +139,7 @@ const PriceImpactRow = styled(Row)`
 
 const ValueText = styled(ThemedText.BodyPrimary)`
   line-height: 20px;
-  font-weight: 500;
+  font-weight: 535;
   overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -192,7 +192,7 @@ const InputCurrencyValue = ({
 }) => {
   if (!usingPayWithAnyToken) {
     return (
-      <ThemedText.BodyPrimary lineHeight="20px" fontWeight="500">
+      <ThemedText.BodyPrimary lineHeight="20px" fontWeight="535">
         {formatWeiToDecimal(totalEthPrice.toString())}
         &nbsp;{activeCurrency?.symbol ?? 'ETH'}
       </ThemedText.BodyPrimary>
@@ -201,14 +201,14 @@ const InputCurrencyValue = ({
 
   if (tradeState === TradeState.LOADING && !trade) {
     return (
-      <ThemedText.BodyPrimary color="textTertiary" lineHeight="20px" fontWeight="500">
+      <ThemedText.BodyPrimary color="neutral3" lineHeight="20px" fontWeight="535">
         <Trans>Fetching price...</Trans>
       </ThemedText.BodyPrimary>
     )
   }
 
   return (
-    <ValueText color={tradeState === TradeState.LOADING ? 'textTertiary' : 'textPrimary'}>
+    <ValueText color={tradeState === TradeState.LOADING ? 'neutral3' : 'neutral1'}>
       {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
     </ValueText>
   )
@@ -247,7 +247,7 @@ const FiatValue = ({
           </MouseoverTooltip>
         </>
       )}
-      <ThemedText.BodySmall color="textTertiary" lineHeight="20px">
+      <ThemedText.BodySmall color="neutral3" lineHeight="20px">
         {`${ethNumberStandardFormatter(usdcValue?.toExact(), true)}`}
       </ThemedText.BodySmall>
     </PriceImpactContainer>
@@ -476,16 +476,16 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
                     }}
                   >
                     <CurrencyLogo currency={activeCurrency} size="24px" />
-                    <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
+                    <ThemedText.HeadlineSmall fontWeight={535} lineHeight="24px">
                       {activeCurrency?.symbol}
                     </ThemedText.HeadlineSmall>
-                    <ChevronDown size={20} color={theme.textSecondary} />
+                    <ChevronDown size={20} color={theme.neutral2} />
                   </CurrencyInput>
                 </>
               )}
             </Column>
             <TotalColumn gap="xs">
-              <ThemedText.SubHeaderSmall marginBottom="4px">
+              <ThemedText.SubHeaderSmall>
                 <Trans>Total</Trans>
               </ThemedText.SubHeaderSmall>
               <InputCurrencyValue

@@ -1,8 +1,10 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useForceUniswapXOn } from 'featureFlags/flags/forceUniswapXOn'
+import { useFotAdjustmentsEnabled } from 'featureFlags/flags/fotAdjustments'
 import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
+import { useUniswapXExactOutputEnabled } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
@@ -34,6 +36,8 @@ export function useRoutingAPIArguments({
   const forceUniswapXOn = useForceUniswapXOn()
   const userDisabledUniswapX = useUserDisabledUniswapX()
   const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
+  const uniswapXExactOutputEnabled = useUniswapXExactOutputEnabled()
+  const fotAdjustmentsEnabled = useFotAdjustmentsEnabled()
 
   return useMemo(
     () =>
@@ -58,6 +62,8 @@ export function useRoutingAPIArguments({
             forceUniswapXOn,
             userDisabledUniswapX,
             uniswapXEthOutputEnabled,
+            uniswapXExactOutputEnabled,
+            fotAdjustmentsEnabled,
           },
     [
       account,
@@ -67,10 +73,12 @@ export function useRoutingAPIArguments({
       tokenOut,
       tradeType,
       uniswapXEnabled,
+      uniswapXExactOutputEnabled,
       uniswapXForceSyntheticQuotes,
       forceUniswapXOn,
       userDisabledUniswapX,
       uniswapXEthOutputEnabled,
+      fotAdjustmentsEnabled,
     ]
   )
 }

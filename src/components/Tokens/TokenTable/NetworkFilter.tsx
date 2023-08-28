@@ -20,7 +20,7 @@ import FilterOption from './FilterOption'
 const InternalMenuItem = styled.div`
   flex: 1;
   padding: 12px 8px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 
   :hover {
     cursor: pointer;
@@ -36,7 +36,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)<{ disabled?: boolean }>`
   border-radius: 8px;
 
   :hover {
-    background-color: ${({ theme }) => theme.hoverState};
+    background-color: ${({ theme }) => theme.surface3};
     text-decoration: none;
   }
 
@@ -51,9 +51,9 @@ const MenuTimeFlyout = styled.span`
   min-width: 240px;
   max-height: 350px;
   overflow: auto;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  box-shadow: ${({ theme }) => theme.deepShadow};
-  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface1};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
+  border: 0.5px solid ${({ theme }) => theme.surface3};
   border-radius: 12px;
   padding: 8px;
   display: flex;
@@ -78,12 +78,12 @@ const StyledMenuContent = styled.div`
   gap: 8px;
   align-items: center;
   border: none;
-  font-weight: 600;
+  font-weight: 535;
   vertical-align: middle;
 `
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
-  color: ${({ open, theme }) => (open ? theme.accentActive : theme.textSecondary)};
+  color: ${({ open, theme }) => (open ? theme.accent1 : theme.neutral2)};
 `
 const NetworkLabel = styled.div`
   ${EllipsisStyle}
@@ -103,8 +103,8 @@ const NetworkFilterOption = styled(FilterOption)`
   min-width: 156px;
 `
 const Tag = styled(Badge)`
-  background-color: ${({ theme }) => theme.backgroundModule};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface2};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 10px;
   opacity: 1;
   padding: 4px 6px;
@@ -163,7 +163,7 @@ export default function NetworkFilter() {
                 </NetworkLabel>
                 {network === currentChainName && (
                   <CheckContainer>
-                    <Check size={16} color={theme.accentAction} />
+                    <Check size={16} color={theme.accent1} />
                   </CheckContainer>
                 )}
               </InternalLinkMenuItem>

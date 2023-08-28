@@ -16,7 +16,7 @@ const InternalLinkMenuItem = styled(Link)`
   padding: 12px 0;
   justify-content: space-between;
   text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 export function MenuItem({
@@ -44,7 +44,7 @@ export function MenuItem({
         {logo && logo}
         <ThemedText.BodySmall data-testid={testId}>{label}</ThemedText.BodySmall>
       </Row>
-      {isActive && <Check color={theme.accentActive} opacity={1} size={20} />}
+      {isActive && <Check color={theme.accent1} opacity={1} size={20} />}
     </InternalLinkMenuItem>
   )
 }

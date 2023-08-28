@@ -19,7 +19,7 @@ const NFTListRowWrapper = styled(Row)`
   border-radius: 8px;
 
   &:hover {
-    background: ${({ theme }) => theme.backgroundOutline};
+    background: ${({ theme }) => theme.surface3};
   }
 `
 
@@ -70,14 +70,14 @@ const TokenInfoWrapper = styled(Column)`
 `
 
 const TokenName = styled.div`
-  font-weight: 500;
+  font-weight: 535;
   font-size: 16px;
   line-height: 24px;
   ${HideTextOverflow}
 `
 
 const CollectionName = styled(ThemedText.BodySmall)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   line-height: 20px;
   ${HideTextOverflow};
 `
@@ -140,7 +140,7 @@ export const NFTListRow = ({
         {hovered && (
           <Trash2
             size={20}
-            color={theme.textSecondary}
+            color={theme.neutral2}
             cursor="pointer"
             onClick={() => {
               removeAsset(asset)

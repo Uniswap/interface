@@ -7,14 +7,14 @@ import styled from 'styled-components'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 const BodyRow = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 485;
   font-size: 14px;
   line-height: 20px;
 `
 const CautionTriangle = styled(AlertTriangle)`
-  color: ${({ theme }) => theme.accentWarning};
+  color: ${({ theme }) => theme.deprecated_accentWarning};
 `
 const Link = styled(ExternalLink)`
   color: ${({ theme }) => theme.black};
@@ -27,16 +27,16 @@ const TitleRow = styled.div`
   margin-bottom: 8px;
 `
 const TitleText = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
-  font-weight: 500;
+  color: ${({ theme }) => theme.neutral1};
+  font-weight: 535;
   font-size: 16px;
   line-height: 24px;
   margin: 0px 12px;
 `
 const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   bottom: 60px;
   display: none;
   max-width: 348px;

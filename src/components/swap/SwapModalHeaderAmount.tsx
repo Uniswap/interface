@@ -14,7 +14,7 @@ import { formatReviewSwapCurrencyAmount } from 'utils/formatNumbers'
 
 export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   margin-right: 8px;
 `
 
@@ -26,7 +26,7 @@ const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextPr
   }
 
   return (
-    <ThemedText.HeadlineLarge fontWeight={500} {...textProps}>
+    <ThemedText.HeadlineLarge fontWeight={535} {...textProps}>
       {children}
     </ThemedText.HeadlineLarge>
   )
@@ -58,7 +58,7 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
             {formatReviewSwapCurrencyAmount(amount)} {currency?.symbol}
           </ResponsiveHeadline>
           {usdAmount && (
-            <ThemedText.BodySmall color="textTertiary">
+            <ThemedText.BodySmall color="neutral2">
               {formatNumber(usdAmount, NumberType.FiatTokenQuantity)}
             </ThemedText.BodySmall>
           )}

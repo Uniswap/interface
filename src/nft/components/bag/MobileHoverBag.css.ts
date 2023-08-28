@@ -8,10 +8,13 @@ export const bagContainer = style([
     bottom: '72',
     left: '16',
     right: '16',
-    background: 'backgroundModule',
+    background: 'surface2',
     padding: '8',
     zIndex: 'dropdown',
     borderRadius: '8',
+    borderStyle: 'solid',
+    borderColor: 'surface3',
+    borderWidth: '1px',
     justifyContent: 'space-between',
   }),
 ])
@@ -19,8 +22,8 @@ export const bagContainer = style([
 export const viewBagButton = style([
   buttonTextSmall,
   sprinkles({
-    color: 'explicitWhite',
-    backgroundColor: 'accentAction',
+    color: 'white',
+    backgroundColor: 'accent1',
     paddingY: '8',
     paddingX: '18',
     borderRadius: '12',

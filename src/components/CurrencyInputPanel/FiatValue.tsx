@@ -24,11 +24,11 @@ export function FiatValue({
 }) {
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
-    if (priceImpact.lessThan('0')) return 'accentSuccess'
+    if (priceImpact.lessThan('0')) return 'success'
     const severity = warningSeverity(priceImpact)
-    if (severity < 1) return 'textTertiary'
+    if (severity < 1) return 'neutral3'
     if (severity < 3) return 'deprecated_yellow1'
-    return 'accentFailure'
+    return 'critical'
   }, [priceImpact])
 
   if (fiatValue.isLoading) {
@@ -37,7 +37,7 @@ export function FiatValue({
 
   return (
     <Row gap="sm">
-      <ThemedText.BodySmall color="textSecondary">
+      <ThemedText.BodySmall color="neutral2">
         {fiatValue.data ? (
           formatNumber(fiatValue.data, NumberType.FiatTokenPrice)
         ) : (

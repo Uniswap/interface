@@ -30,17 +30,17 @@ export const eventRow = style([
   sprinkles({
     paddingY: '12',
     paddingX: { sm: '4', md: '16' },
-    color: 'textPrimary',
+    color: 'neutral1',
     cursor: 'pointer',
     borderWidth: '1px',
     borderStyle: 'solid',
     borderColor: 'transparent',
-    borderBottomColor: 'backgroundOutline',
+    borderBottomColor: 'surface3',
   }),
   {
     height: '84px',
     ':hover': {
-      background: themeVars.colors.backgroundSurface,
+      background: themeVars.colors.surface1,
     },
   },
 ])
@@ -49,9 +49,9 @@ export const headerRow = style([
   baseRow,
   sprinkles({
     paddingBottom: '8',
-    color: 'textSecondary',
+    color: 'neutral2',
     fontSize: '12',
-    fontWeight: 'semibold',
+    fontWeight: 'medium',
     paddingX: '16',
   }),
   {
@@ -69,7 +69,7 @@ export const detailsName = style([
   body,
   sprinkles({
     marginBottom: '6',
-    fontWeight: 'normal',
+    fontWeight: 'book',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
@@ -89,7 +89,7 @@ export const eventDetail = style([
 export const eventTime = style([
   bodySmall,
   sprinkles({
-    color: 'textSecondary',
+    color: 'neutral2',
   }),
   {
     lineHeight: '20px',
@@ -99,7 +99,7 @@ export const eventTime = style([
 export const addressCell = style([
   buttonTextMedium,
   sprinkles({
-    color: 'textPrimary',
+    color: 'neutral1',
     height: 'full',
     justifyContent: 'center',
     paddingLeft: '2',
@@ -131,14 +131,14 @@ export const buyCell = style([
     selectors: {
       '&:enabled': {
         cursor: 'pointer',
-        color: vars.color.accentAction,
+        color: vars.color.accent1,
       },
       '&:disabled': {
-        color: themeVars.colors.textTertiary,
+        color: themeVars.colors.neutral3,
       },
       '&:hover&:enabled': {
-        background: vars.color.accentAction,
-        color: themeVars.colors.explicitWhite,
+        background: vars.color.accent1,
+        color: themeVars.colors.white,
       },
     },
   },
@@ -147,13 +147,13 @@ export const buyCell = style([
 export const removeCell = style([
   baseBuyCell,
   sprinkles({
-    color: 'accentFailure',
+    color: 'critical',
     cursor: 'pointer',
   }),
   {
     ':hover': {
-      background: vars.color.accentFailure,
-      color: themeVars.colors.explicitWhite,
+      background: vars.color.critical,
+      color: themeVars.colors.white,
     },
   },
 ])
@@ -161,8 +161,8 @@ export const removeCell = style([
 export const filter = style([
   subheadSmall,
   sprinkles({
-    background: 'backgroundInteractive',
-    color: 'textPrimary',
+    background: 'surface3',
+    color: 'neutral1',
     paddingY: '12',
     paddingX: '16',
     borderRadius: '12',
@@ -179,10 +179,10 @@ export const rarityInfo = style([
     borderRadius: '4',
     height: '16',
     width: 'min',
-    color: 'textPrimary',
-    background: 'backgroundInteractive',
+    color: 'neutral1',
+    background: 'surface3',
     fontSize: '10',
-    fontWeight: 'semibold',
+    fontWeight: 'medium',
     paddingX: '4',
     cursor: 'pointer',
   }),

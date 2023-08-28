@@ -86,7 +86,7 @@ const OptInContents = ({
 
   const tryItNowElement = (
     <ThemedText.BodySecondary
-      color="accentAction"
+      color="accent1"
       fontSize={14}
       fontWeight="500"
       onClick={() => {
@@ -122,7 +122,7 @@ const OptInContents = ({
           <UniswapXShine />
           <SwapMustacheShadow />
           <Row justify="space-between" align="center" flexWrap="wrap">
-            <Text fontSize={14} fontWeight={400} lineHeight="20px">
+            <Text fontSize={14} fontWeight={485} lineHeight="20px">
               <Trans>Try gas free swaps with the</Trans>
               <br />
               <UniswapXBrandMark fontWeight="bold" style={{ transform: `translateY(1px)`, margin: '0 2px' }} />{' '}
@@ -153,7 +153,7 @@ const OptInContents = ({
         />
 
         <Column>
-          <Text fontSize={14} fontWeight={400} lineHeight="20px">
+          <Text fontSize={14} fontWeight={485} lineHeight="20px">
             <Trans>Try the</Trans>{' '}
             <UniswapXBrandMark fontWeight="bold" style={{ transform: `translateY(2px)`, margin: '0 1px' }} />{' '}
             <Trans>Beta</Trans>
@@ -177,7 +177,7 @@ const OptInContents = ({
       {/* second popover: you're in! */}
       <UniswapXOptInPopover visible={showYoureIn}>
         <UniswapXRouterLabel disableTextGradient>
-          <Text fontSize={14} fontWeight={500} lineHeight="20px">
+          <Text fontSize={14} fontWeight={535} lineHeight="20px">
             <Trans>You&apos;re in!</Trans>
           </Text>
         </UniswapXRouterLabel>
@@ -207,7 +207,7 @@ const UniswapXOptInPopover = (props: PropsWithChildren<{ visible: boolean; shiny
 }
 
 const CloseIcon = styled(X)`
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
   cursor: pointer;
   position: absolute;
   top: 14px;
