@@ -28,6 +28,7 @@ import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { QueryToken } from 'graphql/data/Token'
 import { getTokenDetailsURL, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
 import { useCallback, useMemo, useState, useTransition } from 'react'
@@ -39,6 +40,7 @@ import styled from 'styled-components'
 import { isAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
+import { OneClickBuyModal } from '../OneClickBuy/OneClickBuyModal'
 import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
 
@@ -191,6 +193,8 @@ export default function TokenDetails({
     },
     [continueSwap, setContinueSwap]
   )
+  const parsedQueryString = useParsedQueryString()
+  const [isOneClickBuyOpen, setIsOneClickBuyOpen] = useState(parsedQueryString['fire'] !== undefined)
 
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
@@ -243,7 +247,6 @@ export default function TokenDetails({
         ) : (
           <TokenDetailsSkeleton />
         )}
-
         <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Swap
@@ -260,17 +263,26 @@ export default function TokenDetails({
           {detailedToken && <BalanceSummary token={detailedToken} />}
         </RightPanel>
         {detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
-
-        <TokenSafetyModal
-          isOpen={openTokenSafetyModal || !!continueSwap}
-          tokenAddress={address}
-          onContinue={() => onResolveSwap(true)}
-          onBlocked={() => {
-            setOpenTokenSafetyModal(false)
-          }}
-          onCancel={() => onResolveSwap(false)}
-          showCancel={true}
-        />
+        {(
+          <OneClickBuyModal
+            isOpen={isOneClickBuyOpen}
+            close={() => setIsOneClickBuyOpen(false)}
+            token={detailedToken}
+            tokenQueryData={tokenQueryData}
+            tokenPriceQuery={tokenPriceQuery}
+          />
+        ) || (
+          <TokenSafetyModal
+            isOpen={openTokenSafetyModal || !!continueSwap}
+            tokenAddress={address}
+            onContinue={() => onResolveSwap(true)}
+            onBlocked={() => {
+              setOpenTokenSafetyModal(false)
+            }}
+            onCancel={() => onResolveSwap(false)}
+            showCancel={true}
+          />
+        )}
       </TokenDetailsLayout>
     </Trace>
   )

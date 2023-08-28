@@ -1,3 +1,4 @@
+import Row from 'components/Row'
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
@@ -155,6 +156,33 @@ const ChartAnimation = styled.div`
 const Space = styled.div<{ heightSize: number }>`
   height: ${({ heightSize }) => `${heightSize}px`};
 `
+const OneClickBuyContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+const BannerImageContainer = styled.div`
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+`
+const Blob = styled.div<{ width?: number; radius?: number }>`
+  background-color: ${({ theme }) => theme.backgroundModule};
+  border-radius: ${({ radius }) => (radius ?? 4) + 'px'};
+  height: 56px;
+  width: ${({ width }) => (width ? width + 'px' : '100%')};
+  padding: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
 
 function Wave() {
   const theme = useTheme()
@@ -264,5 +292,33 @@ export function TokenDetailsPageSkeleton() {
         <SwapSkeleton />
       </RightPanel>
     </TokenDetailsLayout>
+  )
+}
+
+export function OneClickBuySkeleton() {
+  return (
+    <OneClickBuyContainer>
+      <Row justify="space-between">
+        <DetailBubble />
+        <DetailBubble />
+      </Row>
+      <Row justify="center">
+        <BannerImageContainer>
+          <TokenLogoBubble />
+          <WideBubble />
+          <WideBubble />
+          <Row justify="space-between" gap="sm">
+            <HalfWideBubble />
+            <HalfWideBubble />
+          </Row>
+        </BannerImageContainer>
+      </Row>
+      <Row gap="sm">
+        <Blob radius={16} />
+        <Blob radius={16} />
+        <Blob radius={16} />
+      </Row>
+      <Blob radius={16} />
+    </OneClickBuyContainer>
   )
 }
