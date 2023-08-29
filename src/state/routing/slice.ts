@@ -166,7 +166,7 @@ export const routingApi = createApi({
                   typeof errorData === 'object' &&
                   (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
                 ) {
-                  sendAnalyticsEvent('No quote receieved from routing API', {
+                  sendAnalyticsEvent('No quote received from routing API', {
                     requestBody,
                     response,
                   })
