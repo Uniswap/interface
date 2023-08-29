@@ -3,10 +3,10 @@ import { deepCopy } from '@ethersproject/properties'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
 import { isPlain } from '@reduxjs/toolkit'
-import { ChainId, SupportedChainsType } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 
 import { AVERAGE_L1_BLOCK_TIME } from './chainInfo'
-import { CHAIN_IDS_TO_NAMES } from './chains'
+import { CHAIN_IDS_TO_NAMES, SupportedInterfaceChain } from './chains'
 import { RPC_URLS } from './networks'
 
 class AppJsonRpcProvider extends StaticJsonRpcProvider {
@@ -20,7 +20,7 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
     return this._blockCache
   }
 
-  constructor(chainId: SupportedChainsType) {
+  constructor(chainId: SupportedInterfaceChain) {
     // Including networkish allows ethers to skip the initial detectNetwork call.
     super(RPC_URLS[chainId][0], /* networkish= */ { chainId, name: CHAIN_IDS_TO_NAMES[chainId] })
 
@@ -57,7 +57,7 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
 /**
  * These are the only JsonRpcProviders used directly by the interface.
  */
-export const RPC_PROVIDERS: { [key in SupportedChainsType]: StaticJsonRpcProvider } = {
+export const RPC_PROVIDERS: { [key in SupportedInterfaceChain]: StaticJsonRpcProvider } = {
   [ChainId.MAINNET]: new AppJsonRpcProvider(ChainId.MAINNET),
   [ChainId.GOERLI]: new AppJsonRpcProvider(ChainId.GOERLI),
   [ChainId.SEPOLIA]: new AppJsonRpcProvider(ChainId.SEPOLIA),
@@ -72,5 +72,4 @@ export const RPC_PROVIDERS: { [key in SupportedChainsType]: StaticJsonRpcProvide
   [ChainId.BNB]: new AppJsonRpcProvider(ChainId.BNB),
   [ChainId.AVALANCHE]: new AppJsonRpcProvider(ChainId.AVALANCHE),
   [ChainId.BASE]: new AppJsonRpcProvider(ChainId.BASE),
-  [ChainId.BASE_GOERLI]: new AppJsonRpcProvider(ChainId.BASE_GOERLI),
 }
