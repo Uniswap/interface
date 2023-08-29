@@ -9,6 +9,9 @@ import { AVERAGE_L1_BLOCK_TIME } from './chainInfo'
 import { CHAIN_IDS_TO_NAMES } from './chains'
 import { RPC_URLS } from './networks'
 
+// TODO: include BASE_GOERLI when routing is implemented
+type SupportedRpcProviderChain = Exclude<SupportedChainsType, ChainId.BASE_GOERLI>
+
 class AppJsonRpcProvider extends StaticJsonRpcProvider {
   private _blockCache = new Map<string, Promise<any>>()
   get blockCache() {
@@ -20,7 +23,7 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
     return this._blockCache
   }
 
-  constructor(chainId: SupportedChainsType) {
+  constructor(chainId: SupportedRpcProviderChain) {
     // Including networkish allows ethers to skip the initial detectNetwork call.
     super(RPC_URLS[chainId][0], /* networkish= */ { chainId, name: CHAIN_IDS_TO_NAMES[chainId] })
 
@@ -57,7 +60,7 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
 /**
  * These are the only JsonRpcProviders used directly by the interface.
  */
-export const RPC_PROVIDERS: { [key in SupportedChainsType]: StaticJsonRpcProvider } = {
+export const RPC_PROVIDERS: { [key in SupportedRpcProviderChain]: StaticJsonRpcProvider } = {
   [ChainId.MAINNET]: new AppJsonRpcProvider(ChainId.MAINNET),
   [ChainId.GOERLI]: new AppJsonRpcProvider(ChainId.GOERLI),
   [ChainId.SEPOLIA]: new AppJsonRpcProvider(ChainId.SEPOLIA),
@@ -72,5 +75,4 @@ export const RPC_PROVIDERS: { [key in SupportedChainsType]: StaticJsonRpcProvide
   [ChainId.BNB]: new AppJsonRpcProvider(ChainId.BNB),
   [ChainId.AVALANCHE]: new AppJsonRpcProvider(ChainId.AVALANCHE),
   [ChainId.BASE]: new AppJsonRpcProvider(ChainId.BASE),
-  [ChainId.BASE_GOERLI]: new AppJsonRpcProvider(ChainId.BASE_GOERLI),
 }
