@@ -74,7 +74,6 @@ const baseMenuItem = style([
     gap: '4',
   }),
   {
-    fontSize: 'large',
     lineHeight: '22px',
     textDecoration: 'none',
     ':hover': {
