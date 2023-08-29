@@ -169,6 +169,7 @@ export const routingApi = createApi({
                   sendAnalyticsEvent('No quote received from routing API', {
                     requestBody,
                     response,
+                    routerPreference: args.routerPreference,
                   })
                   return {
                     data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
