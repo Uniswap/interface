@@ -45,12 +45,14 @@ function useTokenSectionsForSearchResults(
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: refetchPortfolioBalances,
+    loading: portfolioBalancesByIdLoading,
   } = usePortfolioBalancesForAddressById(activeAccountAddress)
 
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
+    loading: portfolioTokenOptionsLoading,
   } = usePortfolioTokenOptions(activeAccountAddress, chainFilter, searchFilter)
 
   // Only call search endpoint if isBalancesOnlySearch is false
@@ -58,21 +60,27 @@ function useTokenSectionsForSearchResults(
     data: searchResultCurrencies,
     error: searchTokensError,
     refetch: refetchSearchTokens,
+    loading: searchTokensLoading,
   } = useSearchTokens(searchFilter, chainFilter, /*skip*/ isBalancesOnlySearch)
 
   const searchResults = useMemo(() => {
     return formatSearchResults(searchResultCurrencies, portfolioBalancesById, searchFilter)
   }, [searchResultCurrencies, portfolioBalancesById, searchFilter])
 
-  const loading = !portfolioTokenOptions || (!isBalancesOnlySearch && !searchResults)
+  const loading =
+    portfolioTokenOptionsLoading ||
+    portfolioBalancesByIdLoading ||
+    (!isBalancesOnlySearch && searchTokensLoading)
 
-  const sections = useMemo(() => {
-    return getTokenOptionsSection(
-      t('Search results'),
-      // Use local search when only searching balances
-      isBalancesOnlySearch ? portfolioTokenOptions : searchResults
-    )
-  }, [isBalancesOnlySearch, portfolioTokenOptions, searchResults, t])
+  const sections = useMemo(
+    () =>
+      getTokenOptionsSection(
+        t('Search results'),
+        // Use local search when only searching balances
+        isBalancesOnlySearch ? portfolioTokenOptions : searchResults
+      ),
+    [isBalancesOnlySearch, portfolioTokenOptions, searchResults, t]
+  )
 
   const error =
     (!portfolioBalancesById && portfolioBalancesByIdError) ||

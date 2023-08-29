@@ -197,7 +197,7 @@ export function usePortfolioTokenOptions(
   })
 
   const portfolioBalances = useMemo(
-    () => (shownTokens ? sortPortfolioBalances(shownTokens) : []),
+    () => (shownTokens ? sortPortfolioBalances(shownTokens) : undefined),
     [shownTokens]
   )
 

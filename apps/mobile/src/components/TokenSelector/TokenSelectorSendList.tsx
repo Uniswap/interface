@@ -31,14 +31,16 @@ function useTokenSectionsForSend(chainFilter: ChainId | null): GqlResult<TokenSe
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
+    loading: portfolioTokenOptionsLoading,
   } = usePortfolioTokenOptions(activeAccountAddress, chainFilter)
 
-  const loading = !portfolioTokenOptions
+  const loading = portfolioTokenOptionsLoading
   const error = !portfolioTokenOptions && portfolioTokenOptionsError
 
-  const sections = useMemo(() => {
-    return getTokenOptionsSection(t('Your tokens'), portfolioTokenOptions)
-  }, [portfolioTokenOptions, t])
+  const sections = useMemo(
+    () => getTokenOptionsSection(t('Your tokens'), portfolioTokenOptions),
+    [portfolioTokenOptions, t]
+  )
 
   return useMemo(
     () => ({

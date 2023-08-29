@@ -15,10 +15,11 @@ export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOptio
 // get items in `currencies` that are not in `without`
 // e.g. difference([B, C, D], [A, B, C]) would return ([D])
 export function tokenOptionDifference(
-  currencies: TokenOption[],
-  without: TokenOption[]
-): TokenOption[] {
-  return differenceWith(currencies, without, tokenOptionComparator)
+  currencies: TokenOption[] | undefined,
+  without: TokenOption[] | undefined
+): TokenOption[] | undefined {
+  if (!currencies) return undefined
+  return differenceWith(currencies, without ?? [], tokenOptionComparator)
 }
 
 function tokenOptionComparator(tokenOption: TokenOption, otherTokenOption: TokenOption): boolean {

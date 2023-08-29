@@ -5,7 +5,6 @@ import {
   useCommonTokensOptions,
   useFavoriteTokensOptions,
   usePopularTokensOptions,
-  usePortfolioTokenOptions,
 } from 'src/components/TokenSelector/hooks'
 import { SuggestedToken } from 'src/components/TokenSelector/SuggestedToken'
 import {
@@ -15,7 +14,7 @@ import {
   TokenSelectorListSections,
 } from 'src/components/TokenSelector/TokenSelectorList'
 import { TokenOption } from 'src/components/TokenSelector/types'
-import { getTokenOptionsSection, tokenOptionDifference } from 'src/components/TokenSelector/utils'
+import { getTokenOptionsSection } from 'src/components/TokenSelector/utils'
 import { ChainId } from 'wallet/src/constants/chains'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -57,15 +56,10 @@ function useTokenSectionsForSwapOutput(
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const {
-    data: portfolioTokenOptions,
-    error: portfolioTokenOptionsError,
-    refetch: refetchPortfolioTokenOptions,
-  } = usePortfolioTokenOptions(activeAccountAddress, chainFilter)
-
-  const {
     data: popularTokenOptions,
     error: popularTokenOptionsError,
     refetch: refetchPopularTokenOptions,
+    loading: popularTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
   } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? ChainId.Mainnet)
 
@@ -73,58 +67,41 @@ function useTokenSectionsForSwapOutput(
     data: favoriteTokenOptions,
     error: favoriteTokenOptionsError,
     refetch: refetchFavoriteTokenOptions,
+    loading: favoriteTokenOptionsLoading,
   } = useFavoriteTokensOptions(activeAccountAddress, chainFilter)
 
   const {
     data: commonTokenOptions,
     error: commonTokenOptionsError,
     refetch: refetchCommonTokenOptions,
+    loading: commonTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
   } = useCommonTokensOptions(activeAccountAddress, chainFilter ?? ChainId.Mainnet)
 
   const error =
-    (!portfolioTokenOptions && portfolioTokenOptionsError) ||
     (!popularTokenOptions && popularTokenOptionsError) ||
     (!favoriteTokenOptions && favoriteTokenOptionsError) ||
     (!commonTokenOptions && commonTokenOptionsError)
 
   const loading =
-    !portfolioTokenOptions || !popularTokenOptions || !favoriteTokenOptions || !commonTokenOptions
+    popularTokenOptionsLoading || favoriteTokenOptionsLoading || commonTokenOptionsLoading
 
   const refetchAll = useCallback(() => {
     refetchPopularTokenOptions?.()
-    refetchPortfolioTokenOptions?.()
     refetchFavoriteTokenOptions?.()
     refetchCommonTokenOptions?.()
-  }, [
-    refetchCommonTokenOptions,
-    refetchFavoriteTokenOptions,
-    refetchPopularTokenOptions,
-    refetchPortfolioTokenOptions,
-  ])
+  }, [refetchCommonTokenOptions, refetchFavoriteTokenOptions, refetchPopularTokenOptions])
 
   const sections = useMemo<TokenSelectorListSections>(() => {
     if (loading) return []
 
-    const popularMinusPortfolioTokens = tokenOptionDifference(
-      popularTokenOptions,
-      portfolioTokenOptions
-    )
-
     return [
       // we draw the pills as a single item of a section list, so `data` is an array of Token[]
-      { title: t('Suggested'), data: [commonTokenOptions] },
+      { title: t('Suggested'), data: [commonTokenOptions ?? []] },
       ...(getTokenOptionsSection(t('Favorites'), favoriteTokenOptions) ?? []),
-      ...(getTokenOptionsSection(t('Popular tokens'), popularMinusPortfolioTokens) ?? []),
+      ...(getTokenOptionsSection(t('Popular tokens'), popularTokenOptions) ?? []),
     ]
-  }, [
-    commonTokenOptions,
-    favoriteTokenOptions,
-    loading,
-    popularTokenOptions,
-    portfolioTokenOptions,
-    t,
-  ])
+  }, [commonTokenOptions, favoriteTokenOptions, loading, popularTokenOptions, t])
 
   return useMemo(
     () => ({

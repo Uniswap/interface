@@ -24,12 +24,14 @@ function useTokenSectionsForSwapInput(
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
+    loading: portfolioTokenOptionsLoading,
   } = usePortfolioTokenOptions(activeAccountAddress, chainFilter)
 
   const {
     data: popularTokenOptions,
     error: popularTokenOptionsError,
     refetch: refetchPopularTokenOptions,
+    loading: popularTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
   } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? ChainId.Mainnet)
 
@@ -37,7 +39,7 @@ function useTokenSectionsForSwapInput(
     (!portfolioTokenOptions && portfolioTokenOptionsError) ||
     (!popularTokenOptions && popularTokenOptionsError)
 
-  const loading = !portfolioTokenOptions || !popularTokenOptions
+  const loading = portfolioTokenOptionsLoading || popularTokenOptionsLoading
 
   const refetchAll = useCallback(() => {
     refetchPortfolioTokenOptions?.()
