@@ -5,19 +5,16 @@ import { OpacityHoverState } from 'components/Common'
 import { Share } from 'components/Icons/Share'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
-import { useBag, useProfilePageState, useSellAsset } from 'nft/hooks'
+import { useBag, useNativeUsdPrice, useProfilePageState, useSellAsset, useUsdPriceofNftAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
 import {
   ethNumberStandardFormatter,
-  fetchPrice,
   formatEthPrice,
   generateTweetForAsset,
   getMarketplaceIcon,
   timeLeft,
-  useUsdPrice,
 } from 'nft/utils'
 import { useMemo } from 'react'
-import { useQuery } from 'react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
@@ -212,7 +209,7 @@ const MarketplaceIcon = styled(ExternalLink)`
 
 const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const navigate = useNavigate()
-  const { data: USDValue } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
+  const ethUsdPrice = useNativeUsdPrice()
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
   const resetSellAssets = useSellAsset((state) => state.reset)
@@ -221,8 +218,8 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const expirationDate = listing?.endAt ? new Date(listing.endAt) : undefined
 
   const USDPrice = useMemo(
-    () => (USDValue && asset.floor_sell_order_price ? USDValue * asset.floor_sell_order_price : undefined),
-    [USDValue, asset.floor_sell_order_price]
+    () => (ethUsdPrice && asset.floor_sell_order_price ? ethUsdPrice * asset.floor_sell_order_price : undefined),
+    [ethUsdPrice, asset.floor_sell_order_price]
   )
   const trace = useTrace()
 
@@ -324,7 +321,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const toggleBag = useBag((s) => s.toggleBag)
   const bagExpanded = useBag((s) => s.bagExpanded)
 
-  const USDPrice = useUsdPrice(asset)
+  const USDPrice = useUsdPriceofNftAsset(asset)
 
   const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
   const { walletAssets: ownerAssets } = useNftBalance(account ?? '', [], assetsFilter, 1)
