@@ -6267,6 +6267,7 @@ type User {
   id: ID!
   totalVolume: BigDecimal!
   txCount: Int!
+  processedTransactions: [String!]!
 }
 
 input User_filter {
@@ -6294,6 +6295,12 @@ input User_filter {
   txCount_lte: Int
   txCount_in: [Int!]
   txCount_not_in: [Int!]
+  processedTransactions: [String!]
+  processedTransactions_not: [String!]
+  processedTransactions_contains: [String!]
+  processedTransactions_contains_nocase: [String!]
+  processedTransactions_not_contains: [String!]
+  processedTransactions_not_contains_nocase: [String!]
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
@@ -6305,6 +6312,7 @@ enum User_orderBy {
   id
   totalVolume
   txCount
+  processedTransactions
 }
 
 type UserMonthData {

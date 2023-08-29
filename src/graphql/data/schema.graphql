@@ -1,17 +1,6 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
-"""
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
-
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
   """
@@ -21,19 +10,14 @@ directive @aws_subscribe(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by an API key.
 """
 directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an OIDC token.
+Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by sigv4 signing.
@@ -47,12 +31,28 @@ directive @aws_auth(
 ) on FIELD_DEFINITION
 
 """
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""
 Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
 directive @aws_cognito_user_pools(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
 ) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
+"""
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
 
 union ActivityDetails = TransactionDetails | SwapOrderDetails
 
@@ -91,6 +91,11 @@ type AmountChange {
   id: ID!
   percentage: Amount
   absolute: Amount
+}
+
+input AmountInput {
+  currency: Currency!
+  value: Float!
 }
 
 type AssetActivity {
@@ -142,9 +147,26 @@ input ContractInput {
 }
 
 enum Currency {
-  USD
+  AUD
+  BRL
+  CAD
   ETH
+  EUR
+  GBP
+  HKD
+  IDR
+  INR
+  JPY
   MATIC
+  NGN
+  PKR
+  RUB
+  SGD
+  THB
+  TRY
+  UAH
+  USD
+  VND
 }
 
 type Dimensions {
@@ -270,7 +292,7 @@ type NftAsset {
   tokenId: String!
   traits: [NftAssetTrait!]
   rarities: [NftAssetRarity!]
-  listings(chain: Chain, asc: Boolean, first: Int, last: Int, after: String, before: String, _fs: String): NftOrderConnection
+  listings(chain: Chain, asc: Boolean, first: Int, last: Int, after: String, before: String): NftOrderConnection
   suspiciousFlag: Boolean
   flaggedBy: String
   metadataUrl: String
@@ -370,11 +392,11 @@ type NftCollection {
   imageUrl: String @deprecated
   image: Image
   instagramName: String
-  markets(currencies: [Currency!]!, _fs: String): [NftCollectionMarket!]
+  markets(currencies: [Currency!]!): [NftCollectionMarket!]
   name: String
   nftContracts: [NftContract!]
   openseaUrl: String @deprecated
-  traits(_fs: String): [NftCollectionTrait!]
+  traits: [NftCollectionTrait!]
   twitterName: String
   isVerified: Boolean
   numAssets: Int
@@ -412,16 +434,16 @@ type NftCollectionEdge {
 type NftCollectionMarket {
   id: ID!
   nftContracts: [NftContract!]
-  floorPrice(_fs: String): TimestampedAmount
+  floorPrice: TimestampedAmount
   owners: Int
   volume24h: Amount @deprecated
   totalVolume: TimestampedAmount
-  volume(duration: HistoryDuration, _fs: String): TimestampedAmount
-  volumePercentChange(duration: HistoryDuration, _fs: String): TimestampedAmount
-  floorPricePercentChange(duration: HistoryDuration, _fs: String): TimestampedAmount
-  sales(duration: HistoryDuration, _fs: String): TimestampedAmount
+  volume(duration: HistoryDuration): TimestampedAmount
+  volumePercentChange(duration: HistoryDuration): TimestampedAmount
+  floorPricePercentChange(duration: HistoryDuration): TimestampedAmount
+  sales(duration: HistoryDuration): TimestampedAmount
   listings: TimestampedAmount
-  marketplaces(marketplaces: [NftMarketplace!], _fs: String): [NftCollectionMarketplace!]
+  marketplaces(marketplaces: [NftMarketplace!]): [NftCollectionMarketplace!]
   percentUniqueOwners: TimestampedAmount
   percentListed: TimestampedAmount
 }
@@ -632,22 +654,23 @@ type Portfolio {
 
   """  TODO: (michael.zhang) replace with paginated query"""
   nftBalances: [NftBalance]
-  assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, chains: [Chain!], _fs: String): [AssetActivity]
+  assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, chains: [Chain!]): [AssetActivity]
 }
 
 type Query {
-  tokens(contracts: [ContractInput!]!, _fs: String): [Token]
-  token(chain: Chain!, address: String, _fs: String): Token
-  tokenProjects(contracts: [ContractInput!]!, _fs: String): [TokenProject]
-  searchTokens(searchQuery: String!, _fs: String): [Token]
-  portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!], _fs: String): [Portfolio]
+  convert(fromAmount: AmountInput!, toCurrency: Currency!): Amount
+  tokens(contracts: [ContractInput!]!): [Token]
+  token(chain: Chain!, address: String): Token
+  tokenProjects(contracts: [ContractInput!]!): [TokenProject]
+  searchTokens(searchQuery: String!, chains: [Chain!]): [Token]
+  portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!]): [Portfolio]
   topTokens(chain: Chain, page: Int, pageSize: Int, orderBy: TokenSortableField): [Token]
-  topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, after: String, first: Int, cursor: String, limit: Int, _fs: String): NftCollectionConnection
-  nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, after: String, first: Int, before: String, last: Int, _fs: String): NftAssetConnection
-  nftCollections(chain: Chain, filter: NftCollectionsFilterInput, after: String, first: Int, _fs: String): NftCollectionConnection
-  nftBalances(chain: Chain, ownerAddress: String!, filter: NftBalancesFilterInput, after: String, first: Int, before: String, last: Int, _fs: String): NftBalanceConnection
+  topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, after: String, first: Int, cursor: String, limit: Int): NftCollectionConnection
+  nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, after: String, first: Int, before: String, last: Int): NftAssetConnection
+  nftCollections(chain: Chain, filter: NftCollectionsFilterInput, after: String, first: Int): NftCollectionConnection
+  nftBalances(chain: Chain, ownerAddress: String!, filter: NftBalancesFilterInput, after: String, first: Int, before: String, last: Int): NftBalanceConnection
   nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
-  nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int, _fs: String): NftActivityConnection
+  nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int): NftActivityConnection
   nftCollectionBalances(chain: Chain, ownerAddress: String!, after: String, first: Int, before: String, last: Int): NftCollectionBalanceConnection
 }
 
@@ -691,7 +714,7 @@ type Token implements IContract {
   decimals: Int
   name: String
   symbol: String
-  project(_fs: String): TokenProject
+  project: TokenProject
   market(currency: Currency): TokenMarket
 }
 
@@ -758,7 +781,7 @@ type TokenProject {
   isSpam: Boolean
   spamCode: Int
   safetyLevel: SafetyLevel
-  markets(currencies: [Currency!]!, _fs: String): [TokenProjectMarket]
+  markets(currencies: [Currency!]!): [TokenProjectMarket]
 }
 
 type TokenProjectMarket {
@@ -770,9 +793,9 @@ type TokenProjectMarket {
   pricePercentChange24h: Amount
   priceHigh52w: Amount
   priceLow52w: Amount
-  priceHistory(duration: HistoryDuration!, _fs: String): [TimestampedAmount]
-  pricePercentChange(duration: HistoryDuration!, _fs: String): Amount
-  priceHighLow(duration: HistoryDuration!, highLow: HighLow!, _fs: String): Amount
+  priceHistory(duration: HistoryDuration!): [TimestampedAmount]
+  pricePercentChange(duration: HistoryDuration!): Amount
+  priceHighLow(duration: HistoryDuration!, highLow: HighLow!): Amount
 }
 
 enum TokenSortableField {

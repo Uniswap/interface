@@ -3,6 +3,7 @@ import CustomSelector, { SelectorItem } from 'components/CustomSelector/CustomSe
 import CustomSwitch from 'components/CustomSwitch/CustomSwitch'
 import CustomTabSwitch from 'components/CustomTabSwitch/CustomTabSwitch'
 import SearchInput from 'components/SearchInput/SearchInput'
+import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useIsMobile } from 'nft/hooks'
 import { useCallback, useMemo, useState } from 'react'
@@ -19,8 +20,11 @@ const FarmsLayout = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 16px;
-  padding: 0 10px 0 10px;
+  padding: 0 12px 0;
   background: ${({ theme }) => theme.backgroundScrolledSurface};
+  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
+  margin-left: auto;
+  margin-right: auto;
 `
 const Header = styled.div`
   width: 100%;

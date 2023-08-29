@@ -33,11 +33,17 @@ const RewardContainer = styled.div`
 
 const NoFarmsContainer = styled.div`
   display: 'flex';
-  justifycontent: 'center';
+  justify-content: center;
   paddingtop: '10px';
-  paddingbottom: '30px';
-  flexdirection: 'column';
-  alignitems: 'center';
+  padding-bottom: '30px';
+  flex-direction: 'column';
+  align-items: center;
+`
+
+const MyFarmsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: '100%';
 `
 
 export default function FarmingMyFarms({ search, chainId }: { search: string; chainId: number }) {
@@ -74,19 +80,19 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
     {
       amount: 100,
       id: 'reward1',
-      name: 'Reward One',
+      name: 'Token One',
       owner: 'Alice',
-      rewardAddress: '0x1234567890abcdef',
-      symbol: 'RWD1',
+      rewardAddress: '0x1234567890123456789012345678901234567890',
+      symbol: 'TOKEN1',
       trueAmount: '100.00',
     },
     {
       amount: 200,
       id: 'reward2',
-      name: 'Reward Two',
+      name: 'Token Two',
       owner: 'Bob',
-      rewardAddress: '0xfedcba0987654321',
-      symbol: 'RWD2',
+      rewardAddress: '0x1234567890123456789012345678901234567890',
+      symbol: 'TOKEN2',
       trueAmount: '200.00',
     },
   ])
@@ -651,11 +657,11 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
   const isDarkMode = useIsDarkMode()
 
   return (
-    <Box mt={2}>
+    <MyFarmsContainer>
       {
         // eslint-disable-next-line no-constant-condition
         true && (
-          <Box px={2} my={2}>
+          <div style={{ paddingLeft: 2, paddingRight: 2, marginTop: 2, marginBottom: 2 }}>
             <SubTitleContainer
               text={"Unclaimed Rewards displays the rewards you've earned but haven't collected yet. Click to claim."}
               description="Unclaimed Rewards"
@@ -704,7 +710,7 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
                   )
               )}
             </Box>
-          </Box>
+          </div>
         )
       }
       {/* {allGammaFarms.length > 0 && ( */}
@@ -712,7 +718,7 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
         <Box>
           <Divider />
           <Box px={2} mt={2}>
-            <SubTitleContainer text="Displays to show your positions." description="Gamma farms" />
+            <SubTitleContainer text="Displays to show your positions." description="Gamma Farms" />
           </Box>
           {gammaFarmsLoading || gammaRewardsLoading ? (
             <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '10px', paddingBottom: '30px' }}>
@@ -742,9 +748,10 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
                     // const gmMasterChef = GAMMA_MASTERCHEF_ADDRESSES[farm.masterChefIndex ?? 0][chainId]
                     //   ? GAMMA_MASTERCHEF_ADDRESSES[farm.masterChefIndex ?? 0][chainId].toLowerCase()
                     //   : undefined
-                    const gmMasterChef = GAMMA_MASTERCHEF_ADDRESSES[0][chainId]
-                      ? GAMMA_MASTERCHEF_ADDRESSES[0][chainId].toLowerCase()
-                      : undefined
+                    // const gmMasterChef = GAMMA_MASTERCHEF_ADDRESSES[0][chainId]
+                    //   ? GAMMA_MASTERCHEF_ADDRESSES[0][chainId].toLowerCase()
+                    //   : undefined
+
                     return (
                       <Box mt={2} key={farm.address}>
                         <GammaFarmCard
@@ -753,12 +760,13 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
                           pairData={farm}
                           data={gammaData ? gammaData[farm.address.toLowerCase()] : undefined}
                           rewardData={
-                            gammaRewards &&
-                            gmMasterChef &&
-                            gammaRewards[gmMasterChef] &&
-                            gammaRewards[gmMasterChef]['pools']
-                              ? gammaRewards[gmMasterChef]['pools'][farm.address.toLowerCase()]
-                              : undefined
+                            // gammaRewards &&
+                            // gmMasterChef &&
+                            // gammaRewards[gmMasterChef] &&
+                            // gammaRewards[gmMasterChef]['pools']
+                            //   ? gammaRewards[gmMasterChef]['pools'][farm.address.toLowerCase()]
+                            //   : undefined
+                            undefined
                           }
                         />
                       </Box>
@@ -770,6 +778,6 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
           )}
         </Box>
       )}
-    </Box>
+    </MyFarmsContainer>
   )
 }
