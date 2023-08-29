@@ -28,9 +28,6 @@ export function OutputTaxTooltipBody({ currencySymbol }: { currencySymbol?: stri
             instead.
           </Trans>
         )}
-        <Trans>
-          {currencySymbol} fees don&apos;t allow for accurate exact outputs. Use the `You pay` field instead.
-        </Trans>
       </ThemedText.LabelMicro>
     </>
   )

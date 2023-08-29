@@ -44,7 +44,7 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
-import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -525,6 +525,7 @@ export function Swap({
     },
     [onCurrencyChange, onCurrencySelection, state, trace]
   )
+  const inputCurrencyNumericalInputRef = useRef<HTMLInputElement>(null)
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
@@ -623,6 +624,7 @@ export function Swap({
               showCommonBases
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
+              ref={inputCurrencyNumericalInputRef}
             />
           </Trace>
         </SwapSection>
@@ -669,8 +671,7 @@ export function Swap({
                   // We disable numerical input here if the selected token has tax, since we cannot guarantee exact_outputs for FOT tokens
                   disabled: outputTokenHasTax,
                   // Focus the input currency panel if the user tries to type into the disabled output currency panel
-                  onDisabledClick: () =>
-                    window.dispatchEvent(new Event(`forceInputFocus:${InterfaceSectionName.CURRENCY_INPUT_PANEL}`)),
+                  onDisabledClick: () => inputCurrencyNumericalInputRef.current?.focus(),
                   disabledTooltipBody: <OutputTaxTooltipBody currencySymbol={currencies[Field.OUTPUT]?.symbol} />,
                 }}
               />
