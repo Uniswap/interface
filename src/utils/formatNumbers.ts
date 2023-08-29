@@ -1,5 +1,9 @@
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
-import { DEFAULT_LOCAL_CURRENCY, SupportedLocalCurrency, USE_NARROW_CURRENCY_SYMBOL } from 'constants/localCurrencies'
+import {
+  DEFAULT_LOCAL_CURRENCY,
+  LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE,
+  SupportedLocalCurrency,
+} from 'constants/localCurrencies'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 
 type Nullish<T> = T | null | undefined
@@ -343,10 +347,7 @@ export function formatNumber({
 
   if (formatterOptions.currency) {
     formatterOptions.currency = localCurrency
-
-    if (USE_NARROW_CURRENCY_SYMBOL[localCurrency]) {
-      formatterOptions.currencyDisplay = 'narrowSymbol'
-    }
+    formatterOptions.currencyDisplay = LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE[localCurrency]
   }
 
   return new Intl.NumberFormat(locale, formatterOptions).format(input)
