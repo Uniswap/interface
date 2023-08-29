@@ -134,6 +134,10 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
     return errorCard
   }
 
+  // We want to display the loading shimmer in the footer only when the data haven't been fetched yet
+  // (list items use their own loading shimmer so there is no need to display it in the footer)
+  const isLoadingInitially = isLoading && !sectionData
+
   return (
     <Flex grow paddingHorizontal="spacing24">
       <AnimatedFlashList
@@ -166,7 +170,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
         // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
         ListFooterComponent={
           <>
-            {isLoading && <Loader.Transaction repeat={4} />}
+            {isLoadingInitially && <Loader.Transaction repeat={4} />}
             {adaptiveFooter}
           </>
         }

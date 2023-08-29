@@ -28,9 +28,6 @@ exports[`ActivityTab renders without error 1`] = `
       ListEmptyComponent={null}
       ListFooterComponent={
         <React.Fragment>
-          <Memo(_Transaction)
-            repeat={4}
-          />
           <View
             style={
               {
@@ -142,9 +139,6 @@ exports[`ActivityTab renders without error 1`] = `
           "props": {
             "ListEmptyComponent": null,
             "ListFooterComponent": <React.Fragment>
-              <Memo(_Transaction)
-                repeat={4}
-              />
               <View
                 style={
                   {

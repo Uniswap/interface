@@ -52,7 +52,7 @@ export const Transaction = memo(function _Transaction({
 }): JSX.Element {
   return (
     <Shimmer>
-      <Flex>
+      <Flex gap="none">
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <TransactionLoader opacity={(length - i) / length} />
