@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
-import * as Sentry from '@sentry/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
+import { sendAnalyticsEvent } from 'analytics'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms'
@@ -166,10 +166,10 @@ export const routingApi = createApi({
                   typeof errorData === 'object' &&
                   (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
                 ) {
-                  Sentry.withScope((scope) => {
-                    scope.setExtra('requestBody', requestBody)
-                    scope.setExtra('response', response)
-                    Sentry.captureException(new Error("No routes found for user's quote request, alert Routing Team"))
+                  sendAnalyticsEvent('No quote received from routing API', {
+                    requestBody,
+                    response,
+                    routerPreference: args.routerPreference,
                   })
                   return {
                     data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
