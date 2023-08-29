@@ -49,7 +49,6 @@ struct MnemonicConfirmation: View {
   @ObservedObject var props = MnemonicConfirmationProps()
   
   let rnEthersRS = RNEthersRS()
-  let interFont = UIFont(name: "Basel-Semibold", size: 20)
   
   func setMnemonicId(mnemonicId: String) {
     props.mnemonicId = mnemonicId

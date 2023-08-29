@@ -14,10 +14,10 @@ import com.uniswap.R
 @Immutable
 data class CustomTypography(
   val defaultFontFamily: FontFamily = FontFamily(
-    Font(R.font.inter_regular),
-    Font(R.font.inter_medium, FontWeight.Medium),
-    Font(R.font.inter_semibold, FontWeight.SemiBold),
-    Font(R.font.inter_bold, FontWeight.Bold),
+    Font(R.font.basel_book),
+    Font(R.font.basel_medium, FontWeight.Medium),
+    Font(R.font.basel_semibold, FontWeight.SemiBold),
+    Font(R.font.basel_bold, FontWeight.Bold),
   ),
   val defaultLetterSpacing: TextUnit = 0.sp,
   val headlineLarge: TextStyle = TextStyle(
