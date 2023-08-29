@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useForceUniswapXOn } from 'featureFlags/flags/forceUniswapXOn'
 import { useFotAdjustmentsEnabled } from 'featureFlags/flags/fotAdjustments'
 import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
+import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputEnabled } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
@@ -38,6 +39,7 @@ export function useRoutingAPIArguments({
   const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
   const uniswapXExactOutputEnabled = useUniswapXExactOutputEnabled()
   const fotAdjustmentsEnabled = useFotAdjustmentsEnabled()
+  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
   return useMemo(
     () =>
@@ -64,6 +66,7 @@ export function useRoutingAPIArguments({
             uniswapXEthOutputEnabled,
             uniswapXExactOutputEnabled,
             fotAdjustmentsEnabled,
+            isUniswapXDefaultEnabled,
           },
     [
       account,
@@ -79,6 +82,7 @@ export function useRoutingAPIArguments({
       userDisabledUniswapX,
       uniswapXEthOutputEnabled,
       fotAdjustmentsEnabled,
+      isUniswapXDefaultEnabled,
     ]
   )
 }

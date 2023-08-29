@@ -6,9 +6,10 @@ import { RowBetween, RowFixed } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
+import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useAppDispatch } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
-import { useRouterPreference } from 'state/user/hooks'
+import { useRouterPreference, useUserDisabledUniswapX } from 'state/user/hooks'
 import { updateDisabledUniswapX } from 'state/user/reducer'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme'
@@ -27,6 +28,11 @@ export default function RouterPreferenceSettings() {
   const [routerPreference, setRouterPreference] = useRouterPreference()
   const uniswapXEnabled = useUniswapXEnabled() && chainId && isUniswapXSupportedChain(chainId)
   const dispatch = useAppDispatch()
+  const userDisabledUniswapX = useUserDisabledUniswapX()
+  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
+
+  const uniswapXInEffect =
+    routerPreference === RouterPreference.X || (isUniswapXDefaultEnabled && !userDisabledUniswapX)
 
   return (
     <>
@@ -48,13 +54,16 @@ export default function RouterPreferenceSettings() {
             </RowFixed>
             <Toggle
               id="toggle-uniswap-x-button"
-              isActive={routerPreference === RouterPreference.X}
+              // If UniswapX-by-default is enabled we need to render this as active even if routerPreference === RouterPreference.API
+              // because we're going to default to the UniswapX quote.
+              // If the user manually toggles it off, this doesn't apply.
+              isActive={uniswapXInEffect}
               toggle={() => {
-                if (routerPreference === RouterPreference.X) {
+                if (uniswapXInEffect) {
                   // We need to remember if a user disables Uniswap X, so we don't show the opt-in flow again.
                   dispatch(updateDisabledUniswapX({ disabledUniswapX: true }))
                 }
-                setRouterPreference(routerPreference === RouterPreference.X ? RouterPreference.API : RouterPreference.X)
+                setRouterPreference(uniswapXInEffect ? RouterPreference.API : RouterPreference.X)
               }}
             />
           </RowBetween>
