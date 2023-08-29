@@ -26,12 +26,15 @@ export const CHAIN_IDS_TO_NAMES = {
 } as const
 
 // Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.
-const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = []
+const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = [ChainId.BASE_GOERLI]
+
+// TODO: include BASE_GOERLI when routing is implemented
+export type SupportedInterfaceChain = Exclude<SupportedChainsType, ChainId.BASE_GOERLI>
 
 export function isSupportedChain(
   chainId: number | null | undefined | ChainId,
   featureFlags?: Record<number, boolean>
-): chainId is SupportedChainsType {
+): chainId is SupportedInterfaceChain {
   if (featureFlags && chainId && chainId in featureFlags) {
     return featureFlags[chainId]
   }
@@ -41,7 +44,7 @@ export function isSupportedChain(
 export function asSupportedChain(
   chainId: number | null | undefined | ChainId,
   featureFlags?: Record<number, boolean>
-): SupportedChainsType | undefined {
+): SupportedInterfaceChain | undefined {
   if (!chainId) return undefined
   if (featureFlags && chainId in featureFlags && !featureFlags[chainId]) {
     return undefined
