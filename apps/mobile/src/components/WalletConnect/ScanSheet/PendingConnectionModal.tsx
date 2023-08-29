@@ -221,7 +221,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
   return (
     <BottomSheetModal name={ModalName.WCPendingConnection} onClose={onClose}>
       <AnimatedFlex
-        backgroundColor="surface2"
+        backgroundColor="surface1"
         borderRadius="rounded12"
         flex={1}
         gap="spacing24"
@@ -251,9 +251,9 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         </Flex>
         <Flex bg="surface2" borderRadius="rounded16" gap="spacing2">
           <SitePermissions />
-          <Separator color="surface2" width={1} />
+          <Separator color="surface1" width={1} />
           <NetworksRow chains={pendingSession.chains} />
-          <Separator color="surface2" width={1} />
+          <Separator color="surface1" width={1} />
           <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />
           <Box />
         </Flex>
