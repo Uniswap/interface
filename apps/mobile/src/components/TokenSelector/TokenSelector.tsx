@@ -124,9 +124,10 @@ function _TokenSelectorModal({
       extendOnKeyboardVisible
       fullScreen
       hideKeyboardOnDismiss
+      hideKeyboardOnSwipeDown
       backgroundColor={theme.colors.surface1}
       name={ModalName.TokenSelector}
-      snapPoints={['65%', 'CONTENT_HEIGHT']}
+      snapPoints={['65%', '100%']}
       onClose={onClose}>
       <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
         <Flex grow pb={IS_IOS ? 'spacing16' : 'none'} px="spacing16">

@@ -4171,18 +4171,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gorhom/bottom-sheet@npm:4.4.5":
-  version: 4.4.5
-  resolution: "@gorhom/bottom-sheet@npm:4.4.5"
+"@gorhom/bottom-sheet@npm:4.4.7":
+  version: 4.4.7
+  resolution: "@gorhom/bottom-sheet@npm:4.4.7"
   dependencies:
     "@gorhom/portal": 1.0.14
     invariant: ^2.2.4
   peerDependencies:
+    "@types/react": "*"
+    "@types/react-native": "*"
     react: "*"
     react-native: "*"
     react-native-gesture-handler: ">=1.10.1"
     react-native-reanimated: ">=2.2.0"
-  checksum: 19b3efeaacdd0eddb3f6c6e6c225dd20fcf21fae9d20f760c94e81b7ecba47a56737cb0e681225c368c93779beebe7a61102e064656a376eeb7761366b9874d6
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-native":
+      optional: true
+  checksum: ae330e7712fa58d78dc91e089e29f07b23c0c581e8a152b806c39dd831d64a7979e274f188868b086ebbb6f435ce8575fc32f2a1df6b8cf2d522a13b7182374c
   languageName: node
   linkType: hard
 
@@ -11742,7 +11749,7 @@ __metadata:
     "@formatjs/intl-numberformat": 7.4.1
     "@formatjs/intl-pluralrules": 4.3.1
     "@formatjs/intl-relativetimeformat": 11.1.2
-    "@gorhom/bottom-sheet": 4.4.5
+    "@gorhom/bottom-sheet": 4.4.7
     "@react-native-async-storage/async-storage": 1.17.10
     "@react-native-community/eslint-config": 3.0.3
     "@react-native-community/netinfo": 9.3.0

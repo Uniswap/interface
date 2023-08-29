@@ -1,19 +1,35 @@
 import { useEffect, useState } from 'react'
-import { Keyboard, KeyboardEvent, useWindowDimensions } from 'react-native'
+import { EmitterSubscription, Keyboard, KeyboardEvent, useWindowDimensions } from 'react-native'
+import { IS_ANDROID } from 'src/constants/globals'
 
 export function useKeyboardLayout(): { isVisible: boolean; containerHeight: number } {
   const window = useWindowDimensions()
 
   const [keyboardPosition, setKeyboardPosition] = useState(window.height)
   useEffect(() => {
-    const keyboardWillChangeFrameListener = Keyboard.addListener(
-      'keyboardWillChangeFrame',
-      (e: KeyboardEvent) => {
-        setKeyboardPosition(e.endCoordinates.screenY)
-      }
-    )
+    const keyboardListeners: EmitterSubscription[] = []
+
+    if (IS_ANDROID) {
+      // When `android:windowSoftInputMode` is set to `adjustResize` or `adjustNothing`,
+      // only `keyboardDidShow` and `keyboardDidHide` events will be available on Android
+      keyboardListeners.push(
+        Keyboard.addListener('keyboardDidShow', (e: KeyboardEvent) => {
+          setKeyboardPosition(e.endCoordinates.screenY)
+        }),
+        Keyboard.addListener('keyboardDidHide', (e: KeyboardEvent) => {
+          setKeyboardPosition(e.endCoordinates.screenY)
+        })
+      )
+    } else {
+      keyboardListeners.push(
+        Keyboard.addListener('keyboardWillChangeFrame', (e: KeyboardEvent) => {
+          setKeyboardPosition(e.endCoordinates.screenY)
+        })
+      )
+    }
+
     return () => {
-      keyboardWillChangeFrameListener.remove()
+      keyboardListeners.forEach((listener) => listener.remove())
     }
   }, [window.height])
 

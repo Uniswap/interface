@@ -1,0 +1,12 @@
+diff --git a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx
+index 3b1264f..29e4e64 100644
+--- a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx
++++ b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx
+@@ -636,6 +636,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
+     const animateToPositionCompleted = useWorkletCallback(
+       function animateToPositionCompleted(isFinished?: boolean) {
+         isForcedClosing.value = false;
++        animatedCurrentIndex.value = animatedNextPositionIndex.value;
+ 
+         if (!isFinished) {
+           return;

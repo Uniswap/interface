@@ -40,6 +40,7 @@ type Props = PropsWithChildren<{
   isDismissible?: boolean
   renderBehindInset?: boolean
   hideKeyboardOnDismiss?: boolean
+  hideKeyboardOnSwipeDown?: boolean
   // extend the sheet to its maximum snap point when keyboard is visible
   extendOnKeyboardVisible?: boolean
 }>
@@ -75,6 +76,7 @@ export function BottomSheetModal({
   isDismissible = true,
   renderBehindInset = false,
   hideKeyboardOnDismiss = false,
+  hideKeyboardOnSwipeDown = false,
   // keyboardBehavior="extend" does not work and it's hard to figure why,
   // probably it requires usage of <BottomSheetTextInput>
   extendOnKeyboardVisible = false,
@@ -190,18 +192,21 @@ export function BottomSheetModal({
   const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
   const backdrop = { backdropComponent: renderBackdrop }
 
-  // onAnimated is called when the sheet is about to animate to a new position.
+  // onAnimate is called when the sheet is about to animate to a new position.
   // `About to` is crucial here, cause we want to start hiding the keyboard during the process of hiding the sheet.
   // See here: https://gorhom.github.io/react-native-bottom-sheet/props#onanimate
   //
   // onDismiss on the other hand is called when a sheet is already closed, hence too late for us here.
   const onAnimate = useCallback(
     (fromIndex: number, toIndex: number): void => {
-      if (hideKeyboardOnDismiss && toIndex === DISAPPEARS_ON_INDEX) {
+      if (
+        (hideKeyboardOnDismiss && toIndex === DISAPPEARS_ON_INDEX) ||
+        (hideKeyboardOnSwipeDown && toIndex < fromIndex)
+      ) {
         Keyboard.dismiss()
       }
     },
-    [hideKeyboardOnDismiss]
+    [hideKeyboardOnDismiss, hideKeyboardOnSwipeDown]
   )
 
   return (
