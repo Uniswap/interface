@@ -1,19 +1,19 @@
 import { t } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { switchChain } from 'utils/switchChain'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -101,7 +101,7 @@ export default function Pools({ account }: { account: string }) {
 
 const ActiveDot = styled.span<{ closed: boolean; outOfRange: boolean }>`
   background-color: ${({ theme, closed, outOfRange }) =>
-    closed ? theme.textSecondary : outOfRange ? theme.accentWarning : theme.accentSuccess};
+    closed ? theme.neutral2 : outOfRange ? theme.deprecated_accentWarning : theme.success};
   border-radius: 50%;
   height: 8px;
   width: 8px;
@@ -126,11 +126,12 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleAccountDrawer()
   const { chainId: walletChainId, connector } = useWeb3React()
+  const switchChain = useSwitchChain()
   const onClick = useCallback(async () => {
     if (walletChainId !== chainId) await switchChain(connector, chainId)
     toggleWalletDrawer()
     navigate('/pool/' + details.tokenId)
-  }, [walletChainId, chainId, connector, toggleWalletDrawer, navigate, details.tokenId])
+  }, [walletChainId, chainId, switchChain, connector, toggleWalletDrawer, navigate, details.tokenId])
   const analyticsEventProperties = useMemo(
     () => ({
       chain_id: chainId,
@@ -159,17 +160,20 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
             </ThemedText.SubHeader>
           </Row>
         }
-        descriptor={<ThemedText.Caption>{`${pool.fee / 10000}%`}</ThemedText.Caption>}
+        descriptor={<ThemedText.BodySmall>{`${pool.fee / 10000}%`}</ThemedText.BodySmall>}
         right={
           <>
             <MouseoverTooltip
               placement="left"
               text={
                 <div style={{ padding: '4px 0px' }}>
-                  <ThemedText.Caption>{`${formatNumber(
+                  <ThemedText.BodySmall>{`${formatNumber(
                     liquidityValue,
                     NumberType.PortfolioBalance
-                  )} (liquidity) + ${formatNumber(feeValue, NumberType.PortfolioBalance)} (fees)`}</ThemedText.Caption>
+                  )} (liquidity) + ${formatNumber(
+                    feeValue,
+                    NumberType.PortfolioBalance
+                  )} (fees)`}</ThemedText.BodySmall>
                 </div>
               }
             >
@@ -179,9 +183,9 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
             </MouseoverTooltip>
 
             <Row justify="flex-end">
-              <ThemedText.Caption color="textSecondary">
+              <ThemedText.BodySmall color="neutral2">
                 {closed ? t`Closed` : inRange ? t`In range` : t`Out of range`}
-              </ThemedText.Caption>
+              </ThemedText.BodySmall>
               <ActiveDot closed={closed} outOfRange={!inRange} />
             </Row>
           </>

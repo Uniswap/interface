@@ -1,26 +1,35 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
 import {
   InterfaceEventName,
   InterfaceModalName,
   SwapEventName,
   SwapPriceUpdateUserResponse,
 } from '@uniswap/analytics-events'
-import { Percent } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
 import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
+import { USDT as USDT_MAINNET } from 'constants/tokens'
+import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
+import { SwapResult } from 'hooks/useSwapCallback'
+import useWrapCallback from 'hooks/useWrapCallback'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
-import styled from 'styled-components/macro'
+import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { Field } from 'state/swap/actions'
+import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
+import invariant from 'tiny-invariant'
 import { isL2ChainId } from 'utils/chains'
+import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -33,6 +42,8 @@ import SwapModalHeader from './SwapModalHeader'
 
 export enum ConfirmModalState {
   REVIEWING,
+  WRAPPING,
+  RESETTING_USDT,
   APPROVING_TOKEN,
   PERMITTING,
   PENDING_CONFIRMATION,
@@ -48,7 +59,11 @@ const StyledL2Logo = styled.img`
 `
 
 function isInApprovalPhase(confirmModalState: ConfirmModalState) {
-  return confirmModalState === ConfirmModalState.APPROVING_TOKEN || confirmModalState === ConfirmModalState.PERMITTING
+  return (
+    confirmModalState === ConfirmModalState.RESETTING_USDT ||
+    confirmModalState === ConfirmModalState.APPROVING_TOKEN ||
+    confirmModalState === ConfirmModalState.PERMITTING
+  )
 }
 
 function useConfirmModalState({
@@ -57,12 +72,14 @@ function useConfirmModalState({
   onSwap,
   allowance,
   doesTradeDiffer,
+  onCurrencySelection,
 }: {
   trade: InterfaceTrade
   allowedSlippage: Percent
   onSwap: () => void
   allowance: Allowance
   doesTradeDiffer: boolean
+  onCurrencySelection: (field: Field, currency: Currency) => void
 }) {
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
@@ -71,70 +88,152 @@ function useConfirmModalState({
   // This is a function instead of a memoized value because we do _not_ want it to update as the allowance changes.
   // For example, if the user needs to complete 3 steps initially, we should always show 3 step indicators
   // at the bottom of the modal, even after they complete steps 1 and 2.
-  const prepareSwapFlow = useCallback(() => {
+  const generateRequiredSteps = useCallback(() => {
     const steps: PendingConfirmModalState[] = []
-    if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermit2Approval) {
+    if (trade.fillType === TradeFillType.UniswapX && trade.wrapInfo.needsWrap) {
+      steps.push(ConfirmModalState.WRAPPING)
+    }
+    // Any existing USDT allowance needs to be reset before we can approve the new amount (mainnet only).
+    // See the `approve` function here: https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7#code
+    if (
+      allowance.state === AllowanceState.REQUIRED &&
+      allowance.needsSetupApproval &&
+      allowance.token.equals(USDT_MAINNET) &&
+      allowance.allowedAmount.greaterThan(0)
+    ) {
+      steps.push(ConfirmModalState.RESETTING_USDT)
+    }
+    if (allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
       steps.push(ConfirmModalState.APPROVING_TOKEN)
     }
-    if (allowance.state === AllowanceState.REQUIRED && allowance.needsSignature) {
+    if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermitSignature) {
       steps.push(ConfirmModalState.PERMITTING)
     }
     steps.push(ConfirmModalState.PENDING_CONFIRMATION)
-    setPendingModalSteps(steps)
-  }, [allowance])
+    return steps
+  }, [allowance, trade])
 
   const { chainId } = useWeb3React()
   const trace = useTrace()
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
 
-  const startSwapFlow = useCallback(async () => {
-    setApprovalError(undefined)
-    if (allowance.state === AllowanceState.REQUIRED) {
-      // Starts the approval process, by triggering either the Token Approval or the Permit signature.
-      try {
-        if (allowance.needsPermit2Approval) {
-          setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
-          await allowance.approve()
-          sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-            chain_id: chainId,
-            token_symbol: maximumAmountIn?.currency.symbol,
-            token_address: maximumAmountIn?.currency.address,
-            ...trace,
-          })
-        } else {
-          setConfirmModalState(ConfirmModalState.PERMITTING)
-          await allowance.permit()
-        }
-      } catch (e) {
-        setConfirmModalState(ConfirmModalState.REVIEWING)
-        if (didUserReject(e)) {
-          return
-        }
-        console.error(e)
-        setApprovalError(
-          allowance.needsPermit2Approval ? PendingModalError.TOKEN_APPROVAL_ERROR : PendingModalError.PERMIT_ERROR
-        )
-      }
-    } else {
-      setConfirmModalState(ConfirmModalState.PENDING_CONFIRMATION)
-      onSwap()
-    }
-  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol, onSwap, trace])
+  const nativeCurrency = useNativeCurrency(chainId)
 
-  const previousPermitNeeded = usePrevious(
-    allowance.state === AllowanceState.REQUIRED ? allowance.needsPermit2Approval : undefined
+  const [wrapTxHash, setWrapTxHash] = useState<string>()
+  const { execute: onWrap } = useWrapCallback(
+    nativeCurrency,
+    trade.inputAmount.currency,
+    formatCurrencyAmount(trade.inputAmount, NumberType.SwapTradeAmount)
   )
+  const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
+  const prevWrapConfirmed = usePrevious(wrapConfirmed)
+  const catchUserReject = async (e: any, errorType: PendingModalError) => {
+    setConfirmModalState(ConfirmModalState.REVIEWING)
+    if (didUserReject(e)) return
+    console.error(e)
+    setApprovalError(errorType)
+  }
+
+  const performStep = useCallback(
+    async (step: ConfirmModalState) => {
+      switch (step) {
+        case ConfirmModalState.WRAPPING:
+          setConfirmModalState(ConfirmModalState.WRAPPING)
+          onWrap?.()
+            .then((wrapTxHash) => {
+              setWrapTxHash(wrapTxHash)
+              // After the wrap has succeeded, reset the input currency to be WETH
+              // because the trade will be on WETH -> token
+              onCurrencySelection(Field.INPUT, trade.inputAmount.currency)
+              sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
+                chain_id: chainId,
+                token_symbol: maximumAmountIn?.currency.symbol,
+                token_address: maximumAmountIn?.currency.address,
+                ...trade,
+                ...trace,
+              })
+            })
+            .catch((e) => catchUserReject(e, PendingModalError.WRAP_ERROR))
+          break
+        case ConfirmModalState.RESETTING_USDT:
+          setConfirmModalState(ConfirmModalState.RESETTING_USDT)
+          invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
+          allowance.revoke().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
+          break
+        case ConfirmModalState.APPROVING_TOKEN:
+          setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
+          invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
+          allowance.approve().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
+          break
+        case ConfirmModalState.PERMITTING:
+          setConfirmModalState(ConfirmModalState.PERMITTING)
+          invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
+          allowance.permit().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
+          break
+        case ConfirmModalState.PENDING_CONFIRMATION:
+          setConfirmModalState(ConfirmModalState.PENDING_CONFIRMATION)
+          try {
+            onSwap()
+          } catch (e) {
+            catchUserReject(e, PendingModalError.CONFIRMATION_ERROR)
+          }
+          break
+        default:
+          setConfirmModalState(ConfirmModalState.REVIEWING)
+          break
+      }
+    },
+    [
+      allowance,
+      chainId,
+      maximumAmountIn?.currency.address,
+      maximumAmountIn?.currency.symbol,
+      onSwap,
+      onWrap,
+      trace,
+      trade,
+      onCurrencySelection,
+    ]
+  )
+
+  const startSwapFlow = useCallback(() => {
+    const steps = generateRequiredSteps()
+    setPendingModalSteps(steps)
+    performStep(steps[0])
+  }, [generateRequiredSteps, performStep])
+
+  const previousSetupApprovalNeeded = usePrevious(
+    allowance.state === AllowanceState.REQUIRED ? allowance.needsSetupApproval : undefined
+  )
+
+  useEffect(() => {
+    // If the wrapping step finished, trigger the next step (allowance or swap).
+    if (wrapConfirmed && !prevWrapConfirmed) {
+      // moves on to either approve WETH or to swap submission
+      performStep(pendingModalSteps[1])
+    }
+  }, [pendingModalSteps, performStep, prevWrapConfirmed, wrapConfirmed])
+
   useEffect(() => {
     if (
       allowance.state === AllowanceState.REQUIRED &&
-      allowance.needsSignature &&
+      allowance.needsPermitSignature &&
       // If the token approval switched from missing to fulfilled, trigger the next step (permit2 signature).
-      !allowance.needsPermit2Approval &&
-      previousPermitNeeded
+      !allowance.needsSetupApproval &&
+      previousSetupApprovalNeeded
     ) {
-      startSwapFlow()
+      performStep(ConfirmModalState.PERMITTING)
     }
-  }, [allowance, previousPermitNeeded, startSwapFlow])
+  }, [allowance, performStep, previousSetupApprovalNeeded])
+
+  const previousRevocationPending = usePrevious(
+    allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending
+  )
+  useEffect(() => {
+    if (allowance.state === AllowanceState.REQUIRED && previousRevocationPending && !allowance.isRevocationPending) {
+      performStep(ConfirmModalState.APPROVING_TOKEN)
+    }
+  }, [allowance, performStep, previousRevocationPending])
 
   useEffect(() => {
     // Automatically triggers the next phase if the local modal state still thinks we're in the approval phase,
@@ -145,57 +244,67 @@ function useConfirmModalState({
         setConfirmModalState(ConfirmModalState.REVIEWING)
         return
       }
-      startSwapFlow()
+      performStep(ConfirmModalState.PENDING_CONFIRMATION)
     }
-  }, [allowance, confirmModalState, doesTradeDiffer, startSwapFlow])
+  }, [allowance, confirmModalState, doesTradeDiffer, performStep])
 
   const onCancel = () => {
     setConfirmModalState(ConfirmModalState.REVIEWING)
     setApprovalError(undefined)
   }
 
-  return { startSwapFlow, prepareSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps }
+  return { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, wrapTxHash }
 }
 
 export default function ConfirmSwapModal({
   trade,
+  inputCurrency,
   originalTrade,
   onAcceptChanges,
   allowedSlippage,
   allowance,
   onConfirm,
   onDismiss,
+  onCurrencySelection,
   swapError,
-  txHash,
-  swapQuoteReceivedDate,
+  swapResult,
   fiatValueInput,
   fiatValueOutput,
 }: {
   trade: InterfaceTrade
+  inputCurrency?: Currency
   originalTrade?: InterfaceTrade
-  txHash?: string
+  swapResult?: SwapResult
   allowedSlippage: Percent
   allowance: Allowance
   onAcceptChanges: () => void
   onConfirm: () => void
   swapError?: Error
   onDismiss: () => void
-  swapQuoteReceivedDate?: Date
+  onCurrencySelection: (field: Field, currency: Currency) => void
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
   const { chainId } = useWeb3React()
   const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
-  const { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, prepareSwapFlow } =
+  const { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, wrapTxHash } =
     useConfirmModalState({
       trade,
       allowedSlippage,
       onSwap: onConfirm,
+      onCurrencySelection,
       allowance,
       doesTradeDiffer: Boolean(doesTradeDiffer),
     })
 
-  const swapFailed = Boolean(swapError) && !didUserReject(swapError)
+  const swapStatus = useSwapTransactionStatus(swapResult)
+
+  // Swap was reverted onchain.
+  const swapReverted = swapStatus === TransactionStatus.Failed
+  // Swap failed locally and was not broadcast to the blockchain.
+  const localSwapFailure = Boolean(swapError) && !didUserReject(swapError)
+  const swapFailed = localSwapFailure || swapReverted
+
   useEffect(() => {
     // Reset the modal state if the user rejected the swap.
     if (swapError && !swapFailed) {
@@ -235,23 +344,18 @@ export default function ConfirmSwapModal({
     if (confirmModalState !== ConfirmModalState.REVIEWING && !showAcceptChanges) {
       return null
     }
-    return <SwapModalHeader trade={trade} allowedSlippage={allowedSlippage} />
-  }, [allowedSlippage, confirmModalState, showAcceptChanges, trade])
+    return <SwapModalHeader inputCurrency={inputCurrency} trade={trade} allowedSlippage={allowedSlippage} />
+  }, [allowedSlippage, confirmModalState, showAcceptChanges, trade, inputCurrency])
 
   const modalBottom = useCallback(() => {
     if (confirmModalState === ConfirmModalState.REVIEWING || showAcceptChanges) {
       return (
         <SwapModalFooter
-          onConfirm={() => {
-            // Calculate the necessary steps once, before starting the flow.
-            prepareSwapFlow()
-            startSwapFlow()
-          }}
+          onConfirm={startSwapFlow}
           trade={trade}
-          hash={txHash}
+          swapResult={swapResult}
           allowedSlippage={allowedSlippage}
           disabledConfirm={showAcceptChanges}
-          swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueInput}
           fiatValueOutput={fiatValueOutput}
           showAcceptChanges={showAcceptChanges}
@@ -266,8 +370,10 @@ export default function ConfirmSwapModal({
         steps={pendingModalSteps}
         currentStep={confirmModalState}
         trade={trade}
-        swapTxHash={txHash}
+        swapResult={swapResult}
+        wrapTxHash={wrapTxHash}
         tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
+        revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
       />
     )
   }, [
@@ -275,16 +381,15 @@ export default function ConfirmSwapModal({
     showAcceptChanges,
     pendingModalSteps,
     trade,
-    txHash,
+    swapResult,
+    wrapTxHash,
     allowance,
     allowedSlippage,
-    swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
     onAcceptChanges,
     swapFailed,
     swapError?.message,
-    prepareSwapFlow,
     startSwapFlow,
   ])
 

@@ -1,8 +1,7 @@
-import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
-import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
+import { logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { GenieCollection } from 'nft/types'
@@ -86,7 +85,15 @@ export function useRecentlySearchedAssets() {
     shortenedHistory.forEach((asset) => {
       if (asset.address === 'NATIVE') {
         // Handles special case where wMATIC data needs to be used for MATIC
-        const native = nativeOnChain(CHAIN_NAME_TO_CHAIN_ID[asset.chain] ?? SupportedChainId.MAINNET)
+        const chain = supportedChainIdFromGQLChain(asset.chain)
+        if (!chain) {
+          logSentryErrorForUnsupportedChain({
+            extras: { asset },
+            errorMessage: 'Invalid chain retrieved from Seach Token/Collection Query',
+          })
+          return
+        }
+        const native = nativeOnChain(chain)
         const queryAddress = getQueryAddress(asset.chain)?.toLowerCase() ?? `NATIVE-${asset.chain}`
         const result = resultsMap[queryAddress]
         if (result) data.push({ ...result, address: 'NATIVE', ...native })

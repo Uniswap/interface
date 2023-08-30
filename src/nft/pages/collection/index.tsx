@@ -1,6 +1,6 @@
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { Trace } from 'analytics'
 import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
@@ -19,7 +19,7 @@ import { blocklistedCollections } from 'nft/utils'
 import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { animated, easings, useSpring } from 'react-spring'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
@@ -85,7 +85,7 @@ const FiltersContainer = styled.div<{ isMobile: boolean; isFiltersExpanded: bool
   left: 0px;
   width: ${({ isMobile }) => (isMobile ? '100%' : '0px')};
   height: ${({ isMobile, isFiltersExpanded }) => (isMobile && isFiltersExpanded ? '100%' : undefined)};
-  background: ${({ theme, isMobile }) => (isMobile ? theme.backgroundBackdrop : undefined)};
+  background: ${({ theme, isMobile }) => (isMobile ? theme.surface2 : undefined)};
   z-index: ${Z_INDEX.modalBackdrop - 3};
   overflow-y: ${({ isMobile }) => (isMobile ? 'scroll' : undefined)};
 
@@ -111,7 +111,7 @@ const IconWrapper = styled.button`
   background-color: transparent;
   border-radius: 8px;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
   display: flex;
   padding: 2px 0px;

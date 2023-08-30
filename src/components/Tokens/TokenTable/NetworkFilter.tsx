@@ -1,13 +1,18 @@
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
-import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
+import {
+  BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
+  BACKEND_SUPPORTED_CHAINS,
+  supportedChainIdFromGQLChain,
+  validateUrlChainParam,
+} from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme'
 
 import FilterOption from './FilterOption'
@@ -15,7 +20,7 @@ import FilterOption from './FilterOption'
 const InternalMenuItem = styled.div`
   flex: 1;
   padding: 12px 8px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 
   :hover {
     cursor: pointer;
@@ -31,7 +36,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)<{ disabled?: boolean }>`
   border-radius: 8px;
 
   :hover {
-    background-color: ${({ theme }) => theme.hoverState};
+    background-color: ${({ theme }) => theme.surface3};
     text-decoration: none;
   }
 
@@ -46,9 +51,9 @@ const MenuTimeFlyout = styled.span`
   min-width: 240px;
   max-height: 350px;
   overflow: auto;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  box-shadow: ${({ theme }) => theme.deepShadow};
-  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface1};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
+  border: 0.5px solid ${({ theme }) => theme.surface3};
   border-radius: 12px;
   padding: 8px;
   display: flex;
@@ -73,12 +78,12 @@ const StyledMenuContent = styled.div`
   gap: 8px;
   align-items: center;
   border: none;
-  font-weight: 600;
+  font-weight: 535;
   vertical-align: middle;
 `
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
-  color: ${({ open, theme }) => (open ? theme.accentActive : theme.textSecondary)};
+  color: ${({ open, theme }) => (open ? theme.accent1 : theme.neutral2)};
 `
 const NetworkLabel = styled.div`
   ${EllipsisStyle}
@@ -98,8 +103,8 @@ const NetworkFilterOption = styled(FilterOption)`
   min-width: 156px;
 `
 const Tag = styled(Badge)`
-  background-color: ${({ theme }) => theme.backgroundModule};
-  color: ${({ theme }) => theme.textSecondary};
+  background-color: ${({ theme }) => theme.surface2};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 10px;
   opacity: 1;
   padding: 4px 6px;
@@ -116,8 +121,7 @@ export default function NetworkFilter() {
   const { chainName } = useParams<{ chainName?: string }>()
   const currentChainName = validateUrlChainParam(chainName)
 
-  const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
-  const BNBChainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID.BNB)
+  const chainInfo = getChainInfo(supportedChainIdFromGQLChain(currentChainName))
 
   return (
     <StyledMenu ref={node}>
@@ -129,7 +133,7 @@ export default function NetworkFilter() {
       >
         <StyledMenuContent>
           <NetworkLabel>
-            <Logo src={chainInfo?.logoUrl} /> {chainInfo?.label}
+            <Logo src={chainInfo.logoUrl} /> {chainInfo.label}
           </NetworkLabel>
           <Chevron open={open}>
             {open ? (
@@ -142,9 +146,8 @@ export default function NetworkFilter() {
       </NetworkFilterOption>
       {open && (
         <MenuTimeFlyout>
-          {BACKEND_CHAIN_NAMES.map((network) => {
-            const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[network])
-            if (!chainInfo) return null
+          {BACKEND_SUPPORTED_CHAINS.map((network) => {
+            const chainInfo = getChainInfo(supportedChainIdFromGQLChain(network))
             return (
               <InternalLinkMenuItem
                 key={network}
@@ -160,19 +163,28 @@ export default function NetworkFilter() {
                 </NetworkLabel>
                 {network === currentChainName && (
                   <CheckContainer>
-                    <Check size={16} color={theme.accentAction} />
+                    <Check size={16} color={theme.accent1} />
                   </CheckContainer>
                 )}
               </InternalLinkMenuItem>
             )
           })}
-          <InternalLinkMenuItem data-testid="tokens-network-filter-option-bnb-chain" disabled>
-            <NetworkLabel>
-              <Logo src={BNBChainInfo.logoUrl} />
-              {BNBChainInfo.label}
-            </NetworkLabel>
-            <Tag>Coming soon</Tag>
-          </InternalLinkMenuItem>
+          {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
+            const chainInfo = getChainInfo(network)
+            return (
+              <InternalLinkMenuItem
+                key={network}
+                data-testid={`tokens-network-filter-option-${network}-chain`}
+                disabled
+              >
+                <NetworkLabel>
+                  <Logo src={chainInfo.logoUrl} />
+                  {chainInfo.label}
+                </NetworkLabel>
+                <Tag>Coming soon</Tag>
+              </InternalLinkMenuItem>
+            )
+          })}
         </MenuTimeFlyout>
       )}
     </StyledMenu>

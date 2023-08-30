@@ -1,8 +1,15 @@
+import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { useRoutingAPIForPrice } from 'featureFlags/flags/priceRoutingApi'
+import { useForceUniswapXOn } from 'featureFlags/flags/forceUniswapXOn'
+import { useFotAdjustmentsEnabled } from 'featureFlags/flags/fotAdjustments'
+import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
+import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
+import { useUniswapXExactOutputEnabled } from 'featureFlags/flags/uniswapXExactOutput'
+import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useMemo } from 'react'
-import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/slice'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
+import { useUserDisabledUniswapX } from 'state/user/hooks'
 
 /**
  * Returns query arguments for the Routing API query or undefined if the
@@ -10,27 +17,37 @@ import { currencyAddressForSwapQuote } from 'state/routing/utils'
  * be destructured.
  */
 export function useRoutingAPIArguments({
+  account,
   tokenIn,
   tokenOut,
   amount,
   tradeType,
   routerPreference,
 }: {
+  account?: string
   tokenIn?: Currency
   tokenOut?: Currency
   amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-}): GetQuoteArgs | undefined {
-  const isRoutingAPIPrice = useRoutingAPIForPrice()
+}): GetQuoteArgs | SkipToken {
+  const uniswapXEnabled = useUniswapXEnabled()
+  const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
+  const forceUniswapXOn = useForceUniswapXOn()
+  const userDisabledUniswapX = useUserDisabledUniswapX()
+  const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
+  const uniswapXExactOutputEnabled = useUniswapXExactOutputEnabled()
+  const fotAdjustmentsEnabled = useFotAdjustmentsEnabled()
+
   return useMemo(
     () =>
       !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut) || tokenIn.wrapped.equals(tokenOut.wrapped)
-        ? undefined
+        ? skipToken
         : {
+            account,
             amount: amount.quotient.toString(),
             tokenInAddress: currencyAddressForSwapQuote(tokenIn),
-            tokenInChainId: tokenIn.wrapped.chainId,
+            tokenInChainId: tokenIn.chainId,
             tokenInDecimals: tokenIn.wrapped.decimals,
             tokenInSymbol: tokenIn.wrapped.symbol,
             tokenOutAddress: currencyAddressForSwapQuote(tokenOut),
@@ -39,8 +56,29 @@ export function useRoutingAPIArguments({
             tokenOutSymbol: tokenOut.wrapped.symbol,
             routerPreference,
             tradeType,
-            isRoutingAPIPrice,
+            needsWrapIfUniswapX: tokenIn.isNative,
+            uniswapXEnabled,
+            uniswapXForceSyntheticQuotes,
+            forceUniswapXOn,
+            userDisabledUniswapX,
+            uniswapXEthOutputEnabled,
+            uniswapXExactOutputEnabled,
+            fotAdjustmentsEnabled,
           },
-    [amount, routerPreference, tokenIn, tokenOut, tradeType, isRoutingAPIPrice]
+    [
+      account,
+      amount,
+      routerPreference,
+      tokenIn,
+      tokenOut,
+      tradeType,
+      uniswapXEnabled,
+      uniswapXExactOutputEnabled,
+      uniswapXForceSyntheticQuotes,
+      forceUniswapXOn,
+      userDisabledUniswapX,
+      uniswapXEthOutputEnabled,
+      fotAdjustmentsEnabled,
+    ]
   )
 }

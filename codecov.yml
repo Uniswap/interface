@@ -6,12 +6,12 @@ ignore:
   - "**/instrumented/**/*"
   - "**/styles/**/*"
   - "styles/**/*"
+  - "**/styled.tsx"
   - "**/constants/**/*"
   - "constants/**/*"
 
 coverage:
   status:
-    # Omit merging unit/e2e reports into the defaults, as it is nonsensical.
     project: off
     patch: off
 
@@ -25,20 +25,16 @@ flag_management:
         removed_code_behavior: adjust_base
         if_ci_failed: error
       - type: patch
-        target: 80%
+        target: 50%
   individual_flags:
     - name: unit-tests
-    - name: e2e-tests
-      # Wait until all machines have reported coverage - e2e tests run across 4 machines.
-      after_n_builds: 4
+    - name: cloud-tests
       statuses:
-        - type: patch
-          target: 0%
+        - type: project
+          target: 80%
 
 comment:
   layout: flags
-  # Wait until all machines have reported coverage - e2e tests run across 4 machines + unit tests across 1.
-  after_n_builds: 5
   hide_comment_details: false
 
 github_checks:

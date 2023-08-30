@@ -5,7 +5,7 @@ import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme'
 
 import { Input as NumericalInput } from '../NumericalInput'
@@ -25,9 +25,7 @@ const pulse = (color: string) => keyframes`
 `
 
 const InputRow = styled.div`
-  display: grid;
-
-  grid-template-columns: 30px 1fr 30px;
+  display: flex;
 `
 
 const SmallButton = styled(ButtonGray)`
@@ -36,35 +34,34 @@ const SmallButton = styled(ButtonGray)`
 `
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
-  border-color: ${({ active, theme }) => active && theme.accentAction};
+  border-color: ${({ active, theme }) => active && theme.accent1};
   padding: 12px;
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accentAction)} 0.8s linear;
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accent1)} 0.8s linear;
 `
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   background-color: transparent;
-  text-align: center;
+  font-weight: 535;
+  text-align: left;
   width: 100%;
-  font-weight: 500;
-  padding: 0 10px;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     font-size: 16px;
   `};
+`
 
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
-    font-size: 12px;
-  `};
+const InputColumn = styled(AutoColumn)`
+  width: 100%;
 `
 
 const InputTitle = styled(ThemedText.DeprecatedSmall)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 535;
 `
 
 const ButtonLabel = styled(ThemedText.DeprecatedWhite)<{ disabled: boolean }>`
-  color: ${({ theme, disabled }) => (disabled ? theme.textSecondary : theme.textPrimary)} !important;
+  color: ${({ theme, disabled }) => (disabled ? theme.neutral2 : theme.neutral1)} !important;
 `
 
 interface StepCounterProps {
@@ -142,20 +139,11 @@ const StepCounter = ({
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
-      <AutoColumn gap="6px">
-        <InputTitle fontSize={12} textAlign="center">
-          {title}
-        </InputTitle>
-
-        <InputRow>
-          {!locked && (
-            <SmallButton onClick={handleDecrement} disabled={decrementDisabled}>
-              <ButtonLabel disabled={decrementDisabled} fontSize="12px">
-                <Minus size={18} />
-              </ButtonLabel>
-            </SmallButton>
-          )}
-
+      <InputRow>
+        <InputColumn justify="flex-start">
+          <InputTitle fontSize={12} textAlign="center">
+            {title}
+          </InputTitle>
           <StyledInput
             className="rate-input-0"
             value={localValue}
@@ -165,22 +153,30 @@ const StepCounter = ({
               setLocalValue(val)
             }}
           />
+          <InputTitle fontSize={12} textAlign="left">
+            <Trans>
+              {tokenB} per {tokenA}
+            </Trans>
+          </InputTitle>
+        </InputColumn>
 
+        <AutoColumn gap="8px">
           {!locked && (
-            <SmallButton onClick={handleIncrement} disabled={incrementDisabled}>
+            <SmallButton data-testid="increment-price-range" onClick={handleIncrement} disabled={incrementDisabled}>
               <ButtonLabel disabled={incrementDisabled} fontSize="12px">
                 <Plus size={18} />
               </ButtonLabel>
             </SmallButton>
           )}
-        </InputRow>
-
-        <InputTitle fontSize={12} textAlign="center">
-          <Trans>
-            {tokenB} per {tokenA}
-          </Trans>
-        </InputTitle>
-      </AutoColumn>
+          {!locked && (
+            <SmallButton data-testid="decrement-price-range" onClick={handleDecrement} disabled={decrementDisabled}>
+              <ButtonLabel disabled={decrementDisabled} fontSize="12px">
+                <Minus size={18} />
+              </ButtonLabel>
+            </SmallButton>
+          )}
+        </AutoColumn>
+      </InputRow>
     </FocusedOutlineCard>
   )
 }

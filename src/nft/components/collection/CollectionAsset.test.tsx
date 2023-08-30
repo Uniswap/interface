@@ -6,6 +6,8 @@ import { CollectionAsset } from './CollectionAsset'
 
 describe('NftCard', () => {
   it('renders correctly', () => {
+    // todo: remove once zustand usage has been update such that `shallow` is no longer used
+    jest.spyOn(console, 'warn').mockImplementation(jest.fn)
     const { asFragment } = render(
       <CollectionAsset
         asset={TEST_NFT_ASSET}

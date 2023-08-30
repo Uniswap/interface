@@ -1,8 +1,9 @@
+import { FeatureFlag } from '../../src/featureFlags'
 import { getTestSelector } from '../utils'
 
 describe('Buy Crypto Modal', () => {
   it('should open and close', () => {
-    cy.visit('/')
+    cy.visit('/', { featureFlags: [FeatureFlag.fiatOnRampButtonOnSwap] })
 
     // Open the fiat onramp modal
     cy.get(getTestSelector('buy-fiat-button')).click()
@@ -15,7 +16,7 @@ describe('Buy Crypto Modal', () => {
 
   it('should open and close, mobile viewport', () => {
     cy.viewport('iphone-6')
-    cy.visit('/')
+    cy.visit('/', { featureFlags: [FeatureFlag.fiatOnRampButtonOnSwap] })
 
     // Open the fiat onramp modal
     cy.get(getTestSelector('buy-fiat-button')).click()

@@ -1,5 +1,5 @@
 import { ButtonEmpty } from 'components/Button'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
@@ -41,7 +41,7 @@ const TextContainer = styled.div`
 `
 
 const HeaderText = styled.div`
-  font-weight: 700;
+  font-weight: 535;
   font-size: 28px;
   line-height: 36px;
 
@@ -53,7 +53,7 @@ const HeaderText = styled.div`
 
 const DescriptionText = styled.div`
   margin: 10px 10px 0 0;
-  font-weight: 500;
+  font-weight: 535;
   font-size: 16px;
   line-height: 20px;
 

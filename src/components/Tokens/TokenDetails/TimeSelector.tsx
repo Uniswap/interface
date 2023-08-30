@@ -1,6 +1,6 @@
 import { TimePeriod } from 'graphql/data/util'
 import { startTransition, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
@@ -31,15 +31,15 @@ const TimeButton = styled.button<{ active: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : 'transparent')};
-  font-weight: 600;
+  background-color: ${({ theme, active }) => (active ? theme.surface3 : 'transparent')};
+  font-weight: 535;
   font-size: 16px;
   padding: 6px 12px;
   border-radius: 12px;
   line-height: 20px;
   border: none;
   cursor: pointer;
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
   :hover {
     ${({ active, theme }) => !active && `opacity: ${theme.opacity.hover};`}

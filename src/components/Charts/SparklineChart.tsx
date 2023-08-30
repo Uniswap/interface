@@ -3,7 +3,7 @@ import { curveCardinal, scaleLinear } from 'd3'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { PricePoint } from 'graphql/data/util'
 import { memo } from 'react'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 
 import { getPriceBounds } from '../Tokens/TokenDetails/PriceChart'
 import LineChart from './LineChart'
@@ -58,7 +58,7 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange, sparkli
       getY={(p: PricePoint) => rdScale(p.value)}
       curve={curveCardinal.tension(curveTension)}
       marginTop={5}
-      color={pricePercentChange && pricePercentChange < 0 ? theme.accentFailure : theme.accentSuccess}
+      color={pricePercentChange && pricePercentChange < 0 ? theme.critical : theme.success}
       strokeWidth={1.5}
       width={width}
       height={height}

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { Trace } from 'analytics'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
@@ -26,7 +26,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { QueryToken } from 'graphql/data/Token'
-import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
+import { getTokenDetailsURL, InterfaceGqlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
@@ -35,7 +35,7 @@ import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Field } from 'state/swap/actions'
 import { SwapState } from 'state/swap/reducer'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { isAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
@@ -44,12 +44,19 @@ import InvalidTokenDetails from './InvalidTokenDetails'
 
 const TokenSymbol = styled.span`
   text-transform: uppercase;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
+  margin-left: 8px;
 `
 const TokenActions = styled.div`
   display: flex;
   gap: 16px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
+`
+const TokenTitle = styled.div`
+  display: flex;
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: inline;
+  }
 `
 
 function useOnChainToken(address: string | undefined, skip: boolean) {
@@ -89,7 +96,7 @@ function useRelevantToken(
 type TokenDetailsProps = {
   urlAddress?: string
   inputTokenAddress?: string
-  chain: Chain
+  chain: InterfaceGqlChain
   tokenQuery: TokenQuery
   tokenPriceQuery?: TokenPriceQuery
   onChangeTimePeriod: OnChangeTimePeriod
@@ -111,8 +118,7 @@ export default function TokenDetails({
   )
 
   const { chainId: connectedChainId } = useWeb3React()
-  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
-
+  const pageChainId = supportedChainIdFromGQLChain(chain)
   const tokenQueryData = tokenQuery.token
   const crossChainMap = useMemo(
     () =>
@@ -185,6 +191,7 @@ export default function TokenDetails({
     },
     [continueSwap, setContinueSwap]
   )
+
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
@@ -204,9 +211,10 @@ export default function TokenDetails({
             <TokenInfoContainer data-testid="token-info-container">
               <TokenNameCell>
                 <CurrencyLogo currency={detailedToken} size="32px" hideL2Icon={false} />
-
-                {detailedToken.name ?? <Trans>Name not found</Trans>}
-                <TokenSymbol>{detailedToken.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+                <TokenTitle>
+                  {detailedToken.name ?? <Trans>Name not found</Trans>}
+                  <TokenSymbol>{detailedToken.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+                </TokenTitle>
               </TokenNameCell>
               <TokenActions>
                 <ShareButton currency={detailedToken} />

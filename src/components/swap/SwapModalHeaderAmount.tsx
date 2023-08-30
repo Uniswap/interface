@@ -1,4 +1,3 @@
-import { formatCurrencyAmount, formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -8,14 +7,14 @@ import { useWindowSize } from 'hooks/useWindowSize'
 import { PropsWithChildren, ReactNode } from 'react'
 import { TextProps } from 'rebass'
 import { Field } from 'state/swap/actions'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
-
-const MAX_AMOUNT_STR_LENGTH = 9
+import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { formatReviewSwapCurrencyAmount } from 'utils/formatNumbers'
 
 export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   margin-right: 8px;
 `
 
@@ -27,7 +26,7 @@ const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextPr
   }
 
   return (
-    <ThemedText.HeadlineLarge fontWeight={500} {...textProps}>
+    <ThemedText.HeadlineLarge fontWeight={535} {...textProps}>
       {children}
     </ThemedText.HeadlineLarge>
   )
@@ -37,16 +36,15 @@ interface AmountProps {
   field: Field
   tooltipText?: ReactNode
   label: ReactNode
-  amount?: CurrencyAmount<Currency>
+  amount: CurrencyAmount<Currency>
   usdAmount?: number
+  // The currency used here can be different than the currency denoted in the `amount` prop
+  // For UniswapX ETH input trades, the trade object will have WETH as the amount.currency, but
+  // the user's real input currency is ETH, so show ETH instead
+  currency: Currency
 }
 
-export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field }: AmountProps) {
-  let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
-  if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
-    formattedAmount = formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
-  }
-
+export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field, currency }: AmountProps) {
   return (
     <Row align="center" justify="space-between" gap="md">
       <Column gap="xs">
@@ -57,16 +55,16 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
         </ThemedText.BodySecondary>
         <Column gap="xs">
           <ResponsiveHeadline data-testid={`${field}-amount`}>
-            {formattedAmount} {amount?.currency.symbol}
+            {formatReviewSwapCurrencyAmount(amount)} {currency?.symbol}
           </ResponsiveHeadline>
           {usdAmount && (
-            <ThemedText.BodySmall color="textTertiary">
+            <ThemedText.BodySmall color="neutral2">
               {formatNumber(usdAmount, NumberType.FiatTokenQuantity)}
             </ThemedText.BodySmall>
           )}
         </Column>
       </Column>
-      {amount?.currency && <CurrencyLogo currency={amount.currency} size="36px" />}
+      <CurrencyLogo currency={currency} size="36px" />
     </Row>
   )
 }

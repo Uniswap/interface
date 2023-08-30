@@ -30,7 +30,7 @@ export const container = style([
 export const rowHover = style([
   {
     ':hover': {
-      background: themeVars.colors.backgroundInteractive,
+      background: themeVars.colors.surface3,
       borderRadius: 12,
     },
   },
@@ -53,19 +53,19 @@ export const row = style([
 
 export const subRowHover = style({
   ':hover': {
-    background: themeVars.colors.backgroundInteractive,
+    background: themeVars.colors.surface3,
   },
 })
 
 export const borderTop = sprinkles({
   borderTopStyle: 'solid',
-  borderTopColor: 'backgroundOutline',
+  borderTopColor: 'surface3',
   borderTopWidth: '1px',
 })
 
 export const borderBottom = sprinkles({
   borderBottomStyle: 'solid',
-  borderBottomColor: 'backgroundOutline',
+  borderBottomColor: 'surface3',
   borderBottomWidth: '1px',
 })
 
@@ -99,7 +99,7 @@ export const chevronIcon = style({
 
 export const chevronContainer = style([
   sprinkles({
-    color: 'textSecondary',
+    color: 'neutral2',
     display: 'inline-block',
     height: '28',
     width: '28',

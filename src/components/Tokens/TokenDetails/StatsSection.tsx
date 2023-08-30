@@ -1,19 +1,19 @@
 import { Trans } from '@lingui/macro'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
+import { ChainId } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { ReactNode } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 
 import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
 import { TokenSortMethod } from '../state'
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
 
 export const StatWrapper = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   min-width: 168px;
   flex: 1;
@@ -36,10 +36,10 @@ const Header = styled(ThemedText.MediumHeader)`
 const StatPrice = styled.div`
   margin-top: 4px;
   font-size: 28px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 const NoData = styled.div`
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
 `
 export const StatsWrapper = styled.div`
   gap: 16px;
@@ -68,7 +68,7 @@ function Stat({
 }
 
 type StatsSectionProps = {
-  chainId: SupportedChainId
+  chainId: ChainId
   address: string
   priceLow52W?: NumericStat
   priceHigh52W?: NumericStat

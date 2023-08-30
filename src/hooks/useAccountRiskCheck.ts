@@ -1,5 +1,5 @@
 import { sendEvent } from 'components/analytics'
-import ms from 'ms.macro'
+import ms from 'ms'
 import { useEffect } from 'react'
 import { ApplicationModal, setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
@@ -35,8 +35,7 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
             .catch(() => dispatch(setOpenModal(null)))
         }
       } finally {
-        // leaving this code in place w/ a negligible cache time in case we want to increase cache time later
-        localStorage.setItem(riskCheckLocalStorageKey, (now + ms`10 seconds`).toString())
+        localStorage.setItem(riskCheckLocalStorageKey, (now + ms(`1d`)).toString())
       }
     }
   }, [account, dispatch])

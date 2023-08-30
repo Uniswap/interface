@@ -1,14 +1,14 @@
-import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
+import { t, Trans } from '@lingui/macro'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import { SupportedL2ChainId } from 'constants/chains'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { isL2ChainId } from 'utils/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -23,9 +23,9 @@ import Row, { RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 
 const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   border-radius: 20px;
-  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
+  outline: 1px solid ${({ theme }) => theme.surface3};
   width: 100%;
   padding: 16px;
 `
@@ -71,13 +71,13 @@ function ConfirmationPendingContent({
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
-          <ThemedText.SubHeaderLarge color="textPrimary" textAlign="center">
+          <ThemedText.SubHeaderLarge color="neutral1" textAlign="center">
             <Trans>Waiting for confirmation</Trans>
           </ThemedText.SubHeaderLarge>
-          <ThemedText.SubHeader color="textPrimary" textAlign="center">
+          <ThemedText.SubHeader color="neutral1" textAlign="center">
             {pendingText}
           </ThemedText.SubHeader>
-          <ThemedText.SubHeaderSmall color="textSecondary" textAlign="center" marginBottom="12px">
+          <ThemedText.SubHeaderSmall color="neutral2" textAlign="center" marginBottom="12px">
             <Trans>Confirm this transaction in your wallet</Trans>
           </ThemedText.SubHeaderSmall>
         </AutoColumn>
@@ -120,6 +120,8 @@ function TransactionSubmittedContent({
       .catch(() => setSuccess(false))
   }, [connector, logoURL, token])
 
+  const explorerText = chainId === ChainId.MAINNET ? t`View on  Etherscan` : t`View on Block Explorer`
+
   return (
     <Wrapper>
       <AutoColumn>
@@ -130,7 +132,7 @@ function TransactionSubmittedContent({
           </RowBetween>
         )}
         <ConfirmedIcon inline={inline}>
-          <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
+          <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accent1} />
         </ConfirmedIcon>
         <ConfirmationModalContentWrapper gap="md" justify="center">
           <ThemedText.MediumHeader textAlign="center">
@@ -145,21 +147,19 @@ function TransactionSubmittedContent({
               ) : (
                 <RowFixed>
                   <Trans>Added {currencyToAdd.symbol} </Trans>
-                  <CheckCircle size="16px" stroke={theme.accentSuccess} style={{ marginLeft: '6px' }} />
+                  <CheckCircle size="16px" stroke={theme.success} style={{ marginLeft: '6px' }} />
                 </RowFixed>
               )}
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }} data-testid="dismiss-tx-confirmation">
-            <ThemedText.HeadlineSmall color={theme.accentTextLightPrimary}>
+            <ThemedText.HeadlineSmall color={theme.deprecated_accentTextLightPrimary}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
             </ThemedText.HeadlineSmall>
           </ButtonPrimary>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <ThemedText.Link color={theme.accentAction}>
-                <Trans>View on {chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
-              </ThemedText.Link>
+              <ThemedText.Link color={theme.accent1}>{explorerText}</ThemedText.Link>
             </ExternalLink>
           )}
         </ConfirmationModalContentWrapper>
@@ -242,10 +242,10 @@ function L2Content({
         <ConfirmedIcon inline={inline}>
           {confirmed ? (
             transactionSuccess ? (
-              // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.accentSuccess} />
+              // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.success} />
               <AnimatedConfirmation />
             ) : (
-              <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.accentFailure} />
+              <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.critical} />
             )
           ) : (
             <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
@@ -268,20 +268,20 @@ function L2Content({
           </ThemedText.BodySecondary>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <ThemedText.SubHeaderSmall color={theme.accentAction}>
+              <ThemedText.SubHeaderSmall color={theme.accent1}>
                 <Trans>View on Explorer</Trans>
               </ThemedText.SubHeaderSmall>
             </ExternalLink>
           ) : (
             <div style={{ height: '17px' }} />
           )}
-          <ThemedText.SubHeaderSmall color={theme.textTertiary} marginTop="20px">
+          <ThemedText.SubHeaderSmall color={theme.neutral3} marginTop="20px">
             {!secondsToConfirm ? (
               <div style={{ height: '24px' }} />
             ) : (
               <div>
                 <Trans>Transaction completed in </Trans>
-                <span style={{ fontWeight: 500, marginLeft: '4px', color: theme.textPrimary }}>
+                <span style={{ fontWeight: 535, marginLeft: '4px', color: theme.neutral1 }}>
                   {secondsToConfirm} seconds 🎉
                 </span>
               </div>

@@ -62,9 +62,9 @@ exports[`Wallet Option renders default state 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  color: #0D111C;
+  color: #222222;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 535;
   padding: 0 8px;
 }
 
@@ -86,6 +86,11 @@ exports[`Wallet Option renders default state 1`] = `
   justify-content: center;
 }
 
+.c2 img {
+  border: 1px solid #22222212;
+  border-radius: 12px;
+}
+
 .c2 > img,
 .c2 span {
   height: 40px;
@@ -103,7 +108,7 @@ exports[`Wallet Option renders default state 1`] = `
 
 <button
   class="c0"
-  data-testid="wallet-option-UNISWAP_WALLET"
+  data-testid="wallet-option-UNISWAP_WALLET_V2"
 >
   <div
     class="c1"

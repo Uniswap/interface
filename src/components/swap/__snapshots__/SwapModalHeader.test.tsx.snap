@@ -27,19 +27,19 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c6 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c8 {
-  color: #0D111C;
+  color: #222222;
 }
 
-.c12 {
+.c13 {
   width: 100%;
   height: 1px;
   border-width: 0;
   margin: 0;
-  background-color: #D2D9EE;
+  background-color: #22222212;
 }
 
 .c2 {
@@ -78,17 +78,23 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   grid-row-gap: 8px;
 }
 
-.c11 {
-  --size: 36px;
-  border-radius: 100px;
-  color: #0D111C;
-  background-color: #E8ECFB;
-  font-size: calc(var(--size) / 3);
-  font-weight: 500;
-  height: 36px;
-  line-height: 36px;
-  text-align: center;
+.c12 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
   width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c11 {
+  width: 36px;
+  height: 36px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
 }
 
 .c10 {
@@ -106,11 +112,11 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 
 .c9 {
   cursor: help;
-  color: #7780A0;
+  color: #7D7D7D;
   margin-right: 8px;
 }
 
-.c13 {
+.c14 {
   margin: 16px 2px 24px 2px;
 }
 
@@ -131,14 +137,14 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
           class="c5"
         >
           <div
-            class="c6 css-1jljtub"
+            class="c6 css-1urox24"
           >
             <div
               class="c7"
             >
               <div>
                 <div
-                  class="c8 c9 css-zhpkf8"
+                  class="c8 c9 css-142zc9n"
                   cursor="help"
                 >
                   You pay
@@ -150,7 +156,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             class="c5"
           >
             <div
-              class="c8 css-z2fexy"
+              class="c8 css-1geukv8"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
@@ -159,11 +165,16 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
         </div>
         <div
           class="c10"
+          style="height: 36px; width: 36px;"
         >
           <div
             class="c11"
           >
-            ABC
+            <img
+              alt="ABC logo"
+              class="c12"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+            />
           </div>
         </div>
       </div>
@@ -174,14 +185,14 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
           class="c5"
         >
           <div
-            class="c6 css-1jljtub"
+            class="c6 css-1urox24"
           >
             <div
               class="c7"
             >
               <div>
                 <div
-                  class="c8 c9 css-zhpkf8"
+                  class="c8 c9 css-142zc9n"
                   cursor="help"
                 >
                   You receive
@@ -193,7 +204,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             class="c5"
           >
             <div
-              class="c8 css-z2fexy"
+              class="c8 css-1geukv8"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
@@ -202,17 +213,256 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
         </div>
         <div
           class="c10"
+          style="height: 36px; width: 36px;"
         >
           <div
             class="c11"
           >
-            DEF
+            <img
+              alt="DEF logo"
+              class="c12"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+            />
           </div>
         </div>
       </div>
     </div>
     <div
-      class="c12 c13"
+      class="c13 c14"
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX swap 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.c6 {
+  color: #7D7D7D;
+}
+
+.c8 {
+  color: #222222;
+}
+
+.c13 {
+  width: 100%;
+  height: 1px;
+  border-width: 0;
+  margin: 0;
+  background-color: #22222212;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c0 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 8px;
+}
+
+.c12 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c11 {
+  width: 36px;
+  height: 36px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c10 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c7 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c9 {
+  cursor: help;
+  color: #7D7D7D;
+  margin-right: 8px;
+}
+
+.c14 {
+  margin: 16px 2px 24px 2px;
+}
+
+.c1 {
+  margin-top: 16px;
+}
+
+<div
+    class="c0 c1"
+  >
+    <div
+      class="c2"
+    >
+      <div
+        class="c3 c4"
+      >
+        <div
+          class="c5"
+        >
+          <div
+            class="c6 css-1urox24"
+          >
+            <div
+              class="c7"
+            >
+              <div>
+                <div
+                  class="c8 c9 css-142zc9n"
+                  cursor="help"
+                >
+                  You pay
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c5"
+          >
+            <div
+              class="c8 css-1geukv8"
+              data-testid="INPUT-amount"
+            >
+              &lt;0.00001 ETH
+            </div>
+          </div>
+        </div>
+        <div
+          class="c10"
+          style="height: 36px; width: 36px;"
+        >
+          <div
+            class="c11"
+          >
+            <img
+              alt="ETH logo"
+              class="c12"
+              src="ethereum-logo.png"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="c3 c4"
+      >
+        <div
+          class="c5"
+        >
+          <div
+            class="c6 css-1urox24"
+          >
+            <div
+              class="c7"
+            >
+              <div>
+                <div
+                  class="c8 c9 css-142zc9n"
+                  cursor="help"
+                >
+                  You receive
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c5"
+          >
+            <div
+              class="c8 css-1geukv8"
+              data-testid="OUTPUT-amount"
+            >
+              &lt;0.00001 DEF
+            </div>
+          </div>
+        </div>
+        <div
+          class="c10"
+          style="height: 36px; width: 36px;"
+        >
+          <div
+            class="c11"
+          >
+            <img
+              alt="DEF logo"
+              class="c12"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c13 c14"
     />
   </div>
 </DocumentFragment>
@@ -245,19 +495,19 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 }
 
 .c6 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c8 {
-  color: #0D111C;
+  color: #222222;
 }
 
-.c12 {
+.c13 {
   width: 100%;
   height: 1px;
   border-width: 0;
   margin: 0;
-  background-color: #D2D9EE;
+  background-color: #22222212;
 }
 
 .c2 {
@@ -296,17 +546,23 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   grid-row-gap: 8px;
 }
 
-.c11 {
-  --size: 36px;
-  border-radius: 100px;
-  color: #0D111C;
-  background-color: #E8ECFB;
-  font-size: calc(var(--size) / 3);
-  font-weight: 500;
-  height: 36px;
-  line-height: 36px;
-  text-align: center;
+.c12 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
   width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c11 {
+  width: 36px;
+  height: 36px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
 }
 
 .c10 {
@@ -324,11 +580,11 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 
 .c9 {
   cursor: help;
-  color: #7780A0;
+  color: #7D7D7D;
   margin-right: 8px;
 }
 
-.c13 {
+.c14 {
   margin: 16px 2px 24px 2px;
 }
 
@@ -349,14 +605,14 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
           class="c5"
         >
           <div
-            class="c6 css-1jljtub"
+            class="c6 css-1urox24"
           >
             <div
               class="c7"
             >
               <div>
                 <div
-                  class="c8 c9 css-zhpkf8"
+                  class="c8 c9 css-142zc9n"
                   cursor="help"
                 >
                   You pay
@@ -368,7 +624,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             class="c5"
           >
             <div
-              class="c8 css-z2fexy"
+              class="c8 css-1geukv8"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
@@ -377,11 +633,16 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
         </div>
         <div
           class="c10"
+          style="height: 36px; width: 36px;"
         >
           <div
             class="c11"
           >
-            ABC
+            <img
+              alt="ABC logo"
+              class="c12"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+            />
           </div>
         </div>
       </div>
@@ -392,14 +653,14 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
           class="c5"
         >
           <div
-            class="c6 css-1jljtub"
+            class="c6 css-1urox24"
           >
             <div
               class="c7"
             >
               <div>
                 <div
-                  class="c8 c9 css-zhpkf8"
+                  class="c8 c9 css-142zc9n"
                   cursor="help"
                 >
                   You receive
@@ -411,7 +672,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             class="c5"
           >
             <div
-              class="c8 css-z2fexy"
+              class="c8 css-1geukv8"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 GHI
@@ -420,17 +681,22 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
         </div>
         <div
           class="c10"
+          style="height: 36px; width: 36px;"
         >
           <div
             class="c11"
           >
-            GHI
+            <img
+              alt="GHI logo"
+              class="c12"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
+            />
           </div>
         </div>
       </div>
     </div>
     <div
-      class="c12 c13"
+      class="c13 c14"
     />
   </div>
 </DocumentFragment>

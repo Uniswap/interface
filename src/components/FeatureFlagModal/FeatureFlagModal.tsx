@@ -1,14 +1,25 @@
+import Column from 'components/Column'
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
-import { useRoutingAPIForPriceFlag } from 'featureFlags/flags/priceRoutingApi'
+import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
+import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
+import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
+import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
+import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
+import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
+import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
+import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { UnifiedRouterVariant, useRoutingAPIV2Flag } from 'featureFlags/flags/unifiedRouter'
+import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
+import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
+import { useUniswapXExactOutputFlag } from 'featureFlags/flags/uniswapXExactOutput'
+import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
+import { BREAKPOINTS } from 'theme'
 
 const StyledModal = styled.div`
   position: fixed;
@@ -18,21 +29,35 @@ const StyledModal = styled.div`
   transform: translate(-50%, -50%);
   width: 400px;
   height: fit-content;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 18px;
-  padding: 20px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  padding: 20px 0px;
+  background-color: ${({ theme }) => theme.surface2};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   z-index: 100;
   flex-direction: column;
   gap: 8px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    max-height: 100vh;
+  }
 `
 
 function Modal({ open, children }: { open: boolean; children: ReactNode }) {
   return open ? <StyledModal>{children}</StyledModal> : null
 }
+
+const FlagsColumn = styled(Column)`
+  max-height: 600px;
+  overflow-y: auto;
+  padding: 0px 20px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    max-height: unset;
+  }
+`
 
 const Row = styled.div`
   display: flex;
@@ -45,52 +70,52 @@ const CloseButton = styled.button`
   cursor: pointer;
   background: transparent;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 const ToggleButton = styled.button`
   cursor: pointer;
   background: transparent;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 const Header = styled(Row)`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.surface3};
   margin-bottom: 8px;
 `
 const FlagName = styled.span`
   font-size: 16px;
   line-height: 20px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 const FlagGroupName = styled.span`
   font-size: 20px;
   line-height: 24px;
-  color: ${({ theme }) => theme.textPrimary};
-  font-weight: 600;
+  color: ${({ theme }) => theme.neutral1};
+  font-weight: 535;
 `
 const FlagDescription = styled.span`
   font-size: 12px;
   line-height: 16px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   display: flex;
   align-items: center;
 `
 const FlagVariantSelection = styled.select`
   border-radius: 12px;
   padding: 8px;
-  background: ${({ theme }) => theme.backgroundInteractive};
-  font-weight: 600;
+  background: ${({ theme }) => theme.surface3};
+  font-weight: 535;
   font-size: 16px;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
 
   :hover {
-    background: ${({ theme }) => theme.backgroundOutline};
+    background: ${({ theme }) => theme.surface3};
   }
 `
 
@@ -103,15 +128,16 @@ const FlagInfo = styled.div`
 const SaveButton = styled.button`
   border-radius: 12px;
   padding: 8px;
-  background: ${({ theme }) => theme.backgroundInteractive};
-  font-weight: 600;
+  margin: 0px 20px;
+  background: ${({ theme }) => theme.surface3};
+  font-weight: 535;
   font-size: 16px;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
 
   :hover {
-    background: ${({ theme }) => theme.backgroundOutline};
+    background: ${({ theme }) => theme.surface3};
   }
 `
 
@@ -197,38 +223,96 @@ export default function FeatureFlagModal() {
 
   return (
     <Modal open={open}>
-      <Header>
-        Feature Flag Settings
-        <CloseButton onClick={toggle}>
-          <X size={24} />
-        </CloseButton>
-      </Header>
-      <FeatureFlagOption
-        variant={DetailsV2Variant}
-        value={useDetailsV2Flag()}
-        featureFlag={FeatureFlag.detailsV2}
-        label="Use the new details page for nfts"
-      />
-      <FeatureFlagOption
-        variant={UnifiedRouterVariant}
-        value={useRoutingAPIV2Flag()}
-        featureFlag={FeatureFlag.uraEnabled}
-        label="Enable the Unified Routing API"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useRoutingAPIForPriceFlag()}
-        featureFlag={FeatureFlag.routingAPIPrice}
-        label="Use the URA or routing-api for price fetches"
-      />
-      <FeatureFlagGroup name="Debug">
+      <FlagsColumn>
+        <Header>
+          Feature Flag Settings
+          <CloseButton onClick={toggle}>
+            <X size={24} />
+          </CloseButton>
+        </Header>
         <FeatureFlagOption
-          variant={TraceJsonRpcVariant}
-          value={useTraceJsonRpcFlag()}
-          featureFlag={FeatureFlag.traceJsonRpc}
-          label="Enables JSON-RPC tracing"
+          variant={UniswapXVariant}
+          value={useUniswapXFlag()}
+          featureFlag={FeatureFlag.uniswapXEnabled}
+          label="Enable UniswapX on interface"
         />
-      </FeatureFlagGroup>
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useForceUniswapXOnFlag()}
+          featureFlag={FeatureFlag.forceUniswapXOn}
+          label="Force routing api to enable UniswapX"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useUniswapXSyntheticQuoteFlag()}
+          featureFlag={FeatureFlag.uniswapXSyntheticQuote}
+          label="Force synthetic quotes for UniswapX"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useUniswapXEthOutputFlag()}
+          featureFlag={FeatureFlag.uniswapXEthOutputEnabled}
+          label="Enable eth output for UniswapX orders"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useUniswapXExactOutputFlag()}
+          featureFlag={FeatureFlag.uniswapXExactOutputEnabled}
+          label="Enable exact output for UniswapX orders"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useCurrencyConversionFlag()}
+          featureFlag={FeatureFlag.currencyConversion}
+          label="Enable currency conversion"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useMultichainUXFlag()}
+          featureFlag={FeatureFlag.multichainUX}
+          label="Updated Multichain UX"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useFotAdjustmentsFlag()}
+          featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
+          label="Enable fee-on-transfer UI and slippage adjustments"
+        />
+        <FeatureFlagGroup name="Info Site Migration">
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoExploreFlag()}
+            featureFlag={FeatureFlag.infoExplore}
+            label="Info site migration - Updating Token Explore Page"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoTDPFlag()}
+            featureFlag={FeatureFlag.infoTDP}
+            label="Info site migration - Updating Token Details Page"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoPoolPageFlag()}
+            featureFlag={FeatureFlag.infoPoolPage}
+            label="Info site migration - Adding Pool Details Page"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useInfoLiveViewsFlag()}
+            featureFlag={FeatureFlag.infoLiveViews}
+            label="Info site migration - Support live view graphs"
+          />
+        </FeatureFlagGroup>
+        <FeatureFlagGroup name="Debug">
+          <FeatureFlagOption
+            variant={TraceJsonRpcVariant}
+            value={useTraceJsonRpcFlag()}
+            featureFlag={FeatureFlag.traceJsonRpc}
+            label="Enables JSON-RPC tracing"
+          />
+        </FeatureFlagGroup>
+      </FlagsColumn>
       <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
     </Modal>
   )

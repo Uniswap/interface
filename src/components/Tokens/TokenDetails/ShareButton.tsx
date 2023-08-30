@@ -1,19 +1,20 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { Share as ShareIcon } from 'components/Icons/Share'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { chainIdToBackendName } from 'graphql/data/util'
+import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Link, Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, CopyHelperRefType } from 'theme'
 import { colors } from 'theme/colors'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
 
-import { ReactComponent as ShareIcon } from '../../../assets/svg/share.svg'
 import { CopyHelper } from '../../../theme'
 
 const TWITTER_WIDTH = 560
@@ -25,7 +26,6 @@ const ShareButtonDisplay = styled.div`
 `
 
 const Share = styled(ShareIcon)<{ open: boolean }>`
-  stroke: ${({ theme }) => theme.textSecondary};
   height: 24px;
   width: 24px;
   ${ClickableStyle}
@@ -43,9 +43,9 @@ const ShareActions = styled.div`
   flex-direction: column;
   overflow: auto;
   padding: 8px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
-  box-shadow: ${({ theme }) => theme.deepShadow};
+  background-color: ${({ theme }) => theme.surface1};
+  border: 0.5px solid ${({ theme }) => theme.surface3};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   border-radius: 12px;
 `
 const ShareAction = styled.div`
@@ -54,10 +54,10 @@ const ShareAction = styled.div`
   padding: 8px;
   border-radius: 8px;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 485;
   gap: 12px;
   height: 40px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
   :hover {
     background-color: ${({ theme }) => opacify(10, theme.darkMode ? colors.gray200 : colors.gray300)};
@@ -73,6 +73,7 @@ export default function ShareButton({ currency }: { currency: Currency }) {
   const positionX = (window.screen.width - TWITTER_WIDTH) / 2
   const positionY = (window.screen.height - TWITTER_HEIGHT) / 2
   const address = currency.isNative ? NATIVE_CHAIN_ID : currency.wrapped.address
+  useDisableScrolling(open)
 
   const shareTweet = () => {
     toggleShare()
@@ -97,7 +98,7 @@ export default function ShareButton({ currency }: { currency: Currency }) {
           <ShareAction onClick={() => copyHelperRef.current?.forceCopy()}>
             <CopyHelper
               InitialIcon={Link}
-              color={theme.textPrimary}
+              color={theme.neutral1}
               iconPosition="left"
               gap={12}
               toCopy={window.location.href}
@@ -108,7 +109,7 @@ export default function ShareButton({ currency }: { currency: Currency }) {
           </ShareAction>
 
           <ShareAction onClick={shareTweet}>
-            <Twitter color={theme.textPrimary} size={20} strokeWidth={1.5} />
+            <Twitter color={theme.neutral1} size={20} strokeWidth={1.5} />
             <Trans>Share to Twitter</Trans>
           </ShareAction>
         </ShareActions>

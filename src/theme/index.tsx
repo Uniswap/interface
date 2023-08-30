@@ -1,6 +1,6 @@
 import { rootCssString } from 'nft/css/cssStringFromTheme'
 import React, { useMemo } from 'react'
-import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components/macro'
+import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import { navDimensions } from '../nft/css/sprinkles.css'
@@ -89,7 +89,7 @@ function getSettings(darkMode: boolean) {
 
     navHeight: navDimensions.height,
     navVerticalPad: navDimensions.verticalPad,
-    mobileBottomBarHeight: 52,
+    mobileBottomBarHeight: 48,
     maxWidth: MAX_CONTENT_WIDTH,
 
     // deprecated - please use hardcoded exported values instead of
@@ -118,7 +118,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
 export const ThemedGlobalStyle = createGlobalStyle`
   html {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     background-color: ${({ theme }) => theme.background} !important;
   }
 
@@ -127,7 +127,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: ${({ theme }) => theme.accentAction}; 
+    color: ${({ theme }) => theme.accent1}; 
   }
 
   :root {

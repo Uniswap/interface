@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { BlockedIcon } from 'components/TokenSafety/TokenSafetyIcon'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 
 import { CopyHelper } from '../../theme'
@@ -45,7 +45,7 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
           toCopy="compliance@uniswap.org"
           fontSize={14}
           iconSize={16}
-          color={theme.accentAction}
+          color={theme.accent1}
           iconPosition="right"
         >
           compliance@uniswap.org

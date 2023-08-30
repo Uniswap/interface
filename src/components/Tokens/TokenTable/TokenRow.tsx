@@ -1,20 +1,22 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
+import { sendAnalyticsEvent } from 'analytics'
 import SparklineChart from 'components/Charts/SparklineChart'
+import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
+import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
+import { Info } from 'components/Icons/Info'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, validateUrlChainParam } from 'graphql/data/util'
+import { getTokenDetailsURL, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
-import { ArrowDown, ArrowUp, Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
-import styled, { css, useTheme } from 'styled-components/macro'
-import { ClickableStyle } from 'theme'
+import styled, { css, useTheme } from 'styled-components'
+import { BREAKPOINTS, ClickableStyle } from 'theme'
+import { formatNumber, formatUSDPrice, NumberType } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -69,7 +71,7 @@ const StyledTokenRow = styled.div<{
     ${({ $loading, theme }) =>
       !$loading &&
       css`
-        background-color: ${theme.hoverDefault};
+        background-color: ${theme.deprecated_hoverDefault};
       `}
     ${({ last }) =>
       last &&
@@ -93,7 +95,7 @@ const StyledTokenRow = styled.div<{
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     grid-template-columns: 2fr 3fr;
     min-width: unset;
-    border-bottom: 0.5px solid ${({ theme }) => theme.backgroundModule};
+    border-bottom: 0.5px solid ${({ theme }) => theme.surface2};
 
     :last-of-type {
       border-bottom: none;
@@ -104,7 +106,7 @@ const StyledTokenRow = styled.div<{
 const ClickableContent = styled.div`
   display: flex;
   text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   align-items: center;
   cursor: pointer;
 `
@@ -114,9 +116,9 @@ const ClickableName = styled(ClickableContent)`
 `
 const StyledHeaderRow = styled(StyledTokenRow)`
   border-bottom: 1px solid;
-  border-color: ${({ theme }) => theme.backgroundOutline};
+  border-color: ${({ theme }) => theme.surface3};
   border-radius: 8px 8px 0px 0px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   height: 48px;
   line-height: 16px;
@@ -134,7 +136,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
 `
 
 const ListNumberCell = styled(Cell)<{ header: boolean }>`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   min-width: 32px;
   font-size: 14px;
 
@@ -163,6 +165,10 @@ const NameCell = styled(Cell)`
   padding: 0px 8px;
   min-width: 240px;
   gap: 8px;
+
+  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
+    min-width: 200px;
+  }
 `
 const PriceCell = styled(DataCell)`
   padding-right: 8px;
@@ -179,7 +185,7 @@ const PercentChangeInfoCell = styled(Cell)`
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: flex;
     justify-content: flex-end;
-    color: ${({ theme }) => theme.textSecondary};
+    color: ${({ theme }) => theme.neutral2};
     font-size: 12px;
     line-height: 16px;
   }
@@ -235,7 +241,7 @@ const TokenInfoCell = styled(Cell)`
     flex-direction: column;
     gap: 0px;
     width: max-content;
-    font-weight: 500;
+    font-weight: 535;
   }
 `
 const TokenName = styled.div`
@@ -245,7 +251,7 @@ const TokenName = styled.div`
   max-width: 100%;
 `
 const TokenSymbol = styled(Cell)`
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral2};
   text-transform: uppercase;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -279,6 +285,7 @@ export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
 `
 
 const InfoIconContainer = styled.div`
+  width: 16px;
   margin-left: 2px;
   display: flex;
   align-items: center;
@@ -316,9 +323,9 @@ function HeaderCell({
       {sortMethod === category && (
         <>
           {sortAscending ? (
-            <ArrowUp size={20} strokeWidth={1.8} color={theme.accentActive} />
+            <ArrowChangeUp width={16} height={16} color={theme.neutral2} />
           ) : (
-            <ArrowDown size={20} strokeWidth={1.8} color={theme.accentActive} />
+            <ArrowChangeDown width={16} height={16} color={theme.neutral2} />
           )}
         </>
       )}
@@ -326,7 +333,7 @@ function HeaderCell({
       {description && (
         <MouseoverTooltip text={description} placement="right">
           <InfoIconContainer>
-            <Info size={14} />
+            <Info width="16px" height="16px" />
           </InfoIconContainer>
         </MouseoverTooltip>
       )}
@@ -435,7 +442,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const filterString = useAtomValue(filterStringAtom)
 
   const filterNetwork = validateUrlChainParam(useParams<{ chainName?: string }>().chainName?.toUpperCase())
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[filterNetwork]
+  const chainId = supportedChainIdFromGQLChain(filterNetwork)
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
@@ -458,7 +465,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <div ref={ref} data-testid={`token-table-row-${token.symbol}`}>
+    <div ref={ref} data-testid={`token-table-row-${token.address}`}>
       <StyledLink
         to={getTokenDetailsURL(token)}
         onClick={() =>

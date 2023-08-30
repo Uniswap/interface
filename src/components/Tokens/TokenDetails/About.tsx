@@ -1,17 +1,17 @@
 import { Trans } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { darken } from 'polished'
 import { useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
 
 import Resource from './Resource'
 
 const NoInfoAvailable = styled.span`
-  color: ${({ theme }) => theme.textTertiary};
-  font-weight: 400;
+  color: ${({ theme }) => theme.neutral3};
+  font-weight: 485;
   font-size: 16px;
 `
 const TokenDescriptionContainer = styled.div`
@@ -25,14 +25,14 @@ const TokenDescriptionContainer = styled.div`
 `
 
 const TruncateDescriptionButton = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
-  font-weight: 400;
+  color: ${({ theme }) => theme.neutral2};
+  font-weight: 485;
   font-size: 0.85em;
   padding-top: 0.5em;
 
   &:hover,
   &:focus {
-    color: ${({ theme }) => darken(0.1, theme.textSecondary)};
+    color: ${({ theme }) => darken(0.1, theme.neutral2)};
     cursor: pointer;
   }
 `
@@ -67,7 +67,7 @@ const ResourcesContainer = styled.div`
 
 type AboutSectionProps = {
   address: string
-  chainId: SupportedChainId
+  chainId: ChainId
   description?: string | null
   homepageUrl?: string | null
   twitterName?: string | null
@@ -105,7 +105,7 @@ export function AboutSection({ address, chainId, description, homepageUrl, twitt
       </ThemedText.SubHeaderSmall>
       <ResourcesContainer data-cy="resources-container">
         <Resource
-          name={chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}
+          name={chainId === ChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}
           link={`${explorer}${address === 'NATIVE' ? '' : 'address/' + address}`}
         />
         <Resource name="More analytics" link={`${infoLink}tokens/${address}`} />

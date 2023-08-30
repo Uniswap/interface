@@ -3,17 +3,17 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { PropsWithChildren } from 'react'
 import { ChevronDown } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   transform: ${({ $expanded }) => ($expanded ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform ${({ theme }) => theme.transition.duration.medium};
 `
 
 const ToggleButton = styled(Row)`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.surface3};
   border-radius: 12px;
   padding: 4px 8px 4px 12px;
   height: 100%;
@@ -30,18 +30,18 @@ const Wrapper = styled(Column)<{ numItems: number; isExpanded: boolean }>`
   overflow: hidden;
 `
 
-// TODO(WEB-3288): Replace this component to use `components/Expand` under the hood
+// TODO(WEB-1982): Replace this component to use `components/Expand` under the hood
 type ExpandoRowProps = PropsWithChildren<{ title?: string; numItems: number; isExpanded: boolean; toggle: () => void }>
 export function ExpandoRow({ title = t`Hidden`, numItems, isExpanded, toggle, children }: ExpandoRowProps) {
   if (numItems === 0) return null
   return (
     <>
       <Row align="center" justify="space-between" padding="16px">
-        <ThemedText.SubHeader color="textSecondary" variant="subheadSmall">
+        <ThemedText.SubHeader color="neutral2" variant="subheadSmall">
           {`${title} (${numItems})`}
         </ThemedText.SubHeader>
         <ToggleButton align="center" onClick={toggle}>
-          <ThemedText.LabelSmall color="textSecondary" variant="buttonLabelSmall">
+          <ThemedText.LabelSmall color="neutral2" variant="buttonLabelSmall">
             {isExpanded ? t`Hide` : t`Show`}
           </ThemedText.LabelSmall>
           <ExpandIcon $expanded={isExpanded} />

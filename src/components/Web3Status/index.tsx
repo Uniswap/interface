@@ -1,24 +1,26 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
+import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import { getConnection } from 'connection'
+import useENSName from 'hooks/useENSName'
+import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
-import { useCallback, useMemo } from 'react'
-import styled from 'styled-components/macro'
+import { useCallback } from 'react'
+import { useAppSelector } from 'state/hooks'
+import styled from 'styled-components'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
+import { shortenAddress } from 'utils'
 
-import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
-import { TransactionDetails } from '../../state/transactions/types'
-import { shortenAddress } from '../../utils'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import { RowBetween } from '../Row'
@@ -30,7 +32,7 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   ${flexRowNoWrap};
   width: 100%;
   align-items: center;
-  padding: 0.5rem;
+  padding: 0.5rem 0.25rem;
   border-radius: ${FULL_BORDER_RADIUS}px;
   cursor: pointer;
   user-select: none;
@@ -42,19 +44,20 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   }
 `
 
-const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
+const Web3StatusConnectWrapper = styled.div`
   ${flexRowNoWrap};
   align-items: center;
-  background-color: ${({ theme }) => theme.accentActionSoft};
+  background-color: ${({ theme }) => theme.accent2};
   border-radius: ${FULL_BORDER_RADIUS}px;
   border: none;
   padding: 0;
   height: 40px;
 
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
   :hover {
-    color: ${({ theme }) => theme.accentActionSoft};
-    stroke: ${({ theme }) => theme.accentActionSoft};
+    color: ${({ theme }) => theme.accent1};
+    stroke: ${({ theme }) => theme.accent2};
+    background-color: ${({ theme }) => darken(0.015, theme.accent2)};
   }
 
   transition: ${({
@@ -68,19 +71,17 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
   pending?: boolean
   isClaimAvailable?: boolean
 }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.accentAction : theme.deprecated_bg1)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.textPrimary)};
-  font-weight: 500;
+  background-color: ${({ pending, theme }) => (pending ? theme.accent1 : theme.surface1)};
+  border: 1px solid ${({ pending, theme }) => (pending ? theme.accent1 : theme.surface1)};
+  color: ${({ pending, theme }) => (pending ? theme.white : theme.neutral1)};
   border: ${({ isClaimAvailable }) => isClaimAvailable && `1px solid ${colors.purple300}`};
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_bg3)};
+    border: 1px solid ${({ theme }) => theme.surface2};
+    background-color: ${({ pending, theme }) => (pending ? theme.accent2 : theme.surface2)};
 
     :focus {
-      border: 1px solid
-        ${({ pending, theme }) =>
-          pending ? darken(0.1, theme.accentAction) : darken(0.1, theme.backgroundInteractive)};
+      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.accent1) : darken(0.1, theme.surface3))};
     }
   }
 
@@ -106,16 +107,11 @@ const Text = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin: 0 0.5rem 0 0.25rem;
+  margin: 0 0.25rem 0 0.25rem;
   font-size: 1rem;
   width: fit-content;
-  font-weight: 500;
+  font-weight: 485;
 `
-
-// we want the latest one to come first, so return negative if a is after b
-function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
-  return b.addedTime - a.addedTime
-}
 
 const StyledConnectButton = styled.button`
   background-color: transparent;
@@ -123,15 +119,19 @@ const StyledConnectButton = styled.button`
   border-top-left-radius: ${FULL_BORDER_RADIUS}px;
   border-bottom-left-radius: ${FULL_BORDER_RADIUS}px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   padding: 10px 12px;
   color: inherit;
 `
 
 function Web3StatusInner() {
-  const { account, connector, chainId, ENSName } = useWeb3React()
+  const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
+  const ignoreWhileSwitchingChain = useCallback(() => !switchingChain, [switchingChain])
+  const { account, connector } = useLast(useWeb3React(), ignoreWhileSwitchingChain)
+  const { ENSName } = useENSName(account)
   const connection = getConnection(connector)
+
   const [, toggleAccountDrawer] = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
@@ -139,20 +139,9 @@ function Web3StatusInner() {
   }, [toggleAccountDrawer])
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
-  const allTransactions = useAllTransactions()
+  const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
 
-  const sortedRecentTransactions = useMemo(() => {
-    const txs = Object.values(allTransactions)
-    return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
-  }, [allTransactions])
-
-  const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
-
-  const hasPendingTransactions = !!pending.length
-
-  if (!chainId) {
-    return null
-  } else if (account) {
+  if (account) {
     return (
       <TraceEvent
         events={[BrowserEvent.onClick]}
@@ -160,16 +149,19 @@ function Web3StatusInner() {
         properties={{ type: 'open' }}
       >
         <Web3StatusConnected
+          disabled={Boolean(switchingChain)}
           data-testid="web3-status-connected"
           onClick={handleWalletDropdownClick}
-          pending={hasPendingTransactions}
+          pending={hasPendingActivity}
           isClaimAvailable={isClaimAvailable}
         >
-          {!hasPendingTransactions && <StatusIcon size={24} connection={connection} showMiniIcons={false} />}
-          {hasPendingTransactions ? (
+          {!hasPendingActivity && (
+            <StatusIcon account={account} size={24} connection={connection} showMiniIcons={false} />
+          )}
+          {hasPendingActivity ? (
             <RowBetween>
               <Text>
-                <Trans>{pending?.length} Pending</Trans>
+                <Trans>{pendingActivityCount} Pending</Trans>
               </Text>{' '}
               <Loader stroke="white" />
             </RowBetween>
@@ -190,7 +182,6 @@ function Web3StatusInner() {
       >
         <Web3StatusConnectWrapper
           tabIndex={0}
-          faded={!account}
           onKeyPress={(e) => e.key === 'Enter' && handleWalletDropdownClick()}
           onClick={handleWalletDropdownClick}
         >
@@ -204,8 +195,9 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
+  const [isDrawerOpen] = useAccountDrawer()
   return (
-    <PrefetchBalancesWrapper>
+    <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={isDrawerOpen}>
       <Web3StatusInner />
       <Portal>
         <PortfolioDrawer />

@@ -4,7 +4,7 @@ import Card, { DarkGrayCard } from 'components/Card'
 import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 import { isMobile } from 'utils/userAgent'
 
@@ -20,20 +20,20 @@ const Wrapper = styled.div`
 `
 
 const StyledExternalCard = styled(Card)`
-  background-color: ${({ theme }) => theme.deprecated_primary5};
+  background-color: ${({ theme }) => theme.accent2};
   padding: 0.5rem;
   width: 100%;
 
   :hover,
   :focus,
   :active {
-    background-color: ${({ theme }) => theme.deprecated_primary4};
+    background-color: ${({ theme }) => theme.neutral3};
   }
 `
 
 const HoverText = styled.div`
   text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   display: flex;
   align-items: center;
 
@@ -63,7 +63,7 @@ const EXTERNAL_APIS = [
           The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance
           reasons.
         </Trans>{' '}
-        <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
+        <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8671777747597-Address-Screening-Guide">
           <Trans>Learn more</Trans>
         </ExternalLink>
       </>
@@ -128,7 +128,7 @@ function PrivacyPolicy() {
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="accentAction">
+                  <ThemedText.DeprecatedMain fontSize={14} color="accent1">
                     <Trans>Uniswap Labs&apos; Terms of Service</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
@@ -141,7 +141,7 @@ function PrivacyPolicy() {
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="accentAction">
+                  <ThemedText.DeprecatedMain fontSize={14} color="accent1">
                     <Trans>Privacy Policy</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
@@ -159,7 +159,7 @@ function PrivacyPolicy() {
               <AutoColumn gap="sm">
                 <AutoRow gap="4px">
                   <Info size={18} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="textPrimary">
+                  <ThemedText.DeprecatedMain fontSize={14} color="neutral1">
                     {name}
                   </ThemedText.DeprecatedMain>
                 </AutoRow>

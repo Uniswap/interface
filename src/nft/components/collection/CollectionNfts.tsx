@@ -1,10 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TraceEvent } from '@uniswap/analytics'
+import { parseEther } from '@ethersproject/units'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { TraceEvent } from 'analytics'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
-import { parseEther } from 'ethers/lib/utils'
 import { NftAssetTraitInput, NftMarketplace, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { ASSET_PAGE_SIZE, AssetFetcherParams, useNftAssets } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
@@ -52,7 +52,7 @@ import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParam
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useLocation } from 'react-router-dom'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme'
 
 import { LoadingAssets } from './CollectionAssetLoading'
@@ -132,14 +132,13 @@ const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
   border-radius: 12px;
   padding: 12px 18px 12px 12px;
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
-  color: ${({ toggled, disabled, theme }) => (toggled && !disabled ? theme.accentTextLightPrimary : theme.textPrimary)};
+  color: ${({ toggled, disabled, theme }) =>
+    toggled && !disabled ? theme.deprecated_accentTextLightPrimary : theme.neutral1};
   background: ${({ theme, toggled, disabled }) =>
-    !disabled && toggled
-      ? 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)'
-      : theme.backgroundInteractive};
+    !disabled && toggled ? 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)' : theme.surface3};
   opacity: ${({ disabled }) => (disabled ? 0.4 : 1)};
   :hover {
-    background-color: ${({ theme }) => theme.hoverState};
+    background-color: ${({ theme }) => theme.surface3};
     transition: ${({
       theme: {
         transition: { duration, timing },
@@ -266,8 +265,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     filter: {
       listed: buyNow,
       marketplaces: markets.length > 0 ? markets.map((market) => market.toUpperCase() as NftMarketplace) : undefined,
-      maxPrice: debouncedMaxPrice ? parseEther(debouncedMaxPrice).toString() : undefined,
-      minPrice: debouncedMinPrice ? parseEther(debouncedMinPrice).toString() : undefined,
+      maxPrice: debouncedMaxPrice ? parseEther(debouncedMaxPrice.toString()).toString() : undefined,
+      minPrice: debouncedMinPrice ? parseEther(debouncedMinPrice.toString()).toString() : undefined,
       tokenSearchQuery: debouncedSearchByNameText,
       traits:
         traits.length > 0
@@ -482,7 +481,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   return (
     <>
       <AnimatedBox
-        backgroundColor="backgroundBackdrop"
+        backgroundColor="surface1"
         position="sticky"
         top="72"
         width="full"
@@ -524,7 +523,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               data-testid="nft-sweep-button"
             >
               <SweepIcon viewBox="0 0 24 24" width="20px" height="20px" />
-              <SweepText fontWeight={600} color="currentColor" lineHeight="20px">
+              <SweepText fontWeight={535} color="currentColor" lineHeight="20px">
                 Sweep
               </SweepText>
             </SweepButton>
@@ -598,14 +597,14 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             className={hasNfts ? styles.assetList : undefined}
           >
             {!hasNfts ? (
-              <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
+              <Center width="full" color="neutral2" textAlign="center" style={{ height: '60vh' }}>
                 <EmptyCollectionWrapper>
                   <p className={headlineMedium}>No NFTS found</p>
                   <Box
                     onClick={reset}
                     type="button"
                     className={clsx(bodySmall, buttonTextMedium)}
-                    color="accentAction"
+                    color="accent1"
                     cursor="pointer"
                   >
                     <ViewFullCollection>View full collection</ViewFullCollection>

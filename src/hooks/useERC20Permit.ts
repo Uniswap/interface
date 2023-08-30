@@ -1,8 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
@@ -32,16 +31,16 @@ const PERMITTABLE_TOKENS: {
     [checksummedTokenAddress: string]: PermitInfo
   }
 } = {
-  [SupportedChainId.MAINNET]: {
+  [ChainId.MAINNET]: {
     [USDC_MAINNET.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
     [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-    [UNI[SupportedChainId.MAINNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+    [UNI[ChainId.MAINNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
-  [SupportedChainId.GOERLI]: {
-    [UNI[SupportedChainId.GOERLI].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  [ChainId.GOERLI]: {
+    [UNI[ChainId.GOERLI].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
-  [SupportedChainId.SEPOLIA]: {
-    [UNI[SupportedChainId.SEPOLIA].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  [ChainId.SEPOLIA]: {
+    [UNI[ChainId.SEPOLIA].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
 }
 

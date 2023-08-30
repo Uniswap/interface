@@ -1,11 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_IDS_TO_NAMES } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
 import { ParsedQs } from 'qs'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import useParsedQueryString from './useParsedQueryString'
-import usePrevious from './usePrevious'
 import useSelectChain from './useSelectChain'
 
 function getChainIdFromName(name: string) {
@@ -22,32 +21,42 @@ function getParsedChainId(parsedQs?: ParsedQs) {
 }
 
 export default function useSyncChainQuery() {
-  const { chainId, isActive } = useWeb3React()
+  const { chainId, isActive, account } = useWeb3React()
   const parsedQs = useParsedQueryString()
+  const chainIdRef = useRef(chainId)
+  const accountRef = useRef(account)
+
+  useEffect(() => {
+    // Update chainIdRef when the account is retrieved from Web3React
+    if (account && account !== accountRef.current) {
+      chainIdRef.current = chainId
+      accountRef.current = account
+    }
+  }, [account, chainId])
 
   const urlChainId = getParsedChainId(parsedQs)
-  const previousUrlChainId = usePrevious(urlChainId)
 
   const selectChain = useSelectChain()
 
-  // Can't use `usePrevious` because `chainId` can be undefined while activating.
-  const [previousChainId, setPreviousChainId] = useState<number | undefined>(undefined)
-  useEffect(() => {
-    if (chainId && chainId !== previousChainId) {
-      setPreviousChainId(chainId)
-    }
-  }, [chainId, previousChainId])
-
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId && isActive
-
-  return useEffect(() => {
-    if (chainQueryManuallyUpdated) {
-      // If the query param changed, and the chain didn't change, then activate the new chain
+  useEffect(() => {
+    // Change a user's chain on pageload if the connected chainId does not match the query param chain
+    if (isActive && urlChainId && chainIdRef.current === chainId && chainId !== urlChainId) {
       selectChain(urlChainId)
-      searchParams.delete('chain')
+    }
+    // If a user has a connected wallet and has manually changed their chain, update the query parameter if it's supported
+    else if (account && chainIdRef.current !== chainId && chainId !== urlChainId) {
+      if (isSupportedChain(chainId)) {
+        searchParams.set('chain', CHAIN_IDS_TO_NAMES[chainId])
+      } else {
+        searchParams.delete('chain')
+      }
       setSearchParams(searchParams)
     }
-  }, [chainQueryManuallyUpdated, urlChainId, selectChain, searchParams, setSearchParams])
+    // If a user has a connected wallet and the chainId matches the query param chain, update the chainIdRef
+    else if (isActive && chainId === urlChainId) {
+      chainIdRef.current = urlChainId
+    }
+  }, [urlChainId, selectChain, searchParams, isActive, chainId, account, setSearchParams])
 }

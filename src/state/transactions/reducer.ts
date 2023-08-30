@@ -1,8 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { SupportedChainId } from 'constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 
-import { updateVersion } from '../global/actions'
-import { TransactionDetails, TransactionInfo } from './types'
+import { SerializableTransactionReceipt, TransactionDetails, TransactionInfo } from './types'
 
 // TODO(WEB-2053): update this to be a map of account -> chainId -> txHash -> TransactionDetails
 // to simplify usage, once we're able to invalidate localstorage
@@ -13,12 +12,13 @@ export interface TransactionState {
 }
 
 interface AddTransactionPayload {
-  chainId: SupportedChainId
+  chainId: ChainId
   from: string
   hash: string
   info: TransactionInfo
-  nonce: number
+  nonce?: number
   deadline?: number
+  receipt?: SerializableTransactionReceipt
 }
 
 export const initialState: TransactionState = {}
@@ -29,13 +29,13 @@ const transactionSlice = createSlice({
   reducers: {
     addTransaction(
       transactions,
-      { payload: { chainId, from, hash, info, nonce, deadline } }: { payload: AddTransactionPayload }
+      { payload: { chainId, from, hash, info, nonce, deadline, receipt } }: { payload: AddTransactionPayload }
     ) {
       if (transactions[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
       }
       const txs = transactions[chainId] ?? {}
-      txs[hash] = { hash, info, from, addedTime: Date.now(), nonce, deadline }
+      txs[hash] = { hash, info, from, addedTime: Date.now(), nonce, deadline, receipt }
       transactions[chainId] = txs
     },
     clearAllTransactions(transactions, { payload: { chainId } }) {
@@ -66,23 +66,27 @@ const transactionSlice = createSlice({
       tx.receipt = receipt
       tx.confirmedTime = Date.now()
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(updateVersion, (transactions) => {
-      // in case there are any transactions in the store with the old format, remove them
-      Object.keys(transactions).forEach((chainId) => {
-        const chainTransactions = transactions[chainId as unknown as number]
-        Object.keys(chainTransactions).forEach((hash) => {
-          if (!('info' in chainTransactions[hash])) {
-            // clear old transactions that don't have the right format
-            delete chainTransactions[hash]
-          }
-        })
-      })
-    })
+    cancelTransaction(transactions, { payload: { hash, chainId, cancelHash } }) {
+      const tx = transactions[chainId]?.[hash]
+
+      if (tx) {
+        delete transactions[chainId]?.[hash]
+        transactions[chainId][cancelHash] = {
+          ...tx,
+          hash: cancelHash,
+          cancelled: true,
+        }
+      }
+    },
   },
 })
 
-export const { addTransaction, clearAllTransactions, checkedTransaction, finalizeTransaction, removeTransaction } =
-  transactionSlice.actions
+export const {
+  addTransaction,
+  clearAllTransactions,
+  checkedTransaction,
+  finalizeTransaction,
+  removeTransaction,
+  cancelTransaction,
+} = transactionSlice.actions
 export default transactionSlice.reducer

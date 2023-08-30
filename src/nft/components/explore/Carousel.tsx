@@ -2,7 +2,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'nft/components/icons'
 import { calculateCardIndex, calculateFirstCardIndex, calculateRank } from 'nft/utils'
 import { ReactNode, useCallback, useEffect, useRef } from 'react'
 import { a, useSprings } from 'react-spring'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -38,7 +38,7 @@ const CarouselItemCard = styled(a.div)`
 
 const CarouselItemIcon = styled.div`
   align-items: center;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
   display: none;
   user-select: none;

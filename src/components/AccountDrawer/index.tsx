@@ -1,14 +1,17 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceEventName } from '@uniswap/analytics-events'
+import { TraceEvent } from 'analytics'
 import { ScrollBarStyles } from 'components/Common'
+import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
-import styled from 'styled-components/macro'
+import { useGesture } from 'react-use-gesture'
+import styled from 'styled-components'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { isMobile } from 'utils/userAgent'
 
 import DefaultMenu from './DefaultMenu'
 
@@ -45,7 +48,7 @@ const ScrimBackground = styled.div<{ open: boolean }>`
   position: fixed;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.backgroundScrim};
+  background-color: ${({ theme }) => theme.scrim};
 
   opacity: 0;
   pointer-events: none;
@@ -55,7 +58,7 @@ const ScrimBackground = styled.div<{ open: boolean }>`
     transition: opacity ${({ theme }) => theme.transition.duration.medium} ease-in-out;
   }
 `
-const Scrim = ({ onClick, open }: { onClick: () => void; open: boolean }) => {
+export const Scrim = ({ onClick, open, testId }: { onClick: () => void; open: boolean; testId?: string }) => {
   const { width } = useWindowSize()
 
   useEffect(() => {
@@ -65,7 +68,7 @@ const Scrim = ({ onClick, open }: { onClick: () => void; open: boolean }) => {
     }
   }, [open, width])
 
-  return <ScrimBackground onClick={onClick} open={open} />
+  return <ScrimBackground data-testid={testId} onClick={onClick} open={open} />
 }
 
 const AccountDrawerScrollWrapper = styled.div`
@@ -92,7 +95,7 @@ const Container = styled.div`
   z-index: ${Z_INDEX.fixed};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    top: 100%;
+    top: 100vh;
     left: 0;
     right: 0;
     width: 100%;
@@ -126,15 +129,15 @@ const AccountDrawerWrapper = styled.div<{ open: boolean }>`
   border-radius: 12px;
   width: ${DRAWER_WIDTH};
   font-size: 16px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  background-color: ${({ theme }) => theme.surface1};
+  border: ${({ theme }) => `1px solid ${theme.surface3}`};
 
-  box-shadow: ${({ theme }) => theme.deepShadow};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   transition: margin-right ${({ theme }) => theme.transition.duration.medium};
 `
 
 const CloseIcon = styled(ChevronsRight).attrs({ size: 24 })`
-  stroke: ${({ theme }) => theme.textSecondary};
+  stroke: ${({ theme }) => theme.neutral2};
 `
 
 const CloseDrawer = styled.div`
@@ -149,7 +152,7 @@ const CloseDrawer = styled.div`
   &:hover {
     z-index: -1;
     margin: 0 -8px 0 0;
-    background-color: ${({ theme }) => theme.stateOverlayHover};
+    background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
   }
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     display: none;
@@ -181,21 +184,53 @@ function AccountDrawer() {
     }
   }, [walletDrawerOpen, toggleWalletDrawer])
 
-  // close on escape keypress
-  useEffect(() => {
-    const escapeKeyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && walletDrawerOpen) {
-        event.preventDefault()
+  // useStates for detecting swipe gestures
+  const [yPosition, setYPosition] = useState(0)
+  const [dragStartTop, setDragStartTop] = useState(true)
+  useDisableScrolling(walletDrawerOpen)
+
+  // useGesture hook for detecting swipe gestures
+  const bind = useGesture({
+    // if the drawer is open and the user is dragging down, close the drawer
+    onDrag: (state) => {
+      // if the user is dragging up, set dragStartTop to false
+      if (state.movement[1] < 0) {
+        setDragStartTop(false)
+        if (scrollRef.current) {
+          scrollRef.current.style.overflowY = 'auto'
+        }
+      } else if (
+        (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) &&
+        walletDrawerOpen &&
+        dragStartTop
+      ) {
         toggleWalletDrawer()
+      } else if (walletDrawerOpen && dragStartTop && state.movement[1] > 0) {
+        setYPosition(state.movement[1])
+        if (scrollRef.current) {
+          scrollRef.current.style.overflowY = 'hidden'
+        }
       }
-    }
-
-    document.addEventListener('keydown', escapeKeyDownHandler)
-
-    return () => {
-      document.removeEventListener('keydown', escapeKeyDownHandler)
-    }
-  }, [walletDrawerOpen, toggleWalletDrawer])
+    },
+    // reset the yPosition when the user stops dragging
+    onDragEnd: () => {
+      setYPosition(0)
+      if (scrollRef.current) {
+        scrollRef.current.style.overflowY = 'auto'
+      }
+    },
+    // set dragStartTop to true if the user starts dragging from the top of the drawer
+    onDragStart: () => {
+      if (!scrollRef.current?.scrollTop || scrollRef.current?.scrollTop < 30) {
+        setDragStartTop(true)
+      } else {
+        setDragStartTop(false)
+        if (scrollRef.current) {
+          scrollRef.current.style.overflowY = 'auto'
+        }
+      }
+    },
+  })
 
   return (
     <Container>
@@ -211,10 +246,18 @@ function AccountDrawer() {
         </TraceEvent>
       )}
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
-      <AccountDrawerWrapper open={walletDrawerOpen}>
+      <AccountDrawerWrapper
+        open={walletDrawerOpen}
+        {...(isMobile
+          ? {
+              ...bind(),
+              style: { transform: `translateY(${yPosition}px)` },
+            }
+          : {})}
+      >
         {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
         <AccountDrawerScrollWrapper ref={scrollRef} id="wallet-dropdown-scroll-wrapper">
-          <DefaultMenu />
+          <DefaultMenu drawerOpen={walletDrawerOpen} />
         </AccountDrawerScrollWrapper>
       </AccountDrawerWrapper>
     </Container>

@@ -1,17 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ConnectionType } from 'connection/types'
-import { SupportedLocale } from 'constants/locales'
-import { RouterPreference } from 'state/routing/slice'
 
+import { ConnectionType } from '../../connection/types'
+import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
-import { updateVersion } from '../global/actions'
+import { RouterPreference } from '../../state/routing/types'
 import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  buyFiatFlowCompleted?: boolean
-
   selectedWallet?: ConnectionType
 
   // the timestamp of the last updateVersion action
@@ -49,7 +46,8 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
-  hideUniswapWalletBanner: boolean
+  hideBaseWalletBanner: boolean
+  disabledUniswapX?: boolean
   // undefined means has not gone through A/B split yet
   showSurveyPopup?: boolean
 }
@@ -59,10 +57,9 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  buyFiatFlowCompleted: undefined,
   selectedWallet: undefined,
   userLocale: null,
-  userRouterPreference: RouterPreference.AUTO,
+  userRouterPreference: RouterPreference.API,
   userHideClosedPositions: false,
   userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,
@@ -71,7 +68,7 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
-  hideUniswapWalletBanner: false,
+  hideBaseWalletBanner: false,
   showSurveyPopup: undefined,
 }
 
@@ -79,9 +76,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateUserBuyFiatFlowCompleted(state, action) {
-      state.buyFiatFlowCompleted = action.payload
-    },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
     },
@@ -103,8 +97,11 @@ const userSlice = createSlice({
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
     },
-    updateHideUniswapWalletBanner(state, action) {
-      state.hideUniswapWalletBanner = action.payload.hideUniswapWalletBanner
+    updateHideBaseWalletBanner(state, action) {
+      state.hideBaseWalletBanner = action.payload.hideBaseWalletBanner
+    },
+    updateDisabledUniswapX(state, action) {
+      state.disabledUniswapX = action.payload.disabledUniswapX
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -126,59 +123,18 @@ const userSlice = createSlice({
       state.timestamp = currentTimestamp()
     },
   },
-  extraReducers: (builder) => {
-    // After adding a new property to the state, its value will be `undefined` (instead of the default)
-    // for all existing users with a previous version of the state in their localStorage.
-    // In order to avoid this, we need to set a default value for each new property manually during hydration.
-    builder.addCase(updateVersion, (state) => {
-      // If `userSlippageTolerance` is not present or its value is invalid, reset to default
-      if (
-        typeof state.userSlippageTolerance !== 'number' ||
-        !Number.isInteger(state.userSlippageTolerance) ||
-        state.userSlippageTolerance < 0 ||
-        state.userSlippageTolerance > 5000
-      ) {
-        state.userSlippageTolerance = SlippageTolerance.Auto
-      } else {
-        if (
-          !state.userSlippageToleranceHasBeenMigratedToAuto &&
-          [10, 50, 100].indexOf(state.userSlippageTolerance) !== -1
-        ) {
-          state.userSlippageTolerance = SlippageTolerance.Auto
-          state.userSlippageToleranceHasBeenMigratedToAuto = true
-        }
-      }
-
-      // If `userDeadline` is not present or its value is invalid, reset to default
-      if (
-        typeof state.userDeadline !== 'number' ||
-        !Number.isInteger(state.userDeadline) ||
-        state.userDeadline < 60 ||
-        state.userDeadline > 180 * 60
-      ) {
-        state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
-      }
-
-      // If `userRouterPreference` is not present, reset to default
-      if (typeof state.userRouterPreference !== 'string') {
-        state.userRouterPreference = RouterPreference.AUTO
-      }
-
-      state.lastUpdateVersionTimestamp = currentTimestamp()
-    })
-  },
 })
 
 export const {
   addSerializedPair,
   addSerializedToken,
-  updateUserBuyFiatFlowCompleted,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateUserRouterPreference,
   updateUserDeadline,
   updateUserLocale,
   updateUserSlippageTolerance,
-  updateHideUniswapWalletBanner,
+  updateHideBaseWalletBanner,
+  updateDisabledUniswapX,
 } = userSlice.actions
 export default userSlice.reducer

@@ -1,9 +1,9 @@
-import { SupportedChainId, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, WETH9 } from '@uniswap/sdk-core'
 
-import { UNI } from '../../src/constants/tokens'
+import { ARB, UNI } from '../../src/constants/tokens'
 import { getTestSelector } from '../utils'
 
-const UNI_MAINNET = UNI[SupportedChainId.MAINNET]
+const UNI_MAINNET = UNI[ChainId.MAINNET]
 
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 
@@ -93,9 +93,7 @@ describe('Token details', () => {
     beforeEach(() => {
       // On mobile widths, we just link back to /swap instead of rendering the swap component.
       cy.viewport(1200, 800)
-      cy.visit(`/tokens/ethereum/${UNI_MAINNET.address}`, {
-        ethereum: 'hardhat',
-      }).then(() => {
+      cy.visit(`/tokens/ethereum/${UNI_MAINNET.address}`).then(() => {
         cy.wait('@eth_blockNumber')
         cy.scrollTo('top')
       })
@@ -110,7 +108,7 @@ describe('Token details', () => {
 
     it('should automatically navigate to the new TDP', () => {
       cy.get(`#swap-currency-output .open-currency-select-button`).click()
-      cy.contains('WETH').click()
+      cy.get('[data-reach-dialog-content]').contains('WETH').click()
       cy.url().should('include', `${WETH9[1].address}`)
       cy.url().should('not.include', `${UNI_MAINNET.address}`)
     })
@@ -145,11 +143,11 @@ describe('Token details', () => {
     })
 
     it('should show a L2 token even if the user is connected to a different network', () => {
-      cy.visit('/tokens', { ethereum: 'hardhat' })
+      cy.visit('/tokens')
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
       cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')
-      cy.get(getTestSelector('token-table-row-ARB')).click()
+      cy.get(getTestSelector(`token-table-row-${ARB.address.toLowerCase()}`)).click()
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'ARB')
       cy.get(getTestSelector('open-settings-dialog-button')).should('be.disabled')
       cy.contains('Connect to Arbitrum').should('exist')

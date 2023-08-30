@@ -2,7 +2,7 @@ import { ButtonGray } from 'components/Button'
 import { ScaleLinear, select, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { RefreshCcw, ZoomIn, ZoomOut } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import { ZoomLevels } from './types'
 
@@ -12,14 +12,14 @@ const Wrapper = styled.div<{ count: number }>`
   grid-gap: 6px;
 
   position: absolute;
-  top: -75px;
+  top: -32px;
   right: 0;
 `
 
 const Button = styled(ButtonGray)`
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
-    color: ${({ theme }) => theme.textPrimary};
+    background-color: ${({ theme }) => theme.surface3};
+    color: ${({ theme }) => theme.neutral1};
   }
 
   width: 32px;

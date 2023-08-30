@@ -4,7 +4,7 @@ import { easeCubicInOut } from 'd3'
 import React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 
 import { LineChartProps } from './LineChart'
 
@@ -57,7 +57,7 @@ function FadedInLineChart<T>({
     }
   })
   const theme = useTheme()
-  const lineColor = color ?? theme.accentAction
+  const lineColor = color ?? theme.accent1
 
   return (
     <Group top={marginTop}>

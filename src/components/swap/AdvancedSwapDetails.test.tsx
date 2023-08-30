@@ -21,7 +21,7 @@ describe('AdvancedSwapDetails.tsx', () => {
   })
 
   it('renders correct tooltips for test trade with exact output and gas use estimate USD', async () => {
-    TEST_TRADE_EXACT_OUTPUT.gasUseEstimateUSD = '1.00'
+    TEST_TRADE_EXACT_OUTPUT.gasUseEstimateUSD = 1.0
     render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_OUTPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
     await act(() => userEvent.hover(screen.getByText(/Maximum input/i)))
     expect(await screen.getByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()

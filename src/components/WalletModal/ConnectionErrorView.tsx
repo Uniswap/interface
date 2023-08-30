@@ -3,7 +3,7 @@ import { useCloseAccountDrawer } from 'components/AccountDrawer'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { AlertTriangle } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { flexColumnNoWrap } from 'theme/styles'
 
@@ -19,7 +19,7 @@ const AlertTriangleIcon = styled(AlertTriangle)`
   height: 90px;
   stroke-width: 1;
   margin: 36px;
-  color: ${({ theme }) => theme.accentCritical};
+  color: ${({ theme }) => theme.critical};
 `
 
 // TODO(cartcrom): move this to a top level modal, rather than inline in the drawer

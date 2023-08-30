@@ -1,16 +1,18 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { formatNumber, NumberType } from '@uniswap/conedison/format'
+import { TraceEvent } from 'analytics'
+import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
-import { PortfolioBalancesQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
+import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
+import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 import { useToggleAccountDrawer } from '../..'
 import { PortfolioArrow } from '../../AuthenticatedHeader'
@@ -19,44 +21,25 @@ import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
 
-const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
-
-function meetsThreshold(tokenBalance: TokenBalance, hideSmallBalances: boolean) {
-  return !hideSmallBalances || (tokenBalance.denominatedValue?.value ?? 0) > HIDE_SMALL_USD_BALANCES_THRESHOLD
-}
-
 export default function Tokens({ account }: { account: string }) {
   const toggleWalletDrawer = useToggleAccountDrawer()
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
-  const { data } = usePortfolioBalancesQuery({
-    variables: { ownerAddress: account },
-    fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
-    errorPolicy: 'all',
-  })
+  const { data } = useCachedPortfolioBalancesQuery({ account })
 
-  const visibleTokens = useMemo(() => {
-    return !hideSmallBalances
-      ? data?.portfolios?.[0].tokenBalances ?? []
-      : data?.portfolios?.[0].tokenBalances?.filter((tokenBalance) =>
-          meetsThreshold(tokenBalance, hideSmallBalances)
-        ) ?? []
-  }, [data?.portfolios, hideSmallBalances])
+  const tokenBalances = data?.portfolios?.[0].tokenBalances as TokenBalance[] | undefined
 
-  const hiddenTokens = useMemo(() => {
-    return !hideSmallBalances
-      ? []
-      : data?.portfolios?.[0].tokenBalances?.filter(
-          (tokenBalance) => !meetsThreshold(tokenBalance, hideSmallBalances)
-        ) ?? []
-  }, [data?.portfolios, hideSmallBalances])
+  const { visibleTokens, hiddenTokens } = useMemo(
+    () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances }),
+    [hideSmallBalances, tokenBalances]
+  )
 
   if (!data) {
     return <PortfolioSkeleton />
   }
 
-  if (data?.portfolios?.[0].tokenBalances?.length === 0) {
+  if (tokenBalances?.length === 0) {
     // TODO: consider launching moonpay here instead of just closing the drawer
     return <EmptyWalletModule type="token" onNavigateClick={toggleWalletDrawer} />
   }
@@ -67,10 +50,7 @@ export default function Tokens({ account }: { account: string }) {
     <PortfolioTabWrapper>
       {visibleTokens.map(
         (tokenBalance) =>
-          tokenBalance.token &&
-          meetsThreshold(tokenBalance, hideSmallBalances) && (
-            <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
-          )
+          tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
       )}
       <ExpandoRow isExpanded={showHiddenTokens} toggle={toggleHiddenTokens} numItems={hiddenTokens.length}>
         {hiddenTokens.map(
@@ -85,10 +65,9 @@ export default function Tokens({ account }: { account: string }) {
 const TokenBalanceText = styled(ThemedText.BodySecondary)`
   ${EllipsisStyle}
 `
-
-type TokenBalance = NonNullable<
-  NonNullable<NonNullable<PortfolioBalancesQuery['portfolios']>[number]>['tokenBalances']
->[number]
+const TokenNameText = styled(ThemedText.SubHeader)`
+  ${EllipsisStyle}
+`
 
 type PortfolioToken = NonNullable<TokenBalance['token']>
 
@@ -103,6 +82,13 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
   }, [navigate, token, toggleWalletDrawer])
 
   const currency = gqlToCurrency(token)
+  if (!currency) {
+    logSentryErrorForUnsupportedChain({
+      extras: { token },
+      errorMessage: 'Token from unsupported chain received from Mini Portfolio Token Balance Query',
+    })
+    return null
+  }
   return (
     <TraceEvent
       events={[BrowserEvent.onClick]}
@@ -112,7 +98,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
     >
       <PortfolioRow
         left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size="40px" />}
-        title={<ThemedText.SubHeader>{token?.name}</ThemedText.SubHeader>}
+        title={<TokenNameText>{token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>
             {formatNumber(quantity, NumberType.TokenNonTx)} {token?.symbol}

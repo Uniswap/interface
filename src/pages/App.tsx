@@ -1,6 +1,6 @@
-import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { getDeviceId, sendAnalyticsEvent, Trace, user } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
@@ -9,15 +9,15 @@ import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
+import { useRouterPreference } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { SpinnerSVG } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
 import { getEnvName } from 'utils/env'
-import { retry } from 'utils/retry'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
@@ -45,12 +45,12 @@ import Swap from './Swap'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
-const TokenDetails = lazy(() => retry(() => import('./TokenDetails')))
-const Vote = lazy(() => retry(() => import('./Vote')))
-const NftExplore = lazy(() => retry(() => import('nft/pages/explore')))
-const Collection = lazy(() => retry(() => import('nft/pages/collection')))
-const Profile = lazy(() => retry(() => import('nft/pages/profile/profile')))
-const Asset = lazy(() => retry(() => import('nft/pages/asset/Asset')))
+const TokenDetails = lazy(() => import('./TokenDetails'))
+const Vote = lazy(() => import('./Vote'))
+const NftExplore = lazy(() => import('nft/pages/explore'))
+const Collection = lazy(() => import('nft/pages/collection'))
+const Profile = lazy(() => import('nft/pages/profile/profile'))
+const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -69,12 +69,14 @@ const MobileBottomBar = styled.div`
   bottom: 0;
   right: 0;
   left: 0;
-  width: 100vw;
+  width: calc(100vw - 16px);
   justify-content: space-between;
-  padding: 4px 8px;
+  padding: 0px 4px;
   height: ${({ theme }) => theme.mobileBottomBarHeight}px;
-  background: ${({ theme }) => theme.backgroundSurface};
-  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+  background: ${({ theme }) => theme.surface1};
+  border: 1px solid ${({ theme }) => theme.surface3};
+  margin: 8px;
+  border-radius: 20px;
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     display: none;
@@ -83,8 +85,8 @@ const MobileBottomBar = styled.div`
 
 const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   ${flexRowNoWrap};
-  background-color: ${({ theme, transparent }) => !transparent && theme.backgroundSurface};
-  border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.backgroundOutline}`};
+  background-color: ${({ theme, transparent }) => !transparent && theme.surface1};
+  border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.surface3}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
@@ -113,6 +115,7 @@ export default function App() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
+  const [routerPreference] = useRouterPreference()
   const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
@@ -159,6 +162,10 @@ export default function App() {
   useEffect(() => {
     user.set(CustomUserProperties.DARK_MODE, isDarkMode)
   }, [isDarkMode])
+
+  useEffect(() => {
+    user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
+  }, [routerPreference])
 
   useEffect(() => {
     const scrollListener = () => {

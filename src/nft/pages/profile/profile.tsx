@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { Trace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { ButtonPrimary } from 'components/Button'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
@@ -11,7 +11,7 @@ import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfileP
 import { useBag, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from './shared'
@@ -89,7 +89,7 @@ const ProfileContent = () => {
           </LoadedAccountPage>
         ) : (
           <Center>
-            <ThemedText.HeadlineMedium lineHeight="36px" color="textSecondary" fontWeight="600" marginBottom="24px">
+            <ThemedText.HeadlineMedium lineHeight="36px" color="neutral2" fontWeight="535" marginBottom="24px">
               <Trans>No items to display</Trans>
             </ThemedText.HeadlineMedium>
             <ConnectWalletButton onClick={toggleWalletDrawer}>

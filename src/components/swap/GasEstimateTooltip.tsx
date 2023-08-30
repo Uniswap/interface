@@ -1,60 +1,60 @@
-import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
+import { Gas } from 'components/Icons/Gas'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
-import { RowFixed } from 'components/Row'
+import { UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
+import Row, { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { InterfaceTrade } from 'state/routing/types'
-import styled from 'styled-components/macro'
+import { isUniswapXTrade } from 'state/routing/utils'
+import styled from 'styled-components'
 import { ThemedText } from 'theme'
+import { formatNumber, NumberType } from 'utils/formatNumbers'
 
-import { ReactComponent as GasIcon } from '../../assets/images/gas-icon.svg'
-import SwapRoute from './SwapRoute'
+import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 
-const StyledGasIcon = styled(GasIcon)`
-  margin-right: 4px;
-  height: 18px;
-
+const StyledGasIcon = styled(Gas)`
+  height: 16px;
+  width: 16px;
   // We apply the following to all children of the SVG in order to override the default color
   & > * {
-    stroke: ${({ theme }) => theme.textTertiary};
+    fill: ${({ theme }) => theme.neutral2};
   }
 `
 
-export default function GasEstimateTooltip({
-  trade,
-  loading,
-  disabled,
-}: {
-  trade: InterfaceTrade // dollar amount in active chain's stablecoin
-  loading: boolean
-  disabled?: boolean
-}) {
-  const formattedGasPriceString = trade?.gasUseEstimateUSD
-    ? trade.gasUseEstimateUSD === '0.00'
-      ? '<$0.01'
-      : '$' + trade.gasUseEstimateUSD
-    : undefined
+export default function GasEstimateTooltip({ trade, loading }: { trade?: InterfaceTrade; loading: boolean }) {
+  const { chainId } = useWeb3React()
+
+  if (!trade || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {
+    return null
+  }
 
   return (
     <MouseoverTooltip
-      disabled={disabled}
-      size={TooltipSize.Large}
-      // TODO(WEB-3304)
-      // Most of Swap-related components accept either `syncing`, `loading` or both props at the same time.
-      // We are often using them interchangeably, or pass both values as one of them (`syncing={loading || syncing}`).
-      // This is confusing and can lead to unpredicted UI behavior. We should refactor and unify this.
-      text={<SwapRoute trade={trade} syncing={loading} />}
+      size={TooltipSize.Small}
+      text={<GasBreakdownTooltip trade={trade} />}
       onOpen={() => {
         sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
           element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
         })
       }}
-      placement="bottom"
+      placement="right"
     >
       <LoadingOpacityContainer $loading={loading}>
-        <RowFixed>
-          <StyledGasIcon />
-          <ThemedText.BodySmall color="textSecondary">{formattedGasPriceString}</ThemedText.BodySmall>
+        <RowFixed gap="xs">
+          {isUniswapXTrade(trade) ? <UniswapXRouterIcon testId="gas-estimate-uniswapx-icon" /> : <StyledGasIcon />}
+          <ThemedText.BodySmall color="neutral2">
+            <Row gap="xs">
+              <div>{formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}</div>
+              {isUniswapXTrade(trade) && (
+                <div>
+                  <s>{formatNumber(trade.classicGasUseEstimateUSD, NumberType.FiatGasPrice)}</s>
+                </div>
+              )}
+            </Row>
+          </ThemedText.BodySmall>
         </RowFixed>
       </LoadingOpacityContainer>
     </MouseoverTooltip>

@@ -12,7 +12,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
@@ -137,7 +137,7 @@ export const PositionPreview = ({
                   {quoteCurrency.symbol} per {baseCurrency.symbol}
                 </Trans>
               </ThemedText.DeprecatedMain>
-              <ThemedText.DeprecatedSmall textAlign="center" color={theme.textTertiary} style={{ marginTop: '4px' }}>
+              <ThemedText.DeprecatedSmall textAlign="center" color={theme.neutral3} style={{ marginTop: '4px' }}>
                 <Trans>Your position will be 100% composed of {baseCurrency?.symbol} at this price</Trans>
               </ThemedText.DeprecatedSmall>
             </AutoColumn>
@@ -160,7 +160,7 @@ export const PositionPreview = ({
                   {quoteCurrency.symbol} per {baseCurrency.symbol}
                 </Trans>
               </ThemedText.DeprecatedMain>
-              <ThemedText.DeprecatedSmall textAlign="center" color={theme.textTertiary} style={{ marginTop: '4px' }}>
+              <ThemedText.DeprecatedSmall textAlign="center" color={theme.neutral3} style={{ marginTop: '4px' }}>
                 <Trans>Your position will be 100% composed of {quoteCurrency?.symbol} at this price</Trans>
               </ThemedText.DeprecatedSmall>
             </AutoColumn>

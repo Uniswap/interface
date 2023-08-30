@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/smart-order-router'
+import { ChainId } from '@uniswap/sdk-core'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { NftActivityType, NftMarketplace, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
@@ -25,34 +25,34 @@ import {
   TokenRarity,
 } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
-import { shortenAddress } from 'nft/utils/address'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { formatEth } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
 import { MouseEvent, ReactNode, useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { ExternalLink } from 'theme'
+import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import * as styles from './Activity.css'
 
 const AddressLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   text-decoration: none;
-  font-weight: 400;
+  font-weight: 485;
   line-height: 20px;
   a {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     text-decoration: none;
   }
   a:hover {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     text-decoration: none;
     opacity: ${({ theme }) => theme.opacity.hover};
   }
   a:focus {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     text-decoration: none;
     opacity: ${({ theme }) => theme.opacity.click};
   }
@@ -165,7 +165,7 @@ export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCel
         href={getExplorerLink(chainId ?? ChainId.MAINNET, address ?? '', ExplorerDataType.ADDRESS)}
         style={{ textDecoration: 'none' }}
       >
-        <Box onClick={(e) => e.stopPropagation()}>{address ? shortenAddress(address, 2, 4) : '-'}</Box>
+        <Box onClick={(e) => e.stopPropagation()}>{address ? shortenAddress(address, 2) : '-'}</Box>
       </AddressLink>
     </Column>
   )
@@ -174,7 +174,7 @@ export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCel
 const PriceTooltip = ({ price }: { price: string }) => (
   <MouseoverTooltip
     text={
-      <Box textAlign="left" fontSize="14" fontWeight="normal" color="textSecondary">
+      <Box textAlign="left" fontSize="14" fontWeight="book" color="neutral2">
         {`${price} ETH`}
       </Box>
     }
@@ -240,13 +240,13 @@ const ExternalLinkIcon = ({ transactionHash }: { transactionHash: string }) => (
 
 const eventColors = (eventType: NftActivityType) => {
   const activityEvents = {
-    [NftActivityType.Listing]: 'gold',
-    [NftActivityType.Sale]: 'green',
-    [NftActivityType.Transfer]: 'violet',
-    [NftActivityType.CancelListing]: 'accentFailure',
+    [NftActivityType.Listing]: 'deprecated_gold',
+    [NftActivityType.Sale]: 'success',
+    [NftActivityType.Transfer]: 'deprecated_violet',
+    [NftActivityType.CancelListing]: 'critical',
   }
 
-  return activityEvents[eventType] as 'gold' | 'green' | 'violet' | 'accentFailure'
+  return activityEvents[eventType] as 'deprecated_gold' | 'success' | 'deprecated_violet' | 'critical'
 }
 
 export const EventCell = ({
@@ -270,7 +270,7 @@ export const EventCell = ({
           {eventTransactionHash && <ExternalLinkIcon transactionHash={eventTransactionHash} />}
         </Row>
       )}
-      {isMobile && price && <Row fontSize="16" fontWeight="normal" color="textPrimary">{`${formattedPrice} ETH`}</Row>}
+      {isMobile && price && <Row fontSize="16" fontWeight="book" color="neutral1">{`${formattedPrice} ETH`}</Row>}
     </Column>
   )
 }
@@ -299,7 +299,7 @@ const NoContentContainer = () => (
       style={{ transform: 'translate3d(-50%, -50%, 0)' }}
       color="gray500"
       fontSize="12"
-      fontWeight="normal"
+      fontWeight="book"
     >
       Image
       <br />

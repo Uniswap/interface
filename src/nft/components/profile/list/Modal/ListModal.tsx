@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
-import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -13,9 +12,10 @@ import { useNFTList, useSellAsset } from 'nft/hooks'
 import { ListingStatus } from 'nft/types'
 import { useCallback, useEffect, useMemo, useReducer } from 'react'
 import { X } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { shallow } from 'zustand/shallow'
 
 import { TitleRow } from '../shared'
@@ -29,10 +29,10 @@ const ListModalWrapper = styled.div`
   transform: translate(-50%, -50%);
   width: 420px;
   z-index: ${Z_INDEX.modal};
-  background: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.surface1};
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  box-shadow: ${({ theme }) => theme.deepShadow};
+  border: 1px solid ${({ theme }) => theme.surface3};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   padding: 20px 24px 24px;
   display: flex;
   flex-direction: column;

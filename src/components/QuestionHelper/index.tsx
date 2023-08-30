@@ -1,6 +1,6 @@
 import { ReactNode, useCallback, useState } from 'react'
 import { HelpCircle } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 import Tooltip from '../Tooltip'
 
@@ -29,7 +29,7 @@ const QuestionMark = styled.span`
   font-size: 14px;
   margin-left: 8px;
   align-items: center;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   margin-top: 2.5px;
 `
 

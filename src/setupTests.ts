@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom' // jest custom assertions
+import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles
 import 'polyfills'
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills'
@@ -70,6 +71,20 @@ jest.mock('@web3-react/core', () => {
         (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions)
       ),
     useWeb3React: jest.fn(),
+  }
+})
+
+jest.mock('state/routing/slice', () => {
+  const routingSlice = jest.requireActual('state/routing/slice')
+  return {
+    ...routingSlice,
+    // Prevents unit tests from logging errors from failed getQuote queries
+    useGetQuoteQuery: () => ({
+      isError: false,
+      data: undefined,
+      error: undefined,
+      currentData: undefined,
+    }),
   }
 })
 

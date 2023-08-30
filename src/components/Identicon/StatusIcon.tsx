@@ -1,8 +1,7 @@
-import { useWeb3React } from '@web3-react/core'
 import { Unicon } from 'components/Unicon'
 import { Connection, ConnectionType } from 'connection/types'
 import useENSAvatar from 'hooks/useENSAvatar'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
 
@@ -15,7 +14,7 @@ export const IconWrapper = styled.div<{ size?: number }>`
   ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
-  margin-right: 8px;
+  margin-right: 4px;
   & > img,
   span {
     height: ${({ size }) => (size ? size + 'px' : '32px')};
@@ -36,9 +35,9 @@ const MiniIconContainer = styled.div<{ side: 'left' | 'right' }>`
   bottom: -4px;
   ${({ side }) => `${side === 'left' ? 'left' : 'right'}: -4px;`}
   border-radius: 50%;
-  outline: 2px solid ${({ theme }) => theme.backgroundSurface};
+  outline: 2px solid ${({ theme }) => theme.surface1};
   outline-offset: -0.1px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   overflow: hidden;
   @supports (overflow: clip) {
     overflow: clip;
@@ -67,24 +66,25 @@ const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'l
   )
 }
 
-const MainWalletIcon = ({ connection, size }: { connection: Connection; size: number }) => {
-  const { account } = useWeb3React()
+const MainWalletIcon = ({ account, connection, size }: { account: string; connection: Connection; size: number }) => {
   const { avatar } = useENSAvatar(account ?? undefined)
 
   if (!account) {
     return null
   } else if (avatar || (connection.type === ConnectionType.INJECTED && connection.getName() === 'MetaMask')) {
-    return <Identicon size={size} />
+    return <Identicon account={account} size={size} />
   } else {
     return <Unicon address={account} size={size} />
   }
 }
 
 export default function StatusIcon({
+  account,
   connection,
   size = 16,
   showMiniIcons = true,
 }: {
+  account: string
   connection: Connection
   size?: number
   showMiniIcons?: boolean
@@ -93,7 +93,7 @@ export default function StatusIcon({
 
   return (
     <IconWrapper size={size} data-testid="StatusIconRoot">
-      <MainWalletIcon connection={connection} size={size} />
+      <MainWalletIcon account={account} connection={connection} size={size} />
       {showMiniIcons && <MiniWalletIcon connection={connection} side="right" />}
       {hasSocks && showMiniIcons && <Socks />}
     </IconWrapper>

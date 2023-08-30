@@ -1,14 +1,12 @@
-import { CurrencyAmount, SupportedChainId, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 
 import { getBalance, getTestSelector } from '../../utils'
 
-const WETH = WETH9[SupportedChainId.MAINNET]
+const WETH = WETH9[ChainId.MAINNET]
 
 describe('Swap wrap', () => {
   beforeEach(() => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${WETH.address}`, { ethereum: 'hardhat' }).hardhat({
-      automine: false,
-    })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${WETH.address}`).hardhat({ automine: false })
   })
 
   it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {

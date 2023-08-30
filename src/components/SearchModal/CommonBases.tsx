@@ -1,6 +1,6 @@
-import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
+import { TraceEvent } from 'analytics'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'
@@ -8,7 +8,7 @@ import { COMMON_BASES } from 'constants/routing'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { currencyId } from 'utils/currencyId'
 
 const MobileWrapper = styled(AutoColumn)`
@@ -18,20 +18,23 @@ const MobileWrapper = styled(AutoColumn)`
 `
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
-  border: 1px solid ${({ theme, disable }) => (disable ? theme.accentActive : theme.backgroundOutline)};
-  border-radius: 16px;
+  border: 1px solid ${({ theme }) => theme.surface3};
+  border-radius: 18px;
   display: flex;
   padding: 6px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   padding-right: 12px;
+  line-height: 0px;
 
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme }) => theme.hoverDefault};
+    background-color: ${({ theme }) => theme.deprecated_hoverDefault};
   }
 
-  color: ${({ theme, disable }) => disable && theme.accentActive};
-  background-color: ${({ theme, disable }) => disable && theme.accentActiveSoft};
+  color: ${({ theme, disable }) => disable && theme.neutral1};
+  background-color: ${({ theme, disable }) => disable && theme.surface3};
 `
 
 const formatAnalyticsEventProperties = (currency: Currency, searchQuery: string, isAddressSearch: string | false) => ({
@@ -81,9 +84,10 @@ export default function CommonBases({
                 onClick={() => !isSelected && onSelect(currency)}
                 disable={isSelected}
                 key={currencyId(currency)}
+                data-testid={`common-base-${currency.symbol}`}
               >
                 <CurrencyLogoFromList currency={currency} />
-                <Text fontWeight={500} fontSize={16}>
+                <Text fontWeight={535} fontSize={16} lineHeight="16px">
                   {currency.symbol}
                 </Text>
               </BaseWrapper>

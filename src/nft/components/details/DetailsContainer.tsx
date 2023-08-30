@@ -2,10 +2,10 @@ import { OpacityHoverState } from 'components/Common'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { putCommas } from 'nft/utils'
-import { shortenAddress } from 'nft/utils/address'
 import { useCallback } from 'react'
 import { Copy } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
+import { shortenAddress } from 'utils'
 
 const Details = styled.div`
   display: grid;
@@ -22,13 +22,13 @@ const Details = styled.div`
 `
 
 const Header = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   line-height: 20px;
 `
 
 const Body = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 14px;
   line-height: 20px;
   margin-top: 8px;
@@ -44,7 +44,7 @@ const Center = styled.span`
 `
 
 const CreatorLink = styled.a`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   text-decoration: none;
 
   ${OpacityHoverState}
@@ -80,7 +80,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
         header="Contract address"
         body={
           <Center onClick={copy}>
-            {shortenAddress(address, 2, 4)} <CopyIcon size={13} />
+            {shortenAddress(address, 2)} <CopyIcon size={13} />
           </Center>
         }
       />
@@ -97,7 +97,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
               rel="noopener noreferrer"
               target="_blank"
             >
-              {shortenAddress(creator.address, 2, 4)}
+              {shortenAddress(creator.address, 2)}
             </CreatorLink>
           )
         }

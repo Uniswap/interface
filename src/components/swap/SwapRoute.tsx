@@ -5,30 +5,30 @@ import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram from 'components/RoutingDiagram/RoutingDiagram'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
-import { InterfaceTrade } from 'state/routing/types'
+import { ClassicTrade } from 'state/routing/types'
 import { Separator, ThemedText } from 'theme'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 
-import RouterLabel from './RouterLabel'
+import RouterLabel from '../RouterLabel'
 
-export default function SwapRoute({ trade, syncing }: { trade: InterfaceTrade; syncing: boolean }) {
+export default function SwapRoute({ trade, syncing }: { trade: ClassicTrade; syncing: boolean }) {
   const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
 
   const routes = getRoutingDiagramEntries(trade)
 
   const gasPrice =
-    // TODO(WEB-3303)
+    // TODO(WEB-2022)
     // Can `trade.gasUseEstimateUSD` be defined when `chainId` is not in `SUPPORTED_GAS_ESTIMATE_CHAIN_IDS`?
     trade.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
-      ? trade.gasUseEstimateUSD === '0.00'
+      ? trade.gasUseEstimateUSD === 0
         ? '<$0.01'
-        : '$' + trade.gasUseEstimateUSD
+        : '$' + trade.gasUseEstimateUSD.toFixed(2)
       : undefined
 
   return (
     <Column gap="md">
-      <RouterLabel />
+      <RouterLabel trade={trade} />
       <Separator />
       {syncing ? (
         <LoadingRows>
@@ -49,13 +49,13 @@ export default function SwapRoute({ trade, syncing }: { trade: InterfaceTrade; s
               <div style={{ width: '100%', height: '15px' }} />
             </LoadingRows>
           ) : (
-            <ThemedText.Caption color="textSecondary">
+            <ThemedText.BodySmall color="neutral2">
               {gasPrice ? <Trans>Best price route costs ~{gasPrice} in gas.</Trans> : null}{' '}
               <Trans>
                 This route optimizes your total output by considering split routes, multiple hops, and the gas cost of
                 each step.
               </Trans>
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           )}
         </>
       )}
