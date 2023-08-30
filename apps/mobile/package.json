@@ -216,6 +216,7 @@
     "react-native-flipper": "0.187.1",
     "react-native-flipper-performance-plugin": "0.3.1",
     "react-native-mmkv-flipper-plugin": "1.0.0",
+    "react-native-monorepo-tools": "1.2.1",
     "react-native-svg-transformer": "1.0.0",
     "react-native-web": "0.18.12",
     "react-svg-loader": "^3.0.3",
