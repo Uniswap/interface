@@ -8,8 +8,11 @@ import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
+<<<<<<< HEAD
 import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
 import { useUniswapXDefaultEnabledFlag } from 'featureFlags/flags/uniswapXDefault'
+=======
+>>>>>>> main
 import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputFlag } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
@@ -249,12 +252,6 @@ export default function FeatureFlagModal() {
           label="Enable fee-on-transfer UI and slippage adjustments"
         />
         <FeatureFlagGroup name="UniswapX Flags">
-          <FeatureFlagOption
-            variant={UniswapXVariant}
-            value={useUniswapXFlag()}
-            featureFlag={FeatureFlag.uniswapXEnabled}
-            label="Enable UniswapX on interface"
-          />
           <FeatureFlagOption
             variant={BaseVariant}
             value={useUniswapXSyntheticQuoteFlag()}
