@@ -138,7 +138,6 @@ export const routingApi = createApi({
               tokenOut: tokenOutAddress,
               amount,
               type,
-              useUniswapX: true,
               configs: getRoutingAPIConfig(args),
             }
 
