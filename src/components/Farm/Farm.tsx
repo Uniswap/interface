@@ -1,3 +1,4 @@
+import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import CustomSelector, { SelectorItem } from 'components/CustomSelector/CustomSelector'
 import CustomSwitch from 'components/CustomSwitch/CustomSwitch'
@@ -14,6 +15,7 @@ import styled from 'styled-components/macro'
 import { GammaPair, GammaPairs, GlobalConst } from './constants'
 import FarmingMyFarms from './MyFarms/FarmMyFarms'
 import SortColumns from './SortColumn'
+import { buildRedirectPath, farmFilters, sortColumns, tabsFarm, tabsFarmDefault } from './utils'
 
 const FarmsLayout = styled.div`
   width: 100%;
@@ -63,65 +65,42 @@ export function Farms() {
   const navigate = useNavigate()
   const location = useLocation()
   const [searchValue, setSearchValue] = useState('')
+  const [farmFilter, setFarmFilter] = useState(farmFilters[0])
+  const [sortBy, setSortBy] = useState(GlobalConst.utils.v3FarmSortBy.pool)
+  const [sortDesc, setSortDesc] = useState(false)
+
+  const getAllPairs = (
+    chainId: number,
+    GammaPairs: {
+      [chainId in ChainId]: {
+        [key: string]: GammaPair[]
+      }
+    }
+  ) => {
+    if (!chainId) return []
+    const pairsGroups = GammaPairs[570] || {}
+    return Object.values(pairsGroups).flat()
+  }
+
+  const filterAbleToFarm = (pairs: GammaPair[]) => {
+    return pairs.filter((item) => item?.ableToFarm)
+  }
 
   const allGammaFarms = useMemo(() => {
-    if (!chainId) return []
-    const pairsGroups = (GammaPairs[570] as { [key: string]: GammaPair[] }) || {}
-    const allPairs = Object.values(pairsGroups).flat()
-
-    return allPairs.filter((item) => item?.ableToFarm)
+    const allPairs = chainId ? getAllPairs(chainId, GammaPairs) : []
+    return filterAbleToFarm(allPairs)
   }, [chainId])
 
   const redirectWithFarmStatus = (status: string) => {
     const currentPath = location.pathname + location.search
-    let redirectPath
-    if (parsedQuery && parsedQuery.farmStatus) {
-      redirectPath = currentPath.replace(`farmStatus=${parsedQuery.farmStatus}`, `farmStatus=${status}`)
-    } else {
-      redirectPath = `${currentPath}${location.search === '' ? '?' : '&'}farmStatus=${status}`
-    }
+    const redirectPath = buildRedirectPath(currentPath, parsedQuery, status)
     navigate(redirectPath)
   }
 
-  const currentTabQueried =
-    parsedQuery && parsedQuery.tab
-      ? (parsedQuery.tab as string)
-      : allGammaFarms.length > 0
-      ? 'gamma-farms'
-      : 'eternal-farms'
+  const currentTabQueried = parsedQuery && parsedQuery.tab ? (parsedQuery.tab as string) : 'gamma-farms'
 
   const v3FarmCategories = useMemo(() => {
-    return allGammaFarms.length > 0
-      ? [
-          {
-            text: 'My Farms',
-            id: 0,
-            link: 'my-farms',
-          },
-          {
-            text: 'Pegasys Farms',
-            id: 1,
-            link: 'pegasys-farms',
-          },
-          {
-            text: 'Gamma Farms',
-            id: 1,
-            link: 'gamma-farms',
-            hasSeparator: true,
-          },
-        ]
-      : [
-          {
-            text: 'My Farms',
-            id: 0,
-            link: 'my-farms',
-          },
-          {
-            text: 'Pegasys Farms',
-            id: 1,
-            link: 'eternal-farms',
-          },
-        ]
+    return allGammaFarms.length > 0 ? tabsFarm : tabsFarmDefault
   }, [allGammaFarms])
 
   const onChangeFarmCategory = useCallback(
@@ -133,11 +112,7 @@ export function Farms() {
 
   const selectedFarmCategory = useMemo(() => {
     const tab = v3FarmCategories.find((item) => item?.link === currentTabQueried)
-    if (!tab) {
-      return v3FarmCategories[0]
-    } else {
-      return tab
-    }
+    return tab || v3FarmCategories[0]
   }, [currentTabQueried, v3FarmCategories])
 
   const farmStatusItems = [
@@ -157,59 +132,6 @@ export function Farms() {
     },
   ]
 
-  const farmFilters = useMemo(
-    () => [
-      {
-        text: 'All Farms',
-        id: GlobalConst.utils.v3FarmFilter.allFarms,
-      },
-      {
-        text: 'Stablecoins',
-        id: GlobalConst.utils.v3FarmFilter.stableCoin,
-      },
-      {
-        text: 'Blue Chips',
-        id: GlobalConst.utils.v3FarmFilter.blueChip,
-      },
-      {
-        text: 'Stable LPs',
-        id: GlobalConst.utils.v3FarmFilter.stableLP,
-      },
-      {
-        text: 'Other LPs',
-        id: GlobalConst.utils.v3FarmFilter.otherLP,
-      },
-    ],
-    []
-  )
-
-  const sortColumns = [
-    {
-      text: 'pool',
-      index: GlobalConst.utils.v3FarmSortBy.pool,
-      width: 0.3,
-      justify: 'flex-start',
-    },
-    {
-      text: 'tvl',
-      index: GlobalConst.utils.v3FarmSortBy.tvl,
-      width: 0.2,
-      justify: 'flex-start',
-    },
-    {
-      text: 'rewards',
-      index: GlobalConst.utils.v3FarmSortBy.rewards,
-      width: 0.3,
-      justify: 'flex-start',
-    },
-    {
-      text: 'apr',
-      index: GlobalConst.utils.v3FarmSortBy.apr,
-      width: 0.2,
-      justify: 'flex-start',
-    },
-  ]
-
   const sortByDesktopItems = sortColumns.map((item) => {
     return {
       ...item,
@@ -223,10 +145,6 @@ export function Farms() {
       },
     }
   })
-
-  const [farmFilter, setFarmFilter] = useState(farmFilters[0])
-  const [sortBy, setSortBy] = useState(GlobalConst.utils.v3FarmSortBy.pool)
-  const [sortDesc, setSortDesc] = useState(false)
 
   return (
     <FarmsLayout>
