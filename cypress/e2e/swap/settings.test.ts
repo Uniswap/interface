@@ -24,6 +24,6 @@ describe('Swap settings', () => {
     cy.contains('Transaction deadline').should('exist')
     cy.contains('UniswapX').should('exist')
     cy.contains('Local routing').should('exist')
-    cy.get(getTestSelector('mobile-settings-scrim')).click()
+    cy.get(getTestSelector('mobile-settings-scrim')).click({ force: true })
   })
 })

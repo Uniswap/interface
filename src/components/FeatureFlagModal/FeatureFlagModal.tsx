@@ -1,7 +1,6 @@
 import Column from 'components/Column'
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
-import { useForceUniswapXOnFlag } from 'featureFlags/flags/forceUniswapXOn'
 import { useFotAdjustmentsFlag } from 'featureFlags/flags/fotAdjustments'
 import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
 import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
@@ -235,12 +234,6 @@ export default function FeatureFlagModal() {
           value={useUniswapXFlag()}
           featureFlag={FeatureFlag.uniswapXEnabled}
           label="Enable UniswapX on interface"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useForceUniswapXOnFlag()}
-          featureFlag={FeatureFlag.forceUniswapXOn}
-          label="Force routing api to enable UniswapX"
         />
         <FeatureFlagOption
           variant={BaseVariant}

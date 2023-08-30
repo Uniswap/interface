@@ -128,15 +128,7 @@ export const routingApi = createApi({
         if (shouldUseAPIRouter(args)) {
           fellBack = true
           try {
-            const {
-              tokenInAddress,
-              tokenInChainId,
-              tokenOutAddress,
-              tokenOutChainId,
-              amount,
-              tradeType,
-              forceUniswapXOn,
-            } = args
+            const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
 
             const requestBody = {
@@ -146,8 +138,6 @@ export const routingApi = createApi({
               tokenOut: tokenOutAddress,
               amount,
               type,
-              // if forceUniswapXOn is not ON, then use the backend's default value
-              useUniswapX: forceUniswapXOn || undefined,
               configs: getRoutingAPIConfig(args),
             }
 
