@@ -126,6 +126,14 @@ const SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS: NumberFormatOptions = {
   useGrouping: false,
 }
 
+const ONE_SIG_FIG_CURRENCY: NumberFormatOptions = {
+  notation: 'standard',
+  minimumSignificantDigits: 1,
+  maximumSignificantDigits: 1,
+  currency: 'USD',
+  style: 'currency',
+}
+
 const THREE_SIG_FIGS_CURRENCY: NumberFormatOptions = {
   notation: 'standard',
   minimumSignificantDigits: 3,
@@ -142,51 +150,79 @@ const SEVEN_SIG_FIGS__SCI_NOTATION_CURRENCY: NumberFormatOptions = {
   style: 'currency',
 }
 
-type FormatOptions = NumberFormatOptions | string
-
 // each rule must contain either an `upperBound` or an `exact` value.
 // upperBound => number will use that formatter as long as it is < upperBound
 // exact => number will use that formatter if it is === exact
-type FormatterRule =
-  | { upperBound?: undefined; exact: number; formatterOptions: FormatOptions }
-  | { upperBound: number; exact?: undefined; formatterOptions: FormatOptions }
+type HardCodedInputFormat =
+  | {
+      input: number
+      prefix?: string
+      hardcodedOutput?: undefined
+    }
+  | {
+      input?: undefined
+      prefix?: undefined
+      hardcodedOutput: string
+    }
+
+type FormatterBaseRule = { formatterOptions: NumberFormatOptions }
+type FormatterExactRule = { upperBound?: undefined; exact: number } & FormatterBaseRule
+type FormatterUpperBoundRule = { upperBound: number; exact?: undefined } & FormatterBaseRule
+
+type FormatterRule = (FormatterExactRule | FormatterUpperBoundRule) & { hardCodedInput?: HardCodedInputFormat }
 
 // these formatter objects dictate which formatter rule to use based on the interval that
 // the number falls into. for example, based on the rule set below, if your number
 // falls between 1 and 1e6, you'd use TWO_DECIMALS as the formatter.
 const tokenNonTxFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: '0' },
-  { upperBound: 0.001, formatterOptions: '<0.001' },
+  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
+  { upperBound: 0.001, hardCodedInput: { input: 0.001, prefix: '<' }, formatterOptions: THREE_DECIMALS },
   { upperBound: 1, formatterOptions: THREE_DECIMALS },
   { upperBound: 1e6, formatterOptions: TWO_DECIMALS },
   { upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS },
-  { upperBound: Infinity, formatterOptions: '>999T' },
+  {
+    upperBound: Infinity,
+    hardCodedInput: { input: 999_000_000_000_000, prefix: '>' },
+    formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS,
+  },
 ]
 
 const tokenTxFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: '0' },
-  { upperBound: 0.00001, formatterOptions: '<0.00001' },
+  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
+  {
+    upperBound: 0.00001,
+    hardCodedInput: { input: 0.00001, prefix: '<' },
+    formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN,
+  },
   { upperBound: 1, formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN },
   { upperBound: 10000, formatterOptions: SIX_SIG_FIGS_TWO_DECIMALS },
   { upperBound: Infinity, formatterOptions: TWO_DECIMALS },
 ]
 
 const swapTradeAmountFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: '0' },
+  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
   { upperBound: 0.1, formatterOptions: SIX_SIG_FIGS_NO_COMMAS },
   { upperBound: 1, formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS },
   { upperBound: Infinity, formatterOptions: SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS },
 ]
 
 const swapPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: '0' },
-  { upperBound: 0.00001, formatterOptions: '<0.00001' },
+  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
+  {
+    upperBound: 0.00001,
+    hardCodedInput: { input: 0.00001, prefix: '<' },
+    formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN,
+  },
   ...swapTradeAmountFormatter,
 ]
 
 const fiatTokenDetailsFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: '$0.00' },
-  { upperBound: 0.00000001, formatterOptions: '<$0.00000001' },
+  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: TWO_DECIMALS_CURRENCY },
+  {
+    upperBound: 0.00000001,
+    hardCodedInput: { input: 0.00000001, prefix: '<' },
+    formatterOptions: ONE_SIG_FIG_CURRENCY,
+  },
   { upperBound: 0.1, formatterOptions: THREE_SIG_FIGS_CURRENCY },
   { upperBound: 1.05, formatterOptions: THREE_DECIMALS_CURRENCY },
   { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
@@ -194,8 +230,12 @@ const fiatTokenDetailsFormatter: FormatterRule[] = [
 ]
 
 const fiatTokenPricesFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: '$0.00' },
-  { upperBound: 0.00000001, formatterOptions: '<$0.00000001' },
+  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: TWO_DECIMALS_CURRENCY },
+  {
+    upperBound: 0.00000001,
+    hardCodedInput: { input: 0.00000001, prefix: '<' },
+    formatterOptions: ONE_SIG_FIG_CURRENCY,
+  },
   { upperBound: 1, formatterOptions: THREE_SIG_FIGS_CURRENCY },
   { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: 1e16, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
@@ -204,42 +244,53 @@ const fiatTokenPricesFormatter: FormatterRule[] = [
 
 const fiatTokenStatsFormatter: FormatterRule[] = [
   // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
-  { exact: 0, formatterOptions: '-' },
-  { upperBound: 0.01, formatterOptions: '<$0.01' },
+  { exact: 0, hardCodedInput: { hardcodedOutput: '-' }, formatterOptions: ONE_SIG_FIG_CURRENCY },
+  { upperBound: 0.01, hardCodedInput: { input: 0.01, prefix: '<' }, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: 1000, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_ONE_DECIMAL },
 ]
 
 const fiatGasPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: '$0.00' },
-  { upperBound: 0.01, formatterOptions: '<$0.01' },
+  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { upperBound: 0.01, hardCodedInput: { input: 0.01, prefix: '<' }, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
 ]
 
-const fiatTokenQuantityFormatter: FormatterRule[] = [{ exact: 0, formatterOptions: '$0.00' }, ...fiatGasPriceFormatter]
+const fiatTokenQuantityFormatter: FormatterRule[] = [
+  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: TWO_DECIMALS_CURRENCY },
+  ...fiatGasPriceFormatter,
+]
 
 const portfolioBalanceFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: '$0.00' },
+  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: Infinity, formatterOptions: TWO_DECIMALS_CURRENCY },
 ]
 
 const ntfTokenFloorPriceFormatterTrailingZeros: FormatterRule[] = [
-  { exact: 0, formatterOptions: '0' },
-  { upperBound: 0.001, formatterOptions: '<0.001' },
+  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
+  { upperBound: 0.001, hardCodedInput: { input: 0.001, prefix: '<' }, formatterOptions: THREE_DECIMALS },
   { upperBound: 1, formatterOptions: THREE_DECIMALS },
   { upperBound: 1000, formatterOptions: TWO_DECIMALS },
   { upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS },
-  { upperBound: Infinity, formatterOptions: '>999T' },
+  {
+    upperBound: Infinity,
+    hardCodedInput: { input: 999_000_000_000_000, prefix: '>' },
+    formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS,
+  },
 ]
 
 const ntfTokenFloorPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatterOptions: '0' },
-  { upperBound: 0.001, formatterOptions: '<0.001' },
+  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
+  { upperBound: 0.001, hardCodedInput: { input: 0.001, prefix: '<' }, formatterOptions: THREE_DECIMALS },
   { upperBound: 1, formatterOptions: THREE_DECIMALS_NO_TRAILING_ZEROS },
   { upperBound: 1000, formatterOptions: TWO_DECIMALS_NO_TRAILING_ZEROS },
   { upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS },
-  { upperBound: Infinity, formatterOptions: '>999T' },
+  {
+    upperBound: Infinity,
+    hardCodedInput: { input: 999_000_000_000_000, prefix: '>' },
+    formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS,
+  },
 ]
 
 const ntfCollectionStatsFormatter: FormatterRule[] = [
@@ -306,14 +357,14 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
 }
 
-function getFormatterRule(input: number, type: NumberType): FormatOptions {
+function getFormatterRule(input: number, type: NumberType): FormatterRule {
   const rules = TYPE_TO_FORMATTER_RULES[type]
   for (const rule of rules) {
     if (
       (rule.exact !== undefined && input === rule.exact) ||
       (rule.upperBound !== undefined && input < rule.upperBound)
     ) {
-      return rule.formatterOptions
+      return rule
     }
   }
 
@@ -339,10 +390,16 @@ export function formatNumber({
     return placeholder
   }
 
-  const formatterOptions = getFormatterRule(input, type)
+  const { hardCodedInput, formatterOptions } = getFormatterRule(input, type)
 
-  if (typeof formatterOptions === 'string') {
-    return formatterOptions
+  if (hardCodedInput) {
+    if (hardCodedInput.hardcodedOutput) {
+      return hardCodedInput.hardcodedOutput
+    }
+
+    const { input: hardCodedInputValue, prefix } = hardCodedInput
+    if (hardCodedInputValue === undefined) return placeholder
+    return (prefix ?? '') + new Intl.NumberFormat(locale, formatterOptions).format(hardCodedInputValue)
   }
 
   if (formatterOptions.currency) {
