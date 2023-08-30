@@ -10,8 +10,6 @@ import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { getTokenDetailsURL, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
@@ -442,8 +440,6 @@ interface LoadedRowProps {
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
-  const activeLocale = useActiveLocale()
-  const activeLocalCurrency = useActiveLocalCurrency()
 
   const filterNetwork = validateUrlChainParam(useParams<{ chainName?: string }>().chainName?.toUpperCase())
   const chainId = supportedChainIdFromGQLChain(filterNetwork)
@@ -510,8 +506,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               {formatNumber({
                 input: token.market?.totalValueLocked?.value,
                 type: NumberType.FiatTokenStats,
-                locale: activeLocale,
-                localCurrency: activeLocalCurrency,
               })}
             </ClickableContent>
           }
@@ -520,8 +514,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               {formatNumber({
                 input: token.market?.volume?.value,
                 type: NumberType.FiatTokenStats,
-                locale: activeLocale,
-                localCurrency: activeLocalCurrency,
               })}
             </ClickableContent>
           }

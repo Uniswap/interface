@@ -6,8 +6,6 @@ import { TraceEvent } from 'analytics'
 import Column from 'components/Column'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { ZERO_PERCENT } from 'constants/misc'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -80,8 +78,6 @@ export default function SwapModalFooter({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
-  const activeLocale = useActiveLocale()
-  const activeLocalCurrency = useActiveLocalCurrency()
 
   const label = `${trade.executionPrice.baseCurrency?.symbol} `
   const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
@@ -117,8 +113,6 @@ export default function SwapModalFooter({
                 {formatNumber({
                   input: trade.totalGasUseEstimateUSD,
                   type: NumberType.FiatGasPrice,
-                  locale: activeLocale,
-                  localCurrency: activeLocalCurrency,
                 })}
               </DetailRowValue>
             </MouseoverTooltip>

@@ -7,8 +7,6 @@ import { UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row, { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
@@ -28,8 +26,6 @@ const StyledGasIcon = styled(Gas)`
 
 export default function GasEstimateTooltip({ trade, loading }: { trade?: InterfaceTrade; loading: boolean }) {
   const { chainId } = useWeb3React()
-  const activeLocale = useActiveLocale()
-  const activeLocalCurrency = useActiveLocalCurrency()
 
   if (!trade || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {
     return null
@@ -55,8 +51,6 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
                 {formatNumber({
                   input: trade.totalGasUseEstimateUSD,
                   type: NumberType.FiatGasPrice,
-                  locale: activeLocale,
-                  localCurrency: activeLocalCurrency,
                 })}
               </div>
               {isUniswapXTrade(trade) && (
@@ -65,8 +59,6 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
                     {formatNumber({
                       input: trade.classicGasUseEstimateUSD,
                       type: NumberType.FiatGasPrice,
-                      locale: activeLocale,
-                      localCurrency: activeLocalCurrency,
                     })}
                   </s>
                 </div>
