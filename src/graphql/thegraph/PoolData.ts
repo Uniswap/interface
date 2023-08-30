@@ -51,18 +51,13 @@ export function usePoolData(poolAddress: string, chainId: ChainId) {
       new ApolloClient({
         cache: new InMemoryCache(),
         uri: CHAIN_SUBGRAPH_URL[chainId],
-        defaultOptions: {
-          watchQuery: {
-            fetchPolicy: 'cache-and-network',
-          },
-        },
       }),
     [chainId]
   )
   const { data, loading } = usePoolDataQuery({ variables: { poolId }, client: apolloClient })
   return useMemo(() => {
     return {
-      data,
+      data: data?.data[0],
       loading,
     }
   }, [data, loading])

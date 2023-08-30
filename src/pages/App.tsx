@@ -39,7 +39,6 @@ import NotFound from './NotFound'
 import Pool from './Pool'
 import PositionPage from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
-import PoolDetails from './PoolDetails'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
@@ -48,6 +47,7 @@ import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
+const PoolDetails = lazy(() => import('./PoolDetails'))
 const Vote = lazy(() => import('./Vote'))
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
