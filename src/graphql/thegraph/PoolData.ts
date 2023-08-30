@@ -1,8 +1,10 @@
+import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { ChainId } from '@uniswap/sdk-core'
 import gql from 'graphql-tag'
 import { useMemo } from 'react'
 
 import { usePoolDataQuery } from './__generated__/types-and-hooks'
-import { apolloClient } from './apollo'
+import { CHAIN_SUBGRAPH_URL } from './apollo'
 
 gql`
   query PoolData($poolId: [ID!]) {
@@ -42,8 +44,21 @@ gql`
   }
 `
 
-export function usePoolData(poolAddress: string) {
+export function usePoolData(poolAddress: string, chainId: ChainId) {
   const poolId = [poolAddress]
+  const apolloClient = useMemo(
+    () =>
+      new ApolloClient({
+        cache: new InMemoryCache(),
+        uri: CHAIN_SUBGRAPH_URL[chainId],
+        defaultOptions: {
+          watchQuery: {
+            fetchPolicy: 'cache-and-network',
+          },
+        },
+      }),
+    [chainId]
+  )
   const { data, loading } = usePoolDataQuery({ variables: { poolId }, client: apolloClient })
   return useMemo(() => {
     return {

@@ -3,7 +3,7 @@ import { ChainId } from '@uniswap/sdk-core'
 
 import store from '../../state/index'
 
-const CHAIN_SUBGRAPH_URL: Record<number, string> = {
+export const CHAIN_SUBGRAPH_URL: Record<number, string> = {
   [ChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
   [ChainId.ARBITRUM_ONE]: 'https://thegraph.com/hosted-service/subgraph/ianlapham/uniswap-arbitrum-one',
   [ChainId.OPTIMISM]: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis',
