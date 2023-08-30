@@ -1,3 +1,4 @@
+import Column from 'components/Column'
 import Row from 'components/Row'
 import { ReactNode } from 'react'
 import { Check } from 'react-feather'
@@ -17,6 +18,10 @@ const InternalLinkMenuItem = styled(Link)`
   justify-content: space-between;
   text-decoration: none;
   color: ${({ theme }) => theme.neutral1};
+`
+
+export const MenuColumn = styled(Column)`
+  padding-bottom: 14px;
 `
 
 export function MenuItem({
