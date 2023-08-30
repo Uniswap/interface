@@ -1,10 +1,11 @@
+import Column from 'components/Column'
 import Row from 'components/Row'
 import { ReactNode } from 'react'
 import { Check } from 'react-feather'
 import type { To } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
-import { ClickableStyle, ThemedText } from 'theme'
+import { BREAKPOINTS, ClickableStyle, ThemedText } from 'theme'
 
 const InternalLinkMenuItem = styled(Link)`
   ${ClickableStyle}
@@ -17,6 +18,12 @@ const InternalLinkMenuItem = styled(Link)`
   justify-content: space-between;
   text-decoration: none;
   color: ${({ theme }) => theme.neutral1};
+`
+
+export const MenuColumn = styled(Column)`
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    padding-bottom: 14px;
+  }
 `
 
 export function MenuItem({

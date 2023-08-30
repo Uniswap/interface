@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
-import Column from 'components/Column'
 import { getLocalCurrencyIcon, SUPPORTED_LOCAL_CURRENCIES, SupportedLocalCurrency } from 'constants/localCurrencies'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useLocalCurrencyLinkProps } from 'hooks/useLocalCurrencyLinkProps'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { MenuItem } from './shared'
+import { MenuColumn, MenuItem } from './shared'
 import { SlideOutMenu } from './SlideOutMenu'
 
 const StyledLocalCurrencyIcon = styled.div`
@@ -48,7 +47,7 @@ export default function LocalCurrencyMenu({ onClose }: { onClose: () => void }) 
 
   return (
     <SlideOutMenu title={<Trans>Currency</Trans>} onClose={onClose}>
-      <Column>
+      <MenuColumn>
         {SUPPORTED_LOCAL_CURRENCIES.map((localCurrency) => (
           <LocalCurrencyMenuItem
             localCurrency={localCurrency}
@@ -56,7 +55,7 @@ export default function LocalCurrencyMenu({ onClose }: { onClose: () => void }) 
             key={localCurrency}
           />
         ))}
-      </Column>
+      </MenuColumn>
     </SlideOutMenu>
   )
 }

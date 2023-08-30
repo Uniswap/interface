@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import AuthenticatedHeader from './AuthenticatedHeader'
@@ -42,25 +42,30 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
     return
   }, [drawerOpen, menu, closeSettings])
 
-  return (
-    <DefaultMenuWrap>
-      {menu === MenuState.DEFAULT &&
-        (isAuthenticated ? (
+  const SubMenu = useMemo(() => {
+    switch (menu) {
+      case MenuState.DEFAULT:
+        return isAuthenticated ? (
           <AuthenticatedHeader account={account} openSettings={openSettings} />
         ) : (
           <WalletModal openSettings={openSettings} />
-        ))}
-      {menu === MenuState.SETTINGS && (
-        <SettingsMenu
-          onClose={closeSettings}
-          openLanguageSettings={openLanguageSettings}
-          openLocalCurrencySettings={openLocalCurrencySettings}
-        />
-      )}
-      {menu === MenuState.LANGUAGE_SETTINGS && <LanguageMenu onClose={openSettings} />}
-      {menu === MenuState.LOCAL_CURRENCY_SETTINGS && <LocalCurrencyMenu onClose={openSettings} />}
-    </DefaultMenuWrap>
-  )
+        )
+      case MenuState.SETTINGS:
+        return (
+          <SettingsMenu
+            onClose={closeSettings}
+            openLanguageSettings={openLanguageSettings}
+            openLocalCurrencySettings={openLocalCurrencySettings}
+          />
+        )
+      case MenuState.LANGUAGE_SETTINGS:
+        return <LanguageMenu onClose={openSettings} />
+      case MenuState.LOCAL_CURRENCY_SETTINGS:
+        return <LocalCurrencyMenu onClose={openSettings} />
+    }
+  }, [account, closeSettings, isAuthenticated, menu, openLanguageSettings, openLocalCurrencySettings, openSettings])
+
+  return <DefaultMenuWrap>{SubMenu}</DefaultMenuWrap>
 }
 
 export default DefaultMenu

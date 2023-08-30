@@ -32,7 +32,7 @@ const ToggleWrapper = styled.div<{ currencyConversionEnabled?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: ${({ currencyConversionEnabled }) => (currencyConversionEnabled ? `10px` : `24px`)};
+  margin-bottom: ${({ currencyConversionEnabled }) => (currencyConversionEnabled ? '10px' : '24px')};
 `
 
 const SettingsButtonWrapper = styled(Row)`

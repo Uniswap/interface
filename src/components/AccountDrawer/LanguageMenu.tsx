@@ -1,10 +1,9 @@
 import { Trans } from '@lingui/macro'
-import Column from 'components/Column'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 
-import { MenuItem } from './shared'
+import { MenuColumn, MenuItem } from './shared'
 import { SlideOutMenu } from './SlideOutMenu'
 
 function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isActive: boolean }) {
@@ -36,9 +35,9 @@ export function LanguageMenuItems() {
 export default function LanguageMenu({ onClose }: { onClose: () => void }) {
   return (
     <SlideOutMenu title={<Trans>Language</Trans>} onClose={onClose}>
-      <Column>
+      <MenuColumn>
         <LanguageMenuItems />
-      </Column>
+      </MenuColumn>
     </SlideOutMenu>
   )
 }
