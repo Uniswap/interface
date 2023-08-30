@@ -146,6 +146,7 @@ export const routingApi = createApi({
               tokenOut: tokenOutAddress,
               amount,
               type,
+              intent: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? 'pricing' : undefined,
               // if forceUniswapXOn is not ON, then use the backend's default value
               useUniswapX: forceUniswapXOn || undefined,
               configs: getRoutingAPIConfig(args),
