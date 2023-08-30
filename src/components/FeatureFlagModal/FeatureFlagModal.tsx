@@ -8,7 +8,6 @@ import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { UniswapXVariant, useUniswapXFlag } from 'featureFlags/flags/uniswapx'
 import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputFlag } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
@@ -229,12 +228,6 @@ export default function FeatureFlagModal() {
             <X size={24} />
           </CloseButton>
         </Header>
-        <FeatureFlagOption
-          variant={UniswapXVariant}
-          value={useUniswapXFlag()}
-          featureFlag={FeatureFlag.uniswapXEnabled}
-          label="Enable UniswapX on interface"
-        />
         <FeatureFlagOption
           variant={BaseVariant}
           value={useUniswapXSyntheticQuoteFlag()}
