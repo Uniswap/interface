@@ -153,6 +153,7 @@ const SEVEN_SIG_FIGS__SCI_NOTATION_CURRENCY: NumberFormatOptions = {
 // each rule must contain either an `upperBound` or an `exact` value.
 // upperBound => number will use that formatter as long as it is < upperBound
 // exact => number will use that formatter if it is === exact
+// if hardcodedinput is supplied it will override the input value or use the hardcoded output
 type HardCodedInputFormat =
   | {
       input: number
