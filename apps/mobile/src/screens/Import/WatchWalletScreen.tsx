@@ -8,7 +8,6 @@ import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
@@ -99,11 +98,6 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     setValue(text?.trim())
   }
 
-  const onPressDemoWallet = (): void => {
-    setValue('uniswapdemo')
-    setShowLiveCheck(false)
-  }
-
   useEffect(() => {
     const delayFn = setTimeout(() => {
       setShowLiveCheck(true)
@@ -113,16 +107,6 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
       clearTimeout(delayFn)
     }
   }, [value])
-
-  const subtitleSize = useResponsiveProp({
-    xs: 'bodyMicro',
-    sm: 'subheadSmall',
-  })
-
-  const addressSize = useResponsiveProp({
-    xs: 'buttonLabelMicro',
-    sm: 'buttonLabelSmall',
-  })
 
   const itemSpacing = useResponsiveProp({
     xs: 'none',
@@ -149,14 +133,6 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
             isValid && Keyboard.dismiss()
           }}
         />
-        <Flex>
-          <Text color="neutral2" mx="spacing4" textAlign="center" variant={subtitleSize}>
-            Not sure? Try adding{' '}
-            <Text color="accent1" variant={addressSize} onPress={onPressDemoWallet}>
-              uniswapdemo.eth
-            </Text>
-          </Text>
-        </Flex>
       </Flex>
       <Button
         disabled={!isValid}
