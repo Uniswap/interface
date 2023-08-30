@@ -2,34 +2,24 @@
 version: v1.25.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
-  SNYK-JS-OPENZEPPELINCONTRACTS-5425827:
-    - '*':
-        reason: 'monorepo migration'
-        expires: 2023-08-30T00:00:00.000Z
-        created: 2023-04-20T00:13:29.506Z
   'snyk:lic:npm:axe-core:MPL-2.0':
     - '*':
         reason: monorepo migration
-        expires: 2023-08-30T00:00:00.000Z
+        expires: 2099-01-01T00:00:00.000Z
         created: 2023-04-19T21:49:00.028Z
   'snyk:lic:npm:eslint-config-turbo:MPL-2.0':
     - '*':
         reason: monorepo migration
-        expires: 2023-08-30T00:00:00.000Z
+        expires: 2099-01-01T00:00:00.000Z
         created: 2023-04-19T21:49:32.588Z
   'snyk:lic:npm:eslint-plugin-no-unsanitized:MPL-2.0':
     - '*':
         reason: monorepo migration
-        expires: 2023-08-30T00:00:00.000Z
+        expires: 2099-01-01T00:00:00.000Z
         created: 2023-04-19T21:49:49.960Z
   'snyk:lic:npm:eslint-plugin-turbo:MPL-2.0':
     - '*':
         reason: monorepo migration
-        expires: 2023-08-30T00:00:00.000Z
+        expires: 2099-01-01T00:00:00.000Z
         created: 2023-04-19T21:50:28.481Z
-  SNYK-JS-WORDWRAP-3149973:
-    - '*':
-        reason: monorepo migration
-        expires: 2023-8-30T00:00:00.000Z
-        created: 2023-04-19T21:50:49.953Z
 patch: {}
