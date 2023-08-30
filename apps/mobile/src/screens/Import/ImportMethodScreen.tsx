@@ -38,17 +38,6 @@ interface ImportMethodOption {
 
 const options: ImportMethodOption[] = [
   {
-    title: (t: AppTFunction) => t('Watch a wallet'),
-    blurb: (t: AppTFunction) =>
-      t('Explore the contents of a wallet by entering any address or ENS name '),
-    icon: (theme: Theme) => (
-      <EyeIcon color={theme.colors.accent1} height={24} strokeWidth="1.5" width={24} />
-    ),
-    nav: OnboardingScreens.WatchWallet,
-    importType: ImportType.Watch,
-    name: ElementName.OnboardingImportWatchedAccount,
-  },
-  {
     title: (t: AppTFunction) => t('Import a wallet'),
     blurb: (t: AppTFunction) => t('Enter your recovery phrase from another crypto wallet'),
     icon: (theme: Theme) => (
@@ -58,6 +47,17 @@ const options: ImportMethodOption[] = [
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
     badgeText: (t: AppTFunction) => t('Recommended'),
+  },
+  {
+    title: (t: AppTFunction) => t('Watch a wallet'),
+    blurb: (t: AppTFunction) =>
+      t('Explore the contents of a wallet by entering any address or ENS name '),
+    icon: (theme: Theme) => (
+      <EyeIcon color={theme.colors.accent1} height={24} strokeWidth="1.5" width={24} />
+    ),
+    nav: OnboardingScreens.WatchWallet,
+    importType: ImportType.Watch,
+    name: ElementName.OnboardingImportWatchedAccount,
   },
 ]
 
