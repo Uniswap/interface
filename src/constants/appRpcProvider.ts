@@ -26,7 +26,7 @@ function checkNetworks(networks: Array<Network>): Network | null {
           (result.ensAddress === network.ensAddress || (result.ensAddress == null && network.ensAddress == null))
         )
       ) {
-        console.warn('provider mismatch', 'networks', networks)
+        return null
       }
     } else {
       result = network
@@ -55,11 +55,11 @@ export default class AppRpcProvider extends JsonRpcProvider {
 
   constructor(providers: JsonRpcProvider[], evaluationInterval = 60000) {
     if (providers.length === 0) throw new Error('providers array empty')
-    const agreedUponNetwork = checkNetworks(providers.map((p) => p.network))
-    if (!agreedUponNetwork) throw new Error('networks mismatch')
     providers.forEach((provider, i) => {
       if (!Provider.isProvider(provider)) throw new Error(`invalid provider ${i}`)
     })
+    const agreedUponNetwork = checkNetworks(providers.map((p) => p.network))
+    if (!agreedUponNetwork) throw new Error('networks mismatch')
 
     const primaryProvider = providers[0]
     super(primaryProvider.connection)
@@ -120,7 +120,7 @@ export default class AppRpcProvider extends JsonRpcProvider {
     return this.primaryProvider.perform(method, params)
   }
 
-  private async evaluateProvider(config: FallbackProviderEvaluation): Promise<void> {
+  async evaluateProvider(config: FallbackProviderEvaluation): Promise<void> {
     const startTime = now()
     try {
       await config.provider.getBlockNumber()
