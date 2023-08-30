@@ -392,22 +392,22 @@ export function formatNumber({
 
   const { hardCodedInput, formatterOptions } = getFormatterRule(input, type)
 
-  if (hardCodedInput) {
-    if (hardCodedInput.hardcodedOutput) {
-      return hardCodedInput.hardcodedOutput
-    }
-
-    const { input: hardCodedInputValue, prefix } = hardCodedInput
-    if (hardCodedInputValue === undefined) return placeholder
-    return (prefix ?? '') + new Intl.NumberFormat(locale, formatterOptions).format(hardCodedInputValue)
-  }
-
   if (formatterOptions.currency) {
     formatterOptions.currency = localCurrency
     formatterOptions.currencyDisplay = LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE[localCurrency]
   }
 
-  return new Intl.NumberFormat(locale, formatterOptions).format(input)
+  if (!hardCodedInput) {
+    return new Intl.NumberFormat(locale, formatterOptions).format(input)
+  }
+
+  if (hardCodedInput.hardcodedOutput) {
+    return hardCodedInput.hardcodedOutput
+  }
+
+  const { input: hardCodedInputValue, prefix } = hardCodedInput
+  if (hardCodedInputValue === undefined) return placeholder
+  return (prefix ?? '') + new Intl.NumberFormat(locale, formatterOptions).format(hardCodedInputValue)
 }
 
 export function formatCurrencyAmount(
