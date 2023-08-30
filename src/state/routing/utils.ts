@@ -265,7 +265,7 @@ export async function transformRoutesToTrade(
 
   // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
   // even if it is the better quote.
-  if (isUniswapXBetter && args.routerPreference === RouterPreference.X) {
+  if (isUniswapXBetter && (args.routerPreference === RouterPreference.X || args.isUniswapXDefaultEnabled)) {
     const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
     const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)
 
