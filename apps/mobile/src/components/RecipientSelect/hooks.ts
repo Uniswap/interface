@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'src/app/hooks'
+import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { ChainId } from 'wallet/src/constants/chains'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
@@ -48,6 +49,7 @@ export function useRecipients(): {
   const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, MAX_RECENT_RECIPIENTS)
 
   const { recipient: validatedAddressRecipient, loading } = useValidatedSearchedAddress(pattern)
+  const watchedWallets = useAppSelector(selectWatchedAddressSet)
 
   const sections = useMemo(() => {
     const sectionsArr = []
@@ -72,8 +74,20 @@ export function useRecipients(): {
       })
     }
 
+    if (watchedWallets.size) {
+      sectionsArr.push({
+        title: t('Favorite wallets'),
+        data: Array.from(watchedWallets).map(
+          (address) =>
+            <SearchableRecipient>{
+              address,
+            }
+        ),
+      })
+    }
+
     return sectionsArr
-  }, [validatedAddressRecipient, recentRecipients, t, inactiveLocalAccounts])
+  }, [validatedAddressRecipient, recentRecipients, t, inactiveLocalAccounts, watchedWallets])
 
   const searchableRecipientOptions = useMemo(
     () =>
