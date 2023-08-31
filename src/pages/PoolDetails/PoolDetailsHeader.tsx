@@ -40,7 +40,7 @@ interface Token {
 }
 
 interface PoolDetailsHeaderProps {
-  chainId: number
+  chainId?: number
   poolAddress?: string
   token0?: Token
   token1?: Token
@@ -81,7 +81,9 @@ export function PoolDetailsHeader({
       </Row>
       <Row gap="18px">
         <Row gap="8px" width="max-content">
-          <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
+          {chainId && (
+            <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
+          )}
           <ThemedText.HeadlineSmall>
             {token0?.symbol} / {token1?.symbol}
           </ThemedText.HeadlineSmall>

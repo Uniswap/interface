@@ -21,7 +21,7 @@ export default function PoolDetailsPage() {
   }>()
   const chain = getValidUrlChainName(chainName)
   const chainId = chain && supportedChainIdFromGQLChain(chain)
-  const { data: poolData, loading } = usePoolData(poolAddress ?? '', chainId ?? 0)
+  const { data: poolData, loading } = usePoolData(poolAddress ?? '', chainId)
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const token0 = isReversed ? poolData?.token1 : poolData?.token0
   const token1 = isReversed ? poolData?.token0 : poolData?.token1
