@@ -5,7 +5,6 @@ import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import { RowBetween, RowFixed } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { isUniswapXSupportedChain } from 'constants/chains'
-import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
 import { useAppDispatch } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference } from 'state/user/hooks'
@@ -25,7 +24,7 @@ const InlineLink = styled(ThemedText.BodySmall)`
 export default function RouterPreferenceSettings() {
   const { chainId } = useWeb3React()
   const [routerPreference, setRouterPreference] = useRouterPreference()
-  const uniswapXEnabled = useUniswapXEnabled() && chainId && isUniswapXSupportedChain(chainId)
+  const uniswapXEnabled = chainId && isUniswapXSupportedChain(chainId)
   const dispatch = useAppDispatch()
 
   return (
