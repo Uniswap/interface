@@ -44,13 +44,13 @@ gql`
   }
 `
 
-export function usePoolData(poolAddress: string, chainId: ChainId) {
+export function usePoolData(poolAddress: string, chainId?: ChainId) {
   const poolId = [poolAddress]
   const apolloClient = useMemo(
     () =>
       new ApolloClient({
         cache: new InMemoryCache(),
-        uri: CHAIN_SUBGRAPH_URL[chainId],
+        uri: CHAIN_SUBGRAPH_URL[chainId ?? ChainId.MAINNET],
       }),
     [chainId]
   )

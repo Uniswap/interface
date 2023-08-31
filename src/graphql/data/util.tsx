@@ -134,13 +134,11 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
 
 /**
  * @param chainName parsed in chain name from url query parameter
- * @returns if chainName is a valid chain name supported by the backend, returns true and casts chainName to a Chain, otherwise returns false
+ * @returns if chainName is a valid chain name, returns the backend chain name, otherwise returns undefined
  */
-export function isValidUrlChainParam(chainName: string | undefined): chainName is Chain {
-  const isValidChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
-  const isValidBackEndChain =
-    isValidChainName && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(isValidChainName)
-  return !!isValidBackEndChain
+export function getValidUrlChainName(chainName: string | undefined): Chain | undefined {
+  const validChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
+  return validChainName ? validChainName : undefined
 }
 
 /**
@@ -148,7 +146,9 @@ export function isValidUrlChainParam(chainName: string | undefined): chainName i
  * @returns if chainName is a valid chain name supported by the backend, returns the backend chain name, otherwise returns Chain.Ethereum
  */
 export function validateUrlChainParam(chainName: string | undefined) {
-  const isValidBackEndChain = isValidUrlChainParam(chainName)
+  const isValidChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
+  const isValidBackEndChain =
+    isValidChainName && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(isValidChainName)
   return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
