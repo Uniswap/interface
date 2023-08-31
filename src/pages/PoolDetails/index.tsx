@@ -1,10 +1,11 @@
 import Row from 'components/Row'
-import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
+import { isValidUrlChainParam, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
 import NotFound from 'pages/NotFound'
 import { useReducer } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { isAddress } from 'utils'
 
 import { PoolDetailsHeader } from './PoolDetailsHeader'
 
@@ -24,10 +25,11 @@ export default function PoolDetailsPage() {
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const token0 = isReversed ? poolData?.token1 : poolData?.token0
   const token1 = isReversed ? poolData?.token0 : poolData?.token1
+  const isInvalidPool = !chainName || !poolAddress || !isValidUrlChainParam(chainName) || !isAddress(poolAddress)
 
   // TODO: Add skeleton once designed
   if (loading) return <></>
-  if (!loading && !poolData) return <NotFound />
+  if ((!loading && !poolData) || isInvalidPool) return <NotFound />
   return (
     <PageWrapper>
       <PoolDetailsHeader
