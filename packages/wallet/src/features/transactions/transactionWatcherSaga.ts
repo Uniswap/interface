@@ -6,7 +6,6 @@ import appsFlyer from 'react-native-appsflyer'
 import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
-import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
@@ -205,16 +204,6 @@ export function* watchTransaction({
     return
   }
 
-  // Log metrics for confirmed transfers
-  if (transaction.typeInfo.type === TransactionType.Send) {
-    const transactionInfo = transaction.typeInfo as SendTokenTransactionInfo
-    analytics.sendEvent(WalletEventName.TransferCompleted, {
-      chainId: transactionInfo.tokenId,
-      tokenAddress: transactionInfo.tokenAddress,
-      toAddress: transactionInfo.recipient,
-    })
-  }
-
   // Update the store with tx receipt details
   yield* call(finalizeTransaction, { transaction, ethersReceipt: receipt, apolloClient })
 }
@@ -283,7 +272,6 @@ export function logTransactionEvent(
 
   // Send analytics event for swap success and failure
   if (type === TransactionType.Swap) {
-    const swapTypeInfo = typeInfo as BaseSwapTransactionInfo
     const {
       slippageTolerance,
       quoteId,
@@ -293,7 +281,7 @@ export function logTransactionEvent(
       outputCurrencyId,
       tradeType,
       protocol,
-    } = swapTypeInfo
+    } = typeInfo as BaseSwapTransactionInfo
     const eventName =
       status === TransactionStatus.Success
         ? SwapEventName.SWAP_TRANSACTION_COMPLETED
@@ -315,6 +303,16 @@ export function logTransactionEvent(
       quoteId,
       alternativeRpc,
       protocol,
+    })
+  }
+
+  // Log metrics for confirmed transfers
+  if (type === TransactionType.Send) {
+    const { tokenAddress, recipient: toAddress } = typeInfo as SendTokenTransactionInfo
+    sendWalletAnalyticsEvent(WalletEventName.TransferCompleted, {
+      chainId,
+      tokenAddress,
+      toAddress,
     })
   }
 }

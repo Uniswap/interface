@@ -34,6 +34,11 @@ async function processAddChanges() {
     warn('You are logging data. Please confirm that nothing sensitive is being logged!')
   }
 
+  // Check for direct logging calls
+  if (addChanges.some((change) => change.content.includes('analytics.logEvent'))) {
+    warn(`You are using the direct analytics call. Please use the typed wrapper for your given surface if possible!`)
+  }
+
   // Check for UI package imports that are longer than needed
   const validLongerImports = ['ui/src', 'ui/src/theme', 'ui/src/loading', 'ui/src/theme/restyle']
   const longestImportLength = Math.max(...validLongerImports.map((i) => i.length))

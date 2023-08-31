@@ -1,6 +1,7 @@
 import { MoonpayEventName, SwapEventName } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
+import { ChainId } from 'wallet/src/constants/chains'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
 
 export type SwapTradeBaseProperties = {
@@ -36,7 +37,7 @@ type SwapTransactionResultProperties = {
 }
 
 type TransferProperties = {
-  chainId: string
+  chainId: ChainId
   tokenAddress: Address
   toAddress: Address
 }
