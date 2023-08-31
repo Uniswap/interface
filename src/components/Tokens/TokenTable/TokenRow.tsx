@@ -33,7 +33,7 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
+import { ArrowCell, DeltaArrow, DeltaText, formatDelta } from '../TokenDetails/PriceChart'
 
 const Cell = styled.div`
   display: flex;
@@ -445,8 +445,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const chainId = supportedChainIdFromGQLChain(filterNetwork)
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
-  const arrow = getDeltaArrow(delta)
-  const smallArrow = getDeltaArrow(delta, 14)
   const formattedDelta = formatDelta(delta)
 
   const exploreTokenSelectedEventProperties = {
@@ -489,7 +487,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <PriceInfoCell>
                 {price}
                 <PercentChangeInfoCell>
-                  <ArrowCell>{smallArrow}</ArrowCell>
+                  <ArrowCell>
+                    <DeltaArrow delta={delta} size={14} />
+                  </ArrowCell>
                   <DeltaText delta={delta}>{formattedDelta}</DeltaText>
                 </PercentChangeInfoCell>
               </PriceInfoCell>
@@ -497,7 +497,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           percentChange={
             <ClickableContent>
-              <ArrowCell>{arrow}</ArrowCell>
+              <ArrowCell>
+                <DeltaArrow delta={delta} />
+              </ArrowCell>
               <DeltaText delta={delta}>{formattedDelta}</DeltaText>
             </ClickableContent>
           }

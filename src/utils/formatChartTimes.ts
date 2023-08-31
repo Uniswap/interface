@@ -10,6 +10,13 @@ export const hourFormatter = (locale: string) => (timestamp: NumberValue) =>
     hour12: true,
   })
 
+const HOUR_FORMAT_OPTIONS = { hour: 'numeric', minute: 'numeric', hour12: true }
+const DAY_AND_HOUR_FORMAT_OPTIONS = { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }
+const MONTH_AND_DAY_FORMAT_OPTIONS = { month: 'long', day: 'numeric' }
+const MONTH_YEAR_DAY_FORMAT_OPTIONS = { month: 'short', year: 'numeric', day: 'numeric' }
+const MONTH_TICK_FORMAT_OPTIONS = { month: 'long' }
+const WEEK_FORMAT_OPTIONS = { weekday: 'long' }
+
 export const dayHourFormatter = (locale: string) => (timestamp: NumberValue) =>
   createTimeFormatter(timestamp, locale, {
     month: 'short',
@@ -35,6 +42,7 @@ export const monthYearDayFormatter = (locale: string) => (timestamp: NumberValue
     day: 'numeric',
   })
 
+// TODO(now) implement
 export const monthTickFormatter = (locale: string) => (timestamp: NumberValue) => {
   let date = new Date(timestamp.valueOf() * 1000)
 

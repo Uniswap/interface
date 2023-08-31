@@ -60,7 +60,7 @@ function Chart({
   return (
     <ChartContainer data-testid="chart-container">
       <ParentSize>
-        {({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} timePeriod={timePeriod} />}
+        {({ width }) => <PriceChart prices={prices ?? null} width={width} height={392} timePeriod={timePeriod} />}
       </ParentSize>
       <TimePeriodSelector
         currentTimePeriod={timePeriod}

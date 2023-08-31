@@ -75,8 +75,16 @@ export default function ShareButton({ currency }: { currency: Currency }) {
   const address = currency.isNative ? NATIVE_CHAIN_ID : currency.wrapped.address
   useDisableScrolling(open)
 
+  const test = () => {
+    navigator.share?.({
+      title: `${currency.symbol} on Uniswap`,
+      url: window.location.href,
+    })
+  }
+
   const shareTweet = () => {
     toggleShare()
+
     window.open(
       `https://twitter.com/intent/tweet?text=Check%20out%20${currency.name}%20(${
         currency.symbol
@@ -92,7 +100,7 @@ export default function ShareButton({ currency }: { currency: Currency }) {
 
   return (
     <ShareButtonDisplay ref={node}>
-      <Share onClick={toggleShare} aria-label="ShareOptions" open={open} />
+      <Share onClick={test} aria-label="ShareOptions" open={open} />
       {open && (
         <ShareActions>
           <ShareAction onClick={() => copyHelperRef.current?.forceCopy()}>

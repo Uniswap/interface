@@ -20,7 +20,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { formatUSDPrice } from 'utils/formatNumbers'
 
-import { DeltaText, getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
+import { DeltaArrow, DeltaText } from '../Tokens/TokenDetails/PriceChart'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 
@@ -156,8 +156,6 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
-  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 16)
-
   return (
     <Link
       data-testid={`searchbar-token-row-${token.chain}-${token.address ?? 'NATIVE'}`}
@@ -192,7 +190,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
               <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
             </Row>
             <PriceChangeContainer>
-              <ArrowCell>{arrow}</ArrowCell>
+              <ArrowCell>
+                <DeltaArrow delta={token.market?.pricePercentChange?.value} />
+              </ArrowCell>
               <ThemedText.BodySmall>
                 <DeltaText delta={token.market?.pricePercentChange?.value}>
                   {Math.abs(token.market?.pricePercentChange?.value ?? 0).toFixed(2)}%
