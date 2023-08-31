@@ -1,4 +1,4 @@
-import { DEFAULT_LOCAL_CURRENCY, SupportedLocalCurrency } from 'constants/localCurrencies'
+import { SupportedLocalCurrency } from 'constants/localCurrencies'
 import gql from 'graphql-tag'
 import ms from 'ms'
 import { getFetchPolicyForKey } from 'utils/getFetchPolicyForKey'
@@ -15,21 +15,12 @@ gql`
   }
 `
 
-export function useLocalCurrencyConversionRate(localCurrency: SupportedLocalCurrency) {
-  const isDefaultCurrency = localCurrency === DEFAULT_LOCAL_CURRENCY
-
+export function useLocalCurrencyConversionRate(localCurrency: SupportedLocalCurrency, skip?: boolean) {
   const { data, loading } = useConvertQuery({
     variables: { toCurrency: localCurrency },
     fetchPolicy: getFetchPolicyForKey(`convert-${localCurrency}`, ms('5m')),
-    skip: isDefaultCurrency,
+    skip,
   })
-
-  if (isDefaultCurrency) {
-    return {
-      data: 1.0,
-      isLoading: false,
-    }
-  }
 
   return {
     data: data?.convert?.value,
