@@ -9,7 +9,7 @@ interface TokenTaxMetadata {
 
 const CHAIN_TOKEN_TAX_MAP: { [chainId in number]?: { [address in string]?: TokenTaxMetadata } } = {
   [ChainId.MAINNET]: {
-    // BULLET
+    // BULLET F
     '0x8ef32a03784c8fd63bbf027251b9620865bd54b6': {
       buyFee: new Percent(5, 100), // 5%
       sellFee: new Percent(5, 100), // 5%
@@ -19,7 +19,7 @@ const CHAIN_TOKEN_TAX_MAP: { [chainId in number]?: { [address in string]?: Token
       buyFee: new Percent(1, 100), // 1%
       sellFee: new Percent(1, 100), // 1%
     },
-    // HarryPotterObamaKnuckles9Inu
+    // HarryPotterObamaKnuckles9Inu F
     '0x2577944fd4b556a99cc5aa0f072e4b944aa088df': {
       buyFee: new Percent(1, 100), // 1%
       sellFee: new Percent(11, 1000), // 1.1%
@@ -34,7 +34,7 @@ const CHAIN_TOKEN_TAX_MAP: { [chainId in number]?: { [address in string]?: Token
       buyFee: new Percent(2, 100), // 2%
       sellFee: new Percent(2, 100), // 2%
     },
-    // KUKU
+    // KUKU - F Locked
     '0x27206f5a9afd0c51da95f20972885545d3b33647': {
       buyFee: new Percent(2, 100), // 2%
       sellFee: new Percent(21, 1000), // 2.1%
@@ -44,7 +44,7 @@ const CHAIN_TOKEN_TAX_MAP: { [chainId in number]?: { [address in string]?: Token
       buyFee: new Percent(5, 100), // 5%
       sellFee: new Percent(5, 100), // 5%
     },
-    // PYUSD
+    // PYUSD F - underflow
     '0xe0a8ed732658832fac18141aa5ad3542e2eb503b': {
       buyFee: new Percent(1, 100), // 1%
       sellFee: new Percent(13, 1000), // 1.3%
@@ -54,7 +54,7 @@ const CHAIN_TOKEN_TAX_MAP: { [chainId in number]?: { [address in string]?: Token
       buyFee: new Percent(1, 100), // 1%
       sellFee: new Percent(1, 100), // 1%
     },
-    // COCO
+    // COCO - F Locked
     '0xcb50350ab555ed5d56265e096288536e8cac41eb': {
       buyFee: new Percent(2, 100), // 2%
       sellFee: new Percent(26, 1000), // 2.6%
