@@ -35,6 +35,12 @@ type SwapTransactionResultProperties = {
   protocol?: Protocol
 }
 
+type TransferProperties = {
+  chainId: string
+  tokenAddress: Address
+  toAddress: Address
+}
+
 export type WalletEventProperties = {
   [MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED]: {
     success: boolean
@@ -49,4 +55,6 @@ export type WalletEventProperties = {
   } & SwapTradeBaseProperties
   [SwapEventName.SWAP_TRANSACTION_COMPLETED]: SwapTransactionResultProperties
   [SwapEventName.SWAP_TRANSACTION_FAILED]: SwapTransactionResultProperties
+  [WalletEventName.TransferSubmitted]: TransferProperties
+  [WalletEventName.TransferCompleted]: TransferProperties
 }

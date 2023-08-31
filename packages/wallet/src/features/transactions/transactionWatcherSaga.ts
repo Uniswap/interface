@@ -6,6 +6,7 @@ import appsFlyer from 'react-native-appsflyer'
 import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
+import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
@@ -29,6 +30,7 @@ import {
 } from 'wallet/src/features/transactions/slice'
 import {
   BaseSwapTransactionInfo,
+  SendTokenTransactionInfo,
   TransactionDetails,
   TransactionReceipt,
   TransactionStatus,
@@ -39,6 +41,7 @@ import { getProvider } from 'wallet/src/features/wallet/context'
 import i18n from 'wallet/src/i18n/i18n'
 import { appSelect } from 'wallet/src/state'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { WalletEventName } from 'wallet/src/telemetry/constants'
 
 export function* transactionWatcher({
   apolloClient,
@@ -200,6 +203,16 @@ export function* watchTransaction({
       )
     }
     return
+  }
+
+  // Log metrics for confirmed transfers
+  if (transaction.typeInfo.type === TransactionType.Send) {
+    const transactionInfo = transaction.typeInfo as SendTokenTransactionInfo
+    analytics.sendEvent(WalletEventName.TransferCompleted, {
+      chainId: transactionInfo.tokenId,
+      tokenAddress: transactionInfo.tokenAddress,
+      toAddress: transactionInfo.recipient,
+    })
   }
 
   // Update the store with tx receipt details
