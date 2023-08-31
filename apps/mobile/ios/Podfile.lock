@@ -356,7 +356,7 @@ PODS:
   - BoringSSL-GRPC/Interface (0.0.7)
   - DoubleConversion (1.1.6)
   - EthersRS (0.0.1)
-  - EXApplication (5.1.1):
+  - EXApplication (5.3.1):
     - ExpoModulesCore
   - EXAV (13.4.1):
     - ExpoModulesCore
@@ -366,16 +366,16 @@ PODS:
     - ExpoModulesCore
     - ZXingObjC/OneD
     - ZXingObjC/PDF417
-  - EXFileSystem (15.3.0):
+  - EXFileSystem (15.4.3):
     - ExpoModulesCore
-  - EXFont (11.1.1):
+  - EXFont (11.4.0):
     - ExpoModulesCore
   - EXImageLoader (4.1.1):
     - ExpoModulesCore
     - React-Core
   - EXLocalAuthentication (13.0.2):
     - ExpoModulesCore
-  - Expo (48.0.19):
+  - Expo (49.0.0):
     - ExpoModulesCore
   - ExpoBlur (12.2.2):
     - ExpoModulesCore
@@ -383,7 +383,7 @@ PODS:
     - ExpoModulesCore
   - ExpoHaptics (12.0.1):
     - ExpoModulesCore
-  - ExpoKeepAwake (12.0.1):
+  - ExpoKeepAwake (12.3.0):
     - ExpoModulesCore
   - ExpoLinearGradient (12.3.0):
     - ExpoModulesCore
@@ -931,7 +931,7 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.15.5)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBApp (14.12.0):
+  - RNFBApp (17.4.3):
     - Firebase/CoreOnly (= 8.8.0)
     - React-Core
   - RNFBAuth (14.12.0):
@@ -1328,18 +1328,18 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EthersRS: fcaf94e30ebdd795bfe1f9332cec8175566ba066
-  EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
+  EXApplication: 042aa2e3f05258a16962ea1a9914bf288db9c9a1
   EXAV: f393dfc0b28214d62855a31e06eb21d426d6e2da
   EXBarCodeScanner: 8e23fae8d267dbef9f04817833a494200f1fce35
-  EXFileSystem: 0b4a2c08c2dc92146849772145d61c1773144283
-  EXFont: 6ea3800df746be7233208d80fe379b8ed74f4272
+  EXFileSystem: 941b273758aee14be2ecc671dacb4f10dd28c833
+  EXFont: 738c44c390953ebcbab075a4848bfbef025fd9ee
   EXImageLoader: fd053169a8ee932dd83bf1fe5487a50c26d27c2b
   EXLocalAuthentication: 78cc5a00b13745b41d16d189ab332b61a01299f9
-  Expo: 8448e3a2aa1b295f029c81551e1ab6d986517fdb
+  Expo: dc993e0d66e657a31dc45574543ca1ed3d68c617
   ExpoBlur: fac3c6318fdf409dd5740afd3313b2bd52a35bac
   ExpoClipboard: 9b87df0ad145e3aa841614fab6aea54b7a604850
   ExpoHaptics: 5a56d30a87ea213dd00b09566dc4b441a4dff97f
-  ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
+  ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
   ExpoLinearGradient: 5966dd5d49872cc9c104fedc8bbc298b6049b2e8
   ExpoModulesCore: bee019333b216be6d5bf997ac9ba7f1fb0767b82
   ExpoWebBrowser: 073e50f16669d498fb49063b9b7fe780b24f7fda
@@ -1420,7 +1420,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
   RNFastImage: 246de6b52d7642992cfd01e2005dda36d00a6660
-  RNFBApp: 728d00a39edf445fb44b0bc11a465a73d69d097e
+  RNFBApp: c7a2ca70517dfb4c54c419038b69fcd6cf01b422
   RNFBAuth: 968868437ff19cb26579ee11929a2ab0e7fb0880
   RNFBFirestore: 4019488f872b1423a79c91ea25e54c570f6b6c1c
   RNFBRemoteConfig: a735b4f7a4ef15adb57b51f0041cfba2925a4393
