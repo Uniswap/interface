@@ -81,13 +81,13 @@ export function PoolDetailsHeader({
       </Row>
       <Row gap="18px">
         <Row gap="8px" width="max-content">
-          <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} />
+          <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
           <ThemedText.HeadlineSmall>
             {token0?.symbol} / {token1?.symbol}
           </ThemedText.HeadlineSmall>
         </Row>
         {feeTier && <FeeTier>{feeTier / 10000}%</FeeTier>}
-        <ToggleReverseArrows onClick={toggleReversed} />
+        <ToggleReverseArrows data-testid="toggle-tokens-reverse-arrows" onClick={toggleReversed} />
       </Row>
     </HeaderColumn>
   )
