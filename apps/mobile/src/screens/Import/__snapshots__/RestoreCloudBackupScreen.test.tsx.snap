@@ -54,17 +54,34 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       }
     >
       <View
-        sentry-label="Flex"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         style={
-          [
-            {
-              "alignItems": "center",
-              "display": "flex",
-              "flexDirection": "column",
-              "justifyContent": "center",
-              "margin": 12,
-            },
-          ]
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "gap": 12,
+            "justifyContent": "center",
+            "marginBottom": 12,
+            "marginLeft": 12,
+            "marginRight": 12,
+            "marginTop": 12,
+          }
         }
       >
         <Text
@@ -87,18 +104,6 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
         >
           Select backup to restore
         </Text>
-        <View
-          style={
-            [
-              {
-                "display": "flex",
-                "flexGrow": 0,
-                "flexShrink": 0,
-                "height": 12,
-              },
-            ]
-          }
-        />
         <Text
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
@@ -131,18 +136,32 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
         }
       />
       <View
-        sentry-label="Flex"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         style={
-          [
-            {
-              "alignItems": "stretch",
-              "display": "flex",
-              "flex": 1,
-              "flexDirection": "column",
-              "flexGrow": 1,
-              "justifyContent": "space-between",
-            },
-          ]
+          {
+            "alignItems": "stretch",
+            "flex": 1,
+            "flexDirection": "column",
+            "flexGrow": 1,
+            "gap": 16,
+            "justifyContent": "space-between",
+          }
         }
       >
         <RCTScrollView
@@ -161,16 +180,29 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
         >
           <View>
             <View
-              sentry-label="Flex"
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
               style={
-                [
-                  {
-                    "alignItems": "stretch",
-                    "display": "flex",
-                    "flexDirection": "column",
-                    "justifyContent": "flex-start",
-                  },
-                ]
+                {
+                  "alignItems": "stretch",
+                  "flexDirection": "column",
+                  "gap": 8,
+                }
               }
             />
           </View>

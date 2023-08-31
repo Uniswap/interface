@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { useDappContext } from 'src/background/features/dapp/hooks'
-import { Button, Icons, Popover, Text, Unicon, XStack } from 'ui/src'
+import { Icons, Popover, Text, TouchableArea, Unicon, XStack } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
@@ -61,9 +61,9 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
             </Popover.Content>
           </Popover>
         ) : null}
-        <Button padding={0} onPress={(): void => navigate('/settings')}>
+        <TouchableArea onPress={(): void => navigate('/settings')}>
           <Icons.Settings color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
-        </Button>
+        </TouchableArea>
       </XStack>
     </XStack>
   )

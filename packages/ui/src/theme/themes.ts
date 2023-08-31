@@ -1,7 +1,6 @@
 // Tamagui syntax for defining sub-themes
 
-import { createTheme } from 'tamagui'
-import { tamaguiDark as colorsDark, tamaguiLight as colorsLight } from 'ui/src/theme/color/colors'
+import { colorsDark, colorsLight } from 'ui/src/theme/color/colors'
 import { opacify } from 'ui/src/theme/color/utils'
 
 // TODO: systematize hover and focus states. requires consolidating mobile and web design systems (they have different button styles right now)
@@ -10,10 +9,18 @@ const hoverColor = (color: any): string => opacify(85, color)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pressedColor = (color: any): string => opacify(65, color)
 
-// TODO: use tokens.color instead of colorsLight/Dark
-const light = createTheme({
+// remove $none from theme because it causes issues where $none tokens always resolve to transparent color
+// even if they are technically a gap or other space/size property
+// tamagui could make this so that themes only apply to color based properties, but would need a release
+const { none: darkTransparent, ...tamaguiColorsDark } = colorsDark
+const { none: lightTransparent, ...tamaguiColorsLight } = colorsLight
+
+// TODO can convert tokens to createTokens() and then use them here
+// Tamagui will automatically convert them though, so it just saves a small amount of performance
+const light = {
   // Uniswap Design System
-  ...colorsLight,
+  ...tamaguiColorsLight,
+  transparent: lightTransparent,
 
   // Tamagui Theme
   // Tamagui components expect the following
@@ -29,12 +36,13 @@ const light = createTheme({
   colorFocus: colorsLight.accent1,
   shadowColor: colorsLight.none,
   shadowColorHover: colorsLight.none,
-})
+}
+
 type BaseTheme = typeof light
 
 const dark: BaseTheme = {
-  ...light,
-  ...colorsDark,
+  ...tamaguiColorsDark,
+  transparent: darkTransparent,
   background: colorsDark.surface1,
   backgroundHover: colorsDark.surface2,
   backgroundPress: colorsDark.surface2,

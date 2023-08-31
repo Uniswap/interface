@@ -1,5 +1,5 @@
-import { ButtonNestingContext } from '@tamagui/web' // TODO export from tamagui
-import { FunctionComponent, useContext } from 'react'
+import { ImpactFeedbackStyle } from 'expo-haptics'
+import { createContext, FunctionComponent, useContext } from 'react'
 import {
   ButtonText,
   GetProps,
@@ -15,8 +15,11 @@ import {
   wrapChildrenInText,
   XStack,
 } from 'tamagui'
+import { hapticFeedback } from 'ui/src/components/haptics/hapticFeedback'
 
 type ButtonSize = 'small' | 'medium' | 'large'
+
+const ButtonNestingContext = createContext(false)
 
 const CustomButtonFrame = styled(XStack, {
   name: 'Button',
@@ -84,18 +87,22 @@ const CustomButtonText = styled(Text, {
     size: {
       micro: {
         fontSize: '$micro',
+        fontWeight: '$micro',
         lineHeight: '$micro',
       },
       medium: {
         fontSize: '$medium',
+        fontWeight: '$medium',
         lineHeight: '$medium',
       },
       small: {
         fontSize: '$small',
+        fontWeight: '$small',
         lineHeight: '$small',
       },
       large: {
         fontSize: '$large',
+        fontWeight: '$large',
         lineHeight: '$large',
       },
     },
@@ -120,6 +127,12 @@ type IconProp = JSX.Element | FunctionComponent<ButtonIconProps> | null
 export type ButtonProps = CustomButtonProps &
   TextParentStyles & {
     /**
+     * use haptic feedback on press (native)
+     */
+    hapticFeedback?: boolean
+    hapticStyle?: ImpactFeedbackStyle
+
+    /**
      * add icon before, passes color and size automatically if Component
      */
     icon?: IconProp
@@ -139,8 +152,25 @@ export type ButtonProps = CustomButtonProps &
 
 const ButtonComponent = CustomButtonFrame.styleable<ButtonProps>((props, ref) => {
   const { props: buttonProps } = useButton(props)
-  return <CustomButtonFrame ref={ref} {...buttonProps} />
+  return (
+    <CustomButtonFrame
+      ref={ref}
+      onPressIn={
+        buttonProps.hapticFeedback
+          ? (): void => {
+              // eslint-disable-next-line no-void
+              void hapticFeedback(buttonProps.hapticStyle)
+            }
+          : undefined
+      }
+      {...buttonProps}
+    />
+  )
 })
+
+ButtonComponent.defaultProps = {
+  theme: 'primary',
+}
 
 export const Button = withStaticProperties(ButtonComponent, {
   Text: ButtonText,
@@ -183,6 +213,7 @@ function useButton<Props extends ButtonProps>(propsIn: Props) {
     {
       size,
       disabled: propsActive.disabled,
+      maxFontSizeMultiplier: 1.2,
     }
   )
 

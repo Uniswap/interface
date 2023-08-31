@@ -1,5 +1,5 @@
 import { useExtensionNavigation } from 'src/app/navigation/utils'
-import { Button, Flex, Icons, Text, XStack } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, XStack } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export function ScreenHeader({
@@ -15,9 +15,9 @@ export function ScreenHeader({
 
   return (
     <XStack alignItems="center" width="100%">
-      <Button padding="$none" onPress={onBackClick ?? navigateBack}>
+      <TouchableArea onPress={onBackClick ?? navigateBack}>
         <Icons.BackArrow color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
-      </Button>
+      </TouchableArea>
 
       {/* When there's no right column, we adjust the margin to match the icon width. This is so that the title is centered on the screen. */}
       <Flex

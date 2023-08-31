@@ -5,10 +5,11 @@ import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { IS_IOS } from 'src/constants/globals'
+import { Flex } from 'ui/src'
 import { Theme } from 'ui/src/theme/restyle'
 
 type OnboardingScreenProps = {
@@ -69,7 +70,7 @@ export function OnboardingScreen({
           pb="spacing16"
           px="spacing16">
           {/* Text content */}
-          <Flex centered gap="spacing12" m="spacing12">
+          <Flex centered gap="$spacing12" m="$spacing12">
             {title && (
               <Text
                 allowFontScaling={false}

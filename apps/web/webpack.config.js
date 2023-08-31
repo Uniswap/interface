@@ -213,7 +213,7 @@ const options = {
           {
             loader: 'tamagui-loader',
             options: {
-              config: './tamagui.config.ts',
+              config: '../../packages/ui/src/tamagui.config.ts',
               components: ['tamagui', 'ui'],
               // add files here that should be parsed by the compiler from within any of the apps/*
               // for example if you have constants.ts then constants.js goes here and it will eval them

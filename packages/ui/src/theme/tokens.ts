@@ -43,7 +43,6 @@ const fontSize = {
   true: fonts.bodySmall.fontSize,
 }
 
-// remove true (default) when migrating from restyle to tamagui
 const radius = { ...borderRadii, true: borderRadii.none }
 
 const zIndex = { ...zIndices, true: zIndices.default }

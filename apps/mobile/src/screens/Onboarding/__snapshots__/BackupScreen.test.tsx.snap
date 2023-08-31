@@ -54,17 +54,34 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
       }
     >
       <View
-        sentry-label="Flex"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         style={
-          [
-            {
-              "alignItems": "center",
-              "display": "flex",
-              "flexDirection": "column",
-              "justifyContent": "center",
-              "margin": 12,
-            },
-          ]
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "gap": 12,
+            "justifyContent": "center",
+            "marginBottom": 12,
+            "marginLeft": 12,
+            "marginRight": 12,
+            "marginTop": 12,
+          }
         }
       >
         <Text
@@ -87,18 +104,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
         >
           Choose a backup for your wallet
         </Text>
-        <View
-          style={
-            [
-              {
-                "display": "flex",
-                "flexGrow": 0,
-                "flexShrink": 0,
-                "height": 12,
-              },
-            ]
-          }
-        />
         <Text
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
@@ -131,45 +136,86 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
         }
       />
       <View
-        sentry-label="Flex"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         style={
-          [
-            {
-              "alignItems": "stretch",
-              "display": "flex",
-              "flex": 1,
-              "flexDirection": "column",
-              "flexGrow": 1,
-              "justifyContent": "space-between",
-            },
-          ]
+          {
+            "alignItems": "stretch",
+            "flex": 1,
+            "flexDirection": "column",
+            "flexGrow": 1,
+            "gap": 16,
+            "justifyContent": "space-between",
+          }
         }
       >
         <View
-          sentry-label="Flex"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
           style={
-            [
-              {
-                "alignItems": "stretch",
-                "display": "flex",
-                "flexDirection": "column",
-                "flexGrow": 1,
-                "justifyContent": "space-between",
-              },
-            ]
+            {
+              "alignItems": "stretch",
+              "flexDirection": "column",
+              "flexGrow": 1,
+              "gap": 16,
+              "justifyContent": "space-between",
+            }
           }
         >
           <View
-            sentry-label="Flex"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
             style={
-              [
-                {
-                  "alignItems": "stretch",
-                  "display": "flex",
-                  "flexDirection": "column",
-                  "justifyContent": "flex-start",
-                },
-              ]
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+                "gap": 12,
+              }
             }
           >
             <View
@@ -413,18 +459,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               </View>
             </View>
             <View
-              style={
-                [
-                  {
-                    "display": "flex",
-                    "flexGrow": 0,
-                    "flexShrink": 0,
-                    "height": 12,
-                  },
-                ]
-              }
-            />
-            <View
               accessibilityState={
                 {
                   "busy": undefined,
@@ -617,29 +651,30 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             </View>
           </View>
           <View
-            style={
-              [
-                {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 16,
-                },
-              ]
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
             }
-          />
-          <View
-            sentry-label="Flex"
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
             style={
-              [
-                {
-                  "alignItems": "stretch",
-                  "display": "flex",
-                  "flexDirection": "column",
-                  "flexGrow": 1,
-                  "justifyContent": "flex-end",
-                },
-              ]
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+                "gap": 12,
+                "justifyContent": "flex-end",
+              }
             }
           >
             <View
@@ -688,16 +723,30 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               }
             >
               <View
-                sentry-label="Flex"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
                 style={
-                  [
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "center",
-                    },
-                  ]
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 4,
+                    "justifyContent": "center",
+                  }
                 }
               >
                 <svg
@@ -706,57 +755,41 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   height={24}
                   width={24}
                 />
-                <View
-                  style={
-                    [
-                      {
-                        "display": "flex",
-                        "flexGrow": 0,
-                        "flexShrink": 0,
-                        "height": 4,
-                        "width": 4,
-                      },
-                    ]
+                <RCTText
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
                   }
-                />
-                <Text
+                  accessible={true}
                   allowFontScaling={true}
-                  maxFontSizeMultiplier={1.4}
+                  ellipsizeMode="tail"
+                  isHighlighted={false}
+                  selectionColor={null}
                   style={
-                    [
-                      {
-                        "color": "#222222",
-                        "display": "flex",
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 17,
-                        "fontWeight": "400",
-                        "lineHeight": 24,
-                      },
-                    ]
+                    {
+                      "color": "#222222",
+                      "display": "flex",
+                      "fontFamily": "Basel-Medium",
+                      "fontSize": 17,
+                      "lineHeight": 24,
+                    }
                   }
                 >
                   Learn about wallet safety and recovery
-                </Text>
+                </RCTText>
               </View>
             </View>
-            <View
-              style={
-                [
-                  {
-                    "display": "flex",
-                    "flexGrow": 0,
-                    "flexShrink": 0,
-                    "height": 16,
-                  },
-                ]
-              }
-            />
             <View
               accessibilityState={
                 {
                   "busy": undefined,
                   "checked": undefined,
-                  "disabled": true,
+                  "disabled": undefined,
                   "expanded": undefined,
                   "selected": undefined,
                 }
@@ -769,71 +802,66 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   "text": undefined,
                 }
               }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              hitSlop={
-                {
-                  "bottom": 5,
-                  "left": 5,
-                  "right": 5,
-                  "top": 5,
-                }
-              }
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
+              onBlur={[Function]}
+              onFocus={[Function]}
+              pointerEvents="none"
               style={
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#FC72FF",
-                  "borderColor": "transparent",
-                  "borderRadius": 16,
-                  "borderWidth": 1,
-                  "display": "flex",
-                  "opacity": 0.4,
+                  "backgroundColor": "#2222220D",
+                  "borderBottomColor": "transparent",
+                  "borderBottomLeftRadius": 16,
+                  "borderBottomRightRadius": 16,
+                  "borderBottomWidth": 1,
+                  "borderLeftColor": "transparent",
+                  "borderLeftWidth": 1,
+                  "borderRightColor": "transparent",
+                  "borderRightWidth": 1,
+                  "borderStyle": "solid",
+                  "borderTopColor": "transparent",
+                  "borderTopLeftRadius": 16,
+                  "borderTopRightRadius": 16,
+                  "borderTopWidth": 1,
+                  "flexDirection": "row",
+                  "gap": 8,
+                  "height": "auto",
+                  "justifyContent": "center",
+                  "paddingBottom": 12,
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                  "paddingTop": 12,
                 }
               }
+              userSelect="none"
             >
-              <View
-                sentry-label="Flex"
+              <RCTText
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessible={true}
+                allowFontScaling={true}
+                ellipsizeMode="tail"
+                isHighlighted={false}
+                maxFontSizeMultiplier={1.2}
+                selectionColor={null}
                 style={
-                  [
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "flex-start",
-                      "paddingHorizontal": 12,
-                      "paddingVertical": 12,
-                    },
-                  ]
+                  {
+                    "color": "#CECECE",
+                    "display": "flex",
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 19,
+                    "lineHeight": 24,
+                  }
                 }
               >
-                <Text
-                  allowFontScaling={true}
-                  maxFontSizeMultiplier={1.2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "display": "flex",
-                        "fontFamily": "Basel-Medium",
-                        "fontSize": 19,
-                        "fontWeight": "500",
-                        "lineHeight": 24,
-                        "textAlign": "center",
-                      },
-                    ]
-                  }
-                >
-                  Select backup to continue
-                </Text>
-              </View>
+                Select backup to continue
+              </RCTText>
             </View>
           </View>
         </View>
@@ -897,17 +925,34 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
       }
     >
       <View
-        sentry-label="Flex"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         style={
-          [
-            {
-              "alignItems": "center",
-              "display": "flex",
-              "flexDirection": "column",
-              "justifyContent": "center",
-              "margin": 12,
-            },
-          ]
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "gap": 12,
+            "justifyContent": "center",
+            "marginBottom": 12,
+            "marginLeft": 12,
+            "marginRight": 12,
+            "marginTop": 12,
+          }
         }
       >
         <Text
@@ -930,18 +975,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
         >
           Choose a backup for your wallet
         </Text>
-        <View
-          style={
-            [
-              {
-                "display": "flex",
-                "flexGrow": 0,
-                "flexShrink": 0,
-                "height": 12,
-              },
-            ]
-          }
-        />
         <Text
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
@@ -974,45 +1007,86 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
         }
       />
       <View
-        sentry-label="Flex"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         style={
-          [
-            {
-              "alignItems": "stretch",
-              "display": "flex",
-              "flex": 1,
-              "flexDirection": "column",
-              "flexGrow": 1,
-              "justifyContent": "space-between",
-            },
-          ]
+          {
+            "alignItems": "stretch",
+            "flex": 1,
+            "flexDirection": "column",
+            "flexGrow": 1,
+            "gap": 16,
+            "justifyContent": "space-between",
+          }
         }
       >
         <View
-          sentry-label="Flex"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
           style={
-            [
-              {
-                "alignItems": "stretch",
-                "display": "flex",
-                "flexDirection": "column",
-                "flexGrow": 1,
-                "justifyContent": "space-between",
-              },
-            ]
+            {
+              "alignItems": "stretch",
+              "flexDirection": "column",
+              "flexGrow": 1,
+              "gap": 16,
+              "justifyContent": "space-between",
+            }
           }
         >
           <View
-            sentry-label="Flex"
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
             style={
-              [
-                {
-                  "alignItems": "stretch",
-                  "display": "flex",
-                  "flexDirection": "column",
-                  "justifyContent": "flex-start",
-                },
-              ]
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+                "gap": 12,
+              }
             }
           >
             <View
@@ -1256,18 +1330,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               </View>
             </View>
             <View
-              style={
-                [
-                  {
-                    "display": "flex",
-                    "flexGrow": 0,
-                    "flexShrink": 0,
-                    "height": 12,
-                  },
-                ]
-              }
-            />
-            <View
               accessibilityState={
                 {
                   "busy": undefined,
@@ -1460,29 +1522,30 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             </View>
           </View>
           <View
-            style={
-              [
-                {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 16,
-                },
-              ]
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
             }
-          />
-          <View
-            sentry-label="Flex"
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
             style={
-              [
-                {
-                  "alignItems": "stretch",
-                  "display": "flex",
-                  "flexDirection": "column",
-                  "flexGrow": 1,
-                  "justifyContent": "flex-end",
-                },
-              ]
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+                "gap": 12,
+                "justifyContent": "flex-end",
+              }
             }
           >
             <View
@@ -1531,16 +1594,30 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               }
             >
               <View
-                sentry-label="Flex"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
                 style={
-                  [
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "center",
-                    },
-                  ]
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 4,
+                    "justifyContent": "center",
+                  }
                 }
               >
                 <svg
@@ -1549,57 +1626,41 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   height={24}
                   width={24}
                 />
-                <View
-                  style={
-                    [
-                      {
-                        "display": "flex",
-                        "flexGrow": 0,
-                        "flexShrink": 0,
-                        "height": 4,
-                        "width": 4,
-                      },
-                    ]
+                <RCTText
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
                   }
-                />
-                <Text
+                  accessible={true}
                   allowFontScaling={true}
-                  maxFontSizeMultiplier={1.4}
+                  ellipsizeMode="tail"
+                  isHighlighted={false}
+                  selectionColor={null}
                   style={
-                    [
-                      {
-                        "color": "#222222",
-                        "display": "flex",
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 17,
-                        "fontWeight": "400",
-                        "lineHeight": 24,
-                      },
-                    ]
+                    {
+                      "color": "#222222",
+                      "display": "flex",
+                      "fontFamily": "Basel-Medium",
+                      "fontSize": 17,
+                      "lineHeight": 24,
+                    }
                   }
                 >
                   Learn about wallet safety and recovery
-                </Text>
+                </RCTText>
               </View>
             </View>
-            <View
-              style={
-                [
-                  {
-                    "display": "flex",
-                    "flexGrow": 0,
-                    "flexShrink": 0,
-                    "height": 16,
-                  },
-                ]
-              }
-            />
             <View
               accessibilityState={
                 {
                   "busy": undefined,
                   "checked": undefined,
-                  "disabled": false,
+                  "disabled": undefined,
                   "expanded": undefined,
                   "selected": undefined,
                 }
@@ -1612,18 +1673,9 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   "text": undefined,
                 }
               }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              hitSlop={
-                {
-                  "bottom": 5,
-                  "left": 5,
-                  "right": 5,
-                  "top": 5,
-                }
-              }
+              onBlur={[Function]}
               onClick={[Function]}
+              onFocus={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
               onResponderRelease={[Function]}
@@ -1634,49 +1686,58 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "#FC72FF",
-                  "borderColor": "transparent",
-                  "borderRadius": 16,
-                  "borderWidth": 1,
-                  "display": "flex",
-                  "opacity": 1,
+                  "borderBottomColor": "transparent",
+                  "borderBottomLeftRadius": 16,
+                  "borderBottomRightRadius": 16,
+                  "borderBottomWidth": 1,
+                  "borderLeftColor": "transparent",
+                  "borderLeftWidth": 1,
+                  "borderRightColor": "transparent",
+                  "borderRightWidth": 1,
+                  "borderStyle": "solid",
+                  "borderTopColor": "transparent",
+                  "borderTopLeftRadius": 16,
+                  "borderTopRightRadius": 16,
+                  "borderTopWidth": 1,
+                  "flexDirection": "row",
+                  "gap": 8,
+                  "height": "auto",
+                  "justifyContent": "center",
+                  "paddingBottom": 12,
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                  "paddingTop": 12,
                 }
               }
             >
-              <View
-                sentry-label="Flex"
+              <RCTText
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessible={true}
+                allowFontScaling={true}
+                ellipsizeMode="tail"
+                isHighlighted={false}
+                maxFontSizeMultiplier={1.2}
+                selectionColor={null}
                 style={
-                  [
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "flex-start",
-                      "paddingHorizontal": 12,
-                      "paddingVertical": 12,
-                    },
-                  ]
+                  {
+                    "color": "#FFFFFF",
+                    "display": "flex",
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 19,
+                    "lineHeight": 24,
+                  }
                 }
               >
-                <Text
-                  allowFontScaling={true}
-                  maxFontSizeMultiplier={1.2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "display": "flex",
-                        "fontFamily": "Basel-Medium",
-                        "fontSize": 19,
-                        "fontWeight": "500",
-                        "lineHeight": 24,
-                        "textAlign": "center",
-                      },
-                    ]
-                  }
-                >
-                  Continue
-                </Text>
-              </View>
+                Continue
+              </RCTText>
             </View>
           </View>
         </View>

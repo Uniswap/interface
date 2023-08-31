@@ -5,7 +5,7 @@ import { AccountRowItem } from 'src/app/features/accounts/AccountRowItem'
 import { SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { useAppDispatch, useAppSelector } from 'src/background/store'
-import { Button, Icons, ListItem, ScrollView, Text, YGroup, YStack } from 'ui/src'
+import { Button, Icons, ListItem, ScrollView, Text, TouchableArea, YGroup, YStack } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
@@ -46,7 +46,7 @@ export function SettingsScreen(): JSX.Element {
             />
           ))}
         {showAllWalletsButton ? (
-          <Button
+          <TouchableArea
             borderRadius="$roundedFull"
             padding="$spacing4"
             onPress={(): void => setShowAll(!showAll)}>
@@ -55,7 +55,7 @@ export function SettingsScreen(): JSX.Element {
               : t('Show all {{numberOfWallets}} wallets', {
                   numberOfWallets: allAccountsSorted.length,
                 })}
-          </Button>
+          </TouchableArea>
         ) : null}
         <YGroup>
           <YGroup.Item>

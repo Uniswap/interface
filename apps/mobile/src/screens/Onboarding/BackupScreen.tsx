@@ -11,11 +11,8 @@ import {
   useOnboardingStackNavigation,
 } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { EducationContentType } from 'src/components/education'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID } from 'src/constants/globals'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
@@ -25,7 +22,7 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
-import { Icons } from 'ui/src'
+import { Button, Flex, Icons, Text } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -68,7 +65,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   })
 
   const onPressNext = (): void => {
-    navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
+    navigation.navigate({
+      name: OnboardingScreens.Notifications,
+      params,
+      merge: true,
+    })
   }
 
   const onPressEducationButton = (): void => {
@@ -91,7 +92,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
               'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
             ),
         [
-          { text: t('Go to settings'), onPress: openSettings, style: 'default' },
+          {
+            text: t('Go to settings'),
+            onPress: openSettings,
+            style: 'default',
+          },
           { text: t('Not now'), style: 'cancel' },
         ]
       )
@@ -110,7 +115,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   const onPressContinue = (): void => {
-    navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
+    navigation.navigate({
+      name: OnboardingScreens.Notifications,
+      params,
+      merge: true,
+    })
   }
 
   const disabled = !activeAccountBackups || activeAccountBackups.length < 1
@@ -128,7 +137,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       )}
       title={t('Choose a backup for your wallet')}>
       <Flex grow justifyContent="space-between">
-        <Flex gap="spacing12">
+        <Flex gap="$spacing12">
           <OptionCard
             blurb={t('Safe, simple, and all you need to save is your password.')}
             disabled={hasCloudBackup}
@@ -152,34 +161,30 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
             onPress={onPressManualBackup}
           />
         </Flex>
-        <Flex grow justifyContent="flex-end">
+        <Flex gap="$spacing12" justifyContent="flex-end">
           <TouchableArea alignSelf="center" py="none" onPress={onPressEducationButton}>
-            <Flex centered row gap="spacing4">
+            <Flex centered row gap="$spacing4">
               <InfoCircle
                 color={theme.colors.neutral2}
                 height={theme.iconSizes.icon24}
                 width={theme.iconSizes.icon24}
               />
-              <Text color="neutral1" variant="subheadSmall">
+              <Text color="$neutral1" variant="subheadSmall">
                 {t('Learn about wallet safety and recovery')}
               </Text>
             </Flex>
           </TouchableArea>
           {showSkipOption && (
             <Trace logPress element={ElementName.Next}>
-              <Button
-                emphasis={ButtonEmphasis.Tertiary}
-                label={t('I already backed up')}
-                onPress={onPressNext}
-              />
+              <Button theme="tertiary" onPress={onPressNext}>
+                {t('I already backed up')}
+              </Button>
             </Trace>
           )}
           <Trace logPress element={ElementName.Next}>
-            <Button
-              disabled={disabled}
-              label={disabled ? t('Select backup to continue') : t('Continue')}
-              onPress={onPressContinue}
-            />
+            <Button disabled={disabled} onPress={onPressContinue}>
+              {disabled ? t('Select backup to continue') : t('Continue')}
+            </Button>
           </Trace>
         </Flex>
       </Flex>

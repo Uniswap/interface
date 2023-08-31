@@ -28,9 +28,7 @@ import { Button } from 'src/components/buttons/Button'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradient'
 import { Arrow } from 'src/components/icons/Arrow'
-import { Box, Flex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
@@ -47,6 +45,7 @@ import {
   textSlideUpAtEnd,
   videoFadeOut,
 } from 'src/screens/Onboarding/QRAnimation/animations'
+import { Box, Flex, Text } from 'ui/src'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { opacify } from 'ui/src/theme'
@@ -189,9 +188,9 @@ export function QRAnimation({
           />
         </GradientBackground>
       </Animated.View>
-      <Flex grow justifyContent="space-between" px="spacing16" py="spacing24">
-        <Flex centered grow gap="spacing36" mb="spacing12" mt="spacing12">
-          <Flex centered gap="spacing12" pt="spacing48">
+      <Flex grow justifyContent="space-between" px="$spacing16" py="$spacing24">
+        <Flex centered grow gap="$spacing36" mb="$spacing12" mt="$spacing12">
+          <Flex centered gap="$spacing12" pt="$spacing48">
             <Animated.View entering={qrSlideUpAndFadeIn}>
               <Animated.View entering={qrSlideUpAtEnd}>
                 <Animated.View entering={flashWipeAnimation} style={styles.behindQrBlur}>
@@ -212,9 +211,9 @@ export function QRAnimation({
                 </Animated.View>
                 <Animated.View entering={qrScaleIn}>
                   <Box
-                    bg="surface1"
-                    borderColor="surface3"
-                    borderRadius="rounded20"
+                    bg="$surface1"
+                    borderColor="$surface3"
+                    borderRadius="$rounded20"
                     borderWidth={2}
                     height={QR_CONTAINER_SIZE}
                     overflow="hidden"
@@ -263,7 +262,7 @@ export function QRAnimation({
                   </Animated.View>
                   <Animated.View entering={flashWipeAnimation} style={styles.glow}>
                     <Flex
-                      borderRadius="rounded20"
+                      borderRadius="$rounded20"
                       height="100%"
                       style={{ backgroundColor: uniconColors.glow }}
                       width="100%"
@@ -271,7 +270,7 @@ export function QRAnimation({
                   </Animated.View>
                 </Animated.View>
                 <Animated.View entering={textSlideUpAtEnd}>
-                  <Flex centered mt="spacing24">
+                  <Flex centered mt="$spacing24">
                     <AddressDisplay
                       showCopy
                       address={activeAddress}
@@ -288,13 +287,13 @@ export function QRAnimation({
           <Animated.View entering={textSlideUpAtEnd} style={[styles.textContainer]}>
             <Text
               maxFontSizeMultiplier={finalTitleMaxFontSizeMultiplier}
-              pb="spacing12"
+              pb="$spacing12"
               textAlign="center"
               variant={titleSize}>
               {t('Welcome to your new wallet')}
             </Text>
             <Text
-              color="neutral2"
+              color="$neutral2"
               maxFontSizeMultiplier={finalBodyMaxFontSizeMultiplier}
               textAlign="center"
               variant={bodySize}>
@@ -311,10 +310,10 @@ export function QRAnimation({
             <Button
               CustomIcon={
                 <Flex grow row alignItems="center" justifyContent="space-between">
-                  <Flex row alignItems="center" gap="spacing8">
+                  <Flex row alignItems="center" space="$spacing8">
                     <Box
-                      borderRadius="roundedFull"
-                      padding="spacing8"
+                      borderRadius="$roundedFull"
+                      padding="$spacing8"
                       style={{ backgroundColor: opacify(10, theme.colors.sporeWhite) }}>
                       <LockIcon
                         color={theme.colors.sporeWhite}
@@ -322,7 +321,7 @@ export function QRAnimation({
                         width={theme.iconSizes.icon16}
                       />
                     </Box>
-                    <Text color="sporeWhite" variant="buttonLabelMedium">
+                    <Text color="$sporeWhite" variant="buttonLabelMedium">
                       {t('Let’s keep it safe')}
                     </Text>
                   </Flex>

@@ -90,6 +90,23 @@ exports[`renders collection preview card 1`] = `
         }
       >
         <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
           style={
             {
               "alignItems": "center",
@@ -102,25 +119,34 @@ exports[`renders collection preview card 1`] = `
             }
           }
         >
-          <Text
+          <RCTText
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessible={true}
             allowFontScaling={true}
+            ellipsizeMode="tail"
+            isHighlighted={false}
+            selectionColor={null}
             style={
               {
                 "color": "#7D7D7D",
                 "display": "flex",
                 "flex": 0,
-                "flexGrow": 0,
-                "flexWrap": "wrap",
                 "fontFamily": "Basel-Medium",
                 "fontSize": 17,
-                "fontWeight": "400",
                 "lineHeight": 24,
               }
             }
-            suppressHighlighting={true}
           >
             Content not available
-          </Text>
+          </RCTText>
         </View>
       </View>
       <View

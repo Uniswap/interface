@@ -9,8 +9,6 @@ import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { Button } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
 import {
   DEFAULT_MNEMONIC_DISPLAY_HEIGHT,
   FULL_MNEMONIC_DISPLAY_HEIGHT,
@@ -26,6 +24,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ManualPageViewScreen, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { Button, Flex } from 'ui/src'
 import {
   EditAccountAction,
   editAccountActions,
@@ -132,7 +131,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             />
           )}
           <Flex grow justifyContent="space-between">
-            <Flex mx="spacing16">
+            <Flex mx="$spacing16">
               {seedWarningAcknowledged ? (
                 <MnemonicDisplay
                   height={mnemonicDisplayHeight ?? DEFAULT_MNEMONIC_DISPLAY_HEIGHT}
@@ -143,7 +142,9 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               )}
             </Flex>
             <Flex grow justifyContent="flex-end">
-              <Button label={t('Continue')} testID={ElementName.Next} onPress={nextView} />
+              <Button testID={ElementName.Next} onPress={nextView}>
+                {t('Continue')}
+              </Button>
             </Flex>
           </Flex>
           {!seedWarningAcknowledged && (
@@ -154,7 +155,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     case View.SeedPhraseConfirm:
       return (
         <OnboardingScreen subtitle={responsiveSubtitle} title={responsiveTitle}>
-          <Flex grow pointerEvents={continueButtonEnabled ? 'none' : 'auto'} pt="spacing12">
+          <Flex grow pointerEvents={continueButtonEnabled ? 'none' : 'auto'} pt="$spacing12">
             <MnemonicConfirmation
               mnemonicId={mnemonicId}
               onConfirmComplete={(): void => setContinueButtonEnabled(true)}
@@ -163,10 +164,10 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
           <Flex justifyContent="flex-end">
             <Button
               disabled={!continueButtonEnabled}
-              label={t('Continue')}
               testID={ElementName.Continue}
-              onPress={onValidationSuccessful}
-            />
+              onPress={onValidationSuccessful}>
+              {t('Continue')}
+            </Button>
           </Flex>
         </OnboardingScreen>
       )
@@ -184,8 +185,8 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
       hideHandlebar={true}
       isDismissible={false}
       name={ModalName.SeedPhraseWarningModal}>
-      <Flex centered gap="spacing12" pb="spacing48" pt="spacing36" px="spacing24">
-        <Flex centered backgroundColor="surface2" borderRadius="roundedFull" padding="spacing8">
+      <Flex centered gap="$spacing12" pb="$spacing48" pt="$spacing36" px="$spacing24">
+        <Flex centered backgroundColor="$surface2" borderRadius="$roundedFull" padding="$spacing8">
           <LockIcon
             color={theme.colors.neutral1}
             height={theme.iconSizes.icon24}

@@ -103,16 +103,19 @@ export const headingFont = createFont({
   size: {
     small: fonts.headlineSmall.fontSize,
     medium: fonts.headlineMedium.fontSize,
+    true: fonts.headlineMedium.fontSize,
     large: fonts.headlineLarge.fontSize,
   },
   weight: {
     small: '500',
     medium: '500',
+    true: '500',
     large: '500',
   },
   lineHeight: {
     small: fonts.headlineSmall.lineHeight,
     medium: fonts.headlineMedium.lineHeight,
+    true: fonts.headlineMedium.lineHeight,
     large: fonts.headlineLarge.lineHeight,
   },
 })
@@ -123,15 +126,18 @@ export const subHeadingFont = createFont({
   size: {
     small: fonts.subheadSmall.fontSize,
     large: fonts.subheadLarge.fontSize,
+    true: fonts.subheadLarge.fontSize,
   },
   weight: {
     small: '500',
     medium: '500',
     large: '500',
+    true: '500',
   },
   lineHeight: {
     small: fonts.subheadSmall.lineHeight,
     large: fonts.subheadLarge.lineHeight,
+    true: fonts.subheadLarge.lineHeight,
   },
 })
 
@@ -146,17 +152,21 @@ export const bodyFont = createFont({
     large: fonts.bodyLarge.fontSize,
     micro: fonts.bodyMicro.fontSize,
     medium: fonts.bodySmall.fontSize,
+    true: fonts.bodySmall.fontSize,
   },
   weight: {
     small: '500',
     large: '500',
     micro: '500',
+    medium: '500',
+    true: '500',
   },
   lineHeight: {
     small: fonts.bodySmall.lineHeight,
     large: fonts.bodyLarge.lineHeight,
     micro: fonts.bodyMicro.lineHeight,
     medium: fonts.bodySmall.lineHeight,
+    true: fonts.bodySmall.lineHeight,
   },
 })
 
@@ -168,18 +178,21 @@ export const buttonFont = createFont({
     medium: fonts.buttonLabelMedium.fontSize,
     large: fonts.buttonLabelLarge.fontSize,
     micro: fonts.buttonLabelMicro.fontSize,
+    true: fonts.buttonLabelMedium.fontSize,
   },
   weight: {
-    small: '500',
-    medium: '500',
-    large: '500',
-    micro: '500',
+    small: '600',
+    medium: '600',
+    large: '600',
+    micro: '600',
+    true: '600',
   },
   lineHeight: {
     small: fonts.buttonLabelSmall.lineHeight,
     medium: fonts.buttonLabelMedium.lineHeight,
     large: fonts.buttonLabelLarge.lineHeight,
     micro: fonts.buttonLabelMicro.lineHeight,
+    true: fonts.buttonLabelMedium.lineHeight,
   },
 })
 

@@ -7,8 +7,6 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { IS_ANDROID } from 'src/constants/globals'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
@@ -16,6 +14,7 @@ import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { Flex, Text } from 'ui/src'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -53,7 +52,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
       }
       title={t('Select backup to restore')}>
       <ScrollView>
-        <Flex gap="spacing8">
+        <Flex gap="$spacing8">
           {sortedBackups.map((backup, index) => {
             const { mnemonicId, createdAt } = backup
             return (
@@ -66,20 +65,20 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                 p="spacing16"
                 onPress={(): Promise<void> => onPressRestoreBackup(backup)}>
                 <Flex row alignItems="center" justifyContent="space-between">
-                  <Flex centered row gap="spacing12">
+                  <Flex centered row gap="$spacing12">
                     <Unicon address={mnemonicId} size={32} />
-                    <Flex gap="none">
+                    <Flex gap="$none">
                       <Text numberOfLines={1} variant="subheadSmall">
                         {t('Backup {{backupIndex}}', { backupIndex: sortedBackups.length - index })}
                       </Text>
-                      <Text color="neutral2" variant="buttonLabelMicro">
+                      <Text color="$neutral2" variant="buttonLabelMicro">
                         {shortenAddress(mnemonicId)}
                       </Text>
                     </Flex>
                   </Flex>
-                  <Flex row gap="spacing12">
-                    <Flex alignItems="flex-end" gap="spacing4">
-                      <Text color="neutral2" variant="buttonLabelMicro">
+                  <Flex row gap="$spacing12">
+                    <Flex alignItems="flex-end" gap="$spacing4">
+                      <Text color="$neutral2" variant="buttonLabelMicro">
                         {t('Backed up on:')}
                       </Text>
                       <Text variant="buttonLabelMicro">

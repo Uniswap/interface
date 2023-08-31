@@ -1,4 +1,3 @@
-import { createTheme } from 'tamagui'
 import { opacify } from 'ui/src/theme/color/utils'
 
 export const colors = {
@@ -329,6 +328,3 @@ export const colorsDark = {
   chain_80001: colors.networkPolygon,
   chain_8453: colors.networkBase,
 }
-
-export const tamaguiLight = createTheme(colorsLight)
-export const tamaguiDark = createTheme(colorsDark)

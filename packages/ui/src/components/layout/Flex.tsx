@@ -2,7 +2,7 @@ import { Stack, styled } from 'tamagui'
 
 export const Flex = styled(Stack, {
   flexDirection: 'column',
-  flexWrap: 'wrap',
+  gap: '$spacing16',
 
   variants: {
     row: {
@@ -20,6 +20,12 @@ export const Flex = styled(Stack, {
     grow: {
       true: {
         flexGrow: 1,
+      },
+    },
+
+    fill: {
+      true: {
+        flex: 1,
       },
     },
 

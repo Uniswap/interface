@@ -1,10 +1,8 @@
-import { config } from 'ui/src'
+import { tamaguiConfig } from 'ui/src'
 
-type Conf = typeof config
+type Conf = typeof tamaguiConfig
 
 declare module 'tamagui' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface TamaguiCustomConfig extends Conf {}
 }
-
-export default config

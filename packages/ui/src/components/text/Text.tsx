@@ -12,11 +12,7 @@ import { fonts } from 'ui/src/theme/fonts'
 // import { Theme } from 'ui/src/theme/restyle/theme'
 
 export const TextFrame = styled(TamaguiText, {
-  // TODO(EXT-61): keep investigating how to get text to wrap
   wordWrap: 'break-word',
-  flex: 1,
-  flexGrow: 0, // Would expect the default to be this, but default seems to be 1
-  flexWrap: 'wrap',
 
   variants: {
     // TODO: leverage font tokens instead
@@ -180,7 +176,7 @@ export const Text = ({
   if (loading) {
     return (
       <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
-        <TextFrame allowFontScaling={enableFontScaling} color="$none" opacity={0} {...rest}>
+        <TextFrame allowFontScaling={enableFontScaling} color="$transparent" opacity={0} {...rest}>
           {/* Important that `children` isn't used or rendered by <Text> when `loading` is true, because if the child of a <Text> component is a dynamic variable that might not be finished fetching yet, it'll result in an error until it's finished loading. We use `loadingPlaceholderText` to set the size of the loading element instead. */}
           {loadingPlaceholderText}
         </TextFrame>
