@@ -1,7 +1,7 @@
 import { ChainId } from '@uniswap/sdk-core'
 
 import { Chain } from './__generated__/types-and-hooks'
-import { isSupportedGQLChain, supportedChainIdFromGQLChain } from './util'
+import { isSupportedGQLChain, isValidUrlChainParam, supportedChainIdFromGQLChain } from './util'
 
 describe('fromGraphQLChain', () => {
   it('should return the corresponding chain ID for supported chains', () => {
@@ -32,5 +32,27 @@ describe('fromGraphQLChain', () => {
       if (isSupportedGQLChain(chain)) continue
       expect(supportedChainIdFromGQLChain(chain)).toBe(undefined)
     }
+  })
+})
+
+describe('isValidUrlChainParam', () => {
+  it('should return true for valid chain name', () => {
+    const validChainName = 'ethereum'
+    expect(isValidUrlChainParam(validChainName)).toBe(true)
+  })
+
+  it('should return false for undefined chain name', () => {
+    const undefinedChainName = undefined
+    expect(isValidUrlChainParam(undefinedChainName)).toBe(false)
+  })
+
+  it('should return false for invalid chain name', () => {
+    const invalidChainName = 'invalidchain'
+    expect(isValidUrlChainParam(invalidChainName)).toBe(false)
+  })
+
+  it('should return false for a misconfigured chain name', () => {
+    const invalidChainName = 'eThErEuM'
+    expect(isValidUrlChainParam(invalidChainName)).toBe(false)
   })
 })
