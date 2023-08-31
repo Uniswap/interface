@@ -69,10 +69,6 @@ function _Trace({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logImpression, directFromPage])
 
-  if (!isPartOfNavigationTree) {
-    return <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
-  }
-
   const modifiedChildren = logPress ? (
     <TraceContext.Consumer>
       {(consumedProps): ReactNode =>
@@ -98,6 +94,10 @@ function _Trace({
   ) : (
     children
   )
+
+  if (!isPartOfNavigationTree) {
+    return <TraceContext.Provider value={combinedProps}>{modifiedChildren}</TraceContext.Provider>
+  }
 
   return (
     <NavAwareTrace
