@@ -109,19 +109,11 @@ export function RestoreCloudBackupLoadingScreen({
                 : t(`It looks like you haven't backed up any of your seed phrases to iCloud.`)
             }
             icon={
-              IS_ANDROID ? (
-                <Icons.GoogleDrive
-                  color={theme.colors.neutral3}
-                  height={theme.imageSizes.image48}
-                  width={theme.imageSizes.image48}
-                />
-              ) : (
-                <Icons.Cloud
-                  color={theme.colors.neutral3}
-                  height={theme.imageSizes.image48}
-                  width={theme.imageSizes.image48}
-                />
-              )
+              <Icons.OSDynamicCloudIcon
+                color={theme.colors.neutral3}
+                height={theme.imageSizes.image48}
+                width={theme.imageSizes.image48}
+              />
             }
             retryButtonLabel={t('Retry')}
             title={t('0 backups found')}

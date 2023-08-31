@@ -18,7 +18,6 @@ import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Icons } from 'ui/src'
-import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import ImportIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
@@ -55,21 +54,13 @@ const options: ImportMethodOption[] = [
       IS_ANDROID
         ? t(`Add wallets you've backed up to your Google Drive account`)
         : t(`Add wallets you've backed up to your iCloud account`),
-    icon: (theme: Theme) =>
-      IS_ANDROID ? (
-        <Icons.GoogleDrive
-          color={theme.colors.accent1}
-          height={theme.iconSizes.icon24}
-          width={theme.iconSizes.icon24}
-        />
-      ) : (
-        <CloudIcon
-          color={theme.colors.accent1}
-          height={theme.iconSizes.icon24}
-          strokeWidth="1.5"
-          width={theme.iconSizes.icon24}
-        />
-      ),
+    icon: (theme: Theme) => (
+      <Icons.OSDynamicCloudIcon
+        color={theme.colors.accent1}
+        height={theme.iconSizes.icon24}
+        width={theme.iconSizes.icon24}
+      />
+    ),
     nav: OnboardingScreens.RestoreCloudBackup,
     importType: ImportType.Restore,
     name: ElementName.OnboardingImportWatchedAccount,

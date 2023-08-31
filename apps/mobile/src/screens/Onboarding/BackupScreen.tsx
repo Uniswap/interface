@@ -134,19 +134,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
             disabled={hasCloudBackup}
             elementName={ElementName.AddCloudBackup}
             icon={
-              IS_ANDROID ? (
-                <Icons.GoogleDrive
-                  color={theme.colors.accent1}
-                  height={theme.iconSizes.icon16}
-                  width={theme.iconSizes.icon16}
-                />
-              ) : (
-                <Icons.Cloud
-                  color={theme.colors.accent1}
-                  height={theme.iconSizes.icon16}
-                  width={theme.iconSizes.icon16}
-                />
-              )
+              <Icons.OSDynamicCloudIcon
+                color={theme.colors.accent1}
+                height={theme.iconSizes.icon16}
+                width={theme.iconSizes.icon16}
+              />
             }
             title={IS_ANDROID ? t('Backup with Google Drive') : t('Backup with iCloud')}
             onPress={onPressCloudBackup}

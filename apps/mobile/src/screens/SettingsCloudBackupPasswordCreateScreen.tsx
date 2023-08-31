@@ -75,19 +75,11 @@ export function SettingsCloudBackupPasswordCreateScreen({
                   borderRadius="rounded12"
                   borderWidth={1}
                   padding="spacing12">
-                  {IS_ANDROID ? (
-                    <Icons.GoogleDrive
-                      color={theme.colors.accent1}
-                      height={theme.iconSizes.icon20}
-                      width={theme.iconSizes.icon20}
-                    />
-                  ) : (
-                    <Icons.Cloud
-                      color={theme.colors.accent1}
-                      height={theme.iconSizes.icon20}
-                      width={theme.iconSizes.icon20}
-                    />
-                  )}
+                  <Icons.OSDynamicCloudIcon
+                    color={theme.colors.accent1}
+                    height={theme.iconSizes.icon20}
+                    width={theme.iconSizes.icon20}
+                  />
                 </Box>
                 <Text textAlign="center" variant="buttonLabelMedium">
                   {IS_ANDROID
