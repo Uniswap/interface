@@ -103,5 +103,6 @@ const style = StyleSheet.create({
   modalBoxFullWidth: {
     ...modalBoxBaseStyle.base,
     margin: 0,
+    padding: 0,
   },
 })
