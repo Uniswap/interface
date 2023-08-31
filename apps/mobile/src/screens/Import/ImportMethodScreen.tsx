@@ -17,9 +17,12 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { Icons } from 'ui/src'
+import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import ImportIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
+import { iconSizes } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import {
   PendingAccountActions,
@@ -33,7 +36,6 @@ interface ImportMethodOption {
   nav: OnboardingScreens
   importType: ImportType
   name: ElementName
-  badgeText?: (t: AppTFunction) => string
 }
 
 const options: ImportMethodOption[] = [
@@ -46,17 +48,30 @@ const options: ImportMethodOption[] = [
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
-    badgeText: (t: AppTFunction) => t('Recommended'),
   },
   {
-    title: (t: AppTFunction) => t('Watch a wallet'),
+    title: (t: AppTFunction) => t('Restore a wallet'),
     blurb: (t: AppTFunction) =>
-      t('Explore the contents of a wallet by entering any address or ENS name '),
-    icon: (theme: Theme) => (
-      <EyeIcon color={theme.colors.accent1} height={24} strokeWidth="1.5" width={24} />
-    ),
-    nav: OnboardingScreens.WatchWallet,
-    importType: ImportType.Watch,
+      IS_ANDROID
+        ? t(`Add wallets you've backed up to your Google Drive account`)
+        : t(`Add wallets you've backed up to your iCloud account`),
+    icon: (theme: Theme) =>
+      IS_ANDROID ? (
+        <Icons.GoogleDrive
+          color={theme.colors.accent1}
+          height={theme.iconSizes.icon24}
+          width={theme.iconSizes.icon24}
+        />
+      ) : (
+        <CloudIcon
+          color={theme.colors.accent1}
+          height={theme.iconSizes.icon24}
+          strokeWidth="1.5"
+          width={theme.iconSizes.icon24}
+        />
+      ),
+    nav: OnboardingScreens.RestoreCloudBackup,
+    importType: ImportType.Restore,
     name: ElementName.OnboardingImportWatchedAccount,
   },
 ]
@@ -123,11 +138,10 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   return (
     <OnboardingScreen title={t('How do you want to add your wallet?')}>
       <Flex grow gap="spacing12" marginTop="spacing4">
-        {importOptions.map(({ title, blurb, icon, nav, importType, name, badgeText }) => (
+        {importOptions.map(({ title, blurb, icon, nav, importType, name }) => (
           <OptionCard
             key={'connection-option-' + title}
             hapticFeedback
-            badgeText={badgeText?.(t)}
             blurb={blurb(t)}
             elementName={name}
             icon={icon(theme)}
@@ -138,14 +152,22 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       </Flex>
       <Trace logPress element={ElementName.OnboardingImportBackup}>
         <TouchableArea alignItems="center" mb="spacing12">
-          <Text
-            color="accent1"
-            variant="buttonLabelMedium"
-            onPress={(): Promise<void> =>
-              handleOnPress(OnboardingScreens.RestoreCloudBackup, ImportType.Restore)
-            }>
-            {IS_ANDROID ? t('Restore from Google Drive') : t('Restore from iCloud')}
-          </Text>
+          <Flex row alignItems="center" gap="spacing4">
+            <EyeIcon
+              color={theme.colors.accent1}
+              height={iconSizes.icon20}
+              strokeWidth="1.5"
+              width={iconSizes.icon20}
+            />
+            <Text
+              color="accent1"
+              variant="buttonLabelMedium"
+              onPress={(): Promise<void> =>
+                handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)
+              }>
+              {t('Watch a wallet')}
+            </Text>
+          </Flex>
         </TouchableArea>
       </Trace>
     </OnboardingScreen>
