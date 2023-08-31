@@ -16,7 +16,6 @@ import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPas
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { Icons } from 'ui/src'
-import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 
 type Props = NativeStackScreenProps<
   SettingsStackParamList,
@@ -83,7 +82,11 @@ export function SettingsCloudBackupPasswordCreateScreen({
                       width={theme.iconSizes.icon20}
                     />
                   ) : (
-                    <CloudIcon color={theme.colors.accent1} />
+                    <Icons.Cloud
+                      color={theme.colors.accent1}
+                      height={theme.iconSizes.icon20}
+                      width={theme.iconSizes.icon20}
+                    />
                   )}
                 </Box>
                 <Text textAlign="center" variant="buttonLabelMedium">

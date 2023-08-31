@@ -40,7 +40,6 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Icons } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import ChartIcon from 'ui/src/assets/icons/chart.svg'
-import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import EditIcon from 'ui/src/assets/icons/edit.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import KeyIcon from 'ui/src/assets/icons/key.svg'
@@ -230,7 +229,14 @@ export function SettingsWallet({
               width={theme.iconSizes.icon24}
             />
           ) : (
-            <CloudIcon {...iconProps} />
+            <Icons.Cloud
+              color={theme.colors.neutral3}
+              height={theme.iconSizes.icon24}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              width={theme.iconSizes.icon24}
+            />
           ),
           isHidden: readonly,
         },

@@ -251,11 +251,60 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     ]
                   }
                 >
-                  <svg
+                  <RNSVGSvgView
+                    align="xMidYMid"
+                    bbHeight="16"
+                    bbWidth="16"
                     color="#FC72FF"
-                    data-file-name="SvgCloud"
+                    fill="none"
+                    focusable={false}
                     height={16}
-                  />
+                    meetOrSlice={0}
+                    minX={0}
+                    minY={0}
+                    size={8}
+                    style={
+                      [
+                        {
+                          "backgroundColor": "transparent",
+                          "borderWidth": 0,
+                        },
+                        {
+                          "flex": 0,
+                          "height": 16,
+                          "width": 16,
+                        },
+                      ]
+                    }
+                    tintColor="#FC72FF"
+                    vbHeight={24}
+                    vbWidth={24}
+                    width={16}
+                  >
+                    <RNSVGGroup
+                      fill={null}
+                      propList={
+                        [
+                          "fill",
+                        ]
+                      }
+                    >
+                      <RNSVGPath
+                        d="M15.03 9.09003C15.35 9.03003 15.67 9 16 9C18.76 9 21 11.24 21 14C21 16.76 18.76 19 16 19H9.5C5.91 19 3 16.09 3 12.5C3 8.91 5.91 6 9.5 6C11.146 6 12.648 6.61297 13.792 7.62097C14.274 8.04597 14.692 8.54103 15.03 9.09003Z"
+                        fill={
+                          {
+                            "payload": 4294734591,
+                            "type": 0,
+                          }
+                        }
+                        propList={
+                          [
+                            "fill",
+                          ]
+                        }
+                      />
+                    </RNSVGGroup>
+                  </RNSVGSvgView>
                 </View>
                 <View
                   style={
@@ -1045,11 +1094,60 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     ]
                   }
                 >
-                  <svg
+                  <RNSVGSvgView
+                    align="xMidYMid"
+                    bbHeight="16"
+                    bbWidth="16"
                     color="#FC72FF"
-                    data-file-name="SvgCloud"
+                    fill="none"
+                    focusable={false}
                     height={16}
-                  />
+                    meetOrSlice={0}
+                    minX={0}
+                    minY={0}
+                    size={8}
+                    style={
+                      [
+                        {
+                          "backgroundColor": "transparent",
+                          "borderWidth": 0,
+                        },
+                        {
+                          "flex": 0,
+                          "height": 16,
+                          "width": 16,
+                        },
+                      ]
+                    }
+                    tintColor="#FC72FF"
+                    vbHeight={24}
+                    vbWidth={24}
+                    width={16}
+                  >
+                    <RNSVGGroup
+                      fill={null}
+                      propList={
+                        [
+                          "fill",
+                        ]
+                      }
+                    >
+                      <RNSVGPath
+                        d="M15.03 9.09003C15.35 9.03003 15.67 9 16 9C18.76 9 21 11.24 21 14C21 16.76 18.76 19 16 19H9.5C5.91 19 3 16.09 3 12.5C3 8.91 5.91 6 9.5 6C11.146 6 12.648 6.61297 13.792 7.62097C14.274 8.04597 14.692 8.54103 15.03 9.09003Z"
+                        fill={
+                          {
+                            "payload": 4294734591,
+                            "type": 0,
+                          }
+                        }
+                        propList={
+                          [
+                            "fill",
+                          ]
+                        }
+                      />
+                    </RNSVGGroup>
+                  </RNSVGSvgView>
                 </View>
                 <View
                   style={

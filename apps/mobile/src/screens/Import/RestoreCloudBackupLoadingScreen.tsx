@@ -17,7 +17,6 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Icons } from 'ui/src'
-import CloudIcon from 'ui/src/assets/icons/cloud.svg'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -117,7 +116,7 @@ export function RestoreCloudBackupLoadingScreen({
                   width={theme.imageSizes.image48}
                 />
               ) : (
-                <CloudIcon
+                <Icons.Cloud
                   color={theme.colors.neutral3}
                   height={theme.imageSizes.image48}
                   width={theme.imageSizes.image48}
