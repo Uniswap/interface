@@ -176,7 +176,7 @@ type FormatterRule = (FormatterExactRule | FormatterUpperBoundRule) & { hardCode
 // the number falls into. for example, based on the rule set below, if your number
 // falls between 1 and 1e6, you'd use TWO_DECIMALS as the formatter.
 const tokenNonTxFormatter: FormatterRule[] = [
-  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
+  { exact: 0, formatterOptions: NO_DECIMALS },
   { upperBound: 0.001, hardCodedInput: { input: 0.001, prefix: '<' }, formatterOptions: THREE_DECIMALS },
   { upperBound: 1, formatterOptions: THREE_DECIMALS },
   { upperBound: 1e6, formatterOptions: TWO_DECIMALS },
@@ -189,7 +189,7 @@ const tokenNonTxFormatter: FormatterRule[] = [
 ]
 
 const tokenTxFormatter: FormatterRule[] = [
-  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
+  { exact: 0, formatterOptions: NO_DECIMALS },
   {
     upperBound: 0.00001,
     hardCodedInput: { input: 0.00001, prefix: '<' },
@@ -201,14 +201,14 @@ const tokenTxFormatter: FormatterRule[] = [
 ]
 
 const swapTradeAmountFormatter: FormatterRule[] = [
-  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
+  { exact: 0, formatterOptions: NO_DECIMALS },
   { upperBound: 0.1, formatterOptions: SIX_SIG_FIGS_NO_COMMAS },
   { upperBound: 1, formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS },
   { upperBound: Infinity, formatterOptions: SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS },
 ]
 
 const swapPriceFormatter: FormatterRule[] = [
-  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
+  { exact: 0, formatterOptions: NO_DECIMALS },
   {
     upperBound: 0.00001,
     hardCodedInput: { input: 0.00001, prefix: '<' },
@@ -218,7 +218,7 @@ const swapPriceFormatter: FormatterRule[] = [
 ]
 
 const fiatTokenDetailsFormatter: FormatterRule[] = [
-  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
   {
     upperBound: 0.00000001,
     hardCodedInput: { input: 0.00000001, prefix: '<' },
@@ -231,7 +231,7 @@ const fiatTokenDetailsFormatter: FormatterRule[] = [
 ]
 
 const fiatTokenPricesFormatter: FormatterRule[] = [
-  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
   {
     upperBound: 0.00000001,
     hardCodedInput: { input: 0.00000001, prefix: '<' },
@@ -252,24 +252,24 @@ const fiatTokenStatsFormatter: FormatterRule[] = [
 ]
 
 const fiatGasPriceFormatter: FormatterRule[] = [
-  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: 0.01, hardCodedInput: { input: 0.01, prefix: '<' }, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
 ]
 
 const fiatTokenQuantityFormatter: FormatterRule[] = [
-  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
   ...fiatGasPriceFormatter,
 ]
 
 const portfolioBalanceFormatter: FormatterRule[] = [
-  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: Infinity, formatterOptions: TWO_DECIMALS_CURRENCY },
 ]
 
 const ntfTokenFloorPriceFormatterTrailingZeros: FormatterRule[] = [
-  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
+  { exact: 0, formatterOptions: NO_DECIMALS },
   { upperBound: 0.001, hardCodedInput: { input: 0.001, prefix: '<' }, formatterOptions: THREE_DECIMALS },
   { upperBound: 1, formatterOptions: THREE_DECIMALS },
   { upperBound: 1000, formatterOptions: TWO_DECIMALS },
@@ -282,7 +282,7 @@ const ntfTokenFloorPriceFormatterTrailingZeros: FormatterRule[] = [
 ]
 
 const ntfTokenFloorPriceFormatter: FormatterRule[] = [
-  { exact: 0, hardCodedInput: { input: 0 }, formatterOptions: NO_DECIMALS },
+  { exact: 0, formatterOptions: NO_DECIMALS },
   { upperBound: 0.001, hardCodedInput: { input: 0.001, prefix: '<' }, formatterOptions: THREE_DECIMALS },
   { upperBound: 1, formatterOptions: THREE_DECIMALS_NO_TRAILING_ZEROS },
   { upperBound: 1000, formatterOptions: TWO_DECIMALS_NO_TRAILING_ZEROS },
