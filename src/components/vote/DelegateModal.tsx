@@ -99,6 +99,12 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
       JSBI.BigInt(100)
     )
   )
+  const newApr = useMemo(() => {
+    if (poolInfo?.apr?.toString() !== 'NaN') {
+      const aprImpact = Number(parsedAmount?.quotient.toString()) / 1e18 / Number(poolInfo?.poolStake)
+      return (Number(poolInfo?.apr) * (1 - aprImpact)).toFixed(2)
+    } else return undefined
+  }, [poolInfo, parsedAmount])
 
   const stakeData = useMemo(() => {
     if (!poolId) return
@@ -219,6 +225,11 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
                   <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
                     <Trans>Staking {formatCurrencyAmount(parsedAmount, 4)} GRG</Trans>
                   </ThemedText.DeprecatedBody>
+                  {newApr && !usingDelegate && (
+                    <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
+                      <Trans>APR {newApr}%</Trans>
+                    </ThemedText.DeprecatedBody>
+                  )}
                 </RowBetween>
               </AutoColumn>
             </LightCard>

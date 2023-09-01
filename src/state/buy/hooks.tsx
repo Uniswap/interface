@@ -17,6 +17,8 @@ export interface PoolInfo {
   userPoolBalance: CurrencyAmount<Token>
   poolPriceAmount: CurrencyAmount<Token>
   spread: number
+  poolStake?: number
+  apr?: number
 }
 
 // based on typed value

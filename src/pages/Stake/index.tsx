@@ -120,6 +120,7 @@ export default function Stake() {
   const userStakeBalances = useUserStakeBalances(poolIds ?? [])
 
   // TODO: check PoolPositionDetails type as irr and apr are number not string
+  //  also check why this typecheck does not return an error as poolOwnStake and poolDelegatedStake are not defined in PoolRegisteredLog
   const poolsWithStats: PoolRegisteredLog[] = useMemo(() => {
     if (!allPools || !stakingPools) return []
     return allPools
@@ -127,12 +128,14 @@ export default function Stake() {
         const apr = stakingPools?.[i].apr
         const irr = stakingPools?.[i].irr
         const poolOwnStake = stakingPools?.[i].poolOwnStake
+        const poolDelegatedStake = stakingPools[i].delegatedStake
         const userHasStake = userStakeBalances?.[i].hasStake
         return {
           ...p,
           irr,
           apr,
           poolOwnStake,
+          poolDelegatedStake,
           userHasStake,
         }
       })
