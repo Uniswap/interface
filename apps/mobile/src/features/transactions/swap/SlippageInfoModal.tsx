@@ -12,6 +12,7 @@ import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils
 import { openUri } from 'src/utils/linking'
 import { Icons } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
+import { fonts } from 'ui/src/theme'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
@@ -52,7 +53,7 @@ export default function SlippageInfoModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.surface2}
+      backgroundColor={theme.colors.surface1}
       name={ModalName.SlippageInfo}
       onClose={onClose}>
       <Flex centered fill gap="spacing16" mb="spacing12" p="spacing24">
@@ -74,8 +75,11 @@ export default function SlippageInfoModal({
             : t(
                 'If the price slips any further, your transaction will revert. Below is the maximum amount you would need to spend.'
               )}{' '}
-          <TouchableArea height={18} onPress={onPressLearnMore}>
-            <Text color="accent1" variant="buttonLabelSmall">
+          <TouchableArea onPress={onPressLearnMore}>
+            <Text
+              color="accent1"
+              lineHeight={fonts.bodySmall.fontSize - 1}
+              variant="buttonLabelSmall">
               {t('Learn more')}
             </Text>
           </TouchableArea>

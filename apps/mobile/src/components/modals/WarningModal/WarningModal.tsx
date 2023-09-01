@@ -61,7 +61,7 @@ export default function WarningModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.surface2}
+      backgroundColor={theme.colors.surface1}
       hideHandlebar={hideHandlebar}
       isDismissible={isDismissible}
       name={modalName}
@@ -71,7 +71,7 @@ export default function WarningModal({
           centered
           borderRadius="rounded12"
           mb="spacing8"
-          p="spacing8"
+          p="spacing12"
           style={{
             backgroundColor: backgroundIconColor ?? opacify(12, theme.colors[alertColor.text]),
           }}>
@@ -96,7 +96,7 @@ export default function WarningModal({
           {closeText && (
             <Button
               fill
-              emphasis={ButtonEmphasis.Tertiary}
+              emphasis={ButtonEmphasis.Secondary}
               label={closeText}
               onPress={onCancel ?? onClose}
             />

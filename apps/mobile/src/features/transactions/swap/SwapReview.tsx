@@ -24,7 +24,7 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
-import InfoCircleSVG from 'ui/src/assets/icons/info-circle.svg'
+import { Icons } from 'ui/src'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -257,15 +257,17 @@ export function SwapReview({
       )}
       {showGasWarningModal && (
         <WarningModal
+          backgroundIconColor={theme.colors.surface3}
           caption={t(
             'This maximum network fee estimate is more conservative than usual—we’re unable to provide a more accurate figure at this time.'
           )}
           closeText={t('Dismiss')}
           icon={
-            <InfoCircleSVG
-              color={theme.colors.DEP_accentWarning}
-              height={theme.iconSizes.icon24}
-              width={theme.iconSizes.icon24}
+            <Icons.InfoCircleFilled
+              color={theme.colors.neutral2}
+              size={theme.iconSizes.icon24}
+              // not sure why this one is upside down
+              style={{ transform: [{ rotate: '180deg' }] }}
             />
           }
           modalName={ModalName.GasEstimateWarning}
