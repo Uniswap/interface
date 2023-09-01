@@ -57,9 +57,10 @@ export default function usePermit2Allowance(
   const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
   const revokeTokenAllowance = useRevokeTokenAllowance(token, PERMIT2_ADDRESS)
   const isApproved = useMemo(() => {
+    if (isPool) return true
     if (!amount || !tokenAllowance) return false
     return tokenAllowance.greaterThan(amount) || tokenAllowance.equalTo(amount)
-  }, [amount, tokenAllowance])
+  }, [amount, tokenAllowance, isPool])
 
   // Marks approval as loading from the time it is submitted (pending), until it has confirmed and another block synced.
   // This avoids re-prompting the user for an already-submitted but not-yet-observed approval, by marking it loading
@@ -102,8 +103,9 @@ export default function usePermit2Allowance(
   const updatePermitAllowance = useUpdatePermitAllowance(token, spender, nonce, setSignature)
   const isPermitted = useMemo(() => {
     if (!amount || !permitAllowance || !permitExpiration) return false
+    if (isPool) return true
     return (permitAllowance.greaterThan(amount) || permitAllowance.equalTo(amount)) && permitExpiration >= now
-  }, [amount, now, permitAllowance, permitExpiration])
+  }, [amount, now, permitAllowance, permitExpiration, isPool])
 
   const shouldRequestApproval = !(isApproved || isApprovalLoading)
 
