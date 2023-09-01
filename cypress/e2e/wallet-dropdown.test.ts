@@ -144,4 +144,32 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('wallet-settings')).should('not.be.visible')
     })
   })
+
+  describe('local currency', () => {
+    it('loads local currency from the query param', () => {
+      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+      cy.contains('USD')
+
+      cy.visit('/?cur=AUD', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.contains('AUD')
+    })
+
+    it('loads local currency from menu', () => {
+      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+      cy.contains('USD')
+
+      cy.get(getTestSelector('local-currency-settings-button')).click()
+      cy.get(getTestSelector('wallet-local-currency-item')).contains('AUD').click({ force: true })
+      cy.location('hash').should('match', /\?cur=AUD$/)
+      cy.contains('AUD')
+
+      cy.get(getTestSelector('wallet-local-currency-item')).contains('USD').click({ force: true })
+      cy.location('hash').should('match', /\?cur=USD$/)
+      cy.contains('USD')
+    })
+  })
 })

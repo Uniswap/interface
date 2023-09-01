@@ -3,6 +3,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { LOCALE_LABEL } from 'constants/locales'
 import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
@@ -27,15 +28,16 @@ const SectionTitle = styled(ThemedText.SubHeader)`
   padding-bottom: 24px;
 `
 
-const ToggleWrapper = styled.div`
+const ToggleWrapper = styled.div<{ currencyConversionEnabled?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: ${({ currencyConversionEnabled }) => (currencyConversionEnabled ? '10px' : '24px')};
 `
 
 const SettingsButtonWrapper = styled(Row)`
   ${ClickableStyle}
+  padding: 16px 0px;
 `
 
 const StyledChevron = styled(ChevronRight)`
@@ -60,7 +62,7 @@ const SettingsButton = ({
   <SettingsButtonWrapper data-testid={testId} align="center" justify="space-between" onClick={onClick}>
     <ThemedText.SubHeaderSmall color="textPrimary">{title}</ThemedText.SubHeaderSmall>
     <LanguageLabel gap="xs" align="center" width="min-content">
-      <ThemedText.LabelMedium color="textPrimary">{currentState}</ThemedText.LabelMedium>
+      <ThemedText.LabelSmall color="textPrimary">{currentState}</ThemedText.LabelSmall>
       <StyledChevron size={20} />
     </LanguageLabel>
   </SettingsButtonWrapper>
@@ -69,12 +71,15 @@ const SettingsButton = ({
 export default function SettingsMenu({
   onClose,
   openLanguageSettings,
+  openLocalCurrencySettings,
 }: {
   onClose: () => void
   openLanguageSettings: () => void
+  openLocalCurrencySettings: () => void
 }) {
   const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
   const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
 
   return (
     <SlideOutMenu title={<Trans>Settings</Trans>} onClose={onClose}>
@@ -83,7 +88,7 @@ export default function SettingsMenu({
           <SectionTitle data-testid="wallet-header">
             <Trans>Preferences</Trans>
           </SectionTitle>
-          <ToggleWrapper>
+          <ToggleWrapper currencyConversionEnabled={currencyConversionEnabled}>
             <ThemeToggle />
             <SmallBalanceToggle />
             <AnalyticsToggle />
@@ -99,12 +104,20 @@ export default function SettingsMenu({
           )}
 
           {currencyConversionEnabled && (
-            <SettingsButton
-              title={<Trans>Language</Trans>}
-              currentState={LOCALE_LABEL[activeLocale]}
-              onClick={openLanguageSettings}
-              testId="language-settings-button"
-            />
+            <Column>
+              <SettingsButton
+                title={<Trans>Language</Trans>}
+                currentState={LOCALE_LABEL[activeLocale]}
+                onClick={openLanguageSettings}
+                testId="language-settings-button"
+              />
+              <SettingsButton
+                title={<Trans>Currency</Trans>}
+                currentState={activeLocalCurrency}
+                onClick={openLocalCurrencySettings}
+                testId="local-currency-settings-button"
+              />
+            </Column>
           )}
         </div>
         <GitVersionRow />

@@ -23,7 +23,7 @@ import { SwapState } from './reducer'
 
 export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
   onCurrencySelection: (field: Field, currency: Currency) => void
-  onSwitchTokens: () => void
+  onSwitchTokens: (newOutputHasTax: boolean, previouslyEstimatedOutput: string) => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
 } {
@@ -39,9 +39,12 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
     [dispatch]
   )
 
-  const onSwitchTokens = useCallback(() => {
-    dispatch(switchCurrencies())
-  }, [dispatch])
+  const onSwitchTokens = useCallback(
+    (newOutputHasTax: boolean, previouslyEstimatedOutput: string) => {
+      dispatch(switchCurrencies({ newOutputHasTax, previouslyEstimatedOutput }))
+    },
+    [dispatch]
+  )
 
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {

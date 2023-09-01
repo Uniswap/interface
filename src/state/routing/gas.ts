@@ -1,8 +1,9 @@
 import { MaxUint256, PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { Currency, SupportedChainsType } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import ERC20_ABI from 'abis/erc20.json'
 import { Erc20, Weth } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
+import { SupportedInterfaceChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { getContract } from 'utils'
@@ -25,7 +26,7 @@ export async function getApproveInfo(
   // If any of these arguments aren't provided, then we cannot generate approval cost info
   if (!account || !usdCostPerGas) return { needsApprove: false }
 
-  const provider = RPC_PROVIDERS[currency.chainId as SupportedChainsType]
+  const provider = RPC_PROVIDERS[currency.chainId as SupportedInterfaceChain]
   const tokenContract = getContract(currency.address, ERC20_ABI, provider) as Erc20
 
   let approveGasUseEstimate
@@ -51,7 +52,7 @@ export async function getApproveInfo(
 export async function getWrapInfo(
   needsWrap: boolean,
   account: string | undefined,
-  chainId: SupportedChainsType,
+  chainId: SupportedInterfaceChain,
   amount: string,
   usdCostPerGas?: number
 ): Promise<WrapInfo> {
