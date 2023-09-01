@@ -1,4 +1,4 @@
-import { DEFAULT_LOCAL_CURRENCY } from 'constants/localCurrencies'
+import { Currency } from 'graphql/data/__generated__/types-and-hooks'
 import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
 
 import { useActiveLocalCurrency } from './useActiveLocalCurrency'
@@ -8,7 +8,7 @@ type useUSDPriceParameters = Parameters<typeof useUSDPrice>
 
 export function useLocalCurrencyPrice(...useUSDPriceParameters: useUSDPriceParameters) {
   const activeLocalCurrency = useActiveLocalCurrency()
-  const activeLocalCurrencyIsUSD = activeLocalCurrency === DEFAULT_LOCAL_CURRENCY
+  const activeLocalCurrencyIsUSD = activeLocalCurrency === Currency.Usd
 
   const { data: usdPrice, isLoading: isUSDPriceLoading } = useUSDPrice(...useUSDPriceParameters)
   const { data: localCurrencyConversionRate, isLoading: isLocalCurrencyConversionRateLoading } =
