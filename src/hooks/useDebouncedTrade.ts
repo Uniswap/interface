@@ -1,7 +1,6 @@
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
 import { useMemo } from 'react'
 import { ClassicTrade, InterfaceTrade, QuoteMethod, RouterPreference, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
@@ -12,10 +11,7 @@ import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 
 // Prevents excessive quote requests between keystrokes.
-const DEBOUNCE_TIME = 350
-
-// Temporary until we remove the feature flag.
-const DEBOUNCE_TIME_INCREASED = 650
+const DEBOUNCE_TIME = 0
 
 export function useDebouncedTrade(
   tradeType: TradeType,
@@ -75,9 +71,7 @@ export function useDebouncedTrade(
     () => [amountSpecified, otherCurrency],
     [amountSpecified, otherCurrency]
   )
-  const debouncedSwapQuoteFlagEnabled = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled
-  const isDebouncing =
-    useDebounce(inputs, debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME) !== inputs
+  const isDebouncing = useDebounce(inputs, DEBOUNCE_TIME) !== inputs
 
   const isWrap = useMemo(() => {
     if (!chainId || !amountSpecified || !otherCurrency) return false
