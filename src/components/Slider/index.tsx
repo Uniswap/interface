@@ -19,11 +19,11 @@ const StyledRangeInput = styled.input<{ size: number }>`
     -webkit-appearance: none;
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: ${({ theme }) => theme.accentAction};
+    background-color: ${({ theme }) => theme.accent1};
     border-radius: 100%;
     border: none;
     transform: translateY(-50%);
-    color: ${({ theme }) => theme.deprecated_bg1};
+    color: ${({ theme }) => theme.surface1};
 
     &:hover,
     &:focus {
@@ -38,7 +38,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
     background-color: #565a69;
     border-radius: 100%;
     border: none;
-    color: ${({ theme }) => theme.deprecated_bg1};
+    color: ${({ theme }) => theme.surface1};
 
     &:hover,
     &:focus {
@@ -52,7 +52,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
     width: ${({ size }) => size}px;
     background-color: #565a69;
     border-radius: 100%;
-    color: ${({ theme }) => theme.deprecated_bg1};
+    color: ${({ theme }) => theme.surface1};
 
     &:hover,
     &:focus {
@@ -62,12 +62,12 @@ const StyledRangeInput = styled.input<{ size: number }>`
   }
 
   &::-webkit-slider-runnable-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.accentAction}, ${({ theme }) => theme.accentAction});
+    background: linear-gradient(90deg, ${({ theme }) => theme.accent1}, ${({ theme }) => theme.accent1});
     height: 2px;
   }
 
   &::-moz-range-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.deprecated_bg5}, ${({ theme }) => theme.deprecated_bg3});
+    background: linear-gradient(90deg, ${({ theme }) => theme.surface4}, ${({ theme }) => theme.surface2});
     height: 2px;
   }
 
@@ -76,14 +76,14 @@ const StyledRangeInput = styled.input<{ size: number }>`
     border-color: transparent;
     color: transparent;
 
-    background: ${({ theme }) => theme.deprecated_bg5};
+    background: ${({ theme }) => theme.surface4};
     height: 2px;
   }
   &::-ms-fill-lower {
-    background: ${({ theme }) => theme.deprecated_bg5};
+    background: ${({ theme }) => theme.surface4};
   }
   &::-ms-fill-upper {
-    background: ${({ theme }) => theme.deprecated_bg3};
+    background: ${({ theme }) => theme.surface2};
   }
 `
 

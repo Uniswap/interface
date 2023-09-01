@@ -6,6 +6,7 @@ import { ThemedText } from 'theme'
 
 const StyledColumn = styled(Column)`
   width: 100%;
+  margin-right: 10px;
 `
 
 interface SettingsToggleProps {
@@ -21,13 +22,13 @@ export function SettingsToggle({ title, description, dataid, isActive, toggle }:
     <Row align="center">
       <StyledColumn>
         <Row>
-          <ThemedText.SubHeaderSmall color="textPrimary">{title}</ThemedText.SubHeaderSmall>
+          <ThemedText.SubHeaderSmall color="neutral1">{title}</ThemedText.SubHeaderSmall>
         </Row>
         {description && (
           <Row>
-            <ThemedText.Caption color="textSecondary" lineHeight="16px">
+            <ThemedText.BodySmall color="neutral2" lineHeight="16px">
               {description}
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           </Row>
         )}
       </StyledColumn>

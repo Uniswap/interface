@@ -55,22 +55,22 @@ const InfoText = styled(Text)`
 const StyledButton = styled(ButtonPrimary)`
   margin-top: 24px;
   width: 100%;
-  font-weight: 600;
+  font-weight: 535;
 `
 
 const StyledCancelButton = styled(ButtonText)`
   margin-top: 16px;
-  color: ${({ theme }) => theme.textSecondary};
-  font-weight: 600;
+  color: ${({ theme }) => theme.neutral2};
+  font-weight: 535;
   font-size: 14px;
 `
 
 const StyledCloseButton = styled(StyledButton)`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
-  color: ${({ theme }) => theme.textPrimary};
+  background-color: ${({ theme }) => theme.surface3};
+  color: ${({ theme }) => theme.neutral1};
 
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
+    background-color: ${({ theme }) => theme.surface3};
     opacity: ${({ theme }) => theme.opacity.hover};
     transition: opacity 250ms ease;
   }
@@ -123,8 +123,8 @@ const ExplorerContainer = styled.div`
   height: 32px;
   margin-top: 10px;
   font-size: 20px;
-  background-color: ${({ theme }) => theme.accentActionSoft};
-  color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.accent2};
+  color: ${({ theme }) => theme.accent1};
   border-radius: 8px;
   padding: 2px 12px;
   display: flex;
@@ -190,9 +190,9 @@ function ExplorerView({ token }: { token: Token }) {
 }
 
 const StyledExternalLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
   stroke: currentColor;
-  font-weight: 600;
+  font-weight: 535;
 `
 
 export interface TokenSafetyProps {

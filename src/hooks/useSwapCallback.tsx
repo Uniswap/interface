@@ -67,13 +67,13 @@ export function useSwapCallback(
         ? {
             tradeType: TradeType.EXACT_INPUT,
             inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-            expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+            expectedOutputCurrencyAmountRaw: trade.postTaxOutputAmount.quotient.toString(),
             minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
           }
         : {
             tradeType: TradeType.EXACT_OUTPUT,
             maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
-            outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+            outputCurrencyAmountRaw: trade.postTaxOutputAmount.quotient.toString(),
             expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
           }),
     }

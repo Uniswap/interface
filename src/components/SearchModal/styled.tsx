@@ -18,7 +18,7 @@ export const MenuItem = styled(RowBetween)<{ dim?: boolean }>`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
-    background-color: ${({ theme }) => theme.hoverDefault};
+    background-color: ${({ theme }) => theme.deprecated_hoverDefault};
   }
   opacity: ${({ disabled, selected, dim }) => (dim || disabled || selected ? 0.4 : 1)};
 `
@@ -36,32 +36,33 @@ export const SearchInput = styled.input`
   align-items: center;
   width: 100%;
   white-space: nowrap;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.surface2};
   border: none;
   outline: none;
   border-radius: 12px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   border-style: solid;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   -webkit-appearance: none;
+  font-weight: 485;
 
   font-size: 16px;
 
   ::placeholder {
-    color: ${({ theme }) => theme.textTertiary};
+    color: ${({ theme }) => theme.neutral3};
     font-size: 16px;
   }
   transition: border 100ms;
   :focus {
-    border: 1px solid ${({ theme }) => theme.accentActiveSoft};
-    background-color: ${({ theme }) => theme.backgroundSurface};
+    border: 1px solid ${({ theme }) => theme.surface3};
+    background-color: ${({ theme }) => theme.surface2};
     outline: none;
   }
 `
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface3};
 `
 
 export const LoadingRows = styled(BaseLoadingRows)`

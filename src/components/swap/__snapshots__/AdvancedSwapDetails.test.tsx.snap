@@ -39,17 +39,17 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
 }
 
 .c6 {
-  color: #7780A0;
+  color: #7D7D7D;
 }
 
 .c7 {
-  color: #0D111C;
+  color: #222222;
 }
 
 .c1 {
   width: 100%;
   height: 1px;
-  background-color: #D2D9EE;
+  background-color: #22222212;
 }
 
 .c0 {
@@ -86,7 +86,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
       >
         <div>
           <div
-            class="c6 css-zhpkf8"
+            class="c6 css-142zc9n"
           >
             Network fee
           </div>
@@ -97,7 +97,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
       >
         <div>
           <div
-            class="c7 css-zhpkf8"
+            class="c7 css-142zc9n"
           >
             ~$1.00
           </div>
@@ -112,14 +112,14 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
       >
         <div>
           <div
-            class="c6 css-zhpkf8"
+            class="c6 css-142zc9n"
           >
             Price Impact
           </div>
         </div>
       </div>
       <div
-        class="c7 css-zhpkf8"
+        class="c7 css-142zc9n"
       >
         105566.373%
       </div>
@@ -135,7 +135,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
         >
           <div>
             <div
-              class="c6 css-zhpkf8"
+              class="c6 css-142zc9n"
             >
               Minimum output
             </div>
@@ -143,7 +143,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
         </div>
       </div>
       <div
-        class="c7 css-zhpkf8"
+        class="c7 css-142zc9n"
       >
         0.00000000000000098 DEF
       </div>
@@ -159,7 +159,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
         >
           <div>
             <div
-              class="c6 css-zhpkf8"
+              class="c6 css-142zc9n"
             >
               Expected output
             </div>
@@ -167,7 +167,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
         </div>
       </div>
       <div
-        class="c7 css-zhpkf8"
+        class="c7 css-142zc9n"
       >
         0.000000000000001 DEF
       </div>
@@ -179,7 +179,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
       class="c2 c3 c4"
     >
       <div
-        class="c6 css-zhpkf8"
+        class="c6 css-142zc9n"
       >
         Order routing
       </div>
@@ -188,7 +188,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
       >
         <div>
           <div
-            class="c7 css-zhpkf8"
+            class="c7 css-142zc9n"
           >
             Uniswap Client
           </div>

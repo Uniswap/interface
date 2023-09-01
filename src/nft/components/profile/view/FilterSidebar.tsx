@@ -63,7 +63,7 @@ const LoadingCollectionItem = ({ style }: { style?: CSSProperties }) => {
         <SmallLoadingBubble />
         <LongLoadingBubble />
       </Row>
-      <Box as="span" borderColor="backgroundOutline" className={checkbox} aria-hidden="true" />
+      <Box as="span" borderColor="surface3" className={checkbox} aria-hidden="true" />
     </Row>
   )
 }
@@ -116,7 +116,7 @@ export const FilterSidebar = ({
       zIndex={{ sm: 'modal', md: 'auto' }}
       display={isFiltersExpanded ? 'flex' : 'none'}
       style={{ transform: isMobile ? undefined : sidebarX.to((x) => `translateX(${x}px)`) }}
-      background="backgroundBackdrop"
+      background="surface2"
     >
       <Box
         paddingTop={{ sm: '24', md: '0' }}
@@ -130,7 +130,7 @@ export const FilterSidebar = ({
             <XMarkIcon
               height={28}
               width={28}
-              fill={themeVars.colors.textPrimary}
+              fill={themeVars.colors.neutral1}
               onClick={() => setFiltersExpanded(false)}
             />
           </MobileMenuHeader>
@@ -315,7 +315,7 @@ const CollectionItem = ({
       maxWidth="full"
       overflowX="hidden"
       overflowY="hidden"
-      fontWeight="normal"
+      fontWeight="book"
       className={styles.subRowHover}
       justifyContent="space-between"
       cursor="pointer"
@@ -349,7 +349,7 @@ const CollectionItem = ({
       </Row>
 
       <Checkbox checked={isChecked(collection.address)} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="textTertiary" marginRight="12" marginLeft="auto">
+        <Box as="span" color="neutral3" marginRight="12" marginLeft="auto">
           {collection.count}
         </Box>
       </Checkbox>

@@ -25,7 +25,7 @@ export const PopupContainer = styled.div<{ show: boolean }>`
     ${({ theme }) => theme.transition.timing.inOut};
 
   background-color: ${({ theme }) => theme.chain_84531};
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   position: fixed;
   z-index: ${Z_INDEX.sticky};
 
@@ -37,9 +37,9 @@ export const PopupContainer = styled.div<{ show: boolean }>`
   width: 390px;
   height: 164px;
 
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
 
-  box-shadow: ${({ theme }) => theme.deepShadow};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     bottom: 62px;

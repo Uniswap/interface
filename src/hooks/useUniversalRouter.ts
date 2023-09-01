@@ -12,7 +12,7 @@ import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { UserRejectedRequestError } from 'utils/errors'
+import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
@@ -61,11 +61,16 @@ export function useUniversalRouterSwapCallback(
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
         const connectedChainId = await provider.getSigner().getChainId()
-        if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
+        if (chainId !== connectedChainId) throw new WrongChainError()
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
+
+        // universal-router-sdk reconstructs V2Trade objects, so rather than updating the trade amounts to account for tax, we adjust the slippage tolerance as a workaround
+        // TODO(WEB-2725): update universal-router-sdk to not reconstruct trades
+        const taxAdjustedSlippageTolerance = options.slippageTolerance.add(trade.totalTaxRate)
+
         const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
-          slippageTolerance: options.slippageTolerance,
+          slippageTolerance: taxAdjustedSlippageTolerance,
           deadlineOrPreviousBlockhash: options.deadline?.toString(),
           inputTokenPermit: options.permit,
           fee: options.feeOptions,
@@ -117,7 +122,10 @@ export function useUniversalRouterSwapCallback(
                 txHash: response.hash,
                 ...analyticsContext,
               })
-              throw new ModifiedSwapError()
+
+              if (!response.data || response.data.length === 0 || response.data === '0x') {
+                throw new ModifiedSwapError()
+              }
             }
             return response
           })

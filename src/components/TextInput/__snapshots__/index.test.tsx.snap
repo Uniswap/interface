@@ -11,13 +11,13 @@ exports[`ResizableTextArea renders correctly 1`] = `
   flex: 1 1 auto;
   width: 0;
   resize: none;
-  background-color: #F5F6FC;
+  background-color: #FFFFFF;
   -webkit-transition: color 300ms step-start;
   transition: color 300ms step-start;
-  color: #0D111C;
+  color: #222222;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 500;
+  font-weight: 535;
   width: 100%;
   line-height: 1.2;
   padding: 0px;
@@ -34,19 +34,19 @@ exports[`ResizableTextArea renders correctly 1`] = `
 }
 
 .c0::-webkit-input-placeholder {
-  color: #98A1C0;
+  color: #7D7D7D;
 }
 
 .c0::-moz-placeholder {
-  color: #98A1C0;
+  color: #7D7D7D;
 }
 
 .c0:-ms-input-placeholder {
-  color: #98A1C0;
+  color: #7D7D7D;
 }
 
 .c0::placeholder {
-  color: #98A1C0;
+  color: #7D7D7D;
 }
 
 <textarea
@@ -57,7 +57,7 @@ exports[`ResizableTextArea renders correctly 1`] = `
     font-size="12"
     placeholder="Test Placeholder"
     spellcheck="false"
-    style="height: auto; min-height: 500px;"
+    style="height: auto; min-height: 535px;"
   >
     My test input
   </textarea>
@@ -74,13 +74,13 @@ exports[`TextInput renders correctly 1`] = `
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   width: 0;
-  background-color: #F5F6FC;
+  background-color: #FFFFFF;
   -webkit-transition: color 300ms step-start;
   transition: color 300ms step-start;
-  color: #0D111C;
+  color: #222222;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 500;
+  font-weight: 535;
   width: 100%;
   padding: 0px;
   -webkit-appearance: textfield;
@@ -96,19 +96,19 @@ exports[`TextInput renders correctly 1`] = `
 }
 
 .c0::-webkit-input-placeholder {
-  color: #98A1C0;
+  color: #CECECE;
 }
 
 .c0::-moz-placeholder {
-  color: #98A1C0;
+  color: #CECECE;
 }
 
 .c0:-ms-input-placeholder {
-  color: #98A1C0;
+  color: #CECECE;
 }
 
 .c0::placeholder {
-  color: #98A1C0;
+  color: #CECECE;
 }
 
 <div
