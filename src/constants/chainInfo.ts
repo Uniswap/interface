@@ -259,22 +259,6 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_84531,
   },
-  [ChainId.BASE_GOERLI]: {
-    networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms(`25m`),
-    bridge: 'https://goerli-bridge.base.org/deposit',
-    defaultListUrl: BASE_LIST,
-    docs: 'https://docs.base.org',
-    explorer: 'https://goerli.basescan.org/',
-    infoLink: 'https://info.uniswap.org/#/base/', // base testnet not supported
-    label: 'Base Goerli',
-    logoUrl: baseLogo,
-    statusPage: 'https://status.base.org/',
-    circleLogoUrl: baseLogo,
-    squareLogoUrl: baseSquareLogo,
-    nativeCurrency: { name: 'Base Goerli Ether', symbol: 'ETH', decimals: 18 },
-    color: darkTheme.chain_84531,
-  },
 } as const
 
 export function getChainInfo(
