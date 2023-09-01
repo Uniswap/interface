@@ -1,7 +1,5 @@
 import { TradeType } from '@kinetix/sdk-core'
 
-import { VoteOption } from '../governance/types'
-
 export interface SerializableTransactionReceipt {
   to: string
   from: string
@@ -50,14 +48,6 @@ interface BaseTransactionInfo {
   type: TransactionType
 }
 
-export interface VoteTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.VOTE
-  governorAddress: string
-  proposalId: number
-  decision: VoteOption
-  reason: string
-}
-
 export interface QueueTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.QUEUE
   governorAddress: string
@@ -68,11 +58,6 @@ export interface ExecuteTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.EXECUTE
   governorAddress: string
   proposalId: number
-}
-
-export interface DelegateTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.DELEGATE
-  delegatee: string
 }
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
@@ -184,11 +169,8 @@ export type TransactionInfo =
   | ApproveTransactionInfo
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
-  | ClaimTransactionInfo
-  | VoteTransactionInfo
   | QueueTransactionInfo
   | ExecuteTransactionInfo
-  | DelegateTransactionInfo
   | DepositLiquidityStakingTransactionInfo
   | WithdrawLiquidityStakingTransactionInfo
   | WrapTransactionInfo

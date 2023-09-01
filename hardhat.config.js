@@ -1,34 +1,12 @@
 import { ChainId } from '@kinetix/sdk-core'
-import { UNIVERSAL_ROUTER_CREATION_BLOCK } from '@kinetix/universal-router-sdk'
 
 /* eslint-env node */
 require('dotenv').config()
 
-const forkingConfig = {
-  httpHeaders: {
-    Origin: 'localhost:3000', // infura allowlists requests by origin
-  },
-}
-
-const forks = {
-  [ChainId.MAINNET]: {
-    url: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
-    blockNumber: UNIVERSAL_ROUTER_CREATION_BLOCK(ChainId.MAINNET),
-    ...forkingConfig,
-  },
-  [ChainId.POLYGON]: {
-    url: `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
-    blockNumber: UNIVERSAL_ROUTER_CREATION_BLOCK(ChainId.POLYGON),
-    ...forkingConfig,
-  },
-}
-
 module.exports = {
-  forks,
   networks: {
     hardhat: {
-      chainId: ChainId.MAINNET,
-      forking: forks[ChainId.MAINNET],
+      chainId: ChainId.KAVA,
       accounts: {
         count: 2,
       },

@@ -1,13 +1,5 @@
 import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@kinetix/sdk-core'
 
-export const UniWalletSupportedChains = [
-  ChainId.MAINNET,
-  ChainId.ARBITRUM_ONE,
-  ChainId.OPTIMISM,
-  ChainId.POLYGON,
-  ChainId.BASE,
-]
-
 export const CHAIN_IDS_TO_NAMES = {
   [ChainId.MAINNET]: 'mainnet',
   [ChainId.GOERLI]: 'goerli',
@@ -51,21 +43,12 @@ export function asSupportedChain(
   return isSupportedChain(chainId) ? chainId : undefined
 }
 
-export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
-  ChainId.MAINNET,
-  ChainId.POLYGON,
-  ChainId.CELO,
-  ChainId.OPTIMISM,
-  ChainId.ARBITRUM_ONE,
-  ChainId.BNB,
-  ChainId.AVALANCHE,
-  ChainId.BASE,
-] as const
+export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [ChainId.KAVA] as const
 
 /**
  * Supported networks for V2 pool behavior.
  */
-export const SUPPORTED_V2POOL_CHAIN_IDS = [ChainId.MAINNET, ChainId.GOERLI] as const
+export const SUPPORTED_V2POOL_CHAIN_IDS = [ChainId.KAVA] as const
 
 export const TESTNET_CHAIN_IDS = [
   ChainId.GOERLI,
@@ -80,7 +63,7 @@ export const TESTNET_CHAIN_IDS = [
 /**
  * All the chain IDs that are running the Ethereum protocol.
  */
-export const L1_CHAIN_IDS = [ChainId.MAINNET, ChainId.KAVA, ChainId.POLYGON] as const
+export const L1_CHAIN_IDS = [ChainId.KAVA] as const
 
 export type SupportedL1ChainId = (typeof L1_CHAIN_IDS)[number]
 

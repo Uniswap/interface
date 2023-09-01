@@ -1,6 +1,6 @@
+import { Percent } from '@kinetix/sdk-core'
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Percent } from '@kinetix/sdk-core'
 import { TraceEvent, useTrace } from 'analytics'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
@@ -130,6 +130,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
             )}
             {trade ? (
               <LoadingOpacityContainer $loading={syncing} data-testid="trade-price-container">
+                {/* @ts-ignore */}
                 <TradePrice price={trade.executionPrice} />
               </LoadingOpacityContainer>
             ) : loading || syncing ? (

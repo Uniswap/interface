@@ -1,13 +1,13 @@
 import { ChainId, CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@kinetix/sdk-core'
+import IUniswapV3PoolStateJSON from '@kinetix/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { computePoolAddress, Pool, Position } from '@kinetix/v3-sdk'
-import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionDetails } from 'types/position'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
-import { UniswapV3PoolInterface } from 'types/v3/UniswapV3Pool'
+import { KinetixV3PoolInterface } from 'types/v3/KinetixV3Pool'
 import { currencyKey } from 'utils/currencyKey'
 
 import { PositionInfo, useCachedPositions, useGetCachedTokens, usePoolAddressCache } from './cache'
@@ -39,16 +39,7 @@ type FeeAmounts = [BigNumber, BigNumber]
 
 const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
 
-const DEFAULT_CHAINS = [
-  ChainId.MAINNET,
-  ChainId.ARBITRUM_ONE,
-  ChainId.OPTIMISM,
-  ChainId.POLYGON,
-  ChainId.CELO,
-  ChainId.BNB,
-  ChainId.AVALANCHE,
-  ChainId.BASE,
-]
+const DEFAULT_CHAINS = [ChainId.KAVA]
 
 type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean }
 
@@ -119,7 +110,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
   // Combines PositionDetails with Pool data to build our return type
   const fetchPositionInfo = useCallback(
     async (positionDetails: PositionDetails[], chainId: ChainId, multicall: UniswapInterfaceMulticall) => {
-      const poolInterface = new Interface(IUniswapV3PoolStateJSON.abi) as UniswapV3PoolInterface
+      const poolInterface = new Interface(IUniswapV3PoolStateJSON.abi) as KinetixV3PoolInterface
       const tokens = await getTokens(
         positionDetails.flatMap((details) => [details.token0, details.token1]),
         chainId

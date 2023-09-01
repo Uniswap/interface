@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { TokenList, VersionUpgrade } from '@kinetix/token-lists'
 
 import { shouldAcceptVersionUpdate } from './utils'

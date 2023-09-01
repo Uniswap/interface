@@ -2,12 +2,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { MixedRouteSDK } from '@kinetix/router-sdk'
 import { ChainId, Currency, CurrencyAmount, Token, TradeType } from '@kinetix/sdk-core'
 import { AlphaRouter } from '@kinetix/smart-order-router'
-import { DutchOrderInfo, DutchOrderInfoJSON } from '@kinetix/swapx-sdk'
 import { Pair, Route as V2Route } from '@kinetix/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@kinetix/v3-sdk'
+import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { asSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
-import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
+import { nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
 import { getApproveInfo, getWrapInfo } from './gas'
@@ -307,9 +307,6 @@ export function isExactInput(tradeType: TradeType): boolean {
 
 export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
-    if (isMatic(currency.chainId)) return SwapRouterNativeAssets.MATIC
-    if (isBsc(currency.chainId)) return SwapRouterNativeAssets.BNB
-    if (isAvalanche(currency.chainId)) return SwapRouterNativeAssets.AVAX
     return SwapRouterNativeAssets.ETH
   }
 

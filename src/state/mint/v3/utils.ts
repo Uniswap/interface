@@ -58,6 +58,7 @@ export function tryParseTick(
     tick = TickMath.MIN_TICK
   } else {
     // this function is agnostic to the base, will always return the correct tick
+    // @ts-ignore
     tick = priceToClosestTick(price)
   }
 

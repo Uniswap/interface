@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'

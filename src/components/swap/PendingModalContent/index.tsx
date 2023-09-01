@@ -164,8 +164,8 @@ function getPendingConfirmationContent({
       // On Mainnet, we show a "submitted" state while the transaction is pending confirmation.
       return {
         title,
-        subtitle: chainId === ChainId.MAINNET ? explorerLink : tradeSummary,
-        bottomLabel: chainId === ChainId.MAINNET ? t`Transaction pending...` : explorerLink,
+        subtitle: chainId === ChainId.KAVA ? explorerLink : tradeSummary,
+        bottomLabel: chainId === ChainId.KAVA ? t`Transaction pending...` : explorerLink,
       }
     } else {
       return {

@@ -1,12 +1,9 @@
 import tokenLogoLookup from 'constants/tokenLogoLookup'
-import { isCelo, nativeOnChain } from 'constants/tokens'
 import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useEffect, useState } from 'react'
 import { isAddress } from 'utils'
-
-import celoLogo from '../assets/svg/celo_logo.svg'
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
@@ -48,10 +45,6 @@ function getInitialUrl(
 
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
   const checksummedAddress = isAddress(address)
-
-  if (chainId && isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
-    return celoLogo
-  }
 
   if (checksummedAddress) {
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`

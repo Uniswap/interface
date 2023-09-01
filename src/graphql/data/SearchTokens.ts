@@ -1,4 +1,4 @@
-import { ARB, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import gql from 'graphql-tag'
 import { useMemo } from 'react'
 import invariant from 'tiny-invariant'
@@ -42,18 +42,12 @@ gql`
   }
 `
 
-const ARB_ADDRESS = ARB.address.toLowerCase()
-
 export type SearchToken = NonNullable<NonNullable<SearchTokensQuery['searchTokens']>[number]>
 
 /* Returns the more relevant cross-chain token based on native status and search chain */
 function dedupeCrosschainTokens(current: SearchToken, existing: SearchToken | undefined, searchChain: Chain) {
   if (!existing) return current
   invariant(current.project?.id === existing.project?.id, 'Cannot dedupe tokens within different tokenProjects')
-
-  // Special case: always prefer Arbitrum ARB over Mainnet ARB
-  if (current.address?.toLowerCase() === ARB_ADDRESS) return current
-  if (existing.address?.toLowerCase() === ARB_ADDRESS) return existing
 
   // Always prioritize natives, and if both tokens are native, prefer native on current chain (i.e. Matic on Polygon over Matic on Mainnet )
   if (current.standard === 'NATIVE' && (existing.standard !== 'NATIVE' || current.chain === searchChain)) return current

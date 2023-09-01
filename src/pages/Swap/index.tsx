@@ -138,6 +138,7 @@ export default function SwapPage({ className }: { className?: string }) {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   const location = useLocation()
+  console.log('connectedChainId', connectedChainId)
 
   const supportedChainId = asSupportedChain(connectedChainId)
 
@@ -146,7 +147,7 @@ export default function SwapPage({ className }: { className?: string }) {
       <PageWrapper>
         <Swap
           className={className}
-          chainId={supportedChainId ?? ChainId.MAINNET}
+          chainId={supportedChainId ?? ChainId.KAVA}
           prefilledState={{
             [Field.INPUT]: { currencyId: loadedUrlParams?.[Field.INPUT]?.currencyId },
             [Field.OUTPUT]: { currencyId: loadedUrlParams?.[Field.OUTPUT]?.currencyId },

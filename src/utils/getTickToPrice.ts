@@ -5,5 +5,6 @@ export function getTickToPrice(baseToken?: Token, quoteToken?: Token, tick?: num
   if (!baseToken || !quoteToken || typeof tick !== 'number') {
     return undefined
   }
+  // @ts-ignore
   return tickToPrice(baseToken, quoteToken, tick)
 }

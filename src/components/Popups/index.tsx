@@ -6,7 +6,6 @@ import { MEDIA_WIDTHS } from 'theme'
 import { useActivePopups } from '../../state/application/hooks'
 import { useURLWarningVisible } from '../../state/user/hooks'
 import { AutoColumn } from '../Column'
-import ClaimPopup from './ClaimPopup'
 import PopupItem from './PopupItem'
 
 const MobilePopupWrapper = styled.div`
@@ -62,12 +61,11 @@ export default function Popups() {
 
   // need extra padding if network is not L1 Ethereum
   const { chainId } = useWeb3React()
-  const isNotOnMainnet = Boolean(chainId && chainId !== ChainId.MAINNET)
+  const isNotOnMainnet = Boolean(chainId && chainId !== ChainId.KAVA)
 
   return (
     <>
       <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet} data-testid="popups">
-        <ClaimPopup />
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}

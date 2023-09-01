@@ -1,4 +1,4 @@
-import { MaxUint256, PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
+import { MaxUint256, PERMIT2_ADDRESS } from '@kinetix/permit2-sdk'
 import { Currency, SupportedChainsType } from '@kinetix/sdk-core'
 import ERC20_ABI from 'abis/erc20.json'
 import { Erc20, Weth } from 'abis/types'

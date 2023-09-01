@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
-import { CurrencyAmount, Token } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
@@ -13,7 +12,6 @@ import { getConnection } from 'connection'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import useENSName from 'hooks/useENSName'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
-import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, CreditCard, IconProps, Info, LogOut, Settings } from 'react-feather'
@@ -27,7 +25,6 @@ import { formatNumber, NumberType } from 'utils/formatNumbers'
 
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
 import { useToggleAccountDrawer } from '.'
 import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
@@ -169,14 +166,10 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
-  const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
-  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
-  const isUnclaimed = useUserHasAvailableClaim(account)
   const connection = getConnection(connector)
-  const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const openNftModal = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const disconnect = useCallback(() => {
     if (connector && connector.deactivate) {
@@ -349,16 +342,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           </FiatOnrampNotAvailableText>
         )}
         <MiniPortfolio account={account} />
-        {isUnclaimed && (
-          <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
-            <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
-          </UNIButton>
-        )}
-        {isClaimAvailable && (
-          <UNIButton size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openNftModal}>
-            <Trans>Claim Uniswap NFT Airdrop</Trans>
-          </UNIButton>
-        )}
       </PortfolioDrawerContainer>
     </AuthenticatedHeaderWrapper>
   )

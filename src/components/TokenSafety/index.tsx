@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Token } from '@kinetix/sdk-core'
+import { Trans } from '@lingui/macro'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -225,11 +225,16 @@ export default function TokenSafety({
 
   // Logic for only showing the 'unsupported' warning if one is supported and other isn't
   if (token1 && token1Warning && (token1Unsupported || !(token2Warning && token2Unsupported))) {
+    // @ts-ignore
     logos.push(<CurrencyLogo currency={token1} size="48px" />)
+    // @ts-ignore
     urls.push(<ExplorerView token={token1} />)
   }
+  // @ts-ignore
   if (token2 && token2Warning && (token2Unsupported || !(token1Warning && token1Unsupported))) {
+    // @ts-ignore
     logos.push(<CurrencyLogo currency={token2} size="48px" />)
+    // @ts-ignore
     urls.push(<ExplorerView token={token2} />)
   }
 

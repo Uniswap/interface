@@ -1,4 +1,4 @@
-import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
+import { PERMIT2_ADDRESS } from '@kinetix/permit2-sdk'
 import { CurrencyAmount, Token } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'

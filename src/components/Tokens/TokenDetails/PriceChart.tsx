@@ -325,6 +325,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     const newTicks = []
     const tickSpacing = Math.floor(ticks.length / maxTicks)
     for (let i = 1; i < ticks.length; i += tickSpacing) {
+      // @ts-ignore
       newTicks.push(ticks[i])
     }
     return newTicks

@@ -7,10 +7,6 @@ import StatusIcon from './StatusIcon'
 
 const ACCOUNT = '0x0'
 
-jest.mock('../../hooks/useSocksBalance', () => ({
-  useHasSocks: () => true,
-}))
-
 describe('StatusIcon', () => {
   describe('with no account', () => {
     it('renders children in correct order', () => {

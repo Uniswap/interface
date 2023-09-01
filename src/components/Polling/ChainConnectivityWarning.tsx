@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { ChainId } from '@kinetix/sdk-core'
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfoOrDefault, L2ChainInfo } from 'constants/chainInfo'
 import { AlertTriangle } from 'react-feather'
@@ -62,7 +62,7 @@ export function ChainConnectivityWarning() {
         </TitleText>
       </TitleRow>
       <BodyRow>
-        {chainId === ChainId.MAINNET ? (
+        {chainId === ChainId.KAVA ? (
           <Trans>You may have lost your network connection.</Trans>
         ) : (
           <Trans>{label} might be down right now, or you may have lost your network connection.</Trans>

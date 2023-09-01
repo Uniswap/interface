@@ -1,3 +1,4 @@
+import { Currency, Percent } from '@kinetix/sdk-core'
 import { Trans } from '@lingui/macro'
 import {
   InterfaceEventName,
@@ -5,14 +6,13 @@ import {
   SwapEventName,
   SwapPriceUpdateUserResponse,
 } from '@uniswap/analytics-events'
-import { Currency, Percent } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
 import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
-import { USDT as USDT_MAINNET } from 'constants/tokens'
+import { USDT_KAVA } from 'constants/tokens'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
@@ -97,7 +97,7 @@ function useConfirmModalState({
     // See the `approve` function here: https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7#code
     if (
       allowance.state === AllowanceState.REQUIRED &&
-      allowance.token.equals(USDT_MAINNET) &&
+      allowance.token.equals(USDT_KAVA) &&
       allowance.allowedAmount.greaterThan(0)
     ) {
       steps.push(ConfirmModalState.RESETTING_USDT)
@@ -318,6 +318,7 @@ export default function ConfirmSwapModal({
   const [priceUpdate, setPriceUpdate] = useState<number>()
   useEffect(() => {
     if (lastExecutionPrice && !trade.executionPrice.equalTo(lastExecutionPrice)) {
+      // @ts-ignore
       setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
       setLastExecutionPrice(trade.executionPrice)
     }

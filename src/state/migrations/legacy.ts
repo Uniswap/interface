@@ -73,7 +73,7 @@ function legacyUserMigrations(state: any): UserState {
   // If `selectedWallet` is a WalletConnect v1 wallet, reset to default.
   if (result.selectedWallet) {
     const selectedWallet = result.selectedWallet as string
-    if (selectedWallet === 'UNIWALLET' || selectedWallet === 'UNISWAP_WALLET' || selectedWallet === 'WALLET_CONNECT') {
+    if (selectedWallet === 'UNISWAP_WALLET' || selectedWallet === 'WALLET_CONNECT') {
       delete result.selectedWallet
     }
   }

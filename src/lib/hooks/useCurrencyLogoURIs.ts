@@ -9,7 +9,7 @@ import BnbLogo from '../../assets/svg/bnb-logo.svg'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import KavaLogo from '../../assets/svg/kava-logo.png'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import { isCelo, NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
+import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'smartchain' | 'celo' | 'avalanchec' | 'kava'
 
@@ -17,18 +17,6 @@ export function chainIdToNetworkName(networkId: ChainId): Network {
   switch (networkId) {
     case ChainId.MAINNET:
       return 'ethereum'
-    case ChainId.ARBITRUM_ONE:
-      return 'arbitrum'
-    case ChainId.OPTIMISM:
-      return 'optimism'
-    case ChainId.POLYGON:
-      return 'polygon'
-    case ChainId.BNB:
-      return 'smartchain'
-    case ChainId.CELO:
-      return 'celo'
-    case ChainId.AVALANCHE:
-      return 'avalanchec'
     case ChainId.KAVA:
       return 'kava'
     default:
@@ -57,10 +45,7 @@ export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
 
 function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): string | void {
   const networkName = chainIdToNetworkName(chainId)
-  const networksWithUrls = [ChainId.ARBITRUM_ONE, ChainId.MAINNET, ChainId.OPTIMISM, ChainId.BNB, ChainId.AVALANCHE]
-  if (isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
-    return CeloLogo
-  }
+  const networksWithUrls = [ChainId.ARBITRUM_ONE, ChainId.MAINNET, ChainId.OPTIMISM, ChainId.BNB, ChainId.KAVA]
 
   if (networksWithUrls.includes(chainId)) {
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`

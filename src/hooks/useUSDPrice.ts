@@ -13,11 +13,7 @@ import useStablecoinPrice from './useStablecoinPrice'
 // ETH amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
 const ETH_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Currency> } = {
-  [ChainId.MAINNET]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.MAINNET), 50e18),
-  [ChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.ARBITRUM_ONE), 10e18),
-  [ChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.OPTIMISM), 10e18),
-  [ChainId.POLYGON]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.POLYGON), 10_000e18),
-  [ChainId.CELO]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.CELO), 10e18),
+  [ChainId.KAVA]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.KAVA), 10e18),
 }
 
 function useETHPrice(currency?: Currency): {

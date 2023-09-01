@@ -223,6 +223,7 @@ export function useV3DerivedMintInfo(
   // used for ratio calculation when pool not initialized
   const mockPool = useMemo(() => {
     if (tokenA && tokenB && feeAmount && price && !invalidPrice) {
+      // @ts-ignore
       const currentTick = priceToClosestTick(price)
       const currentSqrt = TickMath.getSqrtRatioAtTick(currentTick)
       return new Pool(tokenA, tokenB, feeAmount, currentSqrt, JSBI.BigInt(0), currentTick, [])

@@ -1,6 +1,6 @@
+import { Percent, TradeType } from '@kinetix/sdk-core'
 import { Plural, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Percent, TradeType } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Column from 'components/Column'
@@ -79,6 +79,7 @@ export default function SwapModalFooter({
 
   const label = `${trade.executionPrice.baseCurrency?.symbol} `
   const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
+  // @ts-ignore
   const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
   const txCount = getTransactionCount(trade)
 

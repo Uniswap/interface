@@ -76,6 +76,7 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
     if (accountBalance && account) {
       const tokenRequests = []
       for (let i = 0; i < accountBalance; i++) {
+        // @ts-ignore
         tokenRequests.push([account, i])
       }
       return tokenRequests

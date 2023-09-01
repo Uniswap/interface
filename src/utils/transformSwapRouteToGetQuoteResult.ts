@@ -35,11 +35,13 @@ export function transformSwapRouteToGetQuoteResult(
 
       let edgeAmountIn = undefined
       if (i === 0) {
+        // @ts-ignore
         edgeAmountIn = tradeType === TradeType.EXACT_INPUT ? amount.quotient.toString() : quote.quotient.toString()
       }
 
       let edgeAmountOut = undefined
       if (i === pools.length - 1) {
+        // @ts-ignore
         edgeAmountOut = tradeType === TradeType.EXACT_INPUT ? quote.quotient.toString() : amount.quotient.toString()
       }
 
