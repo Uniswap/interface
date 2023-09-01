@@ -31,7 +31,6 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
-import { getInputTax, getOutputTax } from 'constants/tax'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
@@ -279,14 +278,13 @@ export function Swap({
     parsedAmount,
     currencies,
     inputError: swapInputError,
+    inputTax,
+    outputTax,
   } = swapInfo
 
   const [inputTokenHasTax, outputTokenHasTax] = useMemo(
-    () => [
-      !!currencies[Field.INPUT] && !getInputTax(currencies[Field.INPUT]).equalTo(0),
-      !!currencies[Field.OUTPUT] && !getOutputTax(currencies[Field.OUTPUT]).equalTo(0),
-    ],
-    [currencies]
+    () => [!inputTax.equalTo(0), !outputTax.equalTo(0)],
+    [inputTax, outputTax]
   )
 
   useEffect(() => {
