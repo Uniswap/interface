@@ -4,6 +4,7 @@ import {
   NATIVE_ADDRESS_ALT,
   WRAPPED_ARBITRUM_ETH,
   WRAPPED_BASE_ETH,
+  WRAPPED_BNB,
   WRAPPED_GOERLI_ETH,
   WRAPPED_MAINNET_ETH,
   WRAPPED_MAINNET_POLYGON,
@@ -17,9 +18,10 @@ import { areAddressesEqual } from './addresses'
 export type CurrencyId = string
 
 // swap router API special cases these strings to represent native currencies
-// all chains have "ETH" as native currency symbol except for polygon
+// all chains have "ETH" as native currency symbol except for polygon and bnb
 export enum SwapRouterNativeAssets {
   MATIC = 'MATIC',
+  BNB = 'BNB',
   ETH = 'ETH',
 }
 
@@ -49,6 +51,8 @@ export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
     return isPolygonChain(currency.chainId)
       ? SwapRouterNativeAssets.MATIC
+      : currency.chainId === ChainId.Bnb
+      ? SwapRouterNativeAssets.BNB
       : SwapRouterNativeAssets.ETH
   }
 
@@ -89,6 +93,8 @@ export function getWrappedNativeCurrencyAddressForChain(chainId: ChainId): strin
       return WRAPPED_ARBITRUM_ETH
     case ChainId.Base:
       return WRAPPED_BASE_ETH
+    case ChainId.Bnb:
+      return WRAPPED_BNB
     case ChainId.Optimism:
       return WRAPPED_OPTIMISTIC_ETH
     case ChainId.Polygon:

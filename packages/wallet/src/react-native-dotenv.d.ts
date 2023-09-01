@@ -15,4 +15,5 @@ declare module 'react-native-dotenv' {
   export const STATSIG_PROXY_URL: string
   export const ONESIGNAL_APP_ID: string
   export const WALLETCONNECT_PROJECT_ID: string
+  export const QUICKNODE_BNB_RPC_URL: string
 }

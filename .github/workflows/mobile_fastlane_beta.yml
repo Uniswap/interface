@@ -51,3 +51,4 @@ jobs:
           sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
           sentry-org: ${{ secrets.SENTRY_ORG }}
           sentry-project: ${{ secrets.SENTRY_PROJECT }}
+          quicknode-bnb-rpc-url: ${{ secrets.QUICKNODE_BNB_RPC_URL }}

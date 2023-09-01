@@ -92,6 +92,9 @@ inputs:
   appsflyer-app-id:
     description: 'passed secret value'
     required: true
+  quicknode-bnb-rpc-url:
+    description: 'passed secret value'
+    required: true
 
 runs:
   using: 'composite'
@@ -237,3 +240,4 @@ runs:
         SENTRY_AUTH_TOKEN: ${{ inputs.sentry-auth-token }}
         SENTRY_ORG: ${{ inputs.sentry-org }}
         SENTRY_PROJECT: ${{ inputs.sentry-project }}
+        QUICKNODE_BNB_RPC_URL: ${{ inputs.quicknode-bnb-rpc-url }}

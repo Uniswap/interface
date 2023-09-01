@@ -2,7 +2,15 @@ import { AlternativeRpcType, ALT_RPC_URLS_BY_CHAIN, ChainId } from 'wallet/src/c
 
 export function getInfuraChainName(
   chainId: ChainId
-): 'homestead' | 'goerli' | 'arbitrum' | 'base' | 'optimism' | 'matic' | 'maticmum' {
+):
+  | 'homestead'
+  | 'goerli'
+  | 'arbitrum'
+  | 'base'
+  | 'bnbsmartchain-mainnet'
+  | 'optimism'
+  | 'matic'
+  | 'maticmum' {
   switch (chainId) {
     case ChainId.Mainnet:
       return 'homestead'
@@ -12,6 +20,8 @@ export function getInfuraChainName(
       return 'arbitrum'
     case ChainId.Base:
       return 'base'
+    case ChainId.Bnb:
+      return 'bnbsmartchain-mainnet'
     case ChainId.Optimism:
       return 'optimism'
     case ChainId.Polygon:

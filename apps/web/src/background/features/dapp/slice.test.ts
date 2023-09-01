@@ -1,6 +1,20 @@
 import { createStore, Store } from '@reduxjs/toolkit'
-import { ChainId } from 'wallet/src/constants/chains'
+
 import { dappReducer, DappState, initialDappState, saveDappChain } from './slice'
+
+// Import breaks our jest tests because the use of `config` requires a package that is not available in the jest environment
+// TODO: Setup web jests with proper access to config
+enum ChainId {
+  Mainnet = 1,
+  Goerli = 5,
+
+  ArbitrumOne = 42161,
+  Base = 8453,
+  Optimism = 10,
+  Polygon = 137,
+  PolygonMumbai = 80001,
+  Bnb = 56,
+}
 
 describe('dappSlice', () => {
   let store: Store<DappState>

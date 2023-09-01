@@ -6,6 +6,7 @@ type AddressMap<T extends readonly ChainId[]> = Record<ValuesOf<T>, string>
 const SUPPORTED_L1_L2_CHAINS = [
   ChainId.ArbitrumOne,
   ChainId.Base,
+  ChainId.Bnb,
   ChainId.Optimism,
   ChainId.Polygon,
   ChainId.PolygonMumbai,
@@ -26,6 +27,7 @@ export const WRAPPED_ARBITRUM_ETH = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
 export const WRAPPED_BASE_ETH = '0x4200000000000000000000000000000000000006'
 export const WRAPPED_MAINNET_POLYGON = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
 export const WRAPPED_MUMBAI_POLYGON = '0x9c3c9283d3e44854697cd22d3faa240cfb032889'
+export const WRAPPED_BNB = '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
 
 export const UNI_ADDRESS = constructSameAddressMap(
   '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'

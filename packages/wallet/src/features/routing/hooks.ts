@@ -115,6 +115,7 @@ const SWAP_GAS_LIMIT_FALLBACKS: Record<ChainId, string> = {
   [ChainId.Goerli]: '420000',
   [ChainId.ArbitrumOne]: '1200000',
   [ChainId.Base]: '420000',
+  [ChainId.Bnb]: '1200000',
   [ChainId.Optimism]: '420000',
   [ChainId.Polygon]: '420000',
   [ChainId.PolygonMumbai]: '420000',

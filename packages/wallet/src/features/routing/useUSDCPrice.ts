@@ -9,6 +9,7 @@ import {
   USDC_GOERLI,
   USDC_OPTIMISM,
   USDC_POLYGON,
+  USDT_BNB,
 } from 'wallet/src/constants/tokens'
 import { useTrade } from 'wallet/src/features/transactions/swap/useTrade'
 import { areCurrencyIdsEqual, currencyId } from 'wallet/src/utils/currencyId'
@@ -20,6 +21,7 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [ChainId.Goerli]: CurrencyAmount.fromRawAmount(USDC_GOERLI, 100_000e6),
   [ChainId.ArbitrumOne]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
   [ChainId.Base]: CurrencyAmount.fromRawAmount(USDBC_BASE, 10_000e6),
+  [ChainId.Bnb]: CurrencyAmount.fromRawAmount(USDT_BNB, 10_000e6),
   [ChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
   [ChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
 }

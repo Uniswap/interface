@@ -4,12 +4,14 @@ import { ImageSourcePropType } from 'react-native'
 import {
   ARBITRUM_LOGO,
   BASE_LOGO,
+  BNB_LOGO,
   ETHEREUM_LOGO,
   GOERLI_LOGO,
   MUMBAI_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
 } from 'ui/src/assets'
+import { config } from 'wallet/src/config'
 import { chainListToStateMap } from 'wallet/src/features/chains/utils'
 
 export interface ChainState {
@@ -31,6 +33,7 @@ export enum ChainId {
   Optimism = 10,
   Polygon = 137,
   PolygonMumbai = 80001,
+  Bnb = 56,
 }
 
 export const ALL_SUPPORTED_CHAINS: string[] = Object.values(ChainId).map((c) => c.toString())
@@ -43,6 +46,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.ArbitrumOne,
   ChainId.Optimism,
   ChainId.Base,
+  ChainId.Bnb,
 ]
 
 export const ACTIVE_CHAINS = chainListToStateMap(ALL_SUPPORTED_CHAIN_IDS)
@@ -60,6 +64,7 @@ export const L2_CHAIN_IDS = [
   ChainId.Optimism,
   ChainId.Polygon,
   ChainId.PolygonMumbai,
+  ChainId.Bnb,
 ] as const
 
 // Renamed from SupportedL2ChainId in web app
@@ -136,6 +141,17 @@ export const CHAIN_INFO: ChainInfo = {
     nativeCurrency: { name: 'Base ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://mainnet.base.org'],
   },
+  [ChainId.Bnb]: {
+    blockWaitMsBeforeWarning: 600000,
+    bridge: 'https://www.bnbchain.org/bridge',
+    docs: 'https://www.bnbchain.org/',
+    explorer: 'https://bscscan.com/',
+    infoLink: 'https://info.uniswap.org/#/bnb',
+    label: 'BNB',
+    logo: BNB_LOGO,
+    nativeCurrency: { name: 'Binance Coin', symbol: 'BNB', decimals: 18 },
+    rpcUrls: [config.quicknodeBnbRpcUrl],
+  },
   [ChainId.Optimism]: {
     blockWaitMsBeforeWarning: 1200000, // 20 minutes
     bridge: 'https://gateway.optimism.io/',
@@ -203,6 +219,8 @@ export function getChainIdFromString(input: string): ChainId | undefined {
       return ChainId.ArbitrumOne
     case ChainId.Base:
       return ChainId.Base
+    case ChainId.Bnb:
+      return ChainId.Bnb
     case ChainId.Optimism:
       return ChainId.Optimism
     case ChainId.Polygon:

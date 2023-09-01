@@ -21,6 +21,7 @@ import {
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 const MATIC = NativeCurrency.onChain(ChainId.Polygon)
+const BNB = NativeCurrency.onChain(ChainId.Bnb)
 const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
 
 describe(currencyId, () => {
@@ -70,6 +71,10 @@ describe(currencyAddressForSwapQuote, () => {
 
   it('returns correct address for native polygon asset', () => {
     expect(currencyAddressForSwapQuote(MATIC)).toEqual(SwapRouterNativeAssets.MATIC)
+  })
+
+  it('returns correct address for native bnb asset', () => {
+    expect(currencyAddressForSwapQuote(BNB)).toEqual(SwapRouterNativeAssets.BNB)
   })
 
   it('returns correct address for token', () => {

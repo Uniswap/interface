@@ -7,6 +7,10 @@ export function getEthersProvider(
   chainId: ChainId,
   config: Readonly<Config>
 ): ethersProviders.JsonRpcProvider {
+  // Infura BNB support is a deprecated beta, we use quicknode for better performance and stability
+  if (chainId === ChainId.Bnb) {
+    return getEthersProviderFromRpcUrl(chainId)
+  }
   return new ethersProviders.InfuraProvider(getInfuraChainName(chainId), config.infuraProjectId)
 }
 

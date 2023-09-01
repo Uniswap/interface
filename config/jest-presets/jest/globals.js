@@ -16,5 +16,6 @@ module.exports = {
     UNISWAP_API_KEY: 123,
     UNISWAP_API_BASE_URL: 'https://api.uniswap.org',
     WALLETCONNECT_PROJECT_ID: 123,
+    QUICKNODE_BNB_RPC_URL: 'https://api.uniswap.org',
   },
 }

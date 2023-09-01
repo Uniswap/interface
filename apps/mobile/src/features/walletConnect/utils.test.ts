@@ -8,7 +8,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 const EIP155_MAINNET = 'eip155:1'
 const EIP155_POLYGON = 'eip155:137'
 const EIP155_OPTIMISM = 'eip155:10'
-const EIP155_BSC_UNSUPPORTED = 'eip155:56'
+const EIP155_AVAX_UNSUPPORTED = 'eip155:43114'
 
 const TEST_ADDRESS = '0xdFb84E543C39ACa3c6a39ea4e3B6c40eE7d2EBdA'
 
@@ -39,7 +39,7 @@ describe(getSupportedWalletConnectChains, () => {
 
   it('handles list of valid chains including an invalid chain', () => {
     expect(
-      getSupportedWalletConnectChains([EIP155_MAINNET, EIP155_POLYGON, EIP155_BSC_UNSUPPORTED])
+      getSupportedWalletConnectChains([EIP155_MAINNET, EIP155_POLYGON, EIP155_AVAX_UNSUPPORTED])
     ).toEqual([ChainId.Mainnet, ChainId.Polygon])
   })
 })
@@ -54,6 +54,6 @@ describe(getChainIdFromEIP155String, () => {
   })
 
   it('handles invalid eip155 address', () => {
-    expect(getChainIdFromEIP155String(EIP155_BSC_UNSUPPORTED)).toBeNull()
+    expect(getChainIdFromEIP155String(EIP155_AVAX_UNSUPPORTED)).toBeNull()
   })
 })

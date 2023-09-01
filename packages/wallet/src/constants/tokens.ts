@@ -38,6 +38,13 @@ export const USDBC_BASE = new Token(
   'USDbC',
   'USD Base Coin'
 )
+export const USDT_BNB = new Token(
+  ChainId.Bnb,
+  '0x55d398326f99059ff775485246999027b3197955',
+  18,
+  'USDT',
+  'TetherUSD'
+)
 export const USDC_OPTIMISM = new Token(
   ChainId.Optimism,
   '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
@@ -117,6 +124,13 @@ export const WRAPPED_NATIVE_CURRENCY = {
     18,
     'WETH',
     'Wrapped Ether'
+  ),
+  [ChainId.Bnb]: new Token(
+    ChainId.Bnb,
+    '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
+    18,
+    'WBNB',
+    'Wrapped BNB'
   ),
   [ChainId.Polygon]: new Token(
     ChainId.Polygon,
