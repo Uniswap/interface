@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ChainId, Percent } from '@uniswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
@@ -7,8 +8,6 @@ import { FeeOnTransferDetector } from 'abis/types'
 import { sendAnalyticsEvent } from 'analytics'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useEffect, useState } from 'react'
-
-import * as Sentry from '@sentry/react'
 
 import { useContract } from './useContract'
 
@@ -83,7 +82,7 @@ export function useSwapTaxes(inputTokenAddress: string | undefined, outputTokenA
   useEffect(() => {
     if (!fotDetector || chainId !== ChainId.MAINNET) return
     getSwapTaxes(fotDetector, inputTokenAddress, outputTokenAddress).then(setTaxes)
-  }, [fotDetector, inputTokenAddress, outputTokenAddress])
+  }, [fotDetector, inputTokenAddress, outputTokenAddress, chainId])
 
   return { inputTax, outputTax }
 }
