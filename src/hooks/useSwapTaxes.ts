@@ -8,6 +8,8 @@ import { sendAnalyticsEvent } from 'analytics'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useEffect, useState } from 'react'
 
+import * as Sentry from '@sentry/react'
+
 import { useContract } from './useContract'
 
 const FEE_ON_TRANSFER_DETECTOR_ADDRESS = '0x19C97dc2a25845C7f9d1d519c8C2d4809c58b43f'
@@ -59,12 +61,16 @@ async function getSwapTaxes(
         FEE_CACHE[address] = { sellTax, buyTax }
       })
     }
-  } catch {
-    console.error('could not fetch fee on transfer rate for tokens:', addresses)
+  } catch (e) {
+    Sentry.withScope(function (scope) {
+      scope.setTag('method', 'getSwapTaxes')
+      scope.setLevel('warning')
+      Sentry.captureException(e)
+    })
   }
 
-  const inputTax = (inputTokenAddress ? FEE_CACHE[inputTokenAddress]?.sellTax : undefined) ?? ZERO_PERCENT
-  const outputTax = (outputTokenAddress ? FEE_CACHE[outputTokenAddress]?.buyTax : undefined) ?? ZERO_PERCENT
+  const inputTax = (inputTokenAddress ? FEE_CACHE[inputTokenAddress]?.sellTax : ZERO_PERCENT) ?? ZERO_PERCENT
+  const outputTax = (outputTokenAddress ? FEE_CACHE[outputTokenAddress]?.buyTax : ZERO_PERCENT) ?? ZERO_PERCENT
 
   return { inputTax, outputTax }
 }
@@ -72,9 +78,10 @@ async function getSwapTaxes(
 export function useSwapTaxes(inputTokenAddress: string | undefined, outputTokenAddress: string | undefined) {
   const fotDetector = useFeeOnTransferDetectorContract()
   const [{ inputTax, outputTax }, setTaxes] = useState({ inputTax: ZERO_PERCENT, outputTax: ZERO_PERCENT })
+  const { chainId } = useWeb3React()
 
   useEffect(() => {
-    if (!fotDetector) return
+    if (!fotDetector || chainId !== ChainId.MAINNET) return
     getSwapTaxes(fotDetector, inputTokenAddress, outputTokenAddress).then(setTaxes)
   }, [fotDetector, inputTokenAddress, outputTokenAddress])
 
