@@ -31,6 +31,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
+import { getInputTax, getOutputTax } from 'constants/tax'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
@@ -43,14 +44,14 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
-import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
-import { Field, replaceSwapState } from 'state/swap/actions'
+import { Field, forceExactInput, replaceSwapState } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
 import styled, { useTheme } from 'styled-components'
@@ -64,6 +65,7 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
+import { OutputTaxTooltipBody } from './TaxTooltipBody'
 import { UniswapXOptIn } from './UniswapXOptIn'
 
 export const ArrowContainer = styled.div`
@@ -278,6 +280,19 @@ export function Swap({
     currencies,
     inputError: swapInputError,
   } = swapInfo
+
+  const [inputTokenHasTax, outputTokenHasTax] = useMemo(
+    () => [
+      !!currencies[Field.INPUT] && !getInputTax(currencies[Field.INPUT]).equalTo(0),
+      !!currencies[Field.OUTPUT] && !getOutputTax(currencies[Field.OUTPUT]).equalTo(0),
+    ],
+    [currencies]
+  )
+
+  useEffect(() => {
+    // Force exact input if the user switches to an output token with tax
+    if (outputTokenHasTax && independentField === Field.OUTPUT) dispatch(forceExactInput())
+  }, [independentField, outputTokenHasTax, trade?.outputAmount])
 
   const {
     wrapType,
@@ -510,6 +525,7 @@ export function Swap({
     },
     [onCurrencyChange, onCurrencySelection, state, trace]
   )
+  const inputCurrencyNumericalInputRef = useRef<HTMLInputElement>(null)
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
@@ -608,6 +624,7 @@ export function Swap({
               showCommonBases
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
+              ref={inputCurrencyNumericalInputRef}
             />
           </Trace>
         </SwapSection>
@@ -621,7 +638,7 @@ export function Swap({
               data-testid="swap-currency-button"
               onClick={() => {
                 if (disableTokenInputs) return
-                onSwitchTokens()
+                onSwitchTokens(inputTokenHasTax, formattedAmounts[dependentField])
                 maybeLogFirstSwapAction(trace)
               }}
               color={theme.neutral1}
@@ -650,6 +667,13 @@ export function Swap({
                 showCommonBases
                 id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                 loading={independentField === Field.INPUT && routeIsSyncing}
+                numericalInputSettings={{
+                  // We disable numerical input here if the selected token has tax, since we cannot guarantee exact_outputs for FOT tokens
+                  disabled: outputTokenHasTax,
+                  // Focus the input currency panel if the user tries to type into the disabled output currency panel
+                  onDisabledClick: () => inputCurrencyNumericalInputRef.current?.focus(),
+                  disabledTooltipBody: <OutputTaxTooltipBody currencySymbol={currencies[Field.OUTPUT]?.symbol} />,
+                }}
               />
             </Trace>
             {recipient !== null && !showWrap ? (
