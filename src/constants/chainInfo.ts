@@ -123,7 +123,7 @@ export function getChainInfo(
   return undefined
 }
 
-const MAINNET_INFO = CHAIN_INFO[ChainId.MAINNET]
+const MAINNET_INFO = CHAIN_INFO[ChainId.KAVA]
 export function getChainInfoOrDefault(chainId: number | undefined, featureFlags?: Record<number, boolean>) {
   return getChainInfo(chainId, featureFlags) ?? MAINNET_INFO
 }

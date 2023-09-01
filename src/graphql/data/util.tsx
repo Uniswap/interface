@@ -58,47 +58,24 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
   return p !== null
 }
 
-export const GQL_MAINNET_CHAINS = [
-  Chain.Ethereum,
-  Chain.Polygon,
-  Chain.Celo,
-  Chain.Optimism,
-  Chain.Arbitrum,
-  Chain.Bnb,
-  Chain.Avalanche,
-  Chain.Base,
-  Chain.Kava,
-] as const
+export const GQL_MAINNET_CHAINS = [Chain.Kava] as const
 
-const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
+const GQL_TESTNET_CHAINS = [] as const
 
 const UX_SUPPORTED_GQL_CHAINS = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS] as const
 export type InterfaceGqlChain = (typeof UX_SUPPORTED_GQL_CHAINS)[number]
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
-  [ChainId.MAINNET]: Chain.Ethereum,
-  [ChainId.GOERLI]: Chain.EthereumGoerli,
-  [ChainId.SEPOLIA]: Chain.EthereumSepolia,
-  [ChainId.POLYGON]: Chain.Polygon,
-  [ChainId.POLYGON_MUMBAI]: Chain.Polygon,
-  [ChainId.CELO]: Chain.Celo,
-  [ChainId.CELO_ALFAJORES]: Chain.Celo,
-  [ChainId.ARBITRUM_ONE]: Chain.Arbitrum,
-  [ChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
-  [ChainId.OPTIMISM]: Chain.Optimism,
-  [ChainId.OPTIMISM_GOERLI]: Chain.Optimism,
-  [ChainId.BNB]: Chain.Bnb,
-  [ChainId.AVALANCHE]: Chain.Avalanche,
-  [ChainId.BASE]: Chain.Base,
+  [ChainId.KAVA]: Chain.Kava,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
   return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
     ? CHAIN_ID_TO_BACKEND_NAME[chainId]
-    : CHAIN_ID_TO_BACKEND_NAME[ChainId.MAINNET]
+    : CHAIN_ID_TO_BACKEND_NAME[ChainId.KAVA]
 }
 
-const GQL_CHAINS = [ChainId.MAINNET, ChainId.OPTIMISM, ChainId.POLYGON, ChainId.ARBITRUM_ONE, ChainId.CELO] as const
+const GQL_CHAINS = [ChainId.KAVA] as const
 type GqlChainsType = (typeof GQL_CHAINS)[number]
 
 export function isGqlSupportedChain(chainId: number | undefined): chainId is GqlChainsType {
@@ -124,14 +101,7 @@ export function gqlToCurrency(token: {
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
-  ethereum: Chain.Ethereum,
-  polygon: Chain.Polygon,
-  celo: Chain.Celo,
-  arbitrum: Chain.Arbitrum,
-  optimism: Chain.Optimism,
-  bnb: Chain.Bnb,
-  avalanche: Chain.Avalanche,
-  base: Chain.Base,
+  kava: Chain.Kava,
 }
 
 /**
@@ -142,20 +112,10 @@ export function validateUrlChainParam(chainName: string | undefined) {
   const isValidChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
   const isValidBackEndChain =
     isValidChainName && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(isValidChainName)
-  return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
+  return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Kava
 }
 
 const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
-  [Chain.Ethereum]: ChainId.MAINNET,
-  [Chain.EthereumGoerli]: ChainId.GOERLI,
-  [Chain.EthereumSepolia]: ChainId.SEPOLIA,
-  [Chain.Polygon]: ChainId.POLYGON,
-  [Chain.Celo]: ChainId.CELO,
-  [Chain.Optimism]: ChainId.OPTIMISM,
-  [Chain.Arbitrum]: ChainId.ARBITRUM_ONE,
-  [Chain.Bnb]: ChainId.BNB,
-  [Chain.Avalanche]: ChainId.AVALANCHE,
-  [Chain.Base]: ChainId.BASE,
   [Chain.Kava]: ChainId.KAVA,
 }
 
@@ -185,7 +145,7 @@ export function logSentryErrorForUnsupportedChain({
   })
 }
 
-export const BACKEND_SUPPORTED_CHAINS = [Chain.Ethereum, Chain.Arbitrum, Chain.Kava] as const
+export const BACKEND_SUPPORTED_CHAINS = [Chain.Kava] as const
 export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB] as const
 
 export function getTokenDetailsURL({
