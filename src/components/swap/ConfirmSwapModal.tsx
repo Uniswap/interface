@@ -77,7 +77,7 @@ function useConfirmModalState({
   trade: InterfaceTrade
   allowedSlippage: Percent
   onSwap: () => void
-  allowance: Allowance
+  allowance?: Allowance
   doesTradeDiffer: boolean
   onCurrencySelection: (field: Field, currency: Currency) => void
 }) {
@@ -96,16 +96,16 @@ function useConfirmModalState({
     // Any existing USDT allowance needs to be reset before we can approve the new amount (mainnet only).
     // See the `approve` function here: https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7#code
     if (
-      allowance.state === AllowanceState.REQUIRED &&
-      allowance.token.equals(USDT_MAINNET) &&
-      allowance.allowedAmount?.greaterThan(0)
+      allowance?.state === AllowanceState.REQUIRED &&
+      allowance?.token.equals(USDT_MAINNET) &&
+      allowance?.allowedAmount?.greaterThan(0)
     ) {
       steps.push(ConfirmModalState.RESETTING_USDT)
     }
-    if (allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
+    if (allowance?.state === AllowanceState.REQUIRED && allowance?.needsSetupApproval) {
       steps.push(ConfirmModalState.APPROVING_TOKEN)
     }
-    if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermitSignature) {
+    if (allowance?.state === AllowanceState.REQUIRED && allowance?.needsPermitSignature) {
       steps.push(ConfirmModalState.PERMITTING)
     }
     steps.push(ConfirmModalState.PENDING_CONFIRMATION)
@@ -156,18 +156,18 @@ function useConfirmModalState({
           break
         case ConfirmModalState.RESETTING_USDT:
           setConfirmModalState(ConfirmModalState.RESETTING_USDT)
-          invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
-          allowance.revoke().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
+          invariant(allowance?.state === AllowanceState.REQUIRED, 'Allowance should be required')
+          allowance?.revoke().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
           break
         case ConfirmModalState.APPROVING_TOKEN:
           setConfirmModalState(ConfirmModalState.APPROVING_TOKEN)
-          invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
+          invariant(allowance?.state === AllowanceState.REQUIRED, 'Allowance should be required')
           allowance.approve().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
           break
         case ConfirmModalState.PERMITTING:
           setConfirmModalState(ConfirmModalState.PERMITTING)
-          invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
-          allowance.permit().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
+          invariant(allowance?.state === AllowanceState.REQUIRED, 'Allowance should be required')
+          allowance?.permit().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
           break
         case ConfirmModalState.PENDING_CONFIRMATION:
           setConfirmModalState(ConfirmModalState.PENDING_CONFIRMATION)
@@ -202,7 +202,7 @@ function useConfirmModalState({
   }, [generateRequiredSteps, performStep])
 
   const previousSetupApprovalNeeded = usePrevious(
-    allowance.state === AllowanceState.REQUIRED ? allowance.needsSetupApproval : undefined
+    allowance?.state === AllowanceState.REQUIRED ? allowance?.needsSetupApproval : undefined
   )
 
   useEffect(() => {
@@ -215,10 +215,10 @@ function useConfirmModalState({
 
   useEffect(() => {
     if (
-      allowance.state === AllowanceState.REQUIRED &&
-      allowance.needsPermitSignature &&
+      allowance?.state === AllowanceState.REQUIRED &&
+      allowance?.needsPermitSignature &&
       // If the token approval switched from missing to fulfilled, trigger the next step (permit2 signature).
-      !allowance.needsSetupApproval &&
+      !allowance?.needsSetupApproval &&
       previousSetupApprovalNeeded
     ) {
       performStep(ConfirmModalState.PERMITTING)
@@ -226,10 +226,10 @@ function useConfirmModalState({
   }, [allowance, performStep, previousSetupApprovalNeeded])
 
   const previousRevocationPending = usePrevious(
-    allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending
+    allowance?.state === AllowanceState.REQUIRED && allowance?.isRevocationPending
   )
   useEffect(() => {
-    if (allowance.state === AllowanceState.REQUIRED && previousRevocationPending && !allowance.isRevocationPending) {
+    if (allowance?.state === AllowanceState.REQUIRED && previousRevocationPending && !allowance?.isRevocationPending) {
       performStep(ConfirmModalState.APPROVING_TOKEN)
     }
   }, [allowance, performStep, previousRevocationPending])
@@ -237,7 +237,7 @@ function useConfirmModalState({
   useEffect(() => {
     // Automatically triggers the next phase if the local modal state still thinks we're in the approval phase,
     // but the allowance has been set. This will automaticaly trigger the swap.
-    if (isInApprovalPhase(confirmModalState) && allowance.state === AllowanceState.ALLOWED) {
+    if (isInApprovalPhase(confirmModalState) && allowance?.state === AllowanceState.ALLOWED) {
       // Caveat: prevents swap if trade has updated mid approval flow.
       if (doesTradeDiffer) {
         setConfirmModalState(ConfirmModalState.REVIEWING)
@@ -275,7 +275,7 @@ export default function ConfirmSwapModal({
   originalTrade?: InterfaceTrade
   swapResult?: SwapResult
   allowedSlippage: Percent
-  allowance: Allowance
+  allowance?: Allowance
   onAcceptChanges: () => void
   onConfirm: () => void
   swapError?: Error
@@ -370,8 +370,8 @@ export default function ConfirmSwapModal({
         trade={trade}
         swapResult={swapResult}
         wrapTxHash={wrapTxHash}
-        tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
-        revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+        tokenApprovalPending={allowance?.state === AllowanceState.REQUIRED && allowance?.isApprovalPending}
+        revocationPending={allowance?.state === AllowanceState.REQUIRED && allowance?.isRevocationPending}
       />
     )
   }, [
