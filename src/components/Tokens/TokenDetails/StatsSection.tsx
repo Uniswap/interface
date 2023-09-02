@@ -121,7 +121,7 @@ export default function StatsSection(props: StatsSectionProps) {
           <Trans>
             Token stats and charts for {label} are available on{' '}
             <ExternalLink color="currentColor" href={`${infoLink}tokens/${address}`}>
-              info.uniswap.org
+              stats.kinetix.finance
             </ExternalLink>
           </Trans>
         </ThemedText.BodySecondary>

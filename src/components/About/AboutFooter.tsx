@@ -116,7 +116,7 @@ const LogoSectionContent = () => {
     <>
       <StyledLogo src={isDarkMode ? darkUnicornImgSrc : lightUnicornImgSrc} alt="Uniswap Logo" />
       <SocialLinks>
-        <SocialLink href="https://kinetix.finance/" target="_blank" rel="noopener noreferrer">
+        <SocialLink href="https://discord.com/invite/kinetixfi" target="_blank" rel="noopener noreferrer">
           <DiscordIcon size={32} />
         </SocialLink>
         <TraceEvent

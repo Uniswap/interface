@@ -206,7 +206,7 @@ export const MenuDropdown = () => {
                 )}
               </Box>
               <IconRow>
-                <Icon href="https://kinetix.finance/">
+                <Icon href="https://discord.com/invite/kinetixfi">
                   <DiscordIconMenu
                     className={styles.hover}
                     width={24}

@@ -110,7 +110,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <div onClick={handleLogoClick}>Kinetix V3</div>
+              <div onClick={handleLogoClick}>Kinetix DEX</div>
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>
