@@ -101,8 +101,9 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   )
   const newApr = useMemo(() => {
     if (poolInfo?.apr?.toString() !== 'NaN') {
-      const aprImpact = Number(parsedAmount?.quotient.toString()) / 1e18 / Number(poolInfo?.poolStake)
-      return (Number(poolInfo?.apr) * (1 - aprImpact)).toFixed(2)
+      const aprImpact =
+        Number(poolInfo?.poolStake) / (Number(poolInfo?.poolStake) + Number(parsedAmount?.quotient.toString()) / 1e18)
+      return (Number(poolInfo?.apr) * aprImpact).toFixed(2)
     } else return undefined
   }, [poolInfo, parsedAmount])
 
