@@ -6,6 +6,8 @@ import { TokenAmount } from 'graphql/utils/types'
 import { Presets } from 'state/mint/v3/reducer'
 import { Token } from 'types/v3'
 
+import { USDC_ROLLUX, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
+
 interface CommonStakingInfo {
   // the address of the reward contract
   stakingRewardAddress: string
@@ -78,53 +80,27 @@ export interface GammaPair {
   masterChefIndex?: number
 }
 
-export const GammaPairs: {
-  [chainId in ChainId]: {
-    [key: string]: GammaPair[]
-  }
-} = {
+export const GammaPairs = {
   [ChainId.ROLLUX]: {
-    '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270-0x7ceb23fd6bc0add59e62ac25578270cff1b9f619': [
+    '0xf91726da5da9de95d7c3c504d36e6db307659a3b-0x71e7d05be74ff748c45402c06a941c822d756dc5': [
       {
         type: Presets.GAMMA_NARROW,
         title: 'Narrow',
-        address: '0x02203f2351e7ac6ab5051205172d3f772db7d814',
-        token0Address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
-        token1Address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
-        ableToFarm: true,
-        pid: 0,
+        address: '0x2Fcc0d25c4CD2084e402c16DB68FBE206A36A46F',
+        token0Address: '0xf91726da5da9de95d7c3c504d36e6db307659a3b',
+        token1Address: '0x71e7d05be74ff748c45402c06a941c822d756dc5',
+        ableToFarm: false,
+        // pid: 0,
       },
-      {
-        type: Presets.GAMMA_WIDE,
-        title: 'Wide',
-        address: '0x81cec323bf8c4164c66ec066f53cc053a535f03d',
-        token0Address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
-        token1Address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
-        ableToFarm: true,
-        pid: 1,
-      },
-    ],
-  },
-  [ChainId.ROLLUX_TANENBAUM]: {
-    '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270-0x7ceb23fd6bc0add59e62ac25578270cff1b9f619': [
-      {
-        type: Presets.GAMMA_NARROW,
-        title: 'Narrow',
-        address: '0x02203f2351e7ac6ab5051205172d3f772db7d814',
-        token0Address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
-        token1Address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
-        ableToFarm: true,
-        pid: 0,
-      },
-      {
-        type: Presets.GAMMA_WIDE,
-        title: 'Wide',
-        address: '0x81cec323bf8c4164c66ec066f53cc053a535f03d',
-        token0Address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
-        token1Address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
-        ableToFarm: true,
-        pid: 1,
-      },
+      // {
+      //   type: Presets.GAMMA_WIDE,
+      //   title: 'Wide',
+      //   address: '0x81cec323bf8c4164c66ec066f53cc053a535f03d',
+      //   token0Address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+      //   token1Address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+      //   ableToFarm: true,
+      //   pid: 1,
+      // },
     ],
   },
 }
@@ -148,6 +124,18 @@ export const GlobalConst = {
   v3LiquidityRangeType: {
     MANUAL_RANGE: '0',
     GAMMA_RANGE: '1',
+  },
+}
+
+export const GlobalData = {
+  stableCoins: {
+    [ChainId.ROLLUX]: [USDC_ROLLUX],
+  },
+  blueChips: {
+    [ChainId.ROLLUX]: [WRAPPED_NATIVE_CURRENCY[ChainId.ROLLUX]],
+  },
+  stablePairs: {
+    [ChainId.ROLLUX]: [[USDC_ROLLUX]],
   },
 }
 

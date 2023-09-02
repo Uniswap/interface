@@ -1,4 +1,3 @@
-import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import CustomSelector, { SelectorItem } from 'components/CustomSelector/CustomSelector'
 import CustomSwitch from 'components/CustomSwitch/CustomSwitch'
@@ -13,6 +12,7 @@ import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { GammaPair, GammaPairs, GlobalConst } from './constants'
+import GammaFarmsPage from './GammaFarms/GammaFarmsPage'
 import FarmingMyFarms from './MyFarms/FarmMyFarms'
 import SortColumns from './SortColumn'
 import { buildRedirectPath, farmFilters, sortColumns, tabsFarm, tabsFarmDefault } from './utils'
@@ -72,9 +72,7 @@ export function Farms() {
   const getAllPairs = (
     chainId: number,
     GammaPairs: {
-      [chainId in ChainId]: {
-        [key: string]: GammaPair[]
-      }
+      [key: string]: GammaPair[]
     }
   ) => {
     if (!chainId) return []
@@ -87,7 +85,7 @@ export function Farms() {
   }
 
   const allGammaFarms = useMemo(() => {
-    const allPairs = chainId ? getAllPairs(chainId, GammaPairs) : []
+    const allPairs = chainId ? getAllPairs(chainId, GammaPairs[570]) : []
     return filterAbleToFarm(allPairs)
   }, [chainId])
 
@@ -191,9 +189,9 @@ export function Farms() {
 
       {selectedFarmCategory?.id === 0 && chainId && <FarmingMyFarms search={searchValue} chainId={chainId} />}
 
-      {/* {selectedFarmCategory?.id === 2 && (
+      {selectedFarmCategory?.id === 2 && (
         <GammaFarmsPage farmFilter={farmFilter.id} search={searchValue} sortBy={sortBy} sortDesc={sortDesc} />
-      )} */}
+      )}
     </FarmsLayout>
   )
 }

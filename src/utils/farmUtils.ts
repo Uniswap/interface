@@ -1,18 +1,12 @@
 import { TransactionReceipt } from '@ethersproject/providers'
-import { Currency, CurrencyAmount } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
-import { DualStakingInfo, StakingInfo } from 'components/Farm/constants'
-import { EMPTY } from 'constants/addresses'
-import { TokenAmount } from 'graphql/utils/types'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAddPopup } from 'state/application/hooks'
 import { TokenAddressMap } from 'state/lists/hooks'
 import { finalizeTransaction } from 'state/transactions/reducer'
 import { Token } from 'types/v3'
-
-import { unwrappedToken } from './unwrappedToken'
 
 export interface Call {
   address: string
@@ -85,14 +79,14 @@ export function getTokenFromAddress(
   return Object.values(tokenMap[chainId])[tokenIndex]
 }
 
-export function formatTokenAmount(amount?: TokenAmount | CurrencyAmount<Currency>, digits = 3) {
-  if (!amount) return '-'
-  const amountStr = (amount as CurrencyAmount<Currency>).toExact()
-  if (Math.abs(Number(amountStr)) > 1) {
-    return Number(amountStr).toLocaleString('us')
-  }
-  return (amount as CurrencyAmount<Currency>).toSignificant(digits)
-}
+// export function formatTokenAmount(amount?: TokenAmount | CurrencyAmount<Currency>, digits = 3) {
+//   if (!amount) return '-'
+//   const amountStr = (amount as CurrencyAmount<Currency>).toExact()
+//   if (Math.abs(Number(amountStr)) > 1) {
+//     return Number(amountStr).toLocaleString('us')
+//   }
+//   return (amount as CurrencyAmount<Currency>).toSignificant(digits)
+// }
 
 export function formatAPY(apy: number) {
   if (apy > 100000000) {
@@ -106,121 +100,121 @@ export function getAPYWithFee(rewards: number, fee: number) {
   return fee > 0 ? ((1 + ((rewards + fee / 12) * 12) / 12) ** 12 - 1) * 100 : 0
 }
 
-export function getTVLStaking(
-  valueOfTotalStakedAmountInUSDC?: CurrencyAmount<Currency>,
-  valueOfTotalStakedAmountInBaseToken?: TokenAmount
-) {
-  if (!valueOfTotalStakedAmountInUSDC) {
-    return valueOfTotalStakedAmountInBaseToken ? formatTokenAmount(valueOfTotalStakedAmountInBaseToken) + ' ETH' : '-'
-  }
-  return `$${formatTokenAmount(valueOfTotalStakedAmountInUSDC)}`
-}
+// export function getTVLStaking(
+//   valueOfTotalStakedAmountInUSDC?: CurrencyAmount<Currency>,
+//   valueOfTotalStakedAmountInBaseToken?: TokenAmount
+// ) {
+//   if (!valueOfTotalStakedAmountInUSDC) {
+//     return valueOfTotalStakedAmountInBaseToken ? formatTokenAmount(valueOfTotalStakedAmountInBaseToken) + ' ETH' : '-'
+//   }
+//   return `$${formatTokenAmount(valueOfTotalStakedAmountInUSDC)}`
+// }
 
-export function getRewardRate(rate?: TokenAmount, rewardToken?: Token) {
-  if (!rate || !rewardToken) return
-  const ratee = 0.0
-  return `${ratee.toFixed(2).replace(/[.,]00$/, '')} ${rewardToken.symbol}  / day`
-}
+// export function getRewardRate(rate?: TokenAmount, rewardToken?: Token) {
+//   if (!rate || !rewardToken) return
+//   const ratee = 0.0
+//   return `${ratee.toFixed(2).replace(/[.,]00$/, '')} ${rewardToken.symbol}  / day`
+// }
 
-export function getEarnedUSDLPFarm(stakingInfo: StakingInfo | undefined) {
-  if (!stakingInfo || !stakingInfo.earnedAmount) return
-  // const earnedUSD = Number(stakingInfo.earnedAmount.toExact()) * stakingInfo.rewardTokenPrice
-  const earnedUSD = Number(0) * stakingInfo.rewardTokenPrice
-  if (earnedUSD < 0.001 && earnedUSD > 0) {
-    return '< $0.001'
-  }
-  return `$${earnedUSD.toLocaleString('us')}`
-}
+// export function getEarnedUSDLPFarm(stakingInfo: StakingInfo | undefined) {
+//   if (!stakingInfo || !stakingInfo.earnedAmount) return
+//   // const earnedUSD = Number(stakingInfo.earnedAmount.toExact()) * stakingInfo.rewardTokenPrice
+//   const earnedUSD = Number(0) * stakingInfo.rewardTokenPrice
+//   if (earnedUSD < 0.001 && earnedUSD > 0) {
+//     return '< $0.001'
+//   }
+//   return `$${earnedUSD.toLocaleString('us')}`
+// }
 
-export function getEarnedUSDDualFarm(stakingInfo: DualStakingInfo | undefined) {
-  if (!stakingInfo || !stakingInfo.earnedAmountA || !stakingInfo.earnedAmountB) return
-  // const earnedUSD =
-  //   Number(stakingInfo.earnedAmountA.toExact()) * stakingInfo.rewardTokenAPrice +
-  //   Number(stakingInfo.earnedAmountB.toExact()) * Number(stakingInfo.rewardTokenBPrice)
-  const earnedUSD = Number(0) * stakingInfo.rewardTokenAPrice + Number(0) * Number(stakingInfo.rewardTokenBPrice)
-  if (earnedUSD < 0.001 && earnedUSD > 0) {
-    return '< $0.001'
-  }
-  return `$${earnedUSD.toLocaleString('us')}`
-}
+// export function getEarnedUSDDualFarm(stakingInfo: DualStakingInfo | undefined) {
+//   if (!stakingInfo || !stakingInfo.earnedAmountA || !stakingInfo.earnedAmountB) return
+//   // const earnedUSD =
+//   //   Number(stakingInfo.earnedAmountA.toExact()) * stakingInfo.rewardTokenAPrice +
+//   //   Number(stakingInfo.earnedAmountB.toExact()) * Number(stakingInfo.rewardTokenBPrice)
+//   const earnedUSD = Number(0) * stakingInfo.rewardTokenAPrice + Number(0) * Number(stakingInfo.rewardTokenBPrice)
+//   if (earnedUSD < 0.001 && earnedUSD > 0) {
+//     return '< $0.001'
+//   }
+//   return `$${earnedUSD.toLocaleString('us')}`
+// }
 
-export function getStakedAmountStakingInfo(
-  stakingInfo?: StakingInfo | DualStakingInfo,
-  userLiquidityUnstaked?: TokenAmount
-) {
-  if (!stakingInfo) return
-  const stakingTokenPair = stakingInfo.stakingTokenPair
-  const baseTokenCurrency = unwrappedToken(stakingInfo.baseToken as unknown as Currency)
-  const empty = unwrappedToken(EMPTY[570])
-  const token0 = stakingInfo.tokens[0]
-  const baseToken = baseTokenCurrency === empty ? token0 : stakingInfo.baseToken
-  if (!stakingInfo.totalSupply || !stakingTokenPair || !stakingInfo.totalStakedAmount || !stakingInfo.stakedAmount)
-    return
-  // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
-  const valueOfTotalStakedAmountInBaseToken = 0
-  // new TokenAmount(
-  //   baseToken,
-  //   JSBI.divide(
-  //     JSBI.multiply(
-  //       JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(baseToken).raw),
-  //       JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the WETH they entitle owner to
-  //     ),
-  //     stakingInfo.totalSupply.raw
-  //   )
-  // )
+// export function getStakedAmountStakingInfo(
+//   stakingInfo?: StakingInfo | DualStakingInfo,
+//   userLiquidityUnstaked?: TokenAmount
+// ) {
+//   if (!stakingInfo) return
+//   const stakingTokenPair = stakingInfo.stakingTokenPair
+//   const baseTokenCurrency = unwrappedToken(stakingInfo.baseToken as unknown as Currency)
+//   const empty = unwrappedToken(EMPTY[570])
+//   const token0 = stakingInfo.tokens[0]
+//   const baseToken = baseTokenCurrency === empty ? token0 : stakingInfo.baseToken
+//   if (!stakingInfo.totalSupply || !stakingTokenPair || !stakingInfo.totalStakedAmount || !stakingInfo.stakedAmount)
+//     return
+//   // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
+//   const valueOfTotalStakedAmountInBaseToken = 0
+//   // new TokenAmount(
+//   //   baseToken,
+//   //   JSBI.divide(
+//   //     JSBI.multiply(
+//   //       JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(baseToken).raw),
+//   //       JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the WETH they entitle owner to
+//   //     ),
+//   //     stakingInfo.totalSupply.raw
+//   //   )
+//   // )
 
-  const valueOfMyStakedAmountInBaseToken = 0
+//   const valueOfMyStakedAmountInBaseToken = 0
 
-  // new TokenAmount(
-  //   baseToken,
-  //   JSBI.divide(
-  //     JSBI.multiply(
-  //       JSBI.multiply(stakingInfo.stakedAmount.raw, stakingTokenPair.reserveOf(baseToken).raw),
-  //       JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the WETH they entitle owner to
-  //     ),
-  //     stakingInfo.totalSupply.raw
-  //   )
-  // )
+//   // new TokenAmount(
+//   //   baseToken,
+//   //   JSBI.divide(
+//   //     JSBI.multiply(
+//   //       JSBI.multiply(stakingInfo.stakedAmount.raw, stakingTokenPair.reserveOf(baseToken).raw),
+//   //       JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the WETH they entitle owner to
+//   //     ),
+//   //     stakingInfo.totalSupply.raw
+//   //   )
+//   // )
 
-  // get the USD value of staked WETH
-  const USDPrice = stakingInfo.usdPrice
-  const valueOfTotalStakedAmountInUSDC = 0
-  //  USDPrice?.quote(valueOfTotalStakedAmountInBaseToken)
+//   // get the USD value of staked WETH
+//   const USDPrice = stakingInfo.usdPrice
+//   const valueOfTotalStakedAmountInUSDC = 0
+//   //  USDPrice?.quote(valueOfTotalStakedAmountInBaseToken)
 
-  const valueOfMyStakedAmountInUSDC = 0
-  // USDPrice?.quote(valueOfMyStakedAmountInBaseToken)
+//   const valueOfMyStakedAmountInUSDC = 0
+//   // USDPrice?.quote(valueOfMyStakedAmountInBaseToken)
 
-  const stakedAmounts = {
-    totalStakedBase: valueOfTotalStakedAmountInBaseToken,
-    totalStakedUSD: valueOfTotalStakedAmountInUSDC,
-    myStakedBase: valueOfMyStakedAmountInBaseToken,
-    myStakedUSD: valueOfMyStakedAmountInUSDC,
-    unStakedBase: undefined,
-    unStakedUSD: undefined,
-  }
+//   const stakedAmounts = {
+//     totalStakedBase: valueOfTotalStakedAmountInBaseToken,
+//     totalStakedUSD: valueOfTotalStakedAmountInUSDC,
+//     myStakedBase: valueOfMyStakedAmountInBaseToken,
+//     myStakedUSD: valueOfMyStakedAmountInUSDC,
+//     unStakedBase: undefined,
+//     unStakedUSD: undefined,
+//   }
 
-  if (!userLiquidityUnstaked) return stakedAmounts
+//   if (!userLiquidityUnstaked) return stakedAmounts
 
-  const valueOfUnstakedAmountInBaseToken = 0
-  // new TokenAmount(
-  //   baseToken,
-  //   JSBI.divide(
-  //     JSBI.multiply(
-  //       JSBI.multiply(userLiquidityUnstaked.raw, stakingTokenPair.reserveOf(baseToken).raw),
-  //       JSBI.BigInt(2)
-  //     ),
-  //     stakingInfo.totalSupply.raw
-  //   )
-  // )
+//   const valueOfUnstakedAmountInBaseToken = 0
+//   // new TokenAmount(
+//   //   baseToken,
+//   //   JSBI.divide(
+//   //     JSBI.multiply(
+//   //       JSBI.multiply(userLiquidityUnstaked.raw, stakingTokenPair.reserveOf(baseToken).raw),
+//   //       JSBI.BigInt(2)
+//   //     ),
+//   //     stakingInfo.totalSupply.raw
+//   //   )
+//   // )
 
-  const valueOfUnstakedAmountInUSDC = 0
-  // USDPrice?.quote(valueOfUnstakedAmountInBaseToken)
-  return {
-    ...stakedAmounts,
-    unStakedBase: valueOfUnstakedAmountInBaseToken,
-    unStakedUSD: valueOfUnstakedAmountInUSDC,
-  }
-}
+//   const valueOfUnstakedAmountInUSDC = 0
+//   // USDPrice?.quote(valueOfUnstakedAmountInBaseToken)
+//   return {
+//     ...stakedAmounts,
+//     unStakedBase: valueOfUnstakedAmountInBaseToken,
+//     unStakedUSD: valueOfUnstakedAmountInUSDC,
+//   }
+// }
 
 export function formatReward(earned: number) {
   if (earned === 0) {
@@ -240,17 +234,17 @@ export function formatReward(earned: number) {
   }`
 }
 
-export function getV3TokenFromAddress(tokenAddress: string, chainId: ChainId, tokenMap: TokenAddressMap) {
-  const tokenIndex = Object.keys(tokenMap[chainId]).findIndex(
-    (address) => address.toLowerCase() === tokenAddress.toLowerCase()
-  )
-  if (tokenIndex === -1) {
-    return undefined
-  }
+// export function getV3TokenFromAddress(tokenAddress: string, chainId: ChainId, tokenMap: TokenAddressMap) {
+//   const tokenIndex = Object.keys(tokenMap[chainId]).findIndex(
+//     (address) => address.toLowerCase() === tokenAddress.toLowerCase()
+//   )
+//   if (tokenIndex === -1) {
+//     return undefined
+//   }
 
-  const token = Object.values(tokenMap[chainId])[tokenIndex]
-  return token
-}
+//   const token = Object.values(tokenMap[chainId])[tokenIndex]
+//   return token
+// }
 
 const getAPIURL = (chainId: ChainId, url: string) => {
   //TODO: review get api url
@@ -262,7 +256,7 @@ const getAPIURL = (chainId: ChainId, url: string) => {
   return apiURL
 }
 
-export async function fetchPoolsAPR(chainId: ChainId) {
+async function fetchPoolsAPR(chainId: ChainId) {
   const apiURL = getAPIURL(chainId, '/APR/pools/')
 
   try {
@@ -272,7 +266,7 @@ export async function fetchPoolsAPR(chainId: ChainId) {
   }
 }
 
-export async function fetchEternalFarmAPR(chainId: ChainId) {
+async function fetchEternalFarmAPR(chainId: ChainId) {
   const apiURL = getAPIURL(chainId, '/APR/eternalFarmings/')
 
   try {

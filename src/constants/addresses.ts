@@ -75,14 +75,14 @@ export const GAMMA_MASTERCHEF_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x20ec0d06f447d550fc6edee42121bc8c1817b97d'),
 }
 
-export const EMPTY: { [chainId: number]: Token } = {
+const EMPTY: { [chainId: number]: Token } = {
   [ChainId.ROLLUX]: new Token(ChainId.ROLLUX, '0x0000000000000000000000000000000000000000', 0, 'EMPTY', 'EMPTY'),
 }
 
-export const FINITE_FARMING: AddressMap = {
+const FINITE_FARMING: AddressMap = {
   [ChainId.ROLLUX]: '0x9923f42a02A82dA63EE0DbbC5f8E311e3DD8A1f8',
 }
 
-export const FARMING_CENTER: AddressMap = {
+const FARMING_CENTER: AddressMap = {
   [ChainId.ROLLUX]: '0x7F281A8cdF66eF5e9db8434Ec6D97acc1bc01E78',
 }

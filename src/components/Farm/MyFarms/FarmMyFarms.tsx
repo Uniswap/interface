@@ -9,20 +9,23 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import SubTitleContainer from 'components/SubTitleContainer/SubTitleContainer'
 import { GAMMA_MASTERCHEF_ADDRESSES } from 'constants/addresses'
 import { getGammaData, getGammaRewards } from 'graphql/utils/util'
+import { useMasterChefContracts } from 'hooks/useContract'
 import { FormattedRewardInterface } from 'models/interface/farming'
 import { useIsMobile } from 'nft/hooks'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Frown } from 'react-feather'
 import { useQuery } from 'react-query'
 import { Box } from 'rebass'
+import { useV3StakeData } from 'state/farm/hook'
 import { useCombinedActiveList } from 'state/lists/hooks'
 import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { formatReward } from 'utils/farmUtils'
 
-import { GlobalConst } from '../constants'
+import { GammaPairs, GlobalConst } from '../constants'
 import GammaFarmCard from '../GammaFarms/GammaFarmCard'
 import SortColumns from '../SortColumn'
+import { sortColumnsGamma } from '../utils'
 
 const RewardContainer = styled.div`
   margin-right: 5px;
@@ -55,13 +58,12 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
   const [sortDescQuick, setSortDescQuick] = useState(false)
   const sortMultiplierQuick = sortDescQuick ? -1 : 1
 
-  // const allGammaFarms = useMemo(() => {
-  //   if (!chainId) return []
-  //   const pairsGroups = (GammaPairs[570] as { [key: string]: GammaPair[] }) || {}
-  //   const allPairs = Object.values(pairsGroups).flat()
+  const allGammaFarms = useMemo(() => {
+    const pairsGroups = GammaPairs[570] || {}
+    const allPairs = Object.values(pairsGroups).flat()
 
-  //   return allPairs.filter((item) => item?.ableToFarm)
-  // }, [chainId])
+    return allPairs.filter((item) => item?.ableToFarm)
+  }, [])
 
   // TODO: check after build component the farm subgraph
   // const {
@@ -71,7 +73,7 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
   //   fetchEternalFarmAprs: { fetchEternalFarmAprsFn, eternalFarmAprs, eternalFarmAprsLoading },
   // } = useFarmingSubgraph() || {}
 
-  // const { v3Stake } = useV3StakeData()
+  const { v3Stake } = useV3StakeData()
   // const { selectedTokenId, txType, txHash, txError, txConfirmed, selectedFarmingType } = v3Stake ?? {}
 
   // const [shallowPositions, setShallowPositions] = useState<Deposit[] | null>(null)
@@ -338,33 +340,6 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
 
   const [sortDescGamma, setSortDescGamma] = useState(false)
 
-  const sortColumnsGamma = [
-    {
-      text: 'pool',
-      index: v3FarmSortBy.pool,
-      width: 0.3,
-      justify: 'flex-start',
-    },
-    {
-      text: 'tvl',
-      index: v3FarmSortBy.tvl,
-      width: 0.2,
-      justify: 'flex-start',
-    },
-    {
-      text: 'rewards',
-      index: v3FarmSortBy.rewards,
-      width: 0.3,
-      justify: 'flex-start',
-    },
-    {
-      text: 'apr',
-      index: v3FarmSortBy.apr,
-      width: 0.2,
-      justify: 'flex-start',
-    },
-  ]
-
   const sortByDesktopItemsGamma = sortColumnsGamma.map((item) => {
     return {
       ...item,
@@ -425,7 +400,7 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
 
   // const sortMultiplierGamma = sortDescGamma ? -1 : 1
 
-  // const qiGammaFarm = '0x25B186eEd64ca5FDD1bc33fc4CFfd6d34069BAec'
+  const qiGammaFarm = '0x25B186eEd64ca5FDD1bc33fc4CFfd6d34069BAec'
   // const qimasterChefContract = useMasterChefContract(2, undefined, QIGammaMasterChef)
   // const qiHypeContract = useGammaHypervisorContract(qiGammaFarm)
 
@@ -514,7 +489,7 @@ export default function FarmingMyFarms({ search, chainId }: { search: string; ch
 
   // const allGammaPairsToFarm = chainId ? ([] as GammaPair[]).concat(...Object.values(GammaPairs[570])) : []
 
-  // const masterChefContracts = useMasterChefContracts()
+  const masterChefContracts = useMasterChefContracts()
 
   // const stakedAmountData = useMultipleContractMultipleData(
   //   account ? masterChefContracts : [],
