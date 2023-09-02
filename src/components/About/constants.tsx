@@ -39,16 +39,16 @@ const StyledCardLogo = styled.img`
 `
 
 export const MORE_CARDS = [
-  {
-    to: 'https://support.uniswap.org/hc/en-us/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-',
-    external: true,
-    title: 'Buy crypto',
-    description: 'Buy crypto with your credit card or bank account at the best rates.',
-    lightIcon: <DollarSign color={lightTheme.textTertiary} size={48} />,
-    darkIcon: <StyledCardLogo src={darkDollarImgSrc} alt="Earn" />,
-    cta: 'Buy now',
-    elementName: InterfaceElementName.ABOUT_PAGE_BUY_CRYPTO_CARD,
-  },
+  // {
+  //   to: 'https://support.uniswap.org/hc/en-us/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-',
+  //   external: true,
+  //   title: 'Buy crypto',
+  //   description: 'Buy crypto with your credit card or bank account at the best rates.',
+  //   lightIcon: <DollarSign color={lightTheme.textTertiary} size={48} />,
+  //   darkIcon: <StyledCardLogo src={darkDollarImgSrc} alt="Earn" />,
+  //   cta: 'Buy now',
+  //   elementName: InterfaceElementName.ABOUT_PAGE_BUY_CRYPTO_CARD,
+  // },
   {
     to: '/pools',
     title: 'Earn',
@@ -59,7 +59,7 @@ export const MORE_CARDS = [
     elementName: InterfaceElementName.ABOUT_PAGE_EARN_CARD,
   },
   {
-    to: 'https://docs.uniswap.org',
+    to: 'https://info.kinetix.finance',
     external: true,
     title: 'Build dApps',
     description: 'Build apps and tools on the largest DeFi protocol on Ethereum.',

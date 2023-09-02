@@ -165,7 +165,7 @@ export const MenuDropdown = () => {
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 </Box>
-                <PrimaryMenuRow href="https://info.uniswap.org/#/">
+                <PrimaryMenuRow href="https://stats.kinetix.finance/">
                   <Icon>
                     <BarChartIcon width={24} height={24} color={theme.textPrimary} />
                   </Icon>
@@ -185,7 +185,7 @@ export const MenuDropdown = () => {
                 <SecondaryLinkedText href="https://help.uniswap.org/en/">
                   <Trans>Help center</Trans> ↗
                 </SecondaryLinkedText>
-                <SecondaryLinkedText href="https://docs.uniswap.org/">
+                <SecondaryLinkedText href="https://info.kinetix.finance/">
                   <Trans>Documentation</Trans> ↗
                 </SecondaryLinkedText>
                 <SecondaryLinkedText href="https://uniswap.canny.io/feature-requests">
@@ -206,7 +206,7 @@ export const MenuDropdown = () => {
                 )}
               </Box>
               <IconRow>
-                <Icon href="https://discord.com/invite/FCfyBSbCU5">
+                <Icon href="https://kinetix.finance/">
                   <DiscordIconMenu
                     className={styles.hover}
                     width={24}
@@ -214,7 +214,7 @@ export const MenuDropdown = () => {
                     color={themeVars.colors.textSecondary}
                   />
                 </Icon>
-                <Icon href="https://twitter.com/Uniswap">
+                <Icon href="https://twitter.com/KinetixFinance">
                   <TwitterIconMenu
                     className={styles.hover}
                     width={24}
@@ -222,7 +222,7 @@ export const MenuDropdown = () => {
                     color={themeVars.colors.textSecondary}
                   />
                 </Icon>
-                <Icon href="https://github.com/Uniswap">
+                <Icon href="https://github.com/kinetixfi">
                   <GithubIconMenu
                     className={styles.hover}
                     width={24}

@@ -124,7 +124,7 @@ function PrivacyPolicy() {
       <AutoColumn gap="16px">
         <AutoColumn gap="sm" style={{ width: '100%' }}>
           <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/terms-of-service">
+            <ExternalLink href="https://docs.google.com/document/d/1XhnspV89JVU637jNXBZK4JDcF_KTFgBsMoMh5RaU7rk/edit?usp=sharing">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
