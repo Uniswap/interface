@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
-import { ReactNode, /*useCallback,*/ useState } from 'react'
+import { ReactNode, /*useCallback,*/ useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -95,6 +95,13 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
       JSBI.BigInt(100)
     )
   )
+  const newApr = useMemo(() => {
+    if (poolInfo?.apr?.toString() !== 'NaN') {
+      const aprImpact =
+        Number(poolInfo?.poolStake) / (Number(poolInfo?.poolStake) + Number(parsedAmount?.quotient.toString()) / 1e18)
+      return (Number(poolInfo?.apr) * aprImpact).toFixed(2)
+    } else return undefined
+  }, [poolInfo, parsedAmount])
 
   const moveStakeData: StakeData = {
     amount: parsedAmount?.quotient.toString(),
@@ -192,6 +199,11 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
                     {!isDeactivate ? <Trans>Moving</Trans> : <Trans>Deactivating</Trans>}{' '}
                     <Trans>{formatCurrencyAmount(parsedAmount, 4)} GRG Stake</Trans>
                   </ThemedText.DeprecatedBody>
+                  {newApr && !isDeactivate && (
+                    <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
+                      <Trans>APR {newApr}%</Trans>
+                    </ThemedText.DeprecatedBody>
+                  )}
                 </RowBetween>
               </AutoColumn>
             </LightCard>
@@ -233,17 +245,33 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
                 <Trans>Deactivating Stake</Trans>
               )}{' '}
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(parsedAmount, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              {formatCurrencyAmount(parsedAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
           </AutoColumn>
         </LoadingView>
       )}
-      {hash && (
+      {Boolean(hash && stakeAmount?.quotient.toString() === parsedAmount?.quotient.toString()) && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(stakeAmount, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              {formatCurrencyAmount(stakeAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
+          </AutoColumn>
+        </SubmittedView>
+      )}
+      {Boolean(hash && stakeAmount?.quotient.toString() !== parsedAmount?.quotient.toString()) && (
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
+          <AutoColumn gap="12px" justify="center">
+            <ThemedText.DeprecatedLargeHeader>
+              <Trans>Transaction Confirmed</Trans>
+            </ThemedText.DeprecatedLargeHeader>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              Moved {formatCurrencyAmount(stakeAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
           </AutoColumn>
         </SubmittedView>
       )}

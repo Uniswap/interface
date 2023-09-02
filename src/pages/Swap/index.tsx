@@ -10,7 +10,7 @@ import {
   SwapEventName,
 } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+//import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
@@ -34,8 +34,8 @@ import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
-import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
-import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
+//import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
+import { /*usePermit2Allowance,*/ AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
@@ -488,18 +488,19 @@ export function Swap({
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
 
-  const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
-  // we could save 1 RPC call by skiping signature check entirely
-  const isPool = true
-  const allowance = usePermit2Allowance(
-    maximumAmountIn ??
-      (parsedAmounts[Field.INPUT]?.currency.isToken
-        ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
-        : undefined),
-    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
-    trade?.fillType,
-    isPool
-  )
+  //const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
+  // we skip allowance check entirely for pools
+  //const isPool = true
+  //const allowance = usePermit2Allowance(
+  //  maximumAmountIn ??
+  //    (parsedAmounts[Field.INPUT]?.currency.isToken
+  //      ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
+  //      : undefined),
+  //  isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
+  //  trade?.fillType,
+  //  isPool
+  //)
+  const allowance = { state: AllowanceState.ALLOWED, permitSignature: undefined }
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
@@ -708,7 +709,7 @@ export function Swap({
           swapResult={swapResult}
           allowedSlippage={allowedSlippage}
           onConfirm={handleSwap}
-          allowance={allowance}
+          //allowance={allowance}
           swapError={swapError}
           onDismiss={handleConfirmDismiss}
           fiatValueInput={fiatValueTradeInput}

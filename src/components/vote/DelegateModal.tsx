@@ -99,6 +99,13 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
       JSBI.BigInt(100)
     )
   )
+  const newApr = useMemo(() => {
+    if (poolInfo?.apr?.toString() !== 'NaN') {
+      const aprImpact =
+        Number(poolInfo?.poolStake) / (Number(poolInfo?.poolStake) + Number(parsedAmount?.quotient.toString()) / 1e18)
+      return (Number(poolInfo?.apr) * aprImpact).toFixed(2)
+    } else return undefined
+  }, [poolInfo, parsedAmount])
 
   const stakeData = useMemo(() => {
     if (!poolId) return
@@ -219,6 +226,11 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
                   <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
                     <Trans>Staking {formatCurrencyAmount(parsedAmount, 4)} GRG</Trans>
                   </ThemedText.DeprecatedBody>
+                  {Boolean(newApr && !usingDelegate && title === 'Stake') && (
+                    <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
+                      <Trans>APR {newApr}%</Trans>
+                    </ThemedText.DeprecatedBody>
+                  )}
                 </RowBetween>
               </AutoColumn>
             </LightCard>
@@ -248,19 +260,41 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              {usingDelegate ? <Trans>Staking From Pool</Trans> : <Trans>Unlocking Votes</Trans>}
+              {usingDelegate ? (
+                <Trans>Staking From Pool</Trans>
+              ) : title === 'Stake' ? (
+                <Trans>Staking</Trans>
+              ) : (
+                <Trans>Unlocking Votes</Trans>
+              )}
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(parsedAmount, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              {formatCurrencyAmount(parsedAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
           </AutoColumn>
         </LoadingView>
       )}
-      {hash && (
+      {Boolean(hash && stakeAmount?.quotient.toString() === parsedAmount?.quotient.toString()) && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(stakeAmount, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              {formatCurrencyAmount(stakeAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
+          </AutoColumn>
+        </SubmittedView>
+      )}
+      {Boolean(hash && stakeAmount?.quotient.toString() !== parsedAmount?.quotient.toString()) && (
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
+          <AutoColumn gap="md" justify="center">
+            <ThemedText.DeprecatedLargeHeader>
+              <Trans>Transaction Confirmed</Trans>
+            </ThemedText.DeprecatedLargeHeader>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              Staked {formatCurrencyAmount(stakeAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
           </AutoColumn>
         </SubmittedView>
       )}

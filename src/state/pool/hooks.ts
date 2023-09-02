@@ -168,7 +168,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
       return index === pools.findIndex((o) => obj.pool === o.pool)
     })
 
-    if (registry && !uniquePools) {
+    if (registry && !formattedLogsV1 && !poolsFromList) {
       return { data: [], loading: true }
     }
 

@@ -16,7 +16,6 @@ export interface PositionDetails {
   tokensOwed1: BigNumber
 }
 
-// TODO: this is same as Registered, we can change it to contain all pool data
 export interface PoolPositionDetails {
   group?: string
   pool: string
@@ -26,5 +25,7 @@ export interface PoolPositionDetails {
   address?: string
   apr?: string
   irr?: string
+  poolOwnStake?: BigNumber
+  poolDelegatedStake?: BigNumber
   userHasStake?: boolean
 }

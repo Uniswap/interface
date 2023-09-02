@@ -82,6 +82,8 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           ...result,
           apr: positions[i].apr,
           irr: positions[i].irr,
+          poolOwnStake: positions[i].poolOwnStake,
+          poolDelegatedStake: positions[i].poolDelegatedStake,
           userHasStake: positions[i].userHasStake,
           address,
           decimals,

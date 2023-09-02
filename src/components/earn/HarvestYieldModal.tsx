@@ -54,6 +54,8 @@ export default function HarvestYieldModal({
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
 
+  const [farmAmount, setFarmAmount] = useState<CurrencyAmount<Token>>()
+
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
     setHash(undefined)
@@ -65,6 +67,7 @@ export default function HarvestYieldModal({
     // if callback not returned properly ignore
     if (!harvestCallback || !poolIds || poolIds?.length === 0 || !currencyValue.isToken) return
     setAttempting(true)
+    setFarmAmount(yieldAmount)
 
     // try delegation and store hash
     const hash = await harvestCallback(poolIds, isPool)?.catch((error) => {
@@ -120,13 +123,27 @@ export default function HarvestYieldModal({
           </AutoColumn>
         </LoadingView>
       )}
-      {hash && (
+      {hash && Boolean(Number(yieldAmount?.quotient.toString()) > 0) && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(yieldAmount, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              {formatCurrencyAmount(farmAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
+          </AutoColumn>
+        </SubmittedView>
+      )}
+      {hash && Boolean(Number(yieldAmount?.quotient.toString()) === 0) && (
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
+          <AutoColumn gap="12px" justify="center">
+            <ThemedText.DeprecatedLargeHeader>
+              <Trans>Transaction Confirmed</Trans>
+            </ThemedText.DeprecatedLargeHeader>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              Received {formatCurrencyAmount(farmAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
           </AutoColumn>
         </SubmittedView>
       )}
