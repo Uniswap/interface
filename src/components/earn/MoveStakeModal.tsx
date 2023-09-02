@@ -245,17 +245,33 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
                 <Trans>Deactivating Stake</Trans>
               )}{' '}
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(parsedAmount, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              {formatCurrencyAmount(parsedAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
           </AutoColumn>
         </LoadingView>
       )}
-      {hash && (
+      {Boolean(hash && stakeAmount?.quotient.toString() === parsedAmount?.quotient.toString()) && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(stakeAmount, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              {formatCurrencyAmount(stakeAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
+          </AutoColumn>
+        </SubmittedView>
+      )}
+      {Boolean(hash && stakeAmount?.quotient.toString() !== parsedAmount?.quotient.toString()) && (
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
+          <AutoColumn gap="12px" justify="center">
+            <ThemedText.DeprecatedLargeHeader>
+              <Trans>Transaction Confirmed</Trans>
+            </ThemedText.DeprecatedLargeHeader>
+            <ThemedText.DeprecatedMain fontSize={36}>
+              Moved {formatCurrencyAmount(stakeAmount, 4)} GRG
+            </ThemedText.DeprecatedMain>
           </AutoColumn>
         </SubmittedView>
       )}
