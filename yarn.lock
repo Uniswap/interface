@@ -3940,7 +3940,18 @@
     ethers "^5.3.1"
     tiny-invariant "^1.3.1"
 
-"@kinetix/router-sdk@1.0.2", "@kinetix/router-sdk@^1.0.0":
+"@kinetix/router-sdk@1.0.3":
+  version "1.0.3"
+  resolved "http://46.101.181.84:4873/@kinetix/router-sdk/-/router-sdk-1.0.3.tgz#32a3603698ec6acebf19e2ac2f193d959f19f9f5"
+  integrity sha512-fzFoAZd8sP/baiDMkEjNAm9cCoUxplh/tW8DwsDlbrs3OB8H93YXy7UmNbbmko2C0XjHnidCSg5ozRSNxXjpLw==
+  dependencies:
+    "@ethersproject/abi" "^5.5.0"
+    "@kinetix/sdk-core" "^1.0.2"
+    "@kinetix/swap-router-contracts" "^1.0.0"
+    "@kinetix/v2-sdk" "^1.0.0"
+    "@kinetix/v3-sdk" "^1.0.0"
+
+"@kinetix/router-sdk@^1.0.0":
   version "1.0.2"
   resolved "http://46.101.181.84:4873/@kinetix/router-sdk/-/router-sdk-1.0.2.tgz#c9fbed71d04bf656e69bdecda4311cd7bacf95b3"
   integrity sha512-USD8XY1Qil4Yw2rCyJNexVqC5C5J8p2HfNkDK18LhB5YVsZOMfiosL56ava0i8AdKaJu1Jb3iCZYhWduYdA4Bw==
@@ -3955,6 +3966,18 @@
   version "1.0.1"
   resolved "http://46.101.181.84:4873/@kinetix/sdk-core/-/sdk-core-1.0.1.tgz#d6ee3153e30557f35e2d68ed999c7f9ae96c627a"
   integrity sha512-OyKkdIBOVt5RLm9GZrrlPRtbGaMgs+vccAJdZXBy8L1RNvpGkv1igG+FXU/Vr2f2VfeAzOkBsfHFa20roX5BwQ==
+  dependencies:
+    "@ethersproject/address" "^5.0.2"
+    big.js "^5.2.2"
+    decimal.js-light "^2.5.0"
+    jsbi "^3.1.4"
+    tiny-invariant "^1.1.0"
+    toformat "^2.0.0"
+
+"@kinetix/sdk-core@^1.0.2":
+  version "1.0.2"
+  resolved "http://46.101.181.84:4873/@kinetix/sdk-core/-/sdk-core-1.0.2.tgz#b382371e79c9a2bbea6a9189656f9aeacb61f2e4"
+  integrity sha512-+sOvvrNlGP4qNWixcgLRkAYLN9pH0y49daXjGqukJEml2Koi8sfIhf58CB0ruhlRoulfehRnA+ySSbNSLrS3NA==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     big.js "^5.2.2"
@@ -4058,6 +4081,18 @@
     "@ethersproject/address" "^5.0.0"
     "@ethersproject/solidity" "^5.0.0"
     "@kinetix/sdk-core" "^1.0.0"
+    "@kinetix/v2-core" "^1.0.0"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+
+"@kinetix/v2-sdk@^1.0.1":
+  version "1.0.1"
+  resolved "http://46.101.181.84:4873/@kinetix/v2-sdk/-/v2-sdk-1.0.1.tgz#7f5ce826f2570d38ad154c796f49729b660043f5"
+  integrity sha512-DkAPStrt7kT3BC0DMm7WLVS378/EEWJFAPPwYe4W7EQcZ6qrstrYcPyOR9T+OdccxdG/tZtzOTO+buW+1rnepA==
+  dependencies:
+    "@ethersproject/address" "^5.0.0"
+    "@ethersproject/solidity" "^5.0.0"
+    "@kinetix/sdk-core" "^1.0.2"
     "@kinetix/v2-core" "^1.0.0"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"

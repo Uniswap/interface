@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
+import { Currency, CurrencyAmount, Percent } from '@kinetix/sdk-core'
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
@@ -165,6 +165,7 @@ export default function AddLiquidity() {
         account,
         deadline.toHexString(),
       ]
+
       value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).quotient.toString())
     } else {
       estimate = router.estimateGas.addLiquidity

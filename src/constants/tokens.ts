@@ -23,7 +23,7 @@ export const axlWBTC_KAVA = new Token(
   ChainId.KAVA,
   '0x1a35EE4640b0A3B87705B0A4B45D227Ba60Ca2ad',
   8,
-  'axlUSDC',
+  'axlWBTC',
   'Axelar Wrapped Bitcoin'
 )
 
