@@ -127,10 +127,10 @@ export default function FiatOnrampModal() {
   return (
     <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} height={80 /* vh */}>
       <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
-        {error ? (
+        {error && signedIframeUrl ? (
           <>
             <ThemedText.MediumHeader>
-              <Trans>Moonpay Fiat On-ramp iframe</Trans>
+              <Trans>Swipelux Fiat On-ramp iframe</Trans>
             </ThemedText.MediumHeader>
             <ErrorText>
               <Trans>something went wrong!</Trans>
@@ -142,7 +142,7 @@ export default function FiatOnrampModal() {
           <StyledSpinner src={Circle} alt="loading spinner" size="90px" />
         ) : (
           <StyledIframe
-            src={signedIframeUrl ?? ''}
+            src={process.env.REACT_APP_MOONPAY_LINK ?? ''}
             frameBorder="0"
             title="fiat-onramp-iframe"
             isDarkMode={isDarkMode}

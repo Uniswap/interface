@@ -30,7 +30,7 @@ export default function SwapHeader({
 }) {
   const fiatOnRampButtonEnabled = useFiatOnRampButtonEnabled()
   // TODO: remove to display fiat onramp
-  const displayFiatOnramp = false
+  const displayFiatOnramp = true
 
   return (
     <StyledSwapHeader>
