@@ -171,7 +171,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
   // TODO: remove to display fiat onramp
-  const displayFiatOnramp = false
+  const displayFiatOnramp = true
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 

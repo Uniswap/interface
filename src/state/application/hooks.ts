@@ -22,12 +22,12 @@ export function useModalIsOpen(modal: ApplicationModal): boolean {
 }
 
 /** @ref https://dashboard.moonpay.com/api_reference/client_side_api#ip_addresses */
-interface MoonpayIPAddressesResponse {
-  alpha3?: string
-  isAllowed?: boolean
-  isBuyAllowed?: boolean
-  isSellAllowed?: boolean
-}
+//interface MoonpayIPAddressesResponse {
+//  alpha3?: string
+//  isAllowed?: boolean
+//  isBuyAllowed?: boolean
+//  isSellAllowed?: boolean
+//}
 
 async function getMoonpayAvailability(): Promise<boolean> {
   const moonpayPublishableKey = process.env.REACT_APP_MOONPAY_PUBLISHABLE_KEY
@@ -38,9 +38,10 @@ async function getMoonpayAvailability(): Promise<boolean> {
   if (!moonpayApiURI) {
     throw new Error('Must provide an api endpoint for moonpay.')
   }
-  const res = await fetch(`${moonpayApiURI}/v4/ip_address?apiKey=${moonpayPublishableKey}`)
-  const data = await (res.json() as Promise<MoonpayIPAddressesResponse>)
-  return data.isBuyAllowed ?? false
+  //const res = await fetch(`${moonpayApiURI}/v4/ip_address?apiKey=${moonpayPublishableKey}`)
+  //const res = await fetch(`${`https://track.demo.swipelux.com/?api-key=7c1c1d47-e9d1-4192-91b8-bbae276a73b3`}`)
+  //const data = await (res.json() as Promise<MoonpayIPAddressesResponse>)
+  return true //data.isBuyAllowed ?? false
 }
 
 export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () => void) {
