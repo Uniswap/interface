@@ -1,5 +1,5 @@
-import { createMulticall, ListenerOptions } from '@uniswap/redux-multicall'
 import { ChainId } from '@kinetix/sdk-core'
+import { createMulticall, ListenerOptions } from '@uniswap/redux-multicall'
 import { useWeb3React } from '@web3-react/core'
 import { useInterfaceMulticall, useMainnetInterfaceMulticall } from 'hooks/useContract'
 import useBlockNumber, { useMainnetBlockNumber } from 'lib/hooks/useBlockNumber'
@@ -17,14 +17,6 @@ export default multicall
 function getBlocksPerFetchForChainId(chainId: number | undefined): number {
   // TODO(WEB-2437): See if these numbers need to be updated
   switch (chainId) {
-    case ChainId.ARBITRUM_ONE:
-    case ChainId.OPTIMISM:
-      return 15
-    case ChainId.AVALANCHE:
-    case ChainId.BNB:
-    case ChainId.CELO:
-    case ChainId.CELO_ALFAJORES:
-      return 5
     default:
       return 1
   }
@@ -44,7 +36,7 @@ export function MulticallUpdater() {
   )
   const mainnetListener: ListenerOptions = useMemo(
     () => ({
-      blocksPerFetch: getBlocksPerFetchForChainId(ChainId.MAINNET),
+      blocksPerFetch: getBlocksPerFetchForChainId(ChainId.KAVA),
     }),
     []
   )
@@ -52,12 +44,12 @@ export function MulticallUpdater() {
   return (
     <>
       <multicall.Updater
-        chainId={ChainId.MAINNET}
+        chainId={ChainId.KAVA}
         latestBlockNumber={latestMainnetBlockNumber}
         contract={mainnetContract}
         listenerOptions={mainnetListener}
       />
-      {chainId !== ChainId.MAINNET && (
+      {chainId !== ChainId.KAVA && (
         <multicall.Updater
           chainId={chainId}
           latestBlockNumber={latestBlockNumber}

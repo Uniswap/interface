@@ -1,6 +1,6 @@
+import { ChainId } from '@kinetix/sdk-core'
 import { Trans } from '@lingui/macro'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
-import { ChainId } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useTrace } from 'analytics'
 import clsx from 'clsx'
@@ -358,10 +358,6 @@ function SearchBarDropdownContents({
 
 function ComingSoonText({ chainId }: { chainId: ChainId }) {
   switch (chainId) {
-    case ChainId.BNB:
-      return <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
-    case ChainId.AVALANCHE:
-      return <Trans>Coming soon: search and explore tokens on Avalanche Chain</Trans>
     default:
       return null
   }

@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { ChainId } from '@kinetix/sdk-core'
+import { Trans } from '@lingui/macro'
 import { getChainInfo } from 'constants/chainInfo'
 import { darken } from 'polished'
 import { useState } from 'react'
@@ -104,10 +104,7 @@ export function AboutSection({ address, chainId, description, homepageUrl, twitt
         <Trans>Links</Trans>
       </ThemedText.SubHeaderSmall>
       <ResourcesContainer data-cy="resources-container">
-        <Resource
-          name={chainId === ChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}
-          link={`${explorer}${address === 'NATIVE' ? '' : 'address/' + address}`}
-        />
+        <Resource name="Block Explorer" link={`${explorer}${address === 'NATIVE' ? '' : 'address/' + address}`} />
         <Resource name="More analytics" link={`${infoLink}tokens/${address}`} />
         {homepageUrl && <Resource name="Website" link={homepageUrl} />}
         {twitterName && <Resource name="Twitter" link={`https://twitter.com/${twitterName}`} />}

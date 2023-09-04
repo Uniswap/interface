@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
+import { ChainId, Currency, CurrencyAmount, Token } from '@kinetix/sdk-core'
 import { t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { ChainId, Currency, CurrencyAmount, Token } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
@@ -296,7 +296,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
-  const usingPayWithAnyToken = !!inputCurrency && chainId === ChainId.MAINNET
+  const usingPayWithAnyToken = !!inputCurrency && chainId === ChainId.KAVA
   const { universalRouterAddress, universalRouterAddressIsLoading } = useNftUniversalRouterAddress()
 
   useSubscribeTransactionState(setModalIsOpen)
@@ -326,7 +326,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
-    if (!connected || chainId !== ChainId.MAINNET) {
+    if (!connected || chainId !== ChainId.KAVA) {
       return undefined
     }
 
@@ -359,8 +359,8 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     handleClick,
     buttonColor,
   } = useMemo((): BuyButtonStateData => {
-    if (connected && chainId !== ChainId.MAINNET) {
-      const handleClick = () => switchChain(connector, ChainId.MAINNET)
+    if (connected && chainId !== ChainId.KAVA) {
+      const handleClick = () => switchChain(connector, ChainId.KAVA)
       return getBuyButtonStateData(BuyButtonStates.NOT_SUPPORTED_CHAIN, theme, handleClick)
     }
 

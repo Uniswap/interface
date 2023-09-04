@@ -70,7 +70,7 @@ export const gnosisSafeConnection: Connection = {
 }
 
 export const walletConnectV2Connection: Connection = new (class implements Connection {
-  private initializer = (actions: Actions, defaultChainId = ChainId.MAINNET) =>
+  private initializer = (actions: Actions, defaultChainId = ChainId.KAVA) =>
     new WalletConnectV2({ actions, defaultChainId, onError })
 
   type = ConnectionType.WALLET_CONNECT_V2
@@ -133,7 +133,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     new CoinbaseWallet({
       actions,
       options: {
-        url: RPC_URLS[ChainId.MAINNET][0],
+        url: RPC_URLS[ChainId.KAVA][0],
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO,
         reloadOnDisconnect: false,

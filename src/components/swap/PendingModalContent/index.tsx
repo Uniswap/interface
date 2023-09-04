@@ -298,8 +298,8 @@ export function PendingModalContent({
   }
 
   // On mainnet, we show a different icon when the transaction is submitted but pending confirmation.
-  const showSubmitted = swapPending && !swapConfirmed && chainId === ChainId.MAINNET
-  const showSuccess = swapConfirmed || (chainId !== ChainId.MAINNET && swapPending)
+  const showSubmitted = swapPending && !swapConfirmed && chainId === ChainId.KAVA
+  const showSuccess = swapConfirmed || (chainId !== ChainId.KAVA && swapPending)
 
   const transactionPending = revocationPending || tokenApprovalPending || wrapPending || swapPending
 

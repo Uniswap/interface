@@ -16,7 +16,7 @@ gql`
 export function getURAddress(chainId?: number, nftURAddress?: string): string | undefined {
   if (!chainId) return undefined
   // if mainnet and on NFT flow, use the contract address returned by GQL
-  if (chainId === ChainId.MAINNET) {
+  if (chainId === ChainId.KAVA) {
     return nftURAddress ?? UNIVERSAL_ROUTER_ADDRESS(chainId)
   }
   return isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined

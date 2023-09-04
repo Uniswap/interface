@@ -151,7 +151,7 @@ interface PortfolioLogoProps {
 }
 
 function SquareL2Logo({ chainId }: { chainId: ChainId }) {
-  if (chainId === ChainId.MAINNET) return null
+  if (chainId === ChainId.KAVA) return null
   const { squareLogoUrl, logoUrl } = getChainInfo(chainId)
 
   const chainLogo = squareLogoUrl ?? logoUrl

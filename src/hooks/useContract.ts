@@ -65,7 +65,7 @@ export function useContract<T extends Contract = Contract>(
 
 function useMainnetContract<T extends Contract = Contract>(address: string | undefined, ABI: any): T | null {
   const { chainId } = useWeb3React()
-  const isMainnet = chainId === ChainId.MAINNET
+  const isMainnet = chainId === ChainId.KAVA
   const contract = useContract(isMainnet ? address : undefined, ABI, false)
   return useMemo(() => {
     if (isMainnet) return contract
@@ -110,7 +110,7 @@ export function useArgentWalletDetectorContract() {
 }
 
 export function useENSRegistrarContract() {
-  return useMainnetContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES[ChainId.MAINNET], ENS_ABI)
+  return useMainnetContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES[ChainId.KAVA], ENS_ABI)
 }
 
 export function useENSResolverContract(address: string | undefined) {
@@ -139,7 +139,7 @@ export function useInterfaceMulticall() {
 
 export function useMainnetInterfaceMulticall() {
   return useMainnetContract<UniswapInterfaceMulticall>(
-    MULTICALL_ADDRESSES[ChainId.MAINNET],
+    '0x1F98415757620B543A52E61c46B32eB19261F984',
     MulticallABI
   ) as UniswapInterfaceMulticall
 }

@@ -1,4 +1,3 @@
-import { ChainId } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import useBlockNumber, { useMainnetBlockNumber } from 'lib/hooks/useBlockNumber'
 import multicall from 'lib/state/multicall'
@@ -25,7 +24,7 @@ export function useSingleCallResult(...args: SkipFirstTwoParams<typeof multicall
 
 export function useMainnetSingleCallResult(...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleCallResult>) {
   const latestMainnetBlock = useMainnetBlockNumber()
-  return multicall.hooks.useSingleCallResult(ChainId.MAINNET, latestMainnetBlock, ...args)
+  return multicall.hooks.useSingleCallResult(1, latestMainnetBlock, ...args)
 }
 
 export function useSingleContractMultipleData(

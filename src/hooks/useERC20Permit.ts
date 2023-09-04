@@ -29,19 +29,7 @@ const PERMITTABLE_TOKENS: {
   [chainId: number]: {
     [checksummedTokenAddress: string]: PermitInfo
   }
-} = {
-  // [ChainId.MAINNET]: {
-  //   [USDC_MAINNET.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
-  //   [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-  //   [UNI[ChainId.MAINNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  // },
-  // [ChainId.GOERLI]: {
-  //   [UNI[ChainId.GOERLI].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  // },
-  // [ChainId.SEPOLIA]: {
-  //   [UNI[ChainId.SEPOLIA].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  // },
-}
+} = {}
 
 enum UseERC20PermitState {
   // returned for any reason, e.g. it is an argent wallet, or the currency does not support it

@@ -1,11 +1,10 @@
 import { ChainId } from '@kinetix/sdk-core'
-import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
 import kavaLogo from 'assets/svg/kava-logo.png'
 import ms from 'ms'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { ARBITRUM_LIST, KAVA_LIST } from './lists'
+import { KAVA_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
 
@@ -46,27 +45,14 @@ export interface L2ChainInfo extends BaseChainInfo {
   readonly defaultListUrl: string
 }
 
-type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
-  readonly [chainId in SupportedL2ChainId]: L2ChainInfo
-} & { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
+type ChainInfoMap =
+  | { readonly [chainId: number]: L1ChainInfo | L2ChainInfo }
+  | { readonly [chainId in SupportedL2ChainId]: L2ChainInfo }
+  | { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
+
+// type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo }
 
 const CHAIN_INFO: ChainInfoMap = {
-  [ChainId.ARBITRUM_ONE]: {
-    networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms(`10m`),
-    bridge: 'https://bridge.arbitrum.io/',
-    docs: 'https://offchainlabs.com/',
-    explorer: 'https://arbiscan.io/',
-    infoLink: 'https://info.uniswap.org/#/arbitrum',
-    label: 'Arbitrum',
-    logoUrl: arbitrumLogoUrl,
-    circleLogoUrl: arbitrumCircleLogoUrl,
-    defaultListUrl: ARBITRUM_LIST,
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    color: darkTheme.chain_42,
-    backgroundColor: darkTheme.chain_42161_background,
-  },
   [ChainId.KAVA]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms(`10m`),
@@ -115,9 +101,11 @@ export function getChainInfo(
   featureFlags?: Record<ChainId | SupportedL1ChainId | SupportedL2ChainId | number, boolean>
 ): any {
   if (featureFlags && chainId in featureFlags) {
+    // @ts-ignore
     return featureFlags[chainId] ? CHAIN_INFO[chainId] : undefined
   }
   if (chainId) {
+    // @ts-ignore
     return CHAIN_INFO[chainId] ?? undefined
   }
   return undefined

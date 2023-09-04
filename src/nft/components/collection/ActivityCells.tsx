@@ -1,6 +1,6 @@
+import { ChainId } from '@kinetix/sdk-core'
 import { Trans } from '@lingui/macro'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import { ChainId } from '@kinetix/sdk-core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { NftActivityType, NftMarketplace, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
@@ -162,7 +162,7 @@ export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCel
       className={styles.addressCell}
     >
       <AddressLink
-        href={getExplorerLink(chainId ?? ChainId.MAINNET, address ?? '', ExplorerDataType.ADDRESS)}
+        href={getExplorerLink(chainId ?? ChainId.KAVA, address ?? '', ExplorerDataType.ADDRESS)}
         style={{ textDecoration: 'none' }}
       >
         <Box onClick={(e) => e.stopPropagation()}>{address ? shortenAddress(address, 2) : '-'}</Box>
