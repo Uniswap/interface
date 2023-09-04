@@ -41,7 +41,6 @@ async function getMoonpayAvailability(): Promise<boolean> {
   //const res = await fetch(`${moonpayApiURI}/v4/ip_address?apiKey=${moonpayPublishableKey}`)
   //const res = await fetch(`${`https://track.demo.swipelux.com/?api-key=7c1c1d47-e9d1-4192-91b8-bbae276a73b3`}`)
   //const data = await (res.json() as Promise<MoonpayIPAddressesResponse>)
-  //console.log(data)
   return true //data.isBuyAllowed ?? false
 }
 
