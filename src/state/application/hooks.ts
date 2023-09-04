@@ -86,22 +86,6 @@ export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () =>
   return { available, availabilityChecked, loading, error }
 }
 
-// TODO: check if we want to use this script
-export function useScript(url: string) {
-  useEffect(() => {
-    const script = document.createElement('script')
-
-    script.src = 'https://app.demo.swipelux.com/sdk.js'
-    script.async = true
-
-    document.body.appendChild(script)
-
-    return () => {
-      document.body.removeChild(script)
-    }
-  }, [url])
-}
-
 export function useToggleModal(modal: ApplicationModal): () => void {
   const isOpen = useModalIsOpen(modal)
   const dispatch = useAppDispatch()
