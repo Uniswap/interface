@@ -2,10 +2,9 @@
 import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useRestQuery } from 'wallet/src/data/rest'
-import { getEthersProvider } from 'wallet/src/features/providers/getEthersProvider'
+import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 // stub endpoint to conform to REST endpoint styles
@@ -49,7 +48,8 @@ async function getAvatarFetch(address: string, provider: providers.JsonRpcProvid
 
 export const getOnChainEnsFetch = async (params: EnsLookupParams): Promise<Response> => {
   const { type, nameOrAddress } = params
-  const provider = getEthersProvider(ChainId.Mainnet, config)
+  const provider = createEthersProvider(ChainId.Mainnet)
+  if (!provider) return new Response(JSON.stringify({ data: undefined }))
 
   let response: string | null
 

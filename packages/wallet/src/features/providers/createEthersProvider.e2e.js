@@ -1,11 +1,11 @@
 /**
  * Ethers Provider mock for end-to-end tests.
- * Replaces `getEthersProvider.ts` when RN_SRC_EXT=e2e.js at runtime
+ * Replaces `createEthersProvider.ts` when RN_SRC_EXT=e2e.js at runtime
  */
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { ChainId } from 'wallet/src/constants/chains'
 
-export function getEthersProvider(chainId) {
+export function createEthersProvider(chainId) {
   if (chainId === ChainId.Mainnet) {
     const provider = new TestProvider('http://127.0.0.1:8545/', chainId)
     return provider

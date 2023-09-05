@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { call, getContext } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
-import { AlternativeRpcType, ChainId } from 'wallet/src/constants/chains'
+import { ChainId, RPCType } from 'wallet/src/constants/chains'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 import { SignerManager } from './signing/SignerManager'
@@ -72,8 +72,8 @@ export function useProviderManager(): ProviderManager {
   return useContext(WalletContext).value.providers
 }
 
-export function useProvider(chainId: ChainId) {
-  return useProviderManager().tryGetProvider(chainId)
+export function useProvider(chainId: ChainId, rpcType: RPCType = RPCType.Public) {
+  return useProviderManager().tryGetProvider(chainId, rpcType)
 }
 
 export function* getProviderManager() {
@@ -81,10 +81,10 @@ export function* getProviderManager() {
   return yield* getContext<ProviderManager>('providers') ?? walletContextValue.providers
 }
 
-export function* getProvider(chainId: ChainId, alternativeRpcType?: AlternativeRpcType) {
+export function* getProvider(chainId: ChainId, rpcType: RPCType = RPCType.Public) {
   const providerManager = yield* call(getProviderManager)
   // Note, unlike useWalletProvider above, this throws on missing provider
-  return providerManager.getProvider(chainId, alternativeRpcType)
+  return providerManager.getProvider(chainId, rpcType)
 }
 
 export function useContractManager(): ContractManager {

@@ -4,9 +4,9 @@ import { Statsig } from 'statsig-react-native'
 import { call, select } from 'typed-redux-saga'
 import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
-import { AlternativeRpcType, ChainId } from 'wallet/src/constants/chains'
+import { RPCType } from 'wallet/src/constants/chains'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { isAlternativeRpcSupportedOnChain } from 'wallet/src/features/providers'
+import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { makeSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
@@ -36,14 +36,12 @@ export function* approveAndSwap(params: SwapParams) {
       throw new Error('approveAndSwap received incomplete transaction request details')
     }
     const { chainId } = swapTxRequest
-    const alternativeRpc = yield* call(maybeGetAlternativeRpc, chainId)
-    const provider = yield* call(getProvider, chainId, alternativeRpc)
+    const submitViaPrivateRpc = yield* call(shouldSubmitViaPrivateRpc, chainId)
     const nonce = yield* call(
       getNonceForApproveAndSwap,
-      provider,
       account.address,
       chainId,
-      alternativeRpc
+      submitViaPrivateRpc
     )
 
     if (approveTxRequest && approveTxRequest.to) {
@@ -56,7 +54,7 @@ export function* approveAndSwap(params: SwapParams) {
       yield* call(sendTransaction, {
         chainId,
         account,
-        options: { request: approveTxRequest, alternativeRpc },
+        options: { request: approveTxRequest, submitViaPrivateRpc },
         typeInfo,
         trade,
       })
@@ -73,7 +71,7 @@ export function* approveAndSwap(params: SwapParams) {
       txId,
       chainId,
       account,
-      options: { request, alternativeRpc },
+      options: { request, submitViaPrivateRpc },
       typeInfo: swapTypeInfo,
       trade,
     })
@@ -96,47 +94,41 @@ export const {
 } = createMonitoredSaga<SwapParams>(approveAndSwap, 'swap')
 
 function* getNonceForApproveAndSwap(
-  provider: providers.JsonRpcProvider,
   address: Address,
   chainId: number,
-  alternativeRpc?: AlternativeRpcType
+  submitViaPrivateRpc: boolean
 ) {
-  let nonce = yield* call([provider, provider.getTransactionCount], address, 'pending')
+  const rpcType = submitViaPrivateRpc ? RPCType.Private : RPCType.Public
+  const provider = yield* call(getProvider, chainId, rpcType)
+  const nonce = yield* call([provider, provider.getTransactionCount], address, 'pending')
 
-  // If on mainnet, but pending txns on private rpc, need to increment nonce by the amount of
-  // pending transactions to submit correctly.
-  const pendingPrivateTransactionCount = yield* call(getPendingPrivateTransactionCount, address)
-
-  const shouldIncrementNonce = !alternativeRpc && chainId === ChainId.Mainnet
-  if (shouldIncrementNonce) {
-    nonce = nonce + pendingPrivateTransactionCount
+  const pendingPrivateTransactionCount = yield* call(getPendingPrivateTxCount, address, chainId)
+  if (rpcType !== RPCType.Private) {
+    // only need to add the `pendingPrivateTransactionCount` when submitting via a public RPC
+    // because it is unaware of pending txs in private pools
+    return nonce + pendingPrivateTransactionCount
   }
 
   return nonce
 }
 
-function* maybeGetAlternativeRpc(chainId: number) {
-  const isMevBlockerFeatureEnabled = Statsig.checkGate(FEATURE_FLAGS.MevBlocker)
+function* shouldSubmitViaPrivateRpc(chainId: number) {
   const swapProtectionSetting = yield* select(selectWalletSwapProtectionSetting)
   const swapProtectionOn = swapProtectionSetting === SwapProtectionSetting.On
-  const isMevBlockerSupportedOnChain = chainId
-    ? isAlternativeRpcSupportedOnChain(chainId, AlternativeRpcType.MevBlocker)
-    : false
-  const shouldUseMevBlocker =
-    swapProtectionOn && isMevBlockerSupportedOnChain && isMevBlockerFeatureEnabled
-
-  return shouldUseMevBlocker ? AlternativeRpcType.MevBlocker : undefined
+  const mevBlockerFeatureEnabled = Statsig.checkGate(FEATURE_FLAGS.MevBlocker)
+  const privateRpcSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false
+  return Boolean(swapProtectionOn && privateRpcSupportedOnChain && mevBlockerFeatureEnabled)
 }
 
-function* getPendingPrivateTransactionCount(address: Address) {
+function* getPendingPrivateTxCount(address: Address, chainId: number) {
   const pendingTransactions = yield* select(makeSelectAddressTransactions(address))
-
   if (!pendingTransactions) return 0
 
   return pendingTransactions.filter(
     (tx) =>
+      tx.chainId === chainId &&
       tx.status === TransactionStatus.Pending &&
       tx.typeInfo.type === TransactionType.Swap &&
-      Boolean(tx.options.alternativeRpc)
+      Boolean(tx.options.submitViaPrivateRpc)
   ).length
 }

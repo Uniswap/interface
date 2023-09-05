@@ -1,4 +1,4 @@
-import { AlternativeRpcType, ALT_RPC_URLS_BY_CHAIN, ChainId } from 'wallet/src/constants/chains'
+import { ChainId, CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
 
 // Should match supported chains in `InfuraProvider` class within `getUrl` method
 export type InfuraChainName =
@@ -34,9 +34,6 @@ export function getInfuraChainName(chainId: ChainId): InfuraChainName {
   }
 }
 
-export function isAlternativeRpcSupportedOnChain(
-  chainId: ChainId,
-  alternativeRpcType: AlternativeRpcType
-): boolean {
-  return Object.keys(ALT_RPC_URLS_BY_CHAIN[chainId] ?? {}).includes(alternativeRpcType)
+export function isPrivateRpcSupportedOnChain(chainId: ChainId): boolean {
+  return Boolean(CHAIN_INFO[chainId]?.rpcUrls?.[RPCType.Private])
 }

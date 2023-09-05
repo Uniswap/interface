@@ -32,7 +32,7 @@ type SwapTransactionResultProperties = {
   gasUseEstimate?: string
   route?: string
   quoteId?: string
-  alternativeRpc?: string
+  submitViaPrivateRpc?: boolean
   protocol?: Protocol
 }
 

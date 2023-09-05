@@ -1,22 +1,9 @@
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { isStale } from 'utilities/src/time/time'
-import { config } from 'wallet/src/config'
-import {
-  AlternativeRpcType,
-  ALT_RPC_URLS_BY_CHAIN,
-  ChainId,
-  CHAIN_INFO,
-  L1ChainInfo,
-  L2ChainInfo,
-} from 'wallet/src/constants/chains'
-
-import {
-  getEthersProvider,
-  getEthersProviderFromRpcUrl,
-} from 'wallet/src/features/providers/getEthersProvider'
+import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo, RPCType } from 'wallet/src/constants/chains'
+import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
 import { getInfuraChainName } from 'wallet/src/features/providers/utils'
 
 enum ProviderStatus {
@@ -31,7 +18,11 @@ interface ProviderDetails {
   blockWatcher?: Task
 }
 
-type ChainIdToProvider = Partial<Record<ChainId, ProviderDetails>>
+type ProviderInfo = Partial<{
+  [key in keyof RPCType as RPCType]: ProviderDetails
+}>
+
+type ChainIdToProvider = Partial<Record<ChainId, ProviderInfo>>
 
 const getChainDetails = (chainId: ChainId): L1ChainInfo | L2ChainInfo => {
   const chainDetails = CHAIN_INFO[chainId]
@@ -57,133 +48,63 @@ export class ProviderManager {
     this.onUpdate = onUpdate
   }
 
-  createProvider(chainId: ChainId): ethersProviders.Provider {
-    const cachedProvider = this._providers[chainId]
-    if (cachedProvider) {
-      return cachedProvider.provider
+  tryGetProvider(chainId: ChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider | null {
+    try {
+      return this.getProvider(chainId, rpcType)
+    } catch (error) {
+      return null
     }
-
-    const newProvider = this.initProvider(chainId)
-    if (newProvider) {
-      this._providers[chainId] = {
-        provider: newProvider,
-        status: ProviderStatus.Connected,
-      }
-      this.onUpdate?.()
-      return newProvider
-    }
-
-    logger.error('Failed to create provider', {
-      tags: {
-        file: 'ProviderManager',
-        function: 'createProvider',
-        chainId,
-      },
-    })
-    // Otherwise show error
-    throw new Error(`Failed to create new provider for ${chainId}`)
   }
 
-  removeProvider(chainId: ChainId): void {
-    if (!this._providers[chainId]) {
+  getProvider(chainId: ChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider {
+    const cachedProviderDetails = this._providers[chainId]?.[rpcType]
+    if (cachedProviderDetails?.status === ProviderStatus.Connected) {
+      return cachedProviderDetails.provider
+    }
+
+    this.createProvider(chainId, rpcType)
+    const providerDetails = this._providers[chainId]?.[rpcType]
+
+    if (providerDetails?.status !== ProviderStatus.Connected) {
+      throw new Error(`Provider of type ${rpcType} not connected for chain: ${chainId}`)
+    }
+
+    return providerDetails.provider
+  }
+
+  createProvider(chainId: ChainId, rpcType: RPCType = RPCType.Public): undefined {
+    const provider = createEthersProvider(chainId, rpcType)
+    if (!provider) {
+      if (rpcType === RPCType.Public) {
+        // TODO: pop a toast one time to let the user know and maybe update a status page
+      }
+      return
+    }
+
+    this._providers[chainId] = {
+      ...this._providers[chainId],
+      [rpcType]: { provider, status: ProviderStatus.Connected },
+    }
+    this.onUpdate?.()
+  }
+
+  removeProviders(chainId: ChainId): void {
+    const providersInfo = this._providers[chainId]
+    if (!providersInfo) {
       logger.warn(
         'ProviderManager',
-        'removeProvider',
+        'removeProviders',
         `Attempting to remove non-existent provider: ${chainId}`
       )
       return
     }
-    this._providers[chainId]?.provider.removeAllListeners()
+
+    Object.values(providersInfo).forEach((providerInfo) => {
+      providerInfo.provider.removeAllListeners()
+    })
+
     delete this._providers[chainId]
     this.onUpdate?.()
-  }
-
-  hasProvider(chainId: ChainId): boolean {
-    return !!this._providers[chainId]
-  }
-
-  tryGetProvider(chainId: ChainId): ethersProviders.JsonRpcProvider | null {
-    if (!this._providers[chainId]) return null
-    const provider = this._providers[chainId]
-    if (provider?.status !== ProviderStatus.Connected) return null
-    return provider.provider
-  }
-
-  getProvider(
-    chainId: ChainId,
-    alternativeRpcType?: AlternativeRpcType
-  ): ethersProviders.JsonRpcProvider {
-    if (alternativeRpcType) {
-      return this.getAlternativeRpcProvider(chainId, alternativeRpcType)
-    }
-    if (!this._providers[chainId]) {
-      throw new Error(`No provider initialized for chain: ${chainId}`)
-    }
-    const provider = this._providers[chainId]
-    if (provider?.status !== ProviderStatus.Connected) {
-      throw new Error(`Provider not connected for chain: ${chainId}`)
-    }
-    return provider.provider
-  }
-
-  // TODO: [MOB-562] responsibility of this overlaps with init code in providerSaga which is initializing all upfront
-  // Switch to using lazy init throughout app or cut this
-  getInitializedProvider(chainId: ChainId): ethersProviders.Provider {
-    if (this.hasProvider(chainId)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return this._providers[chainId]!.provider
-    }
-    return this.createProvider(chainId)
-  }
-
-  getAllProviders(): Partial<Record<ChainId, ProviderDetails>> {
-    return this._providers
-  }
-
-  private initProvider(chainId: ChainId): Nullable<ethersProviders.JsonRpcProvider> {
-    try {
-      // Attempt to create provider using getEthersProvider for Infura supported chains
-      const infuraChainName = getInfuraChainName(chainId)
-
-      logger.debug(
-        'ProviderManager',
-        'initProvider',
-        `Connecting to infura rpc provider for ${infuraChainName}`
-      )
-
-      const provider = getEthersProvider(chainId, config)
-      return provider
-    } catch (error) {
-      // Attempt to fallback creating provider from RPC urls defined by CHAIN_INFO
-      try {
-        logger.debug(
-          'ProviderManager',
-          'initProvider',
-          `Fallback connecting to infura rpc provider for ${chainId}`
-        )
-        const provider = getEthersProviderFromRpcUrl(chainId)
-        return provider
-      } catch (e) {
-        logger.error('Failed to initialize provider', {
-          tags: {
-            file: 'ProviderManager',
-            function: 'initProvider',
-            chainId,
-            error: serializeError(e),
-          },
-        })
-        return null
-      }
-    }
-  }
-
-  private getAlternativeRpcProvider(
-    chainId: ChainId,
-    alternativeRpcType: AlternativeRpcType
-  ): ethersProviders.JsonRpcProvider {
-    const rpcUrl = ALT_RPC_URLS_BY_CHAIN[chainId]?.[alternativeRpcType]
-    if (!rpcUrl) throw new Error(`${chainId} is not supported by rpc type: ${alternativeRpcType}`)
-    return new ethersProviders.JsonRpcProvider(rpcUrl)
   }
 
   private isProviderSynced(

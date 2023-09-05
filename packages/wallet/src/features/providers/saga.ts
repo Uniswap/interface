@@ -1,5 +1,4 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { providers as ethersProviders } from 'ethers'
 import { REHYDRATE } from 'redux-persist'
 import { call, fork, join, take, takeEvery } from 'typed-redux-saga'
 import { serializeError } from 'utilities/src/errors'
@@ -34,11 +33,7 @@ export function* initProviders() {
 function* initProvider(chainId: ChainId, manager: ProviderManager) {
   try {
     logger.debug('providerSaga', 'initProvider', 'Creating a provider for:', chainId)
-    if (manager.hasProvider(chainId)) {
-      logger.debug('providerSaga', 'initProvider', 'Provider already exists for:', chainId)
-      return
-    }
-    yield* call(createProvider, chainId, manager)
+    yield* call([manager, manager.createProvider], chainId)
   } catch (error) {
     logger.error('Failed to initialize provider', {
       tags: {
@@ -51,15 +46,6 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
   }
 }
 
-function destroyProvider(chainId: ChainId, manager: ProviderManager): void {
-  logger.debug('providerSaga', 'destroyProvider', 'Disabling a provider for:', chainId)
-  if (!manager.hasProvider(chainId)) {
-    logger.debug('providerSaga', 'destroyProvider', 'Provider does not exists for:', chainId)
-    return
-  }
-  manager.removeProvider(chainId)
-}
-
 function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: boolean }>) {
   const { chainId, isActive } = action.payload
   try {
@@ -67,7 +53,7 @@ function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: bo
     if (isActive) {
       yield* call(initProvider, chainId, manager)
     } else {
-      destroyProvider(chainId, manager)
+      yield* call([manager, manager.removeProviders], chainId)
     }
   } catch (error) {
     logger.error('Error while modifying provider', {
@@ -79,13 +65,4 @@ function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: bo
       },
     })
   }
-}
-
-async function createProvider(
-  chainId: ChainId,
-  manager: ProviderManager
-): Promise<ethersProviders.Provider> {
-  logger.debug('providerSaga', 'createProvider', 'Creating a provider for:', chainId)
-  const provider = manager.createProvider(chainId)
-  return provider
 }

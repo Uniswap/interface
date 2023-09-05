@@ -265,7 +265,7 @@ export function logTransactionEvent(
     typeInfo,
     receipt,
     status,
-    options: { alternativeRpc },
+    options: { submitViaPrivateRpc },
   } = payload
   const { gasUsed, effectiveGasPrice, confirmedTime } = receipt ?? {}
   const { type } = typeInfo
@@ -301,7 +301,7 @@ export function logTransactionEvent(
       gasUseEstimate,
       route: routeString,
       quoteId,
-      alternativeRpc,
+      submitViaPrivateRpc,
       protocol,
     })
   }

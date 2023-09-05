@@ -7,15 +7,14 @@ import { logger } from 'utilities/src/logger/logger'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20 } from 'wallet/src/abis/types'
 import { ChainId } from 'wallet/src/constants/chains'
-import { useContractManager, useProviderManager } from 'wallet/src/features/wallet/context'
+import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 
 export function useContract<T extends Contract = Contract>(
   chainId: ChainId,
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
   ABI: ContractInterface
 ): T | null {
-  const providerManager = useProviderManager()
-  const provider = providerManager.tryGetProvider(chainId)
+  const provider = useProvider(chainId)
   const contractsManager = useContractManager()
 
   return useMemo(() => {

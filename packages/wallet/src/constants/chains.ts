@@ -14,6 +14,12 @@ import {
 import { config } from 'wallet/src/config'
 import { chainListToStateMap } from 'wallet/src/features/chains/utils'
 
+export enum RPCType {
+  Public = 'public',
+  Private = 'private',
+  PublicAlt = 'public_alternative',
+}
+
 export interface ChainState {
   isActive: boolean
   // More properties can be added here over time
@@ -82,7 +88,7 @@ export interface L1ChainInfo {
   readonly label: string
   readonly logoUrl?: string
   readonly logo?: ImageSourcePropType
-  readonly rpcUrls?: string[]
+  readonly rpcUrls?: Partial<{ [key in keyof RPCType as RPCType]: string }>
   readonly nativeCurrency: {
     name: string // 'Goerli ETH',
     symbol: string // 'gorETH',
@@ -110,7 +116,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Arbitrum',
     logo: ARBITRUM_LOGO,
     nativeCurrency: { name: 'Arbitrum ETH', symbol: 'ETH', decimals: 18 },
-    rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+    rpcUrls: { [RPCType.PublicAlt]: 'https://arb1.arbitrum.io/rpc' },
   },
   [ChainId.Mainnet]: {
     blockWaitMsBeforeWarning: 60000, // 1 minute
@@ -120,6 +126,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Ethereum',
     logo: ETHEREUM_LOGO,
     nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
+    rpcUrls: { [RPCType.Private]: 'https://rpc.mevblocker.io' },
   },
   [ChainId.Goerli]: {
     blockWaitMsBeforeWarning: 180000, // 3 minutes
@@ -139,7 +146,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Base',
     logo: BASE_LOGO,
     nativeCurrency: { name: 'Base ETH', symbol: 'ETH', decimals: 18 },
-    rpcUrls: ['https://mainnet.base.org'],
+    rpcUrls: { [RPCType.Public]: 'https://mainnet.base.org' },
   },
   [ChainId.Bnb]: {
     blockWaitMsBeforeWarning: 600000,
@@ -150,7 +157,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'BNB',
     logo: BNB_LOGO,
     nativeCurrency: { name: 'Binance Coin', symbol: 'BNB', decimals: 18 },
-    rpcUrls: [config.quicknodeBnbRpcUrl],
+    rpcUrls: { [RPCType.Public]: config.quicknodeBnbRpcUrl },
   },
   [ChainId.Optimism]: {
     blockWaitMsBeforeWarning: 1200000, // 20 minutes
@@ -161,7 +168,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Optimism',
     logo: OPTIMISM_LOGO,
     nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
-    rpcUrls: ['https://mainnet.optimism.io'],
+    rpcUrls: { [RPCType.PublicAlt]: 'https://mainnet.optimism.io' },
     statusPage: 'https://optimism.io/status',
   },
   [ChainId.Polygon]: {
@@ -173,7 +180,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Polygon',
     logo: POLYGON_LOGO,
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
-    rpcUrls: ['https://polygon-rpc.com/'],
+    rpcUrls: { [RPCType.PublicAlt]: 'https://polygon-rpc.com/' },
   },
   [ChainId.PolygonMumbai]: {
     blockWaitMsBeforeWarning: 600000, // 10 minutes
@@ -188,17 +195,7 @@ export const CHAIN_INFO: ChainInfo = {
       symbol: 'mMATIC',
       decimals: 18,
     },
-    rpcUrls: ['https://rpc-endpoints.superfluid.dev/mumbai'],
-  },
-}
-
-export enum AlternativeRpcType {
-  MevBlocker = 'MevBlocker',
-}
-
-export const ALT_RPC_URLS_BY_CHAIN: Partial<Record<ChainId, Record<AlternativeRpcType, string>>> = {
-  [ChainId.Mainnet]: {
-    [AlternativeRpcType.MevBlocker]: 'https://rpc.mevblocker.io',
+    rpcUrls: { [RPCType.PublicAlt]: 'https://rpc-endpoints.superfluid.dev/mumbai' },
   },
 }
 

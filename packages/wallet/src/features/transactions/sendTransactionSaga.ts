@@ -3,7 +3,7 @@ import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { logger } from 'utilities/src/logger/logger'
-import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { ChainId, CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
@@ -48,8 +48,8 @@ export function* sendTransaction(params: SendTransactionParams) {
   if (account.type === AccountType.Readonly) throw new Error('Account must support signing')
 
   // Sign and send the transaction
-  const provider = yield* call(getProvider, chainId, options.alternativeRpc)
-
+  const rpcType = options.submitViaPrivateRpc ? RPCType.Private : RPCType.Public
+  const provider = yield* call(getProvider, chainId, rpcType)
   const signerManager = yield* call(getSignerManager)
   const { transactionResponse, populatedRequest } = yield* call(
     signAndSendTransaction,

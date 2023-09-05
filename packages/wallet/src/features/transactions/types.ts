@@ -1,7 +1,7 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
-import { AlternativeRpcType, ChainId, ChainIdTo } from 'wallet/src/constants/chains'
+import { ChainId, ChainIdTo } from 'wallet/src/constants/chains'
 import { TransactionListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
@@ -71,7 +71,7 @@ export interface FinalizedTransactionDetails extends TransactionDetails {
 export interface TransactionOptions {
   request: providers.TransactionRequest
   timeoutMs?: number
-  alternativeRpc?: AlternativeRpcType
+  submitViaPrivateRpc?: boolean
 }
 
 export interface TransactionReceipt {

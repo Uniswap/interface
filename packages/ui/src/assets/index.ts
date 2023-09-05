@@ -3,7 +3,6 @@ export const OPTIMISM_LOGO = require('./logos/png/optimism-logo.png')
 export const ARBITRUM_LOGO = require('./logos/png/arbitrum-logo.png')
 export const BASE_LOGO = require('./logos/png/base-logo.png')
 export const BNB_LOGO = require('./logos/png/bnb-logo.png')
-
 export const POLYGON_LOGO = require('./logos/png/polygon-logo.png')
 export const GOERLI_LOGO = require('./logos/png/goerli-logo.png')
 export const MUMBAI_LOGO = require('./logos/png/mumbai-logo.png')

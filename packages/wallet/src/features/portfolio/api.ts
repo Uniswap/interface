@@ -1,12 +1,10 @@
 import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
-import { providers as ethersProviders } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
-import { config } from 'wallet/src/config'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useRestQuery } from 'wallet/src/data/rest'
 import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/utils'
-import { getEthersProvider } from 'wallet/src/features/providers/getEthersProvider'
+import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { currencyAddress as getCurrencyAddress } from 'wallet/src/utils/currencyId'
@@ -30,14 +28,8 @@ export const getOnChainBalancesFetch = async (params: BalanceLookupParams): Prom
     throw new Error(`currencyAddress, chainId, or accountAddress is not defined`)
   }
 
-  // attemps to get initialized provider from context, but in some situation
-  // the provider may not be available (e.g. different thread)
-  let provider: ethersProviders.JsonRpcProvider | null = null
-  try {
-    provider = walletContextValue.providers.getProvider(chainId)
-  } catch {
-    provider = getEthersProvider(chainId, config)
-  }
+  const provider = createEthersProvider(chainId)
+  if (!provider) return new Response(JSON.stringify({ balance: undefined }))
 
   // native amount lookup
   if (currencyIsNative) {
