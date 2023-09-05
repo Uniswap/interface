@@ -6,7 +6,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
+import { formatNumber, formatPriceImpact, NumberType, useFormatterLocales } from 'utils/formatNumbers'
 import { warningSeverity } from 'utils/prices'
 
 const FiatLoadingBubble = styled(LoadingBubble)`
@@ -22,6 +22,8 @@ export function FiatValue({
   fiatValue: { data?: number; isLoading: boolean }
   priceImpact?: Percent
 }) {
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
     if (priceImpact.lessThan('0')) return 'success'
@@ -42,6 +44,8 @@ export function FiatValue({
           formatNumber({
             input: fiatValue.data,
             type: NumberType.FiatTokenPrice,
+            locale: formatterLocale,
+            localCurrency: formatterLocalCurrency,
           })
         ) : (
           <MouseoverTooltip text={<Trans>Not enough liquidity to show accurate USD value.</Trans>}>-</MouseoverTooltip>
