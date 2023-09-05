@@ -228,8 +228,8 @@ export function FiatOnRampModal(): JSX.Element {
                   caretHidden={!showNativeKeyboard}
                   fontFamily={theme.textVariants.headlineMedium.fontFamily}
                   fontSize={fontSize}
-                  height={MAX_INPUT_FONT_SIZE}
                   maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
+                  minHeight={MAX_INPUT_FONT_SIZE}
                   mt="spacing48"
                   overflow="visible"
                   placeholder="$0"
