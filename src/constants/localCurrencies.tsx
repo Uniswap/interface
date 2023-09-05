@@ -1,3 +1,4 @@
+import { Currency } from 'graphql/data/__generated__/types-and-hooks'
 import { ReactNode } from 'react'
 
 import {
@@ -22,29 +23,29 @@ import {
 } from './localCurrencyIcons'
 
 export const SUPPORTED_LOCAL_CURRENCIES = [
-  'USD',
-  'AUD',
-  'BRL',
-  'CAD',
-  'EUR',
-  'GBP',
-  'HKD',
-  'IDR',
-  'INR',
-  'JPY',
-  'NGN',
-  'PKR',
-  'RUB',
-  'SGD',
-  'THB',
-  'TRY',
-  'UAH',
-  'VND',
-]
+  Currency.Usd,
+  Currency.Aud,
+  Currency.Brl,
+  Currency.Cad,
+  Currency.Eur,
+  Currency.Gbp,
+  Currency.Hkd,
+  Currency.Idr,
+  Currency.Inr,
+  Currency.Jpy,
+  Currency.Ngn,
+  Currency.Pkr,
+  Currency.Rub,
+  Currency.Sgd,
+  Currency.Thb,
+  Currency.Try,
+  Currency.Uah,
+  Currency.Vnd,
+] as const
 
 export type SupportedLocalCurrency = (typeof SUPPORTED_LOCAL_CURRENCIES)[number]
 
-export const DEFAULT_LOCAL_CURRENCY: SupportedLocalCurrency = 'USD'
+export const DEFAULT_LOCAL_CURRENCY: SupportedLocalCurrency = Currency.Usd
 
 // some currencies need to be forced to use the narrow symbol and others need to be forced to use symbol
 // for example: when CAD is set to narrowSymbol it is displayed as $ which offers no differentiation from USD
@@ -73,41 +74,41 @@ export const LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE: Record<SupportedLocalCurrency, 
 
 export function getLocalCurrencyIcon(localCurrency: SupportedLocalCurrency, size = 20): ReactNode {
   switch (localCurrency) {
-    case 'USD':
+    case Currency.Usd:
       return <USD_ICON width={size} height={size} />
-    case 'EUR':
+    case Currency.Eur:
       return <EUR_ICON width={size} height={size} />
-    case 'RUB':
+    case Currency.Rub:
       return <RUB_ICON width={size} height={size} />
-    case 'INR':
+    case Currency.Inr:
       return <INR_ICON width={size} height={size} />
-    case 'GBP':
+    case Currency.Gbp:
       return <GBP_ICON width={size} height={size} />
-    case 'JPY':
+    case Currency.Jpy:
       return <JPY_ICON width={size} height={size} />
-    case 'VND':
+    case Currency.Vnd:
       return <VND_ICON width={size} height={size} />
-    case 'SGD':
+    case Currency.Sgd:
       return <SGD_ICON width={size} height={size} />
-    case 'BRL':
+    case Currency.Brl:
       return <BRL_ICON width={size} height={size} />
-    case 'HKD':
+    case Currency.Hkd:
       return <HKD_ICON width={size} height={size} />
-    case 'CAD':
+    case Currency.Cad:
       return <CAD_ICON width={size} height={size} />
-    case 'IDR':
+    case Currency.Idr:
       return <IDR_ICON width={size} height={size} />
-    case 'TRY':
+    case Currency.Try:
       return <TRY_ICON width={size} height={size} />
-    case 'NGN':
+    case Currency.Ngn:
       return <NGN_ICON width={size} height={size} />
-    case 'AUD':
+    case Currency.Aud:
       return <AUD_ICON width={size} height={size} />
-    case 'PKR':
+    case Currency.Pkr:
       return <PKR_ICON width={size} height={size} />
-    case 'UAH':
+    case Currency.Uah:
       return <UAH_ICON width={size} height={size} />
-    case 'THB':
+    case Currency.Thb:
       return <THB_ICON width={size} height={size} />
     default:
       return null
