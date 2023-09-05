@@ -34,12 +34,12 @@ import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
+import { useLocalCurrencyPrice } from 'hooks/useLocalCurrencyPrice'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
-import { useUSDPrice } from 'hooks/useUSDPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
@@ -313,8 +313,8 @@ export function Swap({
     [independentField, parsedAmount, showWrap, trade]
   )
 
-  const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT], currencies[Field.INPUT] ?? undefined)
-  const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT], currencies[Field.OUTPUT] ?? undefined)
+  const fiatValueInput = useLocalCurrencyPrice(parsedAmounts[Field.INPUT], currencies[Field.INPUT] ?? undefined)
+  const fiatValueOutput = useLocalCurrencyPrice(parsedAmounts[Field.OUTPUT], currencies[Field.OUTPUT] ?? undefined)
   const showFiatValueInput = Boolean(parsedAmounts[Field.INPUT])
   const showFiatValueOutput = Boolean(parsedAmounts[Field.OUTPUT])
 
@@ -327,9 +327,9 @@ export function Swap({
     [trade, tradeState]
   )
 
-  const fiatValueTradeInput = useUSDPrice(trade?.inputAmount)
-  const fiatValueTradeOutput = useUSDPrice(trade?.postTaxOutputAmount)
-  const preTaxFiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
+  const fiatValueTradeInput = useLocalCurrencyPrice(trade?.inputAmount)
+  const fiatValueTradeOutput = useLocalCurrencyPrice(trade?.postTaxOutputAmount)
+  const preTaxFiatValueTradeOutput = useLocalCurrencyPrice(trade?.outputAmount)
   const [stablecoinPriceImpact, preTaxStablecoinPriceImpact] = useMemo(
     () =>
       routeIsSyncing || !isClassicTrade(trade)
