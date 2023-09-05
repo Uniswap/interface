@@ -13,7 +13,7 @@ export const uniswapUrls = {
   amplitudeProxyUrl: getUniswapAmplitudeProxyUrl(),
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
-  appUrl: `https://${UNISWAP_APP_HOSTNAME}/#`,
+  appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
   interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
   moonpayHelpUrl:
     'https://support.uniswap.org/hc/en-us/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-',
