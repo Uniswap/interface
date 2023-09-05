@@ -128,6 +128,8 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               ? `${formatCurrencyAmount({
                   amount: trade.minimumAmountOut(allowedSlippage),
                   type: NumberType.SwapTradeAmount,
+                  locale: formatterLocale,
+                  localCurrency: formatterLocalCurrency,
                 })} ${trade.outputAmount.currency.symbol}`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
           </ThemedText.BodySmall>
@@ -153,6 +155,8 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             {`${formatCurrencyAmount({
               amount: trade.postTaxOutputAmount,
               type: NumberType.SwapTradeAmount,
+              locale: formatterLocale,
+              localCurrency: formatterLocalCurrency,
             })} ${trade.outputAmount.currency.symbol}`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>

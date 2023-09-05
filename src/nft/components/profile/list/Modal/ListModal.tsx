@@ -15,7 +15,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
+import { formatCurrencyAmount, NumberType, useFormatterLocales } from 'utils/formatNumbers'
 import { shallow } from 'zustand/shallow'
 
 import { TitleRow } from '../shared'
@@ -48,6 +48,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const { provider, chainId } = useWeb3React()
   const signer = provider?.getSigner()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const { setListingStatusAndCallback, setLooksRareNonce, getLooksRareNonce, collectionsRequiringApproval, listings } =
     useNFTList(
@@ -75,7 +76,12 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
-  const usdcAmount = formatCurrencyAmount({ amount: usdcValue, type: NumberType.FiatTokenPrice })
+  const usdcAmount = formatCurrencyAmount({
+    amount: usdcValue,
+    type: NumberType.FiatTokenPrice,
+    locale: formatterLocale,
+    localCurrency: formatterLocalCurrency,
+  })
 
   const allCollectionsApproved = useMemo(
     () => collectionsRequiringApproval.every((collection) => collection.status === ListingStatus.APPROVED),

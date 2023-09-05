@@ -24,7 +24,7 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'state/transactions/types'
-import { formatCurrencyAmount } from 'utils/formatNumbers'
+import { formatCurrencyAmount, useFormatterLocales } from 'utils/formatNumbers'
 
 import { CancelledTransactionTitleTable, getActivityTitle, OrderTextTable } from '../constants'
 import { Activity, ActivityMap } from './types'
@@ -237,13 +237,14 @@ export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions()
   const allSignatures = useAllSignatures()
   const tokens = useAllTokensMultichain()
+  const { formatterLocale } = useFormatterLocales()
 
   return useMemo(() => {
     const activityMap: ActivityMap = {}
     for (const [transaction, chainId] of allTransactions) {
       if (transaction.from !== account) continue
 
-      const activity = transactionToActivity(transaction, chainId, tokens)
+      const activity = transactionToActivity(transaction, chainId, tokens, formatterLocale)
       if (activity) activityMap[transaction.hash] = activity
     }
 
@@ -255,5 +256,5 @@ export function useLocalActivities(account: string): ActivityMap {
     }
 
     return activityMap
-  }, [account, allSignatures, allTransactions, tokens])
+  }, [account, allSignatures, allTransactions, formatterLocale, tokens])
 }
