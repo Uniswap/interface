@@ -1,11 +1,10 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useActivePopups } from 'state/application/hooks'
+import { useURLWarningVisible } from 'state/user/hooks'
 import styled from 'styled-components'
-import { MEDIA_WIDTHS } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
 
-import { useActivePopups } from '../../state/application/hooks'
-import { useURLWarningVisible } from '../../state/user/hooks'
-import { Z_INDEX } from '../../theme/zIndex'
 import { useAccountDrawer } from '../AccountDrawer'
 import { AutoColumn } from '../Column'
 import ClaimPopup from './ClaimPopup'
@@ -16,6 +15,8 @@ const MobilePopupWrapper = styled.div`
   max-width: 100%;
   margin: 0 auto;
   display: none;
+  padding-left: 20px;
+  padding-right: 20px;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: block;
@@ -35,22 +36,12 @@ const MobilePopupInner = styled.div`
   }
 `
 
-const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToMedium + 1}px) and (max-width: ${
-  MEDIA_WIDTHS.deprecated_upToMedium + 500
-}px)`
-
-type TopDistanceModifiers = {
+const FixedPopupColumn = styled(AutoColumn)<{
   bannerVisible: boolean
   drawerOpen: boolean
-}
-
-const getTopDistance = ({ drawerOpen, bannerVisible }: TopDistanceModifiers) => {
-  return 64 + (drawerOpen ? -50 : 0) + (bannerVisible ? 8 : 0)
-}
-
-const FixedPopupColumn = styled(AutoColumn)<TopDistanceModifiers>`
+}>`
   position: fixed;
-  top: ${(modifiers) => `${getTopDistance(modifiers)}px`};
+  top: ${({ drawerOpen, bannerVisible }) => `${64 + (drawerOpen ? -50 : 0) + (bannerVisible ? 8 : 0)}px`};
   right: 1rem;
   max-width: 348px !important;
   width: 100%;
@@ -60,10 +51,6 @@ const FixedPopupColumn = styled(AutoColumn)<TopDistanceModifiers>`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: none;
   `};
-
-  ${StopOverflowQuery} {
-    top: ${(modifiers) => `${getTopDistance(modifiers)}px`};
-  }
 `
 
 export default function Popups() {
