@@ -6,6 +6,8 @@ import { Action } from 'redux'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
+import { AddressDisplay } from 'src/components/AddressDisplay'
+import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
@@ -21,6 +23,7 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import PlusIcon from 'ui/src/assets/icons/plus.svg'
 import { dimensions } from 'ui/src/theme/restyle'
+import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
   PendingAccountActions,
@@ -85,6 +88,16 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
   const onCloseAddWallet = (): void => {
     setShowAddWalletModal(false)
+  }
+
+  const onManageWallet = (): void => {
+    if (!activeAccountAddress) return
+
+    dispatch(closeModal({ name: ModalName.AccountSwitcher }))
+    navigate(Screens.SettingsStack, {
+      screen: Screens.SettingsWallet,
+      params: { address: activeAccountAddress },
+    })
   }
 
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {
@@ -210,6 +223,11 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     return options
   }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, t])
 
+  const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
+
+  const isViewOnly =
+    accounts.find((a) => a.address === activeAccountAddress)?.type === AccountType.Readonly
+
   if (!activeAccountAddress) {
     return null
   }
@@ -218,25 +236,41 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
   return (
     <Flex fill gap="none" maxHeight={fullScreenContentHeight} mb="spacing12">
-      <Flex row alignItems="center" mb="spacing16">
-        <Box flex={1} pl="spacing24">
-          <Text color="neutral1" textAlign="left" variant="bodyLarge">
-            {t('Your wallets')}
-          </Text>
+      <Flex pb="spacing16" pt="spacing12">
+        <AddressDisplay
+          showCopy
+          address={activeAccountAddress}
+          direction="column"
+          horizontalGap="spacing8"
+          showViewOnlyBadge={isViewOnly}
+          size={theme.spacing.spacing60 - theme.spacing.spacing4}
+        />
+        <Box px="spacing24">
+          <Button
+            emphasis={ButtonEmphasis.Secondary}
+            label={t('Manage wallet')}
+            size={ButtonSize.Small}
+            testID={ElementName.WalletSettings}
+            onPress={onManageWallet}
+          />
         </Box>
       </Flex>
-      <AccountList accounts={accounts} isVisible={modalState.isOpen} onPress={onPressAccount} />
-      <TouchableArea hapticFeedback my="spacing24" onPress={onPressAddWallet}>
+      <AccountList
+        accounts={accountsWithoutActive}
+        isVisible={modalState.isOpen}
+        onPress={onPressAccount}
+      />
+      <TouchableArea hapticFeedback mb="spacing48" mt="spacing16" onPress={onPressAddWallet}>
         <Flex row alignItems="center" ml="spacing24">
-          <Box borderColor="surface3" borderRadius="roundedFull" borderWidth={1} p="spacing12">
+          <Box borderColor="surface3" borderRadius="roundedFull" borderWidth={1} p="spacing8">
             <PlusIcon
-              color={theme.colors.neutral1}
-              height={theme.iconSizes.icon16}
+              color={theme.colors.neutral2}
+              height={theme.iconSizes.icon12}
               strokeWidth={2}
-              width={theme.iconSizes.icon16}
+              width={theme.iconSizes.icon12}
             />
           </Box>
-          <Text color="neutral1" variant="bodyLarge">
+          <Text color="neutral2" variant="buttonLabelSmall">
             {t('Add wallet')}
           </Text>
         </Flex>

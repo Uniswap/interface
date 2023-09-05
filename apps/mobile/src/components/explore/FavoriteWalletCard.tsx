@@ -36,14 +36,7 @@ export default function FavoriteWalletCard({
   const { data: avatar } = useENSAvatar(address)
 
   const icon = useMemo(() => {
-    return (
-      <AccountIcon
-        address={address}
-        avatarUri={avatar}
-        showViewOnlyBadge={false}
-        size={theme.iconSizes.icon20}
-      />
-    )
+    return <AccountIcon address={address} avatarUri={avatar} size={theme.iconSizes.icon20} />
   }, [address, avatar])
 
   const onRemove = useCallback(() => {

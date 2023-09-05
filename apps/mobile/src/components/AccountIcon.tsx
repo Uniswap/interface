@@ -37,7 +37,7 @@ export function AccountIcon({
   // Color for gradient background.
   const { gradientStart: uniconColor } = useUniconColors(address)
 
-  const iconPadding = FixedTheme.spacing.spacing2
+  const iconPadding = FixedTheme.spacing.spacing4
   const iconEyeContainerSize = size * 0.45
   const iconEyeSize = iconEyeContainerSize - iconPadding
 
@@ -75,18 +75,18 @@ export function AccountIcon({
           alignItems="center"
           backgroundColor="surface2"
           borderRadius="roundedFull"
-          bottom={0}
+          bottom={-2}
           height={iconEyeContainerSize}
           justifyContent="center"
           p="spacing4"
           position="absolute"
-          right={0}
+          right={-2}
           shadowColor="sporeBlack"
           shadowOffset={{ width: 0, height: 0 }}
           shadowOpacity={0.2}
           shadowRadius={10}
           width={iconEyeContainerSize}>
-          <Eye color={theme.colors.neutral2} width={iconEyeSize} />
+          <Eye color={theme.colors.neutral1} width={iconEyeSize} />
         </Box>
       )}
     </Box>

@@ -22,45 +22,491 @@ exports[`AccountSwitcher renders correctly 1`] = `
     style={
       [
         {
-          "alignItems": "center",
+          "alignItems": "stretch",
           "display": "flex",
-          "flexDirection": "row",
+          "flexDirection": "column",
           "justifyContent": "flex-start",
-          "marginBottom": 16,
+          "paddingBottom": 16,
+          "paddingTop": 12,
         },
       ]
     }
   >
     <View
+      sentry-label="Flex"
       style={
         [
           {
+            "alignItems": "center",
             "display": "flex",
-            "flex": 1,
-            "paddingLeft": 24,
+            "flexDirection": "column",
+            "justifyContent": "flex-start",
           },
         ]
       }
     >
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.4}
+      <View
         style={
           [
             {
-              "color": "#222222",
               "display": "flex",
-              "fontFamily": "Basel-Book",
-              "fontSize": 19,
-              "fontWeight": "400",
-              "lineHeight": 24,
-              "textAlign": "left",
+              "position": "relative",
             },
           ]
         }
       >
-        Your wallets
-      </Text>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "transparent",
+                "borderColor": "transparent",
+                "borderRadius": 999999,
+                "borderWidth": 0,
+                "display": "flex",
+                "position": "relative",
+              },
+              {
+                "padding": 0,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "display": "flex",
+                  "height": 56,
+                  "width": 56,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "display": "flex",
+                    "height": 56,
+                    "width": 56,
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                  }
+                }
+              >
+                <View
+                  clip={true}
+                  mask={
+                    <UniconMask
+                      attributeData={
+                        {
+                          "0": "#6100FF",
+                          "1": "#76D191",
+                          "2": [
+                            {
+                              "fillType": "evenOdd",
+                              "path": "M31 33V16C31 8.8203 25.1797 3 18 3C10.8203 3 5 8.8203 5 16V33H31ZM18 0C9.16344 0 2 7.16344 2 16V35.807C2 35.9136 2.08642 36 2.19303 36H33.807C33.9136 36 34 35.9136 34 35.807V16C34 7.16344 26.8366 0 18 0Z",
+                            },
+                          ],
+                          "3": [
+                            {
+                              "path": "M8 8C8 8 13.1678 6.70089 14.2197 5.649C15.2716 4.59712 15.2583 2.87836 14.19 1.81004C13.1216 0.741719 11.4029 0.728395 10.351 1.78028C9.29911 2.83216 8 8 8 8Z",
+                            },
+                            {
+                              "path": "M8 8C8 8 13.1678 9.29911 14.2197 10.351C15.2716 11.4029 15.2583 13.1216 14.19 14.19C13.1216 15.2583 11.4029 15.2716 10.351 14.2197C9.29911 13.1678 8 8 8 8Z",
+                            },
+                            {
+                              "path": "M1.78028 10.351C2.83216 9.29911 8 8 8 8C8 8 6.70089 13.1678 5.649 14.2197C4.59712 15.2716 2.87836 15.2583 1.81004 14.19C0.741719 13.1216 0.728395 11.4029 1.78028 10.351Z",
+                            },
+                            {
+                              "path": "M8 8C8 8 2.83216 6.70089 1.78028 5.649C0.728395 4.59712 0.741719 2.87836 1.81004 1.81004C2.87836 0.741719 4.59712 0.728395 5.649 1.78028C6.70089 2.83216 8 8 8 8Z",
+                            },
+                          ],
+                        }
+                      }
+                      showBorder={false}
+                      size={56}
+                    />
+                  }
+                >
+                  <View
+                    transform={
+                      [
+                        {
+                          "scale": 1.5135135135135136,
+                        },
+                      ]
+                    }
+                  >
+                    <View
+                      height={37}
+                      width={37}
+                      x={0}
+                      y={0}
+                    >
+                      <View
+                        colors={
+                          [
+                            "#6100FF",
+                            "#76D191",
+                          ]
+                        }
+                        end={null}
+                        start={null}
+                      />
+                    </View>
+                    <View
+                      color="#D3EBA3"
+                      cx={18.5}
+                      cy={-13.36111111111111}
+                      r={30.833333333333336}
+                    >
+                      <View
+                        blur={15}
+                      />
+                    </View>
+                  </View>
+                </View>
+                <View
+                  clip={true}
+                  mask={
+                    <UniconMask
+                      attributeData={
+                        {
+                          "0": "#6100FF",
+                          "1": "#76D191",
+                          "2": [
+                            {
+                              "fillType": "evenOdd",
+                              "path": "M31 33V16C31 8.8203 25.1797 3 18 3C10.8203 3 5 8.8203 5 16V33H31ZM18 0C9.16344 0 2 7.16344 2 16V35.807C2 35.9136 2.08642 36 2.19303 36H33.807C33.9136 36 34 35.9136 34 35.807V16C34 7.16344 26.8366 0 18 0Z",
+                            },
+                          ],
+                          "3": [
+                            {
+                              "path": "M8 8C8 8 13.1678 6.70089 14.2197 5.649C15.2716 4.59712 15.2583 2.87836 14.19 1.81004C13.1216 0.741719 11.4029 0.728395 10.351 1.78028C9.29911 2.83216 8 8 8 8Z",
+                            },
+                            {
+                              "path": "M8 8C8 8 13.1678 9.29911 14.2197 10.351C15.2716 11.4029 15.2583 13.1216 14.19 14.19C13.1216 15.2583 11.4029 15.2716 10.351 14.2197C9.29911 13.1678 8 8 8 8Z",
+                            },
+                            {
+                              "path": "M1.78028 10.351C2.83216 9.29911 8 8 8 8C8 8 6.70089 13.1678 5.649 14.2197C4.59712 15.2716 2.87836 15.2583 1.81004 14.19C0.741719 13.1216 0.728395 11.4029 1.78028 10.351Z",
+                            },
+                            {
+                              "path": "M8 8C8 8 2.83216 6.70089 1.78028 5.649C0.728395 4.59712 0.741719 2.87836 1.81004 1.81004C2.87836 0.741719 4.59712 0.728395 5.649 1.78028C6.70089 2.83216 8 8 8 8Z",
+                            },
+                          ],
+                        }
+                      }
+                      overlay={true}
+                      showBorder={false}
+                      size={56}
+                    />
+                  }
+                >
+                  <View
+                    color="#000000"
+                    height={56}
+                    opacity={0.08}
+                    width={56}
+                    x={0}
+                    y={0}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "height": 8,
+            },
+          ]
+        }
+      />
+      <View
+        sentry-label="Flex"
+        style={
+          [
+            {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "column",
+              "flexShrink": 1,
+              "justifyContent": "flex-start",
+            },
+          ]
+        }
+      >
+        <View
+          sentry-label="Flex"
+          style={
+            [
+              {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row",
+                "justifyContent": "center",
+              },
+            ]
+          }
+        >
+          <Text
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            maxFontSizeMultiplier={1.4}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#222222",
+                  "display": "flex",
+                  "fontFamily": "Basel-Book",
+                  "fontSize": 19,
+                  "fontWeight": "400",
+                  "lineHeight": 24,
+                },
+              ]
+            }
+            testID="address-display/name/Test Account"
+          >
+            Test Account
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 0,
+              },
+            ]
+          }
+        />
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={
+            {
+              "bottom": 5,
+              "left": 5,
+              "right": 5,
+              "top": 5,
+            }
+          }
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "display": "flex",
+              "opacity": 1,
+            }
+          }
+          testID="copy"
+        >
+          <View
+            sentry-label="Flex"
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "transparent",
+                  "borderRadius": 999999,
+                  "display": "flex",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "marginTop": 0,
+                  "paddingHorizontal": 0,
+                  "paddingVertical": 0,
+                },
+              ]
+            }
+          >
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              style={
+                [
+                  {
+                    "color": "#7D7D7D",
+                    "display": "flex",
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 17,
+                    "fontWeight": "400",
+                    "lineHeight": 24,
+                  },
+                ]
+              }
+            >
+              0x​82D5...3Fa6
+            </Text>
+            <View
+              style={
+                [
+                  {
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 4,
+                    "width": 4,
+                  },
+                ]
+              }
+            />
+            <svg
+              color="#7D7D7D"
+              data-file-name="SvgCopySheets"
+              height={17}
+              width={17}
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        [
+          {
+            "display": "flex",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "height": 16,
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        [
+          {
+            "display": "flex",
+            "paddingHorizontal": 24,
+          },
+        ]
+      }
+    >
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        hitSlop={
+          {
+            "bottom": 5,
+            "left": 5,
+            "right": 5,
+            "top": 5,
+          }
+        }
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "#F9F9F9",
+            "borderColor": "transparent",
+            "borderRadius": 8,
+            "borderWidth": 1,
+            "display": "flex",
+            "opacity": 1,
+          }
+        }
+        testID="WalletSettings"
+      >
+        <View
+          sentry-label="Flex"
+          style={
+            [
+              {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "paddingHorizontal": 8,
+                "paddingVertical": 8,
+              },
+            ]
+          }
+        >
+          <Text
+            allowFontScaling={true}
+            maxFontSizeMultiplier={1.2}
+            style={
+              [
+                {
+                  "color": "#222222",
+                  "display": "flex",
+                  "fontFamily": "Basel-Medium",
+                  "fontSize": 17,
+                  "fontWeight": "500",
+                  "lineHeight": 24,
+                  "textAlign": "center",
+                },
+              ]
+            }
+          >
+            Manage wallet
+          </Text>
+        </View>
+      </View>
     </View>
   </View>
   <View
@@ -104,447 +550,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
         ]
       }
     >
-      <View>
-        <View
-          actions={
-            [
-              {
-                "systemIcon": "doc.on.doc",
-                "title": "Copy wallet address",
-              },
-              {
-                "systemIcon": "gearshape",
-                "title": "Wallet settings",
-              },
-              {
-                "destructive": true,
-                "systemIcon": "trash",
-                "title": "Remove wallet",
-              },
-            ]
-          }
-          onPress={[Function]}
-        >
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": undefined,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={true}
-            collapsable={false}
-            focusable={true}
-            hitSlop={
-              {
-                "bottom": 5,
-                "left": 5,
-                "right": 5,
-                "top": 5,
-              }
-            }
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "display": "flex",
-                "opacity": 1,
-                "paddingBottom": 12,
-                "paddingHorizontal": 24,
-                "paddingTop": 8,
-              }
-            }
-          >
-            <View
-              sentry-label="Flex"
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "flex-start",
-                  },
-                ]
-              }
-              testID="account_item/0x82D56A352367453f74FC0dC7B071b311da373Fa6"
-            >
-              <View
-                sentry-label="Flex"
-                style={
-                  [
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "flexShrink": 1,
-                      "justifyContent": "flex-start",
-                    },
-                  ]
-                }
-              >
-                <View
-                  style={
-                    [
-                      {
-                        "display": "flex",
-                        "height": "100%",
-                        "position": "relative",
-                      },
-                    ]
-                  }
-                >
-                  <View
-                    style={
-                      [
-                        {
-                          "backgroundColor": "transparent",
-                          "borderColor": "transparent",
-                          "borderRadius": 999999,
-                          "borderWidth": 0,
-                          "display": "flex",
-                          "position": "relative",
-                        },
-                        {
-                          "padding": 0,
-                        },
-                      ]
-                    }
-                  >
-                    <View
-                      style={
-                        [
-                          {
-                            "display": "flex",
-                            "height": 40,
-                            "width": 40,
-                          },
-                        ]
-                      }
-                    >
-                      <View
-                        style={
-                          [
-                            {
-                              "display": "flex",
-                              "height": 40,
-                              "width": 40,
-                            },
-                          ]
-                        }
-                      >
-                        <View
-                          style={
-                            {
-                              "flex": 1,
-                            }
-                          }
-                        >
-                          <View
-                            clip={true}
-                            mask={
-                              <UniconMask
-                                attributeData={
-                                  {
-                                    "0": "#6100FF",
-                                    "1": "#76D191",
-                                    "2": [
-                                      {
-                                        "fillType": "evenOdd",
-                                        "path": "M31 33V16C31 8.8203 25.1797 3 18 3C10.8203 3 5 8.8203 5 16V33H31ZM18 0C9.16344 0 2 7.16344 2 16V35.807C2 35.9136 2.08642 36 2.19303 36H33.807C33.9136 36 34 35.9136 34 35.807V16C34 7.16344 26.8366 0 18 0Z",
-                                      },
-                                    ],
-                                    "3": [
-                                      {
-                                        "path": "M8 8C8 8 13.1678 6.70089 14.2197 5.649C15.2716 4.59712 15.2583 2.87836 14.19 1.81004C13.1216 0.741719 11.4029 0.728395 10.351 1.78028C9.29911 2.83216 8 8 8 8Z",
-                                      },
-                                      {
-                                        "path": "M8 8C8 8 13.1678 9.29911 14.2197 10.351C15.2716 11.4029 15.2583 13.1216 14.19 14.19C13.1216 15.2583 11.4029 15.2716 10.351 14.2197C9.29911 13.1678 8 8 8 8Z",
-                                      },
-                                      {
-                                        "path": "M1.78028 10.351C2.83216 9.29911 8 8 8 8C8 8 6.70089 13.1678 5.649 14.2197C4.59712 15.2716 2.87836 15.2583 1.81004 14.19C0.741719 13.1216 0.728395 11.4029 1.78028 10.351Z",
-                                      },
-                                      {
-                                        "path": "M8 8C8 8 2.83216 6.70089 1.78028 5.649C0.728395 4.59712 0.741719 2.87836 1.81004 1.81004C2.87836 0.741719 4.59712 0.728395 5.649 1.78028C6.70089 2.83216 8 8 8 8Z",
-                                      },
-                                    ],
-                                  }
-                                }
-                                showBorder={false}
-                                size={40}
-                              />
-                            }
-                          >
-                            <View
-                              transform={
-                                [
-                                  {
-                                    "scale": 1.0810810810810811,
-                                  },
-                                ]
-                              }
-                            >
-                              <View
-                                height={37}
-                                width={37}
-                                x={0}
-                                y={0}
-                              >
-                                <View
-                                  colors={
-                                    [
-                                      "#6100FF",
-                                      "#76D191",
-                                    ]
-                                  }
-                                  end={null}
-                                  start={null}
-                                />
-                              </View>
-                              <View
-                                color="#D3EBA3"
-                                cx={18.5}
-                                cy={-13.36111111111111}
-                                r={30.833333333333336}
-                              >
-                                <View
-                                  blur={15}
-                                />
-                              </View>
-                            </View>
-                          </View>
-                          <View
-                            clip={true}
-                            mask={
-                              <UniconMask
-                                attributeData={
-                                  {
-                                    "0": "#6100FF",
-                                    "1": "#76D191",
-                                    "2": [
-                                      {
-                                        "fillType": "evenOdd",
-                                        "path": "M31 33V16C31 8.8203 25.1797 3 18 3C10.8203 3 5 8.8203 5 16V33H31ZM18 0C9.16344 0 2 7.16344 2 16V35.807C2 35.9136 2.08642 36 2.19303 36H33.807C33.9136 36 34 35.9136 34 35.807V16C34 7.16344 26.8366 0 18 0Z",
-                                      },
-                                    ],
-                                    "3": [
-                                      {
-                                        "path": "M8 8C8 8 13.1678 6.70089 14.2197 5.649C15.2716 4.59712 15.2583 2.87836 14.19 1.81004C13.1216 0.741719 11.4029 0.728395 10.351 1.78028C9.29911 2.83216 8 8 8 8Z",
-                                      },
-                                      {
-                                        "path": "M8 8C8 8 13.1678 9.29911 14.2197 10.351C15.2716 11.4029 15.2583 13.1216 14.19 14.19C13.1216 15.2583 11.4029 15.2716 10.351 14.2197C9.29911 13.1678 8 8 8 8Z",
-                                      },
-                                      {
-                                        "path": "M1.78028 10.351C2.83216 9.29911 8 8 8 8C8 8 6.70089 13.1678 5.649 14.2197C4.59712 15.2716 2.87836 15.2583 1.81004 14.19C0.741719 13.1216 0.728395 11.4029 1.78028 10.351Z",
-                                      },
-                                      {
-                                        "path": "M8 8C8 8 2.83216 6.70089 1.78028 5.649C0.728395 4.59712 0.741719 2.87836 1.81004 1.81004C2.87836 0.741719 4.59712 0.728395 5.649 1.78028C6.70089 2.83216 8 8 8 8Z",
-                                      },
-                                    ],
-                                  }
-                                }
-                                overlay={true}
-                                showBorder={false}
-                                size={40}
-                              />
-                            }
-                          >
-                            <View
-                              color="#000000"
-                              height={40}
-                              opacity={0.08}
-                              width={40}
-                              x={0}
-                              y={0}
-                            />
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-                <View
-                  style={
-                    [
-                      {
-                        "display": "flex",
-                        "flexGrow": 0,
-                        "flexShrink": 0,
-                        "height": 16,
-                        "width": 16,
-                      },
-                    ]
-                  }
-                />
-                <View
-                  sentry-label="Flex"
-                  style={
-                    [
-                      {
-                        "alignItems": "stretch",
-                        "display": "flex",
-                        "flex": 1,
-                        "flexDirection": "column",
-                        "justifyContent": "flex-start",
-                      },
-                    ]
-                  }
-                >
-                  <Text
-                    allowFontScaling={true}
-                    maxFontSizeMultiplier={1.4}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#222222",
-                          "display": "flex",
-                          "fontFamily": "Basel-Book",
-                          "fontSize": 19,
-                          "fontWeight": "400",
-                          "lineHeight": 24,
-                        },
-                      ]
-                    }
-                  >
-                    Test Account
-                  </Text>
-                  <View
-                    style={
-                      [
-                        {
-                          "display": "flex",
-                          "flexGrow": 0,
-                          "flexShrink": 0,
-                          "height": 0,
-                        },
-                      ]
-                    }
-                  />
-                  <View
-                    onLayout={[Function]}
-                  >
-                    <View
-                      style={
-                        [
-                          {
-                            "alignItems": "center",
-                            "display": "flex",
-                            "flexDirection": "row",
-                          },
-                        ]
-                      }
-                    >
-                      <View
-                        style={
-                          [
-                            {
-                              "alignItems": "center",
-                              "display": "flex",
-                              "flexDirection": "row",
-                              "position": "relative",
-                            },
-                          ]
-                        }
-                      >
-                        <View
-                          accessibilityElementsHidden={true}
-                          importantForAccessibility="no-hide-descendants"
-                        >
-                          <Text
-                            allowFontScaling={true}
-                            maxFontSizeMultiplier={1.4}
-                            style={
-                              [
-                                {
-                                  "color": "#7D7D7D",
-                                  "display": "flex",
-                                  "fontFamily": "Basel-Book",
-                                  "fontSize": 17,
-                                  "fontWeight": "400",
-                                  "lineHeight": 24,
-                                  "opacity": 0,
-                                },
-                              ]
-                            }
-                          >
-                            $000.00
-                          </Text>
-                        </View>
-                        <View
-                          style={
-                            [
-                              {
-                                "backgroundColor": "#2222220D",
-                                "borderRadius": 4,
-                                "bottom": "5%",
-                                "display": "flex",
-                                "left": 0,
-                                "position": "absolute",
-                                "right": 0,
-                                "top": "5%",
-                              },
-                            ]
-                          }
-                        />
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </View>
-              <View
-                style={
-                  [
-                    {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 16,
-                      "width": 16,
-                    },
-                  ]
-                }
-              />
-              <View
-                sentry-label="Flex"
-                style={
-                  [
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "flex-start",
-                    },
-                  ]
-                }
-              >
-                <svg
-                  color="#FC72FF"
-                  data-file-name="SvgCheck"
-                  height={24}
-                  width={24}
-                />
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
+      <View />
     </RCTScrollView>
     ExpoLinearGradient
   </View>
@@ -599,7 +605,8 @@ exports[`AccountSwitcher renders correctly 1`] = `
     style={
       {
         "display": "flex",
-        "marginVertical": 24,
+        "marginBottom": 48,
+        "marginTop": 16,
         "opacity": 1,
       }
     }
@@ -626,17 +633,17 @@ exports[`AccountSwitcher renders correctly 1`] = `
               "borderRadius": 999999,
               "borderWidth": 1,
               "display": "flex",
-              "padding": 12,
+              "padding": 8,
             },
           ]
         }
       >
         <svg
-          color="#222222"
+          color="#7D7D7D"
           data-file-name="SvgPlus"
-          height={16}
+          height={12}
           strokeWidth={2}
-          width={16}
+          width={12}
         />
       </View>
       <View
@@ -654,15 +661,15 @@ exports[`AccountSwitcher renders correctly 1`] = `
       />
       <Text
         allowFontScaling={true}
-        maxFontSizeMultiplier={1.4}
+        maxFontSizeMultiplier={1.2}
         style={
           [
             {
-              "color": "#222222",
+              "color": "#7D7D7D",
               "display": "flex",
-              "fontFamily": "Basel-Book",
-              "fontSize": 19,
-              "fontWeight": "400",
+              "fontFamily": "Basel-Medium",
+              "fontSize": 17,
+              "fontWeight": "500",
               "lineHeight": 24,
             },
           ]

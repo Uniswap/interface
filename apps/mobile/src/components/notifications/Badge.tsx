@@ -1,16 +1,18 @@
 import React, { memo, PropsWithChildren } from 'react'
 import { Box } from 'src/components/layout/Box'
+import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 
 type Props = PropsWithChildren<{
-  showIndicator?: boolean
+  address: Address
 }>
 
 const NOTIFICATION_DOT_SIZE = 12
 
-function _NotificationBadge({ showIndicator, children }: Props): JSX.Element {
+function _NotificationBadge({ children, address }: Props): JSX.Element {
+  const hasNotifications = useSelectAddressHasNotifications(address)
   return (
-    <Box height="100%" position="relative">
-      {showIndicator ? (
+    <Box position="relative">
+      {hasNotifications ? (
         <Box
           backgroundColor="accent1"
           borderColor="surface2"

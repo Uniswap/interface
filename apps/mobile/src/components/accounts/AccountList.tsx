@@ -5,8 +5,7 @@ import { StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppTheme } from 'src/app/hooks'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
-import { Box, Flex } from 'src/components/layout'
-import { Spacer } from 'src/components/layout/Spacer'
+import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { opacify, spacing } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -14,7 +13,6 @@ import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useAccountListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 // Most screens can fit more but this is set conservatively
 const MIN_ACCOUNTS_TO_ENABLE_SCROLL = 5
@@ -33,19 +31,27 @@ type AccountWithPortfolioValue = {
 const ViewOnlyHeader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
-    <Flex row alignItems="center" borderBottomColor="surface3">
-      <Box flex={1} px="spacing24">
-        <Text color="neutral2" variant="subheadSmall">
-          {t('View only')}
-        </Text>
-      </Box>
-    </Flex>
+    <Box flex={1} px="spacing24" py="spacing8">
+      <Text color="neutral2" variant="subheadSmall">
+        {t('View only wallets')}
+      </Text>
+    </Box>
+  )
+}
+
+const SignerHeader = (): JSX.Element => {
+  const { t } = useTranslation()
+  return (
+    <Box flex={1} px="spacing24" py="spacing8">
+      <Text color="neutral2" variant="subheadSmall">
+        {t('Your other wallets')}
+      </Text>
+    </Box>
   )
 }
 
 export function AccountList({ accounts, onPress, isVisible }: AccountListProps): JSX.Element {
   const theme = useAppTheme()
-  const activeAccount = useActiveAccount()
   const addresses = accounts.map((a) => a.address)
 
   const { data, networkStatus, refetch, startPolling, stopPolling } = useAccountListQuery({
@@ -83,6 +89,8 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
     )
   }, [accountsWithPortfolioValue])
 
+  const hasSignerAccounts = signerAccounts.length > 0
+
   const viewOnlyAccounts = useMemo(() => {
     return accountsWithPortfolioValue.filter(
       (account) => account.account.type === AccountType.Readonly
@@ -95,7 +103,6 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
     <AccountCardItem
       key={item.account.address}
       address={item.account.address}
-      isActive={!!activeAccount && activeAccount.address === item.account.address}
       isPortfolioValueLoading={item.isPortfolioValueLoading}
       isViewOnly={item.account.type === AccountType.Readonly}
       portfolioValue={item.portfolioValue}
@@ -116,10 +123,14 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
         bounces={false}
         scrollEnabled={accountsWithPortfolioValue.length >= MIN_ACCOUNTS_TO_ENABLE_SCROLL}
         showsVerticalScrollIndicator={false}>
-        {signerAccounts.map(renderAccountCardItem)}
+        {hasSignerAccounts && (
+          <>
+            <SignerHeader />
+            {signerAccounts.map(renderAccountCardItem)}
+          </>
+        )}
         {hasViewOnlyAccounts && (
           <>
-            <Spacer height={theme.spacing.spacing8} />
             <ViewOnlyHeader />
             {viewOnlyAccounts.map(renderAccountCardItem)}
           </>

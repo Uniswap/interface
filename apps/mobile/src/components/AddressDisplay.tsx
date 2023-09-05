@@ -4,7 +4,8 @@ import { FlexAlignType } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
+import { NotificationBadge } from 'src/components/notifications/Badge'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
@@ -32,6 +33,9 @@ type AddressDisplayProps = {
   showIconBackground?: boolean
   textAlign?: FlexAlignType
   horizontalGap?: keyof Theme['spacing']
+  showViewOnlyBadge?: boolean
+  showNotificationsBadge?: boolean
+  gapBetweenLines?: keyof Theme['spacing']
 }
 
 type CopyButtonWrapperProps = {
@@ -70,6 +74,8 @@ export function AddressDisplay({
   contentAlign = 'center', // vertical aligment of all items
   showIconBackground,
   horizontalGap = 'spacing12',
+  showViewOnlyBadge = false,
+  gapBetweenLines = 'none',
 }: AddressDisplayProps): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
@@ -102,15 +108,16 @@ export function AddressDisplay({
         address={address}
         avatarUri={avatar}
         showBackground={showIconBackground}
+        showViewOnlyBadge={showViewOnlyBadge}
         size={size}
       />
     )
-  }, [address, avatar, showIconBackground, size])
+  }, [address, avatar, showIconBackground, showViewOnlyBadge, size])
 
   return (
     <Flex alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>
-      {showAccountIcon && icon}
-      <Box alignItems={itemAlignment} flexShrink={1}>
+      {showAccountIcon && <NotificationBadge address={address}>{icon}</NotificationBadge>}
+      <Flex alignItems={itemAlignment} flexShrink={1} gap={gapBetweenLines}>
         <CopyButtonWrapper
           onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex centered row gap="spacing12">
@@ -151,7 +158,7 @@ export function AddressDisplay({
             </Flex>
           </CopyButtonWrapper>
         )}
-      </Box>
+      </Flex>
     </Flex>
   )
 }

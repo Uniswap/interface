@@ -123,12 +123,12 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
       {/* button content */}
       <Flex row alignItems="flex-start" justifyContent="space-between">
         <AddressDisplay
+          showCopy
+          showIconBackground
           address={address}
           captionVariant="subheadSmall"
           contentAlign="flex-start"
           direction="column"
-          showCopy={true}
-          showIconBackground={true}
           size={HEADER_ICON_SIZE}
           textAlign="flex-start"
           variant="headlineSmall"
