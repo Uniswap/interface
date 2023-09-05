@@ -2,7 +2,7 @@ import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/an
 import { TraceEvent } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Row from 'components/Row'
-import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
+import { formatDelta } from 'components/Tokens/TokenDetails/Delta'
 import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
