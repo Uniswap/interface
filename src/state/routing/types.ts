@@ -48,6 +48,8 @@ export interface GetQuoteArgs {
   userDisabledUniswapX: boolean
   fotAdjustmentsEnabled: boolean
   isUniswapXDefaultEnabled: boolean
+  inputTax: Percent
+  outputTax: Percent
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts

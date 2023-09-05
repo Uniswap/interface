@@ -47,10 +47,20 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
           {isUniswapXTrade(trade) ? <UniswapXRouterIcon testId="gas-estimate-uniswapx-icon" /> : <StyledGasIcon />}
           <ThemedText.BodySmall color="neutral2">
             <Row gap="xs">
-              <div>{formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}</div>
+              <div>
+                {formatNumber({
+                  input: trade.totalGasUseEstimateUSD,
+                  type: NumberType.FiatGasPrice,
+                })}
+              </div>
               {isUniswapXTrade(trade) && (
                 <div>
-                  <s>{formatNumber(trade.classicGasUseEstimateUSD, NumberType.FiatGasPrice)}</s>
+                  <s>
+                    {formatNumber({
+                      input: trade.classicGasUseEstimateUSD,
+                      type: NumberType.FiatGasPrice,
+                    })}
+                  </s>
                 </div>
               )}
             </Row>

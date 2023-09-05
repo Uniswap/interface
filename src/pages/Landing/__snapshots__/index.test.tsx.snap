@@ -765,6 +765,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
 
 .c27 {
   color: #222222;
+  pointer-events: auto;
   width: 0;
   position: relative;
   font-weight: 485;
@@ -864,6 +865,8 @@ exports[`disable nft on landing page does not render nft information and card 1`
   margin-left: 12px;
   box-shadow: 0px 0px 10px 0px rgba(34,34,34,0.04);
   visibility: visible;
+  -webkit-animation: none;
+  animation: none;
 }
 
 .c30:hover,
@@ -919,6 +922,8 @@ exports[`disable nft on landing page does not render nft information and card 1`
   margin-left: 12px;
   box-shadow: 0px 0px 10px 0px rgba(34,34,34,0.04);
   visibility: visible;
+  -webkit-animation: none;
+  animation: none;
 }
 
 .c44:hover,
@@ -1826,56 +1831,65 @@ exports[`disable nft on landing page does not render nft information and card 1`
                     <div
                       class="c26"
                     >
-                      <input
-                        autocomplete="off"
-                        autocorrect="off"
-                        class="c27 c28 token-amount-input"
-                        inputmode="decimal"
-                        maxlength="79"
-                        minlength="1"
-                        pattern="^[0-9]*[.,]?[0-9]*$"
-                        placeholder="0"
-                        spellcheck="false"
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        style="display: flex; flex-grow: 1;"
+                      >
+                        <input
+                          autocomplete="off"
+                          autocorrect="off"
+                          class="c27 c28 token-amount-input"
+                          id="swap-currency-input"
+                          inputmode="decimal"
+                          maxlength="79"
+                          minlength="1"
+                          pattern="^[0-9]*[.,]?[0-9]*$"
+                          placeholder="0"
+                          spellcheck="false"
+                          type="text"
+                          value=""
+                        />
+                      </div>
                       <div>
-                        <button
-                          class="c14 c15 c29 c30 open-currency-select-button"
+                        <div
+                          class="c13"
                         >
-                          <span
-                            class="c31"
+                          <button
+                            class="c14 c15 c29 c30 open-currency-select-button"
                           >
-                            <div
-                              class="c6 c7 c10"
+                            <span
+                              class="c31"
                             >
                               <div
-                                class="c32"
-                                style="height: 24px; width: 24px; margin-right: 2px;"
+                                class="c6 c7 c10"
                               >
                                 <div
-                                  class="c33"
+                                  class="c32"
+                                  style="height: 24px; width: 24px; margin-right: 2px;"
                                 >
-                                  <img
-                                    alt="ETH logo"
-                                    class="c34"
-                                    src="ethereum-logo.png"
-                                  />
+                                  <div
+                                    class="c33"
+                                  >
+                                    <img
+                                      alt="ETH logo"
+                                      class="c34"
+                                      src="ethereum-logo.png"
+                                    />
+                                  </div>
                                 </div>
+                                <span
+                                  class="c35 token-symbol-container"
+                                >
+                                  ETH
+                                </span>
                               </div>
-                              <span
-                                class="c35 token-symbol-container"
+                              <svg
+                                class="c36"
                               >
-                                ETH
-                              </span>
-                            </div>
-                            <svg
-                              class="c36"
-                            >
-                              dropdown.svg
-                            </svg>
-                          </span>
-                        </button>
+                                dropdown.svg
+                              </svg>
+                            </span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <div
@@ -1948,42 +1962,51 @@ exports[`disable nft on landing page does not render nft information and card 1`
                       <div
                         class="c26"
                       >
-                        <input
-                          autocomplete="off"
-                          autocorrect="off"
-                          class="c27 c28 token-amount-input"
-                          inputmode="decimal"
-                          maxlength="79"
-                          minlength="1"
-                          pattern="^[0-9]*[.,]?[0-9]*$"
-                          placeholder="0"
-                          spellcheck="false"
-                          type="text"
-                          value=""
-                        />
+                        <div
+                          style="display: flex; flex-grow: 1;"
+                        >
+                          <input
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="c27 c28 token-amount-input"
+                            id="swap-currency-output"
+                            inputmode="decimal"
+                            maxlength="79"
+                            minlength="1"
+                            pattern="^[0-9]*[.,]?[0-9]*$"
+                            placeholder="0"
+                            spellcheck="false"
+                            type="text"
+                            value=""
+                          />
+                        </div>
                         <div>
-                          <button
-                            class="c14 c15 c29 c44 open-currency-select-button"
+                          <div
+                            class="c13"
                           >
-                            <span
-                              class="c31"
+                            <button
+                              class="c14 c15 c29 c44 open-currency-select-button"
                             >
-                              <div
-                                class="c6 c7 c10"
+                              <span
+                                class="c31"
                               >
-                                <span
-                                  class="c35 token-symbol-container"
+                                <div
+                                  class="c6 c7 c10"
                                 >
-                                  Select token
-                                </span>
-                              </div>
-                              <svg
-                                class="c45"
-                              >
-                                dropdown.svg
-                              </svg>
-                            </span>
-                          </button>
+                                  <span
+                                    class="c35 token-symbol-container"
+                                  >
+                                    Select token
+                                  </span>
+                                </div>
+                                <svg
+                                  class="c45"
+                                >
+                                  dropdown.svg
+                                </svg>
+                              </span>
+                            </button>
+                          </div>
                         </div>
                       </div>
                       <div
@@ -3345,6 +3368,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
 
 .c27 {
   color: #222222;
+  pointer-events: auto;
   width: 0;
   position: relative;
   font-weight: 485;
@@ -3444,6 +3468,8 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   margin-left: 12px;
   box-shadow: 0px 0px 10px 0px rgba(34,34,34,0.04);
   visibility: visible;
+  -webkit-animation: none;
+  animation: none;
 }
 
 .c30:hover,
@@ -3499,6 +3525,8 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   margin-left: 12px;
   box-shadow: 0px 0px 10px 0px rgba(34,34,34,0.04);
   visibility: visible;
+  -webkit-animation: none;
+  animation: none;
 }
 
 .c44:hover,
@@ -4418,56 +4446,65 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
                     <div
                       class="c26"
                     >
-                      <input
-                        autocomplete="off"
-                        autocorrect="off"
-                        class="c27 c28 token-amount-input"
-                        inputmode="decimal"
-                        maxlength="79"
-                        minlength="1"
-                        pattern="^[0-9]*[.,]?[0-9]*$"
-                        placeholder="0"
-                        spellcheck="false"
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        style="display: flex; flex-grow: 1;"
+                      >
+                        <input
+                          autocomplete="off"
+                          autocorrect="off"
+                          class="c27 c28 token-amount-input"
+                          id="swap-currency-input"
+                          inputmode="decimal"
+                          maxlength="79"
+                          minlength="1"
+                          pattern="^[0-9]*[.,]?[0-9]*$"
+                          placeholder="0"
+                          spellcheck="false"
+                          type="text"
+                          value=""
+                        />
+                      </div>
                       <div>
-                        <button
-                          class="c14 c15 c29 c30 open-currency-select-button"
+                        <div
+                          class="c13"
                         >
-                          <span
-                            class="c31"
+                          <button
+                            class="c14 c15 c29 c30 open-currency-select-button"
                           >
-                            <div
-                              class="c6 c7 c10"
+                            <span
+                              class="c31"
                             >
                               <div
-                                class="c32"
-                                style="height: 24px; width: 24px; margin-right: 2px;"
+                                class="c6 c7 c10"
                               >
                                 <div
-                                  class="c33"
+                                  class="c32"
+                                  style="height: 24px; width: 24px; margin-right: 2px;"
                                 >
-                                  <img
-                                    alt="ETH logo"
-                                    class="c34"
-                                    src="ethereum-logo.png"
-                                  />
+                                  <div
+                                    class="c33"
+                                  >
+                                    <img
+                                      alt="ETH logo"
+                                      class="c34"
+                                      src="ethereum-logo.png"
+                                    />
+                                  </div>
                                 </div>
+                                <span
+                                  class="c35 token-symbol-container"
+                                >
+                                  ETH
+                                </span>
                               </div>
-                              <span
-                                class="c35 token-symbol-container"
+                              <svg
+                                class="c36"
                               >
-                                ETH
-                              </span>
-                            </div>
-                            <svg
-                              class="c36"
-                            >
-                              dropdown.svg
-                            </svg>
-                          </span>
-                        </button>
+                                dropdown.svg
+                              </svg>
+                            </span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <div
@@ -4540,42 +4577,51 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
                       <div
                         class="c26"
                       >
-                        <input
-                          autocomplete="off"
-                          autocorrect="off"
-                          class="c27 c28 token-amount-input"
-                          inputmode="decimal"
-                          maxlength="79"
-                          minlength="1"
-                          pattern="^[0-9]*[.,]?[0-9]*$"
-                          placeholder="0"
-                          spellcheck="false"
-                          type="text"
-                          value=""
-                        />
+                        <div
+                          style="display: flex; flex-grow: 1;"
+                        >
+                          <input
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="c27 c28 token-amount-input"
+                            id="swap-currency-output"
+                            inputmode="decimal"
+                            maxlength="79"
+                            minlength="1"
+                            pattern="^[0-9]*[.,]?[0-9]*$"
+                            placeholder="0"
+                            spellcheck="false"
+                            type="text"
+                            value=""
+                          />
+                        </div>
                         <div>
-                          <button
-                            class="c14 c15 c29 c44 open-currency-select-button"
+                          <div
+                            class="c13"
                           >
-                            <span
-                              class="c31"
+                            <button
+                              class="c14 c15 c29 c44 open-currency-select-button"
                             >
-                              <div
-                                class="c6 c7 c10"
+                              <span
+                                class="c31"
                               >
-                                <span
-                                  class="c35 token-symbol-container"
+                                <div
+                                  class="c6 c7 c10"
                                 >
-                                  Select token
-                                </span>
-                              </div>
-                              <svg
-                                class="c45"
-                              >
-                                dropdown.svg
-                              </svg>
-                            </span>
-                          </button>
+                                  <span
+                                    class="c35 token-symbol-container"
+                                  >
+                                    Select token
+                                  </span>
+                                </div>
+                                <svg
+                                  class="c45"
+                                >
+                                  dropdown.svg
+                                </svg>
+                              </span>
+                            </button>
+                          </div>
                         </div>
                       </div>
                       <div
