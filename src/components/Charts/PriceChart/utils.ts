@@ -1,5 +1,101 @@
-import { timeDay, timeHour, TimeInterval, timeMinute, timeMonth } from 'd3'
-import { TimePeriod } from 'graphql/data/util'
+import { bisector, ScaleLinear, timeDay, timeHour, TimeInterval, timeMinute, timeMonth } from 'd3'
+import { PricePoint, TimePeriod } from 'graphql/data/util'
+
+/**
+ * Returns the minimum and maximum values in the given array of PricePoints.
+ */
+export function getPriceBounds(prices: PricePoint[]): { min: number; max: number } {
+  if (!prices.length) return { min: 0, max: 0 }
+
+  let min = prices[0].value
+  let max = prices[0].value
+
+  for (const pricePoint of prices) {
+    if (pricePoint.value < min) {
+      min = pricePoint.value
+    }
+    if (pricePoint.value > max) {
+      max = pricePoint.value
+    }
+  }
+
+  return { min, max }
+}
+
+/**
+ * Cleans up an array of PricePoints by removing zero values and marking gaps in data as blanks.
+ *
+ * @param prices - The original array of PricePoints
+ * @returns An object containing two arrays: fixedChart and blanks
+ */
+export function cleanUpPricePoints(prices: PricePoint[]) {
+  const fixedChart: PricePoint[] = [] // PricePoint array with 0 values removed
+  const blanks: [PricePoint, PricePoint][] = [] // PricePoint pairs that represent blank spaces in the chart
+  let lastValidPrice: PricePoint | undefined
+
+  prices.forEach((pricePoint, index) => {
+    const isValueNonZero = pricePoint.value !== 0
+    if (isValueNonZero) {
+      const isFirstValidPrice = fixedChart.length === 0
+
+      if (isFirstValidPrice && index !== 0) {
+        const blankStart = { timestamp: prices[0].timestamp, value: pricePoint.value }
+        blanks.push([blankStart, pricePoint])
+      }
+
+      lastValidPrice = pricePoint
+      fixedChart.push(pricePoint)
+    }
+  })
+
+  if (lastValidPrice) {
+    const isLastPriceInvalid = lastValidPrice !== prices[prices.length - 1]
+
+    if (isLastPriceInvalid) {
+      const blankEnd = { timestamp: prices[prices.length - 1].timestamp, value: lastValidPrice.value }
+      blanks.push([lastValidPrice, blankEnd])
+    }
+  }
+
+  return { prices: fixedChart, blanks, lastValidPrice }
+}
+
+/**
+ * Retrieves the nearest PricePoint to a given x-coordinate based on a linear time scale.
+ *
+ * @param x - The x-coordinate to find the nearest PricePoint for.
+ * @param prices - An array of PricePoints, assumed to be sorted by timestamp.
+ * @param timeScale - A D3 ScaleLinear instance for time scaling.
+ * @returns The nearest PricePoint to the given x-coordinate.
+ */
+export function getNearestPricePoint(
+  x: number,
+  prices: PricePoint[],
+  timeScale: ScaleLinear<number, number, never>
+): PricePoint | undefined {
+  // Convert the x-coordinate back to a timestamp
+  const targetTimestamp = timeScale.invert(x)
+
+  // Use bisector for O(log N) complexity, assumes prices are sorted by timestamp
+  const bisect = bisector((d: PricePoint) => d.timestamp).left
+  const index = bisect(prices, targetTimestamp, 1)
+
+  // Get potential nearest PricePoints
+  const previousPoint = prices[index - 1]
+  const nextPoint = prices[index]
+
+  // Default to the previous point if next point doesn't exist
+  if (!nextPoint) {
+    return previousPoint
+  }
+
+  // Calculate temporal distances to target timestamp
+  const distanceToPrevious = Math.abs(targetTimestamp.valueOf() - previousPoint.timestamp.valueOf())
+  const distanceToNext = Math.abs(nextPoint.timestamp.valueOf() - targetTimestamp.valueOf())
+
+  // Return the PricePoint with the smallest temporal distance to targetTimestamp
+  return distanceToPrevious < distanceToNext ? previousPoint : nextPoint
+}
 
 const fiveMinutes = timeMinute.every(5)
 const TIME_PERIOD_INTERVAL_TABLE: Record<TimePeriod, { interval: TimeInterval; step: number }> = {
