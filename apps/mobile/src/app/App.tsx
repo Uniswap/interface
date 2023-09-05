@@ -221,13 +221,13 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }): JSX.Element {
         routingInstrumentation.registerNavigationContainer(navigationRef)
       }}>
       <OfflineBanner />
-      <NotificationToastWrapper />
       <AppStackNavigator />
       <StatusBar
         translucent
         backgroundColor="transparent"
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
       />
+      <NotificationToastWrapper />
     </NavigationContainer>
   )
 }
