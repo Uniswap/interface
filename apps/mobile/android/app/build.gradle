@@ -168,6 +168,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
 
+    implementation 'com.google.android.play:integrity:1.2.0'
+
     // Guava
     implementation "com.google.guava:guava:24.1-jre"
     // Guava fix
