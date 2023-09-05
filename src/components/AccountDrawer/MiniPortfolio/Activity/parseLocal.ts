@@ -6,7 +6,6 @@ import UniswapXBolt from 'assets/svg/bolt.svg'
 import { SupportedLocale } from 'constants/locales'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap, useAllTokensMultichain } from 'hooks/Tokens'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
@@ -238,14 +237,13 @@ export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions()
   const allSignatures = useAllSignatures()
   const tokens = useAllTokensMultichain()
-  const activeLocale = useActiveLocale()
 
   return useMemo(() => {
     const activityMap: ActivityMap = {}
     for (const [transaction, chainId] of allTransactions) {
       if (transaction.from !== account) continue
 
-      const activity = transactionToActivity(transaction, chainId, tokens, activeLocale)
+      const activity = transactionToActivity(transaction, chainId, tokens)
       if (activity) activityMap[transaction.hash] = activity
     }
 
@@ -257,5 +255,5 @@ export function useLocalActivities(account: string): ActivityMap {
     }
 
     return activityMap
-  }, [account, activeLocale, allSignatures, allTransactions, tokens])
+  }, [account, allSignatures, allTransactions, tokens])
 }
