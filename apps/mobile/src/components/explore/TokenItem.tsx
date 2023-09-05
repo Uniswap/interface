@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box } from 'src/components/layout/Box'
+import { Box } from 'src/components/layout'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
@@ -160,33 +160,26 @@ export const TokenItem = memo(function _TokenItem({
         hapticStyle={ImpactFeedbackStyle.Light}
         testID={`token-item-${name}`}
         onPress={onPress}>
-        <AnimatedFlex
-          row
-          alignItems="flex-start"
-          justifyContent="space-between"
-          px="spacing24"
-          py="spacing8">
-          <Flex centered row flexShrink={1} gap="spacing8" overflow="hidden">
-            <Flex centered row gap="spacing4" overflow="hidden">
-              {index !== undefined && (
-                <Box minWidth={16}>
-                  <Text color="neutral2" variant="buttonLabelMicro">
-                    {index + 1}
-                  </Text>
-                </Box>
-              )}
-              <TokenLogo symbol={symbol} url={logoUrl} />
-            </Flex>
-            <Flex alignItems="flex-start" flexShrink={1} gap="spacing2" ml="spacing4">
-              <Text numberOfLines={1} variant="bodyLarge">
-                {name}
-              </Text>
-              <Text color="neutral2" variant="subheadSmall">
-                {getMetadataSubtitle()}
-              </Text>
-            </Flex>
+        <AnimatedFlex grow row gap="spacing12" px="spacing24" py="spacing8">
+          <Flex centered row gap="spacing4" overflow="hidden">
+            {index !== undefined && (
+              <Box minWidth={16}>
+                <Text color="neutral2" variant="buttonLabelMicro">
+                  {index + 1}
+                </Text>
+              </Box>
+            )}
+            <TokenLogo symbol={symbol} url={logoUrl} />
           </Flex>
-          <Flex row alignItems="center" justifyContent="flex-end">
+          <Flex shrink gap="spacing2">
+            <Text numberOfLines={1} variant="bodyLarge">
+              {name}
+            </Text>
+            <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
+              {getMetadataSubtitle()}
+            </Text>
+          </Flex>
+          <Flex grow row alignItems="center" justifyContent="flex-end">
             <TokenMetadata>
               <Text lineHeight={24} variant="bodyLarge">
                 {formatUSDPrice(price)}
