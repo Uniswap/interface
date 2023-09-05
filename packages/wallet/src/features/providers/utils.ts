@@ -1,8 +1,7 @@
 import { AlternativeRpcType, ALT_RPC_URLS_BY_CHAIN, ChainId } from 'wallet/src/constants/chains'
 
-export function getInfuraChainName(
-  chainId: ChainId
-):
+// Should match supported chains in `InfuraProvider` class within `getUrl` method
+export type InfuraChainName =
   | 'homestead'
   | 'goerli'
   | 'arbitrum'
@@ -10,7 +9,9 @@ export function getInfuraChainName(
   | 'bnbsmartchain-mainnet'
   | 'optimism'
   | 'matic'
-  | 'maticmum' {
+  | 'maticmum'
+
+export function getInfuraChainName(chainId: ChainId): InfuraChainName {
   switch (chainId) {
     case ChainId.Mainnet:
       return 'homestead'

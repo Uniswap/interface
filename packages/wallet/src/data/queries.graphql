@@ -305,7 +305,10 @@ query NftsTab(
 }
 
 query PortfolioBalances($ownerAddress: String!) {
-  portfolios(ownerAddresses: [$ownerAddress], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]) {
+  portfolios(
+    ownerAddresses: [$ownerAddress]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+  ) {
     id
 
     # Total portfolio balance for header
@@ -357,7 +360,10 @@ query PortfolioBalances($ownerAddress: String!) {
 }
 
 query MultiplePortfolioBalances($ownerAddresses: [String!]!) {
-  portfolios(ownerAddresses: $ownerAddresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]) {
+  portfolios(
+    ownerAddresses: $ownerAddresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+  ) {
     id
 
     # Total portfolio balance for header
@@ -409,7 +415,10 @@ query MultiplePortfolioBalances($ownerAddresses: [String!]!) {
 }
 
 query SelectWalletScreen($ownerAddresses: [String!]!) {
-  portfolios(ownerAddresses: $ownerAddresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]) {
+  portfolios(
+    ownerAddresses: $ownerAddresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+  ) {
     id
     ownerAddress
     tokensTotalDenominatedValue {
@@ -420,7 +429,10 @@ query SelectWalletScreen($ownerAddresses: [String!]!) {
 }
 
 query TransactionHistoryUpdater($addresses: [String!]!) {
-  portfolios(ownerAddresses: $addresses, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]) {
+  portfolios(
+    ownerAddresses: $addresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+  ) {
     id
     ownerAddress
     assetActivities(pageSize: 1, page: 1) {
@@ -513,9 +525,16 @@ query TokenProjects($contracts: [ContractInput!]!) {
 }
 
 query TransactionList($address: String!) {
-  portfolios(ownerAddresses: [$address], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]) {
+  portfolios(
+    ownerAddresses: [$address]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+  ) {
     id
-    assetActivities(pageSize: 100, page: 1, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]) {
+    assetActivities(
+      pageSize: 100
+      page: 1
+      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+    ) {
       id
       timestamp
       type

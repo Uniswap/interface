@@ -11,7 +11,7 @@ import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { selectFavoriteTokens } from 'src/features/favorites/selectors'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { MATIC_MAINNET_ADDRESS } from 'wallet/src/constants/addresses'
+import { MATIC_BNB_ADDRESS, MATIC_MAINNET_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC, USDT, WBTC } from 'wallet/src/constants/tokens'
 import { sortPortfolioBalances, usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
@@ -41,11 +41,12 @@ export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
   const { data: baseCurrencyInfos, loading, error, refetch } = useTokenProjects(baseCurrencyIds)
   const persistedError = usePersistedError(loading, error)
 
-  // TokenProjects returns MATIC on Mainnet and Polygon, but we only want MATIC on Polygon
+  // TokenProjects returns MATIC on Mainnet, BNB and Polygon, but we only want MATIC on Polygon
   const filteredBaseCurrencyInfos = useMemo(() => {
     return baseCurrencyInfos?.filter(
       (currencyInfo) =>
-        !areAddressesEqual((currencyInfo.currency as Token).address, MATIC_MAINNET_ADDRESS)
+        !areAddressesEqual((currencyInfo.currency as Token).address, MATIC_MAINNET_ADDRESS) &&
+        !areAddressesEqual((currencyInfo.currency as Token).address, MATIC_BNB_ADDRESS)
     )
   }, [baseCurrencyInfos])
 

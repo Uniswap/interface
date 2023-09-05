@@ -3,7 +3,7 @@ import { createStore, Store } from '@reduxjs/toolkit'
 import { dappReducer, DappState, initialDappState, saveDappChain } from './slice'
 
 // Import breaks our jest tests because the use of `config` requires a package that is not available in the jest environment
-// TODO: Setup web jests with proper access to config
+// TODO: see https://linear.app/uniswap/issue/EXT-317/fix-jest-setup-on-web
 enum ChainId {
   Mainnet = 1,
   Goerli = 5,
