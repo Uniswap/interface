@@ -27,11 +27,8 @@ import * as styles from './SearchBar.css'
 const PriceChangeContainer = styled.div`
   display: flex;
   align-items: center;
-`
-
-const ArrowCell = styled.span`
   padding-top: 4px;
-  padding-right: 2px;
+  gap: 2px;
 `
 
 interface CollectionRowProps {
@@ -190,9 +187,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
               <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
             </Row>
             <PriceChangeContainer>
-              <ArrowCell>
-                <DeltaArrow delta={token.market?.pricePercentChange?.value} />
-              </ArrowCell>
+              <DeltaArrow delta={token.market?.pricePercentChange?.value} />
               <ThemedText.BodySmall>
                 <DeltaText delta={token.market?.pricePercentChange?.value}>
                   {Math.abs(token.market?.pricePercentChange?.value ?? 0).toFixed(2)}%
