@@ -31,7 +31,7 @@ import CurrencyList from './CurrencyList'
 import { PaddedColumn, SearchInput, Separator } from './styled'
 
 const ContentWrapper = styled(Column)`
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   width: 100%;
   overflow: hidden;
   flex: 1 1;
@@ -238,7 +238,7 @@ export function CurrencySearch({
       >
         <PaddedColumn gap="16px">
           <RowBetween>
-            <Text fontWeight={500} fontSize={16}>
+            <Text fontWeight={535} fontSize={16}>
               <Trans>Select a token</Trans>
             </Text>
             <CloseIcon onClick={onDismiss} />
@@ -307,7 +307,7 @@ export function CurrencySearch({
           </div>
         ) : (
           <Column style={{ padding: '20px', height: '100%' }}>
-            <ThemedText.DeprecatedMain color={theme.textTertiary} textAlign="center" mb="20px">
+            <ThemedText.DeprecatedMain color={theme.neutral3} textAlign="center" mb="20px">
               <Trans>No results found.</Trans>
             </ThemedText.DeprecatedMain>
           </Column>

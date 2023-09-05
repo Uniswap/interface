@@ -20,7 +20,7 @@ import { FixedHeightRow } from '.'
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;
   background: ${({ theme, bgColor }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.deprecated_bg3} 100%) `};
+    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.surface2} 100%) `};
   position: relative;
   overflow: hidden;
 `
@@ -45,7 +45,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
         <FixedHeightRow>
           <AutoRow gap="8px">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
-            <Text fontWeight={500} fontSize={20}>
+            <Text fontWeight={535} fontSize={20}>
               {!currency0 || !currency1 ? (
                 <Dots>
                   <Trans>Loading</Trans>

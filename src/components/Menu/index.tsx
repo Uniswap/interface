@@ -15,7 +15,7 @@ export enum FlyoutAlignment {
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
-    stroke: ${({ theme }) => theme.textPrimary};
+    stroke: ${({ theme }) => theme.neutral1};
   }
 `
 
@@ -32,10 +32,10 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   min-width: 196px;
   max-height: 350px;
   overflow: auto;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.surface1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border: 1px solid ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.surface1};
   border-radius: 12px;
   padding: 0.5rem;
   display: flex;
@@ -62,9 +62,9 @@ const MenuItem = styled(ExternalLink)`
   align-items: center;
   padding: 0.5rem 0.5rem;
   justify-content: space-between;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   :hover {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     cursor: pointer;
     text-decoration: none;
   }
@@ -73,11 +73,11 @@ const MenuItem = styled(ExternalLink)`
 const InternalMenuItem = styled(Link)`
   flex: 1;
   padding: 0.5rem 0.5rem;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   width: max-content;
   text-decoration: none;
   :hover {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     cursor: pointer;
     text-decoration: none;
   }

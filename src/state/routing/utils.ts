@@ -247,6 +247,8 @@ export async function transformRoutesToTrade(
     isUniswapXBetter,
     requestId: data.quote.requestId,
     quoteMethod,
+    inputTax: args.inputTax,
+    outputTax: args.outputTax,
   })
 
   // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,

@@ -146,6 +146,26 @@ describe('Permit2', () => {
       cy.contains('Swap success!')
       cy.get(getTestSelector('popups')).contains('Swapped')
     })
+
+    it('swaps USDT with existing permit, and existing and sufficient token approval', () => {
+      cy.hardhat().then(async (hardhat) => {
+        await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDT, 2e6))
+        await hardhat.mine()
+        await hardhat.approval.setTokenAllowanceForPermit2({ owner: hardhat.wallet, token: USDT }, 1e6)
+        await hardhat.mine()
+        await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: USDT })
+        await hardhat.mine()
+      })
+      setupInputs(USDT, USDC_MAINNET)
+      cy.get('#swap-currency-input .token-amount-input').clear().type('1')
+      initiateSwap()
+
+      // Verify transaction
+      cy.wait('@eth_sendRawTransaction')
+      cy.hardhat().then((hardhat) => hardhat.mine())
+      cy.contains('Swap success!')
+      cy.get(getTestSelector('popups')).contains('Swapped')
+    })
   })
 
   it('swaps when user has already approved token and permit2', () => {
