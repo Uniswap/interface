@@ -1,244 +1,302 @@
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
-import { DEFAULT_LOCALE } from 'constants/locales'
+import {
+  DEFAULT_LOCAL_CURRENCY,
+  LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE,
+  SupportedLocalCurrency,
+} from 'constants/localCurrencies'
+import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 
 type Nullish<T> = T | null | undefined
+type NumberFormatOptions = Intl.NumberFormatOptions
 
 // Number formatting follows the standards laid out in this spec:
 // https://www.notion.so/uniswaplabs/Number-standards-fbb9f533f10e4e22820722c2f66d23c0
 
-const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN = new Intl.NumberFormat('en-US', {
+const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 5,
   minimumFractionDigits: 2,
-})
+}
 
-const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS = new Intl.NumberFormat('en-US', {
+const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 5,
   minimumFractionDigits: 2,
   useGrouping: false,
-})
+}
 
-const NO_DECIMALS = new Intl.NumberFormat('en-US', {
+const NO_DECIMALS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 0,
   minimumFractionDigits: 0,
-})
+}
 
-const THREE_DECIMALS_NO_TRAILING_ZEROS = new Intl.NumberFormat('en-US', {
+const THREE_DECIMALS_NO_TRAILING_ZEROS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 3,
   minimumFractionDigits: 0,
-})
+}
 
-const THREE_DECIMALS = new Intl.NumberFormat('en-US', {
+const THREE_DECIMALS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 3,
   minimumFractionDigits: 3,
-})
+}
 
-const THREE_DECIMALS_USD = new Intl.NumberFormat('en-US', {
+const THREE_DECIMALS_CURRENCY: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 3,
   minimumFractionDigits: 3,
   currency: 'USD',
   style: 'currency',
-})
+}
 
-const TWO_DECIMALS_NO_TRAILING_ZEROS = new Intl.NumberFormat('en-US', {
+const TWO_DECIMALS_NO_TRAILING_ZEROS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 2,
-})
+}
 
-const TWO_DECIMALS = new Intl.NumberFormat('en-US', {
+const TWO_DECIMALS: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
-})
+}
 
-const TWO_DECIMALS_USD = new Intl.NumberFormat('en-US', {
+const TWO_DECIMALS_CURRENCY: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
   currency: 'USD',
   style: 'currency',
-})
+}
 
-const SHORTHAND_TWO_DECIMALS = new Intl.NumberFormat('en-US', {
+const SHORTHAND_TWO_DECIMALS: NumberFormatOptions = {
   notation: 'compact',
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
-})
+}
 
-const SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS = new Intl.NumberFormat('en-US', {
+const SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS: NumberFormatOptions = {
   notation: 'compact',
   maximumFractionDigits: 2,
-})
+}
 
-const SHORTHAND_ONE_DECIMAL = new Intl.NumberFormat('en-US', {
+const SHORTHAND_ONE_DECIMAL: NumberFormatOptions = {
   notation: 'compact',
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
-})
+}
 
-const SHORTHAND_USD_TWO_DECIMALS = new Intl.NumberFormat('en-US', {
+const SHORTHAND_CURRENCY_TWO_DECIMALS: NumberFormatOptions = {
   notation: 'compact',
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
   currency: 'USD',
   style: 'currency',
-})
+}
 
-const SHORTHAND_USD_ONE_DECIMAL = new Intl.NumberFormat('en-US', {
+const SHORTHAND_CURRENCY_ONE_DECIMAL: NumberFormatOptions = {
   notation: 'compact',
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
   currency: 'USD',
   style: 'currency',
-})
+}
 
-const SIX_SIG_FIGS_TWO_DECIMALS = new Intl.NumberFormat('en-US', {
+const SIX_SIG_FIGS_TWO_DECIMALS: NumberFormatOptions = {
   notation: 'standard',
   maximumSignificantDigits: 6,
   minimumSignificantDigits: 3,
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
-})
+}
 
-const SIX_SIG_FIGS_NO_COMMAS = new Intl.NumberFormat('en-US', {
+const SIX_SIG_FIGS_NO_COMMAS: NumberFormatOptions = {
   notation: 'standard',
   maximumSignificantDigits: 6,
   useGrouping: false,
-})
+}
 
-const SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS = new Intl.NumberFormat('en-US', {
+const SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS: NumberFormatOptions = {
   notation: 'standard',
   maximumSignificantDigits: 6,
   minimumSignificantDigits: 3,
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
   useGrouping: false,
-})
+}
 
-const THREE_SIG_FIGS_USD = new Intl.NumberFormat('en-US', {
+const ONE_SIG_FIG_CURRENCY: NumberFormatOptions = {
+  notation: 'standard',
+  minimumSignificantDigits: 1,
+  maximumSignificantDigits: 1,
+  currency: 'USD',
+  style: 'currency',
+}
+
+const THREE_SIG_FIGS_CURRENCY: NumberFormatOptions = {
   notation: 'standard',
   minimumSignificantDigits: 3,
   maximumSignificantDigits: 3,
   currency: 'USD',
   style: 'currency',
-})
+}
 
-const SEVEN_SIG_FIGS__SCI_NOTATION_USD = new Intl.NumberFormat('en-US', {
+const SEVEN_SIG_FIGS__SCI_NOTATION_CURRENCY: NumberFormatOptions = {
   notation: 'scientific',
   minimumSignificantDigits: 7,
   maximumSignificantDigits: 7,
   currency: 'USD',
   style: 'currency',
-})
-
-type Format = Intl.NumberFormat | string
+}
 
 // each rule must contain either an `upperBound` or an `exact` value.
 // upperBound => number will use that formatter as long as it is < upperBound
 // exact => number will use that formatter if it is === exact
-type FormatterRule =
-  | { upperBound?: undefined; exact: number; formatter: Format }
-  | { upperBound: number; exact?: undefined; formatter: Format }
+// if hardcodedinput is supplied it will override the input value or use the hardcoded output
+type HardCodedInputFormat =
+  | {
+      input: number
+      prefix?: string
+      hardcodedOutput?: undefined
+    }
+  | {
+      input?: undefined
+      prefix?: undefined
+      hardcodedOutput: string
+    }
+
+type FormatterBaseRule = { formatterOptions: NumberFormatOptions }
+type FormatterExactRule = { upperBound?: undefined; exact: number } & FormatterBaseRule
+type FormatterUpperBoundRule = { upperBound: number; exact?: undefined } & FormatterBaseRule
+
+type FormatterRule = (FormatterExactRule | FormatterUpperBoundRule) & { hardCodedInput?: HardCodedInputFormat }
 
 // these formatter objects dictate which formatter rule to use based on the interval that
 // the number falls into. for example, based on the rule set below, if your number
 // falls between 1 and 1e6, you'd use TWO_DECIMALS as the formatter.
 const tokenNonTxFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '0' },
-  { upperBound: 0.001, formatter: '<0.001' },
-  { upperBound: 1, formatter: THREE_DECIMALS },
-  { upperBound: 1e6, formatter: TWO_DECIMALS },
-  { upperBound: 1e15, formatter: SHORTHAND_TWO_DECIMALS },
-  { upperBound: Infinity, formatter: '>999T' },
+  { exact: 0, formatterOptions: NO_DECIMALS },
+  { upperBound: 0.001, hardCodedInput: { input: 0.001, prefix: '<' }, formatterOptions: THREE_DECIMALS },
+  { upperBound: 1, formatterOptions: THREE_DECIMALS },
+  { upperBound: 1e6, formatterOptions: TWO_DECIMALS },
+  { upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS },
+  {
+    upperBound: Infinity,
+    hardCodedInput: { input: 999_000_000_000_000, prefix: '>' },
+    formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS,
+  },
 ]
 
 const tokenTxFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '0' },
-  { upperBound: 0.00001, formatter: '<0.00001' },
-  { upperBound: 1, formatter: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN },
-  { upperBound: 10000, formatter: SIX_SIG_FIGS_TWO_DECIMALS },
-  { upperBound: Infinity, formatter: TWO_DECIMALS },
+  { exact: 0, formatterOptions: NO_DECIMALS },
+  {
+    upperBound: 0.00001,
+    hardCodedInput: { input: 0.00001, prefix: '<' },
+    formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN,
+  },
+  { upperBound: 1, formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN },
+  { upperBound: 10000, formatterOptions: SIX_SIG_FIGS_TWO_DECIMALS },
+  { upperBound: Infinity, formatterOptions: TWO_DECIMALS },
 ]
 
 const swapTradeAmountFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '0' },
-  { upperBound: 0.1, formatter: SIX_SIG_FIGS_NO_COMMAS },
-  { upperBound: 1, formatter: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS },
-  { upperBound: Infinity, formatter: SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS },
+  { exact: 0, formatterOptions: NO_DECIMALS },
+  { upperBound: 0.1, formatterOptions: SIX_SIG_FIGS_NO_COMMAS },
+  { upperBound: 1, formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS },
+  { upperBound: Infinity, formatterOptions: SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS },
 ]
 
 const swapPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '0' },
-  { upperBound: 0.00001, formatter: '<0.00001' },
+  { exact: 0, formatterOptions: NO_DECIMALS },
+  {
+    upperBound: 0.00001,
+    hardCodedInput: { input: 0.00001, prefix: '<' },
+    formatterOptions: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN,
+  },
   ...swapTradeAmountFormatter,
 ]
 
 const fiatTokenDetailsFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '$0.00' },
-  { upperBound: 0.00000001, formatter: '<$0.00000001' },
-  { upperBound: 0.1, formatter: THREE_SIG_FIGS_USD },
-  { upperBound: 1.05, formatter: THREE_DECIMALS_USD },
-  { upperBound: 1e6, formatter: TWO_DECIMALS_USD },
-  { upperBound: Infinity, formatter: SHORTHAND_USD_TWO_DECIMALS },
+  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
+  {
+    upperBound: 0.00000001,
+    hardCodedInput: { input: 0.00000001, prefix: '<' },
+    formatterOptions: ONE_SIG_FIG_CURRENCY,
+  },
+  { upperBound: 0.1, formatterOptions: THREE_SIG_FIGS_CURRENCY },
+  { upperBound: 1.05, formatterOptions: THREE_DECIMALS_CURRENCY },
+  { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
 ]
 
 const fiatTokenPricesFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '$0.00' },
-  { upperBound: 0.00000001, formatter: '<$0.00000001' },
-  { upperBound: 1, formatter: THREE_SIG_FIGS_USD },
-  { upperBound: 1e6, formatter: TWO_DECIMALS_USD },
-  { upperBound: 1e16, formatter: SHORTHAND_USD_TWO_DECIMALS },
-  { upperBound: Infinity, formatter: SEVEN_SIG_FIGS__SCI_NOTATION_USD },
+  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
+  {
+    upperBound: 0.00000001,
+    hardCodedInput: { input: 0.00000001, prefix: '<' },
+    formatterOptions: ONE_SIG_FIG_CURRENCY,
+  },
+  { upperBound: 1, formatterOptions: THREE_SIG_FIGS_CURRENCY },
+  { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { upperBound: 1e16, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
+  { upperBound: Infinity, formatterOptions: SEVEN_SIG_FIGS__SCI_NOTATION_CURRENCY },
 ]
 
 const fiatTokenStatsFormatter: FormatterRule[] = [
   // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
-  { exact: 0, formatter: '-' },
-  { upperBound: 0.01, formatter: '<$0.01' },
-  { upperBound: 1000, formatter: TWO_DECIMALS_USD },
-  { upperBound: Infinity, formatter: SHORTHAND_USD_ONE_DECIMAL },
+  { exact: 0, hardCodedInput: { hardcodedOutput: '-' }, formatterOptions: ONE_SIG_FIG_CURRENCY },
+  { upperBound: 0.01, hardCodedInput: { input: 0.01, prefix: '<' }, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { upperBound: 1000, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_ONE_DECIMAL },
 ]
 
 const fiatGasPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '$0.00' },
-  { upperBound: 0.01, formatter: '<$0.01' },
-  { upperBound: 1e6, formatter: TWO_DECIMALS_USD },
-  { upperBound: Infinity, formatter: SHORTHAND_USD_TWO_DECIMALS },
+  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { upperBound: 0.01, hardCodedInput: { input: 0.01, prefix: '<' }, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
 ]
 
-const fiatTokenQuantityFormatter = [{ exact: 0, formatter: '$0.00' }, ...fiatGasPriceFormatter]
+const fiatTokenQuantityFormatter: FormatterRule[] = [
+  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
+  ...fiatGasPriceFormatter,
+]
 
 const portfolioBalanceFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '$0.00' },
-  { upperBound: Infinity, formatter: TWO_DECIMALS_USD },
+  { exact: 0, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { upperBound: Infinity, formatterOptions: TWO_DECIMALS_CURRENCY },
 ]
 
 const ntfTokenFloorPriceFormatterTrailingZeros: FormatterRule[] = [
-  { exact: 0, formatter: '0' },
-  { upperBound: 0.001, formatter: '<0.001' },
-  { upperBound: 1, formatter: THREE_DECIMALS },
-  { upperBound: 1000, formatter: TWO_DECIMALS },
-  { upperBound: 1e15, formatter: SHORTHAND_TWO_DECIMALS },
-  { upperBound: Infinity, formatter: '>999T' },
+  { exact: 0, formatterOptions: NO_DECIMALS },
+  { upperBound: 0.001, hardCodedInput: { input: 0.001, prefix: '<' }, formatterOptions: THREE_DECIMALS },
+  { upperBound: 1, formatterOptions: THREE_DECIMALS },
+  { upperBound: 1000, formatterOptions: TWO_DECIMALS },
+  { upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS },
+  {
+    upperBound: Infinity,
+    hardCodedInput: { input: 999_000_000_000_000, prefix: '>' },
+    formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS,
+  },
 ]
 
 const ntfTokenFloorPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '0' },
-  { upperBound: 0.001, formatter: '<0.001' },
-  { upperBound: 1, formatter: THREE_DECIMALS_NO_TRAILING_ZEROS },
-  { upperBound: 1000, formatter: TWO_DECIMALS_NO_TRAILING_ZEROS },
-  { upperBound: 1e15, formatter: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS },
-  { upperBound: Infinity, formatter: '>999T' },
+  { exact: 0, formatterOptions: NO_DECIMALS },
+  { upperBound: 0.001, hardCodedInput: { input: 0.001, prefix: '<' }, formatterOptions: THREE_DECIMALS },
+  { upperBound: 1, formatterOptions: THREE_DECIMALS_NO_TRAILING_ZEROS },
+  { upperBound: 1000, formatterOptions: TWO_DECIMALS_NO_TRAILING_ZEROS },
+  { upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS },
+  {
+    upperBound: Infinity,
+    hardCodedInput: { input: 999_000_000_000_000, prefix: '>' },
+    formatterOptions: SHORTHAND_TWO_DECIMALS_NO_TRAILING_ZEROS,
+  },
 ]
 
 const ntfCollectionStatsFormatter: FormatterRule[] = [
-  { upperBound: 1000, formatter: NO_DECIMALS },
-  { upperBound: Infinity, formatter: SHORTHAND_ONE_DECIMAL },
+  { upperBound: 1000, formatterOptions: NO_DECIMALS },
+  { upperBound: Infinity, formatterOptions: SHORTHAND_ONE_DECIMAL },
 ]
 
 export enum NumberType {
@@ -300,32 +358,57 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
 }
 
-function getFormatterRule(input: number, type: NumberType): Format {
+function getFormatterRule(input: number, type: NumberType): FormatterRule {
   const rules = TYPE_TO_FORMATTER_RULES[type]
   for (const rule of rules) {
     if (
       (rule.exact !== undefined && input === rule.exact) ||
       (rule.upperBound !== undefined && input < rule.upperBound)
     ) {
-      return rule.formatter
+      return rule
     }
   }
 
   throw new Error(`formatter for type ${type} not configured correctly`)
 }
 
-export function formatNumber(
-  input: Nullish<number>,
-  type: NumberType = NumberType.TokenNonTx,
-  placeholder = '-'
-): string {
+interface FormatNumberOptions {
+  input: Nullish<number>
+  type?: NumberType
+  placeholder?: string
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+}
+
+export function formatNumber({
+  input,
+  type = NumberType.TokenNonTx,
+  placeholder = '-',
+  locale = DEFAULT_LOCALE,
+  localCurrency = DEFAULT_LOCAL_CURRENCY,
+}: FormatNumberOptions): string {
   if (input === null || input === undefined) {
     return placeholder
   }
 
-  const formatter = getFormatterRule(input, type)
-  if (typeof formatter === 'string') return formatter
-  return formatter.format(input)
+  const { hardCodedInput, formatterOptions } = getFormatterRule(input, type)
+
+  if (formatterOptions.currency) {
+    formatterOptions.currency = localCurrency
+    formatterOptions.currencyDisplay = LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE[localCurrency]
+  }
+
+  if (!hardCodedInput) {
+    return new Intl.NumberFormat(locale, formatterOptions).format(input)
+  }
+
+  if (hardCodedInput.hardcodedOutput) {
+    return hardCodedInput.hardcodedOutput
+  }
+
+  const { input: hardCodedInputValue, prefix } = hardCodedInput
+  if (hardCodedInputValue === undefined) return placeholder
+  return (prefix ?? '') + new Intl.NumberFormat(locale, formatterOptions).format(hardCodedInputValue)
 }
 
 export function formatCurrencyAmount(
@@ -333,7 +416,7 @@ export function formatCurrencyAmount(
   type: NumberType = NumberType.TokenNonTx,
   placeholder?: string
 ): string {
-  return formatNumber(amount ? parseFloat(amount.toSignificant()) : undefined, type, placeholder)
+  return formatNumber({ input: amount ? parseFloat(amount.toSignificant()) : undefined, type, placeholder })
 }
 
 export function formatPriceImpact(priceImpact: Percent | undefined): string {
@@ -356,13 +439,13 @@ export function formatPrice(
     return '-'
   }
 
-  return formatNumber(parseFloat(price.toSignificant()), type)
+  return formatNumber({ input: parseFloat(price.toSignificant()), type })
 }
 
 export function formatNumberOrString(price: Nullish<number | string>, type: NumberType): string {
   if (price === null || price === undefined) return '-'
-  if (typeof price === 'string') return formatNumber(parseFloat(price), type)
-  return formatNumber(price, type)
+  if (typeof price === 'string') return formatNumber({ input: parseFloat(price), type })
+  return formatNumber({ input: price, type })
 }
 
 export function formatUSDPrice(price: Nullish<number | string>, type: NumberType = NumberType.FiatTokenPrice): string {
