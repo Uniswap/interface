@@ -8,6 +8,7 @@ import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useCallback } from 'react'
 
 type Nullish<T> = T | null | undefined
 type NumberFormatOptions = Intl.NumberFormatOptions
@@ -433,6 +434,16 @@ export function useFormatterLocales(): {
     formatterLocale: DEFAULT_LOCALE,
     formatterLocalCurrency: DEFAULT_LOCAL_CURRENCY,
   }
+}
+
+export function useFormatNumber() {
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+
+  return useCallback(
+    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency'>) =>
+      formatNumber({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
+    [formatterLocalCurrency, formatterLocale]
+  )
 }
 
 export function formatCurrencyAmount(

@@ -11,7 +11,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { formatNumber, NumberType, useFormatterLocales } from 'utils/formatNumbers'
+import { NumberType, useFormatNumber } from 'utils/formatNumbers'
 
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 
@@ -26,7 +26,7 @@ const StyledGasIcon = styled(Gas)`
 
 export default function GasEstimateTooltip({ trade, loading }: { trade?: InterfaceTrade; loading: boolean }) {
   const { chainId } = useWeb3React()
-  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+  const formatNumber = useFormatNumber()
 
   if (!trade || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {
     return null
@@ -52,8 +52,6 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
                 {formatNumber({
                   input: trade.totalGasUseEstimateUSD,
                   type: NumberType.FiatGasPrice,
-                  locale: formatterLocale,
-                  localCurrency: formatterLocalCurrency,
                 })}
               </div>
               {isUniswapXTrade(trade) && (
@@ -62,8 +60,6 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
                     {formatNumber({
                       input: trade.classicGasUseEstimateUSD,
                       type: NumberType.FiatGasPrice,
-                      locale: formatterLocale,
-                      localCurrency: formatterLocalCurrency,
                     })}
                   </s>
                 </div>

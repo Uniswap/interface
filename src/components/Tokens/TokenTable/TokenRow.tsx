@@ -16,7 +16,7 @@ import { CSSProperties, ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
-import { formatNumber, formatUSDPrice, NumberType, useFormatterLocales } from 'utils/formatNumbers'
+import { formatUSDPrice, NumberType, useFormatNumber } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -438,7 +438,7 @@ interface LoadedRowProps {
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
-  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+  const formatNumber = useFormatNumber()
 
   const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
@@ -508,8 +508,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               {formatNumber({
                 input: token.market?.totalValueLocked?.value,
                 type: NumberType.FiatTokenStats,
-                locale: formatterLocale,
-                localCurrency: formatterLocalCurrency,
               })}
             </ClickableContent>
           }
@@ -518,8 +516,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               {formatNumber({
                 input: token.market?.volume?.value,
                 type: NumberType.FiatTokenStats,
-                locale: formatterLocale,
-                localCurrency: formatterLocalCurrency,
               })}
             </ClickableContent>
           }

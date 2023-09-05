@@ -9,13 +9,7 @@ import { ZERO_PERCENT } from 'constants/misc'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
-import {
-  formatCurrencyAmount,
-  formatNumber,
-  formatPriceImpact,
-  NumberType,
-  useFormatterLocales,
-} from 'utils/formatNumbers'
+import { formatCurrencyAmount, formatPriceImpact, NumberType, useFormatNumber } from 'utils/formatNumbers'
 
 import { Separator, ThemedText } from '../../theme'
 import Column from '../Column'
@@ -53,7 +47,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
   const txCount = getTransactionCount(trade)
-  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+  const formatNumber = useFormatNumber()
 
   const supportsGasEstimate = chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
 
@@ -83,8 +77,6 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
                 {`${trade.totalGasUseEstimateUSD ? '~' : ''}${formatNumber({
                   input: trade.totalGasUseEstimateUSD,
                   type: NumberType.FiatGasPrice,
-                  locale: formatterLocale,
-                  localCurrency: formatterLocalCurrency,
                 })}`}
               </ThemedText.BodySmall>
             </TextWithLoadingPlaceholder>
