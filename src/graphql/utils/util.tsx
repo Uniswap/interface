@@ -1,5 +1,4 @@
 import { Currency } from '@pollum-io/sdk-core'
-import { ChainId } from '@pollum-io/smart-order-router'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
@@ -167,77 +166,62 @@ export function unwrapTokenRollux<
   }
 }
 
-const gammaChainName = (chainId?: ChainId) => {
-  switch (chainId) {
-    case ChainId.ROLLUX:
-      return 'rollux'
-    default:
-      return 'rollux'
+export const getGammaData = async () => {
+  try {
+    const data = await fetch(`${process.env.REACT_APP_GAMMA_API_ENDPOINT}/pegasys/rollux/hypervisors/allData`)
+    const gammaData = await data.json()
+    console.log('gammaData', gammaData)
+    return gammaData
+  } catch (e) {
+    console.log(e)
+    return null
+    // TODO: check backup endpoint with gamma
+    // try {
+    //   const data = await fetch(`${process.env.REACT_APP_GAMMA_API_ENDPOINT_BACKUP}/pegasys/rollux/hypervisors/allData`)
+    //   const gammaData = await data.json()
+    //   return gammaData
+    // } catch (e) {
+    //   console.log(e)
+    //   return null
+    // }
   }
 }
 
-export const getGammaData = async (chainId?: ChainId) => {
-  if (!chainId) return null
+const getGammaPositions = async (account?: string) => {
+  if (!account) return null
   try {
-    const data = await fetch(
-      `${process.env.REACT_APP_GAMMA_API_ENDPOINT}/quickswap/${gammaChainName(chainId)}/hypervisors/allData`
-    )
-    const gammaData = await data.json()
-    return gammaData
-  } catch {
-    try {
-      const data = await fetch(
-        `${process.env.REACT_APP_GAMMA_API_ENDPOINT_BACKUP}/quickswap/${gammaChainName(chainId)}/hypervisors/allData`
-      )
-      const gammaData = await data.json()
-      return gammaData
-    } catch (e) {
-      console.log(e)
-      return null
-    }
+    const data = await fetch(`${process.env.REACT_APP_GAMMA_API_ENDPOINT}/pegasys/rollux/user/${account}`)
+    const positions = await data.json()
+    return positions[account.toLowerCase()]
+  } catch (e) {
+    console.log(e)
+    return null
+    // try {
+    //   const data = await fetch(`${process.env.REACT_APP_GAMMA_API_ENDPOINT_BACKUP}/pegasys/rollux/user/${account}`)
+    //   const positions = await data.json()
+    //   return positions[account.toLowerCase()]
+    // } catch (e) {
+    //   console.log(e)
+    //   return null
+    // }
   }
 }
 
-// export const getGammaPositions = async (account?: string, chainId?: ChainId) => {
-//   if (!account || !chainId) return null
-//   try {
-//     const data = await fetch(
-//       `${process.env.REACT_APP_GAMMA_API_ENDPOINT}/quickswap/${gammaChainName(chainId)}/user/${account}`
-//     )
-//     const positions = await data.json()
-//     return positions[account.toLowerCase()]
-//   } catch {
-//     try {
-//       const data = await fetch(
-//         `${process.env.REACT_APP_GAMMA_API_ENDPOINT_BACKUP}/quickswap/${gammaChainName(chainId)}/user/${account}`
-//       )
-//       const positions = await data.json()
-//       return positions[account.toLowerCase()]
-//     } catch (e) {
-//       console.log(e)
-//       return null
-//     }
-//   }
-// }
-
-export const getGammaRewards = async (chainId?: ChainId) => {
-  if (!chainId) return null
+export const getGammaRewards = async () => {
   try {
-    const data = await fetch(
-      `${process.env.REACT_APP_GAMMA_API_ENDPOINT}/quickswap/${gammaChainName(chainId)}/allRewards2`
-    )
+    const data = await fetch(`${process.env.REACT_APP_GAMMA_API_ENDPOINT}/pegasys/rollux/allRewards2`)
     const gammaData = await data.json()
     return gammaData
-  } catch {
-    try {
-      const data = await fetch(
-        `${process.env.REACT_APP_GAMMA_API_ENDPOINT_BACKUP}/quickswap/${gammaChainName(chainId)}/allRewards2`
-      )
-      const gammaData = await data.json()
-      return gammaData
-    } catch (e) {
-      console.log(e)
-      return null
-    }
+  } catch (e) {
+    console.log(e)
+    return null
+    // try {
+    //   const data = await fetch(`${process.env.REACT_APP_GAMMA_API_ENDPOINT_BACKUP}/pegasys/rollux/allRewards2`)
+    //   const gammaData = await data.json()
+    //   return gammaData
+    // } catch (e) {
+    //   console.log(e)
+    //   return null
+    // }
   }
 }

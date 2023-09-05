@@ -100,7 +100,7 @@ interface Returns {
   status: string
 }
 
-export interface FarmPoolData {
+interface FarmPoolData {
   createDate: string
   poolAddress: string
   name: string

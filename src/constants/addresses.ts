@@ -1,5 +1,3 @@
-import { Token } from '@pollum-io/sdk-core'
-import { ChainId } from '@pollum-io/smart-order-router'
 import { FACTORY_ADDRESS as V2_FACTORY_ADDRESS } from '@pollum-io/v1-sdk'
 import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@pollum-io/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
@@ -72,17 +70,17 @@ export const TICK_LENS_ADDRESSES: AddressMap = {
 
 // Farms address
 export const GAMMA_MASTERCHEF_ADDRESSES: AddressMap = {
-  ...constructSameAddressMap('0x20ec0d06f447d550fc6edee42121bc8c1817b97d'),
+  ...constructSameAddressMap('0x3e4E39C4a90390B0FfA6b4DeE270371f027c7c63'),
 }
 
-const EMPTY: { [chainId: number]: Token } = {
-  [ChainId.ROLLUX]: new Token(ChainId.ROLLUX, '0x0000000000000000000000000000000000000000', 0, 'EMPTY', 'EMPTY'),
-}
+// const EMPTY: { [chainId: number]: Token } = {
+//   [ChainId.ROLLUX]: new Token(ChainId.ROLLUX, '0x0000000000000000000000000000000000000000', 0, 'EMPTY', 'EMPTY'),
+// }
 
-const FINITE_FARMING: AddressMap = {
-  [ChainId.ROLLUX]: '0x9923f42a02A82dA63EE0DbbC5f8E311e3DD8A1f8',
-}
+// const FINITE_FARMING: AddressMap = {
+//   [ChainId.ROLLUX]: '0x9923f42a02A82dA63EE0DbbC5f8E311e3DD8A1f8',
+// }
 
-const FARMING_CENTER: AddressMap = {
-  [ChainId.ROLLUX]: '0x7F281A8cdF66eF5e9db8434Ec6D97acc1bc01E78',
-}
+// const FARMING_CENTER: AddressMap = {
+//   [ChainId.ROLLUX]: '0x7F281A8cdF66eF5e9db8434Ec6D97acc1bc01E78',
+// }

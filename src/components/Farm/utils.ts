@@ -203,6 +203,16 @@ export const getStakedAmount = (item: any, stakedAmounts: any) => {
   )
   return sItem ? Number(sItem.amount) : 0
 }
+const calculateRewardUSD = (gammaReward: any, gammaRewardsWithUSDPrice: any) => {
+  return gammaReward?.['rewarders']
+    ? Object.values(gammaReward['rewarders']).reduce((total: number, rewarder: any) => {
+        const rewardUSD = gammaRewardsWithUSDPrice?.find(
+          (item: any) => item.address.toLowerCase() === rewarder.rewardToken.toLowerCase()
+        )
+        return total + (rewardUSD?.price ?? 0) * rewarder.rewardPerSecond
+      }, 0)
+    : 0
+}
 
 export const sortFarms = (
   farm0: any,
@@ -220,68 +230,76 @@ export const sortFarms = (
   const farm0MasterChefAddress = GAMMA_MASTERCHEF_ADDRESSES[ChainId.ROLLUX].toLowerCase()
   const farm1MasterChefAddress = GAMMA_MASTERCHEF_ADDRESSES[ChainId.ROLLUX].toLowerCase()
 
-  const gammaReward0 =
-    gammaRewards &&
-    farm0MasterChefAddress &&
-    gammaRewards[farm0MasterChefAddress] &&
-    gammaRewards[farm0MasterChefAddress]['pools']
-      ? gammaRewards[farm0MasterChefAddress]['pools'][farm0.address.toLowerCase()]
-      : undefined
-
-  const gammaReward1 =
-    gammaRewards &&
-    farm1MasterChefAddress &&
-    gammaRewards[farm1MasterChefAddress] &&
-    gammaRewards[farm1MasterChefAddress]['pools']
-      ? gammaRewards[farm1MasterChefAddress]['pools'][farm1.address.toLowerCase()]
-      : undefined
+  const gammaReward0 = gammaRewards?.[farm0MasterChefAddress]?.['pools']?.[farm0.address.toLowerCase()] ?? undefined
+  const gammaReward1 = gammaRewards?.[farm1MasterChefAddress]?.['pools']?.[farm1.address.toLowerCase()] ?? undefined
 
   if (sortByGamma === v3FarmSortBy.pool) {
-    const farm0Title = (farm0.token0?.symbol ?? '') + (farm0.token1?.symbol ?? '') + farm0.title
-    const farm1Title = (farm1.token0?.symbol ?? '') + (farm1.token1?.symbol ?? '') + farm1.title
+    const farm0Title = `${farm0.token0?.symbol ?? ''}${farm0.token1?.symbol ?? ''}${farm0.title}`
+    const farm1Title = `${farm1.token0?.symbol ?? ''}${farm1.token1?.symbol ?? ''}${farm1.title}`
+
     return farm0Title > farm1Title ? sortMultiplierGamma : -1 * sortMultiplierGamma
   } else if (sortByGamma === v3FarmSortBy.tvl) {
-    const tvl0 = gammaReward0 && gammaReward0['stakedAmountUSD'] ? Number(gammaReward0['stakedAmountUSD']) : 0
-    const tvl1 = gammaReward1 && gammaReward1['stakedAmountUSD'] ? Number(gammaReward1['stakedAmountUSD']) : 0
+    const tvl0 = Number(gammaReward0?.['stakedAmountUSD'] ?? 0)
+    const tvl1 = Number(gammaReward1?.['stakedAmountUSD'] ?? 0)
+
     return tvl0 > tvl1 ? sortMultiplierGamma : -1 * sortMultiplierGamma
   } else if (sortByGamma === v3FarmSortBy.rewards) {
-    const farm0RewardUSD =
-      gammaReward0 && gammaReward0['rewarders']
-        ? Object.values(gammaReward0['rewarders']).reduce((total: number, rewarder: any) => {
-            const rewardUSD = gammaRewardsWithUSDPrice?.find(
-              (item: any) => item.address.toLowerCase() === rewarder.rewardToken.toLowerCase()
-            )
-            return total + (rewardUSD?.price ?? 0) * rewarder.rewardPerSecond
-          }, 0)
-        : 0
-    const farm1RewardUSD =
-      gammaReward1 && gammaReward1['rewarders']
-        ? Object.values(gammaReward1['rewarders']).reduce((total: number, rewarder: any) => {
-            const rewardUSD = gammaRewardsWithUSDPrice?.find(
-              (item: any) => item.address.toLowerCase() === rewarder.rewardToken.toLowerCase()
-            )
-            return total + (rewardUSD?.price ?? 0) * rewarder.rewardPerSecond
-          }, 0)
-        : 0
+    const farm0RewardUSD = calculateRewardUSD(gammaReward0, gammaRewardsWithUSDPrice)
+    const farm1RewardUSD = calculateRewardUSD(gammaReward1, gammaRewardsWithUSDPrice)
+
     return farm0RewardUSD > farm1RewardUSD ? sortMultiplierGamma : -1 * sortMultiplierGamma
   } else if (sortByGamma === v3FarmSortBy.apr) {
-    const poolAPR0 =
-      gammaData0 &&
-      gammaData0['returns'] &&
-      gammaData0['returns']['allTime'] &&
-      gammaData0['returns']['allTime']['feeApr']
-        ? Number(gammaData0['returns']['allTime']['feeApr'])
-        : 0
-    const poolAPR1 =
-      gammaData1 &&
-      gammaData1['returns'] &&
-      gammaData1['returns']['allTime'] &&
-      gammaData1['returns']['allTime']['feeApr']
-        ? Number(gammaData1['returns']['allTime']['feeApr'])
-        : 0
-    const farmAPR0 = gammaReward0 && gammaReward0['apr'] ? Number(gammaReward0['apr']) : 0
-    const farmAPR1 = gammaReward1 && gammaReward1['apr'] ? Number(gammaReward1['apr']) : 0
+    const poolAPR0 = Number(gammaData0?.['returns']?.['allTime']?.['feeApr'] ?? 0)
+    const poolAPR1 = Number(gammaData1?.['returns']?.['allTime']?.['feeApr'] ?? 0)
+    const farmAPR0 = Number(gammaReward0?.['apr'] ?? 0)
+    const farmAPR1 = Number(gammaReward1?.['apr'] ?? 0)
+
     return poolAPR0 + farmAPR0 > poolAPR1 + farmAPR1 ? sortMultiplierGamma : -1 * sortMultiplierGamma
   }
+
   return 1
+}
+
+const includesIgnoreCase = (str: string, search: string) => str?.toLowerCase().includes(search.toLowerCase())
+
+const findToken = (tokens: any, itemToken: any) =>
+  tokens.find((token: any) => itemToken && token?.address.toLowerCase() === itemToken.address.toLowerCase())
+
+export const checkCondition = (item: any, search: string, GlobalData: any, farmFilter: string) => {
+  console.log('farmFilter', farmFilter)
+  console.log('GlobalData', GlobalData)
+  console.log('search', search)
+  console.log('item', item)
+
+  const searchCondition =
+    includesIgnoreCase(item.token0?.symbol, search) ||
+    includesIgnoreCase(item.token0?.address, search) ||
+    includesIgnoreCase(item.token1?.symbol, search) ||
+    includesIgnoreCase(item.token1?.address, search) ||
+    includesIgnoreCase(item.title, search)
+
+  const blueChipCondition =
+    findToken(GlobalData.blueChips[570], item.token0) && findToken(GlobalData.blueChips[570], item.token1)
+  const stableCoinCondition =
+    findToken(GlobalData.stableCoins[570], item.token0) && findToken(GlobalData.stableCoins[570], item.token1)
+
+  const stablePair0 = GlobalData.stablePairs[570].find((tokens: any) => findToken(tokens, item.token0))
+  const stablePair1 = GlobalData.stablePairs[570].find((tokens: any) => findToken(tokens, item.token1))
+  const stableLPCondition = findToken(stablePair0, item.token1) || findToken(stablePair1, item.token0)
+
+  const otherLPCondition = !blueChipCondition && !stableCoinCondition && !stableLPCondition
+  const { v3FarmFilter } = GlobalConst.utils
+
+  return (
+    searchCondition &&
+    (farmFilter === v3FarmFilter.blueChip
+      ? blueChipCondition
+      : farmFilter === v3FarmFilter.stableCoin
+      ? stableCoinCondition
+      : farmFilter === v3FarmFilter.stableLP
+      ? stableLPCondition
+      : farmFilter === v3FarmFilter.otherLP
+      ? otherLPCondition
+      : true)
+  )
 }
