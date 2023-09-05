@@ -65,6 +65,7 @@ export const GQL_MAINNET_CHAINS = [
   Chain.Arbitrum,
   Chain.Bnb,
   Chain.Avalanche,
+  Chain.Base,
 ] as const
 
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
@@ -86,6 +87,7 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [ChainId.OPTIMISM_GOERLI]: Chain.Optimism,
   [ChainId.BNB]: Chain.Bnb,
   [ChainId.AVALANCHE]: Chain.Avalanche,
+  [ChainId.BASE]: Chain.Base,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -127,6 +129,7 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   optimism: Chain.Optimism,
   bnb: Chain.Bnb,
   avalanche: Chain.Avalanche,
+  base: Chain.Base,
 }
 
 /**
@@ -150,6 +153,7 @@ const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
   [Chain.Arbitrum]: ChainId.ARBITRUM_ONE,
   [Chain.Bnb]: ChainId.BNB,
   [Chain.Avalanche]: ChainId.AVALANCHE,
+  [Chain.Base]: ChainId.BASE,
 }
 
 export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
@@ -184,8 +188,9 @@ export const BACKEND_SUPPORTED_CHAINS = [
   Chain.Arbitrum,
   Chain.Optimism,
   Chain.Celo,
+  Chain.Base,
 ] as const
-export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE, ChainId.BASE] as const
+export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE] as const
 
 export function getTokenDetailsURL({
   address,

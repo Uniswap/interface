@@ -16,7 +16,7 @@ export const Input = styled.input`
     -webkit-appearance: none;
   }
   ::placeholder {
-    color: ${({ theme }) => theme.textTertiary};
+    color: ${({ theme }) => theme.neutral3};
   }
 `
 
@@ -27,21 +27,21 @@ export const InputContainer = styled(Row)<{ error?: boolean }>`
   min-width: 100px;
   flex: 1;
   input {
-    color: ${({ theme, error }) => (error ? theme.accentFailure : theme.textPrimary)};
+    color: ${({ theme, error }) => (error ? theme.critical : theme.neutral1)};
   }
-  border: 1px solid ${({ theme, error }) => (error ? theme.accentFailure : theme.deprecated_bg3)};
+  border: 1px solid ${({ theme, error }) => (error ? theme.critical : theme.surface2)};
   ${({ theme, error }) =>
     error
       ? `
-        border: 1px solid ${theme.accentFailure};
+        border: 1px solid ${theme.critical};
         :focus-within {
-          border-color: ${theme.accentFailureSoft};
+          border-color: ${theme.deprecated_accentFailureSoft};
         }
       `
       : `
-        border: 1px solid ${theme.backgroundOutline};
+        border: 1px solid ${theme.surface3};
         :focus-within {
-          border-color: ${theme.accentActiveSoft};
+          border-color: ${theme.accent2};
         }
       `}
 `

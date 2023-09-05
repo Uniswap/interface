@@ -97,6 +97,7 @@ function useConfirmModalState({
     // See the `approve` function here: https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7#code
     if (
       allowance.state === AllowanceState.REQUIRED &&
+      allowance.needsSetupApproval &&
       allowance.token.equals(USDT_MAINNET) &&
       allowance.allowedAmount.greaterThan(0)
     ) {
@@ -267,7 +268,6 @@ export default function ConfirmSwapModal({
   onCurrencySelection,
   swapError,
   swapResult,
-  swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
 }: {
@@ -282,7 +282,6 @@ export default function ConfirmSwapModal({
   swapError?: Error
   onDismiss: () => void
   onCurrencySelection: (field: Field, currency: Currency) => void
-  swapQuoteReceivedDate?: Date
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
@@ -305,6 +304,7 @@ export default function ConfirmSwapModal({
   // Swap failed locally and was not broadcast to the blockchain.
   const localSwapFailure = Boolean(swapError) && !didUserReject(swapError)
   const swapFailed = localSwapFailure || swapReverted
+
   useEffect(() => {
     // Reset the modal state if the user rejected the swap.
     if (swapError && !swapFailed) {
@@ -356,7 +356,6 @@ export default function ConfirmSwapModal({
           swapResult={swapResult}
           allowedSlippage={allowedSlippage}
           disabledConfirm={showAcceptChanges}
-          swapQuoteReceivedDate={swapQuoteReceivedDate}
           fiatValueInput={fiatValueInput}
           fiatValueOutput={fiatValueOutput}
           showAcceptChanges={showAcceptChanges}
@@ -386,7 +385,6 @@ export default function ConfirmSwapModal({
     wrapTxHash,
     allowance,
     allowedSlippage,
-    swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
     onAcceptChanges,

@@ -2,14 +2,13 @@ import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
-import { useBaseEnabledChains } from 'featureFlags/flags/baseEnabled'
 import { ArrowUpRight } from 'react-feather'
 import styled from 'styled-components'
 import { ExternalLink, HideSmall } from 'theme'
 import { colors } from 'theme/colors'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
 
-import { AutoRow } from '../Row'
+import Column from '../Column'
 
 const L2Icon = styled.img`
   width: 24px;
@@ -24,6 +23,7 @@ const BodyText = styled.div`
   justify-content: flex-start;
   margin: 8px;
   font-size: 14px;
+  line-height: 20px;
 `
 const RootWrapper = styled.div`
   margin-top: 16px;
@@ -41,7 +41,6 @@ const SHOULD_SHOW_ALERT = {
   [ChainId.BNB]: true,
   [ChainId.AVALANCHE]: true,
   [ChainId.BASE]: true,
-  [ChainId.BASE_GOERLI]: true,
 }
 
 type NetworkAlertChains = keyof typeof SHOULD_SHOW_ALERT
@@ -72,8 +71,6 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
       'radial-gradient(948% 292% at 42% 0%, rgba(255, 58, 212, 0.01) 0%, rgba(255, 255, 255, 0.04) 100%),radial-gradient(98% 96% at 2% 0%, rgba(255, 39, 39, 0.01) 0%, rgba(235, 0, 255, 0.01) 96%)',
     [ChainId.BASE]:
       'radial-gradient(100% 100% at 50% 0%, rgba(10, 41, 75, 0.7) 0%, rgba(0, 82, 255, .1) 40%, rgba(0, 82, 255, 0) 100%), rgb(13, 14, 14);',
-    [ChainId.BASE_GOERLI]:
-      'radial-gradient(100% 100% at 50% 0%, rgba(10, 41, 75, 0.7) 0%, rgba(0, 82, 255, .1) 40%, rgba(0, 82, 255, 0) 100%), rgb(13, 14, 14);',
   },
   light: {
     [ChainId.POLYGON]:
@@ -97,8 +94,6 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
     [ChainId.AVALANCHE]:
       'radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.1)',
     [ChainId.BASE]:
-      'radial-gradient(100% 100% at 50% 0%, rgba(0, 82, 255, 0.20) 0%, rgba(0, 82, 255, 0.08) 40.0%, rgba(252, 255, 82, 0.00) 100%), rgb(255, 255, 255)',
-    [ChainId.BASE_GOERLI]:
       'radial-gradient(100% 100% at 50% 0%, rgba(0, 82, 255, 0.20) 0%, rgba(0, 82, 255, 0.08) 40.0%, rgba(252, 255, 82, 0.00) 100%), rgb(255, 255, 255)',
   },
 }
@@ -126,7 +121,7 @@ const ContentWrapper = styled.div<{ chainId: NetworkAlertChains; darkMode: boole
   }
 `
 const Header = styled.h2`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   margin: 0;
 `
@@ -161,7 +156,6 @@ const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [ChainId.ARBITRUM_GOERLI]: '#0490ed',
   [ChainId.AVALANCHE]: '#ff3856',
   [ChainId.BASE]: colors.networkBase,
-  [ChainId.BASE_GOERLI]: colors.networkBase,
 }
 
 function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertChains {
@@ -171,13 +165,12 @@ function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertCh
 export function NetworkAlert() {
   const { chainId } = useWeb3React()
   const [darkMode] = useDarkModeManager()
-  const baseEnabledChains = useBaseEnabledChains()
 
   if (!shouldShowAlert(chainId)) {
     return null
   }
 
-  const chainInfo = getChainInfo(chainId, baseEnabledChains)
+  const chainInfo = getChainInfo(chainId)
 
   if (!chainInfo) return null
 
@@ -190,14 +183,14 @@ export function NetworkAlert() {
         <LinkOutToBridge href={bridge}>
           <BodyText color={textColor}>
             <L2Icon src={logoUrl} />
-            <AutoRow>
+            <Column>
               <Header>
                 <Trans>{label} token bridge</Trans>
               </Header>
               <HideSmall>
                 <Trans>Deposit tokens to the {label} network.</Trans>
               </HideSmall>
-            </AutoRow>
+            </Column>
           </BodyText>
           <StyledArrowUpRight color={textColor} />
         </LinkOutToBridge>

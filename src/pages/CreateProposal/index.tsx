@@ -10,7 +10,7 @@ import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { Wrapper } from 'pages/Pool/styleds'
+import { Wrapper } from 'pages/Pool/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -48,7 +48,7 @@ const PageWrapper = styled(AutoColumn)`
 
 const BackArrow = styled(ArrowLeft)`
   cursor: pointer;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 const Nav = styled(Link)`
   align-items: center;
@@ -57,6 +57,10 @@ const Nav = styled(Link)`
   justify-content: flex-start;
   margin: 1em 0 0 1em;
   text-decoration: none;
+`
+
+const HeaderText = styled(ThemedText.SubHeaderLarge)`
+  margin: auto !important;
 `
 
 const CreateProposalButton = ({
@@ -258,12 +262,12 @@ ${bodyValue}
         <AppBody $maxWidth="800px">
           <Nav to="/vote">
             <BackArrow />
-            <ThemedText.SubHeaderLarge>Create Proposal</ThemedText.SubHeaderLarge>
+            <HeaderText>Create Proposal</HeaderText>
           </Nav>
           <CreateProposalWrapper>
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
+                <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
                   <Trans>
                     <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
                     cannot be modified after submission, so please verify all information before submitting. The voting

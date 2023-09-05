@@ -7,14 +7,17 @@ import styled from 'styled-components'
 export const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};
   border-radius: 100px;
-  color: ${({ theme }) => theme.textPrimary};
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.neutral1};
+  background-color: ${({ theme }) => theme.surface3};
   font-size: calc(var(--size) / 3);
-  font-weight: 500;
+  font-weight: 535;
   height: ${({ size }) => size ?? '24px'};
   line-height: ${({ size }) => size ?? '24px'};
   text-align: center;
   width: ${({ size }) => size ?? '24px'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const LogoImage = styled.img<{ size: string; imgLoaded?: boolean }>`
@@ -28,7 +31,7 @@ const LogoImage = styled.img<{ size: string; imgLoaded?: boolean }>`
 const LogoImageWrapper = styled.div<{ size: string; imgLoaded?: boolean }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  background: ${({ theme, imgLoaded }) => (imgLoaded ? 'none' : theme.backgroundInteractive)};
+  background: ${({ theme, imgLoaded }) => (imgLoaded ? 'none' : theme.surface3)};
   transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
   box-shadow: 0 0 1px white;
   border-radius: 50%;
@@ -83,7 +86,7 @@ export default function AssetLogo({
   })
 
   return (
-    <LogoContainer style={style}>
+    <LogoContainer style={{ height: size, width: size, ...style }}>
       {src ? (
         <LogoImageWrapper size={size} imgLoaded={imgLoaded}>
           <LogoImage

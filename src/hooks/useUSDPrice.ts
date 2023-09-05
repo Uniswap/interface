@@ -3,6 +3,7 @@ import { ChainId, Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sd
 import { nativeOnChain } from 'constants/tokens'
 import { Chain, useTokenSpotPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, isGqlSupportedChain, PollingInterval } from 'graphql/data/util'
+import { useMemo } from 'react'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
@@ -19,66 +20,89 @@ const ETH_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Currency> } = {
   [ChainId.CELO]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.CELO), 10e18),
 }
 
-function useETHValue(currencyAmount?: CurrencyAmount<Currency>): {
-  data?: CurrencyAmount<Currency>
+function useETHPrice(currency?: Currency): {
+  data?: Price<Currency, Currency>
   isLoading: boolean
 } {
-  const chainId = currencyAmount?.currency?.chainId
-  const amountOut = isGqlSupportedChain(chainId) ? ETH_AMOUNT_OUT[chainId] : undefined
+  const chainId = currency?.chainId
+  const isSupported = currency && isGqlSupportedChain(chainId)
+
+  const amountOut = isSupported ? ETH_AMOUNT_OUT[chainId] : undefined
   const { trade, state } = useRoutingAPITrade(
     TradeType.EXACT_OUTPUT,
     amountOut,
-    currencyAmount?.currency,
-    INTERNAL_ROUTER_PREFERENCE_PRICE
+    currency,
+    INTERNAL_ROUTER_PREFERENCE_PRICE,
+    !isSupported
   )
 
-  // Get ETH value of ETH or WETH
-  if (chainId && currencyAmount && currencyAmount.currency.wrapped.equals(nativeOnChain(chainId).wrapped)) {
-    return {
-      data: new Price(currencyAmount.currency, currencyAmount.currency, '1', '1').quote(currencyAmount),
-      isLoading: false,
+  return useMemo(() => {
+    if (!isSupported) {
+      return { data: undefined, isLoading: false }
     }
-  }
 
-  if (!trade || state === TradeState.LOADING || !currencyAmount?.currency || !isGqlSupportedChain(chainId)) {
-    return { data: undefined, isLoading: state === TradeState.LOADING }
-  }
+    if (currency?.wrapped.equals(nativeOnChain(chainId).wrapped)) {
+      return {
+        data: new Price(currency, currency, '1', '1'),
+        isLoading: false,
+      }
+    }
 
-  const { numerator, denominator } = trade.routes[0].midPrice
-  const price = new Price(currencyAmount?.currency, nativeOnChain(chainId), denominator, numerator)
-  return { data: price.quote(currencyAmount), isLoading: false }
+    if (!trade || state === TradeState.LOADING) {
+      return { data: undefined, isLoading: state === TradeState.LOADING }
+    }
+
+    const { numerator, denominator } = trade.routes[0].midPrice
+    const price = new Price(currency, nativeOnChain(chainId), denominator, numerator)
+    return { data: price, isLoading: false }
+  }, [chainId, currency, isSupported, state, trade])
 }
 
-// TODO(WEB-2095): This hook should early return `null` when `currencyAmount` is undefined. Otherwise,
-// it is not possible to differentiate between a loading state and a state where `currencyAmount`
-// is undefined
-export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): {
+export function useUSDPrice(
+  currencyAmount?: CurrencyAmount<Currency>,
+  prefetchCurrency?: Currency
+): {
   data?: number
   isLoading: boolean
 } {
-  const chain = currencyAmount?.currency.chainId ? chainIdToBackendName(currencyAmount?.currency.chainId) : undefined
-  const currency = currencyAmount?.currency
-  const { data: ethValue, isLoading: isEthValueLoading } = useETHValue(currencyAmount)
+  const currency = currencyAmount?.currency ?? prefetchCurrency
+  const chainId = currency?.chainId
+  const chain = chainId ? chainIdToBackendName(chainId) : undefined
 
+  // Use ETH-based pricing if available.
+  const { data: tokenEthPrice, isLoading: isTokenEthPriceLoading } = useETHPrice(currency)
+  const isTokenEthPriced = Boolean(tokenEthPrice || isTokenEthPriceLoading)
   const { data, networkStatus } = useTokenSpotPriceQuery({
     variables: { chain: chain ?? Chain.Ethereum, address: getNativeTokenDBAddress(chain ?? Chain.Ethereum) },
-    skip: !chain || !isGqlSupportedChain(currency?.chainId),
+    skip: !isTokenEthPriced,
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-first',
   })
 
-  // Use USDC price for chains not supported by backend yet
-  const stablecoinPrice = useStablecoinPrice(!isGqlSupportedChain(currency?.chainId) ? currency : undefined)
-  if (!isGqlSupportedChain(currency?.chainId) && currencyAmount && stablecoinPrice) {
-    return { data: parseFloat(stablecoinPrice.quote(currencyAmount).toSignificant()), isLoading: false }
-  }
+  // Use USDC-based pricing for chains not yet supported by backend (for ETH-based pricing).
+  const stablecoinPrice = useStablecoinPrice(isTokenEthPriced ? undefined : currency)
 
-  const isFirstLoad = networkStatus === NetworkStatus.loading
-
-  // Otherwise, get the price of the token in ETH, and then multiple by the price of ETH
-  const ethUSDPrice = data?.token?.project?.markets?.[0]?.price?.value
-  if (!ethUSDPrice || !ethValue) return { data: undefined, isLoading: isEthValueLoading || isFirstLoad }
-
-  return { data: parseFloat(ethValue.toExact()) * ethUSDPrice, isLoading: false }
+  return useMemo(() => {
+    if (!currencyAmount) {
+      return { data: undefined, isLoading: false }
+    } else if (stablecoinPrice) {
+      return { data: parseFloat(stablecoinPrice.quote(currencyAmount).toSignificant()), isLoading: false }
+    } else {
+      // Otherwise, get the price of the token in ETH, and then multiply by the price of ETH.
+      const ethUSDPrice = data?.token?.project?.markets?.[0]?.price?.value
+      if (ethUSDPrice && tokenEthPrice) {
+        return { data: parseFloat(tokenEthPrice.quote(currencyAmount).toExact()) * ethUSDPrice, isLoading: false }
+      } else {
+        return { data: undefined, isLoading: isTokenEthPriceLoading || networkStatus === NetworkStatus.loading }
+      }
+    }
+  }, [
+    currencyAmount,
+    data?.token?.project?.markets,
+    tokenEthPrice,
+    isTokenEthPriceLoading,
+    networkStatus,
+    stablecoinPrice,
+  ])
 }

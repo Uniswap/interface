@@ -1,9 +1,11 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
+import { sendAnalyticsEvent } from 'analytics'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import { getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms'
+import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
 import { trace } from 'tracing/trace'
 
 import {
@@ -36,6 +38,11 @@ const DEFAULT_QUERY_PARAMS = {
   protocols,
 }
 
+function getQuoteLatencyMeasure(mark: PerformanceMark): PerformanceMeasure {
+  performance.mark('quote-fetch-end')
+  return performance.measure('quote-fetch-latency', mark.name, 'quote-fetch-end')
+}
+
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   const {
     account,
@@ -44,6 +51,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     tokenInChainId,
     uniswapXForceSyntheticQuotes,
     uniswapXEthOutputEnabled,
+    uniswapXExactOutputEnabled,
     routerPreference,
   } = args
 
@@ -66,11 +74,11 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   // UniswapX doesn't support native out, exact-out, or non-mainnet trades (yet),
   // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
   if (
-    !args.uniswapXEnabled ||
     (args.userDisabledUniswapX && routerPreference !== RouterPreference.X) ||
     (tokenOutIsNative && !uniswapXEthOutputEnabled) ||
-    tradeType === TradeType.EXACT_OUTPUT ||
-    !isUniswapXSupportedChain(tokenInChainId)
+    (!uniswapXExactOutputEnabled && tradeType === TradeType.EXACT_OUTPUT) ||
+    !isUniswapXSupportedChain(tokenInChainId) ||
+    routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE
   ) {
     return [classic]
   }
@@ -114,18 +122,12 @@ export const routingApi = createApi({
       },
       async queryFn(args, _api, _extraOptions, fetch) {
         let fellBack = false
+        logSwapQuoteRequest(args.tokenInChainId, args.routerPreference)
+        const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
         if (shouldUseAPIRouter(args)) {
           fellBack = true
           try {
-            const {
-              tokenInAddress,
-              tokenInChainId,
-              tokenOutAddress,
-              tokenOutChainId,
-              amount,
-              tradeType,
-              forceUniswapXOn,
-            } = args
+            const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
 
             const requestBody = {
@@ -135,8 +137,6 @@ export const routingApi = createApi({
               tokenOut: tokenOutAddress,
               amount,
               type,
-              // if forceUniswapXOn is not ON, then use the backend's default value
-              useUniswapX: forceUniswapXOn || undefined,
               configs: getRoutingAPIConfig(args),
             }
 
@@ -155,7 +155,14 @@ export const routingApi = createApi({
                   typeof errorData === 'object' &&
                   (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
                 ) {
-                  return { data: { state: QuoteState.NOT_FOUND } }
+                  sendAnalyticsEvent('No quote received from routing API', {
+                    requestBody,
+                    response,
+                    routerPreference: args.routerPreference,
+                  })
+                  return {
+                    data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
+                  }
                 }
               } catch {
                 throw response.error
@@ -164,8 +171,7 @@ export const routingApi = createApi({
 
             const uraQuoteResponse = response.data as URAQuoteResponse
             const tradeResult = await transformRoutesToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
-
-            return { data: tradeResult }
+            return { data: { ...tradeResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
           } catch (error: any) {
             console.warn(
               `GetQuote failed on Unified Routing API, falling back to client: ${
@@ -179,15 +185,18 @@ export const routingApi = createApi({
           const router = getRouter(args.tokenInChainId)
           const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
           if (quoteResult.state === QuoteState.SUCCESS) {
+            const trade = await transformRoutesToTrade(args, quoteResult.data, method)
             return {
-              data: await transformRoutesToTrade(args, quoteResult.data, method),
+              data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
             }
           } else {
-            return { data: quoteResult }
+            return { data: { ...quoteResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
           }
         } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)
-          return { error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error } }
+          return {
+            error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error },
+          }
         }
       },
       keepUnusedDataFor: ms(`10s`),
@@ -199,3 +208,4 @@ export const routingApi = createApi({
 })
 
 export const { useGetQuoteQuery } = routingApi
+export const useGetQuoteQueryState = routingApi.endpoints.getQuote.useQueryState

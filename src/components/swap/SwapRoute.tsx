@@ -49,13 +49,13 @@ export default function SwapRoute({ trade, syncing }: { trade: ClassicTrade; syn
               <div style={{ width: '100%', height: '15px' }} />
             </LoadingRows>
           ) : (
-            <ThemedText.Caption color="textSecondary">
+            <ThemedText.BodySmall color="neutral2">
               {gasPrice ? <Trans>Best price route costs ~{gasPrice} in gas.</Trans> : null}{' '}
               <Trans>
                 This route optimizes your total output by considering split routes, multiple hops, and the gas cost of
                 each step.
               </Trans>
-            </ThemedText.Caption>
+            </ThemedText.BodySmall>
           )}
         </>
       )}

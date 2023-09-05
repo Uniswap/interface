@@ -23,9 +23,9 @@ const InvalidDetailsText = styled.span`
 
   text-align: center;
 
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 535;
   line-height: 28px;
 `
 
@@ -34,9 +34,9 @@ const TokenExploreButton = styled(ButtonPrimary)`
   padding: 12px 16px;
   border-radius: 12px;
 
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 535;
 `
 
 export default function InvalidTokenDetails({

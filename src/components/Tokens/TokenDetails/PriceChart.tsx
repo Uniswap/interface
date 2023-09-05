@@ -6,12 +6,14 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
+import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
+import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
-import { PricePoint } from 'graphql/data/util'
-import { TimePeriod } from 'graphql/data/util'
+import { PricePoint, TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
+import { ArrowDownRight, ArrowUpRight, Info, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
@@ -34,25 +36,40 @@ export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   return [min, max]
 }
 
-const StyledUpArrow = styled(ArrowUpRight)`
-  color: ${({ theme }) => theme.accentSuccess};
+const StyledUpArrow = styled(ArrowChangeUp)`
+  color: ${({ theme }) => theme.success};
 `
-const StyledDownArrow = styled(ArrowDownRight)`
-  color: ${({ theme }) => theme.accentFailure};
+const StyledDownArrow = styled(ArrowChangeDown)`
+  color: ${({ theme }) => theme.critical};
+`
+
+const DefaultUpArrow = styled(ArrowUpRight)`
+  color: ${({ theme }) => theme.neutral3};
+`
+const DefaultDownArrow = styled(ArrowDownRight)`
+  color: ${({ theme }) => theme.neutral3};
 `
 
 function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
 
-export function getDeltaArrow(delta: number | null | undefined, iconSize = 20) {
+export function getDeltaArrow(delta: number | null | undefined, iconSize = 16, styled = true) {
   // Null-check not including zero
   if (delta === null || delta === undefined) {
     return null
   } else if (Math.sign(delta) < 0) {
-    return <StyledDownArrow size={iconSize} key="arrow-down" aria-label="down" />
+    return styled ? (
+      <StyledDownArrow width={iconSize} height={iconSize} key="arrow-down" aria-label="down" />
+    ) : (
+      <DefaultDownArrow size={iconSize} key="arrow-down" aria-label="down" />
+    )
   }
-  return <StyledUpArrow size={iconSize} key="arrow-up" aria-label="up" />
+  return styled ? (
+    <StyledUpArrow width={iconSize} height={iconSize} key="arrow-up" aria-label="up" />
+  ) : (
+    <DefaultUpArrow size={iconSize} key="arrow-up" aria-label="up" />
+  )
 }
 
 export function formatDelta(delta: number | null | undefined) {
@@ -66,7 +83,7 @@ export function formatDelta(delta: number | null | undefined) {
 
 export const DeltaText = styled.span<{ delta?: number }>`
   color: ${({ theme, delta }) =>
-    delta !== undefined ? (Math.sign(delta) < 0 ? theme.accentFailure : theme.accentSuccess) : theme.textPrimary};
+    delta !== undefined ? (Math.sign(delta) < 0 ? theme.critical : theme.success) : theme.neutral1};
 `
 
 const ChartHeader = styled.div`
@@ -77,11 +94,16 @@ const ChartHeader = styled.div`
 export const TokenPrice = styled.span`
   font-size: 36px;
   line-height: 44px;
+  font-weight: 485;
 `
 const MissingPrice = styled(TokenPrice)`
   font-size: 24px;
   line-height: 44px;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
+`
+
+const OutdatedContainer = styled.div`
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const DeltaContainer = styled.div`
@@ -89,10 +111,18 @@ const DeltaContainer = styled.div`
   display: flex;
   align-items: center;
   margin-top: 4px;
+  color: ${({ theme }) => theme.neutral2};
 `
 export const ArrowCell = styled.div`
   padding-right: 3px;
   display: flex;
+`
+
+const OutdatedPriceContainer = styled.div`
+  display: flex;
+  gap: 6px;
+  font-size: 24px;
+  line-height: 44px;
 `
 
 function fixChart(prices: PricePoint[] | undefined | null) {
@@ -147,6 +177,34 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
       <Trans>Missing chart data</Trans>
     )
   ) : null
+
+  const tooltipMessage = (
+    <>
+      <Trans>This price may not be up-to-date due to low trading volume.</Trans>
+    </>
+  )
+
+  //get the last non-zero price point
+  const lastPrice = useMemo(() => {
+    if (!prices) return DATA_EMPTY
+    for (let i = prices.length - 1; i >= 0; i--) {
+      if (prices[i].value !== 0) return prices[i]
+    }
+    return DATA_EMPTY
+  }, [prices])
+
+  //get the first non-zero price point
+  const firstPrice = useMemo(() => {
+    if (!prices) return DATA_EMPTY
+    for (let i = 0; i < prices.length; i++) {
+      if (prices[i].value !== 0) return prices[i]
+    }
+    return DATA_EMPTY
+  }, [prices])
+
+  const totalDelta = calculateDelta(firstPrice.value, lastPrice.value)
+  const formattedTotalDelta = formatDelta(totalDelta)
+  const defaultArrow = getDeltaArrow(totalDelta, 20, false)
 
   // first price point on the x-axis of the current time period's chart
   const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
@@ -302,10 +360,23 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
               <ArrowCell>{arrow}</ArrowCell>
             </DeltaContainer>
           </>
+        ) : lastPrice.value ? (
+          <OutdatedContainer>
+            <OutdatedPriceContainer>
+              <TokenPrice>{formatUSDPrice(lastPrice.value)}</TokenPrice>
+              <MouseoverTooltip text={tooltipMessage}>
+                <Info size={16} />
+              </MouseoverTooltip>
+            </OutdatedPriceContainer>
+            <DeltaContainer>
+              {formattedTotalDelta}
+              <ArrowCell>{defaultArrow}</ArrowCell>
+            </DeltaContainer>
+          </OutdatedContainer>
         ) : (
           <>
             <MissingPrice>Price Unavailable</MissingPrice>
-            <ThemedText.Caption style={{ color: theme.textTertiary }}>{missingPricesMessage}</ThemedText.Caption>
+            <ThemedText.BodySmall style={{ color: theme.neutral3 }}>{missingPricesMessage}</ThemedText.BodySmall>
           </>
         )}
       </ChartHeader>
@@ -330,7 +401,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
               marginTop={margin.top}
               curve={curve}
               strokeWidth={2}
-              color={theme.textTertiary}
+              color={theme.neutral3}
               dashed
             />
           ))}
@@ -338,16 +409,16 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
             <g>
               <AxisBottom
                 scale={timeScale}
-                stroke={theme.backgroundOutline}
+                stroke={theme.surface3}
                 tickFormat={tickFormatter}
-                tickStroke={theme.backgroundOutline}
+                tickStroke={theme.surface3}
                 tickLength={4}
                 hideTicks={true}
                 tickTransform="translate(0 -5)"
                 tickValues={updatedTicks}
                 top={graphHeight - 1}
                 tickLabelProps={() => ({
-                  fill: theme.textSecondary,
+                  fill: theme.neutral2,
                   fontSize: 12,
                   textAnchor: 'middle',
                   transform: 'translate(0 -24)',
@@ -358,14 +429,14 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
                 y={margin.crosshair + 10}
                 textAnchor={crosshairAtEdge ? 'end' : 'start'}
                 fontSize={12}
-                fill={theme.textSecondary}
+                fill={theme.neutral2}
               >
                 {crosshairDateFormatter(displayPrice.timestamp)}
               </text>
               <Line
                 from={{ x: crosshair, y: margin.crosshair }}
                 to={{ x: crosshair, y: graphHeight }}
-                stroke={theme.backgroundOutline}
+                stroke={theme.surface3}
                 strokeWidth={1}
                 pointerEvents="none"
                 strokeDasharray="4,4"
@@ -374,19 +445,13 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
                 left={crosshair}
                 top={rdScale(displayPrice.value) + margin.top}
                 size={50}
-                fill={theme.accentAction}
-                stroke={theme.backgroundOutline}
+                fill={theme.accent1}
+                stroke={theme.surface3}
                 strokeWidth={0.5}
               />
             </g>
           ) : (
-            <AxisBottom
-              hideAxisLine={true}
-              scale={timeScale}
-              stroke={theme.backgroundOutline}
-              top={graphHeight - 1}
-              hideTicks
-            />
+            <AxisBottom hideAxisLine={true} scale={timeScale} stroke={theme.surface3} top={graphHeight - 1} hideTicks />
           )}
           {!width && (
             // Ensures an axis is drawn even if the width is not yet initialized.
@@ -397,7 +462,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
               y2={graphHeight - 1}
               fill="transparent"
               shapeRendering="crispEdges"
-              stroke={theme.backgroundOutline}
+              stroke={theme.surface3}
               strokeWidth={1}
             />
           )}
@@ -421,7 +486,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
 const StyledMissingChart = styled.svg`
   text {
     font-size: 12px;
-    font-weight: 400;
+    font-weight: 485;
   }
 `
 const chartBottomPadding = 15
@@ -433,12 +498,12 @@ function MissingPriceChart({ width, height, message }: { width: number; height: 
       <path
         d={`M 0 ${midPoint} Q 104 ${midPoint - 70}, 208 ${midPoint} T 416 ${midPoint}
           M 416 ${midPoint} Q 520 ${midPoint - 70}, 624 ${midPoint} T 832 ${midPoint}`}
-        stroke={theme.backgroundOutline}
+        stroke={theme.surface3}
         fill="transparent"
         strokeWidth="2"
       />
-      {message && <TrendingUp stroke={theme.textTertiary} x={0} size={12} y={height - chartBottomPadding - 10} />}
-      <text y={height - chartBottomPadding} x="20" fill={theme.textTertiary}>
+      {message && <TrendingUp stroke={theme.neutral3} x={0} size={12} y={height - chartBottomPadding - 10} />}
+      <text y={height - chartBottomPadding} x="20" fill={theme.neutral3}>
         {message}
       </text>
     </StyledMissingChart>

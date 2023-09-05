@@ -116,10 +116,10 @@ export function ActivityTab({ account }: { account: string }) {
       <PortfolioTabWrapper>
         {activityGroups.map((activityGroup) => (
           <ActivityGroupWrapper key={activityGroup.title}>
-            <ThemedText.SubHeader color="textSecondary" marginLeft="16px">
+            <ThemedText.SubHeader color="neutral2" marginLeft="16px">
               {activityGroup.title}
             </ThemedText.SubHeader>
-            <Column>
+            <Column data-testid="activity-content">
               {activityGroup.transactions.map((activity) => (
                 <ActivityRow key={activity.hash} activity={activity} />
               ))}

@@ -1,3 +1,5 @@
+import { FeatureFlag } from 'featureFlags'
+
 import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {
@@ -21,16 +23,20 @@ describe('Wallet Dropdown', () => {
     })
   }
 
-  function itChangesLocale() {
+  function itChangesLocale({ featureFlag = false }: { featureFlag?: boolean } = {}) {
     it('should change locale', () => {
       cy.contains('Uniswap available in: English').should('not.exist')
 
+      if (featureFlag) {
+        cy.get(getTestSelector('language-settings-button')).click()
+      }
+
       cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
-      cy.location('search').should('match', /\?lng=af-ZA$/)
+      cy.location('hash').should('match', /\?lng=af-ZA$/)
       cy.contains('Uniswap available in: English')
 
       cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
-      cy.location('search').should('match', /\?lng=en-US$/)
+      cy.location('hash').should('match', /\?lng=en-US$/)
       cy.contains('Uniswap available in: English').should('not.exist')
     })
   }
@@ -43,6 +49,15 @@ describe('Wallet Dropdown', () => {
     })
     itChangesTheme()
     itChangesLocale()
+  })
+
+  describe('should change locale with feature flag', () => {
+    beforeEach(() => {
+      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+    })
+    itChangesLocale({ featureFlag: true })
   })
 
   describe('testnet toggle', () => {
@@ -100,7 +115,7 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.get(getTestSelector('theme-auto')).click()
-      cy.get(getTestSelector('wallet-header')).should('have.css', 'color', 'rgb(152, 161, 192)')
+      cy.get(getTestSelector('wallet-header')).should('have.css', 'color', 'rgb(155, 155, 155)')
     })
 
     it('should properly use light system theme when auto theme setting is selected', () => {
@@ -108,7 +123,7 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.get(getTestSelector('theme-auto')).click()
-      cy.get(getTestSelector('wallet-header')).should('have.css', 'color', 'rgb(119, 128, 160)')
+      cy.get(getTestSelector('wallet-header')).should('have.css', 'color', 'rgb(125, 125, 125)')
     })
   })
 
@@ -127,6 +142,34 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.root().click(15, 40)
       cy.get(getTestSelector('wallet-settings')).should('not.be.visible')
+    })
+  })
+
+  describe('local currency', () => {
+    it('loads local currency from the query param', () => {
+      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+      cy.contains('USD')
+
+      cy.visit('/?cur=AUD', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.contains('AUD')
+    })
+
+    it('loads local currency from menu', () => {
+      cy.visit('/', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
+      cy.contains('USD')
+
+      cy.get(getTestSelector('local-currency-settings-button')).click()
+      cy.get(getTestSelector('wallet-local-currency-item')).contains('AUD').click({ force: true })
+      cy.location('hash').should('match', /\?cur=AUD$/)
+      cy.contains('AUD')
+
+      cy.get(getTestSelector('wallet-local-currency-item')).contains('USD').click({ force: true })
+      cy.location('hash').should('match', /\?cur=USD$/)
+      cy.contains('USD')
     })
   })
 })

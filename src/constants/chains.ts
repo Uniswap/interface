@@ -1,6 +1,12 @@
 import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
 
-export const UniWalletSupportedChains = [ChainId.MAINNET, ChainId.ARBITRUM_ONE, ChainId.OPTIMISM, ChainId.POLYGON]
+export const UniWalletSupportedChains = [
+  ChainId.MAINNET,
+  ChainId.ARBITRUM_ONE,
+  ChainId.OPTIMISM,
+  ChainId.POLYGON,
+  ChainId.BASE,
+]
 
 export const CHAIN_IDS_TO_NAMES = {
   [ChainId.MAINNET]: 'mainnet',
@@ -17,16 +23,18 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.BNB]: 'bnb',
   [ChainId.AVALANCHE]: 'avalanche',
   [ChainId.BASE]: 'base',
-  [ChainId.BASE_GOERLI]: 'base_goerli',
 } as const
 
 // Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.
-const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = []
+const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = [ChainId.BASE_GOERLI]
+
+// TODO: include BASE_GOERLI when routing is implemented
+export type SupportedInterfaceChain = Exclude<SupportedChainsType, ChainId.BASE_GOERLI>
 
 export function isSupportedChain(
   chainId: number | null | undefined | ChainId,
   featureFlags?: Record<number, boolean>
-): chainId is SupportedChainsType {
+): chainId is SupportedInterfaceChain {
   if (featureFlags && chainId && chainId in featureFlags) {
     return featureFlags[chainId]
   }
@@ -36,7 +44,7 @@ export function isSupportedChain(
 export function asSupportedChain(
   chainId: number | null | undefined | ChainId,
   featureFlags?: Record<number, boolean>
-): SupportedChainsType | undefined {
+): SupportedInterfaceChain | undefined {
   if (!chainId) return undefined
   if (featureFlags && chainId in featureFlags && !featureFlags[chainId]) {
     return undefined
@@ -67,7 +75,6 @@ export const TESTNET_CHAIN_IDS = [
   ChainId.ARBITRUM_GOERLI,
   ChainId.OPTIMISM_GOERLI,
   ChainId.CELO_ALFAJORES,
-  ChainId.BASE_GOERLI,
 ] as const
 
 /**
@@ -97,7 +104,6 @@ export const L2_CHAIN_IDS = [
   ChainId.OPTIMISM,
   ChainId.OPTIMISM_GOERLI,
   ChainId.BASE,
-  ChainId.BASE_GOERLI,
 ] as const
 
 export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
@@ -113,24 +119,26 @@ export function getChainPriority(chainId: ChainId): number {
     case ChainId.GOERLI:
     case ChainId.SEPOLIA:
       return 0
-    case ChainId.POLYGON:
-    case ChainId.POLYGON_MUMBAI:
-      return 1
     case ChainId.ARBITRUM_ONE:
     case ChainId.ARBITRUM_GOERLI:
-      return 2
+      return 1
     case ChainId.OPTIMISM:
     case ChainId.OPTIMISM_GOERLI:
+      return 2
+    case ChainId.POLYGON:
+    case ChainId.POLYGON_MUMBAI:
       return 3
-    case ChainId.BNB:
+    case ChainId.BASE:
       return 4
-    case ChainId.AVALANCHE:
+    case ChainId.BNB:
       return 5
+    case ChainId.AVALANCHE:
+      return 6
     case ChainId.CELO:
     case ChainId.CELO_ALFAJORES:
-      return 6
-    default:
       return 7
+    default:
+      return 8
   }
 }
 

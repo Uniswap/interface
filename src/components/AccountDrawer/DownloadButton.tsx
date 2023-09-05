@@ -14,13 +14,13 @@ const StyledButton = styled.button<{ padded?: boolean; branded?: boolean }>`
   padding: 8px 24px;
   border: none;
   white-space: nowrap;
-  background: ${({ theme, branded }) => (branded ? theme.promotionalGradient : theme.backgroundInteractive)};
+  background: ${({ theme, branded }) => (branded ? theme.accent1 : theme.surface3)};
   border-radius: 12px;
 
-  font-weight: 600;
+  font-weight: 535;
   font-size: 14px;
   line-height: 16px;
-  color: ${({ theme, branded }) => (branded ? theme.accentTextLightPrimary : theme.textPrimary)};
+  color: ${({ theme, branded }) => (branded ? theme.deprecated_accentTextLightPrimary : theme.neutral1)};
 `
 
 function BaseButton({ onClick, branded, children }: PropsWithChildren<{ onClick?: () => void; branded?: boolean }>) {

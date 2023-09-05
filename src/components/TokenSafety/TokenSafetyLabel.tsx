@@ -17,7 +17,7 @@ const Label = styled.div<{ color: string; backgroundColor: string }>`
 
 const Title = styled(Text)`
   margin-right: 5px;
-  font-weight: 700;
+  font-weight: 535;
   font-size: 12px;
 `
 

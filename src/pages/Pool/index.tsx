@@ -10,7 +10,6 @@ import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
-import { useBaseEnabledChains } from 'featureFlags/flags/baseEnabled'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV3Positions } from 'hooks/useV3Positions'
@@ -23,7 +22,7 @@ import { HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
 import CTACards from './CTACards'
-import { LoadingRows } from './styleds'
+import { LoadingRows } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -41,7 +40,7 @@ const PageWrapper = styled(AutoColumn)`
   }
 `
 const TitleRow = styled(RowBetween)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     flex-wrap: wrap;
     gap: 12px;
@@ -75,14 +74,15 @@ const PoolMenuItem = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  font-weight: 500;
+  font-weight: 535;
 `
 const MoreOptionsButton = styled(ButtonGray)`
   border-radius: 12px;
   flex: 1 1 auto;
   padding: 6px 8px;
   width: 100%;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
+  border: 1px solid ${({ theme }) => theme.surface3};
   margin-right: 8px;
 `
 
@@ -127,14 +127,12 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 `
 
 const MainContentWrapper = styled.main`
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface1};
+  border: 1px solid ${({ theme }) => theme.surface3};
   padding: 0;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
   overflow: hidden;
 `
 
@@ -173,7 +171,7 @@ function WrongNetworkCard() {
 
             <MainContentWrapper>
               <ErrorContainer>
-                <ThemedText.BodyPrimary color={theme.textTertiary} textAlign="center">
+                <ThemedText.BodyPrimary color={theme.neutral3} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
                   <div data-testid="pools-unsupported-err">
                     <Trans>Your connected network is unsupported.</Trans>
@@ -213,9 +211,8 @@ export default function Pool() {
   )
 
   const filteredPositions = useFilterPossiblyMaliciousPositions(userSelectedPositionSet)
-  const baseEnabledChains = useBaseEnabledChains()
 
-  if (!isSupportedChain(chainId, baseEnabledChains)) {
+  if (!isSupportedChain(chainId)) {
     return <WrongNetworkCard />
   }
 
@@ -279,7 +276,7 @@ export default function Pool() {
                   />
                 )}
                 <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
-                  + <Trans>New Position</Trans>
+                  + <Trans>New position</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
@@ -295,7 +292,7 @@ export default function Pool() {
                 />
               ) : (
                 <ErrorContainer>
-                  <ThemedText.BodyPrimary color={theme.textTertiary} textAlign="center">
+                  <ThemedText.BodyPrimary color={theme.neutral3} textAlign="center">
                     <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} />
                     <div>
                       <Trans>Your active V3 liquidity positions will appear here.</Trans>

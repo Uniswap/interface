@@ -7,16 +7,17 @@ import { useGate } from 'statsig-react'
  */
 export enum FeatureFlag {
   traceJsonRpc = 'traceJsonRpc',
-  permit2 = 'permit2',
-  fiatOnRampButtonOnSwap = 'fiat_on_ramp_button_on_swap_page',
   debounceSwapQuote = 'debounce_swap_quote',
-  uniswapXEnabled = 'uniswapx_enabled', // enables sending dutch_limit config to routing-api
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
-  routingAPIPrice = 'routing_api_price',
-  forceUniswapXOn = 'uniswapx_force_on', // forces routing-api's feature flag for uniswapx to turn on as well
   uniswapXEthOutputEnabled = 'uniswapx_eth_output_enabled',
-  baseEnabled = 'base_enabled',
+  uniswapXExactOutputEnabled = 'uniswapx_exact_output_enabled',
   multichainUX = 'multichain_ux',
+  currencyConversion = 'currency_conversion',
+  fotAdjustedmentsEnabled = 'fot_adjustments_enabled',
+  infoExplore = 'info_explore',
+  infoTDP = 'info_tdp',
+  infoPoolPage = 'info_pool_page',
+  infoLiveViews = 'info_live_views',
 }
 
 interface FeatureFlagsContextType {

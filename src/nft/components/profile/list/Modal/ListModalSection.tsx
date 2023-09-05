@@ -21,8 +21,7 @@ const SectionHeader = styled(Row)`
 
 const SectionTitle = styled(ThemedText.SubHeader)<{ active: boolean; approved: boolean }>`
   line-height: 24px;
-  color: ${({ theme, active, approved }) =>
-    approved ? theme.accentSuccess : active ? theme.textPrimary : theme.textSecondary};
+  color: ${({ theme, active, approved }) => (approved ? theme.success : active ? theme.neutral1 : theme.neutral2)};
 `
 
 const SectionArrow = styled(ChevronUpIcon)<{ active: boolean }>`
@@ -48,7 +47,7 @@ const StyledInfoIcon = styled(Info)`
   height: 16px;
   width: 16px;
   margin-left: 4px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const ContentRowContainer = styled(Column)`
@@ -101,7 +100,7 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
       <SectionHeader>
         <Row>
           {active || allContentApproved ? (
-            <ListingModalWindowActive fill={allContentApproved ? theme.accentSuccess : theme.accentAction} />
+            <ListingModalWindowActive fill={allContentApproved ? theme.success : theme.accent1} />
           ) : (
             <ListingModalWindowClosed />
           )}
@@ -121,7 +120,7 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
         </Row>
         <SectionArrow
           active={active}
-          secondaryColor={active ? theme.textPrimary : theme.textSecondary}
+          secondaryColor={active ? theme.neutral1 : theme.neutral2}
           onClick={toggleSection}
         />
       </SectionHeader>
@@ -129,9 +128,9 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
         <SectionBody>
           {isCollectionApprovalSection && (
             <Row height="16px" marginBottom="16px">
-              <ThemedText.Caption lineHeight="16px" color="textSecondary">
+              <ThemedText.BodySmall lineHeight="16px" color="neutral2">
                 <Trans>Why is a transaction required?</Trans>
-              </ThemedText.Caption>
+              </ThemedText.BodySmall>
               <MouseoverTooltip
                 text={<Trans>Listing an NFT requires a one-time marketplace approval for each NFT collection.</Trans>}
               >

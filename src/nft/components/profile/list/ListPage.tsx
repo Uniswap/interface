@@ -58,7 +58,7 @@ const BackArrow = styled(ArrowLeft)`
   height: 16px;
   width: 16px;
   cursor: pointer;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     height: 20px;
@@ -71,13 +71,13 @@ const TitleWrapper = styled(Row)`
   margin-bottom: 12px;
   white-space: nowrap;
   width: min-content;
-  font-weight: 500;
+  font-weight: 535;
   font-size: 20px;
   line-height: 28px;
 
   @media screen and (min-width: ${BREAKPOINTS.xs}px) {
     margin-bottom: 0px;
-    font-weight: 500;
+    font-weight: 535;
     font-size: 28px;
     line-height: 36px;
   }
@@ -113,11 +113,11 @@ const GridWrapper = styled.div`
 const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
   padding: 12px 12px 12px 32px;
   border: 1px solid;
-  border-color: ${({ theme, issues }) => (issues ? theme.backgroundOutline : theme.accentAction)};
+  border-color: ${({ theme, issues }) => (issues ? theme.surface3 : theme.accent1)};
   border-radius: 20px;
   white-space: nowrap;
   justify-content: space-between;
-  background: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.surface1};
   position: fixed;
   bottom: 32px;
   width: calc(100vw - ${LIST_PAGE_MARGIN * 2}px);
@@ -125,7 +125,7 @@ const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
   transform: translateX(-50%);
   max-width: ${({ theme }) => theme.maxWidth};
   z-index: ${Z_INDEX.under_dropdown};
-  box-shadow: ${({ theme }) => theme.shallowShadow};
+  box-shadow: ${({ theme }) => theme.deprecated_shallowShadow};
 
   @media screen and (max-width: ${BREAKPOINTS.lg}px) {
     bottom: 68px;
@@ -142,12 +142,12 @@ const Overlay = styled.div`
   bottom: 0px;
   height: 158px;
   width: 100vw;
-  background: ${({ theme }) => `linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, ${theme.backgroundBackdrop} 100%)`};
+  background: ${({ theme }) => `linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, ${theme.surface2} 100%)`};
 `
 
 const UsdValue = styled(ThemedText.SubHeader)`
   line-height: 24px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   display: none;
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
@@ -170,10 +170,10 @@ const ProceedsWrapper = styled(Row)`
 `
 
 const EthValueWrapper = styled.span<{ totalEthListingValue: boolean }>`
-  font-weight: 500;
+  font-weight: 535;
   font-size: 20px;
   line-height: 28px;
-  color: ${({ theme, totalEthListingValue }) => (totalEthListingValue ? theme.textPrimary : theme.textSecondary)};
+  color: ${({ theme, totalEthListingValue }) => (totalEthListingValue ? theme.neutral1 : theme.neutral2)};
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     font-size: 16px;
@@ -268,7 +268,7 @@ export const ListPage = () => {
             <ArrowContainer>
               <BackArrow onClick={() => setSellPageState(ProfilePageStateType.VIEWING)} />
             </ArrowContainer>
-            <ThemedText.BodySmall lineHeight="20px" color="textSecondary">
+            <ThemedText.BodySmall lineHeight="20px" color="neutral2">
               <Trans>My NFTs</Trans>
             </ThemedText.BodySmall>
           </Row>
