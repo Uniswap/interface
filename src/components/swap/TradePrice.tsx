@@ -5,7 +5,7 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { formatPrice, NumberType, useFormatNumber } from 'utils/formatNumbers'
+import { formatPrice, NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
@@ -28,7 +28,7 @@ const StyledPriceContainer = styled.button`
 `
 
 export default function TradePrice({ price }: TradePriceProps) {
-  const formatNumber = useFormatNumber()
+  const { formatNumber } = useFormatter()
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
 

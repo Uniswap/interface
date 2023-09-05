@@ -7,7 +7,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme'
-import { NumberType, useFormatNumber } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Container = styled(AutoColumn)`
   padding: 4px;
@@ -35,7 +35,7 @@ const GasCostItem = ({
   itemValue?: React.ReactNode
   amount?: number
 }) => {
-  const formatNumber = useFormatNumber()
+  const { formatNumber } = useFormatter()
 
   return (
     <Row justify="space-between">

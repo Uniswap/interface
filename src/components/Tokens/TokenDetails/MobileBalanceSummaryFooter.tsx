@@ -7,7 +7,7 @@ import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import styled from 'styled-components'
 import { StyledInternalLink } from 'theme'
-import { NumberType, useFormatCurrencyAmount } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Wrapper = styled.div`
   align-content: center;
@@ -84,7 +84,7 @@ const SwapButton = styled(StyledInternalLink)`
 export default function MobileBalanceSummaryFooter({ token }: { token: Currency }) {
   const { account } = useWeb3React()
   const balance = useCurrencyBalance(account, token)
-  const formatCurrencyAmount = useFormatCurrencyAmount()
+  const { formatCurrencyAmount } = useFormatter()
   const formattedBalance = formatCurrencyAmount({
     amount: balance,
     type: NumberType.TokenNonTx,

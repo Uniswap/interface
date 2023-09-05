@@ -8,7 +8,7 @@ import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 type Nullish<T> = T | null | undefined
 type NumberFormatOptions = Intl.NumberFormatOptions
@@ -415,7 +415,7 @@ export function formatNumber({
   return (prefix ?? '') + new Intl.NumberFormat(locale, formatterOptions).format(hardCodedInputValue)
 }
 
-export function useFormatterLocales(): {
+function useFormatterLocales(): {
   formatterLocale: SupportedLocale
   formatterLocalCurrency: SupportedLocalCurrency
 } {
@@ -434,16 +434,6 @@ export function useFormatterLocales(): {
     formatterLocale: DEFAULT_LOCALE,
     formatterLocalCurrency: DEFAULT_LOCAL_CURRENCY,
   }
-}
-
-export function useFormatNumber() {
-  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
-
-  return useCallback(
-    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency'>) =>
-      formatNumber({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
-    [formatterLocalCurrency, formatterLocale]
-  )
 }
 
 interface FormatCurrencyAmountOptions {
@@ -470,14 +460,27 @@ export function formatCurrencyAmount({
   })
 }
 
-// eslint-disable-next-line import/no-unused-modules
-export function useFormatCurrencyAmount() {
+export function useFormatter() {
   const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
 
-  return useCallback(
+  const formatNumberWithLocales = useCallback(
+    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency'>) =>
+      formatNumber({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
+    [formatterLocalCurrency, formatterLocale]
+  )
+
+  const formatCurrencyAmountWithLocales = useCallback(
     (options: Omit<FormatCurrencyAmountOptions, 'locale' | 'localCurrency'>) =>
       formatCurrencyAmount({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
     [formatterLocalCurrency, formatterLocale]
+  )
+
+  return useMemo(
+    () => ({
+      formatNumber: formatNumberWithLocales,
+      formatCurrencyAmount: formatCurrencyAmountWithLocales,
+    }),
+    [formatCurrencyAmountWithLocales, formatNumberWithLocales]
   )
 }
 
