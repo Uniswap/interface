@@ -1,4 +1,4 @@
-import React, { ComponentProps, useCallback, useReducer, useState } from 'react'
+import React, { ComponentProps, useCallback, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
 import Markdown from 'react-native-markdown-display'
@@ -14,6 +14,7 @@ type LongTextProps = {
   gap?: keyof Theme['spacing']
   color?: string
   linkColor?: string
+  codeBackgroundColor?: string
   readMoreOrLessColor?: string
   renderAsMarkdown?: boolean
   variant?: keyof Theme['textVariants']
@@ -33,6 +34,7 @@ export function LongText(props: LongTextProps): JSX.Element {
     linkColor = theme.colors.neutral2,
     readMoreOrLessColor = theme.colors.neutral2,
     renderAsMarkdown = false,
+    codeBackgroundColor = theme.colors.surface3,
     variant = 'bodySmall',
     ...rest
   } = props
@@ -65,6 +67,11 @@ export function LongText(props: LongTextProps): JSX.Element {
     [initialDisplayedLines]
   )
 
+  const codeStyle = useMemo(
+    () => ({ backgroundColor: codeBackgroundColor, borderColor: 'transparent' }),
+    [codeBackgroundColor]
+  )
+
   return (
     <Flex gap={gap}>
       <Box onLayout={onLayout}>
@@ -76,6 +83,9 @@ export function LongText(props: LongTextProps): JSX.Element {
                 height: !textLengthExceedsLimit || expanded ? 'auto' : maxVisibleHeight,
                 overflow: 'hidden',
               },
+              code_inline: codeStyle,
+              fence: codeStyle,
+              code_block: codeStyle,
               link: { color: linkColor },
               paragraph: {
                 marginBottom: 0,

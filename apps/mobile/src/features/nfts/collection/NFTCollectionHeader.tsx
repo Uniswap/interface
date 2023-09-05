@@ -9,6 +9,7 @@ import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
+import { IS_ANDROID } from 'src/constants/globals'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import { useExtractedColors } from 'src/utils/colors'
 import { Logos } from 'ui/src'
@@ -213,6 +214,9 @@ export function NFTCollectionHeader({
           {/* Collection description */}
           {data?.description ? (
             <LongText
+              codeBackgroundColor={
+                IS_ANDROID ? theme.colors.surface3 : theme.colors.DEP_backgroundOverlay
+              }
               gap="none"
               initialDisplayedLines={3}
               lineBreakMode="tail"
