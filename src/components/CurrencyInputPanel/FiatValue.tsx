@@ -6,7 +6,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { formatPriceImpact, NumberType, useFormatNumber } from 'utils/formatNumbers'
+import { formatPriceImpact, NumberType, useFormatter } from 'utils/formatNumbers'
 import { warningSeverity } from 'utils/prices'
 
 const FiatLoadingBubble = styled(LoadingBubble)`
@@ -22,7 +22,7 @@ export function FiatValue({
   fiatValue: { data?: number; isLoading: boolean }
   priceImpact?: Percent
 }) {
-  const formatNumber = useFormatNumber()
+  const { formatNumber } = useFormatter()
 
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined

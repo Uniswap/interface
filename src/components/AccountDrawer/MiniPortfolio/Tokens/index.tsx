@@ -11,7 +11,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme'
-import { NumberType, useFormatNumber } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 import { useToggleAccountDrawer } from '../..'
@@ -80,7 +80,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
     navigate(getTokenDetailsURL(token))
     toggleWalletDrawer()
   }, [navigate, token, toggleWalletDrawer])
-  const formatNumber = useFormatNumber()
+  const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)
   if (!currency) {

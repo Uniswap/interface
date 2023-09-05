@@ -16,7 +16,7 @@ import { CSSProperties, ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
-import { formatUSDPrice, NumberType, useFormatNumber } from 'utils/formatNumbers'
+import { formatUSDPrice, NumberType, useFormatter } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -438,7 +438,7 @@ interface LoadedRowProps {
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
-  const formatNumber = useFormatNumber()
+  const { formatNumber } = useFormatter()
 
   const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)

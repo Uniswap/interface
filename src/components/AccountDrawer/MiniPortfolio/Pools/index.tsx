@@ -13,7 +13,7 @@ import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { NumberType, useFormatNumber } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -118,7 +118,7 @@ function calculcateLiquidityValue(price0: number | undefined, price1: number | u
 }
 
 function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
-  const formatNumber = useFormatNumber()
+  const { formatNumber } = useFormatter()
 
   const { chainId, position, pool, details, inRange, closed } = positionInfo
 
