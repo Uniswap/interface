@@ -1,15 +1,17 @@
 import { Trans } from '@lingui/macro'
-import { AxisBottom, TickFormatter } from '@visx/axis'
+import { AxisBottom } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
+import { getTimestampFormatter, TimestampFormatterType } from 'components/Charts/PriceChart/format'
+import { getTicks } from 'components/Charts/PriceChart/util'
 import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
 import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
+import { bisect, curveCardinal, scaleLinear } from 'd3'
 import { PricePoint, TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -17,14 +19,6 @@ import { ArrowDownRight, ArrowUpRight, Info, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
-import {
-  dayHourFormatter,
-  hourFormatter,
-  monthDayFormatter,
-  monthTickFormatter,
-  monthYearDayFormatter,
-  weekFormatter,
-} from 'utils/formatChartTimes'
 import { formatUSDPrice } from 'utils/formatNumbers'
 
 const DATA_EMPTY = { value: 0, timestamp: 0 }
@@ -236,52 +230,6 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     [originalPrices, graphInnerHeight]
   )
 
-  function tickFormat(
-    timePeriod: TimePeriod,
-    locale: string
-  ): [TickFormatter<NumberValue>, (v: number) => string, NumberValue[]] {
-    const offsetTime = (endingPrice.timestamp.valueOf() - startingPrice.timestamp.valueOf()) / 24
-    const startDateWithOffset = new Date((startingPrice.timestamp.valueOf() + offsetTime) * 1000)
-    const endDateWithOffset = new Date((endingPrice.timestamp.valueOf() - offsetTime) * 1000)
-    switch (timePeriod) {
-      case TimePeriod.HOUR: {
-        const interval = timeMinute.every(5)
-
-        return [
-          hourFormatter(locale),
-          dayHourFormatter(locale),
-          (interval ?? timeMinute)
-            .range(startDateWithOffset, endDateWithOffset, interval ? 2 : 10)
-            .map((x) => x.valueOf() / 1000),
-        ]
-      }
-      case TimePeriod.DAY:
-        return [
-          hourFormatter(locale),
-          dayHourFormatter(locale),
-          timeHour.range(startDateWithOffset, endDateWithOffset, 4).map((x) => x.valueOf() / 1000),
-        ]
-      case TimePeriod.WEEK:
-        return [
-          weekFormatter(locale),
-          dayHourFormatter(locale),
-          timeDay.range(startDateWithOffset, endDateWithOffset, 1).map((x) => x.valueOf() / 1000),
-        ]
-      case TimePeriod.MONTH:
-        return [
-          monthDayFormatter(locale),
-          dayHourFormatter(locale),
-          timeDay.range(startDateWithOffset, endDateWithOffset, 7).map((x) => x.valueOf() / 1000),
-        ]
-      case TimePeriod.YEAR:
-        return [
-          monthTickFormatter(locale),
-          monthYearDayFormatter(locale),
-          timeMonth.range(startDateWithOffset, endDateWithOffset, 2).map((x) => x.valueOf() / 1000),
-        ]
-    }
-  }
-
   const handleHover = useCallback(
     (event: Element | EventType) => {
       if (!prices) return
@@ -321,19 +269,16 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     setCrosshair(null)
   }, [timePeriod])
 
-  const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
-  //max ticks based on screen size
-  const maxTicks = Math.floor(width / 100)
-  function calculateTicks(ticks: NumberValue[]) {
-    const newTicks = []
-    const tickSpacing = Math.floor(ticks.length / maxTicks)
-    for (let i = 1; i < ticks.length; i += tickSpacing) {
-      newTicks.push(ticks[i])
-    }
-    return newTicks
-  }
+  const { tickTimestampFormatter, crosshairTimestampFormatter, ticks } = useMemo(() => {
+    // max ticks based on screen size
+    const maxTicks = Math.floor(width / 100)
+    const tickTimestampFormatter = getTimestampFormatter(timePeriod, locale, TimestampFormatterType.TICK)
+    const crosshairTimestampFormatter = getTimestampFormatter(timePeriod, locale, TimestampFormatterType.CROSSHAIR)
+    const ticks = getTicks(startingPrice.timestamp, endingPrice.timestamp, timePeriod, maxTicks)
 
-  const updatedTicks = maxTicks > 0 ? (ticks.length > maxTicks ? calculateTicks(ticks) : ticks) : []
+    return { tickTimestampFormatter, crosshairTimestampFormatter, ticks }
+  }, [endingPrice.timestamp, locale, startingPrice.timestamp, timePeriod, width])
+
   const delta = calculateDelta(startingPrice.value, displayPrice.value)
   const formattedDelta = formatDelta(delta)
   const arrow = getDeltaArrow(delta)
@@ -408,20 +353,17 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
           {crosshair !== null ? (
             <g>
               <AxisBottom
+                top={height - 1}
                 scale={timeScale}
                 stroke={theme.surface3}
-                tickFormat={tickFormatter}
-                tickStroke={theme.surface3}
-                tickLength={4}
                 hideTicks={true}
-                tickTransform="translate(0 -5)"
-                tickValues={updatedTicks}
-                top={graphHeight - 1}
+                tickValues={ticks}
+                tickFormat={tickTimestampFormatter}
                 tickLabelProps={() => ({
                   fill: theme.neutral2,
                   fontSize: 12,
                   textAnchor: 'middle',
-                  transform: 'translate(0 -24)',
+                  transform: 'translate(0 -29)',
                 })}
               />
               <text
@@ -431,7 +373,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
                 fontSize={12}
                 fill={theme.neutral2}
               >
-                {crosshairDateFormatter(displayPrice.timestamp)}
+                {crosshairTimestampFormatter(displayPrice.timestamp)}
               </text>
               <Line
                 from={{ x: crosshair, y: margin.crosshair }}
