@@ -14,6 +14,7 @@ import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
 import { USDT as USDT_MAINNET } from 'constants/tokens'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
@@ -81,6 +82,7 @@ function useConfirmModalState({
   doesTradeDiffer: boolean
   onCurrencySelection: (field: Field, currency: Currency) => void
 }) {
+  const activeLocale = useActiveLocale()
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
@@ -123,7 +125,7 @@ function useConfirmModalState({
   const { execute: onWrap } = useWrapCallback(
     nativeCurrency,
     trade.inputAmount.currency,
-    formatCurrencyAmount(trade.inputAmount, NumberType.SwapTradeAmount)
+    formatCurrencyAmount({ amount: trade.inputAmount, type: NumberType.SwapTradeAmount, locale: activeLocale })
   )
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
   const prevWrapConfirmed = usePrevious(wrapConfirmed)
