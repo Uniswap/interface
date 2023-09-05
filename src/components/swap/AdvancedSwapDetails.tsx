@@ -6,6 +6,7 @@ import { sendAnalyticsEvent } from 'analytics'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
@@ -47,6 +48,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
   const txCount = getTransactionCount(trade)
+  const activeLocale = useActiveLocale()
 
   const supportsGasEstimate = chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
 
@@ -116,9 +118,11 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <ThemedText.BodySmall>
             {trade.tradeType === TradeType.EXACT_INPUT
-              ? `${formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), NumberType.SwapTradeAmount)} ${
-                  trade.outputAmount.currency.symbol
-                }`
+              ? `${formatCurrencyAmount({
+                  amount: trade.minimumAmountOut(allowedSlippage),
+                  type: NumberType.SwapTradeAmount,
+                  locale: activeLocale,
+                })} ${trade.outputAmount.currency.symbol}`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
@@ -140,9 +144,11 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <ThemedText.BodySmall>
-            {`${formatCurrencyAmount(trade.postTaxOutputAmount, NumberType.SwapTradeAmount)} ${
-              trade.outputAmount.currency.symbol
-            }`}
+            {`${formatCurrencyAmount({
+              amount: trade.postTaxOutputAmount,
+              type: NumberType.SwapTradeAmount,
+              locale: activeLocale,
+            })} ${trade.outputAmount.currency.symbol}`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
       </RowBetween>
