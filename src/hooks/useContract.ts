@@ -1,6 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import IPegasysPairJson from '@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-core/interfaces/IPegasysPair.sol/IPegasysPair.json'
 import IPegasysRouterJson from '@pollum-io/pegasys-protocol/artifacts/contracts/pegasys-periphery/interfaces/IPegasysRouter.sol/IPegasysRouter.json'
+import { ChainId } from '@pollum-io/smart-order-router'
 import QuoterV2Json from '@pollum-io/swap-router-contracts/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json'
 import PegasysInterfaceMulticallJson from '@pollum-io/v3-periphery/artifacts/contracts/lens/PegasysInterfaceMulticall.sol/PegasysInterfaceMulticall.json'
 import QuoterJson from '@pollum-io/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
@@ -169,13 +170,13 @@ export function useTickLens(): TickLens | null {
   return useContract(address, TickLensABI) as TickLens | null
 }
 
-export function useMasterChefContract(index?: number, withSignerIfPossible?: boolean, abi?: any) {
-  return useContract(GAMMA_MASTERCHEF_ADDRESSES[index ?? 0], abi ?? GammaMasterChef, withSignerIfPossible)
+export function useMasterChefContract(withSignerIfPossible?: boolean, abi?: any) {
+  return useContract(GAMMA_MASTERCHEF_ADDRESSES[ChainId.ROLLUX], abi ?? GammaMasterChef, withSignerIfPossible)
 }
 
-export function useMasterChefContracts(withSignerIfPossible?: boolean) {
-  return useContracts(Object.values(GAMMA_MASTERCHEF_ADDRESSES), GammaMasterChef, withSignerIfPossible)
-}
+// export function useMasterChefContracts(withSignerIfPossible?: boolean) {
+//   return useContracts(Object.values(GAMMA_MASTERCHEF_ADDRESSES), GammaMasterChef, withSignerIfPossible)
+// }
 
 export function useGammaHypervisorContract(address?: string, withSignerIfPossible?: boolean) {
   return useContract(address, GammaPairABI, withSignerIfPossible)

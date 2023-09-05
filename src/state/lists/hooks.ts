@@ -290,7 +290,7 @@ function useSingleCallResult(
   }, [result, contract, fragment, latestBlockNumber])
 }
 
-// export function useMultipleContractMultipleData(
+// function useMultipleContractMultipleData(
 //   contracts: (Contract | null | undefined)[],
 //   methodName: string,
 //   callInputsArr: OptionalMethodInputs[][],

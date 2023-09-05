@@ -80,17 +80,70 @@ export interface GammaPair {
   masterChefIndex?: number
 }
 
+interface Returns {
+  daily: {
+    feeApr: number
+    feeApy: number
+  }
+  weekly: {
+    feeApr: number
+    feeApy: number
+  }
+  monthly: {
+    feeApr: number
+    feeApy: number
+  }
+  allTime: {
+    feeApr: number
+    feeApy: number
+  }
+  status: string
+}
+
+export interface FarmPoolData {
+  createDate: string
+  poolAddress: string
+  name: string
+  token0: string
+  token1: string
+  decimals0: number
+  decimals1: number
+  depositCap0: number
+  depositCap1: number
+  grossFeesClaimed0: number
+  grossFeesClaimed1: number
+  grossFeesClaimedUSD: string
+  feesReinvested0: number
+  feesReinvested1: number
+  feesReinvestedUSD: string
+  tvl0: number
+  tvl1: number
+  tvlUSD: string
+  totalSupply: number
+  maxTotalSupply: number
+  capacityUsed: string
+  sqrtPrice: string
+  tick: number
+  baseLower: number
+  baseUpper: number
+  inRange: boolean
+  observationIndex: string
+  poolTvlUSD: string
+  poolFeesUSD: string
+  returns: Returns
+}
+
 export const GammaPairs = {
   [ChainId.ROLLUX]: {
-    '0xf91726da5da9de95d7c3c504d36e6db307659a3b-0x71e7d05be74ff748c45402c06a941c822d756dc5': [
+    '0x4200000000000000000000000000000000000006-0x48023b16c3e81aa7f6effbdeb35bb83f4f31a8fd': [
       {
         type: Presets.GAMMA_NARROW,
         title: 'Narrow',
-        address: '0x2Fcc0d25c4CD2084e402c16DB68FBE206A36A46F',
-        token0Address: '0xf91726da5da9de95d7c3c504d36e6db307659a3b',
-        token1Address: '0x71e7d05be74ff748c45402c06a941c822d756dc5',
-        ableToFarm: false,
-        // pid: 0,
+        address: '0xf91726da5da9de95d7c3c504d36e6db307659a3b',
+        token0Address: '0x4200000000000000000000000000000000000006',
+        token1Address: '0x48023b16c3e81aa7f6effbdeb35bb83f4f31a8fd',
+        ableToFarm: true,
+        pid: 0,
       },
       // {
       //   type: Presets.GAMMA_WIDE,

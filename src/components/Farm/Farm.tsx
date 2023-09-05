@@ -1,3 +1,4 @@
+import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import CustomSelector, { SelectorItem } from 'components/CustomSelector/CustomSelector'
 import CustomSwitch from 'components/CustomSwitch/CustomSwitch'
@@ -11,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import { GammaPair, GammaPairs, GlobalConst } from './constants'
+import { GammaPairs, GlobalConst } from './constants'
 import GammaFarmsPage from './GammaFarms/GammaFarmsPage'
 import FarmingMyFarms from './MyFarms/FarmMyFarms'
 import SortColumns from './SortColumn'
@@ -69,25 +70,14 @@ export function Farms() {
   const [sortBy, setSortBy] = useState(GlobalConst.utils.v3FarmSortBy.pool)
   const [sortDesc, setSortDesc] = useState(false)
 
-  const getAllPairs = (
-    chainId: number,
-    GammaPairs: {
-      [key: string]: GammaPair[]
-    }
-  ) => {
-    if (!chainId) return []
-    const pairsGroups = GammaPairs[570] || {}
-    return Object.values(pairsGroups).flat()
-  }
-
-  const filterAbleToFarm = (pairs: GammaPair[]) => {
-    return pairs.filter((item) => item?.ableToFarm)
-  }
-
   const allGammaFarms = useMemo(() => {
-    const allPairs = chainId ? getAllPairs(chainId, GammaPairs[570]) : []
-    return filterAbleToFarm(allPairs)
-  }, [chainId])
+    const pairsGroups = GammaPairs[ChainId.ROLLUX]
+    if (!pairsGroups) {
+      return []
+    }
+    const allPairs = Object.values(pairsGroups).flat()
+    return allPairs.filter((item) => item?.ableToFarm)
+  }, [])
 
   const redirectWithFarmStatus = (status: string) => {
     const currentPath = location.pathname + location.search
@@ -189,7 +179,7 @@ export function Farms() {
 
       {selectedFarmCategory?.id === 0 && chainId && <FarmingMyFarms search={searchValue} chainId={chainId} />}
 
-      {selectedFarmCategory?.id === 2 && (
+      {selectedFarmCategory?.id === 1 && (
         <GammaFarmsPage farmFilter={farmFilter.id} search={searchValue} sortBy={sortBy} sortDesc={sortDesc} />
       )}
     </FarmsLayout>
