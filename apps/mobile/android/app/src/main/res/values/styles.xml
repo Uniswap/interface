@@ -9,6 +9,8 @@
         <item name="android:itemBackground">@color/item_background</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/splashscreen_icon</item>
+        <item name="android:navigationBarColor">@color/background_material_light</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 
 </resources>

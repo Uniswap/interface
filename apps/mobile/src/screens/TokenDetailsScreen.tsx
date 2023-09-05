@@ -4,6 +4,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -23,7 +24,7 @@ import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import Trace from 'src/components/Trace/Trace'
-import { IS_IOS } from 'src/constants/globals'
+import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { openModal, selectModalState } from 'src/features/modals/modalSlice'
@@ -171,6 +172,7 @@ function TokenDetails({
 }): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
+  const insets = useSafeAreaInsets()
 
   const currencyChainId = currencyIdToChain(_currencyId) ?? ChainId.Mainnet
   const currencyAddress = currencyIdToAddress(_currencyId)
@@ -362,7 +364,11 @@ function TokenDetails({
       </HeaderScrollScreen>
 
       {!loading && !tokenColorLoading ? (
-        <AnimatedFlex backgroundColor="surface1" entering={FadeInDown} pb={pb}>
+        <AnimatedFlex
+          backgroundColor="surface1"
+          entering={FadeInDown}
+          pb={pb}
+          style={{ marginBottom: IS_ANDROID ? insets.bottom : undefined }}>
           <TokenDetailsActionButtons
             tokenColor={tokenColor}
             onPressSwap={(): void =>
