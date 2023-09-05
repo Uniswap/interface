@@ -39,7 +39,11 @@ const GasCostItem = ({
     <Row justify="space-between">
       <ThemedText.SubHeaderSmall>{title}</ThemedText.SubHeaderSmall>
       <ThemedText.SubHeaderSmall color="neutral1">
-        {itemValue ?? formatNumber(amount, NumberType.FiatGasPrice)}
+        {itemValue ??
+          formatNumber({
+            input: amount,
+            type: NumberType.FiatGasPrice,
+          })}
       </ThemedText.SubHeaderSmall>
     </Row>
   )
