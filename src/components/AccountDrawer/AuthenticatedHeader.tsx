@@ -27,7 +27,7 @@ import { updateSelectedWallet } from 'state/user/reducer'
 import styled, { useTheme } from 'styled-components'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { formatNumber, NumberType, useFormatterLocales } from 'utils/formatNumbers'
 
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -170,6 +170,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
@@ -282,6 +283,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               {formatNumber({
                 input: totalBalance,
                 type: NumberType.PortfolioBalance,
+                locale: formatterLocale,
+                localCurrency: formatterLocalCurrency,
               })}
             </ThemedText.HeadlineLarge>
             <AutoRow marginBottom="20px">
@@ -292,6 +295,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                     {`${formatNumber({
                       input: Math.abs(absoluteChange as number),
                       type: NumberType.PortfolioBalance,
+                      locale: formatterLocale,
+                      localCurrency: formatterLocalCurrency,
                     })} (${formatDelta(percentChange)})`}
                   </ThemedText.BodySecondary>
                 </>

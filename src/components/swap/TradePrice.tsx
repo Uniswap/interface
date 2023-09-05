@@ -5,7 +5,7 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { formatNumber, formatPrice, NumberType } from 'utils/formatNumbers'
+import { formatNumber, formatPrice, NumberType, useFormatterLocales } from 'utils/formatNumbers'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
@@ -28,6 +28,8 @@ const StyledPriceContainer = styled.button`
 `
 
 export default function TradePrice({ price }: TradePriceProps) {
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const { baseCurrency, quoteCurrency } = price
@@ -65,6 +67,8 @@ export default function TradePrice({ price }: TradePriceProps) {
             {formatNumber({
               input: usdPrice,
               type: NumberType.FiatTokenPrice,
+              locale: formatterLocale,
+              localCurrency: formatterLocalCurrency,
             })}
             )
           </Trans>

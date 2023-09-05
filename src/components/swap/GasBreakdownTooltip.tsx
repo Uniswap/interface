@@ -7,7 +7,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { formatNumber, NumberType, useFormatterLocales } from 'utils/formatNumbers'
 
 const Container = styled(AutoColumn)`
   padding: 4px;
@@ -35,6 +35,8 @@ const GasCostItem = ({
   itemValue?: React.ReactNode
   amount?: number
 }) => {
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+
   return (
     <Row justify="space-between">
       <ThemedText.SubHeaderSmall>{title}</ThemedText.SubHeaderSmall>
@@ -43,6 +45,8 @@ const GasCostItem = ({
           formatNumber({
             input: amount,
             type: NumberType.FiatGasPrice,
+            locale: formatterLocale,
+            localCurrency: formatterLocalCurrency,
           })}
       </ThemedText.SubHeaderSmall>
     </Row>

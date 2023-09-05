@@ -9,7 +9,7 @@ import { TextProps } from 'rebass'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { formatNumber, NumberType, useFormatterLocales } from 'utils/formatNumbers'
 import { formatReviewSwapCurrencyAmount } from 'utils/formatNumbers'
 
 export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
@@ -45,6 +45,8 @@ interface AmountProps {
 }
 
 export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field, currency }: AmountProps) {
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+
   return (
     <Row align="center" justify="space-between" gap="md">
       <Column gap="xs">
@@ -62,6 +64,8 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
               {formatNumber({
                 input: usdAmount,
                 type: NumberType.FiatTokenQuantity,
+                locale: formatterLocale,
+                localCurrency: formatterLocalCurrency,
               })}
             </ThemedText.BodySmall>
           )}
