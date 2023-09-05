@@ -5,7 +5,9 @@
   "license": "GPL-3.0-or-later",
   "scripts": {
     "android": "react-native run-android --variant=devDebug --appIdSuffix=dev",
+    "android:release": "react-native run-android --variant=devRelease --appIdSuffix=dev",
     "android:beta": "react-native run-android --variant=betaDebug --appIdSuffix=beta",
+    "android:beta:release": "react-native run-android --variant=betaRelease --appIdSuffix=beta",
     "android:prod": "react-native run-android --variant=prodDebug",
     "android:prod:release": "react-native run-android --variant=prodRelease",
     "clean": "react-native-clean-project",
