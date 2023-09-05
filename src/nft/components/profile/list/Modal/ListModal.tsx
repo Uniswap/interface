@@ -15,7 +15,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { formatCurrencyAmount, NumberType, useFormatterLocales } from 'utils/formatNumbers'
+import { NumberType, useFormatCurrencyAmount } from 'utils/formatNumbers'
 import { shallow } from 'zustand/shallow'
 
 import { TitleRow } from '../shared'
@@ -48,7 +48,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const { provider, chainId } = useWeb3React()
   const signer = provider?.getSigner()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
-  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+  const formatCurrencyAmount = useFormatCurrencyAmount()
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const { setListingStatusAndCallback, setLooksRareNonce, getLooksRareNonce, collectionsRequiringApproval, listings } =
     useNFTList(
@@ -79,8 +79,6 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const usdcAmount = formatCurrencyAmount({
     amount: usdcValue,
     type: NumberType.FiatTokenPrice,
-    locale: formatterLocale,
-    localCurrency: formatterLocalCurrency,
   })
 
   const allCollectionsApproved = useMemo(

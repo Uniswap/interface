@@ -16,7 +16,7 @@ import { forwardRef, ReactNode, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import { formatCurrencyAmount, NumberType, useFormatterLocales } from 'utils/formatNumbers'
+import { NumberType, useFormatCurrencyAmount } from 'utils/formatNumbers'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
@@ -277,7 +277,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     const { account, chainId } = useWeb3React()
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
     const theme = useTheme()
-    const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+    const formatCurrencyAmount = useFormatCurrencyAmount()
 
     const handleDismissSearch = useCallback(() => {
       setModalOpen(false)
@@ -402,8 +402,6 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                             {formatCurrencyAmount({
                               amount: selectedCurrencyBalance,
                               type: NumberType.TokenNonTx,
-                              locale: formatterLocale,
-                              localCurrency: formatterLocalCurrency,
                             })}
                           </Trans>
                         )

@@ -57,7 +57,7 @@ import styled, { useTheme } from 'styled-components'
 import { LinkStyledButton, ThemedText } from 'theme'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
-import { formatCurrencyAmount, NumberType, useFormatterLocales } from 'utils/formatNumbers'
+import { NumberType, useFormatCurrencyAmount } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -381,7 +381,7 @@ export function Swap({
     swapResult: undefined,
   })
 
-  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+  const formatCurrencyAmount = useFormatCurrencyAmount()
   const formattedAmounts = useMemo(
     () => ({
       [independentField]: typedValue,
@@ -391,11 +391,9 @@ export function Swap({
             amount: parsedAmounts[dependentField],
             type: NumberType.SwapTradeAmount,
             placeholder: '',
-            locale: formatterLocale,
-            localCurrency: formatterLocalCurrency,
           }),
     }),
-    [dependentField, formatterLocalCurrency, formatterLocale, independentField, parsedAmounts, showWrap, typedValue]
+    [dependentField, formatCurrencyAmount, independentField, parsedAmounts, showWrap, typedValue]
   )
 
   const userHasSpecifiedInputOutput = Boolean(

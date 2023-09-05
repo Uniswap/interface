@@ -13,7 +13,7 @@ import { useMemo } from 'react'
 import { Twitter, X } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
-import { formatCurrencyAmount, NumberType, useFormatterLocales } from 'utils/formatNumbers'
+import { NumberType, useFormatCurrencyAmount } from 'utils/formatNumbers'
 
 import { TitleRow } from '../shared'
 
@@ -79,7 +79,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
-  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+  const formatCurrencyAmount = useFormatCurrencyAmount()
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
@@ -114,8 +114,6 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
               {formatCurrencyAmount({
                 amount: usdcValue,
                 type: NumberType.FiatTokenPrice,
-                locale: formatterLocale,
-                localCurrency: formatterLocalCurrency,
               })}
             </ThemedText.BodySmall>
           )}

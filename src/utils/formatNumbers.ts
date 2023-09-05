@@ -446,19 +446,21 @@ export function useFormatNumber() {
   )
 }
 
+interface FormatCurrencyAmountOptions {
+  amount: Nullish<CurrencyAmount<Currency>>
+  type?: NumberType
+  placeholder?: string
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+}
+
 export function formatCurrencyAmount({
   amount,
   type = NumberType.TokenNonTx,
   placeholder,
   locale = DEFAULT_LOCALE,
   localCurrency = DEFAULT_LOCAL_CURRENCY,
-}: {
-  amount: Nullish<CurrencyAmount<Currency>>
-  type?: NumberType
-  placeholder?: string
-  locale?: SupportedLocale
-  localCurrency?: SupportedLocalCurrency
-}): string {
+}: FormatCurrencyAmountOptions): string {
   return formatNumber({
     input: amount ? parseFloat(amount.toSignificant()) : undefined,
     type,
@@ -466,6 +468,17 @@ export function formatCurrencyAmount({
     locale,
     localCurrency,
   })
+}
+
+// eslint-disable-next-line import/no-unused-modules
+export function useFormatCurrencyAmount() {
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+
+  return useCallback(
+    (options: Omit<FormatCurrencyAmountOptions, 'locale' | 'localCurrency'>) =>
+      formatCurrencyAmount({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
+    [formatterLocalCurrency, formatterLocale]
+  )
 }
 
 export function formatPriceImpact(priceImpact: Percent | undefined): string {
