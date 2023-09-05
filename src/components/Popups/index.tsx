@@ -1,7 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { useActivePopups } from 'state/application/hooks'
-import { useURLWarningVisible } from 'state/user/hooks'
 import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -37,11 +34,10 @@ const MobilePopupInner = styled.div`
 `
 
 const FixedPopupColumn = styled(AutoColumn)<{
-  bannerVisible: boolean
   drawerOpen: boolean
 }>`
   position: fixed;
-  top: ${({ drawerOpen, bannerVisible }) => `${64 + (drawerOpen ? -50 : 0) + (bannerVisible ? 8 : 0)}px`};
+  top: ${({ drawerOpen }) => `${64 + (drawerOpen ? -50 : 0)}px`};
   right: 1rem;
   max-width: 348px !important;
   width: 100%;
@@ -59,20 +55,9 @@ export default function Popups() {
   // get all popups
   const activePopups = useActivePopups()
 
-  const urlWarningActive = useURLWarningVisible()
-
-  // need extra padding if network is not L1 Ethereum
-  const { chainId } = useWeb3React()
-  const isNotOnMainnet = Boolean(chainId && chainId !== ChainId.MAINNET)
-
   return (
     <>
-      <FixedPopupColumn
-        gap="20px"
-        drawerOpen={isAccountDrawerOpen}
-        bannerVisible={isNotOnMainnet || urlWarningActive}
-        data-testid="popups"
-      >
+      <FixedPopupColumn gap="20px" drawerOpen={isAccountDrawerOpen} data-testid="popups">
         <ClaimPopup />
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />

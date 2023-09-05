@@ -43,7 +43,6 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
         userSlippageToleranceHasBeenMigratedToAuto: user.userSlippageToleranceHasBeenMigratedToAuto,
         userDeadline: user.userDeadline,
         timestamp: user.timestamp,
-        URLWarningVisible: user.URLWarningVisible,
         showSurveyPopup: user.showSurveyPopup,
       },
       transactions,
