@@ -33,7 +33,6 @@ import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useLocalCurrencyPrice } from 'hooks/useLocalCurrencyPrice'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
@@ -185,7 +184,6 @@ export function Swap({
 }) {
   const { account, chainId: connectedChainId, connector } = useWeb3React()
   const trace = useTrace()
-  const activeLocale = useActiveLocale()
 
   // token warning stuff
   const prefilledInputCurrency = useCurrency(prefilledState?.[Field.INPUT]?.currencyId)
@@ -392,10 +390,9 @@ export function Swap({
             amount: parsedAmounts[dependentField],
             type: NumberType.SwapTradeAmount,
             placeholder: '',
-            locale: activeLocale,
           }),
     }),
-    [activeLocale, dependentField, independentField, parsedAmounts, showWrap, typedValue]
+    [dependentField, independentField, parsedAmounts, showWrap, typedValue]
   )
 
   const userHasSpecifiedInputOutput = Boolean(

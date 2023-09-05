@@ -3,7 +3,6 @@ import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import styled from 'styled-components'
@@ -84,13 +83,11 @@ const SwapButton = styled(StyledInternalLink)`
 
 export default function MobileBalanceSummaryFooter({ token }: { token: Currency }) {
   const { account } = useWeb3React()
-  const activeLocale = useActiveLocale()
   const balance = useCurrencyBalance(account, token)
-  const formattedBalance = formatCurrencyAmount({ amount: balance, type: NumberType.TokenNonTx, locale: activeLocale })
+  const formattedBalance = formatCurrencyAmount({ amount: balance, type: NumberType.TokenNonTx })
   const formattedUsdValue = formatCurrencyAmount({
     amount: useStablecoinValue(balance),
     type: NumberType.FiatTokenStats,
-    locale: activeLocale,
   })
   const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
 

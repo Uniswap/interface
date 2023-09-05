@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -47,7 +46,6 @@ const ListModalWrapper = styled.div`
 
 export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const { provider, chainId } = useWeb3React()
-  const activeLocale = useActiveLocale()
   const signer = provider?.getSigner()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const sellAssets = useSellAsset((state) => state.sellAssets)
@@ -77,7 +75,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
-  const usdcAmount = formatCurrencyAmount({ amount: usdcValue, type: NumberType.FiatTokenPrice, locale: activeLocale })
+  const usdcAmount = formatCurrencyAmount({ amount: usdcValue, type: NumberType.FiatTokenPrice })
 
   const allCollectionsApproved = useMemo(
     () => collectionsRequiringApproval.every((collection) => collection.status === ListingStatus.APPROVED),
