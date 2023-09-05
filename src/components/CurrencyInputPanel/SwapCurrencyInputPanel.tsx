@@ -10,6 +10,7 @@ import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Tooltip from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import ms from 'ms'
 import { darken } from 'polished'
 import { forwardRef, ReactNode, useCallback, useEffect, useState } from 'react'
@@ -275,6 +276,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
     const { account, chainId } = useWeb3React()
+    const activeLocale = useActiveLocale()
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
     const theme = useTheme()
 
@@ -396,7 +398,14 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                         renderBalance ? (
                           renderBalance(selectedCurrencyBalance)
                         ) : (
-                          <Trans>Balance: {formatCurrencyAmount(selectedCurrencyBalance, NumberType.TokenNonTx)}</Trans>
+                          <Trans>
+                            Balance:{' '}
+                            {formatCurrencyAmount({
+                              amount: selectedCurrencyBalance,
+                              type: NumberType.TokenNonTx,
+                              locale: activeLocale,
+                            })}
+                          </Trans>
                         )
                       ) : null}
                     </ThemedText.DeprecatedBody>

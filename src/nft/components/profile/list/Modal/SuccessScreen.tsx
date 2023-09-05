@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -76,6 +77,7 @@ const TweetRow = styled(Row)`
 
 export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) => {
   const theme = useTheme()
+  const activeLocale = useActiveLocale()
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
@@ -110,7 +112,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
           <ThemedText.SubHeader>{formatEth(totalEthListingValue)} ETH</ThemedText.SubHeader>
           {usdcValue && (
             <ThemedText.BodySmall lineHeight="20px" color="neutral2">
-              {formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)}
+              {formatCurrencyAmount({ amount: usdcValue, type: NumberType.FiatTokenPrice, locale: activeLocale })}
             </ThemedText.BodySmall>
           )}
         </ProceedsColumn>

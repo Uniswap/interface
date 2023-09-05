@@ -18,12 +18,12 @@ describe('SwapModalHeader.tsx', () => {
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
     expect(screen.getByTestId('INPUT-amount')).toHaveTextContent(
-      `${formatCurrencyAmount(TEST_TRADE_EXACT_INPUT.inputAmount, NumberType.TokenTx)} ${
+      `${formatCurrencyAmount({ amount: TEST_TRADE_EXACT_INPUT.inputAmount, type: NumberType.TokenTx })} ${
         TEST_TRADE_EXACT_INPUT.inputAmount.currency.symbol ?? ''
       }`
     )
     expect(screen.getByTestId('OUTPUT-amount')).toHaveTextContent(
-      `${formatCurrencyAmount(TEST_TRADE_EXACT_INPUT.outputAmount, NumberType.TokenTx)} ${
+      `${formatCurrencyAmount({ amount: TEST_TRADE_EXACT_INPUT.outputAmount, type: NumberType.TokenTx })} ${
         TEST_TRADE_EXACT_INPUT.outputAmount.currency.symbol ?? ''
       }`
     )
@@ -40,10 +40,12 @@ describe('SwapModalHeader.tsx', () => {
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
     expect(screen.getByTestId('INPUT-amount')).toHaveTextContent(
-      `${formatCurrencyAmount(TEST_DUTCH_TRADE_ETH_INPUT.inputAmount, NumberType.TokenTx)} ${ETH_MAINNET.symbol}`
+      `${formatCurrencyAmount({ amount: TEST_DUTCH_TRADE_ETH_INPUT.inputAmount, type: NumberType.TokenTx })} ${
+        ETH_MAINNET.symbol
+      }`
     )
     expect(screen.getByTestId('OUTPUT-amount')).toHaveTextContent(
-      `${formatCurrencyAmount(TEST_DUTCH_TRADE_ETH_INPUT.outputAmount, NumberType.TokenTx)} ${
+      `${formatCurrencyAmount({ amount: TEST_DUTCH_TRADE_ETH_INPUT.outputAmount, type: NumberType.TokenTx })} ${
         TEST_DUTCH_TRADE_ETH_INPUT.outputAmount.currency.symbol ?? ''
       }`
     )
@@ -57,12 +59,12 @@ describe('SwapModalHeader.tsx', () => {
     expect(screen.getByText(/Input is estimated. You will sell at most/i)).toBeInTheDocument()
 
     expect(screen.getByTestId('INPUT-amount')).toHaveTextContent(
-      `${formatCurrencyAmount(TEST_TRADE_EXACT_OUTPUT.inputAmount, NumberType.TokenTx)} ${
+      `${formatCurrencyAmount({ amount: TEST_TRADE_EXACT_OUTPUT.inputAmount, type: NumberType.TokenTx })} ${
         TEST_TRADE_EXACT_OUTPUT.inputAmount.currency.symbol ?? ''
       }`
     )
     expect(screen.getByTestId('OUTPUT-amount')).toHaveTextContent(
-      `${formatCurrencyAmount(TEST_TRADE_EXACT_OUTPUT.outputAmount, NumberType.TokenTx)} ${
+      `${formatCurrencyAmount({ amount: TEST_TRADE_EXACT_OUTPUT.outputAmount, type: NumberType.TokenTx })} ${
         TEST_TRADE_EXACT_OUTPUT.outputAmount.currency.symbol ?? ''
       }`
     )

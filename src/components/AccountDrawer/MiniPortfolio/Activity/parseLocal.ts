@@ -3,8 +3,10 @@ import { t } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from '@uniswap/smart-order-router'
 import UniswapXBolt from 'assets/svg/bolt.svg'
+import { SupportedLocale } from 'constants/locales'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap, useAllTokensMultichain } from 'hooks/Tokens'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
@@ -37,11 +39,16 @@ function buildCurrencyDescriptor(
   amtA: string,
   currencyB: Currency | undefined,
   amtB: string,
-  delimiter = t`for`
+  delimiter = t`for`,
+  locale?: SupportedLocale
 ) {
-  const formattedA = currencyA ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currencyA, amtA)) : t`Unknown`
+  const formattedA = currencyA
+    ? formatCurrencyAmount({ amount: CurrencyAmount.fromRawAmount(currencyA, amtA), locale })
+    : t`Unknown`
   const symbolA = currencyA?.symbol ?? ''
-  const formattedB = currencyB ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currencyB, amtB)) : t`Unknown`
+  const formattedB = currencyB
+    ? formatCurrencyAmount({ amount: CurrencyAmount.fromRawAmount(currencyB, amtB), locale })
+    : t`Unknown`
   const symbolB = currencyB?.symbol ?? ''
   return [formattedA, symbolA, delimiter, formattedB, symbolB].filter(Boolean).join(' ')
 }
@@ -49,7 +56,8 @@ function buildCurrencyDescriptor(
 function parseSwap(
   swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
   chainId: ChainId,
-  tokens: ChainTokenMap
+  tokens: ChainTokenMap,
+  locale?: SupportedLocale
 ): Partial<Activity> {
   const tokenIn = getCurrency(swap.inputCurrencyId, chainId, tokens)
   const tokenOut = getCurrency(swap.outputCurrencyId, chainId, tokens)
@@ -59,7 +67,7 @@ function parseSwap(
       : [swap.expectedInputCurrencyAmountRaw, swap.outputCurrencyAmountRaw]
 
   return {
-    descriptor: buildCurrencyDescriptor(tokenIn, inputRaw, tokenOut, outputRaw),
+    descriptor: buildCurrencyDescriptor(tokenIn, inputRaw, tokenOut, outputRaw, undefined, locale),
     currencies: [tokenIn, tokenOut],
     prefixIconSrc: swap.isUniswapXOrder ? UniswapXBolt : undefined,
   }
@@ -149,7 +157,8 @@ export function getTransactionStatus(details: TransactionDetails): TransactionSt
 export function transactionToActivity(
   details: TransactionDetails,
   chainId: ChainId,
-  tokens: ChainTokenMap
+  tokens: ChainTokenMap,
+  locale?: SupportedLocale
 ): Activity | undefined {
   try {
     const status = getTransactionStatus(details)
@@ -168,7 +177,7 @@ export function transactionToActivity(
     let additionalFields: Partial<Activity> = {}
     const info = details.info
     if (info.type === TransactionType.SWAP) {
-      additionalFields = parseSwap(info, chainId, tokens)
+      additionalFields = parseSwap(info, chainId, tokens, locale)
     } else if (info.type === TransactionType.APPROVAL) {
       additionalFields = parseApproval(info, chainId, tokens, status)
     } else if (info.type === TransactionType.WRAP) {
@@ -229,13 +238,14 @@ export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions()
   const allSignatures = useAllSignatures()
   const tokens = useAllTokensMultichain()
+  const activeLocale = useActiveLocale()
 
   return useMemo(() => {
     const activityMap: ActivityMap = {}
     for (const [transaction, chainId] of allTransactions) {
       if (transaction.from !== account) continue
 
-      const activity = transactionToActivity(transaction, chainId, tokens)
+      const activity = transactionToActivity(transaction, chainId, tokens, activeLocale)
       if (activity) activityMap[transaction.hash] = activity
     }
 
@@ -247,5 +257,5 @@ export function useLocalActivities(account: string): ActivityMap {
     }
 
     return activityMap
-  }, [account, allSignatures, allTransactions, tokens])
+  }, [account, activeLocale, allSignatures, allTransactions, tokens])
 }
