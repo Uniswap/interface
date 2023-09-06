@@ -567,6 +567,7 @@ export function useFormatterLocales(): {
   }
 }
 
+// used to get the appropriate formatter functions with the correct locales passed into them
 export function useFormatter() {
   const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
 
