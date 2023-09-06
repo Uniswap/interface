@@ -1,5 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
 import { sendTiming } from 'components/analytics'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
@@ -8,6 +8,7 @@ import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments
 import ms from 'ms'
 import { useMemo } from 'react'
 
+import { FastQuoteArgs, useGetFastQuoteQuery, useGetFastQuoteQueryState } from './fastSlice'
 import { useGetQuoteQuery, useGetQuoteQueryState } from './slice'
 import {
   ClassicTrade,
@@ -82,18 +83,6 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const fastQueryArgs = useRoutingAPIArguments({
-    account,
-    tokenIn: currencyIn,
-    tokenOut: currencyOut,
-    amount: amountSpecified,
-    tradeType,
-    routerPreference,
-    quoteSpeed: QuoteSpeed.FAST,
-    inputTax,
-    outputTax,
-  })
-
   const standardQueryArgs = useRoutingAPIArguments({
     account,
     tokenIn: currencyIn,
@@ -106,15 +95,29 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     outputTax,
   })
 
-  // skip double quoting if it's just a price lookup
-  const skipFastFetch = skipFetch || routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE
+  const fastQueryArgs: FastQuoteArgs = {
+    account,
+    tokenInAddress: currencyIn?.isToken ? currencyIn.address : undefined,
+    tokenOutAddress: currencyOut?.isToken ? currencyOut.address : undefined,
+    amount: amountSpecified,
+  }
+
+  // skip double quoting if it's an unsupported trade type
+  const skipFastFetch =
+    skipFetch ||
+    routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ||
+    tradeType === TradeType.EXACT_OUTPUT ||
+    currencyIn?.chainId !== ChainId.MAINNET ||
+    fastQueryArgs.tokenInAddress === undefined ||
+    fastQueryArgs.tokenOutAddress === undefined ||
+    fastQueryArgs.amount === undefined
   const {
     isError: isFastTradeError,
     data: fastTradeResult,
     error: fastTradeError,
     currentData: fastTradeCurrentData,
-  } = useGetQuoteQueryState(fastQueryArgs)
-  useGetQuoteQuery(skipFastFetch ? skipToken : fastQueryArgs) // no polling interval on the fast quotes
+  } = useGetFastQuoteQueryState(fastQueryArgs)
+  useGetFastQuoteQuery(skipFastFetch ? skipToken : fastQueryArgs) // no polling interval on the fast quotes
 
   const {
     isError: isStandardTradeError,

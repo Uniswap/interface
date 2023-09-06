@@ -1,11 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { MixedRouteSDK } from '@uniswap/router-sdk'
+import { MixedRouteSDK, Protocol } from '@uniswap/router-sdk'
 import { ChainId, Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter } from '@uniswap/smart-order-router'
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { asSupportedChain } from 'constants/chains'
+import { ZERO_PERCENT } from 'constants/misc'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
@@ -15,6 +16,7 @@ import {
   ClassicQuoteData,
   ClassicTrade,
   DutchOrderTrade,
+  FastQuoteResponse,
   GetQuoteArgs,
   InterfaceTrade,
   isClassicQuoteResponse,
@@ -278,6 +280,104 @@ export async function transformRoutesToTrade(
     }
   }
 
+  return { state: QuoteState.SUCCESS, trade: classicTrade }
+}
+
+export async function transformFastRoutesToTrade(
+  amountIn: CurrencyAmount<Currency>,
+  result: FastQuoteResponse,
+  account: string | undefined
+): Promise<TradeResult> {
+  const { tokenIn, tokenOut, bestQuote } = result
+
+  const parsedTokenIn = parseToken({
+    address: tokenIn.address,
+    chainId: ChainId.MAINNET,
+    decimals: tokenIn.decimals,
+    symbol: tokenIn.symbol,
+  })
+  const parsedTokenOut = parseToken({
+    address: tokenOut.address,
+    chainId: ChainId.MAINNET,
+    decimals: tokenOut.decimals,
+    symbol: tokenOut.symbol,
+  })
+  const approveInfo = await getApproveInfo(account, parsedTokenIn, amountIn?.toExact(), 0)
+  const v2Routes =
+    bestQuote.route.protocol === Protocol.V2
+      ? [
+          {
+            routev2: new V2Route(
+              bestQuote.route.path.map(
+                (hop) =>
+                  new Pair(
+                    CurrencyAmount.fromRawAmount(
+                      parseToken({
+                        address: hop.token0,
+                        chainId: ChainId.MAINNET,
+                        decimals: 18,
+                        symbol: 'UNK',
+                      }),
+                      0
+                    ),
+                    CurrencyAmount.fromRawAmount(
+                      parseToken({
+                        address: hop.token1,
+                        chainId: ChainId.MAINNET,
+                        decimals: 18,
+                        symbol: 'UNK',
+                      }),
+                      0
+                    )
+                  )
+              ),
+              parsedTokenIn,
+              parsedTokenOut
+            ),
+            inputAmount: amountIn,
+            outputAmount: CurrencyAmount.fromRawAmount(parsedTokenOut, bestQuote.amount),
+          },
+        ]
+      : []
+  const v3Routes =
+    bestQuote.route.protocol === Protocol.V3
+      ? [
+          {
+            routev3: new V3Route(
+              bestQuote.route.path.map((hop) =>
+                parsePool({
+                  type: 'v3-pool',
+                  fee: String(hop.fee),
+                  sqrtRatioX96: '2591813593283507889384697884',
+                  liquidity: '62287359628325896425115',
+                  tickCurrent: '-68403',
+                  tokenIn: parsedTokenIn,
+                  tokenOut: parsedTokenOut,
+                })
+              ),
+              parsedTokenIn,
+              parsedTokenOut
+            ),
+            inputAmount: amountIn,
+            outputAmount: CurrencyAmount.fromRawAmount(parsedTokenOut, bestQuote.amount),
+          },
+        ]
+      : []
+  const classicTrade = new ClassicTrade({
+    v2Routes,
+    v3Routes,
+    tradeType: TradeType.EXACT_INPUT,
+    approveInfo,
+    // todo:
+    isUniswapXBetter: false,
+    quoteMethod: QuoteMethod.ROUTING_API,
+    inputTax: ZERO_PERCENT,
+    outputTax: ZERO_PERCENT,
+    // mixedRoutes: [],
+    // requestId: data.quote.requestId,
+    // blockNumber,
+    // gasUseEstimateUSD,
+  })
   return { state: QuoteState.SUCCESS, trade: classicTrade }
 }
 

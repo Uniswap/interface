@@ -51,7 +51,6 @@ export interface GetQuoteArgs {
   uniswapXEthOutputEnabled: boolean
   uniswapXExactOutputEnabled: boolean
   userDisabledUniswapX: boolean
-  quoteSpeed: QuoteSpeed
   fotAdjustmentsEnabled: boolean
   inputTax: Percent
   outputTax: Percent
@@ -132,6 +131,52 @@ type URAClassicQuoteResponse = {
   quote: ClassicQuoteData
   allQuotes: Array<URAQuoteResponse>
 }
+
+type V2Hop = {
+  pairAddress: string
+  token0: string
+  token1: string
+}
+
+type V3Hop = {
+  poolAddress: string
+  token0: string
+  token1: string
+  fee: number
+}
+
+type FastV2Route = {
+  path: V2Hop[]
+  protocol: Protocol.V2
+}
+
+type FastV3Route = {
+  path: V3Hop[]
+  protocol: Protocol.V3
+}
+
+export type FastQuoteResponse = {
+  bestQuote: {
+    amount: string
+    route: FastV2Route | FastV3Route
+  }
+  cacheHit: boolean
+  context: any // todo: cache information not needed by client
+  routes: FastV2Route[] | FastV3Route[]
+  tokenIn: {
+    address: string
+    decimals: number
+    name: string
+    symbol: string
+  }
+  tokenOut: {
+    address: string
+    decimals: number
+    name: string
+    symbol: string
+  }
+}
+
 export type URAQuoteResponse = URAClassicQuoteResponse | URADutchOrderQuoteResponse
 
 export function isClassicQuoteResponse(data: URAQuoteResponse): data is URAClassicQuoteResponse {
