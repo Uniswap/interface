@@ -101,7 +101,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
         title={<TokenNameText>{token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>
-            {formatNumber(quantity, NumberType.TokenNonTx)} {token?.symbol}
+            {formatNumber({ input: quantity, type: NumberType.TokenNonTx })} {token?.symbol}
           </TokenBalanceText>
         }
         onClick={navigateToTokenDetails}
@@ -109,7 +109,10 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
           denominatedValue && (
             <>
               <ThemedText.SubHeader>
-                {formatNumber(denominatedValue?.value, NumberType.PortfolioBalance)}
+                {formatNumber({
+                  input: denominatedValue?.value,
+                  type: NumberType.PortfolioBalance,
+                })}
               </ThemedText.SubHeader>
               <Row justify="flex-end">
                 <PortfolioArrow change={percentChange} size={20} strokeWidth={1.75} />

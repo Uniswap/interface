@@ -109,7 +109,12 @@ export default function SwapModalFooter({
               </Label>
             </MouseoverTooltip>
             <MouseoverTooltip placement="right" size={TooltipSize.Small} text={<GasBreakdownTooltip trade={trade} />}>
-              <DetailRowValue>{formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}</DetailRowValue>
+              <DetailRowValue>
+                {formatNumber({
+                  input: trade.totalGasUseEstimateUSD,
+                  type: NumberType.FiatGasPrice,
+                })}
+              </DetailRowValue>
             </MouseoverTooltip>
           </Row>
         </ThemedText.BodySmall>

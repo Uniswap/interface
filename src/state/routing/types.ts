@@ -42,13 +42,13 @@ export interface GetQuoteArgs {
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
   tradeType: TradeType
   needsWrapIfUniswapX: boolean
-  uniswapXEnabled: boolean
   uniswapXForceSyntheticQuotes: boolean
   uniswapXEthOutputEnabled: boolean
   uniswapXExactOutputEnabled: boolean
-  forceUniswapXOn: boolean
   userDisabledUniswapX: boolean
   fotAdjustmentsEnabled: boolean
+  inputTax: Percent
+  outputTax: Percent
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts

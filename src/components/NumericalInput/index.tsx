@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import styled from 'styled-components'
 import { escapeRegExp } from 'utils'
 
-const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
+const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; disabled?: boolean }>`
   color: ${({ error, theme }) => (error ? theme.critical : theme.neutral1)};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
   width: 0;
   position: relative;
   font-weight: 485;
@@ -40,60 +41,61 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
-export const Input = React.memo(function InnerInput({
-  value,
-  onUserInput,
-  placeholder,
-  prependSymbol,
-  ...rest
-}: {
+interface InputProps extends Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'onChange' | 'as'> {
   value: string | number
   onUserInput: (input: string) => void
   error?: boolean
   fontSize?: string
   align?: 'right' | 'left'
   prependSymbol?: string
-} & Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'onChange' | 'as'>) {
-  const enforcer = (nextUserInput: string) => {
-    if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
-      onUserInput(nextUserInput)
+}
+
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ value, onUserInput, placeholder, prependSymbol, ...rest }: InputProps, ref) => {
+    const enforcer = (nextUserInput: string) => {
+      if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
+        onUserInput(nextUserInput)
+      }
     }
+
+    return (
+      <StyledInput
+        {...rest}
+        ref={ref}
+        value={prependSymbol && value ? prependSymbol + value : value}
+        onChange={(event) => {
+          if (prependSymbol) {
+            const value = event.target.value
+
+            // cut off prepended symbol
+            const formattedValue = value.toString().includes(prependSymbol)
+              ? value.toString().slice(1, value.toString().length + 1)
+              : value
+
+            // replace commas with periods, because uniswap exclusively uses period as the decimal separator
+            enforcer(formattedValue.replace(/,/g, '.'))
+          } else {
+            enforcer(event.target.value.replace(/,/g, '.'))
+          }
+        }}
+        // universal input options
+        inputMode="decimal"
+        autoComplete="off"
+        autoCorrect="off"
+        // text-specific options
+        type="text"
+        pattern="^[0-9]*[.,]?[0-9]*$"
+        placeholder={placeholder || '0'}
+        minLength={1}
+        maxLength={79}
+        spellCheck="false"
+      />
+    )
   }
+)
 
-  return (
-    <StyledInput
-      {...rest}
-      value={prependSymbol && value ? prependSymbol + value : value}
-      onChange={(event) => {
-        if (prependSymbol) {
-          const value = event.target.value
+Input.displayName = 'Input'
 
-          // cut off prepended symbol
-          const formattedValue = value.toString().includes(prependSymbol)
-            ? value.toString().slice(1, value.toString().length + 1)
-            : value
-
-          // replace commas with periods, because uniswap exclusively uses period as the decimal separator
-          enforcer(formattedValue.replace(/,/g, '.'))
-        } else {
-          enforcer(event.target.value.replace(/,/g, '.'))
-        }
-      }}
-      // universal input options
-      inputMode="decimal"
-      autoComplete="off"
-      autoCorrect="off"
-      // text-specific options
-      type="text"
-      pattern="^[0-9]*[.,]?[0-9]*$"
-      placeholder={placeholder || '0'}
-      minLength={1}
-      maxLength={79}
-      spellCheck="false"
-    />
-  )
-})
-
-export default Input
-
+const MemoizedInput = React.memo(Input)
+export { MemoizedInput as Input }
 // const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group

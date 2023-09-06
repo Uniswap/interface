@@ -46,8 +46,10 @@ describe('#useBestV3Trade ExactIn', () => {
       USDCAmount,
       DAI,
       RouterPreference.CLIENT,
-      true, // skipFetch
-      undefined
+      /* skipFetch = */ true,
+      /* account = */ undefined,
+      /* inputTax = */ undefined,
+      /* outputTax = */ undefined
     )
     expect(result.current).toEqual({ state: TradeState.NO_ROUTE_FOUND, trade: undefined })
   })
@@ -64,8 +66,10 @@ describe('#useDebouncedTrade ExactOut', () => {
       DAIAmount,
       USDC_MAINNET,
       RouterPreference.CLIENT,
-      true, // skipFetch
-      undefined
+      /* skipFetch = */ true,
+      /* account = */ undefined,
+      /* inputTax = */ undefined,
+      /* outputTax = */ undefined
     )
     expect(result.current).toEqual({ state: TradeState.NO_ROUTE_FOUND, trade: undefined })
   })
