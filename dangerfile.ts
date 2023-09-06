@@ -25,7 +25,7 @@ async function processAddChanges() {
     const structuredDiff = await danger.git.structuredDiffForFile(file);
 
     return (structuredDiff?.chunks || []).flatMap((chunk) => {
-      return chunk.changes.filter((change) => change.type === 'add')
+      return chunk.changes.filter((change) => change.type === 'add' || change.type === 'normal')
     })
   }))).flatMap((x) => x)
 
@@ -69,6 +69,21 @@ async function checkCocoaPodsVersion() {
   }
 }
 
+async function checkApostrophes() {
+  const updatedTranslations = danger.git.modified_files.find((file) => file.includes('en.json'))
+  if (updatedTranslations) {
+    const structuredDiff = await danger.git.structuredDiffForFile(updatedTranslations);
+    const changedLines = (structuredDiff?.chunks || []).flatMap((chunk) => {
+      return chunk.changes.filter((change) => change.type === 'add')
+    })
+    changedLines.forEach((line) => {
+      if (line.content.includes("'")) {
+        fail("You added a string using the ' character. Please use the ’ character instead!")
+      }
+    })
+  }
+}
+
 /* Warn about storing credentials in GH and uploading env.local to 1Password */
 const envChanged = danger.git.modified_files.includes('.env.defaults')
 if (envChanged) {
@@ -82,6 +97,9 @@ processAddChanges()
 
 // Check for cocoapods version change
 checkCocoaPodsVersion()
+
+// check translations use the correct apostrophes
+checkApostrophes()
 
 // Stories for new components
 const createdComponents = danger.git.created_files.filter(
