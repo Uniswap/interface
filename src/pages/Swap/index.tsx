@@ -493,9 +493,14 @@ export function Swap({
       return { priceImpactSeverity: 0, largerPriceImpact: undefined }
     }
 
-    const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
-    const largerPriceImpact = largerPercentValue(marketPriceImpact, preTaxStablecoinPriceImpact)
-    return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
+    try {
+      const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
+      const largerPriceImpact = largerPercentValue(marketPriceImpact, preTaxStablecoinPriceImpact)
+      return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
+    } catch (e) {
+      console.error(e)
+      return { priceImpactSeverity: 0, largerPriceImpact: undefined }
+    }
   }, [preTaxStablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
