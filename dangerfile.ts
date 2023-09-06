@@ -147,6 +147,17 @@ if (stories.edited) {
   message('🙌 Thanks for keeping stories up to date!')
 }
 
+// GraphQL update warnings
+const updatedGraphQLfile = danger.git.modified_files.find((file) =>
+  file.includes('__generated__/types-and-hooks.ts')
+)
+
+if (updatedGraphQLfile) {
+  warn(
+    'You have updated the GraphQL schema. Please ensure that the Swift GraphQL Schema generation is valid by running `yarn mobile graphql:generate:swift` and rebuilding for iOS. You may need to add or remove generated files to the project.pbxproj'
+  )
+}
+
 // Migrations + schema warnings
 const updatedSchemaFile = danger.git.modified_files.find((file) =>
   file.includes('src/app/schema.ts')

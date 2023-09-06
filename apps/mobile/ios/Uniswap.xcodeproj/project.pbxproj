@@ -51,7 +51,6 @@
 		074322012A83E3CA00F8518D /* HistoryDuration.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321AA2A83E3C900F8518D /* HistoryDuration.graphql.swift */; };
 		074322022A83E3CA00F8518D /* TokenStandard.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321AB2A83E3C900F8518D /* TokenStandard.graphql.swift */; };
 		074322032A83E3CA00F8518D /* Currency.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321AC2A83E3C900F8518D /* Currency.graphql.swift */; };
-		074322042A83E3CA00F8518D /* ActivityType.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321AD2A83E3C900F8518D /* ActivityType.graphql.swift */; };
 		074322052A83E3CA00F8518D /* Chain.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321AE2A83E3C900F8518D /* Chain.graphql.swift */; };
 		074322062A83E3CA00F8518D /* TokenSortableField.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321AF2A83E3C900F8518D /* TokenSortableField.graphql.swift */; };
 		074322072A83E3CA00F8518D /* TransactionDirection.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321B02A83E3C900F8518D /* TransactionDirection.graphql.swift */; };
@@ -94,7 +93,6 @@
 		0743222C2A83E3CA00F8518D /* AssetActivity.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321D62A83E3C900F8518D /* AssetActivity.graphql.swift */; };
 		0743222D2A83E3CA00F8518D /* NftProfile.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321D72A83E3C900F8518D /* NftProfile.graphql.swift */; };
 		0743222E2A83E3CA00F8518D /* NftCollectionEdge.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321D82A83E3C900F8518D /* NftCollectionEdge.graphql.swift */; };
-		0743222F2A83E3CA00F8518D /* Transaction.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321D92A83E3C900F8518D /* Transaction.graphql.swift */; };
 		074322302A83E3CA00F8518D /* TokenTransfer.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321DA2A83E3C900F8518D /* TokenTransfer.graphql.swift */; };
 		074322312A83E3CA00F8518D /* NftApproval.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321DB2A83E3C900F8518D /* NftApproval.graphql.swift */; };
 		074322322A83E3CA00F8518D /* NftBalance.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321DC2A83E3C900F8518D /* NftBalance.graphql.swift */; };
@@ -160,6 +158,10 @@
 		9F7898112A819D32004D5A98 /* WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; };
 		9F7898142A819D62004D5A98 /* WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; };
 		9F7898152A819D62004D5A98 /* WidgetsCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9F813E9E2AA8FB5700438D89 /* ActivityDetails.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F813E9D2AA8FB5700438D89 /* ActivityDetails.graphql.swift */; };
+		9F813EA02AA8FB7500438D89 /* TransactionDetails.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F813E9F2AA8FB7500438D89 /* TransactionDetails.graphql.swift */; };
+		9F813EA22AA8FB8C00438D89 /* SwapOrderDetails.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F813EA12AA8FB8C00438D89 /* SwapOrderDetails.graphql.swift */; };
+		9F813EA42AA8FBCF00438D89 /* TransactionType.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F813EA32AA8FBCF00438D89 /* TransactionType.graphql.swift */; };
 		9FCEBF002A95A8E00079EDDB /* RNWalletConnect.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FCEBEFE2A95A8E00079EDDB /* RNWalletConnect.m */; };
 		9FCEBF012A95A8E00079EDDB /* RNWalletConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FCEBEFF2A95A8E00079EDDB /* RNWalletConnect.swift */; };
 		9FCEBF042A95A99C0079EDDB /* RCTThemeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FCEBF032A95A99B0079EDDB /* RCTThemeModule.m */; };
@@ -325,7 +327,6 @@
 		074321AA2A83E3C900F8518D /* HistoryDuration.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDuration.graphql.swift; sourceTree = "<group>"; };
 		074321AB2A83E3C900F8518D /* TokenStandard.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenStandard.graphql.swift; sourceTree = "<group>"; };
 		074321AC2A83E3C900F8518D /* Currency.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Currency.graphql.swift; sourceTree = "<group>"; };
-		074321AD2A83E3C900F8518D /* ActivityType.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityType.graphql.swift; sourceTree = "<group>"; };
 		074321AE2A83E3C900F8518D /* Chain.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chain.graphql.swift; sourceTree = "<group>"; };
 		074321AF2A83E3C900F8518D /* TokenSortableField.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenSortableField.graphql.swift; sourceTree = "<group>"; };
 		074321B02A83E3C900F8518D /* TransactionDirection.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionDirection.graphql.swift; sourceTree = "<group>"; };
@@ -368,7 +369,6 @@
 		074321D62A83E3C900F8518D /* AssetActivity.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetActivity.graphql.swift; sourceTree = "<group>"; };
 		074321D72A83E3C900F8518D /* NftProfile.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NftProfile.graphql.swift; sourceTree = "<group>"; };
 		074321D82A83E3C900F8518D /* NftCollectionEdge.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NftCollectionEdge.graphql.swift; sourceTree = "<group>"; };
-		074321D92A83E3C900F8518D /* Transaction.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transaction.graphql.swift; sourceTree = "<group>"; };
 		074321DA2A83E3C900F8518D /* TokenTransfer.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenTransfer.graphql.swift; sourceTree = "<group>"; };
 		074321DB2A83E3C900F8518D /* NftApproval.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NftApproval.graphql.swift; sourceTree = "<group>"; };
 		074321DC2A83E3C900F8518D /* NftBalance.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NftBalance.graphql.swift; sourceTree = "<group>"; };
@@ -443,6 +443,10 @@
 		9BF90CF492394DF50D3BAF76 /* Pods-WidgetsCoreTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.debug.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9F3500812A8AA5890077BFC5 /* EXSplashScreen.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = EXSplashScreen.xcframework; path = "../../../node_modules/expo-splash-screen/ios/EXSplashScreen.xcframework"; sourceTree = "<group>"; };
 		9F3500832A8AAAF50077BFC5 /* libreact-native-splash-screen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-splash-screen.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F813E9D2AA8FB5700438D89 /* ActivityDetails.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityDetails.graphql.swift; sourceTree = "<group>"; };
+		9F813E9F2AA8FB7500438D89 /* TransactionDetails.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionDetails.graphql.swift; sourceTree = "<group>"; };
+		9F813EA12AA8FB8C00438D89 /* SwapOrderDetails.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwapOrderDetails.graphql.swift; sourceTree = "<group>"; };
+		9F813EA32AA8FBCF00438D89 /* TransactionType.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionType.graphql.swift; sourceTree = "<group>"; };
 		9FCEBEFD2A95A8E00079EDDB /* RNWalletConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNWalletConnect.h; path = Uniswap/WalletConnect/RNWalletConnect.h; sourceTree = "<group>"; };
 		9FCEBEFE2A95A8E00079EDDB /* RNWalletConnect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNWalletConnect.m; path = Uniswap/WalletConnect/RNWalletConnect.m; sourceTree = "<group>"; };
 		9FCEBEFF2A95A8E00079EDDB /* RNWalletConnect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RNWalletConnect.swift; path = Uniswap/WalletConnect/RNWalletConnect.swift; sourceTree = "<group>"; };
@@ -718,6 +722,7 @@
 		074321A72A83E3C900F8518D /* Unions */ = {
 			isa = PBXGroup;
 			children = (
+				9F813E9D2AA8FB5700438D89 /* ActivityDetails.graphql.swift */,
 				074321A82A83E3C900F8518D /* AssetChange.graphql.swift */,
 			);
 			path = Unions;
@@ -726,10 +731,10 @@
 		074321A92A83E3C900F8518D /* Enums */ = {
 			isa = PBXGroup;
 			children = (
+				9F813EA32AA8FBCF00438D89 /* TransactionType.graphql.swift */,
 				074321AA2A83E3C900F8518D /* HistoryDuration.graphql.swift */,
 				074321AB2A83E3C900F8518D /* TokenStandard.graphql.swift */,
 				074321AC2A83E3C900F8518D /* Currency.graphql.swift */,
-				074321AD2A83E3C900F8518D /* ActivityType.graphql.swift */,
 				074321AE2A83E3C900F8518D /* Chain.graphql.swift */,
 				074321AF2A83E3C900F8518D /* TokenSortableField.graphql.swift */,
 				074321B02A83E3C900F8518D /* TransactionDirection.graphql.swift */,
@@ -745,6 +750,8 @@
 		074321B62A83E3C900F8518D /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				9F813EA12AA8FB8C00438D89 /* SwapOrderDetails.graphql.swift */,
+				9F813E9F2AA8FB7500438D89 /* TransactionDetails.graphql.swift */,
 				074321B72A83E3C900F8518D /* Image.graphql.swift */,
 				074321B82A83E3C900F8518D /* NftOrderEdge.graphql.swift */,
 				074321B92A83E3C900F8518D /* NftApproveForAll.graphql.swift */,
@@ -779,7 +786,6 @@
 				074321D62A83E3C900F8518D /* AssetActivity.graphql.swift */,
 				074321D72A83E3C900F8518D /* NftProfile.graphql.swift */,
 				074321D82A83E3C900F8518D /* NftCollectionEdge.graphql.swift */,
-				074321D92A83E3C900F8518D /* Transaction.graphql.swift */,
 				074321DA2A83E3C900F8518D /* TokenTransfer.graphql.swift */,
 				074321DB2A83E3C900F8518D /* NftApproval.graphql.swift */,
 				074321DC2A83E3C900F8518D /* NftBalance.graphql.swift */,
@@ -1691,6 +1697,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				074322392A83E3CA00F8518D /* NftAssetTraitInput.graphql.swift in Sources */,
+				9F813EA42AA8FBCF00438D89 /* TransactionType.graphql.swift in Sources */,
 				074322342A83E3CA00F8518D /* SchemaConfiguration.swift in Sources */,
 				0743222A2A83E3CA00F8518D /* NftBalanceEdge.graphql.swift in Sources */,
 				0743223A2A83E3CA00F8518D /* NftAssetInput.graphql.swift in Sources */,
@@ -1731,7 +1738,9 @@
 				074322372A83E3CA00F8518D /* ContractInput.graphql.swift in Sources */,
 				0743221F2A83E3CA00F8518D /* PageInfo.graphql.swift in Sources */,
 				074322252A83E3CA00F8518D /* Query.graphql.swift in Sources */,
+				9F813EA22AA8FB8C00438D89 /* SwapOrderDetails.graphql.swift in Sources */,
 				074321F92A83E3CA00F8518D /* SelectWalletScreenQuery.graphql.swift in Sources */,
+				9F813E9E2AA8FB5700438D89 /* ActivityDetails.graphql.swift in Sources */,
 				0767E0382A65C8330042ADA2 /* Colors.swift in Sources */,
 				0743220C2A83E3CA00F8518D /* TransactionStatus.graphql.swift in Sources */,
 				074321EF2A83E3CA00F8518D /* TokenQuery.graphql.swift in Sources */,
@@ -1760,7 +1769,6 @@
 				074321F02A83E3CA00F8518D /* SearchPopularTokensQuery.graphql.swift in Sources */,
 				074322172A83E3CA00F8518D /* NftTransfer.graphql.swift in Sources */,
 				074322202A83E3CA00F8518D /* NftAssetEdge.graphql.swift in Sources */,
-				0743222F2A83E3CA00F8518D /* Transaction.graphql.swift in Sources */,
 				077E60392A85587800ABC4B9 /* TokensQuery.graphql.swift in Sources */,
 				0743223D2A83E3CA00F8518D /* IAmount.graphql.swift in Sources */,
 				074321F32A83E3CA00F8518D /* FavoriteTokenCardQuery.graphql.swift in Sources */,
@@ -1781,12 +1789,12 @@
 				074322082A83E3CA00F8518D /* NftStandard.graphql.swift in Sources */,
 				0743222C2A83E3CA00F8518D /* AssetActivity.graphql.swift in Sources */,
 				0743221C2A83E3CA00F8518D /* TokenBalance.graphql.swift in Sources */,
-				074322042A83E3CA00F8518D /* ActivityType.graphql.swift in Sources */,
 				074321FD2A83E3CA00F8518D /* TransactionHistoryUpdaterQuery.graphql.swift in Sources */,
 				07F136402A575EC00067004F /* DataQueries.swift in Sources */,
 				074322112A83E3CA00F8518D /* NftBalanceConnection.graphql.swift in Sources */,
 				0743221A2A83E3CA00F8518D /* TokenMarket.graphql.swift in Sources */,
 				074322322A83E3CA00F8518D /* NftBalance.graphql.swift in Sources */,
+				9F813EA02AA8FB7500438D89 /* TransactionDetails.graphql.swift in Sources */,
 				074321EC2A83E3CA00F8518D /* SpotPricesQuery.graphql.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
