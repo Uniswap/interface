@@ -10,6 +10,7 @@ import { Currency as GqlCurrency } from 'graphql/data/__generated__/types-and-ho
 import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import usePrevious from 'hooks/usePrevious'
 import { useCallback, useMemo } from 'react'
 
 type Nullish<T> = T | null | undefined
@@ -587,8 +588,19 @@ export function useFormatter() {
   const { data: localCurrencyConversionRate, isLoading: localCurrencyConversionRateIsLoading } =
     useLocalCurrencyConversionRate(activeLocalCurrency, activeLocalCurrencyIsUSD)
 
+  const previousSelectedCurrency = usePrevious(activeLocalCurrency)
+  const previousConversionRate = usePrevious(localCurrencyConversionRate)
+
+  const shouldFallbackToPrevious = !localCurrencyConversionRate && localCurrencyConversionRateIsLoading
   const shouldFallbackToUSD = !localCurrencyConversionRate && !localCurrencyConversionRateIsLoading
-  const currencyToFormatWith = shouldFallbackToUSD ? DEFAULT_LOCAL_CURRENCY : formatterLocalCurrency
+  const currencyToFormatWith = shouldFallbackToUSD
+    ? DEFAULT_LOCAL_CURRENCY
+    : shouldFallbackToPrevious
+    ? previousSelectedCurrency
+    : formatterLocalCurrency
+  const localCurrencyConversionRateToFormatWith = shouldFallbackToPrevious
+    ? previousConversionRate
+    : localCurrencyConversionRate
 
   const formatNumberWithLocales = useCallback(
     (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency' | 'conversionRate'>) =>
@@ -596,9 +608,9 @@ export function useFormatter() {
         ...options,
         locale: formatterLocale,
         localCurrency: currencyToFormatWith,
-        conversionRate: localCurrencyConversionRate,
+        conversionRate: localCurrencyConversionRateToFormatWith,
       }),
-    [currencyToFormatWith, formatterLocale, localCurrencyConversionRate]
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
   )
 
   const formatCurrencyAmountWithLocales = useCallback(
@@ -607,9 +619,9 @@ export function useFormatter() {
         ...options,
         locale: formatterLocale,
         localCurrency: currencyToFormatWith,
-        conversionRate: localCurrencyConversionRate,
+        conversionRate: localCurrencyConversionRateToFormatWith,
       }),
-    [currencyToFormatWith, formatterLocale, localCurrencyConversionRate]
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
   )
 
   return useMemo(
