@@ -89,7 +89,7 @@ const ProfileContent = () => {
           </LoadedAccountPage>
         ) : (
           <Center>
-            <ThemedText.HeadlineMedium lineHeight="36px" color="textSecondary" fontWeight="600" marginBottom="24px">
+            <ThemedText.HeadlineMedium lineHeight="36px" color="neutral2" fontWeight="535" marginBottom="24px">
               <Trans>No items to display</Trans>
             </ThemedText.HeadlineMedium>
             <ConnectWalletButton onClick={toggleWalletDrawer}>

@@ -1,5 +1,7 @@
 import { formatEther } from '@ethersproject/units'
-import { SquareArrowDownIcon, SquareArrowUpIcon, VerifiedIcon } from 'nft/components/icons'
+import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
+import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
+import { VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
 import { ethNumberStandardFormatter, volumeFormatter } from 'nft/utils'
@@ -31,7 +33,7 @@ const TruncatedSubHeader = styled(ThemedText.SubHeader)`
   text-overflow: ellipsis;
 `
 const TruncatedSubHeaderSmall = styled(ThemedText.SubHeaderSmall)`
-  color: ${({ theme }) => `${theme.textPrimary}`};
+  color: ${({ theme }) => `${theme.neutral1}`};
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -41,7 +43,7 @@ const RoundedImage = styled.div<{ src?: string }>`
   height: 36px;
   width: 36px;
   border-radius: 36px;
-  background: ${({ src, theme }) => (src ? `url(${src})` : theme.backgroundModule)};
+  background: ${({ src, theme }) => (src ? `url(${src})` : theme.surface2)};
   background-size: cover;
   background-position: center;
   flex-shrink: 0;
@@ -49,7 +51,7 @@ const RoundedImage = styled.div<{ src?: string }>`
 
 const ChangeCellContainer = styled.div<{ change: number }>`
   display: flex;
-  color: ${({ theme, change }) => (change >= 0 ? theme.accentSuccess : theme.accentFailure)};
+  color: ${({ theme, change }) => (change >= 0 ? theme.success : theme.critical)};
   justify-content: flex-end;
   align-items: center;
   gap: 2px;
@@ -157,13 +159,13 @@ export const VolumeCell = ({
 
 export const ChangeCell = ({ change, children }: { children?: ReactNode; change?: number }) => {
   const isMobile = useIsMobile()
-  const TextComponent = isMobile ? ThemedText.Caption : ThemedText.BodyPrimary
+  const TextComponent = isMobile ? ThemedText.BodySmall : ThemedText.BodyPrimary
   return (
     <ChangeCellContainer change={change ?? 0}>
       {!change || change > 0 ? (
-        <SquareArrowUpIcon width="20px" height="20px" />
+        <ArrowChangeUp width="16px" height="16px" />
       ) : (
-        <SquareArrowDownIcon width="20px" height="20px" />
+        <ArrowChangeDown width="16px" height="16px" />
       )}
       <TextComponent color="currentColor">{children || `${change ? Math.abs(Math.round(change)) : 0}%`}</TextComponent>
     </ChangeCellContainer>

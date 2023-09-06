@@ -11,7 +11,7 @@ import styled from 'styled-components'
 import { shortenAddress } from 'utils'
 
 const TR = styled.tr`
-  border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  border-bottom: ${({ theme }) => `1px solid ${theme.surface3}`};
   width: 100%;
 
   &:last-child {
@@ -20,8 +20,8 @@ const TR = styled.tr`
 `
 
 const TH = styled.th`
-  color: ${({ theme }) => theme.textSecondary};
-  font-weight: 600;
+  color: ${({ theme }) => theme.neutral2};
+  font-weight: 535;
   font-size: 14px;
   line-height: 20px;
   width: 20%;
@@ -72,7 +72,7 @@ const PriceContainer = styled.div`
 `
 
 const Link = styled.a`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   text-decoration: none;
 
   ${OpacityHoverState}

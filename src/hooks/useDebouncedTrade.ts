@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
@@ -22,7 +22,9 @@ export function useDebouncedTrade(
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
   routerPreferenceOverride?: RouterPreference.X,
-  account?: string
+  account?: string,
+  inputTax?: Percent,
+  outputTax?: Percent
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -34,7 +36,9 @@ export function useDebouncedTrade(
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
   routerPreferenceOverride?: RouterPreference.API | RouterPreference.CLIENT,
-  account?: string
+  account?: string,
+  inputTax?: Percent,
+  outputTax?: Percent
 ): {
   state: TradeState
   trade?: ClassicTrade
@@ -54,7 +58,9 @@ export function useDebouncedTrade(
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
   routerPreferenceOverride?: RouterPreference,
-  account?: string
+  account?: string,
+  inputTax?: Percent,
+  outputTax?: Percent
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -91,6 +97,8 @@ export function useDebouncedTrade(
     otherCurrency,
     routerPreferenceOverride ?? routerPreference,
     skipFetch,
-    account
+    account,
+    inputTax,
+    outputTax
   )
 }

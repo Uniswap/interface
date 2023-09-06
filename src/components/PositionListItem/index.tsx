@@ -28,16 +28,16 @@ const LinkRow = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   padding: 16px;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 535;
 
   & > div:not(:first-child) {
     text-align: center;
   }
   :hover {
-    background-color: ${({ theme }) => theme.hoverDefault};
+    background-color: ${({ theme }) => theme.deprecated_hoverDefault};
   }
 
   @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
@@ -65,22 +65,23 @@ const RangeLineItem = styled(DataLineItem)`
 const DoubleArrow = styled.span`
   font-size: 12px;
   margin: 0 2px;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
-const RangeText = styled(ThemedText.Caption)`
-  font-size: 12px !important;
+const RangeText = styled(ThemedText.BodySmall)`
+  font-size: 14px !important;
   word-break: break-word;
   padding: 0.25rem 0.25rem;
   border-radius: 8px;
 `
 
 const FeeTierText = styled(ThemedText.UtilityBadge)`
-  font-size: 10px !important;
-  margin-left: 14px !important;
+  font-size: 16px !important;
+  margin-left: 8px !important;
+  color: ${({ theme }) => theme.neutral3};
 `
-const ExtentsText = styled(ThemedText.Caption)`
-  color: ${({ theme }) => theme.textTertiary};
+const ExtentsText = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.neutral2};
   display: inline-block;
   line-height: 16px;
   margin-right: 4px !important;

@@ -34,8 +34,8 @@ const pulse = (color: string) => keyframes`
   }
 `
 const FocusedOutlineCard = styled(Card)<{ pulsing: boolean }>`
-  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accentAction)} 0.6s linear;
+  border: 1px solid ${({ theme }) => theme.surface3};
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accent1)} 0.6s linear;
   align-self: center;
 `
 
@@ -152,7 +152,7 @@ export default function FeeSelector({
                   <ThemedText.DeprecatedLabel>
                     <Trans>Fee tier</Trans>
                   </ThemedText.DeprecatedLabel>
-                  <ThemedText.DeprecatedMain fontWeight={400} fontSize="12px" textAlign="left">
+                  <ThemedText.DeprecatedMain fontWeight={485} fontSize="12px" textAlign="left">
                     <Trans>The % you will earn in fees.</Trans>
                   </ThemedText.DeprecatedMain>
                 </>

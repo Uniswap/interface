@@ -19,12 +19,12 @@ import { useTimeSince } from './parseRemote'
 import { Activity } from './types'
 
 const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   ${EllipsisStyle}
 `
 
-const StyledTimestamp = styled(ThemedText.Caption)`
-  color: ${({ theme }) => theme.textSecondary};
+const StyledTimestamp = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.neutral2};
   font-variant: small;
   font-feature-settings: 'tnum' on, 'lnum' on, 'ss02' on;
 `
@@ -79,7 +79,7 @@ export function ActivityRow({ activity }: { activity: Activity }) {
           </Row>
         }
         descriptor={
-          <ActivityRowDescriptor color="textSecondary">
+          <ActivityRowDescriptor color="neutral2">
             {descriptor}
             {ENSName ?? shortenAddress(otherAccount)}
           </ActivityRowDescriptor>

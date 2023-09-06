@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Price } from '@uniswap/sdk-core'
-import { useUSDPrice } from 'hooks/useUSDPrice'
+import { useLocalCurrencyPrice } from 'hooks/useLocalCurrencyPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
@@ -31,7 +31,9 @@ export default function TradePrice({ price }: TradePriceProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const { baseCurrency, quoteCurrency } = price
-  const { data: usdPrice } = useUSDPrice(tryParseCurrencyAmount('1', showInverted ? baseCurrency : quoteCurrency))
+  const { data: usdPrice } = useLocalCurrencyPrice(
+    tryParseCurrencyAmount('1', showInverted ? baseCurrency : quoteCurrency)
+  )
 
   const formattedPrice = useMemo(() => {
     try {
@@ -57,8 +59,15 @@ export default function TradePrice({ price }: TradePriceProps) {
     >
       <ThemedText.BodySmall>{text}</ThemedText.BodySmall>{' '}
       {usdPrice && (
-        <ThemedText.BodySmall color="textSecondary">
-          <Trans>({formatNumber(usdPrice, NumberType.FiatTokenPrice)})</Trans>
+        <ThemedText.BodySmall color="neutral2">
+          <Trans>
+            (
+            {formatNumber({
+              input: usdPrice,
+              type: NumberType.FiatTokenPrice,
+            })}
+            )
+          </Trans>
         </ThemedText.BodySmall>
       )}
     </StyledPriceContainer>

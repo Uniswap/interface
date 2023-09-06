@@ -10,8 +10,8 @@ import { textFadeIn } from 'theme/styles'
 import Resource from './Resource'
 
 const NoInfoAvailable = styled.span`
-  color: ${({ theme }) => theme.textTertiary};
-  font-weight: 400;
+  color: ${({ theme }) => theme.neutral3};
+  font-weight: 485;
   font-size: 16px;
 `
 const TokenDescriptionContainer = styled.div`
@@ -25,14 +25,14 @@ const TokenDescriptionContainer = styled.div`
 `
 
 const TruncateDescriptionButton = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
-  font-weight: 400;
+  color: ${({ theme }) => theme.neutral2};
+  font-weight: 485;
   font-size: 0.85em;
   padding-top: 0.5em;
 
   &:hover,
   &:focus {
-    color: ${({ theme }) => darken(0.1, theme.textSecondary)};
+    color: ${({ theme }) => darken(0.1, theme.neutral2)};
     cursor: pointer;
   }
 `

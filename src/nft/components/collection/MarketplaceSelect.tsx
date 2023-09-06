@@ -21,7 +21,7 @@ const FilterItemWrapper = styled(Row)`
   cursor: pointer;
   border-radius: 12px;
   &:hover {
-    background: ${({ theme }) => theme.backgroundInteractive};
+    background: ${({ theme }) => theme.surface2};
   }
 `
 
@@ -91,7 +91,7 @@ const MarketplaceItem = ({
 
   const checkbox = (
     <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
-      <Box as="span" color="textSecondary" marginLeft="4" paddingRight="12">
+      <Box as="span" color="neutral2" marginLeft="4" paddingRight="12">
         {count}
       </Box>
     </Checkbox>

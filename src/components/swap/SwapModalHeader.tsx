@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Column, { AutoColumn } from 'components/Column'
-import { useUSDPrice } from 'hooks/useUSDPrice'
+import { useLocalCurrencyPrice } from 'hooks/useLocalCurrencyPrice'
 import { InterfaceTrade } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
@@ -26,8 +26,8 @@ export default function SwapModalHeader({
   inputCurrency?: Currency
   allowedSlippage: Percent
 }) {
-  const fiatValueInput = useUSDPrice(trade.inputAmount)
-  const fiatValueOutput = useUSDPrice(trade.outputAmount)
+  const fiatValueInput = useLocalCurrencyPrice(trade.inputAmount)
+  const fiatValueOutput = useLocalCurrencyPrice(trade.postTaxOutputAmount)
 
   return (
     <HeaderContainer gap="sm">
@@ -42,12 +42,12 @@ export default function SwapModalHeader({
         <SwapModalHeaderAmount
           field={Field.OUTPUT}
           label={<Trans>You receive</Trans>}
-          amount={trade.outputAmount}
+          amount={trade.postTaxOutputAmount}
           currency={trade.outputAmount.currency}
           usdAmount={fiatValueOutput.data}
           tooltipText={
             trade.tradeType === TradeType.EXACT_INPUT ? (
-              <ThemedText.Caption>
+              <ThemedText.BodySmall>
                 <Trans>
                   Output is estimated. You will receive at least{' '}
                   <b>
@@ -55,9 +55,9 @@ export default function SwapModalHeader({
                   </b>{' '}
                   or the transaction will revert.
                 </Trans>
-              </ThemedText.Caption>
+              </ThemedText.BodySmall>
             ) : (
-              <ThemedText.Caption>
+              <ThemedText.BodySmall>
                 <Trans>
                   Input is estimated. You will sell at most{' '}
                   <b>
@@ -65,7 +65,7 @@ export default function SwapModalHeader({
                   </b>{' '}
                   or the transaction will revert.
                 </Trans>
-              </ThemedText.Caption>
+              </ThemedText.BodySmall>
             )
           }
         />
