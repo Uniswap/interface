@@ -132,7 +132,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     refetchOnMountOrArgChange: 2 * 60,
   })
 
-  const tradeResult = fastTradeResult ?? standardTradeResult
+  const tradeResult = standardTradeResult ?? fastTradeResult
 
   const isFastTradeFetching = fastTradeCurrentData !== fastTradeResult || !fastTradeCurrentData
   const isStandardTradeFetching = standardTradeCurrentData !== standardTradeResult || !standardTradeCurrentData
