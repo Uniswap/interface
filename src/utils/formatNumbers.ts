@@ -6,6 +6,8 @@ import {
 } from 'constants/localCurrencies'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
+import { Currency as GqlCurrency } from 'graphql/data/__generated__/types-and-hooks'
+import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useCallback, useMemo } from 'react'
@@ -362,12 +364,18 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
 }
 
-function getFormatterRule(input: number, type: NumberType): FormatterRule {
+function getFormatterRule(input: number, type: NumberType, conversionRate?: number): FormatterRule {
   const rules = TYPE_TO_FORMATTER_RULES[type]
   for (const rule of rules) {
+    let convertedInput = input
+
+    if (rule.formatterOptions.currency && conversionRate) {
+      convertedInput *= conversionRate
+    }
+
     if (
-      (rule.exact !== undefined && input === rule.exact) ||
-      (rule.upperBound !== undefined && input < rule.upperBound)
+      (rule.exact !== undefined && convertedInput === rule.exact) ||
+      (rule.upperBound !== undefined && convertedInput < rule.upperBound)
     ) {
       return rule
     }
@@ -382,6 +390,7 @@ interface FormatNumberOptions {
   placeholder?: string
   locale?: SupportedLocale
   localCurrency?: SupportedLocalCurrency
+  conversionRate?: number
 }
 
 export function formatNumber({
@@ -390,16 +399,18 @@ export function formatNumber({
   placeholder = '-',
   locale = DEFAULT_LOCALE,
   localCurrency = DEFAULT_LOCAL_CURRENCY,
+  conversionRate,
 }: FormatNumberOptions): string {
   if (input === null || input === undefined) {
     return placeholder
   }
 
-  const { hardCodedInput, formatterOptions } = getFormatterRule(input, type)
+  const { hardCodedInput, formatterOptions } = getFormatterRule(input, type, conversionRate)
 
   if (formatterOptions.currency) {
     formatterOptions.currency = localCurrency
     formatterOptions.currencyDisplay = LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE[localCurrency]
+    input = conversionRate ? input * conversionRate : input
   }
 
   if (!hardCodedInput) {
@@ -442,6 +453,7 @@ interface FormatCurrencyAmountOptions {
   placeholder?: string
   locale?: SupportedLocale
   localCurrency?: SupportedLocalCurrency
+  conversionRate?: number
 }
 
 export function formatCurrencyAmount({
@@ -450,6 +462,7 @@ export function formatCurrencyAmount({
   placeholder,
   locale = DEFAULT_LOCALE,
   localCurrency = DEFAULT_LOCAL_CURRENCY,
+  conversionRate,
 }: FormatCurrencyAmountOptions): string {
   return formatNumber({
     input: amount ? parseFloat(amount.toSignificant()) : undefined,
@@ -457,22 +470,42 @@ export function formatCurrencyAmount({
     placeholder,
     locale,
     localCurrency,
+    conversionRate,
   })
 }
 
 export function useFormatter() {
+  const activeLocalCurrency = useActiveLocalCurrency()
   const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
 
+  const activeLocalCurrencyIsUSD = activeLocalCurrency === GqlCurrency.Usd
+  const { data: localCurrencyConversionRate } = useLocalCurrencyConversionRate(
+    activeLocalCurrency,
+    activeLocalCurrencyIsUSD
+  )
+
+  const currencyToFormatWith = localCurrencyConversionRate ? formatterLocalCurrency : DEFAULT_LOCAL_CURRENCY
+
   const formatNumberWithLocales = useCallback(
-    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency'>) =>
-      formatNumber({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
-    [formatterLocalCurrency, formatterLocale]
+    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency' | 'conversionRate'>) =>
+      formatNumber({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: localCurrencyConversionRate,
+      }),
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRate]
   )
 
   const formatCurrencyAmountWithLocales = useCallback(
-    (options: Omit<FormatCurrencyAmountOptions, 'locale' | 'localCurrency'>) =>
-      formatCurrencyAmount({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
-    [formatterLocalCurrency, formatterLocale]
+    (options: Omit<FormatCurrencyAmountOptions, 'locale' | 'localCurrency' | 'conversionRate'>) =>
+      formatCurrencyAmount({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: localCurrencyConversionRate,
+      }),
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRate]
   )
 
   return useMemo(
