@@ -415,44 +415,6 @@ export function formatNumber({
   return (prefix ?? '') + new Intl.NumberFormat(locale, formatterOptions).format(hardCodedInputValue)
 }
 
-function useFormatterLocales(): {
-  formatterLocale: SupportedLocale
-  formatterLocalCurrency: SupportedLocalCurrency
-} {
-  const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
-  const activeLocale = useActiveLocale()
-  const activeLocalCurrency = useActiveLocalCurrency()
-
-  if (currencyConversionEnabled) {
-    return {
-      formatterLocale: activeLocale,
-      formatterLocalCurrency: activeLocalCurrency,
-    }
-  }
-
-  return {
-    formatterLocale: DEFAULT_LOCALE,
-    formatterLocalCurrency: DEFAULT_LOCAL_CURRENCY,
-  }
-}
-
-export function useFormatter() {
-  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
-
-  const formatNumberWithLocales = useCallback(
-    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency'>) =>
-      formatNumber({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
-    [formatterLocalCurrency, formatterLocale]
-  )
-
-  return useMemo(
-    () => ({
-      formatNumber: formatNumberWithLocales,
-    }),
-    [formatNumberWithLocales]
-  )
-}
-
 export function formatCurrencyAmount(
   amount: Nullish<CurrencyAmount<Currency>>,
   type: NumberType = NumberType.TokenNonTx,
@@ -566,4 +528,43 @@ export function formatReviewSwapCurrencyAmount(amount: CurrencyAmount<Currency>)
     formattedAmount = formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
   }
   return formattedAmount
+}
+
+function useFormatterLocales(): {
+  formatterLocale: SupportedLocale
+  formatterLocalCurrency: SupportedLocalCurrency
+} {
+  const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
+  const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
+
+  if (currencyConversionEnabled) {
+    return {
+      formatterLocale: activeLocale,
+      formatterLocalCurrency: activeLocalCurrency,
+    }
+  }
+
+  return {
+    formatterLocale: DEFAULT_LOCALE,
+    formatterLocalCurrency: DEFAULT_LOCAL_CURRENCY,
+  }
+}
+
+// used to get the appropriate formatter functions with the correct locales passed into them
+export function useFormatter() {
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+
+  const formatNumberWithLocales = useCallback(
+    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency'>) =>
+      formatNumber({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
+    [formatterLocalCurrency, formatterLocale]
+  )
+
+  return useMemo(
+    () => ({
+      formatNumber: formatNumberWithLocales,
+    }),
+    [formatNumberWithLocales]
+  )
 }
