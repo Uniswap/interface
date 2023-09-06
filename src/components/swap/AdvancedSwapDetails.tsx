@@ -73,10 +73,10 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           >
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
               <ThemedText.BodySmall>
-                {`${trade.totalGasUseEstimateUSD ? '~' : ''}${formatNumber(
-                  trade.totalGasUseEstimateUSD,
-                  NumberType.FiatGasPrice
-                )}`}
+                {`${trade.totalGasUseEstimateUSD ? '~' : ''}${formatNumber({
+                  input: trade.totalGasUseEstimateUSD,
+                  type: NumberType.FiatGasPrice,
+                })}`}
               </ThemedText.BodySmall>
             </TextWithLoadingPlaceholder>
           </MouseoverTooltip>
