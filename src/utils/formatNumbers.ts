@@ -415,27 +415,6 @@ export function formatNumber({
   return (prefix ?? '') + new Intl.NumberFormat(locale, formatterOptions).format(hardCodedInputValue)
 }
 
-export function useFormatterLocales(): {
-  formatterLocale: SupportedLocale
-  formatterLocalCurrency: SupportedLocalCurrency
-} {
-  const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
-  const activeLocale = useActiveLocale()
-  const activeLocalCurrency = useActiveLocalCurrency()
-
-  if (currencyConversionEnabled) {
-    return {
-      formatterLocale: activeLocale,
-      formatterLocalCurrency: activeLocalCurrency,
-    }
-  }
-
-  return {
-    formatterLocale: DEFAULT_LOCALE,
-    formatterLocalCurrency: DEFAULT_LOCAL_CURRENCY,
-  }
-}
-
 interface FormatCurrencyAmountOptions {
   amount: Nullish<CurrencyAmount<Currency>>
   type?: NumberType
@@ -458,30 +437,6 @@ export function formatCurrencyAmount({
     locale,
     localCurrency,
   })
-}
-
-export function useFormatter() {
-  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
-
-  const formatNumberWithLocales = useCallback(
-    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency'>) =>
-      formatNumber({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
-    [formatterLocalCurrency, formatterLocale]
-  )
-
-  const formatCurrencyAmountWithLocales = useCallback(
-    (options: Omit<FormatCurrencyAmountOptions, 'locale' | 'localCurrency'>) =>
-      formatCurrencyAmount({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
-    [formatterLocalCurrency, formatterLocale]
-  )
-
-  return useMemo(
-    () => ({
-      formatNumber: formatNumberWithLocales,
-      formatCurrencyAmount: formatCurrencyAmountWithLocales,
-    }),
-    [formatCurrencyAmountWithLocales, formatNumberWithLocales]
-  )
 }
 
 export function formatPriceImpact(priceImpact: Percent | undefined): string {
@@ -589,4 +544,49 @@ export function formatReviewSwapCurrencyAmount(amount: CurrencyAmount<Currency>)
     formattedAmount = formatCurrencyAmount({ amount, type: NumberType.SwapTradeAmount })
   }
   return formattedAmount
+}
+
+export function useFormatterLocales(): {
+  formatterLocale: SupportedLocale
+  formatterLocalCurrency: SupportedLocalCurrency
+} {
+  const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
+  const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
+
+  if (currencyConversionEnabled) {
+    return {
+      formatterLocale: activeLocale,
+      formatterLocalCurrency: activeLocalCurrency,
+    }
+  }
+
+  return {
+    formatterLocale: DEFAULT_LOCALE,
+    formatterLocalCurrency: DEFAULT_LOCAL_CURRENCY,
+  }
+}
+
+export function useFormatter() {
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+
+  const formatNumberWithLocales = useCallback(
+    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency'>) =>
+      formatNumber({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
+    [formatterLocalCurrency, formatterLocale]
+  )
+
+  const formatCurrencyAmountWithLocales = useCallback(
+    (options: Omit<FormatCurrencyAmountOptions, 'locale' | 'localCurrency'>) =>
+      formatCurrencyAmount({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
+    [formatterLocalCurrency, formatterLocale]
+  )
+
+  return useMemo(
+    () => ({
+      formatNumber: formatNumberWithLocales,
+      formatCurrencyAmount: formatCurrencyAmountWithLocales,
+    }),
+    [formatCurrencyAmountWithLocales, formatNumberWithLocales]
+  )
 }
