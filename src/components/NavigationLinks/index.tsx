@@ -178,6 +178,19 @@ export default function NavigationLinks() {
             <Trans>Perpetuals</Trans>
           </Text>
         </StyledNavLinkAlt>
+        <StyledNavLinkAlt
+          id={`swap-nav-link`}
+          onClick={() =>
+            window.open(
+              'https://apy.plasma.finance/#/quadrat/strategy/0x1Ce5B6cC76e49F2fad771c8C01607a9d987620E8?chainId=10',
+              '_blank'
+            )
+          }
+        >
+          <Text fontSize={16} fontWeight={400}>
+            <Trans>Liquidity Mining</Trans>
+          </Text>
+        </StyledNavLinkAlt>
       </NavLinks>
     </NavFrame>
   )
