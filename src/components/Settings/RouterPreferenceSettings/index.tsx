@@ -31,7 +31,8 @@ export default function RouterPreferenceSettings() {
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
   const uniswapXInEffect =
-    routerPreference === RouterPreference.X || (isUniswapXDefaultEnabled && !userDisabledUniswapX)
+    routerPreference === RouterPreference.X ||
+    (routerPreference !== RouterPreference.CLIENT && isUniswapXDefaultEnabled && !userDisabledUniswapX)
 
   return (
     <>
