@@ -290,6 +290,70 @@ export type TradeResult =
       latencyMs?: number
     }
 
+export interface OpenOceanQuoteResponse {
+  data: Data
+  code: number
+}
+interface Data {
+  chainId: number
+  inToken: InToken
+  outToken: OutToken
+  inAmount: string
+  outAmount: string
+  estimatedGas: string
+  dexes: Dex[]
+  path: Path
+  useTime: number
+  save: number
+}
+
+interface InToken {
+  symbol: string
+  name: string
+  address: string
+  decimals: number
+}
+
+interface OutToken {
+  address: string
+  decimals: number
+  symbol: string
+  name: string
+}
+
+interface Dex {
+  dexIndex: number
+  dexCode: string
+  swapAmount: string
+}
+
+interface Path {
+  from: string
+  to: string
+  parts: number
+  routes: Route[]
+}
+
+export interface Route {
+  parts: number
+  percentage: number
+  subRoutes: SubRoute[]
+}
+
+interface SubRoute {
+  from: string
+  to: string
+  parts: number
+  dexes: Dex2[]
+}
+
+interface Dex2 {
+  dex: string
+  id: string
+  parts: number
+  percentage: number
+}
+
 export enum PoolType {
   V2Pool = 'v2-pool',
   V3Pool = 'v3-pool',

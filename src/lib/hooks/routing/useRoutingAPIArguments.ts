@@ -1,5 +1,5 @@
-import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@kinetix/sdk-core'
+import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { useForceUniswapXOn } from 'featureFlags/flags/forceUniswapXOn'
 import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
@@ -41,7 +41,8 @@ export function useRoutingAPIArguments({
         ? skipToken
         : {
             account,
-            amount: amount.quotient.toString(),
+            amount: amount.toExact(),
+            // amount: amount.quotient.toString(),
             tokenInAddress: currencyAddressForSwapQuote(tokenIn),
             tokenInChainId: tokenIn.chainId,
             tokenInDecimals: tokenIn.wrapped.decimals,
