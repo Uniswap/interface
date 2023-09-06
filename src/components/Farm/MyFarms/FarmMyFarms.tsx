@@ -149,8 +149,8 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
     .reduce<{ [key: string]: any }>((acc, item) => {
       const stakedAmount = getStakedAmount(item, stakedAmounts)
       if (stakedAmount > 0) {
-        const token0 = chainId ? getTokenFromAddress(item.token0Address, chainId, tokenMap, []) : null
-        const token1 = chainId ? getTokenFromAddress(item.token1Address, chainId, tokenMap, []) : null
+        const token0 = chainId ? getTokenFromAddress(item.token0Address, tokenMap, []) : null
+        const token1 = chainId ? getTokenFromAddress(item.token1Address, tokenMap, []) : null
         acc.push({ ...item, stakedAmount, token0, token1 })
       }
       return acc

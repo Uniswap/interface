@@ -1,10 +1,11 @@
 // import { Price } from '@pollum-io/sdk-core'
-import { Currency, Price } from '@pollum-io/sdk-core'
+import { Currency, Price, Token } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
 import { Pair } from '@pollum-io/v1-sdk'
+import { TokenList } from '@uniswap/token-lists'
 import { TokenAmount } from 'graphql/utils/types'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { Presets } from 'state/mint/v3/reducer'
-import { Token } from 'types/v3'
 
 import { USDC_ROLLUX, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
@@ -80,6 +81,33 @@ export interface GammaPair {
   masterChefIndex?: number
 }
 
+export interface GammaPairTokens {
+  address: string
+  title: string
+  type: Presets
+  token0Address: string
+  token0:
+    | Token
+    | {
+        token: WrappedTokenInfo
+        list?: TokenList
+      }
+  token1Address: string
+  token1:
+    | Token
+    | {
+        token: WrappedTokenInfo
+        list?: TokenList
+      }
+  ableToFarm?: boolean
+  pid?: number
+}
+
+// export interface itemGammaToken extends GammaPair {
+//   token0: Token
+//   token1: Token
+// }
+
 interface Returns {
   daily: {
     feeApr: number
@@ -143,6 +171,7 @@ export const GammaPairs = {
         token0Address: '0x4200000000000000000000000000000000000006',
         token1Address: '0x48023b16c3e81aa7f6effbdeb35bb83f4f31a8fd',
         ableToFarm: true,
+        feerTier: 500,
         pid: 0,
       },
       // {

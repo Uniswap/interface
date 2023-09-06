@@ -4,29 +4,27 @@ import LoadingGifLight from 'assets/images/lightLoading.gif'
 import LoadingGif from 'assets/images/loading.gif'
 import { LoaderGif } from 'components/Icons/LoadingSpinner'
 import { GAMMA_MASTERCHEF_ADDRESSES } from 'constants/addresses'
-// import { useSingleCallResult } from 'state/multicall/v3/hooks';
 import { getGammaData, getGammaRewards } from 'graphql/utils/util'
-// import {
-//   getAllGammaPairs,
-//   getGammaData,
-//   getGammaRewards,
-//   getTokenFromAddress,
-// } from 'utils';
-// import { useActiveWeb3React } from 'hooks';
-// import { useSelectedTokenList } from 'state/lists/hooks';
-// import { Token } from '@uniswap/sdk';
-// import { GAMMA_MASTERCHEF_ADDRESSES } from 'constants/v3/addresses';
-// import { useUSDCPricesFromAddresses } from 'utils/useUSDCPrice';
 import React, { useEffect, useMemo, useState } from 'react'
 import { Frown } from 'react-feather'
 import { useQuery } from 'react-query'
 import { useCombinedActiveList } from 'state/lists/hooks'
+import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { getTokenFromAddress, useUSDCPricesFromAddresses } from 'utils/farmUtils'
 
 import { GammaPairs, GlobalData } from '../constants'
 import { checkCondition, sortFarms } from '../utils'
 import GammaFarmCard from './GammaFarmCard'
+
+const NoFarmsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  flex-direction: column;
+  align-items: center;
+`
 
 const GammaFarmsPage: React.FC<{
   farmFilter: string
@@ -124,8 +122,8 @@ const GammaFarmsPage: React.FC<{
   const filteredFarms = allGammaFarms
     .map((item) => {
       if (chainId) {
-        const token0 = getTokenFromAddress(item.token0Address, chainId, tokenMap, [])
-        const token1 = getTokenFromAddress(item.token1Address, chainId, tokenMap, [])
+        const token0 = getTokenFromAddress(item?.token0Address, tokenMap, [])
+        const token1 = getTokenFromAddress(item?.token1Address, tokenMap, [])
         return { ...item, token0: token0 ?? null, token1: token1 ?? null }
       }
       return { ...item, token0: null, token1: null }
@@ -142,37 +140,31 @@ const GammaFarmsPage: React.FC<{
           <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="1.5rem" />
         </div>
       ) : filteredFarms.length === 0 ? (
-        <div className="flex flex-col items-center" style={{ padding: '16px 0' }}>
+        <NoFarmsContainer>
           <Frown size="2rem" stroke="white" />
           <p style={{ marginTop: 12 }}>noGammaFarms</p>
-        </div>
-      ) : !gammaFarmsLoading && filteredFarms.length > 0 && chainId ? (
-        <div>
-          {filteredFarms.map((farm: any) => {
-            const gfMasterChefAddress = GAMMA_MASTERCHEF_ADDRESSES[farm.masterChefIndex ?? 0][chainId]
-              ? GAMMA_MASTERCHEF_ADDRESSES[farm.masterChefIndex ?? 0][chainId].toLowerCase()
-              : undefined
-            return (
-              <div style={{ marginBottom: 2 }} key={farm.address}>
-                <GammaFarmCard
-                  token0={farm.token0}
-                  token1={farm.token1}
-                  pairData={farm}
-                  data={gammaData ? gammaData[farm.address.toLowerCase()] : undefined}
-                  rewardData={
-                    gammaRewards &&
-                    gfMasterChefAddress &&
-                    gammaRewards[gfMasterChefAddress] &&
-                    gammaRewards[gfMasterChefAddress]['pools']
-                      ? gammaRewards[gfMasterChefAddress]['pools'][farm.address.toLowerCase()]
-                      : undefined
-                  }
-                />
-              </div>
-            )
-          })}
-        </div>
-      ) : null}
+        </NoFarmsContainer>
+      ) : (
+        !gammaFarmsLoading &&
+        filteredFarms.length > 0 && (
+          <div>
+            {filteredFarms.map((farm: any) => {
+              const gmMasterChef = GAMMA_MASTERCHEF_ADDRESSES[ChainId.ROLLUX].toLowerCase()
+              return (
+                <div style={{ marginBottom: 2 }} key={farm.address}>
+                  <GammaFarmCard
+                    token0={farm.token0}
+                    token1={farm.token1}
+                    pairData={farm}
+                    data={gammaData ? gammaData[farm.address.toLowerCase()] : undefined}
+                    rewardData={gammaRewards?.[gmMasterChef]?.['pools']?.[farm.address.toLowerCase()] ?? undefined}
+                  />
+                </div>
+              )
+            })}
+          </div>
+        )
+      )}
     </div>
   )
 }

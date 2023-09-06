@@ -2,8 +2,9 @@ import { Token } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
 import { GAMMA_MASTERCHEF_ADDRESSES } from 'constants/addresses'
 import { ParsedQs } from 'qs'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-import { GammaPair, GlobalConst } from './constants'
+import { GammaPairTokens, GlobalConst } from './constants'
 
 const { v3FarmSortBy } = GlobalConst.utils
 
@@ -114,11 +115,6 @@ export const buildRedirectPath = (currentPath: string, parsedQuery: ParsedQs, st
   return `${currentPath}${queryDelimiter}farmStatus=${status}`
 }
 
-export interface itemGammaToken extends GammaPair {
-  token0: Token
-  token1: Token
-}
-
 interface Global {
   stableCoins: {
     570: Token[]
@@ -131,41 +127,62 @@ interface Global {
   }
 }
 
-export const doesItemMatchSearch = (item: itemGammaToken, search: string) => {
+export const doesItemMatchSearch = (item: GammaPairTokens, search: string) => {
+  const getAddress = (token: Token | { token: WrappedTokenInfo }): string => {
+    return token instanceof Token ? token.address : token.token.address
+  }
+
+  const getSymbol = (token: Token | { token: WrappedTokenInfo }): string => {
+    return token instanceof Token ? token.symbol ?? '' : token.token.symbol ?? ''
+  }
+
   return (
     item.title.toLowerCase().includes(search.toLowerCase()) ||
-    (item.token0?.symbol?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-    (item.token0?.address.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-    (item.token1?.symbol?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-    (item.token1?.address.toLowerCase().includes(search.toLowerCase()) ?? false)
+    (getSymbol(item.token0).toLowerCase().includes(search.toLowerCase()) ?? false) ||
+    (getAddress(item.token0).toLowerCase().includes(search.toLowerCase()) ?? false) ||
+    (getSymbol(item.token1).toLowerCase().includes(search.toLowerCase()) ?? false) ||
+    (getAddress(item.token1).toLowerCase().includes(search.toLowerCase()) ?? false)
   )
 }
 
-export const doesItemMatchFilter = (item: itemGammaToken, farmFilter: string, GlobalData: Global) => {
-  const blueChipCondition =
-    GlobalData.blueChips[570].some((token) => item.token0?.address.toLowerCase() === token?.address.toLowerCase()) &&
-    GlobalData.blueChips[570].some((token) => item.token1?.address.toLowerCase() === token?.address.toLowerCase())
-
-  const stableCoinCondition =
-    GlobalData.stableCoins[570].some((token) => item.token0?.address.toLowerCase() === token.address.toLowerCase()) &&
-    GlobalData.stableCoins[570].some((token) => item.token1?.address.toLowerCase() === token.address.toLowerCase())
-
-  const stableLPCondition = GlobalData.stablePairs[570].some(
-    (tokens) =>
-      tokens.some((token) => item.token0?.address.toLowerCase() === token.address.toLowerCase()) &&
-      tokens.some((token) => item.token1?.address.toLowerCase() === token.address.toLowerCase())
-  )
+export const doesItemMatchFilter = (item: GammaPairTokens, farmFilter: string, GlobalData: Global) => {
+  const { blueChips, stableCoins, stablePairs } = GlobalData
   const { v3FarmFilter } = GlobalConst.utils
 
-  return farmFilter === v3FarmFilter.blueChip
-    ? blueChipCondition
-    : farmFilter === v3FarmFilter.stableCoin
-    ? stableCoinCondition
-    : farmFilter === v3FarmFilter.stableLP
-    ? stableLPCondition
-    : farmFilter === v3FarmFilter.otherLP
-    ? !blueChipCondition && !stableCoinCondition && !stableLPCondition
-    : true
+  const getAddress = (token: Token | { token: WrappedTokenInfo }): string => {
+    return token instanceof Token ? token.address : token.token.address
+  }
+
+  const token0Address = getAddress(item.token0).toLowerCase()
+  const token1Address = getAddress(item.token1).toLowerCase()
+
+  const isAddressInList = (address: string, list?: Token[]): boolean => {
+    return list?.some((token) => address === token.address.toLowerCase()) ?? false
+  }
+
+  const filteredTokens0: Token[] = blueChips[ChainId.ROLLUX].filter((token): token is Token => token !== undefined)
+
+  const blueChipCondition =
+    isAddressInList(token0Address, filteredTokens0) && isAddressInList(token1Address, filteredTokens0)
+  const stableCoinCondition =
+    isAddressInList(token0Address, stableCoins[ChainId.ROLLUX]) &&
+    isAddressInList(token1Address, stableCoins[ChainId.ROLLUX])
+  const stableLPCondition = stablePairs[ChainId.ROLLUX].some(
+    (tokens) => isAddressInList(token0Address, tokens) && isAddressInList(token1Address, tokens)
+  )
+
+  switch (farmFilter) {
+    case v3FarmFilter.blueChip:
+      return blueChipCondition
+    case v3FarmFilter.stableCoin:
+      return stableCoinCondition
+    case v3FarmFilter.stableLP:
+      return stableLPCondition
+    case v3FarmFilter.otherLP:
+      return !blueChipCondition && !stableCoinCondition && !stableLPCondition
+    default:
+      return true
+  }
 }
 
 export const gammaRewardTokenAddresses = (gammaRewards: any) =>
@@ -262,15 +279,11 @@ export const sortFarms = (
 
 const includesIgnoreCase = (str: string, search: string) => str?.toLowerCase().includes(search.toLowerCase())
 
-const findToken = (tokens: any, itemToken: any) =>
-  tokens.find((token: any) => itemToken && token?.address.toLowerCase() === itemToken.address.toLowerCase())
+const findToken = (tokens: any, itemToken: any) => {
+  return tokens?.find((token: any) => itemToken && token?.address?.toLowerCase() === itemToken.address?.toLowerCase())
+}
 
 export const checkCondition = (item: any, search: string, GlobalData: any, farmFilter: string) => {
-  console.log('farmFilter', farmFilter)
-  console.log('GlobalData', GlobalData)
-  console.log('search', search)
-  console.log('item', item)
-
   const searchCondition =
     includesIgnoreCase(item.token0?.symbol, search) ||
     includesIgnoreCase(item.token0?.address, search) ||

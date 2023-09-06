@@ -1,4 +1,5 @@
 import { TransactionReceipt } from '@ethersproject/providers'
+import { Token } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
@@ -6,7 +7,6 @@ import { useDispatch } from 'react-redux'
 import { useAddPopup } from 'state/application/hooks'
 import { TokenAddressMap } from 'state/lists/hooks'
 import { finalizeTransaction } from 'state/transactions/reducer'
-import { Token } from 'types/v3'
 
 export interface Call {
   address: string
@@ -62,21 +62,16 @@ export function useUSDCPricesFromAddresses(addressArray: string[]) {
   return prices
 }
 
-export function getTokenFromAddress(
-  tokenAddress: string,
-  chainId: ChainId,
-  tokenMap: TokenAddressMap,
-  tokens: Token[]
-) {
-  const tokenIndex = Object.keys(tokenMap[chainId]).findIndex(
+export function getTokenFromAddress(tokenAddress: string, tokenMap: TokenAddressMap, tokens: Token[]) {
+  const tokenIndex = Object.keys(tokenMap[ChainId.ROLLUX]).findIndex(
     (address) => address.toLowerCase() === tokenAddress.toLowerCase()
   )
-  if (tokenIndex === -1) {
-    const token = tokens.find((item) => item.address.toLowerCase() === tokenAddress.toLowerCase())
-    return token
+
+  if (tokens.length > 0 && tokenIndex === -1) {
+    return tokens.find((item) => item.address.toLowerCase() === tokenAddress.toLowerCase())
   }
 
-  return Object.values(tokenMap[chainId])[tokenIndex]
+  return Object.values(tokenMap[ChainId.ROLLUX])[tokenIndex]
 }
 
 // export function formatTokenAmount(amount?: TokenAmount | CurrencyAmount<Currency>, digits = 3) {

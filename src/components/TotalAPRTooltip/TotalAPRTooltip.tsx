@@ -3,7 +3,8 @@
 import { formatNumber } from '@uniswap/conedison/format'
 import Tooltip from 'components/Tooltip'
 import React from 'react'
-import { Box } from 'react-feather'
+import { Box } from 'rebass'
+// import { Box } from 'react-feather'
 // import { formatNumber } from 'utils'
 
 interface TotalAPRToolTipProps {

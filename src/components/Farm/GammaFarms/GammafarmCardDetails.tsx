@@ -92,7 +92,7 @@ const GammaFarmCardDetails: React.FC<{
     .reduce<{ token: Token; amount: number }[]>((rewardArray, callData, index) => {
       const reward = rewards.length > 0 ? rewards[index] : undefined
       if (chainId && reward && tokenMap) {
-        const rewardToken = getTokenFromAddress(reward.rewardToken, chainId, tokenMap, [])
+        const rewardToken = getTokenFromAddress(reward.rewardToken, tokenMap, [])
 
         if (rewardToken) {
           const existingRewardIndex = rewardArray.findIndex(
