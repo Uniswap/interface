@@ -68,6 +68,9 @@ export const fastRoutingApi = createApi({
             method: 'GET',
             url: '/foobar',
             params,
+            headers: {
+              Connection: 'keep-alive',
+            },
           })
 
           if (amount === undefined || tokenInAddress === undefined || tokenOutAddress === undefined) {
