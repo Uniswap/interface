@@ -426,27 +426,6 @@ export function formatNumber({
   return (prefix ?? '') + new Intl.NumberFormat(locale, formatterOptions).format(hardCodedInputValue)
 }
 
-export function useFormatterLocales(): {
-  formatterLocale: SupportedLocale
-  formatterLocalCurrency: SupportedLocalCurrency
-} {
-  const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
-  const activeLocale = useActiveLocale()
-  const activeLocalCurrency = useActiveLocalCurrency()
-
-  if (currencyConversionEnabled) {
-    return {
-      formatterLocale: activeLocale,
-      formatterLocalCurrency: activeLocalCurrency,
-    }
-  }
-
-  return {
-    formatterLocale: DEFAULT_LOCALE,
-    formatterLocalCurrency: DEFAULT_LOCAL_CURRENCY,
-  }
-}
-
 interface FormatCurrencyAmountOptions {
   amount: Nullish<CurrencyAmount<Currency>>
   type?: NumberType
@@ -472,49 +451,6 @@ export function formatCurrencyAmount({
     localCurrency,
     conversionRate,
   })
-}
-
-export function useFormatter() {
-  const activeLocalCurrency = useActiveLocalCurrency()
-  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
-
-  const activeLocalCurrencyIsUSD = activeLocalCurrency === GqlCurrency.Usd
-  const { data: localCurrencyConversionRate } = useLocalCurrencyConversionRate(
-    activeLocalCurrency,
-    activeLocalCurrencyIsUSD
-  )
-
-  const currencyToFormatWith = localCurrencyConversionRate ? formatterLocalCurrency : DEFAULT_LOCAL_CURRENCY
-
-  const formatNumberWithLocales = useCallback(
-    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency' | 'conversionRate'>) =>
-      formatNumber({
-        ...options,
-        locale: formatterLocale,
-        localCurrency: currencyToFormatWith,
-        conversionRate: localCurrencyConversionRate,
-      }),
-    [currencyToFormatWith, formatterLocale, localCurrencyConversionRate]
-  )
-
-  const formatCurrencyAmountWithLocales = useCallback(
-    (options: Omit<FormatCurrencyAmountOptions, 'locale' | 'localCurrency' | 'conversionRate'>) =>
-      formatCurrencyAmount({
-        ...options,
-        locale: formatterLocale,
-        localCurrency: currencyToFormatWith,
-        conversionRate: localCurrencyConversionRate,
-      }),
-    [currencyToFormatWith, formatterLocale, localCurrencyConversionRate]
-  )
-
-  return useMemo(
-    () => ({
-      formatNumber: formatNumberWithLocales,
-      formatCurrencyAmount: formatCurrencyAmountWithLocales,
-    }),
-    [formatCurrencyAmountWithLocales, formatNumberWithLocales]
-  )
 }
 
 export function formatPriceImpact(priceImpact: Percent | undefined): string {
@@ -622,4 +558,69 @@ export function formatReviewSwapCurrencyAmount(amount: CurrencyAmount<Currency>)
     formattedAmount = formatCurrencyAmount({ amount, type: NumberType.SwapTradeAmount })
   }
   return formattedAmount
+}
+
+export function useFormatterLocales(): {
+  formatterLocale: SupportedLocale
+  formatterLocalCurrency: SupportedLocalCurrency
+} {
+  const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
+  const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
+
+  if (currencyConversionEnabled) {
+    return {
+      formatterLocale: activeLocale,
+      formatterLocalCurrency: activeLocalCurrency,
+    }
+  }
+
+  return {
+    formatterLocale: DEFAULT_LOCALE,
+    formatterLocalCurrency: DEFAULT_LOCAL_CURRENCY,
+  }
+}
+
+// used to get the appropriate formatter functions with the correct locales passed into them
+export function useFormatter() {
+  const activeLocalCurrency = useActiveLocalCurrency()
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+
+  const activeLocalCurrencyIsUSD = activeLocalCurrency === GqlCurrency.Usd
+  const { data: localCurrencyConversionRate } = useLocalCurrencyConversionRate(
+    activeLocalCurrency,
+    activeLocalCurrencyIsUSD
+  )
+
+  const currencyToFormatWith = localCurrencyConversionRate ? formatterLocalCurrency : DEFAULT_LOCAL_CURRENCY
+
+  const formatNumberWithLocales = useCallback(
+    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency' | 'conversionRate'>) =>
+      formatNumber({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: localCurrencyConversionRate,
+      }),
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRate]
+  )
+
+  const formatCurrencyAmountWithLocales = useCallback(
+    (options: Omit<FormatCurrencyAmountOptions, 'locale' | 'localCurrency' | 'conversionRate'>) =>
+      formatCurrencyAmount({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: localCurrencyConversionRate,
+      }),
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRate]
+  )
+
+  return useMemo(
+    () => ({
+      formatNumber: formatNumberWithLocales,
+      formatCurrencyAmount: formatCurrencyAmountWithLocales,
+    }),
+    [formatCurrencyAmountWithLocales, formatNumberWithLocales]
+  )
 }
