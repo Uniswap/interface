@@ -4,16 +4,28 @@ import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
 import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
 import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
+import {
+  bisect,
+  curveCardinal,
+  NumberValue,
+  ScaleLinear,
+  scaleLinear,
+  timeDay,
+  timeHour,
+  timeMinute,
+  timeMonth,
+} from 'd3'
 import { PricePoint, TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, Info, TrendingUp } from 'react-feather'
+import { animated, SpringValue, useSpring } from 'react-spring'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
@@ -39,6 +51,7 @@ export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
 const StyledUpArrow = styled(ArrowChangeUp)`
   color: ${({ theme }) => theme.success};
 `
+
 const StyledDownArrow = styled(ArrowChangeDown)`
   color: ${({ theme }) => theme.critical};
 `
@@ -155,15 +168,36 @@ interface PriceChartProps {
   width: number
   height: number
   prices?: PricePoint[] | null
+  activity?: Activity[]
   timePeriod: TimePeriod
 }
 
-export function PriceChart({ width, height, prices: originalPrices, timePeriod }: PriceChartProps) {
+function getNearestPricePoint(x: number, prices: PricePoint[], timeScale: ScaleLinear<number, number, never>) {
+  const x0 = timeScale.invert(x) // get timestamp from the scalexw
+  const index = bisect(
+    prices.map((x) => x.timestamp),
+    x0,
+    1
+  )
+
+  const d0 = prices[index - 1]
+  const d1 = prices[index]
+  let pricePoint = d0
+
+  const hasPreviousData = d1 && d1.timestamp
+  if (hasPreviousData) {
+    pricePoint = x0.valueOf() - d0.timestamp.valueOf() > d1.timestamp.valueOf() - x0.valueOf() ? d1 : d0
+  }
+
+  return pricePoint
+}
+
+export function PriceChart({ width, height, prices: originalPrices, activity, timePeriod }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
 
   const { prices, blanks } = useMemo(
-    () => (originalPrices && originalPrices.length > 0 ? fixChart(originalPrices) : { prices: null, blanks: [] }),
+    () => (originalPrices?.length ? fixChart(originalPrices) : { prices: null, blanks: [] }),
     [originalPrices]
   )
 
@@ -236,6 +270,17 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     [originalPrices, graphInnerHeight]
   )
 
+  const activityAtPricePoint = useMemo(
+    () =>
+      activity?.map((activity) => ({
+        activity,
+        pricePoint: getNearestPricePoint(timeScale(activity.timestamp), prices ?? [], timeScale),
+      })),
+    [activity, prices, timeScale]
+  )
+
+  const [selectedActivity, setSelectedActivity] = useState<{ activity: Activity; pricePoint: PricePoint }>()
+
   function tickFormat(
     timePeriod: TimePeriod,
     locale: string
@@ -286,29 +331,14 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     (event: Element | EventType) => {
       if (!prices) return
 
-      const { x } = localPoint(event) || { x: 0 }
-      const x0 = timeScale.invert(x) // get timestamp from the scalexw
-      const index = bisect(
-        prices.map((x) => x.timestamp),
-        x0,
-        1
-      )
-
-      const d0 = prices[index - 1]
-      const d1 = prices[index]
-      let pricePoint = d0
-
-      const hasPreviousData = d1 && d1.timestamp
-      if (hasPreviousData) {
-        pricePoint = x0.valueOf() - d0.timestamp.valueOf() > d1.timestamp.valueOf() - x0.valueOf() ? d1 : d0
-      }
+      const pricePoint = getNearestPricePoint(localPoint(event)?.x ?? 0, prices, timeScale)
 
       if (pricePoint) {
         setCrosshair(timeScale(pricePoint.timestamp))
         setDisplayPrice(pricePoint)
       }
     },
-    [timeScale, prices]
+    [prices, timeScale]
   )
 
   const resetDisplay = useCallback(() => {
@@ -337,8 +367,10 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   const delta = calculateDelta(startingPrice.value, displayPrice.value)
   const formattedDelta = formatDelta(delta)
   const arrow = getDeltaArrow(delta)
-  const crosshairEdgeMax = width * 0.85
-  const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
+  const crosshairRightEdgeMax = width * 0.85
+  const crosshairLeftEdgeMax = width * 0.15
+  const crosshairAtRightEdge = !!crosshair && crosshair > crosshairRightEdgeMax
+  const crosshairAtLeftEdge = !!crosshair && crosshair < crosshairLeftEdgeMax
 
   // Default curve doesn't look good for the HOUR chart.
   // Higher values make the curve more rigid, lower values smooth the curve but make it less "sticky" to real data points,
@@ -425,9 +457,9 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
                 })}
               />
               <text
-                x={crosshair + (crosshairAtEdge ? -4 : 4)}
+                x={crosshair + (crosshairAtRightEdge ? -4 : 4)}
                 y={margin.crosshair + 10}
-                textAnchor={crosshairAtEdge ? 'end' : 'start'}
+                textAnchor={crosshairAtRightEdge ? 'end' : 'start'}
                 fontSize={12}
                 fill={theme.neutral2}
               >
@@ -453,6 +485,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
           ) : (
             <AxisBottom hideAxisLine={true} scale={timeScale} stroke={theme.surface3} top={graphHeight - 1} hideTicks />
           )}
+
           {!width && (
             // Ensures an axis is drawn even if the width is not yet initialized.
             <line
@@ -477,6 +510,24 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
             onMouseMove={handleHover}
             onMouseLeave={resetDisplay}
           />
+          {activityAtPricePoint?.map(({ activity, pricePoint }, index) => (
+            <ActivityGlyph
+              left={timeScale(activity.timestamp)}
+              top={rdScale(pricePoint.value) + margin.top}
+              fill="#FFEFFF"
+              stroke="#FC72FF"
+              strokeWidth={0.5}
+              key={activity.title + index}
+              setSelected={(selected) => setSelectedActivity(selected ? { activity, pricePoint } : undefined)}
+            />
+          ))}
+          {selectedActivity && (
+            <TextWithBackground
+              text={`${selectedActivity.activity.title} - ${selectedActivity.activity.descriptor}`}
+              x={timeScale(selectedActivity.activity.timestamp)}
+              y={rdScale(selectedActivity.pricePoint.value) + margin.top}
+            />
+          )}
         </svg>
       )}
     </>
@@ -507,5 +558,103 @@ function MissingPriceChart({ width, height, message }: { width: number; height: 
         {message}
       </text>
     </StyledMissingChart>
+  )
+}
+
+interface ActivityGlyphCircleProps extends Omit<React.ComponentProps<typeof GlyphCircle>, 'ref'> {
+  setSelected: (selected: boolean) => void
+}
+
+const ActivityGlyphCircle = animated(GlyphCircle)
+
+function ActivityGlyph({ setSelected, ...rest }: ActivityGlyphCircleProps) {
+  const [animatedProps, setAnimatedProps] = useSpring(() => ({
+    size: 80,
+    textOpacity: 0,
+    config: { tension: 170, friction: 26 },
+  }))
+
+  const onMouseEnter = () => {
+    setSelected(true)
+    setAnimatedProps({ size: 250, textOpacity: 1 })
+  }
+
+  const onMouseLeave = () => {
+    setSelected(false)
+    setAnimatedProps({ size: 80, textOpacity: 0 })
+  }
+
+  return <ActivityGlyphCircle {...rest} {...animatedProps} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} />
+}
+
+interface TextWithBackgroundProps {
+  text: string
+  x: number
+  y: number
+  opacity?: SpringValue<number>
+}
+
+const ACTIVITY_BOX_PADDING = 12
+const ACTIVITY_BOX_MARGIN = 16
+const ACTIVITY_FONT_SIZE = 14
+
+function TextWithBackground({ text, x, y }: TextWithBackgroundProps) {
+  const [bbox, setBbox] = useState<DOMRect | null>(null)
+  const textRef = useRef<SVGTextElement>(null)
+  const theme = useTheme()
+
+  const [{ opacity }, setAnimatedProps] = useSpring(() => ({
+    opacity: 0,
+    config: { tension: 170, friction: 26 },
+  }))
+
+  useEffect(() => {
+    setAnimatedProps({ opacity: 0.8 })
+  }, [setAnimatedProps])
+
+  useEffect(() => {
+    if (textRef.current) {
+      const currentBbox = textRef.current.getBBox()
+      setBbox(currentBbox)
+    }
+  }, [text])
+
+  const backgroundWidth = (bbox?.width ?? 0) + 2 * ACTIVITY_BOX_PADDING
+  const backgroundHeight = ACTIVITY_FONT_SIZE + 2 * ACTIVITY_BOX_PADDING
+
+  const flip = x - (backgroundWidth + ACTIVITY_BOX_MARGIN) <= 0
+
+  const backgroundX = flip ? x + ACTIVITY_BOX_MARGIN : x - backgroundWidth - ACTIVITY_BOX_MARGIN
+  const backgroundY = y - 20
+
+  const textX = x + (flip ? 1 : -1) * (ACTIVITY_BOX_MARGIN + ACTIVITY_BOX_PADDING)
+  const textY = y + 4
+
+  return (
+    <g>
+      {bbox && (
+        <animated.rect
+          x={backgroundX}
+          y={backgroundY}
+          width={backgroundWidth}
+          height={backgroundHeight}
+          fill={theme.background}
+          rx={10}
+          opacity={opacity}
+          stroke={theme.surface4}
+          strokeWidth={1}
+        />
+      )}
+      <text
+        ref={textRef}
+        x={textX}
+        y={textY}
+        textAnchor={flip ? 'start' : 'end'}
+        fontSize={ACTIVITY_FONT_SIZE}
+        fill={theme.neutral1}
+      >
+        {text}
+      </text>
+    </g>
   )
 }

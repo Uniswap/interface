@@ -1,7 +1,11 @@
+import { Currency } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
+import { useWeb3React } from '@web3-react/core'
+import { useAllActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { TokenPriceQuery } from 'graphql/data/TokenPrice'
-import { isPricePoint, PricePoint } from 'graphql/data/util'
+import { gqlToCurrency, isPricePoint, PricePoint } from 'graphql/data/util'
 import { TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { pageTimePeriodAtom } from 'pages/TokenDetails'
@@ -45,6 +49,24 @@ export default function ChartSection({
   )
 }
 
+const TOKEN_ACTIVITIES = ['Swapped', 'Sent', 'Received']
+
+function activityIncludesCurrency(activity: Activity, currency: Currency): boolean {
+  return activity.currencies?.some((_currency) => _currency?.equals(currency)) ?? false
+}
+
+function useTokenActivity(account?: string, currency?: Currency, types: string[] = TOKEN_ACTIVITIES): Activity[] {
+  const { activities } = useAllActivities(account ?? '')
+
+  return useMemo(() => {
+    if (!account || !activities || !currency) return []
+
+    return activities.filter(
+      (activity) => activityIncludesCurrency(activity, currency) && types.includes(activity.title)
+    )
+  }, [account, activities, currency, types])
+}
+
 export type OnChangeTimePeriod = (t: TimePeriod) => void
 function Chart({
   tokenPriceQuery,
@@ -54,13 +76,19 @@ function Chart({
   onChangeTimePeriod: OnChangeTimePeriod
 }) {
   const prices = usePriceHistory(tokenPriceQuery)
+  const { account } = useWeb3React()
+  const currency = tokenPriceQuery.token ? gqlToCurrency(tokenPriceQuery.token) : undefined
+  const activity = useTokenActivity(account, currency)
+  console.log('cartcrom', activity)
   // Initializes time period to global & maintain separate time period for subsequent changes
   const timePeriod = useAtomValue(pageTimePeriodAtom)
 
   return (
     <ChartContainer data-testid="chart-container">
       <ParentSize>
-        {({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} timePeriod={timePeriod} />}
+        {({ width }) => (
+          <PriceChart prices={prices ?? null} activity={activity} width={width} height={436} timePeriod={timePeriod} />
+        )}
       </ParentSize>
       <TimePeriodSelector
         currentTimePeriod={timePeriod}
