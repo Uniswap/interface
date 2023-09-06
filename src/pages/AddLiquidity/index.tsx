@@ -545,7 +545,7 @@ function AddLiquidity() {
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >
-          <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
+          <Text fontWeight={535}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
         </ButtonError>
       </AutoColumn>
     )
@@ -597,7 +597,7 @@ function AddLiquidity() {
               )}
               bottomContent={() => (
                 <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
-                  <Text fontWeight={500} fontSize={20}>
+                  <Text fontWeight={535} fontSize={20}>
                     <Trans>Add</Trans>
                   </Text>
                 </ButtonPrimary>
@@ -771,10 +771,10 @@ function AddLiquidity() {
                         {Boolean(price && baseCurrency && quoteCurrency && !noLiquidity) && (
                           <AutoColumn gap="2px" style={{ marginTop: '0.5rem' }}>
                             <Trans>
-                              <ThemedText.DeprecatedMain fontWeight={500} fontSize={12} color="text1">
+                              <ThemedText.DeprecatedMain fontWeight={535} fontSize={12} color="text1">
                                 Current Price:
                               </ThemedText.DeprecatedMain>
-                              <ThemedText.DeprecatedBody fontWeight={500} fontSize={20} color="text1">
+                              <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
                                 {price && (
                                   <HoverInlineText
                                     maxCharacters={20}
@@ -818,9 +818,9 @@ function AddLiquidity() {
                           >
                             <ThemedText.DeprecatedBody
                               fontSize={14}
-                              style={{ fontWeight: 500 }}
+                              style={{ fontWeight: 535 }}
                               textAlign="left"
-                              color={theme.accentAction}
+                              color={theme.accent1}
                             >
                               <Trans>
                                 This pool must be initialized before you can add liquidity. To initialize, select a
@@ -839,7 +839,7 @@ function AddLiquidity() {
                         </OutlineCard>
                         <RowBetween
                           style={{
-                            backgroundColor: theme.deprecated_bg1,
+                            backgroundColor: theme.surface1,
                             padding: '12px',
                             borderRadius: '12px',
                           }}

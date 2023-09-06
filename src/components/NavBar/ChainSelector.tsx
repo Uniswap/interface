@@ -136,7 +136,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const chevronProps = {
     height: 20,
     width: 20,
-    color: theme.textSecondary,
+    color: theme.neutral2,
   }
 
   return (
@@ -147,11 +147,11 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
           as="button"
           gap="8"
           className={styles.ChainSelector}
-          background={isOpen ? 'accentActiveSoft' : 'none'}
+          background={isOpen ? 'accent2' : 'none'}
           onClick={() => setIsOpen(!isOpen)}
         >
           {!isSupported ? (
-            <AlertTriangle size={20} color={theme.textSecondary} />
+            <AlertTriangle size={20} color={theme.neutral2} />
           ) : (
             <img src={info.logoUrl} alt={info.label} className={styles.Image} data-testid="chain-selector-logo" />
           )}

@@ -12,15 +12,15 @@ import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 const Wrapper = styled.div`
   align-content: center;
   align-items: center;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   border-bottom: none;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   border-radius: 20px 20px 0px 0px;
   bottom: 52px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   display: flex;
   flex-direction: row;
-  font-weight: 500;
+  font-weight: 535;
   font-size: 14px;
   height: fit-content;
   justify-content: space-between;
@@ -38,7 +38,7 @@ const Wrapper = styled.div`
   }
 `
 const BalanceValue = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 20px;
   line-height: 28px;
   display: flex;
@@ -66,15 +66,15 @@ const FiatValue = styled.span`
   }
 `
 const SwapButton = styled(StyledInternalLink)`
-  background-color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.accent1};
   border: none;
   border-radius: 12px;
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
   display: flex;
   flex: 1 1 auto;
   padding: 12px 16px;
   font-size: 1em;
-  font-weight: 600;
+  font-weight: 535;
   height: 44px;
   justify-content: center;
   margin: auto;

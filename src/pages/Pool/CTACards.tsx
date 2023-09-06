@@ -24,15 +24,15 @@ const CTA = styled(ExternalLink)`
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
+  border: 1px solid ${({ theme }) => theme.surface3};
 
   * {
-    color: ${({ theme }) => theme.textPrimary};
+    color: ${({ theme }) => theme.neutral1};
     text-decoration: none !important;
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
+    border: 1px solid ${({ theme }) => theme.surface3};
 
     text-decoration: none;
     * {
@@ -44,9 +44,8 @@ const CTA = styled(ExternalLink)`
 const HeaderText = styled(ThemedText.DeprecatedLabel)`
   align-items: center;
   display: flex;
-
-  font-weight: 400;
   font-size: 16px;
+  font-weight: 535 !important;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     font-size: 16px;
   `};
@@ -74,7 +73,7 @@ export default function CTACards() {
           <HeaderText>
             <Trans>Learn about providing liquidity</Trans> ↗
           </HeaderText>
-          <ThemedText.DeprecatedBody fontWeight={400} style={{ alignItems: 'center', display: 'flex' }}>
+          <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485 }}>
             <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
@@ -84,7 +83,7 @@ export default function CTACards() {
           <HeaderText style={{ alignSelf: 'flex-start' }}>
             <Trans>Top pools</Trans> ↗
           </HeaderText>
-          <ThemedText.DeprecatedBody fontWeight={400} style={{ alignSelf: 'flex-start' }}>
+          <ThemedText.DeprecatedBody style={{ alignSelf: 'flex-start', fontWeight: 485 }}>
             <Trans>Explore Uniswap Analytics.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>

@@ -159,10 +159,16 @@ function parseSwap(changes: TransactionChanges) {
   }
   // Some swaps may have more than 2 transfers, e.g. swaps with fees on tranfer
   if (changes.TokenTransfer.length >= 2) {
-    const sent = changes.TokenTransfer.find((t) => t?.__typename === 'TokenTransfer' && t.direction === 'OUT')
-    const received = changes.TokenTransfer.find((t) => t?.__typename === 'TokenTransfer' && t.direction === 'IN')
+    const sent = changes.TokenTransfer.find((t) => t.direction === 'OUT')
+    // Any leftover native token is refunded on exact_out swaps where the input token is native
+    const refund = changes.TokenTransfer.find(
+      (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === 'NATIVE'
+    )
+    const received = changes.TokenTransfer.find((t) => t.direction === 'IN' && t !== refund)
+
     if (sent && received) {
-      const inputAmount = formatNumberOrString(sent.quantity, NumberType.TokenNonTx)
+      const adjustedInput = parseFloat(sent.quantity) - parseFloat(refund?.quantity ?? '0')
+      const inputAmount = formatNumberOrString(adjustedInput, NumberType.TokenNonTx)
       const outputAmount = formatNumberOrString(received.quantity, NumberType.TokenNonTx)
       return {
         title: getSwapTitle(sent, received),

@@ -109,7 +109,12 @@ export default function SwapModalFooter({
               </Label>
             </MouseoverTooltip>
             <MouseoverTooltip placement="right" size={TooltipSize.Small} text={<GasBreakdownTooltip trade={trade} />}>
-              <DetailRowValue>{formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}</DetailRowValue>
+              <DetailRowValue>
+                {formatNumber({
+                  input: trade.totalGasUseEstimateUSD,
+                  type: NumberType.FiatGasPrice,
+                })}
+              </DetailRowValue>
             </MouseoverTooltip>
           </Row>
         </ThemedText.BodySmall>
@@ -169,7 +174,7 @@ export default function SwapModalFooter({
           <RowBetween>
             <RowFixed>
               <StyledAlertTriangle size={20} />
-              <ThemedText.DeprecatedMain color={theme.accentAction}>
+              <ThemedText.DeprecatedMain color={theme.accent1}>
                 <Trans>Price updated</Trans>
               </ThemedText.DeprecatedMain>
             </RowFixed>
@@ -203,7 +208,7 @@ export default function SwapModalFooter({
               $borderRadius="12px"
               id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
-              <ThemedText.HeadlineSmall color="accentTextLightPrimary">
+              <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
                 <Trans>Confirm swap</Trans>
               </ThemedText.HeadlineSmall>
             </ConfirmButton>

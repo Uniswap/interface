@@ -5,7 +5,6 @@ import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import { RowBetween, RowFixed } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { isUniswapXSupportedChain } from 'constants/chains'
-import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
 import { useAppDispatch } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference } from 'state/user/hooks'
@@ -13,8 +12,8 @@ import { updateDisabledUniswapX } from 'state/user/reducer'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme'
 
-const InlineLink = styled(ThemedText.Caption)`
-  color: ${({ theme }) => theme.accentAction};
+const InlineLink = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.accent1};
   display: inline;
   cursor: pointer;
   &:hover {
@@ -25,7 +24,7 @@ const InlineLink = styled(ThemedText.Caption)`
 export default function RouterPreferenceSettings() {
   const { chainId } = useWeb3React()
   const [routerPreference, setRouterPreference] = useRouterPreference()
-  const uniswapXEnabled = useUniswapXEnabled() && chainId && isUniswapXSupportedChain(chainId)
+  const uniswapXEnabled = chainId && isUniswapXSupportedChain(chainId)
   const dispatch = useAppDispatch()
 
   return (
@@ -38,12 +37,12 @@ export default function RouterPreferenceSettings() {
                 <ThemedText.BodySecondary>
                   <UniswapXBrandMark />
                 </ThemedText.BodySecondary>
-                <ThemedText.Caption color="textSecondary">
+                <ThemedText.BodySmall color="neutral2">
                   <Trans>When available, aggregates liquidity sources for better prices and gas free swaps.</Trans>{' '}
                   <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
                     <InlineLink>Learn more</InlineLink>
                   </ExternalLink>
-                </ThemedText.Caption>
+                </ThemedText.BodySmall>
               </Column>
             </RowFixed>
             <Toggle

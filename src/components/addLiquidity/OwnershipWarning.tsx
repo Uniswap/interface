@@ -4,17 +4,17 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 const ExplainerText = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 const TitleRow = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
-  color: ${({ theme }) => theme.accentWarning};
+  color: ${({ theme }) => theme.deprecated_accentWarning};
   margin-bottom: 8px;
 `
 const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.accentWarningSoft};
+  background-color: ${({ theme }) => theme.deprecated_accentWarningSoft};
   border-radius: 16px;
   margin-top: 12px;
   max-width: 480px;
@@ -30,7 +30,7 @@ const OwnershipWarning = ({ ownerAddress }: OwnershipWarningProps) => (
   <Wrapper>
     <TitleRow>
       <AlertTriangle style={{ marginRight: '8px' }} />
-      <ThemedText.SubHeader color="accentWarning">
+      <ThemedText.SubHeader color="deprecated_accentWarning">
         <Trans>Warning</Trans>
       </ThemedText.SubHeader>
     </TitleRow>

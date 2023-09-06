@@ -18,7 +18,7 @@ import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, Ve
 import * as styles from './CollectionStats.css'
 
 const PercentChange = styled.div<{ isNegative: boolean }>`
-  color: ${({ theme, isNegative }) => (isNegative ? theme.accentFailure : theme.accentSuccess)};
+  color: ${({ theme, isNegative }) => (isNegative ? theme.critical : theme.success)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +28,7 @@ const CollectionNameText = styled.div<{ isVerified: boolean }>`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-right: ${({ isVerified }) => (isVerified ? '12px' : '0px')};
+  margin-right: ${({ isVerified }) => (isVerified ? '6px' : '0px')};
 `
 
 const CollectionNameTextLoading = styled.div`
@@ -56,7 +56,7 @@ const MobileSocialsIcon = ({ children, href }: { children: ReactNode; href: stri
       height="40"
       width="40"
       borderRadius="round"
-      backgroundColor="backgroundSurface"
+      backgroundColor="surface1"
     >
       {children}
     </Box>
@@ -76,9 +76,9 @@ const MobileSocialsPopover = ({
     <>
       <MobileSocialsOverflowIcon onClick={toggleCollectionSocials}>
         {collectionSocialsIsOpen ? (
-          <XMarkIcon width="28" height="28" fill={themeVars.colors.textSecondary} />
+          <XMarkIcon width="28" height="28" fill={themeVars.colors.neutral2} />
         ) : (
-          <EllipsisIcon width="28" height="20" fill={themeVars.colors.textSecondary} />
+          <EllipsisIcon width="28" height="20" fill={themeVars.colors.neutral2} />
         )}
       </MobileSocialsOverflowIcon>
       {collectionSocialsIsOpen && (
@@ -95,7 +95,7 @@ const MobileSocialsPopover = ({
           {collectionStats.discordUrl ? (
             <MobileSocialsIcon href={collectionStats.discordUrl}>
               <Box margin="auto" paddingTop="4">
-                <DiscordIcon width={28} height={28} color={themeVars.colors.textSecondary} />
+                <DiscordIcon width={28} height={28} color={themeVars.colors.neutral2} />
               </Box>
             </MobileSocialsIcon>
           ) : null}
@@ -103,8 +103,8 @@ const MobileSocialsPopover = ({
             <MobileSocialsIcon href={'https://twitter.com/' + collectionStats.twitterUrl}>
               <Box margin="auto" paddingTop="6">
                 <TwitterIcon
-                  fill={themeVars.colors.textSecondary}
-                  color={themeVars.colors.textSecondary}
+                  fill={themeVars.colors.neutral2}
+                  color={themeVars.colors.neutral2}
                   width="28px"
                   height="28px"
                 />
@@ -115,7 +115,7 @@ const MobileSocialsPopover = ({
           {collectionStats.instagram ? (
             <MobileSocialsIcon href={'https://instagram.com/' + collectionStats.instagram}>
               <Box margin="auto" paddingLeft="2" paddingTop="4">
-                <InstagramIcon fill={themeVars.colors.textSecondary} width="28px" height="28px" />
+                <InstagramIcon fill={themeVars.colors.neutral2} width="28px" height="28px" />
               </Box>
             </MobileSocialsIcon>
           ) : null}
@@ -123,7 +123,7 @@ const MobileSocialsPopover = ({
           {collectionStats.externalUrl ? (
             <MobileSocialsIcon href={collectionStats.externalUrl}>
               <Box margin="auto" paddingTop="4">
-                <ExternalIcon fill={themeVars.colors.textSecondary} width="28px" height="28px" />
+                <ExternalIcon fill={themeVars.colors.neutral2} width="28px" height="28px" />
               </Box>
             </MobileSocialsIcon>
           ) : null}
@@ -180,8 +180,8 @@ const CollectionName = ({
           {collectionStats.discordUrl ? (
             <SocialsIcon href={collectionStats.discordUrl ?? ''}>
               <DiscordIcon
-                fill={themeVars.colors.textSecondary}
-                color={themeVars.colors.textSecondary}
+                fill={themeVars.colors.neutral2}
+                color={themeVars.colors.neutral2}
                 width="26px"
                 height="26px"
               />
@@ -190,8 +190,8 @@ const CollectionName = ({
           {collectionStats.twitterUrl ? (
             <SocialsIcon href={'https://twitter.com/' + collectionStats.twitterUrl}>
               <TwitterIcon
-                fill={themeVars.colors.textSecondary}
-                color={themeVars.colors.textSecondary}
+                fill={themeVars.colors.neutral2}
+                color={themeVars.colors.neutral2}
                 width="26px"
                 height="26px"
               />
@@ -200,12 +200,12 @@ const CollectionName = ({
 
           {collectionStats.instagram ? (
             <SocialsIcon href={'https://instagram.com/' + collectionStats.instagram}>
-              <InstagramIcon fill={themeVars.colors.textSecondary} width="26px" height="26px" />
+              <InstagramIcon fill={themeVars.colors.neutral2} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
           {collectionStats.externalUrl ? (
             <SocialsIcon href={collectionStats.externalUrl ?? ''}>
-              <ExternalIcon fill={themeVars.colors.textSecondary} width="26px" height="26px" />
+              <ExternalIcon fill={themeVars.colors.neutral2} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
         </Row>
@@ -245,7 +245,7 @@ const CollectionDescriptionText = styled.div<{ readMore: boolean }>`
         `}
 
   a[href] {
-    color: ${({ theme }) => theme.textSecondary};
+    color: ${({ theme }) => theme.neutral2};
     text-decoration: none;
 
     :hover {
@@ -260,7 +260,7 @@ const CollectionDescriptionText = styled.div<{ readMore: boolean }>`
 
 const ReadMore = styled.span`
   vertical-align: top;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   cursor: pointer;
   margin-left: 4px;
 `
@@ -449,7 +449,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       )}
       <Box
         as={isCollectionStatsLoading ? 'div' : 'img'}
-        background="explicitWhite"
+        background="white"
         borderRadius="round"
         position="absolute"
         className={isCollectionStatsLoading ? styles.collectionImageIsLoading : styles.collectionImage}

@@ -3,7 +3,7 @@ import { css } from 'styled-components'
 export const ScrollBarStyles = css<{ $isHorizontalScroll?: boolean }>`
   // Firefox scrollbar styling
   scrollbar-width: thin;
-  scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
+  scrollbar-color: ${({ theme }) => `${theme.surface3} transparent`};
   height: 100%;
 
   // safari and chrome scrollbar styling
@@ -25,7 +25,7 @@ export const ScrollBarStyles = css<{ $isHorizontalScroll?: boolean }>`
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.backgroundOutline};
+    background: ${({ theme }) => theme.surface3};
     border-radius: 8px;
   }
 `

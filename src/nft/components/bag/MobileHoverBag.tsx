@@ -44,12 +44,12 @@ export const MobileHoverBag = () => {
           })}
         </Box>
         <Column>
-          <Box className={body} fontWeight="semibold">
+          <Box className={body} fontWeight="medium">
             {roundAndPluralize(itemsInBag.length, 'NFT')}
           </Box>
           <Row gap="8">
             <Box className={body}>{`${formatWeiToDecimal(totalEthPrice.toString())}`} ETH</Box>
-            <Box color="textSecondary" className={bodySmall}>
+            <Box color="neutral2" className={bodySmall}>
               {ethNumberStandardFormatter(totalUsdPrice, true)}
             </Box>
           </Row>

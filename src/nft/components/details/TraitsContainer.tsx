@@ -21,7 +21,7 @@ const Grid = styled.div`
 `
 
 const GridItemContainer = styled(Link)`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.surface3};
   border-radius: 12px;
   cursor: pointer;
   padding: 12px;
@@ -32,8 +32,8 @@ const GridItemContainer = styled(Link)`
 `
 
 const TraitType = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
-  font-weight: 600;
+  color: ${({ theme }) => theme.neutral2};
+  font-weight: 535;
   font-size: 10px;
   line-height: 12px;
   white-space: nowrap;
@@ -41,7 +41,7 @@ const TraitType = styled.div`
 `
 
 const TraitValue = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   font-size: 16px;
   line-height: 24px;
   margin-top: 4px;

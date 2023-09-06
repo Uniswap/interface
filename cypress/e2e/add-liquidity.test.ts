@@ -4,7 +4,7 @@ import { aliasQuery, hasQuery } from '../utils/graphql-test-utils'
 
 describe('Add Liquidity', () => {
   beforeEach(() => {
-    cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', (req) => {
+    cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3?source=uniswap', (req) => {
       aliasQuery(req, 'feeTierDistribution')
     })
   })
@@ -29,22 +29,26 @@ describe('Add Liquidity', () => {
 
   it('loads fee tier distribution', () => {
     cy.fixture('feeTierDistribution.json').then((feeTierDistribution) => {
-      cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', (req: CyHttpMessages.IncomingHttpRequest) => {
-        if (hasQuery(req, 'FeeTierDistribution')) {
-          req.alias = 'FeeTierDistribution'
+      cy.intercept(
+        'POST',
+        '/subgraphs/name/uniswap/uniswap-v3?source=uniswap',
+        (req: CyHttpMessages.IncomingHttpRequest) => {
+          if (hasQuery(req, 'FeeTierDistribution')) {
+            req.alias = 'FeeTierDistribution'
 
-          req.reply({
-            body: {
-              data: {
-                ...feeTierDistribution,
+            req.reply({
+              body: {
+                data: {
+                  ...feeTierDistribution,
+                },
               },
-            },
-            headers: {
-              'access-control-allow-origin': '*',
-            },
-          })
+              headers: {
+                'access-control-allow-origin': '*',
+              },
+            })
+          }
         }
-      })
+      )
 
       cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH')
       cy.wait('@FeeTierDistribution')
