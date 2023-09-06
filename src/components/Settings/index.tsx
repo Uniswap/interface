@@ -10,19 +10,30 @@ import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsMobile } from 'nft/hooks'
-import { useMemo, useRef } from 'react'
-import { useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
+import { useCallback, useMemo, useRef } from 'react'
+import { X } from 'react-feather'
+import { useCloseModal, useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
-import { CloseIcon, Divider, ThemedText } from 'theme'
+import { Divider, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
 import MaxSlippageSettings from './MaxSlippageSettings'
 import MenuButton from './MenuButton'
 import RouterPreferenceSettings from './RouterPreferenceSettings'
 import TransactionDeadlineSettings from './TransactionDeadlineSettings'
+
+const CloseButton = styled.button`
+  background: transparent;
+  border: none;
+  color: ${({ theme }) => theme.neutral1};
+  cursor: pointer;
+  height: 24px;
+  padding: 0;
+  width: 24px;
+`
 
 const Menu = styled.div`
   position: relative;
@@ -64,14 +75,14 @@ const MobileMenuContainer = styled(Row)`
   z-index: ${Z_INDEX.fixed};
 `
 
-const MobileMenuWrapper = styled(Column)<{ open: boolean }>`
+const MobileMenuWrapper = styled(Column)<{ $open: boolean }>`
   height: min-content;
   width: 100%;
   padding: 8px 16px 24px;
   background-color: ${({ theme }) => theme.surface1};
   overflow: hidden;
   position: absolute;
-  bottom: ${({ open }) => (open ? `100vh` : 0)};
+  bottom: ${({ $open }) => ($open ? `100vh` : 0)};
   transition: bottom ${({ theme }) => theme.transition.duration.medium};
   border: ${({ theme }) => `1px solid ${theme.surface3}`};
   border-radius: 12px;
@@ -97,17 +108,18 @@ export default function SettingsTab({
 }) {
   const { chainId: connectedChainId } = useWeb3React()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
-
   const node = useRef<HTMLDivElement | null>(null)
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)
 
+  const closeModal = useCloseModal()
+  const closeMenu = useCallback(() => closeModal(ApplicationModal.SETTINGS), [closeModal])
   const toggleMenu = useToggleSettingsMenu()
 
   const isMobile = useIsMobile()
   const isOpenMobile = isOpen && isMobile
   const isOpenDesktop = isOpen && !isMobile
 
-  useOnClickOutside(node, isOpenDesktop ? toggleMenu : undefined)
+  useOnClickOutside(node, isOpenDesktop ? closeMenu : undefined)
   useDisableScrolling(isOpen)
 
   const isChainSupported = isSupportedChain(chainId)
@@ -136,22 +148,18 @@ export default function SettingsTab({
   )
 
   return (
-    <>
-      <Menu ref={node}>
-        <MenuButton
-          disabled={!isChainSupported || chainId !== connectedChainId}
-          isActive={isOpen}
-          onClick={toggleMenu}
-        />
-        {isOpenDesktop && !isMobile && <MenuFlyout>{Settings}</MenuFlyout>}
-      </Menu>
-      {isMobile && (
+    <Menu ref={node}>
+      <MenuButton disabled={!isChainSupported || chainId !== connectedChainId} isActive={isOpen} onClick={toggleMenu} />
+      {isOpenDesktop && <MenuFlyout>{Settings}</MenuFlyout>}
+      {isOpenMobile && (
         <Portal>
           <MobileMenuContainer data-testid="mobile-settings-menu">
-            <Scrim testId="mobile-settings-scrim" onClick={toggleMenu} open={isOpenMobile} />
-            <MobileMenuWrapper open={isOpenMobile}>
+            <Scrim onClick={closeMenu} $open />
+            <MobileMenuWrapper $open>
               <MobileMenuHeader padding="8px 0px 4px">
-                <CloseIcon size={24} onClick={toggleMenu} />
+                <CloseButton data-testid="mobile-settings-close" onClick={closeMenu}>
+                  <X size={24} />
+                </CloseButton>
                 <Row padding="0px 24px 0px 0px" justify="center">
                   <ThemedText.SubHeader>
                     <Trans>Settings</Trans>
@@ -163,6 +171,6 @@ export default function SettingsTab({
           </MobileMenuContainer>
         </Portal>
       )}
-    </>
+    </Menu>
   )
 }
