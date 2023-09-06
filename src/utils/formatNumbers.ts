@@ -367,11 +367,8 @@ const TYPE_TO_FORMATTER_RULES = {
 function getFormatterRule(input: number, type: NumberType, conversionRate?: number): FormatterRule {
   const rules = TYPE_TO_FORMATTER_RULES[type]
   for (const rule of rules) {
-    let convertedInput = input
-
-    if (rule.formatterOptions.currency && conversionRate) {
-      convertedInput *= conversionRate
-    }
+    const shouldConvertInput = rule.formatterOptions.currency && conversionRate
+    const convertedInput = shouldConvertInput ? input * conversionRate : input
 
     if (
       (rule.exact !== undefined && convertedInput === rule.exact) ||
@@ -408,9 +405,9 @@ export function formatNumber({
   const { hardCodedInput, formatterOptions } = getFormatterRule(input, type, conversionRate)
 
   if (formatterOptions.currency) {
+    input = conversionRate ? input * conversionRate : input
     formatterOptions.currency = localCurrency
     formatterOptions.currencyDisplay = LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE[localCurrency]
-    input = conversionRate ? input * conversionRate : input
   }
 
   if (!hardCodedInput) {
