@@ -274,7 +274,7 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
     Alert.alert(
       i18n.t('Invalid QR Code'),
       i18n.t(
-        'WalletConnect v1 is no longer supported. The application you’re trying to connect to needs to upgrade to WalletConnect v2.'
+        "WalletConnect v1 is no longer supported. The application you're trying to connect to needs to upgrade to WalletConnect v2."
       ),
       [
         {

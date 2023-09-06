@@ -307,7 +307,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               <AccountDetails address={request.account} />
               {!hasSufficientFunds && (
                 <Text color="DEP_accentWarning" paddingTop="spacing8" variant="bodySmall">
-                  {t('You don’t have enough {{symbol}} to complete this transaction.', {
+                  {t("You don't have enough {{symbol}} to complete this transaction.", {
                     symbol: nativeCurrency?.symbol,
                   })}
                 </Text>

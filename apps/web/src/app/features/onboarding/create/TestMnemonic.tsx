@@ -65,7 +65,7 @@ export function TestMnemonic({ numberOfTests = 4 }: { numberOfTests?: number }):
       nextButtonEnabled
       Icon={<UniconWithLockIcon address={createdAddress ?? ''} />}
       nextButtonText="Next"
-      subtitle="Let's make sure you’ve recorded it down"
+      subtitle="Let's make sure you've recorded it down"
       title={
         <Stack paddingHorizontal="$spacing36">
           <Text variant="headlineMedium">

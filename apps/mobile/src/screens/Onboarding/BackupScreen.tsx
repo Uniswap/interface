@@ -133,7 +133,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   return (
     <OnboardingScreen
       subtitle={t(
-        'Remember, backups are your lifeline. They’re your ticket back in if something goes wrong.'
+        "Remember, backups are your lifeline. They're your ticket back in if something goes wrong."
       )}
       title={t('Choose a backup for your wallet')}>
       <Flex grow justifyContent="space-between">
@@ -153,7 +153,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
             onPress={onPressCloudBackup}
           />
           <OptionCard
-            blurb={t('Top-notch security with no third parties. You’re in control.')}
+            blurb={t("Top-notch security with no third parties. You're in control.")}
             disabled={hasManualBackup}
             elementName={ElementName.AddManualBackup}
             icon={<PaperIcon color={theme.colors.accent1} height={theme.iconSizes.icon16} />}

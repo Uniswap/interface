@@ -56,7 +56,7 @@ export const useModalContent = ({
           <Trans t={t}>
             {/* https://react.i18next.com/latest/trans-component#interpolation */}
             {/* @ts-expect-error: react-i18next uses this ^ syntax and it's not canonic */}
-            You’re removing <Text color="statusCritical">{{ wallet: account?.name }}</Text>
+            You're removing <Text color="statusCritical">{{ wallet: account?.name }}</Text>
           </Trans>
         ),
         description: t(
@@ -88,7 +88,7 @@ export const useModalContent = ({
       return {
         title: (
           <Trans t={t}>
-            You’re removing your <Text color="statusCritical">recovery phrase</Text>
+            You're removing your <Text color="statusCritical">recovery phrase</Text>
           </Trans>
         ),
         description: IS_ANDROID ? (
@@ -123,7 +123,7 @@ export const useModalContent = ({
           <Trans t={t}>
             {/* https://react.i18next.com/latest/trans-component#interpolation */}
             {/* @ts-expect-error: react-i18next uses this ^ syntax and it's not canonic */}
-            You’re removing <Text color="statusCritical">{{ wallet: account?.name }}</Text>
+            You're removing <Text color="statusCritical">{{ wallet: account?.name }}</Text>
           </Trans>
         ),
         description: (
@@ -147,13 +147,13 @@ export const useModalContent = ({
       return {
         title: (
           <Trans t={t}>
-            You’re removing {/* https://react.i18next.com/latest/trans-component#interpolation */}
+            You're removing {/* https://react.i18next.com/latest/trans-component#interpolation */}
             {/* @ts-expect-error: react-i18next uses this ^ syntax and it's not canonic */}
             <Text color="neutral2">{{ wallet: viewOnlyDisplayName?.name }}</Text>
           </Trans>
         ),
         description: t(
-          'You can always add back view-only wallets by entering the wallet’s address.'
+          "You can always add back view-only wallets by entering the wallet's address."
         ),
         Icon: TrashIcon,
         iconColorLabel: 'neutral2',

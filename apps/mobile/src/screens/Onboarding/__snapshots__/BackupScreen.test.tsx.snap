@@ -120,7 +120,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             ]
           }
         >
-          Remember, backups are your lifeline. They’re your ticket back in if something goes wrong.
+          Remember, backups are your lifeline. They're your ticket back in if something goes wrong.
         </Text>
       </View>
       <View
@@ -643,7 +643,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         ]
                       }
                     >
-                      Top-notch security with no third parties. You’re in control.
+                      Top-notch security with no third parties. You're in control.
                     </Text>
                   </View>
                 </View>
@@ -991,7 +991,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             ]
           }
         >
-          Remember, backups are your lifeline. They’re your ticket back in if something goes wrong.
+          Remember, backups are your lifeline. They're your ticket back in if something goes wrong.
         </Text>
       </View>
       <View
@@ -1514,7 +1514,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         ]
                       }
                     >
-                      Top-notch security with no third parties. You’re in control.
+                      Top-notch security with no third parties. You're in control.
                     </Text>
                   </View>
                 </View>

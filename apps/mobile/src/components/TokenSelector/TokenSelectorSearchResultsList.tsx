@@ -132,7 +132,7 @@ function _TokenSelectorSearchResultsList({
     <TokenSelectorList
       chainFilter={chainFilter}
       emptyElement={emptyElement}
-      errorText={t('Couldn’t load search results')}
+      errorText={t("Couldn't load search results")}
       hasError={Boolean(error)}
       loading={loading}
       refetch={refetch}

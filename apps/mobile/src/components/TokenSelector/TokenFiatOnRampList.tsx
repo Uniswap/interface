@@ -132,7 +132,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
         <Box alignItems="center" flexGrow={1} justifyContent="center">
           <BaseCard.ErrorState
             retryButtonLabel="Retry"
-            title={t('Couldn’t load tokens to buy')}
+            title={t("Couldn't load tokens to buy")}
             onRetry={(): void => {
               if (supportedTokensQueryError) {
                 supportedTokensQueryRefetch?.()

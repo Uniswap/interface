@@ -234,7 +234,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         {showError ? (
           <BaseCard.ErrorState
             retryButtonLabel={t('Retry')}
-            title={t('Couldn’t load addresses')}
+            title={t("Couldn't load addresses")}
             onRetry={onRetry}
           />
         ) : isLoading ? (

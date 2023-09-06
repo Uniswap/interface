@@ -120,7 +120,7 @@ export function WalletEmptyState(): JSX.Element {
       },
       [ActionOption.Import]: {
         title: t('Import wallet'),
-        blurb: t(`Enter this wallet’s recovery phrase to begin swapping and sending.`),
+        blurb: t(`Enter this wallet's recovery phrase to begin swapping and sending.`),
         elementName: ElementName.EmptyStateImport,
         icon: (
           <IconContainer

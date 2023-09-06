@@ -205,7 +205,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} pt="spacing24">
         <BaseCard.ErrorState
           retryButtonLabel="Retry"
-          title={t('Couldn’t load search results')}
+          title={t("Couldn't load search results")}
           onRetry={onRetry}
         />
       </AnimatedFlex>

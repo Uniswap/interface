@@ -30,7 +30,7 @@ export function PriceExplorerError({
         <BaseCard.ErrorState
           description={t('Something went wrong.')}
           retryButtonLabel={showRetry ? t('Retry') : undefined}
-          title={t('Couldn’t load price chart')}
+          title={t("Couldn't load price chart")}
           onRetry={onRetry}
         />
       </Box>

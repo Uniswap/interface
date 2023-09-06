@@ -30,7 +30,7 @@ export function SettingsAppearanceScreen(): JSX.Element {
           Icon={ContrastIcon}
           active={currentTheme === 'system'}
           option={AppearanceSettingType.System}
-          subtitle={t('Default to your device’s appearance')}
+          subtitle={t("Default to your device's appearance")}
           title={t('Device settings')}
         />
         <AppearanceOption
