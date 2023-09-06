@@ -1,9 +1,8 @@
-import { FeatureFlag } from '../../../src/featureFlags'
 import { getTestSelector } from '../../utils'
 
 describe('Swap settings', () => {
   it('Opens and closes the settings menu', () => {
-    cy.visit('/swap', { featureFlags: [FeatureFlag.uniswapXEnabled] })
+    cy.visit('/swap')
     cy.contains('Settings').should('not.exist')
     cy.get(getTestSelector('open-settings-dialog-button')).click()
     cy.get(getTestSelector('mobile-settings-menu')).should('not.exist')
@@ -18,9 +17,7 @@ describe('Swap settings', () => {
   it('should open the mobile settings menu', () => {
     // Set viewport to iPhone 6
     cy.viewport('iphone-6')
-
-    // Visit the swap page with specific feature flag
-    cy.visit('/swap', { featureFlags: [FeatureFlag.uniswapXEnabled] })
+    cy.visit('/swap')
 
     // Click the button to open the settings dialog
     cy.get(getTestSelector('open-settings-dialog-button')).click({ waitForAnimations: true })

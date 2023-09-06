@@ -34,23 +34,23 @@ import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
+import { useLocalCurrencyPrice } from 'hooks/useLocalCurrencyPrice'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
-import { useUSDPrice } from 'hooks/useUSDPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
-import { ReactNode, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
-import { Field, replaceSwapState } from 'state/swap/actions'
+import { Field, forceExactInput, replaceSwapState } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
 import styled, { useTheme } from 'styled-components'
@@ -64,6 +64,7 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
+import { OutputTaxTooltipBody } from './TaxTooltipBody'
 import { UniswapXOptIn } from './UniswapXOptIn'
 
 export const ArrowContainer = styled.div`
@@ -277,7 +278,19 @@ export function Swap({
     parsedAmount,
     currencies,
     inputError: swapInputError,
+    inputTax,
+    outputTax,
   } = swapInfo
+
+  const [inputTokenHasTax, outputTokenHasTax] = useMemo(
+    () => [!inputTax.equalTo(0), !outputTax.equalTo(0)],
+    [inputTax, outputTax]
+  )
+
+  useEffect(() => {
+    // Force exact input if the user switches to an output token with tax
+    if (outputTokenHasTax && independentField === Field.OUTPUT) dispatch(forceExactInput())
+  }, [independentField, outputTokenHasTax, trade?.outputAmount])
 
   const {
     wrapType,
@@ -300,8 +313,8 @@ export function Swap({
     [independentField, parsedAmount, showWrap, trade]
   )
 
-  const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT], currencies[Field.INPUT] ?? undefined)
-  const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT], currencies[Field.OUTPUT] ?? undefined)
+  const fiatValueInput = useLocalCurrencyPrice(parsedAmounts[Field.INPUT], currencies[Field.INPUT] ?? undefined)
+  const fiatValueOutput = useLocalCurrencyPrice(parsedAmounts[Field.OUTPUT], currencies[Field.OUTPUT] ?? undefined)
   const showFiatValueInput = Boolean(parsedAmounts[Field.INPUT])
   const showFiatValueOutput = Boolean(parsedAmounts[Field.OUTPUT])
 
@@ -314,9 +327,9 @@ export function Swap({
     [trade, tradeState]
   )
 
-  const fiatValueTradeInput = useUSDPrice(trade?.inputAmount)
-  const fiatValueTradeOutput = useUSDPrice(trade?.postTaxOutputAmount)
-  const preTaxFiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
+  const fiatValueTradeInput = useLocalCurrencyPrice(trade?.inputAmount)
+  const fiatValueTradeOutput = useLocalCurrencyPrice(trade?.postTaxOutputAmount)
+  const preTaxFiatValueTradeOutput = useLocalCurrencyPrice(trade?.outputAmount)
   const [stablecoinPriceImpact, preTaxStablecoinPriceImpact] = useMemo(
     () =>
       routeIsSyncing || !isClassicTrade(trade)
@@ -510,6 +523,7 @@ export function Swap({
     },
     [onCurrencyChange, onCurrencySelection, state, trace]
   )
+  const inputCurrencyNumericalInputRef = useRef<HTMLInputElement>(null)
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
@@ -608,6 +622,7 @@ export function Swap({
               showCommonBases
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
+              ref={inputCurrencyNumericalInputRef}
             />
           </Trace>
         </SwapSection>
@@ -621,7 +636,7 @@ export function Swap({
               data-testid="swap-currency-button"
               onClick={() => {
                 if (disableTokenInputs) return
-                onSwitchTokens()
+                onSwitchTokens(inputTokenHasTax, formattedAmounts[dependentField])
                 maybeLogFirstSwapAction(trace)
               }}
               color={theme.neutral1}
@@ -650,6 +665,13 @@ export function Swap({
                 showCommonBases
                 id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                 loading={independentField === Field.INPUT && routeIsSyncing}
+                numericalInputSettings={{
+                  // We disable numerical input here if the selected token has tax, since we cannot guarantee exact_outputs for FOT tokens
+                  disabled: outputTokenHasTax,
+                  // Focus the input currency panel if the user tries to type into the disabled output currency panel
+                  onDisabledClick: () => inputCurrencyNumericalInputRef.current?.focus(),
+                  disabledTooltipBody: <OutputTaxTooltipBody currencySymbol={currencies[Field.OUTPUT]?.symbol} />,
+                }}
               />
             </Trace>
             {recipient !== null && !showWrap ? (

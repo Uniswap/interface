@@ -111,8 +111,7 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? avaxDarkGradient : avaxLightGradient
         break
       }
-      case ChainId.BASE:
-      case ChainId.BASE_GOERLI: {
+      case ChainId.BASE: {
         setBackground(backgroundResetStyles)
         const baseLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(0, 82, 255, 0) 0%, rgba(0, 82, 255, 0) 40.0%, rgba(252, 255, 82, 0.00) 100%), rgb(255, 255, 255)'

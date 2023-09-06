@@ -362,8 +362,6 @@ function SearchBarDropdownContents({
 
 function ComingSoonText({ chainId }: { chainId: ChainId }) {
   switch (chainId) {
-    case ChainId.BNB:
-      return <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
     case ChainId.AVALANCHE:
       return <Trans>Coming soon: search and explore tokens on Avalanche Chain</Trans>
     default:

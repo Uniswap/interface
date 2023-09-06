@@ -503,11 +503,19 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           tvl={
             <ClickableContent>
-              {formatNumber(token.market?.totalValueLocked?.value, NumberType.FiatTokenStats)}
+              {formatNumber({
+                input: token.market?.totalValueLocked?.value,
+                type: NumberType.FiatTokenStats,
+              })}
             </ClickableContent>
           }
           volume={
-            <ClickableContent>{formatNumber(token.market?.volume?.value, NumberType.FiatTokenStats)}</ClickableContent>
+            <ClickableContent>
+              {formatNumber({
+                input: token.market?.volume?.value,
+                type: NumberType.FiatTokenStats,
+              })}
+            </ClickableContent>
           }
           sparkLine={
             <SparkLine>

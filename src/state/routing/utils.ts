@@ -6,9 +6,7 @@ import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { asSupportedChain } from 'constants/chains'
-import { ZERO_PERCENT } from 'constants/misc'
 import { RPC_PROVIDERS } from 'constants/providers'
-import { getInputTax, getOutputTax } from 'constants/tax'
 import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
@@ -215,9 +213,6 @@ export async function transformRoutesToTrade(
 
   const approveInfo = await getApproveInfo(account, currencyIn, amount, usdCostPerGas)
 
-  const inputTax = args.fotAdjustmentsEnabled ? getInputTax(currencyIn) : ZERO_PERCENT
-  const outputTax = args.fotAdjustmentsEnabled ? getOutputTax(currencyOut) : ZERO_PERCENT
-
   const classicTrade = new ClassicTrade({
     v2Routes:
       routes
@@ -252,8 +247,8 @@ export async function transformRoutesToTrade(
     isUniswapXBetter,
     requestId: data.quote.requestId,
     quoteMethod,
-    inputTax,
-    outputTax,
+    inputTax: args.inputTax,
+    outputTax: args.outputTax,
   })
 
   // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,

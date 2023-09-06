@@ -279,16 +279,20 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         {totalBalance !== undefined ? (
           <FadeInColumn gap="xs">
             <ThemedText.HeadlineLarge fontWeight={535} data-testid="portfolio-total-balance">
-              {formatNumber(totalBalance, NumberType.PortfolioBalance)}
+              {formatNumber({
+                input: totalBalance,
+                type: NumberType.PortfolioBalance,
+              })}
             </ThemedText.HeadlineLarge>
             <AutoRow marginBottom="20px">
               {absoluteChange !== 0 && percentChange && (
                 <>
                   <PortfolioArrow change={absoluteChange as number} />
                   <ThemedText.BodySecondary>
-                    {`${formatNumber(Math.abs(absoluteChange as number), NumberType.PortfolioBalance)} (${formatDelta(
-                      percentChange
-                    )})`}
+                    {`${formatNumber({
+                      input: Math.abs(absoluteChange as number),
+                      type: NumberType.PortfolioBalance,
+                    })} (${formatDelta(percentChange)})`}
                   </ThemedText.BodySecondary>
                 </>
               )}
