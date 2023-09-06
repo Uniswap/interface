@@ -47,13 +47,16 @@ interface FallbackProviderEvaluation {
   performance: ProviderPerformance
 }
 
+/**
+ * AppRpcProvider is an extension of the JsonRpcProvider class from the ethers.js library.
+ * This provider balances requests among multiple JSON-RPC endpoints.
+ */
 export default class AppRpcProvider extends JsonRpcProvider {
   readonly providerEvaluations: ReadonlyArray<FallbackProviderEvaluation>
   readonly evaluationInterval: number
   _highestBlockNumber = -1
-  primaryProvider: JsonRpcProvider
 
-  constructor(providers: JsonRpcProvider[], evaluationInterval = 60000) {
+  constructor(providers: JsonRpcProvider[], evaluationInterval = 30000) {
     if (providers.length === 0) throw new Error('providers array empty')
     providers.forEach((provider, i) => {
       if (!Provider.isProvider(provider)) throw new Error(`invalid provider ${i}`)
@@ -61,9 +64,7 @@ export default class AppRpcProvider extends JsonRpcProvider {
     const agreedUponNetwork = checkNetworks(providers.map((p) => p.network))
     if (!agreedUponNetwork) throw new Error('networks mismatch')
 
-    const primaryProvider = providers[0]
-    super(primaryProvider.connection)
-    this.primaryProvider = primaryProvider
+    super(providers[0].connection)
     this.providerEvaluations = providers.map((provider) => {
       return Object.freeze({
         provider,
@@ -79,16 +80,15 @@ export default class AppRpcProvider extends JsonRpcProvider {
     defineReadOnly(this, 'providerEvaluations', Object.freeze(this.providerEvaluations))
   }
 
+  /**
+   * Perform a JSON-RPC request.
+   *
+   * method - The JSON-RPC method name.
+   * params - The parameters for the JSON-RPC method.
+   * Returns a Promise that resolves with the result of the JSON-RPC method.
+   * Throws an error if all providers fail to perform the operation.
+   */
   async perform(method: string, params: { [name: string]: any }): Promise<any> {
-    // Sort providers by performance score (latency and failure rate)
-    const sortedEvaluations = this.providerEvaluations.slice().sort((a, b) => {
-      const scoreA = a.performance.latency * a.performance.failureRate
-      const scoreB = b.performance.latency * b.performance.failureRate
-      return scoreA - scoreB
-    })
-
-    this.primaryProvider = sortedEvaluations[0].provider
-
     // Periodically evaluate all providers
     const currentTime = now()
     this.providerEvaluations.forEach((providerEval) => {
@@ -97,29 +97,46 @@ export default class AppRpcProvider extends JsonRpcProvider {
       }
     })
 
+    // Sort providers by performance score (latency and failure rate)
+    const sortedEvaluations = AppRpcProvider.sortProviders(this.providerEvaluations.slice())
+
     // Always broadcast "sendTransaction" to all backends
     if (method === 'sendTransaction') {
       const results: Array<string | Error> = await Promise.all(
-        this.providerEvaluations.map((c) =>
-          c.provider.sendTransaction(params.signedTransaction).then(
+        sortedEvaluations.map(({ provider }) => {
+          return provider.sendTransaction(params.signedTransaction).then(
             (result) => result.hash,
             (error) => error
           )
-        )
+        })
       )
 
-      // Any success is good enough (other errors are likely "already seen" errors
+      // Any success is good enough
       for (let i = 0; i < results.length; i++) {
         if (typeof results[i] === 'string') return results[i]
       }
 
       // They were all an error; pick the first error
       throw results[0]
+    } else {
+      for (const { provider, performance } of sortedEvaluations) {
+        try {
+          const result = await provider.perform(method, params)
+          return result
+        } catch (error) {
+          performance.failureRate++ // Increment failure rate
+        }
+      }
+      throw new Error('All providers failed to perform the operation.')
     }
-
-    return this.primaryProvider.perform(method, params)
   }
 
+  /**
+   * Evaluates the performance of a provider. Updates latency and failure rate metrics.
+   *
+   * config - The provider evaluation configuration.
+   * Returns a Promise that resolves when the evaluation is complete.
+   */
   async evaluateProvider(config: FallbackProviderEvaluation): Promise<void> {
     const startTime = now()
     try {
@@ -131,5 +148,13 @@ export default class AppRpcProvider extends JsonRpcProvider {
       config.performance.failureRate += 1 // Increase failure rate on failed request
     }
     config.performance.lastEvaluated = now()
+  }
+
+  static sortProviders(providerEvaluations: FallbackProviderEvaluation[]) {
+    return providerEvaluations.sort((a, b) => {
+      const scoreA = a.performance.latency * (a.performance.failureRate + 1)
+      const scoreB = b.performance.latency * (b.performance.failureRate + 1)
+      return scoreA - scoreB
+    })
   }
 }
