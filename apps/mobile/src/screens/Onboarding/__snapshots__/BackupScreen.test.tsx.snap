@@ -54,23 +54,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
       }
     >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
         style={
           {
             "alignItems": "center",
@@ -136,23 +119,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
         }
       />
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
         style={
           {
             "alignItems": "stretch",
@@ -165,23 +131,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
         }
       >
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
           style={
             {
               "alignItems": "stretch",
@@ -193,23 +142,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           }
         >
           <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": undefined,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
             style={
               {
                 "alignItems": "stretch",
@@ -301,19 +233,22 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     align="xMidYMid"
                     bbHeight="16"
                     bbWidth="16"
-                    color="#FC72FF"
                     fill="none"
                     focusable={false}
-                    height={16}
                     meetOrSlice={0}
                     minX={0}
                     minY={0}
-                    size={8}
+                    strokeWidth={8}
                     style={
                       [
                         {
                           "backgroundColor": "transparent",
                           "borderWidth": 0,
+                        },
+                        {
+                          "color": "#FC72FF",
+                          "height": 16,
+                          "width": 16,
                         },
                         {
                           "flex": 0,
@@ -325,15 +260,16 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     tintColor="#FC72FF"
                     vbHeight={24}
                     vbWidth={24}
-                    width={16}
                   >
                     <RNSVGGroup
                       fill={null}
                       propList={
                         [
                           "fill",
+                          "strokeWidth",
                         ]
                       }
+                      strokeWidth="8"
                     >
                       <RNSVGPath
                         d="M15.03 9.09003C15.35 9.03003 15.67 9 16 9C18.76 9 21 11.24 21 14C21 16.76 18.76 19 16 19H9.5C5.91 19 3 16.09 3 12.5C3 8.91 5.91 6 9.5 6C11.146 6 12.648 6.61297 13.792 7.62097C14.274 8.04597 14.692 8.54103 15.03 9.09003Z"
@@ -651,23 +587,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             </View>
           </View>
           <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": undefined,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
             style={
               {
                 "alignItems": "stretch",
@@ -723,23 +642,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               }
             >
               <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
                 style={
                   {
                     "alignItems": "center",
@@ -755,21 +657,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   height={24}
                   width={24}
                 />
-                <RCTText
-                  accessibilityState={
-                    {
-                      "busy": undefined,
-                      "checked": undefined,
-                      "disabled": undefined,
-                      "expanded": undefined,
-                      "selected": undefined,
-                    }
-                  }
-                  accessible={true}
+                <Text
                   allowFontScaling={true}
-                  ellipsizeMode="tail"
-                  isHighlighted={false}
-                  selectionColor={null}
                   style={
                     {
                       "color": "#222222",
@@ -779,29 +668,13 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "lineHeight": 24,
                     }
                   }
+                  suppressHighlighting={true}
                 >
                   Learn about wallet safety and recovery
-                </RCTText>
+                </Text>
               </View>
             </View>
             <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": undefined,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
               onBlur={[Function]}
               onFocus={[Function]}
               pointerEvents="none"
@@ -834,22 +707,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               }
               userSelect="none"
             >
-              <RCTText
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessible={true}
-                allowFontScaling={true}
-                ellipsizeMode="tail"
-                isHighlighted={false}
+              <Text
                 maxFontSizeMultiplier={1.2}
-                selectionColor={null}
                 style={
                   {
                     "color": "#CECECE",
@@ -859,9 +718,10 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     "lineHeight": 24,
                   }
                 }
+                suppressHighlighting={true}
               >
                 Select backup to continue
-              </RCTText>
+              </Text>
             </View>
           </View>
         </View>
@@ -925,23 +785,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
       }
     >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
         style={
           {
             "alignItems": "center",
@@ -1007,23 +850,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
         }
       />
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
         style={
           {
             "alignItems": "stretch",
@@ -1036,23 +862,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
         }
       >
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
           style={
             {
               "alignItems": "stretch",
@@ -1064,23 +873,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           }
         >
           <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": undefined,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
             style={
               {
                 "alignItems": "stretch",
@@ -1172,19 +964,22 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     align="xMidYMid"
                     bbHeight="16"
                     bbWidth="16"
-                    color="#FC72FF"
                     fill="none"
                     focusable={false}
-                    height={16}
                     meetOrSlice={0}
                     minX={0}
                     minY={0}
-                    size={8}
+                    strokeWidth={8}
                     style={
                       [
                         {
                           "backgroundColor": "transparent",
                           "borderWidth": 0,
+                        },
+                        {
+                          "color": "#FC72FF",
+                          "height": 16,
+                          "width": 16,
                         },
                         {
                           "flex": 0,
@@ -1196,15 +991,16 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     tintColor="#FC72FF"
                     vbHeight={24}
                     vbWidth={24}
-                    width={16}
                   >
                     <RNSVGGroup
                       fill={null}
                       propList={
                         [
                           "fill",
+                          "strokeWidth",
                         ]
                       }
+                      strokeWidth="8"
                     >
                       <RNSVGPath
                         d="M15.03 9.09003C15.35 9.03003 15.67 9 16 9C18.76 9 21 11.24 21 14C21 16.76 18.76 19 16 19H9.5C5.91 19 3 16.09 3 12.5C3 8.91 5.91 6 9.5 6C11.146 6 12.648 6.61297 13.792 7.62097C14.274 8.04597 14.692 8.54103 15.03 9.09003Z"
@@ -1522,23 +1318,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             </View>
           </View>
           <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": undefined,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
             style={
               {
                 "alignItems": "stretch",
@@ -1594,23 +1373,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               }
             >
               <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
                 style={
                   {
                     "alignItems": "center",
@@ -1626,21 +1388,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   height={24}
                   width={24}
                 />
-                <RCTText
-                  accessibilityState={
-                    {
-                      "busy": undefined,
-                      "checked": undefined,
-                      "disabled": undefined,
-                      "expanded": undefined,
-                      "selected": undefined,
-                    }
-                  }
-                  accessible={true}
+                <Text
                   allowFontScaling={true}
-                  ellipsizeMode="tail"
-                  isHighlighted={false}
-                  selectionColor={null}
                   style={
                     {
                       "color": "#222222",
@@ -1650,29 +1399,13 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "lineHeight": 24,
                     }
                   }
+                  suppressHighlighting={true}
                 >
                   Learn about wallet safety and recovery
-                </RCTText>
+                </Text>
               </View>
             </View>
             <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": undefined,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
               onBlur={[Function]}
               onClick={[Function]}
               onFocus={[Function]}
@@ -1710,22 +1443,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 }
               }
             >
-              <RCTText
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessible={true}
-                allowFontScaling={true}
-                ellipsizeMode="tail"
-                isHighlighted={false}
+              <Text
                 maxFontSizeMultiplier={1.2}
-                selectionColor={null}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -1735,9 +1454,10 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     "lineHeight": 24,
                   }
                 }
+                suppressHighlighting={true}
               >
                 Continue
-              </RCTText>
+              </Text>
             </View>
           </View>
         </View>

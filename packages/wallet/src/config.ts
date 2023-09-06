@@ -51,7 +51,7 @@ const _config: Config = {
 
 export const config = Object.freeze(_config)
 
-if (__DEV__) {
+if (process.env.NODE_ENV !== 'test' && __DEV__) {
   // Cannot use logger here, causes error from circular dep
   // eslint-disable-next-line no-console
   console.debug('Using app config:', config)

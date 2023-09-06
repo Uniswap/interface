@@ -105,9 +105,9 @@ async function generateSVGComponents(directoryPair: SVGDirectorySourceAndOutput)
         .toString()
         .replace(/ class=\"[^\"]+\"/g, '')
         .replace(/ version=\"[^\"]+\"/g, '')
-        .replace(new RegExp('stroke="currentColor"', 'g'), 'stroke={color}')
-        .replace(/width="[0-9]+"/, 'width={size}')
-        .replace(/height="[0-9]+"/, 'height={size}')
+        .replace(new RegExp('stroke="currentColor"', 'g'), 'stroke={props.style?.color}')
+        .replace(/width="[0-9]+"/, '')
+        .replace(/height="[0-9]+"/, '')
         .replace('<svg', '<Svg')
         .replace('</svg', '</Svg')
         .replace(new RegExp('<circle', 'g'), '<_Circle')
@@ -148,10 +148,9 @@ async function generateSVGComponents(directoryPair: SVGDirectorySourceAndOutput)
       let element = `
 import React, { memo, forwardRef } from 'react'
 import PropTypes from 'prop-types'
-import type { IconProps } from '@tamagui/helpers-icon'
-import { useTheme, isWeb, getTokenValue } from 'tamagui'
 import {
   Svg,
+  SvgProps,
   Circle as _Circle,
   Ellipse,
   G,
@@ -168,65 +167,25 @@ import {
   Defs,
   Stop
 } from 'react-native-svg'
-import { themed } from '@tamagui/helpers-icon'
 
-const Icon = forwardRef<Svg, IconProps>((props, ref) => {
-  // isWeb currentColor to maintain backwards compat a bit better, on native uses theme color
-  const {
-    color: colorProp = ${defaultFill ? `'${defaultFill}'` : `isWeb ? 'currentColor' : undefined`},
-    size: sizeProp = '$true',
-    strokeWidth: strokeWidthProp,
-    ...restProps,
-  } = props
-  const theme = useTheme()
+// eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
+import { createIcon } from '../factories/createIcon'
 
-  const size =
-    getTokenValue(
-      // @ts-expect-error it falls back to undefined
-      sizeProp,
-      'size'
-    ) ?? sizeProp
-
-  const strokeWidth =
-    getTokenValue(
-      // @ts-expect-error it falls back to undefined
-      strokeWidthProp,
-      'size'
-    ) ?? strokeWidthProp
-
-  const color =
-    // @ts-expect-error its fine to access colorProp undefined
-    theme[colorProp]?.get()
-    ?? colorProp ?? theme.color.get()
-
-  const svgProps = {
-    ...restProps,
-    size,
-    strokeWidth,
-    color,
-  }
-
-  return (
-    ${parsedSvgToReact
-      .replace(`<Svg `, `<Svg ref={ref} `)
-      .replace('otherProps="..."', '{...svgProps}')}
-  )
+export const [${cname}, Animated${cname}] = createIcon({
+  name: '${cname}',
+  getIcon: (props) => (
+    ${parsedSvgToReact.replace('otherProps="..."', '{...props}')}
+  ),
+  ${defaultFill ? `defaultFill: '${defaultFill}'` : ''}
 })
-
-Icon.displayName = '${cname}'
-
-export const ${cname} = memo<IconProps>(Icon)
 `
 
       // if no width/height/color, add them
 
-      element = element.replace(/fill="(#[a-z0-9]+)"/gi, `fill={color ?? '$1'}`)
-
-      if (!element.includes(`width={size}`)) {
-        element = element.replace(`<Svg `, `<Svg width={size} height={size}`)
-      }
-
-      element = element.replaceAll(`fill="currentColor"`, `fill={color}`)
+      element = element.replace(/fill="(#[a-z0-9]+)"/gi, `fill={props.style?.color ?? '$1'}`)
+      element = element.replaceAll(`fill="currentColor"`, `fill={props.style?.color}`)
+      element = element.replaceAll(`xmlns:xlink="http://www.w3.org/1999/xlink"`, '')
+      element = element.replaceAll(`xlink:href`, 'xlinkHref')
 
       const formatted = await eslintFormat(element)
 
@@ -248,10 +207,6 @@ export const ${cname} = memo<IconProps>(Icon)
 
   const formattedIndex = await eslintFormat(indexFile)
   await writeFile(join(directoryPair.output, 'index.ts'), formattedIndex, 'utf-8')
-
-  console.log(
-    `⚠️ Warning: The CameraScan icon needs manual removing strokeWidth="10", we could automate...`
-  )
 }
 
 const eslint = new ESLint({ fix: true })

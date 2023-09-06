@@ -1,70 +1,16 @@
-import type { IconProps } from '@tamagui/helpers-icon'
-import { forwardRef, memo } from 'react'
 import { Path, Svg } from 'react-native-svg'
-import { getTokenValue, isWeb, useTheme } from 'tamagui'
 
-const Icon = forwardRef<Svg, IconProps>((props, ref) => {
-  // isWeb currentColor to maintain backwards compat a bit better, on native uses theme color
-  const {
-    color: colorProp = isWeb ? 'currentColor' : undefined,
-    size: sizeProp = '$true',
-    strokeWidth: strokeWidthProp,
-    ...restProps
-  } = props
-  const theme = useTheme()
+// eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
+import { createIcon } from '../factories/createIcon'
 
-  const size =
-    getTokenValue(
-      // @ts-expect-error it falls back to undefined
-      sizeProp,
-      'size'
-    ) ?? sizeProp
-
-  const strokeWidth =
-    getTokenValue(
-      // @ts-expect-error it falls back to undefined
-      strokeWidthProp,
-      'size'
-    ) ?? strokeWidthProp
-
-  const color =
-    // @ts-expect-error its fine to access colorProp undefined
-    theme[colorProp]?.get() ?? colorProp ?? theme.color.get()
-
-  const svgProps = {
-    ...restProps,
-    size,
-    strokeWidth,
-    color,
-  }
-
-  return (
-    <Svg
-      ref={ref}
-      fill="none"
-      height={size}
-      stroke={color}
-      viewBox="0 0 20 20"
-      width={size}
-      {...svgProps}>
+export const [CopySheets, AnimatedCopySheets] = createIcon({
+  name: 'CopySheets',
+  getIcon: (props) => (
+    <Svg fill="none" viewBox="0 0 15 16" {...props}>
       <Path
-        d="M16.7 7.5H9.2c-1 0-1.7.7-1.7 1.7v7.5c0 .9.7 1.6 1.7 1.6h7.5c.9 0 1.6-.7 1.6-1.6V9.2c0-1-.7-1.7-1.6-1.7Z"
-        stroke={color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      />
-      <Path
-        d="M4.2 12.5h-.9a1.7 1.7 0 0 1-1.6-1.7V3.3a1.7 1.7 0 0 1 1.6-1.6h7.5a1.7 1.7 0 0 1 1.7 1.6v.9"
-        stroke={color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
+        d="M12.2813 3.6875H5.71875C4.086 3.6875 3.1875 4.586 3.1875 6.21875V12.7813C3.1875 14.414 4.086 15.3125 5.71875 15.3125H12.2813C13.914 15.3125 14.8125 14.414 14.8125 12.7813V6.21875C14.8125 4.586 13.914 3.6875 12.2813 3.6875ZM13.6875 12.7813C13.6875 13.7803 13.2803 14.1875 12.2813 14.1875H5.71875C4.71975 14.1875 4.3125 13.7803 4.3125 12.7813V6.21875C4.3125 5.21975 4.71975 4.8125 5.71875 4.8125H12.2813C13.2803 4.8125 13.6875 5.21975 13.6875 6.21875V12.7813ZM1.3125 3.215V9.785C1.3125 10.6835 1.67482 10.9048 1.79407 10.9783C2.05957 11.1403 2.14192 11.4868 1.97992 11.7515C1.87342 11.9248 1.68902 12.02 1.49927 12.02C1.39952 12.02 1.29743 11.993 1.20593 11.9375C0.530183 11.5235 0.1875 10.7998 0.1875 9.785V3.215C0.1875 1.6085 1.10934 0.6875 2.71509 0.6875H9.28491C10.5487 0.6875 11.1525 1.24173 11.4375 1.70598C11.5995 1.97073 11.5162 2.31723 11.2515 2.47923C10.986 2.64198 10.641 2.55799 10.4782 2.29324C10.4055 2.17399 10.1834 1.81177 9.28491 1.81177H2.71509C1.71909 1.81252 1.3125 2.219 1.3125 3.215Z"
+        fill={props.style?.color}
       />
     </Svg>
-  )
+  ),
 })
-
-Icon.displayName = 'CopySheets'
-
-export const CopySheets = memo<IconProps>(Icon)

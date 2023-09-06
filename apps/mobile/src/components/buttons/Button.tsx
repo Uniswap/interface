@@ -2,11 +2,11 @@ import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo } from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
-import { withAnimated } from 'src/components/animated'
 import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { getButtonProperties } from 'src/components/buttons/utils'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { withAnimated } from 'ui/src/components/factories/animated'
 
 export enum ButtonSize {
   Small = 'small',

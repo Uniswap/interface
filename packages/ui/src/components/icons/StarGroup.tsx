@@ -1,45 +1,12 @@
-import type { IconProps } from '@tamagui/helpers-icon'
-import { forwardRef, memo } from 'react'
 import { Defs, LinearGradient, Path, Stop, Svg } from 'react-native-svg'
-import { getTokenValue, isWeb, useTheme } from 'tamagui'
 
-const Icon = forwardRef<Svg, IconProps>((props, ref) => {
-  // isWeb currentColor to maintain backwards compat a bit better, on native uses theme color
-  const {
-    color: colorProp = isWeb ? 'currentColor' : undefined,
-    size: sizeProp = '$true',
-    strokeWidth: strokeWidthProp,
-    ...restProps
-  } = props
-  const theme = useTheme()
+// eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
+import { createIcon } from '../factories/createIcon'
 
-  const size =
-    getTokenValue(
-      // @ts-expect-error it falls back to undefined
-      sizeProp,
-      'size'
-    ) ?? sizeProp
-
-  const strokeWidth =
-    getTokenValue(
-      // @ts-expect-error it falls back to undefined
-      strokeWidthProp,
-      'size'
-    ) ?? strokeWidthProp
-
-  const color =
-    // @ts-expect-error its fine to access colorProp undefined
-    theme[colorProp]?.get() ?? colorProp ?? theme.color.get()
-
-  const svgProps = {
-    ...restProps,
-    size,
-    strokeWidth,
-    color,
-  }
-
-  return (
-    <Svg ref={ref} fill="none" height={size} viewBox="0 0 16 15" width={size} {...svgProps}>
+export const [StarGroup, AnimatedStarGroup] = createIcon({
+  name: 'StarGroup',
+  getIcon: (props) => (
+    <Svg fill="none" viewBox="0 0 16 15" {...props}>
       <Path
         d="M15.8759 8.44882C15.8363 8.37027 15.7384 8.33088 15.6597 8.31125C15.2072 8.31125 11.317 8.15427 11.317 3.6347C11.317 3.49736 11.1992 3.37943 11.0612 3.37943C10.9242 3.37943 10.8063 3.49736 10.8063 3.6347C10.8063 8.15441 6.91568 8.31125 6.48307 8.31125C6.42416 8.31125 6.36513 8.33088 6.32586 8.37027C6.28647 8.38991 6.26661 8.42896 6.24731 8.44882C6.20793 8.52748 6.20793 8.62566 6.24731 8.70432C6.28659 8.78309 6.38466 8.84189 6.48295 8.84189H6.50259C6.95456 8.84189 10.8258 8.99921 10.8258 13.5184C10.8258 13.6558 10.9435 13.7739 11.0814 13.7739C11.219 13.7739 11.3366 13.6559 11.3366 13.5184C11.3366 9.01884 15.2074 8.84189 15.6598 8.84189C15.7579 8.84189 15.8364 8.7832 15.8957 8.70432C15.9345 8.62566 15.9345 8.5277 15.8758 8.44882H15.8759Z"
         fill="url(#paint0_linear_12336_349)"
@@ -85,9 +52,5 @@ const Icon = forwardRef<Svg, IconProps>((props, ref) => {
         </LinearGradient>
       </Defs>
     </Svg>
-  )
+  ),
 })
-
-Icon.displayName = 'StarGroup'
-
-export const StarGroup = memo<IconProps>(Icon)

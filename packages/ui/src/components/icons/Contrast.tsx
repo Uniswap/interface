@@ -1,53 +1,16 @@
-import type { IconProps } from '@tamagui/helpers-icon'
-import { forwardRef, memo } from 'react'
 import { Path, Svg } from 'react-native-svg'
-import { getTokenValue, isWeb, useTheme } from 'tamagui'
 
-const Icon = forwardRef<Svg, IconProps>((props, ref) => {
-  // isWeb currentColor to maintain backwards compat a bit better, on native uses theme color
-  const {
-    color: colorProp = isWeb ? 'currentColor' : undefined,
-    size: sizeProp = '$true',
-    strokeWidth: strokeWidthProp,
-    ...restProps
-  } = props
-  const theme = useTheme()
+// eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
+import { createIcon } from '../factories/createIcon'
 
-  const size =
-    getTokenValue(
-      // @ts-expect-error it falls back to undefined
-      sizeProp,
-      'size'
-    ) ?? sizeProp
-
-  const strokeWidth =
-    getTokenValue(
-      // @ts-expect-error it falls back to undefined
-      strokeWidthProp,
-      'size'
-    ) ?? strokeWidthProp
-
-  const color =
-    // @ts-expect-error its fine to access colorProp undefined
-    theme[colorProp]?.get() ?? colorProp ?? theme.color.get()
-
-  const svgProps = {
-    ...restProps,
-    size,
-    strokeWidth,
-    color,
-  }
-
-  return (
-    <Svg ref={ref} fill="none" height={size} viewBox="0 0 24 24" width={size} {...svgProps}>
+export const [Contrast, AnimatedContrast] = createIcon({
+  name: 'Contrast',
+  getIcon: (props) => (
+    <Svg fill="none" viewBox="0 0 24 24" {...props}>
       <Path
         d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 18.08C12 18.4 11.73 18.67 11.42 18.64C8.01001 18.35 5.32999 15.48 5.32999 12C5.32999 8.52 8.01001 5.64999 11.42 5.35999C11.73 5.32999 12 5.60001 12 5.92001V18.08Z"
-        fill={color}
+        fill={props.style?.color}
       />
     </Svg>
-  )
+  ),
 })
-
-Icon.displayName = 'Contrast'
-
-export const Contrast = memo<IconProps>(Icon)

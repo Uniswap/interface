@@ -90,23 +90,6 @@ exports[`renders collection preview card 1`] = `
         }
       >
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
           style={
             {
               "alignItems": "center",
@@ -119,21 +102,8 @@ exports[`renders collection preview card 1`] = `
             }
           }
         >
-          <RCTText
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": undefined,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessible={true}
+          <Text
             allowFontScaling={true}
-            ellipsizeMode="tail"
-            isHighlighted={false}
-            selectionColor={null}
             style={
               {
                 "color": "#7D7D7D",
@@ -144,9 +114,10 @@ exports[`renders collection preview card 1`] = `
                 "lineHeight": 24,
               }
             }
+            suppressHighlighting={true}
           >
             Content not available
-          </RCTText>
+          </Text>
         </View>
       </View>
       <View
