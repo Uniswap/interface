@@ -587,12 +587,11 @@ export function useFormatter() {
   const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
 
   const activeLocalCurrencyIsUSD = activeLocalCurrency === GqlCurrency.Usd
-  const { data: localCurrencyConversionRate } = useLocalCurrencyConversionRate(
-    activeLocalCurrency,
-    activeLocalCurrencyIsUSD
-  )
+  const { data: localCurrencyConversionRate, isLoading: localCurrencyConversionRateIsLoading } =
+    useLocalCurrencyConversionRate(activeLocalCurrency, activeLocalCurrencyIsUSD)
 
-  const currencyToFormatWith = localCurrencyConversionRate ? formatterLocalCurrency : DEFAULT_LOCAL_CURRENCY
+  const shouldFallbackToUSD = !localCurrencyConversionRate && !localCurrencyConversionRateIsLoading
+  const currencyToFormatWith = shouldFallbackToUSD ? DEFAULT_LOCAL_CURRENCY : formatterLocalCurrency
 
   const formatNumberWithLocales = useCallback(
     (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency' | 'conversionRate'>) =>
