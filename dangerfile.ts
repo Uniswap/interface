@@ -21,28 +21,28 @@ async function processAddChanges() {
   .concat(danger.git.created_files)
   .filter((file) => (file.endsWith('.ts') || file.endsWith('.tsx')) && !file.includes('dangerfile.ts'))
 
-  const addChanges = (await Promise.all(updatedTsFiles.flatMap(async (file) => {
+  const changes = (await Promise.all(updatedTsFiles.flatMap(async (file) => {
     const structuredDiff = await danger.git.structuredDiffForFile(file);
 
     return (structuredDiff?.chunks || []).flatMap((chunk) => {
-      return chunk.changes.filter((change) => change.type === 'add')
+      return chunk.changes.filter((change) => change.type === 'add' || change.type === 'normal')
     })
   }))).flatMap((x) => x)
 
   // Checks for any logging and reminds the developer not to log sensitive data
-  if (addChanges.some((change) => change.content.includes('logMessage') || change.content.includes('logger.'))) {
+  if (changes.some((change) => change.content.includes('logMessage') || change.content.includes('logger.'))) {
     warn('You are logging data. Please confirm that nothing sensitive is being logged!')
   }
 
   // Check for direct logging calls
-  if (addChanges.some((change) => change.content.includes('analytics.logEvent'))) {
+  if (changes.some((change) => change.content.includes('analytics.logEvent'))) {
     warn(`You are using the direct analytics call. Please use the typed wrapper for your given surface if possible!`)
   }
 
   // Check for UI package imports that are longer than needed
   const validLongerImports = ['ui/src', 'ui/src/theme', 'ui/src/loading', 'ui/src/theme/restyle']
   const longestImportLength = Math.max(...validLongerImports.map((i) => i.length))
-  addChanges.forEach((change) => {
+  changes.forEach((change) => {
     const indices = getIndicesOf(`from 'ui/src/`, change.content)
 
     indices.forEach((idx) => {
@@ -69,6 +69,21 @@ async function checkCocoaPodsVersion() {
   }
 }
 
+async function checkApostrophes() {
+  const updatedTranslations = danger.git.modified_files.find((file) => file.includes('en.json'))
+  if (updatedTranslations) {
+    const structuredDiff = await danger.git.structuredDiffForFile(updatedTranslations);
+    const changedLines = (structuredDiff?.chunks || []).flatMap((chunk) => {
+      return chunk.changes.filter((change) => change.type === 'add' || change.type === 'normal')
+    })
+    changedLines.forEach((line) => {
+      if (line.content.includes("'")) {
+        fail("You added a string using the ' character. Please use the ’ character instead!")
+      }
+    })
+  }
+}
+
 /* Warn about storing credentials in GH and uploading env.local to 1Password */
 const envChanged = danger.git.modified_files.includes('.env.defaults')
 if (envChanged) {
@@ -82,6 +97,9 @@ processAddChanges()
 
 // Check for cocoapods version change
 checkCocoaPodsVersion()
+
+// check translations use the correct apostrophes
+checkApostrophes()
 
 // Stories for new components
 const createdComponents = danger.git.created_files.filter(

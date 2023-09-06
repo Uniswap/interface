@@ -52,7 +52,7 @@ export function getTransferWarnings(
         symbol: currencyAmountIn.currency?.symbol,
       }),
       message: t(
-        "Your {{ symbol }} balance has decreased since you entered the amount you'd like to send",
+        'Your {{ symbol }} balance has decreased since you entered the amount you’d like to send',
         { symbol: currencyAmountIn.currency?.symbol }
       ),
     })

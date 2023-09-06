@@ -164,7 +164,7 @@ function _TokenSelectorList({
         <Box flexGrow={1} justifyContent="center">
           <BaseCard.ErrorState
             retryButtonLabel={t('Retry')}
-            title={errorText ?? t("Couldn't load tokens")}
+            title={errorText ?? t('Couldn’t load tokens')}
             onRetry={refetch}
           />
         </Box>

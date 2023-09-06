@@ -228,7 +228,7 @@ export function NFTItemScreen({
                         width="100%">
                         <BaseCard.ErrorState
                           retryButtonLabel="Retry"
-                          title={t("Couldn't load NFT details")}
+                          title={t('Couldn’t load NFT details')}
                           onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> =>
                             refetch?.()
                           }

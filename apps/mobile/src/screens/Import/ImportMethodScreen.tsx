@@ -52,8 +52,8 @@ const options: ImportMethodOption[] = [
     title: (t: AppTFunction) => t('Restore a wallet'),
     blurb: (t: AppTFunction) =>
       IS_ANDROID
-        ? t(`Add wallets you've backed up to your Google Drive account`)
-        : t(`Add wallets you've backed up to your iCloud account`),
+        ? t(`Add wallets you’ve backed up to your Google Drive account`)
+        : t(`Add wallets you’ve backed up to your iCloud account`),
     icon: (theme: Theme) => (
       <Icons.OSDynamicCloudIcon
         color={theme.colors.accent1}

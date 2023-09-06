@@ -230,7 +230,7 @@ export function SelectWallets(): JSX.Element {
         {showError ? (
           <Stack gap="$spacing24" p="$spacing12" width="100%">
             <Text color="$statusCritical" textAlign="center" variant="buttonLabelMedium">
-              Couldn't load addresses
+              {t('Couldn’t load addresses')}
             </Text>
             <XStack justifyContent="center">
               <Button theme="secondary" onPress={onRetry}>

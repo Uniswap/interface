@@ -216,7 +216,7 @@ export function Complete(): JSX.Element {
           viewportName="onboarding">
           <Toast.Title alignItems="center" display="flex" flexDirection="row" gap="$spacing8">
             <Icons.Checkmark color="$statusSuccess" size={iconSizes.icon24} />
-            <Text variant="bodyLarge">{t("Pinned! It's safe to close this tab now")}</Text>
+            <Text variant="bodyLarge">{t('Pinned! It’s safe to close this tab now')}</Text>
           </Toast.Title>
         </Toast>
       )}

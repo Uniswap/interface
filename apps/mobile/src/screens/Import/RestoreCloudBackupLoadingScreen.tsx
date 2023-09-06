@@ -105,8 +105,8 @@ export function RestoreCloudBackupLoadingScreen({
           <BaseCard.ErrorState
             description={
               IS_ANDROID
-                ? t(`It looks like you haven't backed up any of your seed phrases to Google Drive.`)
-                : t(`It looks like you haven't backed up any of your seed phrases to iCloud.`)
+                ? t(`It looks like you haven’t backed up any of your seed phrases to Google Drive.`)
+                : t(`It looks like you haven’t backed up any of your seed phrases to iCloud.`)
             }
             icon={
               <Icons.OSDynamicCloudIcon
