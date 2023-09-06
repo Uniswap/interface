@@ -46,7 +46,6 @@ export interface GetQuoteArgs {
   uniswapXEthOutputEnabled: boolean
   uniswapXExactOutputEnabled: boolean
   userDisabledUniswapX: boolean
-  fotAdjustmentsEnabled: boolean
   inputTax: Percent
   outputTax: Percent
 }
