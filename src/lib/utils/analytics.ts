@@ -30,6 +30,15 @@ export const getPriceUpdateBasisPoints = (
 }
 
 export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSlippage: Percent) {
+  let priceImpact
+  try {
+    priceImpact = isClassicTrade(trade)
+      ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade))
+      : undefined
+  } catch (e) {
+    console.error(e)
+    priceImpact = 0
+  }
   return {
     routing: trade.fillType,
     type: trade.tradeType,
@@ -42,9 +51,7 @@ export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSli
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
     token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-    price_impact_basis_points: isClassicTrade(trade)
-      ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade))
-      : undefined,
+    price_impact_basis_points: priceImpact,
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId

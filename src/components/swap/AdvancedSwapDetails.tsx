@@ -7,8 +7,9 @@ import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { useMemo } from 'react'
 import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
-import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
+import { getTransactionCount, isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { formatCurrencyAmount, formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
 
 import { Separator, ThemedText } from '../../theme'
@@ -49,6 +50,16 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   const txCount = getTransactionCount(trade)
 
   const supportsGasEstimate = chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
+
+  const priceImpact = useMemo(() => {
+    if (isUniswapXTrade(trade)) return ZERO_PERCENT
+    try {
+      return trade.priceImpact
+    } catch (e) {
+      console.error(e)
+      return ZERO_PERCENT
+    }
+  }, [trade])
 
   return (
     <Column gap="md">
@@ -93,7 +104,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               </ThemedText.BodySmall>
             </MouseoverTooltip>
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-              <ThemedText.BodySmall>{formatPriceImpact(trade.priceImpact)}</ThemedText.BodySmall>
+              <ThemedText.BodySmall>{formatPriceImpact(priceImpact)}</ThemedText.BodySmall>
             </TextWithLoadingPlaceholder>
           </RowBetween>
         </>
