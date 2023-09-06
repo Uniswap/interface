@@ -94,7 +94,6 @@ export function PriceExplorer({
                     />
                   )}
                 </LineChart.Path>
-
                 <LineChart.CursorLine color={tokenColor} />
                 <LineChart.CursorCrosshair
                   color={tokenColor}

@@ -117,7 +117,7 @@ export type TextProps = TextFrameProps & {
 
 // const ThemedAnimatedText = createText<Theme>(Animated.Text)
 
-const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
+export const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   return (
     <Box alignItems="center" flexDirection="row">
       <Box alignItems="center" flexDirection="row" position="relative">
@@ -136,7 +136,7 @@ const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.Element 
   )
 }
 
-const TextLoaderWrapper = ({
+export const TextLoaderWrapper = ({
   children,
   loadingShimmer,
 }: { loadingShimmer?: boolean } & PropsWithChildren<unknown>): JSX.Element => {

@@ -4,7 +4,6 @@ import { useLineChartDatetime } from 'react-native-wagmi-charts'
 import { useAppTheme } from 'src/app/hooks'
 import { AnimatedCaretChange } from 'src/components/icons/Caret'
 import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { IS_ANDROID } from 'src/constants/globals'
 import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
@@ -14,7 +13,7 @@ export function PriceText({ loading }: { loading: boolean }): JSX.Element {
   const price = useLineChartPrice()
 
   if (loading) {
-    return <Text loading loadingPlaceholderText="$10,000" variant="headlineLarge" />
+    return <AnimatedText loading loadingPlaceholderText="$10,000" variant="headlineLarge" />
   }
 
   return <AnimatedDecimalNumber number={price} testID="price-text" variant="headlineLarge" />
@@ -42,11 +41,19 @@ export function RelativeChangeText({
   }))
 
   if (loading) {
-    return <Text loading loadingPlaceholderText="00.00%" variant="bodyLarge" />
+    return (
+      <Flex mt={IS_ANDROID ? 'none' : 'spacing2'}>
+        <AnimatedText loading loadingPlaceholderText="00.00%" variant="bodyLarge" />
+      </Flex>
+    )
   }
 
   return (
-    <Flex row alignItems={IS_ANDROID ? 'center' : 'flex-end'} gap="spacing2" mt="spacing2">
+    <Flex
+      row
+      alignItems={IS_ANDROID ? 'center' : 'flex-end'}
+      gap="spacing2"
+      mt={IS_ANDROID ? 'none' : 'spacing2'}>
       <AnimatedCaretChange
         height={theme.iconSizes.icon16}
         strokeWidth={2}

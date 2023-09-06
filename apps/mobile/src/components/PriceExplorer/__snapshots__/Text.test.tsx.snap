@@ -41,66 +41,178 @@ exports[`PriceText renders loading state 1`] = `
   onLayout={[Function]}
 >
   <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
     style={
-      [
-        {
-          "alignItems": "center",
-          "display": "flex",
-          "flexDirection": "row",
-        },
-      ]
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+      }
     }
   >
     <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
       style={
-        [
-          {
-            "alignItems": "center",
-            "display": "flex",
-            "flexDirection": "row",
-            "position": "relative",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "position": "relative",
+        }
       }
     >
       <View
         accessibilityElementsHidden={true}
         importantForAccessibility="no-hide-descendants"
       >
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.2}
+        <View
+          sentry-label="Flex"
           style={
             [
               {
-                "color": "transparent",
+                "alignItems": "stretch",
                 "display": "flex",
-                "fontFamily": "Basel-Book",
-                "fontSize": 53,
-                "fontWeight": "400",
-                "lineHeight": 60,
-                "opacity": 0,
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
               },
             ]
           }
         >
-          $10,000
-        </Text>
+          <TextInput
+            allowFontScaling={true}
+            editable={false}
+            maxFontSizeMultiplier={1.2}
+            style={
+              [
+                [
+                  {
+                    "color": "#222222",
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 53,
+                    "fontWeight": "400",
+                    "lineHeight": 60,
+                  },
+                  [
+                    {
+                      "padding": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                {
+                  "marginHorizontal": 0,
+                  "opacity": 0,
+                  "paddingHorizontal": 0,
+                  "width": 0,
+                },
+              ]
+            }
+            underlineColorAndroid="transparent"
+          />
+          <View
+            style={
+              [
+                {
+                  "display": "flex",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "height": 0,
+                  "width": 0,
+                },
+              ]
+            }
+          />
+          <Text
+            style={
+              [
+                [
+                  {
+                    "color": "#222222",
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 53,
+                    "fontWeight": "400",
+                    "lineHeight": 60,
+                  },
+                  [
+                    {
+                      "padding": 0,
+                    },
+                    undefined,
+                  ],
+                ],
+                {
+                  "opacity": 0,
+                },
+              ]
+            }
+          >
+            $10,000
+          </Text>
+        </View>
       </View>
       <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         style={
-          [
-            {
-              "backgroundColor": "#2222220D",
-              "borderRadius": 4,
-              "bottom": "5%",
-              "display": "flex",
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": "5%",
-            },
-          ]
+          {
+            "alignItems": "stretch",
+            "backgroundColor": "#F9F9F9",
+            "borderBottomLeftRadius": 4,
+            "borderBottomRightRadius": 4,
+            "borderTopLeftRadius": 4,
+            "borderTopRightRadius": 4,
+            "bottom": "5%",
+            "flexDirection": "column",
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": "5%",
+          }
         }
       />
     </View>
@@ -276,71 +388,198 @@ exports[`PriceText renders without error less than a dollar 1`] = `
 
 exports[`RelativeChangeText renders loading state 1`] = `
 <View
-  onLayout={[Function]}
+  sentry-label="Flex"
+  style={
+    [
+      {
+        "alignItems": "stretch",
+        "display": "flex",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+        "marginTop": 2,
+      },
+    ]
+  }
 >
   <View
-    style={
-      [
-        {
-          "alignItems": "center",
-          "display": "flex",
-          "flexDirection": "row",
-        },
-      ]
-    }
+    onLayout={[Function]}
   >
     <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
       style={
-        [
-          {
-            "alignItems": "center",
-            "display": "flex",
-            "flexDirection": "row",
-            "position": "relative",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+        }
       }
     >
       <View
-        accessibilityElementsHidden={true}
-        importantForAccessibility="no-hide-descendants"
-      >
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
-          style={
-            [
-              {
-                "color": "transparent",
-                "display": "flex",
-                "fontFamily": "Basel-Book",
-                "fontSize": 19,
-                "fontWeight": "400",
-                "lineHeight": 24,
-                "opacity": 0,
-              },
-            ]
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
           }
-        >
-          00.00%
-        </Text>
-      </View>
-      <View
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
         style={
-          [
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "position": "relative",
+          }
+        }
+      >
+        <View
+          accessibilityElementsHidden={true}
+          importantForAccessibility="no-hide-descendants"
+        >
+          <View
+            sentry-label="Flex"
+            style={
+              [
+                {
+                  "alignItems": "stretch",
+                  "display": "flex",
+                  "flexDirection": "row",
+                  "justifyContent": "flex-start",
+                },
+              ]
+            }
+          >
+            <TextInput
+              allowFontScaling={true}
+              editable={false}
+              maxFontSizeMultiplier={1.4}
+              style={
+                [
+                  [
+                    {
+                      "color": "#222222",
+                      "fontFamily": "Basel-Book",
+                      "fontSize": 19,
+                      "fontWeight": "400",
+                      "lineHeight": 24,
+                    },
+                    [
+                      {
+                        "padding": 0,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  {
+                    "marginHorizontal": 0,
+                    "opacity": 0,
+                    "paddingHorizontal": 0,
+                    "width": 0,
+                  },
+                ]
+              }
+              underlineColorAndroid="transparent"
+            />
+            <View
+              style={
+                [
+                  {
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 0,
+                    "width": 0,
+                  },
+                ]
+              }
+            />
+            <Text
+              style={
+                [
+                  [
+                    {
+                      "color": "#222222",
+                      "fontFamily": "Basel-Book",
+                      "fontSize": 19,
+                      "fontWeight": "400",
+                      "lineHeight": 24,
+                    },
+                    [
+                      {
+                        "padding": 0,
+                      },
+                      undefined,
+                    ],
+                  ],
+                  {
+                    "opacity": 0,
+                  },
+                ]
+              }
+            >
+              00.00%
+            </Text>
+          </View>
+        </View>
+        <View
+          accessibilityState={
             {
-              "backgroundColor": "#2222220D",
-              "borderRadius": 4,
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          style={
+            {
+              "alignItems": "stretch",
+              "backgroundColor": "#F9F9F9",
+              "borderBottomLeftRadius": 4,
+              "borderBottomRightRadius": 4,
+              "borderTopLeftRadius": 4,
+              "borderTopRightRadius": 4,
               "bottom": "5%",
-              "display": "flex",
+              "flexDirection": "column",
               "left": 0,
               "position": "absolute",
               "right": 0,
               "top": "5%",
-            },
-          ]
-        }
-      />
+            }
+          }
+        />
+      </View>
     </View>
   </View>
 </View>
