@@ -11,7 +11,11 @@ import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { selectFavoriteTokens } from 'src/features/favorites/selectors'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { MATIC_BNB_ADDRESS, MATIC_MAINNET_ADDRESS } from 'wallet/src/constants/addresses'
+import {
+  BNB_MAINNET_ADDRESS,
+  MATIC_BNB_ADDRESS,
+  MATIC_MAINNET_ADDRESS,
+} from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC, USDT, WBTC } from 'wallet/src/constants/tokens'
 import { sortPortfolioBalances, usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
@@ -25,8 +29,9 @@ import {
   currencyId,
 } from 'wallet/src/utils/currencyId'
 
-// Use Mainnet base token addresses since TokenProjects query returns each token on Arbitrum, Optimism, Polygon
-export const baseCurrencyIds = [
+// Use Mainnet base token addresses since TokenProjects query returns each token
+// on each network
+const baseCurrencyIds = [
   buildNativeCurrencyId(ChainId.Mainnet),
   buildNativeCurrencyId(ChainId.Polygon),
   buildNativeCurrencyId(ChainId.Bnb),
@@ -41,12 +46,14 @@ export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
   const { data: baseCurrencyInfos, loading, error, refetch } = useTokenProjects(baseCurrencyIds)
   const persistedError = usePersistedError(loading, error)
 
-  // TokenProjects returns MATIC on Mainnet, BNB and Polygon, but we only want MATIC on Polygon
+  // TokenProjects returns tokens on every network, so filter out native assets that have a
+  // bridged version on other networks
   const filteredBaseCurrencyInfos = useMemo(() => {
     return baseCurrencyInfos?.filter(
       (currencyInfo) =>
         !areAddressesEqual((currencyInfo.currency as Token).address, MATIC_MAINNET_ADDRESS) &&
-        !areAddressesEqual((currencyInfo.currency as Token).address, MATIC_BNB_ADDRESS)
+        !areAddressesEqual((currencyInfo.currency as Token).address, MATIC_BNB_ADDRESS) &&
+        !areAddressesEqual((currencyInfo.currency as Token).address, BNB_MAINNET_ADDRESS)
     )
   }, [baseCurrencyInfos])
 

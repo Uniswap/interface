@@ -128,7 +128,6 @@ function* getPendingPrivateTxCount(address: Address, chainId: number) {
     (tx) =>
       tx.chainId === chainId &&
       tx.status === TransactionStatus.Pending &&
-      tx.typeInfo.type === TransactionType.Swap &&
       Boolean(tx.options.submitViaPrivateRpc)
   ).length
 }

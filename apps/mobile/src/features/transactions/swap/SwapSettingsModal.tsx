@@ -31,6 +31,7 @@ import { Icons } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
   MAX_CUSTOM_SLIPPAGE_TOLERANCE,
@@ -38,6 +39,7 @@ import {
 import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { setSwapProtectionSetting, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { useAppDispatch } from 'wallet/src/state'
@@ -64,7 +66,7 @@ export default function SwapSettingsModal({
   const { t } = useTranslation()
   const [view, setView] = useState(SwapSettingsModalView.Options)
 
-  const { customSlippageTolerance, autoSlippageTolerance } = derivedSwapInfo
+  const { customSlippageTolerance, autoSlippageTolerance, chainId } = derivedSwapInfo
   const isCustomSlippage = !!customSlippageTolerance
   const currentSlippage =
     customSlippageTolerance ?? autoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
@@ -83,6 +85,7 @@ export default function SwapSettingsModal({
       case SwapSettingsModalView.Options:
         return (
           <SwapSettingsOptions
+            chainId={chainId}
             isCustomSlippage={isCustomSlippage}
             setView={setView}
             slippage={currentSlippage}
@@ -91,7 +94,7 @@ export default function SwapSettingsModal({
       case SwapSettingsModalView.Slippage:
         return <SlippageSettings derivedSwapInfo={derivedSwapInfo} dispatch={dispatch} />
     }
-  }, [currentSlippage, derivedSwapInfo, dispatch, isCustomSlippage, view])
+  }, [chainId, currentSlippage, derivedSwapInfo, dispatch, isCustomSlippage, view])
 
   return (
     <BottomSheetModal
@@ -128,10 +131,12 @@ function SwapSettingsOptions({
   slippage,
   isCustomSlippage,
   setView,
+  chainId,
 }: {
   slippage: number
   isCustomSlippage: boolean
   setView: (newView: SwapSettingsModalView) => void
+  chainId: ChainId
 }): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
@@ -164,12 +169,12 @@ function SwapSettingsOptions({
           </Flex>
         </TouchableArea>
       </Flex>
-      {isMevBlockerFeatureEnabled && <SwapProtectionSettingsRow />}
+      {isMevBlockerFeatureEnabled && <SwapProtectionSettingsRow chainId={chainId} />}
     </Flex>
   )
 }
 
-function SwapProtectionSettingsRow(): JSX.Element {
+function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
@@ -185,6 +190,13 @@ function SwapProtectionSettingsRow(): JSX.Element {
   }, [dispatch, swapProtectionSetting])
 
   const [showInfoModal, setShowInfoModal] = useState(false)
+
+  const privateRpcSupportedOnChain = isPrivateRpcSupportedOnChain(chainId)
+  const chainName = CHAIN_INFO[chainId].label
+  const subText = privateRpcSupportedOnChain
+    ? t('{{chainName}} Network', { chainName })
+    : t('Not available on {{chainName}}', { chainName })
+
   return (
     <>
       {showInfoModal && <SwapProtectionInfoModal onClose={(): void => setShowInfoModal(false)} />}
@@ -193,7 +205,7 @@ function SwapProtectionSettingsRow(): JSX.Element {
         <Flex fill row justifyContent="space-between">
           <TouchableArea onPress={(): void => setShowInfoModal(true)}>
             <Flex gap="spacing4">
-              <Flex centered row gap="spacing4">
+              <Flex row alignItems="center" gap="spacing4">
                 <Text color="neutral1" variant="subheadSmall">
                   {t('Swap protection')}
                 </Text>
@@ -204,12 +216,13 @@ function SwapProtectionSettingsRow(): JSX.Element {
                 />
               </Flex>
               <Text color="neutral2" variant="bodyMicro">
-                {t('Ethereum Network')}
+                {subText}
               </Text>
             </Flex>
           </TouchableArea>
           <Switch
-            value={swapProtectionSetting === SwapProtectionSetting.On}
+            disabled={!privateRpcSupportedOnChain}
+            value={privateRpcSupportedOnChain && swapProtectionSetting === SwapProtectionSetting.On}
             onValueChange={toggleSwapProtectionSetting}
           />
         </Flex>
