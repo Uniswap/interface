@@ -12,7 +12,9 @@ import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 
 // Prevents excessive quote requests between keystrokes.
-const DEBOUNCE_TIME = 350
+// const DEBOUNCE_TIME = 350
+// todo: this is just for testing
+const DEBOUNCE_TIME = 0
 
 // Temporary until we remove the feature flag.
 const DEBOUNCE_TIME_INCREASED = 650
