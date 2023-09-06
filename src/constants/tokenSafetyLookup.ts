@@ -2,14 +2,14 @@ import { TokenInfo } from '@kinetix/token-lists'
 import { ListsState } from 'state/lists/reducer'
 
 import store from '../state'
-import { UNI_EXTENDED_LIST, UNI_LIST, UNSUPPORTED_LIST_URLS } from './lists'
+import { KAVA_LIST, UNSUPPORTED_LIST_URLS } from './lists'
 import { COMMON_BASES } from './routing'
 import brokenTokenList from './tokenLists/broken.tokenlist.json'
 import { NATIVE_CHAIN_ID } from './tokens'
 
 export enum TOKEN_LIST_TYPES {
-  UNI_DEFAULT = 1,
-  UNI_EXTENDED,
+  KAVA_DEFAULT = 1,
+  KAVA_EXTENDED,
   UNKNOWN,
   BLOCKED,
   BROKEN,
@@ -24,13 +24,13 @@ class TokenSafetyLookupTable {
     this.initialized = true
 
     // Initialize extended tokens first
-    lists.byUrl[UNI_EXTENDED_LIST].current?.tokens.forEach((token) => {
-      this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_EXTENDED
-    })
+    // lists.byUrl[KAVA_EXTENDED_LIST].current?.tokens.forEach((token) => {
+    //   this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.KAVA_EXTENDED
+    // })
 
     // Initialize default tokens second, so that any tokens on both default and extended will display as default (no warning)
-    lists.byUrl[UNI_LIST].current?.tokens.forEach((token) => {
-      this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_DEFAULT
+    lists.byUrl[KAVA_LIST].current?.tokens.forEach((token) => {
+      this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.KAVA_DEFAULT
     })
 
     // TODO: Figure out if this list is still relevant
@@ -51,9 +51,9 @@ class TokenSafetyLookupTable {
     if (!this.initialized) this.update(store.getState().lists)
 
     if (address === NATIVE_CHAIN_ID.toLowerCase()) {
-      return TOKEN_LIST_TYPES.UNI_DEFAULT
+      return TOKEN_LIST_TYPES.KAVA_DEFAULT
     } else if (chainId && COMMON_BASES[chainId]?.some((base) => address === base.wrapped.address.toLowerCase())) {
-      return TOKEN_LIST_TYPES.UNI_DEFAULT
+      return TOKEN_LIST_TYPES.KAVA_DEFAULT
     } else {
       return this.dict[address] ?? TOKEN_LIST_TYPES.UNKNOWN
     }

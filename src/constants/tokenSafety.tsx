@@ -89,9 +89,9 @@ export function checkWarning(tokenAddress: string, chainId?: number | null) {
     return null
   }
   switch (tokenSafetyLookup.checkToken(tokenAddress.toLowerCase(), chainId)) {
-    case TOKEN_LIST_TYPES.UNI_DEFAULT:
+    case TOKEN_LIST_TYPES.KAVA_DEFAULT:
       return null
-    case TOKEN_LIST_TYPES.UNI_EXTENDED:
+    case TOKEN_LIST_TYPES.KAVA_EXTENDED:
       return MediumWarning
     case TOKEN_LIST_TYPES.UNKNOWN:
       return StrongWarning

@@ -139,7 +139,7 @@ export function useInterfaceMulticall() {
 
 export function useMainnetInterfaceMulticall() {
   return useMainnetContract<UniswapInterfaceMulticall>(
-    '0x1F98415757620B543A52E61c46B32eB19261F984',
+    MULTICALL_ADDRESSES[ChainId.KAVA],
     MulticallABI
   ) as UniswapInterfaceMulticall
 }

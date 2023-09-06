@@ -18,7 +18,6 @@ import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AutoRow } from 'components/Row'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
@@ -154,7 +153,7 @@ export default function SwapPage({ className }: { className?: string }) {
           }}
           disableTokenInputs={supportedChainId === undefined}
         />
-        <NetworkAlert />
+        {/* <NetworkAlert /> */}
       </PageWrapper>
       {location.pathname === '/swap' && <SwitchLocaleLink />}
     </Trace>
