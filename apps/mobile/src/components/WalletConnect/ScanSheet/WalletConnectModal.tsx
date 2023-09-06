@@ -65,7 +65,7 @@ export function WalletConnectModal({
         Alert.alert(
           t('Invalid QR Code'),
           t(
-            "Make sure that you're scanning a valid WalletConnect or Ethereum address QR code before trying again."
+            'Make sure that you’re scanning a valid WalletConnect or Ethereum address QR code before trying again.'
           ),
           [
             {
@@ -91,7 +91,7 @@ export function WalletConnectModal({
         Alert.alert(
           t('Invalid QR Code'),
           t(
-            "WalletConnect v1 is no longer supported. The application you're trying to connect to needs to upgrade to WalletConnect v2."
+            'WalletConnect v1 is no longer supported. The application you’re trying to connect to needs to upgrade to WalletConnect v2.'
           ),
           [
             {

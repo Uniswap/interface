@@ -23,14 +23,14 @@ function getTokenSafetyBodyText(safetyLevel: Maybe<SafetyLevel>, t: AppTFunction
   switch (safetyLevel) {
     case SafetyLevel.MediumWarning:
       return t(
-        "This token isn't traded on leading U.S. centralized exchanges. Always conduct your own research before trading."
+        'This token isn’t traded on leading U.S. centralized exchanges. Always conduct your own research before trading.'
       )
     case SafetyLevel.StrongWarning:
       return t(
-        "This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap. Always conduct your own research before trading."
+        'This token isn’t traded on leading U.S. centralized exchanges or frequently swapped on Uniswap. Always conduct your own research before trading.'
       )
     case SafetyLevel.Blocked:
-      return t("You can't trade this token using the Uniswap Wallet.")
+      return t('You can’t trade this token using the Uniswap Wallet.')
     default:
       return ''
   }

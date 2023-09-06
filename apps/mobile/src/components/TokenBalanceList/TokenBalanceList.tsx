@@ -143,7 +143,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
               style={containerProps?.emptyContainerStyle}>
               <BaseCard.ErrorState
                 retryButtonLabel="Retry"
-                title={t("Couldn't load token balances")}
+                title={t('Couldn’t load token balances')}
                 onRetry={(): void | undefined => refetch?.()}
               />
             </Box>

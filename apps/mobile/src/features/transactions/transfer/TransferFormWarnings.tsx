@@ -77,7 +77,7 @@ export function TransferFormSpeedbumps({
       {showSpeedbumpModal && !isSignerRecipient && isSmartContractAddress && isNewRecipient && (
         <WarningModal
           caption={t(
-            "You're about to send tokens to a special type of address—a smart contract. Double-check it's the address you intended to send to. If it's wrong, your tokens could be lost forever."
+            'You’re about to send tokens to a special type of address—a smart contract. Double-check it’s the address you intended to send to. If it’s wrong, your tokens could be lost forever.'
           )}
           closeText={t('Cancel')}
           confirmText={t('Continue')}
@@ -91,7 +91,7 @@ export function TransferFormSpeedbumps({
       {showSpeedbumpModal && !isSmartContractAddress && !isSignerRecipient && isNewRecipient && (
         <WarningModal
           caption={t(
-            "You haven't transacted with this address before. Please confirm that the address is correct before continuing."
+            'You haven’t transacted with this address before. Please confirm that the address is correct before continuing.'
           )}
           closeText={t('Cancel')}
           confirmText={t('Confirm')}

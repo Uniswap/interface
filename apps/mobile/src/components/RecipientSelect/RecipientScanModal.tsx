@@ -45,7 +45,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
     } else {
       Alert.alert(
         t('Invalid QR Code'),
-        t("Make sure that you're scanning a valid Ethereum address QR code before trying again."),
+        t('Make sure that you’re scanning a valid Ethereum address QR code before trying again.'),
         [
           {
             text: t('Try again'),

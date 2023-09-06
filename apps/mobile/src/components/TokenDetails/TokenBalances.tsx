@@ -105,7 +105,7 @@ export function CurrentChainBalance({
     <Flex row>
       <Flex fill gap="spacing4">
         <Text color="neutral2" variant="subheadSmall">
-          {isReadonly ? t("{{owner}}'s balance", { owner: displayName }) : t('Your balance')}
+          {isReadonly ? t('{{owner}}’s balance', { owner: displayName }) : t('Your balance')}
         </Text>
         <Text variant="subheadLarge">
           {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
