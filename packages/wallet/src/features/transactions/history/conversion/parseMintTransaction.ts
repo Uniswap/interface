@@ -13,10 +13,14 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currenc
 export default function parseNFTMintTransaction(
   transaction: NonNullable<TransactionListQueryResponse>
 ): NFTMintTransactionInfo | undefined {
-  const tokenChange = transaction.assetChanges.find(
+  if (transaction.details.__typename !== 'TransactionDetails') return undefined
+
+  const tokenChange = transaction.details.assetChanges.find(
     (change) => change?.__typename === 'TokenTransfer'
   )
-  const nftChange = transaction.assetChanges.find((change) => change?.__typename === 'NftTransfer')
+  const nftChange = transaction.details.assetChanges.find(
+    (change) => change?.__typename === 'NftTransfer'
+  )
 
   // Mints must include the NFT minted
   if (!nftChange || nftChange.__typename !== 'NftTransfer') return undefined

@@ -23,6 +23,9 @@ import {
 export default function parseTradeTransaction(
   transaction: NonNullable<TransactionListQueryResponse>
 ): ExactInputSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
+  // ignore UniswapX transactions for now
+  if (transaction?.details?.__typename !== 'TransactionDetails') return undefined
+
   const chainId = fromGraphQLChain(transaction.chain)
   if (!chainId) return undefined
 
@@ -30,13 +33,13 @@ export default function parseTradeTransaction(
   const nativeCurrencyID = buildNativeCurrencyId(chainId).toLocaleLowerCase()
   const wrappedCurrencyID = buildWrappedNativeCurrencyId(chainId).toLocaleLowerCase()
 
-  const sent = transaction.assetChanges.find((t) => {
+  const sent = transaction.details.assetChanges.find((t) => {
     return (
       (t?.__typename === 'TokenTransfer' && t.direction === 'OUT') ||
       (t?.__typename === 'NftTransfer' && t.direction === 'OUT')
     )
   })
-  const received = transaction.assetChanges.find((t) => {
+  const received = transaction.details.assetChanges.find((t) => {
     return (
       (t?.__typename === 'TokenTransfer' && t.direction === 'IN') ||
       (t?.__typename === 'NftTransfer' && t.direction === 'IN')

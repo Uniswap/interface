@@ -8,7 +8,9 @@ import {
 export default function parseApproveTransaction(
   transaction: NonNullable<TransactionListQueryResponse>
 ): ApproveTransactionInfo | NFTApproveTransactionInfo | undefined {
-  const change = transaction.assetChanges[0]
+  if (transaction.details.__typename !== 'TransactionDetails') return undefined
+
+  const change = transaction.details.assetChanges?.[0]
   if (!change) return undefined
 
   if (change.__typename === 'TokenApproval' && change.tokenStandard === 'ERC20') {

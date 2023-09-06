@@ -136,7 +136,9 @@ function AddressTransactionHistoryUpdater({
           // Dont flag notification status for txns submitted from app, this is handled in transactionWatcherSaga.
           const confirmedLocally = localTransactions?.some(
             // eslint-disable-next-line max-nested-callbacks
-            (localTx) => localTx.hash === activity.transaction.hash
+            (localTx) =>
+              activity.details.__typename === 'TransactionDetails' &&
+              localTx.hash === activity.details.hash
           )
           if (!confirmedLocally) {
             dispatch(setNotificationStatus({ address, hasNotifications: true }))
@@ -225,6 +227,7 @@ export function getReceiveNotificationFromData(
   if (!data || !lastTxNotificationUpdateTimestamp) return
 
   const parsedTxHistory = parseDataResponseToTransactionDetails(data, hideSpamTokens)
+  if (!parsedTxHistory) return
 
   const latestReceivedTx = parsedTxHistory
     .sort((a, b) => a.addedTime - b.addedTime)

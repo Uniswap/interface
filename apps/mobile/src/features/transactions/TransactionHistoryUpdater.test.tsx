@@ -48,7 +48,7 @@ const walletSlice = {
   },
 }
 
-const dummyTransaction = {
+const dummyDetails = {
   id: faker.datatype.uuid(),
   hash: faker.datatype.uuid(),
 }
@@ -57,12 +57,12 @@ const assetActivities = [
   {
     id: faker.datatype.uuid(),
     timestamp: past.unix(),
-    transaction: dummyTransaction,
+    details: dummyDetails,
   },
   {
     id: faker.datatype.uuid(),
     timestamp: past.add(1, 'day').unix(),
-    transaction: dummyTransaction,
+    details: dummyDetails,
   },
 ]
 
@@ -70,17 +70,17 @@ const assetActivities2 = [
   {
     id: faker.datatype.uuid(),
     timestamp: past.unix(),
-    transaction: dummyTransaction,
+    details: dummyDetails,
   },
   {
     id: faker.datatype.uuid(),
     timestamp: past.add(1, 'day').unix(),
-    transaction: dummyTransaction,
+    details: dummyDetails,
   },
   {
     id: faker.datatype.uuid(),
     timestamp: past.add(2, 'day').unix(),
-    transaction: dummyTransaction,
+    details: dummyDetails,
   },
 ]
 
@@ -217,9 +217,9 @@ describe(getReceiveNotificationFromData, () => {
     expect(notification).toEqual({
       txStatus: TransactionStatus.Success,
       chainId: ChainId.Mainnet,
-      txHash: PortfoliosWithReceive[0].assetActivities[0]?.transaction.hash, // generated
+      txHash: PortfoliosWithReceive[0].assetActivities[0]?.details.hash, // generated
       address: account.address,
-      txId: '0x852eade76dd6a467979dacafafb9c5f2b6a372bd',
+      txId: '0x80cde0e2abd1bf5fadcf7ff9edf7ae13feec1c32',
       type: AppNotificationType.Transaction,
       txType: TransactionType.Receive,
       assetType: AssetType.Currency,

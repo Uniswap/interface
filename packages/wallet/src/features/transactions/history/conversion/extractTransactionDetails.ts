@@ -1,8 +1,8 @@
 import { ChainId } from 'wallet/src/constants/chains'
 import { SpamCode } from 'wallet/src/data/types'
 import {
-  ActivityType,
   TransactionStatus as RemoteTransactionStatus,
+  TransactionType as RemoteTransactionType,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
@@ -19,18 +19,18 @@ import parseSendTransaction from './parseSendTransaction'
 import parseTradeTransaction from './parseTradeTransaction'
 
 function remoteTxStatusToLocalTxStatus(
-  type: ActivityType,
+  type: RemoteTransactionType,
   status: RemoteTransactionStatus
 ): TransactionStatus {
   switch (status) {
     case RemoteTransactionStatus.Failed:
-      if (type === ActivityType.Cancel) return TransactionStatus.FailedCancel
+      if (type === RemoteTransactionType.Cancel) return TransactionStatus.FailedCancel
       return TransactionStatus.Failed
     case RemoteTransactionStatus.Pending:
-      if (type === ActivityType.Cancel) return TransactionStatus.Cancelling
+      if (type === RemoteTransactionType.Cancel) return TransactionStatus.Cancelling
       return TransactionStatus.Pending
     case RemoteTransactionStatus.Confirmed:
-      if (type === ActivityType.Cancel) return TransactionStatus.Cancelled
+      if (type === RemoteTransactionType.Cancel) return TransactionStatus.Cancelled
       return TransactionStatus.Success
   }
 }
@@ -45,23 +45,23 @@ function remoteTxStatusToLocalTxStatus(
 export default function extractTransactionDetails(
   transaction: TransactionListQueryResponse
 ): TransactionDetails | null {
-  if (!transaction) return null
+  if (transaction?.details.__typename !== 'TransactionDetails') return null
 
   let typeInfo: TransactionTypeInfo | undefined
-  switch (transaction.type) {
-    case ActivityType.Approve:
+  switch (transaction.details.type) {
+    case RemoteTransactionType.Approve:
       typeInfo = parseApproveTransaction(transaction)
       break
-    case ActivityType.Send:
+    case RemoteTransactionType.Send:
       typeInfo = parseSendTransaction(transaction)
       break
-    case ActivityType.Receive:
+    case RemoteTransactionType.Receive:
       typeInfo = parseReceiveTransaction(transaction)
       break
-    case ActivityType.Swap:
+    case RemoteTransactionType.Swap:
       typeInfo = parseTradeTransaction(transaction)
       break
-    case ActivityType.Mint:
+    case RemoteTransactionType.Mint:
       typeInfo = parseNFTMintTransaction(transaction)
       break
   }
@@ -69,7 +69,7 @@ export default function extractTransactionDetails(
   // No match found, default to unknown.
   if (!typeInfo) {
     // If a parsing util returns undefined type info, we still want to check if its spam
-    const isSpam = transaction.assetChanges.some((change) => {
+    const isSpam = transaction.details.assetChanges.some((change) => {
       switch (change?.__typename) {
         case 'NftTransfer':
           return change.asset?.isSpam
@@ -81,7 +81,7 @@ export default function extractTransactionDetails(
     })
     typeInfo = {
       type: TransactionType.Unknown,
-      tokenAddress: transaction.transaction.to,
+      tokenAddress: transaction.details.to,
       isSpam,
     }
   }
@@ -89,13 +89,13 @@ export default function extractTransactionDetails(
   const chainId = fromGraphQLChain(transaction.chain)
 
   return {
-    id: transaction.transaction.hash,
+    id: transaction.details.hash,
     // fallback to mainnet, although this should never happen
     chainId: chainId ?? ChainId.Mainnet,
-    hash: transaction.transaction.hash,
+    hash: transaction.details.hash,
     addedTime: transaction.timestamp * 1000, // convert to ms
-    status: remoteTxStatusToLocalTxStatus(transaction.type, transaction.transaction.status),
-    from: transaction.transaction.from,
+    status: remoteTxStatusToLocalTxStatus(transaction.details.type, transaction.details.status),
+    from: transaction.details.from,
     typeInfo,
     options: { request: {} }, // Empty request is okay, gate re-submissions on txn type and status.
   }

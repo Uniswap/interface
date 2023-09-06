@@ -310,7 +310,6 @@ query PortfolioBalances($ownerAddress: String!) {
     chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
   ) {
     id
-
     # Total portfolio balance for header
     tokensTotalDenominatedValue {
       id
@@ -438,9 +437,11 @@ query TransactionHistoryUpdater($addresses: [String!]!) {
     assetActivities(pageSize: 1, page: 1) {
       id
       timestamp
-      transaction {
-        id
-        hash
+      details {
+        ... on TransactionDetails {
+          id
+          hash
+        }
       }
     }
   }
@@ -537,80 +538,81 @@ query TransactionList($address: String!) {
     ) {
       id
       timestamp
-      type
       chain
-      transaction {
-        id
-        hash
-        status
-        to
-        from
-      }
-      assetChanges {
-        __typename
-        ... on TokenTransfer {
-          id
-          asset {
-            id
-            symbol
-            address
-            decimals
-            chain
-            project {
+      details {
+        ... on TransactionDetails {
+          to
+          type
+          hash
+          from
+          status
+          assetChanges {
+            __typename
+            ... on TokenTransfer {
               id
-              isSpam
-              spamCode
+              asset {
+                id
+                symbol
+                address
+                decimals
+                chain
+                project {
+                  id
+                  isSpam
+                  spamCode
+                }
+              }
+              tokenStandard
+              quantity
+              sender
+              recipient
+              direction
+              transactedValue {
+                id
+                currency
+                value
+              }
+            }
+            ... on NftTransfer {
+              id
+              asset {
+                id
+                name
+                isSpam
+                nftContract {
+                  id
+                  chain
+                  address
+                }
+                tokenId
+                image {
+                  id
+                  url
+                }
+                collection {
+                  id
+                  name
+                }
+              }
+              nftStandard
+              sender
+              recipient
+              direction
+            }
+            ... on TokenApproval {
+              id
+              asset {
+                id
+                symbol
+                decimals
+                address
+                chain
+              }
+              tokenStandard
+              approvedAddress
+              quantity
             }
           }
-          tokenStandard
-          quantity
-          sender
-          recipient
-          direction
-          transactedValue {
-            id
-            currency
-            value
-          }
-        }
-        ... on NftTransfer {
-          id
-          asset {
-            id
-            name
-            isSpam
-            nftContract {
-              id
-              chain
-              address
-            }
-            tokenId
-            image {
-              id
-              url
-            }
-            collection {
-              id
-              name
-            }
-          }
-          nftStandard
-          sender
-          recipient
-          direction
-        }
-        ... on TokenApproval {
-          id
-          asset {
-            id
-            symbol
-            decimals
-            address
-            chain
-          }
-          tokenStandard
-          approvedAddress
-          quantity
         }
       }
     }

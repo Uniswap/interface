@@ -14,7 +14,10 @@ import {
 export default function parseSendTransaction(
   transaction: NonNullable<TransactionListQueryResponse>
 ): SendTokenTransactionInfo | undefined {
-  const change = transaction.assetChanges[0]
+  if (transaction.details.__typename !== 'TransactionDetails') return undefined
+
+  const change = transaction.details.assetChanges[0]
+
   if (!change) return undefined
 
   // Found NFT transfer

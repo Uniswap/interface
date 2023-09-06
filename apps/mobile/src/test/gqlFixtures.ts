@@ -3,7 +3,6 @@ import { faker } from '@faker-js/faker'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC } from 'wallet/src/constants/tokens'
 import {
-  ActivityType,
   Amount,
   AssetActivity,
   AssetChange,
@@ -19,6 +18,7 @@ import {
   TokenProject,
   TokenStandard,
   TokenTransfer,
+  TransactionDetails,
   TransactionDirection,
   TransactionStatus,
   TransactionType,
@@ -84,10 +84,12 @@ export const DaiAsset: Token = {
  * for MockedReponse to infer correct assetActivity response type.
  */
 
-type RequiredAssetActivity = AssetActivity & {
-  assetChanges: (AssetChange & { __typename: 'TokenApproval' | 'TokenTransfer' })[]
+type RequiredAssetActivity = Omit<AssetActivity, 'transaction' | 'assetChanges' | 'type'> & {
+  details: TransactionDetails & {
+    assetChanges: (AssetChange & { __typename: 'TokenApproval' | 'TokenTransfer' })[]
+  }
 }
-type PortfolioWithActivity = Portfolio & {
+type PortfolioWithActivity = Omit<Portfolio, 'assetActivities'> & {
   assetActivities: RequiredAssetActivity[]
 }
 
@@ -95,7 +97,8 @@ const AssetActivityBase = {
   __typeName: 'AssetActivity',
   timestamp: faker.datatype.number({ max: MAX_FIXTURE_TIMESTAMP }),
   chain: Chain.Ethereum,
-  transaction: {
+  details: {
+    __typename: 'TransactionDetails' as const,
     id: 'base_tranaction_id',
     status: TransactionStatus.Confirmed,
     to: SAMPLE_SEED_ADDRESS_2,
@@ -142,48 +145,33 @@ const ApproveAssetActivty: RequiredAssetActivity = {
   ...AssetActivityBase,
   id: faker.datatype.uuid(),
   details: {
-    ...AssetActivityBase.transaction,
+    ...AssetActivityBase.details,
     hash: faker.finance.ethereumAddress(), // need unique ID
     type: TransactionType.Approve,
+    assetChanges: [Erc20ApproveAssetChange],
   },
-  transaction: {
-    ...AssetActivityBase.transaction, // need unique ID
-    hash: faker.finance.ethereumAddress(),
-  },
-  type: ActivityType.Approve,
-  assetChanges: [Erc20ApproveAssetChange],
 }
 
 export const Erc20SwapAssetActivity: RequiredAssetActivity = {
   ...AssetActivityBase,
   id: faker.datatype.uuid(),
   details: {
-    ...AssetActivityBase.transaction,
+    ...AssetActivityBase.details,
     hash: faker.finance.ethereumAddress(), // need unique ID
     type: TransactionType.Swap,
+    assetChanges: [Erc20TransferInAssetChange, Erc20TransferOutAssetChange],
   },
-  transaction: {
-    ...AssetActivityBase.transaction,
-    hash: faker.finance.ethereumAddress(), // need unique ID
-  },
-  type: ActivityType.Swap,
-  assetChanges: [Erc20TransferInAssetChange, Erc20TransferOutAssetChange],
 }
 
 export const Erc20ReceiveAssetActivity: RequiredAssetActivity = {
   ...AssetActivityBase,
   id: faker.datatype.uuid(),
   details: {
-    ...AssetActivityBase.transaction,
+    ...AssetActivityBase.details,
     hash: faker.finance.ethereumAddress(), // need unique ID
     type: TransactionType.Receive,
+    assetChanges: [Erc20TransferInAssetChange],
   },
-  transaction: {
-    ...AssetActivityBase.transaction,
-    hash: faker.finance.ethereumAddress(), // need unique ID
-  },
-  type: ActivityType.Receive,
-  assetChanges: [Erc20TransferInAssetChange],
 }
 
 export const Portfolios: [PortfolioWithActivity, PortfolioWithActivity] = [

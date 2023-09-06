@@ -10,7 +10,11 @@ import {
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
-import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
+import {
+  TransactionDetails,
+  TransactionListQueryResponse,
+  TransactionStatus,
+} from 'wallet/src/features/transactions/types'
 import { getNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
@@ -88,20 +92,22 @@ export function formatTransactionsByDate(
 export function parseDataResponseToTransactionDetails(
   data: TransactionListQuery,
   hideSpamTokens?: boolean
-): TransactionDetails[] {
+): TransactionDetails[] | undefined {
   if (data.portfolios?.[0]?.assetActivities) {
     return data.portfolios[0].assetActivities.reduce((accum: TransactionDetails[], t) => {
-      const parsed = extractTransactionDetails(t)
-      const isSpam = parsed?.typeInfo.isSpam
+      if (t?.details?.__typename === 'TransactionDetails') {
+        const parsed = extractTransactionDetails(t as TransactionListQueryResponse)
+        const isSpam = parsed?.typeInfo.isSpam
 
-      if (parsed && !(hideSpamTokens && isSpam)) {
-        accum.push(parsed)
+        if (parsed && !(hideSpamTokens && isSpam)) {
+          accum.push(parsed)
+        }
       }
 
       return accum
     }, [])
   }
-  return []
+  return undefined
 }
 
 /**
