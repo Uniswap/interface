@@ -207,7 +207,11 @@ export function transactionToActivity(
   }
 }
 
-export function signatureToActivity(signature: SignatureDetails, tokens: ChainTokenMap): Activity | undefined {
+export function signatureToActivity(
+  signature: SignatureDetails,
+  tokens: ChainTokenMap,
+  locale?: SupportedLocale
+): Activity | undefined {
   switch (signature.type) {
     case SignatureType.SIGN_UNISWAPX_ORDER: {
       // Only returns Activity items for orders that don't have an on-chain counterpart
@@ -225,7 +229,7 @@ export function signatureToActivity(signature: SignatureDetails, tokens: ChainTo
         from: signature.offerer,
         statusMessage,
         prefixIconSrc: UniswapXBolt,
-        ...parseSwap(signature.swapInfo, signature.chainId, tokens),
+        ...parseSwap(signature.swapInfo, signature.chainId, tokens, locale),
       }
     }
     default:
@@ -251,7 +255,7 @@ export function useLocalActivities(account: string): ActivityMap {
     for (const signature of Object.values(allSignatures)) {
       if (signature.offerer !== account) continue
 
-      const activity = signatureToActivity(signature, tokens)
+      const activity = signatureToActivity(signature, tokens, formatterLocale)
       if (activity) activityMap[signature.id] = activity
     }
 
