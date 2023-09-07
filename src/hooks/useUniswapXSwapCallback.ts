@@ -67,7 +67,7 @@ export function useUniswapXSwapCallback({
           try {
             const updatedNonce = await getUpdatedNonce(account, trade.order.chainId)
 
-            const startTime = Math.floor(Date.now() / 1000) + trade.startTimeOffsetSecs
+            const startTime = Math.floor(Date.now() / 1000) + trade.startTimeBufferSecs
             setTraceData('startTime', startTime)
 
             const endTime = startTime + trade.auctionPeriodSecs
