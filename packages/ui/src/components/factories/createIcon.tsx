@@ -42,8 +42,8 @@ export function createIcon({
       style: {
         width: width ?? size,
         height: height ?? size,
-        ...style,
         color,
+        ...style,
       },
     }
 
