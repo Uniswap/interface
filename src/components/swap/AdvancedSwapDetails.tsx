@@ -11,7 +11,7 @@ import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { formatCurrencyAmount, formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
 
-import { Separator, ThemedText } from '../../theme'
+import { ExternalLink, Separator, ThemedText } from '../../theme'
 import Column from '../Column'
 import RouterLabel from '../RouterLabel'
 import { RowBetween, RowFixed } from '../Row'
@@ -192,10 +192,15 @@ function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' 
     <RowBetween>
       <MouseoverTooltip
         text={
-          <Trans>
-            Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
-            receive any of these fees.
-          </Trans>
+          <>
+            <Trans>
+              Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
+              receive any of these fees.
+            </Trans>{' '}
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">
+              Learn more
+            </ExternalLink>
+          </>
         }
       >
         <ThemedText.BodySmall color="textSecondary">{`${currency.symbol} fee`}</ThemedText.BodySmall>
