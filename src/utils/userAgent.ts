@@ -7,6 +7,6 @@ const { name } = parser.getBrowser()
 export const isMobile = type === 'mobile' || type === 'tablet'
 const platform = parser.getOS().name
 export const isIOS = platform === 'iOS'
-export const isNonIOSPhone = !isIOS && type === 'mobile'
+/* export const isNonIOSPhone = !isIOS && type === 'mobile' */
 
-export const isMobileSafari = isMobile && isIOS && name?.toLowerCase().includes('safari')
+/* export const isMobileSafari = isMobile && isIOS && name?.toLowerCase().includes('safari') */

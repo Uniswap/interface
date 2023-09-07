@@ -138,7 +138,7 @@ const LogoSectionContent = () => {
 }
 
 export const AboutFooter = () => {
-  const shouldDisableNFTRoutes = useDisableNFTRoutes()
+/*   const shouldDisableNFTRoutes = useDisableNFTRoutes() */
   return (
     <Footer>
       <LogoSectionLeft>
@@ -150,24 +150,24 @@ export const AboutFooter = () => {
           <LinkGroupTitle>App</LinkGroupTitle>
           <TextLink to="/swap">Swap</TextLink>
           <TextLink to="/tokens">Tokens</TextLink>
-          {!shouldDisableNFTRoutes && <TextLink to="/nfts">NFTs</TextLink>}
+{/*           {!shouldDisableNFTRoutes && <TextLink to="/nfts">NFTs</TextLink>} */}
           <TextLink to="/pools">Pools</TextLink>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Protocol</LinkGroupTitle>
           <ExternalTextLink href="https://uniswap.org/community">Community</ExternalTextLink>
           <ExternalTextLink href="https://uniswap.org/governance">Governance</ExternalTextLink>
-          <ExternalTextLink href="https://uniswap.org/developers">Developers</ExternalTextLink>
+{/*           <ExternalTextLink href="https://uniswap.org/developers">Developers</ExternalTextLink> */}
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Company</LinkGroupTitle>
-          <TraceEvent
+{/*           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.CAREERS_LINK}
           >
             <ExternalTextLink href="https://boards.greenhouse.io/uniswaplabs">Careers</ExternalTextLink>
-          </TraceEvent>
+          </TraceEvent> */}
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
@@ -176,7 +176,7 @@ export const AboutFooter = () => {
             <ExternalTextLink href="https://medium.com/@kinetixfi">Blog</ExternalTextLink>
           </TraceEvent>
         </LinkGroup>
-        <LinkGroup>
+       {/*  <LinkGroup>
           <LinkGroupTitle>Get Help</LinkGroupTitle>
           <TraceEvent
             events={[BrowserEvent.onClick]}
@@ -198,7 +198,7 @@ export const AboutFooter = () => {
           >
             <ExternalTextLink href="https://support.uniswap.org/hc/en-us">Help Center</ExternalTextLink>
           </TraceEvent>
-        </LinkGroup>
+        </LinkGroup> */}
       </FooterLinks>
 
       <LogoSectionBottom>

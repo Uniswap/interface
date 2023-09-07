@@ -2266,12 +2266,12 @@ exports[`disable nft on landing page does not render nft information and card 1`
           <div
             class="c75"
           >
-            Powered by the Uniswap Protocol
+            Powered by Kinetix Finance
           </div>
           <div
             class="c76"
           >
-            The leading decentralized crypto trading protocol, governed by a global community.
+            The leading decentralized crypto trading protocol on Kava.
           </div>
         </div>
         <div
@@ -2279,7 +2279,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
         >
           <a
             class="c78 c79 c80"
-            href="https://uniswap.org"
+            href="https://kinetix.finance"
             rel="noopener noreferrer"
             target="_blank"
             width="200px"
@@ -2304,7 +2304,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
           >
             <a
               class="c86"
-              href="https://discord.gg/FCfyBSbCU5"
+              href="https://discord.com/invite/kinetix"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2317,7 +2317,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
             </a>
             <a
               class="c86"
-              href="https://twitter.com/uniswap"
+              href="https://twitter.com/KinetixFi"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2330,7 +2330,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
             </a>
             <a
               class="c86"
-              href="https://github.com/Uniswap"
+              href="https://github.com/kinetixfi"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2421,14 +2421,6 @@ exports[`disable nft on landing page does not render nft information and card 1`
             >
               Company
             </span>
-            <a
-              class="c96 c97"
-              href="https://boards.greenhouse.io/uniswaplabs"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Careers
-            </a>
             <a
               class="c96 c97"
               href="https://uniswap.org/blog"
@@ -4798,7 +4790,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
             class="c72"
             type="Secondary"
           >
-            Provide liquidity to pools on Uniswap and earn fees on swaps.
+            Provide liquidity to pools on Kinetix Finance and earn fees on swaps.
             <div
               class="c72 c68"
               type="Secondary"

@@ -14,13 +14,13 @@ export const MAIN_CARDS = [
   {
     to: '/swap',
     title: 'Swap tokens',
-    description: 'Buy, sell, and explore tokens on Ethereum, Polygon, Optimism, and more.',
+    description: 'Buy, sell, and explore tokens on Kava.',
     cta: 'Trade Tokens',
     darkBackgroundImgSrc: swapCardImgSrc,
     lightBackgroundImgSrc: swapCardImgSrc,
     elementName: InterfaceElementName.ABOUT_PAGE_SWAP_CARD,
   },
-  {
+/*   {
     to: '/nfts',
     title: 'Trade NFTs',
     description: 'Buy and sell NFTs across marketplaces to find more listings at better prices.',
@@ -28,7 +28,7 @@ export const MAIN_CARDS = [
     darkBackgroundImgSrc: nftCardImgSrc,
     lightBackgroundImgSrc: nftCardImgSrc,
     elementName: InterfaceElementName.ABOUT_PAGE_NFTS_CARD,
-  },
+  }, */
 ]
 
 const StyledCardLogo = styled.img`
@@ -52,13 +52,13 @@ export const MORE_CARDS = [
   {
     to: '/pools',
     title: 'Earn',
-    description: 'Provide liquidity to pools on Uniswap and earn fees on swaps.',
+    description: 'Provide liquidity to pools on Kinetix Finance and earn fees on swaps.',
     lightIcon: <StyledCardLogo src={lightArrowImgSrc} alt="Analytics" />,
     darkIcon: <StyledCardLogo src={darkArrowImgSrc} alt="Analytics" />,
     cta: 'Provide liquidity',
     elementName: InterfaceElementName.ABOUT_PAGE_EARN_CARD,
   },
-  {
+/*   {
     to: 'https://info.kinetix.finance',
     external: true,
     title: 'Build dApps',
@@ -67,5 +67,5 @@ export const MORE_CARDS = [
     darkIcon: <StyledCardLogo src={darkTerminalImgSrc} alt="Developers" />,
     cta: 'Developer docs',
     elementName: InterfaceElementName.ABOUT_PAGE_DEV_DOCS_CARD,
-  },
+  }, */
 ]

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent, TraceEvent } from 'analytics'
+/* import { sendAnalyticsEvent, TraceEvent } from 'analytics' */
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -23,7 +23,7 @@ import { CopyHelper, ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 import { formatNumber, NumberType } from 'utils/formatNumbers'
 
-import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
+import { useCloseModal, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import StatusIcon from '../Identicon/StatusIcon'
 import { useToggleAccountDrawer } from '.'
@@ -82,7 +82,7 @@ const IconContainer = styled.div`
     }
   }
 `
-const FiatOnrampNotAvailableText = styled(ThemedText.Caption)`
+/* const FiatOnrampNotAvailableText = styled(ThemedText.Caption)`
   align-items: center;
   color: ${({ theme }) => theme.textSecondary};
   display: flex;
@@ -95,7 +95,7 @@ const FiatOnrampAvailabilityExternalLink = styled(ExternalLink)`
   justify-content: center;
   margin-left: 6px;
   width: 14px;
-`
+` */
 
 const StatusWrapper = styled.div`
   display: inline-block;
@@ -190,22 +190,22 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     closeModal()
   }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, toggleWalletDrawer])
 
-  const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+/*   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
     toggleWalletDrawer()
     sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
     openFiatOnrampModal()
-  }, [openFiatOnrampModal, toggleWalletDrawer])
+  }, [openFiatOnrampModal, toggleWalletDrawer]) */
 
-  const [shouldCheck, setShouldCheck] = useState(false)
+/*   const [shouldCheck, setShouldCheck] = useState(false)
   const {
     available: fiatOnrampAvailable,
     availabilityChecked: fiatOnrampAvailabilityChecked,
     error,
     loading: fiatOnrampAvailabilityLoading,
-  } = useFiatOnrampAvailability(shouldCheck, openFoRModalWithAnalytics)
+  } = useFiatOnrampAvailability(shouldCheck, openFoRModalWithAnalytics) */
 
-  const handleBuyCryptoClick = useCallback(() => {
+/*   const handleBuyCryptoClick = useCallback(() => {
     if (!fiatOnrampAvailabilityChecked) {
       setShouldCheck(true)
     } else if (fiatOnrampAvailable) {
@@ -217,7 +217,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   )
   const [showFiatOnrampUnavailableTooltip, setShow] = useState<boolean>(false)
   const openFiatOnrampUnavailableTooltip = useCallback(() => setShow(true), [setShow])
-  const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
+  const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow]) */
 
   const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account })
   const portfolio = portfolioBalances?.portfolios?.[0]
@@ -252,11 +252,11 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             onClick={openSettings}
             Icon={Settings}
           />
-          <TraceEvent
+{/*           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
-          >
+          > */}
             <IconWithConfirmTextButton
               data-testid="wallet-disconnect"
               onConfirm={disconnect}
@@ -265,7 +265,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               text="Disconnect"
               dismissOnHoverOut
             />
-          </TraceEvent>
+{/*           </TraceEvent> */}
         </IconContainer>
       </HeaderWrapper>
       <PortfolioDrawerContainer>
@@ -323,7 +323,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             </>
           )}
         </HeaderButton> */}
-        {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
+{/*         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
           <FiatOnrampNotAvailableText marginTop="8px">
             <Trans>Not available in your region</Trans>
             <Tooltip
@@ -340,7 +340,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               </FiatOnrampAvailabilityExternalLink>
             </Tooltip>
           </FiatOnrampNotAvailableText>
-        )}
+        )} */}
         <MiniPortfolio account={account} />
       </PortfolioDrawerContainer>
     </AuthenticatedHeaderWrapper>

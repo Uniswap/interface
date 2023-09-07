@@ -7,7 +7,7 @@ import { ThemedText } from 'theme'
 
 import { RowBetween, RowFixed } from '../Row'
 import SettingsTab from '../Settings'
-import SwapBuyFiatButton from './SwapBuyFiatButton'
+/* import SwapBuyFiatButton from './SwapBuyFiatButton' */
 
 const StyledSwapHeader = styled(RowBetween)`
   margin-bottom: 10px;
@@ -28,15 +28,12 @@ export default function SwapHeader({
   chainId?: number
   trade?: InterfaceTrade
 }) {
-  const fiatOnRampButtonEnabled = useFiatOnRampButtonEnabled()
-
   return (
     <StyledSwapHeader>
       <HeaderButtonContainer>
         <ThemedText.SubHeader>
           <Trans>Swap</Trans>
         </ThemedText.SubHeader>
-        {fiatOnRampButtonEnabled && <SwapBuyFiatButton />}
       </HeaderButtonContainer>
       <RowFixed>
         <SettingsTab autoSlippage={autoSlippage} chainId={chainId} trade={trade} />

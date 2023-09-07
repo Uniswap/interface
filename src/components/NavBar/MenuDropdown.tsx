@@ -20,9 +20,9 @@ import { NavLink, NavLinkProps } from 'react-router-dom'
 import { useToggleModal } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
-import { openDownloadApp } from 'utils/openDownloadApp'
+/* import { openDownloadApp } from 'utils/openDownloadApp' */
 
-import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg'
+/* import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg' */
 import { ApplicationModal } from '../../state/application/reducer'
 import * as styles from './MenuDropdown.css'
 import { NavDropdown } from './NavDropdown'
@@ -149,7 +149,7 @@ export const MenuDropdown = () => {
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 </Box>
-                <Box
+                {/* <Box
                   onClick={() =>
                     openDownloadApp({
                       element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON,
@@ -164,7 +164,7 @@ export const MenuDropdown = () => {
                       <Trans>Download Uniswap Wallet</Trans>
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
-                </Box>
+                </Box> */}
                 <PrimaryMenuRow href="https://stats.kinetix.finance/">
                   <Icon>
                     <BarChartIcon width={24} height={24} color={theme.textPrimary} />
