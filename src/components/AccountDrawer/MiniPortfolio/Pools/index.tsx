@@ -167,18 +167,21 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
               placement="left"
               text={
                 <div style={{ padding: '4px 0px' }}>
-                  <ThemedText.BodySmall>{`${formatNumber(
-                    liquidityValue,
-                    NumberType.PortfolioBalance
-                  )} (liquidity) + ${formatNumber(
-                    feeValue,
-                    NumberType.PortfolioBalance
-                  )} (fees)`}</ThemedText.BodySmall>
+                  <ThemedText.BodySmall>{`${formatNumber({
+                    input: liquidityValue,
+                    type: NumberType.PortfolioBalance,
+                  })} (liquidity) + ${formatNumber({
+                    input: feeValue,
+                    type: NumberType.PortfolioBalance,
+                  })} (fees)`}</ThemedText.BodySmall>
                 </div>
               }
             >
               <ThemedText.SubHeader>
-                {formatNumber((liquidityValue ?? 0) + (feeValue ?? 0), NumberType.PortfolioBalance)}
+                {formatNumber({
+                  input: (liquidityValue ?? 0) + (feeValue ?? 0),
+                  type: NumberType.PortfolioBalance,
+                })}
               </ThemedText.SubHeader>
             </MouseoverTooltip>
 
