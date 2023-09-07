@@ -40,7 +40,7 @@ export function useAccountDrawer(): [boolean, () => void] {
   return [accountDrawerOpen, useToggleAccountDrawer()]
 }
 
-const ScrimBackground = styled.div<{ open: boolean }>`
+const ScrimBackground = styled.div<{ $open: boolean }>`
   z-index: ${Z_INDEX.modalBackdrop};
   overflow: hidden;
   top: 0;
@@ -53,22 +53,27 @@ const ScrimBackground = styled.div<{ open: boolean }>`
   opacity: 0;
   pointer-events: none;
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    opacity: ${({ open }) => (open ? 1 : 0)};
-    pointer-events: ${({ open }) => (open ? 'auto' : 'none')};
+    opacity: ${({ $open }) => ($open ? 1 : 0)};
+    pointer-events: ${({ $open }) => ($open ? 'auto' : 'none')};
     transition: opacity ${({ theme }) => theme.transition.duration.medium} ease-in-out;
   }
 `
-export const Scrim = ({ onClick, open, testId }: { onClick: () => void; open: boolean; testId?: string }) => {
+
+interface ScrimBackgroundProps extends React.ComponentPropsWithRef<'div'> {
+  $open: boolean
+}
+
+export const Scrim = (props: ScrimBackgroundProps) => {
   const { width } = useWindowSize()
 
   useEffect(() => {
-    if (width && width < BREAKPOINTS.sm && open) document.body.style.overflow = 'hidden'
+    if (width && width < BREAKPOINTS.sm && props.$open) document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = 'visible'
     }
-  }, [open, width])
+  }, [props.$open, width])
 
-  return <ScrimBackground data-testid={testId} onClick={onClick} open={open} />
+  return <ScrimBackground {...props} />
 }
 
 const AccountDrawerScrollWrapper = styled.div`
@@ -245,7 +250,7 @@ function AccountDrawer() {
           </CloseDrawer>
         </TraceEvent>
       )}
-      <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
+      <Scrim onClick={toggleWalletDrawer} $open={walletDrawerOpen} />
       <AccountDrawerWrapper
         open={walletDrawerOpen}
         {...(isMobile
