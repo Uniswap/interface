@@ -84,8 +84,8 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
       )}
       {isClassicTrade(trade) && (
         <>
-          <TokenTaxLineItem trade={trade} type="input" />
-          <TokenTaxLineItem trade={trade} type="output" />
+          <TokenTaxLineItem trade={trade} type="input" syncing={syncing} />
+          <TokenTaxLineItem trade={trade} type="output" syncing={syncing} />
           <RowBetween>
             <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
               <ThemedText.BodySmall color="neutral2">
@@ -182,7 +182,17 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   )
 }
 
-function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' | 'output' }) {
+function TokenTaxLineItem({
+  trade,
+  type,
+  syncing,
+}: {
+  trade: ClassicTrade
+  type: 'input' | 'output'
+  syncing: boolean
+}) {
+  if (syncing) return null
+
   const [currency, percentage] =
     type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
 
@@ -203,7 +213,7 @@ function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' 
           </>
         }
       >
-        <ThemedText.BodySmall color="textSecondary">{`${currency.symbol} fee`}</ThemedText.BodySmall>
+        <ThemedText.BodySmall color="neutral2">{`${currency.symbol} fee`}</ThemedText.BodySmall>
       </MouseoverTooltip>
       <ThemedText.BodySmall>{formatPriceImpact(percentage)}</ThemedText.BodySmall>
     </RowBetween>
