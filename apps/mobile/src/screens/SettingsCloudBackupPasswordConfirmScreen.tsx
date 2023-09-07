@@ -31,7 +31,7 @@ export function SettingsCloudBackupPasswordConfirmScreen({
   }
 
   return (
-    <Screen mx="spacing16" my="spacing16">
+    <Screen mx="$spacing16" my="$spacing16">
       <BackHeader mb="spacing16" />
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
         <Flex alignItems="center" justifyContent="space-between" mb="spacing24" mx="spacing12">

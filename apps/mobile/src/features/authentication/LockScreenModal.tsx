@@ -9,7 +9,7 @@ import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
-import { dimensions } from 'ui/src/theme/restyle'
+import { dimensions } from 'ui/src/theme'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 

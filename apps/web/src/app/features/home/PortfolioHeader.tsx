@@ -39,9 +39,9 @@ export function PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element 
           <Text variant="subheadSmall">{displayName}</Text>
           <Icons.Chevron
             color="$neutral2"
-            direction="s"
-            height={iconSizes.icon20}
-            width={iconSizes.icon20}
+            size={iconSizes.icon20}
+            // TODO (MOB-1240): make Chevron component more reusable
+            style={{ transform: [{ rotate: '270deg' }] }}
           />
         </XStack>
       </XStack>

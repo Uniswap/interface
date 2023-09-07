@@ -1,49 +1,63 @@
-import { memo } from 'react'
-import { Icons } from 'ui/src'
-import { Flex } from 'ui/src/components/layout/Flex'
+import type { IconProps } from '@tamagui/helpers-icon'
+import { forwardRef, memo } from 'react'
+import { Path, Svg } from 'react-native-svg'
+import { getTokenValue, isWeb, useTheme } from 'tamagui'
 
-type Props = {
-  width?: string | number
-  height?: string | number
-  direction?: 'n' | 'e' | 's' | 'w'
-  color?: string
-}
+const Icon = forwardRef<Svg, IconProps>((props, ref) => {
+  // isWeb currentColor to maintain backwards compat a bit better, on native uses theme color
+  const {
+    color: colorProp = isWeb ? 'currentColor' : undefined,
+    size: sizeProp = '$true',
+    strokeWidth: strokeWidthProp,
+    ...restProps
+  } = props
+  const theme = useTheme()
 
-function _Chevron({
-  width = 24,
-  height = 24,
-  direction = 'w',
-  color,
-  ...rest
-}: Props): JSX.Element {
-  let degree: string
-  switch (direction) {
-    case 'n':
-      degree = '90deg'
-      break
-    case 'e':
-      degree = '180deg'
-      break
-    case 's':
-      degree = '270deg'
-      break
-    case 'w':
-      degree = '0deg'
-      break
-    default:
-      throw new Error(`Invalid chevron direction ${direction}`)
+  const size =
+    getTokenValue(
+      // @ts-expect-error it falls back to undefined
+      sizeProp,
+      'size'
+    ) ?? sizeProp
+
+  const strokeWidth =
+    getTokenValue(
+      // @ts-expect-error it falls back to undefined
+      strokeWidthProp,
+      'size'
+    ) ?? strokeWidthProp
+
+  const color =
+    // @ts-expect-error its fine to access colorProp undefined
+    theme[colorProp]?.get() ?? colorProp ?? theme.color.get()
+
+  const svgProps = {
+    ...restProps,
+    size,
+    strokeWidth,
+    color,
   }
 
   return (
-    <Flex
-      alignItems="center"
-      borderRadius="$roundedFull"
-      justifyContent="center"
-      rotate={degree}
-      {...rest}>
-      <Icons.ChevronLeft color={color} height={height} width={width} />
-    </Flex>
+    <Svg
+      ref={ref}
+      fill="none"
+      height={size}
+      stroke={color}
+      viewBox="0 0 26 24"
+      width={size}
+      {...svgProps}>
+      <Path
+        d="M15 6L9 12L15 18"
+        stroke={color}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="3"
+      />
+    </Svg>
   )
-}
+})
 
-export const Chevron = memo(_Chevron)
+Icon.displayName = 'Chevron'
+
+export const Chevron = memo<IconProps>(Icon)

@@ -3,10 +3,9 @@ import dayjs from 'dayjs'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { IS_ANDROID } from 'src/constants/globals'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
@@ -14,7 +13,7 @@ import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Text } from 'ui/src'
+import { Flex, Icons, Text } from 'ui/src'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -25,7 +24,6 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function RestoreCloudBackupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const backups = useCloudBackups()
   const sortedBackups = backups.slice().sort((a, b) => b.createdAt - a.createdAt)
@@ -85,7 +83,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                         {dayjs.unix(createdAt).format('MMM D, YYYY, h:mma')}
                       </Text>
                     </Flex>
-                    <Chevron color={theme.colors.neutral1} direction="e" />
+                    <Icons.RotatableChevron color="$neutral1" direction="e" />
                   </Flex>
                 </Flex>
               </TouchableArea>

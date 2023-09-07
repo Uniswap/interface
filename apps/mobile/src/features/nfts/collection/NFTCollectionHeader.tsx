@@ -102,7 +102,7 @@ export function NFTCollectionHeader({
             borderRadius="roundedFull"
             padding="spacing12">
             <Flex centered grow height={theme.iconSizes.icon8} width={theme.iconSizes.icon8}>
-              <BackButton color="sporeWhite" size={theme.iconSizes.icon24} />
+              <BackButton color="$sporeWhite" size={iconSizes.icon24} />
             </Flex>
           </TouchableArea>
           <NFTCollectionContextMenu

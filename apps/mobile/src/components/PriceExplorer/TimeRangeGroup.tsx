@@ -74,8 +74,9 @@ export function TimeRangeGroup({
     <Box alignSelf="center" flexDirection="row" width={CHART_WIDTH}>
       <View style={StyleSheet.absoluteFill}>
         <AnimatedBox
-          bg="surface3"
-          borderRadius="rounded20"
+          bg="$surface3"
+          borderRadius="$rounded20"
+          gap="$none"
           style={[StyleSheet.absoluteFillObject, sliderStyle]}
           width={LABEL_WIDTH}
         />

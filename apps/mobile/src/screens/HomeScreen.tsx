@@ -66,7 +66,7 @@ import { hideSplashScreen } from 'src/utils/splashScreen'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
-import { dimensions } from 'ui/src/theme/restyle'
+import { dimensions } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
@@ -469,12 +469,13 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       </View>
       <NavBar />
       <AnimatedBox
+        gap="$none"
         height={insets.top}
         position="absolute"
         style={statusBarStyle}
         top={0}
         width="100%"
-        zIndex="sticky"
+        zIndex="$sticky"
       />
     </Screen>
   )

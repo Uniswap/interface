@@ -19,8 +19,7 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { AnimatedBox, AnimatedFlex, Box, Flex, FlexProps } from 'src/components/layout'
-import { Text } from 'src/components/Text'
+import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -28,7 +27,8 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
 import { Screens } from 'src/screens/Screens'
-import SearchIcon from 'ui/src/assets/icons/search.svg'
+import { Flex, Icons, StackProps, Text } from 'ui/src'
+import { borderRadii, iconSizes } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -57,7 +57,7 @@ export function NavBar(): JSX.Element {
 
   return (
     <>
-      <Box pointerEvents="none" style={StyleSheet.absoluteFill}>
+      <Flex gap="$none" pointerEvents="none" style={StyleSheet.absoluteFill}>
         <GradientBackground overflow="hidden">
           <Svg height={screenHeight} opacity={isDarkMode ? '1' : '0.3'} width="100%">
             <Defs>
@@ -69,12 +69,12 @@ export function NavBar(): JSX.Element {
             <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
           </Svg>
         </GradientBackground>
-      </Box>
+      </Flex>
       <Flex
         row
         alignItems="center"
         bottom={0}
-        gap="none"
+        gap="$none"
         justifyContent="flex-end"
         left={0}
         pointerEvents="box-none"
@@ -85,10 +85,10 @@ export function NavBar(): JSX.Element {
           row
           alignItems="center"
           flex={1}
-          gap="spacing12"
+          gap="$spacing12"
           justifyContent="space-between"
-          mb={IS_ANDROID ? 'spacing8' : 'none'}
-          mx="spacing24"
+          mb={IS_ANDROID ? '$spacing8' : '$none'}
+          mx="$spacing24"
           pointerEvents="auto">
           <ExploreTabBarButton />
           <SwapFAB />
@@ -141,23 +141,29 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
   })
 
   return (
-    <Box alignItems="center" bg="none" pointerEvents="box-none" position="relative">
+    <Flex
+      alignItems="center"
+      bg="$transparent"
+      gap="$none"
+      pointerEvents="box-none"
+      position="relative">
       <TapGestureHandler onGestureEvent={onGestureEvent}>
         <AnimatedBox
-          alignItems="center"
+          centered
+          gap="$none"
           height={SWAP_BUTTON_HEIGHT}
-          justifyContent="center"
           pointerEvents="auto"
-          px="spacing24"
-          py="spacing16"
-          shadowColor="DEP_shadowBranded"
+          px="$spacing24"
+          py="$spacing16"
+          shadowColor="$DEP_shadowBranded"
           shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
           shadowOpacity={isDarkMode ? 0.6 : 0.4}
           shadowRadius={theme.borderRadii.rounded20}
           style={[animatedStyle]}>
-          <Box
-            borderRadius="rounded32"
+          <Flex
+            borderRadius="$rounded32"
             bottom={0}
+            gap="$none"
             left={0}
             overflow="hidden"
             pointerEvents="auto"
@@ -173,13 +179,13 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
               </Defs>
               <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
             </Svg>
-          </Box>
-          <Text color="sporeWhite" variant="buttonLabelMedium">
+          </Flex>
+          <Text color="$sporeWhite" variant="buttonLabelMedium">
             {t('Swap')}
           </Text>
         </AnimatedBox>
       </TapGestureHandler>
-    </Box>
+    </Flex>
   )
 })
 
@@ -213,15 +219,15 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
     },
   })
 
-  const contentProps: FlexProps = IS_IOS
+  const contentProps: StackProps = IS_IOS
     ? {
-        bg: 'surface2',
+        bg: '$surface2',
         opacity: isDarkMode ? 0.6 : 0.8,
       }
     : {
-        bg: 'surface1',
+        bg: '$surface1',
         borderWidth: 1,
-        borderColor: 'surface3',
+        borderColor: '$surface3',
       }
 
   return (
@@ -238,17 +244,18 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               grow
               row
               alignItems="center"
-              borderRadius="roundedFull"
+              borderRadius="$roundedFull"
               flex={1}
-              gap="spacing8"
+              gap="$spacing8"
               justifyContent="flex-start"
-              p="spacing16"
-              shadowColor={isDarkMode ? 'surface2' : 'neutral3'}
-              shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
+              p="$spacing16"
+              shadowColor={isDarkMode ? '$surface2' : '$neutral3'}
+              // TODO(MOB-1211): review shadow offset in Tamagui
+              // shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
               shadowOpacity={isDarkMode ? 0.6 : 0.4}
-              shadowRadius={theme.borderRadii.rounded20}>
-              <SearchIcon color={theme.colors.neutral2} />
-              <Text color="neutral1" variant="bodyLarge">
+              shadowRadius={borderRadii.rounded20}>
+              <Icons.Search color="$neutral2" size={iconSizes.icon24} />
+              <Text color="$neutral1" variant="bodyLarge">
                 {t('Search web3')}
               </Text>
             </Flex>

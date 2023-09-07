@@ -99,7 +99,7 @@ export function CancelConfirmationView({
             <AddressDisplay
               hideAddressInSubtitle
               address={transactionDetails.from}
-              horizontalGap="spacing8"
+              horizontalGap="$spacing8"
               variant="subheadSmall"
             />
             <Text color="neutral2" variant="subheadSmall">

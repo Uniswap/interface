@@ -4,17 +4,15 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
 <View
   sentry-label="Screen"
   style={
-    [
-      {
-        "backgroundColor": "#FFFFFF",
-        "display": "flex",
-        "flex": 1,
-      },
-      {
-        "paddingLeft": undefined,
-        "paddingRight": undefined,
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "backgroundColor": "#FFFFFF",
+      "flex": 1,
+      "flexDirection": "column",
+      "gap": 0,
+      "paddingLeft": undefined,
+      "paddingRight": undefined,
+    }
   }
 >
   <View

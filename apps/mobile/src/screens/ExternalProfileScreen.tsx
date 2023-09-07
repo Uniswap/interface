@@ -124,7 +124,7 @@ export function ExternalProfileScreen({
 
   return (
     <ExploreModalAwareView>
-      <Screen noInsets={true}>
+      <Screen noInsets>
         <Trace
           directFromPage
           logImpression

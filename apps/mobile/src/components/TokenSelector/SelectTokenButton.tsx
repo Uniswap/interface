@@ -1,12 +1,10 @@
-import { useTheme } from '@shopify/restyle'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { Icons } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
@@ -23,8 +21,6 @@ export function SelectTokenButton({
   onPress,
 }: SelectTokenButtonProps): JSX.Element {
   const { t } = useTranslation()
-  const theme = useTheme<Theme>()
-
   return (
     <TouchableArea
       hapticFeedback
@@ -38,7 +34,7 @@ export function SelectTokenButton({
           <Text color="neutral1" pl="spacing4" variant="buttonLabelLarge">
             {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
           </Text>
-          <Chevron color={theme.colors.neutral3} direction="e" />
+          <Icons.RotatableChevron color="$neutral3" direction="e" />
         </Flex>
       ) : (
         <Flex centered row py="spacing4">
@@ -46,7 +42,7 @@ export function SelectTokenButton({
             <Text color="sporeWhite" variant="buttonLabelLarge">
               {t('Choose a token')}
             </Text>
-            <Chevron color={theme.colors.sporeWhite} direction="e" />
+            <Icons.RotatableChevron color="$sporeWhite" direction="e" />
           </Flex>
         </Flex>
       )}

@@ -29,7 +29,7 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
   }, [favoriteCurrencyIds.length])
 
   return (
-    <AnimatedBox entering={FadeIn}>
+    <AnimatedBox entering={FadeIn} gap="$none">
       <FavoriteHeaderRow
         editingTitle={t('Edit favorite tokens')}
         isEditing={isEditing}

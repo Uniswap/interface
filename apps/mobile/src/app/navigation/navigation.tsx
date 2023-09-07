@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import {
@@ -11,7 +11,6 @@ import {
   OnboardingStackParamList,
   SettingsStackParamList,
 } from 'src/app/navigation/types'
-import { Chevron } from 'src/components/icons/Chevron'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -32,7 +31,6 @@ import { NFTItemScreen } from 'src/screens/NFTItemScreen'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { CloudBackupPasswordConfirmScreen } from 'src/screens/Onboarding/CloudBackupPasswordConfirmScreen'
 import { CloudBackupPasswordCreateScreen } from 'src/screens/Onboarding/CloudBackupPasswordCreateScreen'
-
 import { CloudBackupProcessingScreen } from 'src/screens/Onboarding/CloudBackupProcessingScreen'
 import { EditNameScreen } from 'src/screens/Onboarding/EditNameScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
@@ -46,7 +44,6 @@ import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthSc
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCloudBackupPasswordConfirmScreen'
 import { SettingsCloudBackupPasswordCreateScreen } from 'src/screens/SettingsCloudBackupPasswordCreateScreen'
-
 import { SettingsCloudBackupProcessingScreen } from 'src/screens/SettingsCloudBackupProcessingScreen'
 import { SettingsCloudBackupStatus } from 'src/screens/SettingsCloudBackupStatus'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
@@ -56,6 +53,7 @@ import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
+import { Icons } from 'ui/src'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
@@ -160,12 +158,12 @@ export function ExploreStackNavigator(): JSX.Element {
 const renderEmptyBackImage = (): JSX.Element => <></>
 
 export function OnboardingStackNavigator(): JSX.Element {
+  // TODO (MOB-1211): import these values from Tamagui
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
 
-  const renderHeaderBackImage = useCallback(
-    () => <Chevron color={theme.colors.neutral2} height={28} width={28} />,
-    [theme.colors.neutral2]
+  const renderHeaderBackImage = (): JSX.Element => (
+    <Icons.RotatableChevron color="$neutral2" height={28} width={28} />
   )
 
   return (

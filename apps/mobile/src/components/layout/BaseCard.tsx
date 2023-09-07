@@ -3,11 +3,11 @@ import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
+import { Icons } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { opacify } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
@@ -66,8 +66,6 @@ type HeaderProps = {
 } & ComponentProps<typeof TouchableArea>
 
 function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps): JSX.Element {
-  const theme = useAppTheme()
-
   return (
     <TouchableArea
       borderBottomColor="surface3"
@@ -96,7 +94,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
             )
           ) : null}
         </Flex>
-        <Chevron color={theme.colors.neutral2} direction="e" height={20} />
+        <Icons.RotatableChevron color="$neutral2" direction="e" height={20} />
       </Flex>
     </TouchableArea>
   )

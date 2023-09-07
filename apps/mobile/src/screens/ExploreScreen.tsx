@@ -75,7 +75,7 @@ export function ExploreScreen(): JSX.Element {
   }, [])
 
   return (
-    <Screen bg="none" edges={['top']}>
+    <Screen bg="$transparent" edges={['top']}>
       <HandleBar backgroundColor="none" />
       <Box backgroundColor="none" p="spacing16">
         <SearchTextInput

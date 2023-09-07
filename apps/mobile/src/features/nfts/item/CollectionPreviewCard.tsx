@@ -2,12 +2,12 @@ import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTItem } from 'src/features/nfts/types'
+import { Icons } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes, imageSizes } from 'ui/src/theme'
 import { Currency, NftItemScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -100,11 +100,11 @@ export function CollectionPreviewCard({
           </Flex>
         </Flex>
         {isViewableCollection ? (
-          <Chevron
-            color={theme.colors.neutral1}
+          <Icons.RotatableChevron
+            color="$neutral1"
             direction="e"
-            height={theme.iconSizes.icon24}
-            width={theme.iconSizes.icon24}
+            height={iconSizes.icon24}
+            width={iconSizes.icon24}
           />
         ) : null}
       </Flex>

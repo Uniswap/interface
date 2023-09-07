@@ -149,20 +149,16 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     <View
       sentry-label="SpinningLoader"
       style={
-        [
-          {
-            "display": "flex",
-          },
-          [
+        {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "gap": 0,
+          "transform": [
             {
-              "transform": [
-                {
-                  "rotateZ": "0deg",
-                },
-              ],
+              "rotateZ": "0deg",
             },
           ],
-        ]
+        }
       }
     >
       <svg

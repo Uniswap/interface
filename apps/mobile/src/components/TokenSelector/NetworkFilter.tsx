@@ -2,14 +2,13 @@ import { ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutAnimation, StyleSheet, VirtualizedList } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { useNetworkOptions } from 'src/components/Network/hooks'
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
+import { Icons } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { colors, iconSizes } from 'ui/src/theme'
 import {
@@ -97,7 +96,6 @@ export function NetworkFilter({
   includeAllNetworks,
   showEllipsisInitially,
 }: NetworkFilterProps): JSX.Element {
-  const theme = useAppTheme()
   const { t } = useTranslation()
   const [showModal, setShowModal] = useState(false)
   // TODO: remove the comment below once we add it to the main swap screen
@@ -147,11 +145,11 @@ export function NetworkFilter({
             // show specific network or all
             networks={networks}
           />
-          <Chevron
-            color={theme.colors.neutral3}
+          <Icons.RotatableChevron
+            color="$neutral3"
             direction="s"
-            height={theme.iconSizes.icon20}
-            width={theme.iconSizes.icon20}
+            height={iconSizes.icon20}
+            width={iconSizes.icon20}
           />
         </Flex>
       </TouchableArea>

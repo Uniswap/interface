@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { Delay } from 'src/components/layout/Delayed'
 
-import { Theme } from 'ui/src/theme/restyle'
+import { ColorTokens } from 'ui/src'
 import { useDebounce } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
@@ -76,7 +76,7 @@ export function useMoonpayFiatOnRamp({
   fiatOnRampHostUrl?: string
   isError: boolean
   errorText?: string
-  errorColor?: keyof Theme['colors']
+  errorColor?: ColorTokens
 } {
   const theme = useAppTheme()
   const { t } = useTranslation()
@@ -173,16 +173,16 @@ export function useMoonpayFiatOnRamp({
 
   const quoteCurrencyAmountReady = isBaseCurrencyAmountValid && !quoteCurrencyAmountLoading
 
-  let errorText, errorColor: keyof Theme['colors'] | undefined
+  let errorText, errorColor: ColorTokens | undefined
   if (isError) {
     errorText = t('Something went wrong.')
-    errorColor = 'DEP_accentWarning'
+    errorColor = '$DEP_accentWarning'
   } else if (amountIsTooSmall) {
     errorText = t('${{amount}} minimum', { amount: minBuyAmount })
-    errorColor = 'statusCritical'
+    errorColor = '$statusCritical'
   } else if (amountIsTooLarge) {
     errorText = t('${{amount}} maximum', { amount: maxBuyAmount })
-    errorColor = 'statusCritical'
+    errorColor = '$statusCritical'
   }
 
   return {

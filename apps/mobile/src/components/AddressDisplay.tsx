@@ -4,13 +4,11 @@ import { FlexAlignType } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
 import { NotificationBadge } from 'src/components/notifications/Badge'
-import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
-import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
-import { Theme } from 'ui/src/theme/restyle'
+import { ColorTokens, Flex, Icons, SpaceTokens, Text } from 'ui/src'
+import { fonts } from 'ui/src/theme'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -21,10 +19,10 @@ type AddressDisplayProps = {
   address: string
   hideAddressInSubtitle?: boolean
   size?: number
-  variant?: keyof Theme['textVariants']
-  textColor?: keyof Theme['colors']
-  captionTextColor?: keyof Theme['colors']
-  captionVariant?: keyof Theme['textVariants']
+  variant?: keyof typeof fonts
+  textColor?: ColorTokens
+  captionTextColor?: ColorTokens
+  captionVariant?: keyof typeof fonts
   direction?: 'row' | 'column'
   showCopy?: boolean
   showCopyWrapperButton?: boolean
@@ -32,10 +30,10 @@ type AddressDisplayProps = {
   contentAlign?: FlexAlignType
   showIconBackground?: boolean
   textAlign?: FlexAlignType
-  horizontalGap?: keyof Theme['spacing']
+  horizontalGap?: SpaceTokens
   showViewOnlyBadge?: boolean
   showNotificationsBadge?: boolean
-  gapBetweenLines?: keyof Theme['spacing']
+  gapBetweenLines?: SpaceTokens
 }
 
 type CopyButtonWrapperProps = {
@@ -62,8 +60,8 @@ export function AddressDisplay({
   address,
   size = 24,
   variant = 'bodyLarge',
-  textColor = 'neutral1',
-  captionTextColor = 'neutral2',
+  textColor = '$neutral1',
+  captionTextColor = '$neutral2',
   captionVariant = 'subheadSmall',
   hideAddressInSubtitle,
   direction = 'row',
@@ -73,9 +71,9 @@ export function AddressDisplay({
   textAlign,
   contentAlign = 'center', // vertical aligment of all items
   showIconBackground,
-  horizontalGap = 'spacing12',
+  horizontalGap = '$spacing12',
   showViewOnlyBadge = false,
-  gapBetweenLines = 'none',
+  gapBetweenLines = '$none',
 }: AddressDisplayProps): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
@@ -120,7 +118,7 @@ export function AddressDisplay({
       <Flex alignItems={itemAlignment} flexShrink={1} gap={gapBetweenLines}>
         <CopyButtonWrapper
           onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
-          <Flex centered row gap="spacing12">
+          <Flex centered row gap="$spacing12">
             <Text
               color={textColor}
               ellipsizeMode="tail"
@@ -130,7 +128,7 @@ export function AddressDisplay({
               {displayName?.name}
             </Text>
             {showCopy && !showAddressAsSubtitle && (
-              <CopyIcon color={theme.colors.neutral1} height={mainSize} width={mainSize} />
+              <Icons.CopySheets color="$neutral1" size={mainSize} />
             )}
           </Flex>
         </CopyButtonWrapper>
@@ -139,18 +137,18 @@ export function AddressDisplay({
             <Flex
               centered
               row
-              backgroundColor={showCopyWrapperButton ? 'DEP_backgroundOverlay' : 'none'}
-              borderRadius="roundedFull"
-              gap="spacing4"
-              marginTop={showCopyWrapperButton ? 'spacing8' : 'none'}
-              px={showCopyWrapperButton ? 'spacing8' : 'none'}
-              py={showCopyWrapperButton ? 'spacing4' : 'none'}>
+              backgroundColor={showCopyWrapperButton ? '$DEP_backgroundOverlay' : '$transparent'}
+              borderRadius="$roundedFull"
+              gap="$spacing4"
+              marginTop={showCopyWrapperButton ? '$spacing8' : '$none'}
+              px={showCopyWrapperButton ? '$spacing8' : '$none'}
+              py={showCopyWrapperButton ? '$spacing4' : '$none'}>
               <Text color={captionTextColor} variant={captionVariant}>
                 {sanitizeAddressText(shortenAddress(address))}
               </Text>
               {showCopy && (
-                <CopyIcon
-                  color={theme.colors[captionTextColor]}
+                <Icons.CopySheets
+                  color={captionTextColor}
                   height={captionSize}
                   width={captionSize}
                 />

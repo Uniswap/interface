@@ -274,7 +274,7 @@ export function QRAnimation({
                     <AddressDisplay
                       showCopy
                       address={activeAddress}
-                      captionTextColor="neutral3"
+                      captionTextColor="$neutral3"
                       captionVariant="subheadSmall"
                       showAccountIcon={false}
                       variant="headlineSmall"

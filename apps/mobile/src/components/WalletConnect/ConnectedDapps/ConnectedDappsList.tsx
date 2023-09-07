@@ -11,7 +11,7 @@ import { Text } from 'src/components/Text'
 import { DappConnectedNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { dimensions } from 'ui/src/theme/restyle'
+import { dimensions } from 'ui/src/theme'
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]

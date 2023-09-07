@@ -122,7 +122,7 @@ export function AccountCardItem({
             <AddressDisplay
               address={address}
               captionVariant="bodyMicro"
-              gapBetweenLines="spacing2"
+              gapBetweenLines="$spacing2"
               showViewOnlyBadge={isViewOnly}
               size={iconSizes.icon36}
             />

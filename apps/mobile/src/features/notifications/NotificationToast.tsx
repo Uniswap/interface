@@ -104,16 +104,17 @@ export function NotificationToast({
   return (
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
       <AnimatedBox
-        borderColor={useSmallDisplay ? 'none' : 'surface2'}
-        borderRadius="rounded16"
+        borderColor={useSmallDisplay ? '$transparent' : '$surface2'}
+        borderRadius="$rounded16"
         borderWidth={1}
+        gap="$none"
         left={0}
-        marginHorizontal="spacing16"
+        marginHorizontal="$spacing16"
         pointerEvents="box-none"
         position="absolute"
         right={0}
         style={animatedStyle}
-        zIndex="modal">
+        zIndex="$modal">
         {useSmallDisplay ? (
           <NotificationContentSmall
             icon={icon}

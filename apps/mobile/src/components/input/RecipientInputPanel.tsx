@@ -1,13 +1,12 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
+import { Icons } from 'ui/src'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface RecipientInputPanelProps {
@@ -23,8 +22,6 @@ export function RecipientInputPanel({
   recipientAddress,
   onToggleShowRecipientSelector,
 }: RecipientInputPanelProps): JSX.Element {
-  const theme = useAppTheme()
-
   return (
     <TouchableArea
       px="spacing32"
@@ -38,7 +35,7 @@ export function RecipientInputPanel({
             address={recipientAddress}
             variant="headlineSmall"
           />
-          <Chevron color={theme.colors.neutral1} direction="e" />
+          <Icons.RotatableChevron color="$neutral1" direction="e" />
         </Flex>
 
         {recipientAddress && <RecipientPrevTransfers recipient={recipientAddress} />}

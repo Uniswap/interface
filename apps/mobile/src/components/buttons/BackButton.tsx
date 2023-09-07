@@ -3,11 +3,12 @@ import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
+import { ColorTokens } from 'ui/src'
 import { Theme } from 'ui/src/theme/restyle'
 
 type Props = {
   size?: number
-  color?: keyof Theme['colors']
+  color?: ColorTokens
   showButtonLabel?: boolean
   onPressBack?: () => void
 } & SpacingProps<Theme> &

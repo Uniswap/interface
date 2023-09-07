@@ -16,7 +16,8 @@ import { Text } from 'src/components/Text'
 import { openSettings } from 'src/utils/linking'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
-import { dimensions, theme as FixedTheme } from 'ui/src/theme/restyle'
+import { dimensions } from 'ui/src/theme'
+import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 type QRCodeScannerProps = {

@@ -6,7 +6,8 @@ import { Flex } from 'src/components/layout'
 import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
-import { dimensions, flex } from 'ui/src/theme/restyle'
+import { dimensions } from 'ui/src/theme'
+import { flex } from 'ui/src/theme/restyle'
 
 export interface MenuItemProp {
   key: string

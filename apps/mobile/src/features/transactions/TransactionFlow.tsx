@@ -28,7 +28,7 @@ import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTo
 import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
-import { dimensions } from 'ui/src/theme/restyle'
+import { dimensions } from 'ui/src/theme'
 import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'

@@ -30,6 +30,7 @@ import { openUri } from 'src/utils/linking'
 import { Icons } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
+import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import {
@@ -106,10 +107,7 @@ export default function SwapSettingsModal({
         <Flex row justifyContent="space-between">
           <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Options)}>
             <Icons.Chevron
-              color={
-                view === SwapSettingsModalView.Options ? theme.colors.none : theme.colors.neutral3
-              }
-              direction="w"
+              color={view === SwapSettingsModalView.Options ? '$transparent' : '$neutral3'}
               height={theme.iconSizes.icon24}
               width={theme.iconSizes.icon24}
             />
@@ -139,7 +137,6 @@ function SwapSettingsOptions({
   setView: (newView: SwapSettingsModalView) => void
   chainId: ChainId
 }): JSX.Element {
-  const theme = useAppTheme()
   const { t } = useTranslation()
   const isMevBlockerFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.MevBlocker)
 
@@ -162,10 +159,10 @@ function SwapSettingsOptions({
               .toFixed(2)
               .toString()}%`}</Text>
             <Icons.Chevron
-              color={theme.colors.neutral3}
-              direction="e"
-              height={theme.iconSizes.icon24}
-              width={theme.iconSizes.icon24}
+              color="$neutral3"
+              height={iconSizes.icon24}
+              style={{ transform: [{ rotate: '180deg' }] }}
+              width={iconSizes.icon24}
             />
           </Flex>
         </TouchableArea>
@@ -480,15 +477,11 @@ function BottomLabel({
 
   if (inputWarning) {
     return (
-      <Flex
-        centered
-        row
-        gap="spacing8"
-        height={theme.textVariants.bodySmall.lineHeight * 2 + theme.spacing.spacing8}>
+      <Flex centered row gap="spacing8" height={fonts.bodySmall.lineHeight * 2 + spacing.spacing8}>
         <AlertTriangleIcon
           color={theme.colors.DEP_accentWarning}
-          height={theme.iconSizes.icon16}
-          width={theme.iconSizes.icon16}
+          height={iconSizes.icon16}
+          width={iconSizes.icon16}
         />
         <Text color="DEP_accentWarning" textAlign="center" variant="bodySmall">
           {inputWarning}

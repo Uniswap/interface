@@ -10,11 +10,12 @@ import {
 } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Screens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
+import { Icons } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 export interface SettingsSection {
   subTitle: string
@@ -95,10 +96,15 @@ export function SettingsRow({
                 </Text>
               </Flex>
             ) : null}
-            <Chevron color={theme.colors.neutral3} direction="e" height={24} width={24} />
+            <Icons.RotatableChevron
+              color="$neutral3"
+              direction="e"
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
+            />
           </Flex>
         ) : externalLink ? (
-          <Arrow color={theme.colors.neutral3} direction="ne" size={24} />
+          <Arrow color={theme.colors.neutral3} direction="ne" size={iconSizes.icon24} />
         ) : (
           action
         )}

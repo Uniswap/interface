@@ -98,7 +98,7 @@ export function SettingsCloudBackupStatus({
   const googleDriveEmail = backups[0]?.googleDriveEmail
 
   return (
-    <Screen mx="spacing16" my="spacing16">
+    <Screen mx="$spacing16" my="$spacing16">
       <BackHeader alignment="center" mb="spacing16" onPressBack={onPressBack}>
         <Text variant="bodyLarge">
           {IS_ANDROID ? t('Google Drive backup') : t('iCloud backup')}

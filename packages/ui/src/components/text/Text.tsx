@@ -184,5 +184,5 @@ export const Text = ({
     )
   }
 
-  return <TextFrame allowFontScaling={enableFontScaling} {...rest} />
+  return <TextFrame allowFontScaling={enableFontScaling} color="$neutral1" {...rest} />
 }

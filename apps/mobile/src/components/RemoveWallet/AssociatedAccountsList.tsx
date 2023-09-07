@@ -3,8 +3,7 @@ import { ScrollView, StyleSheet } from 'react-native'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { spacing } from 'ui/src/theme'
-import { dimensions } from 'ui/src/theme/restyle'
+import { dimensions, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
 import {
   AccountListQuery,

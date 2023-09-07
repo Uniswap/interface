@@ -1,7 +1,7 @@
 import React from 'react'
 import { Extrapolate, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
-import { dimensions } from 'ui/src/theme/restyle'
+import { dimensions } from 'ui/src/theme'
 
 const { fullWidth } = dimensions
 const INDICATOR_WIDTH = (200 / 375) * fullWidth
@@ -67,9 +67,10 @@ function AnimatedIndicatorPill({
   return (
     <AnimatedBox
       key={`indicator-${index}`}
-      bg="neutral1"
-      borderRadius="rounded16"
+      bg="$neutral1"
+      borderRadius="$rounded16"
       flex={1}
+      gap="$none"
       height={4}
       style={style}
     />

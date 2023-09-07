@@ -5,8 +5,7 @@ import { StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppTheme } from 'src/app/hooks'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
-import { Box } from 'src/components/layout'
-import { Text } from 'src/components/Text'
+import { Flex, Text } from 'ui/src'
 import { opacify, spacing } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -31,22 +30,22 @@ type AccountWithPortfolioValue = {
 const ViewOnlyHeader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
-    <Box flex={1} px="spacing24" py="spacing8">
-      <Text color="neutral2" variant="subheadSmall">
+    <Flex fill gap="$none" px="$spacing24" py="$spacing8">
+      <Text color="$neutral2" variant="subheadSmall">
         {t('View only wallets')}
       </Text>
-    </Box>
+    </Flex>
   )
 }
 
 const SignerHeader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
-    <Box flex={1} px="spacing24" py="spacing8">
-      <Text color="neutral2" variant="subheadSmall">
+    <Flex fill px="$spacing24" py="$spacing8">
+      <Text color="$neutral2" variant="subheadSmall">
         {t('Your other wallets')}
       </Text>
-    </Box>
+    </Flex>
   )
 }
 
@@ -111,7 +110,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
   )
 
   return (
-    <Box flexShrink={1} position="relative">
+    <Flex shrink gap="$none" position="relative">
       {/* TODO(MOB-646): attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
       <LinearGradient
         colors={[opacify(0, theme.colors.surface1), theme.colors.surface1]}
@@ -142,7 +141,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
         start={{ x: 0, y: 0 }}
         style={ListSheet.bottomGradient}
       />
-    </Box>
+    </Flex>
   )
 }
 

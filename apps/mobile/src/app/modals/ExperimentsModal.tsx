@@ -4,14 +4,13 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
 import { TextInput } from 'src/components/input/TextInput'
-import { Flex } from 'src/components/layout/Flex'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { Text } from 'src/components/Text'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import { Statsig } from 'statsig-react'
+import { Flex, Text } from 'ui/src'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 
@@ -45,13 +44,13 @@ export function ExperimentsModal(): JSX.Element {
       name={ModalName.Experiments}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.Experiments }))}>
       <Flex
-        gap="spacing16"
+        gap="$spacing16"
         justifyContent="flex-start"
-        pb="spacing36"
-        pt="spacing12"
-        px="spacing24">
-        <Flex gap="spacing8">
-          <Flex my="spacing16">
+        pb="$spacing36"
+        pt="$spacing12"
+        px="$spacing24">
+        <Flex gap="$spacing8">
+          <Flex my="$spacing16">
             <Text variant="subheadLarge">⚙️ Custom GraphQL Endpoint</Text>
             <Text variant="bodySmall">
               You will need to restart the application to pick up any changes in this section.

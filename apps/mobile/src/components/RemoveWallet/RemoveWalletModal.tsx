@@ -157,7 +157,7 @@ export function RemoveWalletModal(): JSX.Element | null {
         ) : (
           <Flex centered row gap={inProgress ? 'none' : 'spacing12'} pt="spacing12">
             {inProgress ? (
-              <AnimatedBox style={animatedCancelButtonSpanStyles} />
+              <AnimatedBox gap="$none" style={animatedCancelButtonSpanStyles} />
             ) : (
               <Button
                 fill

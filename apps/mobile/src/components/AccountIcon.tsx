@@ -1,12 +1,10 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
-import { useAppTheme } from 'src/app/hooks'
-import { Box } from 'src/components/layout'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
-import Eye from 'ui/src/assets/icons/eye.svg'
-import { theme as FixedTheme } from 'ui/src/theme/restyle'
+import { Flex, Icons } from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 interface Props {
@@ -17,7 +15,7 @@ interface Props {
   showBackground?: boolean // Display images with solid background.
 }
 
-const INSET_PADDING = FixedTheme.spacing.spacing16
+const INSET_PADDING = spacing.spacing16
 
 export function AccountIcon({
   size,
@@ -26,8 +24,6 @@ export function AccountIcon({
   avatarUri,
   showBackground,
 }: Props): JSX.Element {
-  const theme = useAppTheme()
-
   // If background, add padding and center Unicons. Leave ENS avatars as is.
   const shouldShowUniconInsetPadding = !avatarUri && showBackground
 
@@ -37,7 +33,7 @@ export function AccountIcon({
   // Color for gradient background.
   const { gradientStart: uniconColor } = useUniconColors(address)
 
-  const iconPadding = FixedTheme.spacing.spacing4
+  const iconPadding = size * 0.15
   const iconEyeContainerSize = size * 0.45
   const iconEyeSize = iconEyeContainerSize - iconPadding
 
@@ -49,14 +45,15 @@ export function AccountIcon({
   )
 
   return (
-    <Box
-      backgroundColor={showBackground ? 'surface1' : 'none'}
-      borderColor={showBackground ? 'surface1' : 'none'}
-      borderRadius="roundedFull"
+    <Flex
+      backgroundColor={showBackground ? '$surface1' : '$transparent'}
+      borderColor={showBackground ? '$surface1' : '$transparent'}
+      borderRadius="$roundedFull"
       borderWidth={showBackground ? 2 : 0}
+      gap="$none"
       position="relative"
       style={{
-        padding: shouldShowUniconInsetPadding ? INSET_PADDING : FixedTheme.spacing.none,
+        padding: shouldShowUniconInsetPadding ? INSET_PADDING : spacing.none,
       }}>
       {avatarUri ? (
         <RemoteImage
@@ -70,26 +67,24 @@ export function AccountIcon({
         defaultImage
       )}
       {showViewOnlyBadge && (
-        <Box
-          alignContent="center"
+        <Flex
           alignItems="center"
-          backgroundColor="surface2"
-          borderRadius="roundedFull"
+          backgroundColor="$surface2"
+          borderRadius="$roundedFull"
           bottom={-2}
           height={iconEyeContainerSize}
           justifyContent="center"
-          p="spacing4"
           position="absolute"
           right={-2}
-          shadowColor="sporeBlack"
+          shadowColor="$sporeBlack"
           shadowOffset={{ width: 0, height: 0 }}
           shadowOpacity={0.2}
           shadowRadius={10}
           width={iconEyeContainerSize}>
-          <Eye color={theme.colors.neutral1} width={iconEyeSize} />
-        </Box>
+          <Icons.Eye color="$neutral1" height={iconEyeSize} width={iconEyeSize} />
+        </Flex>
       )}
-    </Box>
+    </Flex>
   )
 }
 

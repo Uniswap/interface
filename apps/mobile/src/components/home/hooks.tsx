@@ -3,7 +3,7 @@ import { StyleProp, ViewStyle } from 'react-native'
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
-import { dimensions } from 'ui/src/theme/restyle'
+import { dimensions } from 'ui/src/theme'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>): {

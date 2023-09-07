@@ -228,33 +228,36 @@ exports[`renders collection preview card 1`] = `
     />
     <View
       style={
-        [
-          {
-            "alignItems": "center",
-            "borderRadius": 999999,
-            "display": "flex",
-            "justifyContent": "center",
-          },
-          {
-            "transform": [
-              {
-                "rotate": "180deg",
-              },
-            ],
-          },
-        ]
+        {
+          "alignItems": "center",
+          "borderBottomLeftRadius": 999999,
+          "borderBottomRightRadius": 999999,
+          "borderTopLeftRadius": 999999,
+          "borderTopRightRadius": 999999,
+          "flexDirection": "column",
+          "gap": 0,
+          "justifyContent": "center",
+          "transform": [
+            {
+              "rotate": "180deg",
+            },
+          ],
+        }
       }
     >
       <RNSVGSvgView
         align="xMidYMid"
         bbHeight="24"
         bbWidth="24"
+        color="#222222"
         fill="none"
         focusable={false}
         height={24}
         meetOrSlice={0}
         minX={0}
         minY={0}
+        size={8}
+        stroke="#222222"
         style={
           [
             {
@@ -268,6 +271,7 @@ exports[`renders collection preview card 1`] = `
             },
           ]
         }
+        tintColor="#222222"
         vbHeight={24}
         vbWidth={26}
         width={24}
@@ -277,7 +281,14 @@ exports[`renders collection preview card 1`] = `
           propList={
             [
               "fill",
+              "stroke",
             ]
+          }
+          stroke={
+            {
+              "payload": 4280427042,
+              "type": 0,
+            }
           }
         >
           <RNSVGPath

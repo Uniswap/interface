@@ -9,6 +9,7 @@ import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeG
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
+import { ColorTokens } from 'ui/src'
 import { flex, theme as FixedTheme } from 'ui/src/theme/restyle'
 
 // Distance to scroll to show scrolled state header elements
@@ -21,8 +22,8 @@ type HeaderScrollScreenProps = {
   fullScreen?: boolean // Expand to device edges
   renderedInModal?: boolean // Apply styling to display within bottom sheet modal
   showHandleBar?: boolean // add handlebar element to top of view
-  backgroundColor?: keyof typeof FixedTheme.colors
-  backButtonColor?: keyof typeof FixedTheme.colors
+  backgroundColor?: ColorTokens
+  backButtonColor?: ColorTokens
 }
 
 export function HeaderScrollScreen({
@@ -32,7 +33,7 @@ export function HeaderScrollScreen({
   fullScreen = false,
   renderedInModal = false,
   showHandleBar = false,
-  backgroundColor = 'surface1',
+  backgroundColor = '$surface1',
   backButtonColor,
   children,
 }: PropsWithChildren<HeaderScrollScreenProps>): JSX.Element {

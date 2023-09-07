@@ -4,16 +4,14 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
 <View
   sentry-label="Screen"
   style={
-    [
-      {
-        "backgroundColor": "#FFFFFF",
-        "display": "flex",
-        "flex": 1,
-      },
-      {
-        "paddingTop": 200,
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "backgroundColor": "#FFFFFF",
+      "flex": 1,
+      "flexDirection": "column",
+      "gap": 0,
+      "paddingTop": 200,
+    }
   }
 >
   <View
@@ -735,16 +733,14 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
 <View
   sentry-label="Screen"
   style={
-    [
-      {
-        "backgroundColor": "#FFFFFF",
-        "display": "flex",
-        "flex": 1,
-      },
-      {
-        "paddingTop": 200,
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "backgroundColor": "#FFFFFF",
+      "flex": 1,
+      "flexDirection": "column",
+      "gap": 0,
+      "paddingTop": 200,
+    }
   }
 >
   <View

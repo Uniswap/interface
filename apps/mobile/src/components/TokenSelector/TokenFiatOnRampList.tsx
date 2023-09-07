@@ -2,9 +2,7 @@ import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex, Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
@@ -14,6 +12,7 @@ import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
+import { Icons } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import { fromMoonpayNetwork } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
@@ -176,12 +175,11 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
 }
 
 function Header({ onBack }: { onBack: () => void }): JSX.Element {
-  const theme = useAppTheme()
   const { t } = useTranslation()
   return (
     <Flex row justifyContent="space-between" my="spacing16">
       <TouchableArea testID={ElementName.Back} onPress={onBack}>
-        <Chevron color={theme.colors.neutral1} />
+        <Icons.RotatableChevron color="$neutral1" />
       </TouchableArea>
       <Text variant="bodyLarge">{t('Select a token to buy')}</Text>
       <Box width={24} />

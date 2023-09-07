@@ -1,18 +1,12 @@
-import { BackgroundColorShorthandProps, createBox } from '@shopify/restyle'
 import React, { useMemo } from 'react'
-import { View } from 'react-native'
 import { NativeSafeAreaViewProps, useSafeAreaInsets } from 'react-native-safe-area-context'
-import { BoxProps } from 'src/components/layout/Box'
-import { Theme } from 'ui/src/theme/restyle'
+import { Flex, StackProps } from 'ui/src'
 
-const SafeAreaBox = createBox<Theme>(View)
-
-type ScreenProps = BackgroundColorShorthandProps<Theme> &
+type ScreenProps = StackProps &
   // The SafeAreaView from react-native-safe-area-context also supports a `mode` prop which
   //  lets you choose if `edges` are added as margin or padding, but we don’t use that so
   // our Screen component doesn't need to support it
-  Omit<NativeSafeAreaViewProps, 'mode'> &
-  BoxProps & { noInsets?: boolean }
+  Omit<NativeSafeAreaViewProps, 'mode'> & { noInsets?: boolean }
 
 function SafeAreaWithInsets({ children, edges, noInsets, ...rest }: ScreenProps): JSX.Element {
   // Safe area insets are wrong (0 when they shouldn't be) when using the <SafeAreaView>
@@ -53,13 +47,13 @@ function SafeAreaWithInsets({ children, edges, noInsets, ...rest }: ScreenProps)
   }, [edges, insets, noInsets])
 
   return (
-    <SafeAreaBox style={safeAreaStyles} {...rest}>
+    <Flex gap="$none" style={safeAreaStyles} {...rest}>
       {children}
-    </SafeAreaBox>
+    </Flex>
   )
 }
 
-export function Screen({ bg = 'surface1', children, ...rest }: ScreenProps): JSX.Element {
+export function Screen({ bg = '$surface1', children, ...rest }: ScreenProps): JSX.Element {
   return (
     <SafeAreaWithInsets bg={bg} flex={1} sentry-label="Screen" {...rest}>
       {children}

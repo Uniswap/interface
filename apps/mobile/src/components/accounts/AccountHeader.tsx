@@ -4,15 +4,12 @@ import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
-import { Flex } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 import { isDevBuild } from 'src/utils/version'
-import SettingsIcon from 'ui/src/assets/icons/settings.svg'
+import { Flex, Icons } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -45,11 +42,11 @@ export function AccountHeader(): JSX.Element {
   }
 
   return (
-    <Box
+    <Flex
       alignItems="center"
       flexDirection="row"
       justifyContent="space-between"
-      mt="spacing16"
+      mt="$spacing16"
       testID="account-header">
       <TouchableArea
         hapticFeedback
@@ -68,18 +65,18 @@ export function AccountHeader(): JSX.Element {
         }}
         onPress={onPressAccountHeader}>
         {activeAddress && (
-          <Flex row alignItems="center" gap="spacing4">
+          <Flex row alignItems="center" gap="$spacing4">
             <Flex shrink>
               <AddressDisplay
                 hideAddressInSubtitle
                 address={activeAddress}
-                horizontalGap="spacing8"
+                horizontalGap="$spacing8"
                 size={iconSizes.icon28}
                 variant="subheadLarge"
               />
             </Flex>
-            <Chevron
-              color={theme.colors.neutral3}
+            <Icons.RotatableChevron
+              color="$neutral3"
               direction="s"
               height={iconSizes.icon20}
               width={iconSizes.icon20}
@@ -88,13 +85,13 @@ export function AccountHeader(): JSX.Element {
         )}
       </TouchableArea>
       <TouchableArea hapticFeedback onPress={onPressSettings}>
-        <SettingsIcon
+        <Icons.Settings
           color={theme.colors.neutral2}
           height={theme.iconSizes.icon28}
           opacity="0.8"
           width={theme.iconSizes.icon28}
         />
       </TouchableArea>
-    </Box>
+    </Flex>
   )
 }

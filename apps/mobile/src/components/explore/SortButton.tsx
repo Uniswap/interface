@@ -1,9 +1,8 @@
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
@@ -13,6 +12,8 @@ import {
 } from 'src/features/explore/utils'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
+import { Icons } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
 import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
@@ -22,7 +23,6 @@ interface FilterGroupProps {
 }
 
 function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
-  const theme = useAppTheme()
   const isDarkMode = useIsDarkMode()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
@@ -88,11 +88,11 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
           <Text color="neutral2" variant="buttonLabelSmall">
             {getTokensOrderBySelectedLabel(orderBy, t)}
           </Text>
-          <Chevron
-            color={theme.colors.neutral2}
+          <Icons.RotatableChevron
+            color="$neutral2"
             direction="s"
-            height={theme.iconSizes.icon20}
-            width={theme.iconSizes.icon20}
+            height={iconSizes.icon20}
+            width={iconSizes.icon20}
           />
         </Flex>
       </TouchableArea>

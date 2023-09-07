@@ -13,7 +13,8 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import SearchIcon from 'ui/src/assets/icons/search.svg'
 import X from 'ui/src/assets/icons/x.svg'
-import { dimensions, Theme } from 'ui/src/theme/restyle'
+import { dimensions } from 'ui/src/theme'
+import { Theme } from 'ui/src/theme/restyle'
 
 export const springConfig = {
   stiffness: 1000,
@@ -204,15 +205,18 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           />
 
           {showClearButtonJS ? (
-            <AnimatedBox style={[clearButtonStyle]}>
+            <AnimatedBox gap="$none" style={[clearButtonStyle]}>
               <ClearButton clearIcon={clearIcon} onPress={onClear} />
             </AnimatedBox>
           ) : (
-            <AnimatedBox style={[endAdornmentStyle]}>{endAdornment}</AnimatedBox>
+            <AnimatedBox gap="$none" style={[endAdornmentStyle]}>
+              {endAdornment}
+            </AnimatedBox>
           )}
         </AnimatedFlex>
         {showCancelButton && (
           <AnimatedBox
+            gap="$none"
             style={[cancelButtonStyle, CancelButtonDefaultStyle]}
             onLayout={onCancelLayout}>
             <TouchableArea onPress={onPressCancel}>

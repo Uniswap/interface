@@ -1,10 +1,7 @@
 import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import RNRestart from 'react-native-restart'
-import { Button } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
-import { Text } from 'src/components/Text'
+import { Button, Flex, Text } from 'ui/src'
 import DeadLuni from 'ui/src/assets/graphics/dead-luni.svg'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -53,23 +50,23 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, E
 function ErrorScreen({ error }: { error: Error }): JSX.Element {
   const { t } = useTranslation()
   return (
-    <Flex alignItems="center" flex={1} justifyContent="center" px="spacing16" py="spacing48">
-      <Flex centered grow gap="spacing36">
+    <Flex alignItems="center" flex={1} justifyContent="center" px="$spacing16" py="$spacing48">
+      <Flex centered grow gap="$spacing36">
         <DeadLuni />
-        <Flex centered gap="spacing12">
+        <Flex centered gap="$spacing8">
           <Text variant="subheadLarge">{t('Uh oh!')}</Text>
           <Text variant="bodySmall">{t('Something crashed.')}</Text>
         </Flex>
         {error.message && __DEV__ && <Text variant="bodySmall">{error.message}</Text>}
       </Flex>
-      <Box alignSelf="stretch">
+      <Flex alignSelf="stretch" gap="$none">
         <Button
-          label={t('Restart app')}
           onPress={(): void => {
             RNRestart.Restart()
-          }}
-        />
-      </Box>
+          }}>
+          {t('Restart app')}
+        </Button>
+      </Flex>
     </Flex>
   )
 }

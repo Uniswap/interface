@@ -3,13 +3,13 @@
 exports[`AccountList renders without error 1`] = `
 <View
   style={
-    [
-      {
-        "display": "flex",
-        "flexShrink": 1,
-        "position": "relative",
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "flexShrink": 1,
+      "gap": 0,
+      "position": "relative",
+    }
   }
 >
   ExpoLinearGradient
@@ -33,31 +33,30 @@ exports[`AccountList renders without error 1`] = `
     <View>
       <View
         style={
-          [
-            {
-              "display": "flex",
-              "flex": 1,
-              "paddingHorizontal": 24,
-              "paddingVertical": 8,
-            },
-          ]
+          {
+            "alignItems": "stretch",
+            "flex": 1,
+            "flexDirection": "column",
+            "gap": 16,
+            "paddingBottom": 8,
+            "paddingLeft": 24,
+            "paddingRight": 24,
+            "paddingTop": 8,
+          }
         }
       >
         <Text
           allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
           style={
-            [
-              {
-                "color": "#7D7D7D",
-                "display": "flex",
-                "fontFamily": "Basel-Book",
-                "fontSize": 17,
-                "fontWeight": "400",
-                "lineHeight": 24,
-              },
-            ]
+            {
+              "color": "#7D7D7D",
+              "display": "flex",
+              "fontFamily": "Basel-Medium",
+              "fontSize": 17,
+              "lineHeight": 24,
+            }
           }
+          suppressHighlighting={true}
         >
           Your other wallets
         </Text>
@@ -153,16 +152,12 @@ exports[`AccountList renders without error 1`] = `
               }
             >
               <View
-                sentry-label="Flex"
                 style={
-                  [
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "flex-start",
-                    },
-                  ]
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 12,
+                  }
                 }
               >
                 <View
@@ -177,19 +172,27 @@ exports[`AccountList renders without error 1`] = `
                 >
                   <View
                     style={
-                      [
-                        {
-                          "backgroundColor": "transparent",
-                          "borderColor": "transparent",
-                          "borderRadius": 999999,
-                          "borderWidth": 0,
-                          "display": "flex",
-                          "position": "relative",
-                        },
-                        {
-                          "padding": 0,
-                        },
-                      ]
+                      {
+                        "alignItems": "stretch",
+                        "backgroundColor": "transparent",
+                        "borderBottomColor": "transparent",
+                        "borderBottomLeftRadius": 999999,
+                        "borderBottomRightRadius": 999999,
+                        "borderBottomWidth": 0,
+                        "borderLeftColor": "transparent",
+                        "borderLeftWidth": 0,
+                        "borderRightColor": "transparent",
+                        "borderRightWidth": 0,
+                        "borderStyle": "solid",
+                        "borderTopColor": "transparent",
+                        "borderTopLeftRadius": 999999,
+                        "borderTopRightRadius": 999999,
+                        "borderTopWidth": 0,
+                        "flexDirection": "column",
+                        "gap": 0,
+                        "padding": 0,
+                        "position": "relative",
+                      }
                     }
                   >
                     <View
@@ -346,60 +349,37 @@ exports[`AccountList renders without error 1`] = `
                 </View>
                 <View
                   style={
-                    [
-                      {
-                        "display": "flex",
-                        "flexGrow": 0,
-                        "flexShrink": 0,
-                        "width": 12,
-                      },
-                    ]
-                  }
-                />
-                <View
-                  sentry-label="Flex"
-                  style={
-                    [
-                      {
-                        "alignItems": "flex-start",
-                        "display": "flex",
-                        "flexDirection": "column",
-                        "flexShrink": 1,
-                        "justifyContent": "flex-start",
-                      },
-                    ]
+                    {
+                      "alignItems": "flex-start",
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                      "gap": 2,
+                    }
                   }
                 >
                   <View
-                    sentry-label="Flex"
                     style={
-                      [
-                        {
-                          "alignItems": "center",
-                          "display": "flex",
-                          "flexDirection": "row",
-                          "justifyContent": "center",
-                        },
-                      ]
+                      {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                        "gap": 12,
+                        "justifyContent": "center",
+                      }
                     }
                   >
                     <Text
                       allowFontScaling={true}
-                      ellipsizeMode="tail"
-                      maxFontSizeMultiplier={1.4}
                       numberOfLines={1}
                       style={
-                        [
-                          {
-                            "color": "#222222",
-                            "display": "flex",
-                            "fontFamily": "Basel-Book",
-                            "fontSize": 19,
-                            "fontWeight": "400",
-                            "lineHeight": 24,
-                          },
-                        ]
+                        {
+                          "color": "#222222",
+                          "display": "flex",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 19,
+                          "lineHeight": 24,
+                        }
                       }
+                      suppressHighlighting={true}
                       testID="address-display/name/0x​82D5...3Fa6"
                     >
                       0x​82D5...3Fa6

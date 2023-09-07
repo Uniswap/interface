@@ -1,5 +1,6 @@
 import { ElementName } from 'src/features/telemetry/constants'
-import { dimensions, theme as FixedTheme } from 'ui/src/theme/restyle'
+import { dimensions } from 'ui/src/theme'
+import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 
 // sets the height of the chart short enough on small devices that the

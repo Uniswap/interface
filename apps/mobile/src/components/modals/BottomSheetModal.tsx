@@ -24,8 +24,8 @@ import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
-import { spacing } from 'ui/src/theme'
-import { dimensions, theme as FixedTheme } from 'ui/src/theme/restyle'
+import { dimensions, spacing } from 'ui/src/theme'
+import { theme as FixedTheme } from 'ui/src/theme/restyle'
 
 type Props = PropsWithChildren<{
   disableSwipe?: boolean

@@ -3,13 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
 import { MobileEventName, ModalName } from 'src/features/telemetry/constants'
+import { Icons } from 'ui/src'
 import FiatOnRampBackground from 'ui/src/assets/backgrounds/fiat-onramp-banner.svg'
+import { iconSizes } from 'ui/src/theme'
 
 export function FiatOnRampBanner(props: BoxProps): JSX.Element {
   const { t } = useTranslation()
@@ -38,7 +39,7 @@ export function FiatOnRampBanner(props: BoxProps): JSX.Element {
             <Text color="sporeWhite" variant="buttonLabelMedium">
               {t('Buy crypto')}
             </Text>
-            <Chevron color={theme.colors.sporeWhite} direction="e" width={theme.iconSizes.icon20} />
+            <Icons.RotatableChevron color="$sporeWhite" direction="e" width={iconSizes.icon20} />
           </Flex>
 
           <Text color="sporeWhite" opacity={0.72} variant="subheadSmall">

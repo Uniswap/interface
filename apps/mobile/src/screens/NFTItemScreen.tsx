@@ -178,8 +178,8 @@ export function NFTItemScreen({
               <Box bg="surface2" style={StyleSheet.absoluteFill} />
             )}
             <HeaderScrollScreen
-              backButtonColor="neutral1"
-              backgroundColor="none"
+              backButtonColor="$neutral1"
+              backgroundColor="$transparent"
               centerElement={
                 imageUrl ? (
                   <Box
@@ -315,9 +315,9 @@ export function NFTItemScreen({
                           <AddressDisplay
                             address={owner}
                             hideAddressInSubtitle={true}
-                            horizontalGap="spacing4"
-                            size={theme.iconSizes.icon20}
-                            textColor="neutral1"
+                            horizontalGap="$spacing4"
+                            size={iconSizes.icon20}
+                            textColor="$neutral1"
                             variant="buttonLabelSmall"
                           />
                         </TouchableArea>

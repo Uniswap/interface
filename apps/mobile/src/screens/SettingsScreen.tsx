@@ -13,8 +13,7 @@ import {
 } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import {
   SettingsRow,
@@ -22,12 +21,12 @@ import {
   SettingsSectionItem,
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
-import { Text } from 'src/components/Text'
 import { APP_FEEDBACK_LINK, GET_HELP_LINK } from 'src/constants/urls'
 import { useCurrentAppearanceSetting, useIsDarkMode } from 'src/features/appearance/hooks'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
+import { Flex, Icons, Text } from 'ui/src'
 import { AVATARS_DARK, AVATARS_LIGHT } from 'ui/src/assets'
 import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
@@ -37,6 +36,7 @@ import LikeSquare from 'ui/src/assets/icons/like-square.svg'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
 import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
+import { iconSizes } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { uniswapUrls } from 'wallet/src/constants/urls'
@@ -59,11 +59,11 @@ export function SettingsScreen(): JSX.Element {
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
     const iconProps: SvgProps = {
       color: theme.colors.neutral2,
-      height: 24,
+      height: iconSizes.icon24,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
       strokeWidth: '2',
-      width: 24,
+      width: iconSizes.icon24,
     }
 
     // Defining them inline instead of outside component b.c. they need t()
@@ -182,7 +182,7 @@ export function SettingsScreen(): JSX.Element {
     <HeaderScrollScreen
       alwaysShowCenterElement
       centerElement={<Text variant="bodyLarge">{t('Settings')}</Text>}>
-      <Flex px="spacing24" py="spacing12">
+      <Flex px="$spacing24" py="$spacing12">
         <SectionList
           ItemSeparatorComponent={renderItemSeparator}
           ListFooterComponent={<FooterSettings />}
@@ -190,13 +190,13 @@ export function SettingsScreen(): JSX.Element {
           initialNumToRender={20}
           keyExtractor={(_item, index): string => 'settings' + index}
           renderItem={renderItem}
-          renderSectionFooter={(): JSX.Element => <Flex pt="spacing24" />}
+          renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
           renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-            <Box bg="surface1" pb="spacing12">
-              <Text color="neutral2" variant="bodyLarge">
+            <Flex bg="$surface1" gap="$none" pb="$spacing12">
+              <Text color="$neutral2" variant="bodyLarge">
                 {subTitle}
               </Text>
-            </Box>
+            </Flex>
           )}
           sections={sections.filter((p) => !p.isHidden)}
           showsVerticalScrollIndicator={false}
@@ -206,7 +206,7 @@ export function SettingsScreen(): JSX.Element {
   )
 }
 
-const renderItemSeparator = (): JSX.Element => <Flex pt="spacing8" />
+const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 
 function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
   const theme = useTheme()
@@ -221,17 +221,27 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
         dispatch(resetWallet())
         dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
       }}>
-      <Box alignItems="center" flexDirection="row" justifyContent="space-between" py="spacing4">
-        <Box alignItems="center" flexDirection="row">
+      <Flex
+        alignItems="center"
+        flexDirection="row"
+        gap="$none"
+        justifyContent="space-between"
+        py="$spacing4">
+        <Flex alignItems="center" flexDirection="row" gap="$none">
           <Flex centered height={32} width={32}>
             <UniswapIcon {...iconProps} />
           </Flex>
-          <Text ml="spacing12" variant="bodyLarge">
+          <Text ml="$spacing12" variant="bodyLarge">
             {t('Onboarding')}
           </Text>
-        </Box>
-        <Chevron color={theme.colors.neutral3} direction="e" height={24} width={24} />
-      </Box>
+        </Flex>
+        <Icons.RotatableChevron
+          color={theme.colors.neutral3}
+          direction="e"
+          height={iconSizes.icon24}
+          width={iconSizes.icon24}
+        />
+      </Flex>
     </TouchableArea>
   )
 }
@@ -240,7 +250,6 @@ function WalletSettings(): JSX.Element {
   const DEFAULT_ACCOUNTS_TO_DISPLAY = 5
 
   const { t } = useTranslation()
-  const theme = useTheme()
   const navigation = useSettingsStackNavigation()
   const addressToAccount = useAccounts()
   const [showAll, setShowAll] = useState(false)
@@ -269,14 +278,14 @@ function WalletSettings(): JSX.Element {
   }
 
   return (
-    <Box flexDirection="column" mb="spacing16">
+    <Flex flexDirection="column" gap="$none" mb="$spacing16">
       <Flex row justifyContent="space-between">
-        <Text color="neutral2" variant="bodyLarge">
+        <Text color="$neutral2" variant="bodyLarge">
           {t('Wallet settings')}
         </Text>
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
           <TouchableArea onPress={toggleViewAll}>
-            <Text color="neutral2" mb="spacing12" variant="subheadSmall">
+            <Text color="$neutral2" mb="$spacing12" variant="subheadSmall">
               {showAll ? t('View less') : t('View all')}
             </Text>
           </TouchableArea>
@@ -290,20 +299,29 @@ function WalletSettings(): JSX.Element {
             pl="spacing4"
             py="spacing12"
             onPress={(): void => handleNavigation(account.address)}>
-            <Box alignItems="center" flexDirection="row" justifyContent="space-between">
+            <Flex
+              alignItems="center"
+              flexDirection="row"
+              gap="$none"
+              justifyContent="space-between">
               <Flex shrink>
                 <AddressDisplay
                   address={account.address}
                   captionVariant="subheadSmall"
-                  size={theme.iconSizes.icon40}
+                  size={iconSizes.icon40}
                   variant="bodyLarge"
                 />
               </Flex>
-              <Chevron color={theme.colors.neutral3} direction="e" height={24} width={24} />
-            </Box>
+              <Icons.RotatableChevron
+                color="$neutral3"
+                direction="e"
+                height={iconSizes.icon24}
+                width={iconSizes.icon24}
+              />
+            </Flex>
           </TouchableArea>
         ))}
-    </Box>
+    </Flex>
   )
 }
 
@@ -323,7 +341,7 @@ function FooterSettings(): JSX.Element {
   )
 
   return (
-    <Flex gap="spacing12">
+    <Flex gap="$spacing12">
       {showSignature ? (
         <AnimatedFlex
           alignItems="center"
@@ -331,11 +349,11 @@ function FooterSettings(): JSX.Element {
           exiting={FadeOutUp}
           gap="none"
           mt="spacing16">
-          <Flex gap="spacing4">
-            <Text color="neutral3" textAlign="center" variant="bodySmall">
+          <Flex gap="$spacing4">
+            <Text color="$neutral3" textAlign="center" variant="bodySmall">
               {t('Made with love, ')}
             </Text>
-            <Text color="neutral3" textAlign="center" variant="bodySmall">
+            <Text color="$neutral3" textAlign="center" variant="bodySmall">
               {t('Uniswap Team 🦄')}
             </Text>
           </Flex>
@@ -347,9 +365,9 @@ function FooterSettings(): JSX.Element {
         </AnimatedFlex>
       ) : null}
       <Text
-        color="neutral3"
-        mt="spacing8"
-        paddingBottom="spacing24"
+        color="$neutral3"
+        mt="$spacing8"
+        paddingBottom="$spacing24"
         variant="bodySmall"
         onLongPress={(): void => {
           setShowSignature(true)

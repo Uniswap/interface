@@ -31,16 +31,12 @@ exports[`AccountDetails renders without error 1`] = `
     }
   >
     <View
-      sentry-label="Flex"
       style={
-        [
-          {
-            "alignItems": "center",
-            "display": "flex",
-            "flexDirection": "row",
-            "justifyContent": "flex-start",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 8,
+        }
       }
     >
       <View
@@ -55,19 +51,27 @@ exports[`AccountDetails renders without error 1`] = `
       >
         <View
           style={
-            [
-              {
-                "backgroundColor": "transparent",
-                "borderColor": "transparent",
-                "borderRadius": 999999,
-                "borderWidth": 0,
-                "display": "flex",
-                "position": "relative",
-              },
-              {
-                "padding": 0,
-              },
-            ]
+            {
+              "alignItems": "stretch",
+              "backgroundColor": "transparent",
+              "borderBottomColor": "transparent",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderBottomWidth": 0,
+              "borderLeftColor": "transparent",
+              "borderLeftWidth": 0,
+              "borderRightColor": "transparent",
+              "borderRightWidth": 0,
+              "borderStyle": "solid",
+              "borderTopColor": "transparent",
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "borderTopWidth": 0,
+              "flexDirection": "column",
+              "gap": 0,
+              "padding": 0,
+              "position": "relative",
+            }
           }
         >
           <View
@@ -224,60 +228,37 @@ exports[`AccountDetails renders without error 1`] = `
       </View>
       <View
         style={
-          [
-            {
-              "display": "flex",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "width": 8,
-            },
-          ]
-        }
-      />
-      <View
-        sentry-label="Flex"
-        style={
-          [
-            {
-              "alignItems": "flex-start",
-              "display": "flex",
-              "flexDirection": "column",
-              "flexShrink": 1,
-              "justifyContent": "flex-start",
-            },
-          ]
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "column",
+            "flexShrink": 1,
+            "gap": 0,
+          }
         }
       >
         <View
-          sentry-label="Flex"
           style={
-            [
-              {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
-                "justifyContent": "center",
-              },
-            ]
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 12,
+              "justifyContent": "center",
+            }
           }
         >
           <Text
             allowFontScaling={true}
-            ellipsizeMode="tail"
-            maxFontSizeMultiplier={1.4}
             numberOfLines={1}
             style={
-              [
-                {
-                  "color": "#222222",
-                  "display": "flex",
-                  "fontFamily": "Basel-Book",
-                  "fontSize": 17,
-                  "fontWeight": "400",
-                  "lineHeight": 24,
-                },
-              ]
+              {
+                "color": "#222222",
+                "display": "flex",
+                "fontFamily": "Basel-Medium",
+                "fontSize": 17,
+                "lineHeight": 24,
+              }
             }
+            suppressHighlighting={true}
             testID="address-display/name/0x​82D5...3Fa6"
           >
             0x​82D5...3Fa6
@@ -367,16 +348,12 @@ exports[`AccountDetails renders without error with chevron 1`] = `
     }
   >
     <View
-      sentry-label="Flex"
       style={
-        [
-          {
-            "alignItems": "center",
-            "display": "flex",
-            "flexDirection": "row",
-            "justifyContent": "flex-start",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 8,
+        }
       }
     >
       <View
@@ -391,19 +368,27 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       >
         <View
           style={
-            [
-              {
-                "backgroundColor": "transparent",
-                "borderColor": "transparent",
-                "borderRadius": 999999,
-                "borderWidth": 0,
-                "display": "flex",
-                "position": "relative",
-              },
-              {
-                "padding": 0,
-              },
-            ]
+            {
+              "alignItems": "stretch",
+              "backgroundColor": "transparent",
+              "borderBottomColor": "transparent",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderBottomWidth": 0,
+              "borderLeftColor": "transparent",
+              "borderLeftWidth": 0,
+              "borderRightColor": "transparent",
+              "borderRightWidth": 0,
+              "borderStyle": "solid",
+              "borderTopColor": "transparent",
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "borderTopWidth": 0,
+              "flexDirection": "column",
+              "gap": 0,
+              "padding": 0,
+              "position": "relative",
+            }
           }
         >
           <View
@@ -560,60 +545,37 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       </View>
       <View
         style={
-          [
-            {
-              "display": "flex",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "width": 8,
-            },
-          ]
-        }
-      />
-      <View
-        sentry-label="Flex"
-        style={
-          [
-            {
-              "alignItems": "flex-start",
-              "display": "flex",
-              "flexDirection": "column",
-              "flexShrink": 1,
-              "justifyContent": "flex-start",
-            },
-          ]
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "column",
+            "flexShrink": 1,
+            "gap": 0,
+          }
         }
       >
         <View
-          sentry-label="Flex"
           style={
-            [
-              {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
-                "justifyContent": "center",
-              },
-            ]
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 12,
+              "justifyContent": "center",
+            }
           }
         >
           <Text
             allowFontScaling={true}
-            ellipsizeMode="tail"
-            maxFontSizeMultiplier={1.4}
             numberOfLines={1}
             style={
-              [
-                {
-                  "color": "#222222",
-                  "display": "flex",
-                  "fontFamily": "Basel-Book",
-                  "fontSize": 17,
-                  "fontWeight": "400",
-                  "lineHeight": 24,
-                },
-              ]
+              {
+                "color": "#222222",
+                "display": "flex",
+                "fontFamily": "Basel-Medium",
+                "fontSize": 17,
+                "lineHeight": 24,
+              }
             }
+            suppressHighlighting={true}
             testID="address-display/name/0x​82D5...3Fa6"
           >
             0x​82D5...3Fa6
@@ -683,33 +645,36 @@ exports[`AccountDetails renders without error with chevron 1`] = `
     />
     <View
       style={
-        [
-          {
-            "alignItems": "center",
-            "borderRadius": 999999,
-            "display": "flex",
-            "justifyContent": "center",
-          },
-          {
-            "transform": [
-              {
-                "rotate": "180deg",
-              },
-            ],
-          },
-        ]
+        {
+          "alignItems": "center",
+          "borderBottomLeftRadius": 999999,
+          "borderBottomRightRadius": 999999,
+          "borderTopLeftRadius": 999999,
+          "borderTopRightRadius": 999999,
+          "flexDirection": "column",
+          "gap": 0,
+          "justifyContent": "center",
+          "transform": [
+            {
+              "rotate": "180deg",
+            },
+          ],
+        }
       }
     >
       <RNSVGSvgView
         align="xMidYMid"
         bbHeight="50"
         bbWidth="50"
+        color="#7D7D7D"
         fill="none"
         focusable={false}
         height={50}
         meetOrSlice={0}
         minX={0}
         minY={0}
+        size={8}
+        stroke="#7D7D7D"
         style={
           [
             {
@@ -723,6 +688,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
             },
           ]
         }
+        tintColor="#7D7D7D"
         vbHeight={24}
         vbWidth={26}
         width={50}
@@ -732,7 +698,14 @@ exports[`AccountDetails renders without error with chevron 1`] = `
           propList={
             [
               "fill",
+              "stroke",
             ]
+          }
+          stroke={
+            {
+              "payload": 4286414205,
+              "type": 0,
+            }
           }
         >
           <RNSVGPath

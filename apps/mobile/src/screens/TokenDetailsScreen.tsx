@@ -346,7 +346,7 @@ function TokenDetails({
             />
           </Flex>
           {error ? (
-            <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} px="spacing24">
+            <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} gap="$none" px="$spacing24">
               <BaseCard.InlineErrorState onRetry={retry} />
             </AnimatedBox>
           ) : null}

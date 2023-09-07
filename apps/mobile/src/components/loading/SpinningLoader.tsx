@@ -50,7 +50,7 @@ export function SpinningLoader({
     return <EmptySpinner color={theme.colors.neutral3} height={size} width={size} />
   }
   return (
-    <AnimatedBox sentry-label="SpinningLoader" style={[animatedStyles]}>
+    <AnimatedBox gap="$none" sentry-label="SpinningLoader" style={[animatedStyles]}>
       <Loader color={theme.colors[color ?? 'neutral1']} height={size} width={size} />
     </AnimatedBox>
   )

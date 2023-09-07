@@ -1,4 +1,3 @@
-import { useTheme } from '@shopify/restyle'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
@@ -15,7 +14,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { TextInputProps } from 'src/components/input/TextInput'
@@ -23,7 +21,6 @@ import { Box } from 'src/components/layout'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { Text } from 'src/components/Text'
 import { Pill } from 'src/components/text/Pill'
 import { FiatOnRampTokenSelector } from 'src/components/TokenSelector/FiatOnRampTokenSelector'
 import Trace from 'src/components/Trace/Trace'
@@ -35,9 +32,9 @@ import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/
 import { MobileEventProperties } from 'src/features/telemetry/types'
 import { useDynamicFontSizing, useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { openUri } from 'src/utils/linking'
+import { Icons, Text } from 'ui/src'
 import InformationIcon from 'ui/src/assets/icons/i-icon.svg'
-import { iconSizes, spacing } from 'ui/src/theme'
-import { dimensions, Theme } from 'ui/src/theme/restyle'
+import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
 import { useTimeout } from 'utilities/src/time/timing'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -211,9 +208,7 @@ export function FiatOnRampModal(): JSX.Element {
             style={{ marginBottom: insets.bottom }}
             width="100%">
             <Flex style={{ height: maxContentHeight }} onLayout={onInputPanelLayout}>
-              <Text color="neutral1" variant="subheadLarge">
-                {t('Buy')}
-              </Text>
+              <Text variant="subheadLarge">{t('Buy')}</Text>
               <AnimatedFlex
                 grow
                 alignItems="center"
@@ -418,9 +413,7 @@ function SelectTokenButton({
   disabled,
   loading,
 }: SelectTokenButtonProps): JSX.Element {
-  const theme = useTheme<Theme>()
-
-  const textColor = disabled ? 'neutral3' : 'neutral2'
+  const textColor = disabled ? '$neutral3' : '$neutral2'
 
   return (
     <TouchableArea
@@ -434,13 +427,13 @@ function SelectTokenButton({
         ) : (
           <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.icon24} />
         )}
-        <Text color={textColor} pl="spacing4" variant="bodyLarge">
+        <Text color={textColor} pl="$spacing4" variant="bodyLarge">
           {amount}
         </Text>
-        <Text color={textColor} pl="spacing1" variant="bodyLarge">
+        <Text color={textColor} pl="$spacing1" variant="bodyLarge">
           {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
         </Text>
-        <Chevron color={theme.colors[textColor]} direction="e" height={iconSizes.icon16} />
+        <Icons.RotatableChevron color={textColor} direction="e" height={iconSizes.icon16} />
       </Flex>
     </TouchableArea>
   )

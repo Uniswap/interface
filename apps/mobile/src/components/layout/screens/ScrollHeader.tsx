@@ -9,10 +9,10 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { AnimatedBox, Box, Flex } from 'src/components/layout'
+import { AnimatedBox } from 'src/components/layout'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
-import { zIndices } from 'ui/src/theme'
-import { Theme, theme } from 'ui/src/theme/restyle'
+import { ColorTokens, Flex } from 'ui/src'
+import { iconSizes, zIndices } from 'ui/src/theme'
 
 type ScrollHeaderProps = {
   scrollY: SharedValue<number>
@@ -24,8 +24,8 @@ type ScrollHeaderProps = {
   rightElement?: JSX.Element
   alwaysShowCenterElement?: boolean
   fullScreen?: boolean // Expand to device edges
-  backgroundColor?: keyof Theme['colors']
-  backButtonColor?: keyof Theme['colors']
+  backgroundColor?: ColorTokens
+  backButtonColor?: ColorTokens
 }
 
 /**
@@ -40,7 +40,7 @@ export function ScrollHeader({
   scrollY,
   showHeaderScrollYDistance,
   centerElement,
-  rightElement = <Box width={theme.iconSizes.icon24} />,
+  rightElement = <Flex gap="$none" width={iconSizes.icon24} />,
   alwaysShowCenterElement,
   fullScreen = false,
   backgroundColor,
@@ -81,22 +81,25 @@ export function ScrollHeader({
           row
           alignItems="center"
           justifyContent="space-between"
-          mx="spacing16"
-          my="spacing12"
+          mx="$spacing16"
+          my="$spacing12"
           style={headerRowStyles}>
           <BackButton color={backButtonColor} />
           <Flex shrink>
             {alwaysShowCenterElement ? (
               centerElement
             ) : (
-              <AnimatedBox style={visibleOnScrollStyle}>{centerElement}</AnimatedBox>
+              <AnimatedBox gap="$none" style={visibleOnScrollStyle}>
+                {centerElement}
+              </AnimatedBox>
             )}
           </Flex>
           {rightElement}
         </Flex>
         <AnimatedBox
-          borderBottomColor={backgroundColor ?? 'surface3'}
+          borderBottomColor={backgroundColor ?? '$surface3'}
           borderBottomWidth={0.25}
+          gap="$none"
           height={1}
           overflow="visible"
           style={visibleOnScrollStyle}
@@ -111,19 +114,24 @@ function HeaderWrapper({
   fullScreen,
   children,
   style,
-  backgroundColor = 'surface1',
+  backgroundColor = '$surface1',
 }: {
   fullScreen: boolean
   children: ReactElement
   style?: StyleProp<Animated.AnimateStyle<StyleProp<ViewStyle>>>
-  backgroundColor?: keyof typeof theme.colors
+  backgroundColor?: ColorTokens
 }): JSX.Element {
   if (!fullScreen) {
-    return <Box bg={backgroundColor}>{children}</Box>
+    return (
+      <Flex bg={backgroundColor} gap="$none">
+        {children}
+      </Flex>
+    )
   }
   return (
     <AnimatedBox
       bg={backgroundColor}
+      gap="$none"
       left={0}
       opacity={0}
       position="absolute"
