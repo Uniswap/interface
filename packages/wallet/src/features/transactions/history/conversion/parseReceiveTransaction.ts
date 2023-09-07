@@ -41,6 +41,8 @@ export default function parseReceiveTransaction(
       const collectionName = change.asset?.collection?.name
       const imageURL = change.asset.image?.url
       const tokenId = change.asset.tokenId
+      const isSpam = change.asset?.isSpam ?? false
+
       if (!(sender && tokenAddress && collectionName && imageURL && name && tokenId))
         return undefined
       return {
@@ -54,6 +56,7 @@ export default function parseReceiveTransaction(
           imageURL,
           tokenId,
         },
+        isSpam,
       }
     }
   }

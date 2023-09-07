@@ -120,6 +120,7 @@ const ERC721_TRANSFER_IN_ASSET_CHANGE = {
   asset: {
     id: 'asset_id',
     name: 'asset_name',
+    isSpam: false,
     nftContract: {
       id: 'nft_contract_id',
       chain: Chain.Ethereum,
@@ -303,6 +304,7 @@ describe(parseReceiveTransaction, () => {
       assetType: 'erc-721',
       tokenAddress: 'nft_contract_address',
       sender: FROM_ADDRESS,
+      isSpam: false,
       nftSummaryInfo: {
         name: 'asset_name',
         collectionName: 'collection_name',
