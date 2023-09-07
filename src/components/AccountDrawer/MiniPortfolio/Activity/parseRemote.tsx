@@ -351,7 +351,7 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
       return parseUniswapXOrder(assetActivity as OrderActivity)
     }
 
-    const changes = assetActivity.assetChanges.reduce(
+    const changes = assetActivity.details.assetChanges.reduce(
       (acc: TransactionChanges, assetChange) => {
         if (assetChange.__typename === 'NftApproval') acc.NftApproval.push(assetChange)
         else if (assetChange.__typename === 'NftApproveForAll') acc.NftApproveForAll.push(assetChange)
@@ -377,13 +377,16 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
       status: assetActivity.details.status,
       timestamp: assetActivity.timestamp,
       logos: getLogoSrcs(changes),
-      title: assetActivity.type,
+      title: assetActivity.details.type,
       descriptor: assetActivity.details.to,
       from: assetActivity.details.from,
       nonce: assetActivity.details.nonce,
     }
 
-    const parsedFields = ActivityParserByType[assetActivity.type]?.(changes, assetActivity as TransactionActivity)
+    const parsedFields = ActivityParserByType[assetActivity.details.type]?.(
+      changes,
+      assetActivity as TransactionActivity
+    )
     return { ...defaultFields, ...parsedFields }
   } catch (e) {
     console.error('Failed to parse activity', e, assetActivity)
