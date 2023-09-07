@@ -224,6 +224,8 @@ jobs:
           path: node_modules/.cache
           key: ${{ runner.os }}-cloud-jest-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-cloud-jest-
+      # Ignore start:cloud output so it doesn't flood the test output.
+      # Only use 1 worker for testing, as the other is used to run start:cloud (the proxy server under test).
       - run: yarn start-server-and-test 'yarn start:cloud >/dev/null' 3000 'yarn test:cloud --coverage --maxWorkers=1'
       - uses: codecov/codecov-action@v3
         with:
