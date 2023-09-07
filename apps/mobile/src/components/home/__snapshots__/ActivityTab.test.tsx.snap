@@ -31,7 +31,7 @@ exports[`ActivityTab renders without error 1`] = `
           <View
             style={
               {
-                "height": 1334,
+                "height": NaN,
               }
             }
           />
@@ -142,7 +142,7 @@ exports[`ActivityTab renders without error 1`] = `
               <View
                 style={
                   {
-                    "height": 1334,
+                    "height": NaN,
                   }
                 }
               />
@@ -335,7 +335,7 @@ exports[`ActivityTab renders without error 2`] = `
           <View
             style={
               {
-                "height": 1334,
+                "height": NaN,
               }
             }
           />
@@ -500,7 +500,7 @@ exports[`ActivityTab renders without error 2`] = `
               <View
                 style={
                   {
-                    "height": 1334,
+                    "height": NaN,
                   }
                 }
               />

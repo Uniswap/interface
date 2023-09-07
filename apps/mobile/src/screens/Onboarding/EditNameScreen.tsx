@@ -9,12 +9,12 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { AnimatedButton, Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TextInput } from 'src/components/input/TextInput'
 import Trace from 'src/components/Trace/Trace'
-import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Box, Flex, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import PencilIcon from 'ui/src/assets/icons/pencil-detailed.svg'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import {
@@ -88,28 +88,26 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
   }
 
   return (
-    <OnboardingScreen
+    <SafeKeyboardOnboardingScreen
       subtitle={t('This is a way to keep track of your wallet. Only you will see this.')}
       title={t('Give your wallet a nickname')}>
-      <Box my="$spacing24">
-        {pendingAccount ? (
-          <CustomizationSection
-            accountName={newAccountName}
-            address={pendingAccount?.address}
-            focused={focused}
-            setAccountName={setNewAccountName}
-            setFocused={setFocused}
-          />
-        ) : (
-          <ActivityIndicator />
-        )}
-      </Box>
+      {pendingAccount ? (
+        <CustomizationSection
+          accountName={newAccountName}
+          address={pendingAccount?.address}
+          focused={focused}
+          setAccountName={setNewAccountName}
+          setFocused={setFocused}
+        />
+      ) : (
+        <ActivityIndicator />
+      )}
       <Flex justifyContent="flex-end">
         <Trace logPress element={ElementName.Continue}>
           <Button label={t('Create Wallet')} onPress={onPressNext} />
         </Trace>
       </Flex>
-    </OnboardingScreen>
+    </SafeKeyboardOnboardingScreen>
   )
 }
 

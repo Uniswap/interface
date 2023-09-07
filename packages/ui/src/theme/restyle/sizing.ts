@@ -1,8 +1,8 @@
 import { Dimensions } from 'react-native'
 
 export const dimensions = {
-  fullHeight: Dimensions.get('window').height,
-  fullWidth: Dimensions.get('window').width,
+  fullHeight: Dimensions.get('screen').height,
+  fullWidth: Dimensions.get('screen').width,
 }
 
 // HitSlop allows users to slightly miss button

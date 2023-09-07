@@ -146,10 +146,7 @@ export function BottomSheetModal({
     modalRef.current?.present()
   }, [modalRef])
 
-  let fullScreenContentHeight = (renderBehindInset ? 1 : FULL_HEIGHT) * dimensions.fullHeight
-  if (IS_ANDROID) {
-    fullScreenContentHeight += insets.top
-  }
+  const fullScreenContentHeight = (renderBehindInset ? 1 : FULL_HEIGHT) * dimensions.fullHeight
 
   const borderRadius = useResponsiveProp({
     // on screens without rounded corners, remove rounded corners when modal is fullscreen
