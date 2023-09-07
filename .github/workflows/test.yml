@@ -250,7 +250,7 @@ jobs:
 
   post:
     if: ${{ github.ref_name == 'main' || github.ref_name == 'releases/staging' }}
-    needs: [pre, lint, typecheck, deps-tests, unit-tests, cypress-test-matrix]
+    needs: [pre, lint, typecheck, deps-tests, unit-tests, cypress-test-matrix, cloud-tests]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v6.4.1
@@ -271,4 +271,5 @@ jobs:
             ${{ needs.typecheck.result == 'success' }} &&
             ${{ needs.deps-tests.result == 'success' }} &&
             ${{ needs.unit-tests.result == 'success' }} &&
-            ${{ needs.cypress-test-matrix.result == 'success' }}
+            ${{ needs.cypress-test-matrix.result == 'success' }} &&
+            ${{ needs.cloud-tests.result == 'success' }}
