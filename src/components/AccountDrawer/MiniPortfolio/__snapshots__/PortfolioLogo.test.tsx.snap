@@ -15,18 +15,18 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
   left: 0;
 }
 
-.c1 img:nth-child(n) {
+.c1 img {
   width: 19px;
   height: 40px;
   object-fit: cover;
 }
 
-.c1 img:nth-child(1) {
+.c1 img:first-child {
   border-radius: 20px 0 0 20px;
   object-position: 0 0;
 }
 
-.c1 img:nth-child(2) {
+.c1 img:last-child {
   border-radius: 0 20px 20px 0;
   object-position: 100% 0;
 }
@@ -115,18 +115,18 @@ exports[`PortfolioLogo renders without L2 icon 1`] = `
   left: 0;
 }
 
-.c1 img:nth-child(n) {
+.c1 img {
   width: 19px;
   height: 40px;
   object-fit: cover;
 }
 
-.c1 img:nth-child(1) {
+.c1 img:first-child {
   border-radius: 20px 0 0 20px;
   object-position: 0 0;
 }
 
-.c1 img:nth-child(2) {
+.c1 img:last-child {
   border-radius: 0 20px 20px 0;
   object-position: 100% 0;
 }

@@ -21,16 +21,16 @@ const DoubleLogoContainer = styled.div`
   position: relative;
   top: 0;
   left: 0;
-  img {
+  img:nth-child(n) {
     width: 19px;
     height: 40px;
     object-fit: cover;
   }
-  img:first-child {
+  img:nth-child(1) {
     border-radius: 20px 0 0 20px;
     object-position: 0 0;
   }
-  img:last-child {
+  img:nth-child(2) {
     border-radius: 0 20px 20px 0;
     object-position: 100% 0;
   }
