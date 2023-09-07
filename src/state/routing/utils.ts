@@ -1,11 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MixedRouteSDK } from '@kinetix/router-sdk'
-import { ChainId, Currency, CurrencyAmount, Token, TradeType } from '@kinetix/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, Token, TradeType } from '@kinetix/sdk-core'
 import { AlphaRouter } from '@kinetix/smart-order-router'
 import { Pair, Route as V2Route } from '@kinetix/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@kinetix/v3-sdk'
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { nativeOnChain } from 'constants/tokens'
+import { getCoingeckoPriceCache } from 'hooks/useUSDPrice'
 
 import { getApproveInfo } from './gas'
 import {
@@ -179,6 +180,7 @@ export async function transformRoutesToTrade(
   quoteMethod: QuoteMethod
 ): Promise<TradeResult> {
   const { tradeType, account, amount } = args
+  const { inAmount, outAmount, inToken, outToken } = data.data
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args)
   const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate } = getClassicTradeDetails(
@@ -187,38 +189,33 @@ export async function transformRoutesToTrade(
     data
   )
 
+  const tokenIn = parseToken({
+    address: inToken.address,
+    chainId: ChainId.KAVA,
+    decimals: inToken.decimals,
+    symbol: inToken.symbol,
+  })
+  const tokenOut = parseToken({
+    address: outToken.address,
+    chainId: ChainId.KAVA,
+    decimals: outToken.decimals,
+    symbol: outToken.symbol,
+  })
+
   // Some sus javascript float math but it's ok because its just an estimate for display purposes
   const usdCostPerGas = gasUseEstimateUSD && gasUseEstimate ? gasUseEstimateUSD / gasUseEstimate : undefined
 
   const approveInfo = await getApproveInfo(account, currencyIn, amount, usdCostPerGas)
+  console.log('currencyIn', currencyIn, currencyOut)
+  const inTokenPricePrev = getCoingeckoPriceCache(inToken.symbol)
+  console.log('inTokenDefaultPrice', inTokenPricePrev)
+  const currencyAmountIn = CurrencyAmount.fromRawAmount(currencyIn, inAmount)
+  const currencyAmountOut = CurrencyAmount.fromRawAmount(currencyOut, outAmount)
+  if (inTokenPricePrev) {
+    const currencyAmountInPrev = CurrencyAmount.fromRawAmount(currencyIn, inTokenPricePrev)
+  }
 
   const classicTrade = new ClassicTrade({
-    v2Routes:
-      routes
-        ?.filter((r): r is RouteResult & { routev2: NonNullable<RouteResult['routev2']> } => r.routev2 !== null)
-        .map(({ routev2, inputAmount, outputAmount }) => ({
-          routev2,
-          inputAmount,
-          outputAmount,
-        })) ?? [],
-    v3Routes:
-      routes
-        ?.filter((r): r is RouteResult & { routev3: NonNullable<RouteResult['routev3']> } => r.routev3 !== null)
-        .map(({ routev3, inputAmount, outputAmount }) => ({
-          routev3,
-          inputAmount,
-          outputAmount,
-        })) ?? [],
-    mixedRoutes:
-      routes
-        ?.filter(
-          (r): r is RouteResult & { mixedRoute: NonNullable<RouteResult['mixedRoute']> } => r.mixedRoute !== null
-        )
-        .map(({ mixedRoute, inputAmount, outputAmount }) => ({
-          mixedRoute,
-          inputAmount,
-          outputAmount,
-        })) ?? [],
     tradeType,
     gasUseEstimateUSD,
     approveInfo,
@@ -226,7 +223,18 @@ export async function transformRoutesToTrade(
     isUniswapXBetter: false,
     requestId: undefined,
     quoteMethod,
+    inputAmount: currencyAmountIn,
+    outputAmount: currencyAmountOut,
+    // inputAmount: CurrencyAmount.fromFractionalAmount(tokenIn, currencyAmountIn.numerator, currencyAmountIn.denominator),
+    // outputAmount: CurrencyAmount.fromFractionalAmount(
+    //   tokenOut,
+    //   currencyAmountOut.numerator,
+    //   currencyAmountOut.denominator
+    // ),
+    priceImpact: new Percent(10, 100),
   })
+
+  // outAmount * (1 - this.tolerance / 100), 8, 4)
   console.log('classictrade', classicTrade)
 
   return { state: QuoteState.SUCCESS, trade: classicTrade }

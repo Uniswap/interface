@@ -33,7 +33,6 @@ import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
-import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
@@ -58,7 +57,7 @@ import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
+import { warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
@@ -137,8 +136,6 @@ export default function SwapPage({ className }: { className?: string }) {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   const location = useLocation()
-  console.log('connectedChainId', connectedChainId)
-
   const supportedChainId = asSupportedChain(connectedChainId)
 
   return (
@@ -377,7 +374,7 @@ export function Swap({
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
 
-  const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
+  const maximumAmountIn = undefined
   const allowance = usePermit2Allowance(
     maximumAmountIn ??
       (parsedAmounts[Field.INPUT]?.currency.isToken
@@ -414,6 +411,8 @@ export function Swap({
   }, [trade])
 
   const handleSwap = useCallback(() => {
+    console.log('handleSwap', handleSwap)
+
     if (!swapCallback) {
       return
     }
@@ -475,12 +474,13 @@ export function Swap({
       return { priceImpactSeverity: 0, largerPriceImpact: undefined }
     }
 
-    const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
+    const marketPriceImpact = trade?.priceImpact
     const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
     return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
   }, [stablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
+    console.log(handleConfirmDismiss)
     setSwapState((currentState) => ({ ...currentState, showConfirm: false }))
     // If there was a swap, we want to clear the input
     if (swapResult) {
@@ -489,6 +489,8 @@ export function Swap({
   }, [onUserInput, swapResult])
 
   const handleAcceptChanges = useCallback(() => {
+    console.log('handleAcceptChanges')
+
     setSwapState((currentState) => ({ ...currentState, tradeToConfirm: trade }))
   }, [trade])
 
@@ -576,7 +578,7 @@ export function Swap({
       )}
       {showPriceImpactModal && showPriceImpactWarning && (
         <PriceImpactModal
-          priceImpact={largerPriceImpact}
+          priceImpact={trade?.priceImpact}
           onDismiss={() => setShowPriceImpactModal(false)}
           onContinue={() => {
             setShowPriceImpactModal(false)

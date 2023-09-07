@@ -1,29 +1,25 @@
 import { Percent, TradeType } from '@kinetix/sdk-core'
-import { Plural, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Column from 'components/Column'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { InterfaceTrade, RouterPreference } from 'state/routing/types'
-import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
+import { isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
-import { formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
-import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
-import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
+import { formatPriceImpact } from 'utils/formatNumbers'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 import { getPriceImpactWarning } from 'utils/prices'
 
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
-import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
 import { Label } from './SwapModalHeaderAmount'
 
@@ -72,46 +68,13 @@ export default function SwapModalFooter({
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [routerPreference] = useRouterPreference()
-  const routes = isClassicTrade(trade) ? getRoutingDiagramEntries(trade) : undefined
+  const routes = undefined
   const theme = useTheme()
   const { chainId } = useWeb3React()
-  const nativeCurrency = useNativeCurrency(chainId)
-
-  const label = `${trade.executionPrice.baseCurrency?.symbol} `
-  const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
-  // @ts-ignore
-  const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
-  const txCount = getTransactionCount(trade)
 
   return (
     <>
       <DetailsContainer gap="md">
-        <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between" gap="sm">
-            <Label>
-              <Trans>Exchange rate</Trans>
-            </Label>
-            <DetailRowValue>{`1 ${labelInverted} = ${formattedPrice ?? '-'} ${label}`}</DetailRowValue>
-          </Row>
-        </ThemedText.BodySmall>
-        <ThemedText.BodySmall>
-          <Row align="flex-start" justify="space-between" gap="sm">
-            <MouseoverTooltip
-              text={
-                <Trans>
-                  The fee paid to miners who process your transaction. This must be paid in ${nativeCurrency.symbol}.
-                </Trans>
-              }
-            >
-              <Label cursor="help">
-                <Plural value={txCount} one="Network fee" other="Network fees" />
-              </Label>
-            </MouseoverTooltip>
-            <MouseoverTooltip placement="right" size={TooltipSize.Small} text={<GasBreakdownTooltip trade={trade} />}>
-              <DetailRowValue>{formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}</DetailRowValue>
-            </MouseoverTooltip>
-          </Row>
-        </ThemedText.BodySmall>
         {isClassicTrade(trade) && (
           <ThemedText.BodySmall>
             <Row align="flex-start" justify="space-between" gap="sm">
@@ -154,7 +117,7 @@ export default function SwapModalFooter({
             <DetailRowValue>
               {trade.tradeType === TradeType.EXACT_INPUT
                 ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
-                : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+                : ``}
             </DetailRowValue>
           </Row>
         </ThemedText.BodySmall>
@@ -186,7 +149,6 @@ export default function SwapModalFooter({
               transactionDeadlineSecondsSinceEpoch,
               isAutoSlippage,
               isAutoRouterApi: routerPreference === RouterPreference.API,
-              routes,
               fiatValueInput: fiatValueInput.data,
               fiatValueOutput: fiatValueOutput.data,
             })}

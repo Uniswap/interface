@@ -6,8 +6,8 @@ import UniswapXBolt from 'assets/svg/bolt.svg'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap, useAllTokensMultichain } from 'hooks/Tokens'
 import { useMemo } from 'react'
-import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
-import { SignatureDetails, SignatureType } from 'state/signatures/types'
+import { useAllSignatures } from 'state/signatures/hooks'
+import { SignatureDetails } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
 import {
   AddLiquidityV2PoolTransactionInfo,
@@ -25,7 +25,7 @@ import {
 } from 'state/transactions/types'
 import { formatCurrencyAmount } from 'utils/formatNumbers'
 
-import { CancelledTransactionTitleTable, getActivityTitle, OrderTextTable } from '../constants'
+import { CancelledTransactionTitleTable, getActivityTitle } from '../constants'
 import { Activity, ActivityMap } from './types'
 
 function getCurrency(currencyId: string, chainId: ChainId, tokens: ChainTokenMap): Currency | undefined {
@@ -199,27 +199,8 @@ export function transactionToActivity(
   }
 }
 
-export function signatureToActivity(signature: SignatureDetails, tokens: ChainTokenMap): Activity | undefined {
+function signatureToActivity(signature: SignatureDetails, tokens: ChainTokenMap): Activity | undefined {
   switch (signature.type) {
-    case SignatureType.SIGN_UNISWAPX_ORDER: {
-      // Only returns Activity items for orders that don't have an on-chain counterpart
-      if (isOnChainOrder(signature.status)) return undefined
-
-      const { title, statusMessage, status } = OrderTextTable[signature.status]
-
-      return {
-        hash: signature.orderHash,
-        chainId: signature.chainId,
-        title,
-        status,
-        offchainOrderStatus: signature.status,
-        timestamp: signature.addedTime / 1000,
-        from: signature.offerer,
-        statusMessage,
-        prefixIconSrc: UniswapXBolt,
-        ...parseSwap(signature.swapInfo, signature.chainId, tokens),
-      }
-    }
     default:
       return undefined
   }

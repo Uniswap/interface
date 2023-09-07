@@ -1,8 +1,7 @@
-import { MixedRouteSDK, Protocol, Trade } from '@kinetix/router-sdk'
-import { ChainId, Currency, CurrencyAmount, Percent, Token, TradeType } from '@kinetix/sdk-core'
-import { Route as V2Route } from '@kinetix/v2-sdk'
-import { Route as V3Route } from '@kinetix/v3-sdk'
+import { ONE, Protocol, ZERO } from '@kinetix/router-sdk'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Token, TradeType } from '@kinetix/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
+import invariant from 'tiny-invariant'
 
 export enum TradeState {
   LOADING,
@@ -138,7 +137,7 @@ export enum TradeFillType {
 export type ApproveInfo = { needsApprove: true; approveGasEstimateUSD: number } | { needsApprove: false }
 export type WrapInfo = { needsWrap: true; wrapGasEstimateUSD: number } | { needsWrap: false }
 
-export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
+export class ClassicTrade {
   public readonly fillType = TradeFillType.Classic
   approveInfo: ApproveInfo
   gasUseEstimateUSD?: number // gas estimate for swaps
@@ -146,15 +145,20 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   isUniswapXBetter: boolean | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
+  inputAmount: CurrencyAmount<Currency>
+  outputAmount: CurrencyAmount<Currency>
+  priceImpact: Percent
+  tradeType: TradeType
 
   constructor({
     gasUseEstimateUSD,
     blockNumber,
-    isUniswapXBetter,
     requestId,
     quoteMethod,
     approveInfo,
-    ...routes
+    inputAmount,
+    outputAmount,
+    priceImpact,
   }: {
     gasUseEstimateUSD?: number
     totalGasUseEstimateUSD?: number
@@ -163,30 +167,20 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     requestId?: string
     quoteMethod: QuoteMethod
     approveInfo: ApproveInfo
-    v2Routes: {
-      routev2: V2Route<Currency, Currency>
-      inputAmount: CurrencyAmount<Currency>
-      outputAmount: CurrencyAmount<Currency>
-    }[]
-    v3Routes: {
-      routev3: V3Route<Currency, Currency>
-      inputAmount: CurrencyAmount<Currency>
-      outputAmount: CurrencyAmount<Currency>
-    }[]
     tradeType: TradeType
-    mixedRoutes?: {
-      mixedRoute: MixedRouteSDK<Currency, Currency>
-      inputAmount: CurrencyAmount<Currency>
-      outputAmount: CurrencyAmount<Currency>
-    }[]
+    inputAmount: CurrencyAmount<Currency>
+    outputAmount: CurrencyAmount<Currency>
+    priceImpact: Percent
   }) {
-    super(routes)
     this.blockNumber = blockNumber
     this.gasUseEstimateUSD = gasUseEstimateUSD
-    this.isUniswapXBetter = isUniswapXBetter
     this.requestId = requestId
     this.quoteMethod = quoteMethod
     this.approveInfo = approveInfo
+    this.inputAmount = inputAmount
+    this.outputAmount = outputAmount
+    this.priceImpact = priceImpact
+    this.tradeType = TradeType.EXACT_INPUT
   }
 
   // gas estimate for maybe approve + swap
@@ -196,6 +190,16 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     }
 
     return this.gasUseEstimateUSD
+  }
+
+  public minimumAmountOut(slippageTolerance: Percent, amountOut = this.outputAmount): CurrencyAmount<Currency> {
+    invariant(!slippageTolerance.lessThan(ZERO), 'SLIPPAGE_TOLERANCE')
+    /// does not support exactOutput, as enforced in the constructor
+    const slippageAdjustedAmountOut = new Fraction(ONE)
+      .add(slippageTolerance)
+      .invert()
+      .multiply(amountOut.quotient).quotient
+    return CurrencyAmount.fromRawAmount(amountOut.currency, slippageAdjustedAmountOut)
   }
 }
 

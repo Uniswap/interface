@@ -1,10 +1,8 @@
 import { TransactionStatus, useActivityQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useEffect, useMemo } from 'react'
-import { usePendingOrders } from 'state/signatures/hooks'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
 
 import { useLocalActivities } from './parseLocal'
-import { parseRemoteActivities } from './parseRemote'
 import { Activity, ActivityMap } from './types'
 
 /** Detects transactions from same account with the same nonce and different hash */
@@ -62,7 +60,8 @@ export function useAllActivities(account: string) {
   })
 
   const localMap = useLocalActivities(account)
-  const remoteMap = useMemo(() => parseRemoteActivities(data?.portfolios?.[0].assetActivities), [data?.portfolios])
+  // const remoteMap = useMemo(() => parseRemoteActivities(data?.portfolios?.[0].assetActivities), [data?.portfolios])
+  const remoteMap = undefined
   const updateCancelledTx = useTransactionCanceller()
 
   /* Updates locally stored pendings tx's when remote data contains a conflicting cancellation tx */
@@ -88,10 +87,9 @@ export function useAllActivities(account: string) {
 
 export function usePendingActivity() {
   const pendingTransactions = usePendingTransactions()
-  const pendingOrders = usePendingOrders()
 
-  const hasPendingActivity = pendingTransactions.length > 0 || pendingOrders.length > 0
-  const pendingActivityCount = pendingTransactions.length + pendingOrders.length
+  const hasPendingActivity = pendingTransactions.length > 0
+  const pendingActivityCount = pendingTransactions.length
 
   return { hasPendingActivity, pendingActivityCount }
 }

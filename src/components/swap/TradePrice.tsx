@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency, Price } from '@kinetix/sdk-core'
+import { Trans } from '@lingui/macro'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useMemo, useState } from 'react'
@@ -29,6 +29,7 @@ const StyledPriceContainer = styled.button`
 
 export default function TradePrice({ price }: TradePriceProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
+  console.log('TradePrice', price)
 
   const { baseCurrency, quoteCurrency } = price
   const { data: usdPrice } = useUSDPrice(tryParseCurrencyAmount('1', showInverted ? baseCurrency : quoteCurrency))

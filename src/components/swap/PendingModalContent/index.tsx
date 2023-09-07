@@ -1,18 +1,14 @@
 import { ChainId, Currency } from '@kinetix/sdk-core'
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { ColumnCenter } from 'components/Column'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { ReactNode, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { useOrder } from 'state/signatures/hooks'
-import { UniswapXOrderDetails } from 'state/signatures/types'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled, { css, keyframes } from 'styled-components'
 import { ExternalLink } from 'theme'
@@ -129,7 +125,7 @@ interface ContentArgs {
   revocationPending: boolean
   swapResult?: SwapResult
   chainId?: number
-  order?: UniswapXOrderDetails
+  order?: undefined
 }
 
 function getPendingConfirmationContent({
@@ -265,9 +261,8 @@ export function PendingModalContent({
   const { chainId } = useWeb3React()
 
   const swapStatus = useSwapTransactionStatus(swapResult)
-  const order = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
 
-  const swapConfirmed = swapStatus === TransactionStatus.Confirmed || order?.status === UniswapXOrderStatus.FILLED
+  const swapConfirmed = swapStatus === TransactionStatus.Confirmed
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
 
   const swapPending = swapResult !== undefined && !swapConfirmed
@@ -290,11 +285,6 @@ export function PendingModalContent({
 
   if (steps.length === 0) {
     return null
-  }
-
-  // Return finalized-order-specifc content if available
-  if (order && order.status !== UniswapXOrderStatus.OPEN) {
-    return <OrderContent order={{ status: order.status, orderHash: order.orderHash, details: order }} />
   }
 
   // On mainnet, we show a different icon when the transaction is submitted but pending confirmation.

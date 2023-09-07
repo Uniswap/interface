@@ -10,8 +10,6 @@ import {
   NftApprovalPartsFragment,
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
-  SwapOrderDetailsPartsFragment,
-  SwapOrderStatus,
   TokenApprovalPartsFragment,
   TokenAssetPartsFragment,
   TokenTransferPartsFragment,
@@ -23,7 +21,7 @@ import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 import { formatFiatPrice, formatNumberOrString, NumberType } from 'utils/formatNumbers'
 
-import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
+import { MOONPAY_SENDER_ADDRESSES } from '../constants'
 import { Activity } from './types'
 
 type TransactionChanges = {
@@ -203,7 +201,6 @@ function parseLPTransfers(changes: TransactionChanges) {
 }
 
 type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
-type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }
 
 function parseSendReceive(changes: TransactionChanges, assetActivity: TransactionActivity) {
   // TODO(cartcrom): remove edge cases after backend implements
@@ -299,99 +296,52 @@ function getLogoSrcs(changes: TransactionChanges): Array<string | undefined> {
   return Array.from(logoSet)
 }
 
-function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity | undefined {
-  // We currently only have a polling mechanism for locally-sent pending orders, so we hide remote pending orders since they won't update upon completion
-  // TODO(WEB-2487): Add polling mechanism for remote orders to allow displaying remote pending orders
-  if (details.orderStatus === SwapOrderStatus.Open) return undefined
+// function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activity | undefined {
+//   try {
+//     const changes = assetActivity.assetChanges.reduce(
+//       (acc: TransactionChanges, assetChange) => {
+//         if (assetChange.__typename === 'TokenTransfer') acc.TokenTransfer.push(assetChange)
+//         else if (assetChange.__typename === 'TokenApproval') acc.TokenApproval.push(assetChange)
 
-  const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, orderStatus } = details
-  const uniswapXOrderStatus = OrderStatusTable[orderStatus]
-  const { status, statusMessage, title } = OrderTextTable[uniswapXOrderStatus]
-  const descriptor = getSwapDescriptor({
-    tokenIn: inputToken,
-    inputAmount: inputTokenQuantity,
-    tokenOut: outputToken,
-    outputAmount: outputTokenQuantity,
-  })
+//         return acc
+//       },
+//       { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
+//     )
+//     const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
+//     if (!supportedChain) {
+//       logSentryErrorForUnsupportedChain({
+//         extras: { assetActivity },
+//         errorMessage: 'Invalid activity from unsupported chain received from GQL',
+//       })
+//       return undefined
+//     }
+//     const defaultFields = {
+//       hash: assetActivity.details.hash,
+//       chainId: supportedChain,
+//       status: assetActivity.details.status,
+//       timestamp: assetActivity.timestamp,
+//       logos: getLogoSrcs(changes),
+//       title: assetActivity.type,
+//       descriptor: assetActivity.details.to,
+//       from: assetActivity.details.from,
+//       nonce: assetActivity.details.nonce,
+//     }
 
-  const supportedChain = supportedChainIdFromGQLChain(chain)
-  if (!supportedChain) {
-    logSentryErrorForUnsupportedChain({
-      extras: { details },
-      errorMessage: 'Invalid activity from unsupported chain received from GQL',
-    })
-    return undefined
-  }
+//     const parsedFields = ActivityParserByType[assetActivity.type]?.(changes, assetActivity as TransactionActivity)
+//     return { ...defaultFields, ...parsedFields }
+//   } catch (e) {
+//     console.error('Failed to parse activity', e, assetActivity)
+//     return undefined
+//   }
+// }
 
-  return {
-    hash: details.hash,
-    chainId: supportedChain,
-    status,
-    statusMessage,
-    offchainOrderStatus: uniswapXOrderStatus,
-    timestamp,
-    logos: [inputToken.project?.logo?.url, outputToken.project?.logo?.url],
-    currencies: [gqlToCurrency(inputToken), gqlToCurrency(outputToken)],
-    title,
-    descriptor,
-    from: details.offerer,
-    prefixIconSrc: UniswapXBolt,
-  }
-}
-
-function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activity | undefined {
-  try {
-    if (assetActivity.details.__typename === 'SwapOrderDetails') {
-      return parseUniswapXOrder(assetActivity as OrderActivity)
-    }
-
-    const changes = assetActivity.assetChanges.reduce(
-      (acc: TransactionChanges, assetChange) => {
-        if (assetChange.__typename === 'NftApproval') acc.NftApproval.push(assetChange)
-        else if (assetChange.__typename === 'NftApproveForAll') acc.NftApproveForAll.push(assetChange)
-        else if (assetChange.__typename === 'NftTransfer') acc.NftTransfer.push(assetChange)
-        else if (assetChange.__typename === 'TokenTransfer') acc.TokenTransfer.push(assetChange)
-        else if (assetChange.__typename === 'TokenApproval') acc.TokenApproval.push(assetChange)
-
-        return acc
-      },
-      { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
-    )
-    const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
-    if (!supportedChain) {
-      logSentryErrorForUnsupportedChain({
-        extras: { assetActivity },
-        errorMessage: 'Invalid activity from unsupported chain received from GQL',
-      })
-      return undefined
-    }
-    const defaultFields = {
-      hash: assetActivity.details.hash,
-      chainId: supportedChain,
-      status: assetActivity.details.status,
-      timestamp: assetActivity.timestamp,
-      logos: getLogoSrcs(changes),
-      title: assetActivity.type,
-      descriptor: assetActivity.details.to,
-      from: assetActivity.details.from,
-      nonce: assetActivity.details.nonce,
-    }
-
-    const parsedFields = ActivityParserByType[assetActivity.type]?.(changes, assetActivity as TransactionActivity)
-    return { ...defaultFields, ...parsedFields }
-  } catch (e) {
-    console.error('Failed to parse activity', e, assetActivity)
-    return undefined
-  }
-}
-
-export function parseRemoteActivities(assetActivities?: readonly AssetActivityPartsFragment[]) {
-  return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
-    const activity = parseRemoteActivity(assetActivity)
-    if (activity) acc[activity.hash] = activity
-    return acc
-  }, {})
-}
+// export function parseRemoteActivities(assetActivities?: readonly AssetActivityPartsFragment[]) {
+//   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
+//     const activity = parseRemoteActivity(assetActivity)
+//     if (activity) acc[activity.hash] = activity
+//     return acc
+//   }, {})
+// }
 
 const getTimeSince = (timestamp: number) => {
   const seconds = Math.floor(Date.now() - timestamp * 1000)

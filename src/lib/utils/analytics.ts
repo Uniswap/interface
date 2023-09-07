@@ -91,7 +91,7 @@ export const formatSwapQuoteReceivedEventProperties = (
     ...formatCommonPropertiesForTrade(trade, allowedSlippage),
     swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
     allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
-    token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
+    token_in_amount_max: undefined,
     token_out_amount_min: trade.minimumAmountOut(allowedSlippage).toExact(),
     quote_latency_milliseconds: swapQuoteLatencyMs,
   }

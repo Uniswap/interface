@@ -1,8 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Percent } from '@kinetix/sdk-core'
+import { ChainId, Percent } from '@kinetix/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@kinetix/universal-router-sdk'
 import { FeeOptions, toHex } from '@kinetix/v3-sdk'
 import { t } from '@lingui/macro'
+// import { OpenoceanApiSdk } from '@openocean.finance/api'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
@@ -43,6 +44,41 @@ interface SwapOptions {
   feeOptions?: FeeOptions
 }
 
+async function swapQuote(account: string, chainId: ChainId, data: any, value: any) {
+  console.log('swapQuote', account, chainId, data, value)
+
+  // const openoceanApiSdk = new OpenoceanApiSdk()
+  // const { swapSdk } = openoceanApiSdk
+
+  // const swapData = await swapSdk.swapQuote({
+  //   chain: 'terra',
+  //   inTokenAddress: 'uusd',
+  //   outTokenAddress: 'terra13awdgcx40tz5uygkgm79dytez3x87rpg4uhnvu',
+  //   amount: 0.01,
+  //   slippage: 1,
+  //   // account: this.wallet.address,
+  //   // gasPrice: req.data.gasPrice,
+  // })
+  // if (swapData.code == 200) {
+  //   swapSdk
+  //     .swap(swapData.data)
+  //     .on('error', (error: any) => {
+  //       console.log(error)
+  //     })
+  //     .on('transactionHash', (hash: any) => {
+  //       console.log(hash)
+  //     })
+  //     .on('receipt', (data: any) => {
+  //       console.log(data)
+  //     })
+  //     .on('success', (data: any) => {
+  //       console.log(data)
+  //     })
+  // } else {
+  //   console.log(swapData.message)
+  // }
+}
+
 export function useUniversalRouterSwapCallback(
   trade: ClassicTrade | undefined,
   fiatValues: { amountIn?: number; amountOut?: number },
@@ -50,9 +86,11 @@ export function useUniversalRouterSwapCallback(
 ) {
   const { account, chainId, provider } = useWeb3React()
   const analyticsContext = useTrace()
+  console.log('useUniversalRouterSwapCallback')
 
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
+      console.log('useUniversalRouterSwapCallback useCallback')
       try {
         if (!account) throw new Error('missing account')
         if (!chainId) throw new Error('missing chainId')
@@ -68,7 +106,7 @@ export function useUniversalRouterSwapCallback(
           inputTokenPermit: options.permit,
           fee: options.feeOptions,
         })
-
+        swapQuote(account, chainId, data, value)
         const tx = {
           from: account,
           to: UNIVERSAL_ROUTER_ADDRESS(chainId),
@@ -125,7 +163,6 @@ export function useUniversalRouterSwapCallback(
       } catch (swapError: unknown) {
         if (swapError instanceof ModifiedSwapError) throw swapError
 
-        // GasEstimationErrors are already traced when they are thrown.
         if (!(swapError instanceof GasEstimationError)) setTraceError(swapError)
 
         // Cancellations are not failures, and must be accounted for as 'cancelled'.

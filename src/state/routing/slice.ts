@@ -82,10 +82,11 @@ export const routingApi = createApi({
           }
 
           const quoteResponse = response.data as OpenOceanQuoteResponse
+          console.log(quoteResponse)
           const tradeResult = await transformRoutesToTrade(args, quoteResponse, QuoteMethod.ROUTING_API)
           return { data: { ...tradeResult, latencyMs: 0 } }
         } catch (error: any) {
-          console.warn(
+          console.error(
             `GetQuote failed on Unified Routing API, falling back to client: ${
               error?.message ?? error?.detail ?? error
             }`

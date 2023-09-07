@@ -1,26 +1,18 @@
-import { Currency, Percent } from '@kinetix/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token } from '@kinetix/sdk-core'
 import { Trans } from '@lingui/macro'
-import {
-  InterfaceEventName,
-  InterfaceModalName,
-  SwapEventName,
-  SwapPriceUpdateUserResponse,
-} from '@uniswap/analytics-events'
+import { InterfaceModalName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent, Trace, useTrace } from 'analytics'
+import { Trace, useTrace } from 'analytics'
 import Badge from 'components/Badge'
 import Modal, { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { RowFixed } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
-import { USDT_KAVA } from 'constants/tokens'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
-import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { SwapResult } from 'hooks/useSwapCallback'
 import useWrapCallback from 'hooks/useWrapCallback'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
@@ -30,9 +22,7 @@ import { ThemedText } from 'theme'
 import invariant from 'tiny-invariant'
 import { isL2ChainId } from 'utils/chains'
 import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
-import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import { ConfirmationModalContent } from '../TransactionConfirmationModal'
 import { PendingConfirmModalState, PendingModalContent } from './PendingModalContent'
@@ -81,6 +71,8 @@ function useConfirmModalState({
   doesTradeDiffer: boolean
   onCurrencySelection: (field: Field, currency: Currency) => void
 }) {
+  console.log('useConfirmModalState')
+
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
@@ -95,26 +87,26 @@ function useConfirmModalState({
     }
     // Any existing USDT allowance needs to be reset before we can approve the new amount (mainnet only).
     // See the `approve` function here: https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7#code
-    if (
-      allowance.state === AllowanceState.REQUIRED &&
-      allowance.token.equals(USDT_KAVA) &&
-      allowance.allowedAmount.greaterThan(0)
-    ) {
-      steps.push(ConfirmModalState.RESETTING_USDT)
-    }
+    // if (
+    //   allowance.state === AllowanceState.REQUIRED &&
+    //   allowance.token.equals(USDT_KAVA) &&
+    //   allowance.allowedAmount.greaterThan(0)
+    // ) {
+    //   steps.push(ConfirmModalState.RESETTING_USDT)
+    // }
     if (allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
       steps.push(ConfirmModalState.APPROVING_TOKEN)
     }
-    if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermitSignature) {
-      steps.push(ConfirmModalState.PERMITTING)
-    }
+    // if (allowance.state === AllowanceState.REQUIRED && allowance.needsPermitSignature) {
+    //   steps.push(ConfirmModalState.PERMITTING)
+    // }
     steps.push(ConfirmModalState.PENDING_CONFIRMATION)
     return steps
   }, [allowance, trade])
 
   const { chainId } = useWeb3React()
   const trace = useTrace()
-  const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
+  const maximumAmountIn: CurrencyAmount<Token> | undefined = undefined
 
   const nativeCurrency = useNativeCurrency(chainId)
 
@@ -135,6 +127,8 @@ function useConfirmModalState({
 
   const performStep = useCallback(
     async (step: ConfirmModalState) => {
+      console.log('Modal performStep', step)
+
       switch (step) {
         case ConfirmModalState.WRAPPING:
           setConfirmModalState(ConfirmModalState.WRAPPING)
@@ -144,13 +138,6 @@ function useConfirmModalState({
               // After the wrap has succeeded, reset the input currency to be WETH
               // because the trade will be on WETH -> token
               onCurrencySelection(Field.INPUT, trade.inputAmount.currency)
-              sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
-                chain_id: chainId,
-                token_symbol: maximumAmountIn?.currency.symbol,
-                token_address: maximumAmountIn?.currency.address,
-                ...trade,
-                ...trace,
-              })
             })
             .catch((e) => catchUserReject(e, PendingModalError.WRAP_ERROR))
           break
@@ -166,8 +153,8 @@ function useConfirmModalState({
           break
         case ConfirmModalState.PERMITTING:
           setConfirmModalState(ConfirmModalState.PERMITTING)
-          invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
-          allowance.permit().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
+          // invariant(allowance.state === AllowanceState.REQUIRED, 'Allowance should be required')
+          // allowance.permit().catch((e) => catchUserReject(e, PendingModalError.TOKEN_APPROVAL_ERROR))
           break
         case ConfirmModalState.PENDING_CONFIRMATION:
           setConfirmModalState(ConfirmModalState.PENDING_CONFIRMATION)
@@ -182,17 +169,7 @@ function useConfirmModalState({
           break
       }
     },
-    [
-      allowance,
-      chainId,
-      maximumAmountIn?.currency.address,
-      maximumAmountIn?.currency.symbol,
-      onSwap,
-      onWrap,
-      trace,
-      trade,
-      onCurrencySelection,
-    ]
+    [allowance, onSwap, onWrap, trade, onCurrencySelection]
   )
 
   const startSwapFlow = useCallback(() => {
@@ -285,7 +262,7 @@ export default function ConfirmSwapModal({
   fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
   const { chainId } = useWeb3React()
-  const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
+  const doesTradeDiffer = false
   const { startSwapFlow, onCancel, confirmModalState, approvalError, pendingModalSteps, wrapTxHash } =
     useConfirmModalState({
       trade,
@@ -314,24 +291,10 @@ export default function ConfirmSwapModal({
     trade && doesTradeDiffer && confirmModalState !== ConfirmModalState.PENDING_CONFIRMATION
   )
 
-  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade?.executionPrice)
+  const [lastExecutionPrice, setLastExecutionPrice] = useState()
   const [priceUpdate, setPriceUpdate] = useState<number>()
-  useEffect(() => {
-    if (lastExecutionPrice && !trade.executionPrice.equalTo(lastExecutionPrice)) {
-      // @ts-ignore
-      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
-      setLastExecutionPrice(trade.executionPrice)
-    }
-  }, [lastExecutionPrice, setLastExecutionPrice, trade])
 
   const onModalDismiss = useCallback(() => {
-    if (showAcceptChanges) {
-      // If the user dismissed the modal while showing the price update, log the event as rejected.
-      sendAnalyticsEvent(
-        SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
-        formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
-      )
-    }
     onDismiss()
     setTimeout(() => {
       // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses

@@ -46,11 +46,12 @@ function getInitialUrl(
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
   const checksummedAddress = isAddress(address)
 
-  if (checksummedAddress) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
-  } else {
-    return backupImg ?? undefined
-  }
+  // if (checksummedAddress) {
+  //   return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
+  // } else {
+  //   return backupImg ?? undefined
+  // }
+  return backupImg ?? undefined
 }
 
 export default function useAssetLogoSource(
@@ -67,9 +68,9 @@ export default function useAssetLogoSource(
 
   useEffect(() => {
     if (hideLogo) return
-    setCurrent(getInitialUrl(address, chainId, isNative))
+    setCurrent(getInitialUrl(address, chainId, isNative, backupImg))
     setFallbackSrcs(undefined)
-  }, [address, chainId, hideLogo, isNative])
+  }, [address, chainId, hideLogo, isNative, backupImg])
 
   const nextSrc = useCallback(() => {
     if (current) {

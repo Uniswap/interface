@@ -66,8 +66,6 @@ class KavaNativeCurrency extends NativeCurrency {
   }
 
   public constructor(chainId: number) {
-    console.log('chainId', chainId)
-
     if (!isKava(chainId)) throw new Error('Not kava')
     super(chainId, 18, 'KAVA', 'KAVA')
   }

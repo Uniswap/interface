@@ -1,20 +1,5 @@
-import { Box } from 'nft/components/Box'
-import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { loadingAsset } from 'nft/css/loading.css'
-import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import styled from 'styled-components'
-
-import { DEFAULT_WALLET_ASSET_QUERY_AMOUNT } from './ProfilePage'
-
-const SkeletonPageWrapper = styled.div`
-  ${ScreenBreakpointsPaddings};
-  padding-top: 40px;
-  width: 100%;
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: 16px;
-  }
-`
 
 const SkeletonBodyWrapper = styled.div`
   display: flex;
@@ -56,22 +41,6 @@ const SellButtonSkeleton = styled.div`
   border-radius: 12px;
 `
 
-const ProfileAssetCardSkeleton = styled.div`
-  width: 100%;
-  height: 330px;
-  border-radius: 20px;
-`
-
-const ProfileAssetCardDisplaySectionSkeleton = () => {
-  return (
-    <Box width="full" className={assetList}>
-      {Array.from(Array(DEFAULT_WALLET_ASSET_QUERY_AMOUNT), (_, index) => (
-        <ProfileAssetCardSkeleton key={index} className={loadingAsset} />
-      ))}
-    </Box>
-  )
-}
-
 export const ProfileBodyLoadingSkeleton = () => {
   return (
     <SkeletonBodyWrapper>
@@ -82,15 +51,10 @@ export const ProfileBodyLoadingSkeleton = () => {
         <FilterButtonSkeleton className={loadingAsset} />
         <SellButtonSkeleton className={loadingAsset} />
       </FilterBarSkeletonWrapper>
-      <ProfileAssetCardDisplaySectionSkeleton />
     </SkeletonBodyWrapper>
   )
 }
 
 export const ProfilePageLoadingSkeleton = () => {
-  return (
-    <SkeletonPageWrapper>
-      <ProfileBodyLoadingSkeleton />
-    </SkeletonPageWrapper>
-  )
+  return <ProfileBodyLoadingSkeleton />
 }

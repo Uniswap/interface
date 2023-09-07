@@ -1,16 +1,14 @@
 import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { getDeviceId, sendAnalyticsEvent, Trace, user } from 'analytics'
+import { sendAnalyticsEvent, Trace, user } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { useAtom } from 'jotai'
-import { useBag } from 'nft/hooks/useBag'
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useRouterPreference } from 'state/user/hooks'
-import { StatsigUser } from 'statsig-react'
 import styled from 'styled-components'
 import { SpinnerSVG } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -44,10 +42,6 @@ import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
-const NftExplore = lazy(() => import('nft/pages/explore'))
-const Collection = lazy(() => import('nft/pages/collection'))
-const Profile = lazy(() => import('nft/pages/profile/profile'))
-const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -170,17 +164,9 @@ export default function App() {
     return () => window.removeEventListener('scroll', scrollListener)
   }, [])
 
-  const isBagExpanded = useBag((state) => state.bagExpanded)
-  const isHeaderTransparent = !scrolledState && !isBagExpanded
+  const isHeaderTransparent = !scrolledState
 
   const { account } = useWeb3React()
-  const statsigUser: StatsigUser = useMemo(
-    () => ({
-      userID: getDeviceId(),
-      customIDs: { address: account ?? '' },
-    }),
-    [account]
-  )
 
   return (
     <ErrorBoundary>
@@ -248,55 +234,6 @@ export default function App() {
 
                 <Route path="migrate/v2" element={<MigrateV2 />} />
                 <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
-
-                {!shouldDisableNFTRoutes && (
-                  <>
-                    <Route
-                      path="/nfts"
-                      element={
-                        <Suspense fallback={null}>
-                          <NftExplore />
-                        </Suspense>
-                      }
-                    />
-
-                    <Route
-                      path="/nfts/asset/:contractAddress/:tokenId"
-                      element={
-                        <Suspense fallback={null}>
-                          <Asset />
-                        </Suspense>
-                      }
-                    />
-
-                    <Route
-                      path="/nfts/profile"
-                      element={
-                        <Suspense fallback={null}>
-                          <Profile />
-                        </Suspense>
-                      }
-                    />
-
-                    <Route
-                      path="/nfts/collection/:contractAddress"
-                      element={
-                        <Suspense fallback={null}>
-                          <Collection />
-                        </Suspense>
-                      }
-                    />
-
-                    <Route
-                      path="/nfts/collection/:contractAddress/activity"
-                      element={
-                        <Suspense fallback={null}>
-                          <Collection />
-                        </Suspense>
-                      }
-                    />
-                  </>
-                )}
 
                 <Route path="*" element={<Navigate to="/not-found" replace />} />
                 <Route path="/not-found" element={<NotFound />} />

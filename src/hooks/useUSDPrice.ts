@@ -1,59 +1,38 @@
-import { NetworkStatus } from '@apollo/client'
-import { ChainId, Currency, CurrencyAmount, Price, TradeType } from '@kinetix/sdk-core'
-import { nativeOnChain } from 'constants/tokens'
-import { Chain, useTokenSpotPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName, isGqlSupportedChain, PollingInterval } from 'graphql/data/util'
+import { Currency, CurrencyAmount } from '@kinetix/sdk-core'
 import { useMemo } from 'react'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
-import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
-import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
-import useStablecoinPrice from './useStablecoinPrice'
-
-// ETH amounts used when calculating spot price for a given currency.
-// The amount is large enough to filter low liquidity pairs.
-const ETH_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Currency> } = {
-  [ChainId.KAVA]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.KAVA), 10e18),
+const COINGECKO_ADDRESS_MAP = {
+  usdt: 'tether',
+  kava: 'kava',
+  wkava: 'kava',
 }
+const coingeckoPriceCache: any = {}
 
-function useETHPrice(currency?: Currency): {
-  data?: Price<Currency, Currency>
-  isLoading: boolean
-} {
-  const chainId = currency?.chainId
-  const isSupported = currency && isGqlSupportedChain(chainId)
-
-  const amountOut = isSupported ? ETH_AMOUNT_OUT[chainId] : undefined
-  const { trade, state } = useRoutingAPITrade(
-    TradeType.EXACT_OUTPUT,
-    amountOut,
-    currency,
-    INTERNAL_ROUTER_PREFERENCE_PRICE,
-    !isSupported
-  )
-
-  return useMemo(() => {
-    if (!isSupported) {
-      return { data: undefined, isLoading: false }
-    }
-
-    if (currency?.wrapped.equals(nativeOnChain(chainId).wrapped)) {
-      return {
-        data: new Price(currency, currency, '1', '1'),
-        isLoading: false,
-      }
-    }
-
-    if (!trade || state === TradeState.LOADING) {
-      return { data: undefined, isLoading: state === TradeState.LOADING }
-    }
-
-    const { numerator, denominator } = trade.routes[0].midPrice
-    const price = new Price(currency, nativeOnChain(chainId), denominator, numerator)
-    return { data: price, isLoading: false }
-  }, [chainId, currency, isSupported, state, trade])
+export const getCoingeckoPriceCache = (symbol: string) => {
+  // @ts-ignore
+  const coingeckoId = COINGECKO_ADDRESS_MAP[symbol.toLowerCase()]
+  if (coingeckoPriceCache[coingeckoId] && coingeckoPriceCache[coingeckoId].updateTime < Date.now() - 60000) {
+    return coingeckoPriceCache[coingeckoId].price
+  }
 }
-
+const getTokenPriceByCoingecko = async (symbol: string) => {
+  // @ts-ignore
+  const coingeckoId = COINGECKO_ADDRESS_MAP[symbol.toLowerCase()]
+  try {
+    if (coingeckoPriceCache[coingeckoId] && coingeckoPriceCache[coingeckoId].updateTime < Date.now() - 10000) {
+      return coingeckoPriceCache[coingeckoId].price
+    }
+  } catch (e) {
+    if (coingeckoPriceCache[coingeckoId]) {
+      return coingeckoPriceCache[coingeckoId].price
+    }
+    coingeckoPriceCache[coingeckoId] = {
+      updateTime: Date.now(),
+    }
+    console.error('Error on getTokenPriceByCoingecko', e)
+  }
+  return 0
+}
 export function useUSDPrice(
   currencyAmount?: CurrencyAmount<Currency>,
   prefetchCurrency?: Currency
@@ -61,44 +40,15 @@ export function useUSDPrice(
   data?: number
   isLoading: boolean
 } {
-  const currency = currencyAmount?.currency ?? prefetchCurrency
-  const chainId = currency?.chainId
-  const chain = chainId ? chainIdToBackendName(chainId) : undefined
-
-  // Use ETH-based pricing if available.
-  const { data: tokenEthPrice, isLoading: isTokenEthPriceLoading } = useETHPrice(currency)
-  const isTokenEthPriced = Boolean(tokenEthPrice || isTokenEthPriceLoading)
-  const { data, networkStatus } = useTokenSpotPriceQuery({
-    variables: { chain: chain ?? Chain.Kava, address: getNativeTokenDBAddress(chain ?? Chain.Kava) },
-    skip: !isTokenEthPriced,
-    pollInterval: PollingInterval.Normal,
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-first',
-  })
-
-  // Use USDC-based pricing for chains not yet supported by backend (for ETH-based pricing).
-  const stablecoinPrice = useStablecoinPrice(isTokenEthPriced ? undefined : currency)
-
+  let price = 0
+  let isLoading = true
+  if (currencyAmount && currencyAmount.currency && currencyAmount?.currency?.symbol) {
+    getTokenPriceByCoingecko(currencyAmount?.currency.symbol).then((p) => {
+      price = p || 0
+      isLoading = false
+    })
+  }
   return useMemo(() => {
-    if (!currencyAmount) {
-      return { data: undefined, isLoading: false }
-    } else if (stablecoinPrice) {
-      return { data: parseFloat(stablecoinPrice.quote(currencyAmount).toSignificant()), isLoading: false }
-    } else {
-      // Otherwise, get the price of the token in ETH, and then multiply by the price of ETH.
-      const ethUSDPrice = data?.token?.project?.markets?.[0]?.price?.value
-      if (ethUSDPrice && tokenEthPrice) {
-        return { data: parseFloat(tokenEthPrice.quote(currencyAmount).toExact()) * ethUSDPrice, isLoading: false }
-      } else {
-        return { data: undefined, isLoading: isTokenEthPriceLoading || networkStatus === NetworkStatus.loading }
-      }
-    }
-  }, [
-    currencyAmount,
-    data?.token?.project?.markets,
-    tokenEthPrice,
-    isTokenEthPriceLoading,
-    networkStatus,
-    stablecoinPrice,
-  ])
+    return { data: price, isLoading }
+  }, [price, isLoading])
 }

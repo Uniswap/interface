@@ -2,10 +2,8 @@ import { Percent, TradeType } from '@kinetix/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useCallback } from 'react'
-import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
-import { useAddOrder } from 'state/signatures/hooks'
-import { UniswapXOrderDetails } from 'state/signatures/types'
+import { InterfaceTrade } from 'state/routing/types'
+import { isClassicTrade } from 'state/routing/utils'
 
 import { useTransactionAdder } from '../state/transactions/hooks'
 import {
@@ -15,7 +13,6 @@ import {
 } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import useTransactionDeadline from './useTransactionDeadline'
-import { useUniswapXSwapCallback } from './useUniswapXSwapCallback'
 import { useUniversalRouterSwapCallback } from './useUniversalRouter'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>
@@ -31,14 +28,7 @@ export function useSwapCallback(
   const deadline = useTransactionDeadline()
 
   const addTransaction = useTransactionAdder()
-  const addOrder = useAddOrder()
   const { account, chainId } = useWeb3React()
-
-  const uniswapXSwapCallback = useUniswapXSwapCallback({
-    trade: isUniswapXTrade(trade) ? trade : undefined,
-    allowedSlippage,
-    fiatValues,
-  })
 
   const universalRouterSwapCallback = useUniversalRouterSwapCallback(
     isClassicTrade(trade) ? trade : undefined,
@@ -50,7 +40,7 @@ export function useSwapCallback(
     }
   )
 
-  const swapCallback = isUniswapXTrade(trade) ? uniswapXSwapCallback : universalRouterSwapCallback
+  const swapCallback = universalRouterSwapCallback
 
   return useCallback(async () => {
     if (!trade) throw new Error('missing trade')
@@ -62,34 +52,15 @@ export function useSwapCallback(
       type: TransactionType.SWAP,
       inputCurrencyId: currencyId(trade.inputAmount.currency),
       outputCurrencyId: currencyId(trade.outputAmount.currency),
-      isUniswapXOrder: result.type === TradeFillType.UniswapX,
-      ...(trade.tradeType === TradeType.EXACT_INPUT
-        ? {
-            tradeType: TradeType.EXACT_INPUT,
-            inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-            expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-            minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
-          }
-        : {
-            tradeType: TradeType.EXACT_OUTPUT,
-            maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
-            outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-            expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-          }),
+      isUniswapXOrder: false,
+      tradeType: TradeType.EXACT_INPUT,
+      inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+      expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+      minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
     }
 
-    if (result.type === TradeFillType.UniswapX) {
-      addOrder(
-        account,
-        result.response.orderHash,
-        chainId,
-        result.response.deadline,
-        swapInfo as UniswapXOrderDetails['swapInfo']
-      )
-    } else {
-      addTransaction(result.response, swapInfo, deadline?.toNumber())
-    }
+    addTransaction(result.response, swapInfo, deadline?.toNumber())
 
     return result
-  }, [account, addOrder, addTransaction, allowedSlippage, chainId, deadline, swapCallback, trade])
+  }, [account, addTransaction, allowedSlippage, chainId, deadline, swapCallback, trade])
 }

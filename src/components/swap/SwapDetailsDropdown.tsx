@@ -15,7 +15,6 @@ import { ThemedText } from 'theme'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateTooltip from './GasEstimateTooltip'
-import TradePrice from './TradePrice'
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
   padding: 0;
@@ -131,7 +130,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
             {trade ? (
               <LoadingOpacityContainer $loading={syncing} data-testid="trade-price-container">
                 {/* @ts-ignore */}
-                <TradePrice price={trade.executionPrice} />
+                {/* <TradePrice price={trade.executionPrice} /> */}
               </LoadingOpacityContainer>
             ) : loading || syncing ? (
               <ThemedText.DeprecatedMain fontSize={14}>

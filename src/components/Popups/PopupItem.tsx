@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 
 import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent, PopupType } from '../../state/application/reducer'
-import { FailedNetworkSwitchPopup, TransactionPopupContent, UniswapXOrderPopupContent } from './PopupContent'
+import { FailedNetworkSwitchPopup, TransactionPopupContent } from './PopupContent'
 
 export default function PopupItem({
   removeAfterMs,
@@ -36,7 +36,7 @@ export default function PopupItem({
       return chainId ? <TransactionPopupContent hash={content.hash} chainId={chainId} onClose={onClose} /> : null
     }
     case PopupType.Order: {
-      return <UniswapXOrderPopupContent orderHash={content.orderHash} onClose={onClose} />
+      return <></>
     }
     case PopupType.FailedSwitchNetwork: {
       return <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} onClose={onClose} />

@@ -1,8 +1,6 @@
-import { Plural, Trans } from '@lingui/macro'
-import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent, TradeType } from '@kinetix/sdk-core'
+import { Plural, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -12,11 +10,9 @@ import { formatCurrencyAmount, formatNumber, formatPriceImpact, NumberType } fro
 
 import { Separator, ThemedText } from '../../theme'
 import Column from '../Column'
-import RouterLabel from '../RouterLabel'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip, TooltipSize } from '../Tooltip'
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
-import SwapRoute from './SwapRoute'
 
 interface AdvancedSwapDetailsProps {
   trade: InterfaceTrade
@@ -114,7 +110,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               ? `${formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), NumberType.SwapTradeAmount)} ${
                   trade.outputAmount.currency.symbol
                 }`
-              : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+              : ``}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
       </RowBetween>
@@ -140,38 +136,6 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             }`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
-      </RowBetween>
-      <Separator />
-      <RowBetween>
-        <ThemedText.BodySmall color="textSecondary">
-          <Trans>Order routing</Trans>
-        </ThemedText.BodySmall>
-        {isClassicTrade(trade) ? (
-          <MouseoverTooltip
-            size={TooltipSize.Large}
-            text={<SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} />}
-            onOpen={() => {
-              sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
-                element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
-              })
-            }}
-          >
-            <RouterLabel trade={trade} />
-          </MouseoverTooltip>
-        ) : (
-          <MouseoverTooltip
-            size={TooltipSize.Small}
-            text={<GasBreakdownTooltip trade={trade} hideFees />}
-            placement="right"
-            onOpen={() => {
-              sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
-                element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
-              })
-            }}
-          >
-            <RouterLabel trade={trade} />
-          </MouseoverTooltip>
-        )}
       </RowBetween>
     </Column>
   )

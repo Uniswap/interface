@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Kinetix V3 Interface",
   "license": "GPL-3.0-or-later",
+  "proxy": "https://kinetix.finance",
   "scripts": {
     "ajv": "node scripts/compile-ajv-validators.js",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",

@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@kinetix/sdk-core'
+import { Trans } from '@lingui/macro'
 import Column, { AutoColumn } from 'components/Column'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { InterfaceTrade } from 'state/routing/types'
@@ -61,7 +61,7 @@ export default function SwapModalHeader({
                 <Trans>
                   Input is estimated. You will sell at most{' '}
                   <b>
-                    {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade.inputAmount.currency.symbol}
+                    {/* {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade.inputAmount.currency.symbol} */}
                   </b>{' '}
                   or the transaction will revert.
                 </Trans>

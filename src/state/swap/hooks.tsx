@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@kinetix/sdk-core'
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
@@ -177,7 +177,7 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
     }
 
     // compare input balance to max input based on version
-    const [balanceIn, maxAmountIn] = [currencyBalances[Field.INPUT], trade?.trade?.maximumAmountIn(allowedSlippage)]
+    const [balanceIn, maxAmountIn] = [currencyBalances[Field.INPUT], undefined]
 
     if (balanceIn && maxAmountIn && balanceIn.lessThan(maxAmountIn)) {
       inputError = <Trans>Insufficient {balanceIn.currency.symbol} balance</Trans>

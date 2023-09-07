@@ -14,7 +14,6 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow from '../PortfolioRow'
-import { useOpenOffchainActivityModal } from './OffchainActivityModal'
 import { useTimeSince } from './parseRemote'
 import { Activity } from './types'
 
@@ -43,21 +42,14 @@ function StatusIndicator({ activity: { status, timestamp } }: { activity: Activi
 }
 
 export function ActivityRow({ activity }: { activity: Activity }) {
-  const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc, offchainOrderStatus } =
-    activity
-  const openOffchainActivityModal = useOpenOffchainActivityModal()
+  const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc } = activity
 
   const { ENSName } = useENSName(otherAccount)
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
 
   const onClick = useCallback(() => {
-    if (offchainOrderStatus) {
-      openOffchainActivityModal({ orderHash: hash, status: offchainOrderStatus })
-      return
-    }
-
     window.open(getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION), '_blank')
-  }, [offchainOrderStatus, chainId, hash, openOffchainActivityModal])
+  }, [chainId, hash])
 
   return (
     <TraceEvent

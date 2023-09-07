@@ -11,6 +11,8 @@ import { toReadableError, UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
+import { OPENOCEAN_ROUTER_ADDRESS } from './usePermit2Allowance'
+
 const PERMIT_EXPIRATION = ms(`30d`)
 const PERMIT_SIG_EXPIRATION = ms(`30m`)
 
@@ -76,7 +78,7 @@ export function useUpdatePermitAllowance(
         sigDeadline: toDeadline(PERMIT_SIG_EXPIRATION),
       }
 
-      const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
+      const { domain, types, values } = AllowanceTransfer.getPermitData(permit, OPENOCEAN_ROUTER_ADDRESS, chainId)
       const signature = await signTypedData(provider.getSigner(account), domain, types, values)
       onPermitSignature?.({ ...permit, signature })
       return
