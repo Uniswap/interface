@@ -192,11 +192,20 @@ export async function transformRoutesToTrade(
   data: URAQuoteResponse,
   quoteMethod: QuoteMethod
 ): Promise<TradeResult> {
-  const { tradeType, needsWrapIfUniswapX, routerPreference, account, amount } = args
+  const {
+    tradeType,
+    needsWrapIfUniswapX,
+    routerPreference,
+    account,
+    amount,
+    isUniswapXDefaultEnabled,
+    inputTax,
+    outputTax,
+  } = args
 
-  // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
-  // even if it is the better quote.
-  const showUniswapXTrade = data.routing === URAQuoteType.DUTCH_LIMIT && routerPreference === RouterPreference.X
+  const showUniswapXTrade =
+    data.routing === URAQuoteType.DUTCH_LIMIT &&
+    (routerPreference === RouterPreference.X || (isUniswapXDefaultEnabled && routerPreference === RouterPreference.API))
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
   const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate } = getClassicTradeDetails(
@@ -247,13 +256,13 @@ export async function transformRoutesToTrade(
     isUniswapXBetter,
     requestId: data.quote.requestId,
     quoteMethod,
-    inputTax: args.inputTax,
-    outputTax: args.outputTax,
+    inputTax,
+    outputTax,
   })
 
   // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
   // even if it is the better quote.
-  if (isUniswapXBetter && args.routerPreference === RouterPreference.X) {
+  if (isUniswapXBetter && (routerPreference === RouterPreference.X || isUniswapXDefaultEnabled)) {
     const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
     const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)
 
