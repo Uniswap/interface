@@ -67,6 +67,7 @@ const whitelist: Array<ReducerNames | RootReducerNames> = [
   'transactions',
   'tweaks',
   'wallet',
+  'cloudBackup',
 ]
 
 export const persistConfig = {

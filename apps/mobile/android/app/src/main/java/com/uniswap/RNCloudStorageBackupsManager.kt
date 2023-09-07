@@ -1,6 +1,7 @@
 package com.uniswap
 
 import android.util.Log
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -18,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
-import java.nio.charset.StandardCharsets
+import java.io.FileNotFoundException
 import java.util.Date
 import javax.crypto.BadPaddingException
 import javax.crypto.IllegalBlockSizeException
@@ -35,7 +36,8 @@ data class CloudStorageMnemonicBackup(
   val mnemonicId: String,
   val encryptedMnemonic: String,
   val encryptionSalt: String,
-  val createdAt: Double
+  val createdAt: Double,
+  val googleDriveEmail: String? = null
 )
 
 /**
@@ -62,11 +64,11 @@ enum class Request(val value: Int) {
  */
 
 enum class ICloudManagerEventType(val value: String) {
-  FOUND_CLOUD_BACKUP("FoundCloudBackup")
+  FOUND_CLOUD_BACKUP("FoundCloudBackup"),
 }
 
 /**
- * Class for managing cloud storage backups on anrdoid for React Native.
+ * Class for managing cloud storage backups on android for React Native.
  *
  * @property reactContext The react application context.
  */
@@ -78,6 +80,21 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
   private val rnEthersRS = RnEthersRs(reactContext)
 
   private val gson = Gson()
+
+  /**
+   * Sends FOUND_CLOUD_BACKUP event to react-native app.
+   *
+   * @param mnemonicId Id of backup mnemonic.
+   * @param createdAt Date of backup creation.
+   * @param googleDriveEmail Email address associated with the backup.
+   */
+  private fun sendFoundBackupEvent(mnemonicId: String, createdAt: String, googleDriveEmail: String?) {
+    val body: WritableMap = Arguments.createMap()
+    body.putString("mnemonicId", mnemonicId)
+    body.putString("createdAt", createdAt)
+    body.putString("googleDriveEmail", googleDriveEmail)
+    sendEvent(ICloudManagerEventType.FOUND_CLOUD_BACKUP.value, body)
+  }
 
   /**
    * Sends an event to react-native app with the given name and parameters.
@@ -105,7 +122,7 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
   }
 
   /**
-   * Starts fetching cloud storage backups. Data is send back using to React-Native using[useEvent] method.
+   * Starts fetching cloud storage backups. Data is send back using to React-Native using [sendFoundBackupEvent] method.
    *
    * @param promise A promise to return the result of the operation.
    */
@@ -113,11 +130,21 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
   fun startFetchingCloudStorageBackups(promise: Promise) {
     CoroutineScope(Dispatchers.Main).launch {
       try {
-        GoogleDriveApiHelper.getGoogleDrive(reactContext)?.let { drive ->
-          GoogleDriveApiHelper.fetchCloudBackups(
-            drive,
-            ::sendEvent
-          )
+        GoogleDriveApiHelper.getGoogleDrive(reactContext).let { (drive) ->
+          if (drive == null) return@launch
+          GoogleDriveApiHelper.fetchCloudBackupFiles(drive).let { files ->
+            withContext(Dispatchers.IO) {
+              files.files.forEach { file ->
+                launch {
+                  val outputStream = ByteArrayOutputStream()
+                  drive.files()[file.id]
+                    .executeMediaAndDownloadTo(outputStream)
+                  val mnemonicsBackup: CloudStorageMnemonicBackup = gson.fromJson(outputStream.toString(), CloudStorageMnemonicBackup::class.java)
+                  sendFoundBackupEvent(mnemonicsBackup.mnemonicId, mnemonicsBackup.createdAt.toString(),mnemonicsBackup.googleDriveEmail)
+                }
+              }
+            }
+          }
         }
         promise.resolve(true)
       } catch (e: Exception) {
@@ -153,17 +180,20 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
         val encryptionSalt = generateSalt(16)
         val encryptedMnemonic =
           withContext(Dispatchers.IO) { encrypt(mnemonic, password, encryptionSalt) }
-
-        GoogleDriveApiHelper.getGoogleDrive(reactContext)?.let { drive ->
+        GoogleDriveApiHelper.getGoogleDrive(reactContext).let { (drive, acc) ->
+          if (drive == null) return@launch
+          val createdAt = Date().time / 1000.0
           val backup = CloudStorageMnemonicBackup(
             mnemonicId,
             encryptedMnemonic,
             encryptionSalt,
-            Date().time / 1000.0
+            createdAt,
+            acc?.email
           )
           withContext(Dispatchers.IO) {
-            GoogleDriveApiHelper.saveMnemonicsToGoogleDrive(drive, mnemonicId, backup)
+            GoogleDriveApiHelper.saveMnemonicToGoogleDrive(drive, mnemonicId, backup)
           }
+          sendFoundBackupEvent(mnemonicId, createdAt.toString(), acc?.email)
         }
         promise.resolve(true)
       } catch (e: Exception) {
@@ -186,7 +216,8 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
   fun restoreMnemonicFromCloudStorage(mnemonicId: String, password: String, promise: Promise) {
     CoroutineScope(Dispatchers.Main).launch {
       try {
-        GoogleDriveApiHelper.getGoogleDrive(reactContext)?.let { drive ->
+        GoogleDriveApiHelper.getGoogleDrive(reactContext, true).let { (drive) ->
+          if (drive == null) return@launch
           val fileId = withContext(Dispatchers.IO) {
             GoogleDriveApiHelper.getFileIdByFileName(
               drive,
@@ -263,16 +294,29 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
   fun deleteCloudStorageMnemonicBackup(mnemonicId: String, promise: Promise) {
     CoroutineScope(Dispatchers.Main).launch {
       try {
-        GoogleDriveApiHelper.getGoogleDrive(reactContext)?.let { drive ->
+        GoogleDriveApiHelper.getGoogleDrive(reactContext, true).let { (drive) ->
+          if (drive == null) return@launch
           withContext(Dispatchers.IO) {
             val fileId = GoogleDriveApiHelper.getFileIdByFileName(drive, mnemonicId)
-            drive.files().delete(fileId).execute()
+            if (fileId == null) {
+              GoogleDriveApiHelper.getGoogleDrive(reactContext).let { (drive) ->
+                if (drive == null) return@let
+                val fileId = GoogleDriveApiHelper.getFileIdByFileName(drive, mnemonicId)
+                  ?: throw FileNotFoundException("Failed to locate backup")
+                drive.files().delete(fileId).execute()
+              }
+            } else {
+              drive.files().delete(fileId).execute()
+            }
           }
         }
         promise.resolve(true)
+      } catch (e: FileNotFoundException) {
+        Log.e("EXCEPTION", "${e.message}")
+        promise.reject(CloudBackupError.DELETE_BACKUP_ERROR.value, "Failed to locate backup")
       } catch (e: Exception) {
         Log.e("EXCEPTION", "${e.message}")
-        promise.reject(CloudBackupError.DELETE_BACKUP_ERROR.value, "Failed to locate iCloud backup")
+        promise.reject(CloudBackupError.DELETE_BACKUP_ERROR.value, "Failed to delete backup")
       }
     }
   }

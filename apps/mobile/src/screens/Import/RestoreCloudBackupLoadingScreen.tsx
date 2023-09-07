@@ -1,12 +1,14 @@
+import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
 import { IS_ANDROID } from 'src/constants/globals'
+import { clearCloudBackups } from 'src/features/CloudBackup/cloudBackupSlice'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import {
   startFetchingCloudStorageBackups,
@@ -18,9 +20,7 @@ import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Icons } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
-import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useTimeout } from 'utilities/src/time/timing'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<
@@ -38,12 +38,14 @@ export function RestoreCloudBackupLoadingScreen({
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
+  const dispatch = useAppDispatch()
   const entryPoint = params.entryPoint
   const importType = params.importType
 
   const isRestoringMnemonic = importType === ImportType.RestoreMnemonic
-
-  const [isLoading, setIsLoading] = useState(true)
+  // inits with null before fetchCloudStorageBackups starts fetching
+  const [isLoading, setIsLoading] = useState<boolean | null>(null)
+  const [isError, setIsError] = useState(false)
 
   // when we are restoring after phone migration
   const signerAccounts = useNonPendingSignerAccounts()
@@ -54,46 +56,105 @@ export function RestoreCloudBackupLoadingScreen({
   useAddBackButton(navigation)
 
   // Starts query for cloud backup files, backup files found are streamed into Redux
-  const fetchCloudStorageBackupsWithTimeout = useCallback(async () => {
-    // Show loading state for max 10s, then show no backups found
-    setIsLoading(true)
-    await startFetchingCloudStorageBackups()
-
-    setTimeout(async () => {
-      logger.debug(
-        'RestoreCloudBackupLoadingScreen',
-        'fetchCloudStorageBackupsWithTimeout',
-        `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
-      )
-      setIsLoading(false)
-      await stopFetchingCloudStorageBackups()
-    }, MAX_LOADING_TIMEOUT_MS)
+  const fetchCloudStorageBackups = useCallback(async () => {
+    setIsError(false)
+    try {
+      await startFetchingCloudStorageBackups()
+      setIsLoading(true)
+    } catch (e) {
+      setIsError(true)
+    }
   }, [])
 
-  useAsyncData(fetchCloudStorageBackupsWithTimeout)
-  // After finding backups, show loading state for minimum 1s to prevent screen changing too quickly
-  useTimeout(
-    backups.length > 0
-      ? (): void => {
-          if (backups.length === 1 && backups[0]) {
-            navigation.replace(OnboardingScreens.RestoreCloudBackupPassword, {
-              importType,
-              entryPoint,
-              mnemonicId: backups[0].mnemonicId,
-            })
-          } else {
-            navigation.replace(OnboardingScreens.RestoreCloudBackup, {
-              importType,
-              entryPoint,
-            })
-          }
-        }
-      : (): undefined => undefined,
-    MIN_LOADING_UI_MS
+  /**
+   * Monitors the fetching process and uses two different timeouts:
+   * - MAX_LOADING_TIMEOUT_MS for initial backup fetch
+   * - MIN_LOADING_UI_MS if subsequent backups are being fetched.
+   * Stops the backup fetching process and sets the loading state to false once the timeout is reached.
+   */
+  useEffect(() => {
+    if (!isLoading) return
+    const timer = setTimeout(
+      () => {
+        if (backups.length === 0)
+          logger.debug(
+            'RestoreCloudBackupLoadingScreen',
+            'fetchCloudStorageBackups',
+            `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
+          )
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        stopFetchingCloudStorageBackups()
+        setIsLoading(false)
+      },
+      backups.length === 0 ? MAX_LOADING_TIMEOUT_MS : MIN_LOADING_UI_MS
+    )
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [backups.length, isLoading])
+
+  /**
+   * Initiates the backup fetching process when the screen comes into focus, helping avoid potential issues with Android's consent screens.
+   * 1. Listens for the end of a navigation transition event.
+   * 2. Clears any previous fetched backups from state or redux store.
+   * 3. Starts the backup fetching process anew.
+   */
+  useFocusEffect(
+    useCallback(() => {
+      return navigation.addListener('transitionEnd', async () => {
+        dispatch(clearCloudBackups())
+        await fetchCloudStorageBackups()
+      })
+    }, [dispatch, fetchCloudStorageBackups, navigation])
   )
 
+  /**
+   * Redirects to restore screens after loading phase.
+   * Waits until the loading state is false (indicating that the fetching process has ended).
+   * - If only one backup is found, redirects the user to enter the backup password.
+   * - If multiple backups are found, navigates the user to a screen to choose which backup to restore.
+   */
+  useEffect(() => {
+    if (isLoading !== false || backups.length === 0) return
+    if (backups.length === 1 && backups[0]) {
+      navigation.replace(OnboardingScreens.RestoreCloudBackupPassword, {
+        importType,
+        entryPoint,
+        mnemonicId: backups[0].mnemonicId,
+      })
+    } else {
+      navigation.replace(OnboardingScreens.RestoreCloudBackup, {
+        importType,
+        entryPoint,
+      })
+    }
+  }, [backups, entryPoint, importType, isLoading, navigation])
+
+  if (isError) {
+    return (
+      <Box alignSelf="center" px="spacing16">
+        <BaseCard.ErrorState
+          description={t(
+            `Failed to import backups due to lack of permissions, interruption of authorization, or due to a cloud error`
+          )}
+          icon={
+            <Icons.OSDynamicCloudIcon
+              color={theme.colors.neutral3}
+              height={theme.imageSizes.image48}
+              width={theme.imageSizes.image48}
+            />
+          }
+          retryButtonLabel={t('Retry')}
+          title={t('Error while importing backups')}
+          onRetry={fetchCloudStorageBackups}
+        />
+      </Box>
+    )
+  }
+
   // Handle no backups found error state
-  if (!isLoading && backups.length === 0) {
+  if (isLoading === false && backups.length === 0) {
     if (isRestoringMnemonic) {
       navigation.replace(OnboardingScreens.SeedPhraseInput, {
         importType,
@@ -117,7 +178,7 @@ export function RestoreCloudBackupLoadingScreen({
             }
             retryButtonLabel={t('Retry')}
             title={t('0 backups found')}
-            onRetry={fetchCloudStorageBackupsWithTimeout}
+            onRetry={fetchCloudStorageBackups}
           />
         </Box>
       )
