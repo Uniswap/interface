@@ -191,6 +191,8 @@ function TokenTaxLineItem({
   type: 'input' | 'output'
   syncing: boolean
 }) {
+  if (syncing) return null
+
   const [currency, percentage] =
     type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
 
@@ -213,9 +215,7 @@ function TokenTaxLineItem({
       >
         <ThemedText.BodySmall color="neutral2">{`${currency.symbol} fee`}</ThemedText.BodySmall>
       </MouseoverTooltip>
-      <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-        <ThemedText.BodySmall>{formatPriceImpact(percentage)}</ThemedText.BodySmall>
-      </TextWithLoadingPlaceholder>
+      <ThemedText.BodySmall>{formatPriceImpact(percentage)}</ThemedText.BodySmall>
     </RowBetween>
   )
 }
