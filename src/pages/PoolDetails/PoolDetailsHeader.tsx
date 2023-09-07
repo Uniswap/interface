@@ -166,7 +166,6 @@ function DoubleCurrencyLogo({ chainId, currencies }: { chainId: number; currenci
 
 const DoubleLogoContainer = styled.div`
   display: flex;
-  flex-direction: row;
   gap: 2px;
   position: relative;
   top: 0;
