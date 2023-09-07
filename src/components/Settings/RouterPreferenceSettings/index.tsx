@@ -29,10 +29,11 @@ export default function RouterPreferenceSettings() {
   const dispatch = useAppDispatch()
   const userDisabledUniswapX = useUserDisabledUniswapX()
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
+  const isUniswapXOverrideEnabled = isUniswapXDefaultEnabled && !userDisabledUniswapX
 
   const uniswapXInEffect =
     routerPreference === RouterPreference.X ||
-    (routerPreference !== RouterPreference.CLIENT && isUniswapXDefaultEnabled && !userDisabledUniswapX)
+    (routerPreference !== RouterPreference.CLIENT && isUniswapXOverrideEnabled)
 
   return (
     <>
@@ -83,7 +84,11 @@ export default function RouterPreferenceSettings() {
           isActive={routerPreference === RouterPreference.CLIENT}
           toggle={() =>
             setRouterPreference(
-              routerPreference === RouterPreference.CLIENT ? RouterPreference.API : RouterPreference.CLIENT
+              routerPreference === RouterPreference.CLIENT
+                ? isUniswapXDefaultEnabled
+                  ? RouterPreference.X
+                  : RouterPreference.API
+                : RouterPreference.CLIENT
             )
           }
         />
