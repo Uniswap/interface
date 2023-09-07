@@ -21,11 +21,12 @@ export default function DarkModeQueryParamReader(): null {
 
     if (typeof theme !== 'string') return
 
-    if (theme.toLowerCase() === 'light') {
-      updateMode(ThemeMode.LIGHT)
-    } else if (theme.toLowerCase() === 'dark') {
-      updateMode(ThemeMode.DARK)
-    }
+    // if (theme.toLowerCase() === 'light') {
+    //   updateMode(ThemeMode.LIGHT)
+    // } else if (theme.toLowerCase() === 'dark') {
+    //   updateMode(ThemeMode.DARK)
+    // }
+    updateMode(ThemeMode.DARK)
   }, [search, updateMode])
 
   return null

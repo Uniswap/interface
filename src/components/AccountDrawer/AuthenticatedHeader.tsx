@@ -14,7 +14,7 @@ import useENSName from 'hooks/useENSName'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, CreditCard, IconProps, Info, LogOut, Settings } from 'react-feather'
+import { ArrowDownRight, ArrowUpRight, IconProps, Info, LogOut, Settings } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -303,7 +303,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <Trans>View and sell NFTs</Trans>
           </HeaderButton>
         )}
-        <HeaderButton
+        {/* <HeaderButton
           size={ButtonSize.medium}
           emphasis={ButtonEmphasis.medium}
           onClick={handleBuyCryptoClick}
@@ -322,7 +322,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               <Trans>Buy crypto</Trans>
             </>
           )}
-        </HeaderButton>
+        </HeaderButton> */}
         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
           <FiatOnrampNotAvailableText marginTop="8px">
             <Trans>Not available in your region</Trans>

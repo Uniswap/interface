@@ -1,38 +1,31 @@
-import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
-import { Moon, Sun } from 'react-feather'
 import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
-
-import { Segment, SegmentedControl } from './SegmentedControl'
-import { ThemedText } from './text'
 
 const THEME_UPDATE_DELAY = ms(`0.1s`)
 const DARKMODE_MEDIA_QUERY = window.matchMedia('(prefers-color-scheme: dark)')
 
 export enum ThemeMode {
-  LIGHT,
+  // LIGHT,
   DARK,
-  AUTO,
+  // AUTO,
 }
 
 // Tracks the device theme
-const systemThemeAtom = atom<ThemeMode.LIGHT | ThemeMode.DARK>(
-  DARKMODE_MEDIA_QUERY.matches ? ThemeMode.DARK : ThemeMode.LIGHT
-)
+const systemThemeAtom = atom<ThemeMode.DARK>(DARKMODE_MEDIA_QUERY.matches ? ThemeMode.DARK : ThemeMode.DARK)
 
 // Tracks the user's selected theme mode
-const themeModeAtom = atomWithStorage<ThemeMode>('interface_color_theme', ThemeMode.AUTO)
+const themeModeAtom = atomWithStorage<ThemeMode>('interface_color_theme', ThemeMode.DARK)
 
 export function SystemThemeUpdater() {
   const setSystemTheme = useUpdateAtom(systemThemeAtom)
 
   const listener = useCallback(
     (event: MediaQueryListEvent) => {
-      setSystemTheme(event.matches ? ThemeMode.DARK : ThemeMode.LIGHT)
+      setSystemTheme(event.matches ? ThemeMode.DARK : ThemeMode.DARK)
     },
     [setSystemTheme]
   )
@@ -49,7 +42,7 @@ export function useIsDarkMode(): boolean {
   const mode = useAtomValue(themeModeAtom)
   const systemTheme = useAtomValue(systemThemeAtom)
 
-  return (mode === ThemeMode.AUTO ? systemTheme : mode) === ThemeMode.DARK
+  return (mode === ThemeMode.DARK ? systemTheme : mode) === ThemeMode.DARK
 }
 
 export function useDarkModeManager(): [boolean, (mode: ThemeMode) => void] {
@@ -73,7 +66,7 @@ export default function ThemeToggle({ disabled }: { disabled?: boolean }) {
 
   return (
     <Row align="center">
-      <Row width="40%">
+      {/* <Row width="40%">
         <ThemedText.SubHeaderSmall color="primary">
           <Trans>Theme</Trans>
         </ThemedText.SubHeaderSmall>
@@ -86,7 +79,7 @@ export default function ThemeToggle({ disabled }: { disabled?: boolean }) {
           <Segment value={ThemeMode.LIGHT} Icon={Sun} testId="theme-lightmode" />
           <Segment value={ThemeMode.DARK} Icon={Moon} testId="theme-darkmode" />
         </SegmentedControl>
-      </Row>
+      </Row> */}
     </Row>
   )
 }

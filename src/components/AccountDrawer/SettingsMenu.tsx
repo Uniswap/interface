@@ -10,12 +10,9 @@ import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme'
 import ThemeToggle from 'theme/components/ThemeToggle'
 
-import { AnalyticsToggle } from './AnalyticsToggle'
 import { GitVersionRow } from './GitVersionRow'
-import { LanguageMenuItems } from './LanguageMenu'
 import { SlideOutMenu } from './SlideOutMenu'
 import { SmallBalanceToggle } from './SmallBalanceToggle'
-import { TestnetsToggle } from './TestnetsToggle'
 
 const Container = styled(Column)`
   height: 100%;
@@ -86,17 +83,17 @@ export default function SettingsMenu({
           <ToggleWrapper>
             <ThemeToggle />
             <SmallBalanceToggle />
-            <AnalyticsToggle />
-            <TestnetsToggle />
+            {/* <AnalyticsToggle /> */}
+            {/* <TestnetsToggle /> */}
           </ToggleWrapper>
-          {!currencyConversionEnabled && (
+          {/* {!currencyConversionEnabled && (
             <>
               <SectionTitle data-testid="wallet-header">
                 <Trans>Language</Trans>
               </SectionTitle>
               <LanguageMenuItems />
             </>
-          )}
+          )} */}
 
           {currencyConversionEnabled && (
             <SettingsButton
