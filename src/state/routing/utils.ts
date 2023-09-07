@@ -277,6 +277,7 @@ export async function transformRoutesToTrade(
       wrapInfo,
       approveInfo,
       auctionPeriodSecs: data.quote.auctionPeriodSecs,
+      startTimeOffsetSecs: data.quote.startTimeOffsetSecs,
       deadlineBufferSecs: data.quote.deadlineBufferSecs,
       slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
     })
