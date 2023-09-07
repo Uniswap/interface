@@ -88,9 +88,21 @@ export function useToggleModal(modal: ApplicationModal): () => void {
   return useCallback(() => dispatch(setOpenModal(isOpen ? null : modal)), [dispatch, modal, isOpen])
 }
 
-export function useCloseModal(): () => void {
+export function useCloseModal() {
   const dispatch = useAppDispatch()
-  return useCallback(() => dispatch(setOpenModal(null)), [dispatch])
+  const currentlyOpenModal = useAppSelector((state: AppState) => state.application.openModal)
+  return useCallback(
+    (modalToClose?: ApplicationModal) => {
+      if (!modalToClose) {
+        // Close any open modal if no modal is specified.
+        dispatch(setOpenModal(null))
+      } else if (currentlyOpenModal === modalToClose) {
+        // Close the currently open modal if it is the one specified.
+        dispatch(setOpenModal(null))
+      }
+    },
+    [currentlyOpenModal, dispatch]
+  )
 }
 
 export function useOpenModal(modal: ApplicationModal): () => void {
