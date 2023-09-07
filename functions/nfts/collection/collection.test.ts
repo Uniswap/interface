@@ -16,44 +16,53 @@ const collections = [
   },
 ]
 
-test.each(collections)('should inject metadata for valid collections', async (collection) => {
-  const url = 'http://127.0.0.1:3000/nfts/collection/' + collection.address
-  const body = await fetch(new Request(url)).then((res) => res.text())
-  expect(body).toMatchSnapshot()
-  expect(body).toContain(`<meta property="og:title" content="${collection.collectionName} on Uniswap"/>`)
-  expect(body).not.toContain(`<meta property="og:description"`)
-  expect(body).toContain(`<meta property="og:image" content="${collection.image}"/>`)
-  expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
-  expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
-  expect(body).toContain(`<meta property="og:type" content="website"/>`)
-  expect(body).toContain(`<meta property="og:url" content="${url}"/>`)
-  expect(body).toContain(`<meta property="og:image:alt" content="${collection.collectionName} on Uniswap"/>`)
-  expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
-  expect(body).toContain(`<meta property="twitter:title" content="${collection.collectionName} on Uniswap"/>`)
-  expect(body).toContain(`<meta property="twitter:image" content="${collection.image}"/>`)
-  expect(body).toContain(`<meta property="twitter:image:alt" content="${collection.collectionName} on Uniswap"/>`)
-})
-
-const invalidCollections = [
-  'http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545',
-  'http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545//',
+const nonexistentCollections = [
+  {
+    address: '0xed5af388653567af2f388e6224dc7c4b3241c545',
+    collectionName: '0xed5af388653567af2f388e6224dc7c4b3241c545',
+    image: 'http://127.0.0.1:3000/api/image/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545',
+  },
 ]
 
-test.each(invalidCollections)(
-  'should not inject metadata for invalid collection urls',
-  async (url) => {
+test.each([...collections, ...nonexistentCollections])(
+  'should inject metadata for valid collections',
+  async (collection) => {
+    const url = 'http://127.0.0.1:3000/nfts/collection/' + collection.address
     const body = await fetch(new Request(url)).then((res) => res.text())
-    expect(body).not.toContain('og:title')
-    expect(body).not.toContain('og:image')
-    expect(body).not.toContain('og:image:width')
-    expect(body).not.toContain('og:image:height')
-    expect(body).not.toContain('og:type')
-    expect(body).not.toContain('og:url')
-    expect(body).not.toContain('og:image:alt')
-    expect(body).not.toContain('twitter:card')
-    expect(body).not.toContain('twitter:title')
-    expect(body).not.toContain('twitter:image')
-    expect(body).not.toContain('twitter:image:alt')
-  },
-  50000
+    expect(body).toMatchSnapshot()
+    expect(body).toContain(`<meta property="og:title" content="${collection.collectionName} on Uniswap"/>`)
+    expect(body).not.toContain(`<meta property="og:description"`)
+    expect(body).toContain(`<meta property="og:image" content="${collection.image}"/>`)
+    expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
+    expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
+    expect(body).toContain(`<meta property="og:type" content="website"/>`)
+    expect(body).toContain(`<meta property="og:url" content="${url}"/>`)
+    expect(body).toContain(`<meta property="og:image:alt" content="${collection.collectionName} on Uniswap"/>`)
+    expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
+    expect(body).toContain(`<meta property="twitter:title" content="${collection.collectionName} on Uniswap"/>`)
+    expect(body).toContain(`<meta property="twitter:image" content="${collection.image}"/>`)
+    expect(body).toContain(`<meta property="twitter:image:alt" content="${collection.collectionName} on Uniswap"/>`)
+  }
 )
+
+const invalidCollections = [
+  {
+    address: '0xd3adb33f',
+  },
+]
+
+test.each(invalidCollections)('should inject default metadata for nonexistent collections', async (collection) => {
+  const url = 'http://127.0.0.1:3000/nfts/collection/' + collection.address
+  const body = await fetch(new Request(url)).then((res) => res.text())
+  expect(body).not.toContain('og:title')
+  expect(body).not.toContain('og:image')
+  expect(body).not.toContain('og:image:width')
+  expect(body).not.toContain('og:image:height')
+  expect(body).not.toContain('og:type')
+  expect(body).not.toContain('og:url')
+  expect(body).not.toContain('og:image:alt')
+  expect(body).not.toContain('twitter:card')
+  expect(body).not.toContain('twitter:title')
+  expect(body).not.toContain('twitter:image')
+  expect(body).not.toContain('twitter:image:alt')
+})
