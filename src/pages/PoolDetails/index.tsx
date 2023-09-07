@@ -27,7 +27,7 @@ export default function PoolDetailsPage() {
   const token1 = isReversed ? poolData?.token0 : poolData?.token1
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
 
-  // TODO: Add skeleton once designed
+  // TODO(WEB-2814): Add skeleton once designed
   if (loading) return <></>
   if ((!loading && !poolData) || isInvalidPool) return <NotFound />
   return (
