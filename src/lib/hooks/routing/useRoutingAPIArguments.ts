@@ -1,6 +1,5 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { useFotAdjustmentsEnabled } from 'featureFlags/flags/fotAdjustments'
 import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputEnabled } from 'featureFlags/flags/uniswapXExactOutput'
@@ -38,7 +37,6 @@ export function useRoutingAPIArguments({
   const userDisabledUniswapX = useUserDisabledUniswapX()
   const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
   const uniswapXExactOutputEnabled = useUniswapXExactOutputEnabled()
-  const fotAdjustmentsEnabled = useFotAdjustmentsEnabled()
   const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
   return useMemo(
@@ -63,7 +61,6 @@ export function useRoutingAPIArguments({
             userDisabledUniswapX,
             uniswapXEthOutputEnabled,
             uniswapXExactOutputEnabled,
-            fotAdjustmentsEnabled,
             isUniswapXDefaultEnabled,
             inputTax,
             outputTax,
@@ -79,7 +76,6 @@ export function useRoutingAPIArguments({
       uniswapXForceSyntheticQuotes,
       userDisabledUniswapX,
       uniswapXEthOutputEnabled,
-      fotAdjustmentsEnabled,
       isUniswapXDefaultEnabled,
       inputTax,
       outputTax,
