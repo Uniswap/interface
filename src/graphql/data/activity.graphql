@@ -110,6 +110,24 @@ fragment TransactionDetailsParts on TransactionDetails {
   hash
   nonce
   status
+  assetChanges {
+    __typename
+    ... on TokenTransfer {
+      ...TokenTransferParts
+    }
+    ... on NftTransfer {
+      ...NFTTransferParts
+    }
+    ... on TokenApproval {
+      ...TokenApprovalParts
+    }
+    ... on NftApproval {
+      ...NFTApprovalParts
+    }
+    ... on NftApproveForAll {
+      ...NFTApproveForAllParts
+    }
+  }
 }
 
 fragment SwapOrderDetailsParts on SwapOrderDetails {
@@ -130,7 +148,6 @@ fragment SwapOrderDetailsParts on SwapOrderDetails {
 fragment AssetActivityParts on AssetActivity {
   id
   timestamp
-  type
   chain
   details {
     __typename
@@ -139,24 +156,6 @@ fragment AssetActivityParts on AssetActivity {
     }
     ... on SwapOrderDetails {
       ...SwapOrderDetailsParts
-    }
-  }
-  assetChanges {
-    __typename
-    ... on TokenTransfer {
-      ...TokenTransferParts
-    }
-    ... on NftTransfer {
-      ...NFTTransferParts
-    }
-    ... on TokenApproval {
-      ...TokenApprovalParts
-    }
-    ... on NftApproval {
-      ...NFTApprovalParts
-    }
-    ... on NftApproveForAll {
-      ...NFTApproveForAllParts
     }
   }
 }
