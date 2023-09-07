@@ -8,6 +8,7 @@ import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function SpendingDetails({
@@ -38,7 +39,7 @@ export function SpendingDetails({
         <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon16} />
         <Text variant="subheadSmall">
           {formatCurrencyAmount(nativeCurrencyAmount, NumberType.TokenTx)}{' '}
-          {nativeCurrencyInfo?.currency.symbol}
+          {getSymbolDisplayText(nativeCurrencyInfo?.currency.symbol)}
         </Text>
         <Text color="neutral2" loading={!usdValue} variant="subheadSmall">
           ({formatUSDPrice(usdValue)})

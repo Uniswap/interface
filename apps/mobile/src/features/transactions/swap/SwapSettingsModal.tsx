@@ -43,6 +43,7 @@ import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { setSwapProtectionSetting, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { useAppDispatch } from 'wallet/src/state'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 const SLIPPAGE_INCREMENT = 0.1
 
@@ -508,14 +509,14 @@ function BottomLabel({
                 trade.minimumAmountOut(slippageTolerancePercent),
                 NumberType.TokenTx
               ),
-              symbol: trade.outputAmount.currency.symbol,
+              symbol: getSymbolDisplayText(trade.outputAmount.currency.symbol),
             })
           : t('Spend at most {{amount}} {{symbol}}', {
               amount: formatCurrencyAmount(
                 trade.maximumAmountIn(slippageTolerancePercent),
                 NumberType.TokenTx
               ),
-              symbol: trade.inputAmount.currency.symbol,
+              symbol: getSymbolDisplayText(trade.inputAmount.currency.symbol),
             })}
       </Text>
       {showSlippageWarning ? (

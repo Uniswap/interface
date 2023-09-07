@@ -17,7 +17,7 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
+import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function TransferTokenSummaryItem({
@@ -85,7 +85,7 @@ export function TransferTokenSummaryItem({
 
   const translateOptions = {
     what: isCurrency
-      ? (currencyAmount ?? '') + (currencyInfo?.currency?.symbol ?? '')
+      ? (currencyAmount ?? '') + (getSymbolDisplayText(currencyInfo?.currency?.symbol) ?? '')
       : transaction.typeInfo.nftSummaryInfo?.name,
   }
 

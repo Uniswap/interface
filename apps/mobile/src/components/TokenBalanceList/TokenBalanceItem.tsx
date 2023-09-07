@@ -13,6 +13,7 @@ import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface TokenBalanceItemProps {
@@ -44,6 +45,8 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
     isNative: currency.isNative,
     accountHoldsToken: true,
   })
+
+  const shortenedSymbol = getSymbolDisplayText(currency.symbol)
 
   return (
     <ContextMenu
@@ -80,11 +83,11 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           />
           <Flex alignItems="flex-start" flexShrink={1} gap="none">
             <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
-              {currency.name ?? currency.symbol}
+              {currency.name ?? shortenedSymbol}
             </Text>
             <Flex row alignItems="center" gap="spacing8" minHeight={20}>
               <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
-                {`${formatNumber(quantity)}`} {currency.symbol}
+                {`${formatNumber(quantity)}`} {shortenedSymbol}
               </Text>
             </Flex>
           </Flex>

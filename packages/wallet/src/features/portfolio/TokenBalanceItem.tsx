@@ -5,6 +5,7 @@ import { theme } from 'ui/src/theme/restyle'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface TokenBalanceItemProps {
@@ -64,10 +65,11 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           {/* Currency name */}
           <YStack flex={1.5} flexBasis={0}>
             <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
-              {currency.name ?? currency.symbol}
+              {currency.name ?? getSymbolDisplayText(currency.symbol)}
             </Text>
             <Text color="$neutral2" numberOfLines={1} variant="bodyLarge">
-              {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
+              {`${formatNumber(quantity, NumberType.TokenNonTx)}`}{' '}
+              {getSymbolDisplayText(currency.symbol)}
             </Text>
           </YStack>
 

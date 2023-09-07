@@ -9,6 +9,7 @@ import { iconSizes } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface SelectTokenButtonProps {
   showNonZeroBalancesOnly?: boolean
@@ -35,7 +36,7 @@ export function SelectTokenButton({
         <Flex centered row flexDirection="row" gap="spacing4" p="spacing4">
           <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.icon28} />
           <Text color="neutral1" pl="spacing4" variant="buttonLabelLarge">
-            {selectedCurrencyInfo.currency.symbol}
+            {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
           </Text>
           <Chevron color={theme.colors.neutral3} direction="e" />
         </Flex>

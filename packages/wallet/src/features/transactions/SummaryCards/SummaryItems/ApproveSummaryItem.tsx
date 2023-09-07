@@ -14,6 +14,7 @@ import {
   TransactionDetails,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 const INFINITE_AMOUNT = 'INF'
@@ -39,7 +40,9 @@ export function ApproveSummaryItem({
       ? formatNumberOrString(approvalAmount, NumberType.TokenNonTx)
       : ''
 
-  const caption = `${amount ? amount + ' ' : ''}${currencyInfo?.currency.symbol ?? ''}`
+  const caption = `${amount ? amount + ' ' : ''}${
+    getSymbolDisplayText(currencyInfo?.currency.symbol) ?? ''
+  }`
 
   return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
     caption,

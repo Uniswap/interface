@@ -22,6 +22,7 @@ import { dimensions } from 'ui/src/theme/restyle'
 import { formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface BaseReviewProps {
   actionButtonProps: { disabled: boolean; label: string; name: ElementName; onPress: () => void }
@@ -248,7 +249,7 @@ function CurrencyLogoWithLabel({ currencyInfo }: { currencyInfo: CurrencyInfo })
     <Flex centered row gap={gap}>
       <CurrencyLogo currencyInfo={currencyInfo} size={size} />
       <Text color="neutral1" variant="buttonLabelLarge">
-        {currencyInfo.currency.symbol}
+        {getSymbolDisplayText(currencyInfo.currency.symbol)}
       </Text>
     </Flex>
   )

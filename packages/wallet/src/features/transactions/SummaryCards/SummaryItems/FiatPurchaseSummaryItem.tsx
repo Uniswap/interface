@@ -13,6 +13,7 @@ import {
   FiatPurchaseTransactionInfo,
   TransactionDetails,
 } from 'wallet/src/features/transactions/types'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function FiatPurchaseSummaryItem({
@@ -37,7 +38,7 @@ export function FiatPurchaseSummaryItem({
     inputCurrency?.code
   )
 
-  const symbol = outputCurrencyInfo?.currency.symbol ?? t('unknown token')
+  const symbol = getSymbolDisplayText(outputCurrencyInfo?.currency.symbol) ?? t('unknown token')
 
   return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
     caption:

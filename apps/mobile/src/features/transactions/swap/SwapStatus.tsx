@@ -19,7 +19,7 @@ import {
   getOutputAmountFromTrade,
 } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
+import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 type SwapStatusProps = {
   derivedSwapInfo: DerivedSwapInfo
@@ -172,9 +172,9 @@ const getTextFromSwapStatus = (
         'You swapped {{ inputAmount }}{{ inputCurrency }} for {{ outputAmount }}{{ outputCurrency }}.',
         {
           inputAmount,
-          inputCurrency: inputCurrency?.currency.symbol,
+          inputCurrency: getSymbolDisplayText(inputCurrency?.currency.symbol),
           outputAmount,
-          outputCurrency: outputCurrency?.currency.symbol,
+          outputCurrency: getSymbolDisplayText(outputCurrency?.currency.symbol),
         }
       ),
     }

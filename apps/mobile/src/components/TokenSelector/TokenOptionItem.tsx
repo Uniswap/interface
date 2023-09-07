@@ -13,6 +13,7 @@ import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface OptionProps {
   option: TokenOption
@@ -90,7 +91,7 @@ function _TokenOptionItem({
               </Flex>
               <Flex centered row gap="spacing8">
                 <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
-                  {currency.symbol}
+                  {getSymbolDisplayText(currency.symbol)}
                 </Text>
                 {showNetworkPill && <InlineNetworkPill chainId={currency.chainId} />}
               </Flex>

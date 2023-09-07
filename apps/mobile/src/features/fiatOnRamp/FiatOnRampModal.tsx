@@ -47,6 +47,7 @@ import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export type FiatOnRampCurrency = {
@@ -437,7 +438,7 @@ function SelectTokenButton({
           {amount}
         </Text>
         <Text color={textColor} pl="spacing1" variant="bodyLarge">
-          {selectedCurrencyInfo.currency.symbol}
+          {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
         </Text>
         <Chevron color={theme.colors[textColor]} direction="e" height={iconSizes.icon16} />
       </Flex>

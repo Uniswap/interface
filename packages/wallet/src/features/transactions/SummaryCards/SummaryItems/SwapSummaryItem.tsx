@@ -13,7 +13,7 @@ import {
   ExactOutputSwapTransactionInfo,
   TransactionDetails,
 } from 'wallet/src/features/transactions/types'
-import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
+import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 const MAX_SHOW_RETRY_TIME = 15 * ONE_MINUTE_MS
 
@@ -49,7 +49,9 @@ export function SwapSummaryItem({
     const { currency: outputCurrency } = outputCurrencyInfo
     const currencyAmount = getFormattedCurrencyAmount(inputCurrency, inputAmountRaw)
     const otherCurrencyAmount = getFormattedCurrencyAmount(outputCurrency, outputAmountRaw)
-    return `${currencyAmount}${inputCurrency.symbol} → ${otherCurrencyAmount}${outputCurrency.symbol}`
+    return `${currencyAmount}${getSymbolDisplayText(
+      inputCurrency.symbol
+    )} → ${otherCurrencyAmount}${getSymbolDisplayText(outputCurrency.symbol)}`
   }, [inputCurrencyInfo, outputCurrencyInfo, transaction.typeInfo])
 
   // For retrying failed, locally submitted swaps

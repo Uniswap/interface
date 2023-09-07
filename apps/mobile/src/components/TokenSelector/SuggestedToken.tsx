@@ -10,6 +10,7 @@ import {
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 function _SuggestedToken({
   onSelectCurrency,
@@ -38,7 +39,7 @@ function _SuggestedToken({
         borderRadius="roundedFull"
         foregroundColor={theme.colors.neutral1}
         icon={<TokenLogo size={iconSizes.icon28} symbol={currency.symbol} url={logoUrl} />}
-        label={currency.symbol}
+        label={getSymbolDisplayText(currency.symbol)}
         mr="spacing8"
         my="spacing4"
         pl="spacing4"

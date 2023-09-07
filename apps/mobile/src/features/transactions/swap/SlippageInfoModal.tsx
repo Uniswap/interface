@@ -16,6 +16,7 @@ import { fonts } from 'ui/src/theme'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export type SlippageInfoModalProps = {
   trade: Trade<Currency, Currency, TradeType>
@@ -107,7 +108,7 @@ export default function SlippageInfoModal({
               {tradeType === TradeType.EXACT_INPUT ? t('Receive at least') : t('Spend at most')}
             </Text>
             <Text color="neutral1" textAlign="center" variant="subheadSmall">
-              {amount + ' ' + symbol}
+              {amount + ' ' + getSymbolDisplayText(symbol)}
             </Text>
           </Flex>
         </Flex>

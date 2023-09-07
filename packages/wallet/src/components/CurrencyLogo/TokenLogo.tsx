@@ -81,6 +81,7 @@ export function TokenLogo({
             adjustsFontSizeToFit
             color="$neutral1"
             flex={0}
+            minimumFontScale={0.5}
             numberOfLines={1}
             textAlign="center">
             {symbol?.slice(0, 3)}

@@ -19,7 +19,11 @@ import {
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import i18n from 'wallet/src/i18n/i18n'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
-import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
+import {
+  getCurrencyDisplayText,
+  getFormattedCurrencyAmount,
+  getSymbolDisplayText,
+} from 'wallet/src/utils/currency'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
@@ -124,8 +128,8 @@ export const formWrapNotificationTitle = (
   currencyAmountRaw: string,
   unwrapped: boolean
 ): string => {
-  const inputCurrencySymbol = inputCurrency?.symbol
-  const outputCurrencySymbol = outputCurrency?.symbol
+  const inputCurrencySymbol = getSymbolDisplayText(inputCurrency?.symbol)
+  const outputCurrencySymbol = getSymbolDisplayText(outputCurrency?.symbol)
 
   const inputAmount = getFormattedCurrencyAmount(inputCurrency, currencyAmountRaw)
   const outputAmount = getFormattedCurrencyAmount(outputCurrency, currencyAmountRaw)

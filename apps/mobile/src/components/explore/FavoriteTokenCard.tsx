@@ -32,6 +32,7 @@ import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 102
 
@@ -153,7 +154,7 @@ function FavoriteTokenCard({
                   symbol={token?.symbol ?? undefined}
                   url={token?.project?.logoUrl ?? undefined}
                 />
-                <Text variant="bodyLarge">{token?.symbol}</Text>
+                <Text variant="bodyLarge">{getSymbolDisplayText(token?.symbol)}</Text>
               </Flex>
               {isEditing ? (
                 <RemoveButton onPress={onRemove} />
