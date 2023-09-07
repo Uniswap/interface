@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
@@ -48,33 +48,25 @@ export function TransferFormSpeedbumps({
     chainId ?? ChainId.Mainnet
   )
 
+  const shouldWarnSmartContract = isNewRecipient && !isSignerRecipient && isSmartContractAddress
+  const shouldWarnNewAddress = isNewRecipient && !isSignerRecipient && !shouldWarnSmartContract
+
   useEffect(() => {
     setTransferSpeedbump({
-      hasWarning: (isNewRecipient || isSmartContractAddress) && !isSignerRecipient,
+      hasWarning: shouldWarnSmartContract || shouldWarnNewAddress,
       loading: addressLoading,
     })
-  }, [
-    setTransferSpeedbump,
-    isNewRecipient,
-    isSmartContractAddress,
-    addressLoading,
-    isSignerRecipient,
-  ])
+  }, [setTransferSpeedbump, addressLoading, shouldWarnSmartContract, shouldWarnNewAddress])
 
-  const onCloseSmartContractWarning = useCallback(() => {
+  const onCloseWarning = (): void => {
     setShowSpeedbumpModal(false)
-  }, [setShowSpeedbumpModal])
-
-  const onCloseNewRecipientWarning = useCallback(
-    () => setShowSpeedbumpModal(false),
-    [setShowSpeedbumpModal]
-  )
+  }
 
   const displayName = useDisplayName(recipient)
 
   return (
     <>
-      {showSpeedbumpModal && !isSignerRecipient && isSmartContractAddress && isNewRecipient && (
+      {showSpeedbumpModal && shouldWarnSmartContract && (
         <WarningModal
           caption={t(
             'You’re about to send tokens to a special type of address—a smart contract. Double-check it’s the address you intended to send to. If it’s wrong, your tokens could be lost forever.'
@@ -84,11 +76,11 @@ export function TransferFormSpeedbumps({
           modalName={ModalName.SendWarning}
           severity={WarningSeverity.None}
           title={t('Is this a wallet address?')}
-          onClose={onCloseSmartContractWarning}
+          onClose={onCloseWarning}
           onConfirm={onNext}
         />
       )}
-      {showSpeedbumpModal && !isSmartContractAddress && !isSignerRecipient && isNewRecipient && (
+      {showSpeedbumpModal && shouldWarnNewAddress && (
         <WarningModal
           caption={t(
             'You haven’t transacted with this address before. Please confirm that the address is correct before continuing.'
@@ -98,7 +90,7 @@ export function TransferFormSpeedbumps({
           modalName={ModalName.SendWarning}
           severity={WarningSeverity.Medium}
           title={t('New address')}
-          onClose={onCloseNewRecipientWarning}
+          onClose={onCloseWarning}
           onConfirm={onNext}>
           <TransferRecipient
             address={recipient}
