@@ -353,7 +353,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
           {crosshair !== null ? (
             <g>
               <AxisBottom
-                top={height - 1}
+                top={graphHeight - 1}
                 scale={timeScale}
                 stroke={theme.surface3}
                 hideTicks={true}
