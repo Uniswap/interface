@@ -153,6 +153,8 @@ describe('Wallet Dropdown', () => {
       cy.contains('USD')
 
       cy.visit('/?cur=AUD', { featureFlags: [FeatureFlag.currencyConversion] })
+      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('wallet-settings')).click()
       cy.contains('AUD')
     })
 
@@ -164,11 +166,11 @@ describe('Wallet Dropdown', () => {
 
       cy.get(getTestSelector('local-currency-settings-button')).click()
       cy.get(getTestSelector('wallet-local-currency-item')).contains('AUD').click({ force: true })
-      cy.location('hash').should('match', /\?cur=AUD$/)
+      cy.location('search').should('match', /\?cur=AUD$/)
       cy.contains('AUD')
 
       cy.get(getTestSelector('wallet-local-currency-item')).contains('USD').click({ force: true })
-      cy.location('hash').should('match', /\?cur=USD$/)
+      cy.location('search').should('match', /\?cur=USD$/)
       cy.contains('USD')
     })
   })
