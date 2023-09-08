@@ -5,7 +5,6 @@ import { sendAnalyticsEvent } from 'analytics'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
-import { uniwalletWCV2ConnectConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { ConnectionType } from 'connection/types'
 import { UniwalletConnect as UniwalletConnectV2 } from 'connection/WalletConnectV2'
@@ -46,15 +45,7 @@ export default function UniwalletModal() {
   const open =
     !isIOS &&
     activationState.status === ActivationStatus.PENDING &&
-    activationState.connection.type === ConnectionType.UNISWAP_WALLET_V2 &&
     !!uri
-
-  useEffect(() => {
-    const connectorV2 = uniwalletWCV2ConnectConnection.connector as WalletConnectv2
-    connectorV2.events.addListener(UniwalletConnectV2.UNI_URI_AVAILABLE, (uri: string) => {
-      uri && setUri(uri)
-    })
-  }, [])
 
   useEffect(() => {
     if (open) sendAnalyticsEvent('Uniswap wallet modal opened')

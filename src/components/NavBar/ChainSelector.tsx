@@ -45,8 +45,6 @@ function useWalletSupportedChains(): ChainId[] {
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
       return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
-    case ConnectionType.UNISWAP_WALLET_V2:
-      return UniWalletSupportedChains
     default:
       return NETWORK_SELECTOR_CHAINS
   }
