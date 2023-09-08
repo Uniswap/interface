@@ -91,7 +91,7 @@ function getButtonBorderRadius(size: ButtonSize): keyof Theme['borderRadii'] {
     case ButtonSize.Medium:
       return 'rounded16'
     case ButtonSize.Small:
-      return 'rounded8'
+      return 'rounded12'
   }
 }
 

@@ -366,7 +366,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                           "alignItems": "center",
                           "backgroundColor": "transparent",
                           "borderColor": "#2222220D",
-                          "borderRadius": 8,
+                          "borderRadius": 12,
                           "borderWidth": 1,
                           "display": "flex",
                           "opacity": 1,
