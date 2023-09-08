@@ -2,13 +2,10 @@ import { timeDay, timeHour, TimeInterval, timeMinute, timeMonth } from 'd3'
 import { TimePeriod } from 'graphql/data/util'
 
 const fiveMinutes = timeMinute.every(5)
-// Since 5 is valid input for timeMinute.every, fiveMinutes should never be null
-if (fiveMinutes === null) {
-  throw new Error('Invalid minute interval')
-}
-
 const TIME_PERIOD_INTERVAL_TABLE: Record<TimePeriod, { interval: TimeInterval; step: number }> = {
-  [TimePeriod.HOUR]: { interval: fiveMinutes, step: 2 }, // spaced 10 minutes apart at times that end in 0 or 5
+  [TimePeriod.HOUR]: fiveMinutes
+    ? { interval: fiveMinutes, step: 2 } // spaced 10 minutes apart at times that end in 0 or 5
+    : { interval: timeMinute, step: 10 }, // spaced 10 minutes apart, backup incase fiveMinutes doesn't initialize
   [TimePeriod.DAY]: { interval: timeHour, step: 4 }, // spaced 4 hours apart
   [TimePeriod.WEEK]: { interval: timeDay, step: 1 }, // spaced 1 day apart
   [TimePeriod.MONTH]: { interval: timeDay, step: 7 }, // spaced 1 week apart
