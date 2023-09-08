@@ -22,29 +22,27 @@ class MnemonicConfirmationViewModel(
   private val focusedIndex = MutableStateFlow(0)
   private val selectedWords = MutableStateFlow<List<String?>>(emptyList())
 
-  // Displays simple UI when phrase is too large
-  private val _longPhrase = MutableStateFlow("")
-  val longPhrase = _longPhrase.asStateFlow()
+  val displayWords: StateFlow<List<MnemonicWordUiState>> =
+    combine(focusedIndex, selectedWords) { focusedIndexValue, words ->
+      words.mapIndexed { index, word ->
+        MnemonicWordUiState(
+          num = index + 1,
+          text = word ?: "",
+          focused = index == focusedIndexValue,
+          hasError = word != null && word != sourceWords[index],
+        )
+      }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
-  val displayWords: StateFlow<List<MnemonicWordUiState>> = combine(focusedIndex, selectedWords) { focusedIndexValue, words ->
-    words.mapIndexed { index, word ->
-      MnemonicWordUiState(
-        num = index + 1,
-        text = word ?: "",
-        focused = index == focusedIndexValue,
-        hasError = word != null && word != sourceWords[index],
-      )
-    }
-  }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-
-  val wordBankList: StateFlow<List<MnemonicWordBankCellUiState>> = combine(focusedIndex, selectedWords) { focusedIndexValue, words ->
-    shuffledWords.map { shuffledWord ->
-      MnemonicWordBankCellUiState(
-        text = shuffledWord,
-        used = words.contains(shuffledWord),
-      )
-    }
-  }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+  val wordBankList: StateFlow<List<MnemonicWordBankCellUiState>> =
+    combine(focusedIndex, selectedWords) { focusedIndexValue, words ->
+      shuffledWords.map { shuffledWord ->
+        MnemonicWordBankCellUiState(
+          text = shuffledWord,
+          used = words.contains(shuffledWord),
+        )
+      }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
   private val _completed = MutableStateFlow(false)
   val completed = _completed.asStateFlow()
@@ -58,14 +56,9 @@ class MnemonicConfirmationViewModel(
 
       ethersRs.retrieveMnemonic(mnemonicId)?.let { mnemonic ->
         val words = mnemonic.split(" ")
-        if (words.size > PHRASE_SIZE_MAX) {
-          _longPhrase.update { mnemonic }
-          _completed.update { true }
-        } else {
-          sourceWords = words
-          shuffledWords = words.shuffled()
-          selectedWords.update { List(words.size) { null } }
-        }
+        sourceWords = words
+        shuffledWords = words.shuffled()
+        selectedWords.update { List(words.size) { null } }
       }
     }
   }
@@ -75,9 +68,9 @@ class MnemonicConfirmationViewModel(
     shuffledWords = emptyList()
     focusedIndex.update { 0 }
     selectedWords.update { emptyList() }
-    _longPhrase.update { "" }
     _completed.update { false }
   }
+
   fun handleWordRowClick(word: MnemonicWordUiState) {
     val index = displayWords.value.indexOf(word)
     focusedIndex.update { index }
@@ -108,9 +101,5 @@ class MnemonicConfirmationViewModel(
     if (sourceWords == words) {
       _completed.update { true }
     }
-  }
-
-  companion object {
-    private const val PHRASE_SIZE_MAX = 12
   }
 }

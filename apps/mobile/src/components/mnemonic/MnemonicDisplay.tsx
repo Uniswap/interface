@@ -1,15 +1,21 @@
 import React from 'react'
-import { requireNativeComponent, ViewProps } from 'react-native'
+import { requireNativeComponent, StyleSheet, ViewProps } from 'react-native'
 
 interface NativeMnemonicDisplayProps {
   mnemonicId: Address
-  height: number
 }
 
 const NativeMnemonicDisplay = requireNativeComponent<NativeMnemonicDisplayProps>('MnemonicDisplay')
 
 type MnemonicDisplayProps = ViewProps & NativeMnemonicDisplayProps
 
+const styles = StyleSheet.create({
+  mnemonicDisplay: {
+    flex: 1,
+    flexGrow: 1,
+  },
+})
+
 export function MnemonicDisplay(props: MnemonicDisplayProps): JSX.Element {
-  return <NativeMnemonicDisplay style={{ height: props.height }} {...props} />
+  return <NativeMnemonicDisplay style={styles.mnemonicDisplay} {...props} />
 }

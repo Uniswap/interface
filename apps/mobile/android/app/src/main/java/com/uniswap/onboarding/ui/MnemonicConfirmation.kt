@@ -30,7 +30,6 @@ fun MnemonicConfirmation(
   val displayedWords by viewModel.displayWords.collectAsState()
   val wordBankList by viewModel.wordBankList.collectAsState()
   val completed by viewModel.completed.collectAsState()
-  val longPhrase by viewModel.longPhrase.collectAsState()
 
   LaunchedEffect(mnemonicId) {
     viewModel.setup(mnemonicId)
@@ -48,21 +47,17 @@ fun MnemonicConfirmation(
   ) {
     val showCompact = maxHeight < SCREEN_HEIGHT_BREAKPOINT.dp
 
-    if (longPhrase.isNotBlank()) {
-      MnemonicLongPhraseGroup(longPhrase)
-    } else {
-      Column(
-        modifier = Modifier
-          .fillMaxSize()
-          .verticalScroll(rememberScrollState())
-      ) {
-        MnemonicWordsGroup(words = displayedWords, showCompact = showCompact) {
-          viewModel.handleWordRowClick(it)
-        }
-        Spacer(modifier = Modifier.height(UniswapTheme.spacing.spacing24))
-        MnemonicWordBank(words = wordBankList, showCompact = showCompact) {
-          viewModel.handleWordBankClick(it)
-        }
+    Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+    ) {
+      MnemonicWordsGroup(words = displayedWords, showCompact = showCompact) {
+        viewModel.handleWordRowClick(it)
+      }
+      Spacer(modifier = Modifier.height(UniswapTheme.spacing.spacing24))
+      MnemonicWordBank(words = wordBankList, showCompact = showCompact) {
+        viewModel.handleWordBankClick(it)
       }
     }
   }

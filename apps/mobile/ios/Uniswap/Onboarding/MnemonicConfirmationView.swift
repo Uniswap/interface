@@ -56,9 +56,6 @@ struct MnemonicConfirmation: View {
       props.mnemonicWords = mnemonic.components(separatedBy: " ")
       props.scrambledWords = mnemonic.components(separatedBy: " ").shuffled()
     }
-    if (props.mnemonicWords.count > 12) {
-      props.onConfirmComplete([:])
-    }
   }
   
   func onSuggestionTapped(word: String) {
@@ -92,23 +89,13 @@ struct MnemonicConfirmation: View {
   }
   
   var body: some View {
+    let end = props.mnemonicWords.count - 1
+    let middle = end / 2
+    
     VStack(alignment: HorizontalAlignment.leading, spacing: 0) {
-      if (props.mnemonicWords.count > 12) {
-        Text(props.mnemonicWords.joined(separator: " "))
-          .font(Font(UIFont(name: "Basel-Book", size: 16)!))
-          .multilineTextAlignment(TextAlignment.center)
-          .padding(EdgeInsets(top: 20, leading: 24, bottom: 20, trailing: 24))
-          .foregroundColor(Colors.neutral1)
-          .background(AnyView(
-            RoundedRectangle(cornerRadius: 100, style: .continuous)
-              .fill(Colors.surface2)
-          ))
-          .frame(alignment: Alignment.center)
-          .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-      } else {
         HStack(alignment: VerticalAlignment.center, spacing: 12) {
           VStack(alignment: .leading, spacing: 12) {
-            ForEach((0...5), id: \.self) {index in
+            ForEach((0...middle), id: \.self) {index in
               MnemonicTextField(index: index + 1,
                                 initialText: props.typedWords[index],
                                 shouldShowSmallText: props.shouldShowSmallText,
@@ -119,7 +106,7 @@ struct MnemonicConfirmation: View {
             }
           }.frame(maxWidth: .infinity)
           VStack(alignment: .leading, spacing: 12) {
-            ForEach((6...11), id: \.self) {index in
+            ForEach((middle + 1...end), id: \.self) {index in
               MnemonicTextField(index: index + 1,
                                 initialText: props.typedWords[index],
                                 shouldShowSmallText: props.shouldShowSmallText,
@@ -139,7 +126,6 @@ struct MnemonicConfirmation: View {
                                  shouldShowSmallText: props.shouldShowSmallText)
         .frame(maxWidth: .infinity)
         .padding([.top, .leading, .trailing], 24)
-      }
     }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
   }
 }

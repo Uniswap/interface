@@ -25,14 +25,14 @@ struct MnemonicTextField: View {
   var initialText = ""
   var shouldShowSmallText: Bool
   var onFieldTapped: ((Int) -> Void)?
-  var focusState: InputFocusState = InputFocusState.notFocused
+  var focusState: InputFocusState
   
   
   init(index: Int,
        initialText: String,
-       shouldShowSmallText: Bool,
-       focusState: InputFocusState,
-       onFieldTapped: @escaping (Int) -> Void
+       shouldShowSmallText: Bool = false,
+       focusState: InputFocusState = InputFocusState.notFocused,
+       onFieldTapped: ((Int) -> Void)? = nil
   ) {
     self.index = index
     self.initialText = initialText
@@ -79,14 +79,14 @@ struct MnemonicTextField: View {
       Text(String(index)).cornerRadius(16)
         .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
         .foregroundColor(Colors.neutral3)
-        .padding(shouldShowSmallText ? EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16) : EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
+        .padding(shouldShowSmallText ? EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 12) : EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 12))
         .frame(alignment: Alignment.leading)
       
       Text(initialText)
         .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
         .multilineTextAlignment(TextAlignment.leading)
         .foregroundColor(Colors.neutral1)
-        .padding(shouldShowSmallText ? EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 16) : EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
+        .padding(shouldShowSmallText ? EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 16) : EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 16))
         .frame(maxWidth: .infinity, alignment: Alignment.leading)
     }
     .background(getLabelBackground(focusState: focusState))

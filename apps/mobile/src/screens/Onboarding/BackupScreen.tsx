@@ -130,37 +130,47 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const hasCloudBackup = activeAccountBackups?.some((backup) => backup === BackupType.Cloud)
   const hasManualBackup = activeAccountBackups?.some((backup) => backup === BackupType.Manual)
 
+  const isCreatingNew = params?.importType === ImportType.CreateNew
+  const screenTitle = isCreatingNew
+    ? t('Choose a backup for your wallet')
+    : t('Back up your wallet')
+  const options = [
+    <OptionCard
+      blurb={t('Safe, simple, and all you need to save is your password.')}
+      disabled={hasCloudBackup}
+      elementName={ElementName.AddCloudBackup}
+      icon={
+        <Icons.OSDynamicCloudIcon
+          color={theme.colors.accent1}
+          height={theme.iconSizes.icon16}
+          width={theme.iconSizes.icon16}
+        />
+      }
+      title={IS_ANDROID ? t('Backup with Google Drive') : t('Backup with iCloud')}
+      onPress={onPressCloudBackup}
+    />,
+  ]
+  if (isCreatingNew) {
+    options.push(
+      <OptionCard
+        blurb={t('Top-notch security with no third parties. You’re in control.')}
+        disabled={hasManualBackup}
+        elementName={ElementName.AddManualBackup}
+        icon={<PaperIcon color={theme.colors.accent1} height={theme.iconSizes.icon16} />}
+        title={t('Backup with recovery phrase')}
+        onPress={onPressManualBackup}
+      />
+    )
+  }
+
   return (
     <OnboardingScreen
       subtitle={t(
         'Remember, backups are your lifeline. They’re your ticket back in if something goes wrong.'
       )}
-      title={t('Choose a backup for your wallet')}>
+      title={screenTitle}>
       <Flex grow justifyContent="space-between">
-        <Flex gap="$spacing12">
-          <OptionCard
-            blurb={t('Safe, simple, and all you need to save is your password.')}
-            disabled={hasCloudBackup}
-            elementName={ElementName.AddCloudBackup}
-            icon={
-              <Icons.OSDynamicCloudIcon
-                color={theme.colors.accent1}
-                height={theme.iconSizes.icon16}
-                width={theme.iconSizes.icon16}
-              />
-            }
-            title={IS_ANDROID ? t('Backup with Google Drive') : t('Backup with iCloud')}
-            onPress={onPressCloudBackup}
-          />
-          <OptionCard
-            blurb={t('Top-notch security with no third parties. You’re in control.')}
-            disabled={hasManualBackup}
-            elementName={ElementName.AddManualBackup}
-            icon={<PaperIcon color={theme.colors.accent1} height={theme.iconSizes.icon16} />}
-            title={t('Backup with recovery phrase')}
-            onPress={onPressManualBackup}
-          />
-        </Flex>
+        <Flex gap="$spacing12">{options}</Flex>
         <Flex gap="$spacing12" justifyContent="flex-end">
           <TouchableArea alignSelf="center" py="none" onPress={onPressEducationButton}>
             <Flex centered row gap="$spacing4">

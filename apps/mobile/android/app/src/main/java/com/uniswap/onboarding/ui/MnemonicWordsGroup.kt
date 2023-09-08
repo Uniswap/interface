@@ -18,7 +18,7 @@ fun MnemonicWordsGroup(
   words: List<MnemonicWordUiState>,
   columnCount: Int = DEFAULT_COLUMN_COUNT,
   showCompact: Boolean = false,
-  onClick: (word: MnemonicWordUiState) -> Unit = {},
+  onClick: ((word: MnemonicWordUiState) -> Unit)? = null,
 ) {
   Row(
     modifier = modifier

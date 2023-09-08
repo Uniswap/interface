@@ -15,7 +15,7 @@ fun MnemonicWordsColumn(
   modifier: Modifier = Modifier,
   words: List<MnemonicWordUiState>,
   showCompact: Boolean = false,
-  onClick: (word: MnemonicWordUiState) -> Unit = {},
+  onClick: ((word: MnemonicWordUiState) -> Unit)? = null,
 ) {
   Column(
     modifier = modifier,
@@ -24,9 +24,11 @@ fun MnemonicWordsColumn(
     ),
   ) {
     words.forEachIndexed { index, word ->
-      MnemonicWordCell(word = word, showCompact = showCompact) {
-        onClick(word)
+
+      val onWordClick = onClick?.let {
+        { it(word) }
       }
+      MnemonicWordCell(word = word, showCompact = showCompact, onClick = onWordClick)
     }
   }
 }

@@ -131,17 +131,14 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             />
           )}
           <Flex grow justifyContent="space-between">
-            <Flex mx="$spacing16">
+            <Flex grow>
               {seedWarningAcknowledged ? (
-                <MnemonicDisplay
-                  height={mnemonicDisplayHeight ?? DEFAULT_MNEMONIC_DISPLAY_HEIGHT}
-                  mnemonicId={mnemonicId}
-                />
+                <MnemonicDisplay mnemonicId={mnemonicId} />
               ) : (
                 <HiddenMnemonicWordView />
               )}
             </Flex>
-            <Flex grow justifyContent="flex-end">
+            <Flex justifyContent="flex-end">
               <Button testID={ElementName.Next} onPress={nextView}>
                 {t('Continue')}
               </Button>

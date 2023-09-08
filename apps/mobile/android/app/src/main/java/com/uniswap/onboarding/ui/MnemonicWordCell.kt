@@ -27,7 +27,7 @@ fun MnemonicWordCell(
   modifier: Modifier = Modifier,
   word: MnemonicWordUiState,
   showCompact: Boolean = false,
-  onClick: () -> Unit = {},
+  onClick: (() -> Unit)? = null,
 ) {
   val textStyle =
     if (showCompact) UniswapTheme.typography.bodySmall else UniswapTheme.typography.bodyLarge
@@ -43,11 +43,12 @@ fun MnemonicWordCell(
   } else if (word.focused) {
     rowModifier = rowModifier.border(1.dp, UniswapTheme.colors.accent1, shape)
   }
-
+  onClick?.let {
+    rowModifier = rowModifier.clickable { it() }
+  }
 
   Row(
     modifier = rowModifier
-      .clickable { onClick() }
       .padding(horizontal = if (showCompact) UniswapTheme.spacing.spacing12 else UniswapTheme.spacing.spacing16)
       .padding(vertical = if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12)
   ) {

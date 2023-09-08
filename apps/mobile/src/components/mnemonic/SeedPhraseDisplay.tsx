@@ -1,14 +1,9 @@
-import { useResponsiveProp } from '@shopify/restyle'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePrevious } from 'react-native-wagmi-charts'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout/Flex'
-import {
-  DEFAULT_MNEMONIC_DISPLAY_HEIGHT,
-  FULL_MNEMONIC_DISPLAY_HEIGHT,
-} from 'src/components/mnemonic/constants'
 import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
@@ -70,22 +65,14 @@ export function SeedPhraseDisplay({
     return () => listener?.remove()
   }, [showSeedPhrase])
 
-  const mnemonicDisplayHeight = useResponsiveProp({
-    xs: DEFAULT_MNEMONIC_DISPLAY_HEIGHT,
-    sm: FULL_MNEMONIC_DISPLAY_HEIGHT,
-  })
-
   return (
     <>
       {showSeedPhrase ? (
-        <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="spacing16">
-          <Flex grow mx="spacing16" my="spacing12">
-            <MnemonicDisplay
-              height={mnemonicDisplayHeight ?? DEFAULT_MNEMONIC_DISPLAY_HEIGHT}
-              mnemonicId={mnemonicId}
-            />
+        <Flex grow gap="none" mt="spacing16">
+          <Flex grow pt="spacing16" px="spacing16">
+            <MnemonicDisplay mnemonicId={mnemonicId} />
           </Flex>
-          <Flex justifyContent="center">
+          <Flex borderTopColor="surface3" borderTopWidth={1} pt="spacing12" px="spacing16">
             <Button
               emphasis={ButtonEmphasis.Secondary}
               label={t('Hide recovery phrase')}

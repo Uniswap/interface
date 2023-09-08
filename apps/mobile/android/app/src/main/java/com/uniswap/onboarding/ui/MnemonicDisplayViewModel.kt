@@ -14,10 +14,6 @@ class MnemonicDisplayViewModel(
   private val _words = MutableStateFlow<List<MnemonicWordUiState>>(emptyList())
   val words = _words.asStateFlow()
 
-  // Displays simple UI when phrase is too large
-  private val _longPhrase = MutableStateFlow("")
-  val longPhrase = _longPhrase.asStateFlow()
-
   private var currentMnemonicId = ""
 
   fun setup(mnemonicId: String) {
@@ -27,16 +23,12 @@ class MnemonicDisplayViewModel(
 
       ethersRs.retrieveMnemonic(mnemonicId)?.let { mnemonic ->
         val phraseList = mnemonic.split(" ")
-        if (phraseList.size > PHRASE_SIZE_MAX) {
-          _longPhrase.update { mnemonic }
-        } else {
-          _words.update {
-            phraseList.mapIndexed { index, phrase ->
-              MnemonicWordUiState(
-                num = index + 1,
-                text = phrase,
-              )
-            }
+        _words.update {
+          phraseList.mapIndexed { index, phrase ->
+            MnemonicWordUiState(
+              num = index + 1,
+              text = phrase,
+            )
           }
         }
       }
@@ -45,10 +37,5 @@ class MnemonicDisplayViewModel(
 
   private fun reset() {
     _words.update { emptyList() }
-    _longPhrase.update { "" }
-  }
-
-  companion object {
-     private const val PHRASE_SIZE_MAX = 12
   }
 }
