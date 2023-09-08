@@ -556,134 +556,143 @@ exports[`SearchPopularTokens renders without error 2`] = `
       style={null}
     >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
+        actions={
+          [
+            {
+              "onPress": [Function],
+              "systemIcon": "heart.fill",
+              "title": "Remove favorite",
+            },
+            {
+              "onPress": [Function],
+              "systemIcon": "arrow.2.squarepath",
+              "title": "Swap",
+            },
+            {
+              "onPress": [Function],
+              "systemIcon": "square.and.arrow.up",
+              "title": "Share",
+            },
+          ]
         }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        hitSlop={
-          {
-            "bottom": 5,
-            "left": 5,
-            "right": 5,
-            "top": 5,
-          }
-        }
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "display": "flex",
-            "opacity": 1,
-          }
-        }
-        testID="search-token-item"
+        onPress={[Function]}
       >
         <View
-          sentry-label="Flex"
-          style={
-            [
-              {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "paddingHorizontal": 8,
-                "paddingVertical": 12,
-              },
-            ]
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
           }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={
+            {
+              "bottom": 5,
+              "left": 5,
+              "right": 5,
+              "top": 5,
+            }
+          }
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "display": "flex",
+              "opacity": 1,
+            }
+          }
+          testID="search-token-item"
         >
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "flexDirection": "column",
-                "height": 40,
-                "justifyContent": "center",
-                "width": 40,
-              }
-            }
-          >
-            <Image
-              source={
-                {
-                  "uri": "https://loremflickr.com/640/480",
-                }
-              }
-              style={
-                [
-                  {
-                    "resizeMode": "contain",
-                  },
-                  {
-                    "backgroundColor": "#2222220D",
-                    "borderColor": "#2222220D",
-                    "borderRadius": 20,
-                    "borderWidth": 0.5,
-                    "height": 40,
-                    "width": 40,
-                  },
-                ]
-              }
-            />
-          </View>
-          <View
-            style={
-              [
-                {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 12,
-                  "width": 12,
-                },
-              ]
-            }
-          />
           <View
             sentry-label="Flex"
             style={
               [
                 {
-                  "alignItems": "flex-start",
+                  "alignItems": "center",
                   "display": "flex",
-                  "flexDirection": "column",
-                  "flexShrink": 1,
+                  "flexDirection": "row",
                   "justifyContent": "flex-start",
+                  "paddingHorizontal": 8,
+                  "paddingVertical": 12,
                 },
               ]
             }
           >
             <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "column",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "width": 40,
+                }
+              }
+            >
+              <Image
+                source={
+                  {
+                    "uri": "https://loremflickr.com/640/480",
+                  }
+                }
+                style={
+                  [
+                    {
+                      "resizeMode": "contain",
+                    },
+                    {
+                      "backgroundColor": "#2222220D",
+                      "borderColor": "#2222220D",
+                      "borderRadius": 20,
+                      "borderWidth": 0.5,
+                      "height": 40,
+                      "width": 40,
+                    },
+                  ]
+                }
+              />
+            </View>
+            <View
+              style={
+                [
+                  {
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 12,
+                    "width": 12,
+                  },
+                ]
+              }
+            />
+            <View
               sentry-label="Flex"
               style={
                 [
                   {
-                    "alignItems": "center",
+                    "alignItems": "flex-start",
                     "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "center",
+                    "flexDirection": "column",
+                    "flexShrink": 1,
+                    "justifyContent": "flex-start",
                   },
                 ]
               }
@@ -693,11 +702,70 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 style={
                   [
                     {
-                      "alignItems": "stretch",
+                      "alignItems": "center",
                       "display": "flex",
-                      "flexDirection": "column",
-                      "flexShrink": 1,
-                      "justifyContent": "flex-start",
+                      "flexDirection": "row",
+                      "justifyContent": "center",
+                    },
+                  ]
+                }
+              >
+                <View
+                  sentry-label="Flex"
+                  style={
+                    [
+                      {
+                        "alignItems": "stretch",
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                        "justifyContent": "flex-start",
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#222222",
+                          "display": "flex",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 19,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                      ]
+                    }
+                  >
+                    Ethereum
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={
+                  [
+                    {
+                      "display": "flex",
+                      "flexGrow": 0,
+                      "flexShrink": 0,
+                      "height": 0,
+                    },
+                  ]
+                }
+              />
+              <View
+                sentry-label="Flex"
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "display": "flex",
+                      "flexDirection": "row",
+                      "justifyContent": "center",
                     },
                   ]
                 }
@@ -709,64 +777,19 @@ exports[`SearchPopularTokens renders without error 2`] = `
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "color": "#7D7D7D",
                         "display": "flex",
                         "fontFamily": "Basel-Book",
-                        "fontSize": 19,
+                        "fontSize": 17,
                         "fontWeight": "400",
                         "lineHeight": 24,
                       },
                     ]
                   }
                 >
-                  Ethereum
+                  ETH
                 </Text>
               </View>
-            </View>
-            <View
-              style={
-                [
-                  {
-                    "display": "flex",
-                    "flexGrow": 0,
-                    "flexShrink": 0,
-                    "height": 0,
-                  },
-                ]
-              }
-            />
-            <View
-              sentry-label="Flex"
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "center",
-                  },
-                ]
-              }
-            >
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#7D7D7D",
-                      "display": "flex",
-                      "fontFamily": "Basel-Book",
-                      "fontSize": 17,
-                      "fontWeight": "400",
-                      "lineHeight": 24,
-                    },
-                  ]
-                }
-              >
-                ETH
-              </Text>
             </View>
           </View>
         </View>
@@ -778,134 +801,143 @@ exports[`SearchPopularTokens renders without error 2`] = `
       style={null}
     >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
+        actions={
+          [
+            {
+              "onPress": [Function],
+              "systemIcon": "heart",
+              "title": "Favorite token",
+            },
+            {
+              "onPress": [Function],
+              "systemIcon": "arrow.2.squarepath",
+              "title": "Swap",
+            },
+            {
+              "onPress": [Function],
+              "systemIcon": "square.and.arrow.up",
+              "title": "Share",
+            },
+          ]
         }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        hitSlop={
-          {
-            "bottom": 5,
-            "left": 5,
-            "right": 5,
-            "top": 5,
-          }
-        }
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "display": "flex",
-            "opacity": 1,
-          }
-        }
-        testID="search-token-item"
+        onPress={[Function]}
       >
         <View
-          sentry-label="Flex"
-          style={
-            [
-              {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-                "paddingHorizontal": 8,
-                "paddingVertical": 12,
-              },
-            ]
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
           }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={
+            {
+              "bottom": 5,
+              "left": 5,
+              "right": 5,
+              "top": 5,
+            }
+          }
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "display": "flex",
+              "opacity": 1,
+            }
+          }
+          testID="search-token-item"
         >
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "flexDirection": "column",
-                "height": 40,
-                "justifyContent": "center",
-                "width": 40,
-              }
-            }
-          >
-            <Image
-              source={
-                {
-                  "uri": "https://loremflickr.com/640/480",
-                }
-              }
-              style={
-                [
-                  {
-                    "resizeMode": "contain",
-                  },
-                  {
-                    "backgroundColor": "#2222220D",
-                    "borderColor": "#2222220D",
-                    "borderRadius": 20,
-                    "borderWidth": 0.5,
-                    "height": 40,
-                    "width": 40,
-                  },
-                ]
-              }
-            />
-          </View>
-          <View
-            style={
-              [
-                {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 12,
-                  "width": 12,
-                },
-              ]
-            }
-          />
           <View
             sentry-label="Flex"
             style={
               [
                 {
-                  "alignItems": "flex-start",
+                  "alignItems": "center",
                   "display": "flex",
-                  "flexDirection": "column",
-                  "flexShrink": 1,
+                  "flexDirection": "row",
                   "justifyContent": "flex-start",
+                  "paddingHorizontal": 8,
+                  "paddingVertical": 12,
                 },
               ]
             }
           >
             <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "column",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "width": 40,
+                }
+              }
+            >
+              <Image
+                source={
+                  {
+                    "uri": "https://loremflickr.com/640/480",
+                  }
+                }
+                style={
+                  [
+                    {
+                      "resizeMode": "contain",
+                    },
+                    {
+                      "backgroundColor": "#2222220D",
+                      "borderColor": "#2222220D",
+                      "borderRadius": 20,
+                      "borderWidth": 0.5,
+                      "height": 40,
+                      "width": 40,
+                    },
+                  ]
+                }
+              />
+            </View>
+            <View
+              style={
+                [
+                  {
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 12,
+                    "width": 12,
+                  },
+                ]
+              }
+            />
+            <View
               sentry-label="Flex"
               style={
                 [
                   {
-                    "alignItems": "center",
+                    "alignItems": "flex-start",
                     "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "center",
+                    "flexDirection": "column",
+                    "flexShrink": 1,
+                    "justifyContent": "flex-start",
                   },
                 ]
               }
@@ -915,80 +947,49 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 style={
                   [
                     {
-                      "alignItems": "stretch",
+                      "alignItems": "center",
                       "display": "flex",
-                      "flexDirection": "column",
-                      "flexShrink": 1,
-                      "justifyContent": "flex-start",
+                      "flexDirection": "row",
+                      "justifyContent": "center",
                     },
                   ]
                 }
               >
-                <Text
-                  allowFontScaling={true}
-                  maxFontSizeMultiplier={1.4}
-                  numberOfLines={1}
+                <View
+                  sentry-label="Flex"
                   style={
                     [
                       {
-                        "color": "#222222",
+                        "alignItems": "stretch",
                         "display": "flex",
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 19,
-                        "fontWeight": "400",
-                        "lineHeight": 24,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                        "justifyContent": "flex-start",
                       },
                     ]
                   }
                 >
-                  USD Coin
-                </Text>
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#222222",
+                          "display": "flex",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 19,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                      ]
+                    }
+                  >
+                    USD Coin
+                  </Text>
+                </View>
               </View>
-            </View>
-            <View
-              style={
-                [
-                  {
-                    "display": "flex",
-                    "flexGrow": 0,
-                    "flexShrink": 0,
-                    "height": 0,
-                  },
-                ]
-              }
-            />
-            <View
-              sentry-label="Flex"
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "center",
-                  },
-                ]
-              }
-            >
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#7D7D7D",
-                      "display": "flex",
-                      "fontFamily": "Basel-Book",
-                      "fontSize": 17,
-                      "fontWeight": "400",
-                      "lineHeight": 24,
-                    },
-                  ]
-                }
-              >
-                USDC
-              </Text>
               <View
                 style={
                   [
@@ -996,18 +997,20 @@ exports[`SearchPopularTokens renders without error 2`] = `
                       "display": "flex",
                       "flexGrow": 0,
                       "flexShrink": 0,
-                      "height": 8,
-                      "width": 8,
+                      "height": 0,
                     },
                   ]
                 }
               />
               <View
+                sentry-label="Flex"
                 style={
                   [
                     {
+                      "alignItems": "center",
                       "display": "flex",
-                      "flexShrink": 1,
+                      "flexDirection": "row",
+                      "justifyContent": "center",
                     },
                   ]
                 }
@@ -1019,7 +1022,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
                   style={
                     [
                       {
-                        "color": "#CECECE",
+                        "color": "#7D7D7D",
                         "display": "flex",
                         "fontFamily": "Basel-Book",
                         "fontSize": 17,
@@ -1029,8 +1032,51 @@ exports[`SearchPopularTokens renders without error 2`] = `
                     ]
                   }
                 >
-                  0xA0b8...eB48
+                  USDC
                 </Text>
+                <View
+                  style={
+                    [
+                      {
+                        "display": "flex",
+                        "flexGrow": 0,
+                        "flexShrink": 0,
+                        "height": 8,
+                        "width": 8,
+                      },
+                    ]
+                  }
+                />
+                <View
+                  style={
+                    [
+                      {
+                        "display": "flex",
+                        "flexShrink": 1,
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#CECECE",
+                          "display": "flex",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                      ]
+                    }
+                  >
+                    0xA0b8...eB48
+                  </Text>
+                </View>
               </View>
             </View>
           </View>

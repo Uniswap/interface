@@ -1,7 +1,9 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
+import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -13,7 +15,7 @@ import {
   TokenSearchResult,
 } from 'src/features/explore/searchHistorySlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
+import { ElementName, MobileEventName, SectionName } from 'src/features/telemetry/constants'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
@@ -62,44 +64,54 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
     )
   }
 
+  const { menuActions, onContextMenuPress } = useExploreTokenContextMenu({
+    address,
+    chainId,
+    currencyId,
+    analyticsSection: SectionName.ExploreSearch,
+  })
+
   return (
-    <TouchableArea
-      hapticFeedback
-      hapticStyle={ImpactFeedbackStyle.Light}
-      testID={ElementName.SearchTokenItem}
-      onPress={onPress}>
-      <Flex row alignItems="center" gap="spacing12" px="spacing8" py="spacing12">
-        <TokenLogo chainId={chainId} symbol={symbol} url={logoUrl ?? undefined} />
-        <Flex shrink alignItems="flex-start" gap="none">
-          <Flex centered row gap="spacing8">
-            <Flex shrink>
-              <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
-                {name}
-              </Text>
-            </Flex>
-            {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
-              <WarningIcon
-                height={theme.iconSizes.icon16}
-                safetyLevel={safetyLevel}
-                strokeColorOverride="neutral3"
-                width={theme.iconSizes.icon16}
-              />
-            )}
-          </Flex>
-          <Flex centered row gap="spacing8">
-            <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
-              {symbol}
-            </Text>
-            {address && (
-              <Box flexShrink={1}>
-                <Text color="neutral3" numberOfLines={1} variant="subheadSmall">
-                  {shortenAddress(address)}
+    <ContextMenu actions={menuActions} onPress={onContextMenuPress}>
+      <TouchableArea
+        hapticFeedback
+        hapticStyle={ImpactFeedbackStyle.Light}
+        testID={ElementName.SearchTokenItem}
+        onPress={onPress}>
+        <Flex row alignItems="center" gap="spacing12" px="spacing8" py="spacing12">
+          <TokenLogo chainId={chainId} symbol={symbol} url={logoUrl ?? undefined} />
+          <Flex shrink alignItems="flex-start" gap="none">
+            <Flex centered row gap="spacing8">
+              <Flex shrink>
+                <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
+                  {name}
                 </Text>
-              </Box>
-            )}
+              </Flex>
+              {(safetyLevel === SafetyLevel.Blocked ||
+                safetyLevel === SafetyLevel.StrongWarning) && (
+                <WarningIcon
+                  height={theme.iconSizes.icon16}
+                  safetyLevel={safetyLevel}
+                  strokeColorOverride="neutral3"
+                  width={theme.iconSizes.icon16}
+                />
+              )}
+            </Flex>
+            <Flex centered row gap="spacing8">
+              <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
+                {symbol}
+              </Text>
+              {address && (
+                <Box flexShrink={1}>
+                  <Text color="neutral3" numberOfLines={1} variant="subheadSmall">
+                    {shortenAddress(address)}
+                  </Text>
+                </Box>
+              )}
+            </Flex>
           </Flex>
         </Flex>
-      </Flex>
-    </TouchableArea>
+      </TouchableArea>
+    </ContextMenu>
   )
 }

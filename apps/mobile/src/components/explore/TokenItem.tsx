@@ -1,33 +1,20 @@
-import { SharedEventName } from '@uniswap/analytics-events'
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import React, { memo, useCallback, useMemo } from 'react'
+import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { Box } from 'src/components/layout'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
-import { useSelectHasTokenFavorited, useToggleFavoriteCallback } from 'src/features/favorites/hooks'
-import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import {
-  ElementName,
-  MobileEventName,
-  ModalName,
-  SectionName,
-} from 'src/features/telemetry/constants'
+import { MobileEventName, SectionName } from 'src/features/telemetry/constants'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { ChainId } from 'wallet/src/constants/chains'
-import { AssetType } from 'wallet/src/entities/assets'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'wallet/src/features/transactions/transactionState/types'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 import {
   buildCurrencyId,
@@ -35,9 +22,6 @@ import {
   currencyIdToAddress,
   currencyIdToChain,
 } from 'wallet/src/utils/currencyId'
-
-const FAVORITE_ACTION_INDEX = 0
-const SWAP_ACTION_INDEX = 1
 
 export type TokenItemData = {
   name: string
@@ -64,7 +48,6 @@ export const TokenItem = memo(function _TokenItem({
   metadataDisplayType,
 }: TokenItemProps) {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
   const {
@@ -80,36 +63,6 @@ export const TokenItem = memo(function _TokenItem({
     totalValueLocked,
   } = tokenItemData
   const _currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
-
-  const isFavorited = useSelectHasTokenFavorited(_currencyId)
-  const toggleFavoriteToken = useToggleFavoriteCallback(_currencyId, isFavorited)
-
-  const navigateToSwapSell = useCallback(() => {
-    if (!address) return
-
-    const swapFormState: TransactionState = {
-      exactCurrencyField: CurrencyField.INPUT,
-      exactAmountToken: '0',
-      [CurrencyField.INPUT]: {
-        address,
-        chainId,
-        type: AssetType.Currency,
-      },
-      [CurrencyField.OUTPUT]: null,
-    }
-    dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
-  }, [address, chainId, dispatch])
-
-  const menuActions = useMemo(() => {
-    const removeFavoriteAction = { title: t('Remove favorite'), systemIcon: 'heart.fill' }
-    const addFavoriteAction = { title: t('Favorite token'), systemIcon: 'heart' }
-    const swapAction = { title: t('Swap'), systemIcon: 'arrow.2.squarepath' }
-    const actions = isFavorited
-      ? [removeFavoriteAction, swapAction]
-      : [addFavoriteAction, swapAction]
-
-    return actions
-  }, [isFavorited, t])
 
   const getMetadataSubtitle = (): string | undefined => {
     switch (metadataDisplayType) {
@@ -137,24 +90,15 @@ export const TokenItem = memo(function _TokenItem({
     })
   }
 
+  const { menuActions, onContextMenuPress } = useExploreTokenContextMenu({
+    address,
+    chainId,
+    currencyId: _currencyId,
+    analyticsSection: SectionName.ExploreTopTokensSection,
+  })
+
   return (
-    <ContextMenu
-      actions={menuActions}
-      onPress={(e): void => {
-        // Emitted native index is based on order of options in the action array
-        // Toggle favorite action
-        if (e.nativeEvent.index === FAVORITE_ACTION_INDEX) {
-          toggleFavoriteToken()
-        }
-        // Swap action
-        if (e.nativeEvent.index === SWAP_ACTION_INDEX) {
-          navigateToSwapSell()
-          sendMobileAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-            element: ElementName.Swap,
-            section: SectionName.ExploreTopTokensSection,
-          })
-        }
-      }}>
+    <ContextMenu actions={menuActions} onPress={onContextMenuPress}>
       <TouchableArea
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
