@@ -13,6 +13,7 @@ import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface OptionProps {
@@ -20,6 +21,7 @@ interface OptionProps {
   showNetworkPill: boolean
   showWarnings: boolean
   onPress: () => void
+  showTokenAddress?: boolean
 }
 
 function _TokenOptionItem({
@@ -27,6 +29,7 @@ function _TokenOptionItem({
   showNetworkPill,
   showWarnings,
   onPress,
+  showTokenAddress,
 }: OptionProps): JSX.Element {
   const theme = useAppTheme()
 
@@ -93,6 +96,13 @@ function _TokenOptionItem({
                 <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
                   {getSymbolDisplayText(currency.symbol)}
                 </Text>
+                {!currency.isNative && showTokenAddress && (
+                  <Box flexShrink={1}>
+                    <Text color="neutral3" numberOfLines={1} variant="subheadSmall">
+                      {shortenAddress(currency.address)}
+                    </Text>
+                  </Box>
+                )}
                 {showNetworkPill && <InlineNetworkPill chainId={currency.chainId} />}
               </Flex>
             </Flex>

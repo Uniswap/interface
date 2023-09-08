@@ -989,6 +989,49 @@ exports[`SearchPopularTokens renders without error 2`] = `
               >
                 USDC
               </Text>
+              <View
+                style={
+                  [
+                    {
+                      "display": "flex",
+                      "flexGrow": 0,
+                      "flexShrink": 0,
+                      "height": 8,
+                      "width": 8,
+                    },
+                  ]
+                }
+              />
+              <View
+                style={
+                  [
+                    {
+                      "display": "flex",
+                      "flexShrink": 1,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#CECECE",
+                        "display": "flex",
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 17,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  0xA0b8...eB48
+                </Text>
+              </View>
             </View>
           </View>
         </View>

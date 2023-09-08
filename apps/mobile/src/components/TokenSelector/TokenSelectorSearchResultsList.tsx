@@ -130,6 +130,7 @@ function _TokenSelectorSearchResultsList({
   )
   return (
     <TokenSelectorList
+      showTokenAddress
       chainFilter={chainFilter}
       emptyElement={emptyElement}
       errorText={t('Couldn’t load search results')}

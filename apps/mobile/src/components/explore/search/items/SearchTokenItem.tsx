@@ -3,7 +3,7 @@ import { default as React } from 'react'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import WarningIcon from 'src/components/tokens/WarningIcon'
@@ -16,6 +16,7 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type SearchTokenItemProps = {
@@ -89,6 +90,13 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
             <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
               {symbol}
             </Text>
+            {address && (
+              <Box flexShrink={1}>
+                <Text color="neutral3" numberOfLines={1} variant="subheadSmall">
+                  {shortenAddress(address)}
+                </Text>
+              </Box>
+            )}
           </Flex>
         </Flex>
       </Flex>

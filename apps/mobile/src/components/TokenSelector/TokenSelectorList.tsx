@@ -53,6 +53,7 @@ function TokenOptionItemWrapper({
   index,
   chainFilter,
   showWarnings,
+  showTokenAddress,
 }: {
   tokenOption: TokenOption
   onSelectCurrency: OnSelectCurrency
@@ -60,6 +61,7 @@ function TokenOptionItemWrapper({
   index: number
   chainFilter: ChainId | null
   showWarnings: boolean
+  showTokenAddress?: boolean
 }): JSX.Element {
   const onPress = useCallback(
     () => onSelectCurrency(tokenOption.currencyInfo.currency, section, index),
@@ -72,6 +74,7 @@ function TokenOptionItemWrapper({
       showNetworkPill={
         !chainFilter && tokenOption.currencyInfo.currency.chainId !== ChainId.Mainnet
       }
+      showTokenAddress={showTokenAddress}
       showWarnings={showWarnings}
       onPress={onPress}
     />
@@ -92,6 +95,7 @@ interface TokenSelectorListProps {
   hasError?: boolean
   emptyElement?: JSX.Element
   errorText?: string
+  showTokenAddress?: boolean
 }
 
 function _TokenSelectorList({
@@ -104,6 +108,7 @@ function _TokenSelectorList({
   hasError,
   emptyElement,
   errorText,
+  showTokenAddress,
 }: TokenSelectorListProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -139,6 +144,7 @@ function _TokenSelectorList({
             chainFilter={chainFilter}
             index={index}
             section={section}
+            showTokenAddress={showTokenAddress}
             showWarnings={showTokenWarnings}
             tokenOption={item}
             onSelectCurrency={onSelectCurrency}
@@ -148,7 +154,7 @@ function _TokenSelectorList({
 
       return null
     },
-    [chainFilter, onSelectCurrency, showTokenWarnings]
+    [chainFilter, onSelectCurrency, showTokenAddress, showTokenWarnings]
   )
 
   const renderSectionHeader = useCallback(
