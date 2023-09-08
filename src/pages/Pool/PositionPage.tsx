@@ -406,7 +406,7 @@ function PositionPageContent() {
 
   // flag for receiving WETH
   // we always collect as weth as unwrap, sweepToken methods would clash otherwise
-  const [receiveWETH, setReceiveWETH] = useState(true)
+  const [receiveWETH, setReceiveWETH] = useState(false)
   const nativeCurrency = useNativeCurrency(chainId)
   const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
@@ -615,11 +615,9 @@ function PositionPageContent() {
     )
   }
 
-  // TODO: unwrap and sweepToken methods would clash if implemented in separate adapters
-  // when removing liquidity or collecting fees we can't collect as weth
   const showCollectAsWeth = Boolean(
     ownsNFT &&
-      //(feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
+      (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
       currency0 &&
       currency1 &&
       (currency0.isNative || currency1.isNative) &&
@@ -903,7 +901,7 @@ function PositionPageContent() {
                         </RowBetween>
                       </AutoColumn>
                     </LightCard>
-                    {!showCollectAsWeth && (
+                    {showCollectAsWeth && (
                       <AutoColumn gap="md">
                         <RowBetween>
                           <ThemedText.DeprecatedMain>

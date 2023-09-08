@@ -77,8 +77,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { address: poolAddress } = useActiveSmartPool()
 
   // flag for receiving WETH
-  // we always collect as WETH as unwrap, sweep token methods would clash between adapters otherwise
-  const [receiveWETH, setReceiveWETH] = useState(true)
+  const [receiveWETH, setReceiveWETH] = useState(false)
   const nativeCurrency = useNativeCurrency(chainId)
   const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
@@ -405,7 +404,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 </AutoColumn>
               </LightCard>
 
-              {!showCollectAsWeth && (
+              {showCollectAsWeth && (
                 <RowBetween>
                   <ThemedText.DeprecatedMain>
                     <Trans>Collect as {nativeWrappedSymbol}</Trans>
