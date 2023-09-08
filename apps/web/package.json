@@ -63,10 +63,6 @@
     "webpack-dev-server": "^4.13.1",
     "webpack-node-externals": "3.0.0"
   },
-  "jest": {
-    "preset": "jest-presets/jest",
-    "displayName": "Web App"
-  },
   "private": true,
   "scripts": {
     "env:local:download": "bash ../../scripts/downloadEnvLocal.sh web-local-envs ../../.env",

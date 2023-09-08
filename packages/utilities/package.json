@@ -26,10 +26,6 @@
     "jest-presets": "workspace:^",
     "typescript": "4.9.4"
   },
-  "jest": {
-    "preset": "jest-presets/jest",
-    "displayName": "Utilities Package"
-  },
   "main": "src/index.ts",
   "private": true,
   "scripts": {

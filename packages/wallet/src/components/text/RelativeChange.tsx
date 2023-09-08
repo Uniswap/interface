@@ -1,41 +1,35 @@
-import React from 'react'
-import { useAppTheme } from 'src/app/hooks'
-import { Caret } from 'src/components/icons/Caret'
-import { Flex } from 'src/components/layout'
-import { Text, TextProps } from 'src/components/Text'
-import { Theme } from 'ui/src/theme/restyle/theme'
+import { ColorTokens, Flex, Text, XStack } from 'ui/src'
+import { fonts, iconSizes } from 'ui/src/theme'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
+import { Caret } from 'wallet/src/components/icons/Caret'
 
 interface RelativeChangeProps {
   change?: number
   absoluteChange?: number
-  variant?: TextProps['variant']
+  variant?: keyof typeof fonts
   semanticColor?: boolean // If true, entire % change text will render green or red
-  positiveChangeColor?: keyof Theme['colors']
-  negativeChangeColor?: keyof Theme['colors']
+  positiveChangeColor?: ColorTokens
+  negativeChangeColor?: ColorTokens
   arrowSize?: number
   loading?: boolean
   alignRight?: boolean
 }
 
 export function RelativeChange(props: RelativeChangeProps): JSX.Element {
-  const theme = useAppTheme()
   const {
     absoluteChange,
     change,
     variant = 'subheadSmall',
     semanticColor,
-    positiveChangeColor = 'statusSuccess',
-    negativeChangeColor = 'statusCritical',
-    arrowSize = theme.iconSizes.icon16,
+    positiveChangeColor = '$statusSuccess',
+    negativeChangeColor = '$statusCritical',
+    arrowSize = iconSizes.icon16,
     loading = false,
     alignRight = false,
   } = props
 
   const isPositiveChange = change !== undefined ? change >= 0 : undefined
-  const arrowColor = isPositiveChange
-    ? theme.colors[positiveChangeColor]
-    : theme.colors[negativeChangeColor]
+  const arrowColor = isPositiveChange ? positiveChangeColor : negativeChangeColor
 
   const formattedChange = change !== undefined ? `${Math.abs(change).toFixed(2)}%` : '-'
   const formattedAbsChange = absoluteChange
@@ -43,21 +37,24 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     : ''
 
   return (
-    <Flex
-      row
+    <XStack
       alignItems="center"
-      gap="spacing2"
+      gap="$spacing2"
       justifyContent={alignRight ? 'flex-end' : 'flex-start'}>
       {change !== undefined && (
         <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
       )}
-      <Text
-        color={semanticColor ? (isPositiveChange ? 'statusSuccess' : 'statusCritical') : 'neutral2'}
-        loading={loading}
-        loadingPlaceholderText="$0.00 (0.00)%"
-        variant={variant}>
-        {absoluteChange ? `${formattedAbsChange} (${formattedChange})` : formattedChange}
-      </Text>
-    </Flex>
+      <Flex>
+        <Text
+          color={
+            semanticColor ? (isPositiveChange ? '$statusSuccess' : '$statusCritical') : '$neutral2'
+          }
+          loading={loading}
+          loadingPlaceholderText="$0.00 (0.00)%"
+          variant={variant}>
+          {absoluteChange ? `${formattedAbsChange} (${formattedChange})` : formattedChange}
+        </Text>
+      </Flex>
+    </XStack>
   )
 }

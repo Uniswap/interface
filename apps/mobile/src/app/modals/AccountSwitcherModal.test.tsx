@@ -13,8 +13,6 @@ import {
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { mockWalletPreloadedState, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
-jest.useFakeTimers()
-
 const preloadedState = {
   ...mockWalletPreloadedState,
   modals: {

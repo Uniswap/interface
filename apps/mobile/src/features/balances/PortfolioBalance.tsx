@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Flex } from 'src/components/layout'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { DecimalNumber } from 'src/components/text/DecimalNumber'
-import { RelativeChange } from 'src/components/text/RelativeChange'
 import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
+import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalancesQuery } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -59,8 +59,8 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
           arrowSize={iconSizes.icon20}
           change={portfolioChange?.percentage?.value}
           loading={isLoading}
-          negativeChangeColor={isWarmLoading ? 'neutral2' : 'statusCritical'}
-          positiveChangeColor={isWarmLoading ? 'neutral2' : 'statusSuccess'}
+          negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
+          positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
           variant="bodyLarge"
         />
       </Flex>

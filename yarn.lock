@@ -32051,6 +32051,52 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native@patch:react-native@npm%3A0.71.11#./.yarn/patches/react-native-npm-0.71.11-c31ec9c2e7.patch::locator=universe%40workspace%3A.":
+  version: 0.71.11
+  resolution: "react-native@patch:react-native@npm%3A0.71.11#./.yarn/patches/react-native-npm-0.71.11-c31ec9c2e7.patch::version=0.71.11&hash=d56b89&locator=universe%40workspace%3A."
+  dependencies:
+    "@jest/create-cache-key-function": ^29.2.1
+    "@react-native-community/cli": 10.2.4
+    "@react-native-community/cli-platform-android": 10.2.0
+    "@react-native-community/cli-platform-ios": 10.2.4
+    "@react-native/assets": 1.0.0
+    "@react-native/normalize-color": 2.1.0
+    "@react-native/polyfills": 2.0.0
+    abort-controller: ^3.0.0
+    anser: ^1.4.9
+    base64-js: ^1.1.2
+    deprecated-react-native-prop-types: ^3.0.1
+    event-target-shim: ^5.0.1
+    invariant: ^2.2.4
+    jest-environment-node: ^29.2.1
+    jsc-android: ^250231.0.0
+    memoize-one: ^5.0.0
+    metro-react-native-babel-transformer: 0.73.10
+    metro-runtime: 0.73.10
+    metro-source-map: 0.73.10
+    mkdirp: ^0.5.1
+    nullthrows: ^1.1.1
+    pretty-format: ^26.5.2
+    promise: ^8.3.0
+    react-devtools-core: ^4.26.1
+    react-native-codegen: ^0.71.5
+    react-native-gradle-plugin: ^0.71.19
+    react-refresh: ^0.4.0
+    react-shallow-renderer: ^16.15.0
+    regenerator-runtime: ^0.13.2
+    scheduler: ^0.23.0
+    stacktrace-parser: ^0.1.3
+    use-sync-external-store: ^1.0.0
+    whatwg-fetch: ^3.0.0
+    ws: ^6.2.2
+  peerDependencies:
+    react: 18.2.0
+  bin:
+    react-native: cli.js
+  checksum: 71c3f71c0b6af995cf0472016635a17fb41f481ff62e2ce484d33fd370d8c61a843fbbc6b3ce7adf33a3f1fd98001b9afd475a02515b4d6ca85d40ec7626361b
+  languageName: node
+  linkType: hard
+
 "react-reconciler@npm:^0.27.0":
   version: 0.27.0
   resolution: "react-reconciler@npm:0.27.0"

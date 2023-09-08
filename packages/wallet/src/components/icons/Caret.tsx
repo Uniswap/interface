@@ -1,6 +1,5 @@
-import React, { memo } from 'react'
-import { useAppTheme } from 'src/app/hooks'
-import CaretChange from 'ui/src/assets/icons/arrow-change.svg'
+import { memo } from 'react'
+import { Icons } from 'ui/src'
 import { withAnimated } from 'ui/src/components/factories/animated'
 
 type Props = {
@@ -10,7 +9,6 @@ type Props = {
 }
 
 export function _Caret({ size = 24, color, direction = 'n' }: Props): JSX.Element {
-  const theme = useAppTheme()
   let degree: string
   switch (direction) {
     case 's':
@@ -24,8 +22,8 @@ export function _Caret({ size = 24, color, direction = 'n' }: Props): JSX.Elemen
   }
 
   return (
-    <CaretChange
-      color={color ?? theme.colors.sporeBlack}
+    <Icons.ArrowChange
+      color={color ?? '$sporeBlack'}
       height={size}
       strokeWidth={2}
       style={{ transform: [{ rotate: degree }] }}
@@ -36,4 +34,4 @@ export function _Caret({ size = 24, color, direction = 'n' }: Props): JSX.Elemen
 
 export const Caret = memo(_Caret)
 
-export const AnimatedCaretChange = withAnimated(CaretChange)
+export const AnimatedCaretChange = withAnimated(Icons.ArrowChange)

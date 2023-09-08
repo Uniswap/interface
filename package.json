@@ -71,7 +71,8 @@
     "webpack": "^5.74.0",
     "xml2js": "0.5.0",
     "yaml": "2.2.2",
-    "@shopify/flash-list@1.4.3": "patch:@shopify/flash-list@npm%3A1.4.3#./.yarn/patches/@shopify-flash-list-npm-1.4.3-dc03c28fdd.patch"
+    "@shopify/flash-list@1.4.3": "patch:@shopify/flash-list@npm%3A1.4.3#./.yarn/patches/@shopify-flash-list-npm-1.4.3-dc03c28fdd.patch",
+    "react-native@0.71.11": "patch:react-native@npm%3A0.71.11#./.yarn/patches/react-native-npm-0.71.11-c31ec9c2e7.patch"
   },
   "scripts": {
     "contracts:compile": "typechain --target ethers-v5 --out-dir packages/wallet/src/abis/types './packages/wallet/src/abis/**/*.json'",

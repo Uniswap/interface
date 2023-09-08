@@ -40,14 +40,14 @@ const slice = createSlice({
     addAccount: (state, action: PayloadAction<Account>) => {
       const { address } = action.payload
       const id = getValidAddress(address, true)
-      if (!id) throw new Error('Cannot add an account with an invalid address')
+      if (!id) throw new Error(`Cannot add an account with an invalid address ${address}`)
       state.accounts[id] = action.payload
     },
     addAccounts: (state, action: PayloadAction<Account[]>) => {
       const accounts = action.payload
       accounts.forEach((account) => {
         const id = getValidAddress(account.address, true)
-        if (!id) throw new Error('Cannot add an account with an invalid address')
+        if (!id) throw new Error(`Cannot add an account with an invalid address ${account.address}`)
         state.accounts[id] = account
       })
     },

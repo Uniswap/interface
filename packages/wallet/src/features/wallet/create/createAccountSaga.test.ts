@@ -46,6 +46,7 @@ const createMultipleNativeAccounts = async (
 
 describe(createAccount, () => {
   jest.setTimeout(10000)
+
   it('Creates first native account (initial onboarding)', async () => {
     const state = await createNativeAccount()
 
