@@ -27,7 +27,7 @@
     "typecheck:cloud": "tsc -p functions/tsconfig.json",
     "typecheck:cypress": "tsc -p cypress/tsconfig.json",
     "test": "craco test",
-    "test:cloud": "NODE_OPTIONS=--experimental-vm-modules yarn jest functions --config=functions/jest.config.json",
+    "test:cloud": "yarn jest functions --config=functions/jest.config.json",
     "cypress:open": "cypress open --browser chrome --e2e",
     "cypress:run": "cypress run --browser chrome --e2e",
     "deduplicate": "yarn-deduplicate --strategy=highest",
@@ -133,7 +133,6 @@
     "hardhat": "^2.14.0",
     "husky": "^8.0.3",
     "jest": "^29.6.1",
-    "jest-dev-server": "^9.0.0",
     "jest-extended": "^4.0.1",
     "jest-fail-on-console": "^3.1.1",
     "jest-fetch-mock": "^3.0.3",
@@ -151,6 +150,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "serve": "^11.3.2",
     "source-map-explorer": "^2.5.3",
+    "start-server-and-test": "^2.0.0",
     "swc-loader": "^0.2.3",
     "terser-webpack-plugin": "^5.3.9",
     "ts-jest": "^29.1.1",
@@ -160,7 +160,7 @@
     "typescript": "^4.9.4",
     "webpack": "^5.88.2",
     "webpack-retry-chunk-load-plugin": "^3.1.1",
-    "wrangler": "^3.5.0",
+    "wrangler": "^3.7.0",
     "yarn-deduplicate": "^6.0.0"
   },
   "dependencies": {
