@@ -13,8 +13,6 @@ import { UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
-const DEFAULT_START_TIME_PADDING_SECONDS = 30
-
 type DutchAuctionOrderError = { errorCode?: number; detail?: string }
 type DutchAuctionOrderSuccess = { hash: string }
 type DutchAuctionOrderResponse = DutchAuctionOrderError | DutchAuctionOrderSuccess
@@ -69,7 +67,7 @@ export function useUniswapXSwapCallback({
           try {
             const updatedNonce = await getUpdatedNonce(account, trade.order.chainId)
 
-            const startTime = Math.floor(Date.now() / 1000) + DEFAULT_START_TIME_PADDING_SECONDS
+            const startTime = Math.floor(Date.now() / 1000) + trade.startTimeBufferSecs
             setTraceData('startTime', startTime)
 
             const endTime = startTime + trade.auctionPeriodSecs

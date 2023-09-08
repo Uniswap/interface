@@ -121,6 +121,7 @@ export const TEST_DUTCH_TRADE_ETH_INPUT = new DutchOrderTrade({
   classicGasUseEstimateUSD: 7.87,
   auctionPeriodSecs: 120,
   deadlineBufferSecs: 30,
+  startTimeBufferSecs: 30,
   slippageTolerance: new Percent(5, 100),
 })
 

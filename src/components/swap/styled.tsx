@@ -22,7 +22,7 @@ export const PageWrapper = styled.div`
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-export const SwapWrapper = styled.main<{ isDark?: boolean }>`
+const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
   position: relative;
   z-index: ${Z_INDEX.default};
   border: 1px solid ${({ theme }) => theme.surface3};
@@ -55,7 +55,15 @@ export const SwapWrapper = styled.main<{ isDark?: boolean }>`
   }
 `
 
-export const SwapWrapperInner = styled.div`
+export const SwapWrapper = (props: React.ComponentProps<typeof SwapWrapperOuter>) => {
+  return (
+    <SwapWrapperOuter {...props}>
+      <SwapWrapperInner>{props.children}</SwapWrapperInner>
+    </SwapWrapperOuter>
+  )
+}
+
+const SwapWrapperInner = styled.div`
   border-radius: 24px;
   background: ${({ theme }) => theme.surface1};
   z-index: -1;
