@@ -133,7 +133,7 @@ function _TokenSelectorModal({
         <Flex grow pb={IS_IOS ? 'spacing16' : 'none'} px="spacing16">
           <SearchTextInput
             backgroundColor="surface2"
-            endAdornment={hasClipboardString ? <PasteButton onPress={handlePaste} /> : null}
+            endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
             placeholder={t('Search tokens')}
             py="spacing8"
             value={searchFilter ?? ''}
