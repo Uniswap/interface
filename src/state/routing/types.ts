@@ -1,4 +1,4 @@
-import { ONE, Protocol, ZERO } from '@kinetix/router-sdk'
+import { ONE, ZERO } from '@kinetix/router-sdk'
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Token, TradeType } from '@kinetix/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import invariant from 'tiny-invariant'
@@ -371,21 +371,10 @@ export enum SwapRouterNativeAssets {
   BNB = 'BNB',
   AVAX = 'AVAX',
   ETH = 'ETH',
+  KAVA = 'KAVA',
 }
 
-export enum URAQuoteType {
+enum URAQuoteType {
   CLASSIC = 'CLASSIC',
   DUTCH_LIMIT = 'DUTCH_LIMIT',
 }
-
-type ClassicAPIConfig = {
-  protocols: Protocol[]
-}
-
-type UniswapXConfig = {
-  swapper?: string
-  exclusivityOverrideBps?: number
-  auctionPeriodSecs?: number
-}
-
-export type RoutingConfig = (UniswapXConfig | ClassicAPIConfig)[]

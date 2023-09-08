@@ -1,21 +1,19 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Percent } from '@kinetix/sdk-core'
-import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@kinetix/universal-router-sdk'
-import { FeeOptions, toHex } from '@kinetix/v3-sdk'
+import { FeeOptions } from '@kinetix/v3-sdk'
 import { t } from '@lingui/macro'
 // import { OpenoceanApiSdk } from '@openocean.finance/api'
-import { SwapEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
-import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
+import { useTrace } from 'analytics'
+import { ZERO_ADDRESS } from 'constants/misc'
+import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UserRejectedRequestError } from 'utils/errors'
-import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
+import { OPENOCEAN_ROUTER_ADDRESS } from './usePermit2Allowance'
 import { PermitSignature } from './usePermitAllowance'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
@@ -79,6 +77,7 @@ async function swapQuote(account: string, chainId: ChainId, data: any, value: an
   // }
 }
 
+// TODO KFI send swap quote transaction
 export function useUniversalRouterSwapCallback(
   trade: ClassicTrade | undefined,
   fiatValues: { amountIn?: number; amountOut?: number },
@@ -98,60 +97,41 @@ export function useUniversalRouterSwapCallback(
         if (!trade) throw new Error('missing trade')
         const connectedChainId = await provider.getSigner().getChainId()
         if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
+        console.log('useUniversalRouterSwapCallback try')
 
-        setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
-        const { calldata: data, value } = SwapRouter.swapERC20CallParameters(<any>trade, {
-          slippageTolerance: options.slippageTolerance,
-          deadlineOrPreviousBlockhash: options.deadline?.toString(),
-          inputTokenPermit: options.permit,
-          fee: options.feeOptions,
-        })
-        swapQuote(account, chainId, data, value)
+        const tokenInAddress = trade.inputAmount.currency.isNative
+          ? ZERO_ADDRESS
+          : getTokenAddress(trade.inputAmount.currency)
+
+        const tokenOutAddress = trade.outputAmount.currency.isNative
+          ? ZERO_ADDRESS
+          : getTokenAddress(trade.outputAmount.currency)
+
+        const amount = trade.inputAmount.toExact()
+
+        console.log('useUniversalRouterSwapCallback', tokenInAddress, tokenOutAddress)
+
+        const res = await fetch(
+          `https://open-api.openocean.finance/v3/kava/swap_quote?inTokenAddress=${tokenInAddress}&outTokenAddress=${tokenOutAddress}&amount=${amount}&gasPrice=1.2&slippage=10&account=${account}`
+        )
+        const result = await res.json()
+        const { estimatedGas, data, gasPrice } = result.data
+        const value = trade.inputAmount.currency.isNative ? trade.inputAmount.quotient.toString() : '0'
+
         const tx = {
           from: account,
-          to: UNIVERSAL_ROUTER_ADDRESS(chainId),
+          to: OPENOCEAN_ROUTER_ADDRESS,
+          gasLimit: estimatedGas,
           data,
-          // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
-          ...(value && !isZero(value) ? { value: toHex(value) } : {}),
+          gasPrice,
+          value,
         }
 
-        let gasEstimate: BigNumber
-        try {
-          gasEstimate = await provider.estimateGas(tx)
-        } catch (gasError) {
-          setTraceStatus('failed_precondition')
-          setTraceError(gasError)
-          sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-            ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
-            ...analyticsContext,
-            tx,
-            error: gasError,
-          })
-          console.warn(gasError)
-          throw new GasEstimationError()
-        }
-        const gasLimit = calculateGasMargin(gasEstimate)
-        setTraceData('gasLimit', gasLimit.toNumber())
-        const beforeSign = Date.now()
         const response = await provider
           .getSigner()
-          .sendTransaction({ ...tx, gasLimit })
+          .sendTransaction(tx)
           .then((response) => {
-            sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
-              ...formatSwapSignedAnalyticsEventProperties({
-                trade,
-                timeToSignSinceRequestMs: Date.now() - beforeSign,
-                allowedSlippage: options.slippageTolerance,
-                fiatValues,
-                txHash: response.hash,
-              }),
-              ...analyticsContext,
-            })
             if (tx.data !== response.data) {
-              sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
-                txHash: response.hash,
-                ...analyticsContext,
-              })
               throw new ModifiedSwapError()
             }
             return response

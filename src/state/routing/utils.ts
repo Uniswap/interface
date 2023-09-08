@@ -173,7 +173,7 @@ function getClassicTradeDetails(
     routes: undefined,
   }
 }
-
+// TODO KFI update priceImpact
 export async function transformRoutesToTrade(
   args: GetQuoteArgs,
   data: OpenOceanQuoteResponse,
@@ -268,7 +268,7 @@ export function isExactInput(tradeType: TradeType): boolean {
 
 export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
-    return SwapRouterNativeAssets.ETH
+    return SwapRouterNativeAssets.KAVA
   }
 
   return currency.address

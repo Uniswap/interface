@@ -1,4 +1,6 @@
+import { NATIVE_NAMES_BY_ID } from '@kinetix/smart-order-router'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
+import { ZERO_ADDRESS } from 'constants/misc'
 import ms from 'ms'
 import { trace } from 'tracing/trace'
 
@@ -11,6 +13,7 @@ if (OPENOCEAN_API_URL === undefined) {
   throw new Error(`OPENOCEAN_API_URL must be a defined environment variable`)
 }
 
+// TODO KFI openocean get quotes api
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
@@ -46,13 +49,18 @@ export const routingApi = createApi({
       // @ts-ignore
       async queryFn(args, _api, _extraOptions, fetch) {
         try {
-          const { tokenInAddress, tokenOutAddress, amount } = args
+          const isIntokenNative = NATIVE_NAMES_BY_ID[args.tokenInChainId]?.includes(args.tokenInAddress)
+          const tokenInAddress = isIntokenNative ? ZERO_ADDRESS : args.tokenInAddress
+
+          const tokenOutAddress = NATIVE_NAMES_BY_ID[args.tokenOutChainId]?.includes(args.tokenOutAddress)
+            ? ZERO_ADDRESS
+            : args.tokenOutAddress
 
           const params = {
             chain: 'kava',
             inTokenAddress: tokenInAddress,
             outTokenAddress: tokenOutAddress,
-            amount,
+            amount: args.amount,
             gasPrice: 5,
             slippage: 1,
           }

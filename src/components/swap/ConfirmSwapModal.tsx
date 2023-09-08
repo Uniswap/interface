@@ -56,6 +56,7 @@ function isInApprovalPhase(confirmModalState: ConfirmModalState) {
   )
 }
 
+// TODO KFI swap steps
 function useConfirmModalState({
   trade,
   allowedSlippage,
@@ -71,8 +72,6 @@ function useConfirmModalState({
   doesTradeDiffer: boolean
   onCurrencySelection: (field: Field, currency: Currency) => void
 }) {
-  console.log('useConfirmModalState')
-
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])

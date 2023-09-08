@@ -411,8 +411,6 @@ export function Swap({
   }, [trade])
 
   const handleSwap = useCallback(() => {
-    console.log('handleSwap', handleSwap)
-
     if (!swapCallback) {
       return
     }
