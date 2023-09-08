@@ -2,20 +2,12 @@
 
 exports[`LoadedRow.tsx renders a row 1`] = `
 <DocumentFragment>
-  .c19 {
+  .c18 {
   color: #40B66B;
 }
 
-.c20 {
+.c19 {
   color: #40B66B;
-}
-
-.c18 {
-  padding-right: 3px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c9 {
@@ -113,6 +105,22 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   cursor: pointer;
 }
 
+.c21 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 3px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #222222;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
 .c6 {
   gap: 8px;
   max-width: 100%;
@@ -156,7 +164,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   padding-right: 8px;
 }
 
-.c21 {
+.c20 {
   padding-right: 8px;
 }
 
@@ -264,7 +272,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 @media only screen and (max-width:540px) {
-  .c21 {
+  .c20 {
     display: none;
   }
 }
@@ -275,6 +283,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
+    gap: 3px;
     -webkit-box-pack: end;
     -webkit-justify-content: flex-end;
     -ms-flex-pack: end;
@@ -408,26 +417,22 @@ exports[`LoadedRow.tsx renders a row 1`] = `
               <div
                 class="c2 c17"
               >
-                <div
+                <svg
+                  aria-label="up"
                   class="c18"
+                  fill="none"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    aria-label="up"
-                    class="c19"
-                    fill="none"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    width="14"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </div>
+                  <path
+                    d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+                    fill="currentColor"
+                  />
+                </svg>
                 <span
-                  class="c20"
+                  class="c19"
                 >
                   0.00%
                 </span>
@@ -436,32 +441,28 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="c2 c14 c21"
+          class="c2 c14 c20"
           data-testid="percent-change-cell"
         >
           <div
-            class="c5"
+            class="c21"
           >
-            <div
+            <svg
+              aria-label="up"
               class="c18"
+              fill="none"
+              height="16"
+              viewBox="0 0 24 24"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                aria-label="up"
-                class="c19"
-                fill="none"
-                height="16"
-                viewBox="0 0 24 24"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </div>
+              <path
+                d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+                fill="currentColor"
+              />
+            </svg>
             <span
-              class="c20"
+              class="c19"
             >
               0.00%
             </span>
