@@ -117,21 +117,6 @@ const Banner = () => {
           Better prices. <br />
           More listings.
         </HeaderContainer>
-        {collections ? (
-          <Carousel activeIndex={activeCollectionIdx} toggleNextSlide={onToggleNextSlide}>
-            {collections.map((collection) => (
-              <CarouselCard
-                key={collection.address}
-                collection={collection}
-                onClick={() => navigate(`/nfts/collection/${collection.address}`)}
-              />
-            ))}
-          </Carousel>
-        ) : (
-          <LoadingCarousel>
-            <LoadingCarouselCard />
-          </LoadingCarousel>
-        )}
       </BannerMainArea>
     </BannerContainer>
   )

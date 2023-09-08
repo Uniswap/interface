@@ -1,10 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { Trace, TraceEvent } from 'analytics'
-import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
-import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
 import { AppleLogo } from 'components/Logo/AppleLogo'
@@ -380,17 +378,6 @@ export default function Landing() {
             <Trans>Learn more</Trans>
             <LearnMoreArrow />
           </LearnMoreContainer>
-
-          <DownloadWalletLink
-            {...getDownloadAppLinkProps({
-              // landing page specific tracking params
-              microSiteParams: `utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
-              appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
-            })}
-          >
-            <AppleLogo width="20" height="20" />
-            Download the Uniswap Wallet for iOS
-          </DownloadWalletLink>
         </ContentContainer>
         <AboutContentContainer isDarkMode={isDarkMode}>
           <CardGrid cols={cards.length} ref={cardsRef}>
@@ -407,8 +394,6 @@ export default function Landing() {
               <Card {...card} icon={isDarkMode ? darkIcon : lightIcon} key={card.title} type={CardType.Secondary} />
             ))}
           </CardGrid>
-          <ProtocolBanner />
-          <AboutFooter />
         </AboutContentContainer>
       </PageContainer>
     </Trace>
