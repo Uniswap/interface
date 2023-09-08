@@ -264,11 +264,9 @@ function TokenDetails({
       } else {
         if (swapType === TransactionType.BUY) {
           navigateToSwapBuy()
-        }
-        if (swapType === TransactionType.SELL) {
+        } else if (swapType === TransactionType.SELL) {
           navigateToSwapSell()
         }
-        return
       }
     },
     [navigateToSwapBuy, navigateToSwapSell, safetyLevel, tokenWarningDismissed]

@@ -50,13 +50,6 @@ export enum OnboardingScreens {
   WatchWallet = 'WatchWallet',
 }
 
-export enum Tabs {
-  Explore = 'ExploreTab',
-  Home = 'HomeTab',
-  Profile = 'Profile',
-  SwapButton = 'SwapButton',
-}
-
 export enum Stacks {
   AppStack = 'AppStack',
 }

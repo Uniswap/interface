@@ -464,13 +464,15 @@ function _SwapForm({
               }
             />
           )}
-          <Button
-            disabled={actionButtonDisabled}
-            label={getReviewActionName(t, wrapType)}
-            size={ButtonSize.Large}
-            testID={ElementName.ReviewSwap}
-            onPress={onReview}
-          />
+          <Trace logPress element={ElementName.SwapReview}>
+            <Button
+              disabled={actionButtonDisabled}
+              label={getReviewActionName(t, wrapType)}
+              size={ButtonSize.Large}
+              testID={ElementName.ReviewSwap}
+              onPress={onReview}
+            />
+          </Trace>
         </AnimatedFlex>
       </Flex>
     </>

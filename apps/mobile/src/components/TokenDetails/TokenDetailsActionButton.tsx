@@ -7,7 +7,7 @@ import { getButtonProperties } from 'src/components/buttons/utils'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { getContrastPassingTextColor } from 'src/utils/colors'
 
 export function TokenDetailsActionButtons({
@@ -35,7 +35,7 @@ export function TokenDetailsActionButtons({
       pb="spacing16"
       pt="spacing12"
       px="spacing16">
-      <Trace logPress element={ElementName.Swap}>
+      <Trace logPress element={ElementName.Swap} section={SectionName.TokenDetails}>
         <TouchableArea
           hapticFeedback
           alignItems="center"
