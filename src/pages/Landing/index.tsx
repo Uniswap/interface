@@ -22,7 +22,7 @@ import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { getDownloadAppLinkProps } from 'utils/openDownloadApp'
+/* import { getDownloadAppLinkProps } from 'utils/openDownloadApp' */
 
 const PageContainer = styled.div`
   position: absolute;
@@ -381,7 +381,7 @@ export default function Landing() {
             <LearnMoreArrow />
           </LearnMoreContainer>
 
-          <DownloadWalletLink
+{/*           <DownloadWalletLink
             {...getDownloadAppLinkProps({
               // landing page specific tracking params
               microSiteParams: `utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
@@ -390,7 +390,7 @@ export default function Landing() {
           >
             <AppleLogo width="20" height="20" />
             Download the Uniswap Wallet for iOS
-          </DownloadWalletLink>
+          </DownloadWalletLink> */}
         </ContentContainer>
         <AboutContentContainer isDarkMode={isDarkMode}>
           <CardGrid cols={cards.length} ref={cardsRef}>
@@ -415,7 +415,7 @@ export default function Landing() {
   )
 }
 
-const DownloadWalletLink = styled.a`
+/* const DownloadWalletLink = styled.a`
   display: inline-flex;
   gap: 8px;
   color: ${({ theme }) => theme.textSecondary};
@@ -428,4 +428,4 @@ const DownloadWalletLink = styled.a`
   :hover {
     color: ${({ theme }) => theme.textTertiary};
   }
-`
+` */

@@ -397,7 +397,7 @@ function V2PairMigration({
         {chainId && migrator && (
           <ExternalLink href={getExplorerLink(chainId, migrator.address, ExplorerDataType.ADDRESS)}>
             <ThemedText.DeprecatedBlue display="inline">
-              <Trans>Uniswap migration contract↗</Trans>
+              <Trans>Kinetix migration contract↗</Trans>
             </ThemedText.DeprecatedBlue>
           </ExternalLink>
         )}

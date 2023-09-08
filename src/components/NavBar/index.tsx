@@ -89,7 +89,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
 
   const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
 
-  const handleLogoClick = useCallback(() => {
+ /*  const handleLogoClick = useCallback(() => {
     if (accountDrawerOpen) {
       toggleAccountDrawer()
     }
@@ -97,7 +97,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
       pathname: '/',
       search: '?intro=true',
     })
-  }, [accountDrawerOpen, navigate, toggleAccountDrawer])
+  }, [accountDrawerOpen, navigate, toggleAccountDrawer]) */
 
   return (
     <>
@@ -106,7 +106,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <div onClick={handleLogoClick}>Kinetix DEX</div>
+              <div>Kinetix DEX</div>
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>

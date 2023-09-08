@@ -2,9 +2,9 @@ export function isDevelopmentEnv(): boolean {
   return process.env.NODE_ENV === 'development'
 }
 
-export function isTestEnv(): boolean {
+/* export function isTestEnv(): boolean {
   return process.env.NODE_ENV === 'test'
-}
+} */
 
 export function isStagingEnv(): boolean {
   // This is set in vercel builds and deploys from releases/staging.

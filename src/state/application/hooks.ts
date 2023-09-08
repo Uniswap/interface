@@ -1,5 +1,5 @@
-import { MoonpayEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent } from 'analytics'
+/* import { MoonpayEventName } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent } from 'analytics' */
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -10,7 +10,7 @@ import {
   ApplicationModal,
   PopupContent,
   removePopup,
-  setFiatOnrampAvailability,
+/*   setFiatOnrampAvailability, */
   setOpenModal,
 } from './reducer'
 
@@ -19,15 +19,15 @@ export function useModalIsOpen(modal: ApplicationModal): boolean {
   return openModal === modal
 }
 
-/** @ref https://dashboard.moonpay.com/api_reference/client_side_api#ip_addresses */
+/* @ref https://dashboard.moonpay.com/api_reference/client_side_api#ip_addresses
 interface MoonpayIPAddressesResponse {
   alpha3?: string
   isAllowed?: boolean
   isBuyAllowed?: boolean
   isSellAllowed?: boolean
-}
+} */
 
-async function getMoonpayAvailability(): Promise<boolean> {
+/* async function getMoonpayAvailability(): Promise<boolean> {
   const moonpayPublishableKey = process.env.REACT_APP_MOONPAY_PUBLISHABLE_KEY
   if (!moonpayPublishableKey) {
     throw new Error('Must provide a publishable key for moonpay.')
@@ -39,9 +39,9 @@ async function getMoonpayAvailability(): Promise<boolean> {
   const res = await fetch(`${moonpayApiURI}/v4/ip_address?apiKey=${moonpayPublishableKey}`)
   const data = await (res.json() as Promise<MoonpayIPAddressesResponse>)
   return data.isBuyAllowed ?? false
-}
+} */
 
-export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () => void) {
+/* export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () => void) {
   const dispatch = useAppDispatch()
   const { available, availabilityChecked } = useAppSelector((state: AppState) => state.application.fiatOnramp)
   const [error, setError] = useState<string | null>(null)
@@ -80,7 +80,7 @@ export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () =>
   }, [availabilityChecked, callback, dispatch, shouldCheck])
 
   return { available, availabilityChecked, loading, error }
-}
+} */
 
 export function useToggleModal(modal: ApplicationModal): () => void {
   const isOpen = useModalIsOpen(modal)
