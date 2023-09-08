@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should inject metadata for valid collections 1`] = `
+exports[`should inject metadata for collections 1`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
@@ -145,7 +145,7 @@ exports[`should inject metadata for valid collections 1`] = `
 "
 `;
 
-exports[`should inject metadata for valid collections 2`] = `
+exports[`should inject metadata for collections 2`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
@@ -290,7 +290,7 @@ exports[`should inject metadata for valid collections 2`] = `
 "
 `;
 
-exports[`should inject metadata for valid collections 3`] = `
+exports[`should inject metadata for collections 3`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
@@ -435,7 +435,7 @@ exports[`should inject metadata for valid collections 3`] = `
 "
 `;
 
-exports[`should inject metadata for valid collections 4`] = `
+exports[`should inject metadata for collections 4`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
