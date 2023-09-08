@@ -2,7 +2,7 @@ import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/an
 import { TraceEvent } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Row from 'components/Row'
-import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
+import { DeltaArrow, formatDelta } from 'components/Tokens/TokenDetails/Delta'
 import { TokenBalance } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
@@ -15,7 +15,6 @@ import { formatNumber, NumberType } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 import { useToggleAccountDrawer } from '../..'
-import { PortfolioArrow } from '../../AuthenticatedHeader'
 import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -115,7 +114,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
                 })}
               </ThemedText.SubHeader>
               <Row justify="flex-end">
-                <PortfolioArrow change={percentChange} size={20} strokeWidth={1.75} />
+                <DeltaArrow delta={percentChange} />
                 <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
               </Row>
             </>
