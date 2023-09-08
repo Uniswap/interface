@@ -33,9 +33,14 @@ function isEthersRequestErrorLike(error: ErrorLike): error is ErrorLike & { requ
   return 'requestBody' in error && typeof (error as Record<'requestBody', unknown>).requestBody === 'string'
 }
 
-// Removes trailing slashes, as they are not needed.
+// Since the interface currently uses HashRouter, URLs will have a # before the path.
+// This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
+// Instead, this logic removes the # part of the URL.
+// It also removes trailing slashes, as they are not needed.
+// See https://romain-clement.net/articles/sentry-url-fragments/#url-fragments
 function updateRequestUrl(event: ErrorEvent) {
   if (event.request?.url) {
+    event.request.url = event.request.url.replace('/#', '')
     if (event.request.url.endsWith('/')) {
       event.request.url = event.request.url.slice(0, -1)
     }
