@@ -8,6 +8,7 @@
 	<array>
 		<string>applinks:uniswap.org</string>
 		<string>applinks:app.uniswap.org</string>
+		<string>applinks:app.corn-staging.com</string>
 	</array>
 	<key>com.apple.developer.icloud-container-identifiers</key>
 	<array>
