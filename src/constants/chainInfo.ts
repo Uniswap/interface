@@ -9,6 +9,7 @@ import baseLogo from 'assets/svg/base_logo.svg'
 import baseSquareLogo from 'assets/svg/base_square_logo.svg'
 import bnbSquareLogoUrl from 'assets/svg/bnb_square_logo.svg'
 import bnbLogo from 'assets/svg/bnb-logo.svg'
+import canxiumLogo from 'assets/svg/canxium-logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
 import celoSquareLogoUrl from 'assets/svg/celo_square_logo.svg'
 import optimismSquareLogoUrl from 'assets/svg/optimism_square_logo.svg'
@@ -19,7 +20,16 @@ import ms from 'ms'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { ARBITRUM_LIST, AVALANCHE_LIST, BASE_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
+import {
+  ARBITRUM_LIST,
+  AVALANCHE_LIST,
+  BASE_LIST,
+  CELO_LIST,
+  OPTIMISM_LIST,
+  PLASMA_BNB_LIST,
+  CANXIUM_LIST,
+  CERIUM_LIST,
+} from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
 
@@ -258,6 +268,38 @@ const CHAIN_INFO: ChainInfoMap = {
     squareLogoUrl: baseSquareLogo,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_84531,
+  },
+  [ChainId.CANXIUM]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms(`10m`),
+    bridge: '',
+    docs: '',
+    explorer: 'https://explorer.canxium.org/',
+    infoLink: 'https://info.canxium.org/', // TODO(WEB-2336): Add avax support to info site
+    label: 'Canxium',
+    logoUrl: canxiumLogo,
+    circleLogoUrl: canxiumLogo,
+    squareLogoUrl: canxiumLogo,
+    nativeCurrency: { name: 'Canxium Coin', symbol: 'CAU', decimals: 18 },
+    defaultListUrl: CANXIUM_LIST,
+    color: darkTheme.chain_43114,
+    backgroundColor: darkTheme.chain_43114_background,
+  },
+  [ChainId.CANXIUM_CERIUM]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms(`10m`),
+    bridge: '',
+    docs: '',
+    explorer: 'https://cerium-explorer.canxium.net/',
+    infoLink: 'https://info.canxium.org/', // TODO(WEB-2336): Add avax support to info site
+    label: 'Cerium',
+    logoUrl: canxiumLogo,
+    circleLogoUrl: canxiumLogo,
+    squareLogoUrl: canxiumLogo,
+    nativeCurrency: { name: 'Canxium Coin', symbol: 'CAU', decimals: 18 },
+    defaultListUrl: CERIUM_LIST,
+    color: darkTheme.chain_43114,
+    backgroundColor: darkTheme.chain_43114_background,
   },
 } as const
 

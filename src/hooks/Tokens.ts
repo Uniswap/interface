@@ -111,14 +111,14 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
     }
 
     const listUrl = getChainInfo(chainId).defaultListUrl
-
+    // @ts-ignore
     const list = listsByUrl[listUrl]?.current
     if (!list) {
       return {}
     }
 
     const unsupportedSet = new Set(Object.keys(unsupportedTokens))
-
+    // @ts-ignore
     return list.tokens.reduce((acc, tokenInfo) => {
       const bridgeInfo = tokenInfo.extensions?.bridgeInfo as unknown as BridgeInfo
       if (

@@ -6279,6 +6279,17 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
+"@uniswap/sdk-core@git+https://github.com/canxium/uniswap-sdk-core.git#main":
+  version "4.0.6"
+  resolved "git+https://github.com/canxium/uniswap-sdk-core.git#6e6c8be3fab0f25d282921ff680433d9c74829f8"
+  dependencies:
+    "@ethersproject/address" "^5.0.2"
+    big.js "^5.2.2"
+    decimal.js-light "^2.5.0"
+    jsbi "^3.1.4"
+    tiny-invariant "^1.1.0"
+    toformat "^2.0.0"
+
 "@uniswap/smart-order-router@^3.15.0":
   version "3.15.0"
   resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-3.15.0.tgz#f9e1f7ecdf48b9bae7c182acb99289e3ee1acce3"

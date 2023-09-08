@@ -26,6 +26,8 @@ import {
   USDC_AVALANCHE,
   USDC_BASE,
   USDC_BSC,
+  USDC_CANXIUM,
+  USDC_CANXIUM_CERIUM,
   USDC_MAINNET,
   USDC_OPTIMISM,
   USDC_POLYGON,
@@ -115,6 +117,8 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_AVALANCHE,
     WETH_AVALANCHE,
   ],
+  [ChainId.CANXIUM]: [nativeOnChain(ChainId.CANXIUM), WRAPPED_NATIVE_CURRENCY[ChainId.CANXIUM] as Token, USDC_CANXIUM],
+  [ChainId.CANXIUM_CERIUM]: [nativeOnChain(ChainId.CANXIUM_CERIUM), WRAPPED_NATIVE_CURRENCY[ChainId.CANXIUM_CERIUM] as Token, USDC_CANXIUM_CERIUM],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

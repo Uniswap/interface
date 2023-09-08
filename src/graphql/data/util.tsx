@@ -66,9 +66,10 @@ export const GQL_MAINNET_CHAINS = [
   Chain.Bnb,
   Chain.Avalanche,
   Chain.Base,
+  Chain.Canxium
 ] as const
 
-const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
+const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia, Chain.CanxiumCerium] as const
 
 const UX_SUPPORTED_GQL_CHAINS = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS] as const
 export type InterfaceGqlChain = (typeof UX_SUPPORTED_GQL_CHAINS)[number]
@@ -88,6 +89,8 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [ChainId.BNB]: Chain.Bnb,
   [ChainId.AVALANCHE]: Chain.Avalanche,
   [ChainId.BASE]: Chain.Base,
+  [ChainId.CANXIUM]: Chain.Canxium,
+  [ChainId.CANXIUM_CERIUM]: Chain.CanxiumCerium,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -154,6 +157,8 @@ const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
   [Chain.Bnb]: ChainId.BNB,
   [Chain.Avalanche]: ChainId.AVALANCHE,
   [Chain.Base]: ChainId.BASE,
+  [Chain.Canxium]: ChainId.CANXIUM,
+  [Chain.CanxiumCerium]: ChainId.CANXIUM_CERIUM,
 }
 
 export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {

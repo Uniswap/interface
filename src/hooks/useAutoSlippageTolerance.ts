@@ -75,6 +75,7 @@ const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 100) // 5%
  */
 export default function useClassicAutoSlippageTolerance(trade?: ClassicTrade): Percent {
   const { chainId } = useWeb3React()
+  // @ts-ignore
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
   const outputDollarValue = useStablecoinValue(trade?.outputAmount)
   const nativeGasPrice = useGasPrice()

@@ -26,11 +26,15 @@ export const AVALANCHE_LIST =
   'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/token_list.json'
 export const BASE_LIST =
   'https://raw.githubusercontent.com/ethereum-optimism/ethereum-optimism.github.io/master/optimism.tokenlist.json'
+export const CANXIUM_LIST =
+  'https://gist.githubusercontent.com/canximan/475c77bbda458c794805ab004f842829/raw/48eced08bfc0db9bd7e753b115b69843f0cfe677/list.txt'
+export const CERIUM_LIST =
+  'https://gist.githubusercontent.com/canximan/475c77bbda458c794805ab004f842829/raw/48eced08bfc0db9bd7e753b115b69843f0cfe677/list.txt'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST, UNI_UNSUPPORTED_LIST]
 
 // default lists to be 'active' aka searched across
-export const DEFAULT_ACTIVE_LIST_URLS: string[] = [UNI_LIST]
+export const DEFAULT_ACTIVE_LIST_URLS: string[] = [UNI_LIST, CANXIUM_LIST, CERIUM_LIST]
 export const DEFAULT_INACTIVE_LIST_URLS: string[] = [
   UNI_EXTENDED_LIST,
   COMPOUND_LIST,

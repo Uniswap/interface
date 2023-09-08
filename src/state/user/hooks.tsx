@@ -150,6 +150,7 @@ export function useUserTransactionTTL(): [number, (slippage: number) => void] {
   const { chainId } = useWeb3React()
   const dispatch = useAppDispatch()
   const userDeadline = useAppSelector((state) => state.user.userDeadline)
+  // @ts-ignore
   const onL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
   const deadline = onL2 ? L2_DEADLINE_FROM_NOW : userDeadline
 
