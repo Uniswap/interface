@@ -80,6 +80,20 @@ export const USDC_BASE = new Token(
   'USD Base Coin',
   'USDbC'
 )
+export const USDC_CANXIUM = new Token(
+  ChainId.CANXIUM,
+  '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
+  6,
+  'USD Base Coin',
+  'USDbC'
+)
+export const USDC_CANXIUM_CERIUM = new Token(
+  ChainId.CANXIUM_CERIUM,
+  '0xa2d6CbD859B8d081ba2b4154315690821a6c91eA',
+  6,
+  'USD Base Coin',
+  'USDbC'
+)
 
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const DAI_ARBITRUM_ONE = new Token(
@@ -251,9 +265,9 @@ export const DAI_AVALANCHE = new Token(
 )
 
 export const UNI: { [chainId: number]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESSES[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),
-  [ChainId.GOERLI]: new Token(ChainId.GOERLI, UNI_ADDRESSES[ChainId.GOERLI], 18, 'UNI', 'Uniswap'),
-  [ChainId.SEPOLIA]: new Token(ChainId.SEPOLIA, UNI_ADDRESSES[ChainId.SEPOLIA], 18, 'UNI', 'Uniswap'),
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
+  [ChainId.GOERLI]: new Token(ChainId.GOERLI, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
+  [ChainId.SEPOLIA]: new Token(ChainId.SEPOLIA, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
 }
 
 export const ARB = new Token(ChainId.ARBITRUM_ONE, '0x912CE59144191C1204E64559FE8253a0e49E6548', 18, 'ARB', 'Arbitrum')
@@ -334,6 +348,8 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WAVAX',
     'Wrapped AVAX'
   ),
+  [ChainId.CANXIUM]: new Token(ChainId.CANXIUM, '0x4200000000000000000000000000000000000006', 18, 'WCAU', 'Wrapped CAU'),
+  [ChainId.CANXIUM_CERIUM]: new Token(ChainId.CANXIUM_CERIUM, '0x620969CB5486D4E9E3884E5106EfB4f7d31a76A8', 18, 'WCAU', 'Wrapped CAU'),
 }
 
 export function isCelo(chainId: number): chainId is ChainId.CELO | ChainId.CELO_ALFAJORES {
@@ -471,5 +487,7 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: s
     [ChainId.GOERLI]: USDC_GOERLI.address,
     [ChainId.SEPOLIA]: USDC_SEPOLIA.address,
     [ChainId.AVALANCHE]: USDC_AVALANCHE.address,
+    [ChainId.CANXIUM]: USDC_CANXIUM.address,
+    [ChainId.CANXIUM_CERIUM]: USDC_CANXIUM_CERIUM.address,
   },
 }

@@ -13,6 +13,8 @@ const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [ChainId.BNB]: 'https://bscscan.com',
   [ChainId.AVALANCHE]: 'https://snowtrace.io',
   [ChainId.BASE]: 'https://basescan.org',
+  [ChainId.CANXIUM]: 'https://explorer.canxium.org',
+  [ChainId.CANXIUM_CERIUM]: 'https://cerium-explorer.canxium.net',
 }
 
 export enum ExplorerDataType {

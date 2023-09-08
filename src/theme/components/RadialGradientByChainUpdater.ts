@@ -111,6 +111,8 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? avaxDarkGradient : avaxLightGradient
         break
       }
+      case ChainId.CANXIUM:
+      case ChainId.CANXIUM_CERIUM:
       case ChainId.BASE: {
         setBackground(backgroundResetStyles)
         const baseLightGradient =

@@ -8,7 +8,7 @@ rulesDirPlugin.RULES_DIR = 'eslint_rules'
 
 module.exports = {
   extends: ['@uniswap/eslint-config/react'],
-  plugins: ['rulesdir'],
+  plugins: ['rulesdir', 'simple-import-sort'],
   overrides: [
     {
       files: ['**/*'],

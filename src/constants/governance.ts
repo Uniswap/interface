@@ -9,7 +9,7 @@ import {
 
 export const COMMON_CONTRACT_NAMES: Record<number, { [address: string]: string }> = {
   [ChainId.MAINNET]: {
-    [UNI_ADDRESSES[ChainId.MAINNET]]: 'UNI',
+    ['0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984']: 'UNI',
     [TIMELOCK_ADDRESSES[ChainId.MAINNET]]: 'Timelock',
     [GOVERNANCE_ALPHA_V0_ADDRESSES[ChainId.MAINNET]]: 'Governance (V0)',
     [GOVERNANCE_ALPHA_V1_ADDRESSES[ChainId.MAINNET]]: 'Governance (V1)',

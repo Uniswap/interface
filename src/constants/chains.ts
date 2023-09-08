@@ -23,6 +23,8 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.BNB]: 'bnb',
   [ChainId.AVALANCHE]: 'avalanche',
   [ChainId.BASE]: 'base',
+  [ChainId.CANXIUM]: 'canxium',
+  [ChainId.CANXIUM_CERIUM]: 'cerium',
 } as const
 
 // Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.
@@ -61,6 +63,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   ChainId.BNB,
   ChainId.AVALANCHE,
   ChainId.BASE,
+  ChainId.CANXIUM,
 ] as const
 
 /**
@@ -75,22 +78,13 @@ export const TESTNET_CHAIN_IDS = [
   ChainId.ARBITRUM_GOERLI,
   ChainId.OPTIMISM_GOERLI,
   ChainId.CELO_ALFAJORES,
+  ChainId.CANXIUM_CERIUM,
 ] as const
 
 /**
  * All the chain IDs that are running the Ethereum protocol.
  */
-export const L1_CHAIN_IDS = [
-  ChainId.MAINNET,
-  ChainId.GOERLI,
-  ChainId.SEPOLIA,
-  ChainId.POLYGON,
-  ChainId.POLYGON_MUMBAI,
-  ChainId.CELO,
-  ChainId.CELO_ALFAJORES,
-  ChainId.BNB,
-  ChainId.AVALANCHE,
-] as const
+export const L1_CHAIN_IDS = [ChainId.CANXIUM, ChainId.CANXIUM_CERIUM] as const
 
 export type SupportedL1ChainId = (typeof L1_CHAIN_IDS)[number]
 
@@ -98,13 +92,7 @@ export type SupportedL1ChainId = (typeof L1_CHAIN_IDS)[number]
  * Controls some L2 specific behavior, e.g. slippage tolerance, special UI behavior.
  * The expectation is that all of these networks have immediate transaction confirmation.
  */
-export const L2_CHAIN_IDS = [
-  ChainId.ARBITRUM_ONE,
-  ChainId.ARBITRUM_GOERLI,
-  ChainId.OPTIMISM,
-  ChainId.OPTIMISM_GOERLI,
-  ChainId.BASE,
-] as const
+export const L2_CHAIN_IDS = [] as const
 
 export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
 
@@ -118,6 +106,7 @@ export function getChainPriority(chainId: ChainId): number {
     case ChainId.MAINNET:
     case ChainId.GOERLI:
     case ChainId.SEPOLIA:
+    case ChainId.CANXIUM:
       return 0
     case ChainId.ARBITRUM_ONE:
     case ChainId.ARBITRUM_GOERLI:
@@ -137,8 +126,10 @@ export function getChainPriority(chainId: ChainId): number {
     case ChainId.CELO:
     case ChainId.CELO_ALFAJORES:
       return 7
-    default:
+    case ChainId.CANXIUM_CERIUM:
       return 8
+    default:
+      return 9
   }
 }
 

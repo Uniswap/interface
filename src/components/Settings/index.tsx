@@ -96,6 +96,7 @@ export default function SettingsTab({
   trade?: InterfaceTrade
 }) {
   const { chainId: connectedChainId } = useWeb3React()
+  // @ts-ignore
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
 
   const node = useRef<HTMLDivElement | null>(null)
