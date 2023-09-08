@@ -150,12 +150,11 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     () => scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]),
     [startingPrice, endingPrice, width]
   )
-  const { min, max } = useMemo(() => getPriceBounds(originalPrices ?? []), [originalPrices])
   // y scale
-  const rdScale = useMemo(
-    () => scaleLinear().domain([min, max]).range([graphInnerHeight, 0]),
-    [min, max, graphInnerHeight]
-  )
+  const rdScale = useMemo(() => {
+    const { min, max } = getPriceBounds(originalPrices ?? [])
+    return scaleLinear().domain([min, max]).range([graphInnerHeight, 0])
+  }, [originalPrices, graphInnerHeight])
 
   const handleHover = useCallback(
     (event: Element | EventType) => {
