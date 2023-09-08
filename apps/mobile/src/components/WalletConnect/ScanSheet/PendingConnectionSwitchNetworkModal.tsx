@@ -9,8 +9,7 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
-import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
-import { useActiveChainIds } from 'wallet/src/features/chains/hooks'
+import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 type Props = {
   selectedChainId: ChainId
@@ -23,13 +22,12 @@ export const PendingConnectionSwitchNetworkModal = ({
   onPressChain,
   onClose,
 }: Props): JSX.Element => {
-  const activeChains = useActiveChainIds()
   const theme = useAppTheme()
   const { t } = useTranslation()
 
   const options = useMemo(
     () =>
-      activeChains.map((chainId) => {
+      ALL_SUPPORTED_CHAIN_IDS.map((chainId) => {
         const info = CHAIN_INFO[chainId]
         return {
           key: `${ElementName.NetworkButton}-${chainId}`,
@@ -57,7 +55,7 @@ export const PendingConnectionSwitchNetworkModal = ({
           ),
         }
       }),
-    [activeChains, selectedChainId, onPressChain, theme.colors.accent1]
+    [selectedChainId, onPressChain, theme.colors.accent1]
   )
 
   return (

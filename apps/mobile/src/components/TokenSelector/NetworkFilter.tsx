@@ -15,8 +15,7 @@ import {
   NetworkLogo,
   SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,
 } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
-import { ChainId } from 'wallet/src/constants/chains'
-import { useActiveChainIds } from 'wallet/src/features/chains/hooks'
+import { ALL_SUPPORTED_CHAIN_IDS, ChainId } from 'wallet/src/constants/chains'
 
 const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
@@ -115,10 +114,9 @@ export function NetworkFilter({
     [showEllipsisIcon, selectedChain, onPressChain]
   )
 
-  const activeChains = useActiveChainIds()
   // design wants to limit amount of networks shown in the network filter,
   // when all networks is selected and for now we show all, but Arbitrum
-  const activeChainsWithoutArbitrum = activeChains.filter(
+  const activeChainsWithoutArbitrum = ALL_SUPPORTED_CHAIN_IDS.filter(
     (chainId) => chainId !== ChainId.ArbitrumOne
   )
 
