@@ -103,9 +103,9 @@ const StyledTokenRow = styled.div<{
   }
 `
 
-const ClickableContent = styled.div<{ gap?: string }>`
+const ClickableContent = styled.div<{ gap?: number }>`
   display: flex;
-  ${({ gap }) => gap && `gap: ${gap}`};
+  ${({ gap }) => gap && `gap: ${gap}px`};
   text-decoration: none;
   color: ${({ theme }) => theme.neutral1};
   align-items: center;
@@ -496,7 +496,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
             </ClickableContent>
           }
           percentChange={
-            <ClickableContent gap="3px">
+            <ClickableContent gap={3}>
               <DeltaArrow delta={delta} />
               <DeltaText delta={delta}>{formattedDelta}</DeltaText>
             </ClickableContent>
