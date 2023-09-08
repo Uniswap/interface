@@ -25,13 +25,11 @@ import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Screens } from 'src/screens/Screens'
-import { useExtractedTokenColor } from 'src/utils/colors'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
@@ -45,12 +43,14 @@ import {
   useTokenDetailsScreenQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
+import { useExtractedTokenColor } from 'wallet/src/utils/colors'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 type Price = NonNullable<

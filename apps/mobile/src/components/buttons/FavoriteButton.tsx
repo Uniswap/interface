@@ -10,8 +10,8 @@ import {
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex } from 'src/components/layout'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 interface FavoriteButtonProps {
   isFavorited: boolean

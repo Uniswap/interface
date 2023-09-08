@@ -29,11 +29,6 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { setClipboardImage } from 'src/utils/clipboard'
-import {
-  MIN_COLOR_CONTRAST_THRESHOLD,
-  passesContrast,
-  useNearestThemeColorFromImageUri,
-} from 'src/utils/colors'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, iconSizes } from 'ui/src/theme'
@@ -49,6 +44,11 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
+import {
+  MIN_COLOR_CONTRAST_THRESHOLD,
+  passesContrast,
+  useNearestThemeColorFromImageUri,
+} from 'wallet/src/utils/colors'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
 

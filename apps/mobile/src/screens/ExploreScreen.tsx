@@ -14,13 +14,13 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { flex, Theme } from 'ui/src/theme/restyle'
 import { useDebounce } from 'utilities/src/time/timing'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export function ExploreScreen(): JSX.Element {
   const modalInitialState = useAppSelector(selectModalState(ModalName.Explore)).initialState

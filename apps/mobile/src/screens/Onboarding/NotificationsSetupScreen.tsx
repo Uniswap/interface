@@ -11,7 +11,6 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { IS_IOS } from 'src/constants/globals'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
@@ -21,6 +20,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import {
   EditAccountAction,
   editAccountActions,

@@ -8,7 +8,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
-import { getContrastPassingTextColor } from 'src/utils/colors'
+import { getContrastPassingTextColor } from 'wallet/src/utils/colors'
 
 export function TokenDetailsActionButtons({
   onPressSwap,

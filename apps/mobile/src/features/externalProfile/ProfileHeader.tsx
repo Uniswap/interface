@@ -18,11 +18,11 @@ import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useExtractedColors } from 'src/utils/colors'
 import { Icons } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { useExtractedColors } from 'wallet/src/utils/colors'
 
 const HEADER_GRADIENT_HEIGHT = 137
 const HEADER_ICON_SIZE = 72

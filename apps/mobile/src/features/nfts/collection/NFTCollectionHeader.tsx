@@ -11,7 +11,6 @@ import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { IS_ANDROID } from 'src/constants/globals'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
-import { useExtractedColors } from 'src/utils/colors'
 import { Logos } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -20,6 +19,7 @@ import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { NftCollectionScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
+import { useExtractedColors } from 'wallet/src/utils/colors'
 
 const PROFILE_IMAGE_SIZE = 72
 const PROFILE_IMAGE_WRAPPER_SIZE = PROFILE_IMAGE_SIZE + FixedTheme.spacing.spacing4

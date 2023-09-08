@@ -1,5 +1,4 @@
 import { combineReducers } from '@reduxjs/toolkit'
-import { appearanceSettingsReducer } from 'src/features/appearance/slice'
 import { biometricSettingsReducer } from 'src/features/biometrics/slice'
 import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
 import { passwordLockoutReducer } from 'src/features/CloudBackup/passwordLockoutSlice'
@@ -15,7 +14,6 @@ import { monitoredSagaReducers } from './saga'
 
 const reducers = {
   ...sharedReducers,
-  appearanceSettings: appearanceSettingsReducer,
   biometricSettings: biometricSettingsReducer,
   cloudBackup: cloudBackupReducer,
   favorites: favoritesReducer,

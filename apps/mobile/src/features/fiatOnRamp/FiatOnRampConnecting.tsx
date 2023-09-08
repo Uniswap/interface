@@ -6,7 +6,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Box } from 'src/components/layout'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import {
   FOR_CONNECTING_BACKGROUND_DARK,
   FOR_CONNECTING_BACKGROUND_LIGHT,
@@ -14,6 +13,7 @@ import {
 } from 'ui/src/assets'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
 import { theme } from 'ui/src/theme/restyle'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 const ICON_SIZE = 90
 

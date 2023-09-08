@@ -21,11 +21,11 @@ import { Box } from 'src/components/layout'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
 import { dimensions, spacing } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 type Props = PropsWithChildren<{
   disableSwipe?: boolean

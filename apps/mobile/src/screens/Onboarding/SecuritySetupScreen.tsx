@@ -9,7 +9,6 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import Trace from 'src/components/Trace/Trace'
 import { IS_IOS } from 'src/constants/globals'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import {
   biometricAuthenticationSuccessful,
@@ -21,13 +20,14 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { opacify } from 'src/utils/colors'
 import { openSettings } from 'src/utils/linking'
 import { Box, Button, Flex, Text } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
 import FaceIcon from 'ui/src/assets/icons/faceid-thin.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { opacify } from 'wallet/src/utils/colors'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 

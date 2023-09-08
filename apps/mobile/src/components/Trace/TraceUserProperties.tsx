@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import {
   useBiometricAppSettings,
   useDeviceSupportsBiometricAuth,
@@ -8,6 +7,7 @@ import { setUserProperty } from 'src/features/telemetry'
 import { getAuthMethod, UserPropertyName } from 'src/features/telemetry/constants'
 import { getFullAppVersion } from 'src/utils/version'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
   useActiveAccount,

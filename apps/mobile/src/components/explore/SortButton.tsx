@@ -5,7 +5,6 @@ import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import {
   getTokensOrderByMenuLabel,
   getTokensOrderBySelectedLabel,
@@ -16,6 +15,7 @@ import { Icons } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
 import { ClientTokensOrderBy, TokensOrderBy } from 'wallet/src/features/wallet/types'
 interface FilterGroupProps {

@@ -6,11 +6,11 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { Icons } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { opacify } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
 export const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }

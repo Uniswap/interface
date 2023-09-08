@@ -1,14 +1,13 @@
 import { useTheme } from '@tamagui/web'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ImageColors from 'react-native-image-colors'
-import { useAppTheme } from 'src/app/hooks'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { colors as GlobalColors, GlobalPalette } from 'ui/src/theme'
-import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle'
+import { theme as FixedTheme, theme as restyleTheme, Theme } from 'ui/src/theme/restyle'
 import { assert } from 'utilities/src/errors'
 import { isSVGUri } from 'utilities/src/format/urls'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { hex } from 'wcag-contrast'
 
 export const MIN_COLOR_CONTRAST_THRESHOLD = 3
@@ -45,9 +44,7 @@ export function getNetworkColorKey(chainId: ChainId): keyof Theme['colors'] {
 
 /** Helper to retrieve foreground and background colors for a given chain */
 export function useNetworkColors(chainId: ChainId): { foreground: string; background: string } {
-  const theme = useAppTheme()
-
-  const color = theme.colors[getNetworkColorKey(chainId)]
+  const color = restyleTheme.colors[getNetworkColorKey(chainId)]
 
   const foreground = color
   assert(foreground, 'Network color is not defined in Theme')

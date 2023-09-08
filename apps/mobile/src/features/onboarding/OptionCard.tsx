@@ -5,8 +5,8 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export function OptionCard({
   title,

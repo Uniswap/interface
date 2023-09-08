@@ -5,11 +5,11 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Modal } from 'src/components/modals/Modal'
 import { IS_ANDROID } from 'src/constants/globals'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 import { dimensions } from 'ui/src/theme'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 

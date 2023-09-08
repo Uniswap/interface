@@ -12,10 +12,10 @@ import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 type Props = {

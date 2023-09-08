@@ -1,7 +1,7 @@
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { Logos } from 'ui/src'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export function EtherscanIcon({ width, height }: SvgProps): JSX.Element {
   const isDarkMode = useIsDarkMode()

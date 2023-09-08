@@ -8,13 +8,13 @@ import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedBox, AnimatedFlex, Box } from 'src/components/layout'
 import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import SearchIcon from 'ui/src/assets/icons/search.svg'
 import X from 'ui/src/assets/icons/x.svg'
 import { dimensions } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export const springConfig = {
   stiffness: 1000,

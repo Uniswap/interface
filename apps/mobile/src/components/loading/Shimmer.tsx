@@ -10,9 +10,9 @@ import Reanimated, {
   withTiming,
 } from 'react-native-reanimated'
 import { Box } from 'src/components/layout'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
-import { opacify } from 'src/utils/colors'
 import { theme } from 'ui/src/theme/restyle'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { opacify } from 'wallet/src/utils/colors'
 
 const SHIMMER_DURATION = 2000 // 2 seconds
 

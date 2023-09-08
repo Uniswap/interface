@@ -31,7 +31,6 @@ import { Arrow } from 'src/components/icons/Arrow'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import Trace from 'src/components/Trace/Trace'
 import { useUniconColors } from 'src/components/unicons/utils'
-import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   flashWipeAnimation,
@@ -50,6 +49,7 @@ import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } f
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { opacify } from 'ui/src/theme'
 import { flex } from 'ui/src/theme/restyle'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export function QRAnimation({
   activeAddress,
