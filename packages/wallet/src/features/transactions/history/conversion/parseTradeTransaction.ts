@@ -92,10 +92,6 @@ export default function parseTradeTransaction(
 
   // Token swap
   if (onlyERC20Tokens) {
-    sent.quantity = BigNumber.from(sent.quantity)
-      .sub(BigNumber.from(refund?.quantity ?? '0'))
-      .toString()
-
     const inputCurrencyId =
       sent.tokenStandard === TokenStandard.Native
         ? buildNativeCurrencyId(chainId)
@@ -108,13 +104,28 @@ export default function parseTradeTransaction(
         : received.asset.address
         ? buildCurrencyId(chainId, received.asset.address)
         : null
-    const inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
+    let inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       sent.tokenStandard,
       sent.asset.chain,
       sent.asset.address,
       sent.asset.decimals,
       sent.quantity
     )
+
+    if (refund && refund.tokenStandard === sent.tokenStandard) {
+      const refundCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
+        refund.tokenStandard,
+        refund.asset.chain,
+        refund.asset.address,
+        refund.asset.decimals,
+        refund.quantity
+      )
+
+      inputCurrencyAmountRaw = BigNumber.from(inputCurrencyAmountRaw)
+        .sub(refundCurrencyAmountRaw)
+        .toString()
+    }
+
     const expectedOutputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       received.tokenStandard,
       received.asset.chain,
