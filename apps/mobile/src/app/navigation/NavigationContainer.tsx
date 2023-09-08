@@ -4,14 +4,13 @@ import {
   NavigationContainer as NativeNavigationContainer,
   NavigationContainerRefWithCurrent,
 } from '@react-navigation/native'
-import { AnyAction } from '@reduxjs/toolkit'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { Dispatch, FC, PropsWithChildren, useCallback, useState } from 'react'
+import React, { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { Linking } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { RootParamList } from 'src/app/navigation/types'
 import Trace from 'src/components/Trace/Trace'
-import { DeepLink, openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
+import { openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { getEventParams } from 'src/features/telemetry/constants'
 import { DIRECT_LOG_ONLY_SCREENS } from 'src/features/telemetry/directLogScreens'
@@ -30,13 +29,12 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
   children,
   onReady,
 }: PropsWithChildren<Props>) => {
-  const dispatch = useAppDispatch()
   const theme = useAppTheme()
   const [routeName, setRouteName] = useState<AppScreen>()
   const [routeParams, setRouteParams] = useState<Record<string, unknown> | undefined>()
   const [logImpression, setLogImpression] = useState<boolean>(false)
 
-  useManageDeepLinks(dispatch)
+  useManageDeepLinks()
 
   return (
     <NativeNavigationContainer
@@ -83,21 +81,19 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
   )
 }
 
-export const useManageDeepLinks = (dispatch: Dispatch<AnyAction | AnyAction>): void => {
+export const useManageDeepLinks = (): void => {
+  const dispatch = useAppDispatch()
   const manageDeepLinks = useCallback(async () => {
-    const handleDeepLink = (payload: DeepLink): void => dispatch(openDeepLink(payload))
+    const url = await Linking.getInitialURL()
+    if (url) {
+      dispatch(openDeepLink({ url, coldStart: true }))
+    } else {
+      const urlListener = Linking.addEventListener('url', (event: { url: string }) =>
+        dispatch(openDeepLink({ url: event.url, coldStart: false }))
+      )
 
-    const urlListener = Linking.addEventListener('url', (event: { url: string }) =>
-      handleDeepLink({ url: event.url, coldStart: false })
-    )
-
-    const handleDeepLinkColdStart = async (): Promise<void> => {
-      const url = await Linking.getInitialURL()
-      if (url) handleDeepLink({ url, coldStart: true })
+      return urlListener.remove
     }
-
-    await handleDeepLinkColdStart()
-    return urlListener.remove
   }, [dispatch])
 
   useAsyncData(manageDeepLinks)
