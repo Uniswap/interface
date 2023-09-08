@@ -25,7 +25,7 @@ interface SwapDetailsProps {
   gasFallbackUsed?: boolean
   customSlippageTolerance?: number
   autoSlippageTolerance?: number
-  newTradeToAccept: boolean
+  newTradeRequiresAcceptance: boolean
   warning?: Warning
   onAcceptTrade: () => void
   onShowWarning?: () => void
@@ -38,7 +38,7 @@ export function SwapDetails({
   acceptedTrade,
   gasFeeUSD,
   gasFallbackUsed,
-  newTradeToAccept,
+  newTradeRequiresAcceptance,
   customSlippageTolerance,
   autoSlippageTolerance,
   trade,
@@ -68,7 +68,7 @@ export function SwapDetails({
   return (
     <TransactionDetails
       banner={
-        newTradeToAccept ? (
+        newTradeRequiresAcceptance ? (
           <Flex
             row
             alignItems="center"
@@ -117,7 +117,7 @@ export function SwapDetails({
       gasFallbackUsed={gasFallbackUsed}
       gasFeeUSD={gasFeeUSD}
       showExpandedChildren={!!customSlippageTolerance}
-      showWarning={warning && !newTradeToAccept}
+      showWarning={warning && !newTradeRequiresAcceptance}
       warning={warning}
       onShowGasWarning={onShowGasWarning}
       onShowWarning={onShowWarning}>

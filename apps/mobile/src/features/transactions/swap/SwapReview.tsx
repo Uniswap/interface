@@ -20,7 +20,6 @@ import {
   getActionElementName,
   getActionName,
   isWrapAction,
-  requireAcceptNewTrade,
 } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
@@ -80,7 +79,7 @@ export function SwapReview({
 
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
 
-  const { onAcceptTrade, acceptedTrade } = useAcceptedTrade(trade)
+  const { onAcceptTrade, acceptedTrade, newTradeRequiresAcceptance } = useAcceptedTrade(trade)
 
   const noValidSwap = !isWrapAction(wrapType) && !trade
   const blockingWarning = warnings.some(
@@ -88,7 +87,6 @@ export function SwapReview({
       warning.action === WarningAction.DisableSubmit ||
       warning.action === WarningAction.DisableReview
   )
-  const newTradeToAccept = requireAcceptNewTrade(acceptedTrade, trade)
 
   const { wrapCallback: onWrap } = useWrapCallback(
     currencyAmounts[CurrencyField.INPUT],
@@ -169,7 +167,7 @@ export function SwapReview({
   const actionButtonDisabled =
     noValidSwap ||
     blockingWarning ||
-    newTradeToAccept ||
+    newTradeRequiresAcceptance ||
     !totalGasFee ||
     !txRequest ||
     account.type === AccountType.Readonly
@@ -204,7 +202,7 @@ export function SwapReview({
         customSlippageTolerance={customSlippageTolerance}
         gasFallbackUsed={gasFallbackUsed}
         gasFeeUSD={gasFeeUSD}
-        newTradeToAccept={newTradeToAccept}
+        newTradeRequiresAcceptance={newTradeRequiresAcceptance}
         trade={trade}
         warning={swapWarning}
         onAcceptTrade={onAcceptTrade}

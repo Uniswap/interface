@@ -7,6 +7,7 @@ import {
 } from '@react-native-community/netinfo'
 import { TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { BigNumber, providers } from 'ethers'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20, Weth } from 'wallet/src/abis/types'
@@ -14,7 +15,7 @@ import WETH_ABI from 'wallet/src/abis/weth.json'
 import { config } from 'wallet/src/config'
 import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
-import { DAI, DAI_ARBITRUM_ONE, UNI } from 'wallet/src/constants/tokens'
+import { DAI, DAI_ARBITRUM_ONE, UNI, WBTC } from 'wallet/src/constants/tokens'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
@@ -377,3 +378,12 @@ export const mockWalletPreloadedState = {
     activeAccountAddress: account.address,
   },
 }
+
+export const mockPool = new Pool(
+  UNI[ChainId.Mainnet],
+  WBTC,
+  FeeAmount.HIGH,
+  '2437312313659959819381354528',
+  '10272714736694327408',
+  -69633
+)

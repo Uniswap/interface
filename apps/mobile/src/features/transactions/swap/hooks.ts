@@ -20,6 +20,7 @@ import {
   getSwapMethodParameters,
   getWrapType,
   isWrapAction,
+  requireAcceptNewTrade,
   sumGasFees,
 } from 'src/features/transactions/swap/utils'
 import {
@@ -798,23 +799,31 @@ export function useWrapCallback(
 export function useAcceptedTrade(trade: Maybe<Trade>): {
   onAcceptTrade: () => undefined
   acceptedTrade: Trade<Currency, Currency, TradeType> | undefined
+  newTradeRequiresAcceptance: boolean
 } {
-  const [latestTradeAccepted, setLatestTradeAccepted] = useState<boolean>(false)
-  const prevTradeRef = useRef<Trade>()
-  useEffect(() => {
-    if (latestTradeAccepted) setLatestTradeAccepted(false)
-    if (!prevTradeRef.current) prevTradeRef.current = trade ?? undefined
-  }, [latestTradeAccepted, trade])
+  const [acceptedTrade, setAcceptedTrade] = useState<Trade>()
+  const newTradeRequiresAcceptance = requireAcceptNewTrade(acceptedTrade, trade)
 
-  const acceptedTrade = prevTradeRef.current ?? trade ?? undefined
+  useEffect(() => {
+    if (!trade || trade === acceptedTrade) return
+
+    // auto-accept: 1) first valid trade for the user or 2) new trade if price movement is below threshold
+    if (!acceptedTrade || !newTradeRequiresAcceptance) {
+      setAcceptedTrade(trade)
+    }
+  }, [trade, acceptedTrade, newTradeRequiresAcceptance])
 
   const onAcceptTrade = (): undefined => {
     if (!trade) return undefined
-    setLatestTradeAccepted(true)
-    prevTradeRef.current = trade
+
+    setAcceptedTrade(trade)
   }
 
-  return { onAcceptTrade, acceptedTrade }
+  return {
+    onAcceptTrade,
+    acceptedTrade,
+    newTradeRequiresAcceptance,
+  }
 }
 
 export function useShowSwapNetworkNotification(chainId?: ChainId): void {

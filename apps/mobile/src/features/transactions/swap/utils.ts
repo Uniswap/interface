@@ -102,8 +102,17 @@ export function tradeToTransactionInfo(
       }
 }
 
+// any price movement below ACCEPT_NEW_TRADE_THRESHOLD is auto-accepted for the user
+const ACCEPT_NEW_TRADE_THRESHOLD = new Percent(1, 100)
 export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Trade>): boolean {
-  return oldTrade?.quote?.methodParameters?.calldata !== newTrade?.quote?.methodParameters?.calldata
+  if (!oldTrade || !newTrade) return false
+
+  return (
+    oldTrade.tradeType !== newTrade.tradeType ||
+    !oldTrade.inputAmount.currency.equals(newTrade.inputAmount.currency) ||
+    !oldTrade.outputAmount.currency.equals(newTrade.outputAmount.currency) ||
+    newTrade.executionPrice.lessThan(oldTrade.worstExecutionPrice(ACCEPT_NEW_TRADE_THRESHOLD))
+  )
 }
 
 export const getRateToDisplay = (trade: Trade, showInverseRate: boolean): string => {
