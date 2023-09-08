@@ -41,16 +41,13 @@ Cypress.Commands.overwrite(
   (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
     if (typeof url !== 'string') throw new Error('Invalid arguments. The first argument to cy.visit must be the path.')
 
-    // Add a hash in the URL if it is not present (to use hash-based routing correctly with queryParams).
-    const hashUrl = url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url
-
     return cy
       .intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 })
       .provider()
       .then((provider) =>
         original({
           ...options,
-          url: hashUrl,
+          url,
           onBeforeLoad(win) {
             options?.onBeforeLoad?.(win)
 

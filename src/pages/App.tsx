@@ -17,7 +17,7 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
-import { getEnvName } from 'utils/env'
+import { getEnvName, isBrowserRouterEnabled } from 'utils/env'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
@@ -112,7 +112,8 @@ export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const [shouldDisableNFTRoutes, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
 
-  const { pathname } = useLocation()
+  const browserRouterEnabled = isBrowserRouterEnabled()
+  const { hash, pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
   const [routerPreference] = useRouterPreference()
@@ -211,7 +212,13 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  <Route path="/" element={<Landing />} />
+                  <Route
+                    path="/"
+                    element={
+                      // If we match "/" and # is defined, we are using BrowserRouter and need to redirect.
+                      browserRouterEnabled && hash ? <Navigate to={hash.replace('#', '')} replace /> : <Landing />
+                    }
+                  />
 
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
