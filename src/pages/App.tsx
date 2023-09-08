@@ -17,7 +17,7 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
-import { getEnvName } from 'utils/env'
+import { getEnvName, isBrowserRouterEnabled } from 'utils/env'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
@@ -108,19 +108,12 @@ const LazyLoadSpinner = () => (
   </SpinnerSVG>
 )
 
-const RedirectHashToPath = ({ children }: { children: JSX.Element }) => {
-  const { hash } = useLocation()
-  if (hash) {
-    return <Navigate to={hash.replace('#', '')} replace />
-  }
-  return children
-}
-
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const [shouldDisableNFTRoutes, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
 
-  const { pathname } = useLocation()
+  const browserRouterEnabled = isBrowserRouterEnabled()
+  const { hash, pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
   const [routerPreference] = useRouterPreference()
@@ -222,11 +215,8 @@ export default function App() {
                   <Route
                     path="/"
                     element={
-                      // if react-router-dom matches "/" with window.location.hash defined, it means that we're
-                      // using BrowserRouter and can safely redirect to a path route
-                      <RedirectHashToPath>
-                        <Landing />
-                      </RedirectHashToPath>
+                      // If we match "/" and # is defined, we are using BrowserRouter and need to redirect.
+                      browserRouterEnabled && hash ? <Navigate to={hash.replace('#', '')} replace /> : <Landing />
                     }
                   />
 
