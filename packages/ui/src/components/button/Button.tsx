@@ -65,7 +65,7 @@ const CustomButtonFrame = styled(XStack, {
 
     disabled: {
       true: {
-        backgroundColor: '$surface3',
+        opacity: 0.4,
         pointerEvents: 'none',
         userSelect: 'none',
       },

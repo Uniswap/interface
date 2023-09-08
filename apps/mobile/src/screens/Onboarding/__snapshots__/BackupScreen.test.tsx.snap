@@ -679,7 +679,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               style={
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#2222220D",
+                  "backgroundColor": "#FC72FF",
                   "borderBottomColor": "transparent",
                   "borderBottomLeftRadius": 16,
                   "borderBottomRightRadius": 16,
@@ -697,6 +697,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   "gap": 8,
                   "height": "auto",
                   "justifyContent": "center",
+                  "opacity": 0.4,
                   "paddingBottom": 12,
                   "paddingLeft": 12,
                   "paddingRight": 12,

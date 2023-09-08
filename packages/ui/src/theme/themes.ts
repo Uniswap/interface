@@ -157,21 +157,21 @@ const dark_secondary_Button: BaseTheme = {
 // theme: light
 const light_tertiary_Button: BaseTheme = {
   ...light,
-  background: colorsLight.none,
+  background: colorsLight.surface3,
   backgroundHover: colorsLight.none,
   backgroundPress: colorsLight.none,
-  borderColor: colorsLight.surface3,
-  color: colorsLight.sporeWhite,
+  borderColor: colorsLight.none,
+  color: colorsLight.neutral1,
 }
 
 // theme: dark
 const dark_tertiary_Button: BaseTheme = {
   ...dark,
-  background: colorsDark.none,
+  background: colorsDark.surface3,
   backgroundHover: colorsDark.none,
   backgroundPress: colorsDark.none,
-  borderColor: colorsDark.surface3,
-  color: colorsDark.sporeWhite,
+  borderColor: colorsDark.none,
+  color: colorsDark.neutral1,
 }
 
 // detrimental
