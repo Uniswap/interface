@@ -18,15 +18,73 @@ exports[`PortfolioBalance renders without error 1`] = `
     }
   >
     <View
-      onLayout={[Function]}
+      sentry-label="Flex"
+      style={
+        [
+          {
+            "alignItems": "flex-start",
+            "display": "flex",
+            "flexDirection": "row",
+            "justifyContent": "flex-start",
+          },
+        ]
+      }
     >
+      <View
+        exiting={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
+        style={
+          [
+            {
+              "height": 60,
+            },
+            {
+              "overflow": "hidden",
+            },
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "color": "#222222",
+              },
+              {
+                "fontSize": 48,
+                "fontWeight": "600",
+              },
+              {
+                "height": 60,
+              },
+            ]
+          }
+        >
+          $
+        </Text>
+      </View>
       <View
         style={
           [
             {
-              "alignItems": "center",
               "display": "flex",
-              "flexDirection": "row",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "width": 0,
+            },
+          ]
+        }
+      />
+      <View
+        exiting={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
+        style={
+          [
+            {
+              "height": 60,
+            },
+            {
+              "overflow": "hidden",
             },
           ]
         }
@@ -35,56 +93,1144 @@ exports[`PortfolioBalance renders without error 1`] = `
           style={
             [
               {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
-                "position": "relative",
+                "transform": [
+                  {
+                    "translateY": -0,
+                  },
+                ],
+              },
+              {
+                "marginRight": -10,
+                "width": 40,
               },
             ]
           }
         >
-          <View
-            accessibilityElementsHidden={true}
-            importantForAccessibility="no-hide-descendants"
-          >
-            <Text
-              adjustsFontSizeToFit={false}
-              allowFontScaling={true}
-              maxFontSizeMultiplier={1.2}
-              numberOfLines={1}
-              style={
-                [
-                  {
-                    "color": "#222222",
-                    "display": "flex",
-                    "fontFamily": "Basel-Book",
-                    "fontSize": 53,
-                    "fontWeight": "400",
-                    "lineHeight": 60,
-                    "opacity": 0,
-                  },
-                ]
-              }
-            >
-              $000.00
-            </Text>
-          </View>
-          <View
+          <Text
             style={
               [
                 {
-                  "backgroundColor": "#2222220D",
-                  "borderRadius": 4,
-                  "bottom": "5%",
-                  "display": "flex",
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": "5%",
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
                 },
               ]
             }
-          />
+          >
+            0
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            1
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            2
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            3
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            4
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            5
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            6
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            7
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            8
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            9
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "width": 0,
+            },
+          ]
+        }
+      />
+      <View
+        exiting={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
+        style={
+          [
+            {
+              "height": 60,
+            },
+            {
+              "overflow": "hidden",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "transform": [
+                  {
+                    "translateY": -0,
+                  },
+                ],
+              },
+              {
+                "marginRight": -10,
+                "width": 40,
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            0
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            1
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            2
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            3
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            4
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            5
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            6
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            7
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            8
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            9
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "width": 0,
+            },
+          ]
+        }
+      />
+      <View
+        exiting={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
+        style={
+          [
+            {
+              "height": 60,
+            },
+            {
+              "overflow": "hidden",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "transform": [
+                  {
+                    "translateY": -0,
+                  },
+                ],
+              },
+              {
+                "marginRight": -10,
+                "width": 40,
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            0
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            1
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            2
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            3
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            4
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            5
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            6
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            7
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            8
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            9
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "width": 0,
+            },
+          ]
+        }
+      />
+      <View
+        exiting={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
+        style={
+          [
+            {
+              "height": 60,
+            },
+            {
+              "overflow": "hidden",
+            },
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "color": "#CECECE",
+              },
+              {
+                "fontSize": 48,
+                "fontWeight": "600",
+              },
+              {
+                "height": 60,
+              },
+            ]
+          }
+        >
+          .
+        </Text>
+      </View>
+      <View
+        style={
+          [
+            {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "width": 0,
+            },
+          ]
+        }
+      />
+      <View
+        exiting={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
+        style={
+          [
+            {
+              "height": 60,
+            },
+            {
+              "overflow": "hidden",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "transform": [
+                  {
+                    "translateY": -0,
+                  },
+                ],
+              },
+              {
+                "marginRight": -10,
+                "width": 40,
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            0
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            1
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            2
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            3
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            4
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            5
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            6
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            7
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            8
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            9
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "width": 0,
+            },
+          ]
+        }
+      />
+      <View
+        exiting={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
+        style={
+          [
+            {
+              "height": 60,
+            },
+            {
+              "overflow": "hidden",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "transform": [
+                  {
+                    "translateY": -0,
+                  },
+                ],
+              },
+              {
+                "marginRight": -10,
+                "width": 40,
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            0
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            1
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            2
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            3
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            4
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            5
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            6
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            7
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            8
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "color": "#CECECE",
+                },
+                {
+                  "fontSize": 48,
+                  "fontWeight": "600",
+                },
+                {
+                  "height": 60,
+                },
+              ]
+            }
+          >
+            9
+          </Text>
         </View>
       </View>
     </View>
@@ -181,177 +1327,6 @@ exports[`PortfolioBalance renders without error 1`] = `
             </View>
           </View>
         </View>
-      </View>
-    </View>
-  </View>
-</View>
-`;
-
-exports[`PortfolioBalance renders without error 2`] = `
-<View
-  onLayout={[Function]}
->
-  <View
-    sentry-label="Flex"
-    style={
-      [
-        {
-          "alignItems": "stretch",
-          "display": "flex",
-          "flexDirection": "column",
-          "justifyContent": "flex-start",
-        },
-      ]
-    }
-  >
-    <Text
-      adjustsFontSizeToFit={true}
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.2}
-      numberOfLines={1}
-      style={
-        [
-          {
-            "color": "#222222",
-            "display": "flex",
-            "fontFamily": "Basel-Book",
-            "fontSize": 53,
-            "fontWeight": "400",
-            "lineHeight": 60,
-          },
-        ]
-      }
-    >
-      $55
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.2}
-        style={
-          [
-            {
-              "color": "#CECECE",
-              "display": "flex",
-              "fontFamily": "Basel-Book",
-              "fontSize": 53,
-              "fontWeight": "400",
-              "lineHeight": 60,
-            },
-          ]
-        }
-      >
-        .
-        00
-      </Text>
-    </Text>
-    <View
-      style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 4,
-          },
-        ]
-      }
-    />
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "gap": 2,
-          "justifyContent": "flex-start",
-        }
-      }
-    >
-      <RNSVGSvgView
-        align="xMidYMid"
-        bbHeight="20"
-        bbWidth="20"
-        fill="none"
-        focusable={false}
-        meetOrSlice={0}
-        minX={0}
-        minY={0}
-        strokeWidth={2}
-        style={
-          [
-            {
-              "backgroundColor": "transparent",
-              "borderWidth": 0,
-            },
-            {
-              "color": "#40B66B",
-              "height": 20,
-              "transform": [
-                {
-                  "rotate": "180deg",
-                },
-              ],
-              "width": 20,
-            },
-            {
-              "flex": 0,
-              "height": 20,
-              "width": 20,
-            },
-          ]
-        }
-        tintColor="#40B66B"
-        vbHeight={24}
-        vbWidth={24}
-      >
-        <RNSVGGroup
-          fill={null}
-          propList={
-            [
-              "fill",
-              "strokeWidth",
-            ]
-          }
-          strokeWidth="2"
-        >
-          <RNSVGPath
-            d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-            fill={
-              {
-                "payload": 4282431083,
-                "type": 0,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-          />
-        </RNSVGGroup>
-      </RNSVGSvgView>
-      <View
-        style={
-          {
-            "alignItems": "stretch",
-            "flexDirection": "column",
-            "gap": 16,
-          }
-        }
-      >
-        <Text
-          allowFontScaling={true}
-          style={
-            {
-              "color": "#7D7D7D",
-              "display": "flex",
-              "fontFamily": "Basel-Book",
-              "fontSize": 19,
-              "lineHeight": 24,
-            }
-          }
-          suppressHighlighting={true}
-        >
-          $5.00 (0.05%)
-        </Text>
       </View>
     </View>
   </View>

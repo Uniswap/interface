@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import AnimatedNumber from 'src/components/AnimatedNumber'
 import { Flex } from 'src/components/layout'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
-import { DecimalNumber } from 'src/components/text/DecimalNumber'
 import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -44,15 +44,10 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
   return (
     <WarmLoadingShimmer isWarmLoading={isWarmLoading && !isLoading}>
       <Flex gap="spacing4">
-        <DecimalNumber
-          adjustsFontSizeToFit={!isLoading}
-          // initially set color to textSecondary when isWarm because the shimmer mask takes a second to load, resulting in a flash of the underlying color
-          color={isWarmLoading ? 'neutral2' : undefined}
-          formattedNumber={formatUSDPrice(totalBalance, NumberType.PortfolioBalance)}
-          loading={isLoading}
-          number={totalBalance}
-          numberOfLines={1}
-          variant="headlineLarge"
+        <AnimatedNumber
+          colorIndicationDuration={2000}
+          isLoading={loading}
+          value={isLoading ? '$000.00' : formatUSDPrice(totalBalance, NumberType.PortfolioBalance)}
         />
         <RelativeChange
           absoluteChange={portfolioChange?.absolute?.value}
