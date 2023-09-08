@@ -36,7 +36,7 @@ export function openDownloadApp(options: OpenDownloadAppOptions = defaultDownloa
 }
 
 // if you need this by itself can add export, not used externally for now
-const getDownloadAppLink = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) =>
+export const getDownloadAppLink = (options: OpenDownloadAppOptions = defaultDownloadAppOptions) =>
   isIOS
     ? linkWithParams(APP_STORE_LINK, options?.appStoreParams)
     : linkWithParams(MICROSITE_LINK, options?.microSiteParams)

@@ -6,7 +6,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useRouterPreference } from 'state/user/hooks'
@@ -23,11 +23,11 @@ import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
-import { PageTabs } from '../components/NavBar'
-import NavBar from '../components/NavBar'
+import NavBar, { PageTabs } from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
+import { getDownloadAppLink } from '../utils/openDownloadApp'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
@@ -187,6 +187,18 @@ export default function App() {
     }),
     [account]
   )
+
+  // redirect address to landing pages until implemented
+  const shouldRedirectToAppInstall = pathname?.startsWith('/address/')
+  useLayoutEffect(() => {
+    if (shouldRedirectToAppInstall) {
+      window.location.href = getDownloadAppLink()
+    }
+  }, [shouldRedirectToAppInstall])
+
+  if (shouldRedirectToAppInstall) {
+    return null
+  }
 
   return (
     <ErrorBoundary>
