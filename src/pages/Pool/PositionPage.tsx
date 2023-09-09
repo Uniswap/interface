@@ -259,7 +259,11 @@ function getRatio(
     return undefined
   }
 }
-
+function quote(price0: Price<Currency, Token>, currencyAmount: CurrencyAmount<Token>) {
+  // invariant(currencyAmount.currency.equals(this.baseCurrency), 'TOKEN')
+  // const result = price0.multiply(currencyAmount.asFraction)
+  return CurrencyAmount.fromFractionalAmount(price0.quoteCurrency, currencyAmount.numerator, currencyAmount.denominator)
+}
 // snapshots a src img into a canvas
 function getSnapshot(src: HTMLImageElement, canvas: HTMLCanvasElement, targetHeight: number) {
   const context = canvas.getContext('2d')
@@ -466,16 +470,19 @@ function PositionPageContent() {
     const feeValue1Wrapped = feeValue1?.wrapped
 
     if (!feeValue0Wrapped || !feeValue1Wrapped) return null
-
-    const amount0 = price0.quote(feeValue0Wrapped)
-    const amount1 = price1.quote(feeValue1Wrapped)
+    // const amount0 = price0.quote(feeValue0Wrapped)
+    // const amount1 = price1.quote(feeValue1Wrapped)
+    const amount0 = quote(price0, feeValue0Wrapped)
+    const amount1 = quote(price1, feeValue1Wrapped)
     return amount0.add(amount1)
   }, [price0, price1, feeValue0, feeValue1])
 
   const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
     if (!price0 || !price1 || !position) return null
-    const amount0 = price0.quote(position.amount0)
-    const amount1 = price1.quote(position.amount1)
+    // const amount0 = price0.quote(position.amount0)
+    // const amount1 = price1.quote(position.amount1)
+    const amount0 = quote(price0, position.amount0)
+    const amount1 = quote(price1, position.amount1)
     return amount0.add(amount1)
   }, [price0, price1, position])
 
@@ -757,11 +764,14 @@ function PositionPageContent() {
                       </Label>
                       {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
                         <ThemedText.DeprecatedLargeHeader fontSize="36px" fontWeight={500}>
-                          <Trans>${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}</Trans>
+                          {/* <Trans>${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}</Trans> */}
+                          {/* <Trans>$-</Trans> */}
+                          <br />
                         </ThemedText.DeprecatedLargeHeader>
                       ) : (
                         <ThemedText.DeprecatedLargeHeader color={theme.textPrimary} fontSize="36px" fontWeight={500}>
-                          <Trans>$-</Trans>
+                          {/* <Trans>$-</Trans> */}
+                          <br />
                         </ThemedText.DeprecatedLargeHeader>
                       )}
                     </AutoColumn>
@@ -815,7 +825,8 @@ function PositionPageContent() {
                               fontSize="36px"
                               fontWeight={500}
                             >
-                              <Trans>${fiatValueOfFees.toFixed(2, { groupSeparator: ',' })}</Trans>
+                              {/* <Trans>${fiatValueOfFees.toFixed(2, { groupSeparator: ',' })}</Trans> */}
+                              <br />
                             </ThemedText.DeprecatedLargeHeader>
                           ) : (
                             <ThemedText.DeprecatedLargeHeader
@@ -823,7 +834,8 @@ function PositionPageContent() {
                               fontSize="36px"
                               fontWeight={500}
                             >
-                              <Trans>$-</Trans>
+                              {/* <Trans>$-</Trans> */}
+                              <br />
                             </ThemedText.DeprecatedLargeHeader>
                           )}
                         </AutoColumn>

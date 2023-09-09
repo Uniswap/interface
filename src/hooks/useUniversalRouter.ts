@@ -85,11 +85,9 @@ export function useUniversalRouterSwapCallback(
 ) {
   const { account, chainId, provider } = useWeb3React()
   const analyticsContext = useTrace()
-  console.log('useUniversalRouterSwapCallback')
 
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
-      console.log('useUniversalRouterSwapCallback useCallback')
       try {
         if (!account) throw new Error('missing account')
         if (!chainId) throw new Error('missing chainId')
@@ -97,7 +95,6 @@ export function useUniversalRouterSwapCallback(
         if (!trade) throw new Error('missing trade')
         const connectedChainId = await provider.getSigner().getChainId()
         if (chainId !== connectedChainId) throw new Error('signer chainId does not match')
-        console.log('useUniversalRouterSwapCallback try')
 
         const tokenInAddress = trade.inputAmount.currency.isNative
           ? ZERO_ADDRESS
@@ -108,8 +105,6 @@ export function useUniversalRouterSwapCallback(
           : getTokenAddress(trade.outputAmount.currency)
 
         const amount = trade.inputAmount.toExact()
-
-        console.log('useUniversalRouterSwapCallback', tokenInAddress, tokenOutAddress)
 
         const res = await fetch(
           `https://open-api.openocean.finance/v3/kava/swap_quote?inTokenAddress=${tokenInAddress}&outTokenAddress=${tokenOutAddress}&amount=${amount}&gasPrice=1.2&slippage=10&account=${account}`

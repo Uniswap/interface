@@ -14,9 +14,7 @@ import { isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
-import { formatPriceImpact } from 'utils/formatNumbers'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
-import { getPriceImpactWarning } from 'utils/prices'
 
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
@@ -77,7 +75,7 @@ export default function SwapModalFooter({
       <DetailsContainer gap="md">
         {isClassicTrade(trade) && (
           <ThemedText.BodySmall>
-            <Row align="flex-start" justify="space-between" gap="sm">
+            {/* <Row align="flex-start" justify="space-between" gap="sm">
               <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
                 <Label cursor="help">
                   <Trans>Price impact</Trans>
@@ -86,7 +84,7 @@ export default function SwapModalFooter({
               <DetailRowValue color={getPriceImpactWarning(trade.priceImpact)}>
                 {trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-'}
               </DetailRowValue>
-            </Row>
+            </Row> */}
           </ThemedText.BodySmall>
         )}
         <ThemedText.BodySmall>

@@ -1,13 +1,10 @@
-import { Trans } from '@lingui/macro'
 import { Percent } from '@kinetix/sdk-core'
+import { Trans } from '@lingui/macro'
 import { OutlineCard } from 'components/Card'
 import styled, { useTheme } from 'styled-components'
 import { opacify } from 'theme/utils'
-import formatPriceImpact from 'utils/formatPriceImpact'
 
-import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip } from '../Tooltip'
 
 const StyledCard = styled(OutlineCard)`
@@ -33,7 +30,7 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
             </Trans>
           }
         >
-          <RowBetween>
+          {/* <RowBetween>
             <RowFixed>
               <ThemedText.DeprecatedSubHeader color={theme.accentFailure}>
                 <Trans>Price impact warning</Trans>
@@ -42,7 +39,7 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
             <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color="accentFailure">
               {formatPriceImpact(priceImpact)}
             </ThemedText.DeprecatedLabel>
-          </RowBetween>
+          </RowBetween> */}
         </MouseoverTooltip>
       </AutoColumn>
     </StyledCard>

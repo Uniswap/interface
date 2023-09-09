@@ -752,9 +752,9 @@ export function Swap({
                     swapInputError
                   ) : routeIsSyncing || routeIsLoading ? (
                     <Trans>Swap</Trans>
-                  ) : priceImpactSeverity > 2 ? (
-                    <Trans>Swap Anyway</Trans>
                   ) : (
+                    // ) : priceImpactSeverity > 2 ? (
+                    //   <Trans>Swap Anyway</Trans>
                     <Trans>Swap</Trans>
                   )}
                 </Text>

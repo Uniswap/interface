@@ -7,7 +7,6 @@ import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
-import { AppleLogo } from 'components/Logo/AppleLogo'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
 import { RedirectPathToSwapOnly } from 'pages/Swap/redirects'
@@ -334,7 +333,7 @@ export default function Landing() {
             element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
           >
             <Link to="/swap">
-              <LandingSwap />
+              <Swap />
             </Link>
           </TraceEvent>
         </LandingSwapContainer>
@@ -381,7 +380,7 @@ export default function Landing() {
             <LearnMoreArrow />
           </LearnMoreContainer>
 
-{/*           <DownloadWalletLink
+          {/*           <DownloadWalletLink
             {...getDownloadAppLinkProps({
               // landing page specific tracking params
               microSiteParams: `utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
@@ -415,17 +414,17 @@ export default function Landing() {
   )
 }
 
-/* const DownloadWalletLink = styled.a`
-  display: inline-flex;
-  gap: 8px;
-  color: ${({ theme }) => theme.textSecondary};
-  text-decoration: none;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 500;
-  text-align: center;
-
-  :hover {
-    color: ${({ theme }) => theme.textTertiary};
-  }
-` */
+// const DownloadWalletLink = styled.a`
+// display: inline-flex;
+// gap: 8px;
+// color: ${({ theme }) => theme.textSecondary};
+// text-decoration: none;
+// font-size: 16px;
+// line-height: 24px;
+// font-weight: 500;
+// text-align: center;
+//
+// :hover {
+//     color: ${({ theme }) => theme.textTertiary};
+// }
+// `

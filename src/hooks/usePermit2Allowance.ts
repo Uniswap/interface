@@ -51,13 +51,10 @@ export default function usePermit2Allowance(
   spender?: string,
   tradeFillType?: TradeFillType
 ): Allowance {
-  console.log('usePermit2Allowance')
-
   const { account } = useWeb3React()
   const token = amount?.currency
 
   const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance(token, account, OPENOCEAN_ROUTER_ADDRESS)
-  console.log('tokenAllowance', tokenAllowance)
 
   const updateTokenAllowance = useUpdateTokenAllowance(amount, OPENOCEAN_ROUTER_ADDRESS)
   const revokeTokenAllowance = useRevokeTokenAllowance(token, OPENOCEAN_ROUTER_ADDRESS)

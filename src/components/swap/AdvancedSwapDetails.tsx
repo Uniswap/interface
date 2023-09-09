@@ -5,8 +5,8 @@ import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade } from 'state/routing/types'
-import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
-import { formatCurrencyAmount, formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
+import { getTransactionCount } from 'state/routing/utils'
+import { formatCurrencyAmount, formatNumber, NumberType } from 'utils/formatNumbers'
 
 import { Separator, ThemedText } from '../../theme'
 import Column from '../Column'
@@ -77,7 +77,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           </MouseoverTooltip>
         </RowBetween>
       )}
-      {isClassicTrade(trade) && (
+      {/* {isClassicTrade(trade) && (
         <RowBetween>
           <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
             <ThemedText.BodySmall color="textSecondary">
@@ -88,7 +88,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             <ThemedText.BodySmall>{formatPriceImpact(trade.priceImpact)}</ThemedText.BodySmall>
           </TextWithLoadingPlaceholder>
         </RowBetween>
-      )}
+      )} */}
       <RowBetween>
         <RowFixed>
           <MouseoverTooltip

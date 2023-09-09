@@ -31,7 +31,7 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
       return new Price(stablecoin, stablecoin, '1', '1')
     }
 
-    // if (trade) {
+    // if (currency.symbol === 'WKAVA') {
     //   const { numerator, denominator } = trade.routes[0].midPrice
     //   return new Price(currency, stablecoin, denominator, numerator)
     // }
