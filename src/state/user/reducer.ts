@@ -60,7 +60,7 @@ export const initialState: UserState = {
   selectedWallet: undefined,
   userLocale: null,
   userRouterPreference: RouterPreference.API,
-  userHideClosedPositions: false,
+  userHideClosedPositions: JSON.parse(sessionStorage.getItem('userHideClosedPositions') || 'false'),
   userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,

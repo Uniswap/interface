@@ -138,6 +138,7 @@ export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions:
 
   const setHideClosedPositions = useCallback(
     (newHideClosedPositions: boolean) => {
+      sessionStorage.setItem('userHideClosedPositions', JSON.stringify(newHideClosedPositions))
       dispatch(updateHideClosedPositions({ userHideClosedPositions: newHideClosedPositions }))
     },
     [dispatch]
