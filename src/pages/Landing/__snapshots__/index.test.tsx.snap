@@ -740,14 +740,14 @@ exports[`disable nft on landing page does not render nft information and card 1`
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
 }
 
 .c33 {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   background: #22222212;
   -webkit-transition: background-color 250ms ease-in;
   transition: background-color 250ms ease-in;
@@ -845,8 +845,8 @@ exports[`disable nft on landing page does not render nft information and card 1`
   opacity: 1;
   color: #222222;
   cursor: pointer;
-  height: unset;
-  border-radius: 16px;
+  height: 36px;
+  border-radius: 32px;
   outline: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -902,8 +902,8 @@ exports[`disable nft on landing page does not render nft information and card 1`
   opacity: 1;
   color: #FFFFFF;
   cursor: pointer;
-  height: unset;
-  border-radius: 16px;
+  height: 36px;
+  border-radius: 32px;
   outline: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -913,7 +913,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
   font-size: 24px;
   font-weight: 485;
   width: initial;
-  padding: 6px 6px 6px 8px;
+  padding: 4px 8px 4px 8px;
   gap: 8px;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -1122,7 +1122,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
 }
 
 .c20 {
-  padding: 6px 12px;
+  padding: 4px 4px 4px 12px;
   border-radius: 16px;
 }
 
@@ -1864,7 +1864,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
                               >
                                 <div
                                   class="c32"
-                                  style="height: 24px; width: 24px; margin-right: 2px;"
+                                  style="height: 28px; width: 28px; margin-right: 2px;"
                                 >
                                   <div
                                     class="c33"
@@ -3343,14 +3343,14 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
 }
 
 .c33 {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   background: #22222212;
   -webkit-transition: background-color 250ms ease-in;
   transition: background-color 250ms ease-in;
@@ -3448,8 +3448,8 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   opacity: 1;
   color: #222222;
   cursor: pointer;
-  height: unset;
-  border-radius: 16px;
+  height: 36px;
+  border-radius: 32px;
   outline: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3505,8 +3505,8 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   opacity: 1;
   color: #FFFFFF;
   cursor: pointer;
-  height: unset;
-  border-radius: 16px;
+  height: 36px;
+  border-radius: 32px;
   outline: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3516,7 +3516,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   font-size: 24px;
   font-weight: 485;
   width: initial;
-  padding: 6px 6px 6px 8px;
+  padding: 4px 8px 4px 8px;
   gap: 8px;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -3725,7 +3725,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
 }
 
 .c20 {
-  padding: 6px 12px;
+  padding: 4px 4px 4px 12px;
   border-radius: 16px;
 }
 
@@ -4479,7 +4479,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
                               >
                                 <div
                                   class="c32"
-                                  style="height: 24px; width: 24px; margin-right: 2px;"
+                                  style="height: 28px; width: 28px; margin-right: 2px;"
                                 >
                                   <div
                                     class="c33"

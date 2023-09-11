@@ -122,6 +122,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
 
 .c1 {
   margin-top: 16px;
+  padding: 0 8px;
 }
 
 <div
@@ -156,7 +157,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="c8 css-z82nir"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
@@ -204,7 +205,7 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="c8 css-z82nir"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
@@ -356,6 +357,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
 
 .c1 {
   margin-top: 16px;
+  padding: 0 8px;
 }
 
 <div
@@ -390,7 +392,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="c8 css-z82nir"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ETH
@@ -438,7 +440,7 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="c8 css-z82nir"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 DEF
@@ -590,6 +592,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
 
 .c1 {
   margin-top: 16px;
+  padding: 0 8px;
 }
 
 <div
@@ -624,7 +627,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="c8 css-z82nir"
               data-testid="INPUT-amount"
             >
               &lt;0.00001 ABC
@@ -672,7 +675,7 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
             class="c5"
           >
             <div
-              class="c8 css-1geukv8"
+              class="c8 css-z82nir"
               data-testid="OUTPUT-amount"
             >
               &lt;0.00001 GHI
