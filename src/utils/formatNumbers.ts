@@ -551,7 +551,7 @@ function useFormatterLocales(): {
   }
 }
 
-// used to get the appropriate formatter functions with the correct locales passed into them
+// Constructs an object that injects the correct locale and local currency into each of the above formatter functions.
 export function useFormatter() {
   const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
 

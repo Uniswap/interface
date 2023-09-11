@@ -20,7 +20,25 @@ export function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
 }
 
 export function isAppUniswapStagingOrg({ hostname }: { hostname: string }): boolean {
-  return hostname === 'app.uniswap-staging.org'
+  return hostname === 'app.corn-staging.com'
+}
+
+export function isBrowserRouterEnabled(): boolean {
+  if (isProductionEnv()) {
+    if (
+      isAppUniswapOrg(window.location) ||
+      isAppUniswapStagingOrg(window.location) ||
+      isLocalhost(window.location) // cypress tests
+    ) {
+      return true
+    }
+    return false // production builds *not* served through our domains or localhost, eg IPFS
+  }
+  return true // local dev builds
+}
+
+function isLocalhost({ hostname }: { hostname: string }): boolean {
+  return hostname === 'localhost'
 }
 
 export function isSentryEnabled(): boolean {
