@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/react'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ChainId, Percent } from '@uniswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
@@ -61,11 +60,7 @@ async function getSwapTaxes(
       })
     }
   } catch (e) {
-    Sentry.withScope(function (scope) {
-      scope.setTag('method', 'getSwapTaxes')
-      scope.setLevel('warning')
-      Sentry.captureException(e)
-    })
+    console.warn('Failed to get swap taxes for token(s):', addresses, e)
   }
 
   const inputTax = (inputTokenAddress ? FEE_CACHE[inputTokenAddress]?.sellTax : ZERO_PERCENT) ?? ZERO_PERCENT

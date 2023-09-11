@@ -51,7 +51,7 @@ describe('SwapDetailsDropdown.tsx', () => {
     render(
       <SwapDetailsDropdown
         trade={TEST_TRADE_FEE_ON_SELL}
-        syncing={true}
+        syncing={false}
         loading={true}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
       />
@@ -70,7 +70,7 @@ describe('SwapDetailsDropdown.tsx', () => {
     render(
       <SwapDetailsDropdown
         trade={TEST_TRADE_FEE_ON_BUY}
-        syncing={true}
+        syncing={false}
         loading={true}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
       />
