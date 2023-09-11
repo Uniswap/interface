@@ -86,6 +86,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
   }, [dispatch, initialSendState])
 
   const { t } = useTranslation()
+
   return (
     <Flex bg="surface1" gap="spacing16" pt="spacing36" px="spacing24">
       {/* fixed gradient */}
@@ -127,7 +128,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
           showCopy
           showIconBackground
           address={address}
-          captionVariant="subheadSmall"
+          captionVariant="bodySmall"
           contentAlign="flex-start"
           direction="column"
           size={HEADER_ICON_SIZE}

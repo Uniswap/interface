@@ -661,7 +661,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     {
                       "color": "#222222",
                       "display": "flex",
-                      "fontFamily": "Basel-Medium",
+                      "fontFamily": "Basel-Book",
                       "fontSize": 17,
                       "lineHeight": 24,
                     }
@@ -712,7 +712,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   {
                     "color": "#CECECE",
                     "display": "flex",
-                    "fontFamily": "Basel-Book",
+                    "fontFamily": "Basel-Medium",
                     "fontSize": 19,
                     "lineHeight": 24,
                   }
@@ -1391,7 +1391,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     {
                       "color": "#222222",
                       "display": "flex",
-                      "fontFamily": "Basel-Medium",
+                      "fontFamily": "Basel-Book",
                       "fontSize": 17,
                       "lineHeight": 24,
                     }
@@ -1446,7 +1446,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   {
                     "color": "#FFFFFF",
                     "display": "flex",
-                    "fontFamily": "Basel-Book",
+                    "fontFamily": "Basel-Medium",
                     "fontSize": 19,
                     "lineHeight": 24,
                   }

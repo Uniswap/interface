@@ -329,7 +329,7 @@ export function NFTItemScreen({
                 {/* Traits */}
                 {asset?.traits && asset?.traits?.length > 0 ? (
                   <Flex gap="spacing12">
-                    <Text color="neutral1" ml="spacing24" variant="buttonLabelSmall">
+                    <Text color="neutral1" ml="spacing24" variant="bodySmall">
                       {t('Traits')}
                     </Text>
                     <NFTTraitList titleTextColor={accentTextColor} traits={asset.traits} />

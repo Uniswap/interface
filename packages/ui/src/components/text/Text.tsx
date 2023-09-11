@@ -12,6 +12,7 @@ import { fonts } from 'ui/src/theme/fonts'
 // import { Theme } from 'ui/src/theme/restyle/theme'
 
 export const TextFrame = styled(TamaguiText, {
+  fontFamily: '$body',
   wordWrap: 'break-word',
 
   variants: {
@@ -38,13 +39,13 @@ export const TextFrame = styled(TamaguiText, {
         fontWeight: fonts.headlineSmall.fontWeight,
       },
       subheadLarge: {
-        fontFamily: '$heading',
+        fontFamily: '$subHeading',
         fontSize: fonts.subheadLarge.fontSize,
         lineHeight: fonts.subheadLarge.lineHeight,
         fontWeight: fonts.subheadLarge.fontWeight,
       },
       subheadSmall: {
-        fontFamily: '$heading',
+        fontFamily: '$subHeading',
         fontSize: fonts.subheadSmall.fontSize,
         lineHeight: fonts.subheadSmall.lineHeight,
         fontWeight: fonts.subheadSmall.fontWeight,
@@ -98,6 +99,10 @@ export const TextFrame = styled(TamaguiText, {
       },
     },
   } as const,
+
+  defaultVariants: {
+    variant: 'bodySmall',
+  },
 })
 
 type TextFrameProps = GetProps<typeof TextFrame>

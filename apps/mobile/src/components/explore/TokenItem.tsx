@@ -128,7 +128,7 @@ export const TokenItem = memo(function _TokenItem({
               <Text lineHeight={24} variant="bodyLarge">
                 {formatUSDPrice(price)}
               </Text>
-              <RelativeChange change={pricePercentChange24h} variant="subheadSmall" />
+              <RelativeChange change={pricePercentChange24h} variant="bodySmall" />
             </TokenMetadata>
           </Flex>
         </AnimatedFlex>

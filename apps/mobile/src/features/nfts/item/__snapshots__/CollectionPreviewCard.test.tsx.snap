@@ -109,7 +109,7 @@ exports[`renders collection preview card 1`] = `
                 "color": "#7D7D7D",
                 "display": "flex",
                 "flex": 0,
-                "fontFamily": "Basel-Medium",
+                "fontFamily": "Basel-Book",
                 "fontSize": 17,
                 "lineHeight": 24,
               }

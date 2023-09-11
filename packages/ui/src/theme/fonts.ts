@@ -121,7 +121,7 @@ export const headingFont = createFont({
 })
 
 export const subHeadingFont = createFont({
-  family: baselMedium,
+  family: baselBook,
   face: {},
   size: {
     small: fonts.subheadSmall.fontSize,
@@ -155,11 +155,11 @@ export const bodyFont = createFont({
     true: fonts.bodySmall.fontSize,
   },
   weight: {
-    small: '500',
-    large: '500',
-    micro: '500',
-    medium: '500',
-    true: '500',
+    small: fonts.bodySmall.fontWeight,
+    large: fonts.bodyLarge.fontWeight,
+    micro: fonts.bodyMicro.fontWeight,
+    medium: fonts.bodySmall.fontWeight,
+    true: fonts.bodySmall.fontWeight,
   },
   lineHeight: {
     small: fonts.bodySmall.lineHeight,
@@ -171,8 +171,7 @@ export const bodyFont = createFont({
 })
 
 export const buttonFont = createFont({
-  family: baselBook,
-  face: {},
+  family: baselMedium,
   size: {
     small: fonts.buttonLabelSmall.fontSize,
     medium: fonts.buttonLabelMedium.fontSize,
@@ -181,11 +180,11 @@ export const buttonFont = createFont({
     true: fonts.buttonLabelMedium.fontSize,
   },
   weight: {
-    small: '600',
-    medium: '600',
-    large: '600',
-    micro: '600',
-    true: '600',
+    small: fonts.buttonLabelSmall.fontWeight,
+    medium: fonts.buttonLabelMedium.fontWeight,
+    large: fonts.buttonLabelLarge.fontWeight,
+    micro: fonts.buttonLabelMicro.fontWeight,
+    true: fonts.buttonLabelMedium.fontWeight,
   },
   lineHeight: {
     small: fonts.buttonLabelSmall.lineHeight,

@@ -111,7 +111,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
                   change={relativeChange24 ?? undefined}
                   negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
                   positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
-                  variant="subheadSmall"
+                  variant="bodySmall"
                 />
               </Flex>
             )}
