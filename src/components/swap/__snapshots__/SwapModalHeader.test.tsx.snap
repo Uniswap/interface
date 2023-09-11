@@ -23,7 +23,6 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  gap: 12px;
 }
 
 .c6 {
@@ -69,7 +68,6 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  gap: 4px;
 }
 
 .c0 {
@@ -258,7 +256,6 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  gap: 12px;
 }
 
 .c6 {
@@ -304,7 +301,6 @@ exports[`SwapModalHeader.tsx renders ETH input token for an ETH input UniswapX s
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  gap: 4px;
 }
 
 .c0 {
@@ -493,7 +489,6 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  gap: 12px;
 }
 
 .c6 {
@@ -539,7 +534,6 @@ exports[`SwapModalHeader.tsx test trade exact output, no recipient 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  gap: 4px;
 }
 
 .c0 {
