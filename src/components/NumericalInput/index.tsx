@@ -1,4 +1,7 @@
-import React, { forwardRef } from 'react'
+import { SupportedLocale } from 'constants/locales'
+import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
+import { useActiveLocale } from 'hooks/useActiveLocale'
+import React, { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 import { escapeRegExp } from 'utils'
 
@@ -39,6 +42,14 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   }
 `
 
+function isCommaSeparator(locale: SupportedLocale) {
+  const numberWithDecimalSeparator = 1.1
+  const separator = new Intl.NumberFormat(locale)
+    .formatToParts(numberWithDecimalSeparator)
+    ?.find((part) => part.type === 'decimal')?.value
+  return separator && separator === ','
+}
+
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
 interface InputProps extends Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'onChange' | 'as'> {
@@ -52,6 +63,10 @@ interface InputProps extends Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'on
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ value, onUserInput, placeholder, prependSymbol, ...rest }: InputProps, ref) => {
+    const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
+    const activeLocale = useActiveLocale()
+    const commaSeparator = useMemo(() => isCommaSeparator(activeLocale), [activeLocale])
+
     const enforcer = (nextUserInput: string) => {
       if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
         onUserInput(nextUserInput)
