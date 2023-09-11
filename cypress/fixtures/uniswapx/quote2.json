@@ -32,6 +32,7 @@
       "quoteId": "09ce28b7-1ddf-4317-a28d-d21092be9f84",
       "requestId": "f00535d4-461a-4363-afbe-7a5ab7061cd1",
       "auctionPeriodSecs": 60,
+      "startTimeBufferSecs": 30,
       "deadlineBufferSecs": 12,
       "slippageTolerance": "0.5",
       "permitData": {
@@ -252,6 +253,7 @@
               "quoteId": "09ce28b7-1ddf-4317-a28d-d21092be9f84",
               "requestId": "f00535d4-461a-4363-afbe-7a5ab7061cd1",
               "auctionPeriodSecs": 60,
+              "startTimeBufferSecs": 30,
               "deadlineBufferSecs": 12,
               "slippageTolerance": "0.5",
               "permitData": {
