@@ -67,7 +67,7 @@ const CurrencySelect = styled(ButtonGray)<{
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
   cursor: pointer;
-  height: unset;
+  height: 36px;
   border-radius: 32px;
   outline: none;
   user-select: none;
@@ -349,10 +349,10 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                     <RowFixed>
                       {pair ? (
                         <span style={{ marginRight: '0.5rem' }}>
-                          <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                          <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={28} margin={true} />
                         </span>
                       ) : currency ? (
-                        <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size="24px" />
+                        <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size="28px" />
                       ) : null}
                       {pair ? (
                         <StyledTokenName className="pair-name-container">
