@@ -1,18 +1,11 @@
 import * as Clipboard from 'expo-clipboard'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 
 export async function setClipboard(value: string): Promise<void> {
   try {
     await Clipboard.setStringAsync(value)
   } catch (error) {
-    logger.error('Unable to set clipboard value', {
-      tags: {
-        file: 'clipboard',
-        function: 'setClipboard',
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'clipboard', function: 'setClipboard' } })
   }
 }
 
@@ -21,13 +14,7 @@ export async function getClipboard(): Promise<string | void> {
     const value = await Clipboard.getStringAsync()
     return value
   } catch (error) {
-    logger.error('Unable to get clipboard value', {
-      tags: {
-        file: 'clipboard',
-        function: 'getClipboard',
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'clipboard', function: 'getClipboard' } })
   }
 }
 
@@ -53,14 +40,7 @@ export async function setClipboardImage(imageUrl: string | undefined): Promise<v
       await Clipboard.setImageAsync(formattedEncoding)
     }
   } catch (error) {
-    logger.error('Unable to set clipboard image', {
-      tags: {
-        file: 'clipboard',
-        function: 'setClipboardImage',
-        error: serializeError(error),
-        imageUrl,
-      },
-    })
+    logger.error(error, { tags: { file: 'clipboard', function: 'setClipboardImage', imageUrl } })
   }
 }
 

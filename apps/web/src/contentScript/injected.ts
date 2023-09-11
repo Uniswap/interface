@@ -68,13 +68,8 @@ function dappRequestListener(event: MessageEvent): void {
       }
     )
 
-    chrome.runtime.sendMessage<BaseDappRequest, BaseDappResponse>(request).catch((e) => {
-      logger.error(e, {
-        tags: {
-          file: 'injected.ts',
-          function: 'dappRequestListener',
-        },
-      })
+    chrome.runtime.sendMessage<BaseDappRequest, BaseDappResponse>(request).catch((error) => {
+      logger.error(error, { tags: { file: 'injected.ts', function: 'dappRequestListener' } })
     })
     logger.info('provider.ts', 'contentScriptListener', 'Message sent to background')
   }
@@ -83,12 +78,9 @@ function dappRequestListener(event: MessageEvent): void {
 function addDappToExtensionOneWayListener(): void {
   window.addEventListener('message', (event) => {
     if (event?.data?.type === DappToExtensionRequestType.ConnectionStatus) {
-      chrome.runtime.sendMessage(event?.data).catch((e) => {
-        logger.error(e, {
-          tags: {
-            file: 'injected.ts',
-            function: 'addDappToExtensionOneWayListener',
-          },
+      chrome.runtime.sendMessage(event?.data).catch((error) => {
+        logger.error(error, {
+          tags: { file: 'injected.ts', function: 'addDappToExtensionOneWayListener' },
         })
       })
     }

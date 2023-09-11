@@ -16,7 +16,6 @@ import {
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
 import { Theme } from 'ui/src/theme/restyle'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -201,13 +200,7 @@ function RequestDetailsContent({ request }: Props): JSX.Element {
       const data = JSON.parse(request.rawMessage)
       return getParsedObjectDisplay(request.chainId, data.message, 0)
     } catch (error) {
-      logger.error('Invalid WalletConnect request', {
-        tags: {
-          file: 'RequestDetails',
-          function: 'RequestDetailsContent',
-          error: serializeError(error),
-        },
-      })
+      logger.error(error, { tags: { file: 'RequestDetails', function: 'RequestDetailsContent' } })
       return <Text />
     }
   }

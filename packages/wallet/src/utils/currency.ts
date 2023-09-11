@@ -20,12 +20,8 @@ export function getFormattedCurrencyAmount(
     const formattedAmount = formatCurrencyAmount(currencyAmount)
     return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
   } catch (error) {
-    logger.error('Could not format currency amount', {
-      tags: {
-        file: 'wallet/src/utils/currency',
-        function: 'getFormattedCurrencyAmount',
-        error: JSON.stringify(error),
-      },
+    logger.error(error, {
+      tags: { file: 'wallet/src/utils/currency', function: 'getFormattedCurrencyAmount' },
     })
     return ''
   }

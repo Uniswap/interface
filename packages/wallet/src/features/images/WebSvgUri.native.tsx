@@ -3,7 +3,6 @@ import { Platform, StyleSheet } from 'react-native'
 import WebView from 'react-native-webview'
 import { Box } from 'ui/src'
 import { Loader } from 'ui/src/loading'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { fetchSVG } from 'wallet/src/features/images/utils'
@@ -52,13 +51,11 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Elemen
     try {
       return await fetchSVG(uri, autoplay, signal)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      if (Object.prototype.hasOwnProperty.call(err, 'name') && err.name === 'AbortError') {
+    } catch (error: any) {
+      if (Object.prototype.hasOwnProperty.call(error, 'name') && error.name === 'AbortError') {
         return // expect AbortError on unmount
       }
-      logger.error('Failed to fetch remote SVG content', {
-        tags: { file: 'WebSvgUri', function: 'fetchSvg', uri, error: serializeError(err) },
-      })
+      logger.error(error, { tags: { file: 'WebSvgUri', function: 'fetchSvg', uri } })
     }
   }, [autoplay, uri])
 

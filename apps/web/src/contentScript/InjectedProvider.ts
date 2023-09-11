@@ -31,7 +31,6 @@ import {
   ExtensionChainChange,
   ExtensionRequestType,
 } from 'src/types/requests'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'
 import { v4 as uuidv4 } from 'uuid'
@@ -320,13 +319,7 @@ export class InjectedProvider extends EventEmitter {
       try {
         rpcResult = await func(...(<[]>(params ? params : [])))
       } catch (error) {
-        logger.error('RPC response error', {
-          tags: {
-            file: 'InjectedProvider',
-            function: 'request',
-            error: serializeError(error),
-          },
-        })
+        logger.error(error, { tags: { file: 'InjectedProvider', function: 'request' } })
         return reject(error)
       }
       return resolve(rpcResult)

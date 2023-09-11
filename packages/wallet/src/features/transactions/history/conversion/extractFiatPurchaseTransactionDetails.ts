@@ -1,4 +1,3 @@
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
@@ -115,11 +114,10 @@ export function extractFiatOnRampTransactionDetails(
       options: { request: {} },
     }
   } catch (error) {
-    logger.error('Failed to extract fiat on-ramp transaction details', {
+    logger.error(error, {
       tags: {
         file: 'extractFiatPurchaseTransactionDetails',
         function: 'extractFiatOnRampTransactionDetails',
-        error: serializeError(error),
       },
     })
   }

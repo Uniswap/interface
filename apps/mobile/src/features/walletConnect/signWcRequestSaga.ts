@@ -1,7 +1,6 @@
 import { providers } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { call, put } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -96,13 +95,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
         address: account.address,
       })
     )
-    logger.error('WalletConnect signing error', {
-      tags: {
-        file: 'walletConnect/saga',
-        function: 'signWcRequest',
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'walletConnect/saga', function: 'signWcRequest' } })
   }
 }
 

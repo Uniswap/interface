@@ -10,7 +10,6 @@ import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { getNftUrl } from 'src/utils/linking'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -115,13 +114,7 @@ export function useNFTMenu({
         url,
       })
     } catch (error) {
-      logger.error('Unable to share NFT Item url', {
-        tags: {
-          file: 'nfts/hooks',
-          function: 'useNFTMenu',
-          error: serializeError(error),
-        },
-      })
+      logger.error(error, { tags: { file: 'nfts/hooks', function: 'useNFTMenu' } })
     }
   }, [contractAddress, tokenId])
 

@@ -11,7 +11,6 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { getNftCollectionUrl, getTwitterLink, openUri } from 'src/utils/linking'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 
 type MenuOption = {
@@ -60,13 +59,7 @@ export function NFTCollectionContextMenu({
         url: shareURL,
       })
     } catch (error) {
-      logger.error('Unable to share NFT Collection url', {
-        tags: {
-          file: 'NFTCollectionContextMenu',
-          function: 'onSharePress',
-          error: serializeError(error),
-        },
-      })
+      logger.error(error, { tags: { file: 'NFTCollectionContextMenu', function: 'onSharePress' } })
     }
   }, [shareURL])
 

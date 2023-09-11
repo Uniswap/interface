@@ -103,12 +103,7 @@ async function getPermit2PermitSignature(
       expiry: BigNumber.from(permitMessage.sigDeadline).toNumber(),
     }
   } catch (error) {
-    logger.error('Error signing permit message', {
-      tags: {
-        file: 'usePermit2Signature',
-        function: 'getPermit2Signature',
-      },
-    })
+    logger.error(error, { tags: { file: 'usePermit2Signature', function: 'getPermit2Signature' } })
   }
 }
 

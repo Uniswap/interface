@@ -1,7 +1,6 @@
 import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'react-native'
 import { theme } from 'ui/src/theme/restyle'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { uniswapUrls } from 'wallet/src/constants/urls'
@@ -57,13 +56,7 @@ export async function openUri(
       })
     }
   } catch (error) {
-    logger.error('Unable to open url', {
-      tags: {
-        file: 'linking',
-        function: 'openUri',
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'linking', function: 'openUri' } })
   }
 }
 

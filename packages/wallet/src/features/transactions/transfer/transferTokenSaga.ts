@@ -1,6 +1,5 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
 import { call } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import ERC1155_ABI from 'wallet/src/abis/erc1155.json'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
@@ -41,12 +40,8 @@ export function* transferToken(params: Params) {
     })
     logger.debug('transferTokenSaga', 'transferToken', 'Transfer submitted')
   } catch (error) {
-    yield* call(logger.error, 'Transfer failed', {
-      tags: {
-        file: 'transferTokenSaga',
-        function: 'transferToken',
-        error: serializeError(error),
-      },
+    yield* call(logger.error, error, {
+      tags: { file: 'transferTokenSaga', function: 'transferToken' },
     })
   }
 }

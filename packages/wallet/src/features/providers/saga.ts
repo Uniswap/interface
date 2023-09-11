@@ -1,6 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { call, fork, join, takeEvery } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId } from 'wallet/src/constants/chains'
 import { setChainActiveStatus } from 'wallet/src/features/chains/slice'
@@ -27,14 +26,7 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
     logger.debug('providerSaga', 'initProvider', 'Creating a provider for:', chainId)
     yield* call([manager, manager.createProvider], chainId)
   } catch (error) {
-    logger.error('Failed to initialize provider', {
-      tags: {
-        file: 'providers/saga',
-        function: 'initProvider',
-        chainId,
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'providers/saga', function: 'initProvider', chainId } })
   }
 }
 
@@ -48,13 +40,6 @@ function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: bo
       yield* call([manager, manager.removeProviders], chainId)
     }
   } catch (error) {
-    logger.error('Error while modifying provider', {
-      tags: {
-        file: 'providers/saga',
-        function: 'modifyProviders',
-        chainId,
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'providers/saga', function: 'modifyProviders', chainId } })
   }
 }

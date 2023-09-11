@@ -2,7 +2,6 @@ import { providers } from 'ethers'
 import { tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
 import { Statsig } from 'statsig-react-native'
 import { call, select } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { RPCType } from 'wallet/src/constants/chains'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
@@ -76,13 +75,7 @@ export function* approveAndSwap(params: SwapParams) {
       trade,
     })
   } catch (error) {
-    logger.error('Swap failed', {
-      tags: {
-        file: 'swapSaga',
-        function: 'approveAndSwap',
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'swapSaga', function: 'approveAndSwap' } })
   }
 }
 

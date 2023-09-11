@@ -7,7 +7,6 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { IS_ANDROID } from 'src/constants/globals'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -64,12 +63,8 @@ export function CloudBackupProcessingAnimation({
         })
       )
     } catch (error) {
-      logger.error('Unable to backup to cloud storage', {
-        tags: {
-          file: 'CloudBackupProcessingScreen',
-          function: 'onPressNext',
-          error: serializeError(error),
-        },
+      logger.error(error, {
+        tags: { file: 'CloudBackupProcessingScreen', function: 'onPressNext' },
       })
 
       Alert.alert(

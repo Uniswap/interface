@@ -24,7 +24,6 @@ import {
   setHasPendingSessionError,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, fork, put, take } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
 import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
@@ -120,12 +119,8 @@ function* watchWalletConnectEvents() {
         yield* call(handleSessionDelete, event.session)
       }
     } catch (error) {
-      logger.error('WalletConnect event channel error', {
-        tags: {
-          file: 'walletConnect/saga',
-          function: 'watchWalletConnectEvents',
-          error: serializeError(error),
-        },
+      logger.error(error, {
+        tags: { file: 'walletConnect/saga', function: 'watchWalletConnectEvents' },
       })
     }
   }

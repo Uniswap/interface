@@ -1,7 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Contract, providers } from 'ethers'
 import { call } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { Weth } from 'wallet/src/abis/types'
 import WETH_ABI from 'wallet/src/abis/weth.json'
@@ -67,13 +66,7 @@ export function* wrap(params: Params) {
       typeInfo,
     })
   } catch (error) {
-    logger.error('Wrap failed', {
-      tags: {
-        file: 'wrapSaga',
-        function: 'wrap',
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'wrapSaga', function: 'wrap' } })
   }
 }
 

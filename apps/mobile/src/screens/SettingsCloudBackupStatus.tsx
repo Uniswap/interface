@@ -18,7 +18,6 @@ import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNClo
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import Checkmark from 'ui/src/assets/icons/check.svg'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import {
   EditAccountAction,
@@ -72,13 +71,7 @@ export function SettingsCloudBackupStatus({
       navigation.navigate(Screens.SettingsWallet, { address })
     } catch (error) {
       setShowBackupDeleteWarning(false)
-      logger.error('Unable to delete cloud storage backup', {
-        tags: {
-          file: 'SettingsCloudBackupStatus',
-          function: 'deleteBackup',
-          error: serializeError(error),
-        },
-      })
+      logger.error(error, { tags: { file: 'SettingsCloudBackupStatus', function: 'deleteBackup' } })
 
       Alert.alert(
         IS_ANDROID ? t('Google Drive error') : t('iCloud error'),

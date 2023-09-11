@@ -46,7 +46,6 @@ const rtkQueryErrorLogger: Middleware = () => (next) => (action: PayloadAction<u
         endpointName: (action.meta as any)?.arg?.endpointName,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         status: (action.payload as any)?.status,
-        error: action.error,
       }),
     },
   })

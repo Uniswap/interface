@@ -2,7 +2,6 @@ import { REHYDRATE } from 'redux-persist'
 import { WebState } from 'src/background/store'
 import { openTab } from 'src/background/utils/navigationSaga'
 import { call, delay, put, select, take } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { lockWallet, unlockWallet } from 'wallet/src/features/wallet/slice'
 
@@ -95,10 +94,7 @@ function doWork(): void {
         )
       } else {
         logger.error('Port disconnected unexpectedly', {
-          tags: {
-            file: 'keepaliveSaga',
-            function: 'doWork',
-          },
+          tags: { file: 'keepaliveSaga', function: 'doWork' },
         })
       }
 
@@ -111,12 +107,8 @@ function doWork(): void {
     alivePort.postMessage(KEEP_ALIVE_PING)
 
     if (chrome.runtime.lastError) {
-      logger.error('Port message error', {
-        tags: {
-          file: 'keepaliveSaga',
-          function: 'doWork',
-          error: serializeError(chrome.runtime.lastError),
-        },
+      logger.error(chrome.runtime.lastError, {
+        tags: { file: 'keepaliveSaga', function: 'doWork' },
       })
     } else {
       // no-op.

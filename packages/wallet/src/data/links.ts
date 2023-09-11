@@ -1,7 +1,6 @@
 import { ApolloLink, createHttpLink } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import { RestLink } from 'apollo-link-rest'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
@@ -111,13 +110,7 @@ export function getErrorLink(
     if (networkError) {
       sample(
         () =>
-          logger.error('Network error', {
-            tags: {
-              file: 'data/links',
-              function: 'getErrorLink',
-              error: serializeError(networkError),
-            },
-          }),
+          logger.error(networkError, { tags: { file: 'data/links', function: 'getErrorLink' } }),
         networkErrorSamplingRate
       )
     }

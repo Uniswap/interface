@@ -1,6 +1,5 @@
 import { getIosPushNotificationServiceEnvironmentAsync } from 'expo-application'
 import { getOnesignalPushTokenOrError } from 'src/features/notifications/Onesignal'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
 
@@ -30,12 +29,8 @@ export async function registerWCClientForPushNotifications(clientId: string): Pr
 
     await fetch(`${WC_HOSTED_PUSH_SERVER_URL}/clients`, request)
   } catch (error) {
-    logger.error('Error registering client for WalletConnect 2.0 Push Notifications', {
-      tags: {
-        file: 'walletConnectApi',
-        function: 'registerWCv2ClientForPushNotifications',
-        error: serializeError(error),
-      },
+    logger.error(error, {
+      tags: { file: 'walletConnectApi', function: 'registerWCv2ClientForPushNotifications' },
     })
   }
 }

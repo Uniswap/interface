@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
@@ -34,13 +33,7 @@ export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
       setWalletNeedsRestore(hasImportedSeedPhrase && !addresses.length)
     }
     openRestoreWalletModalIfNeeded().catch((error) =>
-      logger.error('Error at fetching addresses from Keyring', {
-        tags: {
-          file: 'wallet/hooks',
-          function: 'useWalletRestore',
-          error: serializeError(error),
-        },
-      })
+      logger.error(error, { tags: { file: 'wallet/hooks', function: 'useWalletRestore' } })
     )
   }, [dispatch, hasImportedSeedPhrase, isRestoreWalletEnabled])
 

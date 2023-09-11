@@ -2,7 +2,6 @@ import { BigNumber } from 'ethers'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { call, put } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import { selectActiveChainIds } from 'wallet/src/features/chains/saga'
@@ -45,13 +44,7 @@ export function* handleSwapLink(url: URL) {
 
     yield* put(openModal({ name: ModalName.Swap, initialState: swapFormState }))
   } catch (error) {
-    logger.error('Error handling swap link', {
-      tags: {
-        file: 'handleSwapLinkSaga',
-        function: 'handleSwapLink',
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'handleSwapLinkSaga', function: 'handleSwapLink' } })
     yield* put(openModal({ name: ModalName.Swap }))
   }
 }

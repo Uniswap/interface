@@ -1,7 +1,6 @@
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
-import { serializeError } from 'utilities/src/errors'
 import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -45,7 +44,7 @@ export function getCurrencyAmount<T extends Currency>({
     return CurrencyAmount.fromRawAmount(currency, parsedValue)
   } catch (error) {
     // will fail when currency decimal information is incorrect
-    logger.error('Failed to parse a currency amount', {
+    logger.error(error, {
       tags: {
         file: 'getCurrencyAmount',
         function: 'getCurrencyAmount',
@@ -55,7 +54,6 @@ export function getCurrencyAmount<T extends Currency>({
         chain: currency.chainId,
         address: currency.wrapped.address,
         decimals: currency.decimals,
-        error: serializeError(error),
       },
     })
 

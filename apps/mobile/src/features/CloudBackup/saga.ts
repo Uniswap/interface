@@ -7,7 +7,6 @@ import {
   CloudStorageMnemonicBackup,
 } from 'src/features/CloudBackup/types'
 import { call, fork, put, take } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 
 function createCloudStorageBackupManagerChannel(eventEmitter: NativeEventEmitter) {
@@ -53,12 +52,8 @@ export function* watchCloudStorageBackupEvents() {
       const payload = yield* take(channel)
       yield* put(payload)
     } catch (error) {
-      logger.error('Cloud backup saga channel error', {
-        tags: {
-          file: 'CloudBackup/saga',
-          function: 'watchCloudStorageBackupEvents',
-          error: serializeError(error),
-        },
+      logger.error(error, {
+        tags: { file: 'CloudBackup/saga', function: 'watchCloudStorageBackupEvents' },
       })
     }
   }

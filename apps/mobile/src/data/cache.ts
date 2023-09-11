@@ -1,6 +1,5 @@
 import { InMemoryCache } from '@apollo/client'
 import { MMKVWrapper, persistCache } from 'apollo3-cache-persist'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { setupCache } from 'wallet/src/data/cache'
 
@@ -18,13 +17,7 @@ export async function initAndPersistCache(storage: MMKVWrapper): Promise<InMemor
       storage,
     })
   } catch (error) {
-    logger.error('Unable to persist cache', {
-      tags: {
-        file: 'cache',
-        function: 'initAndPersistCache',
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'cache', function: 'initAndPersistCache' } })
   }
 
   return cache

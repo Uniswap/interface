@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import { View } from 'react-native'
 import { parse, SvgXml } from 'react-native-svg'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
@@ -27,14 +26,8 @@ export const RemoteSvg = ({
       const svgStr = await res.text()
       parse(svgStr)
       return svgStr
-    } catch (e) {
-      logger.error(`Could not render svg from uri: ${imageHttpUrl}`, {
-        tags: {
-          file: 'mobile/src/components/images/RemoteSvg',
-          function: 'fetchSvg',
-          error: serializeError(e),
-        },
-      })
+    } catch (error) {
+      logger.error(error, { tags: { file: 'RemoteSvg', function: 'fetchSvg', imageHttpUrl } })
     }
   }, [imageHttpUrl])
 

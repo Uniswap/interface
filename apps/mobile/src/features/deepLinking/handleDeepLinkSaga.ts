@@ -16,7 +16,6 @@ import { WidgetType } from 'src/features/widgets/widgets'
 import { Screens } from 'src/screens/Screens'
 import { openUri, UNISWAP_APP_NATIVE_TOKEN } from 'src/utils/linking'
 import { call, put, takeLatest } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
 import { fromUniswapWebAppLink } from 'wallet/src/features/chains/utils'
@@ -255,12 +254,8 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       is_cold_start: coldStart,
     })
   } catch (error) {
-    yield* call(logger.error, 'Error handling deep link', {
-      tags: {
-        file: 'handleDeepLinkSaga',
-        function: 'handleDeepLink',
-        error: serializeError(error),
-      },
+    yield* call(logger.error, error, {
+      tags: { file: 'handleDeepLinkSaga', function: 'handleDeepLink' },
     })
   }
 }
@@ -276,11 +271,7 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
       i18n.t(
         'WalletConnect v1 is no longer supported. The application you’re trying to connect to needs to upgrade to WalletConnect v2.'
       ),
-      [
-        {
-          text: i18n.t('OK'),
-        },
-      ]
+      [{ text: i18n.t('OK') }]
     )
     return
   }
@@ -288,13 +279,13 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
   if (wcUriVersion === 2) {
     try {
       yield* call(pairWithWalletConnectURI, wcUri)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (errorMessage: any) {
+    } catch (error) {
+      logger.error(error, {
+        tags: { file: 'handleDeepLinkSaga', function: 'handleWalletConnectDeepLink' },
+      })
       Alert.alert(
         i18n.t('WalletConnect Error'),
-        i18n.t(`There was an issue with WalletConnect. \n\n Error information:\n {{error}}`, {
-          error: errorMessage,
-        })
+        i18n.t('There was an issue with WalletConnect. Please try again')
       )
     }
   }

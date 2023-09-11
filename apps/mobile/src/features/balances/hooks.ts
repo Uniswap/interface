@@ -7,7 +7,6 @@ import { selectTokensVisibility } from 'src/features/favorites/selectors'
 import { toggleTokenVisibility, TokenVisibility } from 'src/features/favorites/slice'
 import { useSelectLocalTxCurrencyIds } from 'src/features/transactions/hooks'
 import { getTokenUrl } from 'src/utils/linking'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
@@ -147,13 +146,7 @@ export function useTokenContextMenu({
         url: tokenUrl,
       })
     } catch (error) {
-      logger.error('Unable to share Token url', {
-        tags: {
-          file: 'balances/hooks.ts',
-          function: 'onPressShare',
-          error: serializeError(error),
-        },
-      })
+      logger.error(error, { tags: { file: 'balances/hooks.ts', function: 'onPressShare' } })
     }
   }, [currencyId])
 

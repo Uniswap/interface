@@ -7,7 +7,6 @@ import { dappRequestReducer } from 'src/background/features/dappRequests/slice'
 import { loggerMiddleware } from 'src/background/utils/loggerMiddleware'
 import { PortName } from 'src/types'
 import { SagaGenerator, select } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { createStore, RootState } from 'wallet/src/state'
 import { sharedReducers } from 'wallet/src/state/reducer'
@@ -63,14 +62,8 @@ export const useAppDispatch = (): ((action: AnyAction) => Promise<AnyAction | un
       try {
         // webext-redux wraps dispatch in a promise
         return Promise.resolve(appDispatch(action))
-      } catch (e) {
-        logger.error('Dispatch error', {
-          tags: {
-            file: 'store',
-            function: 'appDispatch',
-            message: serializeError(e),
-          },
-        })
+      } catch (error) {
+        logger.error(error, { tags: { file: 'store', function: 'appDispatch' } })
 
         return Promise.resolve(undefined)
       }

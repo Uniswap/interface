@@ -21,7 +21,6 @@ import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -109,20 +108,11 @@ export function WalletConnectModal({
         setShouldFreezeCamera(true)
         try {
           await pairWithWalletConnectURI(supportedURI.value)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (errorMessage: any) {
-          logger.error(errorMessage, {
-            tags: {
-              file: 'WalletConnectModal',
-              function: 'onScanCode',
-              error: serializeError(errorMessage),
-            },
-          })
+        } catch (error) {
+          logger.error(error, { tags: { file: 'WalletConnectModal', function: 'onScanCode' } })
           Alert.alert(
             t('WalletConnect Error'),
-            t(`There was an issue with WalletConnect. \n\n Error information:\n {{error}}`, {
-              error: errorMessage,
-            }),
+            t('There was an issue with WalletConnect. Please try again'),
             [
               {
                 text: t('OK'),

@@ -7,9 +7,6 @@ export class NotImplementedError extends Error {
   }
 }
 
-export const serializeError = (error: unknown): string =>
-  JSON.stringify(error, Object.getOwnPropertyNames(error))
-
 export function assert(predicate: unknown, errorMessage: string): void {
   if (!predicate) throw new Error(errorMessage)
 }

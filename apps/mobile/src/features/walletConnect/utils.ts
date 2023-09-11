@@ -3,7 +3,6 @@ import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { utils } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
@@ -182,12 +181,8 @@ export async function pairWithWalletConnectURI(uri: string): Promise<void | Pair
   try {
     return await wcWeb3Wallet.core.pairing.pair({ uri })
   } catch (error) {
-    logger.error('Error with new WalletConnect v2 pairing', {
-      tags: {
-        file: 'walletConnectV2/utils',
-        function: 'pairWithWalletConnectURI',
-        error: serializeError(error),
-      },
+    logger.error(error, {
+      tags: { file: 'walletConnectV2/utils', function: 'pairWithWalletConnectURI' },
     })
 
     return Promise.reject(error instanceof Error ? error.message : '')

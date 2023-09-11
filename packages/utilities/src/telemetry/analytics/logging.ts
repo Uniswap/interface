@@ -1,4 +1,3 @@
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { UserPropertyValue } from './analytics'
 
@@ -11,14 +10,8 @@ interface ErrorLoggers {
 
 export function generateErrorLoggers(fileName: string): ErrorLoggers {
   return {
-    init(err: unknown): void {
-      logger.error('Error initializing analytics', {
-        tags: {
-          file: fileName,
-          function: 'init',
-          error: serializeError(err),
-        },
-      })
+    init(error: unknown): void {
+      logger.error(error, { tags: { file: fileName, function: 'init' } })
     },
     sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
       if (__DEV__) {

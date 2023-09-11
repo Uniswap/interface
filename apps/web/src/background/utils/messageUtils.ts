@@ -22,14 +22,9 @@ export function sendMessageToSpecificTab(
   tabId: number,
   onError?: () => void
 ): void {
-  chrome.tabs.sendMessage<Message>(tabId, message).catch((e) => {
+  chrome.tabs.sendMessage<Message>(tabId, message).catch((error) => {
     onError?.()
-    logger.error(e, {
-      tags: {
-        file: 'messageUtils',
-        function: 'sendMessageToSpecificTab',
-      },
-    })
+    logger.error(error, { tags: { file: 'messageUtils', function: 'sendMessageToSpecificTab' } })
   })
 }
 

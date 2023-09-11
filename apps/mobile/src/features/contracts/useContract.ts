@@ -2,7 +2,6 @@
 
 import { Contract, ContractInterface } from 'ethers'
 import { useMemo } from 'react'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20 } from 'wallet/src/abis/types'
@@ -26,13 +25,7 @@ export function useContract<T extends Contract = Contract>(
     try {
       return contractsManager.getOrCreateContract(chainId, address, provider, ABI)
     } catch (error) {
-      logger.error('Failed to get contract', {
-        tags: {
-          file: 'useContract',
-          function: 'useContract',
-          error: serializeError(error),
-        },
-      })
+      logger.error(error, { tags: { file: 'useContract', function: 'useContract' } })
       return null
     }
   }, [chainId, addressOrAddressMap, ABI, provider, contractsManager]) as T

@@ -10,7 +10,6 @@ import { Flex } from 'src/components/layout/Flex'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { setClipboard } from 'src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'src/utils/linking'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 
@@ -48,13 +47,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         url,
       })
     } catch (error) {
-      logger.error('Unable to share Account url', {
-        tags: {
-          file: 'ProfileContextMenu',
-          function: 'onPressShare',
-          error: serializeError(error),
-        },
-      })
+      logger.error(error, { tags: { file: 'ProfileContextMenu', function: 'onPressShare' } })
     }
   }, [address])
 

@@ -2,7 +2,6 @@ import { QueryHookOptions } from '@apollo/client'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -127,21 +126,12 @@ export function useQuoteQuery(
 
   return useMemo(() => {
     if (result.error && request?.loggingProperties?.isUSDQuote) {
-      logger.error(new Error('Error in Routing API response'), {
-        tags: {
-          file: 'routingApi',
-          function: 'quote',
-          error: serializeError(result.error.message),
-        },
-      })
+      logger.error(result.error, { tags: { file: 'routingApi', function: 'quote' } })
     }
 
     if (result.data && !result.data.quote) {
       logger.error(new Error('Unexpected empty Routing API response'), {
-        tags: {
-          file: 'routingApi',
-          function: 'quote',
-        },
+        tags: { file: 'routingApi', function: 'quote' },
         extra: {
           quoteRequestParams: params,
         },

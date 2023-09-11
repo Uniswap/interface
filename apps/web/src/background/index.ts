@@ -17,14 +17,11 @@ let isInitialized = false
 
 // Allows users to open the side panel by clicking on the action toolbar icon
 // TODO(EXT-311): move this until after onboarding is completed so the sidepanel doesn't flash when clicking the action item when the onboarding page is open.
-chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error) =>
-  logger.error(error, {
-    tags: {
-      file: 'background/index.ts',
-      function: 'setPanelBehavior',
-    },
-  })
-)
+chrome.sidePanel
+  .setPanelBehavior({ openPanelOnActionClick: true })
+  .catch((error) =>
+    logger.error(error, { tags: { file: 'background/index.ts', function: 'setPanelBehavior' } })
+  )
 
 // TODO(EXT-285): if the service worker goes to sleep mid onboarding then we get an error.
 // it likely needs to wait for the store to be initialized.
@@ -52,13 +49,8 @@ const initApp = async (): Promise<void> => {
   })
 }
 
-initApp().catch((err) =>
-  logger.error(err, {
-    tags: {
-      file: 'background/index.ts',
-      function: 'initApp',
-    },
-  })
+initApp().catch((error) =>
+  logger.error(error, { tags: { file: 'background/index.ts', function: 'initApp' } })
 )
 
 // onInstalled is triggered when the extension is installed or updated. We want to

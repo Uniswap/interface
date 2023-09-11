@@ -1,6 +1,5 @@
 import { BigNumber, providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -77,13 +76,8 @@ export function* attemptReplaceTransaction(
     // Add new transaction for monitoring after submitting on chain
     yield* put(addTransaction(replacementTransaction))
   } catch (error) {
-    logger.error('Unable to replace transaction', {
-      tags: {
-        file: 'replaceTransactionSaga',
-        function: 'attemptReplaceTransaction',
-        txHash: hash,
-        error: serializeError(error),
-      },
+    logger.error(error, {
+      tags: { file: 'replaceTransactionSaga', function: 'attemptReplaceTransaction', txHash: hash },
     })
 
     // Unable to submit txn on chain, delete from state. This can sometimes be the case where we

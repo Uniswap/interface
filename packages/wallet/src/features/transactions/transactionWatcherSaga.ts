@@ -4,7 +4,6 @@ import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
 import appsFlyer from 'react-native-appsflyer'
 import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -73,12 +72,11 @@ export function* transactionWatcher({
         yield* fork(watchTransaction, { transaction, apolloClient })
       }
     } catch (error) {
-      logger.error('Failed to fork a transaction watcher', {
+      logger.error(error, {
         tags: {
           file: 'transactionWatcherSaga',
           function: 'watchTransaction',
           txHash: transaction.hash,
-          error: serializeError(error),
         },
       })
 
@@ -145,12 +143,8 @@ export function* watchFiatOnRampTransaction(transaction: TransactionDetails) {
       })
     }
   } catch (error) {
-    logger.error('Failed while watching for a fiat on-ramp transaction', {
-      tags: {
-        file: 'transactionWatcherSaga',
-        function: 'watchFiatOnRampTransaction',
-        error: serializeError(error),
-      },
+    logger.error(error, {
+      tags: { file: 'transactionWatcherSaga', function: 'watchFiatOnRampTransaction' },
     })
   }
 }

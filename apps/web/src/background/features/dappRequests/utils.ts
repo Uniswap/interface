@@ -4,7 +4,6 @@ import {
   InjectedAssetRemoveRequest,
   InjectFrameRequest,
 } from 'src/types/requests'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 
 const DEFAULT_WINDOW_WIDTH = 2000
@@ -105,13 +104,6 @@ export function extractBaseUrl(url?: string): string | undefined {
       parsedUrl.port ? ':' + parsedUrl.port : ''
     }`
   } catch (error) {
-    logger.error('Error parsing url', {
-      tags: {
-        file: 'dappRequests/utils',
-        function: 'extractBaseUrl',
-        url,
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'dappRequests/utils', function: 'extractBaseUrl', url } })
   }
 }

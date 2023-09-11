@@ -1,6 +1,5 @@
 import { sendRejectionToContentScript } from 'src/background/utils/messageUtils'
 import { call, put, take } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import {
   ChangeChainRequest,
@@ -93,12 +92,8 @@ export function* dappRequestApprovalWatcher() {
         )
       }
     } catch (error) {
-      logger.error('Error while watching dapp requests', {
-        tags: {
-          file: 'dappRequestApprovalWatcherSaga',
-          function: 'dappRequestApprovalWatcher',
-          error: serializeError(error),
-        },
+      logger.error(error, {
+        tags: { file: 'dappRequestApprovalWatcherSaga', function: 'dappRequestApprovalWatcher' },
       })
     } finally {
       yield* put(dappRequestActions.remove(request.dappRequest.requestId))

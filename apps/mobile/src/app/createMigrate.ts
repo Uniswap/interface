@@ -1,7 +1,6 @@
 // Adapted from https://github.com/rt2zz/redux-persist/blob/master/src/createMigrate.ts to add more logging
 import type { MigrationManifest, PersistedState } from 'redux-persist'
 import { DEFAULT_VERSION } from 'redux-persist/es/constants'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 
 export default function createMigrate(
@@ -53,13 +52,7 @@ export default function createMigrate(
 
       return Promise.resolve(migratedState)
     } catch (error) {
-      logger.error('Redux migration error', {
-        tags: {
-          file: 'redux-persist',
-          function: 'createMigrate',
-          error: serializeError(error),
-        },
-      })
+      logger.error(error, { tags: { file: 'redux-persist', function: 'createMigrate' } })
       return Promise.reject(error)
     }
   }

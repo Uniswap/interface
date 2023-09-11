@@ -1,6 +1,6 @@
 import { createAction, createReducer, PayloadActionCreator } from '@reduxjs/toolkit'
 import { call, delay, put, race, take } from 'typed-redux-saga'
-import { errorToString, serializeError } from 'utilities/src/errors'
+import { errorToString } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -30,13 +30,8 @@ export function createSaga<SagaParams = void>(
         logger.debug('saga', 'wrappedSaga', `${name} triggered`)
         yield* call(saga, trigger.payload)
       } catch (error) {
-        logger.error('Error creating saga', {
-          tags: {
-            file: 'utils/saga',
-            function: 'createSaga',
-            sagaName: name,
-            error: serializeError(error),
-          },
+        logger.error(error, {
+          tags: { file: 'utils/saga', function: 'createSaga', sagaName: name },
         })
       }
     }
@@ -146,13 +141,8 @@ export function createMonitoredSaga<SagaParams = void>(
         yield* put(statusAction(SagaStatus.Success))
         logger.debug('saga', 'monitoredSaga', `${name} finished`)
       } catch (error) {
-        logger.error('Error creating monitored saga', {
-          tags: {
-            file: 'utils/saga',
-            function: 'createMonitoredSaga',
-            sagaName: name,
-            error: serializeError(error),
-          },
+        logger.error(error, {
+          tags: { file: 'utils/saga', function: 'createMonitoredSaga', sagaName: name },
         })
 
         const errorMessage = errorToString(error)

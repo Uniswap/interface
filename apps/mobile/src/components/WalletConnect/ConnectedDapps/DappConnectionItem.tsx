@@ -15,7 +15,6 @@ import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
 import { ElementName } from 'src/features/telemetry/constants'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { removeSession, WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -56,13 +55,7 @@ export function DappConnectionItem({
         })
       )
     } catch (error) {
-      logger.error(error, {
-        tags: {
-          file: 'DappConnectionItem',
-          function: 'onDisconnect',
-          error: serializeError(error),
-        },
-      })
+      logger.error(error, { tags: { file: 'DappConnectionItem', function: 'onDisconnect' } })
     }
   }
 

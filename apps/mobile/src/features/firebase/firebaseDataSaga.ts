@@ -8,7 +8,6 @@ import {
 } from 'src/features/firebase/utils'
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { selectTestnetsAreEnabled } from 'wallet/src/features/chains/slice'
@@ -66,13 +65,7 @@ function* addAccountToFirebase(account: Account) {
     yield* call(mapFirebaseUidToAddresses, [address])
     yield* call(updateFirebaseMetadata, address, { type, name, testnetsEnabled })
   } catch (error) {
-    logger.error('Unable to add account to Firebase', {
-      tags: {
-        file: 'firebaseDataSaga',
-        function: 'addAccountToFirebase',
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'firebaseDataSaga', function: 'addAccountToFirebase' } })
   }
 }
 
@@ -82,12 +75,8 @@ export function* removeAccountFromFirebase(address: Address, notificationsEnable
     yield* call(deleteFirebaseMetadata, address)
     yield* call(disassociateFirebaseUidFromAddresses, [address])
   } catch (error) {
-    logger.error('Unable to remove account from Firebase', {
-      tags: {
-        file: 'firebaseDataSaga',
-        function: 'removeAccountFromFirebase',
-        error: serializeError(error),
-      },
+    logger.error(error, {
+      tags: { file: 'firebaseDataSaga', function: 'removeAccountFromFirebase' },
     })
   }
 }
@@ -98,13 +87,7 @@ export function* renameAccountInFirebase(address: Address, newName: string) {
     if (!notificationsEnabled) return
     yield* call(updateFirebaseMetadata, address, { name: newName })
   } catch (error) {
-    logger.error('Unable to rename account in Firebase', {
-      tags: {
-        file: 'firebaseDataSaga',
-        function: 'renameAccountInFirebase',
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'firebaseDataSaga', function: 'renameAccountInFirebase' } })
   }
 }
 
@@ -133,12 +116,8 @@ export function* toggleFirebaseNotificationSettings({
       })
     )
   } catch (error) {
-    logger.error('Unable to toggle notification settings in Firebase', {
-      tags: {
-        file: 'firebaseDataSaga',
-        function: 'toggleFirebaseNotificationSettings',
-        error: serializeError(error),
-      },
+    logger.error(error, {
+      tags: { file: 'firebaseDataSaga', function: 'toggleFirebaseNotificationSettings' },
     })
   }
 }
@@ -185,13 +164,7 @@ async function updateFirebaseMetadata(address: Address, metadata: AccountMetadat
 
     await metadataRef.set(metadataWithDefinedPropsOnly, { merge: true })
   } catch (error) {
-    logger.error('Unable to update Firebase metadata', {
-      tags: {
-        file: 'firebaseDataSaga',
-        function: 'updateFirebaseMetadata',
-        error: serializeError(error),
-      },
-    })
+    logger.error(error, { tags: { file: 'firebaseDataSaga', function: 'updateFirebaseMetadata' } })
   }
 }
 

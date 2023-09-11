@@ -11,7 +11,6 @@ import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { ModalName } from 'src/features/telemetry/constants'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { removeSession, WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
@@ -54,13 +53,7 @@ export function DappConnectedNetworkModal({
       )
       onClose()
     } catch (error) {
-      logger.error('Unable to disconnect WalletConnect session', {
-        tags: {
-          file: 'DappConnectedNetworkModal',
-          function: 'onDisconnect',
-          error: serializeError(error),
-        },
-      })
+      logger.error(error, { tags: { file: 'DappConnectedNetworkModal', function: 'onDisconnect' } })
     }
   }
 

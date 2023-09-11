@@ -395,12 +395,7 @@ export function* getCurrentTabId() {
   })
   const potentialTabId = tabs?.[0]?.id
   if (!potentialTabId) {
-    logger.error('No tab ID', {
-      tags: {
-        file: 'dappRequests/saga',
-        function: 'getCurrentTabId',
-      },
-    })
+    logger.error('No tab ID', { tags: { file: 'dappRequests/saga', function: 'getCurrentTabId' } })
   } else {
     tabId = potentialTabId
   }

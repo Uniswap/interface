@@ -1,5 +1,4 @@
 import { providers as ethersProviders } from 'ethers'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
 import { ChainId, CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
@@ -27,13 +26,8 @@ export function createEthersProvider(
       return new ethersProviders.JsonRpcProvider(altPublicRPCUrl)
     }
   } catch (error) {
-    logger.error('Failed to create provider', {
-      tags: {
-        file: 'createEthersProvider',
-        function: 'createProvider',
-        chainId,
-        error: serializeError(error),
-      },
+    logger.error(error, {
+      tags: { file: 'createEthersProvider', function: 'createProvider', chainId },
     })
     return null
   }

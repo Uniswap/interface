@@ -1,5 +1,4 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { serializeError } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import {
@@ -81,12 +80,8 @@ export function createSwapFormFromTxDetails({
 
     return swapFormState
   } catch (error) {
-    logger.error('Failed to create swap form from tx details', {
-      tags: {
-        file: 'createSwapFormFromTxDetails',
-        function: 'createSwapFormFromTxDetails',
-        error: serializeError(error),
-      },
+    logger.error(error, {
+      tags: { file: 'createSwapFormFromTxDetails', function: 'createSwapFormFromTxDetails' },
     })
   }
 }
@@ -145,12 +140,8 @@ export function createWrapFormFromTxDetails({
 
     return swapFormState
   } catch (error) {
-    logger.error('Failed to create wrap form from tx details', {
-      tags: {
-        file: 'createSwapFormFromTxDetails',
-        function: 'createWrapFormFromTxDetails',
-        error: serializeError(error),
-      },
+    logger.error(error, {
+      tags: { file: 'createSwapFormFromTxDetails', function: 'createWrapFormFromTxDetails' },
     })
   }
 }
