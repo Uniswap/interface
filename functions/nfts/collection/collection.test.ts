@@ -16,7 +16,15 @@ const collections = [
   },
 ]
 
-test.each(collections)('should inject metadata for valid collections', async (collection) => {
+const nonexistentCollections = [
+  {
+    address: '0xed5af388653567af2f388e6224dc7c4b3241c545',
+    collectionName: '0xed5af388653567af2f388e6224dc7c4b3241c545',
+    image: 'http://127.0.0.1:3000/api/image/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545',
+  },
+]
+
+test.each([...collections, ...nonexistentCollections])('should inject metadata for collections', async (collection) => {
   const url = 'http://127.0.0.1:3000/nfts/collection/' + collection.address
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).toMatchSnapshot()
@@ -35,25 +43,23 @@ test.each(collections)('should inject metadata for valid collections', async (co
 })
 
 const invalidCollections = [
-  'http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545',
-  'http://127.0.0.1:3000/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545//',
+  {
+    address: '0xd3adb33f',
+  },
 ]
 
-test.each(invalidCollections)(
-  'should not inject metadata for invalid collection urls',
-  async (url) => {
-    const body = await fetch(new Request(url)).then((res) => res.text())
-    expect(body).not.toContain('og:title')
-    expect(body).not.toContain('og:image')
-    expect(body).not.toContain('og:image:width')
-    expect(body).not.toContain('og:image:height')
-    expect(body).not.toContain('og:type')
-    expect(body).not.toContain('og:url')
-    expect(body).not.toContain('og:image:alt')
-    expect(body).not.toContain('twitter:card')
-    expect(body).not.toContain('twitter:title')
-    expect(body).not.toContain('twitter:image')
-    expect(body).not.toContain('twitter:image:alt')
-  },
-  50000
-)
+test.each(invalidCollections)('should not inject metadata for nonexistent collections', async (collection) => {
+  const url = 'http://127.0.0.1:3000/nfts/collection/' + collection.address
+  const body = await fetch(new Request(url)).then((res) => res.text())
+  expect(body).not.toContain('og:title')
+  expect(body).not.toContain('og:image')
+  expect(body).not.toContain('og:image:width')
+  expect(body).not.toContain('og:image:height')
+  expect(body).not.toContain('og:type')
+  expect(body).not.toContain('og:url')
+  expect(body).not.toContain('og:image:alt')
+  expect(body).not.toContain('twitter:card')
+  expect(body).not.toContain('twitter:title')
+  expect(body).not.toContain('twitter:image')
+  expect(body).not.toContain('twitter:image:alt')
+})

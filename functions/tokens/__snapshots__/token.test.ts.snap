@@ -119,13 +119,13 @@ exports[`should inject metadata for valid tokens 1`] = `
 
       @media (prefers-color-scheme: dark) {
         html {
-          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
         }
       }
 
       @media (prefers-color-scheme: light) {
         html {
-          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
         }
       }
     </style>
@@ -264,13 +264,13 @@ exports[`should inject metadata for valid tokens 2`] = `
 
       @media (prefers-color-scheme: dark) {
         html {
-          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
         }
       }
 
       @media (prefers-color-scheme: light) {
         html {
-          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
         }
       }
     </style>
@@ -409,13 +409,13 @@ exports[`should inject metadata for valid tokens 3`] = `
 
       @media (prefers-color-scheme: dark) {
         html {
-          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
         }
       }
 
       @media (prefers-color-scheme: light) {
         html {
-          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
         }
       }
     </style>
@@ -554,13 +554,13 @@ exports[`should inject metadata for valid tokens 4`] = `
 
       @media (prefers-color-scheme: dark) {
         html {
-          background: linear-gradient(180deg, #202738 0%, #070816 100%);
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
         }
       }
 
       @media (prefers-color-scheme: light) {
         html {
-          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
         }
       }
     </style>
