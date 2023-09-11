@@ -579,6 +579,17 @@ export function useFormatterLocales(): {
   }
 }
 
+function handleFallbackCurrency(
+  selectedCurrency: SupportedLocalCurrency,
+  previousSelectedCurrency: SupportedLocalCurrency,
+  shouldFallbackToUSD: boolean,
+  shouldFallbackToPrevious: boolean
+) {
+  if (shouldFallbackToUSD) return DEFAULT_LOCAL_CURRENCY
+  if (shouldFallbackToPrevious) return previousSelectedCurrency
+  return selectedCurrency
+}
+
 // Constructs an object that injects the correct locale and local currency into each of the above formatter functions.
 export function useFormatter() {
   const activeLocalCurrency = useActiveLocalCurrency()
@@ -593,11 +604,12 @@ export function useFormatter() {
 
   const shouldFallbackToPrevious = !localCurrencyConversionRate && localCurrencyConversionRateIsLoading
   const shouldFallbackToUSD = !localCurrencyConversionRate && !localCurrencyConversionRateIsLoading
-  const currencyToFormatWith = shouldFallbackToUSD
-    ? DEFAULT_LOCAL_CURRENCY
-    : shouldFallbackToPrevious
-    ? previousSelectedCurrency
-    : formatterLocalCurrency
+  const currencyToFormatWith = handleFallbackCurrency(
+    formatterLocalCurrency,
+    previousSelectedCurrency,
+    shouldFallbackToUSD,
+    shouldFallbackToPrevious
+  )
   const localCurrencyConversionRateToFormatWith = shouldFallbackToPrevious
     ? previousConversionRate
     : localCurrencyConversionRate
