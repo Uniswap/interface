@@ -85,12 +85,12 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
     }
   }
 
+  ${IconWrapper} {
+    margin-right: 4px;
+  }
+
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     width: ${({ pending }) => !pending && '36px'};
-
-    ${IconWrapper} {
-      margin-right: 0;
-    }
   }
 `
 

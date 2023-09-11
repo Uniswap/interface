@@ -1,4 +1,4 @@
-import { Unicon } from 'components/Unicon'
+import Unicon from 'components/Unicon'
 import { Connection, ConnectionType } from 'connection/types'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components'
@@ -14,7 +14,6 @@ export const IconWrapper = styled.div<{ size?: number }>`
   ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
-  margin-right: 4px;
   & > img,
   span {
     height: ${({ size }) => (size ? size + 'px' : '32px')};
@@ -81,7 +80,7 @@ const MainWalletIcon = ({ account, connection, size }: { account: string; connec
 export default function StatusIcon({
   account,
   connection,
-  size = 16,
+  size = 32,
   showMiniIcons = true,
 }: {
   account: string
