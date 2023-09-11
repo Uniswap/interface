@@ -25,7 +25,7 @@ import { ArrowLeft } from 'react-feather'
 import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ListModal } from './Modal/ListModal'
 import { NFTListingsGrid } from './NFTListingsGrid'
@@ -185,6 +185,7 @@ export const ListPage = () => {
   const { provider, chainId } = useWeb3React()
   const isMobile = useIsMobile()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
+  const { formatCurrencyAmount } = useFormatter()
   const { setGlobalMarketplaces, sellAssets, issues } = useSellAsset(
     ({ setGlobalMarketplaces, sellAssets, issues }) => ({
       setGlobalMarketplaces,
@@ -205,7 +206,10 @@ export const ListPage = () => {
   const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
-  const usdcAmount = formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)
+  const usdcAmount = formatCurrencyAmount({
+    amount: usdcValue,
+    type: NumberType.FiatTokenPrice,
+  })
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
   const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
   const signer = provider?.getSigner()

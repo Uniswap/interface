@@ -11,7 +11,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 import { useToggleAccountDrawer } from '../..'
@@ -79,6 +79,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
     navigate(getTokenDetailsURL(token))
     toggleWalletDrawer()
   }, [navigate, token, toggleWalletDrawer])
+  const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)
   if (!currency) {
@@ -100,7 +101,11 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
         title={<TokenNameText>{token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>
-            {formatNumber({ input: quantity, type: NumberType.TokenNonTx })} {token?.symbol}
+            {formatNumber({
+              input: quantity,
+              type: NumberType.TokenNonTx,
+            })}{' '}
+            {token?.symbol}
           </TokenBalanceText>
         }
         onClick={navigateToTokenDetails}
