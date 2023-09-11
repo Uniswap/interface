@@ -117,7 +117,7 @@ const AccountNamesWrapper = styled.div`
   width: 100%;
   flex-direction: column;
   justify-content: center;
-  gap: 2px;
+  margin-left: 8px;
 `
 
 const StyledInfoIcon = styled(Info)`
