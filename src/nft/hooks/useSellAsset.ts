@@ -1,6 +1,5 @@
+import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { shallow } from 'zustand/shallow'
-import { createWithEqualityFn } from 'zustand/traditional'
 
 import { ListingMarket, WalletAsset } from '../types'
 
@@ -19,10 +18,10 @@ interface SellAssetState {
   setIssues: (issues: number) => void
 }
 
-export const useSellAsset = createWithEqualityFn<SellAssetState>()(
+export const useSellAsset = create<SellAssetState>()(
   devtools(
     (set) => ({
-      sellAssets: [] as WalletAsset[],
+      sellAssets: [],
       issues: 0,
       showResolveIssues: false,
       selectSellAsset: (asset) =>
@@ -126,6 +125,5 @@ export const useSellAsset = createWithEqualityFn<SellAssetState>()(
         })),
     }),
     { name: 'useSelectAsset' }
-  ),
-  shallow
+  )
 )
