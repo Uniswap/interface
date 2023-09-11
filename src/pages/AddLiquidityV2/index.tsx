@@ -1,12 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
+import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
@@ -57,6 +56,7 @@ export default function AddLiquidity() {
   const { account, chainId, provider } = useWeb3React()
 
   const theme = useTheme()
+  const trace = useTrace()
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -201,10 +201,9 @@ export default function AddLiquidity() {
 
           setTxHash(response.hash)
 
-          sendEvent({
-            category: 'Liquidity',
-            action: 'Add',
+          sendAnalyticsEvent(LiquidityEventName.ADD_LIQUIDITY_SUBMITTED, {
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
+            ...trace,
           })
         })
       )
