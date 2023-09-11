@@ -1,5 +1,4 @@
 import { Network } from '@ethersproject/networks'
-import { defineReadOnly } from '@ethersproject/properties'
 import { JsonRpcProvider, Provider } from '@ethersproject/providers'
 
 function now() {
@@ -54,7 +53,6 @@ interface FallbackProviderEvaluation {
 export default class AppRpcProvider extends JsonRpcProvider {
   readonly providerEvaluations: ReadonlyArray<FallbackProviderEvaluation>
   readonly evaluationInterval: number
-  _highestBlockNumber = -1
 
   constructor(providers: JsonRpcProvider[], evaluationInterval = 30000) {
     if (providers.length === 0) throw new Error('providers array empty')
@@ -77,7 +75,6 @@ export default class AppRpcProvider extends JsonRpcProvider {
     })
 
     this.evaluationInterval = evaluationInterval
-    defineReadOnly(this, 'providerEvaluations', Object.freeze(this.providerEvaluations))
   }
 
   /**
@@ -121,8 +118,7 @@ export default class AppRpcProvider extends JsonRpcProvider {
     } else {
       for (const { provider, performance } of sortedEvaluations) {
         try {
-          const result = await provider.perform(method, params)
-          return result
+          return provider.perform(method, params)
         } catch (error) {
           performance.failureRate++ // Increment failure rate
         }

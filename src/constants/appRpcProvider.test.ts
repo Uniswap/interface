@@ -75,8 +75,6 @@ describe('AppRpcProvider', () => {
     const [fastProvider, slowProvider] = AppRpcProvider.sortProviders(appRpcProvider.providerEvaluations.slice())
 
     expect(fastProvider.performance.latency).toBeLessThan(slowProvider.performance.latency)
-    mockProvider1.getBlockNumber.mockRestore()
-    mockProvider2.getBlockNumber.mockRestore()
   })
 
   test('should sort failing providers after successful providers', async () => {
@@ -94,8 +92,6 @@ describe('AppRpcProvider', () => {
     // Validate that the providers are sorted correctly by latency
     const [provider, failingProvider] = AppRpcProvider.sortProviders(appRpcProvider.providerEvaluations.slice())
     expect(provider.performance.failureRate).toBeLessThan(failingProvider.performance.failureRate)
-    mockProvider1.getBlockNumber.mockRestore()
-    mockProvider2.getBlockNumber.mockRestore()
   })
 
   test('should increment failureRate on provider failure', async () => {
@@ -108,6 +104,5 @@ describe('AppRpcProvider', () => {
 
     // Validate that the failureRate was incremented
     expect(appRpcProvider.providerEvaluations[0].performance.failureRate).toBe(1)
-    mockProvider1.getBlockNumber.mockRestore()
   })
 })

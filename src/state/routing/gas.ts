@@ -27,7 +27,7 @@ export async function getApproveInfo(
   if (!account || !usdCostPerGas) return { needsApprove: false }
 
   const appProvider = RPC_PROVIDERS[currency.chainId as SupportedInterfaceChain]
-  const provider = appProvider.primaryProvider
+  const provider = appProvider
   const tokenContract = getContract(currency.address, ERC20_ABI, provider) as Erc20
 
   let approveGasUseEstimate
