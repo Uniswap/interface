@@ -581,7 +581,7 @@ export function useFormatterLocales(): {
 
 function handleFallbackCurrency(
   selectedCurrency: SupportedLocalCurrency,
-  previousSelectedCurrency: SupportedLocalCurrency,
+  previousSelectedCurrency: SupportedLocalCurrency | undefined,
   shouldFallbackToUSD: boolean,
   shouldFallbackToPrevious: boolean
 ) {
