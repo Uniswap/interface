@@ -88,7 +88,7 @@ export function PoolDetailsHeader({
             {token0?.symbol} / {token1?.symbol}
           </ThemedText.HeadlineSmall>
         </Row>
-        {feeTier && <FeeTier>{feeTier / 10000}%</FeeTier>}
+        {Boolean(feeTier) && <FeeTier>{feeTier / 10000}%</FeeTier>}
         <ToggleReverseArrows data-testid="toggle-tokens-reverse-arrows" onClick={toggleReversed} />
       </Row>
     </HeaderColumn>
