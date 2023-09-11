@@ -18,7 +18,6 @@ import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
 const StyledPolling = styled.div`
   align-items: center;
-  left: 0;
   bottom: 0;
   color: ${({ theme }) => theme.textTertiary};
   display: none;
