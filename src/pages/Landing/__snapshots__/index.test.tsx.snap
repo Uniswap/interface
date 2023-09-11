@@ -1743,7 +1743,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
     >
       <a
         class="c2"
-        href="#/swap"
+        href="/swap"
       >
         <div
           class="c3"
@@ -2073,7 +2073,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
       >
         <a
           class="c2 c15 c58 c59"
-          href="#/swap"
+          href="/swap"
         >
           <p
             class="c60"
@@ -2140,7 +2140,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
       >
         <a
           class="c66"
-          href="#/swap"
+          href="/swap"
         >
           <div
             class="c67"
@@ -2220,7 +2220,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
         </a>
         <a
           class="c72"
-          href="#/pools"
+          href="/pools"
         >
           <div
             class="c67"
@@ -2405,19 +2405,19 @@ exports[`disable nft on landing page does not render nft information and card 1`
             </span>
             <a
               class="c96 c97"
-              href="#/swap"
+              href="/swap"
             >
               Swap
             </a>
             <a
               class="c96 c97"
-              href="#/tokens"
+              href="/tokens"
             >
               Tokens
             </a>
             <a
               class="c96 c97"
-              href="#/pools"
+              href="/pools"
             >
               Pools
             </a>
@@ -4358,7 +4358,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
     >
       <a
         class="c2"
-        href="#/swap"
+        href="/swap"
       >
         <div
           class="c3"
@@ -4688,7 +4688,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
       >
         <a
           class="c2 c15 c58 c59"
-          href="#/swap"
+          href="/swap"
         >
           <p
             class="c60"
@@ -4755,7 +4755,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
       >
         <a
           class="c66"
-          href="#/swap"
+          href="/swap"
         >
           <div
             class="c67"
@@ -4781,7 +4781,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
         </a>
         <a
           class="c71"
-          href="#/nfts"
+          href="/nfts"
         >
           <div
             class="c67"
@@ -4861,7 +4861,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
         </a>
         <a
           class="c73"
-          href="#/pools"
+          href="/pools"
         >
           <div
             class="c67"
@@ -5046,25 +5046,25 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
             </span>
             <a
               class="c97 c98"
-              href="#/swap"
+              href="/swap"
             >
               Swap
             </a>
             <a
               class="c97 c98"
-              href="#/tokens"
+              href="/tokens"
             >
               Tokens
             </a>
             <a
               class="c97 c98"
-              href="#/nfts"
+              href="/nfts"
             >
               NFTs
             </a>
             <a
               class="c97 c98"
-              href="#/pools"
+              href="/pools"
             >
               Pools
             </a>

@@ -32,6 +32,7 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { getSwapCurrencyId, TOKEN_SHORTHANDS } from 'constants/tokens'
+import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useLocalCurrencyPrice } from 'hooks/useLocalCurrencyPrice'
@@ -556,10 +557,10 @@ export function Swap({
     if (!trade || prevTrade === trade) return // no new swap quote to log
 
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, swapQuoteLatency),
+      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, swapQuoteLatency, inputTax, outputTax),
       ...trace,
     })
-  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency])
+  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency, inputTax, outputTax])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
@@ -570,6 +571,7 @@ export function Swap({
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const showOptInSmall = !useScreenSize().navSearchInputVisible
   const isDark = useIsDarkMode()
+  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
   const swapElement = (
     <SwapWrapper isDark={isDark} className={className} id="swap-page">
@@ -796,14 +798,14 @@ export function Swap({
           )}
         </div>
       </AutoColumn>
-      {!showOptInSmall && <UniswapXOptIn isSmall={false} swapInfo={swapInfo} />}
+      {!showOptInSmall && !isUniswapXDefaultEnabled && <UniswapXOptIn isSmall={false} swapInfo={swapInfo} />}
     </SwapWrapper>
   )
 
   return (
     <>
       {swapElement}
-      {showOptInSmall && <UniswapXOptIn isSmall swapInfo={swapInfo} />}
+      {showOptInSmall && !isUniswapXDefaultEnabled && <UniswapXOptIn isSmall swapInfo={swapInfo} />}
     </>
   )
 }
