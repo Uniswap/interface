@@ -165,6 +165,5 @@ export function useUniversalRouterSwapCallback(
     provider,
     trade,
     isAutoSlippage,
-    blockNumber,
   ])
 }
