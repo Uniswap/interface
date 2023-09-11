@@ -26,8 +26,7 @@ export async function getApproveInfo(
   // If any of these arguments aren't provided, then we cannot generate approval cost info
   if (!account || !usdCostPerGas) return { needsApprove: false }
 
-  const appProvider = RPC_PROVIDERS[currency.chainId as SupportedInterfaceChain]
-  const provider = appProvider
+  const provider = RPC_PROVIDERS[currency.chainId as SupportedInterfaceChain]
   const tokenContract = getContract(currency.address, ERC20_ABI, provider) as Erc20
 
   let approveGasUseEstimate
