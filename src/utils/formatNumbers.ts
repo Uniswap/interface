@@ -415,12 +415,28 @@ export function formatNumber({
   return (prefix ?? '') + new Intl.NumberFormat(locale, formatterOptions).format(hardCodedInputValue)
 }
 
-export function formatCurrencyAmount(
-  amount: Nullish<CurrencyAmount<Currency>>,
-  type: NumberType = NumberType.TokenNonTx,
+interface FormatCurrencyAmountOptions {
+  amount: Nullish<CurrencyAmount<Currency>>
+  type?: NumberType
   placeholder?: string
-): string {
-  return formatNumber({ input: amount ? parseFloat(amount.toSignificant()) : undefined, type, placeholder })
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+}
+
+export function formatCurrencyAmount({
+  amount,
+  type = NumberType.TokenNonTx,
+  placeholder,
+  locale = DEFAULT_LOCALE,
+  localCurrency = DEFAULT_LOCAL_CURRENCY,
+}: FormatCurrencyAmountOptions): string {
+  return formatNumber({
+    input: amount ? parseFloat(amount.toSignificant()) : undefined,
+    type,
+    placeholder,
+    locale,
+    localCurrency,
+  })
 }
 
 export function formatPriceImpact(priceImpact: Percent | undefined): string {
@@ -523,14 +539,14 @@ export const formatTransactionAmount = (num: number | undefined | null, maxDigit
 const MAX_AMOUNT_STR_LENGTH = 9
 
 export function formatReviewSwapCurrencyAmount(amount: CurrencyAmount<Currency>): string {
-  let formattedAmount = formatCurrencyAmount(amount, NumberType.TokenTx)
+  let formattedAmount = formatCurrencyAmount({ amount, type: NumberType.TokenTx })
   if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
-    formattedAmount = formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
+    formattedAmount = formatCurrencyAmount({ amount, type: NumberType.SwapTradeAmount })
   }
   return formattedAmount
 }
 
-function useFormatterLocales(): {
+export function useFormatterLocales(): {
   formatterLocale: SupportedLocale
   formatterLocalCurrency: SupportedLocalCurrency
 } {
@@ -561,10 +577,17 @@ export function useFormatter() {
     [formatterLocalCurrency, formatterLocale]
   )
 
+  const formatCurrencyAmountWithLocales = useCallback(
+    (options: Omit<FormatCurrencyAmountOptions, 'locale' | 'localCurrency'>) =>
+      formatCurrencyAmount({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
+    [formatterLocalCurrency, formatterLocale]
+  )
+
   return useMemo(
     () => ({
       formatNumber: formatNumberWithLocales,
+      formatCurrencyAmount: formatCurrencyAmountWithLocales,
     }),
-    [formatNumberWithLocales]
+    [formatCurrencyAmountWithLocales, formatNumberWithLocales]
   )
 }

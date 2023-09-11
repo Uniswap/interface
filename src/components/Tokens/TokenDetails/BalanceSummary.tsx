@@ -8,7 +8,7 @@ import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
-import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
   background-color: ${({ theme }) => theme.surface1};
@@ -67,8 +67,15 @@ export default function BalanceSummary({ token }: { token: Currency }) {
   const theme = useTheme()
   const { label, color } = getChainInfo(asSupportedChain(chainId) ?? ChainId.MAINNET)
   const balance = useCurrencyBalance(account, token)
-  const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
-  const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
+  const { formatCurrencyAmount } = useFormatter()
+  const formattedBalance = formatCurrencyAmount({
+    amount: balance,
+    type: NumberType.TokenNonTx,
+  })
+  const formattedUsdValue = formatCurrencyAmount({
+    amount: useStablecoinValue(balance),
+    type: NumberType.FiatTokenStats,
+  })
 
   if (!account || !balance) {
     return null
