@@ -35,13 +35,13 @@ export const InputContainer = styled(Row)<{ error?: boolean }>`
       ? `
         border: 1px solid ${theme.critical};
         :focus-within {
-          border-color: ${theme.deprecated_accentFailureSoft};
+          border-color: ${theme.accent1};
         }
       `
       : `
         border: 1px solid ${theme.surface3};
         :focus-within {
-          border-color: ${theme.accent2};
+          border-color: ${theme.accent1};
         }
       `}
 `

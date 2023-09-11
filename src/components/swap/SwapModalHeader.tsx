@@ -15,6 +15,7 @@ const Rule = styled(Divider)`
 
 const HeaderContainer = styled(AutoColumn)`
   margin-top: 16px;
+  padding: 0 8px;
 `
 
 export default function SwapModalHeader({

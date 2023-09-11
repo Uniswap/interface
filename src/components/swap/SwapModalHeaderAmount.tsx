@@ -25,11 +25,7 @@ const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextPr
     return <ThemedText.HeadlineMedium {...textProps}>{children}</ThemedText.HeadlineMedium>
   }
 
-  return (
-    <ThemedText.HeadlineLarge fontWeight={535} {...textProps}>
-      {children}
-    </ThemedText.HeadlineLarge>
-  )
+  return <ThemedText.LargeHeader {...textProps}>{children}</ThemedText.LargeHeader>
 }
 
 interface AmountProps {
