@@ -13,11 +13,12 @@ import Animated, {
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
+import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { Theme } from 'ui/src/theme/restyle'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-const NUMBER_WIDTH_ARRAY = [30, 22, 30, 30, 30, 30, 30, 30, 30, 30] // width of digits in a font
+const NUMBER_WIDTH_ARRAY = [29, 20, 29, 29, 29, 29, 29, 29, 29, 29] // width of digits in a font
 const DIGIT_HEIGHT = 60
 const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 10
 
@@ -46,7 +47,7 @@ const RollNumber = ({
     if (nextColor && index > commonPrefixLength - 1) {
       fontColor.value = withSequence(
         withTiming(nextColor, { duration: 250 }),
-        withDelay(50, withTiming(finishColor, { duration: 300 }))
+        withDelay(50, withTiming(finishColor, { duration: 310 }))
       )
     } else {
       fontColor.value = finishColor
@@ -63,6 +64,7 @@ const RollNumber = ({
   const numbers = NUMBER_ARRAY.map((char) => {
     return (
       <Animated.Text
+        allowFontScaling={false}
         style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}>
         {char}
       </Animated.Text>
@@ -97,6 +99,7 @@ const RollNumber = ({
   } else {
     return (
       <Animated.Text
+        allowFontScaling={false}
         style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}>
         {digit}
       </Animated.Text>
@@ -144,11 +147,13 @@ function longestCommonPrefix(a: string, b: string): string {
 }
 
 const AnimatedNumber = ({
-  isLoading,
   value,
+  loading = false,
+  loadingPlaceholderText = '$00.00',
   colorIndicationDuration,
 }: {
-  isLoading: boolean
+  loadingPlaceholderText?: string
+  loading: boolean | 'no-shimmer'
   value?: string
   colorIndicationDuration: number
 }): JSX.Element => {
@@ -184,51 +189,74 @@ const AnimatedNumber = ({
     value,
   ])
 
+  if (loading) {
+    const placeholderChars = [...loadingPlaceholderText]
+
+    return (
+      <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
+        <Flex
+          alignItems="flex-start"
+          backgroundColor="surface1"
+          borderRadius="rounded4"
+          flexDirection="row"
+          gap="none">
+          {placeholderChars.map((_, index) => (
+            <Char
+              key={
+                index === 0
+                  ? `$_sign_${theme.colors.neutral1}`
+                  : `$_number_${placeholderChars.length - index}`
+              }
+              chars={placeholderChars}
+              commonPrefixLength={commonPrefixLength}
+              index={index}
+              nextColor={nextColor}
+              theme={theme}
+            />
+          ))}
+        </Flex>
+      </TextLoaderWrapper>
+    )
+  }
+
   return (
-    <Flex alignItems="flex-start" flexDirection="row" gap="none">
-      {isLoading || (
-        <Svg height={DIGIT_HEIGHT} style={AnimatedNumberStyles.gradientStyle} width="100%">
-          <Defs>
-            <LinearGradient id="backgroundTop" x1="0%" x2="0%" y1="15%" y2="0%">
-              <Stop offset="0" stopColor={theme.colors.surface1} stopOpacity="0" />
-              <Stop offset="1" stopColor={theme.colors.surface1} stopOpacity="1" />
-            </LinearGradient>
-            <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
-              <Stop offset="0" stopColor={theme.colors.surface1} stopOpacity="0" />
-              <Stop offset="1" stopColor={theme.colors.surface1} stopOpacity="1" />
-            </LinearGradient>
-          </Defs>
-          <Rect
-            fill="url(#backgroundTop)"
-            height={DIGIT_HEIGHT}
-            opacity={1}
-            width="100%"
-            x="0"
-            y="0"
-          />
-          <Rect
-            fill="url(#background)"
-            height={DIGIT_HEIGHT}
-            opacity={1}
-            width="100%"
-            x="0"
-            y="0"
-          />
-        </Svg>
-      )}
-      {chars &&
-        chars.map((_, index) => (
-          <Char
-            key={
-              index === 0 ? `$_sign_${theme.colors.neutral1}` : `$_number_${chars.length - index}`
-            }
-            chars={chars}
-            commonPrefixLength={commonPrefixLength}
-            index={index}
-            nextColor={nextColor}
-            theme={theme}
-          />
-        ))}
+    <Flex
+      alignItems="flex-start"
+      backgroundColor="surface1"
+      borderRadius="rounded4"
+      flexDirection="row"
+      gap="none">
+      <Svg height={DIGIT_HEIGHT} style={AnimatedNumberStyles.gradientStyle} width="100%">
+        <Defs>
+          <LinearGradient id="backgroundTop" x1="0%" x2="0%" y1="15%" y2="0%">
+            <Stop offset="0" stopColor={theme.colors.surface1} stopOpacity="0" />
+            <Stop offset="1" stopColor={theme.colors.surface1} stopOpacity="1" />
+          </LinearGradient>
+          <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
+            <Stop offset="0" stopColor={theme.colors.surface1} stopOpacity="0" />
+            <Stop offset="1" stopColor={theme.colors.surface1} stopOpacity="1" />
+          </LinearGradient>
+        </Defs>
+        <Rect
+          fill="url(#backgroundTop)"
+          height={DIGIT_HEIGHT}
+          opacity={1}
+          width="100%"
+          x="0"
+          y="0"
+        />
+        <Rect fill="url(#background)" height={DIGIT_HEIGHT} opacity={1} width="100%" x="0" y="0" />
+      </Svg>
+      {chars?.map((_, index) => (
+        <Char
+          key={index === 0 ? `$_sign_${theme.colors.neutral1}` : `$_number_${chars.length - index}`}
+          chars={chars}
+          commonPrefixLength={commonPrefixLength}
+          index={index}
+          nextColor={nextColor}
+          theme={theme}
+        />
+      ))}
     </Flex>
   )
 }
@@ -250,7 +278,10 @@ const AnimatedCharStyles = StyleSheet.create({
 
 const AnimatedFontStyles = StyleSheet.create({
   fontStyle: {
-    fontSize: 48,
-    fontWeight: '600',
+    fontFamily: 'Basel-Book',
+    fontSize: 52,
+    fontWeight: '500',
+    lineHeight: 60,
+    top: 1,
   },
 })
