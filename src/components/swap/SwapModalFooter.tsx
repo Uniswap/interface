@@ -16,7 +16,7 @@ import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { DefaultTheme, useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
-import { formatPriceImpact, NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
@@ -78,7 +78,7 @@ export default function SwapModalFooter({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
-  const { formatNumber } = useFormatter()
+  const { formatNumber, formatPriceImpact } = useFormatter()
 
   const label = `${trade.executionPrice.baseCurrency?.symbol} `
   const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
@@ -223,6 +223,8 @@ export default function SwapModalFooter({
 }
 
 function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' | 'output' }) {
+  const { formatPriceImpact } = useFormatter()
+
   const [currency, percentage] =
     type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
 

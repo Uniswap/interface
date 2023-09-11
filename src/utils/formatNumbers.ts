@@ -451,10 +451,13 @@ export function formatCurrencyAmount({
   })
 }
 
-export function formatPriceImpact(priceImpact: Percent | undefined): string {
+export function formatPriceImpact(priceImpact: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE): string {
   if (!priceImpact) return '-'
 
-  return `${priceImpact.multiply(-1).toFixed(3)}%`
+  return `${Number(priceImpact.multiply(-1).toFixed(3)).toLocaleString(locale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}%`
 }
 
 export function formatSlippage(slippage: Percent | undefined) {
@@ -636,11 +639,17 @@ export function useFormatter() {
     [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
   )
 
+  const formatPriceImpactWithLocales = useCallback(
+    (priceImpact: Percent | undefined) => formatPriceImpact(priceImpact, formatterLocale),
+    [formatterLocale]
+  )
+
   return useMemo(
     () => ({
-      formatNumber: formatNumberWithLocales,
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
+      formatNumber: formatNumberWithLocales,
+      formatPriceImpact: formatPriceImpactWithLocales,
     }),
-    [formatCurrencyAmountWithLocales, formatNumberWithLocales]
+    [formatCurrencyAmountWithLocales, formatNumberWithLocales, formatPriceImpactWithLocales]
   )
 }
