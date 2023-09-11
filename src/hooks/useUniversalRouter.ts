@@ -10,6 +10,7 @@ import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
+import { useUserSlippageTolerance } from 'state/user/hooks'
 import { trace } from 'tracing/trace'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
@@ -52,6 +53,7 @@ export function useUniversalRouterSwapCallback(
   const { account, chainId, provider } = useWeb3React()
   const analyticsContext = useTrace()
   const blockNumber = useBlockNumber()
+  const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
 
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
@@ -96,6 +98,7 @@ export function useUniversalRouterSwapCallback(
             client_block_number: blockNumber,
             tx,
             error: gasError,
+            isAutoSlippage,
           })
           console.warn(gasError)
           throw new GasEstimationError()
@@ -161,5 +164,7 @@ export function useUniversalRouterSwapCallback(
     options.slippageTolerance,
     provider,
     trade,
+    isAutoSlippage,
+    blockNumber,
   ])
 }
