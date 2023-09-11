@@ -4,6 +4,7 @@ import { getDeviceId, sendAnalyticsEvent, Trace, user } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
+import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
@@ -46,6 +47,7 @@ import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
+const PoolDetails = lazy(() => import('./PoolDetails'))
 const Vote = lazy(() => import('./Vote'))
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
@@ -118,6 +120,7 @@ export default function App() {
   const isDarkMode = useIsDarkMode()
   const [routerPreference] = useRouterPreference()
   const [scrolledState, setScrolledState] = useState(false)
+  const infoPoolPageEnabled = useInfoPoolPageEnabled()
 
   useAnalyticsReporter()
 
@@ -236,6 +239,7 @@ export default function App() {
                     <Route path=":chainName" />
                   </Route>
                   <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
+                  {infoPoolPageEnabled && <Route path="pools/:chainName/:poolAddress" element={<PoolDetails />} />}
                   <Route
                     path="vote/*"
                     element={
