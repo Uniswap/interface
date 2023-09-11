@@ -185,7 +185,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
     >
       <a
         class="c4"
-        href="#/tokens/ETHEREUM"
+        href="/tokens/ETHEREUM"
       >
         <div
           class="c5 css-1urox24"
@@ -200,7 +200,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
       </div>
       <a
         class="c4"
-        href="#/tokens/ETHEREUM"
+        href="/tokens/ETHEREUM"
       >
         <div
           class="c5 css-1urox24"

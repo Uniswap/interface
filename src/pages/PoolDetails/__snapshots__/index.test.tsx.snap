@@ -193,7 +193,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
       >
         <a
           class="c5"
-          href="#/tokens/ETHEREUM"
+          href="/tokens/ETHEREUM"
         >
           <div
             class="c6 css-1urox24"
@@ -208,7 +208,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
         </div>
         <a
           class="c5"
-          href="#/tokens/ETHEREUM"
+          href="/tokens/ETHEREUM"
         >
           <div
             class="c6 css-1urox24"
