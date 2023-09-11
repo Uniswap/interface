@@ -113,7 +113,7 @@ interface PoolPositionListItemProps {
 
 export default function PoolPositionListItem({ positionDetails, returnPage }: PoolPositionListItemProps) {
   const theme = useTheme()
-  const { name, symbol, apr, irr, userHasStake, poolDelegatedStake } = positionDetails
+  const { name, symbol, apr, irr, userHasStake, poolDelegatedStake, userBalance, userIsOwner } = positionDetails
 
   //const position = useMemo(() => {
   //  return new PoolPosition({ name, symbol, pool, id })
@@ -135,6 +135,22 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
               <LabelText color={theme.accentSuccess}>
                 <BadgeText>
                   <Trans>active</Trans>
+                </BadgeText>
+                <ActiveDot />
+              </LabelText>
+            )}
+            {returnPage === 'mint' && Number(userBalance) > 0 && (
+              <LabelText color={theme.accentSuccess}>
+                <BadgeText>
+                  <Trans>held</Trans>
+                </BadgeText>
+                <ActiveDot />
+              </LabelText>
+            )}
+            {returnPage === 'mint' && userIsOwner && (
+              <LabelText color={theme.accentSuccess}>
+                <BadgeText>
+                  <Trans>owned</Trans>
                 </BadgeText>
                 <ActiveDot />
               </LabelText>

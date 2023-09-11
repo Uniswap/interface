@@ -8,7 +8,7 @@ const StyledSearch = styled.div`
   display: flex;
   align-items: center;
   right: 0;
-  bottom: 0;
+  bottom: 2rem;
   padding: 1rem;
   color: theme.deprecated_yellow3;
   transition: 250ms ease color;

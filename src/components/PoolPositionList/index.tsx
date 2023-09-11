@@ -65,7 +65,9 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
   // TODO: we should merge this part with same part in swap page and move to a custom hook
   const poolAddresses = positions.map((p) => p.pool)
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
-  // TODO: check how many times we are making this rpc call
+
+  const accountArg = useMemo(() => [account ?? undefined], [account])
+  const userBalances = useMultipleContractSingleData(poolAddresses, PoolInterface, 'balanceOf', accountArg)
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
   // TODO: if we initiate this in state, we can later query from state instead of making rpc call
   //  in 1) swap and 2) each pool url, we could also store poolId at that point
@@ -73,11 +75,11 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
     return results
       .map((result, i) => {
         const { result: pools, loading } = result
-        if (!chainId || loading || !pools || !pools?.[0]) return ''
+        if (!chainId || loading || !pools || !pools?.[0]) return
         const { name, symbol, decimals, owner } = pools?.[0]
-        const isPoolOperator = owner === account
-        if (filterByOperator && !isPoolOperator) return ''
-        const address = poolAddresses[i]
+        const shouldDisplay = filterByOperator
+          ? Boolean(owner === account || Number(userBalances[i]?.result) > 0)
+          : true
         return {
           ...result,
           apr: positions[i].apr,
@@ -85,21 +87,24 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           poolOwnStake: positions[i].poolOwnStake,
           poolDelegatedStake: positions[i].poolDelegatedStake,
           userHasStake: positions[i].userHasStake,
-          address,
+          address: poolAddresses[i],
           decimals,
           symbol,
           name,
           chainId,
+          shouldDisplay,
+          userIsOwner: owner === account,
+          userBalance: userBalances[i].result,
         }
       })
-      .filter((p) => p !== '')
-  }, [account, chainId, filterByOperator, poolAddresses, positions, results])
+      .filter((p) => p && p.shouldDisplay)
+  }, [account, chainId, filterByOperator, poolAddresses, positions, results, userBalances])
 
   return (
     <>
       <DesktopHeader>
         <div>
-          {filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}
+          {filterByOperator ? <Trans>Your pools</Trans> : <Trans>Loaded pools</Trans>}
           {positions && ' (' + poolsWithStats.length + ')'}
         </div>
         {!filterByOperator && (
@@ -140,7 +145,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
         )}
       </DesktopHeader>
       <MobileHeader>
-        <div>{filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}</div>
+        <div>{filterByOperator ? <Trans>Your pools</Trans> : <Trans>Loaded pools</Trans>}</div>
         {!filterByOperator && (
           <RowFixed style={{ gap: '40px', marginRight: '8px' }}>
             <div>
@@ -166,11 +171,11 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
         <>
           <DesktopHeader>
             <div>
-              <Trans>You are not operating a smart pool. Create yours or search an existing one.</Trans>
+              <Trans>You don&apos;t have a smart pool. Create yours or buy an existing one.</Trans>
             </div>
           </DesktopHeader>
           <MobileHeader>
-            <Trans>You are not operating a smart pool. Create yours or search an existing one.</Trans>
+            <Trans>You don&apos;t have a smart pool. Create yours or buy an existing one.</Trans>
           </MobileHeader>
         </>
       )}
