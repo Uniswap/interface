@@ -82,7 +82,7 @@ function getSettings(darkMode: boolean) {
     fonts,
 
     // shadows
-    shadow1: darkMode ? '#000' : '#2F80ED',
+    shadow1: darkMode ? '#000' : '#000',
 
     // media queries
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
