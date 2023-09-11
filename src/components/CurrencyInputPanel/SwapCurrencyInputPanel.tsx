@@ -68,14 +68,14 @@ const CurrencySelect = styled(ButtonGray)<{
   color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
   cursor: pointer;
   height: unset;
-  border-radius: 16px;
+  border-radius: 32px;
   outline: none;
   user-select: none;
   border: 1px solid ${({ selected, theme }) => (selected ? theme.surface3 : theme.accent1)};
   font-size: 24px;
   font-weight: 485;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
-  padding: ${({ selected }) => (selected ? '4px 8px 4px 4px' : '6px 6px 6px 8px')};
+  padding: ${({ selected }) => (selected ? '4px 8px 4px 4px' : '4px 8px 4px 8px')};
   gap: 8px;
   justify-content: space-between;
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
