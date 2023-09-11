@@ -11,7 +11,7 @@ import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { formatCurrencyAmount, formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
 
-import { Separator, ThemedText } from '../../theme'
+import { ExternalLink, Separator, ThemedText } from '../../theme'
 import Column from '../Column'
 import RouterLabel from '../RouterLabel'
 import { RowBetween, RowFixed } from '../Row'
@@ -73,10 +73,10 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           >
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
               <ThemedText.BodySmall>
-                {`${trade.totalGasUseEstimateUSD ? '~' : ''}${formatNumber(
-                  trade.totalGasUseEstimateUSD,
-                  NumberType.FiatGasPrice
-                )}`}
+                {`${trade.totalGasUseEstimateUSD ? '~' : ''}${formatNumber({
+                  input: trade.totalGasUseEstimateUSD,
+                  type: NumberType.FiatGasPrice,
+                })}`}
               </ThemedText.BodySmall>
             </TextWithLoadingPlaceholder>
           </MouseoverTooltip>
@@ -84,8 +84,8 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
       )}
       {isClassicTrade(trade) && (
         <>
-          <TokenTaxLineItem trade={trade} type="input" />
-          <TokenTaxLineItem trade={trade} type="output" />
+          <TokenTaxLineItem trade={trade} type="input" syncing={syncing} />
+          <TokenTaxLineItem trade={trade} type="output" syncing={syncing} />
           <RowBetween>
             <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
               <ThemedText.BodySmall color="neutral2">
@@ -182,7 +182,17 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   )
 }
 
-function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' | 'output' }) {
+function TokenTaxLineItem({
+  trade,
+  type,
+  syncing,
+}: {
+  trade: ClassicTrade
+  type: 'input' | 'output'
+  syncing: boolean
+}) {
+  if (syncing) return null
+
   const [currency, percentage] =
     type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
 
@@ -192,13 +202,18 @@ function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' 
     <RowBetween>
       <MouseoverTooltip
         text={
-          <Trans>
-            Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
-            receive any of these fees.
-          </Trans>
+          <>
+            <Trans>
+              Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
+              receive any of these fees.
+            </Trans>{' '}
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">
+              Learn more
+            </ExternalLink>
+          </>
         }
       >
-        <ThemedText.BodySmall color="textSecondary">{`${currency.symbol} fee`}</ThemedText.BodySmall>
+        <ThemedText.BodySmall color="neutral2">{`${currency.symbol} fee`}</ThemedText.BodySmall>
       </MouseoverTooltip>
       <ThemedText.BodySmall>{formatPriceImpact(percentage)}</ThemedText.BodySmall>
     </RowBetween>

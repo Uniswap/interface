@@ -18,9 +18,9 @@ Currently, there are 2 types of cloudflare functions developed
 
 ## Testing
 
-Testing is done utilizing a custom jest environment as well as Cloudflare's local tester: `wrangler`. Wrangler enables testing locally by running a proxy to wrap `localhost`. Testing can be done the following ways.
-- Manually by running `yarn start:cloud` to setup wrangler on `localhost:3000`
-- Automated tests by running `yarn test:cloud` to setup both a jest and wrangler environment and automatically test features
+Testing is done utilizing a custom jest environment as well as Cloudflare's local tester: `wrangler`. Wrangler enables testing locally by running a proxy to wrap `localhost`. Tests run against a proxy server, so you'll need to start it before running tests:
+- Manually run `yarn start:cloud` to setup wrangler on `localhost:3000`
+- Run unit tests with `yarn test:cloud`
 
 ## Deployment
 

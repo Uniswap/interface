@@ -5,13 +5,11 @@ import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
-import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
-import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
 import { AutoRow } from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
+import { DeltaArrow, formatDelta } from 'components/Tokens/TokenDetails/Delta'
 import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
@@ -20,11 +18,11 @@ import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hoo
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
-import { CreditCard, IconProps, Info } from 'react-feather'
+import { CreditCard, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled, { useTheme } from 'styled-components'
+import styled from 'styled-components'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 import { formatNumber, NumberType } from 'utils/formatNumbers'
@@ -151,15 +149,6 @@ const PortfolioDrawerContainer = styled(Column)`
   flex: 1;
 `
 
-export function PortfolioArrow({ change, ...rest }: { change: number } & IconProps) {
-  const theme = useTheme()
-  return change < 0 ? (
-    <ArrowChangeDown color={theme.critical} width={16} {...rest} />
-  ) : (
-    <ArrowChangeUp color={theme.success} width={16} {...rest} />
-  )
-}
-
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { connector } = useWeb3React()
   const { ENSName } = useENSName(account)
@@ -279,16 +268,20 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         {totalBalance !== undefined ? (
           <FadeInColumn gap="xs">
             <ThemedText.HeadlineLarge fontWeight={535} data-testid="portfolio-total-balance">
-              {formatNumber(totalBalance, NumberType.PortfolioBalance)}
+              {formatNumber({
+                input: totalBalance,
+                type: NumberType.PortfolioBalance,
+              })}
             </ThemedText.HeadlineLarge>
             <AutoRow marginBottom="20px">
               {absoluteChange !== 0 && percentChange && (
                 <>
-                  <PortfolioArrow change={absoluteChange as number} />
+                  <DeltaArrow delta={absoluteChange} />
                   <ThemedText.BodySecondary>
-                    {`${formatNumber(Math.abs(absoluteChange as number), NumberType.PortfolioBalance)} (${formatDelta(
-                      percentChange
-                    )})`}
+                    {`${formatNumber({
+                      input: Math.abs(absoluteChange as number),
+                      type: NumberType.PortfolioBalance,
+                    })} (${formatDelta(percentChange)})`}
                   </ThemedText.BodySecondary>
                 </>
               )}

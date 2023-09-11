@@ -1,11 +1,12 @@
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import AuthenticatedHeader from './AuthenticatedHeader'
 import LanguageMenu from './LanguageMenu'
+import LocalCurrencyMenu from './LocalCurrencyMenu'
 import SettingsMenu from './SettingsMenu'
 
 const DefaultMenuWrap = styled(Column)`
@@ -17,6 +18,7 @@ enum MenuState {
   DEFAULT,
   SETTINGS,
   LANGUAGE_SETTINGS,
+  LOCAL_CURRENCY_SETTINGS,
 }
 
 function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
@@ -27,6 +29,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const openSettings = useCallback(() => setMenu(MenuState.SETTINGS), [])
   const closeSettings = useCallback(() => setMenu(MenuState.DEFAULT), [])
   const openLanguageSettings = useCallback(() => setMenu(MenuState.LANGUAGE_SETTINGS), [])
+  const openLocalCurrencySettings = useCallback(() => setMenu(MenuState.LOCAL_CURRENCY_SETTINGS), [])
 
   useEffect(() => {
     if (!drawerOpen && menu !== MenuState.DEFAULT) {
@@ -39,20 +42,30 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
     return
   }, [drawerOpen, menu, closeSettings])
 
-  return (
-    <DefaultMenuWrap>
-      {menu === MenuState.DEFAULT &&
-        (isAuthenticated ? (
+  const SubMenu = useMemo(() => {
+    switch (menu) {
+      case MenuState.DEFAULT:
+        return isAuthenticated ? (
           <AuthenticatedHeader account={account} openSettings={openSettings} />
         ) : (
           <WalletModal openSettings={openSettings} />
-        ))}
-      {menu === MenuState.SETTINGS && (
-        <SettingsMenu onClose={closeSettings} openLanguageSettings={openLanguageSettings} />
-      )}
-      {menu === MenuState.LANGUAGE_SETTINGS && <LanguageMenu onClose={openSettings} />}
-    </DefaultMenuWrap>
-  )
+        )
+      case MenuState.SETTINGS:
+        return (
+          <SettingsMenu
+            onClose={closeSettings}
+            openLanguageSettings={openLanguageSettings}
+            openLocalCurrencySettings={openLocalCurrencySettings}
+          />
+        )
+      case MenuState.LANGUAGE_SETTINGS:
+        return <LanguageMenu onClose={openSettings} />
+      case MenuState.LOCAL_CURRENCY_SETTINGS:
+        return <LocalCurrencyMenu onClose={openSettings} />
+    }
+  }, [account, closeSettings, isAuthenticated, menu, openLanguageSettings, openLocalCurrencySettings, openSettings])
+
+  return <DefaultMenuWrap>{SubMenu}</DefaultMenuWrap>
 }
 
 export default DefaultMenu

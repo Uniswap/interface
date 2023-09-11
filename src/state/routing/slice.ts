@@ -74,7 +74,6 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   // UniswapX doesn't support native out, exact-out, or non-mainnet trades (yet),
   // so even if the user has selected UniswapX as their router preference, force them to receive a Classic quote.
   if (
-    !args.uniswapXEnabled ||
     (args.userDisabledUniswapX && routerPreference !== RouterPreference.X) ||
     (tokenOutIsNative && !uniswapXEthOutputEnabled) ||
     (!uniswapXExactOutputEnabled && tradeType === TradeType.EXACT_OUTPUT) ||
@@ -128,15 +127,7 @@ export const routingApi = createApi({
         if (shouldUseAPIRouter(args)) {
           fellBack = true
           try {
-            const {
-              tokenInAddress,
-              tokenInChainId,
-              tokenOutAddress,
-              tokenOutChainId,
-              amount,
-              tradeType,
-              forceUniswapXOn,
-            } = args
+            const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
             const type = isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT'
 
             const requestBody = {
@@ -147,8 +138,6 @@ export const routingApi = createApi({
               amount,
               type,
               intent: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? 'pricing' : undefined,
-              // if forceUniswapXOn is not ON, then use the backend's default value
-              useUniswapX: forceUniswapXOn || undefined,
               configs: getRoutingAPIConfig(args),
             }
 

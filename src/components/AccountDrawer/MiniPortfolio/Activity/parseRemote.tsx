@@ -159,10 +159,16 @@ function parseSwap(changes: TransactionChanges) {
   }
   // Some swaps may have more than 2 transfers, e.g. swaps with fees on tranfer
   if (changes.TokenTransfer.length >= 2) {
-    const sent = changes.TokenTransfer.find((t) => t?.__typename === 'TokenTransfer' && t.direction === 'OUT')
-    const received = changes.TokenTransfer.find((t) => t?.__typename === 'TokenTransfer' && t.direction === 'IN')
+    const sent = changes.TokenTransfer.find((t) => t.direction === 'OUT')
+    // Any leftover native token is refunded on exact_out swaps where the input token is native
+    const refund = changes.TokenTransfer.find(
+      (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === 'NATIVE'
+    )
+    const received = changes.TokenTransfer.find((t) => t.direction === 'IN' && t !== refund)
+
     if (sent && received) {
-      const inputAmount = formatNumberOrString(sent.quantity, NumberType.TokenNonTx)
+      const adjustedInput = parseFloat(sent.quantity) - parseFloat(refund?.quantity ?? '0')
+      const inputAmount = formatNumberOrString(adjustedInput, NumberType.TokenNonTx)
       const outputAmount = formatNumberOrString(received.quantity, NumberType.TokenNonTx)
       return {
         title: getSwapTitle(sent, received),
@@ -345,7 +351,7 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
       return parseUniswapXOrder(assetActivity as OrderActivity)
     }
 
-    const changes = assetActivity.assetChanges.reduce(
+    const changes = assetActivity.details.assetChanges.reduce(
       (acc: TransactionChanges, assetChange) => {
         if (assetChange.__typename === 'NftApproval') acc.NftApproval.push(assetChange)
         else if (assetChange.__typename === 'NftApproveForAll') acc.NftApproveForAll.push(assetChange)
@@ -371,13 +377,16 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
       status: assetActivity.details.status,
       timestamp: assetActivity.timestamp,
       logos: getLogoSrcs(changes),
-      title: assetActivity.type,
+      title: assetActivity.details.type,
       descriptor: assetActivity.details.to,
       from: assetActivity.details.from,
       nonce: assetActivity.details.nonce,
     }
 
-    const parsedFields = ActivityParserByType[assetActivity.type]?.(changes, assetActivity as TransactionActivity)
+    const parsedFields = ActivityParserByType[assetActivity.details.type]?.(
+      changes,
+      assetActivity as TransactionActivity
+    )
     return { ...defaultFields, ...parsedFields }
   } catch (e) {
     console.error('Failed to parse activity', e, assetActivity)

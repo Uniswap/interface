@@ -152,6 +152,7 @@ export function useUniversalRouterSwapCallback(
   }, [
     account,
     analyticsContext,
+    blockNumber,
     chainId,
     fiatValues,
     options.deadline,
