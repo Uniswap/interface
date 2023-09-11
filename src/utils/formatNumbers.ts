@@ -466,15 +466,26 @@ export function formatSlippage(slippage: Percent | undefined) {
   return `${slippage.toFixed(3)}%`
 }
 
-export function formatPrice(
-  price: Nullish<Price<Currency, Currency>>,
-  type: NumberType = NumberType.FiatTokenPrice
-): string {
+interface FormatPriceProps {
+  price: Nullish<Price<Currency, Currency>>
+  type: NumberType
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+  conversionRate?: number
+}
+
+export function formatPrice({
+  price,
+  type = NumberType.FiatTokenPrice,
+  locale = DEFAULT_LOCALE,
+  localCurrency = DEFAULT_LOCAL_CURRENCY,
+  conversionRate,
+}: FormatPriceProps): string {
   if (price === null || price === undefined) {
     return '-'
   }
 
-  return formatNumber({ input: parseFloat(price.toSignificant()), type })
+  return formatNumber({ input: parseFloat(price.toSignificant()), type, locale, localCurrency, conversionRate })
 }
 
 export function formatNumberOrString(price: Nullish<number | string>, type: NumberType): string {
@@ -617,8 +628,9 @@ export function useFormatter() {
     ? previousConversionRate
     : localCurrencyConversionRate
 
+  type LocalesType = 'locale' | 'localCurrency' | 'conversionRate'
   const formatNumberWithLocales = useCallback(
-    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency' | 'conversionRate'>) =>
+    (options: Omit<FormatNumberOptions, LocalesType>) =>
       formatNumber({
         ...options,
         locale: formatterLocale,
@@ -629,8 +641,19 @@ export function useFormatter() {
   )
 
   const formatCurrencyAmountWithLocales = useCallback(
-    (options: Omit<FormatCurrencyAmountOptions, 'locale' | 'localCurrency' | 'conversionRate'>) =>
+    (options: Omit<FormatCurrencyAmountOptions, LocalesType>) =>
       formatCurrencyAmount({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: localCurrencyConversionRateToFormatWith,
+      }),
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+  )
+
+  const formatPriceWithLocales = useCallback(
+    (options: Omit<FormatPriceProps, LocalesType>) =>
+      formatPrice({
         ...options,
         locale: formatterLocale,
         localCurrency: currencyToFormatWith,
@@ -648,8 +671,9 @@ export function useFormatter() {
     () => ({
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
       formatNumber: formatNumberWithLocales,
+      formatPrice: formatPriceWithLocales,
       formatPriceImpact: formatPriceImpactWithLocales,
     }),
-    [formatCurrencyAmountWithLocales, formatNumberWithLocales, formatPriceImpactWithLocales]
+    [formatCurrencyAmountWithLocales, formatNumberWithLocales, formatPriceImpactWithLocales, formatPriceWithLocales]
   )
 }
