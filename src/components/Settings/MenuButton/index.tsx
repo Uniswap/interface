@@ -1,4 +1,6 @@
 import { t, Trans } from '@lingui/macro'
+import { Percent } from '@uniswap/sdk-core'
+import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { Settings } from 'components/Icons/Settings'
 import Row from 'components/Row'
 import { useUserSlippageTolerance } from 'state/user/hooks'
@@ -31,18 +33,19 @@ const Button = styled.button<{ isActive: boolean }>`
 `
 
 const IconContainer = styled(Row)`
-  padding: 6px 12px;
+  padding: 4px 4px 4px 12px;
   border-radius: 16px;
 `
 
 const IconContainerWithSlippage = styled(IconContainer)<{ displayWarning?: boolean }>`
   div {
-    color: ${({ theme, displayWarning }) => (displayWarning ? theme.deprecated_accentWarning : theme.neutral2)};
+    color: ${({ theme, displayWarning }) => (displayWarning ? theme.neutral2 : theme.neutral2)};
   }
 
-  background-color: ${({ theme, displayWarning }) =>
-    displayWarning ? theme.deprecated_accentWarningSoft : theme.surface2};
+  background-color: ${({ theme, displayWarning }) => (displayWarning ? theme.surface2 : theme.surface2)};
 `
+
+const MAXIMUM_RECOMMENDED_SLIPPAGE = new Percent(1, 100)
 
 const ButtonContent = () => {
   const [userSlippageTolerance] = useUserSlippageTolerance()
@@ -55,10 +58,15 @@ const ButtonContent = () => {
     )
   }
 
+  // const tooLow = userSlippageTolerance !== userSlippageTolerance.lessThan(MINIMUM_RECOMMENDED_SLIPPAGE)
+  const tooHigh = userSlippageTolerance.greaterThan(MAXIMUM_RECOMMENDED_SLIPPAGE)
+
   const isInvalidSlippage = validateUserSlippageTolerance(userSlippageTolerance) !== SlippageValidationResult.Valid
 
   return (
     <IconContainerWithSlippage data-testid="settings-icon-with-slippage" gap="sm" displayWarning={isInvalidSlippage}>
+      {tooHigh && <AlertTriangleFilled />}
+
       <ThemedText.BodySmall>
         <Trans>{userSlippageTolerance.toFixed(2)}% slippage</Trans>
       </ThemedText.BodySmall>

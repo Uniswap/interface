@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components'
-import { CautionTriangle, ThemedText } from 'theme'
+import { ThemedText } from 'theme'
 
 import { Input, InputContainer } from '../Input'
 
@@ -163,7 +163,6 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
       </RowBetween>
       {tooLow || tooHigh ? (
         <RowBetween gap="md">
-          <CautionTriangle />
           <ThemedText.BodySmall color="deprecated_accentWarning">
             {tooLow ? (
               <Trans>
