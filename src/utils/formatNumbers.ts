@@ -5,6 +5,10 @@ import {
   SupportedLocalCurrency,
 } from 'constants/localCurrencies'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
+import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useCallback, useMemo } from 'react'
 
 type Nullish<T> = T | null | undefined
 type NumberFormatOptions = Intl.NumberFormatOptions
@@ -524,4 +528,43 @@ export function formatReviewSwapCurrencyAmount(amount: CurrencyAmount<Currency>)
     formattedAmount = formatCurrencyAmount(amount, NumberType.SwapTradeAmount)
   }
   return formattedAmount
+}
+
+function useFormatterLocales(): {
+  formatterLocale: SupportedLocale
+  formatterLocalCurrency: SupportedLocalCurrency
+} {
+  const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
+  const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
+
+  if (currencyConversionEnabled) {
+    return {
+      formatterLocale: activeLocale,
+      formatterLocalCurrency: activeLocalCurrency,
+    }
+  }
+
+  return {
+    formatterLocale: DEFAULT_LOCALE,
+    formatterLocalCurrency: DEFAULT_LOCAL_CURRENCY,
+  }
+}
+
+// Constructs an object that injects the correct locale and local currency into each of the above formatter functions.
+export function useFormatter() {
+  const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
+
+  const formatNumberWithLocales = useCallback(
+    (options: Omit<FormatNumberOptions, 'locale' | 'localCurrency'>) =>
+      formatNumber({ ...options, locale: formatterLocale, localCurrency: formatterLocalCurrency }),
+    [formatterLocalCurrency, formatterLocale]
+  )
+
+  return useMemo(
+    () => ({
+      formatNumber: formatNumberWithLocales,
+    }),
+    [formatNumberWithLocales]
+  )
 }
