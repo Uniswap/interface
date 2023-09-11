@@ -5,7 +5,8 @@ import { serializeError } from 'utilities/src/errors'
 import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
 import { logger } from 'utilities/src/logger/logger'
 
-const HAS_NO_NUMBERS_REGEX = /^([^0-9]*)$/
+// Allow for digits and one of either period or comma
+const ALL_NUMBERS_OR_SEPARATOR_REGEX = /^\d*\.?,?\d*$/
 
 export enum ValueType {
   'Raw' = 'uint256', // integer format (the "raw" uint256) - usually used in smart contracts / how data is stored on-chain
@@ -71,8 +72,8 @@ const sanitizeTokenAmount = ({
 }): string => {
   let sanitizedValue = convertScientificNotationToNumber(value)
 
-  if (valueType === ValueType.Exact && HAS_NO_NUMBERS_REGEX.test(sanitizedValue)) {
-    throw new Error('Provided value has no digits')
+  if (valueType === ValueType.Exact && !ALL_NUMBERS_OR_SEPARATOR_REGEX.test(sanitizedValue)) {
+    throw new Error('Provided value is invalid')
   }
 
   if (valueType === ValueType.Raw) {
