@@ -1,11 +1,25 @@
-// import { Box } from '@material-ui/core'
-// import { CustomTooltip } from 'components'
 import { formatNumber } from '@uniswap/conedison/format'
-import Tooltip from 'components/Tooltip'
-import React from 'react'
-import { Box } from 'rebass'
-// import { Box } from 'react-feather'
-// import { formatNumber } from 'utils'
+import { MouseoverTooltip } from 'components/Tooltip'
+import styled from 'styled-components/macro'
+
+const InfoContainer = styled.div<{ marginTop?: string; marginBottom?: string }>`
+  display: flex;
+  width: 100px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: ${({ marginTop }) => marginTop || '0px'};
+  margin-bottom: ${({ marginBottom }) => marginBottom || '0px'};
+`
+
+const TextSuccess = styled.small`
+  color: ${({ theme }) => theme.accentActive};
+  font-weight: 600;
+`
+
+const TextSecondary = styled.small`
+  color: ${({ theme }) => theme.textSecondary};
+  font-weight: 600;
+`
 
 interface TotalAPRToolTipProps {
   poolAPR: number
@@ -14,27 +28,24 @@ interface TotalAPRToolTipProps {
 }
 
 export default function TotalAPRTooltip({ poolAPR, farmAPR, children }: TotalAPRToolTipProps) {
+  const InfoRow = ({ label, value, isTotal }: { label: string; value: string; isTotal?: boolean }) => (
+    <InfoContainer marginTop={isTotal ? '0px' : '16px'}>
+      {isTotal ? <TextSuccess>{label}</TextSuccess> : <TextSecondary>{label}</TextSecondary>}
+      <small style={{ fontWeight: 600 }}>{value}%</small>
+    </InfoContainer>
+  )
+
   return (
-    <Tooltip
-      show={true}
+    <MouseoverTooltip
       text={
-        <Box className="totalAPRTooltipWrapper">
-          <Box className="flex justify-between items-center bg-grey29" height="40px">
-            <small>totalAPR</small>
-            <small className="text-sucess">{formatNumber(poolAPR + farmAPR)}%</small>
-          </Box>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
-            <small className="text-secondary">poolAPR</small>
-            <small>{formatNumber(poolAPR)}%</small>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', marginBottom: '10px' }}>
-            <small className="text-secondary">farmAPR</small>
-            <small>{formatNumber(farmAPR)}%</small>
-          </div>
-        </Box>
+        <div>
+          <InfoRow label="Total APR" value={formatNumber(poolAPR + farmAPR)} isTotal={true} />
+          <InfoRow label="Pool APR" value={formatNumber(poolAPR)} />
+          <InfoRow label="Farm APR" value={formatNumber(farmAPR)} />
+        </div>
       }
     >
       {children}
-    </Tooltip>
+    </MouseoverTooltip>
   )
 }
