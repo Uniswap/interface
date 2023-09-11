@@ -1,6 +1,6 @@
 import { memo } from 'react'
-import { Icons } from 'ui/src'
 import { withAnimated } from 'ui/src/components/factories/animated'
+import { ArrowChange } from './ArrowChange'
 
 type Props = {
   size?: number
@@ -22,7 +22,7 @@ export function _Caret({ size = 24, color, direction = 'n' }: Props): JSX.Elemen
   }
 
   return (
-    <Icons.ArrowChange
+    <ArrowChange
       color={color ?? '$sporeBlack'}
       height={size}
       strokeWidth={2}
@@ -34,4 +34,4 @@ export function _Caret({ size = 24, color, direction = 'n' }: Props): JSX.Elemen
 
 export const Caret = memo(_Caret)
 
-export const AnimatedCaretChange = withAnimated(Icons.ArrowChange)
+export const AnimatedCaretChange = withAnimated(ArrowChange)

@@ -6,7 +6,7 @@ import { BaseButtonProps, TouchableArea } from 'src/components/buttons/Touchable
 import { getButtonProperties } from 'src/components/buttons/utils'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { withAnimated } from 'ui/src/components/factories/animated'
+import { withAnimated } from 'ui/src'
 
 export enum ButtonSize {
   Small = 'small',

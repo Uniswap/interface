@@ -1,7 +1,6 @@
-import { ColorTokens, Flex, Text, XStack } from 'ui/src'
+import { ColorTokens, Flex, Icons, Text, XStack } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
-import { Caret } from 'wallet/src/components/icons/Caret'
 
 interface RelativeChangeProps {
   change?: number
@@ -42,7 +41,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
       gap="$spacing2"
       justifyContent={alignRight ? 'flex-end' : 'flex-start'}>
       {change !== undefined && (
-        <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
+        <Icons.Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
       )}
       <Flex>
         <Text

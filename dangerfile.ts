@@ -35,12 +35,12 @@ async function processAddChanges() {
   }
 
   // Check for direct logging calls
-  if (changes.some((change) => change.content.includes('analytics.logEvent'))) {
+  if (changes.some((change) => change.content.includes('analytics.sendEvent'))) {
     warn(`You are using the direct analytics call. Please use the typed wrapper for your given surface if possible!`)
   }
 
   // Check for UI package imports that are longer than needed
-  const validLongerImports = ['ui/src', 'ui/src/theme', 'ui/src/loading', 'ui/src/theme/restyle']
+  const validLongerImports = [`'ui/src'`, `'ui/src/theme'`, `'ui/src/loading'`, `'ui/src/theme/restyle'`]
   const longestImportLength = Math.max(...validLongerImports.map((i) => i.length))
   changes.forEach((change) => {
     const indices = getIndicesOf(`from 'ui/src/`, change.content)
@@ -49,7 +49,7 @@ async function processAddChanges() {
       const potentialSubstring = change.content.substring(idx, Math.min(change.content.length, idx + longestImportLength + 6 + 1))
       if (!validLongerImports.some((validImport) => potentialSubstring.includes(validImport))) {
         const endOfImport = change.content.indexOf(`'`, idx + 6) // skipping the "from '"
-        warn(`It looks like you have a longer import from ui/src than needed (${change.content.substring(idx + 6, endOfImport)}). Please use one of [${validLongerImports.join(', ')}] when possible!`)
+        warn(`It looks like you have a longer import from 'ui/src' than needed ('${change.content.substring(idx + 6, endOfImport)}'). Please use one of [${validLongerImports.join(', ')}] when possible!`)
       }
     })
   })

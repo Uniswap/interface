@@ -9,7 +9,7 @@ import {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import { withAnimated } from 'ui/src/components/factories/animated'
+import { withAnimated } from 'ui/src'
 import { defaultHitslopInset } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 

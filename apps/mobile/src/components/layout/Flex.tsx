@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { Box, BoxProps } from 'src/components/layout/Box'
 import { Spacer, SpacerProps } from 'src/components/layout/Spacer'
-import { withAnimated } from 'ui/src/components/factories/animated'
+import { withAnimated } from 'ui/src'
 import { Theme } from 'ui/src/theme/restyle'
 
 type CenteredProps =

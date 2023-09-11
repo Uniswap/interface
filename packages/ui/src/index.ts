@@ -1,5 +1,6 @@
 export * from 'tamagui'
 export { Button } from './components/button/Button'
+export { withAnimated } from './components/factories/animated'
 export * as Icons from './components/icons/allIcons'
 export * from './components/input/utils'
 export { Box, BoxProps, Flex } from './components/layout'
