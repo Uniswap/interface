@@ -15,6 +15,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
 import { ChangeEvent, useCallback, useEffect, useReducer, useRef, useState } from 'react'
@@ -159,7 +160,7 @@ export const SearchBar = () => {
         <Row
           className={clsx(
             styles.nftSearchBar,
-            // !isOpen && !isMobile && magicalGradientOnHover,
+            !isOpen && !isMobile && magicalGradientOnHover,
             isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
           )}
           borderRadius={isOpen || isMobileOrTablet ? undefined : '16'}
