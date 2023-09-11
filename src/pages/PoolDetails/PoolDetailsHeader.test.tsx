@@ -14,7 +14,8 @@ describe('PoolDetailsHeader', () => {
   }
 
   it('renders header text correctly', () => {
-    render(<PoolDetailsHeader {...mockProps} />)
+    const { asFragment } = render(<PoolDetailsHeader {...mockProps} />)
+    expect(asFragment()).toMatchSnapshot()
 
     expect(screen.getByText(/Explore/i)).toBeInTheDocument()
     expect(screen.getByText(/Pool/i)).toBeInTheDocument()

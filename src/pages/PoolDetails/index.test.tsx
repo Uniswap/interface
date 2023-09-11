@@ -86,7 +86,8 @@ describe('PoolDetailsPage', () => {
   })
 
   it('pool header is displayed when data is received from thegraph', () => {
-    render(<PoolDetails />)
+    const { asFragment } = render(<PoolDetails />)
+    expect(asFragment()).toMatchSnapshot()
 
     waitFor(() => {
       expect(screen.getByText(/Explore/i)).toBeInTheDocument()
