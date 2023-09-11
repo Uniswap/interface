@@ -12,7 +12,7 @@ import { L2_CHAIN_IDS } from '../../constants/chains'
 import { useAddPopup } from '../application/hooks'
 import { isPendingTx } from './hooks'
 import { checkedTransaction, finalizeTransaction } from './reducer'
-import { SerializableTransactionReceipt, TransactionDetails } from './types'
+import { SerializableTransactionReceipt, TransactionDetails, TransactionType } from './types'
 
 export function toSerializableReceipt(receipt: TransactionReceipt): SerializableTransactionReceipt {
   return {
@@ -58,7 +58,9 @@ export default function Updater() {
         })
       )
 
-      logSwapSuccess(hash, chainId, analyticsContext)
+      if (pendingTransactions[hash] && pendingTransactions[hash].info?.type === TransactionType.SWAP) {
+        logSwapSuccess(hash, chainId, analyticsContext)
+      }
 
       addPopup(
         {
@@ -69,7 +71,7 @@ export default function Updater() {
         isL2 ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
       )
     },
-    [addPopup, analyticsContext, dispatch, isL2]
+    [addPopup, analyticsContext, dispatch, isL2, pendingTransactions]
   )
 
   return <LibUpdater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />

@@ -1,6 +1,6 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { useFotAdjustmentsEnabled } from 'featureFlags/flags/fotAdjustments'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputEnabled } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
@@ -21,6 +21,8 @@ export function useRoutingAPIArguments({
   amount,
   tradeType,
   routerPreference,
+  inputTax,
+  outputTax,
 }: {
   account?: string
   tokenIn?: Currency
@@ -28,12 +30,14 @@ export function useRoutingAPIArguments({
   amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+  inputTax: Percent
+  outputTax: Percent
 }): GetQuoteArgs | SkipToken {
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
   const userDisabledUniswapX = useUserDisabledUniswapX()
   const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
   const uniswapXExactOutputEnabled = useUniswapXExactOutputEnabled()
-  const fotAdjustmentsEnabled = useFotAdjustmentsEnabled()
+  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
   return useMemo(
     () =>
@@ -57,7 +61,9 @@ export function useRoutingAPIArguments({
             userDisabledUniswapX,
             uniswapXEthOutputEnabled,
             uniswapXExactOutputEnabled,
-            fotAdjustmentsEnabled,
+            isUniswapXDefaultEnabled,
+            inputTax,
+            outputTax,
           },
     [
       account,
@@ -70,7 +76,9 @@ export function useRoutingAPIArguments({
       uniswapXForceSyntheticQuotes,
       userDisabledUniswapX,
       uniswapXEthOutputEnabled,
-      fotAdjustmentsEnabled,
+      isUniswapXDefaultEnabled,
+      inputTax,
+      outputTax,
     ]
   )
 }

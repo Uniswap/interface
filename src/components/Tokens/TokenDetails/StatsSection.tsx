@@ -62,7 +62,12 @@ function Stat({
   return (
     <StatWrapper data-cy={`${dataCy}`}>
       <MouseoverTooltip text={description}>{title}</MouseoverTooltip>
-      <StatPrice>{formatNumber(value, NumberType.FiatTokenStats)}</StatPrice>
+      <StatPrice>
+        {formatNumber({
+          input: value,
+          type: NumberType.FiatTokenStats,
+        })}
+      </StatPrice>
     </StatWrapper>
   )
 }
