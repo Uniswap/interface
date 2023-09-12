@@ -40,16 +40,6 @@ const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
     z-index: -2;
   }
 
-  &:after {
-    content: ' ';
-    display: flex;
-    position: absolute;
-    inset: -700px;
-    z-index: -1;
-    opacity: 0.023;
-    background-image: url("data:image/svg+xml,%3C!-- svg: first layer --%3E%3Csvg viewBox='0 0 235 235' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4.76' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  }
-
   &:hover {
     border: 1px solid ${({ theme }) => theme.surface3};
   }
