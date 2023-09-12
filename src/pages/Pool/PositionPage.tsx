@@ -35,6 +35,7 @@ import { useIsTransactionPending, useTransactionAdder } from 'state/transactions
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
+import { WrongChainError } from 'utils/errors'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { formatPrice, NumberType } from 'utils/formatNumbers'
 import { formatTickPrice } from 'utils/formatTickPrice'
@@ -491,7 +492,7 @@ function PositionPageContent() {
 
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
-  const collect = useCallback(() => {
+  const collect = useCallback(async () => {
     if (
       !currency0ForFeeCollectionPurposes ||
       !currency1ForFeeCollectionPurposes ||
@@ -519,6 +520,9 @@ function PositionPageContent() {
       data: calldata,
       value,
     }
+
+    const connectedChainId = await provider.getSigner().getChainId()
+    if (chainId !== connectedChainId) throw new WrongChainError()
 
     provider
       .getSigner()

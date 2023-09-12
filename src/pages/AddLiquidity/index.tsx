@@ -26,6 +26,7 @@ import {
 } from 'state/mint/v3/hooks'
 import styled, { useTheme } from 'styled-components'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
+import { WrongChainError } from 'utils/errors'
 
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
@@ -277,6 +278,9 @@ function AddLiquidity() {
           value: '0x0',
         }
       }
+
+      const connectedChainId = await provider.getSigner().getChainId()
+      if (chainId !== connectedChainId) throw new WrongChainError()
 
       setAttemptingTxn(true)
 
