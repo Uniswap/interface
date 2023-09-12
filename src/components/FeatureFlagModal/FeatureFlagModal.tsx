@@ -8,6 +8,7 @@ import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
+import { useUniswapXDefaultEnabledFlag } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputFlag } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
@@ -230,24 +231,6 @@ export default function FeatureFlagModal() {
         </Header>
         <FeatureFlagOption
           variant={BaseVariant}
-          value={useUniswapXSyntheticQuoteFlag()}
-          featureFlag={FeatureFlag.uniswapXSyntheticQuote}
-          label="Force synthetic quotes for UniswapX"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useUniswapXEthOutputFlag()}
-          featureFlag={FeatureFlag.uniswapXEthOutputEnabled}
-          label="Enable eth output for UniswapX orders"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useUniswapXExactOutputFlag()}
-          featureFlag={FeatureFlag.uniswapXExactOutputEnabled}
-          label="Enable exact output for UniswapX orders"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
           value={useCurrencyConversionFlag()}
           featureFlag={FeatureFlag.currencyConversion}
           label="Enable currency conversion"
@@ -264,6 +247,32 @@ export default function FeatureFlagModal() {
           featureFlag={FeatureFlag.fotAdjustedmentsEnabled}
           label="Enable fee-on-transfer UI and slippage adjustments"
         />
+        <FeatureFlagGroup name="UniswapX Flags">
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useUniswapXSyntheticQuoteFlag()}
+            featureFlag={FeatureFlag.uniswapXSyntheticQuote}
+            label="Force synthetic quotes for UniswapX"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useUniswapXEthOutputFlag()}
+            featureFlag={FeatureFlag.uniswapXEthOutputEnabled}
+            label="Enable eth output for UniswapX orders"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useUniswapXExactOutputFlag()}
+            featureFlag={FeatureFlag.uniswapXExactOutputEnabled}
+            label="Enable exact output for UniswapX orders"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useUniswapXDefaultEnabledFlag()}
+            featureFlag={FeatureFlag.uniswapXDefaultEnabled}
+            label="Enable UniswapX by default"
+          />
+        </FeatureFlagGroup>
         <FeatureFlagGroup name="Info Site Migration">
           <FeatureFlagOption
             variant={BaseVariant}

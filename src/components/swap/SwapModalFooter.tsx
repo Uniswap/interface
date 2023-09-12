@@ -15,8 +15,8 @@ import { ClassicTrade, InterfaceTrade, RouterPreference } from 'state/routing/ty
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { DefaultTheme, useTheme } from 'styled-components'
-import { ThemedText } from 'theme'
-import { formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
+import { ExternalLink, ThemedText } from 'theme'
+import { formatPriceImpact, NumberType, useFormatter } from 'utils/formatNumbers'
 import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
@@ -78,6 +78,7 @@ export default function SwapModalFooter({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
+  const { formatNumber } = useFormatter()
 
   const label = `${trade.executionPrice.baseCurrency?.symbol} `
   const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
@@ -232,10 +233,15 @@ function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' 
       <Row align="flex-start" justify="space-between" gap="sm">
         <MouseoverTooltip
           text={
-            <Trans>
-              Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
-              receive any of these fees.
-            </Trans>
+            <>
+              <Trans>
+                Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
+                receive any of these fees.
+              </Trans>{' '}
+              <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">
+                Learn more
+              </ExternalLink>
+            </>
           }
         >
           <Label cursor="help">{t`${currency.symbol} fee`}</Label>

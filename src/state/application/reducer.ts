@@ -43,7 +43,6 @@ export enum ApplicationModal {
   TAX_SERVICE,
   TIME_SELECTOR,
   VOTE,
-  WALLET,
   UNISWAP_NFT_AIRDROP_CLAIM,
 }
 

@@ -1,4 +1,6 @@
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
 import { useEffect } from 'react'
 import { UaEventOptions } from 'react-ga4/types/ga4'
 import { useLocation } from 'react-router-dom'
@@ -18,15 +20,10 @@ export function sendEvent(event: string | UaEventOptions, params?: any) {
   return googleAnalytics.sendEvent(event, params)
 }
 
-export function outboundLink(
-  {
+export function outboundLink({ label }: { label: string }) {
+  sendAnalyticsEvent(InterfaceEventName.EXTERNAL_LINK_CLICK, {
     label,
-  }: {
-    label: string
-  },
-  hitCallback: () => unknown
-) {
-  return googleAnalytics.outboundLink({ label }, hitCallback)
+  })
 }
 
 export function sendTiming(timingCategory: any, timingVar: any, timingValue: any, timingLabel: any) {

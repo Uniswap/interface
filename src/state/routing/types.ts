@@ -46,7 +46,7 @@ export interface GetQuoteArgs {
   uniswapXEthOutputEnabled: boolean
   uniswapXExactOutputEnabled: boolean
   userDisabledUniswapX: boolean
-  fotAdjustmentsEnabled: boolean
+  isUniswapXDefaultEnabled: boolean
   inputTax: Percent
   outputTax: Percent
 }
@@ -114,6 +114,7 @@ type URADutchOrderQuoteResponse = {
   quote: {
     auctionPeriodSecs: number
     deadlineBufferSecs: number
+    startTimeBufferSecs: number
     orderInfo: DutchOrderInfoJSON
     quoteId?: string
     requestId?: string
@@ -236,6 +237,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
   // The gas estimate of the reference classic trade, if there is one.
   classicGasUseEstimateUSD?: number
   auctionPeriodSecs: number
+  startTimeBufferSecs: number
   deadlineBufferSecs: number
   slippageTolerance: Percent
 
@@ -250,6 +252,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     approveInfo,
     classicGasUseEstimateUSD,
     auctionPeriodSecs,
+    startTimeBufferSecs,
     deadlineBufferSecs,
     slippageTolerance,
   }: {
@@ -263,6 +266,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     wrapInfo: WrapInfo
     classicGasUseEstimateUSD?: number
     auctionPeriodSecs: number
+    startTimeBufferSecs: number
     deadlineBufferSecs: number
     slippageTolerance: Percent
   }) {
@@ -275,6 +279,7 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     this.auctionPeriodSecs = auctionPeriodSecs
     this.deadlineBufferSecs = deadlineBufferSecs
     this.slippageTolerance = slippageTolerance
+    this.startTimeBufferSecs = startTimeBufferSecs
   }
 
   public get totalGasUseEstimateUSD(): number {
@@ -351,6 +356,7 @@ type UniswapXConfig = {
   swapper?: string
   exclusivityOverrideBps?: number
   auctionPeriodSecs?: number
+  startTimeBufferSecs?: number
 }
 
 export type RoutingConfig = (UniswapXConfig | ClassicAPIConfig)[]

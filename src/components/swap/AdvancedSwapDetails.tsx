@@ -9,9 +9,9 @@ import { ZERO_PERCENT } from 'constants/misc'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
-import { formatCurrencyAmount, formatNumber, formatPriceImpact, NumberType } from 'utils/formatNumbers'
+import { formatPriceImpact, NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { Separator, ThemedText } from '../../theme'
+import { ExternalLink, Separator, ThemedText } from '../../theme'
 import Column from '../Column'
 import RouterLabel from '../RouterLabel'
 import { RowBetween, RowFixed } from '../Row'
@@ -47,6 +47,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
   const txCount = getTransactionCount(trade)
+  const { formatNumber, formatCurrencyAmount } = useFormatter()
 
   const supportsGasEstimate = chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
 
@@ -84,8 +85,8 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
       )}
       {isClassicTrade(trade) && (
         <>
-          <TokenTaxLineItem trade={trade} type="input" />
-          <TokenTaxLineItem trade={trade} type="output" />
+          <TokenTaxLineItem trade={trade} type="input" syncing={syncing} />
+          <TokenTaxLineItem trade={trade} type="output" syncing={syncing} />
           <RowBetween>
             <MouseoverTooltip text={<Trans>The impact your trade has on the market price of this pool.</Trans>}>
               <ThemedText.BodySmall color="neutral2">
@@ -116,9 +117,10 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <ThemedText.BodySmall>
             {trade.tradeType === TradeType.EXACT_INPUT
-              ? `${formatCurrencyAmount(trade.minimumAmountOut(allowedSlippage), NumberType.SwapTradeAmount)} ${
-                  trade.outputAmount.currency.symbol
-                }`
+              ? `${formatCurrencyAmount({
+                  amount: trade.minimumAmountOut(allowedSlippage),
+                  type: NumberType.SwapTradeAmount,
+                })} ${trade.outputAmount.currency.symbol}`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
@@ -140,9 +142,10 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <ThemedText.BodySmall>
-            {`${formatCurrencyAmount(trade.postTaxOutputAmount, NumberType.SwapTradeAmount)} ${
-              trade.outputAmount.currency.symbol
-            }`}
+            {`${formatCurrencyAmount({
+              amount: trade.postTaxOutputAmount,
+              type: NumberType.SwapTradeAmount,
+            })} ${trade.outputAmount.currency.symbol}`}
           </ThemedText.BodySmall>
         </TextWithLoadingPlaceholder>
       </RowBetween>
@@ -182,7 +185,17 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   )
 }
 
-function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' | 'output' }) {
+function TokenTaxLineItem({
+  trade,
+  type,
+  syncing,
+}: {
+  trade: ClassicTrade
+  type: 'input' | 'output'
+  syncing: boolean
+}) {
+  if (syncing) return null
+
   const [currency, percentage] =
     type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
 
@@ -192,13 +205,18 @@ function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' 
     <RowBetween>
       <MouseoverTooltip
         text={
-          <Trans>
-            Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
-            receive any of these fees.
-          </Trans>
+          <>
+            <Trans>
+              Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not
+              receive any of these fees.
+            </Trans>{' '}
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">
+              Learn more
+            </ExternalLink>
+          </>
         }
       >
-        <ThemedText.BodySmall color="textSecondary">{`${currency.symbol} fee`}</ThemedText.BodySmall>
+        <ThemedText.BodySmall color="neutral2">{`${currency.symbol} fee`}</ThemedText.BodySmall>
       </MouseoverTooltip>
       <ThemedText.BodySmall>{formatPriceImpact(percentage)}</ThemedText.BodySmall>
     </RowBetween>

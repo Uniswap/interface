@@ -1,5 +1,5 @@
 diff --git a/node_modules/@vercel/og/dist/index.edge.js b/node_modules/@vercel/og/dist/index.edge.js
-index 5187f88..c4a1c41 100644
+index 5187f88..eda01d0 100644
 --- a/node_modules/@vercel/og/dist/index.edge.js
 +++ b/node_modules/@vercel/og/dist/index.edge.js
 @@ -18673,8 +18673,8 @@ var Resvg2 = class extends Resvg {
@@ -13,12 +13,11 @@ index 5187f88..c4a1c41 100644
  
  // src/emoji/index.ts
  var U200D = String.fromCharCode(8205);
-@@ -18809,18 +18809,18 @@ async function render(satori, resvg, opts, defaultFonts, element) {
+@@ -18809,18 +18809,15 @@ async function render(satori, resvg, opts, defaultFonts, element) {
  // src/index.edge.ts
  var initializedResvg = initWasm(resvg_wasm);
  var initializedYoga = initYoga(yoga_wasm).then((yoga2) => Ll(yoga2));
 -var fallbackFont = fetch(new URL("./noto-sans-v27-latin-regular.ttf", import.meta.url)).then((res) => res.arrayBuffer());
-+// var fallbackFont = fetch(new URL("https://fonts.gstatic.com/s/notosans/v28/o-0IIpQlx3QUlC5A4PNr6zRF.ttf", import.meta.url)).then((res) => res.arrayBuffer());
  var ImageResponse = class {
    constructor(element, options = {}) {
      const result = new ReadableStream({
@@ -26,22 +25,22 @@ index 5187f88..c4a1c41 100644
          await initializedYoga;
          await initializedResvg;
 -        const fontData = await fallbackFont;
-+        // const fontData = await fallbackFont;
          const fonts = [
            {
              name: "sans serif",
 -            data: fontData,
-+            // data: fontData,
              weight: 700,
              style: "normal"
            }
 diff --git a/node_modules/@vercel/og/dist/types.d.ts b/node_modules/@vercel/og/dist/types.d.ts
-index dde26cc..eb59ff4 100644
+index dde26cc..d075e99 100644
 --- a/node_modules/@vercel/og/dist/types.d.ts
 +++ b/node_modules/@vercel/og/dist/types.d.ts
-@@ -30,7 +30,7 @@ declare type ImageOptions = {
+@@ -28,9 +28,8 @@ declare type ImageOptions = {
+      * A list of fonts to use.
+      *
       * @type {{ data: ArrayBuffer; name: string; weight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900; style?: 'normal' | 'italic' }[]}
-      * @default Noto Sans Latin Regular.
+-     * @default Noto Sans Latin Regular.
       */
 -    fonts?: SatoriOptions['fonts'];
 +    fonts: SatoriOptions['fonts'];

@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendEvent } from 'components/analytics'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { ButtonGray } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -60,6 +61,7 @@ export default function FeeSelector({
   currencyB?: Currency
 }) {
   const { chainId } = useWeb3React()
+  const trace = useTrace()
 
   const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencyA, currencyB)
 
@@ -101,13 +103,13 @@ export default function FeeSelector({
 
   const handleFeePoolSelectWithEvent = useCallback(
     (fee: FeeAmount) => {
-      sendEvent({
-        category: 'FeePoolSelect',
-        action: 'Manual',
+      sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
+        action: FeePoolSelectAction.MANUAL,
+        ...trace,
       })
       handleFeePoolSelect(fee)
     },
-    [handleFeePoolSelect]
+    [handleFeePoolSelect, trace]
   )
 
   useEffect(() => {
@@ -122,14 +124,14 @@ export default function FeeSelector({
       setShowOptions(false)
 
       recommended.current = true
-      sendEvent({
-        category: 'FeePoolSelect',
-        action: ' Recommended',
+      sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
+        action: FeePoolSelectAction.RECOMMENDED,
+        ...trace,
       })
 
       handleFeePoolSelect(largestUsageFeeTier)
     }
-  }, [feeAmount, isLoading, isError, largestUsageFeeTier, handleFeePoolSelect])
+  }, [feeAmount, isLoading, isError, largestUsageFeeTier, handleFeePoolSelect, trace])
 
   useEffect(() => {
     setShowOptions(isError)

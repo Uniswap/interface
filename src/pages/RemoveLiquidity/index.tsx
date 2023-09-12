@@ -2,12 +2,11 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
+import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { sendEvent } from 'components/analytics'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { isSupportedChain } from 'constants/chains'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
@@ -68,6 +67,7 @@ function RemoveLiquidity() {
   const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
 
   const theme = useTheme()
+  const trace = useTrace()
 
   // toggle wallet when disconnected
   const toggleWalletDrawer = useToggleAccountDrawer()
@@ -291,10 +291,9 @@ function RemoveLiquidity() {
 
           setTxHash(response.hash)
 
-          sendEvent({
-            category: 'Liquidity',
-            action: 'Remove',
+          sendAnalyticsEvent(LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED, {
             label: [currencyA.symbol, currencyB.symbol].join('/'),
+            ...trace,
           })
         })
         .catch((error: Error) => {
