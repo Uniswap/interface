@@ -1,7 +1,7 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { JsonRpcProvider, Network, Provider } from '@ethersproject/providers'
 
-import AppRpcProvider from './appRpcProvider'
+import AppRpcProvider from './AppRpcProvider'
 
 jest.mock('@ethersproject/providers')
 

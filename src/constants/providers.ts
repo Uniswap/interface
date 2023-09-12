@@ -1,8 +1,8 @@
 import { ChainId } from '@uniswap/sdk-core'
+import AppRpcProvider from 'rpc/AppRpcProvider'
+import AppStaticJsonRpcProvider from 'rpc/StaticJsonRpcProvider'
 
-import AppRpcProvider from './appRpcProvider'
 import { SupportedInterfaceChain } from './chains'
-import { AppStaticJsonRpcProvider } from './extendedStaticJsonRpcProvider'
 import { RPC_URLS } from './networks'
 
 /**

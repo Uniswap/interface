@@ -4,10 +4,10 @@ import { deepCopy } from '@ethersproject/properties'
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
 import { isPlain } from '@reduxjs/toolkit'
 
-import { AVERAGE_L1_BLOCK_TIME } from './chainInfo'
-import { CHAIN_IDS_TO_NAMES, SupportedInterfaceChain } from './chains'
+import { AVERAGE_L1_BLOCK_TIME } from '../constants/chainInfo'
+import { CHAIN_IDS_TO_NAMES, SupportedInterfaceChain } from '../constants/chains'
 
-export class AppStaticJsonRpcProvider extends StaticJsonRpcProvider {
+export default class AppStaticJsonRpcProvider extends StaticJsonRpcProvider {
   private _blockCache = new Map<string, Promise<any>>()
   get blockCache() {
     // If the blockCache has not yet been initialized this block, do so by
