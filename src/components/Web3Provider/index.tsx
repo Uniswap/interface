@@ -62,14 +62,16 @@ function Updater() {
       // User properties *must* be set before sending corresponding event properties,
       // so that the event contains the correct and up-to-date user properties.
       user.set(CustomUserProperties.WALLET_ADDRESS, account)
+      user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
+
       user.set(CustomUserProperties.WALLET_TYPE, walletType)
       user.set(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
       if (chainId) {
+        user.set(CustomUserProperties.CHAIN_ID, chainId)
         user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
       }
-      user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
 
-      sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+      sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account,
         wallet_type: walletType,

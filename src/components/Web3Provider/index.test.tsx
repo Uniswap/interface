@@ -87,7 +87,7 @@ describe('Web3Provider', () => {
 
       // Assert
       expect(sendAnalyticsEvent).toHaveBeenCalledTimes(1)
-      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: '0x0000000000000000000000000000000000000000',
         wallet_type: 'test',
@@ -123,7 +123,7 @@ describe('Web3Provider', () => {
 
       // Assert
       expect(sendAnalyticsEvent).toHaveBeenCalledTimes(3)
-      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: '0x0000000000000000000000000000000000000000',
         wallet_type: 'test',
