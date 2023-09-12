@@ -42,7 +42,6 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "index.html",
         "ethereum.js"
       ],
       "matches": [ "<all_urls>" ]
