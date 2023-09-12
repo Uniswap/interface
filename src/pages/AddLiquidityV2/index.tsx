@@ -36,7 +36,7 @@ import { PairState } from '../../hooks/useV2Pairs'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { TransactionType } from '../../state/transactions/types'
+import { TransactionInfo, TransactionType } from '../../state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -191,19 +191,22 @@ export default function AddLiquidity() {
         }).then((response) => {
           setAttemptingTxn(false)
 
-          addTransaction(response, {
+          const transactionInfo: TransactionInfo = {
             type: TransactionType.ADD_LIQUIDITY_V2_POOL,
             baseCurrencyId: currencyId(currencyA),
             expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient.toString() ?? '0',
             quoteCurrencyId: currencyId(currencyB),
             expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient.toString() ?? '0',
-          })
+          }
+
+          addTransaction(response, transactionInfo)
 
           setTxHash(response.hash)
 
           sendAnalyticsEvent(LiquidityEventName.ADD_LIQUIDITY_SUBMITTED, {
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
             ...trace,
+            ...transactionInfo,
           })
         })
       )
