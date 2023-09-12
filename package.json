@@ -262,7 +262,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.8",
-    "react-ga4": "^1.4.1",
     "react-infinite-scroll-component": "^6.1.0",
     "react-is": "^17.0.2",
     "react-markdown": "^4.3.1",
