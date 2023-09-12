@@ -1,4 +1,3 @@
-import { sendEvent } from 'components/analytics'
 import ms from 'ms'
 import { useEffect } from 'react'
 import { ApplicationModal, setOpenModal } from 'state/application/reducer'
@@ -25,11 +24,6 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
             .then((data) => {
               if (data.block) {
                 dispatch(setOpenModal(ApplicationModal.BLOCKED_ACCOUNT))
-                sendEvent({
-                  category: 'Address Screening',
-                  action: 'blocked',
-                  label: account,
-                })
               }
             })
             .catch(() => dispatch(setOpenModal(null)))

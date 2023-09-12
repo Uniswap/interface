@@ -21,7 +21,6 @@ import { getEnvName, isBrowserRouterEnabled } from 'utils/env'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
-import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import NavBar, { PageTabs } from '../components/NavBar'
 import Polling from '../components/Polling'
@@ -118,8 +117,6 @@ export default function App() {
   const isDarkMode = useIsDarkMode()
   const [routerPreference] = useRouterPreference()
   const [scrolledState, setScrolledState] = useState(false)
-
-  useAnalyticsReporter()
 
   useEffect(() => {
     window.scrollTo(0, 0)
