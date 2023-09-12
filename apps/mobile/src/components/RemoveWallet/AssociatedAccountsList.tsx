@@ -4,7 +4,7 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { dimensions, spacing } from 'ui/src/theme'
-import { formatUSDPrice } from 'utilities/src/format/format'
+import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import {
   AccountListQuery,
   useAccountListQuery,
@@ -62,7 +62,7 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
               variant="subheadSmall"
             />
             <Text color="neutral2" loading={loading} numberOfLines={1} variant="bodyMicro">
-              {formatUSDPrice(balance)}
+              {formatUSDPrice(balance, NumberType.PortfolioBalance)}
             </Text>
           </Flex>
         ))}
