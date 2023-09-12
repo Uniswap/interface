@@ -4,7 +4,10 @@ import {
   isEnrolledAsync,
   LocalAuthenticationOptions,
 } from 'expo-local-authentication'
+import { NativeModulesProxy } from 'expo-modules-core'
 import { logger } from 'utilities/src/logger/logger'
+
+const ELA = NativeModulesProxy.ExpoLocalAuthentication
 
 /**
  * Biometric authentication statuses
@@ -17,6 +20,10 @@ export enum BiometricAuthenticationStatus {
   Authenticated = 'AUTHENTICATED',
   Canceled = 'CANCELED',
   Authenticating = 'AUTHENTICATING',
+}
+
+export async function enroll(): Promise<void> {
+  ELA?.enrollForAuthentication()
 }
 
 // TODO: [MOB-220] Move into a saga

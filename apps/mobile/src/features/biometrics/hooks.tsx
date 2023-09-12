@@ -67,7 +67,7 @@ export function useDeviceSupportsBiometricAuth(): { touchId: boolean; faceId: bo
   }
 }
 
-const checkOsBiometricAuthEnabled = async (): Promise<boolean> => {
+export const checkOsBiometricAuthEnabled = async (): Promise<boolean> => {
   const [compatible, enrolled] = await Promise.all([hasHardwareAsync(), isEnrolledAsync()])
   return compatible && enrolled
 }

@@ -11,11 +11,13 @@ import { Flex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import { Text } from 'src/components/Text'
+import { IS_IOS } from 'src/constants/globals'
+import { enroll } from 'src/features/biometrics'
 import {
+  checkOsBiometricAuthEnabled,
   useBiometricAppSettings,
   useBiometricPrompt,
   useDeviceSupportsBiometricAuth,
-  useOsBiometricAuthEnabled,
 } from 'src/features/biometrics/hooks'
 import {
   BiometricSettingType,
@@ -46,7 +48,6 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   )
   const onCloseModal = useCallback(() => setShowUnsafeWarningModal(false), [])
 
-  const osBiometricAuthEnabled = useOsBiometricAuthEnabled()
   const { touchId } = useDeviceSupportsBiometricAuth()
   const authenticationTypeName = touchId ? 'Touch' : 'Face'
 
@@ -68,19 +69,23 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
 
   const options: BiometricAuthSetting[] = useMemo((): BiometricAuthSetting[] => {
     const handleFaceIdTurnedOff = (): void => {
-      Alert.alert(
-        t(
-          '{{authenticationTypeName}} ID is currently turned off for Uniswap Wallet—you can turn it on in your system settings.',
-          { authenticationTypeName }
-        ),
-        '',
-        [
-          { text: t('Settings'), onPress: openSettings },
-          {
-            text: t('Cancel'),
-          },
-        ]
-      )
+      IS_IOS
+        ? Alert.alert(
+            t(
+              '{{authenticationTypeName}} ID is currently turned off for Uniswap Wallet—you can turn it on in your system settings.',
+              { authenticationTypeName }
+            ),
+            '',
+            [{ text: t('Settings'), onPress: openSettings }, { text: t('Cancel') }]
+          )
+        : Alert.alert(
+            t(
+              '{{authenticationTypeName}} ID is not set up on your device. To use {{authenticationTypeName}} ID, set up it first in settings.',
+              { authenticationTypeName }
+            ),
+            '',
+            [{ text: t('Set up'), onPress: enroll }, { text: t('Cancel') }]
+          )
     }
 
     return [
@@ -92,7 +97,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
             return
           }
 
-          if (osBiometricAuthEnabled) {
+          if (await checkOsBiometricAuthEnabled()) {
             await trigger({
               biometricAppSettingType: BiometricSettingType.RequiredForAppAccess,
               newValue: newRequiredForAppAccessValue,
@@ -114,11 +119,12 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
             return
           }
 
-          if (osBiometricAuthEnabled) {
+          if (await checkOsBiometricAuthEnabled()) {
             await trigger({
               biometricAppSettingType: BiometricSettingType.RequiredForTransactions,
               newValue: newRequiredForTransactionsValue,
             })
+            return
           }
 
           handleFaceIdTurnedOff()
@@ -128,14 +134,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
         subText: t('Require {{authenticationTypeName}} ID to transact', { authenticationTypeName }),
       },
     ]
-  }, [
-    requiredForAppAccess,
-    t,
-    authenticationTypeName,
-    requiredForTransactions,
-    osBiometricAuthEnabled,
-    trigger,
-  ])
+  }, [requiredForAppAccess, t, authenticationTypeName, requiredForTransactions, trigger])
 
   const renderItem = ({
     item: { text, subText, value, onValueChange },

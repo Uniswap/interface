@@ -9,7 +9,11 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import Trace from 'src/components/Trace/Trace'
 import { IS_IOS } from 'src/constants/globals'
-import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
+import {
+  BiometricAuthenticationStatus,
+  enroll,
+  tryLocalAuthenticate,
+} from 'src/features/biometrics'
 import {
   biometricAuthenticationSuccessful,
   useDeviceSupportsBiometricAuth,
@@ -62,17 +66,28 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
       cancelLabel: 'Cancel',
     })
 
+    // TODO - change the way we handle the Unsupported case (there is no point in redirecting
+    // to settings if the device does not support biometrics - maybe use some fallback method
+    // like PIN or password and display different screen than this in the app)
     if (
       authStatus === BiometricAuthenticationStatus.Unsupported ||
       authStatus === BiometricAuthenticationStatus.MissingEnrollment
     ) {
-      Alert.alert(
-        t('{{authenticationTypeName}} ID is disabled', { authenticationTypeName }),
-        t('To use {{authenticationTypeName}} ID, allow access in system settings', {
-          authenticationTypeName,
-        }),
-        [{ text: t('Go to settings'), onPress: openSettings }, { text: t('Not now') }]
-      )
+      IS_IOS
+        ? Alert.alert(
+            t('{{authenticationTypeName}} ID is disabled', { authenticationTypeName }),
+            t('To use {{authenticationTypeName}} ID, allow access in system settings', {
+              authenticationTypeName,
+            }),
+            [{ text: t('Go to settings'), onPress: openSettings }, { text: t('Not now') }]
+          )
+        : Alert.alert(
+            t('{{authenticationTypeName}} ID is disabled', { authenticationTypeName }),
+            t('To use {{authenticationTypeName}} ID, set up it first in settings', {
+              authenticationTypeName,
+            }),
+            [{ text: t('Set up'), onPress: enroll }, { text: t('Not now') }]
+          )
     }
 
     if (biometricAuthenticationSuccessful(authStatus)) {
