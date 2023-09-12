@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders a currency logo with network logo 1`] = `
-<View
+<div
   style={
     {
       "alignItems": "center",
@@ -34,7 +34,7 @@ exports[`renders a currency logo with network logo 1`] = `
       ]
     }
   />
-  <View
+  <div
     style={
       {
         "alignItems": "stretch",
@@ -42,7 +42,7 @@ exports[`renders a currency logo with network logo 1`] = `
         "flexDirection": "column",
         "position": "absolute",
         "right": 0,
-        "shadowColor": "rgb(0,0,0)",
+        "shadowColor": "rgba(0,0,0,0.10)",
         "shadowOffset": {
           "height": 2,
           "width": 0,
@@ -52,11 +52,11 @@ exports[`renders a currency logo with network logo 1`] = `
       }
     }
   />
-</View>
+</div>
 `;
 
 exports[`renders a currency logo without network logo 1`] = `
-<View
+<div
   style={
     {
       "alignItems": "center",
@@ -89,5 +89,5 @@ exports[`renders a currency logo without network logo 1`] = `
       ]
     }
   />
-</View>
+</div>
 `;
