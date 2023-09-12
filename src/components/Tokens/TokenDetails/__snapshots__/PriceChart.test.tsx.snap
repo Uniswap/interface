@@ -2,7 +2,7 @@
 
 exports[`PriceChart renders correctly with all prices filled 1`] = `
 <DocumentFragment>
-  .c4 {
+  .c3 {
   color: #40B66B;
 }
 
@@ -34,14 +34,6 @@ exports[`PriceChart renders correctly with all prices filled 1`] = `
   color: #7D7D7D;
 }
 
-.c3 {
-  padding-right: 3px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 <div
     class="c0"
     data-cy="chart-header"
@@ -55,24 +47,20 @@ exports[`PriceChart renders correctly with all prices filled 1`] = `
       class="c2"
     >
       0.00%
-      <div
+      <svg
+        aria-label="up"
         class="c3"
+        fill="none"
+        height="16"
+        viewBox="0 0 24 24"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <svg
-          aria-label="up"
-          class="c4"
-          fill="none"
-          height="16"
-          viewBox="0 0 24 24"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
-            fill="currentColor"
-          />
-        </svg>
-      </div>
+        <path
+          d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+          fill="currentColor"
+        />
+      </svg>
     </div>
   </div>
   <svg
@@ -426,8 +414,8 @@ exports[`PriceChart renders correctly with some prices filled 1`] = `
   height: inherit;
 }
 
-.c7 {
-  color: #CECECE;
+.c6 {
+  color: #7D7D7D;
 }
 
 .c0 {
@@ -460,14 +448,6 @@ exports[`PriceChart renders correctly with some prices filled 1`] = `
   align-items: center;
   margin-top: 4px;
   color: #7D7D7D;
-}
-
-.c6 {
-  padding-right: 3px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c2 {
@@ -535,33 +515,20 @@ exports[`PriceChart renders correctly with some prices filled 1`] = `
         class="c5"
       >
         0.00%
-        <div
+        <svg
+          aria-label="up"
           class="c6"
+          fill="none"
+          height="16"
+          viewBox="0 0 24 24"
+          width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <svg
-            aria-label="up"
-            class="c7"
-            fill="none"
-            height="20"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <line
-              x1="7"
-              x2="17"
-              y1="17"
-              y2="7"
-            />
-            <polyline
-              points="7 7 17 7 17 17"
-            />
-          </svg>
-        </div>
+          <path
+            d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+            fill="currentColor"
+          />
+        </svg>
       </div>
     </div>
   </div>

@@ -6,7 +6,7 @@ import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
 import { TokenSortMethod } from '../state'
@@ -59,10 +59,17 @@ function Stat({
   title: ReactNode
   description?: ReactNode
 }) {
+  const { formatNumber } = useFormatter()
+
   return (
     <StatWrapper data-cy={`${dataCy}`}>
       <MouseoverTooltip text={description}>{title}</MouseoverTooltip>
-      <StatPrice>{formatNumber(value, NumberType.FiatTokenStats)}</StatPrice>
+      <StatPrice>
+        {formatNumber({
+          input: value,
+          type: NumberType.FiatTokenStats,
+        })}
+      </StatPrice>
     </StatWrapper>
   )
 }

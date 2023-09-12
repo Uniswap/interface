@@ -1,12 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
+import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
@@ -37,7 +36,7 @@ import { PairState } from '../../hooks/useV2Pairs'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { TransactionType } from '../../state/transactions/types'
+import { TransactionInfo, TransactionType } from '../../state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -57,6 +56,7 @@ export default function AddLiquidity() {
   const { account, chainId, provider } = useWeb3React()
 
   const theme = useTheme()
+  const trace = useTrace()
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -191,20 +191,22 @@ export default function AddLiquidity() {
         }).then((response) => {
           setAttemptingTxn(false)
 
-          addTransaction(response, {
+          const transactionInfo: TransactionInfo = {
             type: TransactionType.ADD_LIQUIDITY_V2_POOL,
             baseCurrencyId: currencyId(currencyA),
             expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient.toString() ?? '0',
             quoteCurrencyId: currencyId(currencyB),
             expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient.toString() ?? '0',
-          })
+          }
+
+          addTransaction(response, transactionInfo)
 
           setTxHash(response.hash)
 
-          sendEvent({
-            category: 'Liquidity',
-            action: 'Add',
+          sendAnalyticsEvent(LiquidityEventName.ADD_LIQUIDITY_SUBMITTED, {
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
+            ...trace,
+            ...transactionInfo,
           })
         })
       )
@@ -367,10 +369,10 @@ export default function AddLiquidity() {
                   <BlueCard>
                     <AutoColumn gap="10px">
                       <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
+                        <b>
+                          <Trans>Tip:</Trans>
+                        </b>{' '}
                         <Trans>
-                          <b>
-                            <Trans>Tip:</Trans>
-                          </b>{' '}
                           When you add liquidity, you will receive pool tokens representing your position. These tokens
                           automatically earn fees proportional to your share of the pool, and can be redeemed at any
                           time.

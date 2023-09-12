@@ -209,7 +209,12 @@ export const MenuDropdown = () => {
                   <Trans>Legal & Privacy</Trans> ↗
                 </SecondaryLinkedText>
                 {(isDevelopmentEnv() || isStagingEnv()) && (
-                  <SecondaryLinkedText onClick={openFeatureFlagsModal}>
+                  <SecondaryLinkedText
+                    onClick={() => {
+                      toggleOpen()
+                      openFeatureFlagsModal()
+                    }}
+                  >
                     <Trans>Feature Flags</Trans>
                   </SecondaryLinkedText>
                 )}

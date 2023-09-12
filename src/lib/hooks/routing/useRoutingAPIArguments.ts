@@ -1,9 +1,8 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { useForceUniswapXOn } from 'featureFlags/flags/forceUniswapXOn'
-import { useFotAdjustmentsEnabled } from 'featureFlags/flags/fotAdjustments'
-import { useUniswapXEnabled } from 'featureFlags/flags/uniswapx'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { useUniswapXDefaultEnabled } from 'featureFlags/flags/uniswapXDefault'
 import { useUniswapXEthOutputEnabled } from 'featureFlags/flags/uniswapXEthOutput'
+import { useUniswapXExactOutputEnabled } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
@@ -22,6 +21,8 @@ export function useRoutingAPIArguments({
   amount,
   tradeType,
   routerPreference,
+  inputTax,
+  outputTax,
 }: {
   account?: string
   tokenIn?: Currency
@@ -29,13 +30,14 @@ export function useRoutingAPIArguments({
   amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+  inputTax: Percent
+  outputTax: Percent
 }): GetQuoteArgs | SkipToken {
-  const uniswapXEnabled = useUniswapXEnabled()
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
-  const forceUniswapXOn = useForceUniswapXOn()
   const userDisabledUniswapX = useUserDisabledUniswapX()
   const uniswapXEthOutputEnabled = useUniswapXEthOutputEnabled()
-  const fotAdjustmentsEnabled = useFotAdjustmentsEnabled()
+  const uniswapXExactOutputEnabled = useUniswapXExactOutputEnabled()
+  const isUniswapXDefaultEnabled = useUniswapXDefaultEnabled()
 
   return useMemo(
     () =>
@@ -55,12 +57,13 @@ export function useRoutingAPIArguments({
             routerPreference,
             tradeType,
             needsWrapIfUniswapX: tokenIn.isNative,
-            uniswapXEnabled,
             uniswapXForceSyntheticQuotes,
-            forceUniswapXOn,
             userDisabledUniswapX,
             uniswapXEthOutputEnabled,
-            fotAdjustmentsEnabled,
+            uniswapXExactOutputEnabled,
+            isUniswapXDefaultEnabled,
+            inputTax,
+            outputTax,
           },
     [
       account,
@@ -69,12 +72,13 @@ export function useRoutingAPIArguments({
       tokenIn,
       tokenOut,
       tradeType,
-      uniswapXEnabled,
+      uniswapXExactOutputEnabled,
       uniswapXForceSyntheticQuotes,
-      forceUniswapXOn,
       userDisabledUniswapX,
       uniswapXEthOutputEnabled,
-      fotAdjustmentsEnabled,
+      isUniswapXDefaultEnabled,
+      inputTax,
+      outputTax,
     ]
   )
 }

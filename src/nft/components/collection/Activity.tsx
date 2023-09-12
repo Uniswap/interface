@@ -3,11 +3,11 @@ import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { useBag, useIsMobile } from 'nft/hooks'
-import { ActivityEvent, ActivityEventType } from 'nft/types'
-import { fetchPrice } from 'nft/utils/fetchPrice'
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { useBag, useIsMobile, useNativeUsdPrice } from 'nft/hooks'
+import { ActivityEventType } from 'nft/types'
+import { useCallback, useReducer } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import * as styles from './Activity.css'
@@ -60,8 +60,6 @@ export const reduceFilters = (state: typeof initialFilterState, action: { eventT
   return { ...state, [action.eventType]: !state[action.eventType] }
 }
 
-const baseHref = (event: ActivityEvent) => `/#/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`
-
 export const Activity = ({ contractAddress, rarityVerified, collectionName, chainId }: ActivityProps) => {
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
@@ -87,13 +85,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
   const cartExpanded = useBag((state) => state.bagExpanded)
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
-  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
-
-  useEffect(() => {
-    fetchPrice().then((price) => {
-      setEthPriceInUSD(price || 0)
-    })
-  }, [])
+  const ethPriceInUSD = useNativeUsdPrice()
 
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
@@ -132,9 +124,11 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
                 (event, i) =>
                   event.eventType && (
                     <Box
-                      as="a"
+                      as={Link}
                       data-testid="nft-activity-row"
-                      href={baseHref(event)}
+                      // @ts-ignore Box component is not typed properly to typecheck
+                      // custom components' props and will incorrectly report `to` as invalid
+                      to={`/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`}
                       className={styles.eventRow}
                       key={i}
                     >
