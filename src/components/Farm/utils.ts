@@ -127,7 +127,7 @@ interface Global {
   }
 }
 
-export const doesItemMatchSearch = (item: GammaPairTokens, search: string) => {
+const doesItemMatchSearch = (item: GammaPairTokens, search: string) => {
   const getAddress = (token: Token | { token: WrappedTokenInfo }): string => {
     return token instanceof Token ? token.address : token.token.address
   }
@@ -145,7 +145,7 @@ export const doesItemMatchSearch = (item: GammaPairTokens, search: string) => {
   )
 }
 
-export const doesItemMatchFilter = (item: GammaPairTokens, farmFilter: string, GlobalData: Global) => {
+const doesItemMatchFilter = (item: GammaPairTokens, farmFilter: string, GlobalData: Global) => {
   const { blueChips, stableCoins, stablePairs } = GlobalData
   const { v3FarmFilter } = GlobalConst.utils
 

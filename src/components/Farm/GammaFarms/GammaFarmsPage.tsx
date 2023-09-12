@@ -150,13 +150,18 @@ const GammaFarmsPage: React.FC<{
           <div>
             {filteredFarms.map((farm: any) => {
               const gmMasterChef = GAMMA_MASTERCHEF_ADDRESSES[ChainId.ROLLUX].toLowerCase()
+              const foundData = gammaData
+                ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
+                : undefined
+
+              console.log('gammaRewards', gammaRewards)
               return (
-                <div style={{ marginBottom: 2 }} key={farm.address}>
+                <div style={{ marginBottom: '20px' }} key={farm.address}>
                   <GammaFarmCard
                     token0={farm.token0}
                     token1={farm.token1}
                     pairData={farm}
-                    data={gammaData ? gammaData[farm.address.toLowerCase()] : undefined}
+                    data={foundData}
                     rewardData={gammaRewards?.[gmMasterChef]?.['pools']?.[farm.address.toLowerCase()] ?? undefined}
                   />
                 </div>

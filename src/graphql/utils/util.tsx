@@ -1,4 +1,5 @@
 import { Currency } from '@pollum-io/sdk-core'
+import { FarmPoolData } from 'components/Farm/constants'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
@@ -169,8 +170,7 @@ export function unwrapTokenRollux<
 export const getGammaData = async () => {
   try {
     const data = await fetch(`${process.env.REACT_APP_GAMMA_API_ENDPOINT}/pegasys/rollux/hypervisors/allData`)
-    const gammaData = await data.json()
-    console.log('gammaData', gammaData)
+    const gammaData = (await data.json()) as { [key: string]: FarmPoolData }
     return gammaData
   } catch (e) {
     console.log(e)

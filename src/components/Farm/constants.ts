@@ -128,37 +128,37 @@ interface Returns {
   status: string
 }
 
-interface FarmPoolData {
+export interface FarmPoolData {
+  baseLower: number
+  baseUpper: number
+  capacityUsed: string
   createDate: string
-  poolAddress: string
-  name: string
-  token0: string
-  token1: string
   decimals0: number
   decimals1: number
   depositCap0: number
   depositCap1: number
-  grossFeesClaimed0: number
-  grossFeesClaimed1: number
-  grossFeesClaimedUSD: string
   feesReinvested0: number
   feesReinvested1: number
   feesReinvestedUSD: string
+  grossFeesClaimed0: number
+  grossFeesClaimed1: number
+  grossFeesClaimedUSD: string
+  inRange: boolean
+  maxTotalSupply: number
+  name: string
+  observationIndex: string
+  poolAddress: string
+  poolFeesUSD: string
+  poolTvlUSD: string
+  returns: Returns
+  sqrtPrice: string
+  tick: number
+  token0: string
+  token1: string
+  totalSupply: number
   tvl0: number
   tvl1: number
   tvlUSD: string
-  totalSupply: number
-  maxTotalSupply: number
-  capacityUsed: string
-  sqrtPrice: string
-  tick: number
-  baseLower: number
-  baseUpper: number
-  inRange: boolean
-  observationIndex: string
-  poolTvlUSD: string
-  poolFeesUSD: string
-  returns: Returns
 }
 
 export const GammaPairs = {
