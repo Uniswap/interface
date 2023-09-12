@@ -1,4 +1,4 @@
-import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -352,7 +352,6 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const floorPriceStr = floorFormatter(stats.stats?.floor_price ?? 0)
   // graphQL formatted %age values out of 100, whereas v3 endpoint did a decimal between 0 & 1
   const floorChangeStr = Math.round(Math.abs(stats?.stats?.one_day_floor_change ?? 0))
-  const arrow = stats?.stats?.one_day_floor_change ? getDeltaArrow(stats.stats.one_day_floor_change) : undefined
 
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const isScreenSize = useScreenSize()
@@ -372,7 +371,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           {stats.stats?.one_day_floor_change !== undefined ? (
             <StatsItem label="Floor 24H" shouldHide={false}>
               <PercentChange isNegative={stats.stats.one_day_floor_change < 0}>
-                {arrow}
+                <DeltaArrow delta={stats?.stats?.one_day_floor_change} />
                 {floorChangeStr}%
               </PercentChange>
             </StatsItem>

@@ -1,5 +1,6 @@
-import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
+import { shallow } from 'zustand/shallow'
+import { createWithEqualityFn } from 'zustand/traditional'
 
 import { ProfilePageStateType } from '../types'
 
@@ -11,7 +12,7 @@ interface profilePageState {
   setProfilePageState: (state: ProfilePageStateType) => void
 }
 
-export const useProfilePageState = create<profilePageState>()(
+export const useProfilePageState = createWithEqualityFn<profilePageState>()(
   devtools(
     (set) => ({
       state: ProfilePageStateType.VIEWING,
@@ -21,5 +22,6 @@ export const useProfilePageState = create<profilePageState>()(
         })),
     }),
     { name: 'useProfilePageState' }
-  )
+  ),
+  shallow
 )
