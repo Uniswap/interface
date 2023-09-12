@@ -16,7 +16,7 @@ import React, { useState } from 'react'
 import { Box } from 'rebass'
 import { useCombinedActiveList } from 'state/lists/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { getTokenFromAddress, useTransactionFinalizer } from 'utils/farmUtils'
 
@@ -36,6 +36,14 @@ const GridItem = styled.div`
   text-align: center;
   font-size: 18px;
 `
+
+const ClaimContainer = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: column;
+`
 const GammaFarmCardDetails: React.FC<{
   data: any
   pairData: any
@@ -51,6 +59,7 @@ const GammaFarmCardDetails: React.FC<{
   const [attemptUnstaking, setAttemptUnstaking] = useState(false)
   const [attemptClaiming, setAttemptClaiming] = useState(false)
   const isMobile = useIsMobile()
+  const theme = useTheme()
 
   const tokenMap = useCombinedActiveList()
 
@@ -58,7 +67,6 @@ const GammaFarmCardDetails: React.FC<{
   const hypervisorContract = useGammaHypervisorContract(pairData.address)
 
   const stakedData = useSingleCallResult(masterChefContract, 'userInfo', [pairData.pid, account ?? undefined])
-  console.log('stakedData', stakedData)
 
   const stakedAmountBN =
     !stakedData.loading && stakedData.result && stakedData.result.length > 0 ? stakedData.result[0] : undefined
@@ -360,19 +368,22 @@ const GammaFarmCardDetails: React.FC<{
 
           {rewards.length > 0 && (
             <GridItem>
-              <Box height="100%" className="flex flex-col justify-between">
-                <small className="text-secondary">earnedRewards</small>
-                <div style={{ marginBottom: 2, marginTop: 2 }}>
+              <ClaimContainer>
+                <small style={{ color: theme.textSecondary }}>EarnedRewards</small>
+                <div style={{ marginBottom: 10, marginTop: 10 }}>
                   {pendingRewards.map((reward) => {
                     return (
-                      <Box key={reward.token.address} className="flex items-center justify-center">
+                      <div
+                        key={reward.token.address}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
                         <CurrencyLogo currency={reward.token} size="16px" />
                         <div style={{ marginLeft: '6px' }}>
                           <small>
                             {formatNumber(reward.amount)} {reward.token.symbol}
                           </small>
                         </div>
-                      </Box>
+                      </div>
                     )
                   })}
                 </div>
@@ -381,7 +392,7 @@ const GammaFarmCardDetails: React.FC<{
                     {attemptClaiming ? 'claiming' : 'claim'}
                   </ButtonPrimary>
                 </Box>
-              </Box>
+              </ClaimContainer>
             </GridItem>
           )}
         </Grid>

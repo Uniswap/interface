@@ -137,7 +137,7 @@ const GammaFarmCard: React.FC<{
             height={20}
             onClick={() => setShowDetails(!showDetails)}
           >
-            {showDetails ? <ChevronUp /> : <ChevronDown />}
+            {showDetails ? <ChevronUp color={theme.accentActive} /> : <ChevronDown color={theme.accentActive} />}
           </Box>
         </div>
       </div>

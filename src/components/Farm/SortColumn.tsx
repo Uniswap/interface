@@ -18,9 +18,9 @@ interface SortColumnsProps {
 
 const SortColumnsLayout = styled.div`
   display: flex;
-  width: 100%;
+  width: 90%;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 `
 
 export default function SortColumns({ sortColumns, selectedSort, sortDesc }: SortColumnsProps) {

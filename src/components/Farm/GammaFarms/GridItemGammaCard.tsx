@@ -38,11 +38,11 @@ interface GridItemGammaCardProps {
   stakeAmount: string
   setStakeAmount: (amount: string) => void
   setUnStakeAmount: (amount: string) => void
-  approveOrStakeLP?: () => void
-  stakeButtonDisabled?: boolean
   textButton: string
   titleText: string
+  approveOrStakeLP?: () => void
   unStakeLP?: () => void
+  stakeButtonDisabled?: boolean
   unStakeButtonDisabled?: boolean
 }
 
@@ -92,12 +92,13 @@ export function GridItemGammaCard({
       )}
 
       <div style={{ marginTop: 5 }}>
-        {stakeButtonDisabled && (
+        {approveOrStakeLP && (
           <ButtonPrimary style={{ height: '40px' }} disabled={stakeButtonDisabled} onClick={approveOrStakeLP}>
             {textButton}
           </ButtonPrimary>
         )}
-        {unStakeButtonDisabled && (
+
+        {unStakeLP && (
           <ButtonPrimary style={{ height: '40px' }} disabled={unStakeButtonDisabled} onClick={unStakeLP}>
             {textButton}
           </ButtonPrimary>

@@ -136,8 +136,8 @@ const GammaFarmsPage: React.FC<{
   return (
     <div style={{ padding: '2 3' }}>
       {gammaFarmsLoading || gammaRewardsLoading ? (
-        <div className="flex justify-center" style={{ padding: '16px 0' }}>
-          <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="1.5rem" />
+        <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '10px', paddingBottom: '30px' }}>
+          <LoaderGif gif={isDarkMode ? LoadingGif : LoadingGifLight} size="3.5rem" />
         </div>
       ) : filteredFarms.length === 0 ? (
         <NoFarmsContainer>
@@ -154,7 +154,6 @@ const GammaFarmsPage: React.FC<{
                 ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
                 : undefined
 
-              console.log('gammaRewards', gammaRewards)
               return (
                 <div style={{ marginBottom: '20px' }} key={farm.address}>
                   <GammaFarmCard

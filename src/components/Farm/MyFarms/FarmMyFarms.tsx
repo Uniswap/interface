@@ -1,4 +1,3 @@
-import { Token } from '@pollum-io/sdk-core'
 import { ChainId } from '@pollum-io/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import LoadingGifLight from 'assets/images/lightLoading.gif'
@@ -120,7 +119,7 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
 
   const gammaRewardsWithUSDPrice = useUSDCPricesFromAddresses(gammaRewardTokenAddressesFiltered)
 
-  const allGammaPairsToFarm = chainId ? ([] as GammaPair[]).concat(...Object.values(GammaPairs[570])) : []
+  const allGammaPairsToFarm = chainId ? ([] as GammaPair[]).concat(...Object.values(GammaPairs[ChainId.ROLLUX])) : []
   const masterChefContract = useMasterChefContract()
 
   // TODO: check after
@@ -178,7 +177,7 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
             </NoFarmsContainer>
           ) : (
             chainId && (
-              <Box padding="24px">
+              <Box>
                 {!isMobile && (
                   <Box px={1.5}>
                     <Box>
@@ -191,20 +190,24 @@ export default function FarmingMyFarms({ chainId }: { search: string; chainId: n
                   </Box>
                 )}
                 <Box pb={2}>
-                  {myGammaFarms.map((farm: Token) => {
+                  {myGammaFarms.map((farm: any) => {
                     const gmMasterChef = GAMMA_MASTERCHEF_ADDRESSES[ChainId.ROLLUX].toLowerCase()
+                    const foundData = gammaData
+                      ? Object.values(gammaData).find((poolData) => poolData.poolAddress === farm.address.toLowerCase())
+                      : undefined
+
                     return (
-                      <Box mt={2} key={farm.address}>
+                      <div style={{ marginBottom: '20px' }} key={farm.address}>
                         <GammaFarmCard
-                          token0={farm}
-                          token1={farm}
+                          token0={farm.token0}
+                          token1={farm.token1}
                           pairData={farm}
-                          data={gammaData ? gammaData[farm.address.toLowerCase()] : undefined}
+                          data={foundData}
                           rewardData={
                             gammaRewards?.[gmMasterChef]?.['pools']?.[farm.address.toLowerCase()] ?? undefined
                           }
                         />
-                      </Box>
+                      </div>
                     )
                   })}
                 </Box>
