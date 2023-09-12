@@ -287,7 +287,7 @@ function AddLiquidity() {
       provider
         .getSigner()
         .estimateGas(txn)
-        .then(async (estimate) => {
+        .then((estimate) => {
           const newTxn = {
             ...txn,
             gasLimit: calculateGasMargin(estimate),
