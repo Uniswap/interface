@@ -8,7 +8,7 @@ import {
 import { useResponsiveProp } from '@shopify/restyle'
 import { BlurView } from 'expo-blur'
 import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
-import { Keyboard, StyleSheet } from 'react-native'
+import { BackHandler, Keyboard, StyleSheet } from 'react-native'
 import Animated, {
   Extrapolate,
   interpolate,
@@ -27,6 +27,26 @@ import { dimensions, spacing } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
+/**
+ * (android only)
+ * Adds a back handler to the modal that dismisses it when the back button is pressed.
+ *
+ * @param modalRef - ref to the modal
+ * @param enabled - whether to enable the back handler
+ */
+function useModalBackHandler(modalRef: React.RefObject<BaseModal>, enabled: boolean): void {
+  useEffect(() => {
+    if (enabled) {
+      const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+        modalRef.current?.dismiss()
+        return true
+      })
+
+      return subscription.remove
+    }
+  }, [modalRef, enabled])
+}
+
 type Props = PropsWithChildren<{
   disableSwipe?: boolean
   hideHandlebar?: boolean
@@ -37,6 +57,7 @@ type Props = PropsWithChildren<{
   fullScreen?: boolean
   backgroundColor?: string
   blurredBackground?: boolean
+  dismissOnBackPress?: boolean
   isDismissible?: boolean
   renderBehindInset?: boolean
   hideKeyboardOnDismiss?: boolean
@@ -73,6 +94,7 @@ export function BottomSheetModal({
   hideHandlebar,
   backgroundColor,
   blurredBackground = false,
+  dismissOnBackPress = true,
   isDismissible = true,
   renderBehindInset = false,
   hideKeyboardOnDismiss = false,
@@ -85,16 +107,19 @@ export function BottomSheetModal({
   const modalRef = useRef<BaseModal>(null)
   const keyboard = useKeyboardLayout()
 
+  useModalBackHandler(modalRef, isDismissible && dismissOnBackPress)
+
+  useEffect(() => {
+    modalRef.current?.present()
+    // Close modal when it is unmounted
+    return modalRef.current?.close
+  }, [modalRef])
+
   useEffect(() => {
     if (extendOnKeyboardVisible && keyboard.isVisible) {
       modalRef.current?.expand()
     }
   }, [extendOnKeyboardVisible, keyboard.isVisible])
-
-  useEffect(() => {
-    // Close modal when it is unmounted
-    return modalRef.current?.close
-  }, [])
 
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints)
@@ -141,10 +166,6 @@ export function BottomSheetModal({
     },
     [backgroundColorValue, hideHandlebar, renderBehindInset]
   )
-
-  useEffect(() => {
-    modalRef.current?.present()
-  }, [modalRef])
 
   const fullScreenContentHeight = (renderBehindInset ? 1 : FULL_HEIGHT) * dimensions.fullHeight
 
@@ -261,6 +282,8 @@ export function BottomSheetDetachedModal({
   onClose,
   snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
   stackBehavior = 'push',
+  isDismissible = true,
+  dismissOnBackPress = true,
   fullScreen,
   hideHandlebar,
   backgroundColor,
@@ -272,6 +295,8 @@ export function BottomSheetDetachedModal({
   const theme = useAppTheme()
 
   const fullScreenContentHeight = FULL_HEIGHT * dimensions.fullHeight
+
+  useModalBackHandler(modalRef, isDismissible && dismissOnBackPress)
 
   useEffect(() => {
     modalRef.current?.present()
@@ -303,6 +328,7 @@ export function BottomSheetDetachedModal({
       bottomInset={theme.spacing.spacing48}
       contentHeight={animatedContentHeight}
       detached={true}
+      enableContentPanningGesture={isDismissible}
       handleComponent={renderHandleBar}
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}

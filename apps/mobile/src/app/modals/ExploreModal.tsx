@@ -30,6 +30,9 @@ export function ExploreModal(): JSX.Element {
       fullScreen
       hideKeyboardOnDismiss
       backgroundColor={theme.colors.none}
+      // Don't dismiss on back press, as this modal is used for the ExploreStack navigation.
+      // (the modal should be dismissed only when the user navigates to the initial Explore screen)
+      dismissOnBackPress={false}
       hideHandlebar={true}
       name={ModalName.Explore}
       renderBehindInset={true}

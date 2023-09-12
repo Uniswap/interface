@@ -14,6 +14,7 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
+import { useReduxModalBackHandler } from 'src/features/modals/hooks'
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
@@ -25,6 +26,8 @@ import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 export function ExploreScreen(): JSX.Element {
   const modalInitialState = useAppSelector(selectModalState(ModalName.Explore)).initialState
   const navigation = useExploreStackNavigation()
+
+  useReduxModalBackHandler(ModalName.Explore)
 
   // The ExploreStack is not directly accessible from outside
   // (e.g., navigating from Home to NFTItem within ExploreStack), due to its mount within BottomSheetModal.
