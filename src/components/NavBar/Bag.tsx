@@ -4,7 +4,6 @@ import { BagIcon, HundredsOverflowIcon, TagIcon } from 'nft/components/icons'
 import { useBag, useSellAsset } from 'nft/hooks'
 import { useCallback } from 'react'
 import styled from 'styled-components'
-import { shallow } from 'zustand/shallow'
 
 const CounterDot = styled.div`
   background-color: ${({ theme }) => theme.accent1};
@@ -26,10 +25,7 @@ export const Bag = () => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const isProfilePage = useIsNftProfilePage()
 
-  const { bagExpanded, setBagExpanded } = useBag(
-    ({ bagExpanded, setBagExpanded }) => ({ bagExpanded, setBagExpanded }),
-    shallow
-  )
+  const { bagExpanded, setBagExpanded } = useBag(({ bagExpanded, setBagExpanded }) => ({ bagExpanded, setBagExpanded }))
 
   const handleIconClick = useCallback(() => {
     setBagExpanded({ bagExpanded: !bagExpanded })
