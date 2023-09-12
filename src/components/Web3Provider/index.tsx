@@ -59,9 +59,14 @@ function Updater() {
         (wallet) => wallet.account === account && wallet.walletType === walletType
       )
 
-      provider?.send('web3_clientVersion', []).then((clientVersion) => {
-        user.set(CustomUserProperties.WALLET_VERSION, clientVersion)
-      })
+      provider
+        ?.send('web3_clientVersion', [])
+        .then((clientVersion) => {
+          user.set(CustomUserProperties.WALLET_VERSION, clientVersion)
+        })
+        .catch((error) => {
+          console.warn('Failed to get client version', error)
+        })
 
       // User properties *must* be set before sending corresponding event properties,
       // so that the event contains the correct and up-to-date user properties.
