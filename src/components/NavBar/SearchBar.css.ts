@@ -104,8 +104,8 @@ export const searchBarInput = style([
 export const searchBarDropdownNft = style([
   baseSearchNftStyle,
   sprinkles({
-    borderBottomLeftRadius: '12',
-    borderBottomRightRadius: '12',
+    borderBottomLeftRadius: '16',
+    borderBottomRightRadius: '16',
     height: { sm: 'viewHeight', md: 'auto' },
     backgroundColor: 'surface1',
   }),
