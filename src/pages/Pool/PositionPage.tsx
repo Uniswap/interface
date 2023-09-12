@@ -1,12 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
-import { sendEvent } from 'components/analytics'
+import { sendAnalyticsEvent, Trace } from 'analytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
@@ -537,9 +536,8 @@ function PositionPageContent() {
             setCollectMigrationHash(response.hash)
             setCollecting(false)
 
-            sendEvent({
-              category: 'Liquidity',
-              action: 'CollectV3',
+            sendAnalyticsEvent(LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED, {
+              source: LiquiditySource.V3,
               label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
             })
 
