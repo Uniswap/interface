@@ -38,7 +38,7 @@ function useModalBackHandler(modalRef: React.RefObject<BaseModal>, enabled: bool
   useEffect(() => {
     if (enabled) {
       const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
-        modalRef.current?.dismiss()
+        modalRef.current?.close()
         return true
       })
 
@@ -300,6 +300,8 @@ export function BottomSheetDetachedModal({
 
   useEffect(() => {
     modalRef.current?.present()
+    // Close modal when it is unmounted
+    return modalRef.current?.close
   }, [modalRef])
 
   const renderHandleBar = useCallback(

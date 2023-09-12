@@ -196,10 +196,10 @@ const AnimatedNumber = ({
       <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
         <Flex
           alignItems="flex-start"
-          backgroundColor="surface1"
           borderRadius="rounded4"
           flexDirection="row"
-          gap="none">
+          gap="none"
+          opacity={0}>
           {placeholderChars.map((_, index) => (
             <Char
               key={

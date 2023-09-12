@@ -47,11 +47,11 @@ exports[`PortfolioBalance renders without error 1`] = `
                 [
                   {
                     "alignItems": "flex-start",
-                    "backgroundColor": "#FFFFFF",
                     "borderRadius": 4,
                     "display": "flex",
                     "flexDirection": "row",
                     "justifyContent": "flex-start",
+                    "opacity": 0,
                   },
                 ]
               }
