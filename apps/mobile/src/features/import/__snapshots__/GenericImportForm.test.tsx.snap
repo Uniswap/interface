@@ -78,7 +78,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               "lineHeight": 19,
               "paddingHorizontal": 0,
               "paddingVertical": 0,
-              "textAlign": "left",
+              "textAlign": "center",
               "width": 8,
             },
           ]

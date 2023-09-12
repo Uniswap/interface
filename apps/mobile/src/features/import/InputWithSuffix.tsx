@@ -64,6 +64,15 @@ function Inputs({
     [textInputRef, inputFontSize]
   )
 
+  const isInputEmpty = !value?.length
+
+  const foregroundFallbackTextAlignment =
+    isMultiline || inputAlignment === 'flex-start' ? 'left' : 'center'
+  const foregroundTextAlignment = textAlign ?? foregroundFallbackTextAlignment
+
+  const fallbackBackgroundTextAlignment = inputAlignment === 'flex-start' ? 'left' : 'center'
+  const backgroundTextAlignment = textAlign ?? fallbackBackgroundTextAlignment
+
   return (
     <Box
       alignItems="flex-end"
@@ -85,9 +94,7 @@ function Inputs({
           px="none"
           py="none"
           scrollEnabled={false}
-          textAlign={
-            textAlign ?? (isMultiline || inputAlignment === 'flex-start' ? 'left' : 'center')
-          }
+          textAlign={isInputEmpty ? 'left' : foregroundTextAlignment}
           textAlignVertical="bottom"
           value={value}
           width="100%"
@@ -112,7 +119,7 @@ function Inputs({
           selectionColor={theme.colors.neutral1}
           spellCheck={false}
           testID="import_account_form/input"
-          textAlign={textAlign ?? (inputAlignment === 'center' || !value ? 'left' : 'center')}
+          textAlign={backgroundTextAlignment}
           textAlignVertical="bottom"
           value={value}
           width={value ? 'auto' : (layout?.width || 0) + theme.spacing.spacing8}

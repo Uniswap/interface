@@ -29,7 +29,7 @@ export function BackButton({
         navigation.goBack()
       }
   return (
-    <TouchableArea testID="buttons/back-button" onPress={goBack} {...rest}>
+    <TouchableArea testID="buttons/back-button" onPress={goBack} {...rest} hitSlop={32}>
       <BackButtonView color={color} showButtonLabel={showButtonLabel} size={size} />
     </TouchableArea>
   )

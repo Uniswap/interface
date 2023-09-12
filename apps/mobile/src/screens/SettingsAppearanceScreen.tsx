@@ -73,6 +73,8 @@ function AppearanceOption({
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
 
+  const showCheckMark = active ? 1 : 0
+
   return (
     <TouchableArea
       alignItems="center"
@@ -86,22 +88,20 @@ function AppearanceOption({
         strokeWidth={1.5}
         width={theme.iconSizes.icon24}
       />
-      <Flex gap="none" ml="spacing16">
-        <Text variant="bodyLarge">{title}</Text>
-        <Text color="neutral2" pr="spacing12" variant="bodySmall">
-          {subtitle}
-        </Text>
-      </Flex>
-      <Flex grow alignItems="flex-end">
-        {active ? (
-          <Flex row alignItems="center" gap="spacing4">
-            <Check
-              color={theme.colors.accent1}
-              height={theme.iconSizes.icon24}
-              width={theme.iconSizes.icon24}
-            />
-          </Flex>
-        ) : null}
+      <Flex row shrink gap="none">
+        <Flex shrink gap="none" ml="spacing16">
+          <Text variant="bodyLarge">{title}</Text>
+          <Text color="neutral2" pr="spacing12" variant="bodySmall">
+            {subtitle}
+          </Text>
+        </Flex>
+        <Flex grow alignItems="flex-end" justifyContent="center" style={{ opacity: showCheckMark }}>
+          <Check
+            color={theme.colors.accent1}
+            height={theme.iconSizes.icon24}
+            width={theme.iconSizes.icon24}
+          />
+        </Flex>
       </Flex>
     </TouchableArea>
   )

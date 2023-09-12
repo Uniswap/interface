@@ -251,7 +251,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                             "lineHeight": 19,
                             "paddingHorizontal": 0,
                             "paddingVertical": 0,
-                            "textAlign": "left",
+                            "textAlign": "center",
                             "width": 8,
                           },
                         ]
