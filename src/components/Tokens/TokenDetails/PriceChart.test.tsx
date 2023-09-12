@@ -1,5 +1,5 @@
 import { TimePeriod } from 'graphql/data/util'
-import { render } from 'test-utils/render'
+import { render, screen } from 'test-utils/render'
 
 import { PriceChart } from './PriceChart'
 
@@ -20,7 +20,7 @@ describe('PriceChart', () => {
     }))
 
     const { asFragment } = render(
-      <PriceChart prices={mockPrices} width={780} height={436} timePeriod={TimePeriod.HOUR} />
+      <PriceChart prices={mockPrices} width={780} height={392} timePeriod={TimePeriod.HOUR} />
     )
     expect(asFragment()).toMatchSnapshot()
     expect(asFragment().textContent).toContain('$1.00')
@@ -33,15 +33,42 @@ describe('PriceChart', () => {
     }))
 
     const { asFragment } = render(
-      <PriceChart prices={mockPrices} width={780} height={436} timePeriod={TimePeriod.HOUR} />
+      <PriceChart prices={mockPrices} width={780} height={392} timePeriod={TimePeriod.HOUR} />
     )
     expect(asFragment()).toMatchSnapshot()
     expect(asFragment().textContent).toContain('$1.00')
     expect(asFragment().textContent).toContain('0.00%')
   })
-  it('renders correctly with no prices filled', () => {
-    const { asFragment } = render(<PriceChart prices={[]} width={780} height={436} timePeriod={TimePeriod.HOUR} />)
+  it('renders correctly with empty price array', () => {
+    const { asFragment } = render(<PriceChart prices={[]} width={780} height={392} timePeriod={TimePeriod.HOUR} />)
     expect(asFragment()).toMatchSnapshot()
     expect(asFragment().textContent).toContain('Price Unavailable')
+    expect(asFragment().textContent).toContain('Missing price data due to recently low trading volume on Uniswap v3')
+  })
+  it('renders correctly with undefined prices', () => {
+    const { asFragment } = render(
+      <PriceChart prices={undefined} width={780} height={392} timePeriod={TimePeriod.HOUR} />
+    )
+    expect(asFragment()).toMatchSnapshot()
+    expect(asFragment().textContent).toContain('Price Unavailable')
+    expect(asFragment().textContent).toContain('Missing chart data')
+  })
+  it('renders stale UI', () => {
+    const { asFragment } = render(
+      <PriceChart
+        prices={[
+          { value: 1, timestamp: 1694538836 },
+          { value: 1, timestamp: 1694538840 },
+          { value: 1, timestamp: 1694538844 },
+          { value: 0, timestamp: 1694538900 },
+        ]}
+        width={780}
+        height={392}
+        timePeriod={TimePeriod.HOUR}
+      />
+    )
+    expect(asFragment()).toMatchSnapshot()
+    expect(asFragment().textContent).toContain('$1.00')
+    expect(screen.getByTestId('chart-stale-icon')).toBeInTheDocument()
   })
 })
