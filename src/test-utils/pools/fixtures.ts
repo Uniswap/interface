@@ -34,4 +34,5 @@ export const validPoolDataResponse = {
     totalValueLockedUSD: '417233634.1468435997761171520463339',
   },
   loading: false,
+  error: false,
 }
