@@ -8,7 +8,7 @@ export const [EmptyStateTokens, AnimatedEmptyStateTokens] = createIcon({
   getIcon: (props) => (
     <Svg fill="none" viewBox="0 0 66 65" {...props}>
       <Rect
-        fill={props.style?.color}
+        fill="currentColor"
         height="36.073"
         rx="2.327"
         transform="rotate(90 35.573 22.926)"
@@ -17,7 +17,7 @@ export const [EmptyStateTokens, AnimatedEmptyStateTokens] = createIcon({
         y="22.926"
       />
       <Rect
-        fill={props.style?.color}
+        fill="currentColor"
         height="36.073"
         rx="2.327"
         transform="rotate(90 35.573 11.463)"
@@ -26,7 +26,7 @@ export const [EmptyStateTokens, AnimatedEmptyStateTokens] = createIcon({
         y="11.463"
       />
       <Rect
-        fill={props.style?.color}
+        fill="currentColor"
         height="36.073"
         rx="2.327"
         transform="rotate(90 40.227 0)"
@@ -34,7 +34,7 @@ export const [EmptyStateTokens, AnimatedEmptyStateTokens] = createIcon({
         x="40.227"
       />
       <Rect
-        fill={props.style?.color}
+        fill="currentColor"
         height="36.073"
         rx="2.327"
         transform="rotate(90 39.064 34.389)"
@@ -43,7 +43,7 @@ export const [EmptyStateTokens, AnimatedEmptyStateTokens] = createIcon({
         y="34.389"
       />
       <Rect
-        fill={props.style?.color}
+        fill="currentColor"
         height="36.073"
         rx="2.327"
         transform="rotate(90 35.573 45.851)"

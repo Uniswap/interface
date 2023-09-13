@@ -7,8 +7,8 @@ export const [Plus, AnimatedPlus] = createIcon({
   name: 'Plus',
   getIcon: (props) => (
     <Svg fill="none" viewBox="0 0 16 16" {...props}>
-      <Path d="M8 1v14" stroke={props.style?.color} strokeLinecap="round" strokeLinejoin="round" />
-      <Path d="M1 8h14" stroke={props.style?.color} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M8 1v14" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M1 8h14" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   ),
 })

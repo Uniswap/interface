@@ -249,20 +249,23 @@ exports[`renders collection preview card 1`] = `
         align="xMidYMid"
         bbHeight="24"
         bbWidth="24"
-        color="#222222"
         fill="none"
         focusable={false}
-        height={24}
         meetOrSlice={0}
         minX={0}
         minY={0}
-        size={8}
-        stroke="#222222"
+        stroke="currentColor"
+        strokeWidth={8}
         style={
           [
             {
               "backgroundColor": "transparent",
               "borderWidth": 0,
+            },
+            {
+              "color": "#222222",
+              "height": 24,
+              "width": 24,
             },
             {
               "flex": 0,
@@ -273,8 +276,7 @@ exports[`renders collection preview card 1`] = `
         }
         tintColor="#222222"
         vbHeight={24}
-        vbWidth={26}
-        width={24}
+        vbWidth={24}
       >
         <RNSVGGroup
           fill={null}
@@ -282,14 +284,15 @@ exports[`renders collection preview card 1`] = `
             [
               "fill",
               "stroke",
+              "strokeWidth",
             ]
           }
           stroke={
             {
-              "payload": 4280427042,
-              "type": 0,
+              "type": 2,
             }
           }
+          strokeWidth="8"
         >
           <RNSVGPath
             d="M15 6L9 12L15 18"
@@ -309,13 +312,12 @@ exports[`renders collection preview card 1`] = `
             }
             stroke={
               {
-                "payload": 4280427042,
-                "type": 0,
+                "type": 2,
               }
             }
             strokeLinecap={1}
             strokeLinejoin={1}
-            strokeWidth="3"
+            strokeWidth="2"
           />
         </RNSVGGroup>
       </RNSVGSvgView>

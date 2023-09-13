@@ -9,21 +9,21 @@ export const [Hamburger, AnimatedHamburger] = createIcon({
     <Svg fill="none" viewBox="0 0 18 12" {...props}>
       <Path
         d="M1.5 6H16.5"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
       />
       <Path
         d="M1.5 1H16.5"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
       />
       <Path
         d="M1.5 11H16.5"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"

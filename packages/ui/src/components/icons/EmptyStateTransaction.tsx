@@ -10,7 +10,7 @@ export const [EmptyStateTransaction, AnimatedEmptyStateTransaction] = createIcon
       <Rect
         height="82.4"
         rx="5.2"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeWidth="2.4"
         transform="rotate(90 83.7 1.8)"
         width="30.4"
@@ -19,7 +19,7 @@ export const [EmptyStateTransaction, AnimatedEmptyStateTransaction] = createIcon
       />
       <Path
         d="M12.2 12.8h5.6m-5.6 5h5.6m5.4-5h49.6m-49.6 5h49.6"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeWidth="2.4"
       />

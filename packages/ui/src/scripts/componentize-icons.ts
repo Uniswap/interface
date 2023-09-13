@@ -105,7 +105,6 @@ async function generateSVGComponents(directoryPair: SVGDirectorySourceAndOutput)
         .toString()
         .replace(/ class=\"[^\"]+\"/g, '')
         .replace(/ version=\"[^\"]+\"/g, '')
-        .replace(new RegExp('stroke="currentColor"', 'g'), 'stroke={props.style?.color}')
         .replace(/width="[0-9]+"/, '')
         .replace(/height="[0-9]+"/, '')
         .replace('<svg', '<Svg')
@@ -182,8 +181,7 @@ export const [${cname}, Animated${cname}] = createIcon({
 
       // if no width/height/color, add them
 
-      element = element.replace(/fill="(#[a-z0-9]+)"/gi, `fill={props.style?.color ?? '$1'}`)
-      element = element.replaceAll(`fill="currentColor"`, `fill={props.style?.color}`)
+      element = element.replace(/fill="(#[a-z0-9]+)"/gi, `fill={"currentColor" ?? '$1'}`)
       element = element.replaceAll(`xmlns:xlink="http://www.w3.org/1999/xlink"`, '')
       element = element.replaceAll(`xlink:href`, 'xlinkHref')
 

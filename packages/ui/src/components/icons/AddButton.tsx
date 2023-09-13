@@ -9,27 +9,19 @@ export const [AddButton, AnimatedAddButton] = createIcon({
     <Svg fill="none" viewBox="0 0 24 24" {...props}>
       <Path
         d="M12 7.625V16.375"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
       />
       <Path
         d="M7.625 12H16.375"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
       />
-      <Rect
-        height="22"
-        rx="11"
-        stroke={props.style?.color}
-        strokeWidth="2"
-        width="22"
-        x="1"
-        y="1"
-      />
+      <Rect height="22" rx="11" stroke="currentColor" strokeWidth="2" width="22" x="1" y="1" />
     </Svg>
   ),
 })

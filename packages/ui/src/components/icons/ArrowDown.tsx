@@ -9,14 +9,14 @@ export const [ArrowDown, AnimatedArrowDown] = createIcon({
     <Svg fill="none" viewBox="0 0 24 24" {...props}>
       <Path
         d="M12 5V19"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
       />
       <Path
         d="M19 12L12 19L5 12"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"

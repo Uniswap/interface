@@ -9,11 +9,11 @@ export const [CircleSpinner, AnimatedCircleSpinner] = createIcon({
     <Svg fill="none" viewBox="0 0 24 24" {...props}>
       <Path
         d="M21 12C21 7.02944 16.9706 3 12 3"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeWidth="3"
       />
-      <_Circle cx="12" cy="12" fill={props.style?.color ?? '#99A1BD'} fillOpacity="0.14" r="6" />
+      <_Circle cx="12" cy="12" fill={'currentColor' ?? '#99A1BD'} fillOpacity="0.14" r="6" />
     </Svg>
   ),
   defaultFill: '#99A1BD',

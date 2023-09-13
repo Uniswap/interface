@@ -9,42 +9,42 @@ export const [List, AnimatedList] = createIcon({
     <Svg fill="none" viewBox="0 0 24 24" {...props}>
       <Path
         d="M8 6H21"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
       />
       <Path
         d="M8 12H21"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
       />
       <Path
         d="M8 18H21"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
       />
       <Path
         d="M3 6H3.01"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
       />
       <Path
         d="M3 12H3.01"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
       />
       <Path
         d="M3 18H3.01"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"

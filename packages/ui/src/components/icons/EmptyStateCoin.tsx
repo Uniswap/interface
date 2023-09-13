@@ -10,7 +10,7 @@ export const [EmptyStateCoin, AnimatedEmptyStateCoin] = createIcon({
       <Path
         clipRule="evenodd"
         d="M16.91 32.5c8.836 0 16-7.163 16-16s-7.164-16-16-16c-8.837 0-16 7.163-16 16s7.163 16 16 16Zm6-16-6-6-6 6 6 6 6-6Z"
-        fill={props.style?.color}
+        fill="currentColor"
         fillRule="evenodd"
       />
     </Svg>

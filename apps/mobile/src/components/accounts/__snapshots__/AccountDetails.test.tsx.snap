@@ -666,20 +666,23 @@ exports[`AccountDetails renders without error with chevron 1`] = `
         align="xMidYMid"
         bbHeight="50"
         bbWidth="50"
-        color="#7D7D7D"
         fill="none"
         focusable={false}
-        height={50}
         meetOrSlice={0}
         minX={0}
         minY={0}
-        size={8}
-        stroke="#7D7D7D"
+        stroke="currentColor"
+        strokeWidth={8}
         style={
           [
             {
               "backgroundColor": "transparent",
               "borderWidth": 0,
+            },
+            {
+              "color": "#7D7D7D",
+              "height": 50,
+              "width": 50,
             },
             {
               "flex": 0,
@@ -690,8 +693,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
         }
         tintColor="#7D7D7D"
         vbHeight={24}
-        vbWidth={26}
-        width={50}
+        vbWidth={24}
       >
         <RNSVGGroup
           fill={null}
@@ -699,14 +701,15 @@ exports[`AccountDetails renders without error with chevron 1`] = `
             [
               "fill",
               "stroke",
+              "strokeWidth",
             ]
           }
           stroke={
             {
-              "payload": 4286414205,
-              "type": 0,
+              "type": 2,
             }
           }
+          strokeWidth="8"
         >
           <RNSVGPath
             d="M15 6L9 12L15 18"
@@ -726,13 +729,12 @@ exports[`AccountDetails renders without error with chevron 1`] = `
             }
             stroke={
               {
-                "payload": 4286414205,
-                "type": 0,
+                "type": 2,
               }
             }
             strokeLinecap={1}
             strokeLinejoin={1}
-            strokeWidth="3"
+            strokeWidth="2"
           />
         </RNSVGGroup>
       </RNSVGSvgView>

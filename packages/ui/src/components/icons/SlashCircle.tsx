@@ -10,14 +10,14 @@ export const [SlashCircle, AnimatedSlashCircle] = createIcon({
       <G clipPath="url(#clip0_702_17824)">
         <Path
           d="M8.00016 14.6667C11.6821 14.6667 14.6668 11.6819 14.6668 8.00004C14.6668 4.31814 11.6821 1.33337 8.00016 1.33337C4.31826 1.33337 1.3335 4.31814 1.3335 8.00004C1.3335 11.6819 4.31826 14.6667 8.00016 14.6667Z"
-          stroke={props.style?.color}
+          stroke="currentColor"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth="2"
         />
         <Path
           d="M3.28662 3.28662L12.7133 12.7133"
-          stroke={props.style?.color}
+          stroke="currentColor"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth="2"
@@ -25,7 +25,7 @@ export const [SlashCircle, AnimatedSlashCircle] = createIcon({
       </G>
       <Defs>
         <clipPath id="clip0_702_17824">
-          <Rect fill={props.style?.color} height="16" width="16" />
+          <Rect fill="currentColor" height="16" width="16" />
         </clipPath>
       </Defs>
     </Svg>

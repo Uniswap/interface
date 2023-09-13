@@ -9,14 +9,14 @@ export const [DoubleChevron, AnimatedDoubleChevron] = createIcon({
     <Svg fill="none" viewBox="0 0 10 14" {...props}>
       <Path
         d="M1 9L5 13L9 9"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
       />
       <Path
         d="M9 5L5 1L1 5"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"

@@ -9,7 +9,7 @@ export const [Checkmark, AnimatedCheckmark] = createIcon({
     <Svg fill="none" viewBox="0 0 11 8" {...props}>
       <Path
         d="M1.3 4L3.8 6.5L9.3 1"
-        stroke={props.style?.color}
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
