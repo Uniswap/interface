@@ -473,7 +473,7 @@ function formatSlippage(slippage: Percent | undefined, locale: SupportedLocale =
   })}%`
 }
 
-interface FormatPriceProps {
+interface FormatPriceOptions {
   price: Nullish<Price<Currency, Currency>>
   type: FormatterType
   locale?: SupportedLocale
@@ -487,7 +487,7 @@ function formatPrice({
   locale = DEFAULT_LOCALE,
   localCurrency = DEFAULT_LOCAL_CURRENCY,
   conversionRate,
-}: FormatPriceProps): string {
+}: FormatPriceOptions): string {
   if (price === null || price === undefined) {
     return '-'
   }
@@ -495,7 +495,7 @@ function formatPrice({
   return formatNumber({ input: parseFloat(price.toSignificant()), type, locale, localCurrency, conversionRate })
 }
 
-interface FormatTickPriceProps {
+interface FormatTickPriceOptions {
   price?: Price<Token, Token>
   atLimit: { [bound in Bound]?: boolean | undefined }
   direction: Bound
@@ -515,7 +515,7 @@ function formatTickPrice({
   locale,
   localCurrency,
   conversionRate,
-}: FormatTickPriceProps) {
+}: FormatTickPriceOptions) {
   if (atLimit[direction]) {
     return direction === Bound.LOWER ? '0' : '∞'
   }
@@ -527,14 +527,29 @@ function formatTickPrice({
   return formatPrice({ price, type: numberType ?? NumberType.TokenNonTx, locale, localCurrency, conversionRate })
 }
 
-export function formatNumberOrString(price: Nullish<number | string>, type: FormatterType): string {
-  if (price === null || price === undefined) return '-'
-  if (typeof price === 'string') return formatNumber({ input: parseFloat(price), type })
-  return formatNumber({ input: price, type })
+interface FormatNumberOrStringOptions {
+  input: Nullish<number | string>
+  type: FormatterType
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+  conversionRate?: number
+}
+
+function formatNumberOrString({
+  input,
+  type,
+  locale,
+  localCurrency,
+  conversionRate,
+}: FormatNumberOrStringOptions): string {
+  if (input === null || input === undefined) return '-'
+  if (typeof input === 'string')
+    return formatNumber({ input: parseFloat(input), type, locale, localCurrency, conversionRate })
+  return formatNumber({ input, type, locale, localCurrency, conversionRate })
 }
 
 export function formatUSDPrice(price: Nullish<number | string>, type: NumberType = NumberType.FiatTokenPrice): string {
-  return formatNumberOrString(price, type)
+  return formatNumberOrString({ input: price, type })
 }
 
 /** Formats USD and non-USD prices */
@@ -655,7 +670,7 @@ export function useFormatter() {
   )
 
   const formatPriceWithLocales = useCallback(
-    (options: Omit<FormatPriceProps, LocalesType>) =>
+    (options: Omit<FormatPriceOptions, LocalesType>) =>
       formatPrice({
         ...options,
         locale: formatterLocale,
@@ -681,8 +696,19 @@ export function useFormatter() {
   )
 
   const formatTickPriceWithLocales = useCallback(
-    (options: Omit<FormatTickPriceProps, LocalesType>) =>
+    (options: Omit<FormatTickPriceOptions, LocalesType>) =>
       formatTickPrice({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: localCurrencyConversionRateToFormatWith,
+      }),
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+  )
+
+  const formatNumberOrStringWithLocales = useCallback(
+    (options: Omit<FormatNumberOrStringOptions, LocalesType>) =>
+      formatNumberOrString({
         ...options,
         locale: formatterLocale,
         localCurrency: currencyToFormatWith,
@@ -695,6 +721,7 @@ export function useFormatter() {
     () => ({
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
       formatNumber: formatNumberWithLocales,
+      formatNumberOrString: formatNumberOrStringWithLocales,
       formatPrice: formatPriceWithLocales,
       formatPriceImpact: formatPriceImpactWithLocales,
       formatReviewSwapCurrencyAmount: formatReviewSwapCurrencyAmountWithLocales,
@@ -703,6 +730,7 @@ export function useFormatter() {
     }),
     [
       formatCurrencyAmountWithLocales,
+      formatNumberOrStringWithLocales,
       formatNumberWithLocales,
       formatPriceImpactWithLocales,
       formatPriceWithLocales,
