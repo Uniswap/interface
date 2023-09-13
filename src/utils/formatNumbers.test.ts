@@ -10,7 +10,6 @@ import { mocked } from 'test-utils/mocked'
 
 import {
   currencyAmountToPreciseFloat,
-  formatNumber,
   formatPriceImpact,
   formatReviewSwapCurrencyAmount,
   formatSlippage,
@@ -200,254 +199,239 @@ describe('Number Formatting', () => {
   })
 
   it('formats fiat estimates for token stats correctly', () => {
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
     expect(formatNumber({ input: 1234576, type: NumberType.FiatTokenStats })).toBe('$1.2M')
-    expect(
-      formatNumber({ input: 1234576, type: NumberType.FiatTokenStats, locale: 'ja-JP', localCurrency: Currency.Cad })
-    ).toBe('CA$123.5万')
     expect(formatNumber({ input: 234567, type: NumberType.FiatTokenStats })).toBe('$234.6K')
-    expect(
-      formatNumber({ input: 234567, type: NumberType.FiatTokenStats, locale: 'ja-JP', localCurrency: Currency.Cad })
-    ).toBe('CA$23.5万')
     expect(formatNumber({ input: 123.456, type: NumberType.FiatTokenStats })).toBe('$123.46')
-    expect(
-      formatNumber({ input: 123.456, type: NumberType.FiatTokenStats, locale: 'ja-JP', localCurrency: Currency.Cad })
-    ).toBe('CA$123.46')
     expect(formatNumber({ input: 1.23, type: NumberType.FiatTokenStats })).toBe('$1.23')
-    expect(
-      formatNumber({ input: 1.23, type: NumberType.FiatTokenStats, locale: 'ja-JP', localCurrency: Currency.Cad })
-    ).toBe('CA$1.23')
     expect(formatNumber({ input: 0.123, type: NumberType.FiatTokenStats })).toBe('$0.12')
-    expect(
-      formatNumber({ input: 0.123, type: NumberType.FiatTokenStats, locale: 'ja-JP', localCurrency: Currency.Cad })
-    ).toBe('CA$0.12')
     expect(formatNumber({ input: 0.00123, type: NumberType.FiatTokenStats })).toBe('<$0.01')
-    expect(
-      formatNumber({ input: 0.00123, type: NumberType.FiatTokenStats, locale: 'ja-JP', localCurrency: Currency.Cad })
-    ).toBe('<CA$0.01')
     expect(formatNumber({ input: 0, type: NumberType.FiatTokenStats })).toBe('-')
-    expect(
-      formatNumber({ input: 0, type: NumberType.FiatTokenStats, locale: 'ja-JP', localCurrency: Currency.Cad })
-    ).toBe('-')
+  })
+
+  it('formats fiat estimates for token stats correctly with japenese locale and cad currency', () => {
+    mocked(useActiveLocale).mockReturnValue('ja-JP')
+    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Cad)
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
+    expect(formatNumber({ input: 1234576, type: NumberType.FiatTokenStats })).toBe('CA$123.5万')
+    expect(formatNumber({ input: 234567, type: NumberType.FiatTokenStats })).toBe('CA$23.5万')
+    expect(formatNumber({ input: 123.456, type: NumberType.FiatTokenStats })).toBe('CA$123.46')
+    expect(formatNumber({ input: 1.23, type: NumberType.FiatTokenStats })).toBe('CA$1.23')
+    expect(formatNumber({ input: 0.123, type: NumberType.FiatTokenStats })).toBe('CA$0.12')
+    expect(formatNumber({ input: 0.00123, type: NumberType.FiatTokenStats })).toBe('<CA$0.01')
+    expect(formatNumber({ input: 0, type: NumberType.FiatTokenStats })).toBe('-')
   })
 
   it('formats gas USD prices correctly', () => {
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatGasPrice })).toBe('$1.23M')
-    expect(
-      formatNumber({ input: 1234567.891, type: NumberType.FiatGasPrice, locale: 'pt-PR', localCurrency: Currency.Thb })
-    ).toBe('฿\xa01,23\xa0mi')
     expect(formatNumber({ input: 18.448, type: NumberType.FiatGasPrice })).toBe('$18.45')
-    expect(
-      formatNumber({ input: 18.448, type: NumberType.FiatGasPrice, locale: 'pt-PR', localCurrency: Currency.Thb })
-    ).toBe('฿\xa018,45')
     expect(formatNumber({ input: 0.0099, type: NumberType.FiatGasPrice })).toBe('<$0.01')
-    expect(
-      formatNumber({ input: 0.0099, type: NumberType.FiatGasPrice, locale: 'pt-PR', localCurrency: Currency.Thb })
-    ).toBe('<฿\xa00,01')
     expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('$0.00')
-    expect(
-      formatNumber({ input: 0, type: NumberType.FiatGasPrice, locale: 'pt-PR', localCurrency: Currency.Thb })
-    ).toBe('฿\xa00,00')
+  })
+
+  it('formats gas prices correctly with portugese locale and thai baht currency', () => {
+    mocked(useActiveLocale).mockReturnValue('pt-PR')
+    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Thb)
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
+    expect(formatNumber({ input: 1234567.891, type: NumberType.FiatGasPrice })).toBe('฿\xa01,23\xa0mi')
+    expect(formatNumber({ input: 18.448, type: NumberType.FiatGasPrice })).toBe('฿\xa018,45')
+    expect(formatNumber({ input: 0.0099, type: NumberType.FiatGasPrice })).toBe('<฿\xa00,01')
+    expect(formatNumber({ input: 0, type: NumberType.FiatGasPrice })).toBe('฿\xa00,00')
   })
 
   it('formats USD token quantities prices correctly', () => {
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatTokenQuantity })).toBe('$1.23M')
-    expect(formatNumber({ input: 1234567.891, type: NumberType.FiatTokenQuantity, localCurrency: Currency.Ngn })).toBe(
-      '₦1.23M'
-    )
     expect(formatNumber({ input: 18.448, type: NumberType.FiatTokenQuantity })).toBe('$18.45')
-    expect(formatNumber({ input: 18.448, type: NumberType.FiatTokenQuantity, localCurrency: Currency.Ngn })).toBe(
-      '₦18.45'
-    )
     expect(formatNumber({ input: 0.0099, type: NumberType.FiatTokenQuantity })).toBe('<$0.01')
-    expect(formatNumber({ input: 0.0099, type: NumberType.FiatTokenQuantity, localCurrency: Currency.Ngn })).toBe(
-      '<₦0.01'
-    )
     expect(formatNumber({ input: 0, type: NumberType.FiatTokenQuantity })).toBe('$0.00')
-    expect(formatNumber({ input: 0, type: NumberType.FiatTokenQuantity, localCurrency: Currency.Ngn })).toBe('₦0.00')
+  })
+
+  it('formats token quantities prices correctly with nigerian naira currency', () => {
+    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Ngn)
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
+    expect(formatNumber({ input: 1234567.891, type: NumberType.FiatTokenQuantity })).toBe('₦1.23M')
+    expect(formatNumber({ input: 18.448, type: NumberType.FiatTokenQuantity })).toBe('₦18.45')
+    expect(formatNumber({ input: 0.0099, type: NumberType.FiatTokenQuantity })).toBe('<₦0.01')
+    expect(formatNumber({ input: 0, type: NumberType.FiatTokenQuantity })).toBe('₦0.00')
   })
 
   it('formats Swap text input/output numbers correctly', () => {
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
     expect(formatNumber({ input: 1234567.8901, type: NumberType.SwapTradeAmount })).toBe('1234570')
-    expect(formatNumber({ input: 1234567.8901, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('1234570')
     expect(formatNumber({ input: 765432.1, type: NumberType.SwapTradeAmount })).toBe('765432')
-    expect(formatNumber({ input: 765432.1, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('765432')
 
     expect(formatNumber({ input: 7654.321, type: NumberType.SwapTradeAmount })).toBe('7654.32')
-    expect(formatNumber({ input: 7654.321, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('7654.32')
     expect(formatNumber({ input: 765.4321, type: NumberType.SwapTradeAmount })).toBe('765.432')
-    expect(formatNumber({ input: 765.4321, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('765.432')
     expect(formatNumber({ input: 76.54321, type: NumberType.SwapTradeAmount })).toBe('76.5432')
-    expect(formatNumber({ input: 76.54321, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('76.5432')
     expect(formatNumber({ input: 7.654321, type: NumberType.SwapTradeAmount })).toBe('7.65432')
-    expect(formatNumber({ input: 7.654321, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('7.65432')
     expect(formatNumber({ input: 7.60000054321, type: NumberType.SwapTradeAmount })).toBe('7.60')
-    expect(formatNumber({ input: 7.60000054321, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('7.60')
     expect(formatNumber({ input: 7.6, type: NumberType.SwapTradeAmount })).toBe('7.60')
-    expect(formatNumber({ input: 7.6, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('7.60')
     expect(formatNumber({ input: 7, type: NumberType.SwapTradeAmount })).toBe('7.00')
-    expect(formatNumber({ input: 7, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('7.00')
 
     expect(formatNumber({ input: 0.987654321, type: NumberType.SwapTradeAmount })).toBe('0.98765')
-    expect(formatNumber({ input: 0.987654321, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('0.98765')
     expect(formatNumber({ input: 0.9, type: NumberType.SwapTradeAmount })).toBe('0.90')
-    expect(formatNumber({ input: 0.9, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('0.90')
     expect(formatNumber({ input: 0.901000123, type: NumberType.SwapTradeAmount })).toBe('0.901')
-    expect(formatNumber({ input: 0.901000123, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('0.901')
     expect(formatNumber({ input: 0.000000001, type: NumberType.SwapTradeAmount })).toBe('0.000000001')
-    expect(formatNumber({ input: 0.000000001, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('0.000000001')
     expect(formatNumber({ input: 0, type: NumberType.SwapTradeAmount })).toBe('0')
-    expect(formatNumber({ input: 0, type: NumberType.SwapTradeAmount, locale: 'ko-KR' })).toBe('0')
+  })
+
+  it('formats Swap text input/output numbers correctly with Korean locale', () => {
+    mocked(useActiveLocale).mockReturnValue('ko-KR')
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
+    expect(formatNumber({ input: 1234567.8901, type: NumberType.SwapTradeAmount })).toBe('1234570')
+    expect(formatNumber({ input: 765432.1, type: NumberType.SwapTradeAmount })).toBe('765432')
+
+    expect(formatNumber({ input: 7654.321, type: NumberType.SwapTradeAmount })).toBe('7654.32')
+    expect(formatNumber({ input: 765.4321, type: NumberType.SwapTradeAmount })).toBe('765.432')
+    expect(formatNumber({ input: 76.54321, type: NumberType.SwapTradeAmount })).toBe('76.5432')
+    expect(formatNumber({ input: 7.654321, type: NumberType.SwapTradeAmount })).toBe('7.65432')
+    expect(formatNumber({ input: 7.60000054321, type: NumberType.SwapTradeAmount })).toBe('7.60')
+    expect(formatNumber({ input: 7.6, type: NumberType.SwapTradeAmount })).toBe('7.60')
+    expect(formatNumber({ input: 7, type: NumberType.SwapTradeAmount })).toBe('7.00')
+
+    expect(formatNumber({ input: 0.987654321, type: NumberType.SwapTradeAmount })).toBe('0.98765')
+    expect(formatNumber({ input: 0.9, type: NumberType.SwapTradeAmount })).toBe('0.90')
+    expect(formatNumber({ input: 0.901000123, type: NumberType.SwapTradeAmount })).toBe('0.901')
+    expect(formatNumber({ input: 0.000000001, type: NumberType.SwapTradeAmount })).toBe('0.000000001')
+    expect(formatNumber({ input: 0, type: NumberType.SwapTradeAmount })).toBe('0')
   })
 
   it('formats NFT numbers correctly', () => {
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
     expect(formatNumber({ input: 1234567000000000, type: NumberType.NFTTokenFloorPrice })).toBe('>999T')
+    expect(formatNumber({ input: 1002345, type: NumberType.NFTTokenFloorPrice })).toBe('1M')
+    expect(formatNumber({ input: 1234, type: NumberType.NFTTokenFloorPrice })).toBe('1.23K')
+    expect(formatNumber({ input: 12.34467, type: NumberType.NFTTokenFloorPrice })).toBe('12.34')
+    expect(formatNumber({ input: 12.1, type: NumberType.NFTTokenFloorPrice })).toBe('12.1')
+    expect(formatNumber({ input: 0.00909, type: NumberType.NFTTokenFloorPrice })).toBe('0.009')
+    expect(formatNumber({ input: 0.09001, type: NumberType.NFTTokenFloorPrice })).toBe('0.09')
+    expect(formatNumber({ input: 0.00099, type: NumberType.NFTTokenFloorPrice })).toBe('<0.001')
+    expect(formatNumber({ input: 0, type: NumberType.NFTTokenFloorPrice })).toBe('0')
+
+    expect(formatNumber({ input: 12.1, type: NumberType.NFTTokenFloorPriceTrailingZeros })).toBe('12.10')
+    expect(formatNumber({ input: 0.09001, type: NumberType.NFTTokenFloorPriceTrailingZeros })).toBe('0.090')
+
+    expect(formatNumber({ input: 0.987654321, type: NumberType.NFTCollectionStats })).toBe('1')
+    expect(formatNumber({ input: 0.9, type: NumberType.NFTCollectionStats })).toBe('1')
+    expect(formatNumber({ input: 76543.21, type: NumberType.NFTCollectionStats })).toBe('76.5K')
+    expect(formatNumber({ input: 7.60000054321, type: NumberType.NFTCollectionStats })).toBe('8')
+    expect(formatNumber({ input: 1234567890, type: NumberType.NFTCollectionStats })).toBe('1.2B')
+    expect(formatNumber({ input: 1234567000000000, type: NumberType.NFTCollectionStats })).toBe('1234.6T')
+  })
+
+  it('formats NFT numbers correctly with brazilian portugese locale and braziliean real currency', () => {
+    mocked(useActiveLocale).mockReturnValue('pt-Br')
+    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Brl)
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
+
     expect(
       formatNumber({
         input: 1234567000000000,
         type: NumberType.NFTTokenFloorPrice,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('>999\xa0tri')
-    expect(formatNumber({ input: 1002345, type: NumberType.NFTTokenFloorPrice })).toBe('1M')
     expect(
       formatNumber({
         input: 1002345,
         type: NumberType.NFTTokenFloorPrice,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('1\xa0mi')
-    expect(formatNumber({ input: 1234, type: NumberType.NFTTokenFloorPrice })).toBe('1.23K')
     expect(
       formatNumber({
         input: 1234,
         type: NumberType.NFTTokenFloorPrice,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('1,23\xa0mil')
-    expect(formatNumber({ input: 12.34467, type: NumberType.NFTTokenFloorPrice })).toBe('12.34')
     expect(
       formatNumber({
         input: 12.34467,
         type: NumberType.NFTTokenFloorPrice,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('12,34')
-    expect(formatNumber({ input: 12.1, type: NumberType.NFTTokenFloorPrice })).toBe('12.1')
     expect(
       formatNumber({
         input: 12.1,
         type: NumberType.NFTTokenFloorPrice,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('12,1')
-    expect(formatNumber({ input: 0.00909, type: NumberType.NFTTokenFloorPrice })).toBe('0.009')
     expect(
       formatNumber({
         input: 0.00909,
         type: NumberType.NFTTokenFloorPrice,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('0,009')
-    expect(formatNumber({ input: 0.09001, type: NumberType.NFTTokenFloorPrice })).toBe('0.09')
     expect(
       formatNumber({
         input: 0.09001,
         type: NumberType.NFTTokenFloorPrice,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('0,09')
-    expect(formatNumber({ input: 0.00099, type: NumberType.NFTTokenFloorPrice })).toBe('<0.001')
     expect(
       formatNumber({
         input: 0.00099,
         type: NumberType.NFTTokenFloorPrice,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('<0,001')
-    expect(formatNumber({ input: 0, type: NumberType.NFTTokenFloorPrice })).toBe('0')
     expect(
       formatNumber({
         input: 0,
         type: NumberType.NFTTokenFloorPrice,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('0')
 
-    expect(formatNumber({ input: 12.1, type: NumberType.NFTTokenFloorPriceTrailingZeros })).toBe('12.10')
     expect(
       formatNumber({
         input: 12.1,
         type: NumberType.NFTTokenFloorPriceTrailingZeros,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('12,10')
-    expect(formatNumber({ input: 0.09001, type: NumberType.NFTTokenFloorPriceTrailingZeros })).toBe('0.090')
     expect(
       formatNumber({
         input: 0.09001,
         type: NumberType.NFTTokenFloorPriceTrailingZeros,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('0,090')
 
-    expect(formatNumber({ input: 0.987654321, type: NumberType.NFTCollectionStats })).toBe('1')
     expect(
       formatNumber({
         input: 0.987654321,
         type: NumberType.NFTCollectionStats,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('1')
     expect(formatNumber({ input: 0.9, type: NumberType.NFTCollectionStats })).toBe('1')
     expect(
-      formatNumber({ input: 0.9, type: NumberType.NFTCollectionStats, locale: 'pt-BR', localCurrency: Currency.Brl })
-    ).toBe('1')
-    expect(formatNumber({ input: 76543.21, type: NumberType.NFTCollectionStats })).toBe('76.5K')
-    expect(
       formatNumber({
         input: 76543.21,
         type: NumberType.NFTCollectionStats,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('76,5\xa0mil')
-    expect(formatNumber({ input: 7.60000054321, type: NumberType.NFTCollectionStats })).toBe('8')
     expect(
       formatNumber({
         input: 7.60000054321,
         type: NumberType.NFTCollectionStats,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('8')
-    expect(formatNumber({ input: 1234567890, type: NumberType.NFTCollectionStats })).toBe('1.2B')
     expect(
       formatNumber({
         input: 1234567890,
         type: NumberType.NFTCollectionStats,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('1,2\xa0bi')
-    expect(formatNumber({ input: 1234567000000000, type: NumberType.NFTCollectionStats })).toBe('1234.6T')
     expect(
       formatNumber({
         input: 1234567000000000,
         type: NumberType.NFTCollectionStats,
-        locale: 'pt-BR',
-        localCurrency: Currency.Brl,
       })
     ).toBe('1234,6\xa0tri')
   })
