@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import {
   DEFAULT_LOCAL_CURRENCY,
   LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE,
@@ -12,6 +12,7 @@ import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useMemo } from 'react'
+import { Bound } from 'state/mint/v3/actions'
 
 type Nullish<T> = T | null | undefined
 type NumberFormatOptions = Intl.NumberFormatOptions
@@ -480,7 +481,7 @@ interface FormatPriceProps {
   conversionRate?: number
 }
 
-export function formatPrice({
+function formatPrice({
   price,
   type = NumberType.FiatTokenPrice,
   locale = DEFAULT_LOCALE,
@@ -492,6 +493,38 @@ export function formatPrice({
   }
 
   return formatNumber({ input: parseFloat(price.toSignificant()), type, locale, localCurrency, conversionRate })
+}
+
+interface FormatTickPriceProps {
+  price?: Price<Token, Token>
+  atLimit: { [bound in Bound]?: boolean | undefined }
+  direction: Bound
+  placeholder?: string
+  numberType?: NumberType
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+  conversionRate?: number
+}
+
+function formatTickPrice({
+  price,
+  atLimit,
+  direction,
+  placeholder,
+  numberType,
+  locale,
+  localCurrency,
+  conversionRate,
+}: FormatTickPriceProps) {
+  if (atLimit[direction]) {
+    return direction === Bound.LOWER ? '0' : '∞'
+  }
+
+  if (!price && placeholder !== undefined) {
+    return placeholder
+  }
+
+  return formatPrice({ price, type: numberType ?? NumberType.TokenNonTx, locale, localCurrency, conversionRate })
 }
 
 export function formatNumberOrString(price: Nullish<number | string>, type: FormatterType): string {
@@ -647,6 +680,17 @@ export function useFormatter() {
     [formatterLocale]
   )
 
+  const formatTickPriceWithLocales = useCallback(
+    (options: Omit<FormatTickPriceProps, LocalesType>) =>
+      formatTickPrice({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: localCurrencyConversionRateToFormatWith,
+      }),
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+  )
+
   return useMemo(
     () => ({
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
@@ -655,6 +699,7 @@ export function useFormatter() {
       formatPriceImpact: formatPriceImpactWithLocales,
       formatReviewSwapCurrencyAmount: formatReviewSwapCurrencyAmountWithLocales,
       formatSlippage: formatSlippageWithLocales,
+      formatTickPrice: formatTickPriceWithLocales,
     }),
     [
       formatCurrencyAmountWithLocales,
@@ -663,6 +708,7 @@ export function useFormatter() {
       formatPriceWithLocales,
       formatReviewSwapCurrencyAmountWithLocales,
       formatSlippageWithLocales,
+      formatTickPriceWithLocales,
     ]
   )
 }
