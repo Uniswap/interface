@@ -1,12 +1,4 @@
-import {
-  ApolloClient,
-  ApolloClientOptions,
-  ApolloLink,
-  concat,
-  HttpLink,
-  InMemoryCache,
-  NormalizedCacheObject,
-} from '@apollo/client'
+import { ApolloClient, ApolloLink, concat, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
 import { ChainId } from '@uniswap/sdk-core'
 
 import store from '../../state/index'
@@ -84,47 +76,33 @@ export const chainToApolloClient: Record<number, ApolloClient<NormalizedCacheObj
   }),
 }
 
-const baseOptions: ApolloClientOptions<NormalizedCacheObject> = {
-  cache: new InMemoryCache(),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'no-cache',
-    },
-    query: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'all',
-    },
-  },
-}
-
 export const chainToApolloBlockClient: Record<number, ApolloClient<NormalizedCacheObject>> = {
   [ChainId.MAINNET]: new ApolloClient({
     uri: CHAIN_BLOCK_SUBGRAPH_URL[ChainId.MAINNET],
-    ...baseOptions,
+    cache: new InMemoryCache(),
   }),
   [ChainId.ARBITRUM_ONE]: new ApolloClient({
     uri: CHAIN_BLOCK_SUBGRAPH_URL[ChainId.ARBITRUM_ONE],
-    ...baseOptions,
+    cache: new InMemoryCache(),
   }),
   [ChainId.OPTIMISM]: new ApolloClient({
     uri: CHAIN_BLOCK_SUBGRAPH_URL[ChainId.OPTIMISM],
-    ...baseOptions,
+    cache: new InMemoryCache(),
   }),
   [ChainId.POLYGON]: new ApolloClient({
     uri: CHAIN_BLOCK_SUBGRAPH_URL[ChainId.POLYGON],
-    ...baseOptions,
+    cache: new InMemoryCache(),
   }),
   [ChainId.CELO]: new ApolloClient({
     uri: CHAIN_BLOCK_SUBGRAPH_URL[ChainId.CELO],
-    ...baseOptions,
+    cache: new InMemoryCache(),
   }),
   [ChainId.BNB]: new ApolloClient({
     uri: CHAIN_BLOCK_SUBGRAPH_URL[ChainId.BNB],
-    ...baseOptions,
+    cache: new InMemoryCache(),
   }),
   [ChainId.AVALANCHE]: new ApolloClient({
     uri: CHAIN_BLOCK_SUBGRAPH_URL[ChainId.AVALANCHE],
-    ...baseOptions,
+    cache: new InMemoryCache(),
   }),
 }

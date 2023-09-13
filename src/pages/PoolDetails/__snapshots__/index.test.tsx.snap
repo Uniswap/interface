@@ -224,7 +224,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
         <div
           class="c7 css-1urox24"
         >
-          USDC / WETH (0x88e6...5640)
+          WMATIC / WETH (0x88e6...5640)
         </div>
       </div>
       <div
@@ -242,24 +242,24 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
             >
               <img
                 class="c13"
-                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270/logo.png"
               />
               <img
                 class="c13"
-                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/logo.png"
               />
             </div>
           </div>
           <div
             class="c7 css-1jyz67g"
           >
-            USDC / WETH
+            WMATIC / WETH
           </div>
         </div>
         <div
           class="c6 c14 css-1m65e73"
         >
-          0.05%
+          0.3%
         </div>
         <svg
           class="c15"

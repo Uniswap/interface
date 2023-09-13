@@ -22,6 +22,7 @@ jest.mock('graphql/thegraph/PoolData', () => {
 describe('PoolDetailsPage', () => {
   beforeEach(() => {
     jest.spyOn(Router, 'useParams').mockReturnValue(validParams)
+    // TODO: fix response format
     mocked(usePoolData).mockReturnValue(validPoolDataResponse)
   })
 
