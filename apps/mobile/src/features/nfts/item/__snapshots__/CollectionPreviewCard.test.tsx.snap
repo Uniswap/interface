@@ -317,7 +317,7 @@ exports[`renders collection preview card 1`] = `
             }
             strokeLinecap={1}
             strokeLinejoin={1}
-            strokeWidth="2"
+            strokeWidth="3"
           />
         </RNSVGGroup>
       </RNSVGSvgView>

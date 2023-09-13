@@ -12,7 +12,7 @@ export const [Chevron, AnimatedChevron] = createIcon({
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="2"
+        strokeWidth="3"
       />
     </Svg>
   ),

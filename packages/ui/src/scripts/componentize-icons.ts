@@ -139,6 +139,8 @@ async function generateSVGComponents(directoryPair: SVGDirectorySourceAndOutput)
         .replace(new RegExp('</defs', 'g'), '</Defs')
         .replace(new RegExp('<stop', 'g'), '<Stop')
         .replace(new RegExp('</stop', 'g'), '</Stop')
+        .replace(new RegExp('<clipPath', 'g'), '<ClipPath')
+        .replace(new RegExp('</clipPath', 'g'), '</ClipPath')
         .replace(new RegExp('px', 'g'), '')
 
       const foundFills = Array.from(parsedSvgToReact.matchAll(/fill="(#[a-z0-9]+)"/gi)).flat()
@@ -164,7 +166,8 @@ import {
   Text as _Text,
   Use,
   Defs,
-  Stop
+  Stop,
+  ClipPath
 } from 'react-native-svg'
 
 // eslint-disable-next-line no-relative-import-paths/no-relative-import-paths

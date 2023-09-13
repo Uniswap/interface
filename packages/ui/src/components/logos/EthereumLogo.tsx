@@ -1,4 +1,4 @@
-import { Circle as _Circle, Defs, G, Path, Rect, Svg } from 'react-native-svg'
+import { Circle as _Circle, ClipPath, Defs, G, Path, Rect, Svg } from 'react-native-svg'
 
 // eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
 import { createIcon } from '../factories/createIcon'
@@ -36,9 +36,9 @@ export const [EthereumLogo, AnimatedEthereumLogo] = createIcon({
         />
       </G>
       <Defs>
-        <clipPath id="clip0_2_30">
+        <ClipPath id="clip0_2_30">
           <Rect fill="white" height="20" width="20" />
-        </clipPath>
+        </ClipPath>
       </Defs>
     </Svg>
   ),

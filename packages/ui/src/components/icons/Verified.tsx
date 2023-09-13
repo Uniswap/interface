@@ -1,4 +1,4 @@
-import { Defs, G, Path, Rect, Svg } from 'react-native-svg'
+import { ClipPath, Defs, G, Path, Rect, Svg } from 'react-native-svg'
 
 // eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
 import { createIcon } from '../factories/createIcon'
@@ -18,9 +18,9 @@ export const [Verified, AnimatedVerified] = createIcon({
         />
       </G>
       <Defs>
-        <clipPath id="clip0_1010_7085">
+        <ClipPath id="clip0_1010_7085">
           <Rect fill="white" height="16" width="16" />
-        </clipPath>
+        </ClipPath>
       </Defs>
     </Svg>
   ),
