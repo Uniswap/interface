@@ -1,10 +1,9 @@
 import React, { PropsWithChildren } from 'react'
-import { Box } from 'src/components/layout/Box'
-import { Theme } from 'ui/src/theme/restyle'
+import { Flex, SpaceTokens } from 'ui/src'
 
 interface InsetProps {
   /** applies consistent padding to each side */
-  all?: keyof Theme['spacing']
+  all?: SpaceTokens
 }
 
 /**
@@ -16,6 +15,13 @@ interface InsetProps {
  *  API can be expanded to specific sides
  *  Debug options to color bg to debug spacing
  */
-export function Inset({ all = 'spacing16', children }: PropsWithChildren<InsetProps>): JSX.Element {
-  return <Box p={all}>{children}</Box>
+export function Inset({
+  all = '$spacing16',
+  children,
+}: PropsWithChildren<InsetProps>): JSX.Element {
+  return (
+    <Flex gap="$none" p={all}>
+      {children}
+    </Flex>
+  )
 }

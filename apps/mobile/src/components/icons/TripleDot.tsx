@@ -1,18 +1,17 @@
 import React, { memo } from 'react'
-import { Box, Flex } from 'src/components/layout'
-import { Theme } from 'ui/src/theme/restyle'
+import { ColorTokens, Flex } from 'ui/src'
 
 type Props = {
   size?: number
-  color?: keyof Theme['colors']
+  color?: ColorTokens
 }
 
-export const TripleDot = memo(function _TripleDot({ size = 5, color = 'neutral2' }: Props) {
+export const TripleDot = memo(function _TripleDot({ size = 5, color = '$neutral2' }: Props) {
   return (
-    <Flex row gap="spacing4">
-      <Box bg={color} borderRadius="roundedFull" height={size} width={size} />
-      <Box bg={color} borderRadius="roundedFull" height={size} width={size} />
-      <Box bg={color} borderRadius="roundedFull" height={size} width={size} />
+    <Flex row gap="$spacing4">
+      <Flex bg={color} borderRadius="$roundedFull" gap="$none" height={size} width={size} />
+      <Flex bg={color} borderRadius="$roundedFull" gap="$none" height={size} width={size} />
+      <Flex bg={color} borderRadius="$roundedFull" gap="$none" height={size} width={size} />
     </Flex>
   )
 })

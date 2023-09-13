@@ -4,75 +4,67 @@ exports[`renders wallet loader 1`] = `
 <View
   sentry-label="WalletLoader"
   style={
-    [
-      {
-        "alignItems": "center",
-        "borderColor": "#2222220D",
-        "borderRadius": 20,
-        "borderWidth": 1,
-        "display": "flex",
-        "flexDirection": "row",
-        "justifyContent": "flex-start",
-        "opacity": 1,
-        "overflow": "hidden",
-        "paddingHorizontal": 16,
-        "paddingVertical": 16,
-      },
-    ]
+    {
+      "alignItems": "center",
+      "borderBottomColor": "#2222220D",
+      "borderBottomLeftRadius": 20,
+      "borderBottomRightRadius": 20,
+      "borderBottomWidth": 1,
+      "borderLeftColor": "#2222220D",
+      "borderLeftWidth": 1,
+      "borderRightColor": "#2222220D",
+      "borderRightWidth": 1,
+      "borderStyle": "solid",
+      "borderTopColor": "#2222220D",
+      "borderTopLeftRadius": 20,
+      "borderTopRightRadius": 20,
+      "borderTopWidth": 1,
+      "flexDirection": "row",
+      "gap": 16,
+      "justifyContent": "flex-start",
+      "opacity": 1,
+      "overflow": "hidden",
+      "paddingBottom": 16,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
+    }
   }
 >
   <View
-    sentry-label="Flex"
     style={
-      [
-        {
-          "alignItems": "center",
-          "display": "flex",
-          "flexDirection": "row",
-          "height": 36,
-          "justifyContent": "flex-start",
-        },
-      ]
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 12,
+        "height": 36,
+      }
     }
   >
     <View
       style={
-        [
-          {
-            "backgroundColor": "#2222220D",
-            "borderRadius": 999999,
-            "display": "flex",
-            "height": 32,
-            "width": 32,
-          },
-        ]
+        {
+          "alignItems": "stretch",
+          "backgroundColor": "#2222220D",
+          "borderBottomLeftRadius": 999999,
+          "borderBottomRightRadius": 999999,
+          "borderTopLeftRadius": 999999,
+          "borderTopRightRadius": 999999,
+          "flexDirection": "column",
+          "gap": 0,
+          "height": 32,
+          "width": 32,
+        }
       }
     />
     <View
       style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 12,
-            "width": 12,
-          },
-        ]
-      }
-    />
-    <View
-      sentry-label="Flex"
-      style={
-        [
-          {
-            "alignItems": "flex-start",
-            "display": "flex",
-            "flexDirection": "column",
-            "justifyContent": "flex-start",
-            "width": "100%",
-          },
-        ]
+        {
+          "alignItems": "flex-start",
+          "flexDirection": "column",
+          "gap": 0,
+          "width": "100%",
+        }
       }
     >
       <View
@@ -80,25 +72,21 @@ exports[`renders wallet loader 1`] = `
       >
         <View
           style={
-            [
-              {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
-              },
-            ]
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 16,
+            }
           }
         >
           <View
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "display": "flex",
-                  "flexDirection": "row",
-                  "position": "relative",
-                },
-              ]
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 16,
+                "position": "relative",
+              }
             }
           >
             <View
@@ -127,59 +115,46 @@ exports[`renders wallet loader 1`] = `
             </View>
             <View
               style={
-                [
-                  {
-                    "backgroundColor": "#2222220D",
-                    "borderRadius": 4,
-                    "bottom": "5%",
-                    "display": "flex",
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": "5%",
-                  },
-                ]
+                {
+                  "alignItems": "stretch",
+                  "backgroundColor": "#2222220D",
+                  "borderBottomLeftRadius": 4,
+                  "borderBottomRightRadius": 4,
+                  "borderTopLeftRadius": 4,
+                  "borderTopRightRadius": 4,
+                  "bottom": "5%",
+                  "flexDirection": "column",
+                  "gap": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": "5%",
+                }
               }
             />
           </View>
         </View>
       </View>
       <View
-        style={
-          [
-            {
-              "display": "flex",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "height": 0,
-            },
-          ]
-        }
-      />
-      <View
         onLayout={[Function]}
       >
         <View
           style={
-            [
-              {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
-              },
-            ]
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 16,
+            }
           }
         >
           <View
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "display": "flex",
-                  "flexDirection": "row",
-                  "position": "relative",
-                },
-              ]
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 16,
+                "position": "relative",
+              }
             }
           >
             <View
@@ -208,18 +183,21 @@ exports[`renders wallet loader 1`] = `
             </View>
             <View
               style={
-                [
-                  {
-                    "backgroundColor": "#2222220D",
-                    "borderRadius": 4,
-                    "bottom": "5%",
-                    "display": "flex",
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": "5%",
-                  },
-                ]
+                {
+                  "alignItems": "stretch",
+                  "backgroundColor": "#2222220D",
+                  "borderBottomLeftRadius": 4,
+                  "borderBottomRightRadius": 4,
+                  "borderTopLeftRadius": 4,
+                  "borderTopRightRadius": 4,
+                  "bottom": "5%",
+                  "flexDirection": "column",
+                  "gap": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": "5%",
+                }
               }
             />
           </View>

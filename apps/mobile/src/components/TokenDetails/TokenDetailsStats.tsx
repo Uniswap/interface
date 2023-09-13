@@ -108,7 +108,7 @@ export function TokenDetailsStats({
           )}
           <Flex gap="spacing16">
             <LongText
-              gap="spacing2"
+              gap="$spacing2"
               initialDisplayedLines={5}
               linkColor={tokenColor ?? theme.colors.neutral1}
               readMoreOrLessColor={tokenColor ?? theme.colors.neutral2}

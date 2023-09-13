@@ -128,27 +128,23 @@ exports[`AccountList renders without error 1`] = `
           }
         >
           <View
-            sentry-label="Flex"
             style={
-              [
-                {
-                  "alignItems": "flex-start",
-                  "display": "flex",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                },
-              ]
+              {
+                "alignItems": "flex-start",
+                "flexDirection": "row",
+                "gap": 16,
+              }
             }
             testID="account_item/0x82D56A352367453f74FC0dC7B071b311da373Fa6"
           >
             <View
               style={
-                [
-                  {
-                    "display": "flex",
-                    "flex": 1,
-                  },
-                ]
+                {
+                  "alignItems": "stretch",
+                  "flex": 1,
+                  "flexDirection": "column",
+                  "gap": 0,
+                }
               }
             >
               <View
@@ -162,12 +158,12 @@ exports[`AccountList renders without error 1`] = `
               >
                 <View
                   style={
-                    [
-                      {
-                        "display": "flex",
-                        "position": "relative",
-                      },
-                    ]
+                    {
+                      "alignItems": "stretch",
+                      "flexDirection": "column",
+                      "gap": 0,
+                      "position": "relative",
+                    }
                   }
                 >
                   <View
@@ -197,24 +193,24 @@ exports[`AccountList renders without error 1`] = `
                   >
                     <View
                       style={
-                        [
-                          {
-                            "display": "flex",
-                            "height": 36,
-                            "width": 36,
-                          },
-                        ]
+                        {
+                          "alignItems": "stretch",
+                          "flexDirection": "column",
+                          "gap": 0,
+                          "height": 36,
+                          "width": 36,
+                        }
                       }
                     >
                       <View
                         style={
-                          [
-                            {
-                              "display": "flex",
-                              "height": 36,
-                              "width": 36,
-                            },
-                          ]
+                          {
+                            "alignItems": "stretch",
+                            "flexDirection": "column",
+                            "gap": 0,
+                            "height": 36,
+                            "width": 36,
+                          }
                         }
                       >
                         <View
@@ -388,19 +384,6 @@ exports[`AccountList renders without error 1`] = `
                 </View>
               </View>
             </View>
-            <View
-              style={
-                [
-                  {
-                    "display": "flex",
-                    "flexGrow": 0,
-                    "flexShrink": 0,
-                    "height": 16,
-                    "width": 16,
-                  },
-                ]
-              }
-            />
             <Text
               allowFontScaling={true}
               maxFontSizeMultiplier={1.4}

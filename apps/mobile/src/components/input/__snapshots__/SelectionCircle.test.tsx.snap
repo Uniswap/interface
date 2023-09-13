@@ -2,35 +2,45 @@
 
 exports[`renders selection circle 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "center",
-        "borderColor": "#FC72FF",
-        "borderRadius": 999999,
-        "borderWidth": 1,
-        "display": "flex",
-        "flexDirection": "column",
-        "height": 20,
-        "justifyContent": "center",
-        "width": 20,
-      },
-    ]
+    {
+      "alignItems": "center",
+      "borderBottomColor": "#FC72FF",
+      "borderBottomLeftRadius": 999999,
+      "borderBottomRightRadius": 999999,
+      "borderBottomWidth": 1,
+      "borderLeftColor": "#FC72FF",
+      "borderLeftWidth": 1,
+      "borderRightColor": "#FC72FF",
+      "borderRightWidth": 1,
+      "borderStyle": "solid",
+      "borderTopColor": "#FC72FF",
+      "borderTopLeftRadius": 999999,
+      "borderTopRightRadius": 999999,
+      "borderTopWidth": 1,
+      "flexDirection": "column",
+      "gap": 16,
+      "height": 20,
+      "justifyContent": "center",
+      "width": 20,
+    }
   }
 >
   <View
     style={
-      [
-        {
-          "backgroundColor": "#FC72FF",
-          "borderRadius": 999999,
-          "display": "flex",
-          "height": 10,
-          "opacity": 1,
-          "width": 10,
-        },
-      ]
+      {
+        "alignItems": "stretch",
+        "backgroundColor": "#FC72FF",
+        "borderBottomLeftRadius": 999999,
+        "borderBottomRightRadius": 999999,
+        "borderTopLeftRadius": 999999,
+        "borderTopRightRadius": 999999,
+        "flexDirection": "column",
+        "gap": 0,
+        "height": 10,
+        "opacity": 1,
+        "width": 10,
+      }
     }
   />
 </View>

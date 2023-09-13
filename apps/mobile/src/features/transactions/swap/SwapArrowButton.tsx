@@ -2,7 +2,7 @@ import React, { ComponentProps, useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
-import { Box } from 'src/components/layout'
+import { Flex } from 'ui/src'
 
 type SwapArrowButtonProps = Pick<
   ComponentProps<typeof TouchableArea>,
@@ -36,9 +36,9 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
         onPress={onPress}
         {...rest}>
         {/* hack to add 2px more padding without adjusting design system values */}
-        <Box alignItems="center" justifyContent="center" p="spacing2">
+        <Flex centered gap="$none" p="$spacing2">
           <Arrow color={theme.colors.neutral2} direction="s" size={size} />
-        </Box>
+        </Flex>
       </TouchableArea>
     ),
     [bg, disabled, onPress, testID, rest, theme.colors.neutral2, size]

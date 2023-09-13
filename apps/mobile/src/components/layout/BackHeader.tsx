@@ -1,8 +1,6 @@
-import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React, { PropsWithChildren } from 'react'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { Box, Flex } from 'src/components/layout'
-import { Theme } from 'ui/src/theme/restyle'
+import { Flex, StackProps } from 'ui/src'
 
 const BACK_BUTTON_SIZE = 24
 
@@ -10,13 +8,12 @@ type BackButtonRowProps = {
   alignment?: 'left' | 'center'
   endAdornment?: JSX.Element
   onPressBack?: () => void
-} & SpacingProps<Theme> &
-  SpacingShorthandProps<Theme>
+} & StackProps
 
 export function BackHeader({
   alignment = 'center',
   children,
-  endAdornment = <Box width={BACK_BUTTON_SIZE} />,
+  endAdornment = <Flex gap="$none" width={BACK_BUTTON_SIZE} />,
   onPressBack,
   ...spacingProps
 }: PropsWithChildren<BackButtonRowProps>): JSX.Element {

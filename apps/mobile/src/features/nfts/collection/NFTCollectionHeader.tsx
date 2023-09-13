@@ -5,13 +5,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
-import { IS_ANDROID } from 'src/constants/globals'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
-import { Logos } from 'ui/src'
+import { Flex, Logos, StackProps } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
@@ -54,7 +52,7 @@ export function NFTCollectionHeader({
     maxHeight: adjustedBannerHeight,
   }
 
-  const bannerLoadingStyle: BoxProps['style'] = {
+  const bannerLoadingStyle: StackProps['style'] = {
     ...bannerImageStyle,
     overflow: 'hidden',
   }
@@ -74,7 +72,7 @@ export function NFTCollectionHeader({
 
   return (
     <>
-      <Flex gap="spacing12" mb="spacing16" pb="spacing4">
+      <Flex gap="$spacing12" mb="$spacing16" pb="$spacing4">
         {/* Banner image*/}
         {loading || !!bannerImageUrl ? (
           <ImageUri
@@ -86,7 +84,8 @@ export function NFTCollectionHeader({
           />
         ) : (
           // No uri found on collection
-          <Box
+          <Flex
+            gap="$none"
             style={[
               bannerImageStyle,
               { backgroundColor: bannerColorsFallback?.base ?? theme.colors.surface2 },
@@ -95,7 +94,12 @@ export function NFTCollectionHeader({
         )}
 
         {/* Banner buttons */}
-        <Flex row alignItems="center" justifyContent="space-between" mx="spacing24" pt="spacing48">
+        <Flex
+          row
+          alignItems="center"
+          justifyContent="space-between"
+          mx="$spacing24"
+          pt="$spacing48">
           <TouchableArea
             hapticFeedback
             backgroundColor="sporeBlack"
@@ -108,32 +112,34 @@ export function NFTCollectionHeader({
           <NFTCollectionContextMenu
             collectionAddress={collectionAddress}
             data={data}
-            iconColor="sporeWhite"
+            iconColor="$sporeWhite"
             showButtonOutline={true}
           />
         </Flex>
 
         {/* Profile image */}
-        <Flex gap="none" px="spacing24" style={profileImageWrapperStyle}>
+        <Flex gap="$none" px="$spacing24" style={profileImageWrapperStyle}>
           <Flex
             alignItems="center"
-            bg="surface1"
-            borderRadius="roundedFull"
+            bg="$surface1"
+            borderRadius="$roundedFull"
             height={PROFILE_IMAGE_WRAPPER_SIZE}
             justifyContent="center"
             width={PROFILE_IMAGE_WRAPPER_SIZE}>
             {data?.image?.url ? (
-              <Box
+              <Flex
+                gap="$none"
                 height={PROFILE_IMAGE_SIZE}
                 overflow="hidden"
                 style={{ borderRadius: PROFILE_IMAGE_SIZE }}
                 width={PROFILE_IMAGE_SIZE}>
                 <NFTViewer uri={data.image.url} />
-              </Box>
+              </Flex>
             ) : (
-              <Box
-                backgroundColor="surface2"
-                borderRadius="roundedFull"
+              <Flex
+                backgroundColor="$surface2"
+                borderRadius="$roundedFull"
+                gap="$none"
                 height={PROFILE_IMAGE_SIZE}
                 width={PROFILE_IMAGE_SIZE}
               />
@@ -143,11 +149,11 @@ export function NFTCollectionHeader({
 
         {/* Collection stats */}
         <Flex
-          gap="spacing4"
-          pt="spacing12"
-          px="spacing24"
+          gap="$spacing4"
+          pt="$spacing12"
+          px="$spacing24"
           style={{ marginTop: PROFILE_IMAGE_WRAPPER_SIZE }}>
-          <Flex row alignItems="center" gap="spacing8">
+          <Flex row alignItems="center" gap="$spacing8">
             <Text loading={loading} loadingPlaceholderText="Collection Name" variant="subheadLarge">
               {data?.name ?? '-'}
             </Text>
@@ -160,8 +166,8 @@ export function NFTCollectionHeader({
             ) : null}
           </Flex>
 
-          <Flex row gap="spacing24" justifyContent="space-between">
-            <Flex fill alignItems="flex-start" gap="spacing4">
+          <Flex row gap="$spacing24" justifyContent="space-between">
+            <Flex fill alignItems="flex-start" gap="$spacing4">
               <Text color="neutral2" variant="subheadSmall">
                 {t('Items')}
               </Text>
@@ -169,7 +175,7 @@ export function NFTCollectionHeader({
                 {formatNumber(data?.numAssets, NumberType.NFTCollectionStats)}
               </Text>
             </Flex>
-            <Flex fill alignItems="flex-start" gap="spacing4">
+            <Flex fill alignItems="flex-start" gap="$spacing4">
               <Text color="neutral2" variant="subheadSmall">
                 {t('Owners')}
               </Text>
@@ -177,11 +183,11 @@ export function NFTCollectionHeader({
                 {formatNumber(collectionStats?.owners, NumberType.NFTCollectionStats)}
               </Text>
             </Flex>
-            <Flex fill alignItems="flex-start" gap="spacing4">
+            <Flex fill alignItems="flex-start" gap="$spacing4">
               <Text color="neutral2" variant="subheadSmall">
                 {t('Floor')}
               </Text>
-              <Flex row alignItems="center" gap="none">
+              <Flex row alignItems="center" gap="$none">
                 <Text loading={loading} variant="bodyLarge">
                   {`${formatNumber(
                     collectionStats?.floorPrice?.value,
@@ -193,11 +199,11 @@ export function NFTCollectionHeader({
                 ) : null}
               </Flex>
             </Flex>
-            <Flex fill alignItems="flex-start" gap="spacing4">
+            <Flex fill alignItems="flex-start" gap="$spacing4">
               <Text color="neutral2" variant="subheadSmall">
                 {t('Volume')}
               </Text>
-              <Flex row alignItems="center" gap="spacing4">
+              <Flex row alignItems="center" gap="$spacing4">
                 <Text loading={loading} pr="spacing1" variant="bodyLarge">
                   {`${formatNumber(
                     collectionStats?.totalVolume?.value,
@@ -214,10 +220,7 @@ export function NFTCollectionHeader({
           {/* Collection description */}
           {data?.description ? (
             <LongText
-              codeBackgroundColor={
-                IS_ANDROID ? theme.colors.surface3 : theme.colors.DEP_backgroundOverlay
-              }
-              gap="none"
+              gap="$none"
               initialDisplayedLines={3}
               lineBreakMode="tail"
               mt="spacing4"
@@ -225,7 +228,7 @@ export function NFTCollectionHeader({
               text={data?.description}
             />
           ) : loading ? (
-            <Flex gap="spacing8">
+            <Flex gap="$spacing8">
               <Loader.Box height={theme.spacing.spacing16} width="100%" />
               <Loader.Box height={theme.spacing.spacing16} width="100%" />
               <Loader.Box height={theme.spacing.spacing16} width="100%" />

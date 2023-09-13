@@ -2,10 +2,10 @@ import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
+import { Flex } from 'ui/src'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export function OptionCard({
@@ -56,29 +56,30 @@ export function OptionCard({
         p="spacing16"
         testID={elementName}
         onPress={onPress}>
-        <Flex row alignContent="center" alignItems="center" gap="spacing16">
-          <Box
+        <Flex row alignContent="center" alignItems="center" gap="$spacing16">
+          <Flex
             alignItems="center"
-            backgroundColor="DEP_magentaDark"
-            borderRadius="roundedFull"
+            backgroundColor="$DEP_magentaDark"
+            borderRadius="$roundedFull"
+            gap="$none"
             height={iconSize}
             justifyContent="center"
-            padding="spacing16"
+            padding="$spacing16"
             width={iconSize}>
             {icon}
-          </Box>
-          <Flex row alignItems="center" gap="spacing4" paddingRight="spacing60">
-            <Flex fill alignItems="flex-start" gap="spacing4" justifyContent="space-around">
-              <Flex row gap="spacing8">
+          </Flex>
+          <Flex row alignItems="center" gap="$spacing4" pr="$spacing60">
+            <Flex fill alignItems="flex-start" gap="$spacing4" justifyContent="space-around">
+              <Flex row gap="$spacing8">
                 <Text allowFontScaling={false} variant={titleSize}>
                   {title}
                 </Text>
                 {badgeText && (
                   <Flex
                     centered
-                    backgroundColor="DEP_magentaDark"
-                    borderRadius="rounded8"
-                    px="spacing8">
+                    backgroundColor="$DEP_magentaDark"
+                    borderRadius="$rounded8"
+                    px="$spacing8">
                     <Text color="accent1" variant="buttonLabelMicro">
                       {badgeText}
                     </Text>

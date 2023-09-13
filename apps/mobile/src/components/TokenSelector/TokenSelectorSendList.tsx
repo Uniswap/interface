@@ -1,10 +1,8 @@
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Flex } from 'src/components/layout'
-import { usePortfolioTokenOptions } from 'src/components/TokenSelector/hooks'
-
 import { useAppDispatch } from 'src/app/hooks'
 import { BaseCard } from 'src/components/layout/BaseCard'
+import { usePortfolioTokenOptions } from 'src/components/TokenSelector/hooks'
 import {
   OnSelectCurrency,
   SectionHeader,
@@ -18,6 +16,7 @@ import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { Flex } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
@@ -78,9 +77,9 @@ function EmptyList({ onClose }: { onClose: () => void }): JSX.Element {
   return (
     <Flex>
       <SectionHeader title={t('Your tokens')} />
-      <Box paddingHorizontal="spacing16" paddingTop="spacing16">
+      <Flex gap="$none" paddingHorizontal="$spacing16" paddingTop="$spacing16">
         {isLoading ? (
-          <Flex centered row flexDirection="row" gap="spacing4" mt="spacing60" p="spacing4">
+          <Flex centered row flexDirection="row" gap="$spacing4" mt="$spacing60" p="$spacing4">
             <SpinningLoader color="neutral3" size={iconSizes.icon64} />
           </Flex>
         ) : (
@@ -95,7 +94,7 @@ function EmptyList({ onClose }: { onClose: () => void }): JSX.Element {
             onPress={onEmptyActionPress}
           />
         )}
-      </Box>
+      </Flex>
     </Flex>
   )
 }

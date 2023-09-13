@@ -99,7 +99,7 @@ export function CloudBackupProcessingAnimation({
   ) : (
     <Flex centered grow gap="spacing24">
       <CheckmarkCircle
-        borderColor="statusSuccess"
+        borderColor="$statusSuccess"
         borderWidth={3}
         checkmarkStrokeWidth={2}
         color={theme.colors.statusSuccess}

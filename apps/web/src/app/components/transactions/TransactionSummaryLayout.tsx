@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Box, Flex, Icons, Text } from 'ui/src'
+import { Flex, Icons, Text } from 'ui/src'
 import { TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import {
   getTransactionSummaryTitle,
@@ -38,14 +38,14 @@ function TransactionSummaryLayout({
       width={TXN_STATUS_ICON_SIZE}
     />
   ) : status === TransactionStatus.Failed ? (
-    <Box alignItems="flex-end" flexGrow={1} justifyContent="space-between">
+    <Flex grow alignItems="flex-end" gap="$none" justifyContent="space-between">
       <Icons.AlertTriangle
         color="DEP_accentWarning"
         fill="surface1"
         height={TXN_STATUS_ICON_SIZE}
         width={TXN_STATUS_ICON_SIZE}
       />
-    </Box>
+    </Flex>
   ) : (
     <Text color="$neutral3" variant="bodyMicro">
       {formattedAddedTime}
@@ -69,11 +69,11 @@ function TransactionSummaryLayout({
               {!inProgress && rightBlock}
             </Flex>
             <Flex grow row>
-              <Box flexGrow={1} flexShrink={1}>
+              <Flex grow shrink gap="$none">
                 <Text color="$neutral1" variant="bodyMicro">
                   {caption}
                 </Text>
-              </Box>
+              </Flex>
             </Flex>
           </Flex>
         </Flex>

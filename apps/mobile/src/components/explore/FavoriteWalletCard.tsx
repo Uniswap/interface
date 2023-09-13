@@ -8,10 +8,9 @@ import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import RemoveButton from 'src/components/explore/RemoveButton'
-import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Text } from 'src/components/Text'
 import { removeWatchedAddress } from 'src/features/favorites/slice'
+import { Flex, Text } from 'ui/src'
 import { flex, theme } from 'ui/src/theme/restyle'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -80,12 +79,12 @@ export default function FavoriteWalletCard({
           await preload(address)
         }}>
         <BaseCard.Shadow>
-          <Flex row gap="spacing4" justifyContent="space-between">
-            <Flex row shrink alignItems="center" gap="spacing8">
+          <Flex row gap="$spacing4" justifyContent="space-between">
+            <Flex row shrink alignItems="center" gap="$spacing8">
               {icon}
               <Text
                 adjustsFontSizeToFit={displayName?.type === 'address'}
-                color="neutral1"
+                color="$neutral1"
                 numberOfLines={1}
                 style={flex.shrink}
                 variant="bodyLarge">
@@ -95,7 +94,7 @@ export default function FavoriteWalletCard({
             {isEditing ? (
               <RemoveButton onPress={onRemove} />
             ) : (
-              <Box height={theme.imageSizes.image24} />
+              <Flex gap="$none" height={theme.imageSizes.image24} />
             )}
           </Flex>
         </BaseCard.Shadow>

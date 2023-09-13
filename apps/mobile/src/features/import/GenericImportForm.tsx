@@ -1,4 +1,4 @@
-import { ResponsiveValue, useResponsiveProp } from '@shopify/restyle'
+import { useResponsiveProp } from '@shopify/restyle'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -15,7 +15,6 @@ import Trace from 'src/components/Trace/Trace'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { SectionName } from 'src/features/telemetry/constants'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
-import { Theme } from 'ui/src/theme/restyle'
 
 interface Props {
   value: string | undefined
@@ -27,7 +26,7 @@ interface Props {
   inputSuffix?: string //text to auto to end of input string
   liveCheck?: boolean
   autoCorrect?: boolean
-  inputAlignment?: ResponsiveValue<'center' | 'flex-start', Theme>
+  inputAlignment?: 'center' | 'flex-start'
   onBlur?: () => void
   onFocus?: () => void
   beforePasteButtonPress?: () => void

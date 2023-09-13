@@ -3,7 +3,7 @@ import React, { memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex, Inset } from 'src/components/layout'
+import { Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -12,7 +12,7 @@ import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Icons } from 'ui/src'
+import { Flex, Icons } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import { fromMoonpayNetwork } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
@@ -128,7 +128,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
     return (
       <>
         <Header onBack={onBack} />
-        <Box alignItems="center" flexGrow={1} justifyContent="center">
+        <Flex centered grow gap="$none">
           <BaseCard.ErrorState
             retryButtonLabel="Retry"
             title={t('Couldn’t load tokens to buy')}
@@ -141,27 +141,27 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
               }
             }}
           />
-        </Box>
+        </Flex>
       </>
     )
   }
 
   if (supportedTokensLoading || loading) {
     return (
-      <Box>
+      <Flex gap="$none">
         <Header onBack={onBack} />
         <Loader.Token repeat={5} />
-      </Box>
+      </Flex>
     )
   }
 
   return (
-    <Box flexGrow={1}>
+    <Flex flexGrow={1} gap="$none">
       <Header onBack={onBack} />
       <BottomSheetFlatList
         ref={flatListRef}
         ListEmptyComponent={<Flex />}
-        ListFooterComponent={<Inset all="spacing36" />}
+        ListFooterComponent={<Inset all="$spacing36" />}
         data={data}
         keyExtractor={key}
         keyboardDismissMode="on-drag"
@@ -170,19 +170,19 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
         showsVerticalScrollIndicator={false}
         windowSize={5}
       />
-    </Box>
+    </Flex>
   )
 }
 
 function Header({ onBack }: { onBack: () => void }): JSX.Element {
   const { t } = useTranslation()
   return (
-    <Flex row justifyContent="space-between" my="spacing16">
+    <Flex row justifyContent="space-between" my="$spacing16">
       <TouchableArea testID={ElementName.Back} onPress={onBack}>
         <Icons.RotatableChevron color="$neutral1" />
       </TouchableArea>
       <Text variant="bodyLarge">{t('Select a token to buy')}</Text>
-      <Box width={24} />
+      <Flex gap="$none" width={24} />
     </Flex>
   )
 }

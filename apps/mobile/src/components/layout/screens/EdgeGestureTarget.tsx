@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box } from 'src/components/layout'
+import { Flex } from 'ui/src'
 import { dimensions } from 'ui/src/theme'
 
 /**
@@ -18,8 +18,9 @@ export function HorizontalEdgeGestureTarget({
   width?: number
 }): JSX.Element {
   return (
-    <Box
-      bg="accent1"
+    <Flex
+      bg="$accent1"
+      gap="$none"
       height={height}
       left={edge === 'left' ? 0 : undefined}
       opacity={0}

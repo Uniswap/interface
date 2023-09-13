@@ -6,8 +6,6 @@ import { useAppTheme } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { Box } from 'src/components/layout/Box'
-import { Flex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
@@ -15,7 +13,7 @@ import { IS_ANDROID } from 'src/constants/globals'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { Icons } from 'ui/src'
+import { Flex, Icons } from 'ui/src'
 
 type Props = NativeStackScreenProps<
   SettingsStackParamList,
@@ -47,9 +45,9 @@ export function SettingsCloudBackupPasswordCreateScreen({
 
   return (
     <Screen mx="$spacing16" my="$spacing16">
-      <BackHeader mb="spacing16" />
+      <BackHeader mb="$spacing16" />
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
-        <Flex alignItems="center" justifyContent="space-between" mb="spacing24" mx="spacing12">
+        <Flex alignItems="center" justifyContent="space-between" mb="$spacing24" mx="$spacing12">
           <Text variant="headlineSmall">
             {IS_ANDROID ? t('Back up to Google Drive') : t('Back up to iCloud')}
           </Text>
@@ -68,19 +66,20 @@ export function SettingsCloudBackupPasswordCreateScreen({
           <BottomSheetModal
             backgroundColor={theme.colors.surface2}
             name={ModalName.CloudBackupInfo}>
-            <Flex gap="none" mb="spacing36" px="spacing16" py="spacing12">
-              <Flex centered gap="spacing16">
-                <Box
-                  borderColor="accent1"
-                  borderRadius="rounded12"
+            <Flex gap="$none" mb="$spacing36" px="$spacing16" py="$spacing12">
+              <Flex centered gap="$spacing16">
+                <Flex
+                  borderColor="$accent1"
+                  borderRadius="$rounded12"
                   borderWidth={1}
-                  padding="spacing12">
+                  gap="$none"
+                  padding="$spacing12">
                   <Icons.OSDynamicCloudIcon
                     color={theme.colors.accent1}
                     height={theme.iconSizes.icon20}
                     width={theme.iconSizes.icon20}
                   />
-                </Box>
+                </Flex>
                 <Text textAlign="center" variant="buttonLabelMedium">
                   {IS_ANDROID
                     ? t('Back up recovery phrase to Google Drive?')
@@ -96,7 +95,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
                       )}
                 </Text>
               </Flex>
-              <Flex centered row gap="spacing12" pt="spacing24">
+              <Flex centered row gap="$spacing12" pt="$spacing24">
                 <Button
                   fill
                   emphasis={ButtonEmphasis.Tertiary}

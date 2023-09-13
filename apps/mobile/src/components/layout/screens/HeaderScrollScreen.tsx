@@ -3,14 +3,14 @@ import React, { PropsWithChildren, useRef } from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAnimatedScrollHandler, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import { Box } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
-import { ColorTokens } from 'ui/src'
-import { flex, theme as FixedTheme } from 'ui/src/theme/restyle'
+import { ColorTokens, Flex } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
+import { flex } from 'ui/src/theme/restyle'
 
 // Distance to scroll to show scrolled state header elements
 const SHOW_HEADER_SCROLL_Y_DISTANCE = 50
@@ -28,7 +28,7 @@ type HeaderScrollScreenProps = {
 
 export function HeaderScrollScreen({
   centerElement,
-  rightElement = <Box width={FixedTheme.iconSizes.icon24} />,
+  rightElement = <Flex gap="$none" width={iconSizes.icon24} />,
   alwaysShowCenterElement,
   fullScreen = false,
   renderedInModal = false,

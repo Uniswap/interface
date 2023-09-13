@@ -9,7 +9,6 @@ import { AppStackParamList } from 'src/app/navigation/types'
 import { ActivityTab } from 'src/components/home/ActivityTab'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
-import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { renderTabLabel, TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import Trace from 'src/components/Trace/Trace'
@@ -18,6 +17,7 @@ import ProfileHeader from 'src/features/externalProfile/ProfileHeader'
 import { SectionName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
+import { Flex } from 'ui/src'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.ExternalProfile>
@@ -94,7 +94,7 @@ export function ExternalProfileScreen({
   const renderTabBar = useCallback(
     (sceneProps: SceneRendererProps) => {
       return (
-        <Box bg="surface1" paddingLeft="spacing12">
+        <Flex bg="$surface1" gap="$none" pl="$spacing12">
           <TabBar
             {...sceneProps}
             indicatorStyle={TAB_STYLES.activeTabIndicator}
@@ -111,7 +111,7 @@ export function ExternalProfileScreen({
             ]}
             tabStyle={styles.tabStyle}
           />
-        </Box>
+        </Flex>
       )
     },
     [tabIndex, tabs, theme]

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import TransactionSummaryLayout from 'src/app/components/transactions/TransactionSummaryLayout'
-import { Box, ScrollView, Text } from 'ui/src'
+import { Flex, ScrollView, Text } from 'ui/src'
 import { Loader } from 'ui/src/loading'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
 import {
@@ -29,11 +29,11 @@ const loadingData: ActivityItem[] = [
 ]
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
-  <Box pb="$spacing12">
+  <Flex gap="$none" pb="$spacing12">
     <Text color="$neutral2" variant="subheadSmall">
       {title}
     </Text>
-  </Box>
+  </Flex>
 )
 
 export function TransactionActivity({ address }: { address: Address }): JSX.Element {

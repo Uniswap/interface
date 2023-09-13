@@ -2,9 +2,9 @@ import { createText, useResponsiveProp } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren } from 'react'
 import { useWindowDimensions } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { Box } from 'src/components/layout'
 import { Shimmer } from 'src/components/loading/Shimmer'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
+import { Flex } from 'ui/src'
 import { textVariants, Theme } from 'ui/src/theme/restyle'
 
 export const DEFAULT_FONT_SCALE = 1
@@ -24,20 +24,21 @@ const ThemedAnimatedText = createText<Theme>(Animated.Text)
 
 const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   return (
-    <Box alignItems="center" flexDirection="row">
-      <Box alignItems="center" flexDirection="row" position="relative">
+    <Flex row alignItems="center">
+      <Flex row alignItems="center" position="relative">
         <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
-        <Box
-          bg="surface3"
-          borderRadius="rounded4"
+        <Flex
+          bg="$surface3"
+          borderRadius="$rounded4"
           bottom="5%"
+          gap="$none"
           left={0}
           position="absolute"
           right={0}
           top="5%"
         />
-      </Box>
-    </Box>
+      </Flex>
+    </Flex>
   )
 }
 

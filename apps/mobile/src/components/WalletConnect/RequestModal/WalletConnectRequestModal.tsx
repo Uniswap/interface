@@ -7,7 +7,6 @@ import { StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { Box, BoxProps, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
@@ -30,6 +29,7 @@ import {
   TransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { Flex } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
@@ -96,15 +96,10 @@ function SectionContainer({
   style,
 }: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>): JSX.Element | null {
   return children ? (
-    <Box p="spacing16" style={style}>
+    <Flex gap="$none" p="$spacing16" style={style}>
       {children}
-    </Box>
+    </Flex>
   ) : null
-}
-
-const spacerProps: BoxProps = {
-  borderBottomColor: 'surface2',
-  borderBottomWidth: 1,
 }
 
 export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Element | null {
@@ -260,22 +255,27 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
   return (
     <BottomSheetModal name={ModalName.WCSignRequest} onClose={handleClose}>
-      <Flex gap="spacing24" paddingBottom="spacing48" paddingHorizontal="spacing16" pt="spacing36">
+      <Flex
+        gap="$spacing24"
+        paddingBottom="$spacing48"
+        paddingHorizontal="$spacing16"
+        pt="$spacing36">
         <ClientDetails permitInfo={permitInfo} request={request} />
-        <Flex gap="spacing12">
+        <Flex gap="$spacing12">
           <Flex
-            backgroundColor="surface2"
-            borderRadius="rounded16"
-            gap="none"
-            spacerProps={spacerProps}>
+            backgroundColor="$surface2"
+            borderBottomColor="$surface2"
+            borderBottomWidth={1}
+            borderRadius="$rounded16"
+            gap="$none">
             {!permitInfo && (
               <SectionContainer style={requestMessageStyle}>
-                <Flex gap="spacing12">
+                <Flex gap="$spacing12">
                   <RequestDetails request={request} />
                 </Flex>
               </SectionContainer>
             )}
-            <Box px="spacing16" py="spacing12">
+            <Flex gap="$none" px="$spacing16" py="$spacing12">
               {methodCostsGas(request) ? (
                 <NetworkFee chainId={chainId} gasFeeUSD={gasFeeUSD} />
               ) : (
@@ -294,7 +294,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                   />
                 </Flex>
               )}
-            </Box>
+            </Flex>
 
             <SectionContainer>
               <AccountDetails address={request.account} />
@@ -309,7 +309,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           </Flex>
           {!netInfo.isInternetReachable ? (
             <BaseCard.InlineErrorState
-              backgroundColor="DEP_accentWarningSoft"
+              backgroundColor="$DEP_accentWarningSoft"
               icon={
                 <AlertTriangle
                   color={theme.colors.DEP_accentWarning}
@@ -327,7 +327,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               showUnsafeWarning={isPotentiallyUnsafe(request)}
             />
           )}
-          <Flex row gap="spacing12">
+          <Flex row gap="$spacing12">
             <Button
               fill
               emphasis={ButtonEmphasis.Tertiary}
@@ -376,7 +376,7 @@ function WarningSection({
   }
 
   return (
-    <Flex centered row alignSelf="center" gap="spacing8">
+    <Flex centered row alignSelf="center" gap="$spacing8">
       <AlertTriangle
         color={theme.colors.DEP_accentWarning}
         height={iconSizes.icon16}

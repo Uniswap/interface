@@ -1,34 +1,35 @@
 import React from 'react'
-import { Box, Flex } from 'src/components/layout'
-import { Theme, theme } from 'ui/src/theme/restyle'
+import { ColorTokens, Flex } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 interface SelectionCircleProps {
   selected: boolean
-  size: keyof Theme['iconSizes']
-  unselectedColor?: keyof Theme['colors']
-  selectedColor?: keyof Theme['colors']
+  size: keyof typeof iconSizes
+  unselectedColor?: ColorTokens
+  selectedColor?: ColorTokens
 }
 
 export function SelectionCircle({
   selected,
   size,
-  unselectedColor = 'neutral2',
-  selectedColor = 'accent1',
+  unselectedColor = '$neutral2',
+  selectedColor = '$accent1',
 }: SelectionCircleProps): JSX.Element {
   return (
     <Flex
       centered
       borderColor={selected ? selectedColor : unselectedColor}
-      borderRadius="roundedFull"
+      borderRadius="$roundedFull"
       borderWidth={1}
-      height={theme.iconSizes[size]}
-      width={theme.iconSizes[size]}>
-      <Box
+      height={iconSizes[size]}
+      width={iconSizes[size]}>
+      <Flex
         backgroundColor={selected ? selectedColor : unselectedColor}
-        borderRadius="roundedFull"
-        height={theme.iconSizes[size] / 2}
+        borderRadius="$roundedFull"
+        gap="$none"
+        height={iconSizes[size] / 2}
         opacity={selected ? 1 : 0}
-        width={theme.iconSizes[size] / 2}
+        width={iconSizes[size] / 2}
       />
     </Flex>
   )

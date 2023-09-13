@@ -17,12 +17,12 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
-import { Box } from 'src/components/layout'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
+import { Flex } from 'ui/src'
 import { dimensions, spacing } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -200,7 +200,7 @@ export function BottomSheetModal({
             tint={isDarkMode ? 'dark' : 'light'}
           />
         ) : (
-          <Box bg="surface2" flex={1} />
+          <Flex fill bg="$surface2" gap="$none" />
         )}
       </Animated.View>
     ),

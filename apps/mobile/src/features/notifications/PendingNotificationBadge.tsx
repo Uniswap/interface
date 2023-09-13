@@ -3,13 +3,14 @@ import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
-import { Box } from 'src/components/layout/Box'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
+import { Flex } from 'ui/src'
 import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
+import { iconSizes } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
@@ -41,7 +42,7 @@ export function PendingNotificationBadge({
     if (txStatus === TransactionStatus.Success) {
       return (
         <CheckmarkCircle
-          borderColor="statusSuccess"
+          borderColor="$statusSuccess"
           borderWidth={2}
           checkmarkStrokeWidth={3}
           color={theme.colors.statusSuccess}
@@ -71,17 +72,18 @@ export function PendingNotificationBadge({
         onPressIn={async (): Promise<void | null> =>
           activeAccountAddress ? await preload(activeAccountAddress) : null
         }>
-        <Box
+        <Flex
           alignItems="center"
+          gap="$none"
           height={size}
           justifyContent="center"
           position="absolute"
           width={size}
-          zIndex="modal">
+          zIndex="$modal">
           <Text color="neutral2" fontSize={8} textAlign="center" variant="buttonLabelMicro">
             {countToDisplay}
           </Text>
-        </Box>
+        </Flex>
         <SpinningLoader size={LOADING_SPINNER_SIZE} />
       </TouchableArea>
     )
@@ -94,11 +96,12 @@ export function PendingNotificationBadge({
 
   if (hasNotifications) {
     return (
-      <Box
-        backgroundColor="accent1"
-        borderRadius="roundedFull"
-        height={theme.iconSizes.icon8}
-        width={theme.iconSizes.icon8}
+      <Flex
+        backgroundColor="$accent1"
+        borderRadius="$roundedFull"
+        gap="$none"
+        height={iconSizes.icon8}
+        width={iconSizes.icon8}
       />
     )
   }

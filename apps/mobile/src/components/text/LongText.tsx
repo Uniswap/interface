@@ -3,15 +3,15 @@ import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
 import Markdown from 'react-native-markdown-display'
 import { useAppTheme } from 'src/app/hooks'
-import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { openUri } from 'src/utils/linking'
+import { Flex, SpaceTokens } from 'ui/src'
 import { Theme } from 'ui/src/theme/restyle'
 
 type LongTextProps = {
   initialDisplayedLines?: number
   text: string
-  gap?: keyof Theme['spacing']
+  gap?: SpaceTokens
   color?: string
   linkColor?: string
   codeBackgroundColor?: string
@@ -29,7 +29,7 @@ export function LongText(props: LongTextProps): JSX.Element {
   const {
     initialDisplayedLines = 3,
     text,
-    gap = 'spacing8',
+    gap = '$spacing8',
     color = theme.colors.neutral1,
     linkColor = theme.colors.neutral2,
     readMoreOrLessColor = theme.colors.neutral2,
@@ -74,7 +74,7 @@ export function LongText(props: LongTextProps): JSX.Element {
 
   return (
     <Flex gap={gap}>
-      <Box onLayout={onLayout}>
+      <Flex gap="$none" onLayout={onLayout}>
         {renderAsMarkdown ? (
           <Markdown
             style={{
@@ -112,7 +112,7 @@ export function LongText(props: LongTextProps): JSX.Element {
             {text}
           </Text>
         )}
-      </Box>
+      </Flex>
 
       {/* Text is removed vs hidden using opacity to ensure spacing after the element is consistent in all cases.
       This will cause mild thrash as data loads into a page but will ensure consistent spacing */}

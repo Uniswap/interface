@@ -12,8 +12,6 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Box } from 'src/components/layout/Box'
-import { Flex } from 'src/components/layout/Flex'
 import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'src/components/NFT/NFTHiddenRow'
@@ -32,6 +30,7 @@ import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
+import { Flex } from 'ui/src'
 import NoNFTsIcon from 'ui/src/assets/icons/empty-state-picture.svg'
 import { dimensions } from 'ui/src/theme'
 import { GQLQueries } from 'wallet/src/data/queries'
@@ -99,7 +98,7 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
   })
 
   return (
-    <Box flex={1} justifyContent="flex-start" m="spacing4">
+    <Flex fill gap="$none" justifyContent="flex-start" m="$spacing4">
       <ContextMenu
         actions={menuActions}
         disabled={menuActions.length === 0}
@@ -110,11 +109,12 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
           activeOpacity={1}
           hapticStyle={ImpactFeedbackStyle.Light}
           onPress={onPressItem}>
-          <Box
+          <Flex
             alignItems="center"
             aspectRatio={1}
-            backgroundColor="surface3"
-            borderRadius="rounded12"
+            backgroundColor="$surface3"
+            borderRadius="$rounded12"
+            gap="$none"
             overflow="hidden"
             width="100%">
             <NFTViewer
@@ -125,10 +125,10 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
               squareGridView={true}
               uri={item.imageUrl ?? ''}
             />
-          </Box>
+          </Flex>
         </TouchableArea>
       </ContextMenu>
-    </Box>
+    </Flex>
   )
 }
 
@@ -236,7 +236,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
   const onRetry = useCallback(() => refetch(), [refetch])
 
   return (
-    <Flex grow px="spacing12">
+    <Flex grow px="$spacing12">
       <AnimatedFlashList
         ref={ref}
         ListEmptyComponent={
@@ -257,7 +257,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
             </Flex>
           ) : (
             // empty view
-            <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
+            <Flex grow gap="$none" style={containerProps?.emptyContainerStyle}>
               <BaseCard.EmptyState
                 buttonLabel={isExternalProfile ? undefined : t('Receive NFTs')}
                 description={
@@ -269,7 +269,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(function _NftsTa
                 title={t('No NFTs yet')}
                 onPress={onPressScan}
               />
-            </Box>
+            </Flex>
           )
         }
         // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top

@@ -4,9 +4,10 @@ import { FadeIn } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
-import { AnimatedBox, Box, Flex } from 'src/components/layout'
+import { AnimatedBox } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
+import { Flex } from 'ui/src'
 
 const NUM_COLUMNS = 2
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
@@ -38,7 +39,7 @@ export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): 
       {showLoading ? (
         <FavoriteWalletsGridLoader />
       ) : (
-        <Box flexDirection="row" flexWrap="wrap">
+        <Flex row flexWrap="wrap" gap="$none">
           {watchedWalletsList.map((address) => (
             <FavoriteWalletCard
               key={address}
@@ -48,7 +49,7 @@ export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): 
               style={HALF_WIDTH}
             />
           ))}
-        </Box>
+        </Flex>
       )}
     </AnimatedBox>
   )
@@ -56,13 +57,13 @@ export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): 
 
 function FavoriteWalletsGridLoader(): JSX.Element {
   return (
-    <Flex row gap="spacing8">
-      <Box style={ITEM_FLEX}>
+    <Flex row gap="$spacing8">
+      <Flex gap="$none" style={ITEM_FLEX}>
         <Loader.Favorite height={48} />
-      </Box>
-      <Box style={ITEM_FLEX}>
+      </Flex>
+      <Flex gap="$none" style={ITEM_FLEX}>
         <Loader.Favorite height={48} />
-      </Box>
+      </Flex>
     </Flex>
   )
 }

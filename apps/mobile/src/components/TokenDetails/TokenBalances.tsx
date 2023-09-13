@@ -2,13 +2,13 @@ import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import Trace from 'src/components/Trace/Trace'
 import { MobileEventName } from 'src/features/telemetry/constants'
+import { Flex } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -54,9 +54,9 @@ export function TokenBalances({
   if (!hasCurrentChainBalances && !hasOtherChainBalances) return null
 
   return (
-    <Flex borderRadius="rounded8" gap="spacing24">
+    <Flex borderRadius="$rounded8" gap="$spacing24">
       {currentChainBalance && (
-        <Flex gap="spacing24">
+        <Flex gap="$spacing24">
           <Separator />
           <CurrentChainBalance
             balance={currentChainBalance}
@@ -71,7 +71,7 @@ export function TokenBalances({
           <Text color="neutral2" variant="subheadSmall">
             {t('Balances on other networks')}
           </Text>
-          <Flex gap="spacing12">
+          <Flex gap="$spacing12">
             {otherChainBalances.map((balance) => {
               return (
                 <OtherChainBalance
@@ -104,7 +104,7 @@ export function CurrentChainBalance({
 
   return (
     <Flex row>
-      <Flex fill gap="spacing4">
+      <Flex fill gap="$spacing4">
         <Text color="neutral2" variant="subheadSmall">
           {isReadonly ? t('{{owner}}’s balance', { owner: displayName }) : t('Your balance')}
         </Text>
@@ -134,14 +134,14 @@ function OtherChainBalance({
     <Trace logPress pressEvent={MobileEventName.TokenDetailsOtherChainButtonPressed}>
       <TouchableArea hapticFeedback onPress={(): void => navigate(balance.currencyInfo.currencyId)}>
         <Flex row alignItems="center" justifyContent="space-between">
-          <Flex row alignItems="center" gap="spacing4">
+          <Flex row alignItems="center" gap="$spacing4">
             <TokenLogo
               chainId={balance.currencyInfo.currency.chainId}
               size={iconSizes.icon36}
               symbol={balance.currencyInfo.currency.symbol}
               url={balance.currencyInfo.logoUrl ?? undefined}
             />
-            <Box alignItems="flex-start">
+            <Flex alignItems="flex-start" gap="$none">
               <Text px="spacing4" variant="bodyLarge">
                 {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
               </Text>
@@ -150,7 +150,7 @@ function OtherChainBalance({
                 showBackgroundColor={false}
                 textVariant="buttonLabelMicro"
               />
-            </Box>
+            </Flex>
           </Flex>
           <Text color="neutral2" variant="bodyLarge">
             {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}

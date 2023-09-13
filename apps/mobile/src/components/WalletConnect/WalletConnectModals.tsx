@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
-import { Box } from 'src/components/layout'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { WalletConnectRequestModal } from 'src/components/WalletConnect/RequestModal/WalletConnectRequestModal'
@@ -18,6 +17,7 @@ import {
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
+import { Flex } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import {
   useActiveAccount,
@@ -120,9 +120,14 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         title={t('This wallet is in view only mode')}
         onCancel={onClose}
         onClose={onClose}>
-        <Box alignSelf="stretch" backgroundColor="surface2" borderRadius="rounded16" p="spacing16">
+        <Flex
+          alignSelf="stretch"
+          backgroundColor="$surface2"
+          borderRadius="$rounded16"
+          gap="$none"
+          p="$spacing16">
           <AccountDetails address={currRequest.account} iconSize={theme.iconSizes.icon24} />
-        </Box>
+        </Flex>
       </WarningModal>
     )
   }

@@ -3,16 +3,16 @@ import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
-import { Icons } from 'ui/src'
+import { ColorTokens, Flex, Icons, StackProps } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { opacify } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
-const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
+// TODO(MOB-1211): figure out shadow offset in Tamagui
+// const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
 export const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
 
 // Container
@@ -22,38 +22,42 @@ export function Container({
 }: PropsWithChildren<ComponentProps<typeof Trace>>): JSX.Element {
   return (
     <Trace {...trace}>
-      <Box
-        bg="surface2"
-        borderColor="surface3"
-        borderRadius="rounded16"
+      <Flex
+        bg="$surface2"
+        borderColor="$surface3"
+        borderRadius="$rounded16"
         borderWidth={0.25}
+        gap="$none"
         overflow="visible"
-        shadowColor="sporeBlack"
-        shadowOffset={SHADOW_OFFSET}
+        shadowColor="$sporeBlack"
+        // TODO(MOB-1211): figure out shadow offset in Tamagui
+        // shadowOffset={SHADOW_OFFSET}
         shadowOpacity={0.05}
         shadowRadius={10}>
         {children}
-      </Box>
+      </Flex>
     </Trace>
   )
 }
 
-export function Shadow({ children, ...rest }: BoxProps): JSX.Element {
+export function Shadow({ children, ...rest }: StackProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const theme = useAppTheme()
 
   return (
-    <Box
-      borderRadius="rounded16"
-      p="spacing12"
-      shadowColor={isDarkMode ? 'sporeBlack' : 'none'}
-      shadowOffset={SHADOW_OFFSET_SMALL}
+    <Flex
+      borderRadius="$rounded16"
+      gap="$none"
+      p="$spacing12"
+      shadowColor={isDarkMode ? '$sporeBlack' : '$transparent'}
+      // TODO(MOB-1211): figure out shadow offset in Tamagui
+      // shadowOffset={SHADOW_OFFSET_SMALL}
       shadowOpacity={0.4}
       shadowRadius={6}
       style={{ backgroundColor: opacify(isDarkMode ? 10 : 100, theme.colors.sporeWhite) }}
       {...rest}>
       {children}
-    </Box>
+    </Flex>
   )
 }
 
@@ -75,8 +79,8 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
       onPress={onPress}
       {...buttonProps}>
       <Flex row alignItems="center" justifyContent="space-between">
-        <Flex gap="spacing4">
-          <Flex row alignItems="center" gap="spacing8">
+        <Flex gap="$spacing4">
+          <Flex row alignItems="center" gap="$spacing8">
             {icon}
             {typeof title === 'string' ? (
               <Text color="neutral2" variant="subheadSmall">
@@ -121,10 +125,10 @@ function EmptyState({
   icon,
 }: EmptyStateProps): JSX.Element {
   return (
-    <Flex centered gap="spacing24" p="spacing12" width="100%">
+    <Flex centered gap="$spacing24" p="$spacing12" width="100%">
       <Flex centered>
         {icon}
-        <Flex centered gap="spacing8">
+        <Flex centered gap="$spacing8">
           {title && (
             <Text textAlign="center" variant="buttonLabelMedium">
               {title}
@@ -168,10 +172,10 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
   const { t } = useTranslation()
   const { title, description = t('Something went wrong'), retryButtonLabel, onRetry, icon } = props
   return (
-    <Flex centered grow gap="spacing24" p="spacing12" width="100%">
+    <Flex centered grow gap="$spacing24" p="$spacing12" width="100%">
       <Flex centered>
         {icon}
-        <Flex centered gap="spacing8">
+        <Flex centered gap="$spacing8">
           {title ? (
             <Text textAlign="center" variant="buttonLabelMedium">
               {title}
@@ -196,7 +200,7 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
 }
 
 type InlineErrorStateProps = {
-  backgroundColor?: keyof Theme['colors']
+  backgroundColor?: ColorTokens
   textColor?: keyof Theme['colors']
 } & Pick<ErrorStateProps, 'icon' | 'title' | 'onRetry' | 'retryButtonLabel'>
 
@@ -204,7 +208,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const {
-    backgroundColor = 'surface2',
+    backgroundColor = '$surface2',
     textColor = 'neutral1',
     title = t('Oops! Something went wrong.'),
     onRetry: retry,
@@ -224,12 +228,12 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
       row
       alignItems="center"
       bg={backgroundColor}
-      borderRadius="rounded16"
-      gap="spacing24"
+      borderRadius="$rounded16"
+      gap="$spacing24"
       justifyContent="space-between"
-      p="spacing12"
+      p="$spacing12"
       width="100%">
-      <Flex row shrink alignItems="center" gap="spacing8">
+      <Flex row shrink alignItems="center" gap="$spacing8">
         {icon}
         <Text
           color={textColor}

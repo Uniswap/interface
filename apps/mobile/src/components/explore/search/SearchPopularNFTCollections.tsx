@@ -34,7 +34,7 @@ export function SearchPopularNFTCollections(): JSX.Element {
 
   if (loading) {
     return (
-      <Inset all="spacing8">
+      <Inset all="$spacing8">
         <Loader.Token repeat={2} />
       </Inset>
     )

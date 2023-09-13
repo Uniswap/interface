@@ -14,7 +14,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { Box, Button, Flex } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 import { useTimeout } from 'utilities/src/time/timing'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -80,7 +80,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
               </Text>
             </TouchableArea>
           </Trace>
-          <Box $short={{ pb: '$none' }} mx="$spacing24" py="$spacing12">
+          <Flex $short={{ pb: '$none' }} mx="$spacing24" py="$spacing12">
             <Text color="neutral2" mx="spacing4" textAlign="center" variant="buttonLabelMicro">
               <Trans t={t}>
                 By continuing, I agree to the{' '}
@@ -100,7 +100,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                 .
               </Trans>
             </Text>
-          </Box>
+          </Flex>
         </Flex>
       </Flex>
     </Screen>

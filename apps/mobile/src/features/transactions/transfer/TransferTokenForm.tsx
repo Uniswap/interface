@@ -13,11 +13,10 @@ import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { TextInputProps } from 'src/components/input/TextInput'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
-import { Text } from 'src/components/Text'
 import { TokenSelectorFlow } from 'src/components/TokenSelector/TokenSelector'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
@@ -34,9 +33,10 @@ import {
 import { TransferFormSpeedbumps } from 'src/features/transactions/transfer/TransferFormWarnings'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
+import { Flex, Text } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
-import { dimensions } from 'ui/src/theme'
+import { dimensions, iconSizes } from 'ui/src/theme'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -213,9 +213,9 @@ export function TransferTokenForm({
           confirmText={t('Close')}
           icon={
             <SendWarningIcon
-              color={theme.colors[transferWarningColor.text]}
-              height={theme.iconSizes.icon24}
-              width={theme.iconSizes.icon24}
+              color={transferWarningColor.text}
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
             />
           }
           modalName={ModalName.SendWarning}
@@ -233,7 +233,7 @@ export function TransferTokenForm({
         showSpeedbumpModal={showSpeedbumpModal}
         onNext={goToNext}
       />
-      <Flex grow gap="spacing8" justifyContent="space-between">
+      <Flex grow gap="$spacing8" justifyContent="space-between">
         <AnimatedFlex
           entering={FadeIn}
           exiting={FadeOut}
@@ -242,7 +242,11 @@ export function TransferTokenForm({
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
-            <Box backgroundColor="surface2" borderRadius="rounded20" justifyContent="center">
+            <Flex
+              backgroundColor="$surface2"
+              borderRadius="$rounded20"
+              gap="$none"
+              justifyContent="center">
               <CurrencyInputPanel
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
@@ -269,39 +273,41 @@ export function TransferTokenForm({
                 }}
                 onShowTokenSelector={(): void => onShowTokenSelector(CurrencyField.INPUT)}
               />
-            </Box>
+            </Flex>
           )}
 
-          <Box zIndex="popover">
-            <Box
+          <Flex gap="$none" zIndex="$popover">
+            <Flex
               alignItems="center"
+              gap="$none"
               height={
                 TRANSFER_DIRECTION_BUTTON_SIZE +
                 TRANSFER_DIRECTION_BUTTON_INNER_PADDING +
                 TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH
               }
               style={StyleSheet.absoluteFill}>
-              <Box
+              <Flex
                 alignItems="center"
                 bottom={TRANSFER_DIRECTION_BUTTON_SIZE / 2}
+                gap="$none"
                 position="absolute">
                 <TransferArrowButton
                   disabled
                   bg={recipient ? 'surface2' : 'surface2'}
                   padding="spacing8"
                 />
-              </Box>
-            </Box>
-          </Box>
+              </Flex>
+            </Flex>
+          </Flex>
 
-          <Box>
+          <Flex gap="$none">
             <Flex
-              backgroundColor={recipient ? 'surface2' : 'none'}
-              borderBottomLeftRadius={transferWarning || isBlocked ? 'none' : 'rounded20'}
-              borderBottomRightRadius={transferWarning || isBlocked ? 'none' : 'rounded20'}
-              borderTopLeftRadius="rounded20"
-              borderTopRightRadius="rounded20"
-              gap="none"
+              backgroundColor={recipient ? '$surface2' : '$transparent'}
+              borderBottomLeftRadius={transferWarning || isBlocked ? '$none' : '$rounded20'}
+              borderBottomRightRadius={transferWarning || isBlocked ? '$none' : '$rounded20'}
+              borderTopLeftRadius="$rounded20"
+              borderTopRightRadius="$rounded20"
+              gap="$none"
               justifyContent="center">
               {recipient && (
                 <RecipientInputPanel
@@ -312,24 +318,24 @@ export function TransferTokenForm({
               {walletNeedsRestore && (
                 <TouchableArea onPress={onRestorePress}>
                   <Flex
+                    grow
                     row
                     alignItems="center"
                     alignSelf="stretch"
-                    backgroundColor="surface2"
-                    borderBottomLeftRadius="rounded16"
-                    borderBottomRightRadius="rounded16"
-                    borderTopColor="surface1"
+                    backgroundColor="$surface2"
+                    borderBottomLeftRadius="$rounded16"
+                    borderBottomRightRadius="$rounded16"
+                    borderTopColor="$surface1"
                     borderTopWidth={1}
-                    flexGrow={1}
-                    gap="spacing8"
-                    px="spacing12"
-                    py="spacing12">
+                    gap="$spacing8"
+                    px="$spacing12"
+                    py="$spacing12">
                     <InfoCircleFilled
                       color={theme.colors.DEP_accentWarning}
                       height={theme.iconSizes.icon20}
                       width={theme.iconSizes.icon20}
                     />
-                    <Text color="DEP_accentWarning" variant="subheadSmall">
+                    <Text color="$DEP_accentWarning" variant="subheadSmall">
                       {t('Restore your wallet to send')}
                     </Text>
                   </Flex>
@@ -343,17 +349,17 @@ export function TransferTokenForm({
                   alignItems="center"
                   alignSelf="stretch"
                   backgroundColor={transferWarningColor.background}
-                  borderBottomLeftRadius="rounded16"
-                  borderBottomRightRadius="rounded16"
+                  borderBottomLeftRadius="$rounded16"
+                  borderBottomRightRadius="$rounded16"
                   flexGrow={1}
-                  gap="spacing8"
-                  px="spacing16"
-                  py="spacing12">
+                  gap="$spacing8"
+                  px="$spacing16"
+                  py="$spacing12">
                   <SendWarningIcon
-                    color={theme.colors[transferWarningColor.text]}
-                    height={theme.iconSizes.icon16}
+                    color={transferWarningColor.text}
+                    height={iconSizes.icon16}
                     strokeWidth={1.5}
-                    width={theme.iconSizes.icon16}
+                    width={iconSizes.icon16}
                   />
                   <Text color={transferWarningColor.text} variant="subheadSmall">
                     {transferWarning.title}
@@ -375,7 +381,7 @@ export function TransferTokenForm({
                 py="spacing12"
               />
             ) : null}
-          </Box>
+          </Flex>
         </AnimatedFlex>
         <AnimatedFlex
           bottom={0}

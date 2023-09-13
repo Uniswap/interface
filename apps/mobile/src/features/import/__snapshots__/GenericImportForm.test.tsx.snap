@@ -39,15 +39,13 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
   >
     <View
       style={
-        [
-          {
-            "alignItems": "flex-end",
-            "display": "flex",
-            "flexDirection": "row",
-            "justifyContent": "center",
-            "width": "100%",
-          },
-        ]
+        {
+          "alignItems": "flex-end",
+          "flexDirection": "row",
+          "gap": 0,
+          "justifyContent": "center",
+          "width": "100%",
+        }
       }
     >
       <TextInput

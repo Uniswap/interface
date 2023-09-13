@@ -1,8 +1,8 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
-import { Box, Flex } from 'src/components/layout/index'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Text } from 'src/components/Text'
+import { Flex } from 'ui/src'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
 import { theme } from 'ui/src/theme/restyle'
 
@@ -21,9 +21,9 @@ export default {
   component: HeaderScrollScreen,
   decorators: [
     (Story): JSX.Element => (
-      <Box borderColor="surface2" borderWidth={1} height={812} width={375}>
+      <Flex borderColor="$surface2" borderWidth={1} gap="$none" height={812} width={375}>
         <Story />
-      </Box>
+      </Flex>
     ),
   ],
 } as ComponentMeta<typeof HeaderScrollScreen>
@@ -31,7 +31,7 @@ export default {
 const Template: ComponentStory<typeof HeaderScrollScreen> = (args) => {
   return (
     <HeaderScrollScreen {...args}>
-      <Flex row bg="surface2" m="spacing16" p="spacing16">
+      <Flex row bg="$surface2" m="$spacing16" p="$spacing16">
         <Text variant="bodyLarge">Body content</Text>
       </Flex>
     </HeaderScrollScreen>

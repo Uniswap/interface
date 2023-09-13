@@ -2,7 +2,7 @@ import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
 import { Switch as BaseSwitch, SwitchProps, ViewProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { Box } from 'src/components/layout/Box'
+import { Flex } from 'ui/src'
 import { Theme } from 'ui/src/theme/restyle'
 
 type RestyleProps = SpacingProps<Theme> & SpacingShorthandProps<Theme>
@@ -20,9 +20,10 @@ export function Switch({ value, onValueChange, disabled, ...rest }: Props): JSX.
   const theme = useAppTheme()
 
   return (
-    <Box>
+    <Flex gap="$none">
       <BaseSwitch
         ios_backgroundColor="transparent"
+        // TODO(MOB-1226): pull colors from dark/light theme with Tamagui
         thumbColor={value ? theme.colors.accent1 : theme.colors.surface1}
         trackColor={{
           false: theme.colors.surface4,
@@ -32,6 +33,6 @@ export function Switch({ value, onValueChange, disabled, ...rest }: Props): JSX.
         onValueChange={disabled ? undefined : onValueChange}
         {...rest}
       />
-    </Box>
+    </Flex>
   )
 }

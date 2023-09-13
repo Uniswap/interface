@@ -8,10 +8,9 @@ import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
-import { Box, Flex, Inset } from 'src/components/layout'
+import { Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
-import { Text } from 'src/components/Text'
 import {
   getClientTokensOrderByCompareFn,
   getTokenMetadataDisplayType,
@@ -19,6 +18,7 @@ import {
 } from 'src/features/explore/utils'
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/favorites/selectors'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
+import { Flex, Text } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
@@ -126,13 +126,13 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
 
   if (!hasAllData && error) {
     return (
-      <Box height="100%" pb="spacing60">
+      <Flex gap="$none" height="100%" pb="$spacing60">
         <BaseCard.ErrorState
           retryButtonLabel={t('Retry')}
           title={t('Couldn’t load tokens')}
           onRetry={onRetry}
         />
-      </Box>
+      </Flex>
     )
   }
 
@@ -140,11 +140,11 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     <BottomSheetFlatList
       ref={listRef}
       ListEmptyComponent={
-        <Box mx="spacing24" my="spacing12">
+        <Flex gap="$none" mx="$spacing24" my="$spacing12">
           <Loader.Token repeat={5} />
-        </Box>
+        </Flex>
       }
-      ListFooterComponent={<Inset all="spacing12" />}
+      ListFooterComponent={<Inset all="$spacing12" />}
       ListHeaderComponent={
         <>
           <FavoritesSection showLoading={showLoading} />
@@ -152,12 +152,12 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
             row
             alignItems="center"
             justifyContent="space-between"
-            mb="spacing8"
-            ml="spacing16"
-            mr="spacing12"
-            mt="spacing16"
-            pl="spacing4">
-            <Text color="neutral2" variant="subheadSmall">
+            mb="$spacing8"
+            ml="$spacing16"
+            mr="$spacing12"
+            mt="$spacing16"
+            pl="$spacing4">
+            <Text color="$neutral2" variant="subheadSmall">
               {t('Top tokens')}
             </Text>
             <SortButton orderBy={orderBy} />
@@ -211,7 +211,7 @@ function FavoritesSection({ showLoading }: { showLoading: boolean }): JSX.Elemen
   if (!hasFavoritedTokens && !hasFavoritedWallets) return null
 
   return (
-    <Flex bg="none" gap="spacing12" pb="spacing12" pt="spacing8" px="spacing12">
+    <Flex bg="$transparent" gap="$spacing12" pb="$spacing12" pt="$spacing8" px="$spacing12">
       {hasFavoritedTokens && <FavoriteTokensGrid showLoading={showLoading} />}
       {hasFavoritedWallets && <FavoriteWalletsGrid showLoading={showLoading} />}
     </Flex>

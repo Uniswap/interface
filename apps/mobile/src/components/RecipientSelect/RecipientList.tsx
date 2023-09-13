@@ -24,7 +24,7 @@ export function RecipientList({ onPress, sections }: RecipientListProps): JSX.El
 
   return (
     <BottomSheetSectionList
-      ListFooterComponent={<Inset all="spacing36" />}
+      ListFooterComponent={<Inset all="$spacing36" />}
       keyExtractor={key}
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="always"

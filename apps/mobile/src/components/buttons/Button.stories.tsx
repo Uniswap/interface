@@ -1,6 +1,6 @@
 import { ComponentStory, Meta } from '@storybook/react'
 import React from 'react'
-import { Box } from 'src/components/layout'
+import { Flex } from 'ui/src'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { Button, ButtonEmphasis, ButtonSize } from './Button'
 
@@ -9,9 +9,9 @@ export default {
   component: Button,
   decorators: [
     (Story): JSX.Element => (
-      <Box m="spacing24">
+      <Flex gap="$none" m="$spacing24">
         <Story />
-      </Box>
+      </Flex>
     ),
   ],
   argTypes: {

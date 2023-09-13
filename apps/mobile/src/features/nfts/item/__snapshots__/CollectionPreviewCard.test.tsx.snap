@@ -45,48 +45,49 @@ exports[`renders collection preview card 1`] = `
   }
 >
   <View
-    sentry-label="Flex"
     style={
-      [
-        {
-          "alignItems": "center",
-          "backgroundColor": "#2222220D",
-          "borderRadius": 16,
-          "display": "flex",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
-          "paddingHorizontal": 12,
-          "paddingVertical": 12,
-        },
-      ]
+      {
+        "alignItems": "center",
+        "backgroundColor": "#2222220D",
+        "borderBottomLeftRadius": 16,
+        "borderBottomRightRadius": 16,
+        "borderTopLeftRadius": 16,
+        "borderTopRightRadius": 16,
+        "flexDirection": "row",
+        "gap": 8,
+        "justifyContent": "space-between",
+        "paddingBottom": 12,
+        "paddingLeft": 12,
+        "paddingRight": 12,
+        "paddingTop": 12,
+      }
     }
   >
     <View
-      sentry-label="Flex"
       style={
-        [
-          {
-            "alignItems": "center",
-            "display": "flex",
-            "flexDirection": "row",
-            "flexShrink": 1,
-            "justifyContent": "flex-start",
-            "overflow": "hidden",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "flexShrink": 1,
+          "gap": 12,
+          "overflow": "hidden",
+        }
       }
     >
       <View
         style={
-          [
-            {
-              "borderRadius": 999999,
-              "display": "flex",
-              "height": 40,
-              "overflow": "hidden",
-              "width": 40,
-            },
-          ]
+          {
+            "alignItems": "stretch",
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "flexDirection": "column",
+            "gap": 0,
+            "height": 40,
+            "overflow": "hidden",
+            "width": 40,
+          }
         }
       >
         <View
@@ -122,53 +123,32 @@ exports[`renders collection preview card 1`] = `
       </View>
       <View
         style={
-          [
-            {
-              "display": "flex",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "height": 12,
-              "width": 12,
-            },
-          ]
-        }
-      />
-      <View
-        sentry-label="Flex"
-        style={
-          [
-            {
-              "alignItems": "stretch",
-              "display": "flex",
-              "flexDirection": "column",
-              "flexShrink": 1,
-              "justifyContent": "flex-start",
-            },
-          ]
+          {
+            "alignItems": "stretch",
+            "flexDirection": "column",
+            "flexShrink": 1,
+            "gap": 0,
+          }
         }
       >
         <View
-          sentry-label="Flex"
           style={
-            [
-              {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
-                "flexGrow": 1,
-                "justifyContent": "flex-start",
-              },
-            ]
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "flexGrow": 1,
+              "gap": 8,
+            }
           }
         >
           <View
             style={
-              [
-                {
-                  "display": "flex",
-                  "flexShrink": 1,
-                },
-              ]
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+                "flexShrink": 1,
+                "gap": 0,
+              }
             }
           >
             <Text
@@ -191,19 +171,6 @@ exports[`renders collection preview card 1`] = `
               Test NFT 1
             </Text>
           </View>
-          <View
-            style={
-              [
-                {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 8,
-                  "width": 8,
-                },
-              ]
-            }
-          />
           <svg
             color="#FC72FF"
             data-file-name="SvgVerified"
@@ -213,19 +180,6 @@ exports[`renders collection preview card 1`] = `
         </View>
       </View>
     </View>
-    <View
-      style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 8,
-            "width": 8,
-          },
-        ]
-      }
-    />
     <View
       style={
         {

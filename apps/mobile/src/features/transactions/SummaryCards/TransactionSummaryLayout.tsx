@@ -4,7 +4,6 @@ import { default as React, memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
@@ -13,6 +12,7 @@ import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
+import { Flex } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { cancelTransaction } from 'wallet/src/features/transactions/slice'
@@ -105,14 +105,14 @@ function TransactionSummaryLayout({
       width={TXN_STATUS_ICON_SIZE}
     />
   ) : status === TransactionStatus.Failed ? (
-    <Box alignItems="flex-end" flexGrow={1} justifyContent="space-between">
+    <Flex grow alignItems="flex-end" gap="$none" justifyContent="space-between">
       <AlertTriangle
         color={theme.colors.DEP_accentWarning}
         fill={statusIconFill}
         height={TXN_STATUS_ICON_SIZE}
         width={TXN_STATUS_ICON_SIZE}
       />
-    </Box>
+    </Flex>
   ) : (
     <Text color="neutral3" variant="bodyMicro">
       {formattedAddedTime}
@@ -122,32 +122,32 @@ function TransactionSummaryLayout({
   return (
     <>
       <TouchableArea mb="spacing24" overflow="hidden" onPress={onPress}>
-        <Flex grow row bg="surface1" gap="spacing12">
+        <Flex grow row bg="$surface1" gap="$spacing12">
           {icon && (
             <Flex centered width={TXN_HISTORY_ICON_SIZE}>
               {icon}
             </Flex>
           )}
-          <Flex grow shrink gap="none">
-            <Flex grow gap="none">
-              <Flex grow row alignItems="center" gap="spacing4" justifyContent="space-between">
+          <Flex grow shrink gap="$none">
+            <Flex grow gap="$none">
+              <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
                 <Text color="neutral2" numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row>
-                <Box flexGrow={1} flexShrink={1}>
+                <Flex grow shrink gap="$none">
                   <Text color="neutral1" variant="subheadSmall">
                     {caption}
                   </Text>
-                </Box>
+                </Flex>
                 {status === TransactionStatus.Failed && onRetry && (
-                  <Box flexShrink={0}>
+                  <Flex flexShrink={0} gap="$none">
                     <Text color="accent1" variant="buttonLabelSmall" onPress={onRetry}>
                       {t('Retry')}
                     </Text>
-                  </Box>
+                  </Flex>
                 )}
               </Flex>
             </Flex>

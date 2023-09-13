@@ -2,12 +2,11 @@ import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTItem } from 'src/features/nfts/types'
-import { Icons } from 'ui/src'
+import { Flex, Icons } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes, imageSizes } from 'ui/src/theme'
 import { Currency, NftItemScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -43,16 +42,17 @@ export function CollectionPreviewCard({
       <Flex
         row
         alignItems="center"
-        backgroundColor="surface3"
-        borderRadius="rounded16"
-        gap="spacing8"
+        backgroundColor="$surface3"
+        borderRadius="$rounded16"
+        gap="$spacing8"
         justifyContent="space-between"
-        px="spacing12"
-        py="spacing12">
-        <Flex row shrink alignItems="center" gap="spacing12" overflow="hidden">
+        px="$spacing12"
+        py="$spacing12">
+        <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
           {collection?.image?.url ? (
-            <Box
-              borderRadius="roundedFull"
+            <Flex
+              borderRadius="$roundedFull"
+              gap="$none"
               height={imageSizes.image40}
               overflow="hidden"
               width={imageSizes.image40}>
@@ -61,17 +61,17 @@ export function CollectionPreviewCard({
                 maxHeight={theme.spacing.spacing60}
                 uri={collection.image.url}
               />
-            </Box>
+            </Flex>
           ) : null}
-          <Flex shrink gap="none">
-            <Flex grow row alignItems="center" gap="spacing8">
+          <Flex shrink gap="$none">
+            <Flex grow row alignItems="center" gap="$spacing8">
               {/* Width chosen to ensure truncation of collection name on both small
                 and large screens with sufficient padding */}
-              <Box flexShrink={1}>
+              <Flex shrink gap="$none">
                 <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
                   {collection?.name || fallbackData?.name || '-'}
                 </Text>
-              </Box>
+              </Flex>
               {collection?.isVerified && (
                 <VerifiedIcon
                   color={theme.colors.accent1}
@@ -81,7 +81,7 @@ export function CollectionPreviewCard({
               )}
             </Flex>
             {collection?.markets?.[0]?.floorPrice?.value && (
-              <Flex row gap="spacing4">
+              <Flex row gap="$spacing4">
                 <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
                   {t('Floor')}:
                 </Text>

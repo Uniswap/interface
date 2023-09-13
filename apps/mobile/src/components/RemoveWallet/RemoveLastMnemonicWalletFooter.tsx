@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { CheckBox } from 'src/components/buttons/CheckBox'
-import { Box, Flex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
+import { Flex } from 'ui/src'
 
 export function RemoveLastMnemonicWalletFooter({
   onPress,
@@ -21,31 +21,29 @@ export function RemoveLastMnemonicWalletFooter({
 
   return (
     <>
-      <Box
-        backgroundColor="surface2"
-        borderRadius="rounded16"
-        mx="spacing16"
-        px="spacing8"
-        py="spacing12">
+      <Flex
+        backgroundColor="$surface2"
+        borderRadius="$rounded16"
+        gap="$none"
+        mx="$spacing16"
+        px="$spacing8"
+        py="$spacing12">
         <CheckBox
           checked={checkBoxAccepted}
           text={
-            <Box>
-              <Trans t={t}>
-                <Text color="neutral1" variant="subheadSmall">
-                  I backed up my recovery phrase
-                </Text>
-                <Text color="neutral2" variant="bodyMicro">
-                  I understand that Uniswap Labs can’t help me recover my wallets if I failed to do
-                  so
-                </Text>
-              </Trans>
-            </Box>
+            <Trans t={t}>
+              <Text color="neutral1" variant="subheadSmall">
+                I backed up my recovery phrase
+              </Text>
+              <Text color="neutral2" variant="bodyMicro">
+                I understand that Uniswap Labs can’t help me recover my wallets if I failed to do so
+              </Text>
+            </Trans>
           }
           onCheckPressed={onCheckPressed}
         />
-      </Box>
-      <Flex centered row gap="spacing12" pt="spacing12">
+      </Flex>
+      <Flex centered row gap="$spacing12" pt="$spacing12">
         <Button
           fill
           CustomIcon={inProgress ? <SpinningLoader color="statusCritical" /> : undefined}

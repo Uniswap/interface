@@ -11,12 +11,13 @@ import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { Arrow } from 'src/components/icons/Arrow'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { RecipientPrevTransfers } from 'src/components/input/RecipientInputPanel'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
+import { Flex } from 'ui/src'
 import { dimensions, iconSizes } from 'ui/src/theme'
 import { formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -73,8 +74,8 @@ export function TransactionReview({
   const { trigger: actionButtonTrigger } = useBiometricPrompt(actionButtonProps.onPress)
   const { requiredForTransactions } = useBiometricAppSettings()
 
-  const spacingGap = { xs: 'none', sm: 'spacing12' }
-  const innerGap = useResponsiveProp({ xs: 'none', sm: 'spacing16' })
+  const spacingGap = { xs: '$none', sm: '$spacing12' }
+  const innerGap = useResponsiveProp({ xs: '$none', sm: '$spacing16' })
 
   const fontFamily = useResponsiveProp({
     xs: theme.textVariants.headlineSmall.fontFamily,
@@ -104,7 +105,9 @@ export function TransactionReview({
 
   const arrowPadding = useResponsiveProp({ xs: 'spacing4', sm: 'spacing8' })
 
-  const amountAndEquivalentValueGap = useResponsiveProp({ xs: 'spacing4', sm: 'spacing4' })
+  const amountAndEquivalentValueGap = useResponsiveProp({ xs: '$spacing4', sm: '$spacing4' })
+
+  const bottomPadding = useResponsiveProp({ xs: '$spacing4', sm: '$none' })
 
   const formattedInputUsdValue = inputCurrencyUSDValue
     ? formatNumberOrString(inputCurrencyUSDValue?.toExact(), NumberType.FiatTokenQuantity)
@@ -156,18 +159,18 @@ export function TransactionReview({
             <CurrencyLogoWithLabel currencyInfo={currencyInInfo} />
           </Flex>
         ) : nftIn ? (
-          <Flex mt="spacing60">
+          <Flex mt="$spacing60">
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 5} />
           </Flex>
         ) : null}
         <TransferArrowButton disabled bg="none" borderColor="none" padding={arrowPadding} />
         {currencyOutInfo && formattedAmountOut ? (
-          <Flex centered gap={innerGap} pb={{ xs: 'spacing4', sm: 'none' }}>
+          <Flex centered gap={innerGap} pb={bottomPadding}>
             <Flex centered gap={amountAndEquivalentValueGap}>
               <Text color="neutral2" variant="bodyLarge">
                 {t('You receive')}
               </Text>
-              <Box height={lineHeight} justifyContent="center" overflow="hidden">
+              <Flex gap="$none" height={lineHeight} justifyContent="center" overflow="hidden">
                 <AmountInput
                   alignSelf="stretch"
                   backgroundColor="none"
@@ -183,7 +186,7 @@ export function TransactionReview({
                   textAlign="center"
                   value={formattedAmountOut}
                 />
-              </Box>
+              </Flex>
               {outputCurrencyUSDValue ? (
                 <Text color="neutral2" variant={equivalentValueTextVariant}>
                   {formattedOutputUsdValue}
@@ -193,11 +196,11 @@ export function TransactionReview({
             <CurrencyLogoWithLabel currencyInfo={currencyOutInfo} />
           </Flex>
         ) : recipient ? (
-          <Flex centered gap="spacing12">
+          <Flex centered gap="$spacing12">
             <Text color="neutral2" variant="bodyLarge">
               {t('To')}
             </Text>
-            <Flex centered gap="spacing8">
+            <Flex centered gap="$spacing8">
               <AddressDisplay
                 hideAddressInSubtitle
                 address={recipient}
@@ -211,7 +214,7 @@ export function TransactionReview({
       </AnimatedFlex>
       <AnimatedFlex entering={FadeInUp} exiting={FadeOut} gap="spacing12" justifyContent="flex-end">
         {transactionDetails}
-        <Flex row gap="spacing8">
+        <Flex row gap="$spacing8">
           <Button
             CustomIcon={
               <Arrow color={theme.colors.neutral1} direction="w" size={theme.iconSizes.icon24} />
@@ -242,7 +245,7 @@ export function TransactionReview({
 }
 
 function CurrencyLogoWithLabel({ currencyInfo }: { currencyInfo: CurrencyInfo }): JSX.Element {
-  const gap = useResponsiveProp({ xs: 'spacing4', sm: 'spacing8' })
+  const gap = useResponsiveProp({ xs: '$spacing4', sm: '$spacing8' })
   const size = useResponsiveProp({ xs: iconSizes.icon20, sm: iconSizes.icon24 })
   return (
     <Flex centered row gap={gap}>

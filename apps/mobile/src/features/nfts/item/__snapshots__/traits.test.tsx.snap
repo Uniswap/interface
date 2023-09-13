@@ -2,20 +2,21 @@
 
 exports[`renders trait card 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "stretch",
-        "backgroundColor": "#2222220D",
-        "borderRadius": 16,
-        "display": "flex",
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-        "paddingHorizontal": 16,
-        "paddingVertical": 12,
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "backgroundColor": "#2222220D",
+      "borderBottomLeftRadius": 16,
+      "borderBottomRightRadius": 16,
+      "borderTopLeftRadius": 16,
+      "borderTopRightRadius": 16,
+      "flexDirection": "column",
+      "gap": 4,
+      "paddingBottom": 12,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 12,
+    }
   }
 >
   <Text
@@ -38,18 +39,6 @@ exports[`renders trait card 1`] = `
   >
     traitName
   </Text>
-  <View
-    style={
-      [
-        {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 4,
-        },
-      ]
-    }
-  />
   <Text
     allowFontScaling={true}
     maxFontSizeMultiplier={1.4}

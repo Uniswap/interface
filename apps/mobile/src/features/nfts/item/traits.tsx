@@ -1,8 +1,8 @@
 import React from 'react'
 import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { Flex } from 'ui/src'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { NftAssetTrait } from 'wallet/src/data/__generated__/types-and-hooks'
 
@@ -15,7 +15,7 @@ export function NFTTraitCard({
 }): JSX.Element {
   const theme = useAppTheme()
   return (
-    <Flex bg="surface3" borderRadius="rounded16" gap="spacing4" px="spacing16" py="spacing12">
+    <Flex bg="$surface3" borderRadius="$rounded16" gap="$spacing4" px="$spacing16" py="$spacing12">
       <Text
         fontSize={14}
         style={{ color: titleTextColor ?? theme.colors.neutral2 }}
@@ -53,7 +53,7 @@ export function NFTTraitList({
 }
 
 function Separator(): JSX.Element {
-  return <Box width={FixedTheme.spacing.spacing8} />
+  return <Flex gap="$none" width={FixedTheme.spacing.spacing8} />
 }
 
 const Styles = StyleSheet.create({

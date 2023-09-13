@@ -3,18 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
-import { Box } from 'src/components/layout/Box'
-import { Flex } from 'src/components/layout/Flex'
 import { SeedPhraseDisplay } from 'src/components/mnemonic/SeedPhraseDisplay'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
-import { Text } from 'src/components/Text'
 import { APP_STORE_LINK } from 'src/constants/urls'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { ModalName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
 import { Statsig } from 'statsig-react-native'
+import { Flex, Text } from 'ui/src'
 import { DYNAMIC_CONFIGS } from 'wallet/src/features/experiments/constants'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -77,13 +75,13 @@ export function ForceUpgradeModal(): JSX.Element {
           title={t('Update the app to continue')}
           onClose={onClose}
           onConfirm={onPressConfirm}>
-          <Text color="neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="bodySmall">
             {t(
               'The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets.'
             )}
           </Text>
           {mnemonicId && (
-            <Text color="accent1" variant="buttonLabelSmall" onPress={onPressViewRecovery}>
+            <Text color="$accent1" variant="buttonLabelSmall" onPress={onPressViewRecovery}>
               {t('View recovery phrase')}
             </Text>
           )}
@@ -95,16 +93,16 @@ export function ForceUpgradeModal(): JSX.Element {
           backgroundColor={theme.colors.surface1}
           name={ModalName.ForceUpgradeModal}
           onClose={onDismiss}>
-          <Box flex={1} px="spacing24" py="spacing24">
+          <Flex fill px="$spacing24" py="$spacing24">
             <Flex row alignItems="center" justifyContent="flex-start">
               <TouchableArea onPress={onDismiss}>
                 <BackButtonView size={BACK_BUTTON_SIZE} />
               </TouchableArea>
               <Text variant="subheadLarge">{t('Recovery phrase')}</Text>
-              <Box width={BACK_BUTTON_SIZE} />
+              <Flex gap="$none" width={BACK_BUTTON_SIZE} />
             </Flex>
             <SeedPhraseDisplay mnemonicId={mnemonicId} onDismiss={onDismiss} />
-          </Box>
+          </Flex>
         </BottomSheetModal>
       )}
     </>

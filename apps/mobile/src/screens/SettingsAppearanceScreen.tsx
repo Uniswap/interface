@@ -4,11 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { SvgProps } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
+import { Flex } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
 import MoonIcon from 'ui/src/assets/icons/moon.svg'
@@ -25,10 +24,10 @@ export function SettingsAppearanceScreen(): JSX.Element {
 
   return (
     <Screen>
-      <BackHeader alignment="center" mx="spacing16" pt="spacing16">
+      <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
         <Text variant="bodyLarge">{t('Appearance')}</Text>
       </BackHeader>
-      <Box p="spacing24">
+      <Flex gap="$none" p="$spacing24">
         <AppearanceOption
           Icon={ContrastIcon}
           active={currentTheme === 'system'}
@@ -50,7 +49,7 @@ export function SettingsAppearanceScreen(): JSX.Element {
           subtitle={t('Always use dark mode')}
           title={t('Dark mode')}
         />
-      </Box>
+      </Flex>
     </Screen>
   )
 }
@@ -88,8 +87,8 @@ function AppearanceOption({
         strokeWidth={1.5}
         width={theme.iconSizes.icon24}
       />
-      <Flex row shrink gap="none">
-        <Flex shrink gap="none" ml="spacing16">
+      <Flex row shrink gap="$none">
+        <Flex shrink gap="$none" ml="$spacing16">
           <Text variant="bodyLarge">{title}</Text>
           <Text color="neutral2" pr="spacing12" variant="bodySmall">
             {subtitle}

@@ -4,7 +4,7 @@ import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { filterRecipientByNameAndAddress } from 'src/components/RecipientSelect/filter'
 import { useRecipients } from 'src/components/RecipientSelect/hooks'
 import { RecipientList } from 'src/components/RecipientSelect/RecipientList'
@@ -13,6 +13,7 @@ import { filterSections } from 'src/components/RecipientSelect/utils'
 import { Text } from 'src/components/Text'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 import { ElementName } from 'src/features/telemetry/constants'
+import { Flex } from 'ui/src'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 
 interface RecipientSelectProps {
@@ -83,7 +84,7 @@ export function _RecipientSelect({
           onChangeText={onChangePattern}
         />
         {noResults ? (
-          <Flex centered gap="spacing12" mt="spacing24" px="spacing24">
+          <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">
             <Text variant="buttonLabelMedium">{t('No results found')}</Text>
             <Text color="neutral3" textAlign="center" variant="bodyLarge">
               {t('The address you typed either does not exist or is spelled incorrectly.')}

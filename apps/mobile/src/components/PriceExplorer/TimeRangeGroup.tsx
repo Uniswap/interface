@@ -8,7 +8,7 @@ import {
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedBox, Box } from 'src/components/layout/Box'
+import { AnimatedBox } from 'src/components/layout/Box'
 import {
   BUTTON_PADDING,
   BUTTON_WIDTH,
@@ -18,6 +18,7 @@ import {
 } from 'src/components/PriceExplorer/constants'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
+import { Flex } from 'ui/src'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 
 interface Props {
@@ -71,7 +72,7 @@ export function TimeRangeGroup({
   }))
 
   return (
-    <Box alignSelf="center" flexDirection="row" width={CHART_WIDTH}>
+    <Flex row alignSelf="center" gap="$none" width={CHART_WIDTH}>
       <View style={StyleSheet.absoluteFill}>
         <AnimatedBox
           bg="$surface3"
@@ -105,6 +106,6 @@ export function TimeRangeGroup({
           </Trace>
         )
       })}
-    </Box>
+    </Flex>
   )
 }

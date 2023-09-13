@@ -51,52 +51,46 @@ exports[`renders wallet preview card 1`] = `
   }
 >
   <View
-    sentry-label="Flex"
     style={
-      [
-        {
-          "alignItems": "center",
-          "display": "flex",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
-        },
-      ]
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 16,
+        "justifyContent": "space-between",
+      }
     }
   >
     <View
-      sentry-label="Flex"
       style={
-        [
-          {
-            "alignItems": "center",
-            "display": "flex",
-            "flexDirection": "row",
-            "height": 36,
-            "justifyContent": "flex-start",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 12,
+          "height": 36,
+          "justifyContent": "flex-start",
+        }
       }
     >
       <View
         style={
-          [
-            {
-              "display": "flex",
-              "height": 32,
-              "width": 32,
-            },
-          ]
+          {
+            "alignItems": "stretch",
+            "flexDirection": "column",
+            "gap": 0,
+            "height": 32,
+            "width": 32,
+          }
         }
       >
         <View
           style={
-            [
-              {
-                "display": "flex",
-                "height": 32,
-                "width": 32,
-              },
-            ]
+            {
+              "alignItems": "stretch",
+              "flexDirection": "column",
+              "gap": 0,
+              "height": 32,
+              "width": 32,
+            }
           }
         >
           <View
@@ -229,24 +223,11 @@ exports[`renders wallet preview card 1`] = `
       </View>
       <View
         style={
-          [
-            {
-              "display": "flex",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "height": 12,
-              "width": 12,
-            },
-          ]
-        }
-      />
-      <View
-        style={
-          [
-            {
-              "display": "flex",
-            },
-          ]
+          {
+            "alignItems": "stretch",
+            "flexDirection": "column",
+            "gap": 0,
+          }
         }
       >
         <Text
@@ -271,47 +252,44 @@ exports[`renders wallet preview card 1`] = `
     </View>
     <View
       style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 16,
-            "width": 16,
-          },
-        ]
-      }
-    />
-    <View
-      sentry-label="Flex"
-      style={
-        [
-          {
-            "alignItems": "center",
-            "borderColor": "#FC72FF",
-            "borderRadius": 999999,
-            "borderWidth": 1,
-            "display": "flex",
-            "flexDirection": "column",
-            "height": 16,
-            "justifyContent": "center",
-            "width": 16,
-          },
-        ]
+        {
+          "alignItems": "center",
+          "borderBottomColor": "#FC72FF",
+          "borderBottomLeftRadius": 999999,
+          "borderBottomRightRadius": 999999,
+          "borderBottomWidth": 1,
+          "borderLeftColor": "#FC72FF",
+          "borderLeftWidth": 1,
+          "borderRightColor": "#FC72FF",
+          "borderRightWidth": 1,
+          "borderStyle": "solid",
+          "borderTopColor": "#FC72FF",
+          "borderTopLeftRadius": 999999,
+          "borderTopRightRadius": 999999,
+          "borderTopWidth": 1,
+          "flexDirection": "column",
+          "gap": 16,
+          "height": 16,
+          "justifyContent": "center",
+          "width": 16,
+        }
       }
     >
       <View
         style={
-          [
-            {
-              "backgroundColor": "#FC72FF",
-              "borderRadius": 999999,
-              "display": "flex",
-              "height": 8,
-              "opacity": 1,
-              "width": 8,
-            },
-          ]
+          {
+            "alignItems": "stretch",
+            "backgroundColor": "#FC72FF",
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "flexDirection": "column",
+            "gap": 0,
+            "height": 8,
+            "opacity": 1,
+            "width": 8,
+          }
         }
       />
     </View>

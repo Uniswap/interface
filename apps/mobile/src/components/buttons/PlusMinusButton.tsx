@@ -1,8 +1,8 @@
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box } from 'src/components/layout'
-import PlusIcon from 'ui/src/assets/icons/plus.svg'
+import { Flex, Icons } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 export enum PlusMinusButtonType {
   Plus,
@@ -32,14 +32,20 @@ export default function PlusMinusButton({
       width={theme.iconSizes.icon28}
       onPress={(): void => onPress(type)}>
       {type === PlusMinusButtonType.Plus ? (
-        <PlusIcon
-          color={theme.colors.surface1}
-          height={theme.iconSizes.icon12}
+        <Icons.Plus
+          color="$surface1"
+          height={iconSizes.icon12}
           strokeWidth={2.5}
-          width={theme.iconSizes.icon12}
+          width={iconSizes.icon12}
         />
       ) : (
-        <Box backgroundColor="surface1" borderRadius="rounded12" height={2} width={10} />
+        <Flex
+          backgroundColor="$surface1"
+          borderRadius="$rounded12"
+          gap="$none"
+          height={2}
+          width={10}
+        />
       )}
     </TouchableArea>
   )

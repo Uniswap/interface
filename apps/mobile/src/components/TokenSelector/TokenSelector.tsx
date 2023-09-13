@@ -6,7 +6,6 @@ import { useAppTheme } from 'src/app/hooks'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
-import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
 import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
@@ -19,6 +18,7 @@ import Trace from 'src/components/Trace/Trace'
 import { IS_IOS } from 'src/constants/globals'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { getClipboard } from 'src/utils/clipboard'
+import { Flex } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
@@ -130,7 +130,7 @@ function _TokenSelectorModal({
       snapPoints={['65%', '100%']}
       onClose={onClose}>
       <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
-        <Flex grow pb={IS_IOS ? 'spacing16' : 'none'} px="spacing16">
+        <Flex grow pb={IS_IOS ? '$spacing16' : '$none'} px="$spacing16">
           <SearchTextInput
             backgroundColor="surface2"
             endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
@@ -139,7 +139,7 @@ function _TokenSelectorModal({
             value={searchFilter ?? ''}
             onChangeText={onChangeText}
           />
-          <Box flexGrow={1}>
+          <Flex grow gap="$none">
             {searchFilter ? (
               <TokenSelectorSearchResultsList
                 chainFilter={chainFilter}
@@ -164,14 +164,14 @@ function _TokenSelectorModal({
                 onSelectCurrency={onSelectCurrencyCallback}
               />
             ) : null}
-            <Box position="absolute" right={0}>
+            <Flex gap="$none" position="absolute" right={0}>
               <NetworkFilter
                 includeAllNetworks
                 selectedChain={chainFilter}
                 onPressChain={onChangeChainFilter}
               />
-            </Box>
-          </Box>
+            </Flex>
+          </Flex>
         </Flex>
       </Trace>
     </BottomSheetModal>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { Box } from 'src/components/layout'
+import { Flex } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
@@ -22,7 +22,7 @@ export function DappHeaderIcon({
   const fallback = <DappIconPlaceholder iconSize={iconSizes.icon40} name={dapp.name} />
 
   return (
-    <Box height={iconSizes.icon40} width={iconSizes.icon40}>
+    <Flex gap="$none" height={iconSizes.icon40} width={iconSizes.icon40}>
       {dapp.icon ? (
         <ImageUri
           fallback={fallback}
@@ -36,7 +36,7 @@ export function DappHeaderIcon({
       ) : (
         fallback
       )}
-    </Box>
+    </Flex>
   )
 }
 

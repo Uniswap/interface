@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, BoxProps, Flex } from 'src/components/layout'
+import { BoxProps } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
 import { MobileEventName, ModalName } from 'src/features/telemetry/constants'
-import { Icons } from 'ui/src'
+import { Flex, Icons } from 'ui/src'
 import FiatOnRampBackground from 'ui/src/assets/backgrounds/fiat-onramp-banner.svg'
 import { iconSizes } from 'ui/src/theme'
 
@@ -31,10 +31,10 @@ export function FiatOnRampBanner(props: BoxProps): JSX.Element {
         onPress={onPress}
         {...props}
         hapticFeedback>
-        <Box flex={1} position="absolute" right={0} top={0}>
+        <Flex fill gap="$none" position="absolute" right={0} top={0}>
           <FiatOnRampBackground color={theme.colors.sporeWhite} />
-        </Box>
-        <Flex gap="spacing4">
+        </Flex>
+        <Flex gap="$spacing4">
           <Flex row justifyContent="space-between">
             <Text color="sporeWhite" variant="buttonLabelMedium">
               {t('Buy crypto')}

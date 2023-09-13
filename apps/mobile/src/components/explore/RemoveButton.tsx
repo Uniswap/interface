@@ -2,7 +2,7 @@ import React from 'react'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AnimatedTouchableArea, BaseButtonProps } from 'src/components/buttons/TouchableArea'
-import { Box } from 'src/components/layout/Box'
+import { Flex } from 'ui/src'
 
 export default function RemoveButton(props: BaseButtonProps): JSX.Element {
   const theme = useAppTheme()
@@ -19,7 +19,7 @@ export default function RemoveButton(props: BaseButtonProps): JSX.Element {
       justifyContent="center"
       width={theme.imageSizes.image24}
       zIndex="tooltip">
-      <Box backgroundColor="surface1" borderRadius="rounded12" height={2} width={10} />
+      <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={10} />
     </AnimatedTouchableArea>
   )
 }

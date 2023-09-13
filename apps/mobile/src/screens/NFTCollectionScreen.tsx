@@ -7,7 +7,6 @@ import { ListRenderItemInfo } from 'react-native'
 import { useAnimatedScrollHandler, useSharedValue, withTiming } from 'react-native-reanimated'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Screen } from 'src/components/layout/Screen'
@@ -26,6 +25,7 @@ import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
+import { Flex } from 'ui/src'
 import { dimensions } from 'ui/src/theme'
 import { theme } from 'ui/src/theme/restyle'
 import { isError } from 'wallet/src/data/utils'
@@ -144,11 +144,12 @@ export function NFTCollectionScreen({
     const priceColor = IS_IOS ? 'sporeWhite' : 'neutral1'
 
     return (
-      <Box
+      <Flex
+        fill
         aspectRatio={1}
-        backgroundColor="surface3"
-        borderRadius="rounded16"
-        flex={1}
+        backgroundColor="$surface3"
+        borderRadius="$rounded16"
+        gap="$none"
         overflow="hidden"
         style={containerStyle}>
         {typeof item === 'string' ? (
@@ -172,7 +173,7 @@ export function NFTCollectionScreen({
             {item.listPrice && (
               <ListPriceBadge
                 bottom={theme.spacing.spacing4}
-                gap="none"
+                gap="$none"
                 iconColor={priceColor}
                 iconSize="icon12"
                 position="absolute"
@@ -183,7 +184,7 @@ export function NFTCollectionScreen({
             )}
           </TouchableArea>
         )}
-      </Box>
+      </Flex>
     )
   }
 

@@ -3,8 +3,8 @@ import React from 'react'
 import { Modal as BaseModal, ModalProps, StyleSheet, View } from 'react-native'
 import { CloseButton } from 'src/components/buttons/CloseButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
+import { Flex } from 'ui/src'
 import { Theme } from 'ui/src/theme/restyle'
 
 interface Props extends ModalProps {
@@ -51,8 +51,9 @@ Props): JSX.Element {
         justifyContent={justifyContent}
         style={dimBackground && style.bgDimmed}
         onPress={dismissable ? hide : undefined}>
-        <Box
-          backgroundColor="surface1"
+        <Flex
+          backgroundColor="$surface1"
+          gap="$none"
           style={width === '100%' ? style.modalBoxFullWidth : style.modalBox}
           width={width}>
           {title && (
@@ -66,7 +67,7 @@ Props): JSX.Element {
             </View>
           )}
           {children}
-        </Box>
+        </Flex>
       </TouchableArea>
     </BaseModal>
   )

@@ -1,12 +1,11 @@
 import React, { memo, useMemo } from 'react'
-import { Box as BoxComponent, Flex } from 'src/components/layout'
 import { NftCardLoader } from 'src/components/loading/NftCardLoader'
 import { Shimmer } from 'src/components/loading/Shimmer'
 import { TokenLoader } from 'src/components/loading/TokenLoader'
 import { TransactionLoader } from 'src/components/loading/TransactionLoader'
 import { WalletLoader } from 'src/components/loading/WalletLoader'
 import { WaveLoader } from 'src/components/loading/WaveLoader'
-import { getToken } from 'ui/src'
+import { Flex, getToken } from 'ui/src'
 import { BoxLoader, BoxLoaderProps } from 'ui/src/loading'
 
 function Graph(): JSX.Element {
@@ -20,7 +19,7 @@ function Graph(): JSX.Element {
 function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
     <Shimmer>
-      <Flex gap="spacing12">
+      <Flex gap="$spacing12">
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <WalletLoader opacity={(length - i) / length} />
@@ -34,7 +33,7 @@ function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
 function Token({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
     <Shimmer>
-      <Flex grow gap="spacing4">
+      <Flex grow gap="$spacing4">
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <TokenLoader opacity={(length - i) / length} />
@@ -52,7 +51,7 @@ export const Transaction = memo(function _Transaction({
 }): JSX.Element {
   return (
     <Shimmer>
-      <Flex gap="none">
+      <Flex gap="$none">
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <TransactionLoader opacity={(length - i) / length} />
@@ -69,20 +68,20 @@ function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
       repeat === 1 ? (
         <NftCardLoader opacity={1} />
       ) : (
-        <BoxComponent>
+        <Flex gap="$none">
           {new Array(repeat / 2).fill(null).map((_, i) => {
             const firstColOpacity = (repeat - ((repeat / 2) * i + 1) + 1) / repeat
             const secondColOpacity = (repeat - ((repeat / 2) * i + 2) + 1) / repeat
             return (
               <React.Fragment key={i}>
-                <Flex row gap="none">
+                <Flex row gap="$none">
                   <NftCardLoader opacity={firstColOpacity} width="50%" />
                   <NftCardLoader opacity={secondColOpacity} width="50%" />
                 </Flex>
               </React.Fragment>
             )
           })}
-        </BoxComponent>
+        </Flex>
       ),
     [repeat]
   )

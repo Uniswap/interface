@@ -1,9 +1,9 @@
 import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { CHART_HEIGHT } from 'src/components/PriceExplorer/constants'
 import { Text } from 'src/components/Text'
+import { Flex } from 'ui/src'
 
 export function PriceExplorerError({
   showRetry,
@@ -13,17 +13,17 @@ export function PriceExplorerError({
 }): JSX.Element {
   const { t } = useTranslation()
   return (
-    <Flex gap="spacing16" mx="spacing24">
-      <Flex gap="spacing12">
+    <Flex gap="$spacing16" mx="$spacing24">
+      <Flex gap="$spacing12">
         <Text color="neutral3" variant="headlineLarge">
           {
             '\u2013' // em dash
           }
         </Text>
       </Flex>
-      <Box
+      <Flex
         alignItems="center"
-        borderRadius="rounded16"
+        borderRadius="$rounded16"
         height={CHART_HEIGHT}
         justifyContent="center"
         overflow="hidden">
@@ -33,7 +33,7 @@ export function PriceExplorerError({
           title={t('Couldn’t load price chart')}
           onRetry={onRetry}
         />
-      </Box>
+      </Flex>
     </Flex>
   )
 }

@@ -198,33 +198,34 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               testID="add-cloud-backup"
             >
               <View
-                sentry-label="Flex"
                 style={
-                  [
-                    {
-                      "alignContent": "center",
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "flex-start",
-                    },
-                  ]
+                  {
+                    "alignContent": "center",
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 16,
+                  }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "alignItems": "center",
-                        "backgroundColor": "#FC72FF1f",
-                        "borderRadius": 999999,
-                        "display": "flex",
-                        "height": 36,
-                        "justifyContent": "center",
-                        "padding": 16,
-                        "width": 36,
-                      },
-                    ]
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": "#FC72FF1f",
+                      "borderBottomLeftRadius": 999999,
+                      "borderBottomRightRadius": 999999,
+                      "borderTopLeftRadius": 999999,
+                      "borderTopRightRadius": 999999,
+                      "flexDirection": "column",
+                      "gap": 0,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "width": 36,
+                    }
                   }
                 >
                   <RNSVGSvgView
@@ -287,56 +288,32 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 </View>
                 <View
                   style={
-                    [
-                      {
-                        "display": "flex",
-                        "flexGrow": 0,
-                        "flexShrink": 0,
-                        "height": 16,
-                        "width": 16,
-                      },
-                    ]
-                  }
-                />
-                <View
-                  sentry-label="Flex"
-                  style={
-                    [
-                      {
-                        "alignItems": "center",
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "justifyContent": "flex-start",
-                        "paddingRight": 60,
-                      },
-                    ]
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "gap": 4,
+                      "paddingRight": 60,
+                    }
                   }
                 >
                   <View
-                    sentry-label="Flex"
                     style={
-                      [
-                        {
-                          "alignItems": "flex-start",
-                          "display": "flex",
-                          "flex": 1,
-                          "flexDirection": "column",
-                          "justifyContent": "space-around",
-                        },
-                      ]
+                      {
+                        "alignItems": "flex-start",
+                        "flex": 1,
+                        "flexDirection": "column",
+                        "gap": 4,
+                        "justifyContent": "space-around",
+                      }
                     }
                   >
                     <View
-                      sentry-label="Flex"
                       style={
-                        [
-                          {
-                            "alignItems": "stretch",
-                            "display": "flex",
-                            "flexDirection": "row",
-                            "justifyContent": "flex-start",
-                          },
-                        ]
+                        {
+                          "alignItems": "stretch",
+                          "flexDirection": "row",
+                          "gap": 8,
+                        }
                       }
                     >
                       <Text
@@ -358,18 +335,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         Backup with iCloud
                       </Text>
                     </View>
-                    <View
-                      style={
-                        [
-                          {
-                            "display": "flex",
-                            "flexGrow": 0,
-                            "flexShrink": 0,
-                            "height": 4,
-                          },
-                        ]
-                      }
-                    />
                     <Text
                       allowFontScaling={false}
                       maxFontSizeMultiplier={1.4}
@@ -441,33 +406,34 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               testID="add-manual-backup"
             >
               <View
-                sentry-label="Flex"
                 style={
-                  [
-                    {
-                      "alignContent": "center",
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "flex-start",
-                    },
-                  ]
+                  {
+                    "alignContent": "center",
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 16,
+                  }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "alignItems": "center",
-                        "backgroundColor": "#FC72FF1f",
-                        "borderRadius": 999999,
-                        "display": "flex",
-                        "height": 36,
-                        "justifyContent": "center",
-                        "padding": 16,
-                        "width": 36,
-                      },
-                    ]
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": "#FC72FF1f",
+                      "borderBottomLeftRadius": 999999,
+                      "borderBottomRightRadius": 999999,
+                      "borderTopLeftRadius": 999999,
+                      "borderTopRightRadius": 999999,
+                      "flexDirection": "column",
+                      "gap": 0,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "width": 36,
+                    }
                   }
                 >
                   <svg
@@ -478,56 +444,32 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 </View>
                 <View
                   style={
-                    [
-                      {
-                        "display": "flex",
-                        "flexGrow": 0,
-                        "flexShrink": 0,
-                        "height": 16,
-                        "width": 16,
-                      },
-                    ]
-                  }
-                />
-                <View
-                  sentry-label="Flex"
-                  style={
-                    [
-                      {
-                        "alignItems": "center",
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "justifyContent": "flex-start",
-                        "paddingRight": 60,
-                      },
-                    ]
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "gap": 4,
+                      "paddingRight": 60,
+                    }
                   }
                 >
                   <View
-                    sentry-label="Flex"
                     style={
-                      [
-                        {
-                          "alignItems": "flex-start",
-                          "display": "flex",
-                          "flex": 1,
-                          "flexDirection": "column",
-                          "justifyContent": "space-around",
-                        },
-                      ]
+                      {
+                        "alignItems": "flex-start",
+                        "flex": 1,
+                        "flexDirection": "column",
+                        "gap": 4,
+                        "justifyContent": "space-around",
+                      }
                     }
                   >
                     <View
-                      sentry-label="Flex"
                       style={
-                        [
-                          {
-                            "alignItems": "stretch",
-                            "display": "flex",
-                            "flexDirection": "row",
-                            "justifyContent": "flex-start",
-                          },
-                        ]
+                        {
+                          "alignItems": "stretch",
+                          "flexDirection": "row",
+                          "gap": 8,
+                        }
                       }
                     >
                       <Text
@@ -549,18 +491,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         Backup with recovery phrase
                       </Text>
                     </View>
-                    <View
-                      style={
-                        [
-                          {
-                            "display": "flex",
-                            "flexGrow": 0,
-                            "flexShrink": 0,
-                            "height": 4,
-                          },
-                        ]
-                      }
-                    />
                     <Text
                       allowFontScaling={false}
                       maxFontSizeMultiplier={1.4}
@@ -709,7 +639,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 maxFontSizeMultiplier={1.2}
                 style={
                   {
-                    "color": "#CECECE",
+                    "color": "#FFFFFF",
                     "display": "flex",
                     "fontFamily": "Basel-Medium",
                     "fontSize": 19,
@@ -927,33 +857,34 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               testID="add-cloud-backup"
             >
               <View
-                sentry-label="Flex"
                 style={
-                  [
-                    {
-                      "alignContent": "center",
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "flex-start",
-                    },
-                  ]
+                  {
+                    "alignContent": "center",
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 16,
+                  }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "alignItems": "center",
-                        "backgroundColor": "#FC72FF1f",
-                        "borderRadius": 999999,
-                        "display": "flex",
-                        "height": 36,
-                        "justifyContent": "center",
-                        "padding": 16,
-                        "width": 36,
-                      },
-                    ]
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": "#FC72FF1f",
+                      "borderBottomLeftRadius": 999999,
+                      "borderBottomRightRadius": 999999,
+                      "borderTopLeftRadius": 999999,
+                      "borderTopRightRadius": 999999,
+                      "flexDirection": "column",
+                      "gap": 0,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "width": 36,
+                    }
                   }
                 >
                   <RNSVGSvgView
@@ -1016,56 +947,32 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 </View>
                 <View
                   style={
-                    [
-                      {
-                        "display": "flex",
-                        "flexGrow": 0,
-                        "flexShrink": 0,
-                        "height": 16,
-                        "width": 16,
-                      },
-                    ]
-                  }
-                />
-                <View
-                  sentry-label="Flex"
-                  style={
-                    [
-                      {
-                        "alignItems": "center",
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "justifyContent": "flex-start",
-                        "paddingRight": 60,
-                      },
-                    ]
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "gap": 4,
+                      "paddingRight": 60,
+                    }
                   }
                 >
                   <View
-                    sentry-label="Flex"
                     style={
-                      [
-                        {
-                          "alignItems": "flex-start",
-                          "display": "flex",
-                          "flex": 1,
-                          "flexDirection": "column",
-                          "justifyContent": "space-around",
-                        },
-                      ]
+                      {
+                        "alignItems": "flex-start",
+                        "flex": 1,
+                        "flexDirection": "column",
+                        "gap": 4,
+                        "justifyContent": "space-around",
+                      }
                     }
                   >
                     <View
-                      sentry-label="Flex"
                       style={
-                        [
-                          {
-                            "alignItems": "stretch",
-                            "display": "flex",
-                            "flexDirection": "row",
-                            "justifyContent": "flex-start",
-                          },
-                        ]
+                        {
+                          "alignItems": "stretch",
+                          "flexDirection": "row",
+                          "gap": 8,
+                        }
                       }
                     >
                       <Text
@@ -1087,18 +994,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         Backup with iCloud
                       </Text>
                     </View>
-                    <View
-                      style={
-                        [
-                          {
-                            "display": "flex",
-                            "flexGrow": 0,
-                            "flexShrink": 0,
-                            "height": 4,
-                          },
-                        ]
-                      }
-                    />
                     <Text
                       allowFontScaling={false}
                       maxFontSizeMultiplier={1.4}
@@ -1170,33 +1065,34 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               testID="add-manual-backup"
             >
               <View
-                sentry-label="Flex"
                 style={
-                  [
-                    {
-                      "alignContent": "center",
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "flex-start",
-                    },
-                  ]
+                  {
+                    "alignContent": "center",
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 16,
+                  }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "alignItems": "center",
-                        "backgroundColor": "#FC72FF1f",
-                        "borderRadius": 999999,
-                        "display": "flex",
-                        "height": 36,
-                        "justifyContent": "center",
-                        "padding": 16,
-                        "width": 36,
-                      },
-                    ]
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": "#FC72FF1f",
+                      "borderBottomLeftRadius": 999999,
+                      "borderBottomRightRadius": 999999,
+                      "borderTopLeftRadius": 999999,
+                      "borderTopRightRadius": 999999,
+                      "flexDirection": "column",
+                      "gap": 0,
+                      "height": 36,
+                      "justifyContent": "center",
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "width": 36,
+                    }
                   }
                 >
                   <svg
@@ -1207,56 +1103,32 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 </View>
                 <View
                   style={
-                    [
-                      {
-                        "display": "flex",
-                        "flexGrow": 0,
-                        "flexShrink": 0,
-                        "height": 16,
-                        "width": 16,
-                      },
-                    ]
-                  }
-                />
-                <View
-                  sentry-label="Flex"
-                  style={
-                    [
-                      {
-                        "alignItems": "center",
-                        "display": "flex",
-                        "flexDirection": "row",
-                        "justifyContent": "flex-start",
-                        "paddingRight": 60,
-                      },
-                    ]
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "gap": 4,
+                      "paddingRight": 60,
+                    }
                   }
                 >
                   <View
-                    sentry-label="Flex"
                     style={
-                      [
-                        {
-                          "alignItems": "flex-start",
-                          "display": "flex",
-                          "flex": 1,
-                          "flexDirection": "column",
-                          "justifyContent": "space-around",
-                        },
-                      ]
+                      {
+                        "alignItems": "flex-start",
+                        "flex": 1,
+                        "flexDirection": "column",
+                        "gap": 4,
+                        "justifyContent": "space-around",
+                      }
                     }
                   >
                     <View
-                      sentry-label="Flex"
                       style={
-                        [
-                          {
-                            "alignItems": "stretch",
-                            "display": "flex",
-                            "flexDirection": "row",
-                            "justifyContent": "flex-start",
-                          },
-                        ]
+                        {
+                          "alignItems": "stretch",
+                          "flexDirection": "row",
+                          "gap": 8,
+                        }
                       }
                     >
                       <Text
@@ -1278,18 +1150,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         Backup with recovery phrase
                       </Text>
                     </View>
-                    <View
-                      style={
-                        [
-                          {
-                            "display": "flex",
-                            "flexGrow": 0,
-                            "flexShrink": 0,
-                            "height": 4,
-                          },
-                        ]
-                      }
-                    />
                     <Text
                       allowFontScaling={false}
                       maxFontSizeMultiplier={1.4}

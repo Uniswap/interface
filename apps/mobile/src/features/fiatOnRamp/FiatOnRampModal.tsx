@@ -17,8 +17,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { TextInputProps } from 'src/components/input/TextInput'
-import { Box } from 'src/components/layout'
-import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
+import { AnimatedFlex } from 'src/components/layout/Flex'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Pill } from 'src/components/text/Pill'
@@ -32,7 +31,7 @@ import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/
 import { MobileEventProperties } from 'src/features/telemetry/types'
 import { useDynamicFontSizing, useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { openUri } from 'src/utils/linking'
-import { Icons, Text } from 'ui/src'
+import { Flex, Icons, Text } from 'ui/src'
 import InformationIcon from 'ui/src/assets/icons/i-icon.svg'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
@@ -251,7 +250,8 @@ export function FiatOnRampModal(): JSX.Element {
                     }}
                   />
                 )}
-                <Box
+                <Flex
+                  gap="$none"
                   /* We want to reserve the space here, so when error occurs - layout does not jump */
                   height={spacing.spacing24}>
                   {errorText && errorColor && (
@@ -259,9 +259,9 @@ export function FiatOnRampModal(): JSX.Element {
                       {errorText}
                     </Text>
                   )}
-                </Box>
+                </Flex>
               </AnimatedFlex>
-              <Flex centered row pb="spacing16">
+              <Flex centered row pb="$spacing16">
                 {['100', '300', '1000'].map((amount) => (
                   <PredefinedAmount
                     key={amount}
@@ -421,7 +421,7 @@ function SelectTokenButton({
       borderRadius="roundedFull"
       testID={ElementName.TokenSelectorToggle}
       onPress={onPress}>
-      <Flex centered row flexDirection="row" gap="spacing4" p="spacing4">
+      <Flex centered row flexDirection="row" gap="$spacing4" p="$spacing4">
         {loading ? (
           <SpinningLoader />
         ) : (

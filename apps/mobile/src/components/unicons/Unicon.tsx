@@ -12,7 +12,6 @@ import {
 } from '@shopify/react-native-skia'
 import React, { memo, useMemo } from 'react'
 import 'react-native-reanimated'
-import { Box } from 'src/components/layout'
 import {
   blurs,
   UniconAttributeData,
@@ -24,6 +23,7 @@ import {
   getUniconAttributeData,
   isEthAddress,
 } from 'src/components/unicons/utils'
+import { Flex } from 'ui/src'
 import { flex } from 'ui/src/theme/restyle'
 import { useSelectedColorScheme } from 'wallet/src/features/appearance/hooks'
 
@@ -259,25 +259,25 @@ export function _Unicon({
   if (!address || !isEthAddress(address) || !attributeIndices) return null
 
   return (
-    <Box height={size} width={size}>
-      <Box height={size} width={size}>
+    <Flex gap="$none" height={size} width={size}>
+      <Flex gap="$none" height={size} width={size}>
         <UniconSvg
           attributeIndices={attributeIndices}
           lightModeOverlay={isLightMode}
           showBorder={showBorder}
           size={size}
         />
-      </Box>
+      </Flex>
       {showBorder && (
-        <Box height={size} position="absolute" width={size} zIndex="negative">
+        <Flex gap="$none" height={size} position="absolute" width={size} zIndex="$negative">
           <UniconBG
             attributeIndices={attributeIndices}
             backgroundColor={backgroundColor}
             showBorder={true}
             size={size}
           />
-        </Box>
+        </Flex>
       )}
-    </Box>
+    </Flex>
   )
 }

@@ -10,10 +10,11 @@ import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { openSettings } from 'src/utils/linking'
+import { Flex } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import { dimensions } from 'ui/src/theme'
@@ -94,9 +95,10 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       entering={FadeIn}
       exiting={FadeOut}
       overflow="hidden">
-      <Box justifyContent="center" style={StyleSheet.absoluteFill}>
-        <Box
-          bg="sporeBlack"
+      <Flex gap="$none" justifyContent="center" style={StyleSheet.absoluteFill}>
+        <Flex
+          bg="$sporeBlack"
+          gap="$none"
           height={Math.min((4 / 3) * dimensions.fullWidth, dimensions.fullHeight)}
           overflow="hidden">
           {permissionStatus === PermissionStatus.GRANTED && (
@@ -108,13 +110,13 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             />
           )}
           <GradientOverlay shouldFreezeCamera={shouldFreezeCamera} theme={theme} />
-        </Box>
-      </Box>
-      <Flex centered gap="spacing48" style={StyleSheet.absoluteFill}>
-        <Flex alignItems="center" gap="none">
+        </Flex>
+      </Flex>
+      <Flex centered gap="$spacing48" style={StyleSheet.absoluteFill}>
+        <Flex alignItems="center" gap="$none">
           <Flex
             centered
-            gap="spacing12"
+            gap="$spacing12"
             opacity={shouldFreezeCamera ? 0.4 : 1}
             position="absolute"
             style={{
@@ -141,7 +143,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             />
           ) : (
             // camera has been frozen (has seen a barcode) — show the loading spinner and "Connecting..." or "Loading..."
-            <Box height={SCANNER_SIZE} width={SCANNER_SIZE}>
+            <Flex gap="$none" height={SCANNER_SIZE} width={SCANNER_SIZE}>
               <Flex
                 alignItems="center"
                 height="100%"
@@ -154,12 +156,12 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                   top={SCANNER_SIZE / 2 - LOADER_SIZE / 2}>
                   <SpinningLoader color="neutral1" size={theme.iconSizes.icon40} />
                 </Flex>
-                <Box style={{ marginTop: LOADER_SIZE + theme.spacing.spacing24 }} />
+                <Flex gap="$none" style={{ marginTop: LOADER_SIZE + theme.spacing.spacing24 }} />
                 <Text color="neutral1" textAlign="center" variant="bodyLarge">
                   {isWalletConnectModal ? t('Connecting...') : t('Loading...')}
                 </Text>
               </Flex>
-            </Box>
+            </Flex>
           )}
           <DevelopmentOnly>
             {/* when in development mode AND there's no camera (using iOS Simulator), add a paste button */}
@@ -170,12 +172,12 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                 style={[StyleSheet.absoluteFill]}
                 width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}>
                 <Flex
-                  backgroundColor="surface2"
-                  borderRadius="rounded16"
-                  gap="spacing24"
-                  m="spacing12"
+                  backgroundColor="$surface2"
+                  borderRadius="$rounded16"
+                  gap="$spacing24"
+                  m="$spacing12"
                   opacity={0.6}
-                  p="spacing12">
+                  p="$spacing12">
                   <Text color="neutral1" textAlign="center" variant="bodyLarge">
                     This paste button will only show up in development mode
                   </Text>
@@ -185,8 +187,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             ) : null}
           </DevelopmentOnly>
           {isWalletConnectModal && props.numConnections > 0 && (
-            <Box
+            <Flex
               bottom={0}
+              gap="$none"
               position="absolute"
               style={{
                 transform: [
@@ -212,7 +215,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                 }
                 onPress={props.onPressConnections}
               />
-            </Box>
+            </Flex>
           )}
         </Flex>
       </Flex>
@@ -257,8 +260,9 @@ const GradientOverlay = memo(function GradientOverlay({
   }
 
   return (
-    <Box
+    <Flex
       alignItems="center"
+      gap="$none"
       justifyContent="center"
       position="absolute"
       style={StyleSheet.absoluteFill}
@@ -292,6 +296,6 @@ const GradientOverlay = memo(function GradientOverlay({
         {/* gradient from bottom of modal to bottom of QR code, of color DEP_background1 to transparent */}
         <Rect fill="url(#scan-bottom-fadeout)" height="100%" width="100%" x="0" y="0" />
       </Svg>
-    </Box>
+    </Flex>
   )
 })

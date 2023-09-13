@@ -6,12 +6,13 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { DappConnectedNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { dimensions } from 'ui/src/theme'
+import { Flex } from 'ui/src'
+import { dimensions, iconSizes } from 'ui/src/theme'
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
@@ -27,13 +28,15 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
   return (
     <>
       <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="spacing12">
-        <Flex row alignItems="center" justifyContent="space-between" px="spacing24">
-          <Box width={theme.iconSizes.icon40}>{backButton ?? <BackButton />}</Box>
+        <Flex row alignItems="center" justifyContent="space-between" px="$spacing24">
+          <Flex gap="$none" width={iconSizes.icon40}>
+            {backButton ?? <BackButton />}
+          </Flex>
           <Text color="neutral1" variant="bodyLarge">
             {t('Manage connections')}
           </Text>
           <TouchableArea
-            width={theme.iconSizes.icon40}
+            width={iconSizes.icon40}
             onPress={(): void => {
               setIsEditing(!isEditing)
             }}>
@@ -62,7 +65,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
             )}
           />
         ) : (
-          <Flex fill alignItems="center" gap="spacing8" px="spacing24" style={emptyCardStyle}>
+          <Flex fill alignItems="center" gap="$spacing8" px="$spacing24" style={emptyCardStyle}>
             <Text color="neutral1" variant="subheadLarge">
               {t('No apps connected')}
             </Text>

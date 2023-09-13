@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { Image, ImageBackground, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Box } from 'src/components/layout'
-import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
+import { AnimatedFlex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
+import { Flex } from 'ui/src'
 import {
   FOR_CONNECTING_BACKGROUND_DARK,
   FOR_CONNECTING_BACKGROUND_LIGHT,
@@ -39,15 +39,23 @@ export function FiatOnRampConnectingView({
         entering={FadeIn}
         exiting={FadeOut}
         style={{ marginBottom: insets.bottom }}>
-        <Flex row gap="spacing16" pb="spacing16">
-          <Box alignItems="center" justifyContent="center" style={styles.uniswapLogoWrapper}>
+        <Flex row gap="$spacing16" pb="$spacing16">
+          <Flex
+            alignItems="center"
+            gap="$none"
+            justifyContent="center"
+            style={styles.uniswapLogoWrapper}>
             <Image source={UNISWAP_LOGO_LARGE} style={styles.uniswapLogo} />
-          </Box>
-          <Box alignItems="center" justifyContent="center" style={styles.moonpayLogoWrapper}>
+          </Flex>
+          <Flex
+            alignItems="center"
+            gap="$none"
+            justifyContent="center"
+            style={styles.moonpayLogoWrapper}>
             <MoonpayLogo height={ICON_SIZE} width={ICON_SIZE} />
-          </Box>
+          </Flex>
         </Flex>
-        <Flex centered gap="spacing8">
+        <Flex centered gap="$spacing8">
           <Text variant="subheadLarge">{t('Connecting you to Moonpay')}</Text>
           {quoteCurrencyCode && (
             <Text color="neutral2" variant="bodySmall">

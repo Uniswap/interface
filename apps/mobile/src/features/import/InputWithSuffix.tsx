@@ -1,4 +1,3 @@
-import { ResponsiveValue } from '@shopify/restyle'
 import { useCallback, useState } from 'react'
 import {
   LayoutRectangle,
@@ -7,15 +6,15 @@ import {
   TextInputContentSizeChangeEventData,
 } from 'react-native'
 import { TextInput } from 'src/components/input/TextInput'
-import { Box } from 'src/components/layout'
 import { IS_ANDROID } from 'src/constants/globals'
+import { Flex } from 'ui/src'
 import { Theme } from 'ui/src/theme/restyle'
 
 interface Props {
   autoCorrect: boolean
   blurOnSubmit: boolean
   theme: Theme
-  inputAlignment: ResponsiveValue<'center' | 'flex-start', Theme>
+  inputAlignment: 'center' | 'flex-start'
   value?: string
   inputFontSize: number
   inputMaxFontSizeMultiplier: number
@@ -31,10 +30,10 @@ interface Props {
 
 export default function InputWithSuffix(props: Props): JSX.Element {
   return IS_ANDROID && props.inputSuffix ? (
-    <Box width="100%">
+    <Flex gap="$none" width="100%">
       <Inputs {...props} layerType="foreground" />
       <Inputs {...props} layerType="background" />
-    </Box>
+    </Flex>
   ) : (
     <Inputs {...props} />
   )
@@ -74,9 +73,10 @@ function Inputs({
   const backgroundTextAlignment = textAlign ?? fallbackBackgroundTextAlignment
 
   return (
-    <Box
+    <Flex
       alignItems="flex-end"
       flexDirection="row"
+      gap="$none"
       justifyContent={inputAlignment}
       width="100%"
       {...(layerType === 'foreground' ? { position: 'absolute', left: 0, bottom: 0 } : {})}
@@ -146,6 +146,6 @@ function Inputs({
           {...(layerType === 'foreground' ? { opacity: 0 } : {})}
         />
       ) : null}
-    </Box>
+    </Flex>
   )
 }

@@ -2,10 +2,10 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
+import { Flex } from 'ui/src'
 import InfoCircleSVG from 'ui/src/assets/icons/info-circle.svg'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -32,13 +32,13 @@ export function NetworkFee({
         {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
       </Text>
       {gasFallbackUsed && gasFeeUSD && (
-        <Box ml="spacing4">
+        <Flex gap="$none" ml="$spacing4">
           <InfoCircleSVG
             color={theme.colors.DEP_accentWarning}
             height={theme.iconSizes.icon20}
             width={theme.iconSizes.icon20}
           />
-        </Box>
+        </Flex>
       )}
     </>
   )
@@ -46,7 +46,7 @@ export function NetworkFee({
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Text variant="subheadSmall">{t('Network fee')}</Text>
-      <Flex row alignItems="center" gap="spacing8">
+      <Flex row alignItems="center" gap="$spacing8">
         <InlineNetworkPill chainId={chainId} />
         <Text variant="subheadSmall">•</Text>
         {!gasFeeUSD ? (

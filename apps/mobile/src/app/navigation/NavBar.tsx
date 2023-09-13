@@ -4,7 +4,7 @@ import { BlurView } from 'expo-blur'
 import { impactAsync } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Dimensions, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import {
   cancelAnimation,
@@ -14,11 +14,9 @@ import {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { pulseAnimation } from 'src/components/buttons/utils'
-import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -26,12 +24,13 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Icons, StackProps, Text } from 'ui/src'
-import { borderRadii, iconSizes } from 'ui/src/theme'
+import { Flex, Icons, LinearGradient, StackProps, Text, useTheme } from 'ui/src'
+import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { opacify } from 'wallet/src/utils/colors'
 
 export const NAV_BAR_HEIGHT_XS = 52
 export const NAV_BAR_HEIGHT_SM = 72
@@ -48,27 +47,26 @@ function sendSwapPressAnalyticsEvent(): void {
 
 export function NavBar(): JSX.Element {
   const insets = useSafeAreaInsets()
-  const theme = useAppTheme()
+  const theme = useTheme()
   const isDarkMode = useIsDarkMode()
-  const screenHeight = Dimensions.get('screen').height
 
   const BUTTONS_OFFSET =
-    useResponsiveProp({ xs: theme.spacing.spacing24, sm: theme.spacing.none }) ?? theme.spacing.none
+    useResponsiveProp({ xs: spacing.spacing24, sm: spacing.none }) ?? spacing.none
 
   return (
     <>
-      <Flex gap="$none" pointerEvents="none" style={StyleSheet.absoluteFill}>
-        <GradientBackground overflow="hidden">
-          <Svg height={screenHeight} opacity={isDarkMode ? '1' : '0.3'} width="100%">
-            <Defs>
-              <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
-                <Stop offset="0" stopColor={theme.colors.sporeBlack} stopOpacity="0" />
-                <Stop offset="1" stopColor={theme.colors.sporeBlack} stopOpacity="0.5" />
-              </LinearGradient>
-            </Defs>
-            <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
-          </Svg>
-        </GradientBackground>
+      <Flex
+        opacity={isDarkMode ? 1 : 0.3}
+        overflow="hidden"
+        pointerEvents="none"
+        style={StyleSheet.absoluteFill}>
+        <LinearGradient
+          colors={[opacify(50, theme.sporeBlack.val), opacify(0, theme.sporeBlack.val)]}
+          end={[0, 0.8]}
+          height="100%"
+          start={[0, 1]}
+          width="100%"
+        />
       </Flex>
       <Flex
         row
@@ -170,15 +168,13 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
             position="absolute"
             right={0}
             top={0}>
-            <Svg height="100%" width="100%">
-              <Defs>
-                <LinearGradient id="background" x1="0%" x2="0%" y1="0%" y2="100%">
-                  <Stop offset="0" stopColor="#F160F9" stopOpacity="1" />
-                  <Stop offset="1" stopColor="#e14ee9" stopOpacity="1" />
-                </LinearGradient>
-              </Defs>
-              <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
-            </Svg>
+            <LinearGradient
+              colors={['#F160F9', '#E14EE9']}
+              end={[0, 1]}
+              height="100%"
+              start={[0, 0]}
+              width="100%"
+            />
           </Flex>
           <Text color="$sporeWhite" variant="buttonLabelMedium">
             {t('Swap')}

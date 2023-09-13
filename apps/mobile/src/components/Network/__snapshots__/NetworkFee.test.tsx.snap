@@ -2,16 +2,13 @@
 
 exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "center",
-        "display": "flex",
-        "flexDirection": "row",
-        "justifyContent": "space-between",
-      },
-    ]
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 16,
+      "justifyContent": "space-between",
+    }
   }
 >
   <Text
@@ -34,28 +31,11 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
   </Text>
   <View
     style={
-      [
-        {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 16,
-          "width": 16,
-        },
-      ]
-    }
-  />
-  <View
-    sentry-label="Flex"
-    style={
-      [
-        {
-          "alignItems": "center",
-          "display": "flex",
-          "flexDirection": "row",
-          "justifyContent": "flex-start",
-        },
-      ]
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 8,
+      }
     }
   >
     <View
@@ -102,19 +82,6 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         Ethereum
       </Text>
     </View>
-    <View
-      style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 8,
-            "width": 8,
-          },
-        ]
-      }
-    />
     <Text
       allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
@@ -133,19 +100,6 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     >
       •
     </Text>
-    <View
-      style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 8,
-            "width": 8,
-          },
-        ]
-      }
-    />
     <View
       sentry-label="SpinningLoader"
       style={
@@ -174,16 +128,13 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
 
 exports[`NetworkFee renders a NetworkFee normally 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "center",
-        "display": "flex",
-        "flexDirection": "row",
-        "justifyContent": "space-between",
-      },
-    ]
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 16,
+      "justifyContent": "space-between",
+    }
   }
 >
   <Text
@@ -206,28 +157,11 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
   </Text>
   <View
     style={
-      [
-        {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 16,
-          "width": 16,
-        },
-      ]
-    }
-  />
-  <View
-    sentry-label="Flex"
-    style={
-      [
-        {
-          "alignItems": "center",
-          "display": "flex",
-          "flexDirection": "row",
-          "justifyContent": "flex-start",
-        },
-      ]
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 8,
+      }
     }
   >
     <View
@@ -274,19 +208,6 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         Ethereum
       </Text>
     </View>
-    <View
-      style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 8,
-            "width": 8,
-          },
-        ]
-      }
-    />
     <Text
       allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
@@ -307,28 +228,12 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     </Text>
     <View
       style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 8,
-            "width": 8,
-          },
-        ]
-      }
-    />
-    <View
-      sentry-label="Flex"
-      style={
-        [
-          {
-            "alignItems": "center",
-            "display": "flex",
-            "flexDirection": "row",
-            "justifyContent": "space-between",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 16,
+          "justifyContent": "space-between",
+        }
       }
     >
       <Text
@@ -356,16 +261,13 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
 
 exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "center",
-        "display": "flex",
-        "flexDirection": "row",
-        "justifyContent": "space-between",
-      },
-    ]
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 16,
+      "justifyContent": "space-between",
+    }
   }
 >
   <Text
@@ -388,28 +290,11 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
   </Text>
   <View
     style={
-      [
-        {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 16,
-          "width": 16,
-        },
-      ]
-    }
-  />
-  <View
-    sentry-label="Flex"
-    style={
-      [
-        {
-          "alignItems": "center",
-          "display": "flex",
-          "flexDirection": "row",
-          "justifyContent": "flex-start",
-        },
-      ]
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 8,
+      }
     }
   >
     <View
@@ -456,19 +341,6 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
         Ethereum
       </Text>
     </View>
-    <View
-      style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 8,
-            "width": 8,
-          },
-        ]
-      }
-    />
     <Text
       allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
@@ -489,28 +361,12 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
     </Text>
     <View
       style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 8,
-            "width": 8,
-          },
-        ]
-      }
-    />
-    <View
-      sentry-label="Flex"
-      style={
-        [
-          {
-            "alignItems": "center",
-            "display": "flex",
-            "flexDirection": "row",
-            "justifyContent": "space-between",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 16,
+          "justifyContent": "space-between",
+        }
       }
     >
       <Text
@@ -533,12 +389,12 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
       </Text>
       <View
         style={
-          [
-            {
-              "display": "flex",
-              "marginLeft": 4,
-            },
-          ]
+          {
+            "alignItems": "stretch",
+            "flexDirection": "column",
+            "gap": 0,
+            "marginLeft": 4,
+          }
         }
       >
         <svg

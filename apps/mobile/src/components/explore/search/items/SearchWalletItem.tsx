@@ -2,19 +2,18 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
-import { Box } from 'src/components/layout'
-import { Flex } from 'src/components/layout/Flex'
-import { Text } from 'src/components/Text'
 import { addToSearchHistory, WalletSearchResult } from 'src/features/explore/searchHistorySlice'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
+import { Flex, Text } from 'ui/src'
+import { imageSizes } from 'ui/src/theme'
 import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import { getCompletedENSName } from 'wallet/src/features/ens/useENS'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
@@ -26,7 +25,6 @@ type SearchWalletItemProps = {
 
 export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProps): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { preload, navigate } = useEagerExternalProfileNavigation()
 
@@ -92,9 +90,9 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
         onPressIn={async (): Promise<void> => {
           await preload(address)
         }}>
-        <Flex row alignItems="center" gap="spacing12" px="spacing8" py="spacing12">
-          <AccountIcon address={address} avatarUri={avatar} size={theme.imageSizes.image40} />
-          <Box flexShrink={1}>
+        <Flex row alignItems="center" gap="$spacing12" px="$spacing8" py="$spacing12">
+          <AccountIcon address={address} avatarUri={avatar} size={imageSizes.image40} />
+          <Flex shrink gap="$none">
             <Text
               ellipsizeMode="tail"
               numberOfLines={1}
@@ -103,13 +101,13 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
               {completedENSName || formattedAddress}
             </Text>
             {showOwnedBy ? (
-              <Text color="neutral2" ellipsizeMode="tail" numberOfLines={1} variant="subheadSmall">
+              <Text color="$neutral2" ellipsizeMode="tail" numberOfLines={1} variant="subheadSmall">
                 {t('Owned by {{owner}}', {
                   owner: primaryENSName || formattedAddress,
                 })}
               </Text>
             ) : null}
-          </Box>
+          </Flex>
         </Flex>
       </TouchableArea>
     </ContextMenu>

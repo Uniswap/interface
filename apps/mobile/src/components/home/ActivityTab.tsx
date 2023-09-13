@@ -6,13 +6,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
-import { Box, Flex } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { Text } from 'src/components/Text'
 import { IS_ANDROID } from 'src/constants/globals'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -23,6 +21,7 @@ import {
 import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { useMostRecentSwapTx } from 'src/features/transactions/swap/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
+import { Flex, Text } from 'ui/src'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
 import { getActivityItemType } from 'wallet/src/features/activity/utils'
@@ -39,11 +38,11 @@ export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
 const ESTIMATED_ITEM_SIZE = 92
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
-  <Box pb="spacing12">
-    <Text color="neutral2" variant="subheadSmall">
+  <Flex gap="$none" pb="$spacing12">
+    <Text color="$neutral2" variant="subheadSmall">
       {title}
     </Text>
-  </Box>
+  </Flex>
 )
 
 export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _ActivityTab(
@@ -139,7 +138,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
   const isLoadingInitially = isLoading && !sectionData
 
   return (
-    <Flex grow paddingHorizontal="spacing24">
+    <Flex grow px="$spacing24">
       <AnimatedFlashList
         ref={ref}
         ListEmptyComponent={
@@ -148,7 +147,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
             ? errorCard
             : // empty view
               (!isLoading && (
-                <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
+                <Flex grow gap="$none" style={containerProps?.emptyContainerStyle}>
                   <BaseCard.EmptyState
                     buttonLabel={isExternalProfile ? undefined : 'Receive tokens or NFTs'}
                     description={
@@ -162,7 +161,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
                     title={t('No activity yet')}
                     onPress={onPressReceive}
                   />
-                </Box>
+                </Flex>
               )) ||
               null
           // initial loading is implemented inside sectionData

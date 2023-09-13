@@ -4,11 +4,11 @@ import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
 import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { Screens } from 'src/screens/Screens'
+import { Flex } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useActiveChainIds } from 'wallet/src/features/chains/hooks'
@@ -71,23 +71,24 @@ export function DevScreen(): JSX.Element {
 
   return (
     <SheetScreen>
-      <Box
-        flexDirection="row"
+      <Flex
+        row
+        gap="$none"
         justifyContent="flex-end"
-        pb="spacing12"
-        pt="spacing36"
-        px="spacing16">
+        pb="$spacing12"
+        pt="$spacing36"
+        px="$spacing16">
         <BackButton />
-      </Box>
+      </Flex>
       <ScrollView>
-        <Box alignItems="center">
+        <Flex alignItems="center" gap="$none">
           <Text color="neutral1" textAlign="center" variant="headlineSmall">
             {`Your Account: ${activeAccount?.address || 'none'}`}
           </Text>
           <Text mt="spacing16" textAlign="center" variant="headlineSmall">
             🌀🌀Screen Stargate🌀🌀
           </Text>
-          <Box alignItems="center" flexDirection="row" flexWrap="wrap" justifyContent="center">
+          <Flex centered row flexWrap="wrap" gap="$none">
             {Object.values(Screens).map((s) => (
               <TouchableArea
                 key={s}
@@ -97,7 +98,7 @@ export function DevScreen(): JSX.Element {
                 <Text color="neutral1">{s}</Text>
               </TouchableArea>
             ))}
-          </Box>
+          </Flex>
           <Text mt="spacing12" textAlign="center" variant="bodyLarge">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
@@ -122,7 +123,7 @@ export function DevScreen(): JSX.Element {
           <Text color="neutral1" mt="spacing12" textAlign="center">
             {`Current Chain: ${currentChain}`}
           </Text>
-        </Box>
+        </Flex>
       </ScrollView>
     </SheetScreen>
   )

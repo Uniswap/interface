@@ -6,8 +6,6 @@ import { useAppDispatch } from 'src/app/hooks'
 import { Switch } from 'src/components/buttons/Switch'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { Box } from 'src/components/layout/Box'
-import { Flex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import { Text } from 'src/components/Text'
@@ -25,6 +23,7 @@ import {
   setRequiredForTransactions,
 } from 'src/features/biometrics/slice'
 import { openSettings } from 'src/utils/linking'
+import { Flex } from 'ui/src'
 
 interface BiometricAuthSetting {
   onValueChange: (newValue: boolean) => void
@@ -140,9 +139,9 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
     item: { text, subText, value, onValueChange },
   }: ListRenderItemInfo<BiometricAuthSetting>): JSX.Element => {
     return (
-      <Box alignItems="center" flexDirection="row" justifyContent="space-between">
+      <Flex row alignItems="center" gap="$none" justifyContent="space-between">
         <Flex row>
-          <Flex gap="none">
+          <Flex gap="$none">
             <Text variant="bodyLarge">{text}</Text>
             <Text color="neutral2" variant="bodyMicro">
               {subText}
@@ -156,7 +155,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
           }}>
           <Switch pointerEvents="none" value={value} onValueChange={onValueChange} />
         </TouchableArea>
-      </Box>
+      </Flex>
     )
   }
 
@@ -180,22 +179,22 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
         />
       )}
       <Screen>
-        <BackHeader alignment="center" mx="spacing16" pt="spacing16">
+        <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
           <Text variant="bodyLarge">
             {t('{{authenticationTypeName}} ID', { authenticationTypeName })}
           </Text>
         </BackHeader>
-        <Box p="spacing24">
+        <Flex gap="$none" p="$spacing24">
           <FlatList
             ItemSeparatorComponent={renderItemSeparator}
             data={options}
             renderItem={renderItem}
             scrollEnabled={false}
           />
-        </Box>
+        </Flex>
       </Screen>
     </>
   )
 }
 
-const renderItemSeparator = (): JSX.Element => <Flex pt="spacing24" />
+const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing24" />

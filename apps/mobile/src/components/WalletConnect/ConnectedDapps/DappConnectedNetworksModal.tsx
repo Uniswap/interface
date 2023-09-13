@@ -2,15 +2,16 @@ import { getSdkError } from '@walletconnect/utils'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import 'react-native-reanimated'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
-import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { ModalName } from 'src/features/telemetry/constants'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { removeSession, WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import { Flex } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
@@ -31,7 +32,6 @@ export function DappConnectedNetworkModal({
   const { t } = useTranslation()
   const address = useActiveAccountAddressWithThrow()
   const dispatch = useAppDispatch()
-  const theme = useAppTheme()
   const { dapp, id } = session
 
   const onDisconnect = async (): Promise<void> => {
@@ -59,8 +59,8 @@ export function DappConnectedNetworkModal({
 
   return (
     <BottomSheetModal name={ModalName.WCDappConnectedNetworks} onClose={onClose}>
-      <Flex centered gap="spacing16" mb="spacing24" px="spacing24" py="spacing12">
-        <Flex alignItems="center" gap="spacing8">
+      <Flex centered gap="$spacing16" mb="$spacing24" px="$spacing24" py="$spacing12">
+        <Flex alignItems="center" gap="$spacing8">
           <DappHeaderIcon dapp={dapp} />
           <Text textAlign="center" variant="buttonLabelMedium">
             <Text variant="bodyLarge">{t('Connected to ')}</Text>
@@ -70,32 +70,33 @@ export function DappConnectedNetworkModal({
             {dapp.url}
           </Text>
         </Flex>
-        <Box flexDirection="row">
+        <Flex flexDirection="row" gap="$none">
           <Flex
             grow
-            borderColor="surface3"
-            borderRadius="rounded12"
+            borderColor="$surface3"
+            borderRadius="$rounded12"
             borderWidth={1}
-            gap="spacing16"
-            p="spacing16">
+            gap="$spacing16"
+            p="$spacing16">
             {session.chains.map((chainId) => (
               <Flex key={chainId} row alignItems="center" justifyContent="space-between">
-                <NetworkLogo chainId={chainId} size={theme.iconSizes.icon24} />
+                <NetworkLogo chainId={chainId} size={iconSizes.icon24} />
                 <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
                   {CHAIN_INFO[chainId].label}
                 </Text>
-                <Flex centered height={theme.iconSizes.icon24} width={theme.iconSizes.icon24}>
-                  <Box
-                    bg="statusSuccess"
-                    borderRadius="roundedFull"
-                    height={theme.iconSizes.icon8}
-                    width={theme.iconSizes.icon8}
+                <Flex centered height={iconSizes.icon24} width={iconSizes.icon24}>
+                  <Flex
+                    bg="$statusSuccess"
+                    borderRadius="$roundedFull"
+                    gap="$none"
+                    height={iconSizes.icon8}
+                    width={iconSizes.icon8}
                   />
                 </Flex>
               </Flex>
             ))}
           </Flex>
-        </Box>
+        </Flex>
         <Flex centered row>
           <Button fill emphasis={ButtonEmphasis.Secondary} label={t('Close')} onPress={onClose} />
           <Button

@@ -3,8 +3,6 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import React from 'react'
 import { SharedValue } from 'react-native-reanimated'
 import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
-import { Flex } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
 import { Loader } from 'src/components/loading'
 import {
   CHART_HEIGHT,
@@ -15,6 +13,7 @@ import { PriceExplorerError } from 'src/components/PriceExplorer/PriceExplorerEr
 import { DatetimeText, PriceText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
 import { TimeRangeGroup } from 'src/components/PriceExplorer/TimeRangeGroup'
 import { invokeImpact } from 'src/utils/haptic'
+import { Flex } from 'ui/src'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { useTokenPriceHistory } from './usePriceHistory'
@@ -26,13 +25,13 @@ type PriceTextProps = {
 
 function PriceTextSection({ loading, relativeChange }: PriceTextProps): JSX.Element {
   return (
-    <Box mx="spacing12">
+    <Flex gap="$none" mx="$spacing12">
       <PriceText loading={loading} />
-      <Flex row gap="spacing4">
+      <Flex row gap="$spacing4">
         <RelativeChangeText loading={loading} spotRelativeChange={relativeChange} />
         <DatetimeText loading={loading} />
       </Flex>
-    </Box>
+    </Flex>
   )
 }
 
@@ -69,14 +68,14 @@ export function PriceExplorer({
   const lastPricePoint = data?.priceHistory ? data.priceHistory.length - 1 : 0
 
   return (
-    <Box overflow="hidden">
+    <Flex gap="$none" overflow="hidden">
       {data?.priceHistory ? (
         <LineChartProvider
           data={data.priceHistory}
           onCurrentIndexChange={invokeImpact[ImpactFeedbackStyle.Light]}>
-          <Flex gap="spacing8">
+          <Flex gap="$spacing8">
             <PriceTextSection loading={loading} relativeChange={data.spot?.relativeChange} />
-            <Box my="spacing24">
+            <Flex gap="$none" my="$spacing24">
               <LineChart
                 height={CHART_HEIGHT}
                 width={SCREEN_WIDTH - additionalPadding}
@@ -103,19 +102,19 @@ export function PriceExplorer({
                   onEnded={invokeImpact[ImpactFeedbackStyle.Light]}
                 />
               </LineChart>
-            </Box>
+            </Flex>
           </Flex>
         </LineChartProvider>
       ) : (
-        <Flex gap="spacing8">
+        <Flex gap="$spacing8">
           <PriceTextSection loading={loading} />
-          <Box my="spacing24">
+          <Flex gap="$none" my="$spacing24">
             <Loader.Graph />
-          </Box>
+          </Flex>
         </Flex>
       )}
 
       <TimeRangeGroup setDuration={setDuration} />
-    </Box>
+    </Flex>
   )
 }

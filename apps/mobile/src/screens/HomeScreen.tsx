@@ -30,7 +30,7 @@ import { pulseAnimation } from 'src/components/buttons/utils'
 import { ActivityTab, ACTIVITY_TAB_DATA_DEPENDENCIES } from 'src/components/home/ActivityTab'
 import { NftsTab, NFTS_TAB_DATA_DEPENDENCIES } from 'src/components/home/NftsTab'
 import { TokensTab, TOKENS_TAB_DATA_DEPENDENCIES } from 'src/components/home/TokensTab'
-import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
 import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { Delay, Delayed } from 'src/components/layout/Delayed'
 import { Screen } from 'src/components/layout/Screen'
@@ -63,6 +63,7 @@ import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
+import { Flex } from 'ui/src'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
@@ -249,13 +250,13 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const contentHeader = useMemo(() => {
     return (
-      <Flex bg="surface1" gap="spacing12" pb="spacing16" px="spacing24">
-        <Box pb="spacing12">
+      <Flex bg="$surface1" gap="$spacing12" pb="$spacing16" px="$spacing24">
+        <Flex gap="$none" pb="$spacing12">
           <AccountHeader />
-        </Box>
-        <Box pb="spacing4">
+        </Flex>
+        <Flex gap="$none" pb="$spacing4">
           <PortfolioBalance owner={activeAccount.address} />
-        </Box>
+        </Flex>
         <QuickActions sentry-label="QuickActions" />
       </Flex>
     )
@@ -504,7 +505,7 @@ function QuickActions(): JSX.Element {
   const showFiatOnRamp = activeAccount.type === AccountType.SignerMnemonic
 
   return (
-    <Flex centered row gap="spacing8">
+    <Flex centered row gap="$spacing8">
       {showFiatOnRamp ? (
         <ActionButton
           Icon={BuyIcon}

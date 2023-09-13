@@ -2,18 +2,15 @@
 
 exports[`ActivityTab renders without error 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "stretch",
-        "display": "flex",
-        "flexDirection": "column",
-        "flexGrow": 1,
-        "justifyContent": "flex-start",
-        "paddingHorizontal": 24,
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "flexGrow": 1,
+      "gap": 16,
+      "paddingLeft": 24,
+      "paddingRight": 24,
+    }
   }
 >
   <View
@@ -294,18 +291,15 @@ exports[`ActivityTab renders without error 1`] = `
 
 exports[`ActivityTab renders without error 2`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "stretch",
-        "display": "flex",
-        "flexDirection": "column",
-        "flexGrow": 1,
-        "justifyContent": "flex-start",
-        "paddingHorizontal": 24,
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "flexGrow": 1,
+      "gap": 16,
+      "paddingLeft": 24,
+      "paddingRight": 24,
+    }
   }
 >
   <View
@@ -319,7 +313,8 @@ exports[`ActivityTab renders without error 2`] = `
     <RCTScrollView
       ListEmptyComponent={
         <ForwardRef
-          flexGrow={1}
+          gap="$none"
+          grow={true}
         >
           <EmptyState
             buttonLabel="Receive tokens or NFTs"
@@ -486,7 +481,8 @@ exports[`ActivityTab renders without error 2`] = `
           },
           "props": {
             "ListEmptyComponent": <ForwardRef
-              flexGrow={1}
+              gap="$none"
+              grow={true}
             >
               <EmptyState
                 buttonLabel="Receive tokens or NFTs"

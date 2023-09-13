@@ -18,7 +18,7 @@ import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PlusMinusButton, { PlusMinusButtonType } from 'src/components/buttons/PlusMinusButton'
 import { Switch } from 'src/components/buttons/Switch'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -27,7 +27,7 @@ import { SwapProtectionInfoModal } from 'src/features/transactions/swap/SwapProt
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import { openUri } from 'src/utils/linking'
-import { Icons } from 'ui/src'
+import { Flex, Icons } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
@@ -103,7 +103,7 @@ export default function SwapSettingsModal({
       backgroundColor={theme.colors.surface1}
       name={ModalName.SwapSettings}
       onClose={onClose}>
-      <Flex mb="spacing28" px="spacing24" py="spacing12">
+      <Flex mb="$spacing28" px="$spacing24" py="$spacing12">
         <Flex row justifyContent="space-between">
           <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Options)}>
             <Icons.Chevron
@@ -115,7 +115,7 @@ export default function SwapSettingsModal({
           <Text textAlign="center" variant="bodyLarge">
             {getTitle()}
           </Text>
-          <Box width={theme.iconSizes.icon24} />
+          <Flex gap="$none" width={iconSizes.icon24} />
         </Flex>
         {innerContent}
         <Flex centered row>
@@ -141,15 +141,15 @@ function SwapSettingsOptions({
   const isMevBlockerFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.MevBlocker)
 
   return (
-    <Flex fill gap="spacing16" py="spacing12">
+    <Flex fill gap="$spacing16" py="$spacing12">
       <Flex fill row justifyContent="space-between">
         <Text color="neutral1" variant="subheadSmall">
           {t('Max slippage')}
         </Text>
         <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Slippage)}>
-          <Flex row gap="spacing8">
+          <Flex row gap="$spacing8">
             {!isCustomSlippage ? (
-              <Flex centered bg="accent2" borderRadius="roundedFull" px="spacing8">
+              <Flex centered bg="$accent2" borderRadius="$roundedFull" px="$spacing8">
                 <Text color="accent1" variant="buttonLabelMicro">
                   {t('Auto')}
                 </Text>
@@ -198,12 +198,12 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
   return (
     <>
       {showInfoModal && <SwapProtectionInfoModal onClose={(): void => setShowInfoModal(false)} />}
-      <Flex fill gap="spacing16">
-        <Flex fill bg="surface3" height={1} />
+      <Flex fill gap="$spacing16">
+        <Flex fill bg="$surface3" height={1} />
         <Flex fill row justifyContent="space-between">
           <TouchableArea onPress={(): void => setShowInfoModal(true)}>
-            <Flex gap="spacing4">
-              <Flex row alignItems="center" gap="spacing4">
+            <Flex gap="$spacing4">
+              <Flex row alignItems="center" gap="$spacing4">
                 <Text color="neutral1" variant="subheadSmall">
                   {t('Swap protection')}
                 </Text>
@@ -387,7 +387,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
   )
 
   return (
-    <Flex gap="spacing16">
+    <Flex gap="$spacing16">
       <Text color="neutral2" textAlign="center" variant="bodySmall">
         {t('Your transaction will revert if the price changes more than the slippage percentage.')}{' '}
         <TouchableArea height={18} onPress={onPressLearnMore}>
@@ -396,8 +396,8 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
           </Text>
         </TouchableArea>
       </Text>
-      <Flex gap="spacing12">
-        <Flex centered row mt="spacing12">
+      <Flex gap="$spacing12">
+        <Flex centered row mt="$spacing12">
           <PlusMinusButton
             disabled={currentSlippageToleranceNum === 0}
             type={PlusMinusButtonType.Minus}
@@ -437,11 +437,11 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
               onChangeText={onChangeSlippageInput}
               onFocus={onFocusSlippageInput}
             />
-            <Box width={theme.iconSizes.icon28}>
+            <Flex gap="$none" width={theme.iconSizes.icon28}>
               <Text color="neutral2" textAlign="center" variant="subheadLarge">
                 %
               </Text>
-            </Box>
+            </Flex>
           </AnimatedFlex>
           <PlusMinusButton
             disabled={currentSlippageToleranceNum === MAX_CUSTOM_SLIPPAGE_TOLERANCE}
@@ -477,7 +477,7 @@ function BottomLabel({
 
   if (inputWarning) {
     return (
-      <Flex centered row gap="spacing8" height={fonts.bodySmall.lineHeight * 2 + spacing.spacing8}>
+      <Flex centered row gap="$spacing8" height={fonts.bodySmall.lineHeight * 2 + spacing.spacing8}>
         <AlertTriangleIcon
           color={theme.colors.DEP_accentWarning}
           height={iconSizes.icon16}
@@ -493,7 +493,7 @@ function BottomLabel({
   return trade ? (
     <Flex
       centered
-      gap="spacing8"
+      gap="$spacing8"
       height={theme.textVariants.bodySmall.lineHeight * 2 + theme.spacing.spacing8}>
       <Text color="neutral2" textAlign="center" variant="bodySmall">
         {trade.tradeType === TradeType.EXACT_INPUT
@@ -513,7 +513,7 @@ function BottomLabel({
             })}
       </Text>
       {showSlippageWarning ? (
-        <Flex centered row gap="spacing8">
+        <Flex centered row gap="$spacing8">
           <AlertTriangleIcon
             color={theme.colors.DEP_accentWarning}
             height={theme.iconSizes.icon16}
@@ -526,6 +526,6 @@ function BottomLabel({
       ) : null}
     </Flex>
   ) : (
-    <Box height={theme.textVariants.bodySmall.lineHeight} />
+    <Flex gap="$none" height={theme.textVariants.bodySmall.lineHeight} />
   )
 }

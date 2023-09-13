@@ -6,7 +6,7 @@ import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { Warning, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
@@ -23,6 +23,7 @@ import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { TransferReview } from 'src/features/transactions/transfer/TransferReview'
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
+import { Flex } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { dimensions } from 'ui/src/theme'
 import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
@@ -126,13 +127,13 @@ export function TransactionFlow({
 
   return (
     <TouchableWithoutFeedback>
-      <Box style={{ marginTop: insets.top }}>
+      <Flex gap="$none" style={{ marginTop: insets.top }}>
         <HandleBar backgroundColor="none" />
         <AnimatedFlex grow row gap="none" height="100%" style={wrapperStyle}>
           <Flex
-            gap="spacing16"
-            pb={IS_ANDROID ? 'spacing32' : 'spacing16'}
-            px="spacing16"
+            gap="$spacing16"
+            pb={IS_ANDROID ? '$spacing32' : '$spacing16'}
+            px="$spacing16"
             style={{ marginBottom: insets.bottom }}
             width="100%">
             {step !== TransactionStep.SUBMITTED && (
@@ -200,7 +201,7 @@ export function TransactionFlow({
 
           {showRecipientSelector && recipientSelector ? recipientSelector : null}
         </AnimatedFlex>
-      </Box>
+      </Flex>
     </TouchableWithoutFeedback>
   )
 }

@@ -212,15 +212,13 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 >
                   <View
                     style={
-                      [
-                        {
-                          "alignItems": "flex-end",
-                          "display": "flex",
-                          "flexDirection": "row",
-                          "justifyContent": "center",
-                          "width": "100%",
-                        },
-                      ]
+                      {
+                        "alignItems": "flex-end",
+                        "flexDirection": "row",
+                        "gap": 0,
+                        "justifyContent": "center",
+                        "width": "100%",
+                      }
                     }
                   >
                     <TextInput

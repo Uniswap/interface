@@ -91,12 +91,12 @@ exports[`AccountHeader renders without error 1`] = `
         >
           <View
             style={
-              [
-                {
-                  "display": "flex",
-                  "position": "relative",
-                },
-              ]
+              {
+                "alignItems": "stretch",
+                "flexDirection": "column",
+                "gap": 0,
+                "position": "relative",
+              }
             }
           >
             <View
@@ -126,24 +126,24 @@ exports[`AccountHeader renders without error 1`] = `
             >
               <View
                 style={
-                  [
-                    {
-                      "display": "flex",
-                      "height": 28,
-                      "width": 28,
-                    },
-                  ]
+                  {
+                    "alignItems": "stretch",
+                    "flexDirection": "column",
+                    "gap": 0,
+                    "height": 28,
+                    "width": 28,
+                  }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "display": "flex",
-                        "height": 28,
-                        "width": 28,
-                      },
-                    ]
+                    {
+                      "alignItems": "stretch",
+                      "flexDirection": "column",
+                      "gap": 0,
+                      "height": 28,
+                      "width": 28,
+                    }
                   }
                 >
                   <View

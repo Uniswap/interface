@@ -9,7 +9,7 @@ import Reanimated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { Box } from 'src/components/layout'
+import { Flex } from 'ui/src'
 import { theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { opacify } from 'wallet/src/utils/colors'
@@ -57,7 +57,12 @@ export function Shimmer({ children }: Props): JSX.Element {
         width: layout.width,
         height: layout.height,
       }}>
-      <Box backgroundColor={isDarkMode ? 'neutral2' : 'neutral1'} flexGrow={1} overflow="hidden" />
+      <Flex
+        grow
+        backgroundColor={isDarkMode ? '$neutral2' : '$neutral1'}
+        gap="$none"
+        overflow="hidden"
+      />
       <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <MaskedView
           maskElement={
@@ -69,7 +74,7 @@ export function Shimmer({ children }: Props): JSX.Element {
             />
           }
           style={StyleSheet.absoluteFill}>
-          <Box backgroundColor="surface2" style={StyleSheet.absoluteFill} />
+          <Flex backgroundColor="$surface2" gap="$none" style={StyleSheet.absoluteFill} />
         </MaskedView>
       </Reanimated.View>
     </MaskedView>

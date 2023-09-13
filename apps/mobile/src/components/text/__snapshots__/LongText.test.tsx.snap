@@ -2,26 +2,22 @@
 
 exports[`renders a LongText 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "stretch",
-        "display": "flex",
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "gap": 8,
+    }
   }
 >
   <View
     onLayout={[Function]}
     style={
-      [
-        {
-          "display": "flex",
-        },
-      ]
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+        "gap": 0,
+      }
     }
   >
     <Text

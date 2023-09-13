@@ -5,7 +5,6 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
-import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import WarningIcon from 'src/components/tokens/WarningIcon'
@@ -16,6 +15,7 @@ import {
 } from 'src/features/explore/searchHistorySlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, SectionName } from 'src/features/telemetry/constants'
+import { Flex } from 'ui/src'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
@@ -78,10 +78,10 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
         hapticStyle={ImpactFeedbackStyle.Light}
         testID={ElementName.SearchTokenItem}
         onPress={onPress}>
-        <Flex row alignItems="center" gap="spacing12" px="spacing8" py="spacing12">
+        <Flex row alignItems="center" gap="$spacing12" px="$spacing8" py="$spacing12">
           <TokenLogo chainId={chainId} symbol={symbol} url={logoUrl ?? undefined} />
-          <Flex shrink alignItems="flex-start" gap="none">
-            <Flex centered row gap="spacing8">
+          <Flex shrink alignItems="flex-start" gap="$none">
+            <Flex centered row gap="$spacing8">
               <Flex shrink>
                 <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
                   {name}
@@ -97,16 +97,16 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
                 />
               )}
             </Flex>
-            <Flex centered row gap="spacing8">
+            <Flex centered row gap="$spacing8">
               <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
                 {symbol}
               </Text>
               {address && (
-                <Box flexShrink={1}>
+                <Flex shrink>
                   <Text color="neutral3" numberOfLines={1} variant="subheadSmall">
                     {shortenAddress(address)}
                   </Text>
-                </Box>
+                </Flex>
               )}
             </Flex>
           </Flex>

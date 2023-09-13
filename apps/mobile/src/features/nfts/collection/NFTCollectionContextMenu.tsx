@@ -4,13 +4,12 @@ import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TripleDot } from 'src/components/icons/TripleDot'
-import { Box } from 'src/components/layout'
-import { Flex } from 'src/components/layout/Flex'
 import { NFTCollectionData } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { getNftCollectionUrl, getTwitterLink, openUri } from 'src/utils/linking'
-import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle'
+import { ColorTokens, Flex } from 'ui/src'
+import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { logger } from 'utilities/src/logger/logger'
 
 type MenuOption = {
@@ -25,12 +24,12 @@ export function NFTCollectionContextMenu({
   data,
   collectionAddress,
   showButtonOutline = false,
-  iconColor = 'neutral2',
+  iconColor = '$neutral2',
 }: {
   data: NFTCollectionData
   collectionAddress?: Maybe<string>
   showButtonOutline?: boolean
-  iconColor?: keyof Theme['colors']
+  iconColor?: ColorTokens
 }): Nullable<JSX.Element> {
   const { t } = useTranslation()
 
@@ -87,7 +86,7 @@ export function NFTCollectionContextMenu({
   // Only display menu if valid options from data response, otherwise return empty
   // element for spacing purposes
   if (!homepageUrl && !twitterURL)
-    return <Box style={{ padding: ICON_PADDING }} width={ICON_SIZE} />
+    return <Flex gap="$none" style={{ padding: ICON_PADDING }} width={ICON_SIZE} />
 
   return (
     <ContextMenu

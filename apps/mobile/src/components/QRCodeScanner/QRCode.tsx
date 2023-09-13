@@ -1,35 +1,34 @@
 import React, { memo, useMemo } from 'react'
 import { ImageSourcePropType, StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { Box } from 'src/components/layout'
 import QRCode from 'src/components/QRCodeScanner/custom-qr-code-generator'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { IS_ANDROID } from 'src/constants/globals'
-import { opacify } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
+import { ColorTokens, Flex } from 'ui/src'
+import { borderRadii, opacify } from 'ui/src/theme'
 
 type AddressQRCodeProps = {
   address: Address
   errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H'
   size: number
-  backgroundColor?: keyof Theme['colors']
+  backgroundColor?: ColorTokens
   color?: string
   safeAreaSize?: number
-  safeAreaColor?: keyof Theme['colors']
+  safeAreaColor?: ColorTokens
 }
 
 export const AddressQRCode = ({
   address,
   errorCorrectionLevel,
   size,
-  backgroundColor = 'surface1',
+  backgroundColor = '$surface1',
   color,
   safeAreaSize,
   safeAreaColor,
 }: AddressQRCodeProps): JSX.Element => {
   const theme = useAppTheme()
-  const backgroundColorValue = theme.colors[backgroundColor]
+  const backgroundColorValue = backgroundColor
   const gradientData = useUniconColors(address)
 
   const safeAreaProps = useMemo(() => {
@@ -47,7 +46,7 @@ export const AddressQRCode = ({
         logo: { uri: '' },
         // this could eventually be set to an SVG version of the Unicon which would ensure it's perfectly centered, but for now we can just use an empty logo image to create a blank circle in the middle of the QR code
         logoBackgroundColor: theme.colors.surface1,
-        logoBorderRadius: theme.borderRadii.roundedFull,
+        logoBorderRadius: borderRadii.roundedFull,
         // note: this QR code library doesn't actually create a "safe" space in the middle, it just adds the logo on top, so that's why ecl is set to H (high error correction level) by default to ensure the QR code is still readable even if the middle of the QR code is partially obscured
       }
     }
@@ -90,9 +89,9 @@ type QRCodeDisplayProps = {
   address: Address
   errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H'
   size: number
-  backgroundColor?: keyof Theme['colors']
-  containerBackgroundColor?: keyof Theme['colors']
-  safeAreaColor?: keyof Theme['colors']
+  backgroundColor?: ColorTokens
+  containerBackgroundColor?: ColorTokens
+  safeAreaColor?: ColorTokens
   logoSize?: number
   overlayOpacityPercent?: number
   hideOutline?: boolean
@@ -103,7 +102,7 @@ const _QRCodeDisplay = ({
   address,
   errorCorrectionLevel = 'M',
   size,
-  backgroundColor = 'surface1',
+  backgroundColor = '$surface1',
   containerBackgroundColor,
   overlayOpacityPercent,
   logoSize = 32,
@@ -114,20 +113,21 @@ const _QRCodeDisplay = ({
   const theme = useAppTheme()
 
   return (
-    <Box
+    <Flex
       alignItems="center"
       backgroundColor={containerBackgroundColor}
-      borderColor="surface3"
-      borderRadius="rounded32"
+      borderColor="$surface3"
+      borderRadius="$rounded32"
       borderWidth={hideOutline ? 0 : 2}
+      gap="$none"
       justifyContent="center"
-      padding="spacing24"
+      padding="$spacing24"
       position="relative"
-      shadowColor="sporeBlack"
+      shadowColor="$sporeBlack"
       shadowOffset={{ width: 0, height: 16 }}
       shadowOpacity={displayShadow ? 0.1 : 0}
       shadowRadius={16}>
-      <Box>
+      <Flex gap="$none">
         <AddressQRCode
           address={address}
           backgroundColor={backgroundColor}
@@ -137,26 +137,27 @@ const _QRCodeDisplay = ({
           size={size}
         />
         {overlayOpacityPercent && (
-          <Box style={StyleSheet.absoluteFill}>
+          <Flex gap="$none" style={StyleSheet.absoluteFill}>
             <AddressQRCode
               address={address}
-              backgroundColor="none"
+              backgroundColor="$transparent"
               color={opacify(overlayOpacityPercent, theme.colors.neutral1)}
               errorCorrectionLevel={errorCorrectionLevel}
               safeAreaColor={safeAreaColor}
               safeAreaSize={logoSize / 1.5}
               size={size}
             />
-          </Box>
+          </Flex>
         )}
-      </Box>
-      <Box
+      </Flex>
+      <Flex
         alignItems="center"
-        backgroundColor="none"
-        borderRadius="roundedFull"
+        backgroundColor="$transparent"
+        borderRadius="$roundedFull"
+        gap="$none"
         overflow="visible"
-        paddingLeft="spacing2"
-        paddingTop="spacing2"
+        paddingLeft="$spacing2"
+        paddingTop="$spacing2"
         position="absolute">
         <Unicon
           showBorder
@@ -164,8 +165,8 @@ const _QRCodeDisplay = ({
           backgroundColor={theme.colors.surface1}
           size={logoSize}
         />
-      </Box>
-    </Box>
+      </Flex>
+    </Flex>
   )
 }
 

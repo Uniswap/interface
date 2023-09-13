@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loader } from 'src/components/loading'
@@ -29,6 +28,7 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { setClipboardImage } from 'src/utils/clipboard'
+import { Flex } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, iconSizes } from 'ui/src/theme'
@@ -175,21 +175,22 @@ export function NFTItemScreen({
                 imageUri={imageUrl}
               />
             ) : (
-              <Box bg="surface2" style={StyleSheet.absoluteFill} />
+              <Flex bg="$surface2" gap="$none" style={StyleSheet.absoluteFill} />
             )}
             <HeaderScrollScreen
               backButtonColor="$neutral1"
               backgroundColor="$transparent"
               centerElement={
                 imageUrl ? (
-                  <Box
-                    borderRadius="rounded8"
+                  <Flex
+                    borderRadius="$rounded8"
+                    gap="$none"
                     maxHeight={theme.iconSizes.icon40}
                     maxWidth={theme.iconSizes.icon40}
-                    ml="spacing16"
+                    ml="$spacing16"
                     overflow="hidden">
                     <NFTViewer autoplay uri={imageUrl} />
-                  </Box>
+                  </Flex>
                 ) : (
                   <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
                     {name}
@@ -200,30 +201,31 @@ export function NFTItemScreen({
               rightElement={rightElement}>
               {/* Content wrapper */}
               <Flex
-                backgroundColor="none"
-                gap="spacing24"
-                mb="spacing48"
-                mt="spacing8"
-                pb="spacing48">
+                bg="$transparent"
+                gap="$spacing24"
+                mb="$spacing48"
+                mt="$spacing8"
+                pb="$spacing48">
                 <Flex
-                  gap="spacing12"
-                  px="spacing24"
-                  shadowColor="sporeBlack"
+                  gap="$spacing12"
+                  px="$spacing24"
+                  shadowColor="$sporeBlack"
                   shadowOffset={{ width: 0, height: 16 }}
                   shadowOpacity={0.2}
                   shadowRadius={16}>
-                  <Flex centered borderRadius="rounded16" overflow="hidden">
+                  <Flex centered borderRadius="$rounded16" overflow="hidden">
                     {nftLoading ? (
-                      <Box aspectRatio={1} width="100%">
+                      <Flex aspectRatio={1} gap="$none" width="100%">
                         <Loader.Image />
-                      </Box>
+                      </Flex>
                     ) : imageUrl ? (
                       <TouchableArea onPress={onLongPressNFTImage}>
                         <NFTViewer autoplay maxHeight={MAX_NFT_IMAGE_HEIGHT} uri={imageUrl} />
                       </TouchableArea>
                     ) : (
-                      <Box
+                      <Flex
                         aspectRatio={1}
+                        gap="$none"
                         style={{ backgroundColor: colorsDark.surface2 }}
                         width="100%">
                         <BaseCard.ErrorState
@@ -233,7 +235,7 @@ export function NFTItemScreen({
                             refetch?.()
                           }
                         />
-                      </Box>
+                      </Flex>
                     )}
                   </Flex>
                   {nftLoading ? (
@@ -258,16 +260,16 @@ export function NFTItemScreen({
                 </Flex>
 
                 {/* Description */}
-                <Flex px="spacing24">
+                <Flex px="$spacing24">
                   {nftLoading ? (
-                    <Box mt="spacing12">
+                    <Flex gap="$none" mt="$spacing12">
                       <Loader.Box
                         height={theme.textVariants.bodySmall.lineHeight}
                         // TODO EXT-259 make work with shortcut props like "mb", etc
                         marginBottom="$spacing4"
                         repeat={3}
                       />
-                    </Box>
+                    </Flex>
                   ) : description ? (
                     <LongText
                       renderAsMarkdown
@@ -279,7 +281,7 @@ export function NFTItemScreen({
                 </Flex>
 
                 {/* Metadata */}
-                <Flex gap="spacing12" px="spacing24">
+                <Flex gap="$spacing12" px="$spacing24">
                   {listingPrice?.value ? (
                     <AssetMetadata
                       title={t('Current price')}
@@ -328,7 +330,7 @@ export function NFTItemScreen({
 
                 {/* Traits */}
                 {asset?.traits && asset?.traits?.length > 0 ? (
-                  <Flex gap="spacing12">
+                  <Flex gap="$spacing12">
                     <Text color="neutral1" ml="spacing24" variant="bodySmall">
                       {t('Traits')}
                     </Text>
@@ -352,13 +354,15 @@ function AssetMetadata({
   valueComponent: JSX.Element
 }): JSX.Element {
   return (
-    <Flex row alignItems="center" justifyContent="space-between" paddingLeft="spacing2">
-      <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start" maxWidth="40%">
+    <Flex row alignItems="center" justifyContent="space-between" pl="$spacing2">
+      <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" maxWidth="40%">
         <Text color="neutral2" variant="bodySmall">
           {title}
         </Text>
       </Flex>
-      <Box maxWidth="60%">{valueComponent}</Box>
+      <Flex gap="$none" maxWidth="60%">
+        {valueComponent}
+      </Flex>
     </Flex>
   )
 }
@@ -383,8 +387,9 @@ function RightElement({
   })
 
   return (
-    <Box
+    <Flex
       alignItems="center"
+      gap="$none"
       height={theme.iconSizes.icon40}
       justifyContent="center"
       width={theme.iconSizes.icon40}>
@@ -407,6 +412,6 @@ function RightElement({
           </ContextMenu>
         )
       ) : undefined}
-    </Box>
+    </Flex>
   )
 }

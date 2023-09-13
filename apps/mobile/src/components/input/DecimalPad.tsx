@@ -3,8 +3,9 @@ import React, { memo, useMemo } from 'react'
 import { TextInputProps } from 'react-native'
 import { getNumberFormatSettings } from 'react-native-localize'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedBox, Box } from 'src/components/layout'
+import { AnimatedBox } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { Flex } from 'ui/src'
 
 // if this setting is changed in phone settings the app would be restarted
 const { decimalSeparator } = getNumberFormatSettings()
@@ -94,7 +95,13 @@ export function _DecimalPad({
     <AnimatedBox flexDirection="row" flexWrap="wrap" gap="$none">
       {keys.map((key, i) =>
         key.hidden ? (
-          <Box key={i} alignItems={key.align} height="25%" width={i % 3 === 1 ? '50%' : '25%'} />
+          <Flex
+            key={i}
+            alignItems={key.align}
+            gap="$none"
+            height="25%"
+            width={i % 3 === 1 ? '50%' : '25%'}
+          />
         ) : (
           <KeyButton
             {...key}

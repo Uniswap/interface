@@ -2,17 +2,16 @@ import { BlurView } from 'expo-blur'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { Box, Flex, FlexProps } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { IS_IOS } from 'src/constants/globals'
-import { Logos } from 'ui/src'
+import { Flex, Logos, SpaceTokens, StackProps } from 'ui/src'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { Amount } from 'wallet/src/data/__generated__/types-and-hooks'
 
-type ListPriceProps = FlexProps & {
+type ListPriceProps = StackProps & {
   price: Amount
-  gap?: keyof Theme['spacing']
+  gap?: SpaceTokens
   iconSize?: keyof Theme['iconSizes']
   textVariant?: keyof Theme['textVariants']
   iconColor?: keyof Theme['colors']
@@ -37,9 +36,9 @@ export function ListPriceBadge({
           <PriceAmount {...priceAmountProps} />
         </BlurView>
       ) : (
-        <Box style={[styles.background, { backgroundColor: theme.colors.surface2 }]}>
+        <Flex gap="$none" style={[styles.background, { backgroundColor: theme.colors.surface2 }]}>
           <PriceAmount {...priceAmountProps} />
-        </Box>
+        </Flex>
       )}
     </Flex>
   )
@@ -47,7 +46,7 @@ export function ListPriceBadge({
 
 export function PriceAmount({
   price,
-  gap = 'spacing4',
+  gap = '$spacing4',
   iconSize = 'icon16',
   textVariant = 'buttonLabelMicro',
   iconColor = 'neutral1',

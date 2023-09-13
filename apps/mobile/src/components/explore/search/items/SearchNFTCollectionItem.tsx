@@ -1,11 +1,9 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
-import { Box, Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import {
   addToSearchHistory,
   NFTCollectionSearchResult,
@@ -14,7 +12,7 @@ import {
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
+import { Flex, Icons, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
@@ -27,7 +25,6 @@ export function SearchNFTCollectionItem({
   collection,
   searchContext,
 }: NFTCollectionItemProps): JSX.Element {
-  const theme = useAppTheme()
   const { name, address, chainId, isVerified, imageUrl } = collection
   const dispatch = useAppDispatch()
   const navigation = useAppStackNavigation()
@@ -73,37 +70,33 @@ export function SearchNFTCollectionItem({
       <Flex
         row
         alignItems="center"
-        gap="spacing8"
+        gap="$spacing8"
         justifyContent="flex-start"
-        px="spacing8"
-        py="spacing12">
+        px="$spacing8"
+        py="$spacing12">
         <Flex
           centered
-          borderRadius="roundedFull"
+          borderRadius="$roundedFull"
           height={iconSizes.icon40}
-          mr="spacing4"
+          mr="$spacing4"
           overflow="hidden"
           width={iconSizes.icon40}>
           {imageUrl ? (
             <NFTViewer uri={imageUrl} />
           ) : (
-            <Text color="neutral1" numberOfLines={1} textAlign="center">
+            <Text color="$neutral1" numberOfLines={1} textAlign="center">
               {name.slice(0, 1)}
             </Text>
           )}
         </Flex>
-        <Box flexShrink={1}>
-          <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
+        <Flex shrink gap="$none">
+          <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
             {name}
           </Text>
-        </Box>
-        <Flex grow alignItems="flex-start" width={theme.spacing.spacing36}>
+        </Flex>
+        <Flex grow alignItems="flex-start" width="$spacing36">
           {isVerified ? (
-            <VerifiedIcon
-              color={theme.colors.accent1}
-              height={iconSizes.icon16}
-              width={iconSizes.icon16}
-            />
+            <Icons.Verified color="$accent1" height={iconSizes.icon16} width={iconSizes.icon16} />
           ) : null}
         </Flex>
       </Flex>

@@ -10,7 +10,7 @@ import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
@@ -19,6 +19,7 @@ import { selectModalState } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
+import { Flex } from 'ui/src'
 import { flex, Theme } from 'ui/src/theme/restyle'
 import { useDebounce } from 'utilities/src/time/timing'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -80,7 +81,7 @@ export function ExploreScreen(): JSX.Element {
   return (
     <Screen bg="$transparent" edges={['top']}>
       <HandleBar backgroundColor="none" />
-      <Box backgroundColor="none" p="spacing16">
+      <Flex backgroundColor="$transparent" gap="$none" p="$spacing16">
         <SearchTextInput
           ref={textInputRef}
           showCancelButton
@@ -92,12 +93,12 @@ export function ExploreScreen(): JSX.Element {
           onChangeText={onChangeSearchFilter}
           onFocus={onSearchFocus}
         />
-      </Box>
+      </Flex>
       {isSearchMode ? (
         <KeyboardAvoidingView behavior="height" style={flex.fill}>
-          <Flex grow mx="spacing16">
+          <Flex grow mx="$spacing16">
             <VirtualizedList onScroll={onScroll}>
-              <Box p="spacing4" />
+              <Flex gap="$none" p="$spacing4" />
               {debouncedSearchQuery.length === 0 ? (
                 <SearchEmptySection />
               ) : (

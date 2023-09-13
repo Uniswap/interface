@@ -6,7 +6,7 @@ import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
@@ -25,6 +25,7 @@ import {
   removePendingSession,
   WalletConnectPendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { Flex } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import X from 'ui/src/assets/icons/x.svg'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -59,39 +60,39 @@ const SitePermissions = (): JSX.Element => {
   const { t } = useTranslation()
 
   return (
-    <Flex gap="spacing12" p="spacing16">
+    <Flex gap="$spacing12" p="$spacing16">
       <Text color="neutral2" variant="subheadSmall">
         {t('App permissions')}
       </Text>
-      <Flex row alignItems="flex-start" gap="spacing8">
-        <Box mt="spacing2">
+      <Flex row alignItems="flex-start" gap="$spacing8">
+        <Flex gap="$none" mt="$spacing2">
           <Checkmark color={theme.colors.statusSuccess} height={16} width={16} />
-        </Box>
-        <Box flex={1}>
+        </Flex>
+        <Flex flex={1} gap="$none">
           <Text color="neutral1" variant="bodySmall">
             {t('View your wallet address')}
           </Text>
-        </Box>
+        </Flex>
       </Flex>
-      <Flex row alignItems="flex-start" gap="spacing8">
-        <Box mt="spacing2">
+      <Flex row alignItems="flex-start" gap="$spacing8">
+        <Flex gap="$none" mt="$spacing2">
           <Checkmark color={theme.colors.statusSuccess} height={16} width={16} />
-        </Box>
-        <Box flex={1}>
+        </Flex>
+        <Flex flex={1} gap="$none">
           <Text color="neutral1" variant="bodySmall">
             {t('View your token balances')}
           </Text>
-        </Box>
+        </Flex>
       </Flex>
-      <Flex row alignItems="flex-start" gap="spacing8">
-        <Box mt="spacing2">
+      <Flex row alignItems="flex-start" gap="$spacing8">
+        <Flex gap="$none" mt="$spacing2">
           <X color={theme.colors.statusCritical} height={16} width={16} />
-        </Box>
-        <Box flex={1}>
+        </Flex>
+        <Flex flex={1} gap="$none">
           <Text color="neutral1" variant="bodySmall">
             {t('Transfer your assets without consent')}
           </Text>
-        </Box>
+        </Flex>
       </Flex>
     </Flex>
   )
@@ -105,10 +106,10 @@ const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
       row
       shrink
       alignItems="center"
-      gap="spacing12"
+      gap="$spacing12"
       justifyContent="space-between"
-      p="spacing12">
-      <Flex grow row gap="spacing8" justifyContent="space-between">
+      p="$spacing12">
+      <Flex grow row gap="$spacing8" justifyContent="space-between">
         <Text color="neutral1" variant="subheadSmall">
           {t('Networks')}
         </Text>
@@ -228,7 +229,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         overflow="hidden"
         px="spacing24"
         py="spacing60">
-        <Flex alignItems="center" flex={1} gap="spacing16" justifyContent="flex-end">
+        <Flex fill alignItems="center" gap="$spacing16" justifyContent="flex-end">
           <DappHeaderIcon dapp={pendingSession.dapp} />
           <Text fontWeight="bold" textAlign="center" variant="headlineSmall">
             {t('{{ dappName }} wants to connect to your wallet', {
@@ -249,15 +250,15 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             url={pendingSession.dapp.url}
           />
         </Flex>
-        <Flex bg="surface2" borderRadius="rounded16" gap="spacing2">
+        <Flex bg="$surface2" borderRadius="$rounded16" gap="$spacing2">
           <SitePermissions />
-          <Separator color="surface1" width={1} />
+          <Separator color="$surface1" width={1} />
           <NetworksRow chains={pendingSession.chains} />
-          <Separator color="surface1" width={1} />
+          <Separator color="$surface1" width={1} />
           <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />
-          <Box />
+          <Flex gap="$none" />
         </Flex>
-        <Flex flexDirection="row" gap="spacing8" justifyContent="space-between">
+        <Flex flexDirection="row" gap="$spacing8" justifyContent="space-between">
           <Button
             fill
             emphasis={ButtonEmphasis.Secondary}

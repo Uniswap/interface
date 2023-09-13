@@ -106,12 +106,6 @@ const CustomButtonText = styled(Text, {
         lineHeight: '$large',
       },
     },
-
-    disabled: {
-      true: {
-        color: '$neutral3',
-      },
-    },
   } as const,
 
   defaultVariants: {

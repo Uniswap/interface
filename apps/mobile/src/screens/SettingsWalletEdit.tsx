@@ -7,10 +7,10 @@ import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TextInput } from 'src/components/input/TextInput'
-import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
+import { Flex } from 'ui/src'
 import PencilIcon from 'ui/src/assets/icons/pencil.svg'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -56,12 +56,12 @@ export function SettingsWalletEdit({
 
   return (
     <Screen>
-      <BackHeader alignment="center" mx="spacing16" pt="spacing16">
+      <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
         <Text variant="bodyLarge">{t('Nickname')}</Text>
       </BackHeader>
-      <Flex gap="spacing36" px="spacing24" py="spacing24">
-        <Flex gap="none">
-          <Flex alignItems="center" flexDirection="row">
+      <Flex gap="$spacing36" px="$spacing24" py="$spacing24">
+        <Flex gap="$none">
+          <Flex row alignItems="center">
             {showEditInput ? (
               <TextInput
                 autoFocus
@@ -90,14 +90,14 @@ export function SettingsWalletEdit({
                   </Text>
                 </Flex>
                 {!ensName && (
-                  <Box ml="spacing12">
+                  <Flex gap="$none" ml="$spacing12">
                     <Button
                       IconName={PencilIcon}
                       emphasis={ButtonEmphasis.Secondary}
                       size={ButtonSize.Small}
                       onPress={onPressShowEditInput}
                     />
-                  </Box>
+                  </Flex>
                 )}
               </Flex>
             )}

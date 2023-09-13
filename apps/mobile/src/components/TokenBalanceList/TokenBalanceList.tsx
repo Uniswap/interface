@@ -7,7 +7,7 @@ import { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
-import { AnimatedBox, Box } from 'src/components/layout'
+import { AnimatedBox } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import {
@@ -21,6 +21,7 @@ import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceIt
 import { IS_ANDROID } from 'src/constants/globals'
 import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { Screens } from 'src/screens/Screens'
+import { Flex } from 'ui/src'
 import { dimensions, zIndices } from 'ui/src/theme'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
@@ -131,13 +132,14 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
         }>
         {!balancesById ? (
           isNonPollingRequestInFlight(networkStatus) ? (
-            <Box px="spacing24" style={containerProps?.loadingContainerStyle}>
+            <Flex gap="$none" px="$spacing24" style={containerProps?.loadingContainerStyle}>
               <Loader.Token repeat={4} />
-            </Box>
+            </Flex>
           ) : (
-            <Box
+            <Flex
               flex={1}
               flexGrow={1}
+              gap="$none"
               justifyContent="center"
               style={containerProps?.emptyContainerStyle}>
               <BaseCard.ErrorState
@@ -145,15 +147,19 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
                 title={t('Couldn’t load token balances')}
                 onRetry={(): void | undefined => refetch?.()}
               />
-            </Box>
+            </Flex>
           )
         ) : (
           <AnimatedFlashList
             ref={ref}
             ListEmptyComponent={
-              <Box flexGrow={1} px="spacing24" style={containerProps?.emptyContainerStyle}>
+              <Flex
+                flexGrow={1}
+                gap="$none"
+                px="$spacing24"
+                style={containerProps?.emptyContainerStyle}>
                 {empty}
-              </Box>
+              </Flex>
             }
             // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
             ListFooterComponent={adaptiveFooter}

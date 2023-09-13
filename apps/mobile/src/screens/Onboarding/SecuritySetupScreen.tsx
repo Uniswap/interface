@@ -25,7 +25,7 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
-import { Box, Button, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
 import FaceIcon from 'ui/src/assets/icons/faceid-thin.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
@@ -117,12 +117,13 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
         )}
         title={t('Protect your wallet')}>
         <Flex centered shrink my="$spacing12" position="relative" py="$spacing24">
-          <Box paddingTop="$spacing24">
+          <Flex gap="$none" paddingTop="$spacing24">
             <SecurityBackgroundImage />
-          </Box>
-          <Box
+          </Flex>
+          <Flex
             borderRadius="$rounded16"
             borderWidth={1}
+            gap="$none"
             overflow="hidden"
             padding="$spacing36"
             position="absolute"
@@ -149,7 +150,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
                 width={theme.imageSizes.image48}
               />
             )}
-          </Box>
+          </Flex>
         </Flex>
         <Flex gap="$spacing24">
           <Trace logPress element={ElementName.Skip}>

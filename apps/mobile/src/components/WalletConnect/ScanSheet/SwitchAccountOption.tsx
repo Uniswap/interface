@@ -1,9 +1,9 @@
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import { Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
+import { Flex } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -23,9 +23,9 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
   return (
     <>
       <Separator />
-      <Flex row alignItems="center" justifyContent="space-between" px="spacing24" py="spacing8">
+      <Flex row alignItems="center" justifyContent="space-between" px="$spacing24" py="$spacing8">
         <Unicon address={account.address} size={ICON_SIZE} />
-        <Flex shrink alignItems="center" gap="none" p="none">
+        <Flex shrink alignItems="center" gap="$none" p="$none">
           <Text
             color="neutral1"
             numberOfLines={1}
@@ -37,11 +37,11 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
             {shortenAddress(account.address)}
           </Text>
         </Flex>
-        <Box height={ICON_SIZE} width={ICON_SIZE}>
+        <Flex gap="$none" height={ICON_SIZE} width={ICON_SIZE}>
           {activeAccount?.address === account.address && (
             <Check color={theme.colors.accent1} height={ICON_SIZE} width={ICON_SIZE} />
           )}
-        </Box>
+        </Flex>
       </Flex>
     </>
   )

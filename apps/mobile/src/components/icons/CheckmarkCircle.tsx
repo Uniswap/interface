@@ -1,32 +1,21 @@
-import {
-  BackgroundColorProps,
-  BackgroundColorShorthandProps,
-  BorderProps,
-  SpacingProps,
-  SpacingShorthandProps,
-} from '@shopify/restyle'
 import React, { memo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import { Box } from 'src/components/layout/Box'
+import { Flex, StackProps } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/checkmark.svg'
-import { Theme } from 'ui/src/theme/restyle'
 
 type Props = {
   size: number
   checkmarkStrokeWidth?: number
   color?: string
-} & BorderProps<Theme> &
-  BackgroundColorProps<Theme> &
-  BackgroundColorShorthandProps<Theme> &
-  SpacingProps<Theme> &
-  SpacingShorthandProps<Theme>
+} & StackProps
 
 function _CheckmarkCircle({ color, checkmarkStrokeWidth = 3, size, ...rest }: Props): JSX.Element {
   const theme = useAppTheme()
   return (
-    <Box
+    <Flex
       alignItems="center"
-      borderRadius="roundedFull"
+      borderRadius="$roundedFull"
+      gap="$none"
       height={size}
       justifyContent="center"
       width={size}
@@ -37,7 +26,7 @@ function _CheckmarkCircle({ color, checkmarkStrokeWidth = 3, size, ...rest }: Pr
         strokeWidth={checkmarkStrokeWidth}
         width={size / 2}
       />
-    </Box>
+    </Flex>
   )
 }
 

@@ -1,8 +1,8 @@
 import React from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { Flex } from 'ui/src'
 import { dimensions, spacing } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import {
@@ -39,13 +39,14 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
     spacing.spacing12 // 12 is the ScrollView vertical padding
 
   return (
-    <Box
-      borderColor="surface3"
-      borderRadius="rounded16"
+    <Flex
+      borderColor="$surface3"
+      borderRadius="$rounded16"
       borderWidth={1}
+      gap="$none"
       maxHeight={accountsScrollViewHeight}
-      mb="spacing16"
-      px="spacing12"
+      mb="$spacing16"
+      px="$spacing12"
       width="100%">
       <ScrollView bounces={false} contentContainerStyle={styles.accounts}>
         {sortedAddressesByBalance.map(({ address, balance }, index) => (
@@ -54,7 +55,7 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
             row
             alignItems="center"
             justifyContent="space-between"
-            pb={index !== accounts.length - 1 ? 'spacing16' : undefined}>
+            pb={index !== accounts.length - 1 ? '$spacing16' : undefined}>
             <AddressDisplay
               hideAddressInSubtitle
               address={address}
@@ -67,7 +68,7 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
           </Flex>
         ))}
       </ScrollView>
-    </Box>
+    </Flex>
   )
 }
 

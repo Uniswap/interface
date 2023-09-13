@@ -3,12 +3,11 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutAnimation, StyleSheet, VirtualizedList } from 'react-native'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Box, Flex } from 'src/components/layout'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { useNetworkOptions } from 'src/components/Network/hooks'
 import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Icons } from 'ui/src'
+import { Flex, Icons } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { colors, iconSizes } from 'ui/src/theme'
 import {
@@ -34,11 +33,11 @@ type ListItem = 'ellipsis' | number
 
 function renderItem({ item: chainId }: { item: ListItem }): JSX.Element {
   return (
-    <Box key={chainId} borderColor="surface2" style={styles.networksInSeriesIcon}>
+    <Flex key={chainId} borderColor="$surface2" gap="$none" style={styles.networksInSeriesIcon}>
       {chainId === ELLIPSIS ? (
         <Flex
           centered
-          backgroundColor="neutral3"
+          backgroundColor="$neutral3"
           height={NETWORK_ICON_SIZE}
           style={styles.ellipsisIcon}
           width={NETWORK_ICON_SIZE}>
@@ -47,7 +46,7 @@ function renderItem({ item: chainId }: { item: ListItem }): JSX.Element {
       ) : (
         <NetworkLogo chainId={chainId} shape="square" size={NETWORK_ICON_SIZE} />
       )}
-    </Box>
+    </Flex>
   )
 }
 function keyExtractor(item: ListItem): string {
@@ -77,7 +76,7 @@ function NetworksInSeries({
   }
 
   return (
-    <Box>
+    <Flex gap="$none">
       <VirtualizedList<ListItem>
         contentContainerStyle={styles.networkListContainer}
         getItem={getItem}
@@ -85,7 +84,7 @@ function NetworksInSeries({
         keyExtractor={keyExtractor}
         renderItem={renderItem}
       />
-    </Box>
+    </Flex>
   )
 }
 
@@ -136,7 +135,7 @@ export function NetworkFilter({
           Keyboard.dismiss()
           setShowModal(true)
         }}>
-        <Flex centered row gap="spacing4" py="spacing8">
+        <Flex centered row gap="$spacing4" py="$spacing8">
           <NetworksInSeries
             // show ellipsis as the last item when all networks is selected
             ellipsisPosition={!selectedChain ? 'end' : undefined}
@@ -154,7 +153,7 @@ export function NetworkFilter({
 
       <ActionSheetModal
         header={
-          <Flex centered gap="spacing4" py="spacing16">
+          <Flex centered gap="$spacing4" py="$spacing16">
             <Text variant="buttonLabelMedium">{t('Switch Network')}</Text>
           </Flex>
         }

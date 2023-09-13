@@ -2,13 +2,12 @@ import React, { PropsWithChildren, ReactNode } from 'react'
 import { ColorValue } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningColor, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
+import { Flex, Icons } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 
 export type WarningModalProps = {
@@ -66,18 +65,18 @@ export default function WarningModal({
       isDismissible={isDismissible}
       name={modalName}
       onClose={onClose}>
-      <Flex centered gap="spacing12" mb="spacing24" p="spacing24">
+      <Flex centered gap="$spacing12" mb="$spacing24" p="$spacing24">
         <Flex
           centered
-          borderRadius="rounded12"
-          mb="spacing8"
-          p="spacing12"
+          borderRadius="$rounded12"
+          mb="$spacing8"
+          p="$spacing8"
           style={{
-            backgroundColor: backgroundIconColor ?? opacify(12, theme.colors[alertColor.text]),
+            backgroundColor: backgroundIconColor ?? opacify(12, alertColor.text),
           }}>
           {icon ?? (
-            <AlertTriangleIcon
-              color={theme.colors[alertColor.text]}
+            <Icons.AlertTriangle
+              color={alertColor.text}
               height={theme.iconSizes.icon24}
               width={theme.iconSizes.icon24}
             />
@@ -92,7 +91,7 @@ export default function WarningModal({
           </Text>
         )}
         {children}
-        <Flex centered row gap="spacing12" pt={children ? 'spacing12' : 'spacing24'}>
+        <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'}>
           {closeText && (
             <Button
               fill
@@ -120,32 +119,32 @@ export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
   switch (severity) {
     case WarningSeverity.None:
       return {
-        text: 'neutral2',
-        background: 'neutral2',
+        text: '$neutral2',
+        background: '$neutral2',
         buttonEmphasis: ButtonEmphasis.Secondary,
       }
     case WarningSeverity.Low:
       return {
-        text: 'neutral2',
-        background: 'surface2',
+        text: '$neutral2',
+        background: '$surface2',
         buttonEmphasis: ButtonEmphasis.Tertiary,
       }
     case WarningSeverity.High:
       return {
-        text: 'statusCritical',
-        background: 'DEP_accentCriticalSoft',
+        text: '$statusCritical',
+        background: '$DEP_accentCriticalSoft',
         buttonEmphasis: ButtonEmphasis.Detrimental,
       }
     case WarningSeverity.Medium:
       return {
-        text: 'DEP_accentWarning',
-        background: 'DEP_accentWarningSoft',
+        text: '$DEP_accentWarning',
+        background: '$DEP_accentWarningSoft',
         buttonEmphasis: ButtonEmphasis.Warning,
       }
     default:
       return {
-        text: 'neutral2',
-        background: 'none',
+        text: '$neutral2',
+        background: '$transparent',
         buttonEmphasis: ButtonEmphasis.Tertiary,
       }
   }

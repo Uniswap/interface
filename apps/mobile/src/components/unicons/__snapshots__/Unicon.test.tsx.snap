@@ -5,24 +5,24 @@ exports[`fails to render a Unicon if given an invalid eth address 1`] = `null`;
 exports[`renders a Unicon 1`] = `
 <View
   style={
-    [
-      {
-        "display": "flex",
-        "height": 36,
-        "width": 36,
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "gap": 0,
+      "height": 36,
+      "width": 36,
+    }
   }
 >
   <View
     style={
-      [
-        {
-          "display": "flex",
-          "height": 36,
-          "width": 36,
-        },
-      ]
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+        "gap": 0,
+        "height": 36,
+        "width": 36,
+      }
     }
   >
     <View

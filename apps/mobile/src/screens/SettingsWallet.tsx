@@ -14,9 +14,7 @@ import {
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
-import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import {
   SettingsRow,
@@ -37,7 +35,7 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { Icons } from 'ui/src'
+import { Flex, Icons } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import ChartIcon from 'ui/src/assets/icons/chart.svg'
 import EditIcon from 'ui/src/assets/icons/edit.svg'
@@ -258,7 +256,7 @@ export function SettingsWallet({
 
   return (
     <Screen>
-      <BackHeader alignment="center" mx="spacing16" pt="spacing16">
+      <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
         <Flex shrink>
           <AddressDisplay
             hideAddressInSubtitle
@@ -269,25 +267,25 @@ export function SettingsWallet({
         </Flex>
       </BackHeader>
 
-      <Flex fill p="spacing24">
-        <Box flex={1}>
+      <Flex fill p="$spacing24">
+        <Flex fill gap="$none">
           <SectionList
             ItemSeparatorComponent={renderItemSeparator}
             keyExtractor={(_item, index): string => 'wallet_settings' + index}
             renderItem={renderItem}
-            renderSectionFooter={(): JSX.Element => <Flex pt="spacing24" />}
+            renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
             renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-              <Box bg="surface1" pb="spacing12">
+              <Flex bg="$surface1" gap="$none" pb="$spacing12">
                 <Text color="neutral2" variant="bodyLarge">
                   {subTitle}
                 </Text>
-              </Box>
+              </Flex>
             )}
             sections={sections.filter((p) => !p.isHidden)}
             showsVerticalScrollIndicator={false}
             stickySectionHeadersEnabled={false}
           />
-        </Box>
+        </Flex>
         <Button
           emphasis={ButtonEmphasis.Detrimental}
           label={t('Remove wallet')}
@@ -299,4 +297,4 @@ export function SettingsWallet({
   )
 }
 
-const renderItemSeparator = (): JSX.Element => <Flex pt="spacing8" />
+const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />

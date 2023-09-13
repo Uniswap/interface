@@ -1,22 +1,21 @@
-import { SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
-import { Box } from 'src/components/layout'
-import { Theme } from 'ui/src/theme/restyle'
+import { ColorTokens, Flex, StackProps } from 'ui/src'
 
 type SeparatorProps = {
-  color?: keyof Theme['colors']
+  color?: ColorTokens
   width?: number
-} & SpacingShorthandProps<Theme>
+} & StackProps
 
 export function Separator({
-  color = 'neutral3',
+  color = '$neutral3',
   width = 0.25,
   ...rest
 }: SeparatorProps): JSX.Element {
   return (
-    <Box
+    <Flex
       borderBottomColor={color}
       borderBottomWidth={width}
+      gap="$none"
       height={1}
       overflow="visible"
       {...rest}

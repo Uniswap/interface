@@ -64,12 +64,12 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
         <QRCodeDisplay
           hideOutline
           address={address}
-          backgroundColor="surface1"
-          containerBackgroundColor="surface1"
+          backgroundColor="$surface1"
+          containerBackgroundColor="$surface1"
           displayShadow={true}
           logoSize={UNICON_SIZE}
           overlayOpacityPercent={10}
-          safeAreaColor="surface1"
+          safeAreaColor="$surface1"
           size={QR_CODE_SIZE}
         />
         <Text color="neutral2" lineHeight={20} textAlign="center" variant="bodyMicro">

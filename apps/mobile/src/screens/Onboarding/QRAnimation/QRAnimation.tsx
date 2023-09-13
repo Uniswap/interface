@@ -44,7 +44,7 @@ import {
   textSlideUpAtEnd,
   videoFadeOut,
 } from 'src/screens/Onboarding/QRAnimation/animations'
-import { Box, Flex, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { opacify } from 'ui/src/theme'
@@ -210,11 +210,12 @@ export function QRAnimation({
                   </Canvas>
                 </Animated.View>
                 <Animated.View entering={qrScaleIn}>
-                  <Box
+                  <Flex
                     bg="$surface1"
                     borderColor="$surface3"
                     borderRadius="$rounded20"
                     borderWidth={2}
+                    gap="$none"
                     height={QR_CONTAINER_SIZE}
                     overflow="hidden"
                     width={QR_CONTAINER_SIZE}>
@@ -222,15 +223,15 @@ export function QRAnimation({
                       <QRCodeDisplay
                         hideOutline
                         address={activeAddress}
-                        backgroundColor="surface1"
-                        containerBackgroundColor="surface1"
+                        backgroundColor="$surface1"
+                        containerBackgroundColor="$surface1"
                         logoSize={UNICON_SIZE}
                         overlayOpacityPercent={10}
-                        safeAreaColor="surface1"
+                        safeAreaColor="$surface1"
                         size={QR_CODE_SIZE}
                       />
                     </Animated.View>
-                  </Box>
+                  </Flex>
                   <Animated.View entering={videoFadeOut} style={[styles.video]}>
                     <View style={styles.video}>
                       <Video
@@ -311,8 +312,9 @@ export function QRAnimation({
               CustomIcon={
                 <Flex grow row alignItems="center" justifyContent="space-between">
                   <Flex row alignItems="center" space="$spacing8">
-                    <Box
+                    <Flex
                       borderRadius="$roundedFull"
+                      gap="$none"
                       padding="$spacing8"
                       style={{ backgroundColor: opacify(10, theme.colors.sporeWhite) }}>
                       <LockIcon
@@ -320,7 +322,7 @@ export function QRAnimation({
                         height={theme.iconSizes.icon16}
                         width={theme.iconSizes.icon16}
                       />
-                    </Box>
+                    </Flex>
                     <Text color="$sporeWhite" variant="buttonLabelMedium">
                       {t('Let’s keep it safe')}
                     </Text>

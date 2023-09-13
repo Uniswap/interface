@@ -1,9 +1,9 @@
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import { Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
+import { Flex } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
@@ -24,9 +24,9 @@ export function NetworkOption({
   return (
     <>
       <Separator />
-      <Flex row alignItems="center" justifyContent="space-between" px="spacing24" py="spacing16">
+      <Flex row alignItems="center" justifyContent="space-between" px="$spacing24" py="$spacing16">
         {(chainId && <NetworkLogo chainId={chainId} size={NETWORK_OPTION_ICON_SIZE} />) || (
-          <Box width={NETWORK_OPTION_ICON_SIZE} />
+          <Flex width={NETWORK_OPTION_ICON_SIZE} />
         )}
         <Text color="neutral1" variant="bodyLarge">
           {info?.label ?? t('All networks')}

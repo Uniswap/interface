@@ -5,14 +5,14 @@ import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
-import { AnimatedBox, AnimatedFlex, Box } from 'src/components/layout'
+import { AnimatedBox, AnimatedFlex, Flex } from 'src/components/layout'
 import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import SearchIcon from 'ui/src/assets/icons/search.svg'
+import { Icons } from 'ui/src'
 import X from 'ui/src/assets/icons/x.svg'
-import { dimensions } from 'ui/src/theme'
+import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -116,7 +116,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const textInputStyle = useAnimatedStyle(() => {
       return {
         marginRight: withSpring(
-          showCancelButton && isFocus.value ? cancelButtonWidth.value + theme.spacing.spacing12 : 0,
+          showCancelButton && isFocus.value ? cancelButtonWidth.value + spacing.spacing12 : 0,
           springConfig
         ),
       }
@@ -160,7 +160,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       : null
 
     return (
-      <Box alignItems="center" flexDirection="row" flexShrink={1}>
+      <Flex row shrink alignItems="center" gap="none">
         <AnimatedFlex
           row
           alignItems="center"
@@ -174,13 +174,9 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           py={py}
           style={textInputStyle}
           {...shadowProps}>
-          <Box py="spacing4">
-            <SearchIcon
-              color={theme.colors.neutral2}
-              height={theme.iconSizes.icon20}
-              width={theme.iconSizes.icon20}
-            />
-          </Box>
+          <Flex gap="none" py="spacing4">
+            <Icons.Search color="$neutral2" height={iconSizes.icon20} width={iconSizes.icon20} />
+          </Flex>
           <TextInput
             ref={ref}
             autoCapitalize="none"
@@ -224,7 +220,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             </TouchableArea>
           </AnimatedBox>
         )}
-      </Box>
+      </Flex>
     )
   }
 )

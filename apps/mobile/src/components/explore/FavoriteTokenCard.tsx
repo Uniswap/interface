@@ -8,17 +8,16 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AnimatedTouchableArea } from 'src/components/buttons/TouchableArea'
 import RemoveButton from 'src/components/explore/RemoveButton'
-import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Flex } from 'src/components/layout/Flex'
 import { Loader } from 'src/components/loading'
-import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { removeFavoriteToken } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
+import { Flex, Text } from 'ui/src'
+import { imageSizes } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -145,9 +144,9 @@ function FavoriteTokenCard({
         testID={`token-box-${token?.symbol}`}
         onPress={onPress}>
         <BaseCard.Shadow>
-          <Flex alignItems="flex-start" gap="spacing8">
-            <Flex row gap="spacing4" justifyContent="space-between">
-              <Flex grow row alignItems="center" gap="spacing8">
+          <Flex alignItems="flex-start" gap="$spacing8">
+            <Flex row gap="$spacing4" justifyContent="space-between">
+              <Flex grow row alignItems="center" gap="$spacing8">
                 <TokenLogo
                   chainId={chainId ?? undefined}
                   size={theme.imageSizes.image20}
@@ -159,10 +158,10 @@ function FavoriteTokenCard({
               {isEditing ? (
                 <RemoveButton onPress={onRemove} />
               ) : (
-                <Box height={theme.imageSizes.image24} />
+                <Flex gap="$none" height={imageSizes.image24} />
               )}
             </Flex>
-            <Flex gap="spacing2">
+            <Flex gap="$spacing2">
               <Text adjustsFontSizeToFit numberOfLines={1} variant="headlineSmall">
                 {formatUSDPrice(usdPrice)}
               </Text>
