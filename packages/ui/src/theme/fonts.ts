@@ -9,83 +9,119 @@ const adjustedSize = (fontSize: number): number => {
   return fontSize + 1
 }
 
+const fontFamily = {
+  serif: 'serif',
+  sansSerif: {
+    // iOS uses the name embedded in the font
+    book: 'Basel-Book',
+    medium: 'Basel-Medium',
+    monospace: 'InputMono-Regular',
+  },
+}
+
+type SansSerifFontFamilyKey = keyof typeof fontFamily.sansSerif
+type SansSerifFontFamilyValue = (typeof fontFamily.sansSerif)[SansSerifFontFamilyKey]
+
+const platformFontFamily = (
+  family: SansSerifFontFamilyKey
+): SansSerifFontFamilyKey | SansSerifFontFamilyValue => {
+  if (Platform.OS === 'web') {
+    return family
+  }
+
+  return fontFamily.sansSerif[family]
+}
+
 export const fonts = {
   headlineLarge: {
-    family: 'book',
+    family: platformFontFamily('book'),
     fontSize: adjustedSize(52),
     lineHeight: 60,
     fontWeight: '400',
+    maxFontSizeMultiplier: 1.2,
   },
   headlineMedium: {
-    family: 'book',
+    family: platformFontFamily('book'),
     fontSize: adjustedSize(36),
     lineHeight: 44,
     fontWeight: '400',
+    maxFontSizeMultiplier: 1.2,
   },
   headlineSmall: {
-    family: 'book',
+    family: platformFontFamily('book'),
     fontSize: adjustedSize(24),
     lineHeight: 32,
     fontWeight: '400',
+    maxFontSizeMultiplier: 1.2,
   },
   subheadLarge: {
-    family: 'book',
+    family: platformFontFamily('book'),
     fontSize: adjustedSize(18),
     lineHeight: 24,
     fontWeight: '400',
+    maxFontSizeMultiplier: 1.4,
   },
   subheadSmall: {
-    family: 'book',
+    family: platformFontFamily('book'),
     fontSize: adjustedSize(16),
     lineHeight: 24,
     fontWeight: '400',
+    maxFontSizeMultiplier: 1.4,
   },
   bodyLarge: {
-    family: 'book',
+    family: platformFontFamily('book'),
     fontSize: adjustedSize(18),
     lineHeight: 24,
     fontWeight: '400',
+    maxFontSizeMultiplier: 1.4,
   },
   bodySmall: {
-    family: 'book',
+    family: platformFontFamily('book'),
     fontSize: adjustedSize(16),
     lineHeight: 24,
     fontWeight: '400',
+    maxFontSizeMultiplier: 1.4,
   },
   bodyMicro: {
-    family: 'book',
+    family: platformFontFamily('book'),
     fontSize: adjustedSize(14),
     lineHeight: 16,
     fontWeight: '400',
+    maxFontSizeMultiplier: 1.4,
   },
   buttonLabelLarge: {
-    family: 'medium',
+    family: platformFontFamily('medium'),
     fontSize: adjustedSize(20),
     lineHeight: 24,
     fontWeight: '500',
+    maxFontSizeMultiplier: 1.2,
   },
   buttonLabelMedium: {
-    family: 'medium',
+    family: platformFontFamily('medium'),
     fontSize: adjustedSize(18),
     lineHeight: 24,
     fontWeight: '500',
+    maxFontSizeMultiplier: 1.2,
   },
   buttonLabelSmall: {
-    family: 'medium',
+    family: platformFontFamily('medium'),
     fontSize: adjustedSize(16),
     lineHeight: 24,
     fontWeight: '500',
+    maxFontSizeMultiplier: 1.2,
   },
   buttonLabelMicro: {
-    family: 'medium',
+    family: platformFontFamily('medium'),
     fontSize: adjustedSize(12),
     lineHeight: 16,
     fontWeight: '500',
+    maxFontSizeMultiplier: 1.2,
   },
   monospace: {
-    family: 'monospace',
+    family: platformFontFamily('monospace'),
     fontSize: adjustedSize(14),
     lineHeight: 20,
+    maxFontSizeMultiplier: 1.2,
   },
 } as const
 

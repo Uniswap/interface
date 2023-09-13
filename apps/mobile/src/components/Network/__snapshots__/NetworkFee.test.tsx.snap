@@ -70,6 +70,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
               "display": "flex",
               "fontFamily": "Basel-Medium",
               "fontSize": 13,
+              "fontWeight": "500",
               "lineHeight": 16,
             },
             {
@@ -196,6 +197,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
               "display": "flex",
               "fontFamily": "Basel-Medium",
               "fontSize": 13,
+              "fontWeight": "500",
               "lineHeight": 16,
             },
             {
@@ -329,6 +331,7 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
               "display": "flex",
               "fontFamily": "Basel-Medium",
               "fontSize": 13,
+              "fontWeight": "500",
               "lineHeight": 16,
             },
             {

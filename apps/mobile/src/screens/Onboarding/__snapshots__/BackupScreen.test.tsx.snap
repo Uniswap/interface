@@ -95,6 +95,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 "display": "flex",
                 "fontFamily": "Basel-Book",
                 "fontSize": 17,
+                "fontWeight": "400",
                 "lineHeight": 24,
                 "textAlign": "center",
               },
@@ -345,6 +346,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             "display": "flex",
                             "fontFamily": "Basel-Book",
                             "fontSize": 17,
+                            "fontWeight": "400",
                             "lineHeight": 24,
                           },
                         ]
@@ -501,6 +503,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             "display": "flex",
                             "fontFamily": "Basel-Book",
                             "fontSize": 17,
+                            "fontWeight": "400",
                             "lineHeight": 24,
                           },
                         ]
@@ -754,6 +757,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 "display": "flex",
                 "fontFamily": "Basel-Book",
                 "fontSize": 17,
+                "fontWeight": "400",
                 "lineHeight": 24,
                 "textAlign": "center",
               },
@@ -1004,6 +1008,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                             "display": "flex",
                             "fontFamily": "Basel-Book",
                             "fontSize": 17,
+                            "fontWeight": "400",
                             "lineHeight": 24,
                           },
                         ]
@@ -1160,6 +1165,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                             "display": "flex",
                             "fontFamily": "Basel-Book",
                             "fontSize": 17,
+                            "fontWeight": "400",
                             "lineHeight": 24,
                           },
                         ]

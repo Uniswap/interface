@@ -33,6 +33,7 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
           "display": "flex",
           "fontFamily": "Basel-Book",
           "fontSize": 17,
+          "fontWeight": "400",
           "lineHeight": 24,
         },
         {
@@ -80,6 +81,7 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
           "display": "flex",
           "fontFamily": "Basel-Book",
           "fontSize": 17,
+          "fontWeight": "400",
           "lineHeight": 24,
         },
         {
@@ -127,6 +129,7 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
           "display": "flex",
           "fontFamily": "Basel-Medium",
           "fontSize": 13,
+          "fontWeight": "500",
           "lineHeight": 16,
         },
         {
