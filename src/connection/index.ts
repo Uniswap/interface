@@ -115,8 +115,7 @@ export const walletConnectConnection: Connection = {
   hooks: web3WalletConnectHooks,
   type: ConnectionType.WALLET_CONNECT,
   getIcon: () => WALLET_CONNECT_ICON,
-  // shouldDisplay: () => !getIsInjectedMobileBrowser(),
-  shouldDisplay: () => false,
+  shouldDisplay: () => !getIsInjectedMobileBrowser(),
 }
 
 const [web3UniwalletConnect, web3UniwalletConnectHooks] = initializeConnector<UniwalletConnect>(
