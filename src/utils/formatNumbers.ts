@@ -528,7 +528,7 @@ export const priceToPreciseFloat = (price: Price<Currency, Currency> | undefined
 
 const MAX_AMOUNT_STR_LENGTH = 9
 
-function formatReviewSwapCurrencyAmount(
+export function formatReviewSwapCurrencyAmount(
   amount: CurrencyAmount<Currency>,
   locale: SupportedLocale = DEFAULT_LOCALE
 ): string {
