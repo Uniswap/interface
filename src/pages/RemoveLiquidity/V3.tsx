@@ -59,11 +59,11 @@ export default function RemoveLiquidityV3() {
     }
   }, [tokenId])
 
+  const { position, loading } = useV3PositionFromTokenId(parsedTokenId ?? undefined)
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
     return <Navigate to={{ ...location, pathname: '/pools' }} replace />
   }
-
-  if (isSupportedChain(chainId)) {
+  if (isSupportedChain(chainId) && (loading || position)) {
     return <Remove tokenId={parsedTokenId} />
   } else {
     return <PositionPageUnsupportedContent />
