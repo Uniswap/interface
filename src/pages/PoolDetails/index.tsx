@@ -28,6 +28,8 @@ export default function PoolDetailsPage() {
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
+  console.log('poolData', poolData)
+
   // TODO(WEB-2814): Add skeleton once designed
   if (loading) return null
   if (poolNotFound) return <NotFound />

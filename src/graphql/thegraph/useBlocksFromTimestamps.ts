@@ -1,11 +1,12 @@
 import { ChainId } from '@uniswap/sdk-core'
-import gql from 'graphql-tag'
-import { chainToApolloBlockClient } from './apollo'
-import { useEffect, useMemo, useState } from 'react'
-import { splitQuery } from './utils'
 import { START_BLOCKS } from 'constants/chainInfo'
+import gql from 'graphql-tag'
+import { useEffect, useMemo, useState } from 'react'
 
-export const GET_BLOCKS = (timestamps: string[]) => {
+import { chainToApolloBlockClient } from './apollo'
+import { splitQuery } from './utils'
+
+const GET_BLOCKS = (timestamps: string[]) => {
   let queryString = 'query blocks {'
   queryString += timestamps.map((timestamp) => {
     return `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${
@@ -26,12 +27,10 @@ export function useBlocksFromTimestamps(
   timestamps: number[],
   chainId: ChainId
 ): {
-  blocks:
-    | {
-        timestamp: string
-        number: any
-      }[]
-    | undefined
+  blocks?: {
+    timestamp: string
+    number: any
+  }[]
   error: boolean
 } {
   const [blocks, setBlocks] = useState<any>()
