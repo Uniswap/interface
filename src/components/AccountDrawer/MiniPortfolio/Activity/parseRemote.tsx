@@ -21,7 +21,7 @@ import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromG
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
-import { formatFiatPrice, NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
 import { Activity } from './types'
@@ -142,10 +142,10 @@ function getSwapDescriptor({
  * @param transactedValue Transacted value amount from TokenTransfer API response
  * @returns parsed & formatted USD value as a string if currency is of type USD
  */
-function formatTransactedValue(transactedValue: TokenTransferPartsFragment['transactedValue']): string {
-  if (!transactedValue) return '-'
+function getTransactedValue(transactedValue: TokenTransferPartsFragment['transactedValue']): number | undefined {
+  if (!transactedValue) return undefined
   const price = transactedValue?.currency === GQLCurrency.Usd ? transactedValue.value ?? undefined : undefined
-  return formatFiatPrice(price)
+  return price
 }
 
 function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
@@ -247,7 +247,10 @@ function parseSendReceive(
       return isMoonpayPurchase && transfer.__typename === 'TokenTransfer'
         ? {
             title: t`Purchased`,
-            descriptor: `${amount} ${assetName} ${t`for`} ${formatTransactedValue(transfer.transactedValue)}`,
+            descriptor: `${amount} ${assetName} ${t`for`} ${formatNumberOrString({
+              input: getTransactedValue(transfer.transactedValue),
+              type: NumberType.FiatTokenPrice,
+            })}`,
             logos: [moonpayLogoSrc],
             currencies,
           }

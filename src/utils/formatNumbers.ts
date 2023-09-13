@@ -548,14 +548,22 @@ function formatNumberOrString({
   return formatNumber({ input, type, locale, localCurrency, conversionRate })
 }
 
-export function formatUSDPrice(price: Nullish<number | string>, type: NumberType = NumberType.FiatTokenPrice): string {
-  return formatNumberOrString({ input: price, type })
+interface FormatFiatPriceOptions {
+  price: Nullish<number | string>
+  type?: FormatterType
+  locale?: SupportedLocale
+  localCurrency?: SupportedLocalCurrency
+  conversionRate?: number
 }
 
-/** Formats USD and non-USD prices */
-export function formatFiatPrice(price: Nullish<number>, currency = 'USD'): string {
-  if (price === null || price === undefined) return '-'
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price)
+function formatFiatPrice({
+  price,
+  type = NumberType.FiatTokenPrice,
+  locale,
+  localCurrency,
+  conversionRate,
+}: FormatFiatPriceOptions): string {
+  return formatNumberOrString({ input: price, type, locale, localCurrency, conversionRate })
 }
 
 // Convert [CurrencyAmount] to number with necessary precision for price formatting.
@@ -717,9 +725,21 @@ export function useFormatter() {
     [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
   )
 
+  const formatFiatPriceWithLocales = useCallback(
+    (options: Omit<FormatFiatPriceOptions, LocalesType>) =>
+      formatFiatPrice({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: localCurrencyConversionRateToFormatWith,
+      }),
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+  )
+
   return useMemo(
     () => ({
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
+      formatFiatPrice: formatFiatPriceWithLocales,
       formatNumber: formatNumberWithLocales,
       formatNumberOrString: formatNumberOrStringWithLocales,
       formatPrice: formatPriceWithLocales,
@@ -730,6 +750,7 @@ export function useFormatter() {
     }),
     [
       formatCurrencyAmountWithLocales,
+      formatFiatPriceWithLocales,
       formatNumberOrStringWithLocales,
       formatNumberWithLocales,
       formatPriceImpactWithLocales,

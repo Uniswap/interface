@@ -11,7 +11,6 @@ import { mocked } from 'test-utils/mocked'
 import {
   currencyAmountToPreciseFloat,
   formatReviewSwapCurrencyAmount,
-  formatUSDPrice,
   NumberType,
   priceToPreciseFloat,
   useFormatter,
@@ -323,38 +322,43 @@ describe('formatNumber', () => {
 })
 
 describe('formatUSDPrice', () => {
-  it('should correctly format 0.000000009876', () => {
-    expect(formatUSDPrice(0.000000009876)).toBe('<$0.00000001')
+  beforeEach(() => {
+    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
+    mocked(useCurrencyConversionFlagEnabled).mockReturnValue(true)
   })
-  it('should correctly format 0.00001231', () => {
-    expect(formatUSDPrice(0.00001231)).toBe('$0.0000123')
+
+  it('format fiat price correctly', () => {
+    const { formatFiatPrice } = renderHook(() => useFormatter()).result.current
+
+    expect(formatFiatPrice({ price: 0.000000009876 })).toBe('<$0.00000001')
+    expect(formatFiatPrice({ price: 0.00001231 })).toBe('$0.0000123')
+    expect(formatFiatPrice({ price: 0.001231 })).toBe('$0.00123')
+    expect(formatFiatPrice({ price: 0.0 })).toBe('$0.00')
+    expect(formatFiatPrice({ price: 0 })).toBe('$0.00')
+    expect(formatFiatPrice({ price: 1.048942 })).toBe('$1.05')
+    expect(formatFiatPrice({ price: 0.10235 })).toBe('$0.102')
+    expect(formatFiatPrice({ price: 1_234.5678 })).toBe('$1,234.57')
+    expect(formatFiatPrice({ price: 1_234_567.891 })).toBe('$1.23M')
+    expect(formatFiatPrice({ price: 1_000_000_000_000 })).toBe('$1.00T')
+    expect(formatFiatPrice({ price: 1_000_000_000_000_000 })).toBe('$1000.00T')
   })
-  it('should correctly format 0.001231', () => {
-    expect(formatUSDPrice(0.001231)).toBe('$0.00123')
-  })
-  it('should correctly format 0.0', () => {
-    expect(formatUSDPrice(0.0)).toBe('$0.00')
-  })
-  it('should correctly format 0', () => {
-    expect(formatUSDPrice(0)).toBe('$0.00')
-  })
-  it('should correctly format 1.048942', () => {
-    expect(formatUSDPrice(1.048942)).toBe('$1.05')
-  })
-  it('should correctly format 0.10235', () => {
-    expect(formatUSDPrice(0.10235)).toBe('$0.102')
-  })
-  it('should correctly format 1234.5678', () => {
-    expect(formatUSDPrice(1_234.5678)).toBe('$1,234.57')
-  })
-  it('should correctly format 1234567.8910', () => {
-    expect(formatUSDPrice(1_234_567.891)).toBe('$1.23M')
-  })
-  it('should correctly format 1000000000000', () => {
-    expect(formatUSDPrice(1_000_000_000_000)).toBe('$1.00T')
-  })
-  it('should correctly format 1000000000000000', () => {
-    expect(formatUSDPrice(1_000_000_000_000_000)).toBe('$1000.00T')
+
+  it('format fiat price correctly in euros with french locale', () => {
+    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Eur)
+    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    const { formatFiatPrice } = renderHook(() => useFormatter()).result.current
+
+    expect(formatFiatPrice({ price: 0.000000009876 })).toBe('<0,00000001\xa0€')
+    expect(formatFiatPrice({ price: 0.00001231 })).toBe('0,0000123\xa0€')
+    expect(formatFiatPrice({ price: 0.001231 })).toBe('0,00123\xa0€')
+    expect(formatFiatPrice({ price: 0.0 })).toBe('0,00\xa0€')
+    expect(formatFiatPrice({ price: 0 })).toBe('0,00\xa0€')
+    expect(formatFiatPrice({ price: 1.048942 })).toBe('1,05\xa0€')
+    expect(formatFiatPrice({ price: 0.10235 })).toBe('0,102\xa0€')
+    expect(formatFiatPrice({ price: 1_234.5678 })).toBe('1\u202f234,57\xa0€')
+    expect(formatFiatPrice({ price: 1_234_567.891 })).toBe('1,23\xa0M\xa0€')
+    expect(formatFiatPrice({ price: 1_000_000_000_000 })).toBe('1,00\xa0Bn\xa0€')
+    expect(formatFiatPrice({ price: 1_000_000_000_000_000 })).toBe('1000,00\xa0Bn\xa0€')
   })
 })
 
