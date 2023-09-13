@@ -11,7 +11,6 @@ import { mocked } from 'test-utils/mocked'
 import {
   currencyAmountToPreciseFloat,
   formatReviewSwapCurrencyAmount,
-  formatSlippage,
   formatUSDPrice,
   NumberType,
   priceToPreciseFloat,
@@ -394,16 +393,36 @@ describe('formatPriceImpact', () => {
 })
 
 describe('formatSlippage', () => {
+  beforeEach(() => {
+    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
+    mocked(useCurrencyConversionFlagEnabled).mockReturnValue(true)
+  })
+
   it('should correctly format undefined', () => {
+    const { formatSlippage } = renderHook(() => useFormatter()).result.current
+
     expect(formatSlippage(undefined)).toBe('-')
   })
 
   it('correctly formats a percent with 3 significant digits', () => {
+    const { formatSlippage } = renderHook(() => useFormatter()).result.current
+
     expect(formatSlippage(new Percent(1, 100000))).toBe('0.001%')
     expect(formatSlippage(new Percent(1, 1000))).toBe('0.100%')
     expect(formatSlippage(new Percent(1, 100))).toBe('1.000%')
     expect(formatSlippage(new Percent(1, 10))).toBe('10.000%')
     expect(formatSlippage(new Percent(1, 1))).toBe('100.000%')
+  })
+
+  it('correctly formats a percent with 3 significant digits with french locale', () => {
+    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    const { formatSlippage } = renderHook(() => useFormatter()).result.current
+
+    expect(formatSlippage(new Percent(1, 100000))).toBe('0,001%')
+    expect(formatSlippage(new Percent(1, 1000))).toBe('0,100%')
+    expect(formatSlippage(new Percent(1, 100))).toBe('1,000%')
+    expect(formatSlippage(new Percent(1, 10))).toBe('10,000%')
+    expect(formatSlippage(new Percent(1, 1))).toBe('100,000%')
   })
 })
 

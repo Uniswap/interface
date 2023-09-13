@@ -462,10 +462,14 @@ function formatPriceImpact(priceImpact: Percent | undefined, locale: SupportedLo
   })}%`
 }
 
-export function formatSlippage(slippage: Percent | undefined) {
+function formatSlippage(slippage: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE) {
   if (!slippage) return '-'
 
-  return `${slippage.toFixed(3)}%`
+  return `${Number(slippage.toFixed(3)).toLocaleString(locale, {
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3,
+    useGrouping: false,
+  })}%`
 }
 
 interface FormatPriceProps {
@@ -638,6 +642,11 @@ export function useFormatter() {
     [formatterLocale]
   )
 
+  const formatSlippageWithLocales = useCallback(
+    (slippage: Percent | undefined) => formatSlippage(slippage, formatterLocale),
+    [formatterLocale]
+  )
+
   return useMemo(
     () => ({
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
@@ -645,6 +654,7 @@ export function useFormatter() {
       formatPrice: formatPriceWithLocales,
       formatPriceImpact: formatPriceImpactWithLocales,
       formatReviewSwapCurrencyAmount: formatReviewSwapCurrencyAmountWithLocales,
+      formatSlippage: formatSlippageWithLocales,
     }),
     [
       formatCurrencyAmountWithLocales,
@@ -652,6 +662,7 @@ export function useFormatter() {
       formatPriceImpactWithLocales,
       formatPriceWithLocales,
       formatReviewSwapCurrencyAmountWithLocales,
+      formatSlippageWithLocales,
     ]
   )
 }
