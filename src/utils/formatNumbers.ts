@@ -392,7 +392,7 @@ interface FormatNumberOptions {
   conversionRate?: number
 }
 
-export function formatNumber({
+function formatNumber({
   input,
   type = NumberType.TokenNonTx,
   placeholder = '-',
@@ -539,7 +539,7 @@ export function formatReviewSwapCurrencyAmount(
   return formattedAmount
 }
 
-export function useFormatterLocales(): {
+function useFormatterLocales(): {
   formatterLocale: SupportedLocale
   formatterLocalCurrency: SupportedLocalCurrency
 } {

@@ -17,6 +17,7 @@ import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme'
+import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledClose = styled(X)<{ $padding: number }>`
@@ -137,9 +138,10 @@ export function TransactionPopupContent({
 }) {
   const transaction = useTransaction(hash)
   const tokens = useAllTokensMultichain()
+  const { formatNumber } = useFormatter()
   if (!transaction) return null
 
-  const activity = transactionToActivity(transaction, chainId, tokens)
+  const activity = transactionToActivity(transaction, chainId, tokens, formatNumber)
 
   if (!activity) return null
 
@@ -153,9 +155,10 @@ export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: s
   const order = useOrder(orderHash)
   const tokens = useAllTokensMultichain()
   const openOffchainActivityModal = useOpenOffchainActivityModal()
+  const { formatNumber } = useFormatter()
   if (!order) return null
 
-  const activity = signatureToActivity(order, tokens)
+  const activity = signatureToActivity(order, tokens, formatNumber)
 
   if (!activity) return null
 
