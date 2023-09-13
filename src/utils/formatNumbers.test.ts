@@ -8,7 +8,7 @@ import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { mocked } from 'test-utils/mocked'
 
-import { formatReviewSwapCurrencyAmount, NumberType, useFormatter } from './formatNumbers'
+import { NumberType, useFormatter } from './formatNumbers'
 
 jest.mock('hooks/useActiveLocale')
 jest.mock('hooks/useActiveLocalCurrency')
@@ -425,11 +425,37 @@ describe('formatSlippage', () => {
 })
 
 describe('formatReviewSwapCurrencyAmount', () => {
+  beforeEach(() => {
+    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
+    mocked(useCurrencyConversionFlagEnabled).mockReturnValue(true)
+  })
+
   it('should use TokenTx formatting under a default length', () => {
+    const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
+
     const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000') // 2,000 USDC
     expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2,000')
   })
+
+  it('should use TokenTx formatting under a default length with french locales', () => {
+    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
+
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000') // 2,000 USDC
+    expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2\u202f000')
+  })
+
   it('should use SwapTradeAmount formatting over the default length', () => {
+    const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
+
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
+    expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
+  })
+
+  it('should use SwapTradeAmount formatting over the default length with french locales', () => {
+    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
+
     const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
     expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
   })
