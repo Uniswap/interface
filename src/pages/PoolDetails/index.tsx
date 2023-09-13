@@ -3,7 +3,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { DeltaArrow, formatDelta } from 'components/Tokens/TokenDetails/Delta'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { usePoolData } from 'graphql/thegraph/PoolData'
+import { PoolData, usePoolData } from 'graphql/thegraph/PoolData'
 import NotFound from 'pages/NotFound'
 import { ReactNode, useReducer } from 'react'
 import { useParams } from 'react-router-dom'
@@ -17,6 +17,7 @@ import { PoolDetailsHeader } from './PoolDetailsHeader'
 const PageWrapper = styled(Row)`
   padding: 48px 56px;
   width: 100%;
+  align-items: flex-start;
 `
 
 export default function PoolDetailsPage() {
@@ -33,8 +34,6 @@ export default function PoolDetailsPage() {
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
-  console.log('poolData', poolData)
-
   // TODO(WEB-2814): Add skeleton once designed
   if (loading) return null
   if (poolNotFound) return <NotFound />
@@ -48,7 +47,7 @@ export default function PoolDetailsPage() {
         feeTier={poolData?.feeTier}
         toggleReversed={toggleReversed}
       />
-      <PoolDetailsStats tvl={poolData?.totalValueLockedUSD} />
+      {poolData && <PoolDetailsStats poolData={poolData} />}
     </PageWrapper>
   )
 }
@@ -63,13 +62,14 @@ const StatsWrapper = styled(Column)`
   width: 22vw;
 `
 
-function PoolDetailsStats({ tvl, volume, fees }: { tvl?: string; volume?: string; fees?: string }) {
-  // TODO: update query to get correct tvl, volume, fees vs https://info.uniswap.org/#/polygon/pools/0x167384319b41f7094e62f7506409eb38079abff8
-  // add deltas
+function PoolDetailsStats({ poolData }: { poolData: PoolData }) {
+  // TODO: header spacing and 24H formatting vs https://info.uniswap.org/#/polygon/pools/0x167384319b41f7094e62f7506409eb38079abff8
   // move formatter to statItem?
   // add graph
   // add color extraction for tokens
-  const formattedTvl = formatUSDPrice(tvl)
+  const formattedTvl = formatUSDPrice(poolData.tvlUSD)
+  const formatted24HVolume = formatUSDPrice(poolData.volumeUSD)
+  const formatted24HFees = formatUSDPrice(poolData.volumeUSD * (poolData.feeTier / 1000000))
   return (
     <StatsWrapper>
       <ThemedText.DeprecatedLargeHeader>
@@ -81,9 +81,9 @@ function PoolDetailsStats({ tvl, volume, fees }: { tvl?: string; volume?: string
         </ThemedText.BodySecondary>
         {/* TODO Balances graph */}
       </Column>
-      {!!tvl && <StatItem title={<Trans>TVL</Trans>} value={formattedTvl} delta={-2.16} />}
-      {!!volume && <StatItem title={<Trans>24H volume</Trans>} value="$5.64M" delta={106.081} />}
-      {!!fees && <StatItem title={<Trans>24H fees</Trans>} value="$16.92K" />}
+      <StatItem title={<Trans>TVL</Trans>} value={formattedTvl} delta={poolData.tvlUSDChange} />
+      <StatItem title={<Trans>24H volume</Trans>} value={formatted24HVolume} delta={poolData.volumeUSDChange} />
+      <StatItem title={<Trans>24H fees</Trans>} value={formatted24HFees} />
     </StatsWrapper>
   )
 }

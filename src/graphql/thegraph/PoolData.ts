@@ -57,7 +57,7 @@ const POOLS_BULK = (pools: string[], block?: number) => {
   return gql(queryString)
 }
 
-interface PoolData {
+export interface PoolData {
   // basic token info
   address: string
   feeTier: number
