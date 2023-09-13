@@ -67,6 +67,7 @@ describe('PoolDetailsPage', () => {
     mocked(usePoolData).mockReturnValue({
       data: undefined,
       loading: false,
+      error: false,
     })
     render(<PoolDetails />)
 
@@ -77,7 +78,11 @@ describe('PoolDetailsPage', () => {
 
   // TODO replace with loading skeleton when designed
   it('nothing displayed while data is loading', () => {
-    mocked(usePoolData).mockReturnValue({ data: undefined, loading: true })
+    mocked(usePoolData).mockReturnValue({
+      data: undefined,
+      loading: true,
+      error: false,
+    })
     render(<PoolDetails />)
 
     waitFor(() => {
