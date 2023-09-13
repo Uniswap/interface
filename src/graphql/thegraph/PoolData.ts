@@ -167,6 +167,7 @@ export function usePoolData(
      * During subgraph deploy switch this month we lost logic to fix this accounting.
      * Grafted sync pending fix now.
      * Verified that this hotfix is still required as of 2023-09-13
+     * TODO(DAT-139): Diagnose and address subgraph issue that requires this hotfix
      */
     const feePercent = current ? parseFloat(current.feeTier) / 10000 / 100 : 0
     const tvlAdjust0 = current?.volumeToken0 ? (parseFloat(current.volumeToken0) * feePercent) / 2 : 0
