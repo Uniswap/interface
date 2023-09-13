@@ -22,7 +22,7 @@ describe('disconnect wallet', () => {
     cy.contains('Connect Wallet')
 
     // Verify swap input is cleared
-    cy.get('#swap-currency-input .token-amount-input').should('have.value', '1')
+    cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
   })
 })
 
