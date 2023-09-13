@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react'
-import { CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
-import { USDC_MAINNET, WBTC } from 'constants/tokens'
+import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { USDC_MAINNET } from 'constants/tokens'
 import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
 import { Currency } from 'graphql/data/__generated__/types-and-hooks'
 import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
@@ -8,13 +8,7 @@ import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { mocked } from 'test-utils/mocked'
 
-import {
-  currencyAmountToPreciseFloat,
-  formatReviewSwapCurrencyAmount,
-  NumberType,
-  priceToPreciseFloat,
-  useFormatter,
-} from './formatNumbers'
+import { formatReviewSwapCurrencyAmount, NumberType, useFormatter } from './formatNumbers'
 
 jest.mock('hooks/useActiveLocale')
 jest.mock('hooks/useActiveLocalCurrency')
@@ -427,44 +421,6 @@ describe('formatSlippage', () => {
     expect(formatSlippage(new Percent(1, 100))).toBe('1,000%')
     expect(formatSlippage(new Percent(1, 10))).toBe('10,000%')
     expect(formatSlippage(new Percent(1, 1))).toBe('100,000%')
-  })
-})
-
-describe('currencyAmountToPreciseFloat', () => {
-  it('small number', () => {
-    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '20000', '7')
-    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(0.00285714)
-  })
-  it('tiny number', () => {
-    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '2', '7')
-    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(0.000000285714)
-  })
-  it('lots of decimals', () => {
-    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '200000000', '7')
-    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(28.571428)
-  })
-  it('integer', () => {
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '20000000')
-    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(20.0)
-  })
-})
-
-describe('priceToPreciseFloat', () => {
-  it('small number', () => {
-    const price = new Price(WBTC, USDC_MAINNET, 1234, 1)
-    expect(priceToPreciseFloat(price)).toEqual(0.0810373)
-  })
-  it('tiny number', () => {
-    const price = new Price(WBTC, USDC_MAINNET, 12345600, 1)
-    expect(priceToPreciseFloat(price)).toEqual(0.00000810005)
-  })
-  it('lots of decimals', () => {
-    const price = new Price(WBTC, USDC_MAINNET, 123, 7)
-    expect(priceToPreciseFloat(price)).toEqual(5.691056911)
-  })
-  it('integer', () => {
-    const price = new Price(WBTC, USDC_MAINNET, 1, 7)
-    expect(priceToPreciseFloat(price)).toEqual(700)
   })
 })
 

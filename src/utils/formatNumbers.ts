@@ -566,26 +566,6 @@ function formatFiatPrice({
   return formatNumberOrString({ input: price, type, locale, localCurrency, conversionRate })
 }
 
-// Convert [CurrencyAmount] to number with necessary precision for price formatting.
-export const currencyAmountToPreciseFloat = (currencyAmount: CurrencyAmount<Currency> | undefined) => {
-  if (!currencyAmount) return undefined
-  const floatForLargerNumbers = parseFloat(currencyAmount.toExact())
-  if (floatForLargerNumbers < 0.1) {
-    return parseFloat(currencyAmount.toSignificant(6))
-  }
-  return floatForLargerNumbers
-}
-
-// Convert [Price] to number with necessary precision for price formatting.
-export const priceToPreciseFloat = (price: Price<Currency, Currency> | undefined) => {
-  if (!price) return undefined
-  const floatForLargerNumbers = parseFloat(price.toFixed(9))
-  if (floatForLargerNumbers < 0.1) {
-    return parseFloat(price.toSignificant(6))
-  }
-  return floatForLargerNumbers
-}
-
 const MAX_AMOUNT_STR_LENGTH = 9
 
 export function formatReviewSwapCurrencyAmount(
