@@ -6,7 +6,7 @@ function now() {
 }
 
 function checkNetworks(networks: Array<Network>): Network | null {
-  let result: Network | undefined = undefined
+  let result: Network | null = null
 
   for (let i = 0; i < networks.length; i++) {
     const network = networks[i]
@@ -32,7 +32,7 @@ function checkNetworks(networks: Array<Network>): Network | null {
     }
   }
 
-  return result ?? null
+  return result
 }
 
 interface ProviderPerformance {
