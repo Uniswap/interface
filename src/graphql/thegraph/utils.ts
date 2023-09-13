@@ -47,10 +47,14 @@ export async function splitQuery<Type extends object>(
   }
 }
 
+/**
+ * Get the 24hr, 48hr, and 1 week ago timestamps
+ * @returns [t24, t48, tWeek]
+ */
 export function useDeltaTimestamps(): [number, number, number] {
   const utcCurrentTime = Date.now()
-  const t1 = Math.floor((utcCurrentTime - ms('1d')) / 1000)
-  const t2 = Math.floor((utcCurrentTime - ms('2d')) / 1000)
+  const t24 = Math.floor((utcCurrentTime - ms('1d')) / 1000)
+  const t48 = Math.floor((utcCurrentTime - ms('2d')) / 1000)
   const tWeek = Math.floor((utcCurrentTime - ms('7d')) / 1000)
-  return [t1, t2, tWeek]
+  return [t24, t48, tWeek]
 }
