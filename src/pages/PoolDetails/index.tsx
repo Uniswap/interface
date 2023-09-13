@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { isAddress } from 'utils'
-import { formatUSDPrice } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { PoolDetailsHeader } from './PoolDetailsHeader'
 
@@ -64,12 +64,8 @@ const StatsWrapper = styled(Column)`
 
 function PoolDetailsStats({ poolData }: { poolData: PoolData }) {
   // TODO: header spacing and 24H formatting vs https://info.uniswap.org/#/polygon/pools/0x167384319b41f7094e62f7506409eb38079abff8
-  // move formatter to statItem?
   // add graph
   // add color extraction for tokens
-  const formattedTvl = formatUSDPrice(poolData.tvlUSD)
-  const formatted24HVolume = formatUSDPrice(poolData.volumeUSD)
-  const formatted24HFees = formatUSDPrice(poolData.volumeUSD * (poolData.feeTier / 1000000))
   return (
     <StatsWrapper>
       <ThemedText.DeprecatedLargeHeader>
@@ -81,19 +77,26 @@ function PoolDetailsStats({ poolData }: { poolData: PoolData }) {
         </ThemedText.BodySecondary>
         {/* TODO Balances graph */}
       </Column>
-      <StatItem title={<Trans>TVL</Trans>} value={formattedTvl} delta={poolData.tvlUSDChange} />
-      <StatItem title={<Trans>24H volume</Trans>} value={formatted24HVolume} delta={poolData.volumeUSDChange} />
-      <StatItem title={<Trans>24H fees</Trans>} value={formatted24HFees} />
+      <StatItem title={<Trans>TVL</Trans>} value={poolData.tvlUSD} delta={poolData.tvlUSDChange} />
+      <StatItem title={<Trans>24H volume</Trans>} value={poolData.volumeUSD} delta={poolData.volumeUSDChange} />
+      <StatItem title={<Trans>24H fees</Trans>} value={poolData.volumeUSD * (poolData.feeTier / 1000000)} />
     </StatsWrapper>
   )
 }
 
-function StatItem({ title, value, delta }: { title: ReactNode; value: string; delta?: number }) {
+function StatItem({ title, value, delta }: { title: ReactNode; value: number; delta?: number }) {
+  const { formatNumber } = useFormatter()
+
   return (
     <Column gap="sm">
       <ThemedText.BodySecondary>{title}</ThemedText.BodySecondary>
       <Row gap="4px" width="full" align="flex-end">
-        <ThemedText.HeadlineLarge>{value}</ThemedText.HeadlineLarge>
+        <ThemedText.HeadlineLarge>
+          {formatNumber({
+            input: value,
+            type: NumberType.FiatTokenStats,
+          })}
+        </ThemedText.HeadlineLarge>
         {!!delta && (
           <Row width="max-content" padding="4px 0px">
             <DeltaArrow delta={delta} />
