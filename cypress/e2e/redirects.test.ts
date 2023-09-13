@@ -1,3 +1,5 @@
+import { MaxUint256 } from '@uniswap/sdk-core'
+
 describe('Redirect', () => {
   it('should redirect to /vote/create-proposal when visiting /create-proposal', () => {
     cy.visit('/create-proposal')
@@ -17,7 +19,7 @@ describe('Redirect', () => {
     cy.url().should('match', /\/not-found/)
 
     // Nonexist v3 tokenId pool
-    cy.visit('/remove/-1')
+    cy.visit(`/remove/${MaxUint256}`)
     cy.contains('Position unavailable')
   })
 })
