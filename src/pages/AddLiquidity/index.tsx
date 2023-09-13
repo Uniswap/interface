@@ -7,7 +7,7 @@ import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
+import OwnershipWarning from 'components/AddLiquidity/OwnershipWarning'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { isSupportedChain } from 'constants/chains'
@@ -507,6 +507,7 @@ function AddLiquidity() {
                   onClick={approveACallback}
                   disabled={approvalA === ApprovalState.PENDING}
                   width={showApprovalB ? '48%' : '100%'}
+                  data-testid="approve-tokena-button"
                 >
                   {approvalA === ApprovalState.PENDING ? (
                     <Dots>
@@ -522,6 +523,7 @@ function AddLiquidity() {
                   onClick={approveBCallback}
                   disabled={approvalB === ApprovalState.PENDING}
                   width={showApprovalA ? '48%' : '100%'}
+                  data-testid="approve-tokenb-button"
                 >
                   {approvalB === ApprovalState.PENDING ? (
                     <Dots>
@@ -544,6 +546,7 @@ function AddLiquidity() {
             (!argentWalletContract && approvalB !== ApprovalState.APPROVED && !depositBDisabled)
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
+          data-testid="call-to-action"
         >
           <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
         </ButtonError>
@@ -596,7 +599,7 @@ function AddLiquidity() {
                 />
               )}
               bottomContent={() => (
-                <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
+                <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd} data-testid="confirm-add">
                   <Text fontWeight={500} fontSize={20}>
                     <Trans>Add</Trans>
                   </Text>
@@ -907,7 +910,7 @@ function AddLiquidity() {
                   </AutoColumn>
                 </DynamicSection>
               </div>
-              <Buttons />
+              <Buttons data-testid="call-to-action" />
             </ResponsiveTwoColumns>
           </Wrapper>
         </StyledBodyWrapper>
