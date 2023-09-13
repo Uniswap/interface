@@ -10,7 +10,6 @@ import { mocked } from 'test-utils/mocked'
 
 import {
   currencyAmountToPreciseFloat,
-  formatPriceImpact,
   formatReviewSwapCurrencyAmount,
   formatSlippage,
   formatUSDPrice,
@@ -24,7 +23,7 @@ jest.mock('hooks/useActiveLocalCurrency')
 jest.mock('graphql/data/ConversionRate')
 jest.mock('featureFlags/flags/currencyConversion')
 
-describe('Number Formatting', () => {
+describe('formatNumber', () => {
   beforeEach(() => {
     mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
     mocked(useCurrencyConversionFlagEnabled).mockReturnValue(true)
@@ -322,117 +321,137 @@ describe('Number Formatting', () => {
     expect(formatNumber({ input: 1234567890, type: NumberType.NFTCollectionStats })).toBe('1,2\xa0bi')
     expect(formatNumber({ input: 1234567000000000, type: NumberType.NFTCollectionStats })).toBe('1234,6\xa0tri')
   })
+})
 
-  describe('formatUSDPrice', () => {
-    it('should correctly format 0.000000009876', () => {
-      expect(formatUSDPrice(0.000000009876)).toBe('<$0.00000001')
-    })
-    it('should correctly format 0.00001231', () => {
-      expect(formatUSDPrice(0.00001231)).toBe('$0.0000123')
-    })
-    it('should correctly format 0.001231', () => {
-      expect(formatUSDPrice(0.001231)).toBe('$0.00123')
-    })
-    it('should correctly format 0.0', () => {
-      expect(formatUSDPrice(0.0)).toBe('$0.00')
-    })
-    it('should correctly format 0', () => {
-      expect(formatUSDPrice(0)).toBe('$0.00')
-    })
-    it('should correctly format 1.048942', () => {
-      expect(formatUSDPrice(1.048942)).toBe('$1.05')
-    })
-    it('should correctly format 0.10235', () => {
-      expect(formatUSDPrice(0.10235)).toBe('$0.102')
-    })
-    it('should correctly format 1234.5678', () => {
-      expect(formatUSDPrice(1_234.5678)).toBe('$1,234.57')
-    })
-    it('should correctly format 1234567.8910', () => {
-      expect(formatUSDPrice(1_234_567.891)).toBe('$1.23M')
-    })
-    it('should correctly format 1000000000000', () => {
-      expect(formatUSDPrice(1_000_000_000_000)).toBe('$1.00T')
-    })
-    it('should correctly format 1000000000000000', () => {
-      expect(formatUSDPrice(1_000_000_000_000_000)).toBe('$1000.00T')
-    })
+describe('formatUSDPrice', () => {
+  it('should correctly format 0.000000009876', () => {
+    expect(formatUSDPrice(0.000000009876)).toBe('<$0.00000001')
+  })
+  it('should correctly format 0.00001231', () => {
+    expect(formatUSDPrice(0.00001231)).toBe('$0.0000123')
+  })
+  it('should correctly format 0.001231', () => {
+    expect(formatUSDPrice(0.001231)).toBe('$0.00123')
+  })
+  it('should correctly format 0.0', () => {
+    expect(formatUSDPrice(0.0)).toBe('$0.00')
+  })
+  it('should correctly format 0', () => {
+    expect(formatUSDPrice(0)).toBe('$0.00')
+  })
+  it('should correctly format 1.048942', () => {
+    expect(formatUSDPrice(1.048942)).toBe('$1.05')
+  })
+  it('should correctly format 0.10235', () => {
+    expect(formatUSDPrice(0.10235)).toBe('$0.102')
+  })
+  it('should correctly format 1234.5678', () => {
+    expect(formatUSDPrice(1_234.5678)).toBe('$1,234.57')
+  })
+  it('should correctly format 1234567.8910', () => {
+    expect(formatUSDPrice(1_234_567.891)).toBe('$1.23M')
+  })
+  it('should correctly format 1000000000000', () => {
+    expect(formatUSDPrice(1_000_000_000_000)).toBe('$1.00T')
+  })
+  it('should correctly format 1000000000000000', () => {
+    expect(formatUSDPrice(1_000_000_000_000_000)).toBe('$1000.00T')
+  })
+})
+
+describe('formatPriceImpact', () => {
+  beforeEach(() => {
+    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
+    mocked(useCurrencyConversionFlagEnabled).mockReturnValue(true)
   })
 
-  describe('formatPriceImpact', () => {
-    it('should correctly format undefined', () => {
-      expect(formatPriceImpact(undefined)).toBe('-')
-    })
+  it('should correctly format undefined', () => {
+    const { formatPriceImpact } = renderHook(() => useFormatter()).result.current
 
-    it('correctly formats a percent with 3 significant digits', () => {
-      expect(formatPriceImpact(new Percent(-1, 100000))).toBe('0.001%')
-      expect(formatPriceImpact(new Percent(-1, 1000))).toBe('0.100%')
-      expect(formatPriceImpact(new Percent(-1, 100))).toBe('1.000%')
-      expect(formatPriceImpact(new Percent(-1, 10))).toBe('10.000%')
-      expect(formatPriceImpact(new Percent(-1, 1))).toBe('100.000%')
-    })
+    expect(formatPriceImpact(undefined)).toBe('-')
   })
 
-  describe('formatSlippage', () => {
-    it('should correctly format undefined', () => {
-      expect(formatSlippage(undefined)).toBe('-')
-    })
+  it('correctly formats a percent with 3 significant digits', () => {
+    const { formatPriceImpact } = renderHook(() => useFormatter()).result.current
 
-    it('correctly formats a percent with 3 significant digits', () => {
-      expect(formatSlippage(new Percent(1, 100000))).toBe('0.001%')
-      expect(formatSlippage(new Percent(1, 1000))).toBe('0.100%')
-      expect(formatSlippage(new Percent(1, 100))).toBe('1.000%')
-      expect(formatSlippage(new Percent(1, 10))).toBe('10.000%')
-      expect(formatSlippage(new Percent(1, 1))).toBe('100.000%')
-    })
+    expect(formatPriceImpact(new Percent(-1, 100000))).toBe('0.001%')
+    expect(formatPriceImpact(new Percent(-1, 1000))).toBe('0.100%')
+    expect(formatPriceImpact(new Percent(-1, 100))).toBe('1.000%')
+    expect(formatPriceImpact(new Percent(-1, 10))).toBe('10.000%')
+    expect(formatPriceImpact(new Percent(-1, 1))).toBe('100.000%')
   })
 
-  describe('currencyAmountToPreciseFloat', () => {
-    it('small number', () => {
-      const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '20000', '7')
-      expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(0.00285714)
-    })
-    it('tiny number', () => {
-      const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '2', '7')
-      expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(0.000000285714)
-    })
-    it('lots of decimals', () => {
-      const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '200000000', '7')
-      expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(28.571428)
-    })
-    it('integer', () => {
-      const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '20000000')
-      expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(20.0)
-    })
+  it('correctly formats a percent with 3 significant digits with french locale', () => {
+    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    const { formatPriceImpact } = renderHook(() => useFormatter()).result.current
+
+    expect(formatPriceImpact(new Percent(-1, 100000))).toBe('0,001%')
+    expect(formatPriceImpact(new Percent(-1, 1000))).toBe('0,100%')
+    expect(formatPriceImpact(new Percent(-1, 100))).toBe('1,000%')
+    expect(formatPriceImpact(new Percent(-1, 10))).toBe('10,000%')
+    expect(formatPriceImpact(new Percent(-1, 1))).toBe('100,000%')
+  })
+})
+
+describe('formatSlippage', () => {
+  it('should correctly format undefined', () => {
+    expect(formatSlippage(undefined)).toBe('-')
   })
 
-  describe('priceToPreciseFloat', () => {
-    it('small number', () => {
-      const price = new Price(WBTC, USDC_MAINNET, 1234, 1)
-      expect(priceToPreciseFloat(price)).toEqual(0.0810373)
-    })
-    it('tiny number', () => {
-      const price = new Price(WBTC, USDC_MAINNET, 12345600, 1)
-      expect(priceToPreciseFloat(price)).toEqual(0.00000810005)
-    })
-    it('lots of decimals', () => {
-      const price = new Price(WBTC, USDC_MAINNET, 123, 7)
-      expect(priceToPreciseFloat(price)).toEqual(5.691056911)
-    })
-    it('integer', () => {
-      const price = new Price(WBTC, USDC_MAINNET, 1, 7)
-      expect(priceToPreciseFloat(price)).toEqual(700)
-    })
+  it('correctly formats a percent with 3 significant digits', () => {
+    expect(formatSlippage(new Percent(1, 100000))).toBe('0.001%')
+    expect(formatSlippage(new Percent(1, 1000))).toBe('0.100%')
+    expect(formatSlippage(new Percent(1, 100))).toBe('1.000%')
+    expect(formatSlippage(new Percent(1, 10))).toBe('10.000%')
+    expect(formatSlippage(new Percent(1, 1))).toBe('100.000%')
   })
+})
 
-  describe('formatReviewSwapCurrencyAmount', () => {
-    it('should use TokenTx formatting under a default length', () => {
-      const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000') // 2,000 USDC
-      expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2,000')
-    })
-    it('should use SwapTradeAmount formatting over the default length', () => {
-      const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
-      expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
-    })
+describe('currencyAmountToPreciseFloat', () => {
+  it('small number', () => {
+    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '20000', '7')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(0.00285714)
+  })
+  it('tiny number', () => {
+    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '2', '7')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(0.000000285714)
+  })
+  it('lots of decimals', () => {
+    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '200000000', '7')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(28.571428)
+  })
+  it('integer', () => {
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '20000000')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(20.0)
+  })
+})
+
+describe('priceToPreciseFloat', () => {
+  it('small number', () => {
+    const price = new Price(WBTC, USDC_MAINNET, 1234, 1)
+    expect(priceToPreciseFloat(price)).toEqual(0.0810373)
+  })
+  it('tiny number', () => {
+    const price = new Price(WBTC, USDC_MAINNET, 12345600, 1)
+    expect(priceToPreciseFloat(price)).toEqual(0.00000810005)
+  })
+  it('lots of decimals', () => {
+    const price = new Price(WBTC, USDC_MAINNET, 123, 7)
+    expect(priceToPreciseFloat(price)).toEqual(5.691056911)
+  })
+  it('integer', () => {
+    const price = new Price(WBTC, USDC_MAINNET, 1, 7)
+    expect(priceToPreciseFloat(price)).toEqual(700)
+  })
+})
+
+describe('formatReviewSwapCurrencyAmount', () => {
+  it('should use TokenTx formatting under a default length', () => {
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000') // 2,000 USDC
+    expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2,000')
+  })
+  it('should use SwapTradeAmount formatting over the default length', () => {
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
+    expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
   })
 })

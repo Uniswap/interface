@@ -452,7 +452,7 @@ function formatCurrencyAmount({
   })
 }
 
-export function formatPriceImpact(priceImpact: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE): string {
+function formatPriceImpact(priceImpact: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE): string {
   if (!priceImpact) return '-'
 
   return `${Number(priceImpact.multiply(-1).toFixed(3)).toLocaleString(locale, {
