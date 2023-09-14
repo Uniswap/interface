@@ -43,6 +43,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   }, [drawerOpen, menu, closeSettings])
 
   const SubMenu = useMemo(() => {
+    if (!drawerOpen) return null
     switch (menu) {
       case MenuState.DEFAULT:
         return isAuthenticated ? (
@@ -63,7 +64,16 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
       case MenuState.LOCAL_CURRENCY_SETTINGS:
         return <LocalCurrencyMenu onClose={openSettings} />
     }
-  }, [account, closeSettings, isAuthenticated, menu, openLanguageSettings, openLocalCurrencySettings, openSettings])
+  }, [
+    account,
+    closeSettings,
+    drawerOpen,
+    isAuthenticated,
+    menu,
+    openLanguageSettings,
+    openLocalCurrencySettings,
+    openSettings,
+  ])
 
   return <DefaultMenuWrap>{SubMenu}</DefaultMenuWrap>
 }

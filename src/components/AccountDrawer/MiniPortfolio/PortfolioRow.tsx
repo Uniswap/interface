@@ -1,7 +1,7 @@
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 export const PortfolioRowWrapper = styled(Row)<{ onClick?: any }>`
   gap: 12px;
@@ -85,10 +85,7 @@ const fadeIn = keyframes`
   from { opacity: .25 }
   to { opacity: 1 }
 `
-export const portfolioFadeInAnimation = css`
-  animation: ${fadeIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
-`
 
 export const PortfolioTabWrapper = styled.div`
-  ${portfolioFadeInAnimation}
+  animation: ${fadeIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
 `

@@ -17,12 +17,12 @@ import useENSName from 'hooks/useENSName'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
-import { useCallback, useState } from 'react'
+import { lazy, Suspense, useCallback, useState } from 'react'
 import { CreditCard, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -33,9 +33,9 @@ import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/cl
 import StatusIcon from '../Identicon/StatusIcon'
 import { useToggleAccountDrawer } from '.'
 import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
-import MiniPortfolio from './MiniPortfolio'
-import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
 import { useCachedPortfolioBalancesQuery } from './PrefetchBalancesWrapper'
+
+const MiniPortfolio = lazy(() => import('./MiniPortfolio'))
 
 const AuthenticatedHeaderWrapper = styled.div`
   padding: 20px 16px;
@@ -141,8 +141,13 @@ const CopyText = styled(CopyHelper).attrs({
   iconPosition: 'right',
 })``
 
+const fadeIn = keyframes`
+  from { opacity: .25 }
+  to { opacity: 1 }
+`
+
 const FadeInColumn = styled(Column)`
-  ${portfolioFadeInAnimation}
+  animation: ${fadeIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
 `
 
 const PortfolioDrawerContainer = styled(Column)`
@@ -342,7 +347,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             </Tooltip>
           </FiatOnrampNotAvailableText>
         )}
-        <MiniPortfolio account={account} />
+        <Suspense>
+          <MiniPortfolio account={account} />
+        </Suspense>
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
