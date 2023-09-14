@@ -1,13 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { AxisBottom, TickFormatter } from '@visx/axis'
+import { AxisBottom } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
+import { getTimestampFormatter, TimestampFormatterType } from 'components/Charts/PriceChart/format'
+import { cleanPricePoints, getNearestPricePoint, getPriceBounds, getTicks } from 'components/Charts/PriceChart/utils'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
+import { curveCardinal, scaleLinear } from 'd3'
 import { PricePoint, TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -15,26 +17,11 @@ import { Info, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
-import {
-  dayHourFormatter,
-  hourFormatter,
-  monthDayFormatter,
-  monthTickFormatter,
-  monthYearDayFormatter,
-  weekFormatter,
-} from 'utils/formatChartTimes'
 import { formatUSDPrice } from 'utils/formatNumbers'
 
 import { calculateDelta, DeltaArrow, formatDelta } from './Delta'
 
 const DATA_EMPTY = { value: 0, timestamp: 0 }
-
-export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
-  const prices = pricePoints.map((x) => x.value)
-  const min = Math.min(...prices)
-  const max = Math.max(...prices)
-  return [min, max]
-}
 
 const ChartHeader = styled.div`
   position: absolute;
@@ -71,29 +58,6 @@ const OutdatedPriceContainer = styled.div`
   line-height: 44px;
 `
 
-function fixChart(prices: PricePoint[] | undefined | null) {
-  if (!prices) return { prices: null, blanks: [] }
-
-  const fixedChart: PricePoint[] = []
-  const blanks: PricePoint[][] = []
-  let lastValue: PricePoint | undefined = undefined
-  for (let i = 0; i < prices.length; i++) {
-    if (prices[i].value !== 0) {
-      if (fixedChart.length === 0 && i !== 0) {
-        blanks.push([{ ...prices[0], value: prices[i].value }, prices[i]])
-      }
-      lastValue = prices[i]
-      fixedChart.push(prices[i])
-    }
-  }
-
-  if (lastValue && lastValue !== prices[prices.length - 1]) {
-    blanks.push([lastValue, { ...prices[prices.length - 1], value: lastValue.value }])
-  }
-
-  return { prices: fixedChart, blanks }
-}
-
 const margin = { top: 100, bottom: 48, crosshair: 72 }
 const timeOptionsHeight = 44
 
@@ -125,7 +89,8 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   const theme = useTheme()
 
   const { prices, blanks } = useMemo(
-    () => (originalPrices && originalPrices.length > 0 ? fixChart(originalPrices) : { prices: null, blanks: [] }),
+    () =>
+      originalPrices && originalPrices.length > 0 ? cleanPricePoints(originalPrices) : { prices: null, blanks: [] },
     [originalPrices]
   )
 
@@ -186,80 +151,17 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     [startingPrice, endingPrice, width]
   )
   // y scale
-  const rdScale = useMemo(
-    () =>
-      scaleLinear()
-        .domain(getPriceBounds(originalPrices ?? []))
-        .range([graphInnerHeight, 0]),
-    [originalPrices, graphInnerHeight]
-  )
-
-  function tickFormat(
-    timePeriod: TimePeriod,
-    locale: string
-  ): [TickFormatter<NumberValue>, (v: number) => string, NumberValue[]] {
-    const offsetTime = (endingPrice.timestamp.valueOf() - startingPrice.timestamp.valueOf()) / 24
-    const startDateWithOffset = new Date((startingPrice.timestamp.valueOf() + offsetTime) * 1000)
-    const endDateWithOffset = new Date((endingPrice.timestamp.valueOf() - offsetTime) * 1000)
-    switch (timePeriod) {
-      case TimePeriod.HOUR: {
-        const interval = timeMinute.every(5)
-
-        return [
-          hourFormatter(locale),
-          dayHourFormatter(locale),
-          (interval ?? timeMinute)
-            .range(startDateWithOffset, endDateWithOffset, interval ? 2 : 10)
-            .map((x) => x.valueOf() / 1000),
-        ]
-      }
-      case TimePeriod.DAY:
-        return [
-          hourFormatter(locale),
-          dayHourFormatter(locale),
-          timeHour.range(startDateWithOffset, endDateWithOffset, 4).map((x) => x.valueOf() / 1000),
-        ]
-      case TimePeriod.WEEK:
-        return [
-          weekFormatter(locale),
-          dayHourFormatter(locale),
-          timeDay.range(startDateWithOffset, endDateWithOffset, 1).map((x) => x.valueOf() / 1000),
-        ]
-      case TimePeriod.MONTH:
-        return [
-          monthDayFormatter(locale),
-          dayHourFormatter(locale),
-          timeDay.range(startDateWithOffset, endDateWithOffset, 7).map((x) => x.valueOf() / 1000),
-        ]
-      case TimePeriod.YEAR:
-        return [
-          monthTickFormatter(locale),
-          monthYearDayFormatter(locale),
-          timeMonth.range(startDateWithOffset, endDateWithOffset, 2).map((x) => x.valueOf() / 1000),
-        ]
-    }
-  }
+  const rdScale = useMemo(() => {
+    const { min, max } = getPriceBounds(originalPrices ?? [])
+    return scaleLinear().domain([min, max]).range([graphInnerHeight, 0])
+  }, [originalPrices, graphInnerHeight])
 
   const handleHover = useCallback(
     (event: Element | EventType) => {
       if (!prices) return
 
       const { x } = localPoint(event) || { x: 0 }
-      const x0 = timeScale.invert(x) // get timestamp from the scalexw
-      const index = bisect(
-        prices.map((x) => x.timestamp),
-        x0,
-        1
-      )
-
-      const d0 = prices[index - 1]
-      const d1 = prices[index]
-      let pricePoint = d0
-
-      const hasPreviousData = d1 && d1.timestamp
-      if (hasPreviousData) {
-        pricePoint = x0.valueOf() - d0.timestamp.valueOf() > d1.timestamp.valueOf() - x0.valueOf() ? d1 : d0
-      }
+      const pricePoint = getNearestPricePoint(x, prices, timeScale)
 
       if (pricePoint) {
         setCrosshair(timeScale(pricePoint.timestamp))
@@ -279,19 +181,16 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     setCrosshair(null)
   }, [timePeriod])
 
-  const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
-  //max ticks based on screen size
-  const maxTicks = Math.floor(width / 100)
-  function calculateTicks(ticks: NumberValue[]) {
-    const newTicks = []
-    const tickSpacing = Math.floor(ticks.length / maxTicks)
-    for (let i = 1; i < ticks.length; i += tickSpacing) {
-      newTicks.push(ticks[i])
-    }
-    return newTicks
-  }
+  const { tickTimestampFormatter, crosshairTimestampFormatter, ticks } = useMemo(() => {
+    // max ticks based on screen size
+    const maxTicks = Math.floor(width / 100)
+    const tickTimestampFormatter = getTimestampFormatter(timePeriod, locale, TimestampFormatterType.TICK)
+    const crosshairTimestampFormatter = getTimestampFormatter(timePeriod, locale, TimestampFormatterType.CROSSHAIR)
+    const ticks = getTicks(startingPrice.timestamp, endingPrice.timestamp, timePeriod, maxTicks)
 
-  const updatedTicks = maxTicks > 0 ? (ticks.length > maxTicks ? calculateTicks(ticks) : ticks) : []
+    return { tickTimestampFormatter, crosshairTimestampFormatter, ticks }
+  }, [endingPrice.timestamp, locale, startingPrice.timestamp, timePeriod, width])
+
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
@@ -357,20 +256,17 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
           {crosshair !== null ? (
             <g>
               <AxisBottom
+                top={graphHeight - 1}
                 scale={timeScale}
                 stroke={theme.surface3}
-                tickFormat={tickFormatter}
-                tickStroke={theme.surface3}
-                tickLength={4}
                 hideTicks={true}
-                tickTransform="translate(0 -5)"
-                tickValues={updatedTicks}
-                top={graphHeight - 1}
+                tickValues={ticks}
+                tickFormat={tickTimestampFormatter}
                 tickLabelProps={() => ({
                   fill: theme.neutral2,
                   fontSize: 12,
                   textAnchor: 'middle',
-                  transform: 'translate(0 -24)',
+                  transform: 'translate(0 -29)',
                 })}
               />
               <text
@@ -380,7 +276,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
                 fontSize={12}
                 fill={theme.neutral2}
               >
-                {crosshairDateFormatter(displayPrice.timestamp)}
+                {crosshairTimestampFormatter(displayPrice.timestamp)}
               </text>
               <Line
                 from={{ x: crosshair, y: margin.crosshair }}

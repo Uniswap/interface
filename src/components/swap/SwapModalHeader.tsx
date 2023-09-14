@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Column, { AutoColumn } from 'components/Column'
-import { useLocalCurrencyPrice } from 'hooks/useLocalCurrencyPrice'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import { InterfaceTrade } from 'state/routing/types'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
@@ -26,8 +26,8 @@ export default function SwapModalHeader({
   inputCurrency?: Currency
   allowedSlippage: Percent
 }) {
-  const fiatValueInput = useLocalCurrencyPrice(trade.inputAmount)
-  const fiatValueOutput = useLocalCurrencyPrice(trade.postTaxOutputAmount)
+  const fiatValueInput = useUSDPrice(trade.inputAmount)
+  const fiatValueOutput = useUSDPrice(trade.postTaxOutputAmount)
 
   return (
     <HeaderContainer gap="sm">
