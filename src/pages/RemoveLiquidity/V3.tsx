@@ -355,7 +355,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <LightCard>
                 <AutoColumn gap="md">
                   <RowBetween>
-                    <Text fontSize={16} fontWeight={535} id="remove-liquidity-tokena-symbol">
+                    <Text fontSize={16} fontWeight={535} id="remove-pooled-tokena-symbol">
                       <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>
@@ -366,7 +366,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     </RowFixed>
                   </RowBetween>
                   <RowBetween>
-                    <Text fontSize={16} fontWeight={535} id="remove-liquidity-tokenb-symbol">
+                    <Text fontSize={16} fontWeight={535} id="remove-pooled-tokenb-symbol">
                       <Trans>Pooled {liquidityValue1?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>

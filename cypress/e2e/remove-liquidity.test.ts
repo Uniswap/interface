@@ -15,8 +15,8 @@ describe('Remove Liquidity', () => {
     cy.visit(`/remove/1`)
     cy.get('#remove-liquidity-tokens').should('contain.text', 'UNI/ETH')
 
-    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'Pooled UNI')
-    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'Pooled ETH')
+    cy.get('#remove-pooled-tokena-symbol').should('contain.text', 'Pooled UNI')
+    cy.get('#remove-pooled-tokenb-symbol').should('contain.text', 'Pooled ETH')
   })
 
   it('should redirect to error pages if pool does not exist', () => {
