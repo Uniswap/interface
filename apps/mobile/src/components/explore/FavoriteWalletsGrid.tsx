@@ -59,10 +59,10 @@ function FavoriteWalletsGridLoader(): JSX.Element {
   return (
     <Flex row gap="$spacing8">
       <Flex gap="$none" style={ITEM_FLEX}>
-        <Loader.Favorite height={48} />
+        <Loader.Favorite contrast height={48} />
       </Flex>
       <Flex gap="$none" style={ITEM_FLEX}>
-        <Loader.Favorite height={48} />
+        <Loader.Favorite contrast height={48} />
       </Flex>
     </Flex>
   )

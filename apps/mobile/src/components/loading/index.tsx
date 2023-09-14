@@ -1,12 +1,11 @@
 import React, { memo, useMemo } from 'react'
 import { NftCardLoader } from 'src/components/loading/NftCardLoader'
-import { Shimmer } from 'src/components/loading/Shimmer'
 import { TokenLoader } from 'src/components/loading/TokenLoader'
 import { TransactionLoader } from 'src/components/loading/TransactionLoader'
 import { WalletLoader } from 'src/components/loading/WalletLoader'
 import { WaveLoader } from 'src/components/loading/WaveLoader'
 import { Flex, getToken } from 'ui/src'
-import { BoxLoader, BoxLoaderProps } from 'ui/src/loading'
+import { BoxLoader, BoxLoaderProps, Shimmer } from 'ui/src/loading'
 
 function Graph(): JSX.Element {
   return (
@@ -105,9 +104,9 @@ function Image(): JSX.Element {
   )
 }
 
-function Favorite({ height }: { height?: number }): JSX.Element {
+function Favorite({ height, contrast }: { height?: number; contrast?: boolean }): JSX.Element {
   return (
-    <Shimmer>
+    <Shimmer contrast={contrast}>
       <BoxLoader backgroundColor="$surface3" borderRadius="$rounded16" height={height ?? 50} />
     </Shimmer>
   )

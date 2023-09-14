@@ -2,9 +2,9 @@ import { createText, useResponsiveProp } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren } from 'react'
 import { useWindowDimensions } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { Shimmer } from 'src/components/loading/Shimmer'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
 import { Flex } from 'ui/src'
+import { Shimmer } from 'ui/src/loading'
 import { textVariants, Theme } from 'ui/src/theme/restyle'
 
 export const DEFAULT_FONT_SCALE = 1
