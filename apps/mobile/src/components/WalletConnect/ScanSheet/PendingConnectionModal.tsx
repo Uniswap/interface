@@ -7,7 +7,6 @@ import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
-import { Separator } from 'src/components/layout/Separator'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
@@ -25,7 +24,7 @@ import {
   removePendingSession,
   WalletConnectPendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Separator, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import X from 'ui/src/assets/icons/x.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -261,9 +260,9 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         </Flex>
         <Flex bg="$surface2" borderRadius="$rounded16" gap="$spacing2">
           <SitePermissions />
-          <Separator color="$surface1" width={1} />
+          <Separator borderColor="$surface1" width={1} />
           <NetworksRow chains={pendingSession.chains} />
-          <Separator color="$surface1" width={1} />
+          <Separator borderColor="$surface1" width={1} />
           <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />
           <Flex gap="$none" />
         </Flex>

@@ -3,12 +3,11 @@ import React, { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Separator } from 'src/components/layout/Separator'
 import { Warning } from 'src/components/modals/WarningModal/types'
 import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
 import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
@@ -86,7 +85,7 @@ export function TransactionDetails({
         {!showWarning && (
           <>
             {banner}
-            <Separator color="$surface2" width={1} />
+            <Separator borderColor="$surface2" width={1} />
           </>
         )}
         <Flex gap="$spacing12" px="$spacing12" py="$spacing12">
@@ -98,7 +97,7 @@ export function TransactionDetails({
             onShowGasWarning={onShowGasWarning}
           />
         </Flex>
-        <Separator color="$surface2" width={1} />
+        <Separator borderColor="$surface2" width={1} />
         <Flex gap="$none" px="$spacing12" py="$spacing12">
           <AccountDetails address={userAddress} iconSize={iconSizes.icon20} />
         </Flex>
