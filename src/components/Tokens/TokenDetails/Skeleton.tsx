@@ -7,7 +7,7 @@ import { textFadeIn } from 'theme/styles'
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
-import { TokenPrice } from './PriceChart'
+import { TokenPrice } from '../../Charts/PriceChart'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
 const SWAP_COMPONENT_WIDTH = 360

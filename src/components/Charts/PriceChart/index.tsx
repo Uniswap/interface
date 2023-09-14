@@ -20,7 +20,7 @@ import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/styles'
 import { formatUSDPrice } from 'utils/formatNumbers'
 
-import { calculateDelta, DeltaArrow, formatDelta } from './Delta'
+import { calculateDelta, DeltaArrow, formatDelta } from '../../Tokens/TokenDetails/Delta'
 
 const CHART_MARGIN = { top: 100, bottom: 48, crosshair: 72 }
 
