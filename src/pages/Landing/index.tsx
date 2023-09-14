@@ -10,11 +10,10 @@ import { BaseButton } from 'components/Button'
 import { AppleLogo } from 'components/Logo/AppleLogo'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
-import { RedirectPathToSwapOnly } from 'pages/Swap/redirects'
 import { parse } from 'qs'
 import { useEffect, useMemo, useRef } from 'react'
 import { ArrowDownCircle } from 'react-feather'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components'
@@ -321,7 +320,7 @@ export default function Landing() {
 
   const queryParams = parse(useLocation().search, { ignoreQueryPrefix: true })
   if (selectedWallet && !queryParams.intro) {
-    return <RedirectPathToSwapOnly />
+    return <Navigate to="/swap" replace />
   }
 
   return (
