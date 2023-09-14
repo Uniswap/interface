@@ -21,7 +21,6 @@ import { DAI, USDC, USDT, WBTC } from 'wallet/src/constants/tokens'
 import { sortPortfolioBalances, usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { CurrencyInfo, GqlResult, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
-import { useSelectAccountHideSpamTokens } from 'wallet/src/features/wallet/hooks'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import {
   buildNativeCurrencyId,
@@ -166,8 +165,6 @@ export function useCurrencyInfosToTokenOptions({
 export function usePortfolioBalancesForAddressById(
   address: Address
 ): GqlResult<Record<Address, PortfolioBalance> | undefined> {
-  const hideSpamTokens = useSelectAccountHideSpamTokens(address)
-
   const {
     data: portfolioBalancesById,
     error,
@@ -176,8 +173,6 @@ export function usePortfolioBalancesForAddressById(
   } = usePortfolioBalances({
     address,
     shouldPoll: false, // Home tab's TokenBalanceList will poll portfolio balances for activeAccount
-    hideSmallBalances: false, // always show small balances in token selector
-    hideSpamTokens,
     fetchPolicy: 'cache-first', // we want to avoid re-renders when token selector is opening
   })
 

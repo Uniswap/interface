@@ -79,8 +79,6 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
     } = usePortfolioBalances({
       address: owner,
       shouldPoll: true,
-      hideSmallBalances: false,
-      hideSpamTokens: false,
       onCompleted,
       fetchPolicy: 'cache-and-network',
     })

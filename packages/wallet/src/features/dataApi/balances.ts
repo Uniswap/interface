@@ -35,15 +35,11 @@ type SortedPortfolioBalances = {
 export function usePortfolioBalances({
   address,
   shouldPoll,
-  hideSmallBalances,
-  hideSpamTokens,
   onCompleted,
   fetchPolicy,
 }: {
   address?: Address
   shouldPoll?: boolean
-  hideSmallBalances?: boolean
-  hideSpamTokens?: boolean
   onCompleted?: () => void
   fetchPolicy?: WatchQueryFetchPolicy
 }): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
@@ -78,14 +74,6 @@ export function usePortfolioBalances({
       // require all of these fields to be defined
       if (!chainId || !balance || !quantity || !token || !decimals || !symbol) return
 
-      if (
-        hideSmallBalances &&
-        (!denominatedValue || denominatedValue.value < HIDE_SMALL_USD_BALANCES_THRESHOLD)
-      )
-        return null
-
-      if (hideSpamTokens && isSpam) return null
-
       const currency = tokenAddress
         ? new Token(
             chainId,
@@ -118,7 +106,7 @@ export function usePortfolioBalances({
     })
 
     return byId
-  }, [balancesForAddress, hideSmallBalances, hideSpamTokens])
+  }, [balancesForAddress])
 
   const retry = useCallback(() => refetch({ ownerAddress: address }), [address, refetch])
 
@@ -170,8 +158,6 @@ export function useSortedPortfolioBalances(
   } = usePortfolioBalances({
     address,
     shouldPoll,
-    hideSmallBalances: false,
-    hideSpamTokens: false,
     onCompleted,
     fetchPolicy: 'cache-and-network',
   })
