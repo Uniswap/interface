@@ -109,6 +109,20 @@ const THREE_SIG_FIGS_USD = new Intl.NumberFormat('en-US', {
   style: 'currency',
 })
 
+const NO_TRAILING_DECIMALS_PERCENTAGES = new Intl.NumberFormat('en-US', {
+  notation: 'standard',
+  style: 'percent',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+})
+
+const TWO_DECIMALS_PERCENTAGES = new Intl.NumberFormat('en-US', {
+  notation: 'standard',
+  style: 'percent',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+})
+
 type Format = Intl.NumberFormat | string
 
 // each rule must contain either an `upperBound` or an `exact` value.
@@ -201,6 +215,11 @@ const ntfCollectionStatsFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatter: SHORTHAND_ONE_DECIMAL },
 ]
 
+const percentagesFormatter: FormatterRule[] = [
+  { upperBound: 0.01, formatter: TWO_DECIMALS_PERCENTAGES },
+  { upperBound: Infinity, formatter: NO_TRAILING_DECIMALS_PERCENTAGES },
+]
+
 export enum NumberType {
   // used for token quantities in non-transaction contexts (e.g. portfolio balances)
   TokenNonTx = 'token-non-tx',
@@ -239,6 +258,8 @@ export enum NumberType {
 
   // nft collection stats like number of items, holder, and sales
   NFTCollectionStats = 'nft-collection-stats',
+
+  Percentage = 'percentage',
 }
 
 const TYPE_TO_FORMATTER_RULES = {
@@ -254,6 +275,7 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.PortfolioBalance]: portfolioBalanceFormatter,
   [NumberType.NFTTokenFloorPrice]: ntfTokenFloorPriceFormatter,
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
+  [NumberType.Percentage]: percentagesFormatter,
 }
 
 function getFormatterRule(input: number, type: NumberType): Format {
@@ -326,4 +348,13 @@ export function formatUSDPrice(
 export function formatFiatPrice(price: Maybe<number>, currency = 'USD'): string {
   if (price === null || price === undefined) return '-'
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price)
+}
+
+export function formatPercent(rawPercentage: Maybe<number | string>): string {
+  if (rawPercentage === null || rawPercentage === undefined) return '-'
+  const percentage =
+    typeof rawPercentage === 'string'
+      ? parseFloat(rawPercentage)
+      : parseFloat(rawPercentage.toString())
+  return formatNumber(percentage / 100, NumberType.Percentage)
 }

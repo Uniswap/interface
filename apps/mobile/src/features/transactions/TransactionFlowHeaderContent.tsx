@@ -12,6 +12,7 @@ import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { iconSizes } from 'ui/src/theme'
+import { formatPercent } from 'utilities/src/format/format'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -114,9 +115,7 @@ export function HeaderContent({
               py="spacing4">
               {customSlippageTolerance ? (
                 <Text color="neutral2" variant="buttonLabelMicro">
-                  {t('{{slippage}}% slippage', {
-                    slippage: customSlippageTolerance.toFixed(2),
-                  })}
+                  {`${formatPercent(customSlippageTolerance)} ${t('slippage')}`}
                 </Text>
               ) : null}
               <SettingsIcon

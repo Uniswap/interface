@@ -30,7 +30,7 @@ import { Flex, Icons, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
-import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { formatCurrencyAmount, formatPercent, NumberType } from 'utilities/src/format/format'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
@@ -154,9 +154,9 @@ function SwapSettingsOptions({
                 </Text>
               </Flex>
             ) : null}
-            <Text color="neutral2" variant="subheadSmall">{`${slippage
-              .toFixed(2)
-              .toString()}%`}</Text>
+            <Text color="neutral2" variant="subheadSmall">
+              {formatPercent(slippage)}
+            </Text>
             <Icons.Chevron
               color="$neutral3"
               height={iconSizes.icon24}

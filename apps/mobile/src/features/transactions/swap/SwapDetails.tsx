@@ -13,7 +13,7 @@ import { TransactionDetails } from 'src/features/transactions/TransactionDetails
 import { Icons, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes } from 'ui/src/theme'
-import { formatPrice, NumberType } from 'utilities/src/format/format'
+import { formatPercent, formatPrice, NumberType } from 'utilities/src/format/format'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
@@ -180,7 +180,7 @@ export function SwapDetails({
           <Text
             color={showSlippageWarning ? 'DEP_accentWarning' : 'neutral1'}
             variant="subheadSmall">
-            {`${acceptedTrade.slippageTolerance.toFixed(2).toString()}%`}
+            {formatPercent(acceptedTrade.slippageTolerance)}
           </Text>
         </Flex>
       </Flex>

@@ -1,6 +1,6 @@
 import { ColorTokens, Flex, Icons, Text, XStack } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
-import { formatNumber, NumberType } from 'utilities/src/format/format'
+import { formatNumber, formatPercent, NumberType } from 'utilities/src/format/format'
 
 interface RelativeChangeProps {
   change?: number
@@ -30,7 +30,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
   const isPositiveChange = change !== undefined ? change >= 0 : undefined
   const arrowColor = isPositiveChange ? positiveChangeColor : negativeChangeColor
 
-  const formattedChange = change !== undefined ? `${Math.abs(change).toFixed(2)}%` : '-'
+  const formattedChange = formatPercent(change !== undefined ? Math.abs(change) : change)
   const formattedAbsChange = absoluteChange
     ? `${formatNumber(Math.abs(absoluteChange), NumberType.PortfolioBalance)}`
     : ''

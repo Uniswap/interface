@@ -12,7 +12,7 @@ import { openUri } from 'src/utils/linking'
 import { Icons, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { fonts, iconSizes } from 'ui/src/theme'
-import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
+import { formatCurrencyAmount, formatPercent, NumberType } from 'utilities/src/format/format'
 import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
@@ -99,7 +99,9 @@ export default function SlippageInfoModal({
               ) : null}
               <Text
                 color={showSlippageWarning ? 'DEP_accentWarning' : 'neutral1'}
-                variant="subheadSmall">{`${slippageTolerance.toFixed(2).toString()}%`}</Text>
+                variant="subheadSmall">
+                {formatPercent(slippageTolerance)}
+              </Text>
             </Flex>
           </Flex>
           <Flex fill row justifyContent="space-between">
