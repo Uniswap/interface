@@ -1,12 +1,10 @@
-import { ChainId, MaxUint256 } from '@uniswap/sdk-core'
+import { ChainId, UNI_ADDRESSES } from '@uniswap/sdk-core'
 
-import { UNI } from '../../src/constants/tokens'
-
-const UNI_MAINNET = UNI[ChainId.MAINNET]
+const UNI_MAINNET = UNI_ADDRESSES[ChainId.MAINNET]
 
 describe('Remove Liquidity', () => {
   it('loads the token pair in v2', () => {
-    cy.visit(`/remove/v2/ETH/${UNI_MAINNET.address}`)
+    cy.visit(`/remove/v2/ETH/${UNI_MAINNET}`)
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'ETH')
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'UNI')
   })
