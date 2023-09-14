@@ -575,9 +575,9 @@ function handleFallbackCurrency(
 export function useFormatter() {
   const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
 
-  const activeLocalCurrencyIsUSD = formatterLocalCurrency === GqlCurrency.Usd
+  const formatterLocalCurrencyIsUSD = formatterLocalCurrency === GqlCurrency.Usd
   const { data: localCurrencyConversionRate, isLoading: localCurrencyConversionRateIsLoading } =
-    useLocalCurrencyConversionRate(formatterLocalCurrency, activeLocalCurrencyIsUSD)
+    useLocalCurrencyConversionRate(formatterLocalCurrency, formatterLocalCurrencyIsUSD)
 
   const previousSelectedCurrency = usePrevious(formatterLocalCurrency)
   const previousConversionRate = usePrevious(localCurrencyConversionRate)
