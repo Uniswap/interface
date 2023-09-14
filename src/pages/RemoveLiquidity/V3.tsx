@@ -312,8 +312,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <RowBetween>
                 <RowFixed>
                   <DoubleCurrencyLogo
-                    currency0={feeValue0?.currency}
-                    currency1={feeValue1?.currency}
+                    currency0={liquidityValue0?.currency}
+                    currency1={liquidityValue1?.currency}
                     size={20}
                     margin={true}
                   />
