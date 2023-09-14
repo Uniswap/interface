@@ -1,12 +1,12 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import InfoCircleSVG from 'ui/src/assets/icons/info-circle.svg'
+import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
 
@@ -22,7 +22,7 @@ export function NetworkFee({
   onShowGasWarning?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const feeSectionContent = (
     <>
@@ -34,9 +34,9 @@ export function NetworkFee({
       {gasFallbackUsed && gasFeeUSD && (
         <Flex gap="$none" ml="$spacing4">
           <InfoCircleSVG
-            color={theme.colors.DEP_accentWarning}
-            height={theme.iconSizes.icon20}
-            width={theme.iconSizes.icon20}
+            color={colors.DEP_accentWarning.val}
+            height={iconSizes.icon20}
+            width={iconSizes.icon20}
           />
         </Flex>
       )}
@@ -50,7 +50,7 @@ export function NetworkFee({
         <InlineNetworkPill chainId={chainId} />
         <Text variant="subheadSmall">•</Text>
         {!gasFeeUSD ? (
-          <SpinningLoader size={theme.iconSizes.icon20} />
+          <SpinningLoader size={iconSizes.icon20} />
         ) : gasFallbackUsed && onShowGasWarning ? (
           <TouchableArea
             alignItems="center"

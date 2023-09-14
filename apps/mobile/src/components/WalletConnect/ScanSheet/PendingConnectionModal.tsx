@@ -1,7 +1,7 @@
 import { getSdkError } from '@walletconnect/utils'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
@@ -25,9 +25,10 @@ import {
   removePendingSession,
   WalletConnectPendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import X from 'ui/src/assets/icons/x.svg'
+import { iconSizes } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -56,7 +57,7 @@ enum PendingConnectionModalState {
 }
 
 const SitePermissions = (): JSX.Element => {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
 
   return (
@@ -66,7 +67,11 @@ const SitePermissions = (): JSX.Element => {
       </Text>
       <Flex row alignItems="flex-start" gap="$spacing8">
         <Flex gap="$none" mt="$spacing2">
-          <Checkmark color={theme.colors.statusSuccess} height={16} width={16} />
+          <Checkmark
+            color={colors.statusSuccess.val}
+            height={iconSizes.icon16}
+            width={iconSizes.icon16}
+          />
         </Flex>
         <Flex flex={1} gap="$none">
           <Text color="neutral1" variant="bodySmall">
@@ -76,7 +81,11 @@ const SitePermissions = (): JSX.Element => {
       </Flex>
       <Flex row alignItems="flex-start" gap="$spacing8">
         <Flex gap="$none" mt="$spacing2">
-          <Checkmark color={theme.colors.statusSuccess} height={16} width={16} />
+          <Checkmark
+            color={colors.statusSuccess.val}
+            height={iconSizes.icon16}
+            width={iconSizes.icon16}
+          />
         </Flex>
         <Flex flex={1} gap="$none">
           <Text color="neutral1" variant="bodySmall">
@@ -86,7 +95,7 @@ const SitePermissions = (): JSX.Element => {
       </Flex>
       <Flex row alignItems="flex-start" gap="$spacing8">
         <Flex gap="$none" mt="$spacing2">
-          <X color={theme.colors.statusCritical} height={16} width={16} />
+          <X color={colors.statusCritical.val} height={iconSizes.icon16} width={iconSizes.icon16} />
         </Flex>
         <Flex flex={1} gap="$none">
           <Text color="neutral1" variant="bodySmall">
@@ -146,7 +155,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
 
 export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.Element => {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const activeAddress = useActiveAccountAddressWithThrow()
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccountWithThrow()
@@ -239,13 +248,13 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
           <LinkButton
             backgroundColor="surface2"
             borderRadius="rounded16"
-            color={theme.colors.accent1}
-            iconColor={theme.colors.accent1}
+            color={colors.accent1.val}
+            iconColor={colors.accent1.val}
             label={pendingSession.dapp.url}
             mb="spacing12"
             px="spacing8"
             py="spacing4"
-            size={theme.iconSizes.icon12}
+            size={iconSizes.icon12}
             textVariant="buttonLabelMicro"
             url={pendingSession.dapp.url}
           />

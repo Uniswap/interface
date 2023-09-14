@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useTheme } from '@shopify/restyle'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
@@ -10,8 +9,9 @@ import { TextInput } from 'src/components/input/TextInput'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import PencilIcon from 'ui/src/assets/icons/pencil.svg'
+import { fonts } from 'ui/src/theme'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -32,7 +32,7 @@ export function SettingsWalletEdit({
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const theme = useTheme()
+  const colors = useSporeColors()
   const activeAccount = useAccounts()[address]
   const ensName = useENS(ChainId.Mainnet, address)?.name
   const [nickname, setNickname] = useState(ensName || activeAccount?.name)
@@ -67,13 +67,13 @@ export function SettingsWalletEdit({
                 autoFocus
                 autoCapitalize="none"
                 color={nickname === activeAccount?.name ? 'neutral3' : 'neutral1'}
-                fontFamily={theme.textVariants.headlineMedium.fontFamily}
-                fontSize={theme.textVariants.headlineMedium.fontSize}
+                fontFamily={fonts.headlineMedium.family}
+                fontSize={fonts.headlineMedium.fontSize}
                 margin="none"
                 maxLength={NICKNAME_MAX_LENGTH}
                 numberOfLines={1}
                 placeholder={shortenAddress(address)}
-                placeholderTextColor={theme.colors.neutral3}
+                placeholderTextColor={colors.neutral3.val}
                 px="none"
                 py="none"
                 returnKeyType="done"

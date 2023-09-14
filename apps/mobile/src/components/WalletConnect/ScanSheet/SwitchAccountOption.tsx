@@ -1,9 +1,8 @@
 import React from 'react'
-import { useAppTheme } from 'src/app/hooks'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -17,7 +16,7 @@ type Props = {
 const ICON_SIZE = 24
 
 export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Element => {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const displayName = useDisplayName(account.address)
   return (
@@ -39,7 +38,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
         </Flex>
         <Flex gap="$none" height={ICON_SIZE} width={ICON_SIZE}>
           {activeAccount?.address === account.address && (
-            <Check color={theme.colors.accent1} height={ICON_SIZE} width={ICON_SIZE} />
+            <Check color={colors.accent1.val} height={ICON_SIZE} width={ICON_SIZE} />
           )}
         </Flex>
       </Flex>

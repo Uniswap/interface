@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, AnimatedFlex, Flex } from 'src/components/layout'
@@ -30,8 +30,9 @@ import { openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Screens } from 'src/screens/Screens'
+import { useSporeColors } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -171,7 +172,7 @@ function TokenDetails({
   loading: boolean
 }): JSX.Element {
   const dispatch = useAppDispatch()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const insets = useSafeAreaInsets()
 
   const currencyChainId = currencyIdToChain(_currencyId) ?? ChainId.Mainnet
@@ -188,8 +189,8 @@ function TokenDetails({
 
   const { tokenColor, tokenColorLoading } = useExtractedTokenColor(
     tokenLogoUrl,
-    /*background=*/ theme.colors.surface1,
-    /*default=*/ theme.colors.neutral3
+    /*background=*/ colors.surface1.val,
+    /*default=*/ colors.neutral3.val
   )
 
   const onPriceChartRetry = useCallback((): void => {
@@ -301,8 +302,8 @@ function TokenDetails({
 
   const isDarkMode = useIsDarkMode()
   // shall be the same color as heart icon in not favorited state next to it
-  const ellipsisColor = isDarkMode ? theme.colors.neutral2 : theme.colors.neutral2
-  const loadingColor = isDarkMode ? theme.colors.neutral3 : theme.colors.surface3
+  const ellipsisColor = isDarkMode ? colors.neutral2.val : colors.neutral2.val
+  const loadingColor = isDarkMode ? colors.neutral3.val : colors.surface3.val
 
   const ellipsisMenuVisible = menuActions.length > 0
 
@@ -317,7 +318,7 @@ function TokenDetails({
               <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
                 <TouchableArea
                   hapticFeedback
-                  style={{ padding: theme.spacing.spacing8, marginRight: -theme.spacing.spacing8 }}>
+                  style={{ padding: spacing.spacing8, marginRight: -spacing.spacing8 }}>
                   <EllipsisIcon
                     color={ellipsisColor}
                     height={iconSizes.icon16}
@@ -339,7 +340,7 @@ function TokenDetails({
             />
             <PriceExplorer
               currencyId={_currencyId}
-              tokenColor={tokenColorLoading ? loadingColor : tokenColor ?? theme.colors.accent1}
+              tokenColor={tokenColorLoading ? loadingColor : tokenColor ?? colors.accent1.val}
               onRetry={onPriceChartRetry}
             />
           </Flex>

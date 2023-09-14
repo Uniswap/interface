@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 're
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { AnimatedButton, Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TextInput } from 'src/components/input/TextInput'
@@ -14,8 +14,9 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import PencilIcon from 'ui/src/assets/icons/pencil-detailed.svg'
+import { fonts } from 'ui/src/theme'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import {
   EditAccountAction,
@@ -125,7 +126,7 @@ function CustomizationSection({
   setFocused: Dispatch<SetStateAction<boolean>>
 }): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const textInputRef = useRef<NativeTextInput>(null)
 
   const focusInputWithKeyboard = (): void => {
@@ -133,8 +134,8 @@ function CustomizationSection({
   }
 
   const inputSize = useResponsiveProp({
-    xs: theme.textVariants.headlineSmall.fontSize,
-    sm: theme.textVariants.headlineMedium.fontSize,
+    xs: fonts.headlineSmall.fontSize,
+    sm: fonts.headlineMedium.fontSize,
   })
 
   return (
@@ -151,10 +152,10 @@ function CustomizationSection({
             autoFocus
             backgroundColor="none"
             fontSize={inputSize}
-            maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
+            maxFontSizeMultiplier={fonts.headlineMedium.maxFontSizeMultiplier}
             maxLength={NICKNAME_MAX_LENGTH}
             placeholder="Nickname"
-            placeholderTextColor={theme.colors.neutral3}
+            placeholderTextColor={colors.neutral3.val}
             testID="customize/name"
             textAlign="center"
             value={accountName}

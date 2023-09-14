@@ -1,14 +1,13 @@
 import React, { PropsWithChildren, ReactNode } from 'react'
 import { ColorValue } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningColor, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Flex, Icons } from 'ui/src'
-import { opacify } from 'ui/src/theme'
+import { Flex, Icons, useSporeColors } from 'ui/src'
+import { iconSizes, opacify } from 'ui/src/theme'
 
 export type WarningModalProps = {
   onClose?: () => void
@@ -55,12 +54,12 @@ export default function WarningModal({
     }
   }
 
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const alertColor = getAlertColor(severity)
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.surface1}
+      backgroundColor={colors.surface1.val}
       hideHandlebar={hideHandlebar}
       isDismissible={isDismissible}
       name={modalName}
@@ -77,8 +76,8 @@ export default function WarningModal({
           {icon ?? (
             <Icons.AlertTriangle
               color={alertColor.text}
-              height={theme.iconSizes.icon24}
-              width={theme.iconSizes.icon24}
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
             />
           )}
         </Flex>

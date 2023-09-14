@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Text } from 'src/components/Text'
 import { IS_IOS } from 'src/constants/globals'
-import { Flex, Logos, SpaceTokens, StackProps } from 'ui/src'
+import { Flex, Logos, SpaceTokens, StackProps, useSporeColors } from 'ui/src'
 import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { Amount } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -26,7 +26,7 @@ export function ListPriceBadge({
   gap,
   ...flexProps
 }: ListPriceProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const priceAmountProps = { iconColor, textColor, iconSize, price, gap }
 
   return (
@@ -36,7 +36,7 @@ export function ListPriceBadge({
           <PriceAmount {...priceAmountProps} />
         </BlurView>
       ) : (
-        <Flex gap="$none" style={[styles.background, { backgroundColor: theme.colors.surface2 }]}>
+        <Flex gap="$none" style={[styles.background, { backgroundColor: colors.surface2.val }]}>
           <PriceAmount {...priceAmountProps} />
         </Flex>
       )}

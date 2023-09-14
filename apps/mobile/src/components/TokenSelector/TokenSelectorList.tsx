@@ -3,7 +3,6 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
@@ -15,7 +14,8 @@ import {
   suggestedTokensKeyExtractor,
 } from 'src/components/TokenSelector/TokenSelectorSwapOutputList'
 import { TokenOption } from 'src/components/TokenSelector/types'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
+import { fonts } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -112,7 +112,7 @@ function _TokenSelectorList({
   showTokenAddress,
 }: TokenSelectorListProps): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const sectionListRef = useRef<SectionList<TokenOption>>(null)
 
   useEffect(() => {
@@ -188,7 +188,7 @@ function _TokenSelectorList({
     return (
       <Flex gap="$none">
         <Flex gap="$none" py="$spacing16" width={80}>
-          <Loader.Box height={theme.textVariants.subheadSmall.lineHeight} />
+          <Loader.Box height={fonts.subheadSmall.lineHeight} />
         </Flex>
         <Loader.Token repeat={5} />
       </Flex>

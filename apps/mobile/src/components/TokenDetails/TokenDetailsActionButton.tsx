@@ -1,6 +1,5 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { getButtonProperties } from 'src/components/buttons/utils'
@@ -8,6 +7,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
+import { useSporeColors } from 'ui/src'
 import { getContrastPassingTextColor } from 'wallet/src/utils/colors'
 
 export function TokenDetailsActionButtons({
@@ -18,7 +18,7 @@ export function TokenDetailsActionButtons({
   tokenColor?: Maybe<string>
 }): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const { textVariant, paddingX, paddingY, borderRadius, borderColor } = getButtonProperties(
     ButtonEmphasis.Secondary,
@@ -45,7 +45,7 @@ export function TokenDetailsActionButtons({
           flexGrow={1}
           px={paddingX}
           py={paddingY}
-          style={{ backgroundColor: tokenColor ?? theme.colors.accent1 }}
+          style={{ backgroundColor: tokenColor ?? colors.accent1.val }}
           onPress={onPressSwap}>
           <Text
             color={tokenColor ? getContrastPassingTextColor(tokenColor) : 'sporeWhite'}

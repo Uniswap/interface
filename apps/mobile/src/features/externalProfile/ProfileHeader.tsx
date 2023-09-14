@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -17,7 +17,7 @@ import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -31,7 +31,7 @@ interface ProfileHeaderProps {
 }
 
 export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
 
@@ -47,7 +47,8 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors = useMemo(() => {
     if (loading || (hasAvatar && !avatarColors)) {
-      return [theme.colors.surface1, theme.colors.surface1]
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return [colors.surface1.val, colors.surface1.val]
     }
     if (hasAvatar && avatarColors && avatarColors.base) {
       return [avatarColors.base, avatarColors.base]
@@ -57,7 +58,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
     avatarColors,
     hasAvatar,
     loading,
-    theme.colors.surface1,
+    colors.surface1.val,
     uniconGradientEnd,
     uniconGradientStart,
   ])

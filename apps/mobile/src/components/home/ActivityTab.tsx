@@ -3,7 +3,7 @@ import React, { forwardRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RefreshControl } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
@@ -21,7 +21,7 @@ import {
 import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { useMostRecentSwapTx } from 'src/features/transactions/swap/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
 import { getActivityItemType } from 'wallet/src/features/activity/utils'
@@ -59,7 +59,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
 ) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const insets = useSafeAreaInsets()
 
   const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(
@@ -123,11 +123,11 @@ export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(function _Ac
           insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
         }
         refreshing={refreshing ?? false}
-        tintColor={theme.colors.neutral3}
+        tintColor={colors.neutral3.val}
         onRefresh={onRefresh}
       />
     )
-  }, [refreshing, headerHeight, onRefresh, theme.colors.neutral3, insets.top])
+  }, [refreshing, headerHeight, onRefresh, colors.neutral3.val, insets.top])
 
   if (!hasData && isError) {
     return errorCard

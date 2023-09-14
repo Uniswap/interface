@@ -1,4 +1,5 @@
 export * from 'tamagui'
+export { useTheme as useSporeColors } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
 export { Button } from './components/button/Button'
 export { withAnimated } from './components/factories/animated'

@@ -1,8 +1,8 @@
 import React, { ComponentProps, useMemo } from 'react'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 type SwapArrowButtonProps = Pick<
   ComponentProps<typeof TouchableArea>,
@@ -10,15 +10,8 @@ type SwapArrowButtonProps = Pick<
 > & { size?: number }
 
 export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
-  const theme = useAppTheme()
-  const {
-    testID,
-    onPress,
-    disabled,
-    bg = 'surface2',
-    size = theme.iconSizes.icon20,
-    ...rest
-  } = props
+  const colors = useSporeColors()
+  const { testID, onPress, disabled, bg = 'surface2', size = iconSizes.icon20, ...rest } = props
   return useMemo(
     () => (
       <TouchableArea
@@ -37,10 +30,10 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
         {...rest}>
         {/* hack to add 2px more padding without adjusting design system values */}
         <Flex centered gap="$none" p="$spacing2">
-          <Arrow color={theme.colors.neutral2} direction="s" size={size} />
+          <Arrow color={colors.neutral2.val} direction="s" size={size} />
         </Flex>
       </TouchableArea>
     ),
-    [bg, disabled, onPress, testID, rest, theme.colors.neutral2, size]
+    [bg, disabled, onPress, testID, rest, colors.neutral2.val, size]
   )
 }

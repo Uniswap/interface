@@ -1,15 +1,17 @@
 import { useNetInfo } from '@react-native-community/netinfo'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppSelector } from 'src/app/hooks'
 import { TabsAwareBottomBanner } from 'src/components/banners/TabsAwareBottomBanner'
 import { selectSomeModalOpen } from 'src/features/modals/modalSlice'
+import { useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
+import { iconSizes } from 'ui/src/theme'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 export function OfflineBanner(): JSX.Element | null {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const netInfo = useNetInfo()
 
   // don't show the offline banner in onboarding
@@ -30,9 +32,9 @@ export function OfflineBanner(): JSX.Element | null {
     <TabsAwareBottomBanner
       icon={
         <InfoCircle
-          color={theme.colors.neutral1}
-          height={theme.iconSizes.icon24}
-          width={theme.iconSizes.icon24}
+          color={colors.neutral1.val}
+          height={iconSizes.icon24}
+          width={iconSizes.icon24}
         />
       }
       text={t('You are in offline mode')}

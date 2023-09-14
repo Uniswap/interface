@@ -1,8 +1,7 @@
 import React from 'react'
 import { ColorValue, FlexStyle } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { IS_ANDROID } from 'src/constants/globals'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 
 const HANDLEBAR_HEIGHT = FixedTheme.spacing.spacing4
@@ -18,8 +17,8 @@ export const HandleBar = ({
   hidden?: boolean
   containerFlexStyles?: FlexStyle
 }): JSX.Element => {
-  const theme = useAppTheme()
-  const bg = hidden ? 'transparent' : backgroundColor ?? theme.colors.surface1
+  const colors = useSporeColors()
+  const bg = hidden ? 'transparent' : backgroundColor ?? colors.surface1.val
 
   return (
     <Flex gap="$none" mt={IS_ANDROID ? '$spacing4' : '$none'}>

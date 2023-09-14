@@ -1,7 +1,7 @@
 import { impactAsync } from 'expo-haptics'
 import { default as React, PropsWithChildren, useMemo } from 'react'
 import { FlexAlignType } from 'react-native'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NotificationBadge } from 'src/components/notifications/Badge'
@@ -76,7 +76,6 @@ export function AddressDisplay({
   gapBetweenLines = '$none',
 }: AddressDisplayProps): JSX.Element {
   const dispatch = useAppDispatch()
-  const theme = useAppTheme()
   const displayName = useDisplayName(address)
   const { data: avatar } = useENSAvatar(address)
 
@@ -95,8 +94,8 @@ export function AddressDisplay({
   }
 
   // Extract sizes so copy icon can match font variants
-  const mainSize = theme.textVariants[variant].fontSize
-  const captionSize = theme.textVariants[captionVariant].fontSize
+  const mainSize = fonts[variant].fontSize
+  const captionSize = fonts[captionVariant].fontSize
   const itemAlignment =
     textAlign || (!showAccountIcon || direction === 'column' ? 'center' : 'flex-start')
 

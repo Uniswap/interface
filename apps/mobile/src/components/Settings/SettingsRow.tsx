@@ -1,5 +1,4 @@
 import { NavigatorScreenParams } from '@react-navigation/core'
-import { BaseTheme } from '@shopify/restyle'
 import React from 'react'
 import { ValueOf } from 'react-native-gesture-handler/lib/typescript/typeUtils'
 import {
@@ -14,7 +13,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Screens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
-import { Icons } from 'ui/src'
+import { Icons, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export interface SettingsSection {
@@ -43,14 +42,14 @@ export interface SettingsSectionItem {
 interface SettingsRowProps {
   page: SettingsSectionItem
   navigation: SettingsStackNavigationProp & OnboardingStackNavigationProp
-  theme: BaseTheme
 }
 
 export function SettingsRow({
   page: { screen, screenProps, externalLink, action, icon, text, subText, currentSetting },
   navigation,
-  theme,
 }: SettingsRowProps): JSX.Element {
+  const colors = useSporeColors()
+
   const handleRow = async (): Promise<void> => {
     if (screen) {
       navigation.navigate(screen, screenProps)
@@ -104,7 +103,7 @@ export function SettingsRow({
             />
           </Flex>
         ) : externalLink ? (
-          <Arrow color={theme.colors.neutral3} direction="ne" size={iconSizes.icon24} />
+          <Arrow color={colors.neutral3.val} direction="ne" size={iconSizes.icon24} />
         ) : (
           action
         )}

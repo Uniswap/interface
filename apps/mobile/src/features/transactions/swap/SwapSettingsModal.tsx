@@ -13,7 +13,6 @@ import {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PlusMinusButton, { PlusMinusButtonType } from 'src/components/buttons/PlusMinusButton'
 import { Switch } from 'src/components/buttons/Switch'
@@ -27,7 +26,7 @@ import { SwapProtectionInfoModal } from 'src/features/transactions/swap/SwapProt
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import { openUri } from 'src/utils/linking'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
@@ -64,7 +63,7 @@ export default function SwapSettingsModal({
   dispatch,
   onClose,
 }: SwapSettingsModalProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
   const [view, setView] = useState(SwapSettingsModalView.Options)
 
@@ -100,7 +99,7 @@ export default function SwapSettingsModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.surface1}
+      backgroundColor={colors.surface1.val}
       name={ModalName.SwapSettings}
       onClose={onClose}>
       <Flex mb="$spacing28" px="$spacing24" py="$spacing12">
@@ -108,8 +107,8 @@ export default function SwapSettingsModal({
           <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Options)}>
             <Icons.Chevron
               color={view === SwapSettingsModalView.Options ? '$transparent' : '$neutral3'}
-              height={theme.iconSizes.icon24}
-              width={theme.iconSizes.icon24}
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
             />
           </TouchableArea>
           <Text textAlign="center" variant="bodyLarge">
@@ -174,7 +173,7 @@ function SwapSettingsOptions({
 
 function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const swapProtectionSetting = useSwapProtectionSetting()
 
@@ -208,9 +207,9 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
                   {t('Swap protection')}
                 </Text>
                 <InfoCircle
-                  color={theme.colors.neutral1}
-                  height={theme.iconSizes.icon16}
-                  width={theme.iconSizes.icon16}
+                  color={colors.neutral1.val}
+                  height={iconSizes.icon16}
+                  width={iconSizes.icon16}
                 />
               </Flex>
               <Text color="neutral2" variant="bodyMicro">
@@ -231,7 +230,7 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
 
 function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const {
     customSlippageTolerance,
@@ -421,11 +420,11 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
             <BottomSheetTextInput
               keyboardType="numeric"
               style={{
-                color: autoSlippageEnabled ? theme.colors.neutral2 : theme.colors.neutral1,
-                fontSize: theme.textVariants.subheadLarge.fontSize,
-                fontFamily: theme.textVariants.subheadLarge.fontFamily,
-                width: theme.textVariants.subheadLarge.fontSize * 4,
-                padding: theme.spacing.none,
+                color: autoSlippageEnabled ? colors.neutral2.val : colors.neutral1.val,
+                fontSize: fonts.subheadLarge.fontSize,
+                fontFamily: fonts.subheadLarge.family,
+                width: fonts.subheadLarge.fontSize * 4,
+                padding: spacing.none,
               }}
               textAlign="center"
               value={
@@ -437,7 +436,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
               onChangeText={onChangeSlippageInput}
               onFocus={onFocusSlippageInput}
             />
-            <Flex gap="$none" width={theme.iconSizes.icon28}>
+            <Flex gap="$none" width={iconSizes.icon28}>
               <Text color="neutral2" textAlign="center" variant="subheadLarge">
                 %
               </Text>
@@ -471,7 +470,7 @@ function BottomLabel({
   slippageTolerance: number
   showSlippageWarning: boolean
 }): JSX.Element | null {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
   const slippageTolerancePercent = slippageToleranceToPercent(slippageTolerance)
 
@@ -479,7 +478,7 @@ function BottomLabel({
     return (
       <Flex centered row gap="$spacing8" height={fonts.bodySmall.lineHeight * 2 + spacing.spacing8}>
         <AlertTriangleIcon
-          color={theme.colors.DEP_accentWarning}
+          color={colors.DEP_accentWarning.val}
           height={iconSizes.icon16}
           width={iconSizes.icon16}
         />
@@ -491,10 +490,7 @@ function BottomLabel({
   }
 
   return trade ? (
-    <Flex
-      centered
-      gap="$spacing8"
-      height={theme.textVariants.bodySmall.lineHeight * 2 + theme.spacing.spacing8}>
+    <Flex centered gap="$spacing8" height={fonts.bodySmall.lineHeight * 2 + spacing.spacing8}>
       <Text color="neutral2" textAlign="center" variant="bodySmall">
         {trade.tradeType === TradeType.EXACT_INPUT
           ? t('Receive at least {{amount}} {{symbol}}', {
@@ -515,9 +511,9 @@ function BottomLabel({
       {showSlippageWarning ? (
         <Flex centered row gap="$spacing8">
           <AlertTriangleIcon
-            color={theme.colors.DEP_accentWarning}
-            height={theme.iconSizes.icon16}
-            width={theme.iconSizes.icon16}
+            color={colors.DEP_accentWarning.val}
+            height={iconSizes.icon16}
+            width={iconSizes.icon16}
           />
           <Text color="DEP_accentWarning" variant="bodySmall">
             {t('Slippage may be higher than necessary')}
@@ -526,6 +522,6 @@ function BottomLabel({
       ) : null}
     </Flex>
   ) : (
-    <Flex gap="$none" height={theme.textVariants.bodySmall.lineHeight} />
+    <Flex gap="$none" height={fonts.bodySmall.lineHeight} />
   )
 }

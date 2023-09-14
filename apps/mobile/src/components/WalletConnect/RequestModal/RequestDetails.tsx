@@ -3,7 +3,6 @@ import { Transaction, TransactionDescription } from 'no-yolo-signatures'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
-import { useAppTheme } from 'src/app/hooks'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Text } from 'src/components/Text'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
@@ -14,7 +13,8 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -38,17 +38,17 @@ type AddressButtonProps = {
 
 const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.Element => {
   const { name } = useENS(chainId, address, false)
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   return (
     <LinkButton
       backgroundColor="surface3"
       borderRadius="rounded12"
-      iconColor={theme.colors.neutral1}
+      iconColor={colors.neutral1.val}
       label={name || shortenAddress(address)}
       px="spacing8"
       py="spacing4"
-      size={theme.iconSizes.icon16}
+      size={iconSizes.icon16}
       textVariant="bodySmall"
       url={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}
       {...rest}

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
@@ -10,11 +10,12 @@ import { UNISWAP_HELP_CENTER_WALLET_URL } from 'src/constants/urls'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
+import { useSporeColors } from 'ui/src'
 import BookIcon from 'ui/src/assets/icons/book.svg'
 import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import PaperStackIcon from 'ui/src/assets/icons/paper-stack.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
-import { colors, iconSizes } from 'ui/src/theme'
+import { colors as rawColors, iconSizes } from 'ui/src/theme'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { opacify } from 'wallet/src/utils/colors'
@@ -37,7 +38,7 @@ enum ActionOption {
 
 export function WalletEmptyState(): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const dispatch = useAppDispatch()
 
   const activeAccount = useActiveAccount()
@@ -52,13 +53,13 @@ export function WalletEmptyState(): JSX.Element {
         elementName: ElementName.EmptyStateBuy,
         icon: (
           <IconContainer
-            backgroundColor={colors.green200}
+            backgroundColor={rawColors.green200}
             icon={
               <IconContainer
-                backgroundColor={colors.green200}
+                backgroundColor={rawColors.green200}
                 icon={
                   <DollarSign
-                    color={colors.green200}
+                    color={rawColors.green200}
                     height={iconSizes.icon20}
                     width={iconSizes.icon20}
                   />
@@ -75,13 +76,13 @@ export function WalletEmptyState(): JSX.Element {
         elementName: ElementName.EmptyStateReceive,
         icon: (
           <IconContainer
-            backgroundColor={colors.gold300}
+            backgroundColor={rawColors.gold300}
             icon={
               <IconContainer
-                backgroundColor={colors.gold300}
+                backgroundColor={rawColors.gold300}
                 icon={
                   <ScanIcon
-                    color={colors.gold300}
+                    color={rawColors.gold300}
                     height={iconSizes.icon16}
                     width={iconSizes.icon16}
                   />
@@ -106,10 +107,10 @@ export function WalletEmptyState(): JSX.Element {
         elementName: ElementName.EmptyStateGetStarted,
         icon: (
           <IconContainer
-            backgroundColor={colors.blue300}
+            backgroundColor={rawColors.blue300}
             icon={
               <BookIcon
-                color={theme.colors.DEP_blue300}
+                color={colors.DEP_blue300.val}
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
               />
@@ -124,10 +125,10 @@ export function WalletEmptyState(): JSX.Element {
         elementName: ElementName.EmptyStateImport,
         icon: (
           <IconContainer
-            backgroundColor={colors.violet400}
+            backgroundColor={rawColors.violet400}
             icon={
               <PaperStackIcon
-                color={colors.violet400}
+                color={rawColors.violet400}
                 height={iconSizes.icon20}
                 width={iconSizes.icon20}
               />
@@ -137,7 +138,7 @@ export function WalletEmptyState(): JSX.Element {
         onPress: () => dispatch(dispatch(openModal({ name: ModalName.AccountSwitcher }))),
       },
     }),
-    [dispatch, isViewOnly, t, theme.colors]
+    [dispatch, isViewOnly, t, colors]
   )
 
   // Order options based on view only status

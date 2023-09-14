@@ -7,7 +7,7 @@ import {
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { Linking } from 'react-native'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { RootParamList } from 'src/app/navigation/types'
 import Trace from 'src/components/Trace/Trace'
 import { openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
@@ -16,6 +16,7 @@ import { getEventParams } from 'src/features/telemetry/constants'
 import { DIRECT_LOG_ONLY_SCREENS } from 'src/features/telemetry/directLogScreens'
 import { processWidgetEvents } from 'src/features/widgets/widgets'
 import { AppScreen } from 'src/screens/Screens'
+import { useSporeColors } from 'ui/src'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 interface Props {
@@ -29,7 +30,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
   children,
   onReady,
 }: PropsWithChildren<Props>) => {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const [routeName, setRouteName] = useState<AppScreen>()
   const [routeParams, setRouteParams] = useState<Record<string, unknown> | undefined>()
   const [logImpression, setLogImpression] = useState<boolean>(false)
@@ -42,7 +43,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
       // avoid white flickering background on screen navigation
       theme={{
         ...DefaultTheme,
-        colors: { ...DefaultTheme.colors, background: theme.colors.surface1 },
+        colors: { ...DefaultTheme.colors, background: colors.surface1.val },
       }}
       onReady={(): void => {
         onReady(navigationRef)

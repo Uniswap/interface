@@ -4,7 +4,7 @@ import { providers } from 'ethers'
 import React, { PropsWithChildren, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { BaseCard } from 'src/components/layout/BaseCard'
@@ -29,7 +29,7 @@ import {
   TransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
@@ -103,7 +103,7 @@ function SectionContainer({
 }
 
 export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Element | null {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const netInfo = useNetInfo()
   const didOpenFromDeepLink = useAppSelector(selectDidOpenFromDeepLink)
   const chainId = request.chainId
@@ -312,9 +312,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               backgroundColor="$DEP_accentWarningSoft"
               icon={
                 <AlertTriangle
-                  color={theme.colors.DEP_accentWarning}
-                  height={theme.iconSizes.icon16}
-                  width={theme.iconSizes.icon16}
+                  color={colors.DEP_accentWarning.val}
+                  height={iconSizes.icon16}
+                  width={iconSizes.icon16}
                 />
               }
               textColor="DEP_accentWarning"
@@ -366,7 +366,7 @@ function WarningSection({
   showUnsafeWarning: boolean
   isBlockedAddress: boolean
 }): JSX.Element | null {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
 
   if (!showUnsafeWarning && !isBlockedAddress) return null
@@ -378,7 +378,7 @@ function WarningSection({
   return (
     <Flex centered row alignSelf="center" gap="$spacing8">
       <AlertTriangle
-        color={theme.colors.DEP_accentWarning}
+        color={colors.DEP_accentWarning.val}
         height={iconSizes.icon16}
         width={iconSizes.icon16}
       />

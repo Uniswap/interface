@@ -26,7 +26,7 @@ import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { Flex } from 'ui/src'
-import { dimensions } from 'ui/src/theme'
+import { dimensions, spacing } from 'ui/src/theme'
 import { theme } from 'ui/src/theme/restyle'
 import { isError } from 'wallet/src/data/utils'
 import {
@@ -172,13 +172,13 @@ export function NFTCollectionScreen({
             />
             {item.listPrice && (
               <ListPriceBadge
-                bottom={theme.spacing.spacing4}
+                bottom={spacing.spacing4}
                 gap="$none"
                 iconColor={priceColor}
                 iconSize="icon12"
                 position="absolute"
                 price={item.listPrice}
-                right={theme.spacing.spacing4}
+                right={spacing.spacing4}
                 textColor={priceColor}
               />
             )}

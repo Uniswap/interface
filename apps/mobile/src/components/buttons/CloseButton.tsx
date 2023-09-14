@@ -14,6 +14,7 @@ type Props = {
   SpacingShorthandProps<Theme>
 
 export function CloseButton({ onPress, size, strokeWidth, color, ...rest }: Props): JSX.Element {
+  // TODO(MOB-1275): remove this usage of Restyle, change behavior of XIcon to support Tamagui
   const theme = useAppTheme()
   return (
     <TouchableArea onPress={onPress} {...rest}>

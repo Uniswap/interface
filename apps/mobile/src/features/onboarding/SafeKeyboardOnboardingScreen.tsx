@@ -5,12 +5,12 @@ import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { IS_IOS } from 'src/constants/globals'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
+import { useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { flex, Theme } from 'ui/src/theme/restyle'
 
@@ -28,7 +28,7 @@ export function SafeKeyboardOnboardingScreen({
   paddingTop = 'none',
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const headerHeight = useHeaderHeight()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const insets = useSafeAreaInsets()
   const keyboard = useKeyboardLayout()
 
@@ -69,7 +69,7 @@ export function SafeKeyboardOnboardingScreen({
 
   const topGradient = (
     <LinearGradient
-      colors={[theme.colors.surface1, opacify(0, theme.colors.surface1)]}
+      colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
       locations={[0.6, 0.8]}
       style={[
         styles.gradient,

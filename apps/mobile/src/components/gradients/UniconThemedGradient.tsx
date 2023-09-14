@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
-import { useAppTheme } from 'src/app/hooks'
+import { borderRadii } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 
 function _UniconThemedGradient({
@@ -16,7 +16,6 @@ function _UniconThemedGradient({
   middleOut?: boolean
   opacity?: number
 }): JSX.Element {
-  const theme = useAppTheme()
   const id = `background${middleOut ? 'MiddleOut' : ''}}`
 
   return (
@@ -42,7 +41,7 @@ function _UniconThemedGradient({
         fill={`url(#${id})`}
         height="100%"
         opacity={opacity}
-        rx={theme.borderRadii[borderRadius]}
+        rx={borderRadii[borderRadius]}
         width="100%"
         x="0"
         y="0"

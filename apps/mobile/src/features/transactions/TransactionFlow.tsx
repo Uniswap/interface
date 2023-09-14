@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex } from 'src/components/layout'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { Warning, WarningSeverity } from 'src/components/modals/WarningModal/types'
@@ -23,9 +22,9 @@ import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { TransferReview } from 'src/features/transactions/transfer/TransferReview'
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
-import { dimensions } from 'ui/src/theme'
+import { dimensions, iconSizes } from 'ui/src/theme'
 import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
 
 export enum TransactionStep {
@@ -97,7 +96,7 @@ export function TransactionFlow({
   isUSDInput,
   showUSDToggle,
 }: TransactionFlowProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const insets = useSafeAreaInsets()
   const { t } = useTranslation()
 
@@ -177,9 +176,9 @@ export function TransactionFlow({
               confirmText={t('Dismiss')}
               icon={
                 <EyeIcon
-                  color={theme.colors.neutral2}
-                  height={theme.iconSizes.icon24}
-                  width={theme.iconSizes.icon24}
+                  color={colors.neutral2.val}
+                  height={iconSizes.icon24}
+                  width={iconSizes.icon24}
                 />
               }
               modalName={ModalName.SwapWarning}

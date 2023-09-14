@@ -2,11 +2,10 @@ import React, { ComponentProps, useCallback, useMemo, useReducer, useState } fro
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
 import Markdown from 'react-native-markdown-display'
-import { useAppTheme } from 'src/app/hooks'
 import { Text } from 'src/components/Text'
 import { openUri } from 'src/utils/linking'
-import { Flex, SpaceTokens } from 'ui/src'
-import { Theme } from 'ui/src/theme/restyle'
+import { Flex, SpaceTokens, useSporeColors } from 'ui/src'
+import { fonts } from 'ui/src/theme'
 
 type LongTextProps = {
   initialDisplayedLines?: number
@@ -17,24 +16,24 @@ type LongTextProps = {
   codeBackgroundColor?: string
   readMoreOrLessColor?: string
   renderAsMarkdown?: boolean
-  variant?: keyof Theme['textVariants']
+  variant?: keyof typeof fonts
 } & Omit<
   ComponentProps<typeof Text>,
   'children' | 'numberOfLines' | 'onTextLayout' | 'color' | 'variant'
 >
 
 export function LongText(props: LongTextProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
   const {
     initialDisplayedLines = 3,
     text,
     gap = '$spacing8',
-    color = theme.colors.neutral1,
-    linkColor = theme.colors.neutral2,
-    readMoreOrLessColor = theme.colors.neutral2,
+    color = colors.neutral1.val,
+    linkColor = colors.neutral2.val,
+    readMoreOrLessColor = colors.neutral2.val,
     renderAsMarkdown = false,
-    codeBackgroundColor = theme.colors.surface3,
+    codeBackgroundColor = colors.surface3.val,
     variant = 'bodySmall',
     ...rest
   } = props
@@ -46,7 +45,7 @@ export function LongText(props: LongTextProps): JSX.Element {
   const [textLengthExceedsLimit, setTextLengthExceedsLimit] = useState(false)
   const [initialContentHeight, setInitialContentHeight] = useState<number | undefined>(undefined)
 
-  const textLineHeight = theme.textVariants[variant].lineHeight
+  const textLineHeight = fonts[variant].lineHeight
   const maxVisibleHeight = textLineHeight * initialDisplayedLines
 
   const onLayout = useCallback(
@@ -90,8 +89,8 @@ export function LongText(props: LongTextProps): JSX.Element {
               paragraph: {
                 marginBottom: 0,
                 marginTop: 0,
-                fontSize: theme.textVariants.bodySmall.fontSize,
-                lineHeight: theme.textVariants.bodySmall.lineHeight,
+                fontSize: fonts.bodySmall.fontSize,
+                lineHeight: fonts.bodySmall.lineHeight,
               },
             }}
             onLinkPress={(url): false => {

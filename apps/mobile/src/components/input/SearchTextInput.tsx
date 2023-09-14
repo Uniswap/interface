@@ -2,7 +2,6 @@ import React, { forwardRef, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedBox, AnimatedFlex, Flex } from 'src/components/layout'
@@ -10,9 +9,9 @@ import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { Icons } from 'ui/src'
+import { Icons, useSporeColors } from 'ui/src'
 import X from 'ui/src/assets/icons/x.svg'
-import { dimensions, iconSizes, spacing } from 'ui/src/theme'
+import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -39,7 +38,7 @@ export type SearchTextInputProps = TextInputProps & {
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>(
   function _SearchTextInput(props, ref) {
-    const theme = useAppTheme()
+    const colors = useSporeColors()
     const isDarkMode = useIsDarkMode()
     const { t } = useTranslation()
     const {
@@ -185,11 +184,11 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             backgroundColor="none"
             borderWidth={0}
             flex={1}
-            fontFamily={theme.textVariants.bodyLarge.fontFamily}
-            fontSize={theme.textVariants.bodyLarge.fontSize}
-            maxFontSizeMultiplier={theme.textVariants.bodyLarge.maxFontSizeMultiplier}
+            fontFamily={fonts.bodyLarge.family}
+            fontSize={fonts.bodyLarge.fontSize}
+            maxFontSizeMultiplier={fonts.bodyLarge.maxFontSizeMultiplier}
             placeholder={placeholder}
-            placeholderTextColor={theme.colors.neutral2}
+            placeholderTextColor={colors.neutral2.val}
             px="none"
             py="none"
             returnKeyType="done"
@@ -236,9 +235,14 @@ interface ClearButtonProps {
 }
 
 function ClearButton(props: ClearButtonProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
-  const { onPress, clearIcon = <X color={theme.colors.neutral2} height={16} width={16} /> } = props
+  const {
+    onPress,
+    clearIcon = (
+      <X color={colors.neutral2.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+    ),
+  } = props
 
   return (
     <TouchableArea

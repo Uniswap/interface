@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TripleDot } from 'src/components/icons/TripleDot'
 import { Flex } from 'src/components/layout/Flex'
@@ -14,12 +14,12 @@ import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
+import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 
 export function ProfileContextMenu({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
   const dispatch = useAppDispatch()
 
   const onPressCopyAddress = useCallback(async () => {
@@ -84,7 +84,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         borderRadius="roundedFull"
         opacity={0.8}
         padding="spacing8">
-        <Flex centered grow height={theme.iconSizes.icon16} width={theme.iconSizes.icon16}>
+        <Flex centered grow height={iconSizes.icon16} width={iconSizes.icon16}>
           <TripleDot color="$sporeWhite" size={3.5} />
         </Flex>
       </TouchableArea>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
@@ -17,8 +17,9 @@ import {
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
+import { iconSizes } from 'ui/src/theme'
 import {
   useActiveAccount,
   useActiveAccountAddressWithThrow,
@@ -87,7 +88,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   // TODO: Move returnToPreviousApp() call to onClose but ensure it is not called twice
   const onClose = (): void => {
@@ -109,10 +110,10 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         closeText={t('Dismiss')}
         icon={
           <EyeIcon
-            color={theme.colors.neutral2}
-            height={theme.iconSizes.icon24}
+            color={colors.neutral2.val}
+            height={iconSizes.icon24}
             strokeWidth={1.5}
-            width={theme.iconSizes.icon24}
+            width={iconSizes.icon24}
           />
         }
         modalName={ModalName.WCViewOnlyWarning}
@@ -126,7 +127,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
           borderRadius="$rounded16"
           gap="$none"
           p="$spacing16">
-          <AccountDetails address={currRequest.account} iconSize={theme.iconSizes.icon24} />
+          <AccountDetails address={currRequest.account} iconSize={iconSizes.icon24} />
         </Flex>
       </WarningModal>
     )

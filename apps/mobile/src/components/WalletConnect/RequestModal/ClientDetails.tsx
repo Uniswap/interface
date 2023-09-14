@@ -1,10 +1,11 @@
 import React from 'react'
-import { useAppTheme } from 'src/app/hooks'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Flex } from 'src/components/layout'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { HeaderText } from 'src/components/WalletConnect/RequestModal/HeaderText'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { useSporeColors } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 
 export interface PermitInfo {
@@ -20,7 +21,7 @@ export function ClientDetails({
   permitInfo?: PermitInfo
 }): JSX.Element {
   const { dapp } = request
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const permitCurrencyInfo = useCurrencyInfo(permitInfo?.currencyId)
 
@@ -36,13 +37,13 @@ export function ClientDetails({
         <LinkButton
           backgroundColor="surface2"
           borderRadius="rounded16"
-          color={theme.colors.accent1}
-          iconColor={theme.colors.accent1}
+          color={colors.accent1.val}
+          iconColor={colors.accent1.val}
           label={dapp.url}
           mb="spacing12"
           px="spacing8"
           py="spacing4"
-          size={theme.iconSizes.icon12}
+          size={iconSizes.icon12}
           textVariant="buttonLabelMicro"
           url={dapp.url}
         />

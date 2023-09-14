@@ -1,6 +1,5 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo } from 'react'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Pill } from 'src/components/text/Pill'
 import {
@@ -8,6 +7,7 @@ import {
   SuggestedTokenSection,
 } from 'src/components/TokenSelector/TokenSelectorList'
 import { TokenOption } from 'src/components/TokenSelector/types'
+import { useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
@@ -24,7 +24,7 @@ function _SuggestedToken({
   section: SuggestedTokenSection
 }): JSX.Element {
   const { currency, logoUrl } = token.currencyInfo
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const onPress = (): void => {
     onSelectCurrency?.(currency, section, index)
   }
@@ -37,7 +37,7 @@ function _SuggestedToken({
       <Pill
         backgroundColor="surface3"
         borderRadius="roundedFull"
-        foregroundColor={theme.colors.neutral1}
+        foregroundColor={colors.neutral1.val}
         icon={<TokenLogo size={iconSizes.icon28} symbol={currency.symbol} url={logoUrl} />}
         label={getSymbolDisplayText(currency.symbol)}
         mr="spacing8"

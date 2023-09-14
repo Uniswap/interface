@@ -4,12 +4,12 @@ import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { IS_IOS } from 'src/constants/globals'
 import { Flex } from 'ui/src'
+import { fonts } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 
 type OnboardingScreenProps = {
@@ -29,11 +29,10 @@ export function OnboardingScreen({
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const headerHeight = useHeaderHeight()
   const insets = useSafeAreaInsets()
-  const theme = useAppTheme()
 
   const subtitleMaxFontScaleMultiplier = useResponsiveProp({
     xs: 1.1,
-    sm: theme.textVariants.bodySmall.maxFontSizeMultiplier,
+    sm: fonts.bodySmall.maxFontSizeMultiplier,
   })
 
   const titleSize = useResponsiveProp({

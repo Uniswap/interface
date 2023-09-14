@@ -1,11 +1,10 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
@@ -22,7 +21,7 @@ export const PendingConnectionSwitchNetworkModal = ({
   onPressChain,
   onClose,
 }: Props): JSX.Element => {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
 
   const options = useMemo(
@@ -45,9 +44,13 @@ export const PendingConnectionSwitchNetworkModal = ({
                 <Text color="neutral1" variant="bodyLarge">
                   {info.label}
                 </Text>
-                <Flex gap="$none" height={24} width={24}>
+                <Flex gap="$none" height={iconSizes.icon24} width={iconSizes.icon24}>
                   {chainId === selectedChainId && (
-                    <Check color={theme.colors.accent1} height={24} width={24} />
+                    <Check
+                      color={colors.accent1.val}
+                      height={iconSizes.icon24}
+                      width={iconSizes.icon24}
+                    />
                   )}
                 </Flex>
               </Flex>
@@ -55,7 +58,7 @@ export const PendingConnectionSwitchNetworkModal = ({
           ),
         }
       }),
-    [selectedChainId, onPressChain, theme.colors.accent1]
+    [selectedChainId, onPressChain, colors.accent1.val]
   )
 
   return (

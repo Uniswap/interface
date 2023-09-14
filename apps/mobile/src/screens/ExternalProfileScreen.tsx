@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
-import { useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
 import { ActivityTab } from 'src/components/home/ActivityTab'
 import { NftsTab } from 'src/components/home/NftsTab'
@@ -17,7 +16,8 @@ import ProfileHeader from 'src/features/externalProfile/ProfileHeader'
 import { SectionName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.ExternalProfile>
@@ -28,7 +28,7 @@ export function ExternalProfileScreen({
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const [tabIndex, setIndex] = useState(0)
   const insets = useSafeAreaInsets()
 
@@ -53,11 +53,11 @@ export function ExternalProfileScreen({
 
   const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: theme.spacing.spacing60,
-      paddingHorizontal: theme.spacing.spacing36,
+      paddingTop: spacing.spacing60,
+      paddingHorizontal: spacing.spacing36,
       paddingBottom: insets.bottom,
     }),
-    [insets.bottom, theme.spacing.spacing36, theme.spacing.spacing60]
+    [insets.bottom]
   )
 
   const sharedProps = useMemo<TabContentProps>(
@@ -105,8 +105,8 @@ export function ExternalProfileScreen({
             style={[
               TAB_STYLES.tabBar,
               {
-                backgroundColor: theme.colors.surface1,
-                borderBottomColor: theme.colors.surface3,
+                backgroundColor: colors.surface1.val,
+                borderBottomColor: colors.surface3.val,
               },
             ]}
             tabStyle={styles.tabStyle}
@@ -114,7 +114,7 @@ export function ExternalProfileScreen({
         </Flex>
       )
     },
-    [tabIndex, tabs, theme]
+    [colors.surface1.val, colors.surface3.val, tabIndex, tabs]
   )
 
   const traceProperties = useMemo(

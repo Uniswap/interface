@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react'
-import { useAppTheme } from 'src/app/hooks'
 import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { openUri } from 'src/utils/linking'
+import { useSporeColors } from 'ui/src'
 import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
 import { iconSizes } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
@@ -31,7 +31,7 @@ export function LinkButton({
   justifyContent = 'center',
   ...rest
 }: LinkButtonProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const colorStyles = useMemo(() => {
     return color
       ? { style: { color } }
@@ -48,7 +48,7 @@ export function LinkButton({
           {label}
         </Text>
         <ExternalLinkIcon
-          color={iconColor ?? color ?? theme.colors.accent1}
+          color={iconColor ?? color ?? colors.accent1.val}
           height={size}
           strokeWidth={1.5}
           width={size}

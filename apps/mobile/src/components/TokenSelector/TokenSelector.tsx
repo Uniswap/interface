@@ -2,7 +2,6 @@ import { Currency } from '@uniswap/sdk-core'
 import { hasStringAsync } from 'expo-clipboard'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
@@ -18,7 +17,7 @@ import Trace from 'src/components/Trace/Trace'
 import { IS_IOS } from 'src/constants/globals'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { getClipboard } from 'src/utils/clipboard'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
@@ -88,7 +87,7 @@ function _TokenSelectorModal({
   }, [])
 
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   // Log currency field only for Swap as for Transfer it's always input
   const currencyFieldName =
@@ -125,7 +124,7 @@ function _TokenSelectorModal({
       fullScreen
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
-      backgroundColor={theme.colors.surface1}
+      backgroundColor={colors.surface1.val}
       name={ModalName.TokenSelector}
       snapPoints={['65%', '100%']}
       onClose={onClose}>

@@ -2,7 +2,7 @@
 import { providers } from 'ethers'
 import { default as React, memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -12,7 +12,7 @@ import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { cancelTransaction } from 'wallet/src/features/transactions/slice'
@@ -37,7 +37,7 @@ function TransactionSummaryLayout({
   onRetry,
 }: TransactionSummaryLayoutProps): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const { type } = useActiveAccountWithThrow()
   const readonly = type === AccountType.Readonly
@@ -94,11 +94,11 @@ function TransactionSummaryLayout({
 
   const formattedAddedTime = useFormattedTime(transaction.addedTime)
 
-  const statusIconFill = theme.colors.surface1
+  const statusIconFill = colors.surface1.val
 
   const rightBlock = inCancelling ? (
     <SlashCircleIcon
-      color={theme.colors.statusCritical}
+      color={colors.statusCritical.val}
       fill={statusIconFill}
       fillOpacity={1}
       height={TXN_STATUS_ICON_SIZE}
@@ -107,7 +107,7 @@ function TransactionSummaryLayout({
   ) : status === TransactionStatus.Failed ? (
     <Flex grow alignItems="flex-end" gap="$none" justifyContent="space-between">
       <AlertTriangle
-        color={theme.colors.DEP_accentWarning}
+        color={colors.DEP_accentWarning.val}
         fill={statusIconFill}
         height={TXN_STATUS_ICON_SIZE}
         width={TXN_STATUS_ICON_SIZE}

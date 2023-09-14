@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Separator } from 'src/components/layout/Separator'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
@@ -8,7 +7,7 @@ import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import Trace from 'src/components/Trace/Trace'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -100,7 +99,7 @@ export function CurrentChainBalance({
   onPressSend: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   return (
     <Flex row>
@@ -117,7 +116,7 @@ export function CurrentChainBalance({
         </Text>
       </Flex>
       <Flex alignItems="flex-end" justifyContent="center">
-        <SendButton color={theme.colors.neutral1} size={28} onPress={onPressSend} />
+        <SendButton color={colors.neutral1.val} size={iconSizes.icon28} onPress={onPressSend} />
       </Flex>
     </Flex>
   )

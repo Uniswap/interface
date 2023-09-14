@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
+import { useSporeColors } from 'ui/src'
 import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
+import { iconSizes } from 'ui/src/theme'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 
@@ -17,14 +18,14 @@ function StatsRow({
   children: JSX.Element
   tokenColor?: Nullable<string>
 }): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   return (
     <Flex row justifyContent="space-between" paddingLeft="spacing2">
       <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start">
         <StatsIcon
-          color={tokenColor ?? theme.colors.neutral3}
-          height={theme.iconSizes.icon12}
-          width={theme.iconSizes.icon12}
+          color={tokenColor ?? colors.neutral3.val}
+          height={iconSizes.icon12}
+          width={iconSizes.icon12}
         />
         <Text color="neutral1" variant="bodySmall">
           {label}
@@ -90,7 +91,7 @@ export function TokenDetailsStats({
   tokenColor?: Maybe<string>
 }): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const tokenData = data?.token
   const tokenProjectData = tokenData?.project
@@ -110,8 +111,8 @@ export function TokenDetailsStats({
             <LongText
               gap="$spacing2"
               initialDisplayedLines={5}
-              linkColor={tokenColor ?? theme.colors.neutral1}
-              readMoreOrLessColor={tokenColor ?? theme.colors.neutral2}
+              linkColor={tokenColor ?? colors.neutral1.val}
+              readMoreOrLessColor={tokenColor ?? colors.neutral2.val}
               text={tokenProjectData.description.trim()}
             />
           </Flex>

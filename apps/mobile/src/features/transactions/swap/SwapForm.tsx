@@ -5,7 +5,6 @@ import React, { Dispatch, memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
@@ -36,11 +35,11 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { formatCurrencyAmount, formatPrice, NumberType } from 'utilities/src/format/format'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -65,7 +64,7 @@ function _SwapForm({
   showingSelectorScreen,
 }: SwapFormProps): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const {
     chainId,
@@ -169,9 +168,9 @@ function _SwapForm({
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
     useShouldShowNativeKeyboard()
 
-  const SWAP_DIRECTION_BUTTON_SIZE = theme.iconSizes.icon20
-  const SWAP_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.spacing8 + theme.spacing.spacing2
-  const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.spacing4
+  const SWAP_DIRECTION_BUTTON_SIZE = iconSizes.icon20
+  const SWAP_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing8 + spacing.spacing2
+  const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 
   useSwapAnalytics(derivedSwapInfo)
   const SwapWarningIcon = swapWarning?.icon ?? AlertTriangleIcon
@@ -223,8 +222,8 @@ function _SwapForm({
           icon={
             <SwapWarningIcon
               color={swapWarningColor.text}
-              height={theme.iconSizes.icon24}
-              width={theme.iconSizes.icon24}
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
             />
           }
           modalName={ModalName.SwapWarning}
@@ -343,9 +342,9 @@ function _SwapForm({
                       px="$spacing12"
                       py="$spacing12">
                       <InfoCircleFilled
-                        color={theme.colors.DEP_accentWarning}
-                        height={theme.iconSizes.icon20}
-                        width={theme.iconSizes.icon20}
+                        color={colors.DEP_accentWarning.val}
+                        height={iconSizes.icon20}
+                        width={iconSizes.icon20}
                       />
                       <Text color="$DEP_accentWarning" variant="subheadSmall">
                         {t('Restore your wallet to swap')}
@@ -419,10 +418,10 @@ function _SwapForm({
                     px="$spacing12"
                     py="$spacing12">
                     {swapDataRefreshing ? (
-                      <SpinningLoader size={theme.iconSizes.icon20} />
+                      <SpinningLoader size={iconSizes.icon20} />
                     ) : (
                       <InfoCircle
-                        color={theme.colors.neutral1}
+                        color={colors.neutral1.val}
                         height={iconSizes.icon20}
                         width={iconSizes.icon20}
                       />

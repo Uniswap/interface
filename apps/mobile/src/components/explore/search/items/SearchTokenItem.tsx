@@ -1,7 +1,7 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
@@ -16,6 +16,7 @@ import {
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName, SectionName } from 'src/features/telemetry/constants'
 import { Flex } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
@@ -28,7 +29,6 @@ type SearchTokenItemProps = {
 
 export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps): JSX.Element {
   const dispatch = useAppDispatch()
-  const theme = useAppTheme()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
   const { chainId, address, name, symbol, logoUrl, safetyLevel } = token
@@ -90,10 +90,10 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               {(safetyLevel === SafetyLevel.Blocked ||
                 safetyLevel === SafetyLevel.StrongWarning) && (
                 <WarningIcon
-                  height={theme.iconSizes.icon16}
+                  height={iconSizes.icon16}
                   safetyLevel={safetyLevel}
                   strokeColorOverride="neutral3"
-                  width={theme.iconSizes.icon16}
+                  width={iconSizes.icon16}
                 />
               )}
             </Flex>

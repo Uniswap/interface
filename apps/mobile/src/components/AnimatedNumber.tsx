@@ -11,10 +11,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
-import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
+import { useSporeColors } from 'ui/src'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
-import { Theme } from 'ui/src/theme/restyle'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -27,23 +26,22 @@ const RollNumber = ({
   nextColor,
   index,
   chars,
-  theme,
   commonPrefixLength,
 }: {
   chars: string[]
   digit?: string
   nextColor?: string
   index: number
-  theme: Theme
   commonPrefixLength: number
 }): JSX.Element => {
+  const colors = useSporeColors()
   const fontColor = useSharedValue(
-    nextColor || (index > chars.length - 4 ? theme.colors.neutral3 : theme.colors.neutral1)
+    nextColor || (index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val)
   )
   const yOffset = useSharedValue(digit && Number(digit) >= 0 ? DIGIT_HEIGHT * -digit : 0)
 
   useEffect(() => {
-    const finishColor = index > chars.length - 4 ? theme.colors.neutral3 : theme.colors.neutral1
+    const finishColor = index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val
     if (nextColor && index > commonPrefixLength - 1) {
       fontColor.value = withSequence(
         withTiming(nextColor, { duration: 250 }),
@@ -53,7 +51,7 @@ const RollNumber = ({
       fontColor.value = finishColor
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [digit, nextColor, theme])
+  }, [digit, nextColor])
 
   const animatedFontStyle = useAnimatedStyle(() => {
     return {
@@ -112,13 +110,11 @@ const Char = ({
   chars,
   nextColor,
   commonPrefixLength,
-  theme,
 }: {
   index: number
   chars: string[]
   nextColor?: string
   commonPrefixLength: number
-  theme: Theme
 }): JSX.Element => {
   return (
     <Animated.View
@@ -132,7 +128,6 @@ const Char = ({
         digit={chars[index]}
         index={index}
         nextColor={nextColor}
-        theme={theme}
       />
     </Animated.View>
   )
@@ -162,14 +157,14 @@ const AnimatedNumber = ({
   const [commonPrefixLength, setCommonPrefixLength] = useState<number>(0)
   const [nextColor, setNextColor] = useState<string>()
 
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   useEffect(() => {
     if (value && prevValue !== value) {
       if (prevValue && value > prevValue) {
-        setNextColor(theme.colors.statusSuccess)
+        setNextColor(colors.statusSuccess.val)
       } else if (prevValue && value < prevValue) {
-        setNextColor(theme.colors.neutral2)
+        setNextColor(colors.neutral2.val)
       } else {
         setNextColor(undefined)
       }
@@ -180,14 +175,7 @@ const AnimatedNumber = ({
         setNextColor(undefined)
       }, colorIndicationDuration)
     }
-  }, [
-    colorIndicationDuration,
-    prevValue,
-    theme.colors.neutral2,
-    theme.colors.statusCritical,
-    theme.colors.statusSuccess,
-    value,
-  ])
+  }, [colorIndicationDuration, colors.neutral2.val, colors.statusSuccess.val, prevValue, value])
 
   if (loading) {
     const placeholderChars = [...loadingPlaceholderText]
@@ -204,14 +192,13 @@ const AnimatedNumber = ({
             <Char
               key={
                 index === 0
-                  ? `$_sign_${theme.colors.neutral1}`
+                  ? `$_sign_${colors.neutral1.val}`
                   : `$_number_${placeholderChars.length - index}`
               }
               chars={placeholderChars}
               commonPrefixLength={commonPrefixLength}
               index={index}
               nextColor={nextColor}
-              theme={theme}
             />
           ))}
         </Flex>
@@ -229,12 +216,12 @@ const AnimatedNumber = ({
       <Svg height={DIGIT_HEIGHT} style={AnimatedNumberStyles.gradientStyle} width="100%">
         <Defs>
           <LinearGradient id="backgroundTop" x1="0%" x2="0%" y1="15%" y2="0%">
-            <Stop offset="0" stopColor={theme.colors.surface1} stopOpacity="0" />
-            <Stop offset="1" stopColor={theme.colors.surface1} stopOpacity="1" />
+            <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
+            <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
           </LinearGradient>
           <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
-            <Stop offset="0" stopColor={theme.colors.surface1} stopOpacity="0" />
-            <Stop offset="1" stopColor={theme.colors.surface1} stopOpacity="1" />
+            <Stop offset="0" stopColor={colors.surface1.val} stopOpacity="0" />
+            <Stop offset="1" stopColor={colors.surface1.val} stopOpacity="1" />
           </LinearGradient>
         </Defs>
         <Rect
@@ -249,12 +236,11 @@ const AnimatedNumber = ({
       </Svg>
       {chars?.map((_, index) => (
         <Char
-          key={index === 0 ? `$_sign_${theme.colors.neutral1}` : `$_number_${chars.length - index}`}
+          key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${chars.length - index}`}
           chars={chars}
           commonPrefixLength={commonPrefixLength}
           index={index}
           nextColor={nextColor}
-          theme={theme}
         />
       ))}
     </Flex>

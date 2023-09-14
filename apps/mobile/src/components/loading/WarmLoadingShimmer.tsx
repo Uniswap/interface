@@ -9,8 +9,7 @@ import Reanimated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 const SHIMMER_DURATION = 2000 // 2 seconds
 
@@ -23,7 +22,7 @@ export function WarmLoadingShimmer({
   children,
   isWarmLoading = true,
 }: WarmLoadingShimmerProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const [layout, setLayout] = useState<LayoutRectangle | null>()
   const xPosition = useSharedValue(0)
@@ -57,11 +56,7 @@ export function WarmLoadingShimmer({
         <Flex grow backgroundColor="$neutral2" gap="$none" height="100%" overflow="hidden" />
         <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
           <LinearGradient
-            colors={[
-              theme.colors.neutral2,
-              opacify(64, theme.colors.neutral1),
-              theme.colors.neutral2,
-            ]}
+            colors={[colors.neutral2.val, opacify(64, colors.neutral1.val), colors.neutral2.val]}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}

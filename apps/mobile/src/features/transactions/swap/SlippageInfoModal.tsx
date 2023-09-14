@@ -1,7 +1,6 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
@@ -10,9 +9,9 @@ import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { openUri } from 'src/utils/linking'
-import { Icons } from 'ui/src'
+import { Icons, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import { fonts } from 'ui/src/theme'
+import { fonts, iconSizes } from 'ui/src/theme'
 import { formatCurrencyAmount, NumberType } from 'utilities/src/format/format'
 import { SWAP_SLIPPAGE_HELP_PAGE_URL } from 'wallet/src/constants/urls'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
@@ -32,7 +31,7 @@ export default function SlippageInfoModal({
   onClose,
 }: SlippageInfoModalProps): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const onPressLearnMore = async (): Promise<void> => {
     await openUri(SWAP_SLIPPAGE_HELP_PAGE_URL)
@@ -54,15 +53,15 @@ export default function SlippageInfoModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.surface1}
+      backgroundColor={colors.surface1.val}
       name={ModalName.SlippageInfo}
       onClose={onClose}>
       <Flex centered fill gap="spacing16" mb="spacing12" p="spacing24">
         <Flex centered backgroundColor="surface2" borderRadius="rounded12" p="spacing12">
           <Icons.Settings
-            color={theme.colors.neutral2}
-            height={theme.iconSizes.icon28}
-            width={theme.iconSizes.icon28}
+            color={colors.neutral2.val}
+            height={iconSizes.icon28}
+            width={iconSizes.icon28}
           />
         </Flex>
         <Text textAlign="center" variant="bodyLarge">
@@ -115,9 +114,9 @@ export default function SlippageInfoModal({
         {showSlippageWarning ? (
           <Flex centered row gap="spacing8">
             <AlertTriangleIcon
-              color={theme.colors.DEP_accentWarning}
-              height={theme.iconSizes.icon16}
-              width={theme.iconSizes.icon16}
+              color={colors.DEP_accentWarning.val}
+              height={iconSizes.icon16}
+              width={iconSizes.icon16}
             />
             <Text color="DEP_accentWarning" variant="bodySmall">
               {t('Slippage may be higher than necessary')}

@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
@@ -33,10 +32,10 @@ import {
 import { TransferFormSpeedbumps } from 'src/features/transactions/transfer/TransferFormWarnings'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
-import { dimensions, iconSizes } from 'ui/src/theme'
+import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -64,7 +63,7 @@ export function TransferTokenForm({
   showingSelectorScreen,
 }: TransferTokenProps): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const {
     currencyAmounts,
@@ -200,9 +199,9 @@ export function TransferTokenForm({
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
     useShouldShowNativeKeyboard()
 
-  const TRANSFER_DIRECTION_BUTTON_SIZE = theme.iconSizes.icon20
-  const TRANSFER_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.spacing12
-  const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.spacing4
+  const TRANSFER_DIRECTION_BUTTON_SIZE = iconSizes.icon20
+  const TRANSFER_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing12
+  const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
   const SendWarningIcon = transferWarning?.icon ?? AlertTriangleIcon
 
   return (
@@ -331,9 +330,9 @@ export function TransferTokenForm({
                     px="$spacing12"
                     py="$spacing12">
                     <InfoCircleFilled
-                      color={theme.colors.DEP_accentWarning}
-                      height={theme.iconSizes.icon20}
-                      width={theme.iconSizes.icon20}
+                      color={colors.DEP_accentWarning.val}
+                      height={iconSizes.icon20}
+                      width={iconSizes.icon20}
                     />
                     <Text color="$DEP_accentWarning" variant="subheadSmall">
                       {t('Restore your wallet to send')}

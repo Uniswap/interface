@@ -1,11 +1,11 @@
 import React from 'react'
 import { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useLineChartDatetime } from 'react-native-wagmi-charts'
-import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { IS_ANDROID } from 'src/constants/globals'
-import { Icons } from 'ui/src'
+import { Icons, useSporeColors } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
@@ -26,17 +26,15 @@ export function RelativeChangeText({
   loading: boolean
   spotRelativeChange?: SharedValue<number>
 }): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const relativeChange = useLineChartRelativeChange({ spotRelativeChange })
 
   const styles = useAnimatedStyle(() => ({
-    color:
-      relativeChange.value.value > 0 ? theme.colors.statusSuccess : theme.colors.statusCritical,
+    color: relativeChange.value.value > 0 ? colors.statusSuccess.val : colors.statusCritical.val,
   }))
   const caretStyle = useAnimatedStyle(() => ({
-    color:
-      relativeChange.value.value > 0 ? theme.colors.statusSuccess : theme.colors.statusCritical,
+    color: relativeChange.value.value > 0 ? colors.statusSuccess.val : colors.statusCritical.val,
     transform: [{ rotate: relativeChange.value.value > 0 ? '180deg' : '0deg' }],
   }))
 
@@ -55,7 +53,7 @@ export function RelativeChangeText({
       gap="spacing2"
       mt={IS_ANDROID ? 'none' : 'spacing2'}>
       <Icons.AnimatedCaretChange
-        height={theme.iconSizes.icon16}
+        height={iconSizes.icon16}
         strokeWidth={2}
         style={[
           caretStyle,
@@ -63,7 +61,7 @@ export function RelativeChangeText({
           // eslint-disable-next-line react-native/no-inline-styles
           { translateY: relativeChange.value.value > 0 ? -1 : 1 },
         ]}
-        width={theme.iconSizes.icon16}
+        width={iconSizes.icon16}
       />
       <AnimatedText
         style={styles}

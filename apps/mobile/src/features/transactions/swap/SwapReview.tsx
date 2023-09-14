@@ -2,7 +2,6 @@
 import { providers } from 'ethers'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import Trace from 'src/components/Trace/Trace'
@@ -23,7 +22,8 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
-import { Icons } from 'ui/src'
+import { Icons, useSporeColors } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -55,7 +55,7 @@ export function SwapReview({
   exactValue,
 }: SwapFormProps): JSX.Element | null {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showGasWarningModal, setShowGasWarningModal] = useState(false)
@@ -255,15 +255,15 @@ export function SwapReview({
       )}
       {showGasWarningModal && (
         <WarningModal
-          backgroundIconColor={theme.colors.surface3}
+          backgroundIconColor={colors.surface3.val}
           caption={t(
             'This maximum network fee estimate is more conservative than usual—we’re unable to provide a more accurate figure at this time.'
           )}
           closeText={t('Dismiss')}
           icon={
             <Icons.InfoCircleFilled
-              color={theme.colors.neutral2}
-              size={theme.iconSizes.icon24}
+              color={colors.neutral2.val}
+              size={iconSizes.icon24}
               // not sure why this one is upside down
               style={{ transform: [{ rotate: '180deg' }] }}
             />

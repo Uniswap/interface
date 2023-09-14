@@ -2,11 +2,11 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Icons } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 export function HiddenNftsRowLeft({ numHidden }: { numHidden: number }): JSX.Element {
   const { t } = useTranslation()
@@ -34,7 +34,6 @@ export function HiddenNftsRowRight({
   isExpanded: boolean
   onPress: () => void
 }): JSX.Element {
-  const theme = useAppTheme()
   const { t } = useTranslation()
 
   const chevronRotate = useSharedValue(isExpanded ? 180 : 0)
@@ -76,8 +75,8 @@ export function HiddenNftsRowRight({
             <Icons.RotatableChevron
               color="$neutral2"
               direction="s"
-              height={theme.iconSizes.icon20}
-              width={theme.iconSizes.icon20}
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
             />
           </AnimatedBox>
         </Flex>

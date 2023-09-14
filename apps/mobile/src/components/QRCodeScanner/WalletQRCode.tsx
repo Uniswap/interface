@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
@@ -11,6 +10,7 @@ import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { openUri } from 'src/utils/linking'
+import { useSporeColors } from 'ui/src'
 import { SUPPORTED_NETWORKS_PAGE_URL } from 'wallet/src/constants/urls'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export function WalletQRCode({ address }: Props): JSX.Element | null {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
   const gradientData = useUniconColors(address)
   const { t } = useTranslation()
@@ -39,7 +39,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
         <UniconThemedGradient
           middleOut
           borderRadius="rounded16"
-          gradientEndColor={theme.colors.surface1}
+          gradientEndColor={colors.surface1.val}
           gradientStartColor={gradientData.glow}
           opacity={isDarkMode ? 0.24 : 0.2}
         />

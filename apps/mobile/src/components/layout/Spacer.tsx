@@ -1,6 +1,6 @@
 import React from 'react'
-import { useAppTheme } from 'src/app/hooks'
 import { Box, BoxProps } from 'src/components/layout/Box'
+import { spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 
 export type SpacerProps = BoxProps & {
@@ -13,13 +13,12 @@ export type SpacerProps = BoxProps & {
  * Useful to avoid using margin props which break component isolation
  */
 export function Spacer({ x, y, ...rest }: SpacerProps): JSX.Element {
-  const theme = useAppTheme()
   return (
     <Box
       flexGrow={0}
       flexShrink={0}
-      height={y ? theme.spacing[y] : undefined}
-      width={x ? theme.spacing[x] : undefined}
+      height={y ? spacing[y] : undefined}
+      width={x ? spacing[x] : undefined}
       {...rest}
     />
   )

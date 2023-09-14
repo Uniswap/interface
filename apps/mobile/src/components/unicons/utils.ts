@@ -1,5 +1,4 @@
 import { isAddress } from 'ethers/lib/utils'
-import { useAppTheme } from 'src/app/hooks'
 import { svgPaths as containerPaths } from 'src/components/unicons/Container'
 import { svgPaths as emblemPaths } from 'src/components/unicons/Emblem'
 import {
@@ -12,6 +11,7 @@ import {
   UniconAttributesToIndices,
   UniconNumOptions,
 } from 'src/components/unicons/types'
+import { useSporeColors } from 'ui/src'
 
 const NUM_CHARS_TO_USE_PER_ATTRIBUTE = 2
 
@@ -63,22 +63,22 @@ export const useUniconColors = (
   gradientStart: string
   gradientEnd: string
 } => {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const attributeIndices = deriveUniconAttributeIndices(activeAddress || '')
   if (!attributeIndices)
     return {
-      gradientStart: theme.colors.accent1,
-      gradientEnd: theme.colors.accent2,
-      glow: theme.colors.accent1,
+      gradientStart: colors.accent1.val,
+      gradientEnd: colors.accent2.val,
+      glow: colors.accent1.val,
     }
 
   const attributeData = getUniconAttributeData(attributeIndices)
   const blurColor = blurs[attributeIndices[UniconAttributes.GradientStart]]
   if (!blurColor)
     return {
-      gradientStart: theme.colors.accent1,
-      gradientEnd: theme.colors.accent2,
-      glow: theme.colors.accent1,
+      gradientStart: colors.accent1.val,
+      gradientEnd: colors.accent2.val,
+      glow: colors.accent1.val,
     }
 
   return {

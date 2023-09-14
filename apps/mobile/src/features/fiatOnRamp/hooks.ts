@@ -1,9 +1,8 @@
 import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { Delay } from 'src/components/layout/Delayed'
-
-import { ColorTokens } from 'ui/src'
+import { ColorTokens, useSporeColors } from 'ui/src'
 import { useDebounce } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
@@ -78,7 +77,7 @@ export function useMoonpayFiatOnRamp({
   errorText?: string
   errorColor?: ColorTokens
 } {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
 
   const debouncedBaseCurrencyAmount = useDebounce(baseCurrencyAmount, Delay.Short)
@@ -124,7 +123,7 @@ export function useMoonpayFiatOnRamp({
     // as-is, avoids waterfalling requests => better ux
     {
       ownerAddress: activeAccountAddress,
-      colorCode: theme.colors.accent1,
+      colorCode: colors.accent1.val,
       externalTransactionId,
       amount: baseCurrencyAmount,
       currencyCode: quoteCurrencyCode,

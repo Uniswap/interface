@@ -1,11 +1,12 @@
 import React from 'react'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { ExploreStackNavigator } from 'src/app/navigation/navigation'
 import { ExploreStackParamList } from 'src/app/navigation/types'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
+import { useSporeColors } from 'ui/src'
 
 type InnerExploreStackParamList = Omit<ExploreStackParamList, Screens.Explore>
 
@@ -17,7 +18,7 @@ export type ExploreModalState = {
 }[keyof InnerExploreStackParamList]
 
 export function ExploreModal(): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const appDispatch = useAppDispatch()
 
   const onClose = (): void => {
@@ -29,7 +30,7 @@ export function ExploreModal(): JSX.Element {
       blurredBackground
       fullScreen
       hideKeyboardOnDismiss
-      backgroundColor={theme.colors.none}
+      backgroundColor={colors.transparent.val}
       // Don't dismiss on back press, as this modal is used for the ExploreStack navigation.
       // (the modal should be dismissed only when the user navigates to the initial Explore screen)
       dismissOnBackPress={false}

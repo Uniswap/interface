@@ -21,7 +21,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -63,11 +63,11 @@ import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
-import { dimensions } from 'ui/src/theme'
+import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
@@ -90,7 +90,7 @@ export enum TabIndex {
 export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const insets = useSafeAreaInsets()
   const dispatch = useAppDispatch()
 
@@ -103,8 +103,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const listBottomPadding =
     useResponsiveProp({
-      xs: theme.spacing.spacing36,
-      sm: theme.spacing.spacing12,
+      xs: spacing.spacing36,
+      sm: spacing.spacing12,
     }) ?? 0
 
   const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? TabIndex.Tokens)
@@ -284,10 +284,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: theme.spacing.spacing60,
+      paddingTop: spacing.spacing60,
       paddingBottom: insets.bottom,
     }),
-    [insets.bottom, theme.spacing.spacing60]
+    [insets.bottom]
   )
 
   const sharedProps = useMemo<TabContentProps>(
@@ -316,7 +316,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     backgroundColor: interpolateColor(
       currentScrollValue.value,
       [0, headerHeightDiff],
-      [theme.colors.surface1, theme.colors.surface1]
+      [colors.surface1.val, colors.surface1.val]
     ),
   }))
 
@@ -333,14 +333,14 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
               {...sceneProps}
               indicatorStyle={TAB_STYLES.activeTabIndicator}
               navigationState={{ index: tabIndex, routes }}
-              pressColor={theme.colors.surface3} // Android only
+              pressColor={colors.surface3.val} // Android only
               renderLabel={renderTabLabel}
               style={[
                 TAB_STYLES.tabBar,
                 {
-                  backgroundColor: theme.colors.surface1,
-                  borderBottomColor: theme.colors.surface3,
-                  paddingLeft: theme.spacing.spacing12,
+                  backgroundColor: colors.surface1.val,
+                  borderBottomColor: colors.surface3.val,
+                  paddingLeft: spacing.spacing12,
                 },
               ]}
               tabStyle={style}
@@ -353,15 +353,14 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       )
     },
     [
+      colors.surface1.val,
+      colors.surface3.val,
       contentHeader,
       handleHeaderLayout,
       headerContainerStyle,
       routes,
       tabBarStyle,
       tabIndex,
-      theme.colors.surface1,
-      theme.colors.surface3,
-      theme.spacing.spacing12,
     ]
   )
 
@@ -558,7 +557,7 @@ function ActionButton({
   activeScale?: number
   iconScale?: number
 }): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(
     () => ({
@@ -601,10 +600,10 @@ function ActionButton({
               },
             ]}>
             <Icon
-              color={theme.colors.accent1}
-              height={theme.iconSizes.icon20 * iconScale}
+              color={colors.accent1.val}
+              height={iconSizes.icon20 * iconScale}
               strokeWidth={2}
-              width={theme.iconSizes.icon20 * iconScale}
+              width={iconSizes.icon20 * iconScale}
             />
             <Text color="accent1" marginLeft="spacing8" variant="buttonLabelMedium">
               {label}

@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react'
 import { useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { TextProps } from 'src/components/Text'
 import { AnimatedText } from 'src/components/text/AnimatedText'
+import { useSporeColors } from 'ui/src'
 import { Theme } from 'ui/src/theme/restyle'
 import { ValueAndFormatted } from './usePrice'
 
@@ -19,14 +19,14 @@ type AnimatedDecimalNumberProps = TextProps & {
 // Utility component to display decimal numbers where the decimal part
 // is dimmed using AnimatedText
 export function AnimatedDecimalNumber(props: AnimatedDecimalNumberProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const {
     number,
     separator = '.',
     variant,
-    wholePartColor = theme.colors.neutral1,
-    decimalPartColor = theme.colors.neutral3,
+    wholePartColor = colors.neutral1.val,
+    decimalPartColor = colors.neutral3.val,
     decimalThreshold = 1,
     ...rest
   } = props

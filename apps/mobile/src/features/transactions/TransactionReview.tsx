@@ -4,7 +4,6 @@ import { notificationAsync } from 'expo-haptics'
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
@@ -17,8 +16,8 @@ import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex } from 'ui/src'
-import { dimensions, iconSizes } from 'ui/src/theme'
+import { Flex, useSporeColors } from 'ui/src'
+import { dimensions, fonts, iconSizes } from 'ui/src/theme'
 import { formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
@@ -68,7 +67,7 @@ export function TransactionReview({
   usdTokenEquivalentAmount,
   onPrev,
 }: TransactionReviewProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
 
   const { trigger: actionButtonTrigger } = useBiometricPrompt(actionButtonProps.onPress)
@@ -78,24 +77,24 @@ export function TransactionReview({
   const innerGap = useResponsiveProp({ xs: '$none', sm: '$spacing16' })
 
   const fontFamily = useResponsiveProp({
-    xs: theme.textVariants.headlineSmall.fontFamily,
-    sm: theme.textVariants.headlineLarge.fontFamily,
+    xs: fonts.headlineSmall.family,
+    sm: fonts.headlineLarge.family,
   })
 
   const fontSize = useResponsiveProp({
-    xs: theme.textVariants.headlineSmall.fontSize,
-    sm: theme.textVariants.headlineLarge.fontSize,
+    xs: fonts.headlineSmall.fontSize,
+    sm: fonts.headlineLarge.fontSize,
   })
 
   const lineHeight =
     useResponsiveProp({
-      xs: theme.textVariants.headlineSmall.lineHeight,
-      sm: theme.textVariants.headlineLarge.lineHeight,
-    }) ?? theme.textVariants.headlineLarge.lineHeight
+      xs: fonts.headlineSmall.lineHeight,
+      sm: fonts.headlineLarge.lineHeight,
+    }) ?? fonts.headlineLarge.lineHeight
 
   const maxFontSizeMultiplier = useResponsiveProp({
-    xs: theme.textVariants.headlineSmall.maxFontSizeMultiplier,
-    sm: theme.textVariants.headlineLarge.maxFontSizeMultiplier,
+    xs: fonts.headlineSmall.maxFontSizeMultiplier,
+    sm: fonts.headlineLarge.maxFontSizeMultiplier,
   })
 
   const equivalentValueTextVariant = useResponsiveProp({
@@ -216,9 +215,7 @@ export function TransactionReview({
         {transactionDetails}
         <Flex row gap="$spacing8">
           <Button
-            CustomIcon={
-              <Arrow color={theme.colors.neutral1} direction="w" size={theme.iconSizes.icon24} />
-            }
+            CustomIcon={<Arrow color={colors.neutral1.val} direction="w" size={iconSizes.icon24} />}
             emphasis={ButtonEmphasis.Tertiary}
             size={ButtonSize.Large}
             onPress={onPrev}

@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
@@ -17,7 +17,8 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, useSporeColors } from 'ui/src'
+import { imageSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -36,7 +37,7 @@ export function RestoreCloudBackupLoadingScreen({
   route: { params },
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const entryPoint = params.entryPoint
   const importType = params.importType
@@ -139,9 +140,9 @@ export function RestoreCloudBackupLoadingScreen({
           )}
           icon={
             <Icons.OSDynamicCloudIcon
-              color={theme.colors.neutral3}
-              height={theme.imageSizes.image48}
-              width={theme.imageSizes.image48}
+              color={colors.neutral3.val}
+              height={imageSizes.image48}
+              width={imageSizes.image48}
             />
           }
           retryButtonLabel={t('Retry')}
@@ -170,9 +171,9 @@ export function RestoreCloudBackupLoadingScreen({
             }
             icon={
               <Icons.OSDynamicCloudIcon
-                color={theme.colors.neutral3}
-                height={theme.imageSizes.image48}
-                width={theme.imageSizes.image48}
+                color={colors.neutral3.val}
+                height={imageSizes.image48}
+                width={imageSizes.image48}
               />
             }
             retryButtonLabel={t('Retry')}

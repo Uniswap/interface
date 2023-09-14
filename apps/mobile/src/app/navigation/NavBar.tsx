@@ -14,7 +14,7 @@ import {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
@@ -24,7 +24,7 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Icons, LinearGradient, StackProps, Text, useTheme } from 'ui/src'
+import { Flex, Icons, LinearGradient, StackProps, Text, useSporeColors } from 'ui/src'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -47,7 +47,7 @@ function sendSwapPressAnalyticsEvent(): void {
 
 export function NavBar(): JSX.Element {
   const insets = useSafeAreaInsets()
-  const theme = useTheme()
+  const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
 
   const BUTTONS_OFFSET =
@@ -61,7 +61,7 @@ export function NavBar(): JSX.Element {
         pointerEvents="none"
         style={StyleSheet.absoluteFill}>
         <LinearGradient
-          colors={[opacify(50, theme.sporeBlack.val), opacify(0, theme.sporeBlack.val)]}
+          colors={[opacify(50, colors.sporeBlack.val), opacify(0, colors.sporeBlack.val)]}
           end={[0, 0.8]}
           height="100%"
           start={[0, 1]}
@@ -108,7 +108,6 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
-  const theme = useAppTheme()
   const isDarkMode = useIsDarkMode()
 
   const activeAccountAddress = useActiveAccountAddressWithThrow()
@@ -156,7 +155,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
           shadowColor="$DEP_shadowBranded"
           shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
           shadowOpacity={isDarkMode ? 0.6 : 0.4}
-          shadowRadius={theme.borderRadii.rounded20}
+          shadowRadius={borderRadii.rounded20}
           style={[animatedStyle]}>
           <Flex
             borderRadius="$rounded32"
@@ -195,7 +194,6 @@ type ExploreTabBarButtonProps = {
 
 function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): JSX.Element {
   const dispatch = useAppDispatch()
-  const theme = useAppTheme()
   const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()
 
@@ -230,7 +228,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
     <TouchableArea
       hapticFeedback
       activeOpacity={1}
-      style={[styles.searchBar, { borderRadius: theme.borderRadii.roundedFull }]}
+      style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}
       onPress={onPress}>
       <TapGestureHandler onGestureEvent={onGestureEvent}>
         <AnimatedFlex borderRadius="roundedFull" overflow="hidden" style={animatedStyle}>

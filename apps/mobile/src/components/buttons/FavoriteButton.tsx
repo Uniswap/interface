@@ -8,8 +8,8 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex } from 'src/components/layout'
+import { useSporeColors } from 'ui/src'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -24,10 +24,10 @@ export const FavoriteButton = ({
   size,
   onPress,
 }: FavoriteButtonProps): JSX.Element => {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
-  const unfilledColor = isDarkMode ? theme.colors.neutral3 : theme.colors.surface3
-  const color = isFavorited ? theme.colors.accent1 : unfilledColor
+  const unfilledColor = isDarkMode ? colors.neutral3.val : colors.surface3.val
+  const color = isFavorited ? colors.accent1.val : unfilledColor
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])

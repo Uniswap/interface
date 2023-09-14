@@ -3,7 +3,7 @@ import { BlurView } from 'expo-blur'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Image, Platform, StyleSheet } from 'react-native'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
@@ -25,10 +25,11 @@ import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
-import { Button, Flex, Text } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
 import FaceIcon from 'ui/src/assets/icons/faceid-thin.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
+import { imageSizes } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { opacify } from 'wallet/src/utils/colors'
@@ -37,7 +38,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const isDarkMode = useIsDarkMode()
 
@@ -128,8 +129,8 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             padding="$spacing36"
             position="absolute"
             style={{
-              borderColor: opacify(15, theme.colors.sporeWhite),
-              backgroundColor: opacify(35, theme.colors.surface1),
+              borderColor: opacify(15, colors.sporeWhite.val),
+              backgroundColor: opacify(35, colors.surface1.val),
             }}
             top={0}>
             <BlurView
@@ -139,15 +140,15 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             />
             {isTouchIdDevice ? (
               <FingerprintIcon
-                color={theme.colors.sporeWhite}
-                height={theme.imageSizes.image48}
-                width={theme.imageSizes.image48}
+                color={colors.sporeWhite.val}
+                height={imageSizes.image48}
+                width={imageSizes.image48}
               />
             ) : (
               <FaceIcon
-                color={theme.colors.sporeWhite}
-                height={theme.imageSizes.image48}
-                width={theme.imageSizes.image48}
+                color={colors.sporeWhite.val}
+                height={imageSizes.image48}
+                width={imageSizes.image48}
               />
             )}
           </Flex>

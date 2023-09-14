@@ -3,12 +3,12 @@ import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { Text } from 'src/components/Text'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
+import { borderRadii, spacing } from 'ui/src/theme'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -32,7 +32,6 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   const { quantity, currencyInfo, relativeChange24, balanceUSD } = portfolioBalance
   const { currency, currencyId, isSpam } = currencyInfo
   const { t } = useTranslation()
-  const theme = useAppTheme()
 
   const onPress = (): void => {
     onPressToken?.(currencyInfo.currencyId)
@@ -53,8 +52,8 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       actions={menuActions}
       disabled={menuActions.length === 0}
       style={{
-        borderRadius: theme.borderRadii.rounded16,
-        paddingHorizontal: theme.spacing.spacing12,
+        borderRadius: borderRadii.rounded16,
+        paddingHorizontal: spacing.spacing12,
       }}
       onPress={onContextMenuPress}>
       <TouchableArea

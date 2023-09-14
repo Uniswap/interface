@@ -2,7 +2,6 @@ import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
 import { filterRecipientByNameAndAddress } from 'src/components/RecipientSelect/filter'
@@ -13,8 +12,9 @@ import { filterSections } from 'src/components/RecipientSelect/utils'
 import { Text } from 'src/components/Text'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
+import { iconSizes } from 'ui/src/theme'
 
 interface RecipientSelectProps {
   onSelectRecipient: (newRecipientAddress: string) => void
@@ -23,15 +23,11 @@ interface RecipientSelectProps {
 }
 
 function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   return (
     <TouchableArea hapticFeedback testID={ElementName.SelectRecipient} onPress={onPress}>
-      <ScanQRIcon
-        color={theme.colors.neutral2}
-        height={theme.iconSizes.icon20}
-        width={theme.iconSizes.icon20}
-      />
+      <ScanQRIcon color={colors.neutral2.val} height={iconSizes.icon20} width={iconSizes.icon20} />
     </TouchableArea>
   )
 }

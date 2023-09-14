@@ -6,7 +6,7 @@ import { NativeSyntheticEvent, StyleSheet } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { AnimatedTouchableArea, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
@@ -15,7 +15,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { removeSession, WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex } from 'ui/src'
-import { spacing } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -32,7 +32,6 @@ export function DappConnectionItem({
   isEditing: boolean
   onPressChangeNetwork: (session: WalletConnectSession) => void
 }): JSX.Element {
-  const theme = useAppTheme()
   const { t } = useTranslation()
   const { dapp } = session
   const dispatch = useAppDispatch()
@@ -94,9 +93,9 @@ export function DappConnectionItem({
               borderRadius="roundedFull"
               entering={FadeIn}
               exiting={FadeOut}
-              height={theme.iconSizes.icon28}
+              height={iconSizes.icon28}
               justifyContent="center"
-              width={theme.iconSizes.icon28}
+              width={iconSizes.icon28}
               zIndex="tooltip"
               onPress={onDisconnect}>
               <Flex
@@ -108,7 +107,7 @@ export function DappConnectionItem({
               />
             </AnimatedTouchableArea>
           ) : (
-            <Flex gap="$none" height={theme.iconSizes.icon28} width={theme.iconSizes.icon28} />
+            <Flex gap="$none" height={iconSizes.icon28} width={iconSizes.icon28} />
           )}
         </Flex>
         <Flex grow alignItems="center" gap="$spacing8">

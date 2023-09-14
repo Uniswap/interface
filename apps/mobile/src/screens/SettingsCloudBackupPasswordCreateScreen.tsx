@@ -2,7 +2,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -13,7 +12,8 @@ import { IS_ANDROID } from 'src/constants/globals'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, useSporeColors } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 type Props = NativeStackScreenProps<
   SettingsStackParamList,
@@ -28,7 +28,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const [showCloudBackupInfoModal, setShowCloudBackupInfoModal] = useState(true)
 
@@ -63,9 +63,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
         </Flex>
         <CloudBackupPasswordForm navigateToNextScreen={navigateToNextScreen} />
         {showCloudBackupInfoModal && (
-          <BottomSheetModal
-            backgroundColor={theme.colors.surface2}
-            name={ModalName.CloudBackupInfo}>
+          <BottomSheetModal backgroundColor={colors.surface2.val} name={ModalName.CloudBackupInfo}>
             <Flex gap="$none" mb="$spacing36" px="$spacing16" py="$spacing12">
               <Flex centered gap="$spacing16">
                 <Flex
@@ -75,9 +73,9 @@ export function SettingsCloudBackupPasswordCreateScreen({
                   gap="$none"
                   padding="$spacing12">
                   <Icons.OSDynamicCloudIcon
-                    color={theme.colors.accent1}
-                    height={theme.iconSizes.icon20}
-                    width={theme.iconSizes.icon20}
+                    color={colors.accent1.val}
+                    height={iconSizes.icon20}
+                    width={iconSizes.icon20}
                   />
                 </Flex>
                 <Text textAlign="center" variant="buttonLabelMedium">

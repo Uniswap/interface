@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppSelector } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
@@ -8,7 +8,7 @@ import { Text } from 'src/components/Text'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
@@ -26,7 +26,7 @@ interface Props {
 export function PendingNotificationBadge({
   size = LOADING_SPINNER_SIZE,
 }: Props): JSX.Element | null {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
   const notifications = useAppSelector(selectActiveAccountNotifications)
   const sortedPendingTransactions = useSortedPendingTransactions(activeAccountAddress)
@@ -45,13 +45,13 @@ export function PendingNotificationBadge({
           borderColor="$statusSuccess"
           borderWidth={2}
           checkmarkStrokeWidth={3}
-          color={theme.colors.statusSuccess}
+          color={colors.statusSuccess.val}
           size={size}
         />
       )
     }
 
-    return <AlertCircle color={theme.colors.DEP_accentWarning} height={size} width={size} />
+    return <AlertCircle color={colors.DEP_accentWarning.val} height={size} width={size} />
   }
 
   /*************** Pending in-app txn  **************/

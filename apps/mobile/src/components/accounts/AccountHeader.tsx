@@ -1,6 +1,6 @@
 import { impactAsync, ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -9,14 +9,14 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 import { isDevBuild } from 'src/utils/version'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export function AccountHeader(): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
   const dispatch = useAppDispatch()
 
@@ -86,10 +86,10 @@ export function AccountHeader(): JSX.Element {
       </TouchableArea>
       <TouchableArea hapticFeedback onPress={onPressSettings}>
         <Icons.Settings
-          color={theme.colors.neutral2}
-          height={theme.iconSizes.icon28}
+          color={colors.neutral2.val}
+          height={iconSizes.icon28}
           opacity="0.8"
-          width={theme.iconSizes.icon28}
+          width={iconSizes.icon28}
         />
       </TouchableArea>
     </Flex>

@@ -1,16 +1,17 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useTokenFormActionHandlers } from 'src/features/transactions/hooks'
 import { TransactionFlowProps, TransactionStep } from 'src/features/transactions/TransactionFlow'
+import { useSporeColors } from 'ui/src'
 import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
+import { iconSizes } from 'ui/src/theme'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -35,7 +36,7 @@ export function HeaderContent({
   setShowSettingsModal,
   setShowViewOnlyModal,
 }: HeaderContentProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const account = useActiveAccountWithThrow()
   const { t } = useTranslation()
   const { onToggleUSDInput } = useTokenFormActionHandlers(dispatch)
@@ -68,9 +69,9 @@ export function HeaderContent({
             onPress={(): void => onToggleUSDInput(!isUSDInput)}>
             <Flex row alignItems="center" gap="spacing4">
               <DollarSign
-                color={isUSDInput ? theme.colors.accent1 : theme.colors.neutral2}
-                height={theme.iconSizes.icon16}
-                width={theme.iconSizes.icon16}
+                color={isUSDInput ? colors.accent1.val : colors.neutral2.val}
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
               />
               <Text color={isUSDInput ? 'accent1' : 'neutral2'} variant="buttonLabelSmall">
                 {t('USD')}
@@ -88,9 +89,9 @@ export function HeaderContent({
             onPress={(): void => setShowViewOnlyModal(true)}>
             <Flex row alignItems="center" gap="spacing4">
               <EyeIcon
-                color={theme.colors.neutral2}
-                height={theme.iconSizes.icon16}
-                width={theme.iconSizes.icon16}
+                color={colors.neutral2.val}
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
               />
               <Text color="neutral2" variant="buttonLabelSmall">
                 {t('View-only')}
@@ -119,9 +120,9 @@ export function HeaderContent({
                 </Text>
               ) : null}
               <SettingsIcon
-                color={theme.colors.neutral3}
-                height={theme.iconSizes.icon28}
-                width={theme.iconSizes.icon28}
+                color={colors.neutral3.val}
+                height={iconSizes.icon28}
+                width={iconSizes.icon28}
               />
             </Flex>
           </TouchableArea>

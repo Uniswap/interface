@@ -1,9 +1,8 @@
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
@@ -19,7 +18,7 @@ export function NetworkOption({
   currentlySelected?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const info = chainId && CHAIN_INFO[chainId]
   return (
     <>
@@ -33,11 +32,7 @@ export function NetworkOption({
         </Text>
         <Flex centered height={NETWORK_OPTION_ICON_SIZE} width={NETWORK_OPTION_ICON_SIZE}>
           {currentlySelected && (
-            <Check
-              color={theme.colors.neutral1}
-              height={iconSizes.icon20}
-              width={iconSizes.icon20}
-            />
+            <Check color={colors.neutral1.val} height={iconSizes.icon20} width={iconSizes.icon20} />
           )}
         </Flex>
       </Flex>

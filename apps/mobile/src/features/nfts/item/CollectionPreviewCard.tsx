@@ -1,14 +1,13 @@
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTItem } from 'src/features/nfts/types'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
-import { iconSizes, imageSizes } from 'ui/src/theme'
+import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { Currency, NftItemScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
@@ -28,11 +27,11 @@ export function CollectionPreviewCard({
   onPress,
   loading,
 }: CollectionPreviewCardProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
 
   if (loading || (!collection && !fallbackData?.name)) {
-    return <Loader.Box borderRadius="$rounded16" height={theme.spacing.spacing60} />
+    return <Loader.Box borderRadius="$rounded16" height={spacing.spacing60} />
   }
 
   const isViewableCollection = Boolean(collection || fallbackData?.contractAddress)
@@ -56,11 +55,7 @@ export function CollectionPreviewCard({
               height={imageSizes.image40}
               overflow="hidden"
               width={imageSizes.image40}>
-              <NFTViewer
-                squareGridView
-                maxHeight={theme.spacing.spacing60}
-                uri={collection.image.url}
-              />
+              <NFTViewer squareGridView maxHeight={spacing.spacing60} uri={collection.image.url} />
             </Flex>
           ) : null}
           <Flex shrink gap="$none">
@@ -74,7 +69,7 @@ export function CollectionPreviewCard({
               </Flex>
               {collection?.isVerified && (
                 <VerifiedIcon
-                  color={theme.colors.accent1}
+                  color={colors.accent1.val}
                   height={iconSizes.icon16}
                   width={iconSizes.icon16}
                 />

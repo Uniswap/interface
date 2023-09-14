@@ -22,7 +22,6 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
@@ -44,10 +43,10 @@ import {
   textSlideUpAtEnd,
   videoFadeOut,
 } from 'src/screens/Onboarding/QRAnimation/animations'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
-import { opacify } from 'ui/src/theme'
+import { fonts, iconSizes, opacify } from 'ui/src/theme'
 import { flex } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -60,7 +59,7 @@ export function QRAnimation({
   isNewWallet: boolean
   onPressNext: () => void
 }): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
   const video = useRef<Video>(null)
 
@@ -158,12 +157,12 @@ export function QRAnimation({
 
   const finalTitleMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.1,
-    sm: theme.textVariants.headlineSmall.maxFontSizeMultiplier,
+    sm: fonts.headlineSmall.maxFontSizeMultiplier,
   })
 
   const finalBodyMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.1,
-    sm: theme.textVariants.bodyLarge.maxFontSizeMultiplier,
+    sm: fonts.bodyLarge.maxFontSizeMultiplier,
   })
 
   const titleSize = useResponsiveProp({
@@ -183,7 +182,7 @@ export function QRAnimation({
           <UniconThemedGradient
             borderRadius="rounded16"
             gradientEndColor={uniconColors.glow}
-            gradientStartColor={theme.colors.surface1}
+            gradientStartColor={colors.surface1.val}
             opacity={isDarkMode ? 0.3 : 0.2}
           />
         </GradientBackground>
@@ -316,22 +315,18 @@ export function QRAnimation({
                       borderRadius="$roundedFull"
                       gap="$none"
                       padding="$spacing8"
-                      style={{ backgroundColor: opacify(10, theme.colors.sporeWhite) }}>
+                      style={{ backgroundColor: opacify(10, colors.sporeWhite.val) }}>
                       <LockIcon
-                        color={theme.colors.sporeWhite}
-                        height={theme.iconSizes.icon16}
-                        width={theme.iconSizes.icon16}
+                        color={colors.sporeWhite.val}
+                        height={iconSizes.icon16}
+                        width={iconSizes.icon16}
                       />
                     </Flex>
                     <Text color="$sporeWhite" variant="buttonLabelMedium">
                       {t('Let’s keep it safe')}
                     </Text>
                   </Flex>
-                  <Arrow
-                    color={theme.colors.sporeWhite}
-                    direction="e"
-                    size={theme.iconSizes.icon24}
-                  />
+                  <Arrow color={colors.sporeWhite.val} direction="e" size={iconSizes.icon24} />
                 </Flex>
               }
               onPress={onPressNext}

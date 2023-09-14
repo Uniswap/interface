@@ -1,8 +1,7 @@
 import React, { ComponentProps } from 'react'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 
 const ICON_SIZE = 20
 
@@ -18,7 +17,7 @@ export function TransferArrowButton({
   padding = 'spacing12',
   ...rest
 }: ArrowDownButtonProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   return (
     <TouchableArea
       alignItems="center"
@@ -34,7 +33,7 @@ export function TransferArrowButton({
       onPress={onPress}
       {...rest}>
       <Flex alignItems="center" gap="$none" justifyContent="center" p="$spacing2">
-        <Arrow color={theme.colors.neutral2} direction="s" size={ICON_SIZE} />
+        <Arrow color={colors.neutral2.val} direction="s" size={ICON_SIZE} />
       </Flex>
     </TouchableArea>
   )

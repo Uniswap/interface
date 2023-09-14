@@ -1,6 +1,6 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
 import { EtherscanIcon } from 'src/components/icons/EtherscanIcon'
@@ -9,6 +9,8 @@ import { Text } from 'src/components/Text'
 import { addToSearchHistory, EtherscanSearchResult } from 'src/features/explore/searchHistorySlice'
 import { ElementName } from 'src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
+import { useSporeColors } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
@@ -17,7 +19,7 @@ type SearchEtherscanItemProps = {
 }
 
 export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const dispatch = useAppDispatch()
 
   const { address } = etherscanResult
@@ -46,10 +48,10 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
         px="spacing8"
         py="spacing12">
         <Flex centered row gap="spacing12">
-          <EtherscanIcon height={theme.iconSizes.icon40} width={theme.iconSizes.icon40} />
+          <EtherscanIcon height={iconSizes.icon40} width={iconSizes.icon40} />
           <Text variant="bodyLarge">{shortenAddress(address)}</Text>
         </Flex>
-        <Arrow color={theme.colors.neutral2} direction="ne" size={24} />
+        <Arrow color={colors.neutral2.val} direction="ne" size={24} />
       </Flex>
     </TouchableArea>
   )

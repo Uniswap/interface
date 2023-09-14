@@ -1,7 +1,6 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
@@ -10,6 +9,7 @@ import WarningIcon from 'src/components/tokens/WarningIcon'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Flex } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -31,8 +31,6 @@ function _TokenOptionItem({
   onPress,
   showTokenAddress,
 }: OptionProps): JSX.Element {
-  const theme = useAppTheme()
-
   const { currencyInfo, quantity, balanceUSD } = option
   const { currency, currencyId, safetyLevel, logoUrl } = currencyInfo
 
@@ -90,10 +88,10 @@ function _TokenOptionItem({
                 {(safetyLevel === SafetyLevel.Blocked ||
                   safetyLevel === SafetyLevel.StrongWarning) && (
                   <WarningIcon
-                    height={theme.iconSizes.icon16}
+                    height={iconSizes.icon16}
                     safetyLevel={safetyLevel}
                     strokeColorOverride="neutral3"
-                    width={theme.iconSizes.icon16}
+                    width={iconSizes.icon16}
                   />
                 )}
               </Flex>

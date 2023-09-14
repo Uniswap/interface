@@ -1,6 +1,5 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useTheme } from '@shopify/restyle'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
@@ -35,13 +34,14 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, useSporeColors } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import ChartIcon from 'ui/src/assets/icons/chart.svg'
 import EditIcon from 'ui/src/assets/icons/edit.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import KeyIcon from 'ui/src/assets/icons/key.svg'
 import ShieldQuestionIcon from 'ui/src/assets/icons/shield-question.svg'
+import { iconSizes } from 'ui/src/theme'
 import {
   EditAccountAction,
   editAccountActions,
@@ -63,7 +63,7 @@ export function SettingsWallet({
 }: Props): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-  const theme = useTheme()
+  const colors = useSporeColors()
   const addressToAccount = useAccounts()
   const currentAccount = addressToAccount[address]
   const readonly = currentAccount?.type === AccountType.Readonly
@@ -145,12 +145,12 @@ export function SettingsWallet({
   }
 
   const iconProps: SvgProps = {
-    color: theme.colors.neutral3,
-    height: theme.iconSizes.icon24,
+    color: colors.neutral3.val,
+    height: iconSizes.icon24,
     strokeLinecap: 'round',
     strokeLinejoin: 'round',
     strokeWidth: '2',
-    width: theme.iconSizes.icon24,
+    width: iconSizes.icon24,
   }
 
   const sections: SettingsSection[] = [
@@ -160,7 +160,7 @@ export function SettingsWallet({
         {
           screen: Screens.SettingsWalletEdit,
           text: t('Nickname'),
-          icon: <EditIcon fill={theme.colors.neutral2} {...iconProps} />,
+          icon: <EditIcon fill={colors.neutral2.val} {...iconProps} />,
           screenProps: { address },
         },
         {
@@ -222,9 +222,9 @@ export function SettingsWallet({
           text: IS_ANDROID ? t('Google Drive Backup') : t('iCloud backup'),
           icon: (
             <Icons.OSDynamicCloudIcon
-              color={theme.colors.neutral3}
-              height={theme.iconSizes.icon24}
-              width={theme.iconSizes.icon24}
+              color={colors.neutral3.val}
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
             />
           ),
           isHidden: readonly,
@@ -242,7 +242,7 @@ export function SettingsWallet({
       return item.component
     }
     if (item.isHidden) return null
-    return <SettingsRow key={item.screen} navigation={navigation} page={item} theme={theme} />
+    return <SettingsRow key={item.screen} navigation={navigation} page={item} />
   }
 
   const onRemoveWallet = (): void => {

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet, ViewStyle } from 'react-native'
 import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
@@ -12,7 +11,7 @@ import { DappConnectedNetworkModal } from 'src/components/WalletConnect/Connecte
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex } from 'ui/src'
-import { dimensions, iconSizes } from 'ui/src/theme'
+import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
@@ -21,7 +20,6 @@ type ConnectedDappsProps = {
 
 export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
   const [isEditing, setIsEditing] = useState(false)
   const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
 
@@ -52,7 +50,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
         {sessions.length > 0 ? (
           <FlatList
             columnWrapperStyle={ColumnStyle.base}
-            contentContainerStyle={{ paddingHorizontal: theme.spacing.spacing24 }}
+            contentContainerStyle={{ paddingHorizontal: spacing.spacing24 }}
             data={sessions}
             keyExtractor={(item): string => item.id}
             numColumns={2}

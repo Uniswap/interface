@@ -1,11 +1,12 @@
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
+import { useSporeColors } from 'ui/src'
 import TripleDots from 'ui/src/assets/icons/triple-dots.svg'
+import { iconSizes } from 'ui/src/theme'
 
 export function FavoriteHeaderRow({
   title,
@@ -19,7 +20,7 @@ export function FavoriteHeaderRow({
   onPress: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   return (
     <Flex row alignItems="center" justifyContent="space-between" mb="spacing8" mx="spacing8">
       <Text color="neutral2" variant="subheadSmall">
@@ -28,15 +29,15 @@ export function FavoriteHeaderRow({
       {!isEditing ? (
         <TouchableArea hapticFeedback testID={ElementName.Edit} onPress={onPress}>
           <TripleDots
-            color={theme.colors.neutral2}
-            height={theme.iconSizes.icon20}
+            color={colors.neutral2.val}
+            height={iconSizes.icon20}
             strokeLinecap="round"
             strokeWidth="1"
-            width={theme.iconSizes.icon20}
+            width={iconSizes.icon20}
           />
         </TouchableArea>
       ) : (
-        <TouchableArea height={theme.iconSizes.icon20} onPress={onPress}>
+        <TouchableArea height={iconSizes.icon20} onPress={onPress}>
           <Text color="accent1" variant="buttonLabelSmall">
             {t('Done')}
           </Text>

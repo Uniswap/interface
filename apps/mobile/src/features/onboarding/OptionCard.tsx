@@ -1,11 +1,11 @@
 import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Flex } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export function OptionCard({
@@ -29,16 +29,14 @@ export function OptionCard({
   badgeText?: string | undefined
   hapticFeedback?: boolean | undefined
 }): JSX.Element {
-  const theme = useAppTheme()
-
   const titleSize = useResponsiveProp({
     xs: 'subheadSmall',
     sm: 'bodyLarge',
   })
 
   const iconSize = useResponsiveProp({
-    xs: theme.iconSizes.icon24,
-    sm: theme.iconSizes.icon36,
+    xs: iconSizes.icon24,
+    sm: iconSizes.icon36,
   })
 
   const isDarkMode = useIsDarkMode()

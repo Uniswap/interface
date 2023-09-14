@@ -17,7 +17,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Icons } from 'ui/src'
+import { Icons, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import ImportIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
@@ -71,7 +71,9 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function ImportMethodScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
+  // TODO(MOB-1286): update this useTheme to useSporeColors. needs a small refactor because `icon(theme)` is used below
   const theme = useAppTheme()
+  const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const entryPoint = params?.entryPoint
 
@@ -145,7 +147,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         <TouchableArea alignItems="center" mb="spacing12">
           <Flex row alignItems="center" gap="spacing4">
             <EyeIcon
-              color={theme.colors.accent1}
+              color={colors.accent1.val}
               height={iconSizes.icon20}
               strokeWidth="1.5"
               width={iconSizes.icon20}

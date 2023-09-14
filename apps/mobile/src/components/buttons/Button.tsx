@@ -56,6 +56,7 @@ const _Button = ({
   onPressIn,
   size = ButtonSize.Medium,
 }: ButtonProps & Pick<BaseButtonProps, 'testID'>): JSX.Element => {
+  // TODO(MOB-1274): remove this usage of Restyle, change types of Button and its helper utils
   const theme = useAppTheme()
 
   const {

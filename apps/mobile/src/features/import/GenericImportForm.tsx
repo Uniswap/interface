@@ -7,14 +7,15 @@ import {
   StyleSheet,
   TextInput as NativeTextInput,
 } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { SectionName } from 'src/features/telemetry/constants'
+import { useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
+import { fonts } from 'ui/src/theme'
 
 interface Props {
   value: string | undefined
@@ -54,13 +55,13 @@ export function GenericImportForm({
   inputAlignment = 'center',
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const [focused, setFocused] = useState(false)
   const [layout, setLayout] = useState<LayoutRectangle | null>()
   const textInputRef = useRef<NativeTextInput>(null)
 
-  const INPUT_FONT_SIZE = theme.textVariants.bodyLarge.fontSize
-  const INPUT_MAX_FONT_SIZE_MULTIPLIER = theme.textVariants.bodyLarge.maxFontSizeMultiplier
+  const INPUT_FONT_SIZE = fonts.bodyLarge.fontSize
+  const INPUT_MAX_FONT_SIZE_MULTIPLIER = fonts.bodyLarge.maxFontSizeMultiplier
 
   const minHeight = useResponsiveProp({ xs: 90, sm: 120 })
   const px = useResponsiveProp({ xs: 'spacing24', sm: 'spacing36' })
@@ -114,7 +115,6 @@ export function GenericImportForm({
             layout={layout}
             textAlign={textAlign}
             textInputRef={textInputRef}
-            theme={theme}
             value={value}
             onBlur={handleBlur}
             onChangeText={onChange}
@@ -160,7 +160,7 @@ export function GenericImportForm({
         <Flex>
           {errorMessage && value && (liveCheck || !focused) && (
             <Flex centered row gap="spacing12">
-              <AlertTriangle color={theme.colors.statusCritical} />
+              <AlertTriangle color={colors.statusCritical.val} />
               <Text color="statusCritical" variant="bodyLarge">
                 {errorMessage}
               </Text>

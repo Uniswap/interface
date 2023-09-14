@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { SeedPhraseDisplay } from 'src/components/mnemonic/SeedPhraseDisplay'
@@ -12,14 +11,14 @@ import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { ModalName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
 import { Statsig } from 'statsig-react-native'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { DYNAMIC_CONFIGS } from 'wallet/src/features/experiments/constants'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 export function ForceUpgradeModal(): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const [isVisible, setIsVisible] = useState(false)
   const [upgradeStatus, setUpgradeStatus] = useState(UpgradeStatus.NotRequired)
@@ -90,7 +89,7 @@ export function ForceUpgradeModal(): JSX.Element {
       {mnemonicId && showSeedPhrase && (
         <BottomSheetModal
           fullScreen
-          backgroundColor={theme.colors.surface1}
+          backgroundColor={colors.surface1.val}
           name={ModalName.ForceUpgradeModal}
           onClose={onDismiss}>
           <Flex fill px="$spacing24" py="$spacing24">

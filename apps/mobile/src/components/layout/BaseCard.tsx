@@ -1,13 +1,12 @@
 import { ShadowProps } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
-import { ColorTokens, Flex, Icons, StackProps } from 'ui/src'
+import { ColorTokens, Flex, Icons, StackProps, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
-import { opacify } from 'ui/src/theme'
+import { iconSizes, opacify } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -42,7 +41,7 @@ export function Container({
 
 export function Shadow({ children, ...rest }: StackProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   return (
     <Flex
@@ -54,7 +53,7 @@ export function Shadow({ children, ...rest }: StackProps): JSX.Element {
       // shadowOffset={SHADOW_OFFSET_SMALL}
       shadowOpacity={0.4}
       shadowRadius={6}
-      style={{ backgroundColor: opacify(isDarkMode ? 10 : 100, theme.colors.sporeWhite) }}
+      style={{ backgroundColor: opacify(isDarkMode ? 10 : 100, colors.sporeWhite.val) }}
       {...rest}>
       {children}
     </Flex>
@@ -205,7 +204,7 @@ type InlineErrorStateProps = {
 } & Pick<ErrorStateProps, 'icon' | 'title' | 'onRetry' | 'retryButtonLabel'>
 
 function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
   const {
     backgroundColor = '$surface2',
@@ -215,9 +214,9 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
     retryButtonLabel = t('Retry'),
     icon = (
       <AlertTriangle
-        color={theme.colors.neutral3}
-        height={theme.iconSizes.icon16}
-        width={theme.iconSizes.icon16}
+        color={colors.neutral3.val}
+        height={iconSizes.icon16}
+        width={iconSizes.icon16}
       />
     ),
   } = props

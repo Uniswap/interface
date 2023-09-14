@@ -1,7 +1,6 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import React, { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Separator } from 'src/components/layout/Separator'
@@ -9,10 +8,11 @@ import { Warning } from 'src/components/modals/WarningModal/types'
 import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
 import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
+import { iconSizes } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -42,7 +42,7 @@ export function TransactionDetails({
   onShowGasWarning,
   onShowWarning,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
   const userAddress = useActiveAccountAddressWithThrow()
   const warningColor = getAlertColor(warning?.severity)
@@ -100,7 +100,7 @@ export function TransactionDetails({
         </Flex>
         <Separator color="$surface2" width={1} />
         <Flex gap="$none" px="$spacing12" py="$spacing12">
-          <AccountDetails address={userAddress} iconSize={20} />
+          <AccountDetails address={userAddress} iconSize={iconSizes.icon20} />
         </Flex>
       </Flex>
       {children ? (
@@ -115,15 +115,15 @@ export function TransactionDetails({
           </Text>
           {showChildren ? (
             <AnglesMinimize
-              color={theme.colors.neutral3}
-              height={theme.iconSizes.icon20}
-              width={theme.iconSizes.icon20}
+              color={colors.neutral3.val}
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
             />
           ) : (
             <AnglesMaximize
-              color={theme.colors.neutral3}
-              height={theme.iconSizes.icon20}
-              width={theme.iconSizes.icon20}
+              color={colors.neutral3.val}
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
             />
           )}
         </TouchableArea>

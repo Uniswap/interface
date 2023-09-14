@@ -2,16 +2,15 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ImageStyle } from 'react-native-fast-image'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppTheme } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
-import { Flex, Logos, StackProps } from 'ui/src'
+import { Flex, Logos, StackProps, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { NftCollectionScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -36,7 +35,7 @@ export function NFTCollectionHeader({
   data: Maybe<NFTCollectionData>
   collectionAddress?: Maybe<string>
 }): ReactElement {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
 
   // Style based on device sizing
@@ -88,7 +87,7 @@ export function NFTCollectionHeader({
             gap="$none"
             style={[
               bannerImageStyle,
-              { backgroundColor: bannerColorsFallback?.base ?? theme.colors.surface2 },
+              { backgroundColor: bannerColorsFallback?.base ?? colors.surface2.val },
             ]}
           />
         )}
@@ -105,7 +104,7 @@ export function NFTCollectionHeader({
             backgroundColor="sporeBlack"
             borderRadius="roundedFull"
             padding="spacing12">
-            <Flex centered grow height={theme.iconSizes.icon8} width={theme.iconSizes.icon8}>
+            <Flex centered grow height={iconSizes.icon8} width={iconSizes.icon8}>
               <BackButton color="$sporeWhite" size={iconSizes.icon24} />
             </Flex>
           </TouchableArea>
@@ -159,7 +158,7 @@ export function NFTCollectionHeader({
             </Text>
             {data?.isVerified ? (
               <VerifiedIcon
-                color={theme.colors.accent1}
+                color={colors.accent1.val}
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
               />
@@ -195,7 +194,7 @@ export function NFTCollectionHeader({
                   )} `}
                 </Text>
                 {collectionStats?.floorPrice?.value !== undefined ? (
-                  <Logos.Ethereum color={theme.colors.neutral1} size={iconSizes.icon16} />
+                  <Logos.Ethereum color={colors.neutral1.val} size={iconSizes.icon16} />
                 ) : null}
               </Flex>
             </Flex>
@@ -211,7 +210,7 @@ export function NFTCollectionHeader({
                   )}`}
                 </Text>
                 {collectionStats?.totalVolume?.value !== undefined ? (
-                  <Logos.Ethereum color={theme.colors.neutral1} size={iconSizes.icon16} />
+                  <Logos.Ethereum color={colors.neutral1.val} size={iconSizes.icon16} />
                 ) : null}
               </Flex>
             </Flex>
@@ -229,9 +228,9 @@ export function NFTCollectionHeader({
             />
           ) : loading ? (
             <Flex gap="$spacing8">
-              <Loader.Box height={theme.spacing.spacing16} width="100%" />
-              <Loader.Box height={theme.spacing.spacing16} width="100%" />
-              <Loader.Box height={theme.spacing.spacing16} width="100%" />
+              <Loader.Box height={spacing.spacing16} width="100%" />
+              <Loader.Box height={spacing.spacing16} width="100%" />
+              <Loader.Box height={spacing.spacing16} width="100%" />
             </Flex>
           ) : null}
         </Flex>

@@ -28,7 +28,7 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { setClipboardImage } from 'src/utils/clipboard'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, iconSizes } from 'ui/src/theme'
@@ -376,7 +376,7 @@ function RightElement({
   owner?: string
   isSpam?: boolean
 }): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const { menuActions, onContextMenuPress, onlyShare } = useNFTMenu({
     contractAddress: asset?.nftContract?.address,
@@ -390,14 +390,14 @@ function RightElement({
     <Flex
       alignItems="center"
       gap="$none"
-      height={theme.iconSizes.icon40}
+      height={iconSizes.icon40}
       justifyContent="center"
-      width={theme.iconSizes.icon40}>
+      width={iconSizes.icon40}>
       {menuActions.length > 0 ? (
         onlyShare ? (
           <TouchableOpacity onPress={menuActions[0]?.onPress}>
             <ShareIcon
-              color={theme.colors.neutral1}
+              color={colors.neutral1.val}
               height={iconSizes.icon24}
               width={iconSizes.icon24}
             />
@@ -405,7 +405,7 @@ function RightElement({
         ) : (
           <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
             <EllipsisIcon
-              color={theme.colors.neutral1}
+              color={colors.neutral1.val}
               height={iconSizes.icon16}
               width={iconSizes.icon16}
             />

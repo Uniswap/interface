@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { RefreshControl } from 'react-native'
 import { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppTheme } from 'src/app/hooks'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { AnimatedBox } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
@@ -21,7 +20,7 @@ import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceIt
 import { IS_ANDROID } from 'src/constants/globals'
 import { useTokenBalancesGroupedByVisibility } from 'src/features/balances/hooks'
 import { Screens } from 'src/screens/Screens'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { dimensions, zIndices } from 'ui/src/theme'
 import { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
@@ -57,7 +56,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
     ref
   ) {
     const { t } = useTranslation()
-    const theme = useAppTheme()
+    const colors = useSporeColors()
     const insets = useSafeAreaInsets()
 
     const { onContentSizeChange, adaptiveFooter, footerHeight } = useAdaptiveFooter(
@@ -116,11 +115,11 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
             insets.top + (IS_ANDROID && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
           }
           refreshing={refreshing ?? false}
-          tintColor={theme.colors.neutral3}
+          tintColor={colors.neutral3.val}
           onRefresh={onRefresh}
         />
       )
-    }, [refreshing, headerHeight, onRefresh, theme.colors.neutral3, insets.top])
+    }, [refreshing, headerHeight, onRefresh, colors.neutral3.val, insets.top])
 
     // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
     return (

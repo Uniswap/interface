@@ -5,8 +5,8 @@ import {
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex } from 'src/components/layout'
+import { useSporeColors } from 'ui/src'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -19,13 +19,13 @@ const DELAY = 100
 const ANIMATION_CONFIG = { duration: DELAY }
 
 export const Favorite = ({ isFavorited, size }: FavoriteButtonProps): JSX.Element => {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
-  const unfilledColor = isDarkMode ? theme.colors.neutral2 : theme.colors.surface3
+  const unfilledColor = isDarkMode ? colors.neutral2.val : colors.surface3.val
 
   const getColor = useCallback(
-    () => (isFavorited ? theme.colors.accent1 : unfilledColor),
-    [isFavorited, theme.colors.accent1, unfilledColor]
+    () => (isFavorited ? colors.accent1.val : unfilledColor),
+    [isFavorited, colors.accent1.val, unfilledColor]
   )
 
   const [color, setColor] = useState(getColor())

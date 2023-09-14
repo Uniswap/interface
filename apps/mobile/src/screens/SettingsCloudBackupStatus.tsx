@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
@@ -17,7 +17,9 @@ import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
+import { useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
+import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import {
   EditAccountAction,
@@ -39,7 +41,7 @@ export function SettingsCloudBackupStatus({
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const accounts = useAccounts()
   const mnemonicId = (accounts[address] as SignerMnemonicAccount)?.mnemonicId
@@ -118,7 +120,11 @@ export function SettingsCloudBackupStatus({
                 </Text>
 
                 {/* @TODO: [MOB-249] Add non-backed up state once we have more options on this page  */}
-                <Checkmark color={theme.colors.statusSuccess} height={24} width={24} />
+                <Checkmark
+                  color={colors.statusSuccess.val}
+                  height={iconSizes.icon24}
+                  width={iconSizes.icon24}
+                />
               </Flex>
               {googleDriveEmail && (
                 <Text color="neutral3" variant="buttonLabelMicro">

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { AnimatedTouchableArea } from 'src/components/buttons/TouchableArea'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { BaseCard } from 'src/components/layout/BaseCard'
@@ -17,7 +17,7 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { Flex, Text } from 'ui/src'
-import { imageSizes } from 'ui/src/theme'
+import { borderRadii, iconSizes, imageSizes } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -47,7 +47,6 @@ function FavoriteTokenCard({
   setIsEditing,
   ...rest
 }: FavoriteTokenCardProps): JSX.Element {
-  const theme = useAppTheme()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
@@ -113,7 +112,7 @@ function FavoriteTokenCard({
     <ContextMenu
       actions={menuActions}
       disabled={isEditing}
-      style={{ borderRadius: theme.borderRadii.rounded16 }}
+      style={{ borderRadius: borderRadii.rounded16 }}
       onPress={(e): void => {
         // Emitted index based on order of menu action array
         // remove favorite action
@@ -149,7 +148,7 @@ function FavoriteTokenCard({
               <Flex grow row alignItems="center" gap="$spacing8">
                 <TokenLogo
                   chainId={chainId ?? undefined}
-                  size={theme.imageSizes.image20}
+                  size={imageSizes.image20}
                   symbol={token?.symbol ?? undefined}
                   url={token?.project?.logoUrl ?? undefined}
                 />
@@ -166,7 +165,7 @@ function FavoriteTokenCard({
                 {formatUSDPrice(usdPrice)}
               </Text>
               <RelativeChange
-                arrowSize={theme.iconSizes.icon16}
+                arrowSize={iconSizes.icon16}
                 change={pricePercentChange ?? undefined}
                 semanticColor={true}
                 variant="subheadSmall"

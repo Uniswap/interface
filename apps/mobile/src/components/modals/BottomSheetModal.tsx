@@ -16,14 +16,13 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppTheme } from 'src/app/hooks'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import Trace from 'src/components/Trace/Trace'
 import { IS_ANDROID, IS_IOS } from 'src/constants/globals'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
-import { Flex } from 'ui/src'
-import { dimensions, spacing } from 'ui/src/theme'
+import { Flex, useSporeColors } from 'ui/src'
+import { borderRadii, dimensions, spacing } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -124,12 +123,12 @@ export function BottomSheetModal({
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints)
   const animatedPosition = useSharedValue(0)
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
 
   const backgroundColorValue = blurredBackground
-    ? theme.colors.none
-    : backgroundColor ?? theme.colors.surface1
+    ? colors.transparent.val
+    : backgroundColor ?? colors.surface1.val
 
   const renderBackdrop = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -171,8 +170,8 @@ export function BottomSheetModal({
 
   const borderRadius = useResponsiveProp({
     // on screens without rounded corners, remove rounded corners when modal is fullscreen
-    xs: theme.borderRadii.none,
-    sm: theme.borderRadii.rounded24,
+    xs: borderRadii.none,
+    sm: borderRadii.rounded24,
   })
 
   const hiddenHandlebarStyle = {
@@ -184,7 +183,7 @@ export function BottomSheetModal({
     const interpolatedRadius = interpolate(
       animatedPosition.value,
       [0, insets.top],
-      [0, borderRadius ?? theme.borderRadii.rounded24],
+      [0, borderRadius ?? borderRadii.rounded24],
       Extrapolate.CLAMP
     )
     return { borderTopLeftRadius: interpolatedRadius, borderTopRightRadius: interpolatedRadius }
@@ -292,7 +291,7 @@ export function BottomSheetDetachedModal({
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints)
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const fullScreenContentHeight = FULL_HEIGHT * dimensions.fullHeight
 
@@ -324,10 +323,10 @@ export function BottomSheetDetachedModal({
         hideHandlebar
           ? BottomSheetStyle.modalTransparent
           : {
-              backgroundColor: backgroundColor ?? theme.colors.surface1,
+              backgroundColor: backgroundColor ?? colors.surface1.val,
             }
       }
-      bottomInset={theme.spacing.spacing48}
+      bottomInset={spacing.spacing48}
       contentHeight={animatedContentHeight}
       detached={true}
       enableContentPanningGesture={isDismissible}

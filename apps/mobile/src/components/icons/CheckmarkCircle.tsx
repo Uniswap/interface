@@ -1,6 +1,5 @@
 import React, { memo } from 'react'
-import { useAppTheme } from 'src/app/hooks'
-import { Flex, StackProps } from 'ui/src'
+import { Flex, StackProps, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/checkmark.svg'
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
 } & StackProps
 
 function _CheckmarkCircle({ color, checkmarkStrokeWidth = 3, size, ...rest }: Props): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   return (
     <Flex
       alignItems="center"
@@ -21,7 +20,7 @@ function _CheckmarkCircle({ color, checkmarkStrokeWidth = 3, size, ...rest }: Pr
       width={size}
       {...rest}>
       <Checkmark
-        color={color ?? theme.colors.sporeWhite}
+        color={color ?? colors.sporeWhite.val}
         height={size / 2}
         strokeWidth={checkmarkStrokeWidth}
         width={size / 2}

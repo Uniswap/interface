@@ -1,5 +1,4 @@
 import React from 'react'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex, Icons } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -18,8 +17,6 @@ export default function PlusMinusButton({
   disabled: boolean
   onPress: (type: PlusMinusButtonType) => void
 }): JSX.Element {
-  const theme = useAppTheme()
-
   return (
     <TouchableArea
       hapticFeedback
@@ -27,9 +24,9 @@ export default function PlusMinusButton({
       backgroundColor={disabled ? 'surface3' : 'neutral2'}
       borderRadius="roundedFull"
       disabled={disabled}
-      height={theme.iconSizes.icon28}
+      height={iconSizes.icon28}
       justifyContent="center"
-      width={theme.iconSizes.icon28}
+      width={iconSizes.icon28}
       onPress={(): void => onPress(type)}>
       {type === PlusMinusButtonType.Plus ? (
         <Icons.Plus

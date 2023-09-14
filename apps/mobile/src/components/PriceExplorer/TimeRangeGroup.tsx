@@ -6,7 +6,6 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox } from 'src/components/layout/Box'
 import {
@@ -18,7 +17,7 @@ import {
 } from 'src/components/PriceExplorer/constants'
 import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
 
 interface Props {
@@ -29,17 +28,17 @@ interface Props {
 }
 
 export function TimeRangeLabel({ index, label, selectedIndex, transition }: Props): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   const style = useAnimatedStyle(() => {
     const selected = index === selectedIndex.value
 
-    if (!selected) return { color: theme.colors.neutral2 }
+    if (!selected) return { color: colors.neutral2.val }
 
     const color = interpolateColor(
       transition.value,
       [0, 1],
-      [theme.colors.neutral2, theme.colors.neutral1]
+      [colors.neutral2.val, colors.neutral1.val]
     )
 
     return { color }

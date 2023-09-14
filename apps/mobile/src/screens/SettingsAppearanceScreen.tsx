@@ -2,16 +2,17 @@ import { Action } from '@reduxjs/toolkit'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { SvgProps } from 'react-native-svg'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
 import MoonIcon from 'ui/src/assets/icons/moon.svg'
 import SunIcon from 'ui/src/assets/icons/sun.svg'
+import { iconSizes } from 'ui/src/theme'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import {
   AppearanceSettingType,
@@ -69,7 +70,7 @@ function AppearanceOption({
   Icon,
   option,
 }: AppearanceOptionProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const dispatch = useAppDispatch()
 
   const showCheckMark = active ? 1 : 0
@@ -82,10 +83,10 @@ function AppearanceOption({
       py="spacing12"
       onPress={(): Action => dispatch(setSelectedAppearanceSettings(option))}>
       <Icon
-        color={theme.colors.neutral2}
-        height={theme.iconSizes.icon24}
+        color={colors.neutral2.val}
+        height={iconSizes.icon24}
         strokeWidth={1.5}
-        width={theme.iconSizes.icon24}
+        width={iconSizes.icon24}
       />
       <Flex row shrink gap="$none">
         <Flex shrink gap="$none" ml="$spacing16">
@@ -95,11 +96,7 @@ function AppearanceOption({
           </Text>
         </Flex>
         <Flex grow alignItems="flex-end" justifyContent="center" style={{ opacity: showCheckMark }}>
-          <Check
-            color={theme.colors.accent1}
-            height={theme.iconSizes.icon24}
-            width={theme.iconSizes.icon24}
-          />
+          <Check color={colors.accent1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
       </Flex>
     </TouchableArea>

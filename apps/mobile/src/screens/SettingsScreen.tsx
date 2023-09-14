@@ -1,5 +1,4 @@
 import { useNavigation } from '@react-navigation/core'
-import { useTheme } from '@shopify/restyle'
 import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
@@ -25,7 +24,7 @@ import { APP_FEEDBACK_LINK, GET_HELP_LINK } from 'src/constants/urls'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
-import { Flex, Icons, Text } from 'ui/src'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { AVATARS_DARK, AVATARS_LIGHT } from 'ui/src/assets'
 import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
@@ -46,7 +45,7 @@ import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/s
 
 export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
-  const theme = useTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
 
   // check if device supports biometric authentication, if not, hide option
@@ -58,7 +57,7 @@ export function SettingsScreen(): JSX.Element {
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
     const iconProps: SvgProps = {
-      color: theme.colors.neutral2,
+      color: colors.neutral2.val,
       height: iconSizes.icon24,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
@@ -160,7 +159,7 @@ export function SettingsScreen(): JSX.Element {
       },
     ]
   }, [
-    theme.colors.neutral2,
+    colors.neutral2.val,
     t,
     currentAppearanceSetting,
     isTouchIdSupported,
@@ -175,7 +174,7 @@ export function SettingsScreen(): JSX.Element {
   >): JSX.Element | null => {
     if (item.isHidden) return null
     if ('component' in item) return item.component
-    return <SettingsRow key={item.screen} navigation={navigation} page={item} theme={theme} />
+    return <SettingsRow key={item.screen} navigation={navigation} page={item} />
   }
 
   return (
@@ -209,7 +208,6 @@ export function SettingsScreen(): JSX.Element {
 const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 
 function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
-  const theme = useTheme()
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigation = useSettingsStackNavigation()
@@ -236,7 +234,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
           </Text>
         </Flex>
         <Icons.RotatableChevron
-          color={theme.colors.neutral3}
+          color="$neutral3"
           direction="e"
           height={iconSizes.icon24}
           width={iconSizes.icon24}

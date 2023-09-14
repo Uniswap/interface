@@ -3,7 +3,7 @@
 /* eslint-disable max-lines */
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { store } from 'src/app/store'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
@@ -21,6 +21,7 @@ import {
 } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCreateSwapFormState, useCreateWrapFormState } from 'src/features/transactions/hooks'
+import { useSporeColors } from 'ui/src'
 import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
@@ -460,7 +461,7 @@ export function SuccessNotification({
 }: {
   notification: Pick<AppNotificationDefault, 'title' | 'hideDelay'>
 }): JSX.Element | null {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   return (
     <NotificationToast
@@ -468,7 +469,7 @@ export function SuccessNotification({
       hideDelay={hideDelay}
       icon={
         <CheckCircle
-          color={theme.colors.statusSuccess}
+          color={colors.statusSuccess.val}
           height={iconSizes.icon24}
           strokeWidth={1.5}
           width={iconSizes.icon24}
@@ -526,7 +527,7 @@ export function ChangeAssetVisibilityNotification({
   notification: ChangeAssetVisibilityNotificationType
 }): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
+  const colors = useSporeColors()
 
   return (
     <NotificationToast
@@ -535,16 +536,12 @@ export function ChangeAssetVisibilityNotification({
       icon={
         visible ? (
           <EyeOffIcon
-            color={theme.colors.neutral1}
-            height={theme.iconSizes.icon24}
-            width={theme.iconSizes.icon24}
+            color={colors.neutral1.val}
+            height={iconSizes.icon24}
+            width={iconSizes.icon24}
           />
         ) : (
-          <EyeIcon
-            color={theme.colors.neutral1}
-            height={theme.iconSizes.icon24}
-            width={theme.iconSizes.icon24}
-          />
+          <EyeIcon color={colors.neutral1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
         )
       }
       title={

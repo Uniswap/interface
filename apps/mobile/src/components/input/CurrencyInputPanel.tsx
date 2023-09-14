@@ -9,7 +9,6 @@ import {
   TextInputProps,
   TextInputSelectionChangeEventData,
 } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
 import { Flex } from 'src/components/layout/Flex'
@@ -17,6 +16,8 @@ import { Warning, WarningLabel } from 'src/components/modals/WarningModal/types'
 import { Text } from 'src/components/Text'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
+import { useSporeColors } from 'ui/src'
+import { fonts } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { useMemoCompare } from 'utilities/src/react/hooks'
@@ -119,7 +120,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
     ...rest
   } = props
 
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
   const transformedProps = useRestyle(
     restyleFunctions,
@@ -235,16 +236,16 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               borderWidth={0}
               dimTextColor={dimTextColor}
               flex={1}
-              fontFamily={theme.textVariants.headlineMedium.fontFamily}
+              fontFamily={fonts.headlineMedium.family}
               fontSize={fontSize}
-              maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
+              maxFontSizeMultiplier={fonts.headlineMedium.maxFontSizeMultiplier}
               // This is a hacky workaround for Android to prevent text from being cut off
               // (the text input height is greater than the font size and the input is
               // centered vertically, so the caret is cut off but the text is not)
               minHeight={2 * MAX_INPUT_FONT_SIZE}
               overflow="visible"
               placeholder="0"
-              placeholderTextColor={theme.colors.neutral3}
+              placeholderTextColor={colors.neutral3.val}
               px="none"
               py="none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}

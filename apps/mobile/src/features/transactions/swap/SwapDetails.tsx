@@ -2,7 +2,6 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout/Flex'
 import { Warning } from 'src/components/modals/WarningModal/types'
@@ -11,8 +10,9 @@ import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
-import { Icons } from 'ui/src'
+import { Icons, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
+import { iconSizes } from 'ui/src/theme'
 import { formatPrice, NumberType } from 'utilities/src/format/format'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { useShouldUseMEVBlocker } from 'wallet/src/features/transactions/swap/customRpc'
@@ -49,7 +49,7 @@ export function SwapDetails({
   onShowSlippageModal,
   onShowSwapProtectionModal,
 }: SwapDetailsProps): JSX.Element {
-  const theme = useAppTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
   const [showInverseRate, setShowInverseRate] = useState(false)
 
@@ -140,17 +140,17 @@ export function SwapDetails({
             <Flex centered row gap="spacing4">
               <Text variant="subheadSmall">{t('Swap protection')}</Text>
               <InfoCircle
-                color={theme.colors.neutral1}
-                height={theme.iconSizes.icon20}
-                width={theme.iconSizes.icon20}
+                color={colors.neutral1.val}
+                height={iconSizes.icon20}
+                width={iconSizes.icon20}
               />
             </Flex>
           </TouchableArea>
           <Flex centered row gap="spacing8">
             <Icons.ShieldCheck
-              color={theme.colors.neutral3}
-              height={theme.iconSizes.icon16}
-              width={theme.iconSizes.icon16}
+              color={colors.neutral3.val}
+              height={iconSizes.icon16}
+              width={iconSizes.icon16}
             />
             <Text color="neutral1" variant="subheadSmall">
               {t('On')}
@@ -163,9 +163,9 @@ export function SwapDetails({
           <Flex centered row gap="spacing4">
             <Text variant="subheadSmall">{t('Max slippage')}</Text>
             <InfoCircle
-              color={theme.colors.neutral1}
-              height={theme.iconSizes.icon20}
-              width={theme.iconSizes.icon20}
+              color={colors.neutral1.val}
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
             />
           </Flex>
         </TouchableArea>
