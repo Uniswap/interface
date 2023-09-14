@@ -64,7 +64,7 @@ jobs:
 
       - name: Add CODEOWNERS
         run: |
-          echo '@uniswap/web-admins' > CODEOWNERS
+          echo '* @uniswap/web-admins' > CODEOWNERS
           git add CODEOWNERS
           git commit -m 'ci: add global CODEOWNERS'
 

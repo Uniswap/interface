@@ -1,4 +1,4 @@
-import { ApolloClient, ApolloLink, concat, HttpLink, InMemoryCache } from '@apollo/client'
+import { ApolloClient, ApolloLink, concat, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
 import { ChainId } from '@uniswap/sdk-core'
 
 import store from '../../state/index'
@@ -32,3 +32,34 @@ export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: concat(authMiddleware, httpLink),
 })
+
+export const chainToApolloClient: Record<number, ApolloClient<NormalizedCacheObject>> = {
+  [ChainId.MAINNET]: new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: CHAIN_SUBGRAPH_URL[ChainId.MAINNET],
+  }),
+  [ChainId.ARBITRUM_ONE]: new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: CHAIN_SUBGRAPH_URL[ChainId.ARBITRUM_ONE],
+  }),
+  [ChainId.OPTIMISM]: new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: CHAIN_SUBGRAPH_URL[ChainId.OPTIMISM],
+  }),
+  [ChainId.POLYGON]: new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: CHAIN_SUBGRAPH_URL[ChainId.POLYGON],
+  }),
+  [ChainId.CELO]: new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: CHAIN_SUBGRAPH_URL[ChainId.CELO],
+  }),
+  [ChainId.BNB]: new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: CHAIN_SUBGRAPH_URL[ChainId.BNB],
+  }),
+  [ChainId.AVALANCHE]: new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: CHAIN_SUBGRAPH_URL[ChainId.AVALANCHE],
+  }),
+}

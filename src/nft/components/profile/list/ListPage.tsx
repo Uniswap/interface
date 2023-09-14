@@ -26,7 +26,6 @@ import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { shallow } from 'zustand/shallow'
 
 import { ListModal } from './Modal/ListModal'
 import { NFTListingsGrid } from './NFTListingsGrid'
@@ -192,8 +191,7 @@ export const ListPage = () => {
       setGlobalMarketplaces,
       sellAssets,
       issues,
-    }),
-    shallow
+    })
   )
   const { listings, collectionsRequiringApproval, setLooksRareNonce, setCollectionStatusAndCallback } = useNFTList(
     ({ listings, collectionsRequiringApproval, setLooksRareNonce, setCollectionStatusAndCallback }) => ({
@@ -201,8 +199,7 @@ export const ListPage = () => {
       collectionsRequiringApproval,
       setLooksRareNonce,
       setCollectionStatusAndCallback,
-    }),
-    shallow
+    })
   )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
