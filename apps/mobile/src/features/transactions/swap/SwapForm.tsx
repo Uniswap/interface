@@ -428,7 +428,7 @@ function _SwapForm({
                     )}
                     <Flex row gap="$none">
                       <Text
-                        color={swapDataRefreshing ? '$neutral3' : undefined}
+                        color={swapDataRefreshing ? '$neutral3' : '$neutral2'}
                         variant="subheadSmall">
                         {trade.trade
                           ? getRateToDisplay(trade.trade, showInverseRate)
