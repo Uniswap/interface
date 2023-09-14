@@ -573,14 +573,13 @@ function handleFallbackCurrency(
 
 // Constructs an object that injects the correct locale and local currency into each of the above formatter functions.
 export function useFormatter() {
-  const activeLocalCurrency = useActiveLocalCurrency()
   const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
 
-  const activeLocalCurrencyIsUSD = activeLocalCurrency === GqlCurrency.Usd
+  const activeLocalCurrencyIsUSD = formatterLocalCurrency === GqlCurrency.Usd
   const { data: localCurrencyConversionRate, isLoading: localCurrencyConversionRateIsLoading } =
-    useLocalCurrencyConversionRate(activeLocalCurrency, activeLocalCurrencyIsUSD)
+    useLocalCurrencyConversionRate(formatterLocalCurrency, activeLocalCurrencyIsUSD)
 
-  const previousSelectedCurrency = usePrevious(activeLocalCurrency)
+  const previousSelectedCurrency = usePrevious(formatterLocalCurrency)
   const previousConversionRate = usePrevious(localCurrencyConversionRate)
 
   const shouldFallbackToPrevious = !localCurrencyConversionRate && localCurrencyConversionRateIsLoading
