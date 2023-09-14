@@ -93,7 +93,7 @@ function HeaderTitleElement({
           symbol={token?.symbol ?? undefined}
           url={tokenProject?.logoUrl ?? undefined}
         />
-        <Text color="neutral2" variant="buttonLabelMicro">
+        <Text color="neutral2" numberOfLines={1} variant="buttonLabelMicro">
           {token?.symbol ?? t('Unknown token')}
         </Text>
       </Flex>
