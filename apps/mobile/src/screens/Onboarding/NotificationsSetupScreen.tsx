@@ -154,5 +154,6 @@ const styles = StyleSheet.create({
   image: {
     height: '100%',
     resizeMode: 'contain',
+    width: '100%',
   },
 })
