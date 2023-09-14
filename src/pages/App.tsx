@@ -2,7 +2,6 @@ import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/anal
 import { useWeb3React } from '@web3-react/core'
 import { getDeviceId, sendAnalyticsEvent, Trace, user } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
-import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
 import { useAtom } from 'jotai'
@@ -24,8 +23,6 @@ import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import ErrorBoundary from '../components/ErrorBoundary'
 import NavBar, { PageTabs } from '../components/NavBar'
-import Polling from '../components/Polling'
-import Popups from '../components/Popups'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
 import { getDownloadAppLink } from '../utils/openDownloadApp'
 import AddLiquidity from './AddLiquidity'
@@ -45,6 +42,7 @@ import Swap from './Swap'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
+const AppChrome = lazy(() => import('./AppChrome'))
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const PoolDetails = lazy(() => import('./PoolDetails'))
 const Vote = lazy(() => import('./Vote'))
@@ -218,9 +216,9 @@ export default function App() {
             <NavBar blur={isHeaderTransparent} />
           </HeaderWrapper>
           <BodyWrapper>
-            <Popups />
-            <Polling />
-            <TopLevelModals />
+            <Suspense>
+              <AppChrome />
+            </Suspense>
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
