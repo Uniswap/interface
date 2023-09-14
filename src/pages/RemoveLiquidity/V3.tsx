@@ -320,7 +320,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                   <ThemedText.DeprecatedLabel
                     ml="10px"
                     fontSize="20px"
-                  >{`${feeValue0?.currency?.symbol}/${feeValue1?.currency?.symbol}`}</ThemedText.DeprecatedLabel>
+                    id="remove-liquidity-tokens"
+                  >{`${liquidityValue0?.currency?.symbol}/${liquidityValue1?.currency?.symbol}`}</ThemedText.DeprecatedLabel>
                 </RowFixed>
                 <RangeBadge removed={removed} inRange={!outOfRange} />
               </RowBetween>
@@ -354,7 +355,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <LightCard>
                 <AutoColumn gap="md">
                   <RowBetween>
-                    <Text fontSize={16} fontWeight={535}>
+                    <Text fontSize={16} fontWeight={535} id="remove-liquidity-tokena-symbol">
                       <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>
@@ -365,7 +366,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     </RowFixed>
                   </RowBetween>
                   <RowBetween>
-                    <Text fontSize={16} fontWeight={535}>
+                    <Text fontSize={16} fontWeight={535} id="remove-liquidity-tokenb-symbol">
                       <Trans>Pooled {liquidityValue1?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>
