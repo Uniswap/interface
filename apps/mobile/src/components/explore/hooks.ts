@@ -27,7 +27,6 @@ import { CurrencyId, currencyIdToAddress } from 'wallet/src/utils/currencyId'
 
 interface TokenMenuParams {
   currencyId: CurrencyId
-  address: Address | null
   chainId: ChainId
   analyticsSection: SectionName
 }
@@ -35,7 +34,6 @@ interface TokenMenuParams {
 // Provide context menu related data for token
 export function useExploreTokenContextMenu({
   currencyId,
-  address,
   chainId,
   analyticsSection,
 }: TokenMenuParams): {

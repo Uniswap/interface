@@ -24,7 +24,7 @@ export const Favorite = ({ isFavorited, size }: FavoriteButtonProps): JSX.Elemen
   const unfilledColor = isDarkMode ? colors.neutral2.val : colors.surface3.val
 
   const getColor = useCallback(
-    () => (isFavorited ? colors.accent1.val : unfilledColor),
+    () => (isFavorited ? colors.accent1.val : unfilledColor) as string,
     [isFavorited, colors.accent1.val, unfilledColor]
   )
 

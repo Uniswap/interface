@@ -14,7 +14,7 @@ import {
   suggestedTokensKeyExtractor,
 } from 'src/components/TokenSelector/TokenSelectorSwapOutputList'
 import { TokenOption } from 'src/components/TokenSelector/types'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
@@ -112,7 +112,6 @@ function _TokenSelectorList({
   showTokenAddress,
 }: TokenSelectorListProps): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const sectionListRef = useRef<SectionList<TokenOption>>(null)
 
   useEffect(() => {

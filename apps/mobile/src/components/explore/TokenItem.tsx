@@ -90,7 +90,6 @@ export const TokenItem = memo(function _TokenItem({
   }
 
   const { menuActions, onContextMenuPress } = useExploreTokenContextMenu({
-    address,
     chainId,
     currencyId: _currencyId,
     analyticsSection: SectionName.ExploreTopTokensSection,

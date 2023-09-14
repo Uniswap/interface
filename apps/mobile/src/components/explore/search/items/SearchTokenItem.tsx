@@ -65,7 +65,6 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
   }
 
   const { menuActions, onContextMenuPress } = useExploreTokenContextMenu({
-    address,
     chainId,
     currencyId,
     analyticsSection: SectionName.ExploreSearch,

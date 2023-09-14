@@ -47,8 +47,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors = useMemo(() => {
     if (loading || (hasAvatar && !avatarColors)) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return [colors.surface1.val, colors.surface1.val]
+      return [colors.surface1.val, colors.surface1.val] as [string, string]
     }
     if (hasAvatar && avatarColors && avatarColors.base) {
       return [avatarColors.base, avatarColors.base]
