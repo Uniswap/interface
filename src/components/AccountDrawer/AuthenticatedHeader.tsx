@@ -99,6 +99,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const [totalBalance, setTotalBalance] = useState(0)
   const getConnection = useGetConnection()
   const connection = getConnection(connector)
+  console.log('connection', connection)
   const disconnect = useCallback(() => {
     if (connector && connector.deactivate) {
       connector.deactivate()
@@ -180,7 +181,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     <AuthenticatedHeaderWrapper>
       <HeaderWrapper>
         <StatusWrapper>
-          <StatusIcon connection={connection} size={40} />
+          {connection && <StatusIcon connection={connection} size={40} />}
           {account && (
             <AccountNamesWrapper>
               <ThemedText.SubHeader color="textPrimary" fontWeight={500}>
