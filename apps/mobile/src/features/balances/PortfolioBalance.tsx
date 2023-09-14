@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import AnimatedNumber from 'src/components/AnimatedNumber'
 import { Flex } from 'src/components/layout'
-import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
 import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -42,24 +41,22 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
   const totalBalance = portfolioBalance?.tokensTotalDenominatedValue?.value
 
   return (
-    <WarmLoadingShimmer isWarmLoading={isWarmLoading && !isLoading}>
-      <Flex gap="spacing4">
-        <AnimatedNumber
-          colorIndicationDuration={2000}
-          loading={isLoading}
-          loadingPlaceholderText="$000.00"
-          value={formatUSDPrice(totalBalance, NumberType.PortfolioBalance)}
-        />
-        <RelativeChange
-          absoluteChange={portfolioChange?.absolute?.value}
-          arrowSize={iconSizes.icon20}
-          change={portfolioChange?.percentage?.value}
-          loading={isLoading}
-          negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
-          positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
-          variant="bodyLarge"
-        />
-      </Flex>
-    </WarmLoadingShimmer>
+    <Flex gap="spacing4">
+      <AnimatedNumber
+        colorIndicationDuration={2000}
+        loading={isWarmLoading || isLoading}
+        loadingPlaceholderText="$000.00"
+        value={formatUSDPrice(totalBalance, NumberType.PortfolioBalance)}
+      />
+      <RelativeChange
+        absoluteChange={portfolioChange?.absolute?.value}
+        arrowSize={iconSizes.icon20}
+        change={portfolioChange?.percentage?.value}
+        loading={isWarmLoading || isLoading}
+        negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
+        positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
+        variant="bodyLarge"
+      />
+    </Flex>
   )
 }

@@ -60,10 +60,10 @@ function FavoriteTokensGridLoader(): JSX.Element {
   return (
     <Flex row gap="$spacing8">
       <Flex gap="$none" style={ITEM_FLEX}>
-        <Loader.Favorite height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
+        <Loader.Favorite contrast height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
       </Flex>
       <Flex style={ITEM_FLEX}>
-        <Loader.Favorite height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
+        <Loader.Favorite contrast height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
       </Flex>
     </Flex>
   )

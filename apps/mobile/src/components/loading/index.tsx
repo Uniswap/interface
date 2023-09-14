@@ -29,9 +29,9 @@ function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
   )
 }
 
-function Token({ repeat = 1 }: { repeat?: number }): JSX.Element {
+function Token({ repeat = 1, contrast }: { repeat?: number; contrast?: boolean }): JSX.Element {
   return (
-    <Shimmer>
+    <Shimmer contrast={contrast}>
       <Flex grow gap="$spacing4">
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>

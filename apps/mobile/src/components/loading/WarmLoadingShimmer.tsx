@@ -35,7 +35,6 @@ export function WarmLoadingShimmer({
   }, [])
 
   const animatedStyle = useAnimatedStyle(() => ({
-    opacity: 0.5,
     transform: [
       {
         translateX: interpolate(
@@ -54,16 +53,16 @@ export function WarmLoadingShimmer({
   if (isWarmLoading) {
     return (
       <MaskedView maskElement={children} style={{ width: layout.width, height: layout.height }}>
-        <Flex grow backgroundColor="$surface3" gap="$none" height="100%" overflow="hidden" />
+        <Flex grow backgroundColor="$neutral2" gap="$none" height="100%" overflow="hidden" />
         <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
           <LinearGradient
             colors={[
-              opacify(0, colors.surface3.val.slice(0, 7)),
-              opacify(44, colors.neutral2.val.slice(0, 7)),
-              opacify(0, colors.surface3.val.slice(0, 7)),
+              opacify(0, colors.neutral2.val.slice(0, 7)),
+              opacify(44, colors.surface2.val.slice(0, 7)),
+              opacify(0, colors.neutral2.val.slice(0, 7)),
             ]}
-            end={{ x: 0.9, y: 0 }}
-            start={{ x: 0.1, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            start={{ x: 0, y: 0 }}
             style={StyleSheet.absoluteFill}
           />
         </Reanimated.View>
