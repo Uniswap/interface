@@ -7,9 +7,9 @@ import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
 import { getTimestampFormatter, TimestampFormatterType } from 'components/Charts/PriceChart/format'
-import { getTicks } from 'components/Charts/PriceChart/utils'
+import { cleanPricePoints, getNearestPricePoint, getPriceBounds, getTicks } from 'components/Charts/PriceChart/utils'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { bisect, curveCardinal, scaleLinear } from 'd3'
+import { curveCardinal, scaleLinear } from 'd3'
 import { PricePoint, TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -22,13 +22,6 @@ import { formatUSDPrice } from 'utils/formatNumbers'
 import { calculateDelta, DeltaArrow, formatDelta } from './Delta'
 
 const DATA_EMPTY = { value: 0, timestamp: 0 }
-
-export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
-  const prices = pricePoints.map((x) => x.value)
-  const min = Math.min(...prices)
-  const max = Math.max(...prices)
-  return [min, max]
-}
 
 const ChartHeader = styled.div`
   position: absolute;
@@ -65,29 +58,6 @@ const OutdatedPriceContainer = styled.div`
   line-height: 44px;
 `
 
-function fixChart(prices: PricePoint[] | undefined | null) {
-  if (!prices) return { prices: null, blanks: [] }
-
-  const fixedChart: PricePoint[] = []
-  const blanks: PricePoint[][] = []
-  let lastValue: PricePoint | undefined = undefined
-  for (let i = 0; i < prices.length; i++) {
-    if (prices[i].value !== 0) {
-      if (fixedChart.length === 0 && i !== 0) {
-        blanks.push([{ ...prices[0], value: prices[i].value }, prices[i]])
-      }
-      lastValue = prices[i]
-      fixedChart.push(prices[i])
-    }
-  }
-
-  if (lastValue && lastValue !== prices[prices.length - 1]) {
-    blanks.push([lastValue, { ...prices[prices.length - 1], value: lastValue.value }])
-  }
-
-  return { prices: fixedChart, blanks }
-}
-
 const margin = { top: 100, bottom: 48, crosshair: 72 }
 const timeOptionsHeight = 44
 
@@ -119,7 +89,8 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   const theme = useTheme()
 
   const { prices, blanks } = useMemo(
-    () => (originalPrices && originalPrices.length > 0 ? fixChart(originalPrices) : { prices: null, blanks: [] }),
+    () =>
+      originalPrices && originalPrices.length > 0 ? cleanPricePoints(originalPrices) : { prices: null, blanks: [] },
     [originalPrices]
   )
 
@@ -180,34 +151,17 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
     [startingPrice, endingPrice, width]
   )
   // y scale
-  const rdScale = useMemo(
-    () =>
-      scaleLinear()
-        .domain(getPriceBounds(originalPrices ?? []))
-        .range([graphInnerHeight, 0]),
-    [originalPrices, graphInnerHeight]
-  )
+  const rdScale = useMemo(() => {
+    const { min, max } = getPriceBounds(originalPrices ?? [])
+    return scaleLinear().domain([min, max]).range([graphInnerHeight, 0])
+  }, [originalPrices, graphInnerHeight])
 
   const handleHover = useCallback(
     (event: Element | EventType) => {
       if (!prices) return
 
       const { x } = localPoint(event) || { x: 0 }
-      const x0 = timeScale.invert(x) // get timestamp from the scalexw
-      const index = bisect(
-        prices.map((x) => x.timestamp),
-        x0,
-        1
-      )
-
-      const d0 = prices[index - 1]
-      const d1 = prices[index]
-      let pricePoint = d0
-
-      const hasPreviousData = d1 && d1.timestamp
-      if (hasPreviousData) {
-        pricePoint = x0.valueOf() - d0.timestamp.valueOf() > d1.timestamp.valueOf() - x0.valueOf() ? d1 : d0
-      }
+      const pricePoint = getNearestPricePoint(x, prices, timeScale)
 
       if (pricePoint) {
         setCrosshair(timeScale(pricePoint.timestamp))
