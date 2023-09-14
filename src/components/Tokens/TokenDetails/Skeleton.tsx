@@ -4,10 +4,10 @@ import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { textFadeIn } from 'theme/styles'
 
+import { TokenPrice } from '../../Charts/PriceChart'
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
-import { TokenPrice } from '../../Charts/PriceChart'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
 const SWAP_COMPONENT_WIDTH = 360
