@@ -7,7 +7,7 @@ import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import FadedInLineChart from 'components/Charts/FadeInLineChart'
 import { getTimestampFormatter, TimestampFormatterType } from 'components/Charts/PriceChart/format'
-import { cleanUpPricePoints, getNearestPricePoint, getPriceBounds, getTicks } from 'components/Charts/PriceChart/utils'
+import { cleanPricePoints, getNearestPricePoint, getPriceBounds, getTicks } from 'components/Charts/PriceChart/utils'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { curveCardinal, scaleLinear } from 'd3'
 import { PricePoint, TimePeriod } from 'graphql/data/util'
@@ -90,7 +90,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
 
   const { prices, blanks } = useMemo(
     () =>
-      originalPrices && originalPrices.length > 0 ? cleanUpPricePoints(originalPrices) : { prices: null, blanks: [] },
+      originalPrices && originalPrices.length > 0 ? cleanPricePoints(originalPrices) : { prices: null, blanks: [] },
     [originalPrices]
   )
 

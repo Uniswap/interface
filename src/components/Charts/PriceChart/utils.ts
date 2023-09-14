@@ -23,20 +23,19 @@ export function getPriceBounds(prices: PricePoint[]): { min: number; max: number
 }
 
 /**
- * Cleans up an array of PricePoints by removing zero values and marking gaps in data as blanks.
+ * Cleans an array of PricePoints by removing zero values and marking gaps in data as blanks.
  *
  * @param prices - The original array of PricePoints
  * @returns An object containing two arrays: fixedChart and blanks
  */
-export function cleanUpPricePoints(prices: PricePoint[]) {
-  const fixedChart: PricePoint[] = [] // PricePoint array with 0 values removed
+export function cleanPricePoints(prices: PricePoint[]) {
+  const validPrices: PricePoint[] = [] // PricePoint array with 0 values removed
   const blanks: [PricePoint, PricePoint][] = [] // PricePoint pairs that represent blank spaces in the chart
   let lastValidPrice: PricePoint | undefined
 
   prices.forEach((pricePoint, index) => {
-    const isValueNonZero = pricePoint.value !== 0
-    if (isValueNonZero) {
-      const isFirstValidPrice = fixedChart.length === 0
+    if (pricePoint.value !== 0) {
+      const isFirstValidPrice = validPrices.length === 0
 
       if (isFirstValidPrice && index !== 0) {
         const blankStart = { timestamp: prices[0].timestamp, value: pricePoint.value }
@@ -44,7 +43,7 @@ export function cleanUpPricePoints(prices: PricePoint[]) {
       }
 
       lastValidPrice = pricePoint
-      fixedChart.push(pricePoint)
+      validPrices.push(pricePoint)
     }
   })
 
@@ -57,7 +56,7 @@ export function cleanUpPricePoints(prices: PricePoint[]) {
     }
   }
 
-  return { prices: fixedChart, blanks, lastValidPrice }
+  return { prices: validPrices, blanks, lastValidPrice }
 }
 
 /**
