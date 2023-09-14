@@ -37,6 +37,8 @@ exports[`should inject metadata for valid tokens 1`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
+    <link rel="preconnect" href="https://api.uniswap.org/v1/amplitude-proxy" />
+
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
 
@@ -181,6 +183,8 @@ exports[`should inject metadata for valid tokens 2`] = `
       See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="/manifest.json" />
+
+    <link rel="preconnect" href="https://api.uniswap.org/v1/amplitude-proxy" />
 
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
@@ -327,6 +331,8 @@ exports[`should inject metadata for valid tokens 3`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
+    <link rel="preconnect" href="https://api.uniswap.org/v1/amplitude-proxy" />
+
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
 
@@ -471,6 +477,8 @@ exports[`should inject metadata for valid tokens 4`] = `
       See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="/manifest.json" />
+
+    <link rel="preconnect" href="https://api.uniswap.org/v1/amplitude-proxy" />
 
     <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
