@@ -58,7 +58,6 @@ const ButtonContent = () => {
     )
   }
 
-  // const tooLow = userSlippageTolerance !== userSlippageTolerance.lessThan(MINIMUM_RECOMMENDED_SLIPPAGE)
   const tooHigh = userSlippageTolerance.greaterThan(MAXIMUM_RECOMMENDED_SLIPPAGE)
 
   const isInvalidSlippage = validateUserSlippageTolerance(userSlippageTolerance) !== SlippageValidationResult.Valid
