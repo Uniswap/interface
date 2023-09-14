@@ -362,7 +362,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
           const [name, types] = sig.substring(0, sig.length - 1).split('(')
           calldata = `0x${calldata.slice(10)}`
 
-          const decoded = defaultAbiCoder.decode(types.split(','), calldata)
+          const decoded = types ? defaultAbiCoder.decode(types.split(','), calldata) : []
           return {
             target: action.target,
             functionSig: name,
