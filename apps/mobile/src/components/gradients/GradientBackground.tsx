@@ -1,5 +1,7 @@
 import React from 'react'
+import { IS_IOS } from 'src/constants/globals'
 import { Flex, StackProps } from 'ui/src'
+import { zIndices } from 'ui/src/theme'
 
 // Fills up entire parent by default
 export function GradientBackground({ children, ...rest }: StackProps): JSX.Element {
@@ -11,7 +13,7 @@ export function GradientBackground({ children, ...rest }: StackProps): JSX.Eleme
       position="absolute"
       right={0}
       top={0}
-      zIndex="$background"
+      zIndex={IS_IOS ? '$background' : zIndices.background}
       {...rest}>
       {children}
     </Flex>
