@@ -45,7 +45,6 @@ export interface UserState {
   }
 
   timestamp: number
-  URLWarningVisible: boolean
   hideBaseWalletBanner: boolean
   disabledUniswapX?: boolean
   // undefined means has not gone through A/B split yet
@@ -67,7 +66,6 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  URLWarningVisible: true,
   hideBaseWalletBanner: false,
   showSurveyPopup: undefined,
 }
