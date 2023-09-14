@@ -27,19 +27,21 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
     <>
       <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="spacing12">
         <Flex row alignItems="center" justifyContent="space-between" px="$spacing24">
-          <Flex gap="$none" width={iconSizes.icon40}>
+          <Flex grow gap="$none" width={iconSizes.icon40}>
             {backButton ?? <BackButton />}
           </Flex>
-          <Text color="neutral1" variant="bodyLarge">
+          <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
             {t('Manage connections')}
           </Text>
           <TouchableArea
+            flexGrow={1}
             width={iconSizes.icon40}
             onPress={(): void => {
               setIsEditing(!isEditing)
             }}>
             <Text
               color={isEditing ? 'accent1' : 'neutral2'}
+              numberOfLines={1}
               textAlign="right"
               variant="subheadSmall">
               {isEditing ? t('Done') : t('Edit')}
