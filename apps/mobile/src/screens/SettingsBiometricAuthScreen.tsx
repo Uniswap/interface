@@ -14,6 +14,7 @@ import { enroll } from 'src/features/biometrics'
 import {
   checkOsBiometricAuthEnabled,
   useBiometricAppSettings,
+  useBiometricName,
   useBiometricPrompt,
   useDeviceSupportsBiometricAuth,
 } from 'src/features/biometrics/hooks'
@@ -48,7 +49,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   const onCloseModal = useCallback(() => setShowUnsafeWarningModal(false), [])
 
   const { touchId } = useDeviceSupportsBiometricAuth()
-  const authenticationTypeName = touchId ? 'Touch' : 'Face'
+  const authenticationTypeName = useBiometricName(touchId)
 
   const { requiredForAppAccess, requiredForTransactions } = useBiometricAppSettings()
   const { trigger } = useBiometricPrompt<BiometricPromptTriggerArgs>(
@@ -67,20 +68,22 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   )
 
   const options: BiometricAuthSetting[] = useMemo((): BiometricAuthSetting[] => {
+    const capitalizedAuthTypeName =
+      authenticationTypeName.charAt(0).toUpperCase() + authenticationTypeName.slice(1)
     const handleFaceIdTurnedOff = (): void => {
       IS_IOS
         ? Alert.alert(
             t(
-              '{{authenticationTypeName}} ID is currently turned off for Uniswap Wallet—you can turn it on in your system settings.',
-              { authenticationTypeName }
+              '{{capitalizedAuthTypeName}} is currently turned off for Uniswap Wallet—you can turn it on in your system settings.',
+              { capitalizedAuthTypeName }
             ),
             '',
             [{ text: t('Settings'), onPress: openSettings }, { text: t('Cancel') }]
           )
         : Alert.alert(
             t(
-              '{{authenticationTypeName}} ID is not set up on your device. To use {{authenticationTypeName}} ID, set up it first in settings.',
-              { authenticationTypeName }
+              '{{capitalizedAuthTypeName}} is not set up on your device. To use {{authenticationTypeName}}, set up it first in settings.',
+              { capitalizedAuthTypeName, authenticationTypeName }
             ),
             '',
             [{ text: t('Set up'), onPress: enroll }, { text: t('Cancel') }]
@@ -108,7 +111,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
         },
         value: requiredForAppAccess,
         text: t('App access'),
-        subText: t('Require {{authenticationTypeName}} ID to open app', { authenticationTypeName }),
+        subText: t('Require {{authenticationTypeName}} to open app', { authenticationTypeName }),
       },
       {
         onValueChange: async (newRequiredForTransactionsValue): Promise<void> => {
@@ -130,7 +133,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
         },
         value: requiredForTransactions,
         text: t('Transactions'),
-        subText: t('Require {{authenticationTypeName}} ID to transact', { authenticationTypeName }),
+        subText: t('Require {{authenticationTypeName}} to transact', { authenticationTypeName }),
       },
     ]
   }, [requiredForAppAccess, t, authenticationTypeName, requiredForTransactions, trigger])
@@ -181,7 +184,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
       <Screen>
         <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
           <Text variant="bodyLarge">
-            {t('{{authenticationTypeName}} ID', { authenticationTypeName })}
+            {t('{{authenticationTypeName}}', { authenticationTypeName })}
           </Text>
         </BackHeader>
         <Flex gap="$none" p="$spacing24">

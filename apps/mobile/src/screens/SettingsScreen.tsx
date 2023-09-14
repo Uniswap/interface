@@ -21,7 +21,7 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { APP_FEEDBACK_LINK, GET_HELP_LINK } from 'src/constants/urls'
-import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
+import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
 import { Flex, Icons, Text, useSporeColors } from 'ui/src'
@@ -51,8 +51,8 @@ export function SettingsScreen(): JSX.Element {
   // check if device supports biometric authentication, if not, hide option
   const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } =
     useDeviceSupportsBiometricAuth()
-  const authenticationTypeName = isTouchIdSupported ? 'Touch' : 'Face'
 
+  const authenticationTypeName = useBiometricName(isTouchIdSupported, true)
   const currentAppearanceSetting = useCurrentAppearanceSetting()
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
@@ -84,7 +84,7 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: Screens.SettingsBiometricAuth,
             isHidden: !isTouchIdSupported && !isFaceIdSupported,
-            text: t('{{authenticationTypeName}} ID', { authenticationTypeName }),
+            text: authenticationTypeName,
             icon: isTouchIdSupported ? (
               <FingerprintIcon {...iconProps} />
             ) : (

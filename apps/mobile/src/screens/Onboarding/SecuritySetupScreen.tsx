@@ -16,6 +16,7 @@ import {
 } from 'src/features/biometrics'
 import {
   biometricAuthenticationSuccessful,
+  useBiometricName,
   useDeviceSupportsBiometricAuth,
 } from 'src/features/biometrics/hooks'
 import { setRequiredForTransactions } from 'src/features/biometrics/slice'
@@ -44,7 +45,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { touchId: isTouchIdDevice } = useDeviceSupportsBiometricAuth()
-  const authenticationTypeName = isTouchIdDevice ? 'Touch' : 'Face'
+  const authenticationTypeName = useBiometricName(isTouchIdDevice)
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params.entryPoint, params.importType)
 
@@ -67,6 +68,9 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
       cancelLabel: 'Cancel',
     })
 
+    const authTypeCapitalized =
+      authenticationTypeName.charAt(0).toUpperCase() + authenticationTypeName.slice(1)
+
     // TODO - change the way we handle the Unsupported case (there is no point in redirecting
     // to settings if the device does not support biometrics - maybe use some fallback method
     // like PIN or password and display different screen than this in the app)
@@ -76,15 +80,15 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
     ) {
       IS_IOS
         ? Alert.alert(
-            t('{{authenticationTypeName}} ID is disabled', { authenticationTypeName }),
-            t('To use {{authenticationTypeName}} ID, allow access in system settings', {
+            t('{{authTypeCapitalized}} is disabled', { authTypeCapitalized }),
+            t('To use {{authenticationTypeName}}, allow access in system settings', {
               authenticationTypeName,
             }),
             [{ text: t('Go to settings'), onPress: openSettings }, { text: t('Not now') }]
           )
         : Alert.alert(
-            t('{{authenticationTypeName}} ID is disabled', { authenticationTypeName }),
-            t('To use {{authenticationTypeName}} ID, set up it first in settings', {
+            t('{{authTypeCapitalized}} is disabled', { authTypeCapitalized }),
+            t('To use {{authenticationTypeName}}, set up it first in settings', {
               authenticationTypeName,
             }),
             [{ text: t('Set up'), onPress: enroll }, { text: t('Not now') }]
@@ -111,7 +115,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
       <OnboardingScreen
         childrenGap="none"
         subtitle={t(
-          'Add an extra layer of security by requiring {{ authenticationTypeName }} ID to send transactions.',
+          'Add an extra layer of security by requiring {{ authenticationTypeName }} to send transactions.',
           {
             authenticationTypeName,
           }
@@ -163,7 +167,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
           </Trace>
           <Trace logPress element={ElementName.Enable}>
             <Button theme="primary" onPress={onPressEnableSecurity}>
-              {t('Turn on {{authenticationTypeName}} ID', {
+              {t('Turn on {{authenticationTypeName}}', {
                 authenticationTypeName,
               })}
             </Button>
