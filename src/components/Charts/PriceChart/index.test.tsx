@@ -1,7 +1,7 @@
 import { TimePeriod } from 'graphql/data/util'
 import { render, screen } from 'test-utils/render'
 
-import { PriceChart } from './PriceChart'
+import { PriceChart } from '.'
 
 jest.mock('components/Charts/AnimatedInLineChart', () => ({
   __esModule: true,
