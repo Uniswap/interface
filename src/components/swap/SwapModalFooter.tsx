@@ -16,8 +16,8 @@ import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { DefaultTheme, useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
-import { formatPriceImpact, NumberType, useFormatter } from 'utils/formatNumbers'
-import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
+import { FormatterRule, NumberType, SIX_SIG_FIGS_NO_COMMAS, useFormatter } from 'utils/formatNumbers'
+import { priceToPreciseFloat } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 import { getPriceImpactColor } from 'utils/prices'
@@ -27,6 +27,8 @@ import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
 import { Label } from './SwapModalHeaderAmount'
+
+const sixFigsFormatterRules: FormatterRule[] = [{ upperBound: Infinity, formatterOptions: SIX_SIG_FIGS_NO_COMMAS }]
 
 const DetailsContainer = styled(Column)`
   padding: 0 8px;
@@ -78,11 +80,14 @@ export default function SwapModalFooter({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
-  const { formatNumber } = useFormatter()
+  const { formatCurrencyAmount, formatNumber, formatPriceImpact } = useFormatter()
 
   const label = `${trade.executionPrice.baseCurrency?.symbol} `
   const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
-  const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
+  const formattedPrice = formatNumber({
+    input: priceToPreciseFloat(trade.executionPrice),
+    type: NumberType.TokenTx,
+  })
   const txCount = getTransactionCount(trade)
 
   return (
@@ -164,8 +169,14 @@ export default function SwapModalFooter({
             </MouseoverTooltip>
             <DetailRowValue>
               {trade.tradeType === TradeType.EXACT_INPUT
-                ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
-                : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+                ? `${formatCurrencyAmount({
+                    amount: trade.minimumAmountOut(allowedSlippage),
+                    type: sixFigsFormatterRules,
+                  })} ${trade.outputAmount.currency.symbol}`
+                : `${formatCurrencyAmount({
+                    amount: trade.maximumAmountIn(allowedSlippage),
+                    type: sixFigsFormatterRules,
+                  })} ${trade.inputAmount.currency.symbol}`}
             </DetailRowValue>
           </Row>
         </ThemedText.BodySmall>
@@ -223,6 +234,8 @@ export default function SwapModalFooter({
 }
 
 function TokenTaxLineItem({ trade, type }: { trade: ClassicTrade; type: 'input' | 'output' }) {
+  const { formatPriceImpact } = useFormatter()
+
   const [currency, percentage] =
     type === 'input' ? [trade.inputAmount.currency, trade.inputTax] : [trade.outputAmount.currency, trade.outputTax]
 

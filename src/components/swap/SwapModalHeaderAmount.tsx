@@ -10,7 +10,6 @@ import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { formatReviewSwapCurrencyAmount } from 'utils/formatNumbers'
 
 export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
@@ -45,7 +44,7 @@ interface AmountProps {
 }
 
 export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field, currency }: AmountProps) {
-  const { formatNumber } = useFormatter()
+  const { formatNumber, formatReviewSwapCurrencyAmount } = useFormatter()
 
   return (
     <Row align="center" justify="space-between" gap="md">
