@@ -136,6 +136,7 @@ export const routingApi = createApi({
               tokenOut: tokenOutAddress,
               amount,
               type,
+              intent: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? 'pricing' : undefined,
               configs: getRoutingAPIConfig(args),
             }
 
