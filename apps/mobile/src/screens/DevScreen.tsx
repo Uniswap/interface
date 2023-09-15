@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -10,9 +10,6 @@ import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { Screens } from 'src/screens/Screens'
 import { Flex } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
-import { ChainId } from 'wallet/src/constants/chains'
-import { useActiveChainIds } from 'wallet/src/features/chains/hooks'
-import { setChainActiveStatus } from 'wallet/src/features/chains/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
@@ -22,7 +19,6 @@ import { resetWallet } from 'wallet/src/features/wallet/slice'
 export function DevScreen(): JSX.Element {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
-  const [currentChain] = useState(ChainId.Goerli)
 
   const onPressResetTokenWarnings = (): void => {
     dispatch(resetDismissedWarnings())
@@ -34,13 +30,6 @@ export function DevScreen(): JSX.Element {
 
   const activateWormhole = (s: Screens): void => {
     navigate(s)
-  }
-
-  const activeChains = useActiveChainIds()
-  const onPressToggleTestnets = (): void => {
-    // always rely on the state of goerli
-    const isGoerliActive = activeChains.includes(ChainId.Goerli)
-    dispatch(setChainActiveStatus({ chainId: ChainId.Goerli, isActive: !isGoerliActive }))
   }
 
   const onPressShowError = (): void => {
@@ -105,9 +94,6 @@ export function DevScreen(): JSX.Element {
           <TouchableArea mt="spacing16" onPress={onPressCreate}>
             <Text color="neutral1">Create account</Text>
           </TouchableArea>
-          <TouchableArea mt="spacing12" onPress={onPressToggleTestnets}>
-            <Text color="neutral1">Toggle testnets</Text>
-          </TouchableArea>
           <TouchableArea mt="spacing12" onPress={onPressResetTokenWarnings}>
             <Text color="neutral1">Reset token warnings</Text>
           </TouchableArea>
@@ -117,12 +103,6 @@ export function DevScreen(): JSX.Element {
           <TouchableArea mt="spacing12" onPress={onPressResetOnboarding}>
             <Text color="neutral1">Reset onboarding</Text>
           </TouchableArea>
-          <Text color="neutral1" mt="spacing36" textAlign="center">
-            {`Active Chains: ${activeChains}`}
-          </Text>
-          <Text color="neutral1" mt="spacing12" textAlign="center">
-            {`Current Chain: ${currentChain}`}
-          </Text>
         </Flex>
       </ScrollView>
     </SheetScreen>

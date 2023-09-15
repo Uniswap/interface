@@ -145,11 +145,6 @@ export function SettingsScreen(): JSX.Element {
         isHidden: !__DEV__,
         data: [
           {
-            screen: Screens.SettingsChains,
-            text: t('Chains'),
-            icon: <UniswapIcon {...iconProps} />,
-          },
-          {
             screen: Screens.Dev,
             text: t('Dev Options'),
             icon: <UniswapIcon {...iconProps} />,

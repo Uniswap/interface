@@ -115,15 +115,15 @@ export function NetworkFilter({
 
   // design wants to limit amount of networks shown in the network filter,
   // when all networks is selected and for now we show all, but Arbitrum
-  const activeChainsWithoutArbitrum = ALL_SUPPORTED_CHAIN_IDS.filter(
+  const allChainsExceptArbitrum = ALL_SUPPORTED_CHAIN_IDS.filter(
     (chainId) => chainId !== ChainId.ArbitrumOne
   )
 
   const networkOptions = useNetworkOptions({ selectedChain, onPress, includeAllNetworks })
 
   const networks = useMemo(() => {
-    return selectedChain ? [selectedChain] : activeChainsWithoutArbitrum
-  }, [activeChainsWithoutArbitrum, selectedChain])
+    return selectedChain ? [selectedChain] : allChainsExceptArbitrum
+  }, [allChainsExceptArbitrum, selectedChain])
 
   return (
     <>

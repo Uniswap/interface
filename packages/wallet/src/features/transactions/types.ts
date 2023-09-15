@@ -1,13 +1,15 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
-import { ChainId, ChainIdTo } from 'wallet/src/constants/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { TransactionListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { DappInfo } from 'wallet/src/features/walletConnect/types'
 
-export type ChainIdToTxIdToDetails = ChainIdTo<{ [txId: string]: TransactionDetails }>
+export type ChainIdToTxIdToDetails = Partial<
+  Record<ChainId, { [txId: string]: TransactionDetails }>
+>
 
 // Basic identifying info for a transaction
 export interface TransactionId {

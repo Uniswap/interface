@@ -47,6 +47,7 @@ import {
   v46Schema,
   v47Schema,
   v48Schema,
+  v49Schema,
   v4Schema,
   v5Schema,
   v6Schema,
@@ -67,9 +68,7 @@ import { initialTelemetryState } from 'src/features/telemetry/slice'
 import { initialTokensState } from 'src/features/tokens/tokensSlice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
-import { SWAP_ROUTER_ADDRESSES } from 'wallet/src/constants/addresses'
-import { ACTIVE_CHAINS, ChainId } from 'wallet/src/constants/chains'
-import { ChainsState, initialChainsState } from 'wallet/src/features/chains/slice'
+import { ChainId } from 'wallet/src/constants/chains'
 import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
 import {
   initialTransactionsState,
@@ -131,7 +130,14 @@ describe('Redux state migrations', () => {
       appearanceSettings: { selectedAppearanceSettings: 'system' },
       biometricSettings: initialBiometricsSettingsState,
       blocks: { byChainId: {} },
-      chains: initialChainsState,
+      chains: {
+        byChainId: {
+          '1': { isActive: true },
+          '10': { isActive: true },
+          '137': { isActive: true },
+          '42161': { isActive: true },
+        },
+      },
       cloudBackup: initialCloudBackupState,
       ens: { ensForAddress: {} },
       favorites: initialFavoritesState,
@@ -197,7 +203,7 @@ describe('Redux state migrations', () => {
       typeInfo: {
         type: TransactionType.Approve,
         tokenAddress: '0xtokenAddress',
-        spender: SWAP_ROUTER_ADDRESSES[ChainId.Mainnet],
+        spender: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45',
       },
       status: TransactionStatus.Pending,
       addedTime: 1487076708000,
@@ -221,7 +227,7 @@ describe('Redux state migrations', () => {
       typeInfo: {
         type: TransactionType.Approve,
         tokenAddress: '0xtokenAddress',
-        spender: SWAP_ROUTER_ADDRESSES[ChainId.Goerli],
+        spender: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45',
       },
       status: TransactionStatus.Success,
       addedTime: 1487076708000,
@@ -647,7 +653,7 @@ describe('Redux state migrations', () => {
       typeInfo: {
         type: TransactionType.Approve,
         tokenAddress: '0xtokenAddress',
-        spender: SWAP_ROUTER_ADDRESSES[ChainId.Mainnet],
+        spender: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45',
       },
       status: TransactionStatus.Pending,
       addedTime: 1487076708000,
@@ -672,7 +678,7 @@ describe('Redux state migrations', () => {
       typeInfo: {
         type: TransactionType.Approve,
         tokenAddress: '0xtokenAddress',
-        spender: SWAP_ROUTER_ADDRESSES[ChainId.Goerli],
+        spender: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45',
       },
       status: TransactionStatus.Success,
       addedTime: 1487076708000,
@@ -735,7 +741,7 @@ describe('Redux state migrations', () => {
       },
     }
 
-    const chains: ChainsState = {
+    const chains = {
       byChainId: {
         [ChainId.ArbitrumOne]: { isActive: true },
         [ChainId.Goerli]: { isActive: true },
@@ -1168,7 +1174,14 @@ describe('Redux state migrations', () => {
     const v46Stub = { ...v46Schema }
     const v47 = migrations[47](v46Stub)
 
-    expect(v47.chains.byChainId).toBe(ACTIVE_CHAINS)
+    expect(v47.chains.byChainId).toStrictEqual({
+      '1': { isActive: true },
+      '10': { isActive: true },
+      '56': { isActive: true },
+      '137': { isActive: true },
+      '8453': { isActive: true },
+      '42161': { isActive: true },
+    })
   })
 
   it('migrates from v47 to 48', () => {
@@ -1183,5 +1196,12 @@ describe('Redux state migrations', () => {
     const v49 = migrations[49](v48Stub)
 
     expect(v49.wallet.settings.swapProtection).toEqual(SwapProtectionSetting.On)
+  })
+
+  it('migrates from v49 to 50', () => {
+    const v449Stub = { ...v49Schema }
+    const v50 = migrations[50](v449Stub)
+
+    expect(v50.chains).toBeUndefined()
   })
 })

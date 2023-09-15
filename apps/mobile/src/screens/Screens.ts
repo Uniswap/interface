@@ -17,7 +17,6 @@ export enum Screens {
   SettingsWalletEdit = 'SettingsWalletEdit',
   SettingsWalletManageConnection = 'SettingsWalletManageConnection',
   SettingsHelpCenter = 'SettingsHelpCenter',
-  SettingsChains = 'SettingsChains',
   SettingsStack = 'SettingsStack',
   SettingsBiometricAuth = 'SettingsBiometricAuth',
   SettingsAppearance = 'SettingsAppearance',

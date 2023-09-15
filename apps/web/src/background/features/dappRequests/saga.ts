@@ -8,7 +8,8 @@ import { sendMessageToActiveTab, sendMessageToSpecificTab } from 'src/background
 import { DisconnectResponse, ExtensionChainChange, ExtensionRequestType } from 'src/types/requests'
 import { call, put, select, take } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
-import { ChainId, getChainIdFromString } from 'wallet/src/constants/chains'
+import { ChainId } from 'wallet/src/constants/chains'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts//types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import {
@@ -243,7 +244,7 @@ export function* getChainIdForDapp(senderTabId: number, walletAddress: Address) 
 
 export function* connect(requestId: string, chainId: string, senderTabId: number) {
   // get chain id enum
-  const chainIdEnum = yield* call(getChainIdFromString, chainId)
+  const chainIdEnum = toSupportedChainId(chainId)
   if (!chainIdEnum) {
     throw new Error(`Invalid chainId: ${chainId}`)
   }
@@ -262,7 +263,7 @@ export function* connect(requestId: string, chainId: string, senderTabId: number
 }
 
 export function* changeChain(requestId: string, chainId: string, senderTabId: number) {
-  const chainIdEnum = yield* call(getChainIdFromString, chainId)
+  const chainIdEnum = toSupportedChainId(chainId)
   if (!chainIdEnum) {
     throw new Error(`Invalid chainId: ${chainId}`)
   }

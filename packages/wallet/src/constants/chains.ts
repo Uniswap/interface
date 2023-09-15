@@ -12,22 +12,12 @@ import {
   POLYGON_LOGO,
 } from 'ui/src/assets'
 import { config } from 'wallet/src/config'
-import { chainListToStateMap } from 'wallet/src/features/chains/utils'
 
 export enum RPCType {
   Public = 'public',
   Private = 'private',
   PublicAlt = 'public_alternative',
 }
-
-export interface ChainState {
-  isActive: boolean
-  // More properties can be added here over time
-  // such as priority or hidden
-}
-
-export type ChainIdTo<T> = Partial<Record<ChainId, T>>
-export type ChainIdToCurrencyIdTo<T> = ChainIdTo<{ [currencyId: string]: T }>
 
 // Renamed from SupportedChainId in web app
 export enum ChainId {
@@ -55,14 +45,12 @@ export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.Bnb,
 ]
 
-export const ACTIVE_CHAINS = chainListToStateMap(ALL_SUPPORTED_CHAIN_IDS)
-
 export const TESTNET_CHAIN_IDS = [ChainId.Goerli, ChainId.PolygonMumbai]
 
-export const L1_CHAIN_IDS = [ChainId.Mainnet, ChainId.Goerli] as const
+export const ETHEREUM_CHAIN_IDS = [ChainId.Mainnet, ChainId.Goerli] as const
 
 // Renamed from SupportedL1ChainId in web app
-export type L1ChainId = (typeof L1_CHAIN_IDS)[number]
+export type EthereumChainId = (typeof ETHEREUM_CHAIN_IDS)[number]
 
 export const L2_CHAIN_IDS = [
   ChainId.ArbitrumOne,
@@ -75,9 +63,6 @@ export const L2_CHAIN_IDS = [
 
 // Renamed from SupportedL2ChainId in web app
 export type L2ChainId = (typeof L2_CHAIN_IDS)[number]
-
-export const isL2Chain = (chainId?: ChainId): boolean =>
-  Boolean(chainId && L2_CHAIN_IDS.includes(chainId as L2ChainId))
 
 export interface L1ChainInfo {
   readonly blockWaitMsBeforeWarning?: number
@@ -104,7 +89,7 @@ export type ChainInfo = {
   readonly [chainId: number]: L1ChainInfo | L2ChainInfo
 } & {
   readonly [chainId in L2ChainId]: L2ChainInfo
-} & { readonly [chainId in L1ChainId]: L1ChainInfo }
+} & { readonly [chainId in EthereumChainId]: L1ChainInfo }
 
 export const CHAIN_INFO: ChainInfo = {
   [ChainId.ArbitrumOne]: {
@@ -197,34 +182,4 @@ export const CHAIN_INFO: ChainInfo = {
     },
     rpcUrls: { [RPCType.PublicAlt]: 'https://rpc-endpoints.superfluid.dev/mumbai' },
   },
-}
-
-export function isPolygonChain(
-  chainId: number
-): chainId is ChainId.Polygon | ChainId.PolygonMumbai {
-  return chainId === ChainId.PolygonMumbai || chainId === ChainId.Polygon
-}
-
-export function getChainIdFromString(input: string): ChainId | undefined {
-  const parsedInput = parseInt(input, 16)
-  switch (parsedInput) {
-    case ChainId.Mainnet:
-      return ChainId.Mainnet
-    case ChainId.Goerli:
-      return ChainId.Goerli
-    case ChainId.ArbitrumOne:
-      return ChainId.ArbitrumOne
-    case ChainId.Base:
-      return ChainId.Base
-    case ChainId.Bnb:
-      return ChainId.Bnb
-    case ChainId.Optimism:
-      return ChainId.Optimism
-    case ChainId.Polygon:
-      return ChainId.Polygon
-    case ChainId.PolygonMumbai:
-      return ChainId.PolygonMumbai
-    default:
-      return undefined
-  }
 }

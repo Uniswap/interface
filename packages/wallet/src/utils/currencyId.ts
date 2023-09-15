@@ -11,8 +11,8 @@ import {
   WRAPPED_MUMBAI_POLYGON,
   WRAPPED_OPTIMISTIC_ETH,
 } from 'wallet/src/constants/addresses'
-import { ChainId, isPolygonChain } from 'wallet/src/constants/chains'
-import { toSupportedChainId } from 'wallet/src/features/chains/utils'
+import { ChainId } from 'wallet/src/constants/chains'
+import { isPolygonChain, toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { areAddressesEqual } from './addresses'
 
 export type CurrencyId = string

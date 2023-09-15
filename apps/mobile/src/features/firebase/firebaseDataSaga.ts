@@ -7,10 +7,9 @@ import {
   getFirestoreUidRef,
 } from 'src/features/firebase/utils'
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
-import { call, put, select, takeEvery } from 'typed-redux-saga'
+import { call, put, takeEvery } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { getKeys } from 'utilities/src/primitives/objects'
-import { selectTestnetsAreEnabled } from 'wallet/src/features/chains/slice'
 import {
   EditAccountAction,
   editAccountActions,
@@ -59,7 +58,7 @@ function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountAct
 
 function* addAccountToFirebase(account: Account) {
   const { name, type, address } = account
-  const testnetsEnabled = yield* select(selectTestnetsAreEnabled)
+  const testnetsEnabled = false
 
   try {
     yield* call(mapFirebaseUidToAddresses, [address])

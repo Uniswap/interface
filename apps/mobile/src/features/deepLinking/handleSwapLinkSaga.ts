@@ -1,10 +1,10 @@
 import { BigNumber } from 'ethers'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { call, put } from 'typed-redux-saga'
+import { put } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
-import { selectActiveChainIds } from 'wallet/src/features/chains/saga'
 import {
   CurrencyField,
   TransactionState,
@@ -21,7 +21,7 @@ export function* handleSwapLink(url: URL) {
       outputAddress,
       exactCurrencyField,
       exactAmountToken,
-    } = yield* call(parseAndValidateSwapParams, url)
+    } = parseAndValidateSwapParams(url)
 
     const inputAsset: CurrencyAsset = {
       address: inputAddress,
@@ -49,7 +49,7 @@ export function* handleSwapLink(url: URL) {
   }
 }
 
-export function* parseAndValidateSwapParams(url: URL) {
+const parseAndValidateSwapParams = (url: URL) => {
   const inputCurrencyId = url.searchParams.get('inputCurrencyId')
   const outputCurrencyId = url.searchParams.get('outputCurrencyId')
   const currencyField = url.searchParams.get('currencyField')
@@ -85,14 +85,12 @@ export function* parseAndValidateSwapParams(url: URL) {
     throw new Error('Invalid tokenAddress provided within outputCurrencyId')
   }
 
-  const activeChainIds = yield* call(selectActiveChainIds)
-
-  if (!activeChainIds.includes(inputChain)) {
-    throw new Error('Invalid inputCurrencyId. Chain ID is not currently active')
+  if (!ALL_SUPPORTED_CHAIN_IDS.includes(inputChain)) {
+    throw new Error('Invalid inputCurrencyId. Chain ID is not supported')
   }
 
-  if (!activeChainIds.includes(outputChain)) {
-    throw new Error('Invalid outputCurrencyId. Chain ID is not currently active')
+  if (!ALL_SUPPORTED_CHAIN_IDS.includes(outputChain)) {
+    throw new Error('Invalid outputCurrencyId. Chain ID is not supported')
   }
 
   try {

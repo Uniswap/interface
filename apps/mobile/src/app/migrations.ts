@@ -7,8 +7,7 @@ import dayjs from 'dayjs'
 import { AccountToNftData } from 'src/features/favorites/slice'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import { ACTIVE_CHAINS, ChainId } from 'wallet/src/constants/chains'
-import { ChainsState } from 'wallet/src/features/chains/slice'
+import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
 import {
@@ -240,8 +239,14 @@ export const migrations = {
   19: (state: any) => {
     const newState = { ...state }
 
-    const chainState: ChainsState | undefined = newState?.chains
-    const newChainState = Object.keys(chainState?.byChainId ?? {}).reduce<ChainsState>(
+    const chainState:
+      | {
+          byChainId: Partial<Record<ChainId, { isActive: boolean }>>
+        }
+      | undefined = newState?.chains
+    const newChainState = Object.keys(chainState?.byChainId ?? {}).reduce<{
+      byChainId: Partial<Record<ChainId, { isActive: boolean }>>
+    }>(
       (tempState, chainIdString) => {
         const chainId = toSupportedChainId(chainIdString)
         if (!chainId) return tempState
@@ -644,7 +649,14 @@ export const migrations = {
   47: function resetActiveChains(state: any) {
     const newState = { ...state }
 
-    newState.chains.byChainId = ACTIVE_CHAINS
+    newState.chains.byChainId = {
+      '1': { isActive: true },
+      '10': { isActive: true },
+      '56': { isActive: true },
+      '137': { isActive: true },
+      '8453': { isActive: true },
+      '42161': { isActive: true },
+    }
 
     return newState
   },
@@ -663,6 +675,12 @@ export const migrations = {
       ...state.wallet.settings,
       swapProtection: SwapProtectionSetting.On,
     }
+    return newState
+  },
+
+  50: function deleteChainsSlice(state: any) {
+    const newState = { ...state }
+    delete newState.chains
     return newState
   },
 }

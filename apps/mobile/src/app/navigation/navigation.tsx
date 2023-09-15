@@ -41,7 +41,6 @@ import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { SettingsAppearanceScreen } from 'src/screens/SettingsAppearanceScreen'
 import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthScreen'
-import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCloudBackupPasswordConfirmScreen'
 import { SettingsCloudBackupPasswordCreateScreen } from 'src/screens/SettingsCloudBackupPasswordCreateScreen'
 import { SettingsCloudBackupProcessingScreen } from 'src/screens/SettingsCloudBackupProcessingScreen'
@@ -78,7 +77,6 @@ function SettingsStackGroup(): JSX.Element {
         name={Screens.SettingsWalletManageConnection}
       />
       <SettingsStack.Screen component={WebViewScreen} name={Screens.WebView} />
-      <SettingsStack.Screen component={SettingsChainsScreen} name={Screens.SettingsChains} />
       <SettingsStack.Screen component={DevScreen} name={Screens.Dev} />
       <SettingsStack.Screen
         component={SettingsBiometricAuthScreen}

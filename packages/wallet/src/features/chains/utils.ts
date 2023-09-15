@@ -1,21 +1,14 @@
 import { BigNumberish } from 'ethers'
 import {
   ALL_SUPPORTED_CHAINS,
-  ALL_SUPPORTED_CHAIN_IDS,
   ChainId,
-  ChainIdTo,
-  ChainState,
-  isL2Chain,
+  L2ChainId,
+  L2_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
 } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 
 import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
-
-// ALL_SUPPORTED_CHAINS is manually sorted by chain TVL
-export function getSortedActiveChainIds(chains: ChainIdTo<ChainState>): ChainId[] {
-  return ALL_SUPPORTED_CHAIN_IDS.filter((n: ChainId) => !!chains[n]?.isActive)
-}
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
@@ -26,21 +19,23 @@ export function toSupportedChainId(chainId?: BigNumberish): ChainId | null {
   return parseInt(chainId.toString(), 10) as ChainId
 }
 
-export function chainIdtoHexadecimalString(chainId: ChainId): string {
+export function chainIdToHexadecimalString(chainId: ChainId): string {
   return chainId.toString(16)
 }
 
-export function chainListToStateMap(chainIds: ChainId[]): Partial<Record<ChainId, ChainState>> {
-  return chainIds.reduce<ChainIdTo<ChainState>>((memo, chainId) => {
-    memo[chainId] = { isActive: true }
-    return memo
-  }, {})
-}
+export const isL2Chain = (chainId?: ChainId): boolean =>
+  Boolean(chainId && L2_CHAIN_IDS.includes(chainId as L2ChainId))
 
 export function isTestnet(chainId?: ChainId): boolean {
   if (!chainId) return false
 
   return TESTNET_CHAIN_IDS.includes(chainId)
+}
+
+export function isPolygonChain(
+  chainId: number
+): chainId is ChainId.Polygon | ChainId.PolygonMumbai {
+  return chainId === ChainId.PolygonMumbai || chainId === ChainId.Polygon
 }
 
 export function fromGraphQLChain(chain: Chain | undefined): ChainId | null {

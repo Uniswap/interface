@@ -1,5 +1,4 @@
 import { ModalName } from 'src/features/telemetry/constants'
-import { ACTIVE_CHAINS } from 'wallet/src/constants/chains'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 // only add fields that are persisted
@@ -8,7 +7,12 @@ export const initialSchema = {
     byChainId: {},
   },
   chains: {
-    byChainId: ACTIVE_CHAINS,
+    byChainId: {
+      '1': { isActive: true },
+      '10': { isActive: true },
+      '137': { isActive: true },
+      '42161': { isActive: true },
+    },
   },
   favorites: {
     tokens: [],
@@ -320,7 +324,19 @@ delete v45SchemaIntermediate.trmApi
 export const v46Schema = { ...v45SchemaIntermediate }
 
 // Remove reliance on env var config.activeChains
-export const v47Schema = { ...v46Schema, chains: { byChainId: ACTIVE_CHAINS } }
+export const v47Schema = {
+  ...v46Schema,
+  chains: {
+    byChainId: {
+      '1': { isActive: true },
+      '10': { isActive: true },
+      '56': { isActive: true },
+      '137': { isActive: true },
+      '8453': { isActive: true },
+      '42161': { isActive: true },
+    },
+  },
+}
 
 export const v48Schema = { ...v46Schema, tweaks: {} }
 
@@ -335,6 +351,10 @@ export const v49Schema = {
   },
 }
 
+const v50SchemaIntermediate = { ...v49Schema, chains: undefined }
+delete v50SchemaIntermediate.chains
+export const v50Schema = { ...v50SchemaIntermediate }
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v49Schema => v49Schema
+export const getSchema = (): typeof v50Schema => v50Schema

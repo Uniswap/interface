@@ -7,7 +7,6 @@ import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
-import { isL2Chain } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   AGGRESSIVE_AUTO_SLIPPAGE_TOLERANCE,
@@ -15,6 +14,7 @@ import {
   MAX_TRADE_SIZE_FOR_AGGRESSIVE_SLIPPAGE_USD,
   MIN_AUTO_SLIPPAGE_TOLERANCE,
 } from 'wallet/src/constants/transactions'
+import { isL2Chain } from 'wallet/src/features/chains/utils'
 import { useRouterQuote } from 'wallet/src/features/routing/hooks'
 import { QuoteResult } from 'wallet/src/features/routing/types'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'

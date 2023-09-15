@@ -34,7 +34,7 @@ import {
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'
 import { v4 as uuidv4 } from 'uuid'
-import { chainIdtoHexadecimalString } from 'wallet/src/features/chains/utils'
+import { chainIdToHexadecimalString } from 'wallet/src/features/chains/utils'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
 
@@ -148,7 +148,7 @@ export class InjectedProvider extends EventEmitter {
       switch (messageData?.type) {
         case ExtensionRequestType.SwitchChain: {
           const request = messageData as ExtensionChainChange
-          const chainId = chainIdtoHexadecimalString(request.chainId)
+          const chainId = chainIdToHexadecimalString(request.chainId)
           this.chainId = chainId
           this.provider = new ethers.providers.JsonRpcProvider(request.providerUrl)
           this.emit('chainChanged', chainId)
