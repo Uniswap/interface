@@ -99,17 +99,14 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
               </Flex>
             ) : (
               <Flex alignItems="flex-end" gap="spacing4" pl="spacing8">
-                <Text
-                  color={isWarmLoading ? 'neutral2' : 'neutral1'}
-                  numberOfLines={1}
-                  variant="bodyLarge">
+                <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
                   {formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
                 </Text>
                 <RelativeChange
                   alignRight
                   change={relativeChange24 ?? undefined}
-                  negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
-                  positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
+                  negativeChangeColor="$statusCritical"
+                  positiveChangeColor="$statusSuccess"
                   variant="bodySmall"
                 />
               </Flex>

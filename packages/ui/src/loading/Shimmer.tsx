@@ -1,5 +1,5 @@
 import MaskedView from '@react-native-masked-view/masked-view'
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { LayoutRectangle, StyleSheet, View } from 'react-native'
 import Reanimated, {
   interpolate,
@@ -24,7 +24,7 @@ export function Shimmer({ children, contrast }: Props): JSX.Element {
   const [layout, setLayout] = useState<LayoutRectangle | null>()
   const xPosition = useSharedValue(0)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // TODO: [MOB-210] tweak animation to be smoother, right now sometimes looks kind of stuttery
     xPosition.value = withRepeat(withTiming(1, { duration: SHIMMER_DURATION }), Infinity, true)
 
