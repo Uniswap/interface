@@ -38,11 +38,11 @@ interface ChainSelectorProps {
 
 function useWalletSupportedChains(): ChainId[] {
   const { connector } = useWeb3React()
-
   const connectionType = getConnection(connector).type
 
   switch (connectionType) {
-    case ConnectionType.WALLET_CONNECT_V2 || ConnectionType.UNISWAP_WALLET_V2:
+    case ConnectionType.WALLET_CONNECT_V2:
+    case ConnectionType.UNISWAP_WALLET_V2:
       return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
     default:
       return NETWORK_SELECTOR_CHAINS
