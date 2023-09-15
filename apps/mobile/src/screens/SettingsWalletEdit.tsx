@@ -41,11 +41,12 @@ export function SettingsWalletEdit({
   const handleNicknameUpdate = (): void => {
     Keyboard.dismiss()
     setShowEditInput(false)
+    setNickname(nickname?.trim())
     dispatch(
       editAccountActions.trigger({
         type: EditAccountAction.Rename,
         address,
-        newName: nickname ?? '',
+        newName: nickname?.trim() ?? '',
       })
     )
   }
