@@ -12,7 +12,6 @@ import {
   L1_CHAIN_IDS,
   L2_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
-  UniWalletSupportedChains,
 } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
@@ -43,10 +42,8 @@ function useWalletSupportedChains(): ChainId[] {
   const connectionType = getConnection(connector).type
 
   switch (connectionType) {
-    case ConnectionType.WALLET_CONNECT_V2:
+    case ConnectionType.WALLET_CONNECT_V2 || ConnectionType.UNISWAP_WALLET_V2:
       return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
-    case ConnectionType.UNISWAP_WALLET_V2:
-      return UniWalletSupportedChains
     default:
       return NETWORK_SELECTOR_CHAINS
   }
