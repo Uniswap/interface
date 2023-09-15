@@ -70,6 +70,7 @@ describe('Web3Provider', () => {
       const mockConnection = connections[0]
       mockProvider = mockConnection.connector.provider as MockEIP1193Provider
       mocked(getConnection).mockReturnValue(mockConnection)
+      jest.spyOn(console, 'warn').mockImplementation()
     })
 
     it('sends event when the active account changes', async () => {
@@ -87,7 +88,7 @@ describe('Web3Provider', () => {
 
       // Assert
       expect(sendAnalyticsEvent).toHaveBeenCalledTimes(1)
-      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: '0x0000000000000000000000000000000000000000',
         wallet_type: 'test',
@@ -123,7 +124,7 @@ describe('Web3Provider', () => {
 
       // Assert
       expect(sendAnalyticsEvent).toHaveBeenCalledTimes(3)
-      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: '0x0000000000000000000000000000000000000000',
         wallet_type: 'test',

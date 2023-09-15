@@ -5,8 +5,8 @@ import { PricePoint } from 'graphql/data/util'
 import { memo } from 'react'
 import styled, { useTheme } from 'styled-components'
 
-import { getPriceBounds } from '../Tokens/TokenDetails/PriceChart'
 import LineChart from './LineChart'
+import { getPriceBounds } from './PriceChart/utils'
 
 const LoadingContainer = styled.div`
   height: 100%;
@@ -48,7 +48,9 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange, sparkli
       // the range of possible output values that the inputs should be transformed to (see https://www.d3indepth.com/scales/ for details)
       [0, 110]
     )
-  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([30, 0])
+
+  const { min, max } = getPriceBounds(pricePoints)
+  const rdScale = scaleLinear().domain([min, max]).range([30, 0])
   const curveTension = 0.9
 
   return (

@@ -7,13 +7,7 @@ import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { WalletConnectV2 } from 'connection/WalletConnectV2'
 import { getChainInfo } from 'constants/chainInfo'
-import {
-  getChainPriority,
-  L1_CHAIN_IDS,
-  L2_CHAIN_IDS,
-  TESTNET_CHAIN_IDS,
-  UniWalletSupportedChains,
-} from 'constants/chains'
+import { getChainPriority, L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -39,14 +33,12 @@ interface ChainSelectorProps {
 
 function useWalletSupportedChains(): ChainId[] {
   const { connector } = useWeb3React()
-
   const connectionType = getConnection(connector).type
 
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
-      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
     case ConnectionType.UNISWAP_WALLET_V2:
-      return UniWalletSupportedChains
+      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
     default:
       return NETWORK_SELECTOR_CHAINS
   }

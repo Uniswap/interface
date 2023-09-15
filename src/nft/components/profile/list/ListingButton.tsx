@@ -5,7 +5,6 @@ import { useIsMobile, useSellAsset } from 'nft/hooks'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
-import { shallow } from 'zustand/shallow'
 
 import { findListingIssues } from './utils'
 
@@ -37,8 +36,7 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
       toggleShowResolveIssues,
       issues,
       setIssues,
-    }),
-    shallow
+    })
   )
   const [showWarning, setShowWarning] = useState(false)
   const isMobile = useIsMobile()
