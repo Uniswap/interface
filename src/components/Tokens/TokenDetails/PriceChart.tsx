@@ -25,6 +25,7 @@ import {
 } from 'utils/formatChartTimes'
 import { formatUSDPrice } from 'utils/formatNumbers'
 
+import AnimatedNumber from './AnimatedNumber'
 import { calculateDelta, DeltaArrow, formatDelta } from './Delta'
 
 const DATA_EMPTY = { value: 0, timestamp: 0 }
@@ -309,7 +310,13 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
       <ChartHeader data-cy="chart-header">
         {displayPrice.value ? (
           <>
-            <TokenPrice>{formatUSDPrice(displayPrice.value)}</TokenPrice>
+            <TokenPrice>
+              <AnimatedNumber
+                colorIndicationDuration={2000}
+                value={formatUSDPrice(displayPrice.value)}
+                num={displayPrice.value}
+              />
+            </TokenPrice>
             <ChartDelta startingPrice={startingPrice} endingPrice={displayPrice} />
           </>
         ) : lastPrice.value ? (

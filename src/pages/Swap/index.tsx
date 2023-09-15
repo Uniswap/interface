@@ -345,10 +345,17 @@ export function Swap({
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers(dispatch)
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
+  const [recentlyTyped, setRecentlyTyped] = useState<boolean>(false)
+
+  useEffect(() => {
+    setRecentlyTyped(false)
+  }, [trade?.inputAmount, trade?.outputAmount])
+
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
       maybeLogFirstSwapAction(trace)
+      setRecentlyTyped(true)
     },
     [onUserInput, trace]
   )
@@ -356,6 +363,7 @@ export function Swap({
     (value: string) => {
       onUserInput(Field.OUTPUT, value)
       maybeLogFirstSwapAction(trace)
+      setRecentlyTyped(true)
     },
     [onUserInput, trace]
   )
@@ -624,6 +632,8 @@ export function Swap({
               showCommonBases
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
+              recentlyTyped={recentlyTyped}
+              isDependentField={independentField === Field.OUTPUT}
               ref={inputCurrencyNumericalInputRef}
             />
           </Trace>
@@ -667,6 +677,7 @@ export function Swap({
                 showCommonBases
                 id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                 loading={independentField === Field.INPUT && routeIsSyncing}
+                isDependentField={independentField === Field.INPUT}
                 numericalInputSettings={{
                   // We disable numerical input here if the selected token has tax, since we cannot guarantee exact_outputs for FOT tokens
                   disabled: outputTokenHasTax,

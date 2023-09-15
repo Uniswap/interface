@@ -8,6 +8,7 @@ import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWr
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import AnimatedNumber from 'components/Tokens/TokenDetails/AnimatedNumber2'
 import Tooltip from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import ms from 'ms'
@@ -142,6 +143,7 @@ const InputRow = styled.div`
   ${flexRowNoWrap};
   align-items: center;
   justify-content: space-between;
+  height: 44px;
 `
 
 const LabelRow = styled.div`
@@ -207,12 +209,18 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   }
 `
 
-const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
-  ${loadingOpacityMixin};
+const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean; $hideText: boolean }>`
+  /* ${loadingOpacityMixin}; */
   text-align: left;
   font-size: 36px;
   font-weight: 485;
   max-height: 44px;
+  caret-color: ${({ theme }) => theme.neutral1};
+  /* opacity: 0.5; */
+  ${({ $hideText, theme }) => $hideText && `color: ${theme.surface1}`}/* ::selection {
+    background: rgba(252, 114, 255, 0.8);
+    color: #000;
+  } */
 `
 
 interface SwapCurrencyInputPanelProps {
@@ -237,6 +245,8 @@ interface SwapCurrencyInputPanelProps {
   locked?: boolean
   loading?: boolean
   disabled?: boolean
+  recentlyTyped?: boolean
+  isDependentField: boolean
   numericalInputSettings?: {
     disabled?: boolean
     onDisabledClick?: () => void
@@ -267,6 +277,8 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       locked = false,
       loading = false,
       disabled = false,
+      recentlyTyped,
+      isDependentField,
       numericalInputSettings,
       label,
       ...rest
@@ -316,6 +328,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
               <div style={{ display: 'flex', flexGrow: '1' }} onClick={handleDisabledNumericalInputClick}>
                 <StyledNumericalInput
                   className="token-amount-input"
+                  $hideText={isDependentField}
                   value={value}
                   onUserInput={onUserInput}
                   disabled={!chainAllowed || disabled || numericalInputSettings?.disabled}
@@ -325,6 +338,13 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                 />
               </div>
             )}
+            <AnimatedNumber
+              colorIndicationDuration={recentlyTyped ? 0 : 2000}
+              value={value}
+              num={Number(value)}
+              hideText={!isDependentField}
+            />
+
             <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen}>
               <Tooltip
                 show={tooltipVisible && !modalOpen}
