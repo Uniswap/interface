@@ -1,4 +1,5 @@
 import { Currency } from '@pollum-io/sdk-core'
+import { ChainId } from '@pollum-io/smart-order-router'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
@@ -101,11 +102,11 @@ export function validateUrlChainParam(chainName: string | undefined) {
 
 // TODO(cartcrom): refactor into safer lookup & replace usage
 // TODO verify this later
-export const CHAIN_NAME_TO_CHAIN_ID: { [key in string]: SupportedChainId } = {
-  ['ROLLUX' as Chain]: SupportedChainId.ROLLUX,
+export const CHAIN_NAME_TO_CHAIN_ID: { [key in string]: ChainId } = {
+  ['ROLLUX' as Chain]: ChainId.ROLLUX,
 }
 
-export function fromGraphQLChain(chain: Chain): SupportedChainId {
+export function fromGraphQLChain(chain: Chain): ChainId {
   return CHAIN_NAME_TO_CHAIN_ID[chain]
 }
 

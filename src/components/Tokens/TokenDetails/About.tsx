@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { ChainId } from '@pollum-io/smart-order-router'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { darken } from 'polished'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
@@ -69,7 +69,7 @@ const ResourcesContainer = styled.div`
 
 type AboutSectionProps = {
   address: string
-  chainId: SupportedChainId
+  chainId: ChainId
   description?: string | null
   homepageUrl?: string | null
   twitterName?: string | null
