@@ -4,9 +4,6 @@ import { getDeviceId, sendAnalyticsEvent, Trace, user } from 'analytics'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
-import Polling from 'components/Polling'
-import Popups from 'components/Popups'
-import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
 import { useAtom } from 'jotai'
@@ -32,6 +29,7 @@ import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 import Landing from './Landing'
 import Swap from './Swap'
 
+const AppChrome = lazy(() => import('./AppChrome'))
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
@@ -219,9 +217,9 @@ export default function App() {
             <NavBar blur={isHeaderTransparent} />
           </HeaderWrapper>
           <BodyWrapper>
-            <Popups />
-            <Polling />
-            <TopLevelModals />
+            <Suspense>
+              <AppChrome />
+            </Suspense>
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
