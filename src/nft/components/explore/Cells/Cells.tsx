@@ -3,10 +3,11 @@ import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
-import { ethNumberStandardFormatter, volumeFormatter } from 'nft/utils'
+import { volumeFormatter } from 'nft/utils'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import * as styles from './Cells.css'
 
@@ -113,11 +114,12 @@ export const EthCell = ({
   denomination: Denomination
   usdPrice?: number
 }) => {
+  const { formatNumberOrString } = useFormatter()
   const denominatedValue = getDenominatedValue(denomination, false, value, usdPrice)
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
-      ? ethNumberStandardFormatter(denominatedValue.toString(), false, true, false) + ' ETH'
-      : ethNumberStandardFormatter(denominatedValue, true, false, true)
+      ? formatNumberOrString({ input: denominatedValue.toString(), type: NumberType.NFTTokenFloorPrice }) + ' ETH'
+      : formatNumberOrString({ input: denominatedValue, type: NumberType.FiatTokenStats })
     : '-'
 
   const isMobile = useIsMobile()
@@ -141,12 +143,13 @@ export const VolumeCell = ({
   denomination: Denomination
   usdPrice?: number
 }) => {
+  const { formatNumberOrString } = useFormatter()
   const denominatedValue = getDenominatedValue(denomination, false, value, usdPrice)
 
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
-      ? ethNumberStandardFormatter(denominatedValue.toString(), false, false, true) + ' ETH'
-      : ethNumberStandardFormatter(denominatedValue, true, false, true)
+      ? formatNumberOrString({ input: denominatedValue.toString(), type: NumberType.NFTTokenFloorPrice }) + ' ETH'
+      : formatNumberOrString({ input: denominatedValue, type: NumberType.FiatTokenStats })
     : '-'
 
   return (
