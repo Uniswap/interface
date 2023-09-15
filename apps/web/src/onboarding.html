@@ -1,0 +1,26 @@
+<!--
+-- UI entrypoint for extension onboarding flow.
+--
+-- This exists as a separate React App from the main extension with its own store because it doesn't
+-- need to rely on the service worker to maintain the redux state with web-ext redux. Rather the onboarding
+-- flow is a standard single page app completely decoupled from the background server going to sleep.
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+    html,
+    body,
+    #root {
+    min-height: 100%;
+    }
+    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uniswap Wallet</title>
+  </head>
+  <body>
+    <div id="onboarding-root"></div>
+    <script type="module" src="onboarding.js"></script>
+  </body>
+</html>

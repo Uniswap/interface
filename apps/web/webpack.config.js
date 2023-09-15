@@ -143,7 +143,8 @@ const options = {
   mode: NODE_ENV,
   entry: {
     background: './src/background/index.ts',
-    index: './src/index.tsx',
+    onboarding: './src/onboarding/onboarding.tsx',
+    sidebar: './src/sidebar/sidebar.tsx',
     injected: './src/contentScript/injected.ts',
     ethereum: './src/contentScript/ethereum.js',
   },

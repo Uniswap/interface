@@ -15,16 +15,18 @@ import { initializeStore, WebState } from './store'
 // reset to false, as expected, whenever the service worker wakes up from idle.
 let isInitialized = false
 
+// Track if the user is in the onboarding flow. If they are when the onConnect event fires then
+// we need to reinitialize the store for the sidepanel.
+let isInOnboarding = false
+
 // Allows users to open the side panel by clicking on the action toolbar icon
-// TODO(EXT-311): move this until after onboarding is completed so the sidepanel doesn't flash when clicking the action item when the onboarding page is open.
+// TODO(EXT-311): the sidepanel flashes when clicking the action item when the onboarding page is open.
 chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
   .catch((error) =>
     logger.error(error, { tags: { file: 'background/index.ts', function: 'setPanelBehavior' } })
   )
 
-// TODO(EXT-285): if the service worker goes to sleep mid onboarding then we get an error.
-// it likely needs to wait for the store to be initialized.
 /** Main entrypoint for intializing the app. */
 const initApp = async (): Promise<void> => {
   if (isInitialized) {
@@ -70,12 +72,17 @@ chrome.runtime.onConnect.addListener(async (port) => {
     return
   }
 
-  notifyStoreInitialized()
+  if (isInOnboarding) {
+    isInitialized = false
+    isInOnboarding = false
+    await initApp()
+  } else {
+    notifyStoreInitialized()
+  }
 })
 
 async function maybeOpenOnboarding({
   state,
-  dispatch,
 }: {
   state: WebState
   dispatch: Dispatch<AnyAction>
@@ -83,7 +90,8 @@ async function maybeOpenOnboarding({
   const isOnboarded = isOnboardedSelector(state)
 
   if (!isOnboarded) {
-    await focusOrCreateOnboardingTab({ dispatch })
+    isInOnboarding = true
+    await focusOrCreateOnboardingTab()
   }
 }
 

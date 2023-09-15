@@ -3,7 +3,6 @@ import {
   dappRequestWatcher,
   extensionRequestWatcher,
 } from 'src/background/features/dappRequests/saga'
-import { navigationSaga } from 'src/background/utils/navigationSaga'
 import { spawn } from 'typed-redux-saga'
 import { authActions, authReducer, authSaga, authSagaName } from 'wallet/src/features/auth/saga'
 import { initProviders } from 'wallet/src/features/providers'
@@ -27,7 +26,6 @@ import {
   importAccountSagaName,
 } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
-import { keepAliveSaga } from './utils/keepaliveSaga'
 
 // Stateful sagas that are registered with the store on startup
 export const monitoredSagas: Record<string, MonitoredSaga> = {
@@ -62,8 +60,6 @@ const sagasInitializedOnStartup = [
   dappRequestWatcher,
   extensionRequestWatcher,
   initProviders,
-  keepAliveSaga, // TODO(EXT:285): remove this and replace with session storage
-  navigationSaga,
   pendingAccountSaga,
 ] as const
 

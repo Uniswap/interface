@@ -1,20 +1,20 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="../../../index.d.ts" />
+/// <reference path="../../../../index.d.ts" />
 
 import React, { lazy } from 'react'
 import { createRoot } from 'react-dom/client'
+import { WebState } from 'src/background/store'
+import { PortName } from 'src/types'
 import { logger } from 'utilities/src/logger/logger'
 import { initializeTranslation } from 'wallet/src/i18n/i18n'
 import { Store } from 'webext-redux'
-import { WebState } from './background/store'
-import { PortName } from './types'
 ;(globalThis as any).regeneratorRuntime = undefined // eslint-disable-line @typescript-eslint/no-explicit-any
 // The globalThis.regeneratorRuntime = undefined addresses a potentially unsafe-eval problem
 // see https://github.com/facebook/regenerator/issues/378#issuecomment-802628326
 
 logger.debug('content_window', 'init', 'initial load')
 
-const App = lazy(() => import('src/app/App'))
+const App = lazy(() => import('src/app/SidebarApp'))
 
 chrome.runtime.connect({ name: PortName.Popup })
 chrome.runtime.onMessage.addListener(async (req) => {
