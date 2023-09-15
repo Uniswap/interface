@@ -4,9 +4,10 @@ import { getDeviceId, sendAnalyticsEvent, Trace, user } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
+import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useRouterPreference } from 'state/user/hooks'
@@ -17,17 +18,16 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
-import { getEnvName } from 'utils/env'
+import { getEnvName, isBrowserRouterEnabled } from 'utils/env'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
-import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
-import { PageTabs } from '../components/NavBar'
-import NavBar from '../components/NavBar'
+import NavBar, { PageTabs } from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
+import { getDownloadAppLink } from '../utils/openDownloadApp'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
@@ -46,6 +46,7 @@ import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
+const PoolDetails = lazy(() => import('./PoolDetails'))
 const Vote = lazy(() => import('./Vote'))
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
@@ -112,13 +113,13 @@ export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const [shouldDisableNFTRoutes, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
 
-  const { pathname } = useLocation()
+  const browserRouterEnabled = isBrowserRouterEnabled()
+  const { hash, pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
   const [routerPreference] = useRouterPreference()
   const [scrolledState, setScrolledState] = useState(false)
-
-  useAnalyticsReporter()
+  const infoPoolPageEnabled = useInfoPoolPageEnabled()
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -187,6 +188,18 @@ export default function App() {
     [account]
   )
 
+  // redirect address to landing pages until implemented
+  const shouldRedirectToAppInstall = pathname?.startsWith('/address/')
+  useLayoutEffect(() => {
+    if (shouldRedirectToAppInstall) {
+      window.location.href = getDownloadAppLink()
+    }
+  }, [shouldRedirectToAppInstall])
+
+  if (shouldRedirectToAppInstall) {
+    return null
+  }
+
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
@@ -211,12 +224,19 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  <Route path="/" element={<Landing />} />
+                  <Route
+                    path="/"
+                    element={
+                      // If we match "/" and # is defined, we are using BrowserRouter and need to redirect.
+                      browserRouterEnabled && hash ? <Navigate to={hash.replace('#', '')} replace /> : <Landing />
+                    }
+                  />
 
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>
                   <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
+                  {infoPoolPageEnabled && <Route path="pools/:chainName/:poolAddress" element={<PoolDetails />} />}
                   <Route
                     path="vote/*"
                     element={

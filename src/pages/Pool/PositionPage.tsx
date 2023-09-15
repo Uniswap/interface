@@ -1,12 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { InterfacePageName } from '@uniswap/analytics-events'
-import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
+import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
-import { sendEvent } from 'components/analytics'
+import { sendAnalyticsEvent, Trace } from 'analytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
@@ -29,13 +28,14 @@ import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
-import { ExternalLink, HideExtraSmall, HideSmall, ThemedText } from 'theme'
+import { ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
+import { WrongChainError } from 'utils/errors'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { formatPrice, NumberType } from 'utils/formatNumbers'
 import { formatTickPrice } from 'utils/formatTickPrice'
@@ -51,15 +51,6 @@ import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styled'
-
-const getTokenLink = (chainId: ChainId, address: string) => {
-  if (isGqlSupportedChain(chainId)) {
-    const chainName = CHAIN_IDS_TO_NAMES[chainId]
-    return `${window.location.origin}/#/tokens/${chainName}/${address}`
-  } else {
-    return getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
-  }
-}
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
   width: 228px;
@@ -211,17 +202,31 @@ function CurrentPriceCard({
   )
 }
 
+const TokenLink = ({
+  children,
+  chainId,
+  address,
+}: PropsWithChildren<{ chainId: keyof typeof CHAIN_IDS_TO_NAMES; address: string }>) => {
+  const chainName = CHAIN_IDS_TO_NAMES[chainId]
+  return <StyledRouterLink to={`/tokens/${chainName}/${address}`}>{children}</StyledRouterLink>
+}
+
+const ExternalTokenLink = ({ children, chainId, address }: PropsWithChildren<{ chainId: number; address: string }>) => {
+  return <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.TOKEN)}>{children}</ExternalLink>
+}
+
 function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Currency }) {
   const address = (currency as Token)?.address
 
   if (typeof chainId === 'number' && address) {
+    const Link = isGqlSupportedChain(chainId) ? TokenLink : ExternalTokenLink
     return (
-      <ExternalLink href={getTokenLink(chainId, address)}>
+      <Link chainId={chainId} address={address}>
         <RowFixed>
           <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
           <ThemedText.DeprecatedMain>{currency?.symbol} ↗</ThemedText.DeprecatedMain>
         </RowFixed>
-      </ExternalLink>
+      </Link>
     )
   }
 
@@ -487,7 +492,7 @@ function PositionPageContent() {
 
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
-  const collect = useCallback(() => {
+  const collect = useCallback(async () => {
     if (
       !currency0ForFeeCollectionPurposes ||
       !currency1ForFeeCollectionPurposes ||
@@ -516,6 +521,9 @@ function PositionPageContent() {
       value,
     }
 
+    const connectedChainId = await provider.getSigner().getChainId()
+    if (chainId !== connectedChainId) throw new WrongChainError()
+
     provider
       .getSigner()
       .estimateGas(txn)
@@ -532,9 +540,8 @@ function PositionPageContent() {
             setCollectMigrationHash(response.hash)
             setCollecting(false)
 
-            sendEvent({
-              category: 'Liquidity',
-              action: 'CollectV3',
+            sendAnalyticsEvent(LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED, {
+              source: LiquiditySource.V3,
               label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
             })
 

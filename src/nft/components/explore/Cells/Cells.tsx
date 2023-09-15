@@ -1,6 +1,5 @@
 import { formatEther } from '@ethersproject/units'
-import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
-import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
@@ -162,11 +161,7 @@ export const ChangeCell = ({ change, children }: { children?: ReactNode; change?
   const TextComponent = isMobile ? ThemedText.BodySmall : ThemedText.BodyPrimary
   return (
     <ChangeCellContainer change={change ?? 0}>
-      {!change || change > 0 ? (
-        <ArrowChangeUp width="16px" height="16px" />
-      ) : (
-        <ArrowChangeDown width="16px" height="16px" />
-      )}
+      <DeltaArrow delta={change} />
       <TextComponent color="currentColor">{children || `${change ? Math.abs(Math.round(change)) : 0}%`}</TextComponent>
     </ChangeCellContainer>
   )

@@ -1,8 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { IMetric, MetricLoggerUnit, setGlobalMetric } from '@uniswap/smart-order-router'
-import { sendTiming } from 'components/analytics'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
+import { ZERO_PERCENT } from 'constants/misc'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms'
 import { useMemo } from 'react'
@@ -27,7 +26,9 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   otherCurrency: Currency | undefined,
   routerPreference: typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
   skipFetch?: boolean,
-  account?: string
+  account?: string,
+  inputTax?: Percent,
+  outputTax?: Percent
 ): {
   state: TradeState
   trade?: ClassicTrade
@@ -40,7 +41,9 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference,
   skipFetch?: boolean,
-  account?: string
+  account?: string,
+  inputTax?: Percent,
+  outputTax?: Percent
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -59,7 +62,9 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
   skipFetch = false,
-  account?: string
+  account?: string,
+  inputTax = ZERO_PERCENT,
+  outputTax = ZERO_PERCENT
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -81,6 +86,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     amount: amountSpecified,
     tradeType,
     routerPreference,
+    inputTax,
+    outputTax,
   })
 
   const { isError, data: tradeResult, error, currentData } = useGetQuoteQueryState(queryArgs)
@@ -127,20 +134,3 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     tradeResult?.trade,
   ])
 }
-
-// only want to enable this when app hook called
-class GAMetric extends IMetric {
-  putDimensions() {
-    return
-  }
-
-  putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
-    sendTiming('Routing API', `${key} | ${unit}`, value, 'client')
-  }
-
-  setProperty() {
-    return
-  }
-}
-
-setGlobalMetric(new GAMetric())

@@ -11,7 +11,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 
@@ -26,6 +26,7 @@ const StyledGasIcon = styled(Gas)`
 
 export default function GasEstimateTooltip({ trade, loading }: { trade?: InterfaceTrade; loading: boolean }) {
   const { chainId } = useWeb3React()
+  const { formatNumber } = useFormatter()
 
   if (!trade || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {
     return null
@@ -47,10 +48,20 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Interfa
           {isUniswapXTrade(trade) ? <UniswapXRouterIcon testId="gas-estimate-uniswapx-icon" /> : <StyledGasIcon />}
           <ThemedText.BodySmall color="neutral2">
             <Row gap="xs">
-              <div>{formatNumber(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}</div>
+              <div>
+                {formatNumber({
+                  input: trade.totalGasUseEstimateUSD,
+                  type: NumberType.FiatGasPrice,
+                })}
+              </div>
               {isUniswapXTrade(trade) && (
                 <div>
-                  <s>{formatNumber(trade.classicGasUseEstimateUSD, NumberType.FiatGasPrice)}</s>
+                  <s>
+                    {formatNumber({
+                      input: trade.classicGasUseEstimateUSD,
+                      type: NumberType.FiatGasPrice,
+                    })}
+                  </s>
                 </div>
               )}
             </Row>
