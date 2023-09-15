@@ -318,9 +318,10 @@ export default function Landing() {
     }
   }, [accountDrawerOpen, navigate])
 
-  const queryParams = parse(useLocation().search, { ignoreQueryPrefix: true })
+  const location = useLocation()
+  const queryParams = parse(location.search, { ignoreQueryPrefix: true })
   if (selectedWallet && !queryParams.intro) {
-    return <Navigate to="/swap" replace />
+    return <Navigate to={{ ...location, pathname: '/swap' }} replace />
   }
 
   return (

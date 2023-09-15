@@ -114,7 +114,8 @@ export default function App() {
   const [shouldDisableNFTRoutes, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
 
   const browserRouterEnabled = isBrowserRouterEnabled()
-  const { hash, pathname } = useLocation()
+  const location = useLocation()
+  const { hash, pathname } = location
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
   const [routerPreference] = useRouterPreference()
@@ -246,7 +247,7 @@ export default function App() {
                     }
                   />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="send" element={<Navigate to="/swap" replace />} />
+                  <Route path="send" element={<Navigate to={{ ...location, pathname: '/swap' }} replace />} />
                   <Route path="swap" element={<Swap />} />
 
                   <Route path="pool/v2/find" element={<PoolFinder />} />
