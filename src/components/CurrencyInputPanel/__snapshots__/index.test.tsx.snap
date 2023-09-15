@@ -1,0 +1,341 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Currency input panel Should render with "Select token" 1`] = `
+.c5 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c10 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c12 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c6 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c6:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c6 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c6 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c7 {
+  background-color: #FFFFFF;
+  color: #7D7D7D;
+  border: 1px solid #22222212;
+  font-size: 16px;
+  font-weight: 535;
+}
+
+.c7:hover {
+  background-color: #ececec;
+}
+
+.c7:active {
+  background-color: #e0e0e0;
+}
+
+.c3 {
+  color: #222222;
+  pointer-events: auto;
+  width: 0;
+  position: relative;
+  font-weight: 485;
+  outline: none;
+  border: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  background-color: transparent;
+  font-size: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px;
+  -webkit-appearance: textfield;
+  text-align: right;
+}
+
+.c3::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.c3 [type='number'] {
+  -moz-appearance: textfield;
+}
+
+.c3::-webkit-outer-spin-button,
+.c3::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.c3::-webkit-input-placeholder {
+  color: #CECECE;
+}
+
+.c3::-moz-placeholder {
+  color: #CECECE;
+}
+
+.c3:-ms-input-placeholder {
+  color: #CECECE;
+}
+
+.c3::placeholder {
+  color: #CECECE;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  position: relative;
+  border-radius: 20px;
+  background-color: #F9F9F9;
+  z-index: 1;
+  width: initial;
+  -webkit-transition: height 1s ease;
+  transition: height 1s ease;
+  will-change: height;
+}
+
+.c1 {
+  border-radius: 20px;
+  border: 1px solid #22222212;
+  background-color: #F9F9F9;
+  width: initial;
+}
+
+.c1:focus,
+.c1:hover {
+  border: 1px solid #F9F9F9;
+}
+
+.c8 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #FC72FF;
+  opacity: 1;
+  box-shadow: 0px 0px 10px 0px rgba(34,34,34,0.04);
+  color: #FFFFFF;
+  cursor: pointer;
+  border-radius: 16px;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: none;
+  font-size: 24px;
+  font-weight: 535;
+  height: 2.4rem;
+  width: initial;
+  padding: 0 8px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin-left: 12px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.c8:focus,
+.c8:hover {
+  background-color: #fb58ff;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 1rem 1rem 0.75rem 1rem;
+}
+
+.c9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  width: 100%;
+  line-height: 0px;
+}
+
+.c13 {
+  margin: 0 0.25rem 0 0.25rem;
+  font-size: 20px;
+}
+
+.c4 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+  text-align: left;
+}
+
+<div>
+  <div
+    class="c0"
+    id=""
+  >
+    <div
+      class="c1"
+    >
+      <div
+        class="c2"
+      >
+        <input
+          autocomplete="off"
+          autocorrect="off"
+          class="c3 c4 token-amount-input"
+          inputmode="decimal"
+          maxlength="79"
+          minlength="1"
+          pattern="^[0-9]*[.,]?[0-9]*$"
+          placeholder="0"
+          spellcheck="false"
+          type="text"
+          value=""
+        />
+        <button
+          class="c5 c6 c7 c8 open-currency-select-button"
+          pointer-events="none"
+        >
+          <span
+            class="c9"
+          >
+            <div
+              class="c10 c11 c12"
+            >
+              <span
+                class="c13 token-symbol-container"
+              >
+                Select token
+              </span>
+            </div>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
