@@ -1,7 +1,7 @@
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { sendAnalyticsEvent, user } from 'analytics'
+import { sendAnalyticsEvent, user, useTrace } from 'analytics'
 import { connections, getConnection } from 'connection'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
@@ -31,6 +31,7 @@ function Updater() {
   const { account, chainId, connector, provider } = useWeb3React()
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
+  const analyticsContext = useTrace()
 
   // Trace RPC calls (for debugging).
   const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId] : undefined
@@ -46,7 +47,21 @@ function Updater() {
       provider?.off('debug', trace)
       networkProvider?.off('debug', trace)
     }
-  }, [networkProvider, provider, shouldTrace])
+  }, [analyticsContext, networkProvider, provider, shouldTrace])
+
+  const previousConnectedChainId = usePrevious(chainId)
+  useEffect(() => {
+    const chainChanged = previousConnectedChainId && previousConnectedChainId !== chainId
+    if (chainChanged) {
+      sendAnalyticsEvent(InterfaceEventName.CHAIN_CHANGED, {
+        result: WalletConnectionResult.SUCCEEDED,
+        wallet_address: account,
+        wallet_type: getConnection(connector).getName(),
+        chain_id: chainId,
+        page: currentPage,
+      })
+    }
+  }, [account, chainId, connector, currentPage, previousConnectedChainId])
 
   // Send analytics events when the active account changes.
   const previousAccount = usePrevious(account)
