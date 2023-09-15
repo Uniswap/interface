@@ -563,11 +563,12 @@ export function useFormatterLocales(): {
 function handleFallbackCurrency(
   selectedCurrency: SupportedLocalCurrency,
   previousSelectedCurrency: SupportedLocalCurrency | undefined,
+  previousConversionRate: number | undefined,
   shouldFallbackToUSD: boolean,
   shouldFallbackToPrevious: boolean
 ) {
   if (shouldFallbackToUSD) return DEFAULT_LOCAL_CURRENCY
-  if (shouldFallbackToPrevious) return previousSelectedCurrency
+  if (shouldFallbackToPrevious) return previousConversionRate ? previousSelectedCurrency : DEFAULT_LOCAL_CURRENCY
   return selectedCurrency
 }
 
@@ -587,6 +588,7 @@ export function useFormatter() {
   const currencyToFormatWith = handleFallbackCurrency(
     formatterLocalCurrency,
     previousSelectedCurrency,
+    previousConversionRate,
     shouldFallbackToUSD,
     shouldFallbackToPrevious
   )
