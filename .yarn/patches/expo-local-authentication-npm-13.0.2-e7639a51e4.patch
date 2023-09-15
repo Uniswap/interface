@@ -1,7 +1,7 @@
-diff --git a/node_modules/expo-local-authentication/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt b/node_modules/expo-local-authentication/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
-index 9980dfa..5f6aa3a 100644
---- a/node_modules/expo-local-authentication/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
-+++ b/node_modules/expo-local-authentication/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
+diff --git a/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt b/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
+index 9980dfabbd5179753ba99f50c6ecfadd732cfdb9..648ddbf933eb789f2920354b4116b64292f1d2b9 100644
+--- a/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
++++ b/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
 @@ -7,6 +7,7 @@ import android.content.Context
  import android.content.Intent
  import android.os.Build
@@ -35,7 +35,15 @@ index 9980dfa..5f6aa3a 100644
      promise.resolve(result == BiometricManager.BIOMETRIC_SUCCESS)
    }
  
-@@ -145,6 +146,24 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
+@@ -138,13 +139,31 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
+     if (isDeviceSecure) {
+       level = SECURITY_LEVEL_SECRET
+     }
+-    val result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
++    val result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+     if (result == BiometricManager.BIOMETRIC_SUCCESS) {
+       level = SECURITY_LEVEL_BIOMETRIC
+     }
      promise.resolve(level)
    }
  
@@ -60,7 +68,7 @@ index 9980dfa..5f6aa3a 100644
    @ExpoMethod
    fun authenticateAsync(options: Map<String?, Any?>, promise: Promise) {
      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-@@ -215,16 +234,10 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
+@@ -215,15 +234,15 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
          promptMessage?.let {
            promptInfoBuilder.setTitle(it)
          }
@@ -69,21 +77,16 @@ index 9980dfa..5f6aa3a 100644
 -            promptInfoBuilder.setNegativeButtonText(it)
 -          }
 -        } else {
--          promptInfoBuilder.setAllowedAuthenticators(
--            BiometricManager.Authenticators.BIOMETRIC_WEAK
--              or BiometricManager.Authenticators.DEVICE_CREDENTIAL
--          )
--        }
 +        if (Build.VERSION.SDK_INT >= 30) {
-+          promptInfoBuilder.setAllowedAuthenticators(
+           promptInfoBuilder.setAllowedAuthenticators(
+-            BiometricManager.Authenticators.BIOMETRIC_WEAK
 +            BiometricManager.Authenticators.BIOMETRIC_STRONG
-+              or BiometricManager.Authenticators.DEVICE_CREDENTIAL
-+          )
+               or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+           )
 +        } else {
 +          promptInfoBuilder.setAllowedAuthenticators(
 +            BiometricManager.Authenticators.BIOMETRIC_STRONG
 +          )
-+        }
+         }
          promptInfoBuilder.setConfirmationRequired(requireConfirmation)
          val promptInfo = promptInfoBuilder.build()
-         try {
