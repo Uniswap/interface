@@ -122,7 +122,7 @@ export const routingApi = createApi({
       },
       async queryFn(args, _api, _extraOptions, fetch) {
         let fellBack = false
-        logSwapQuoteRequest(args.tokenInChainId, args.routerPreference)
+        logSwapQuoteRequest(args.tokenInChainId, args.routerPreference, false)
         const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
         if (shouldUseAPIRouter(args)) {
           fellBack = true

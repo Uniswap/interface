@@ -8,68 +8,62 @@ import { useMemo } from 'react'
 
 import { useGetQuickRouteQuery, useGetQuickRouteQueryState } from './quickRouteSlice'
 import { useGetQuoteQuery, useGetQuoteQueryState } from './slice'
-import {
-  ClassicTrade,
-  InterfaceTrade,
-  INTERNAL_ROUTER_PREFERENCE_PRICE,
-  QuoteMethod,
-  QuoteState,
-  RouterPreference,
-  TradeState,
-} from './types'
+import { INTERNAL_ROUTER_PREFERENCE_PRICE, PreviewTrade, QuoteState, RouterPreference, TradeState } from './types'
+import { currencyAddressForSwapQuote } from './utils'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
 
-export function useRoutingAPITrade<TTradeType extends TradeType>(
-  tradeType: TTradeType,
-  amountSpecified: CurrencyAmount<Currency> | undefined,
-  otherCurrency: Currency | undefined,
-  routerPreference: typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
-  skipFetch?: boolean,
-  account?: string,
-  inputTax?: Percent,
-  outputTax?: Percent
-): {
-  state: TradeState
-  trade?: ClassicTrade
-  swapQuoteLatency?: number
-}
+function useQuickRouteArguments({
+  tokenIn,
+  tokenOut,
+  amount,
+  tradeType,
+  inputTax,
+  outputTax,
+}: {
+  tokenIn?: Currency
+  tokenOut?: Currency
+  amount?: CurrencyAmount<Currency>
+  tradeType: TradeType
+  inputTax: Percent
+  outputTax: Percent
+}) {
+  return useMemo(() => {
+    if (!tokenIn || !tokenOut || !amount) return skipToken
 
-export function useRoutingAPITrade<TTradeType extends TradeType>(
-  tradeType: TTradeType,
-  amountSpecified: CurrencyAmount<Currency> | undefined,
-  otherCurrency: Currency | undefined,
-  routerPreference: RouterPreference,
-  skipFetch?: boolean,
-  account?: string,
-  inputTax?: Percent,
-  outputTax?: Percent
-): {
-  state: TradeState
-  trade?: InterfaceTrade
-  swapQuoteLatency?: number
+    return {
+      amount: amount.quotient.toString(),
+      tokenInAddress: currencyAddressForSwapQuote(tokenIn),
+      tokenInChainId: tokenIn.chainId,
+      tokenInDecimals: tokenIn.wrapped.decimals,
+      tokenInSymbol: tokenIn.wrapped.symbol,
+      tokenOutAddress: currencyAddressForSwapQuote(tokenOut),
+      tokenOutChainId: tokenOut.wrapped.chainId,
+      tokenOutDecimals: tokenOut.wrapped.decimals,
+      tokenOutSymbol: tokenOut.wrapped.symbol,
+      tradeType,
+      inputTax,
+      outputTax,
+    }
+  }, [amount, inputTax, outputTax, tokenIn, tokenOut, tradeType])
 }
-
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
  * @param tradeType whether the swap is an exact in/out
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
-export function useRoutingAPITrade<TTradeType extends TradeType>(
-  tradeType: TTradeType,
+function usePreviewTrade(
+  tradeType: TradeType,
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
-  routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
   skipFetch = false,
-  account?: string,
   inputTax = ZERO_PERCENT,
   outputTax = ZERO_PERCENT
 ): {
   state: TradeState
-  trade?: InterfaceTrade
-  method?: QuoteMethod
+  trade?: PreviewTrade
   swapQuoteLatency?: number
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
@@ -80,19 +74,17 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const queryArgs = useRoutingAPIArguments({
-    account,
+  const queryArgs = useQuickRouteArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
     amount: amountSpecified,
     tradeType,
-    routerPreference,
     inputTax,
     outputTax,
   })
 
-  const { isError, data: tradeResult, error, currentData } = useGetQuoteQueryState(queryArgs)
-  useGetQuoteQuery(skipFetch ? skipToken : queryArgs, {
+  const { isError, data: tradeResult, error, currentData } = useGetQuickRouteQueryState(queryArgs)
+  useGetQuickRouteQuery(skipFetch ? skipToken : queryArgs, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : AVERAGE_L1_BLOCK_TIME,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period

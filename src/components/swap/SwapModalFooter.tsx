@@ -11,7 +11,7 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { ClassicTrade, InterfaceTrade, RouterPreference } from 'state/routing/types'
+import { ClassicTrade, RouterPreference, SubmittableTrade } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { DefaultTheme, useTheme } from 'styled-components'
@@ -60,7 +60,7 @@ export default function SwapModalFooter({
   showAcceptChanges,
   onAcceptChanges,
 }: {
-  trade: InterfaceTrade
+  trade: SubmittableTrade
   swapResult?: SwapResult
   allowedSlippage: Percent
   onConfirm: () => void

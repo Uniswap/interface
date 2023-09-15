@@ -19,9 +19,12 @@ import {
   InterfaceTrade,
   isClassicQuoteResponse,
   PoolType,
+  PreviewTrade,
+  QuickRouteResponse,
   QuoteMethod,
   QuoteState,
   RouterPreference,
+  SubmittableTrade,
   SwapRouterNativeAssets,
   TradeFillType,
   TradeResult,
@@ -187,6 +190,16 @@ function getClassicTradeDetails(
   }
 }
 
+export function transformQuickRouteToTrade(args: GetQuoteArgs, data: QuickRouteResponse): PreviewTrade {
+  const [currencyIn, currencyOut] = getTradeCurrencies(args, false)
+  const [rawAmountIn, rawAmountOut] =
+    data.tradeType === 'EXACT_IN' ? [args.amount, data.quote.amount] : [data.quote.amount, args.amount]
+  const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn)
+  const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut)
+
+  return new PreviewTrade({ inputAmount, outputAmount, tradeType: args.tradeType })
+}
+
 export async function transformRoutesToTrade(
   args: GetQuoteArgs,
   data: URAQuoteResponse,
@@ -208,6 +221,7 @@ export async function transformRoutesToTrade(
     (routerPreference === RouterPreference.X || (isUniswapXDefaultEnabled && routerPreference === RouterPreference.API))
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
+  console.log('currencyIn here', currencyIn?.symbol)
   const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate } = getClassicTradeDetails(
     currencyIn,
     currencyOut,
@@ -332,6 +346,10 @@ export function isClassicTrade(trade?: InterfaceTrade): trade is ClassicTrade {
   return trade?.fillType === TradeFillType.Classic
 }
 
+export function isSubmittableTrade(trade?: InterfaceTrade): trade is SubmittableTrade {
+  return trade?.fillType === TradeFillType.Classic || trade?.fillType === TradeFillType.UniswapX
+}
+
 export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrade {
   return trade?.fillType === TradeFillType.UniswapX
 }
@@ -341,6 +359,8 @@ export function shouldUseAPIRouter(args: GetQuoteArgs): boolean {
 }
 
 export function getTransactionCount(trade: InterfaceTrade): number {
+  if (!isSubmittableTrade(trade)) return 0
+
   let count = 0
   if (trade.approveInfo.needsApprove) {
     count++ // approval step, which can happen in both classic and uniswapx

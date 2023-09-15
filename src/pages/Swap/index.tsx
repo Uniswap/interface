@@ -50,7 +50,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
-import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
+import { isClassicTrade, isSubmittableTrade } from 'state/routing/utils'
 import { Field, forceExactInput, replaceSwapState } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useDerivedSwapInfo, useSwapActionHandlers } from 'state/swap/hooks'
 import swapReducer, { initialState as initialSwapState, SwapState } from 'state/swap/reducer'
@@ -495,7 +495,7 @@ export function Swap({
 
   // warnings on the greater of fiat value price impact and execution price impact
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
-    if (isUniswapXTrade(trade)) {
+    if (!isClassicTrade(trade)) {
       return { priceImpactSeverity: 0, largerPriceImpact: undefined }
     }
 
@@ -584,7 +584,7 @@ export function Swap({
         showCancel={true}
       />
       <SwapHeader trade={trade} autoSlippage={autoSlippage} chainId={chainId} />
-      {trade && showConfirm && allowance.state !== AllowanceState.LOADING && (
+      {isSubmittableTrade(trade) && showConfirm && allowance.state !== AllowanceState.LOADING && (
         <ConfirmSwapModal
           trade={trade}
           inputCurrency={inputCurrency}
