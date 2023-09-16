@@ -49,7 +49,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
             semanticColor ? (isPositiveChange ? '$statusSuccess' : '$statusCritical') : '$neutral2'
           }
           loading={loading}
-          loadingPlaceholderText="$0.00 (0.00)%"
+          loadingPlaceholderText="▲ $0.00 (0.00)%"
           variant={variant}>
           {absoluteChange ? `${formattedAbsChange} (${formattedChange})` : formattedChange}
         </Text>

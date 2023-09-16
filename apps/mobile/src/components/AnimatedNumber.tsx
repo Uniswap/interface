@@ -144,10 +144,10 @@ function longestCommonPrefix(a: string, b: string): string {
 const AnimatedNumber = ({
   value,
   loading = false,
-  loadingPlaceholderText = '$00.00',
+  loadingPlaceholderText,
   colorIndicationDuration,
 }: {
-  loadingPlaceholderText?: string
+  loadingPlaceholderText: string
   loading: boolean | 'no-shimmer'
   value?: string
   colorIndicationDuration: number

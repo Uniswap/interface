@@ -45,7 +45,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
       <AnimatedNumber
         colorIndicationDuration={2000}
         loading={isWarmLoading || isLoading}
-        loadingPlaceholderText="$000.00"
+        loadingPlaceholderText="$00000.00"
         value={formatUSDPrice(totalBalance, NumberType.PortfolioBalance)}
       />
       <RelativeChange
