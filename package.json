@@ -20,7 +20,7 @@
     "start": "craco start",
     "start:cloud": "NODE_OPTIONS=--dns-result-order=ipv4first PORT=3001 npx wrangler pages dev --compatibility-flags=nodejs_compat --compatibility-date=2023-08-01 --proxy=3001 --port=3000 -- yarn start",
     "build": "craco build",
-    "analyze": "source-map-explorer 'build/static/js/*.js' --only-mapped",
+    "analyze": "source-map-explorer 'build/static/js/*.js' --no-border-checks --gzip",
     "serve": "serve build -s -l 3000",
     "lint": "yarn eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ .",
     "typecheck": "tsc",
