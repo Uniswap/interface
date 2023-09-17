@@ -22,6 +22,9 @@ const NavLinks = styled(Row)`
   margin: 0;
   border-radius: 20px;
   gap: 1rem;
+  @media (max-width: 480px) {
+    flex-flow: wrap;
+  }
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     flex-direction: row;
