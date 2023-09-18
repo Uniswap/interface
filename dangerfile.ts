@@ -25,7 +25,7 @@ async function processAddChanges() {
     const structuredDiff = await danger.git.structuredDiffForFile(file);
 
     return (structuredDiff?.chunks || []).flatMap((chunk) => {
-      return chunk.changes.filter((change) => change.type === 'add' || change.type === 'normal')
+      return chunk.changes.filter((change) => change.type === 'add')
     })
   }))).flatMap((x) => x)
 
@@ -74,7 +74,7 @@ async function checkApostrophes() {
   if (updatedTranslations) {
     const structuredDiff = await danger.git.structuredDiffForFile(updatedTranslations);
     const changedLines = (structuredDiff?.chunks || []).flatMap((chunk) => {
-      return chunk.changes.filter((change) => change.type === 'add' || change.type === 'normal')
+      return chunk.changes.filter((change) => change.type === 'add')
     })
     changedLines.forEach((line) => {
       if (line.content.includes("'")) {
