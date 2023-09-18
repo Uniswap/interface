@@ -1,14 +1,22 @@
 import { Connector } from '@web3-react/types'
+import { useSyncExternalStore } from 'react'
 
 import { getConnection, gnosisSafeConnection, networkConnection } from './index'
 import { ConnectionType, selectedWalletKey, toConnectionType } from './types'
 
-/**
- * This may be thrown (as a promise) by components to suspend rendering until a wallet connection is attempted.
- * @example
- *     if (connectionReady instanceof Promise) throw connectionReady
- */
-export let connectionReady: Promise<void> | true
+let connectionReady: Promise<void> | true = true
+
+export function useConnectionReady() {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      if (connectionReady instanceof Promise) {
+        connectionReady.finally(onStoreChange)
+      }
+      return () => undefined
+    },
+    () => connectionReady === true
+  )
+}
 
 async function connect(connector: Connector, type: ConnectionType) {
   performance.mark(`web3:connect:${type}:start`)

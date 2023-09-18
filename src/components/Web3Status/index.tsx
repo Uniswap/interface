@@ -5,16 +5,17 @@ import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
-import Loader from 'components/Icons/LoadingSpinner'
+import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import { getConnection } from 'connection'
+import { useConnectionReady } from 'connection/eagerlyConnect'
 import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components'
 import { colors } from 'theme/colors'
@@ -128,7 +129,10 @@ const StyledConnectButton = styled.button`
 function Web3StatusInner() {
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const ignoreWhileSwitchingChain = useCallback(() => !switchingChain, [switchingChain])
-  const { account, connector } = useLast(useWeb3React(), ignoreWhileSwitchingChain)
+  const connectionReady = useConnectionReady()
+  const activeWeb3 = useWeb3React()
+  const lastWeb3 = useLast(useWeb3React(), ignoreWhileSwitchingChain)
+  const { account, connector } = useMemo(() => (activeWeb3.account ? activeWeb3 : lastWeb3), [activeWeb3, lastWeb3])
   const { ENSName } = useENSName(account)
   const connection = getConnection(connector)
 
@@ -172,6 +176,12 @@ function Web3StatusInner() {
           )}
         </Web3StatusConnected>
       </TraceEvent>
+    )
+  } else if (!connectionReady) {
+    return (
+      <Web3StatusConnected disabled={true}>
+        <LoaderV3 size="24px" />
+      </Web3StatusConnected>
     )
   } else {
     return (
