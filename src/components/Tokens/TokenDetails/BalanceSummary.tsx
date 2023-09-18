@@ -11,13 +11,11 @@ import { ThemedText } from 'theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
-  background-color: ${({ theme }) => theme.surface1};
-  border: ${({ theme }) => `1px solid ${theme.surface3}`};
   border-radius: 16px;
   color: ${({ theme }) => theme.neutral1};
   display: none;
   height: fit-content;
-  padding: 20px;
+  padding: 16px;
   width: 100%;
 
   // 768 hardcoded to match NFT-redesign navbar breakpoints
@@ -35,7 +33,7 @@ const BalanceRow = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
-  margin-top: 20px;
+  margin-top: 12px;
 `
 const BalanceItem = styled.div`
   display: flex;

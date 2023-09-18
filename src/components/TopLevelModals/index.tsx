@@ -1,18 +1,16 @@
 import { useWeb3React } from '@web3-react/core'
 import { OffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import UniwalletModal from 'components/AccountDrawer/UniwalletModal'
+import AirdropModal from 'components/AirdropModal'
 import BaseAnnouncementBanner from 'components/Banner/BaseAnnouncementBanner'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
 import FiatOnrampModal from 'components/FiatOnrampModal'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
-import { lazy } from 'react'
+import Bag from 'nft/components/bag/Bag'
+import TransactionCompleteModal from 'nft/components/collection/TransactionCompleteModal'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-
-const Bag = lazy(() => import('nft/components/bag/Bag'))
-const TransactionCompleteModal = lazy(() => import('nft/components/collection/TransactionCompleteModal'))
-const AirdropModal = lazy(() => import('components/AirdropModal'))
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)

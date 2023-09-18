@@ -6045,10 +6045,10 @@
     "@typescript-eslint/types" "5.59.1"
     eslint-visitor-keys "^3.3.0"
 
-"@uniswap/analytics-events@^2.18.0":
-  version "2.18.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.18.0.tgz#22d38adcbe9c18aec7109e562fd005c0e4082edc"
-  integrity sha512-raJP1/xLnunxLwu6XyM4kRJuuIb4aHFR5X9fAovpR6gllpbHicwdjPnjKR5Z8DAnFe5ClFBT0T/foyE5SU5oQQ==
+"@uniswap/analytics-events@^2.22.0":
+  version "2.22.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.22.0.tgz#25600f5f6d9df4ea3aa7328dbc6ec44af4b652d1"
+  integrity sha512-Q/H4JaxQuEBFZvMWW40J3m51/zUXr2FYkfO2+IA0EJfoZiWE8Yl0xWtNrO5RDc4Q57Q9z0cEzzDLN2L1RQSpJA==
 
 "@uniswap/analytics@^1.4.0":
   version "1.4.0"
@@ -17460,11 +17460,6 @@ react-focus-lock@^2.3.1:
     react-clientside-effect "^1.2.2"
     use-callback-ref "^1.2.1"
     use-sidecar "^1.0.1"
-
-react-ga4@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/react-ga4/-/react-ga4-1.4.1.tgz#6ee2a2db115ed235b2f2092bc746b4eeeca9e206"
-  integrity sha512-ioBMEIxd4ePw4YtaloTUgqhQGqz5ebDdC4slEpLgy2sLx1LuZBC9iYCwDymTXzcntw6K1dHX183ulP32nNdG7w==
 
 react-infinite-scroll-component@^6.1.0:
   version "6.1.0"

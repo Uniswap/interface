@@ -37,7 +37,6 @@ import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeFillType, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
-import { shallow } from 'zustand/shallow'
 
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
 
@@ -272,7 +271,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
   const totalEthPrice = useBagTotalEthPrice()
-  const { inputCurrency } = useTokenInput(({ inputCurrency }) => ({ inputCurrency }), shallow)
+  const { inputCurrency } = useTokenInput(({ inputCurrency }) => ({ inputCurrency }))
   const setInputCurrency = useTokenInput((state) => state.setInputCurrency)
   const defaultCurrency = useCurrency('ETH')
   const inputCurrencyBalance = useTokenBalance(
@@ -284,15 +283,12 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     bagStatus,
     setBagExpanded,
     setBagStatus,
-  } = useBag(
-    ({ isLocked, bagStatus, setBagExpanded, setBagStatus }) => ({
-      isLocked,
-      bagStatus,
-      setBagExpanded,
-      setBagStatus,
-    }),
-    shallow
-  )
+  } = useBag(({ isLocked, bagStatus, setBagExpanded, setBagStatus }) => ({
+    isLocked,
+    bagStatus,
+    setBagExpanded,
+    setBagStatus,
+  }))
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency

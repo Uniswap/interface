@@ -1,10 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendEvent } from 'components/analytics'
+import { sendAnalyticsEvent, useTrace } from 'analytics'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { LightCard } from 'components/Card'
@@ -33,6 +34,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme'
+import { WrongChainError } from 'utils/errors'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -57,11 +59,11 @@ export default function RemoveLiquidityV3() {
     }
   }, [tokenId])
 
+  const { position, loading } = useV3PositionFromTokenId(parsedTokenId ?? undefined)
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
     return <Navigate to={{ ...location, pathname: '/pools' }} replace />
   }
-
-  if (isSupportedChain(chainId)) {
+  if (isSupportedChain(chainId) && (loading || position)) {
     return <Remove tokenId={parsedTokenId} />
   } else {
     return <PositionPageUnsupportedContent />
@@ -71,6 +73,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
   const theme = useTheme()
   const { account, chainId, provider } = useWeb3React()
+  const trace = useTrace()
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
@@ -140,6 +143,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       value,
     }
 
+    const connectedChainId = await provider.getSigner().getChainId()
+    if (chainId !== connectedChainId) throw new WrongChainError()
+
     provider
       .getSigner()
       .estimateGas(txn)
@@ -153,10 +159,10 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           .getSigner()
           .sendTransaction(newTxn)
           .then((response: TransactionResponse) => {
-            sendEvent({
-              category: 'Liquidity',
-              action: 'RemoveV3',
+            sendAnalyticsEvent(LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED, {
+              source: LiquiditySource.V3,
               label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
+              ...trace,
             })
             setTxnHash(response.hash)
             setAttemptingTxn(false)
@@ -180,13 +186,14 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     deadline,
     account,
     chainId,
-    feeValue0,
-    feeValue1,
     positionSDK,
     liquidityPercentage,
     provider,
     tokenId,
     allowedSlippage,
+    feeValue0,
+    feeValue1,
+    trace,
     addTransaction,
   ])
 
@@ -305,15 +312,16 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <RowBetween>
                 <RowFixed>
                   <DoubleCurrencyLogo
-                    currency0={feeValue0?.currency}
-                    currency1={feeValue1?.currency}
+                    currency0={liquidityValue0?.currency}
+                    currency1={liquidityValue1?.currency}
                     size={20}
                     margin={true}
                   />
                   <ThemedText.DeprecatedLabel
                     ml="10px"
                     fontSize="20px"
-                  >{`${feeValue0?.currency?.symbol}/${feeValue1?.currency?.symbol}`}</ThemedText.DeprecatedLabel>
+                    id="remove-liquidity-tokens"
+                  >{`${liquidityValue0?.currency?.symbol}/${liquidityValue1?.currency?.symbol}`}</ThemedText.DeprecatedLabel>
                 </RowFixed>
                 <RangeBadge removed={removed} inRange={!outOfRange} />
               </RowBetween>
@@ -347,7 +355,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <LightCard>
                 <AutoColumn gap="md">
                   <RowBetween>
-                    <Text fontSize={16} fontWeight={535}>
+                    <Text fontSize={16} fontWeight={535} id="remove-pooled-tokena-symbol">
                       <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>
@@ -358,7 +366,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     </RowFixed>
                   </RowBetween>
                   <RowBetween>
-                    <Text fontSize={16} fontWeight={535}>
+                    <Text fontSize={16} fontWeight={535} id="remove-pooled-tokenb-symbol">
                       <Trans>Pooled {liquidityValue1?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>

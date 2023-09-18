@@ -2,15 +2,7 @@
 
 exports[`LoadedRow.tsx renders a row 1`] = `
 <DocumentFragment>
-  .c18 {
-  color: #40B66B;
-}
-
-.c19 {
-  color: #40B66B;
-}
-
-.c9 {
+  .c9 {
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -48,6 +40,14 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   background-repeat: no-repeat;
   background-size: calc(24px / 2) calc(24px / 2);
   display: none;
+}
+
+.c18 {
+  color: #40B66B;
+}
+
+.c19 {
+  color: #40B66B;
 }
 
 .c2 {

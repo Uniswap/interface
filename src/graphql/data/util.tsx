@@ -134,6 +134,15 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
 
 /**
  * @param chainName parsed in chain name from url query parameter
+ * @returns if chainName is a valid chain name, returns the backend chain name, otherwise returns undefined
+ */
+export function getValidUrlChainName(chainName: string | undefined): Chain | undefined {
+  const validChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
+  return validChainName ? validChainName : undefined
+}
+
+/**
+ * @param chainName parsed in chain name from url query parameter
  * @returns if chainName is a valid chain name supported by the backend, returns the backend chain name, otherwise returns Chain.Ethereum
  */
 export function validateUrlChainParam(chainName: string | undefined) {
