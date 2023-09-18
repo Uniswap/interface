@@ -5,7 +5,6 @@ import { Provider as EIP1193Provider } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'analytics'
 import { connections, getConnection } from 'connection'
 import { Connection, ConnectionType } from 'connection/types'
-import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 import store from 'state'
@@ -33,7 +32,6 @@ jest.mock('connection', () => {
 
   return { ConnectionType, getConnection: jest.fn(), connections: [mockConnection] }
 })
-jest.mock('hooks/useEagerlyConnect', () => jest.fn())
 
 jest.unmock('@web3-react/core')
 
@@ -59,7 +57,6 @@ describe('Web3Provider', () => {
     await act(async () => {
       await result
     })
-    expect(useEagerlyConnect).toHaveBeenCalled()
     expect(result).toBeTruthy()
   })
 
