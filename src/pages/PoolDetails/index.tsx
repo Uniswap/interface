@@ -9,7 +9,7 @@ import NotFound from 'pages/NotFound'
 import { ReactNode, useMemo, useReducer } from 'react'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme'
 import { isAddress } from 'utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -88,15 +88,27 @@ interface PoolDetailsStatsProps {
   chainId?: number
 }
 
-const BalanceChartSide = styled.div<{ percent: number; $color: string; left: boolean }>`
+const left = css`
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-right: 1px solid ${({ theme }) => theme.surface2};
+`
+
+const right = css`
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-left: 1px solid ${({ theme }) => theme.surface2};
+`
+
+const BalanceChartSide = styled.div<{ percent: number; $color: string; isLeft: boolean }>`
   height: 8px;
   width: ${({ percent }) => percent * 100}%;
   background: ${({ $color }) => $color};
+  ${({ isLeft }) => (isLeft ? left : right)}
 `
 
 function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsProps) {
   // TODO: vs https://info.uniswap.org/#/polygon/pools/0x167384319b41f7094e62f7506409eb38079abff8
-  // style graph
   // fix color extraction for tokens
   const { formatNumber } = useFormatter()
   const currencies = [
@@ -155,8 +167,8 @@ function PoolDetailsStats({ poolData, isReversed, chainId }: PoolDetailsStatsPro
           </PoolBalanceTokenNames>
         </Row>
         <Row>
-          {token0.color && <BalanceChartSide percent={token0.percent} $color={token0.color} left={true} />}
-          {token1.color && <BalanceChartSide percent={token1.percent} $color={token1.color} left={false} />}
+          {token0.color && <BalanceChartSide percent={token0.percent} $color={token0.color} isLeft={true} />}
+          {token1.color && <BalanceChartSide percent={token1.percent} $color={token1.color} isLeft={false} />}
         </Row>
       </Column>
       <StatItem title={<Trans>TVL</Trans>} value={poolData.tvlUSD} delta={poolData.tvlUSDChange} />
