@@ -16,13 +16,14 @@ export enum ApprovalState {
 
 function useApprovalStateForSpender(
   amountToApprove: CurrencyAmount<Currency> | undefined,
-  spender: string | undefined,
+  spender: string,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean
 ): ApprovalState {
   const { account } = useWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
-  const { tokenAllowance } = useTokenAllowance(token, account ?? undefined, spender)
+  const { tokenAllowance } = useTokenAllowance(token, account, spender)
+
   const pendingApproval = useIsPendingApproval(token, spender)
 
   return useMemo(() => {
@@ -52,7 +53,8 @@ export function useApproval(
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
   // check the current approval status
-  const approvalState = useApprovalStateForSpender(amountToApprove, spender, useIsPendingApproval)
+  const approvalState = useApprovalStateForSpender(amountToApprove, spender || '', useIsPendingApproval)
+  console.log('approval', approvalState)
 
   const tokenContract = useTokenContract(token?.address)
 

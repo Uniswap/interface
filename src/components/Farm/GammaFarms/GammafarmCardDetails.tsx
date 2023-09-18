@@ -7,16 +7,17 @@ import { ButtonPrimary } from 'components/Button'
 import Divider from 'components/Divider/Divider'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useGammaHypervisorContract, useMasterChefContract } from 'hooks/useContract'
+import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useMultipleContractSingleData, useSingleCallResult } from 'lib/hooks/multicall'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useIsMobile } from 'nft/hooks'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Box } from 'rebass'
 import { useCombinedActiveList } from 'state/lists/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
+import invariant from 'tiny-invariant'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { getTokenFromAddress, useTransactionFinalizer } from 'utils/farmUtils'
 
@@ -49,7 +50,7 @@ const GammaFarmCardDetails: React.FC<{
   pairData: any
   rewardData: any
 }> = ({ pairData, rewardData, data }) => {
-  console.log('pairData', pairData)
+  // console.log('pairData', pairData)
   const { chainId, account } = useWeb3React()
   const addTransaction = useTransactionAdder()
   const finalizedTransaction = useTransactionFinalizer()
@@ -64,7 +65,7 @@ const GammaFarmCardDetails: React.FC<{
   const tokenMap = useCombinedActiveList()
 
   const masterChefContract = useMasterChefContract()
-  const hypervisorContract = useGammaHypervisorContract(pairData.address)
+  const hypervisorContract = useGammaHypervisorContract(pairData.hypervisor)
 
   const stakedData = useSingleCallResult(masterChefContract, 'userInfo', [pairData.pid, account ?? undefined])
 
@@ -148,17 +149,33 @@ const GammaFarmCardDetails: React.FC<{
     !account ||
     attemptUnstaking
 
-  const [approval, approveCallback] = useApproveCallback(parsedStakeAmount, masterChefContract?.address)
+  const allowance = usePermit2Allowance(parsedStakeAmount, masterChefContract?.address)
+  console.log('allowance', allowance)
+
+  const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
+  const [isAllowancePending, setIsAllowancePending] = useState(false)
+  const updateAllowance = useCallback(async () => {
+    invariant(allowance.state === AllowanceState.REQUIRED)
+    setIsAllowancePending(true)
+    try {
+      await allowance.approveAndPermit()
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsAllowancePending(false)
+    }
+  }, [allowance])
+  // const [asd, approveCallback] = useApproveCallback(parsedStakeAmount, masterChefContract?.address)
 
   const claimButtonDisabled = pendingRewards.length === 0 || attemptClaiming
 
   const approveOrStakeLP = async () => {
     setApproveOrStaking(true)
     try {
-      if (approval === ApprovalState.APPROVED) {
+      if (!isApprovalLoading && !isAllowancePending) {
         await stakeLP()
       } else {
-        await approveCallback()
+        await updateAllowance()
       }
       setApproveOrStaking(false)
     } catch (e) {
@@ -197,9 +214,9 @@ const GammaFarmCardDetails: React.FC<{
         }
       )
     }
-    addTransaction(response, {
-      summary: 'depositliquidity',
-    })
+    // addTransaction(response, {
+    //   summary: 'depositliquidity',
+    // })
     const receipt = await response.wait()
     finalizedTransaction(receipt, {
       summary: 'depositliquidity',
@@ -239,9 +256,9 @@ const GammaFarmCardDetails: React.FC<{
         )
       }
 
-      addTransaction(response, {
-        summary: 'withdrawliquidity',
-      })
+      // addTransaction(response, {
+      //   summary: 'withdrawliquidity',
+      // })
       const receipt = await response.wait()
       finalizedTransaction(receipt, {
         summary: 'withdrawliquidity',
@@ -269,9 +286,9 @@ const GammaFarmCardDetails: React.FC<{
           gasLimit: calculateGasMargin(estimatedGas),
         })
       }
-      addTransaction(response, {
-        summary: 'claimrewards',
-      })
+      // addTransaction(response, {
+      //   summary: 'claimrewards',
+      // })
       const receipt = await response.wait()
       finalizedTransaction(receipt, {
         summary: 'claimrewards',
@@ -341,7 +358,7 @@ const GammaFarmCardDetails: React.FC<{
               setStakeAmount={setStakeAmount}
               stakeButtonDisabled={stakeButtonDisabled}
               textButton={
-                approval === ApprovalState.APPROVED
+                allowance.state === AllowanceState.ALLOWED
                   ? approveOrStaking
                     ? 'stakingLPTokens'
                     : 'stakeLPTokens'

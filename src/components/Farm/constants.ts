@@ -173,6 +173,7 @@ export const GammaPairs = {
         ableToFarm: true,
         feerTier: 500,
         pid: 0,
+        hypervisor: '0x2fcc0d25c4cd2084e402c16db68fbe206a36a46f',
       },
       // {
       //   type: Presets.GAMMA_WIDE,

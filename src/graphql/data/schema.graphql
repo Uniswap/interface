@@ -1,18 +1,16 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an API key.
+Tells the service this field/object has access authorized by sigv4 signing.
 """
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by a Lambda Authorizer.
@@ -20,15 +18,9 @@ Tells the service this field/object has access authorized by a Lambda Authorizer
 directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by sigv4 signing.
+Tells the service this field/object has access authorized by an API key.
 """
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by an OIDC token.
@@ -54,7 +46,20 @@ directive @aws_publish(
   subscriptions: [String]
 ) on FIELD_DEFINITION
 
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
+
 union ActivityDetails = TransactionDetails | SwapOrderDetails
+
+input ActivityDetailsInput {
+  transaction: TransactionDetailsInput
+  swapOrder: SwapOrderDetailsInput
+}
 
 """  deprecated and replaced with TransactionType, please do not use this"""
 enum ActivityType {
@@ -107,9 +112,24 @@ type AssetActivity {
   transaction: Transaction! @deprecated(reason: "use fields from details")
   assetChanges: [AssetChange]! @deprecated(reason: "use assetChanges field in details")
   details: ActivityDetails!
+  addresses: [String!]
+}
+
+input AssetActivityInput {
+  timestamp: Int!
+  chain: Chain!
+  details: ActivityDetailsInput!
 }
 
 union AssetChange = TokenTransfer | NftTransfer | TokenApproval | NftApproval | NftApproveForAll
+
+input AssetChangeInput {
+  tokenTransfer: TokenTransferInput
+  tokenApproval: TokenApprovalInput
+  nftTransfer: NftTransferInput
+  nftApproval: NftApprovalInput
+  nftApproveForAll: NftApproveForAllInput
+}
 
 """
 The `AWSJSON` scalar type provided by AWS AppSync, represents a JSON string that
@@ -212,6 +232,10 @@ enum MediaType {
   AUDIO
 }
 
+type Mutation {
+  assetActivity(input: AssetActivityInput!): AssetActivity!
+}
+
 type NftActivity {
   id: ID!
   address: String!
@@ -261,12 +285,25 @@ type NftApproval {
   approvedAddress: String!
 }
 
+input NftApprovalInput {
+  nftStandard: NftStandard!
+  asset: NftAssetInput!
+  approvedAddress: String!
+}
+
 type NftApproveForAll {
   id: ID!
   nftStandard: NftStandard!
 
   """  can be erc721, erc1155, noncompliant"""
   asset: NftAsset!
+  operatorAddress: String!
+  approved: Boolean!
+}
+
+input NftApproveForAllInput {
+  nftStandard: NftStandard!
+  asset: NftAssetInput!
   operatorAddress: String!
   approved: Boolean!
 }
@@ -594,6 +631,14 @@ type NftTransfer {
   direction: TransactionDirection!
 }
 
+input NftTransferInput {
+  nftStandard: NftStandard!
+  asset: NftAssetInput!
+  sender: String!
+  recipient: String!
+  direction: TransactionDirection!
+}
+
 enum OrderStatus {
   VALID
   EXECUTED
@@ -660,6 +705,12 @@ type Portfolio {
 type Query {
   convert(fromAmount: AmountInput!, toCurrency: Currency!): Amount
   tokens(contracts: [ContractInput!]!): [Token]
+
+  """
+    token consumes chain and address instead of contract because the apollo client request cache can only use
+   keys from the response, and the token response does not contain a contract, but does contain an unwrapped
+   contract: chain and address.
+  """
   token(chain: Chain!, address: String): Token
   tokenProjects(contracts: [ContractInput!]!): [TokenProject]
   searchTokens(searchQuery: String!, chains: [Chain!]): [Token]
@@ -681,6 +732,10 @@ enum SafetyLevel {
   BLOCKED
 }
 
+type Subscription {
+  onAssetActivity(subscriptionId: ID!, addresses: [String!]!): AssetActivity
+}
+
 type SwapOrderDetails {
   id: ID!
   offerer: String!
@@ -689,6 +744,16 @@ type SwapOrderDetails {
   inputToken: Token!
   inputTokenQuantity: String!
   outputToken: Token!
+  outputTokenQuantity: String!
+}
+
+input SwapOrderDetailsInput {
+  offerer: String!
+  hash: String!
+  status: SwapOrderStatus!
+  inputToken: TokenInput!
+  inputTokenQuantity: String!
+  outputToken: TokenInput!
   outputTokenQuantity: String!
 }
 
@@ -735,6 +800,13 @@ type TokenApproval {
 
   """  can be erc20 or native"""
   asset: Token!
+  approvedAddress: String!
+  quantity: String!
+}
+
+input TokenApprovalInput {
+  tokenStandard: TokenStandard!
+  asset: TokenInput!
   approvedAddress: String!
   quantity: String!
 }
@@ -846,6 +918,16 @@ type TokenTransfer {
   transactedValue: Amount
 }
 
+input TokenTransferInput {
+  tokenStandard: TokenStandard!
+  asset: TokenInput!
+  sender: String!
+  recipient: String!
+  quantity: String!
+  direction: TransactionDirection!
+  transactedValue: AmountInput
+}
+
 input TradePoolInput {
   pair: PairInput
   pool: PoolInput
@@ -874,6 +956,16 @@ type TransactionDetails {
   nonce: Int!
 }
 
+input TransactionDetailsInput {
+  type: TransactionType!
+  assetChanges: [AssetChangeInput!]!
+  from: String!
+  to: String!
+  hash: String!
+  status: TransactionStatus!
+  nonce: Int!
+}
+
 enum TransactionDirection {
   IN
   OUT
@@ -887,12 +979,21 @@ enum TransactionStatus {
 }
 
 enum TransactionType {
-  SEND
+  APPROVE
+  BORROW
+  CANCEL
+  CLAIM
+  DEPLOYMENT
+  LEND
+  MINT
   RECEIVE
+  REPAY
+  SEND
+  STAKE
   SWAP
   SWAP_ORDER
-  MINT
-  APPROVE
   UNKNOWN
+  UNSTAKE
+  WITHDRAW
 }
 
