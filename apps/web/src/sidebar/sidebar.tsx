@@ -23,11 +23,7 @@ chrome.runtime.onMessage.addListener(async (req) => {
   }
 })
 
-let container: Element | null = null
-
 async function initContentWindow(): Promise<void> {
-  if (container) return
-
   const store = new Store<WebState>({ portName: PortName.Store })
   // https://github.com/tshaddix/webext-redux/issues/286#issuecomment-1347985776
   Object.assign(store, {
@@ -40,7 +36,7 @@ async function initContentWindow(): Promise<void> {
 
   initializeTranslation()
 
-  container = window.document.querySelector('#root')
+  const container = window.document.querySelector('#root')
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const root = createRoot(container!)
   root.render(
