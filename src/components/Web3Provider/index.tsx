@@ -6,7 +6,6 @@ import { connections, getConnection } from 'connection'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -15,7 +14,6 @@ import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getWalletMeta } from 'utils/walletMeta'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
-  useEagerlyConnect()
   const connectors = connections.map<[Connector, Web3ReactHooks]>(({ hooks, connector }) => [connector, hooks])
 
   return (
