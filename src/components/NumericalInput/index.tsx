@@ -41,7 +41,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   }
 `
 
-function localeUsesDecimal(locale: SupportedLocale): boolean {
+function localeUsesComma(locale: SupportedLocale): boolean {
   const n = 1.1
   const decimalSeparator = new Intl.NumberFormat(locale).format(n)[1]
 
@@ -70,7 +70,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     }
 
     const formatValueWithLocale = (value: string | number) => {
-      const [searchValue, replaceValue] = localeUsesDecimal(formatterLocale) ? [/\./g, ','] : [/,/g, '.']
+      const [searchValue, replaceValue] = localeUsesComma(formatterLocale) ? [/\./g, ','] : [/,/g, '.']
       return value.toString().replace(searchValue, replaceValue)
     }
 
