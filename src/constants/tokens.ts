@@ -185,12 +185,12 @@ export const PORTAL_ETH_CELO = new Token(
   'ETH',
   'Portal Ether'
 )
-export const CMC02_CELO = new Token(
+export const WBTC_CELO = new Token(
   ChainId.CELO,
-  '0x32A9FE697a32135BFd313a6Ac28792DaE4D9979d',
+  '0xd71Ffd0940c920786eC4DbB5A12306669b5b81EF',
   18,
-  'cMCO2',
-  'Celo Moss Carbon Credit'
+  'WBTC',
+  'Wrapped BTC'
 )
 const CELO_CELO_ALFAJORES = new Token(
   ChainId.CELO_ALFAJORES,
@@ -277,13 +277,6 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'Wrapped Ether'
   ),
   [ChainId.BASE]: new Token(ChainId.BASE, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'),
-  [ChainId.BASE_GOERLI]: new Token(
-    ChainId.BASE_GOERLI,
-    '0x4200000000000000000000000000000000000006',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
   [ChainId.ARBITRUM_ONE]: new Token(
     ChainId.ARBITRUM_ONE,
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',

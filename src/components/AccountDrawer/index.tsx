@@ -40,7 +40,7 @@ export function useAccountDrawer(): [boolean, () => void] {
   return [accountDrawerOpen, useToggleAccountDrawer()]
 }
 
-const ScrimBackground = styled.div<{ open: boolean }>`
+const ScrimBackground = styled.div<{ $open: boolean }>`
   z-index: ${Z_INDEX.modalBackdrop};
   overflow: hidden;
   top: 0;
@@ -48,27 +48,32 @@ const ScrimBackground = styled.div<{ open: boolean }>`
   position: fixed;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.backgroundScrim};
+  background-color: ${({ theme }) => theme.scrim};
 
   opacity: 0;
   pointer-events: none;
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    opacity: ${({ open }) => (open ? 1 : 0)};
-    pointer-events: ${({ open }) => (open ? 'auto' : 'none')};
+    opacity: ${({ $open }) => ($open ? 1 : 0)};
+    pointer-events: ${({ $open }) => ($open ? 'auto' : 'none')};
     transition: opacity ${({ theme }) => theme.transition.duration.medium} ease-in-out;
   }
 `
-export const Scrim = ({ onClick, open, testId }: { onClick: () => void; open: boolean; testId?: string }) => {
+
+interface ScrimBackgroundProps extends React.ComponentPropsWithRef<'div'> {
+  $open: boolean
+}
+
+export const Scrim = (props: ScrimBackgroundProps) => {
   const { width } = useWindowSize()
 
   useEffect(() => {
-    if (width && width < BREAKPOINTS.sm && open) document.body.style.overflow = 'hidden'
+    if (width && width < BREAKPOINTS.sm && props.$open) document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = 'visible'
     }
-  }, [open, width])
+  }, [props.$open, width])
 
-  return <ScrimBackground data-testid={testId} onClick={onClick} open={open} />
+  return <ScrimBackground {...props} />
 }
 
 const AccountDrawerScrollWrapper = styled.div`
@@ -129,15 +134,15 @@ const AccountDrawerWrapper = styled.div<{ open: boolean }>`
   border-radius: 12px;
   width: ${DRAWER_WIDTH};
   font-size: 16px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  background-color: ${({ theme }) => theme.surface1};
+  border: ${({ theme }) => `1px solid ${theme.surface3}`};
 
-  box-shadow: ${({ theme }) => theme.deepShadow};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   transition: margin-right ${({ theme }) => theme.transition.duration.medium};
 `
 
 const CloseIcon = styled(ChevronsRight).attrs({ size: 24 })`
-  stroke: ${({ theme }) => theme.textSecondary};
+  stroke: ${({ theme }) => theme.neutral2};
 `
 
 const CloseDrawer = styled.div`
@@ -152,7 +157,7 @@ const CloseDrawer = styled.div`
   &:hover {
     z-index: -1;
     margin: 0 -8px 0 0;
-    background-color: ${({ theme }) => theme.stateOverlayHover};
+    background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
   }
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     display: none;
@@ -245,7 +250,7 @@ function AccountDrawer() {
           </CloseDrawer>
         </TraceEvent>
       )}
-      <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
+      <Scrim onClick={toggleWalletDrawer} $open={walletDrawerOpen} />
       <AccountDrawerWrapper
         open={walletDrawerOpen}
         {...(isMobile

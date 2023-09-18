@@ -134,6 +134,15 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
 
 /**
  * @param chainName parsed in chain name from url query parameter
+ * @returns if chainName is a valid chain name, returns the backend chain name, otherwise returns undefined
+ */
+export function getValidUrlChainName(chainName: string | undefined): Chain | undefined {
+  const validChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
+  return validChainName ? validChainName : undefined
+}
+
+/**
+ * @param chainName parsed in chain name from url query parameter
  * @returns if chainName is a valid chain name supported by the backend, returns the backend chain name, otherwise returns Chain.Ethereum
  */
 export function validateUrlChainParam(chainName: string | undefined) {
@@ -184,13 +193,14 @@ export function logSentryErrorForUnsupportedChain({
 
 export const BACKEND_SUPPORTED_CHAINS = [
   Chain.Ethereum,
-  Chain.Polygon,
   Chain.Arbitrum,
   Chain.Optimism,
-  Chain.Celo,
+  Chain.Polygon,
   Chain.Base,
+  Chain.Bnb,
+  Chain.Celo,
 ] as const
-export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.BNB, ChainId.AVALANCHE] as const
+export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.AVALANCHE] as const
 
 export function getTokenDetailsURL({
   address,

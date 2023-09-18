@@ -13,7 +13,7 @@ const Container = styled.button<{ disabled: boolean }>`
   background: none;
   border: none;
   border-radius: 12px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
   display: grid;
   grid-template-columns: min-content 1fr min-content;
@@ -31,7 +31,7 @@ const Container = styled.button<{ disabled: boolean }>`
   }
 
   &:hover {
-    background-color: ${({ disabled, theme }) => (disabled ? 'none' : theme.backgroundOutline)};
+    background-color: ${({ disabled, theme }) => (disabled ? 'none' : theme.surface3)};
   }
 `
 
@@ -39,6 +39,7 @@ const Label = styled.div`
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
+  font-weight: 485;
 `
 
 const Status = styled.div`
@@ -50,7 +51,7 @@ const Status = styled.div`
 `
 
 const CaptionText = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 12px;
   grid-column: 2;
   grid-row: 2;
@@ -96,7 +97,7 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
         </CaptionText>
       )}
       <Status>
-        {active && <CheckMarkIcon width={LOGO_SIZE} height={LOGO_SIZE} color={theme.accentActive} />}
+        {active && <CheckMarkIcon width={LOGO_SIZE} height={LOGO_SIZE} color={theme.accent1} />}
         {!active && isPending && <Loader width={LOGO_SIZE} height={LOGO_SIZE} />}
       </Status>
     </Container>

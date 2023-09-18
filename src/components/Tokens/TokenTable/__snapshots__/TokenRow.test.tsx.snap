@@ -2,23 +2,7 @@
 
 exports[`LoadedRow.tsx renders a row 1`] = `
 <DocumentFragment>
-  .c19 {
-  color: #40B66B;
-}
-
-.c20 {
-  color: #40B66B;
-}
-
-.c18 {
-  padding-right: 3px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c9 {
+  .c9 {
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -30,7 +14,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 .c8 {
   width: 24px;
   height: 24px;
-  background: #E8ECFB;
+  background: #22222212;
   -webkit-transition: background-color 250ms ease-in;
   transition: background-color 250ms ease-in;
   box-shadow: 0 0 1px white;
@@ -56,6 +40,14 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   background-repeat: no-repeat;
   background-size: calc(24px / 2) calc(24px / 2);
   display: none;
+}
+
+.c18 {
+  color: #40B66B;
+}
+
+.c19 {
+  color: #40B66B;
 }
 
 .c2 {
@@ -105,7 +97,23 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   display: flex;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: #0D111C;
+  color: #222222;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.c21 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 3px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #222222;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -119,7 +127,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 .c3 {
-  color: #7780A0;
+  color: #7D7D7D;
   min-width: 32px;
   font-size: 14px;
 }
@@ -156,7 +164,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   padding-right: 8px;
 }
 
-.c21 {
+.c20 {
   padding-right: 8px;
 }
 
@@ -207,7 +215,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 .c13 {
-  color: #98A1C0;
+  color: #7D7D7D;
   text-transform: uppercase;
 }
 
@@ -237,7 +245,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   .c1 {
     grid-template-columns: 2fr 3fr;
     min-width: unset;
-    border-bottom: 0.5px solid #F5F6FC;
+    border-bottom: 0.5px solid #F9F9F9;
   }
 
   .c1:last-of-type {
@@ -264,7 +272,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
 }
 
 @media only screen and (max-width:540px) {
-  .c21 {
+  .c20 {
     display: none;
   }
 }
@@ -275,11 +283,12 @@ exports[`LoadedRow.tsx renders a row 1`] = `
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
+    gap: 3px;
     -webkit-box-pack: end;
     -webkit-justify-content: flex-end;
     -ms-flex-pack: end;
     justify-content: flex-end;
-    color: #7780A0;
+    color: #7D7D7D;
     font-size: 12px;
     line-height: 16px;
   }
@@ -316,7 +325,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
     width: -webkit-max-content;
     width: -moz-max-content;
     width: max-content;
-    font-weight: 500;
+    font-weight: 535;
   }
 }
 
@@ -408,35 +417,22 @@ exports[`LoadedRow.tsx renders a row 1`] = `
               <div
                 class="c2 c17"
               >
-                <div
+                <svg
+                  aria-label="up"
                   class="c18"
+                  fill="none"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    aria-label="up"
-                    class="c19"
-                    fill="none"
-                    height="14"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="14"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <line
-                      x1="7"
-                      x2="17"
-                      y1="17"
-                      y2="7"
-                    />
-                    <polyline
-                      points="7 7 17 7 17 17"
-                    />
-                  </svg>
-                </div>
+                  <path
+                    d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+                    fill="currentColor"
+                  />
+                </svg>
                 <span
-                  class="c20"
+                  class="c19"
                 >
                   0.00%
                 </span>
@@ -445,41 +441,28 @@ exports[`LoadedRow.tsx renders a row 1`] = `
           </div>
         </div>
         <div
-          class="c2 c14 c21"
+          class="c2 c14 c20"
           data-testid="percent-change-cell"
         >
           <div
-            class="c5"
+            class="c21"
           >
-            <div
+            <svg
+              aria-label="up"
               class="c18"
+              fill="none"
+              height="16"
+              viewBox="0 0 24 24"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                aria-label="up"
-                class="c19"
-                fill="none"
-                height="20"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <line
-                  x1="7"
-                  x2="17"
-                  y1="17"
-                  y2="7"
-                />
-                <polyline
-                  points="7 7 17 7 17 17"
-                />
-              </svg>
-            </div>
+              <path
+                d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+                fill="currentColor"
+              />
+            </svg>
             <span
-              class="c20"
+              class="c19"
             >
               0.00%
             </span>

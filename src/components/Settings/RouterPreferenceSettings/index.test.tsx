@@ -5,10 +5,6 @@ import { fireEvent, render, screen } from 'test-utils/render'
 
 import RouterPreferenceSettings from '.'
 
-jest.mock('featureFlags/flags/uniswapx', () => ({
-  useUniswapXEnabled: () => true,
-}))
-
 describe('RouterPreferenceSettings', () => {
   // Restore to default router preference before each unit test
   beforeEach(() => {

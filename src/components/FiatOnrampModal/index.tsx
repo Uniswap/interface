@@ -16,7 +16,7 @@ const Wrapper = styled.div<{ isDarkMode: boolean }>`
   // #1c1c1e is the background color for the darkmode moonpay iframe as of 2/16/2023
   background-color: ${({ isDarkMode, theme }) => (isDarkMode ? MOONPAY_DARK_BACKGROUND : theme.white)};
   border-radius: 20px;
-  box-shadow: ${({ theme }) => theme.deepShadow};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   display: flex;
   flex-flow: column nowrap;
   margin: 0;
@@ -27,7 +27,7 @@ const Wrapper = styled.div<{ isDarkMode: boolean }>`
 `
 
 const ErrorText = styled(ThemedText.BodyPrimary)`
-  color: ${({ theme }) => theme.accentFailure};
+  color: ${({ theme }) => theme.critical};
   margin: auto !important;
   text-align: center;
   width: 90%;
@@ -99,7 +99,7 @@ export default function FiatOnrampModal() {
         method: 'POST',
         body: JSON.stringify({
           theme: isDarkMode ? 'dark' : 'light',
-          colorCode: theme.accentAction,
+          colorCode: theme.accent1,
           defaultCurrencyCode: 'eth',
           redirectUrl: swapUrl,
           walletAddresses: JSON.stringify(
@@ -121,14 +121,14 @@ export default function FiatOnrampModal() {
     } finally {
       setLoading(false)
     }
-  }, [account, isDarkMode, swapUrl, theme.accentAction])
+  }, [account, isDarkMode, swapUrl, theme.accent1])
 
   useEffect(() => {
     fetchSignedIframeUrl()
   }, [fetchSignedIframeUrl])
 
   return (
-    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} height={80 /* vh */}>
+    <Modal isOpen={fiatOnrampModalOpen} onDismiss={() => closeModal()} height={80 /* vh */}>
       <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
         {error ? (
           <>

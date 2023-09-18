@@ -14,10 +14,8 @@ const StyledCard = styled.div<{ $isDarkMode: boolean; $backgroundImgSrc?: string
   display: flex;
   background: ${({ $isDarkMode, $backgroundImgSrc, $type, theme }) =>
     $isDarkMode
-      ? `${$type === CardType.Primary ? theme.backgroundModule : theme.backgroundSurface} ${
-          $backgroundImgSrc ? ` url(${$backgroundImgSrc})` : ''
-        }`
-      : `${$type === CardType.Primary ? 'white' : theme.backgroundModule} url(${$backgroundImgSrc})`};
+      ? `${theme.surface2} ${$backgroundImgSrc ? ` url(${$backgroundImgSrc})` : ''}`
+      : `${$type === CardType.Primary ? 'white' : theme.surface2} url(${$backgroundImgSrc})`};
   background-size: auto 100%;
   background-position: right;
   background-repeat: no-repeat;
@@ -26,16 +24,15 @@ const StyledCard = styled.div<{ $isDarkMode: boolean; $backgroundImgSrc?: string
   flex-direction: column;
   justify-content: space-between;
   text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   padding: 24px;
   height: 212px;
   border-radius: 24px;
-  border: 1px solid ${({ theme, $type }) => ($type === CardType.Primary ? 'transparent' : theme.backgroundOutline)};
-  box-shadow: 0px 10px 24px 0px rgba(51, 53, 72, 0.04);
+  border: 1px solid ${({ theme, $type }) => ($type === CardType.Primary ? 'transparent' : theme.surface3)};
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} border`};
 
   &:hover {
-    border: 1px solid ${({ theme, $isDarkMode }) => ($isDarkMode ? theme.backgroundInteractive : theme.textTertiary)};
+    border: 1px solid ${({ theme, $isDarkMode }) => ($isDarkMode ? theme.surface3 : theme.neutral3)};
   }
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
     height: ${({ $backgroundImgSrc }) => ($backgroundImgSrc ? 360 : 260)}px;
@@ -54,7 +51,7 @@ const TitleRow = styled.div`
 const CardTitle = styled.div`
   font-size: 20px;
   line-height: 28px;
-  font-weight: 600;
+  font-weight: 535;
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
     font-size: 28px;
@@ -65,9 +62,9 @@ const CardTitle = styled.div`
 const getCardDescriptionColor = (type: CardType, theme: DefaultTheme) => {
   switch (type) {
     case CardType.Secondary:
-      return theme.textSecondary
+      return theme.neutral2
     default:
-      return theme.textPrimary
+      return theme.neutral1
   }
 }
 
@@ -88,8 +85,8 @@ const CardDescription = styled.div<{ type: CardType }>`
 `
 
 const CardCTA = styled(CardDescription)`
-  color: ${({ theme }) => theme.accentAction};
-  font-weight: 500;
+  color: ${({ theme }) => theme.accent1};
+  font-weight: 535;
   margin: 24px 0 0;
   cursor: pointer;
 

@@ -6,7 +6,7 @@ import Row from 'components/Row'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme'
-import { formatPriceImpact } from 'utils/formatNumbers'
+import { useFormatter } from 'utils/formatNumbers'
 
 import Modal from '../Modal'
 
@@ -19,7 +19,7 @@ const IconContainer = styled.div`
 `
 
 const WarningIcon = styled(AlertTriangle)`
-  color: ${({ theme }) => theme.accentCritical};
+  color: ${({ theme }) => theme.critical};
 `
 
 const ButtonContainer = styled(ColumnCenter)`
@@ -37,6 +37,8 @@ interface PriceImpactModalProps {
 }
 
 export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }: PriceImpactModalProps) {
+  const { formatPriceImpact } = useFormatter()
+
   return (
     <Modal isOpen onDismiss={onDismiss}>
       <Wrapper gap="md">
@@ -47,13 +49,13 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
           <WarningIcon size={48} />
         </IconContainer>
         <ColumnCenter gap="sm">
-          <ThemedText.HeadlineSmall fontWeight={500}>
+          <ThemedText.HeadlineSmall fontWeight={535}>
             <Trans>Warning</Trans>
           </ThemedText.HeadlineSmall>
           <ThemedText.BodyPrimary lineHeight="24px" textAlign="center">
             <Trans>
               This transaction will result in a{' '}
-              <ThemedText.BodyPrimary lineHeight="24px" color="accentFailure" display="inline">
+              <ThemedText.BodyPrimary lineHeight="24px" color="critical" display="inline">
                 {formatPriceImpact(priceImpact)}
               </ThemedText.BodyPrimary>{' '}
               price impact on the market price of this pool. Do you wish to continue?

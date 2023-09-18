@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
@@ -22,7 +22,9 @@ export function useDebouncedTrade(
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
   routerPreferenceOverride?: RouterPreference.X,
-  account?: string
+  account?: string,
+  inputTax?: Percent,
+  outputTax?: Percent
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -34,7 +36,9 @@ export function useDebouncedTrade(
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
   routerPreferenceOverride?: RouterPreference.API | RouterPreference.CLIENT,
-  account?: string
+  account?: string,
+  inputTax?: Percent,
+  outputTax?: Percent
 ): {
   state: TradeState
   trade?: ClassicTrade
@@ -54,7 +58,9 @@ export function useDebouncedTrade(
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency,
   routerPreferenceOverride?: RouterPreference,
-  account?: string
+  account?: string,
+  inputTax?: Percent,
+  outputTax?: Percent
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -65,42 +71,34 @@ export function useDebouncedTrade(
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
 
-  const debouncedSwapQuoteFlagEnabled = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled
-  const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
-    useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
-    debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME
+  const inputs = useMemo<[CurrencyAmount<Currency> | undefined, Currency | undefined]>(
+    () => [amountSpecified, otherCurrency],
+    [amountSpecified, otherCurrency]
   )
+  const debouncedSwapQuoteFlagEnabled = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled
+  const isDebouncing =
+    useDebounce(inputs, debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME) !== inputs
 
-  const isAWrapTransaction = useMemo(() => {
-    if (!chainId || !amountSpecified || !debouncedOtherCurrency) return false
+  const isWrap = useMemo(() => {
+    if (!chainId || !amountSpecified || !otherCurrency) return false
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
     return (
-      (amountSpecified.currency.isNative && weth?.equals(debouncedOtherCurrency)) ||
-      (debouncedOtherCurrency.isNative && weth?.equals(amountSpecified.currency))
+      (amountSpecified.currency.isNative && weth?.equals(otherCurrency)) ||
+      (otherCurrency.isNative && weth?.equals(amountSpecified.currency))
     )
-  }, [amountSpecified, chainId, debouncedOtherCurrency])
+  }, [amountSpecified, chainId, otherCurrency])
 
-  const shouldGetTrade = !isAWrapTransaction && isWindowVisible
+  const skipFetch = isDebouncing || !autoRouterSupported || !isWindowVisible || isWrap
 
   const [routerPreference] = useRouterPreference()
-  const routingAPITrade = useRoutingAPITrade(
+  return useRoutingAPITrade(
     tradeType,
-    amountSpecified ? debouncedAmount : undefined,
-    debouncedOtherCurrency,
+    amountSpecified,
+    otherCurrency,
     routerPreferenceOverride ?? routerPreference,
-    !(autoRouterSupported && shouldGetTrade), // skip fetching
-    account
-  )
-
-  const inDebounce =
-    (!debouncedAmount && Boolean(amountSpecified)) || (!debouncedOtherCurrency && Boolean(otherCurrency))
-  const isLoading = routingAPITrade.state === TradeState.LOADING || inDebounce
-
-  return useMemo(
-    () => ({
-      ...routingAPITrade,
-      ...(isLoading ? { state: TradeState.LOADING } : {}),
-    }),
-    [isLoading, routingAPITrade]
+    skipFetch,
+    account,
+    inputTax,
+    outputTax
   )
 }

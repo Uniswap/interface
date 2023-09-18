@@ -1,6 +1,5 @@
 import { BagStatus, TxStateType } from 'nft/types'
 import { useEffect, useRef } from 'react'
-import { shallow } from 'zustand/shallow'
 
 import { useBag } from './useBag'
 import { useSendTransaction } from './useSendTransaction'
@@ -9,14 +8,11 @@ export function useSubscribeTransactionState(setModalIsOpen: (isOpen: boolean) =
   const transactionState = useSendTransaction((state) => state.state)
   const setTransactionState = useSendTransaction((state) => state.setState)
   const transactionStateRef = useRef(transactionState)
-  const { setBagStatus, setLocked: setBagLocked } = useBag(
-    ({ setBagExpanded, setBagStatus, setLocked }) => ({
-      setBagExpanded,
-      setBagStatus,
-      setLocked,
-    }),
-    shallow
-  )
+  const { setBagStatus, setLocked: setBagLocked } = useBag(({ setBagExpanded, setBagStatus, setLocked }) => ({
+    setBagExpanded,
+    setBagStatus,
+    setLocked,
+  }))
 
   useEffect(() => {
     useSendTransaction.subscribe((state) => (transactionStateRef.current = state.state))

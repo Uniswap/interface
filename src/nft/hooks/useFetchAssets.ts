@@ -5,7 +5,6 @@ import { buildNftTradeInputFromBagItems, recalculateBagUsingPooledAssets } from 
 import { getNextBagState, getPurchasableAssets } from 'nft/utils/bag'
 import { buildRouteResponse } from 'nft/utils/nftRoute'
 import { useCallback, useMemo } from 'react'
-import { shallow } from 'zustand/shallow'
 
 import { useBag } from './useBag'
 import { usePurchaseAssets } from './usePurchaseAssets'
@@ -39,8 +38,7 @@ export function useFetchAssets(): () => Promise<void> {
       isLocked,
       setLocked,
       setItemsInBag,
-    }),
-    shallow
+    })
   )
   const tokenTradeInput = useTokenInput((state) => state.tokenTradeInput)
   const itemsInBag = useMemo(() => recalculateBagUsingPooledAssets(uncheckedItemsInBag), [uncheckedItemsInBag])

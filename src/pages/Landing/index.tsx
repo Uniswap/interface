@@ -10,11 +10,10 @@ import { BaseButton } from 'components/Button'
 import { AppleLogo } from 'components/Logo/AppleLogo'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
-import { RedirectPathToSwapOnly } from 'pages/Swap/redirects'
 import { parse } from 'qs'
 import { useEffect, useMemo, useRef } from 'react'
 import { ArrowDownCircle } from 'react-feather'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components'
@@ -97,7 +96,7 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
   padding: 0 0 40px;
   max-width: min(720px, 90%);
-  min-height: 500px;
+  min-height: 535px;
   z-index: ${Z_INDEX.under_dropdown};
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
   height: ${({ theme }) => `calc(100vh - ${theme.navHeight + theme.mobileBottomBarHeight}px)`};
@@ -111,7 +110,7 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
   color: transparent;
   font-size: 36px;
   line-height: 44px;
-  font-weight: 700;
+  font-weight: 535;
   text-align: center;
   margin: 0 0 24px;
   ${({ isDarkMode }) =>
@@ -137,12 +136,12 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
 `
 
 const SubText = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   font-size: 16px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: 535;
   text-align: center;
-  max-width: 600px;
+  max-width: 500px;
   margin: 0 0 32px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
@@ -175,7 +174,7 @@ const ButtonCTA = styled(LandingButton)`
 const ButtonCTAText = styled.p`
   margin: 0px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 535;
   white-space: nowrap;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
@@ -191,10 +190,10 @@ const ActionsContainer = styled.span`
 
 const LearnMoreContainer = styled.div`
   align-items: center;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.neutral3};
   cursor: pointer;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 535;
   margin: 36px 0;
   display: flex;
   visibility: hidden;
@@ -291,7 +290,7 @@ const LinkCss = css`
 const LandingSwap = styled(Swap)`
   ${SwapCss}
   &:hover {
-    border: 1px solid ${({ theme }) => theme.accentAction};
+    border: 1px solid ${({ theme }) => theme.accent1};
   }
 `
 
@@ -319,9 +318,10 @@ export default function Landing() {
     }
   }, [accountDrawerOpen, navigate])
 
-  const queryParams = parse(useLocation().search, { ignoreQueryPrefix: true })
+  const location = useLocation()
+  const queryParams = parse(location.search, { ignoreQueryPrefix: true })
   if (selectedWallet && !queryParams.intro) {
-    return <RedirectPathToSwapOnly />
+    return <Navigate to={{ ...location, pathname: '/swap' }} replace />
   }
 
   return (
@@ -418,14 +418,15 @@ export default function Landing() {
 const DownloadWalletLink = styled.a`
   display: inline-flex;
   gap: 8px;
-  color: ${({ theme }) => theme.textSecondary};
+  margin-top: 24px;
+  color: ${({ theme }) => theme.neutral2};
   text-decoration: none;
   font-size: 16px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: 535;
   text-align: center;
 
   :hover {
-    color: ${({ theme }) => theme.textTertiary};
+    color: ${({ theme }) => theme.neutral3};
   }
 `

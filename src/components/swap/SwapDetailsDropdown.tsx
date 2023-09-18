@@ -33,9 +33,9 @@ const StyledPolling = styled.div`
   height: 16px;
   width: 16px;
   margin-right: 2px;
-  margin-left: 10px;
+  margin-left: 2px;
   align-items: center;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   transition: 250ms ease color;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
@@ -50,7 +50,7 @@ const StyledPollingDot = styled.div`
   min-width: 8px;
   border-radius: 50%;
   position: relative;
-  background-color: ${({ theme }) => theme.backgroundInteractive};
+  background-color: ${({ theme }) => theme.surface3};
   transition: 250ms ease background-color;
 `
 
@@ -69,7 +69,7 @@ const Spinner = styled.div`
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme }) => theme.textPrimary};
+  border-left: 2px solid ${({ theme }) => theme.neutral1};
   background: transparent;
   width: 14px;
   height: 14px;
@@ -85,7 +85,7 @@ const SwapDetailsWrapper = styled.div`
 `
 
 const Wrapper = styled(Column)`
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 16px;
   padding: 12px 16px;
 `
@@ -138,12 +138,9 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
               </ThemedText.DeprecatedMain>
             ) : null}
           </RowFixed>
-          <RowFixed>
+          <RowFixed gap="xs">
             {!showDetails && <GasEstimateTooltip trade={trade} loading={syncing || loading} />}
-            <RotatingArrow
-              stroke={trade ? theme.textTertiary : theme.deprecated_bg3}
-              open={Boolean(trade && showDetails)}
-            />
+            <RotatingArrow stroke={trade ? theme.neutral3 : theme.surface2} open={Boolean(trade && showDetails)} />
           </RowFixed>
         </StyledHeaderRow>
       </TraceEvent>

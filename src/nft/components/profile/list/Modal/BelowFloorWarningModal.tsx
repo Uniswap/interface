@@ -17,10 +17,10 @@ const ModalWrapper = styled(Column)`
   transform: translate(-50%, -50%);
   width: 420px;
   z-index: ${Z_INDEX.modal};
-  background: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.surface1};
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  box-shadow: ${({ theme }) => theme.deepShadow};
+  border: 1px solid ${({ theme }) => theme.surface3};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   padding: 20px 24px 24px;
   display: flex;
   flex-direction: column;
@@ -51,17 +51,17 @@ const HazardIconWrap = styled.div`
 `
 
 const ContinueButton = styled(ButtonPrimary)`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 20px;
   line-height: 24px;
   margin-top: 12px;
 `
 
 const EditListings = styled.span`
-  font-weight: 600;
+  font-weight: 535;
   font-size: 16px;
   line-height: 20px;
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
   text-align: center;
   cursor: pointer;
   padding: 12px 16px;
@@ -94,7 +94,7 @@ export const BelowFloorWarningModal = ({
           <CloseIcon width={24} height={24} onClick={closeModal} />{' '}
         </CloseIconWrapper>
         <HazardIconWrap>
-          <AlertTriangle height={90} width={90} color={theme.accentCritical} />
+          <AlertTriangle height={90} width={90} color={theme.critical} />
         </HazardIconWrap>
         <ThemedText.HeadlineSmall lineHeight="28px" textAlign="center">
           <Trans>Low listing price</Trans>

@@ -8,14 +8,6 @@ const QUICKNODE_BNB_RPC_URL = process.env.REACT_APP_BNB_RPC_URL
 if (typeof QUICKNODE_BNB_RPC_URL === 'undefined') {
   throw new Error(`REACT_APP_BNB_RPC_URL must be a defined environment variable`)
 }
-const QUICKNODE_BASE_GOERLI_RPC_URL = process.env.REACT_APP_BASE_GOERLI_RPC_URL
-if (typeof QUICKNODE_BASE_GOERLI_RPC_URL === 'undefined') {
-  throw new Error(`REACT_APP_BASE_GOERLI_RPC_URL must be a defined environment variable`)
-}
-const QUICKNODE_BASE_RPC_URL = process.env.REACT_APP_BASE_MAINNET_RPC_URL
-if (typeof QUICKNODE_BASE_RPC_URL === 'undefined') {
-  throw new Error(`REACT_APP_BASE_MAINNET_RPC_URL must be a defined environment variable`)
-}
 
 /**
  * Fallback JSON-RPC endpoints.
@@ -115,19 +107,13 @@ export const FALLBACK_URLS = {
   ],
   [ChainId.BASE]: [
     // "Safe" URLs
-    'https://mainnet.base.org',
-    // "Unsafe" URLs
-    QUICKNODE_BASE_RPC_URL,
-    'https://base-mainnet.blastapi.io/b5a802d8-151d-4443-90a7-699108dc4e01',
-    'https://svc.blockdaemon.com/base/mainnet/native?apiKey=zpka_1334e7c450464d06b6e33a972a7a4e57_75320f43',
-  ],
-  [ChainId.BASE_GOERLI]: [
-    // "Safe" URLs
-    'https://goerli.base.org',
-    // "Unsafe" URLs
-    QUICKNODE_BASE_GOERLI_RPC_URL,
-    'https://base-goerli.blastapi.io/b5a802d8-151d-4443-90a7-699108dc4e01',
-    'https://svc.blockdaemon.com/base/testnet/native?apiKey=zpka_1334e7c450464d06b6e33a972a7a4e57_75320f43',
+    'https://mainnet.base.org/',
+    'https://developer-access-mainnet.base.org/',
+    'https://base.gateway.tenderly.co',
+    'https://base.publicnode.com',
+    // "Fallback" URLs
+    'https://1rpc.io/base',
+    'https://base.meowrpc.com',
   ],
 }
 
@@ -162,5 +148,4 @@ export const RPC_URLS = {
   [ChainId.BNB]: [QUICKNODE_BNB_RPC_URL, ...FALLBACK_URLS[ChainId.BNB]],
   [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.AVALANCHE]],
   [ChainId.BASE]: [`https://base-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.BASE]],
-  [ChainId.BASE_GOERLI]: [`https://base-goerli.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.BASE_GOERLI]],
 }

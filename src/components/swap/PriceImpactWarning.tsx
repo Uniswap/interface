@@ -3,7 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { OutlineCard } from 'components/Card'
 import styled, { useTheme } from 'styled-components'
 import { opacify } from 'theme/utils'
-import formatPriceImpact from 'utils/formatPriceImpact'
+import { useFormatter } from 'utils/formatNumbers'
 
 import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
@@ -12,7 +12,7 @@ import { MouseoverTooltip } from '../Tooltip'
 
 const StyledCard = styled(OutlineCard)`
   padding: 12px;
-  border: 1px solid ${({ theme }) => opacify(24, theme.accentFailure)};
+  border: 1px solid ${({ theme }) => opacify(24, theme.critical)};
 `
 
 interface PriceImpactWarningProps {
@@ -20,6 +20,7 @@ interface PriceImpactWarningProps {
 }
 
 export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningProps) {
+  const { formatPriceImpact } = useFormatter()
   const theme = useTheme()
 
   return (
@@ -35,11 +36,11 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
         >
           <RowBetween>
             <RowFixed>
-              <ThemedText.DeprecatedSubHeader color={theme.accentFailure}>
+              <ThemedText.DeprecatedSubHeader color={theme.critical}>
                 <Trans>Price impact warning</Trans>
               </ThemedText.DeprecatedSubHeader>
             </RowFixed>
-            <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color="accentFailure">
+            <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color="critical">
               {formatPriceImpact(priceImpact)}
             </ThemedText.DeprecatedLabel>
           </RowBetween>

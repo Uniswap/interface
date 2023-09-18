@@ -26,7 +26,7 @@ exports[`NftCard renders correctly 1`] = `
 }
 
 .c16 {
-  color: #0D111C;
+  color: #222222;
 }
 
 .c11 {
@@ -68,7 +68,7 @@ exports[`NftCard renders correctly 1`] = `
   will-change: transform;
   object-fit: contain;
   visibility: visible;
-  background: linear-gradient(270deg,#D2D9EE 0%,#FFFFFF 100%);
+  background: linear-gradient(270deg,#22222212 0%,#FFFFFF 100%);
 }
 
 .c9 {
@@ -104,7 +104,7 @@ exports[`NftCard renders correctly 1`] = `
   left: 8px;
   right: 8px;
   color: #F5F6FC;
-  background: #FB118E;
+  background: #FC72FF;
   -webkit-transition: 250ms ease bottom,250ms ease visibility;
   transition: 250ms ease bottom,250ms ease visibility;
   will-change: transform;
@@ -113,7 +113,7 @@ exports[`NftCard renders correctly 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  font-weight: 600 !important;
+  font-weight: 535 !important;
   line-height: 16px;
   visibility: hidden;
   cursor: pointer;
@@ -143,7 +143,6 @@ exports[`NftCard renders correctly 1`] = `
   border-radius: 12px;
   background-color: #FFFFFF;
   overflow: hidden;
-  box-shadow: 0px 0px 8px rgba(51,53,72,0.04),1px 2px 4px rgba(51,53,72,0.12);
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   isolation: isolate;
@@ -158,7 +157,7 @@ exports[`NftCard renders correctly 1`] = `
   left: 0px;
   border: 1px solid;
   border-radius: 12px;
-  border-color: #D2D9EE;
+  border-color: #22222212;
   pointer-events: none;
   -webkit-transition: 250ms ease border;
   transition: 250ms ease border;
@@ -215,7 +214,7 @@ exports[`NftCard renders correctly 1`] = `
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-weight: 600 !important;
+  font-weight: 535 !important;
   line-height: 20px;
 }
 
@@ -272,11 +271,11 @@ exports[`NftCard renders correctly 1`] = `
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  color: #7780A0;
-  background: #E8ECFB;
+  color: #7D7D7D;
+  background: #22222212;
   padding: 4px 6px;
   border-radius: 4px;
-  font-weight: 700 !important;
+  font-weight: 535 !important;
   line-height: 12px;
   text-align: right;
   cursor: pointer;
@@ -358,13 +357,13 @@ exports[`NftCard renders correctly 1`] = `
                 class="c4 c5 c15"
               >
                 <div
-                  class="c16 c17 css-zhpkf8"
+                  class="c16 c17 css-142zc9n"
                 >
                   Azuki #3318
                 </div>
               </div>
               <div
-                class="c16 c18 css-4u0e4f"
+                class="c16 c18 css-142zc9n"
               >
                 <div
                   class="c19"
@@ -382,7 +381,7 @@ exports[`NftCard renders correctly 1`] = `
                 class="c4 c5 c21"
               >
                 <div
-                  class="c16 c22 css-1jljtub"
+                  class="c16 c22 css-1urox24"
                 >
                   15.8 ETH
                 </div>
@@ -392,7 +391,7 @@ exports[`NftCard renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="c16 c23 c24 css-zhpkf8"
+        class="c16 c23 c24 css-142zc9n"
       >
         Add to bag
       </div>

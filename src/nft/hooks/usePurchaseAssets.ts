@@ -1,7 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { RouteResponse, UpdatedGenieAsset } from 'nft/types'
 import { useCallback } from 'react'
-import { shallow } from 'zustand/shallow'
 
 import { useBag } from './useBag'
 import { useSendTransaction } from './useSendTransaction'
@@ -20,14 +19,11 @@ export function usePurchaseAssets(): (
     setLocked: setBagLocked,
     setBagExpanded,
     reset: resetBag,
-  } = useBag(
-    ({ setLocked, setBagExpanded, reset }) => ({
-      setLocked,
-      setBagExpanded,
-      reset,
-    }),
-    shallow
-  )
+  } = useBag(({ setLocked, setBagExpanded, reset }) => ({
+    setLocked,
+    setBagExpanded,
+    reset,
+  }))
 
   return useCallback(
     async (routingData: RouteResponse, assetsToBuy: UpdatedGenieAsset[], purchasingWithErc20 = false) => {

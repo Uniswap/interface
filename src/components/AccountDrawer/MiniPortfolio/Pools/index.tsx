@@ -13,7 +13,7 @@ import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -101,7 +101,7 @@ export default function Pools({ account }: { account: string }) {
 
 const ActiveDot = styled.span<{ closed: boolean; outOfRange: boolean }>`
   background-color: ${({ theme, closed, outOfRange }) =>
-    closed ? theme.textSecondary : outOfRange ? theme.accentWarning : theme.accentSuccess};
+    closed ? theme.neutral2 : outOfRange ? theme.deprecated_accentWarning : theme.success};
   border-radius: 50%;
   height: 8px;
   width: 8px;
@@ -118,6 +118,8 @@ function calculcateLiquidityValue(price0: number | undefined, price1: number | u
 }
 
 function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
+  const { formatNumber } = useFormatter()
+
   const { chainId, position, pool, details, inRange, closed } = positionInfo
 
   const { priceA, priceB, fees: feeValue } = useFeeValues(positionInfo)
@@ -160,29 +162,35 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
             </ThemedText.SubHeader>
           </Row>
         }
-        descriptor={<ThemedText.Caption>{`${pool.fee / 10000}%`}</ThemedText.Caption>}
+        descriptor={<ThemedText.BodySmall>{`${pool.fee / 10000}%`}</ThemedText.BodySmall>}
         right={
           <>
             <MouseoverTooltip
               placement="left"
               text={
                 <div style={{ padding: '4px 0px' }}>
-                  <ThemedText.Caption>{`${formatNumber(
-                    liquidityValue,
-                    NumberType.PortfolioBalance
-                  )} (liquidity) + ${formatNumber(feeValue, NumberType.PortfolioBalance)} (fees)`}</ThemedText.Caption>
+                  <ThemedText.BodySmall>{`${formatNumber({
+                    input: liquidityValue,
+                    type: NumberType.PortfolioBalance,
+                  })} (liquidity) + ${formatNumber({
+                    input: feeValue,
+                    type: NumberType.PortfolioBalance,
+                  })} (fees)`}</ThemedText.BodySmall>
                 </div>
               }
             >
               <ThemedText.SubHeader>
-                {formatNumber((liquidityValue ?? 0) + (feeValue ?? 0), NumberType.PortfolioBalance)}
+                {formatNumber({
+                  input: (liquidityValue ?? 0) + (feeValue ?? 0),
+                  type: NumberType.PortfolioBalance,
+                })}
               </ThemedText.SubHeader>
             </MouseoverTooltip>
 
             <Row justify="flex-end">
-              <ThemedText.Caption color="textSecondary">
+              <ThemedText.BodySmall color="neutral2">
                 {closed ? t`Closed` : inRange ? t`In range` : t`Out of range`}
-              </ThemedText.Caption>
+              </ThemedText.BodySmall>
               <ActiveDot closed={closed} outOfRange={!inRange} />
             </Row>
           </>
