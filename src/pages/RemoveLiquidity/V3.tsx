@@ -59,11 +59,11 @@ export default function RemoveLiquidityV3() {
     }
   }, [tokenId])
 
+  const { position, loading } = useV3PositionFromTokenId(parsedTokenId ?? undefined)
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
     return <Navigate to={{ ...location, pathname: '/pools' }} replace />
   }
-
-  if (isSupportedChain(chainId)) {
+  if (isSupportedChain(chainId) && (loading || position)) {
     return <Remove tokenId={parsedTokenId} />
   } else {
     return <PositionPageUnsupportedContent />
@@ -312,15 +312,16 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <RowBetween>
                 <RowFixed>
                   <DoubleCurrencyLogo
-                    currency0={feeValue0?.currency}
-                    currency1={feeValue1?.currency}
+                    currency0={liquidityValue0?.currency}
+                    currency1={liquidityValue1?.currency}
                     size={20}
                     margin={true}
                   />
                   <ThemedText.DeprecatedLabel
                     ml="10px"
                     fontSize="20px"
-                  >{`${feeValue0?.currency?.symbol}/${feeValue1?.currency?.symbol}`}</ThemedText.DeprecatedLabel>
+                    id="remove-liquidity-tokens"
+                  >{`${liquidityValue0?.currency?.symbol}/${liquidityValue1?.currency?.symbol}`}</ThemedText.DeprecatedLabel>
                 </RowFixed>
                 <RangeBadge removed={removed} inRange={!outOfRange} />
               </RowBetween>
@@ -354,7 +355,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <LightCard>
                 <AutoColumn gap="md">
                   <RowBetween>
-                    <Text fontSize={16} fontWeight={535}>
+                    <Text fontSize={16} fontWeight={535} id="remove-pooled-tokena-symbol">
                       <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>
@@ -365,7 +366,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     </RowFixed>
                   </RowBetween>
                   <RowBetween>
-                    <Text fontSize={16} fontWeight={535}>
+                    <Text fontSize={16} fontWeight={535} id="remove-pooled-tokenb-symbol">
                       <Trans>Pooled {liquidityValue1?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>
