@@ -9,7 +9,7 @@ import { ZERO_PERCENT } from 'constants/misc'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
-import { formatPriceImpact, NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ExternalLink, Separator, ThemedText } from '../../theme'
 import Column from '../Column'
@@ -47,7 +47,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
   const txCount = getTransactionCount(trade)
-  const { formatNumber, formatCurrencyAmount } = useFormatter()
+  const { formatCurrencyAmount, formatNumber, formatPriceImpact } = useFormatter()
 
   const supportsGasEstimate = chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)
 
@@ -194,6 +194,8 @@ function TokenTaxLineItem({
   type: 'input' | 'output'
   syncing: boolean
 }) {
+  const { formatPriceImpact } = useFormatter()
+
   if (syncing) return null
 
   const [currency, percentage] =

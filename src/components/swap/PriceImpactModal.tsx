@@ -6,7 +6,7 @@ import Row from 'components/Row'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme'
-import { formatPriceImpact } from 'utils/formatNumbers'
+import { useFormatter } from 'utils/formatNumbers'
 
 import Modal from '../Modal'
 
@@ -37,6 +37,8 @@ interface PriceImpactModalProps {
 }
 
 export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }: PriceImpactModalProps) {
+  const { formatPriceImpact } = useFormatter()
+
   return (
     <Modal isOpen onDismiss={onDismiss}>
       <Wrapper gap="md">

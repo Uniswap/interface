@@ -12,7 +12,6 @@ import { UserAddedToken } from 'types/tokens'
 
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
 import { useDefaultActiveTokens } from '../../hooks/Tokens'
-import { AppState } from '../reducer'
 import {
   addSerializedPair,
   addSerializedToken,
@@ -205,10 +204,6 @@ export function usePairAdder(): (pair: Pair) => void {
     },
     [dispatch]
   )
-}
-
-export function useURLWarningVisible(): boolean {
-  return useAppSelector((state: AppState) => state.user.URLWarningVisible)
 }
 
 export function useHideBaseWalletBanner(): [boolean, () => void] {
