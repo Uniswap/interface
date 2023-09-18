@@ -19,6 +19,7 @@ const nonexistentCollections = [
     address: '0xed5af388653567af2f388e6224dc7c4b3241c545',
     collectionName: '0xed5af388653567af2f388e6224dc7c4b3241c545',
     image: 'http://127.0.0.1:3000/api/image/nfts/collection/0xed5af388653567af2f388e6224dc7c4b3241c545',
+    description: '',
   },
 ]
 
