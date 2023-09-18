@@ -846,7 +846,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
   color: #222222;
   cursor: pointer;
   height: 36px;
-  border-radius: 32px;
+  border-radius: 18px;
   outline: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -903,7 +903,7 @@ exports[`disable nft on landing page does not render nft information and card 1`
   color: #FFFFFF;
   cursor: pointer;
   height: 36px;
-  border-radius: 32px;
+  border-radius: 18px;
   outline: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3474,7 +3474,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   color: #222222;
   cursor: pointer;
   height: 36px;
-  border-radius: 32px;
+  border-radius: 18px;
   outline: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3531,7 +3531,7 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   color: #FFFFFF;
   cursor: pointer;
   height: 36px;
-  border-radius: 32px;
+  border-radius: 18px;
   outline: none;
   -webkit-user-select: none;
   -moz-user-select: none;
