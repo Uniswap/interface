@@ -1,11 +1,29 @@
-import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { BigintIsh, ChainId, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig } from '@uniswap/smart-order-router'
+import { asSupportedChain } from 'constants/chains'
+import { RPC_PROVIDERS } from 'constants/providers'
 import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { GetQuoteArgs, QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
+
+const routers = new Map<ChainId, AlphaRouter>()
+export function getRouter(chainId: ChainId): AlphaRouter {
+  const router = routers.get(chainId)
+  if (router) return router
+
+  const supportedChainId = asSupportedChain(chainId)
+  if (supportedChainId) {
+    const provider = RPC_PROVIDERS[supportedChainId]
+    const router = new AlphaRouter({ chainId, provider })
+    routers.set(chainId, router)
+    return router
+  }
+
+  throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
+}
 
 async function getQuote(
   {

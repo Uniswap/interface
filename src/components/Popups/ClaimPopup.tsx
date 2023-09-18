@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendEvent } from 'components/analytics'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
@@ -65,10 +64,6 @@ export default function ClaimPopup() {
   const showClaimModal = useModalIsOpen(ApplicationModal.SELF_CLAIM)
   const toggleSelfClaimModal = useToggleSelfClaimModal()
   const handleToggleSelfClaimModal = useCallback(() => {
-    sendEvent({
-      category: 'MerkleDrop',
-      action: 'Toggle self claim modal',
-    })
     toggleSelfClaimModal()
   }, [toggleSelfClaimModal])
 
@@ -79,10 +74,6 @@ export default function ClaimPopup() {
   // listen for available claim and show popup if needed
   useEffect(() => {
     if (userHasAvailableclaim) {
-      sendEvent({
-        category: 'MerkleDrop',
-        action: 'Show claim popup',
-      })
       toggleShowClaimPopup()
     }
     // the toggleShowClaimPopup function changes every time the popup changes, so this will cause an infinite loop.
