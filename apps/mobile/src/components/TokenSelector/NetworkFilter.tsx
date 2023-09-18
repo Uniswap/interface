@@ -13,11 +13,19 @@ import {
   NetworkLogo,
   SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,
 } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
-import { ALL_SUPPORTED_CHAIN_IDS, ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 
 const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
 const NETWORK_ICON_SHIFT = 10
+// Array of logos to show when "all networks" are visible. Don't want to show all
+// logos because there are too many
+const NETWORK_LOGOS_TO_SHOW = [
+  ChainId.Mainnet,
+  ChainId.Polygon,
+  ChainId.ArbitrumOne,
+  ChainId.Optimism,
+]
 
 interface NetworkFilterProps {
   selectedChain: ChainId | null
@@ -112,17 +120,11 @@ export function NetworkFilter({
     [showEllipsisIcon, selectedChain, onPressChain]
   )
 
-  // design wants to limit amount of networks shown in the network filter,
-  // when all networks is selected and for now we show all, but Arbitrum
-  const allChainsExceptArbitrum = ALL_SUPPORTED_CHAIN_IDS.filter(
-    (chainId) => chainId !== ChainId.ArbitrumOne
-  )
-
   const networkOptions = useNetworkOptions({ selectedChain, onPress, includeAllNetworks })
 
   const networks = useMemo(() => {
-    return selectedChain ? [selectedChain] : allChainsExceptArbitrum
-  }, [allChainsExceptArbitrum, selectedChain])
+    return selectedChain ? [selectedChain] : NETWORK_LOGOS_TO_SHOW
+  }, [selectedChain])
 
   return (
     <>

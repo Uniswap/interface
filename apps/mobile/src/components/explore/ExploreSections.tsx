@@ -19,6 +19,7 @@ import {
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/favorites/selectors'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { Flex, Text } from 'ui/src'
+import { WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
@@ -30,11 +31,7 @@ import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import {
-  buildCurrencyId,
-  buildNativeCurrencyId,
-  getWrappedNativeCurrencyAddressForChain,
-} from 'wallet/src/utils/currencyId'
+import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type ExploreSectionsProps = {
   listRef?: React.MutableRefObject<null>
@@ -72,7 +69,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     // eth will be defined only if all the required data is available
     // when eth data is not fully available, we do not replace weth with eth
     const { eth } = data
-    const wethAddress = getWrappedNativeCurrencyAddressForChain(ChainId.Mainnet)
+    const wethAddress = WRAPPED_BASE_ADDRESSES[ChainId.Mainnet]
 
     const topTokens = data.topTokens
       .map((token) => {

@@ -2,14 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import {
   NATIVE_ADDRESS,
   NATIVE_ADDRESS_ALT,
-  WRAPPED_ARBITRUM_ETH,
-  WRAPPED_BASE_ETH,
-  WRAPPED_BNB,
-  WRAPPED_GOERLI_ETH,
-  WRAPPED_MAINNET_ETH,
-  WRAPPED_MAINNET_POLYGON,
-  WRAPPED_MUMBAI_POLYGON,
-  WRAPPED_OPTIMISTIC_ETH,
+  WRAPPED_BASE_ADDRESSES,
 } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { isPolygonChain, toSupportedChainId } from 'wallet/src/features/chains/utils'
@@ -39,7 +32,7 @@ export function buildNativeCurrencyId(chainId: ChainId): string {
 }
 
 export function buildWrappedNativeCurrencyId(chainId: ChainId): string {
-  const nativeAddress = getWrappedNativeCurrencyAddressForChain(chainId)
+  const nativeAddress = WRAPPED_BASE_ADDRESSES[chainId]
   return buildCurrencyId(chainId, nativeAddress)
 }
 
@@ -81,29 +74,6 @@ export function getNativeCurrencyAddressForChain(chainId: ChainId): string {
   if (isPolygonChain(chainId)) return NATIVE_ADDRESS_ALT
 
   return NATIVE_ADDRESS
-}
-
-export function getWrappedNativeCurrencyAddressForChain(chainId: ChainId): string {
-  switch (chainId) {
-    case ChainId.Mainnet:
-      return WRAPPED_MAINNET_ETH
-    case ChainId.Goerli:
-      return WRAPPED_GOERLI_ETH
-    case ChainId.ArbitrumOne:
-      return WRAPPED_ARBITRUM_ETH
-    case ChainId.Base:
-      return WRAPPED_BASE_ETH
-    case ChainId.Bnb:
-      return WRAPPED_BNB
-    case ChainId.Optimism:
-      return WRAPPED_OPTIMISTIC_ETH
-    case ChainId.Polygon:
-      return WRAPPED_MAINNET_POLYGON
-    case ChainId.PolygonMumbai:
-      return WRAPPED_MUMBAI_POLYGON
-    default:
-      throw new Error(`Unsupported chainId: ${chainId}`)
-  }
 }
 
 export const isNativeCurrencyAddress = (chainId: ChainId, address: Maybe<Address>): boolean => {

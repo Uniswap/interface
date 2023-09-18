@@ -4,6 +4,7 @@ import { call } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { Weth } from 'wallet/src/abis/types'
 import WETH_ABI from 'wallet/src/abis/weth.json'
+import { WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import {
@@ -12,7 +13,6 @@ import {
   TransactionTypeInfo,
 } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { getWrappedNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export enum WrapType {
@@ -32,7 +32,7 @@ export async function getWethContract(
   chainId: ChainId,
   provider: providers.Provider
 ): Promise<Weth> {
-  return new Contract(getWrappedNativeCurrencyAddressForChain(chainId), WETH_ABI, provider) as Weth
+  return new Contract(WRAPPED_BASE_ADDRESSES[chainId], WETH_ABI, provider) as Weth
 }
 
 export function* wrap(params: Params) {

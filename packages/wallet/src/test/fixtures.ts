@@ -13,7 +13,7 @@ import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20, Weth } from 'wallet/src/abis/types'
 import WETH_ABI from 'wallet/src/abis/weth.json'
 import { config } from 'wallet/src/config'
-import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
+import { NATIVE_ADDRESS, WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE, UNI, WBTC } from 'wallet/src/constants/tokens'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -34,7 +34,7 @@ import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/acc
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
-import { currencyId, getWrappedNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
+import { currencyId } from 'wallet/src/utils/currencyId'
 
 // Ensures stable fixtures
 export const FAKER_SEED = 123
@@ -134,14 +134,14 @@ export const contractManager = new ContractManager()
 contractManager.getOrCreateContract(ChainId.Goerli, DAI.address, provider, ERC20_ABI)
 contractManager.getOrCreateContract(
   ChainId.Goerli,
-  getWrappedNativeCurrencyAddressForChain(ChainId.Goerli),
+  WRAPPED_BASE_ADDRESSES[ChainId.Goerli],
   provider,
   WETH_ABI
 )
 export const tokenContract = contractManager.getContract(ChainId.Goerli, DAI.address) as Erc20
 export const wethContract = contractManager.getContract(
   ChainId.Goerli,
-  getWrappedNativeCurrencyAddressForChain(ChainId.Goerli)
+  WRAPPED_BASE_ADDRESSES[ChainId.Goerli]
 ) as Weth
 
 /**

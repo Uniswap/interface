@@ -5,6 +5,7 @@ import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Inset } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
+import { WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
   Chain,
@@ -13,7 +14,6 @@ import {
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import { getWrappedNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 
 export function SearchPopularTokens(): JSX.Element {
   // Load popular tokens by top Uniswap trading volume
@@ -26,7 +26,7 @@ export function SearchPopularTokens(): JSX.Element {
     // eth will be defined only if all the required data is available
     // when eth data is not fully available, we do not replace weth with eth
     const eth = data?.eth && data?.eth.length > 0 && data?.eth?.[0]?.project ? data.eth[0] : null
-    const wethAddress = getWrappedNativeCurrencyAddressForChain(ChainId.Mainnet)
+    const wethAddress = WRAPPED_BASE_ADDRESSES[ChainId.Mainnet]
 
     return data.topTokens
       .map((token) => {

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { TradeType } from '@uniswap/sdk-core'
-import { NATIVE_ADDRESS } from 'wallet/src/constants/addresses'
+import { NATIVE_ADDRESS, WRAPPED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI } from 'wallet/src/constants/tokens'
 import {
@@ -18,7 +18,6 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
-import { getWrappedNativeCurrencyAddressForChain } from 'wallet/src/utils/currencyId'
 import extractTransactionDetails from './extractTransactionDetails'
 import parseApproveTransaction from './parseApproveTransaction'
 import parseNFTMintTransaction from './parseMintTransaction'
@@ -35,7 +34,7 @@ const FROM_ADDRESS = SAMPLE_SEED_ADDRESS_1
 const TO_ADDRESS = SAMPLE_SEED_ADDRESS_2
 const TEST_HASH = '0x00'
 const ERC20_ASSET_ADDRESS = DAI.address
-const WRAPPED_NATIVE_ADDRESS = getWrappedNativeCurrencyAddressForChain(ChainId.Mainnet)
+const WRAPPED_NATIVE_ADDRESS = WRAPPED_BASE_ADDRESSES[ChainId.Mainnet]
 
 const RESPONSE_BASE = {
   id: 'base_id',
