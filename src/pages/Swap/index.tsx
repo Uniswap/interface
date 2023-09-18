@@ -314,10 +314,20 @@ export function Swap({
     [independentField, parsedAmount, showWrap, trade]
   )
 
-  const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT], currencies[Field.INPUT] ?? undefined)
-  const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT], currencies[Field.OUTPUT] ?? undefined)
-  const showFiatValueInput = Boolean(parsedAmounts[Field.INPUT])
-  const showFiatValueOutput = Boolean(parsedAmounts[Field.OUTPUT])
+  const fiatValueInput = useUSDPrice(
+    parsedAmounts[Field.INPUT] ??
+      (currencies[Field.INPUT]
+        ? CurrencyAmount.fromRawAmount(currencies[Field.INPUT], JSBI.BigInt(10 ** currencies[Field.INPUT].decimals))
+        : undefined),
+    currencies[Field.INPUT] ?? undefined
+  )
+  const fiatValueOutput = useUSDPrice(
+    parsedAmounts[Field.OUTPUT] ??
+      (currencies[Field.OUTPUT]
+        ? CurrencyAmount.fromRawAmount(currencies[Field.OUTPUT], JSBI.BigInt(10 ** currencies[Field.OUTPUT].decimals))
+        : undefined),
+    currencies[Field.OUTPUT] ?? undefined
+  )
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [
@@ -623,7 +633,7 @@ export function Swap({
               currency={currencies[Field.INPUT] ?? null}
               onUserInput={handleTypeInput}
               onMax={handleMaxInput}
-              fiatValue={showFiatValueInput ? fiatValueInput : undefined}
+              fiatValue={fiatValueInput}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               showCommonBases
@@ -664,7 +674,7 @@ export function Swap({
                 label={<Trans>You receive</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
-                fiatValue={showFiatValueOutput ? fiatValueOutput : undefined}
+                fiatValue={fiatValueOutput}
                 priceImpact={stablecoinPriceImpact}
                 currency={currencies[Field.OUTPUT] ?? null}
                 onCurrencySelect={handleOutputSelect}
