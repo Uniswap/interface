@@ -35,16 +35,16 @@ function _SuggestedToken({
       testID={`token-option-${currency.chainId}-${currency.symbol}`}
       onPress={onPress}>
       <Pill
-        backgroundColor="surface3"
-        borderRadius="roundedFull"
+        backgroundColor="$surface3"
+        borderRadius="$roundedFull"
         foregroundColor={colors.neutral1.val}
         icon={<TokenLogo size={iconSizes.icon28} symbol={currency.symbol} url={logoUrl} />}
         label={getSymbolDisplayText(currency.symbol)}
-        mr="spacing8"
-        my="spacing4"
-        pl="spacing4"
-        pr="spacing12"
-        py="spacing4"
+        mr="$spacing8"
+        my="$spacing4"
+        pl="$spacing4"
+        pr="$spacing12"
+        py="$spacing4"
         textVariant="bodyLarge"
       />
     </TouchableArea>

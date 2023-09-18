@@ -10,14 +10,13 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Favorite } from 'src/components/icons/Favorite'
 import { AnimatedBox } from 'src/components/layout/Box'
-import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Flex, Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -166,7 +165,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
                   height={iconSizes.icon20}
                   width={iconSizes.icon20}
                 />
-                <Text color="neutral2" lineHeight={20} variant="buttonLabelMedium">
+                <Text color="$neutral2" lineHeight={20} variant="buttonLabelMedium">
                   {t('Send')}
                 </Text>
               </Flex>

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import { Text } from 'src/components/Text'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
 import {
   isTransactionRequest,
@@ -13,7 +12,7 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { logger } from 'utilities/src/logger/logger'
@@ -73,7 +72,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
         if (typeof childValue === 'object') {
           return (
             <Flex key={objKey} gap="$spacing4">
-              <Text color="neutral3" style={{ marginLeft: depth * 10 }} variant="monospace">
+              <Text color="$neutral2" style={{ marginLeft: depth * 10 }} variant="monospace">
                 {objKey}
               </Text>
               {getParsedObjectDisplay(chainId, childValue, depth + 1)}
@@ -89,14 +88,14 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
               alignItems="flex-start"
               gap="$spacing8"
               style={{ marginLeft: depth * 10 }}>
-              <Text color="neutral3" py="spacing4" variant="monospace">
+              <Text color="$neutral2" py="$spacing4" variant="monospace">
                 {objKey}
               </Text>
               <Flex flexShrink={1}>
                 {getValidAddress(childValue, true) ? (
                   <AddressButton address={childValue} chainId={chainId} textVariant="monospace" />
                 ) : (
-                  <Text py="spacing4" variant="monospace">
+                  <Text py="$spacing4" variant="monospace">
                     {childValue}
                   </Text>
                 )}
@@ -160,14 +159,14 @@ function TransactionDetails({
       ) : null}
       {to ? (
         <Flex row alignItems="center" gap="$spacing16">
-          <Text color="neutral2" variant="bodySmall">
+          <Text color="$neutral2" variant="bodySmall">
             {t('To')}:
           </Text>
           <AddressButton address={to} chainId={chainId} />
         </Flex>
       ) : null}
       <Flex row alignItems="center" gap="$spacing16">
-        <Text color="neutral2" variant="bodySmall">
+        <Text color="$neutral2" variant="bodySmall">
           {t('Function')}:
         </Text>
         <Flex
@@ -176,7 +175,7 @@ function TransactionDetails({
           gap="$none"
           px="$spacing8"
           py="$spacing4">
-          <Text color="neutral1" loading={isLoading} variant="monospace">
+          <Text color="$neutral1" loading={isLoading} variant="monospace">
             {parsedData ? parsedData.name : t('Unknown')}
           </Text>
         </Flex>
@@ -214,7 +213,7 @@ function RequestDetailsContent({ request }: Props): JSX.Element {
   return message ? (
     <Text variant="bodySmall">{message}</Text>
   ) : (
-    <Text color="neutral2" variant="bodySmall">
+    <Text color="$neutral2" variant="bodySmall">
       {t('No message found.')}
     </Text>
   )

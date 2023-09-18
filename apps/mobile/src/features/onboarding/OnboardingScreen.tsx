@@ -6,17 +6,15 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { AnimatedFlex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
-import { Text } from 'src/components/Text'
 import { IS_IOS } from 'src/constants/globals'
-import { Flex } from 'ui/src'
+import { Flex, SpaceTokens, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
 
 type OnboardingScreenProps = {
   subtitle?: string
   title?: string
-  paddingTop?: keyof Theme['spacing']
-  childrenGap?: keyof Theme['spacing']
+  paddingTop?: SpaceTokens
+  childrenGap?: SpaceTokens
   keyboardAvoidingViewEnabled?: boolean
 }
 
@@ -24,7 +22,7 @@ export function OnboardingScreen({
   title,
   subtitle,
   children,
-  paddingTop = 'none',
+  paddingTop = '$none',
   keyboardAvoidingViewEnabled = true,
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const headerHeight = useHeaderHeight()
@@ -81,7 +79,7 @@ export function OnboardingScreen({
             )}
             {subtitle ? (
               <Text
-                color="neutral2"
+                color="$neutral2"
                 maxFontSizeMultiplier={subtitleMaxFontScaleMultiplier}
                 textAlign="center"
                 variant={subtitleSize}>

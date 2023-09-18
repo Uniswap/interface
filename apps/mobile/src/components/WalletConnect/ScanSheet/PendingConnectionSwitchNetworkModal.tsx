@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
-import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Flex, Separator, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
@@ -40,7 +39,7 @@ export const PendingConnectionSwitchNetworkModal = ({
                 px="$spacing24"
                 py="$spacing16">
                 <NetworkLogo chainId={chainId} size={iconSizes.icon24} />
-                <Text color="neutral1" variant="bodyLarge">
+                <Text color="$neutral1" variant="bodyLarge">
                   {info.label}
                 </Text>
                 <Flex gap="$none" height={iconSizes.icon24} width={iconSizes.icon24}>

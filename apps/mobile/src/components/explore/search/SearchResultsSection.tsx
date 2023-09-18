@@ -13,9 +13,8 @@ import {
   formatTokenSearchResults,
   getSearchResultId,
 } from 'src/components/explore/search/utils'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Text } from 'src/components/Text'
 import {
   NFTCollectionSearchResult,
   SearchResult,
@@ -24,6 +23,7 @@ import {
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
+import { Flex, Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { SafetyLevel, useExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -213,13 +213,13 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   }
 
   return (
-    <Flex grow gap="spacing8">
+    <Flex grow gap="$spacing8">
       <FlatList
         ListEmptyComponent={
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing8" mx="spacing8">
-            <Text color="neutral2" variant="bodyLarge">
+            <Text color="$neutral2" variant="bodyLarge">
               <Trans t={t}>
-                No results found for <Text color="neutral1">"{searchQuery}"</Text>
+                No results found for <Text color="$neutral1">"{searchQuery}"</Text>
               </Trans>
             </Text>
           </AnimatedFlex>
@@ -260,7 +260,9 @@ export const renderSearchItem = ({
 }): JSX.Element | null => {
   switch (searchResult.type) {
     case SEARCH_RESULT_HEADER_KEY:
-      return <SectionHeaderText mt={index === 0 ? 'none' : 'spacing8'} title={searchResult.title} />
+      return (
+        <SectionHeaderText mt={index === 0 ? '$none' : '$spacing8'} title={searchResult.title} />
+      )
     case SearchResultType.Token:
       return <SearchTokenItem searchContext={searchContext} token={searchResult} />
     case SearchResultType.Wallet:

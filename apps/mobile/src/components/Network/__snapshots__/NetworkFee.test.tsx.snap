@@ -13,19 +13,16 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
 >
   <Text
     allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
     style={
-      [
-        {
-          "color": "#222222",
-          "display": "flex",
-          "fontFamily": "Basel-Book",
-          "fontSize": 17,
-          "fontWeight": "400",
-          "lineHeight": 24,
-        },
-      ]
+      {
+        "color": "#222222",
+        "display": "flex",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
     }
+    suppressHighlighting={true}
   >
     Network fee
   </Text>
@@ -39,65 +36,63 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     }
   >
     <View
-      sentry-label="Flex"
       style={
-        [
-          {
-            "alignItems": "center",
-            "borderColor": "transparent",
-            "borderRadius": 12,
-            "borderWidth": 1,
-            "display": "flex",
-            "flexDirection": "row",
-            "justifyContent": "center",
-            "paddingHorizontal": 8,
-            "paddingVertical": 2,
-          },
-          {
-            "backgroundColor": "#3939391a",
-            "borderColor": "transparent",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "backgroundColor": "#3939391a",
+          "borderBottomColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderBottomWidth": 1,
+          "borderColor": "transparent",
+          "borderLeftColor": "transparent",
+          "borderLeftWidth": 1,
+          "borderRightColor": "transparent",
+          "borderRightWidth": 1,
+          "borderStyle": "solid",
+          "borderTopColor": "transparent",
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "borderTopWidth": 1,
+          "flexDirection": "row",
+          "gap": 8,
+          "justifyContent": "center",
+          "paddingBottom": 0,
+          "paddingLeft": 4,
+          "paddingRight": 4,
+          "paddingTop": 0,
+        }
       }
     >
       <Text
         allowFontScaling={true}
-        maxFontSizeMultiplier={1.2}
         style={
-          [
-            {
-              "color": "#222222",
-              "display": "flex",
-              "fontFamily": "Basel-Medium",
-              "fontSize": 13,
-              "fontWeight": "500",
-              "lineHeight": 16,
-            },
-            {
-              "color": "#393939",
-              "paddingTop": 1,
-            },
-          ]
+          {
+            "color": "#393939",
+            "display": "flex",
+            "fontFamily": "Basel-Book",
+            "fontSize": 13,
+            "lineHeight": 16,
+            "paddingTop": 1,
+          }
         }
+        suppressHighlighting={true}
       >
         Ethereum
       </Text>
     </View>
     <Text
       allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
       style={
-        [
-          {
-            "color": "#222222",
-            "display": "flex",
-            "fontFamily": "Basel-Book",
-            "fontSize": 17,
-            "fontWeight": "400",
-            "lineHeight": 24,
-          },
-        ]
+        {
+          "color": "#222222",
+          "display": "flex",
+          "fontFamily": "Basel-Book",
+          "fontSize": 17,
+          "lineHeight": 24,
+        }
       }
+      suppressHighlighting={true}
     >
       •
     </Text>
@@ -140,19 +135,16 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
 >
   <Text
     allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
     style={
-      [
-        {
-          "color": "#222222",
-          "display": "flex",
-          "fontFamily": "Basel-Book",
-          "fontSize": 17,
-          "fontWeight": "400",
-          "lineHeight": 24,
-        },
-      ]
+      {
+        "color": "#222222",
+        "display": "flex",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
     }
+    suppressHighlighting={true}
   >
     Network fee
   </Text>
@@ -166,65 +158,63 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     }
   >
     <View
-      sentry-label="Flex"
       style={
-        [
-          {
-            "alignItems": "center",
-            "borderColor": "transparent",
-            "borderRadius": 12,
-            "borderWidth": 1,
-            "display": "flex",
-            "flexDirection": "row",
-            "justifyContent": "center",
-            "paddingHorizontal": 8,
-            "paddingVertical": 2,
-          },
-          {
-            "backgroundColor": "#3939391a",
-            "borderColor": "transparent",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "backgroundColor": "#3939391a",
+          "borderBottomColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderBottomWidth": 1,
+          "borderColor": "transparent",
+          "borderLeftColor": "transparent",
+          "borderLeftWidth": 1,
+          "borderRightColor": "transparent",
+          "borderRightWidth": 1,
+          "borderStyle": "solid",
+          "borderTopColor": "transparent",
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "borderTopWidth": 1,
+          "flexDirection": "row",
+          "gap": 8,
+          "justifyContent": "center",
+          "paddingBottom": 0,
+          "paddingLeft": 4,
+          "paddingRight": 4,
+          "paddingTop": 0,
+        }
       }
     >
       <Text
         allowFontScaling={true}
-        maxFontSizeMultiplier={1.2}
         style={
-          [
-            {
-              "color": "#222222",
-              "display": "flex",
-              "fontFamily": "Basel-Medium",
-              "fontSize": 13,
-              "fontWeight": "500",
-              "lineHeight": 16,
-            },
-            {
-              "color": "#393939",
-              "paddingTop": 1,
-            },
-          ]
+          {
+            "color": "#393939",
+            "display": "flex",
+            "fontFamily": "Basel-Book",
+            "fontSize": 13,
+            "lineHeight": 16,
+            "paddingTop": 1,
+          }
         }
+        suppressHighlighting={true}
       >
         Ethereum
       </Text>
     </View>
     <Text
       allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
       style={
-        [
-          {
-            "color": "#222222",
-            "display": "flex",
-            "fontFamily": "Basel-Book",
-            "fontSize": 17,
-            "fontWeight": "400",
-            "lineHeight": 24,
-          },
-        ]
+        {
+          "color": "#222222",
+          "display": "flex",
+          "fontFamily": "Basel-Book",
+          "fontSize": 17,
+          "lineHeight": 24,
+        }
       }
+      suppressHighlighting={true}
     >
       •
     </Text>
@@ -240,19 +230,16 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     >
       <Text
         allowFontScaling={true}
-        maxFontSizeMultiplier={1.4}
         style={
-          [
-            {
-              "color": "#222222",
-              "display": "flex",
-              "fontFamily": "Basel-Book",
-              "fontSize": 17,
-              "fontWeight": "400",
-              "lineHeight": 24,
-            },
-          ]
+          {
+            "color": "#222222",
+            "display": "flex",
+            "fontFamily": "Basel-Book",
+            "fontSize": 17,
+            "lineHeight": 24,
+          }
         }
+        suppressHighlighting={true}
       >
         $500.00
       </Text>
@@ -274,19 +261,16 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
 >
   <Text
     allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
     style={
-      [
-        {
-          "color": "#222222",
-          "display": "flex",
-          "fontFamily": "Basel-Book",
-          "fontSize": 17,
-          "fontWeight": "400",
-          "lineHeight": 24,
-        },
-      ]
+      {
+        "color": "#222222",
+        "display": "flex",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
     }
+    suppressHighlighting={true}
   >
     Network fee
   </Text>
@@ -300,65 +284,63 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
     }
   >
     <View
-      sentry-label="Flex"
       style={
-        [
-          {
-            "alignItems": "center",
-            "borderColor": "transparent",
-            "borderRadius": 12,
-            "borderWidth": 1,
-            "display": "flex",
-            "flexDirection": "row",
-            "justifyContent": "center",
-            "paddingHorizontal": 8,
-            "paddingVertical": 2,
-          },
-          {
-            "backgroundColor": "#3939391a",
-            "borderColor": "transparent",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "backgroundColor": "#3939391a",
+          "borderBottomColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderBottomWidth": 1,
+          "borderColor": "transparent",
+          "borderLeftColor": "transparent",
+          "borderLeftWidth": 1,
+          "borderRightColor": "transparent",
+          "borderRightWidth": 1,
+          "borderStyle": "solid",
+          "borderTopColor": "transparent",
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "borderTopWidth": 1,
+          "flexDirection": "row",
+          "gap": 8,
+          "justifyContent": "center",
+          "paddingBottom": 0,
+          "paddingLeft": 4,
+          "paddingRight": 4,
+          "paddingTop": 0,
+        }
       }
     >
       <Text
         allowFontScaling={true}
-        maxFontSizeMultiplier={1.2}
         style={
-          [
-            {
-              "color": "#222222",
-              "display": "flex",
-              "fontFamily": "Basel-Medium",
-              "fontSize": 13,
-              "fontWeight": "500",
-              "lineHeight": 16,
-            },
-            {
-              "color": "#393939",
-              "paddingTop": 1,
-            },
-          ]
+          {
+            "color": "#393939",
+            "display": "flex",
+            "fontFamily": "Basel-Book",
+            "fontSize": 13,
+            "lineHeight": 16,
+            "paddingTop": 1,
+          }
         }
+        suppressHighlighting={true}
       >
         Ethereum
       </Text>
     </View>
     <Text
       allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
       style={
-        [
-          {
-            "color": "#222222",
-            "display": "flex",
-            "fontFamily": "Basel-Book",
-            "fontSize": 17,
-            "fontWeight": "400",
-            "lineHeight": 24,
-          },
-        ]
+        {
+          "color": "#222222",
+          "display": "flex",
+          "fontFamily": "Basel-Book",
+          "fontSize": 17,
+          "lineHeight": 24,
+        }
       }
+      suppressHighlighting={true}
     >
       •
     </Text>
@@ -374,19 +356,16 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
     >
       <Text
         allowFontScaling={true}
-        maxFontSizeMultiplier={1.4}
         style={
-          [
-            {
-              "color": "#FEB239",
-              "display": "flex",
-              "fontFamily": "Basel-Book",
-              "fontSize": 17,
-              "fontWeight": "400",
-              "lineHeight": 24,
-            },
-          ]
+          {
+            "color": "#FEB239",
+            "display": "flex",
+            "fontFamily": "Basel-Book",
+            "fontSize": 17,
+            "lineHeight": 24,
+          }
         }
+        suppressHighlighting={true}
       >
         $500.00
       </Text>

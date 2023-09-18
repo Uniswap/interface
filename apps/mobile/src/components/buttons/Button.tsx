@@ -4,7 +4,7 @@ import { SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { getButtonProperties } from 'src/components/buttons/utils'
-import { Flex } from 'src/components/layout'
+import { DeprecatedMobileOnlyFlex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { withAnimated } from 'ui/src'
 
@@ -56,7 +56,7 @@ const _Button = ({
   onPressIn,
   size = ButtonSize.Medium,
 }: ButtonProps & Pick<BaseButtonProps, 'testID'>): JSX.Element => {
-  // TODO(MOB-1274): remove this usage of Restyle, change types of Button and its helper utils
+  // TODO(MOB-1274): refactor Button to remove useAppTheme, Restyle Flex, Restyle Text
   const theme = useAppTheme()
 
   const {
@@ -105,7 +105,12 @@ const _Button = ({
       onLongPress={onLongPress}
       onPress={onPressHandler}
       onPressIn={onPressIn}>
-      <Flex row alignItems="center" gap={iconPadding} px={paddingX} py={paddingY}>
+      <DeprecatedMobileOnlyFlex
+        row
+        alignItems="center"
+        gap={iconPadding}
+        px={paddingX}
+        py={paddingY}>
         {icon}
         {label && (
           <Text
@@ -116,7 +121,7 @@ const _Button = ({
             {label}
           </Text>
         )}
-      </Flex>
+      </DeprecatedMobileOnlyFlex>
     </TouchableArea>
   )
 }

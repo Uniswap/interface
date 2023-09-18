@@ -4,11 +4,10 @@ import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
-import { Text } from 'src/components/Text'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
@@ -80,7 +79,7 @@ export function PendingNotificationBadge({
           position="absolute"
           width={size}
           zIndex="$modal">
-          <Text color="neutral2" fontSize={8} textAlign="center" variant="buttonLabelMicro">
+          <Text color="$neutral2" fontSize={8} textAlign="center" variant="buttonLabelMicro">
             {countToDisplay}
           </Text>
         </Flex>

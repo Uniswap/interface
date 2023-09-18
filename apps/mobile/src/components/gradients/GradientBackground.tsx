@@ -1,10 +1,10 @@
 import React from 'react'
 import { IS_IOS } from 'src/constants/globals'
-import { Flex, StackProps } from 'ui/src'
+import { Flex, FlexProps } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
 
 // Fills up entire parent by default
-export function GradientBackground({ children, ...rest }: StackProps): JSX.Element {
+export function GradientBackground({ children, ...rest }: FlexProps): JSX.Element {
   return (
     <Flex
       bottom={0}

@@ -1,7 +1,6 @@
 import React from 'react'
 import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
-import { Text } from 'src/components/Text'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { NftAssetTrait } from 'wallet/src/data/__generated__/types-and-hooks'
 
@@ -21,7 +20,7 @@ export function NFTTraitCard({
         variant="buttonLabelMicro">
         {trait.name}
       </Text>
-      <Text color="neutral1" variant="subheadSmall">
+      <Text color="$neutral1" variant="subheadSmall">
         {trait.value}
       </Text>
     </Flex>

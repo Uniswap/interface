@@ -6,12 +6,11 @@ import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Text } from 'src/components/Text'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -36,7 +35,7 @@ function PortfolioValue({
 
   return (
     <Text
-      color="neutral2"
+      color="$neutral2"
       loading={isLoading}
       loadingPlaceholderText="$000.00"
       variant="subheadSmall">

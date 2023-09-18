@@ -1,6 +1,9 @@
 import { Platform } from 'react-native'
 import { createFont, isWeb } from 'tamagui'
 
+// TODO(EXT-148): remove this type and use Tamagui's FontTokens
+export type TextVariantTokens = keyof typeof fonts
+
 // make React Native font rendering more visually similar to the web and Figma
 const adjustedSize = (fontSize: number): number => {
   if (Platform.OS === 'web') {

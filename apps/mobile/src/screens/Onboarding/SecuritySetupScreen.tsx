@@ -113,7 +113,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
         />
       )}
       <OnboardingScreen
-        childrenGap="none"
+        childrenGap="$none"
         subtitle={t(
           'Add an extra layer of security by requiring {{ authenticationTypeName }} to send transactions.',
           {

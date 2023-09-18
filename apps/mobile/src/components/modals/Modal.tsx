@@ -3,8 +3,7 @@ import React from 'react'
 import { Modal as BaseModal, ModalProps, StyleSheet, View } from 'react-native'
 import { CloseButton } from 'src/components/buttons/CloseButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Text } from 'src/components/Text'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { Theme } from 'ui/src/theme/restyle'
 
 interface Props extends ModalProps {
@@ -57,7 +56,7 @@ Props): JSX.Element {
           style={width === '100%' ? style.modalBoxFullWidth : style.modalBox}
           width={width}>
           {title && (
-            <Text mb="spacing12" px="spacing16" variant="headlineSmall">
+            <Text mb="$spacing12" px="$spacing16" variant="headlineSmall">
               {title}
             </Text>
           )}

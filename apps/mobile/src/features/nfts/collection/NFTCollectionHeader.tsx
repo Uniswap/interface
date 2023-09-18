@@ -5,10 +5,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Loader } from 'src/components/loading'
-import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
-import { Flex, Logos, StackProps, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Logos, Text, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
@@ -51,7 +50,7 @@ export function NFTCollectionHeader({
     maxHeight: adjustedBannerHeight,
   }
 
-  const bannerLoadingStyle: StackProps['style'] = {
+  const bannerLoadingStyle: FlexProps['style'] = {
     ...bannerImageStyle,
     overflow: 'hidden',
   }
@@ -167,7 +166,7 @@ export function NFTCollectionHeader({
 
           <Flex row gap="$spacing24" justifyContent="space-between">
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheadSmall">
                 {t('Items')}
               </Text>
               <Text loading={loading} variant="bodyLarge">
@@ -175,7 +174,7 @@ export function NFTCollectionHeader({
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheadSmall">
                 {t('Owners')}
               </Text>
               <Text loading={loading} variant="bodyLarge">
@@ -183,7 +182,7 @@ export function NFTCollectionHeader({
               </Text>
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheadSmall">
                 {t('Floor')}
               </Text>
               <Flex row alignItems="center" gap="$none">
@@ -199,11 +198,11 @@ export function NFTCollectionHeader({
               </Flex>
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
-              <Text color="neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheadSmall">
                 {t('Volume')}
               </Text>
               <Flex row alignItems="center" gap="$spacing4">
-                <Text loading={loading} pr="spacing1" variant="bodyLarge">
+                <Text loading={loading} pr="$spacing1" variant="bodyLarge">
                   {`${formatNumber(
                     collectionStats?.totalVolume?.value,
                     NumberType.NFTCollectionStats
@@ -222,7 +221,7 @@ export function NFTCollectionHeader({
               gap="$none"
               initialDisplayedLines={3}
               lineBreakMode="tail"
-              mt="spacing4"
+              mt="$spacing4"
               renderAsMarkdown={true}
               text={data?.description}
             />

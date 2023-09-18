@@ -1,7 +1,6 @@
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Text } from 'src/components/Text'
-import { Flex, Separator, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
@@ -26,7 +25,7 @@ export function NetworkOption({
         {(chainId && <NetworkLogo chainId={chainId} size={NETWORK_OPTION_ICON_SIZE} />) || (
           <Flex width={NETWORK_OPTION_ICON_SIZE} />
         )}
-        <Text color="neutral1" variant="bodyLarge">
+        <Text color="$neutral1" variant="bodyLarge">
           {info?.label ?? t('All networks')}
         </Text>
         <Flex centered height={NETWORK_OPTION_ICON_SIZE} width={NETWORK_OPTION_ICON_SIZE}>

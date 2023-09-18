@@ -2,11 +2,10 @@ import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
-import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import Trace from 'src/components/Trace/Trace'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { Flex, Separator, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -66,7 +65,7 @@ export function TokenBalances({
       )}
       {hasOtherChainBalances && otherChainBalances ? (
         <Flex>
-          <Text color="neutral2" variant="subheadSmall">
+          <Text color="$neutral2" variant="subheadSmall">
             {t('Balances on other networks')}
           </Text>
           <Flex gap="$spacing12">
@@ -103,13 +102,13 @@ export function CurrentChainBalance({
   return (
     <Flex row>
       <Flex fill gap="$spacing4">
-        <Text color="neutral2" variant="subheadSmall">
+        <Text color="$neutral2" variant="subheadSmall">
           {isReadonly ? t('{{owner}}’s balance', { owner: displayName }) : t('Your balance')}
         </Text>
         <Text variant="subheadLarge">
           {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
         </Text>
-        <Text color="neutral2" variant="bodySmall">
+        <Text color="$neutral2" variant="bodySmall">
           {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
           {getSymbolDisplayText(balance.currencyInfo.currency.symbol)}
         </Text>
@@ -140,7 +139,7 @@ function OtherChainBalance({
               url={balance.currencyInfo.logoUrl ?? undefined}
             />
             <Flex alignItems="flex-start" gap="$none">
-              <Text px="spacing4" variant="bodyLarge">
+              <Text px="$spacing4" variant="bodyLarge">
                 {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
               </Text>
               <InlineNetworkPill
@@ -150,7 +149,7 @@ function OtherChainBalance({
               />
             </Flex>
           </Flex>
-          <Text color="neutral2" variant="bodyLarge">
+          <Text color="$neutral2" variant="bodyLarge">
             {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
             {getSymbolDisplayText(balance.currencyInfo.currency.symbol)}
           </Text>

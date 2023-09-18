@@ -6,8 +6,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { Text } from 'src/components/Text'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
 import MoonIcon from 'ui/src/assets/icons/moon.svg'
@@ -91,7 +90,7 @@ function AppearanceOption({
       <Flex row shrink gap="$none">
         <Flex shrink gap="$none" ml="$spacing16">
           <Text variant="bodyLarge">{title}</Text>
-          <Text color="neutral2" pr="spacing12" variant="bodySmall">
+          <Text color="$neutral2" pr="$spacing12" variant="bodySmall">
             {subtitle}
           </Text>
         </Flex>

@@ -1,6 +1,5 @@
 import React from 'react'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
+import { Flex, Text } from 'ui/src'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 
 interface TransactionLoaderProps {
@@ -14,25 +13,25 @@ export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Elem
         grow
         row
         alignItems="flex-start"
-        gap="spacing16"
+        gap="$spacing16"
         justifyContent="space-between"
-        py="spacing12">
+        py="$spacing12">
         <Flex
           row
           shrink
           alignItems="center"
-          gap="spacing12"
+          gap="$spacing12"
           height="100%"
           justifyContent="flex-start">
           <Flex
             centered
-            bg="surface3"
-            borderRadius="roundedFull"
+            bg="$surface3"
+            borderRadius="$roundedFull"
             height={TXN_HISTORY_ICON_SIZE}
             width={TXN_HISTORY_ICON_SIZE}
           />
-          <Flex shrink gap="none">
-            <Flex row alignItems="center" gap="spacing4">
+          <Flex shrink gap="$none">
+            <Flex row alignItems="center" gap="$spacing4">
               <Text
                 loading
                 loadingPlaceholderText="Contract Interaction"
@@ -42,7 +41,7 @@ export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Elem
             </Flex>
             <Text
               loading
-              color="neutral2"
+              color="$neutral2"
               loadingPlaceholderText="Caption Text"
               numberOfLines={1}
               variant="subheadSmall"

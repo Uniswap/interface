@@ -10,9 +10,8 @@ import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { AnimatedFlex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
-import { Text } from 'src/components/Text'
 import { openSettings } from 'src/utils/linking'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
@@ -127,7 +126,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             top={0}
             width="100%"
             onLayout={(event: LayoutChangeEvent): void => setInfoLayout(event.nativeEvent.layout)}>
-            <Text color="neutral1" variant="subheadLarge">
+            <Text color="$neutral1" variant="subheadLarge">
               {t('Scan a QR code')}
             </Text>
           </Flex>
@@ -155,7 +154,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                   <SpinningLoader color="neutral1" size={iconSizes.icon40} />
                 </Flex>
                 <Flex gap="$none" style={{ marginTop: LOADER_SIZE + spacing.spacing24 }} />
-                <Text color="neutral1" textAlign="center" variant="bodyLarge">
+                <Text color="$neutral1" textAlign="center" variant="bodyLarge">
                   {isWalletConnectModal ? t('Connecting...') : t('Loading...')}
                 </Text>
               </Flex>
@@ -176,7 +175,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                   m="$spacing12"
                   opacity={0.6}
                   p="$spacing12">
-                  <Text color="neutral1" textAlign="center" variant="bodyLarge">
+                  <Text color="$neutral1" textAlign="center" variant="bodyLarge">
                     This paste button will only show up in development mode
                   </Text>
                   <PasteButton onPress={onScanCode} />

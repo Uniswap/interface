@@ -2,12 +2,10 @@ import React, { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useTokenFormActionHandlers } from 'src/features/transactions/hooks'
 import { TransactionFlowProps, TransactionStep } from 'src/features/transactions/TransactionFlow'
-import { useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
@@ -54,12 +52,14 @@ export function HeaderContent({
       row
       alignItems="center"
       justifyContent="space-between"
-      mt="spacing8"
-      pb="spacing8"
-      pl="spacing12"
-      pr={customSlippageTolerance ? 'spacing8' : 'spacing16'}>
-      <Text variant={{ xs: 'subheadSmall', sm: 'subheadLarge' }}>{flowName}</Text>
-      <Flex row gap="spacing4">
+      mt="$spacing8"
+      pb="$spacing8"
+      pl="$spacing12"
+      pr={customSlippageTolerance ? '$spacing8' : '$spacing16'}>
+      <Text $sm={{ variant: 'subheadLarge' }} $xs={{ variant: 'subheadSmall' }}>
+        {flowName}
+      </Text>
+      <Flex row gap="$spacing4">
         {step === TransactionStep.FORM && showUSDToggle ? (
           <TouchableArea
             hapticFeedback
@@ -68,13 +68,13 @@ export function HeaderContent({
             px="spacing8"
             py="spacing4"
             onPress={(): void => onToggleUSDInput(!isUSDInput)}>
-            <Flex row alignItems="center" gap="spacing4">
+            <Flex row alignItems="center" gap="$spacing4">
               <DollarSign
                 color={isUSDInput ? colors.accent1.val : colors.neutral2.val}
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
               />
-              <Text color={isUSDInput ? 'accent1' : 'neutral2'} variant="buttonLabelSmall">
+              <Text color={isUSDInput ? '$accent1' : '$neutral2'} variant="buttonLabelSmall">
                 {t('USD')}
               </Text>
             </Flex>
@@ -88,13 +88,13 @@ export function HeaderContent({
             px="spacing8"
             py="spacing4"
             onPress={(): void => setShowViewOnlyModal(true)}>
-            <Flex row alignItems="center" gap="spacing4">
+            <Flex row alignItems="center" gap="$spacing4">
               <EyeIcon
                 color={colors.neutral2.val}
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
               />
-              <Text color="neutral2" variant="buttonLabelSmall">
+              <Text color="$neutral2" variant="buttonLabelSmall">
                 {t('View-only')}
               </Text>
             </Flex>
@@ -108,13 +108,13 @@ export function HeaderContent({
             <Flex
               centered
               row
-              bg={customSlippageTolerance ? 'surface2' : 'none'}
-              borderRadius="roundedFull"
-              gap="spacing4"
-              px={customSlippageTolerance ? 'spacing8' : 'none'}
-              py="spacing4">
+              bg={customSlippageTolerance ? '$surface2' : '$transparent'}
+              borderRadius="$roundedFull"
+              gap="$spacing4"
+              px={customSlippageTolerance ? '$spacing8' : '$none'}
+              py="$spacing4">
               {customSlippageTolerance ? (
-                <Text color="neutral2" variant="buttonLabelMicro">
+                <Text color="$neutral2" variant="buttonLabelMicro">
                   {`${formatPercent(customSlippageTolerance)} ${t('slippage')}`}
                 </Text>
               ) : null}

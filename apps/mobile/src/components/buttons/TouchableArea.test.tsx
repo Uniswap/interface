@@ -1,7 +1,7 @@
 import React from 'react'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Text } from 'src/components/Text'
 import { fireEvent, render, screen } from 'src/test/test-utils'
+import { Text } from 'ui/src'
 
 export const ON_PRESS_EVENT_PAYLOAD = { nativeEvent: { pageX: Infinity, pageY: Infinity } }
 

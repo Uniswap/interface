@@ -11,8 +11,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
-import { Flex } from 'src/components/layout'
-import { useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { usePrevious } from 'utilities/src/react/hooks'
 
@@ -184,9 +183,9 @@ const AnimatedNumber = ({
       <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
         <Flex
           alignItems="flex-start"
-          borderRadius="rounded4"
+          borderRadius="$rounded4"
           flexDirection="row"
-          gap="none"
+          gap="$none"
           opacity={0}>
           {placeholderChars.map((_, index) => (
             <Char
@@ -208,11 +207,11 @@ const AnimatedNumber = ({
 
   return (
     <Flex
+      row
       alignItems="flex-start"
-      backgroundColor="surface1"
-      borderRadius="rounded4"
-      flexDirection="row"
-      gap="none">
+      backgroundColor="$surface1"
+      borderRadius="$rounded4"
+      gap="$none">
       <Svg height={DIGIT_HEIGHT} style={AnimatedNumberStyles.gradientStyle} width="100%">
         <Defs>
           <LinearGradient id="backgroundTop" x1="0%" x2="0%" y1="15%" y2="0%">

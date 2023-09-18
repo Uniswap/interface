@@ -9,10 +9,9 @@ import { useRecipients } from 'src/components/RecipientSelect/hooks'
 import { RecipientList } from 'src/components/RecipientSelect/RecipientList'
 import { RecipientScanModal } from 'src/components/RecipientSelect/RecipientScanModal'
 import { filterSections } from 'src/components/RecipientSelect/utils'
-import { Text } from 'src/components/Text'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
 
@@ -82,7 +81,7 @@ export function _RecipientSelect({
         {noResults ? (
           <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">
             <Text variant="buttonLabelMedium">{t('No results found')}</Text>
-            <Text color="neutral3" textAlign="center" variant="bodyLarge">
+            <Text color="$neutral3" textAlign="center" variant="bodyLarge">
               {t('The address you typed either does not exist or is spelled incorrectly.')}
             </Text>
           </Flex>

@@ -3,11 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import { IS_ANDROID } from 'src/constants/globals'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
-import { useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -92,14 +90,14 @@ export function CloudBackupProcessingAnimation({
   useAsyncData(backup)
 
   return processing ? (
-    <Flex centered grow gap="spacing24">
+    <Flex centered grow gap="$spacing24">
       <ActivityIndicator size="large" />
       <Text variant="headlineSmall">
         {IS_ANDROID ? t('Backing up to Google Drive...') : t('Backing up to iCloud...')}
       </Text>
     </Flex>
   ) : (
-    <Flex centered grow gap="spacing24">
+    <Flex centered grow gap="$spacing24">
       <CheckmarkCircle
         borderColor="$statusSuccess"
         borderWidth={3}

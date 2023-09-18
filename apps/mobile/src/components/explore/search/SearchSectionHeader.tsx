@@ -1,6 +1,5 @@
 import React from 'react'
-import { Flex } from 'src/components/layout'
-import { Text, TextProps } from 'src/components/Text'
+import { Flex, Text, TextProps } from 'ui/src'
 
 interface SectionHeaderTextProps {
   title: string
@@ -13,9 +12,9 @@ export const SectionHeaderText = ({
   ...rest
 }: SectionHeaderTextProps & TextProps): JSX.Element => {
   return (
-    <Flex row alignItems="center" gap="spacing12" mb="spacing4" mx="spacing4" {...rest}>
+    <Flex row alignItems="center" gap="$spacing12" mb="$spacing4" mx="$spacing4">
       {icon && icon}
-      <Text color="neutral2" variant="subheadSmall">
+      <Text color="$neutral2" variant="subheadSmall" {...rest}>
         {title}
       </Text>
     </Flex>

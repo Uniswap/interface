@@ -3,9 +3,8 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { CheckBox } from 'src/components/buttons/CheckBox'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
-import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 
 export function RemoveLastMnemonicWalletFooter({
   onPress,
@@ -32,10 +31,10 @@ export function RemoveLastMnemonicWalletFooter({
           checked={checkBoxAccepted}
           text={
             <Trans t={t}>
-              <Text color="neutral1" variant="subheadSmall">
+              <Text color="$neutral1" variant="subheadSmall">
                 I backed up my recovery phrase
               </Text>
-              <Text color="neutral2" variant="bodyMicro">
+              <Text color="$neutral2" variant="bodyMicro">
                 I understand that Uniswap Labs can’t help me recover my wallets if I failed to do so
               </Text>
             </Trans>

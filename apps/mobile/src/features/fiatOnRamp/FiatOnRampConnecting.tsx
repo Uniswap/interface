@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Image, ImageBackground, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AnimatedFlex } from 'src/components/layout/Flex'
-import { Text } from 'src/components/Text'
-import { Flex } from 'ui/src'
+import { AnimatedFlex } from 'src/components/layout'
+import { Flex, Text } from 'ui/src'
 import {
   FOR_CONNECTING_BACKGROUND_DARK,
   FOR_CONNECTING_BACKGROUND_LIGHT,
@@ -58,7 +57,7 @@ export function FiatOnRampConnectingView({
         <Flex centered gap="$spacing8">
           <Text variant="subheadLarge">{t('Connecting you to Moonpay')}</Text>
           {quoteCurrencyCode && (
-            <Text color="neutral2" variant="bodySmall">
+            <Text color="$neutral2" variant="bodySmall">
               {t('Buying {{amount}} worth of {{quoteCurrencyCode}}', {
                 amount,
                 quoteCurrencyCode,

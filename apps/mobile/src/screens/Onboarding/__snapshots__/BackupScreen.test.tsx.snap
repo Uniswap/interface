@@ -67,21 +67,18 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
       >
         <Text
           allowFontScaling={false}
-          maxFontSizeMultiplier={1.2}
           style={
-            [
-              {
-                "color": "#222222",
-                "display": "flex",
-                "fontFamily": "Basel-Book",
-                "fontSize": 25,
-                "fontWeight": "400",
-                "lineHeight": 32,
-                "paddingTop": 0,
-                "textAlign": "center",
-              },
-            ]
+            {
+              "color": "#222222",
+              "display": "flex",
+              "fontFamily": "Basel-Medium",
+              "fontSize": 25,
+              "lineHeight": 32,
+              "paddingTop": 0,
+              "textAlign": "center",
+            }
           }
+          suppressHighlighting={true}
         >
           Choose a backup for your wallet
         </Text>
@@ -89,18 +86,16 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
           style={
-            [
-              {
-                "color": "#7D7D7D",
-                "display": "flex",
-                "fontFamily": "Basel-Book",
-                "fontSize": 17,
-                "fontWeight": "400",
-                "lineHeight": 24,
-                "textAlign": "center",
-              },
-            ]
+            {
+              "color": "#7D7D7D",
+              "display": "flex",
+              "fontFamily": "Basel-Book",
+              "fontSize": 17,
+              "lineHeight": 24,
+              "textAlign": "center",
+            }
           }
+          suppressHighlighting={true}
         >
           Remember, backups are your lifeline. They’re your ticket back in if something goes wrong.
         </Text>
@@ -319,38 +314,32 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     >
                       <Text
                         allowFontScaling={false}
-                        maxFontSizeMultiplier={1.4}
                         style={
-                          [
-                            {
-                              "color": "#222222",
-                              "display": "flex",
-                              "fontFamily": "Basel-Book",
-                              "fontSize": 19,
-                              "fontWeight": "400",
-                              "lineHeight": 24,
-                            },
-                          ]
+                          {
+                            "color": "#222222",
+                            "display": "flex",
+                            "fontFamily": "Basel-Book",
+                            "fontSize": 19,
+                            "lineHeight": 24,
+                          }
                         }
+                        suppressHighlighting={true}
                       >
                         Backup with iCloud
                       </Text>
                     </View>
                     <Text
                       allowFontScaling={false}
-                      maxFontSizeMultiplier={1.4}
                       style={
-                        [
-                          {
-                            "color": "#7D7D7D",
-                            "display": "flex",
-                            "fontFamily": "Basel-Book",
-                            "fontSize": 17,
-                            "fontWeight": "400",
-                            "lineHeight": 24,
-                          },
-                        ]
+                        {
+                          "color": "#7D7D7D",
+                          "display": "flex",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
                       }
+                      suppressHighlighting={true}
                     >
                       Safe, simple, and all you need to save is your password.
                     </Text>
@@ -476,38 +465,32 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     >
                       <Text
                         allowFontScaling={false}
-                        maxFontSizeMultiplier={1.4}
                         style={
-                          [
-                            {
-                              "color": "#222222",
-                              "display": "flex",
-                              "fontFamily": "Basel-Book",
-                              "fontSize": 19,
-                              "fontWeight": "400",
-                              "lineHeight": 24,
-                            },
-                          ]
+                          {
+                            "color": "#222222",
+                            "display": "flex",
+                            "fontFamily": "Basel-Book",
+                            "fontSize": 19,
+                            "lineHeight": 24,
+                          }
                         }
+                        suppressHighlighting={true}
                       >
                         Backup with recovery phrase
                       </Text>
                     </View>
                     <Text
                       allowFontScaling={false}
-                      maxFontSizeMultiplier={1.4}
                       style={
-                        [
-                          {
-                            "color": "#7D7D7D",
-                            "display": "flex",
-                            "fontFamily": "Basel-Book",
-                            "fontSize": 17,
-                            "fontWeight": "400",
-                            "lineHeight": 24,
-                          },
-                        ]
+                        {
+                          "color": "#7D7D7D",
+                          "display": "flex",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
                       }
+                      suppressHighlighting={true}
                     >
                       Top-notch security with no third parties. You’re in control.
                     </Text>
@@ -729,21 +712,18 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
       >
         <Text
           allowFontScaling={false}
-          maxFontSizeMultiplier={1.2}
           style={
-            [
-              {
-                "color": "#222222",
-                "display": "flex",
-                "fontFamily": "Basel-Book",
-                "fontSize": 25,
-                "fontWeight": "400",
-                "lineHeight": 32,
-                "paddingTop": 0,
-                "textAlign": "center",
-              },
-            ]
+            {
+              "color": "#222222",
+              "display": "flex",
+              "fontFamily": "Basel-Medium",
+              "fontSize": 25,
+              "lineHeight": 32,
+              "paddingTop": 0,
+              "textAlign": "center",
+            }
           }
+          suppressHighlighting={true}
         >
           Choose a backup for your wallet
         </Text>
@@ -751,18 +731,16 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
           style={
-            [
-              {
-                "color": "#7D7D7D",
-                "display": "flex",
-                "fontFamily": "Basel-Book",
-                "fontSize": 17,
-                "fontWeight": "400",
-                "lineHeight": 24,
-                "textAlign": "center",
-              },
-            ]
+            {
+              "color": "#7D7D7D",
+              "display": "flex",
+              "fontFamily": "Basel-Book",
+              "fontSize": 17,
+              "lineHeight": 24,
+              "textAlign": "center",
+            }
           }
+          suppressHighlighting={true}
         >
           Remember, backups are your lifeline. They’re your ticket back in if something goes wrong.
         </Text>
@@ -981,38 +959,32 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     >
                       <Text
                         allowFontScaling={false}
-                        maxFontSizeMultiplier={1.4}
                         style={
-                          [
-                            {
-                              "color": "#222222",
-                              "display": "flex",
-                              "fontFamily": "Basel-Book",
-                              "fontSize": 19,
-                              "fontWeight": "400",
-                              "lineHeight": 24,
-                            },
-                          ]
+                          {
+                            "color": "#222222",
+                            "display": "flex",
+                            "fontFamily": "Basel-Book",
+                            "fontSize": 19,
+                            "lineHeight": 24,
+                          }
                         }
+                        suppressHighlighting={true}
                       >
                         Backup with iCloud
                       </Text>
                     </View>
                     <Text
                       allowFontScaling={false}
-                      maxFontSizeMultiplier={1.4}
                       style={
-                        [
-                          {
-                            "color": "#7D7D7D",
-                            "display": "flex",
-                            "fontFamily": "Basel-Book",
-                            "fontSize": 17,
-                            "fontWeight": "400",
-                            "lineHeight": 24,
-                          },
-                        ]
+                        {
+                          "color": "#7D7D7D",
+                          "display": "flex",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
                       }
+                      suppressHighlighting={true}
                     >
                       Safe, simple, and all you need to save is your password.
                     </Text>
@@ -1138,38 +1110,32 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     >
                       <Text
                         allowFontScaling={false}
-                        maxFontSizeMultiplier={1.4}
                         style={
-                          [
-                            {
-                              "color": "#222222",
-                              "display": "flex",
-                              "fontFamily": "Basel-Book",
-                              "fontSize": 19,
-                              "fontWeight": "400",
-                              "lineHeight": 24,
-                            },
-                          ]
+                          {
+                            "color": "#222222",
+                            "display": "flex",
+                            "fontFamily": "Basel-Book",
+                            "fontSize": 19,
+                            "lineHeight": 24,
+                          }
                         }
+                        suppressHighlighting={true}
                       >
                         Backup with recovery phrase
                       </Text>
                     </View>
                     <Text
                       allowFontScaling={false}
-                      maxFontSizeMultiplier={1.4}
                       style={
-                        [
-                          {
-                            "color": "#7D7D7D",
-                            "display": "flex",
-                            "fontFamily": "Basel-Book",
-                            "fontSize": 17,
-                            "fontWeight": "400",
-                            "lineHeight": 24,
-                          },
-                        ]
+                        {
+                          "color": "#7D7D7D",
+                          "display": "flex",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                        }
                       }
+                      suppressHighlighting={true}
                     >
                       Top-notch security with no third parties. You’re in control.
                     </Text>

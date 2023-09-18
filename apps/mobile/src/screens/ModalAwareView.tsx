@@ -3,12 +3,11 @@ import React from 'react'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector } from 'src/app/hooks'
-import { Flex } from 'src/components/layout'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { flex } from 'ui/src/theme/restyle'
 /**
  * Wrapper view to correctly render screens within BottomSheetModal as needed. This is required
@@ -27,7 +26,7 @@ export function ExploreModalAwareView({ children }: { children: JSX.Element }): 
   if (inModal) {
     return (
       <View style={flex.fill}>
-        <Flex left={0} position="absolute" right={0} top={insets.top} zIndex="fixed">
+        <Flex left={0} position="absolute" right={0} top={insets.top} zIndex="$fixed">
           <HandleBar backgroundColor={colors.transparent.val} />
         </Flex>
         <BottomSheetDraggableView style={flex.fill}>{children}</BottomSheetDraggableView>

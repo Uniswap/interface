@@ -11,7 +11,6 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { NetworkPill } from 'src/components/Network/NetworkPill'
-import { Text } from 'src/components/Text'
 import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
 import { useHasSufficientFunds } from 'src/components/WalletConnect/RequestModal/hooks'
 import { RequestDetails } from 'src/components/WalletConnect/RequestModal/RequestDetails'
@@ -29,7 +28,7 @@ import {
   TransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
@@ -280,16 +279,16 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                 <NetworkFee chainId={chainId} gasFeeUSD={gasFeeUSD} />
               ) : (
                 <Flex row alignItems="center" justifyContent="space-between">
-                  <Text color="neutral1" variant="subheadSmall">
+                  <Text color="$neutral1" variant="subheadSmall">
                     {t('Network')}
                   </Text>
                   <NetworkPill
                     showIcon
                     chainId={chainId}
-                    gap="spacing4"
-                    pl="spacing4"
-                    pr="spacing8"
-                    py="spacing2"
+                    gap="$spacing4"
+                    pl="$spacing4"
+                    pr="$spacing8"
+                    py="$spacing2"
                     textVariant="subheadSmall"
                   />
                 </Flex>
@@ -299,7 +298,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
             <SectionContainer>
               <AccountDetails address={request.account} />
               {!hasSufficientFunds && (
-                <Text color="DEP_accentWarning" paddingTop="spacing8" variant="bodySmall">
+                <Text color="$DEP_accentWarning" pt="$spacing8" variant="bodySmall">
                   {t('You don’t have enough {{symbol}} to complete this transaction.', {
                     symbol: nativeCurrency?.symbol,
                   })}
@@ -317,7 +316,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                   width={iconSizes.icon16}
                 />
               }
-              textColor="DEP_accentWarning"
+              textColor="$DEP_accentWarning"
               title={t('Internet or network connection error')}
             />
           ) : (
@@ -382,7 +381,7 @@ function WarningSection({
         height={iconSizes.icon16}
         width={iconSizes.icon16}
       />
-      <Text color="neutral2" fontStyle="italic" variant="bodyMicro">
+      <Text color="$neutral2" fontStyle="italic" variant="bodyMicro">
         {t('Be careful: this {{ requestType }} may transfer assets', {
           requestType: isTransactionRequest(request) ? 'transaction' : 'message',
         })}

@@ -2,11 +2,11 @@ import React from 'react'
 import { Image, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
 import { Modal } from 'src/components/modals/Modal'
 import { IS_ANDROID } from 'src/constants/globals'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { Flex } from 'ui/src'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 import { dimensions } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -36,7 +36,7 @@ export function LockScreenModal(): JSX.Element | null {
       <TouchableArea onPress={(): Promise<void> => trigger()}>
         <Flex
           alignItems="center"
-          backgroundColor={!isDarkMode ? 'sporeBlack' : 'sporeWhite'}
+          backgroundColor={!isDarkMode ? '$sporeBlack' : '$sporeWhite'}
           justifyContent={IS_ANDROID ? 'center' : undefined}
           pointerEvents="none"
           style={{

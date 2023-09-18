@@ -1,6 +1,5 @@
 /* eslint-disable complexity */
 import { ApolloQueryResult } from '@apollo/client'
-import { ThemeProvider } from '@shopify/restyle'
 import { isAddress } from 'ethers/lib/utils'
 import { impactAsync } from 'expo-haptics'
 import React, { useMemo } from 'react'
@@ -14,7 +13,6 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loader } from 'src/components/loading'
-import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import Trace from 'src/components/Trace/Trace'
 import { IS_IOS } from 'src/constants/globals'
@@ -28,7 +26,7 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { setClipboardImage } from 'src/utils/clipboard'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, Theme, useSporeColors } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, iconSizes } from 'ui/src/theme'
@@ -158,7 +156,7 @@ export function NFTItemScreen({
   )
 
   return (
-    <ThemeProvider theme={theme}>
+    <Theme name="dark">
       {IS_IOS ? (
         <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
       ) : null}
@@ -192,7 +190,7 @@ export function NFTItemScreen({
                     <NFTViewer autoplay uri={imageUrl} />
                   </Flex>
                 ) : (
-                  <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
+                  <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
                     {name}
                   </Text>
                 )
@@ -240,14 +238,14 @@ export function NFTItemScreen({
                   </Flex>
                   {nftLoading ? (
                     <Text
-                      color="neutral1"
+                      color="$neutral1"
                       loading={nftLoading}
                       loadingPlaceholderText="#0000 NFT Title"
-                      mt="spacing4"
+                      mt="$spacing4"
                       variant="subheadLarge"
                     />
                   ) : name ? (
-                    <Text color="neutral1" mt="spacing4" numberOfLines={2} variant="subheadLarge">
+                    <Text color="$neutral1" mt="$spacing4" numberOfLines={2} variant="subheadLarge">
                       {name}
                     </Text>
                   ) : null}
@@ -287,9 +285,9 @@ export function NFTItemScreen({
                       title={t('Current price')}
                       valueComponent={
                         <PriceAmount
-                          iconColor="neutral1"
+                          iconColor="$neutral1"
                           price={listingPrice}
-                          textColor="neutral1"
+                          textColor="$neutral1"
                           textVariant="buttonLabelSmall"
                         />
                       }
@@ -300,9 +298,9 @@ export function NFTItemScreen({
                       title={t('Last sale price')}
                       valueComponent={
                         <PriceAmount
-                          iconColor="neutral1"
+                          iconColor="$neutral1"
                           price={lastSaleData.price}
-                          textColor="neutral1"
+                          textColor="$neutral1"
                           textVariant="buttonLabelSmall"
                         />
                       }
@@ -331,7 +329,7 @@ export function NFTItemScreen({
                 {/* Traits */}
                 {asset?.traits && asset?.traits?.length > 0 ? (
                   <Flex gap="$spacing12">
-                    <Text color="neutral1" ml="spacing24" variant="bodySmall">
+                    <Text color="$neutral1" ml="$spacing24" variant="bodySmall">
                       {t('Traits')}
                     </Text>
                     <NFTTraitList titleTextColor={accentTextColor} traits={asset.traits} />
@@ -342,7 +340,7 @@ export function NFTItemScreen({
           </>
         </ExploreModalAwareView>
       </Trace>
-    </ThemeProvider>
+    </Theme>
   )
 }
 
@@ -356,7 +354,7 @@ function AssetMetadata({
   return (
     <Flex row alignItems="center" justifyContent="space-between" pl="$spacing2">
       <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" maxWidth="40%">
-        <Text color="neutral2" variant="bodySmall">
+        <Text color="$neutral2" variant="bodySmall">
           {title}
         </Text>
       </Flex>

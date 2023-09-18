@@ -3,13 +3,11 @@ import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
 import { openUri } from 'src/utils/linking'
-import { useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
 import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -73,11 +71,11 @@ export function LinkButton({
         paddingVertical="spacing8"
         testID={element}
         onPress={onPress}>
-        <Flex centered row gap="spacing8">
+        <Flex centered row gap="$spacing8">
           {Icon && (
             <Icon color={colors.neutral1.val} height={iconSizes.icon16} width={iconSizes.icon16} />
           )}
-          <Text color="neutral1" variant={fontSize}>
+          <Text color="$neutral1" variant={fontSize}>
             {label}
           </Text>
           {buttonType === LinkButtonType.Copy && (

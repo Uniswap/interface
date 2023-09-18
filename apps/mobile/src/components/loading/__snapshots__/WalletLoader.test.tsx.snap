@@ -75,7 +75,6 @@ exports[`renders wallet loader 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
-              "gap": 16,
             }
           }
         >
@@ -84,7 +83,6 @@ exports[`renders wallet loader 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "gap": 16,
                 "position": "relative",
               }
             }
@@ -95,20 +93,17 @@ exports[`renders wallet loader 1`] = `
             >
               <Text
                 allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
                 style={
-                  [
-                    {
-                      "color": "transparent",
-                      "display": "flex",
-                      "fontFamily": "Basel-Book",
-                      "fontSize": 19,
-                      "fontWeight": "400",
-                      "lineHeight": 24,
-                      "opacity": 0,
-                    },
-                  ]
+                  {
+                    "color": "transparent",
+                    "display": "flex",
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 19,
+                    "lineHeight": 24,
+                    "opacity": 0,
+                  }
                 }
+                suppressHighlighting={true}
               >
                 Wallet Nickname
               </Text>
@@ -117,14 +112,13 @@ exports[`renders wallet loader 1`] = `
               style={
                 {
                   "alignItems": "stretch",
-                  "backgroundColor": "#2222220D",
+                  "backgroundColor": "#F9F9F9",
                   "borderBottomLeftRadius": 4,
                   "borderBottomRightRadius": 4,
                   "borderTopLeftRadius": 4,
                   "borderTopRightRadius": 4,
                   "bottom": "5%",
                   "flexDirection": "column",
-                  "gap": 0,
                   "left": 0,
                   "position": "absolute",
                   "right": 0,
@@ -143,7 +137,6 @@ exports[`renders wallet loader 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
-              "gap": 16,
             }
           }
         >
@@ -152,7 +145,6 @@ exports[`renders wallet loader 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "gap": 16,
                 "position": "relative",
               }
             }
@@ -163,20 +155,17 @@ exports[`renders wallet loader 1`] = `
             >
               <Text
                 allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
                 style={
-                  [
-                    {
-                      "color": "transparent",
-                      "display": "flex",
-                      "fontFamily": "Basel-Book",
-                      "fontSize": 17,
-                      "fontWeight": "400",
-                      "lineHeight": 24,
-                      "opacity": 0,
-                    },
-                  ]
+                  {
+                    "color": "transparent",
+                    "display": "flex",
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 17,
+                    "lineHeight": 24,
+                    "opacity": 0,
+                  }
                 }
+                suppressHighlighting={true}
               >
                 0xaaaa...aaaa
               </Text>
@@ -185,14 +174,13 @@ exports[`renders wallet loader 1`] = `
               style={
                 {
                   "alignItems": "stretch",
-                  "backgroundColor": "#2222220D",
+                  "backgroundColor": "#F9F9F9",
                   "borderBottomLeftRadius": 4,
                   "borderBottomRightRadius": 4,
                   "borderTopLeftRadius": 4,
                   "borderTopRightRadius": 4,
                   "bottom": "5%",
                   "flexDirection": "column",
-                  "gap": 0,
                   "left": 0,
                   "position": "absolute",
                   "right": 0,

@@ -1,6 +1,5 @@
 import React from 'react'
-import { Text } from 'src/components/Text'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 
 const LEFT_COLUMN_INDEXES = [1, 2, 3, 4, 5, 6]
 const RIGHT_COLUMN_INDEXES = [7, 8, 9, 10, 11, 12]
@@ -35,7 +34,7 @@ function HiddenWordViewColumn({ indexes }: { indexes: number[] }): JSX.Element {
           justifyContent="space-between"
           px="$spacing12"
           py="$spacing16">
-          <Text color="neutral2">{value}</Text>
+          <Text color="$neutral2">{value}</Text>
           <Flex fill bg="$neutral3" borderRadius="$rounded20" gap="$none" height={9} />
         </Flex>
       ))}

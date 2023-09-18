@@ -1,10 +1,9 @@
 import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -78,13 +77,13 @@ export function OptionCard({
                     backgroundColor="$DEP_magentaDark"
                     borderRadius="$rounded8"
                     px="$spacing8">
-                    <Text color="accent1" variant="buttonLabelMicro">
+                    <Text color="$accent1" variant="buttonLabelMicro">
                       {badgeText}
                     </Text>
                   </Flex>
                 )}
               </Flex>
-              <Text allowFontScaling={false} color="neutral2" variant="bodySmall">
+              <Text allowFontScaling={false} color="$neutral2" variant="bodySmall">
                 {blurb}
               </Text>
             </Flex>

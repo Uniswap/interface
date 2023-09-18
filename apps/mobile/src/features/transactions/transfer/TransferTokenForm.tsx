@@ -368,16 +368,16 @@ export function TransferTokenForm({
             ) : null}
             {isBlocked ? (
               <BlockedAddressWarning
+                grow
                 row
                 alignItems="center"
                 alignSelf="stretch"
-                backgroundColor="surface2"
-                borderBottomLeftRadius="rounded16"
-                borderBottomRightRadius="rounded16"
-                flexGrow={1}
-                mt="spacing2"
-                px="spacing16"
-                py="spacing12"
+                backgroundColor="$surface2"
+                borderBottomLeftRadius="$rounded16"
+                borderBottomRightRadius="$rounded16"
+                mt="$spacing2"
+                px="$spacing16"
+                py="$spacing12"
               />
             ) : null}
           </Flex>

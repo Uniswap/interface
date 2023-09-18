@@ -8,7 +8,6 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
-import { Text } from 'src/components/Text'
 import { IS_IOS } from 'src/constants/globals'
 import { enroll } from 'src/features/biometrics'
 import {
@@ -24,7 +23,7 @@ import {
   setRequiredForTransactions,
 } from 'src/features/biometrics/slice'
 import { openSettings } from 'src/utils/linking'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 
 interface BiometricAuthSetting {
   onValueChange: (newValue: boolean) => void
@@ -146,7 +145,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
         <Flex row>
           <Flex gap="$none">
             <Text variant="bodyLarge">{text}</Text>
-            <Text color="neutral2" variant="bodyMicro">
+            <Text color="$neutral2" variant="bodyMicro">
               {subText}
             </Text>
           </Flex>

@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react'
-import { Flex, FlexProps } from 'src/components/layout'
-import { Text } from 'src/components/Text'
-import { Theme } from 'ui/src/theme/restyle'
+import { Flex, FlexProps, Text } from 'ui/src'
+import { TextVariantTokens } from 'ui/src/theme'
 
 type PillProps = {
   customBackgroundColor?: string
@@ -9,11 +8,11 @@ type PillProps = {
   foregroundColor?: string
   icon?: ReactNode
   label?: ReactNode
-  textVariant?: keyof Theme['textVariants']
+  textVariant?: TextVariantTokens
 } & FlexProps
 
 export function Pill({
-  borderRadius = 'roundedFull',
+  borderRadius = '$roundedFull',
   children,
   customBackgroundColor,
   customBorderColor,
@@ -21,19 +20,19 @@ export function Pill({
   foregroundColor,
   icon,
   label,
-  px = 'spacing4',
-  py = 'spacing8',
+  px = '$spacing4',
+  py = '$spacing8',
   textVariant = 'bodySmall',
   ...rest
 }: PillProps): JSX.Element {
   return (
     <Flex
       alignItems="center"
-      borderColor="none"
+      borderColor="$transparent"
       borderRadius={borderRadius}
       borderWidth={1}
       flexDirection={flexDirection}
-      gap="spacing8"
+      gap="$spacing8"
       justifyContent="center"
       px={px}
       py={py}

@@ -1,9 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
-import { Icons } from 'ui/src'
+import { Flex, Icons, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
@@ -29,17 +27,17 @@ export function SelectTokenButton({
       testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
       onPress={onPress}>
       {selectedCurrencyInfo ? (
-        <Flex centered row flexDirection="row" gap="spacing4" p="spacing4">
+        <Flex centered row gap="$spacing4" p="$spacing4">
           <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.icon28} />
-          <Text color="neutral1" pl="spacing4" variant="buttonLabelLarge">
+          <Text color="$neutral1" pl="$spacing4" variant="buttonLabelLarge">
             {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
           </Text>
           <Icons.RotatableChevron color="$neutral3" direction="e" />
         </Flex>
       ) : (
-        <Flex centered row py="spacing4">
-          <Flex centered row gap="spacing4" pl="spacing12" pr="spacing8" py="spacing2">
-            <Text color="sporeWhite" variant="buttonLabelLarge">
+        <Flex centered row py="$spacing4">
+          <Flex centered row gap="$spacing4" pl="$spacing12" pr="$spacing8" py="$spacing2">
+            <Text color="$sporeWhite" variant="buttonLabelLarge">
               {t('Choose a token')}
             </Text>
             <Icons.RotatableChevron color="$sporeWhite" direction="e" />

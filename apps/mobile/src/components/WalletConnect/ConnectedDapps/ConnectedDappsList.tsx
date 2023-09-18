@@ -6,11 +6,10 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import { DappConnectedNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 
 type ConnectedDappsProps = {
@@ -30,7 +29,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           <Flex grow gap="$none" width={iconSizes.icon40}>
             {backButton ?? <BackButton />}
           </Flex>
-          <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
+          <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
             {t('Manage connections')}
           </Text>
           <TouchableArea
@@ -40,7 +39,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
               setIsEditing(!isEditing)
             }}>
             <Text
-              color={isEditing ? 'accent1' : 'neutral2'}
+              color={isEditing ? '$accent1' : '$neutral2'}
               numberOfLines={1}
               textAlign="right"
               variant="subheadSmall">
@@ -66,10 +65,10 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           />
         ) : (
           <Flex fill alignItems="center" gap="$spacing8" px="$spacing24" style={emptyCardStyle}>
-            <Text color="neutral1" variant="subheadLarge">
+            <Text color="$neutral1" variant="subheadLarge">
               {t('No apps connected')}
             </Text>
-            <Text color="neutral2" textAlign="center" variant="bodySmall">
+            <Text color="$neutral2" textAlign="center" variant="bodySmall">
               {t('Connect to an app by scanning a code via WalletConnect')}
             </Text>
           </Flex>

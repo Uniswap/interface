@@ -2,8 +2,8 @@ import React, { ComponentProps, createContext, ReactNode, useCallback, useRef } 
 import { ListRenderItemInfo } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import { AnimatedIndicator } from 'src/components/carousel/Indicator'
-import { Flex } from 'src/components/layout'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
+import { Flex } from 'ui/src'
 import { dimensions } from 'ui/src/theme'
 
 const { fullWidth } = dimensions
@@ -51,7 +51,7 @@ export function Carousel({ slides, ...flatListProps }: CarouselProps): JSX.Eleme
 
   return (
     <CarouselContext.Provider value={{ goToNext, goToPrev, current: 0 }}>
-      <Flex grow mb="spacing24">
+      <Flex grow mb="$spacing24">
         <AnimatedIndicator scroll={scroll} stepCount={slides.length} />
         <AnimatedFlatList
           horizontal
@@ -61,7 +61,7 @@ export function Carousel({ slides, ...flatListProps }: CarouselProps): JSX.Eleme
           {...flatListProps}
           ref={myRef}
           renderItem={({ item }: ListRenderItemInfo<ReactNode>): JSX.Element => (
-            <Flex centered grow p="spacing24" pt="none" width={fullWidth}>
+            <Flex centered grow p="$spacing24" pt="$none" width={fullWidth}>
               {item}
             </Flex>
           )}

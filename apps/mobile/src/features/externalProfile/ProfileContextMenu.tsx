@@ -6,15 +6,14 @@ import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context
 import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TripleDot } from 'src/components/icons/TripleDot'
-import { Flex } from 'src/components/layout/Flex'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'src/utils/linking'
+import { Flex } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
-
-import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
-import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 

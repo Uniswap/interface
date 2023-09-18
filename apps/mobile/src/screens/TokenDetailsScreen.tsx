@@ -8,12 +8,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedBox, AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
-import { Text } from 'src/components/Text'
 import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButtons'
@@ -29,7 +28,7 @@ import { openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Screens } from 'src/screens/Screens'
-import { Separator, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, useSporeColors } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { formatUSDPrice } from 'utilities/src/format/format'
@@ -65,7 +64,7 @@ function HeaderPriceLabel({ price }: { price: Price }): JSX.Element {
   const { t } = useTranslation()
 
   return (
-    <Text color="neutral1" variant="bodyLarge">
+    <Text color="$neutral1" variant="bodyLarge">
       {formatUSDPrice(price?.value) ?? t('Unknown token')}
     </Text>
   )
@@ -86,18 +85,18 @@ function HeaderTitleElement({
   return (
     <Flex
       alignItems="center"
-      gap="none"
+      gap="$none"
       justifyContent="space-between"
-      ml={ellipsisMenuVisible ? 'spacing32' : 'none'}>
+      ml={ellipsisMenuVisible ? '$spacing32' : '$none'}>
       <HeaderPriceLabel price={tokenProject?.markets?.[0]?.price} />
-      <Flex centered row gap="spacing4">
+      <Flex centered row gap="$spacing4">
         <TokenLogo
           chainId={fromGraphQLChain(token?.chain) ?? undefined}
           size={iconSizes.icon16}
           symbol={token?.symbol ?? undefined}
           url={tokenProject?.logoUrl ?? undefined}
         />
-        <Text color="neutral2" numberOfLines={1} variant="buttonLabelMicro">
+        <Text color="$neutral2" numberOfLines={1} variant="buttonLabelMicro">
           {token?.symbol ?? t('Unknown token')}
         </Text>
       </Flex>
@@ -329,8 +328,8 @@ function TokenDetails({
           </Flex>
         }
         showHandleBar={inModal}>
-        <Flex gap="spacing36" my="spacing8" pb="spacing16">
-          <Flex gap="spacing4">
+        <Flex gap="$spacing36" my="$spacing8" pb="$spacing16">
+          <Flex gap="$spacing4">
             <TokenDetailsHeader
               data={data}
               loading={loading}
@@ -347,7 +346,7 @@ function TokenDetails({
               <BaseCard.InlineErrorState onRetry={retry} />
             </AnimatedBox>
           ) : null}
-          <Flex gap="spacing24" mb="spacing8" px="spacing16">
+          <Flex gap="$spacing24" mb="$spacing8" px="$spacing16">
             <TokenBalances
               currentChainBalance={currentChainBalance}
               otherChainBalances={otherChainBalances}

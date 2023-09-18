@@ -153,20 +153,17 @@ exports[`renders collection preview card 1`] = `
           >
             <Text
               allowFontScaling={true}
-              maxFontSizeMultiplier={1.4}
               numberOfLines={1}
               style={
-                [
-                  {
-                    "color": "#222222",
-                    "display": "flex",
-                    "fontFamily": "Basel-Book",
-                    "fontSize": 19,
-                    "fontWeight": "400",
-                    "lineHeight": 24,
-                  },
-                ]
+                {
+                  "color": "#222222",
+                  "display": "flex",
+                  "fontFamily": "Basel-Book",
+                  "fontSize": 19,
+                  "lineHeight": 24,
+                }
               }
+              suppressHighlighting={true}
             >
               Test NFT 1
             </Text>

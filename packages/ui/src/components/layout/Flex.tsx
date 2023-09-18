@@ -1,4 +1,12 @@
-import { Stack, styled } from 'tamagui'
+import { Stack, StackProps, styled } from 'tamagui'
+
+export type FlexProps = StackProps & {
+  row?: boolean
+  shrink?: boolean
+  grow?: boolean
+  fill?: boolean
+  centered?: boolean
+}
 
 export const Flex = styled(Stack, {
   flexDirection: 'column',

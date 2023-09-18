@@ -1,12 +1,12 @@
 import React, { memo } from 'react'
-import { Flex, StackProps, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/checkmark.svg'
 
 type Props = {
   size: number
   checkmarkStrokeWidth?: number
   color?: string
-} & StackProps
+} & FlexProps
 
 function _CheckmarkCircle({ color, checkmarkStrokeWidth = 3, size, ...rest }: Props): JSX.Element {
   const colors = useSporeColors()

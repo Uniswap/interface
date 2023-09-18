@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
+import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -31,17 +30,17 @@ export function SpendingDetails({
   const usdValue = useUSDValue(chainId, value)
 
   return (
-    <Flex row alignItems="center" gap="spacing16">
-      <Text color="neutral2" variant="bodySmall">
+    <Flex row alignItems="center" gap="$spacing16">
+      <Text color="$neutral2" variant="bodySmall">
         {t('Sending')}:
       </Text>
-      <Flex row alignItems="center" gap="spacing4">
+      <Flex row alignItems="center" gap="$spacing4">
         <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon16} />
         <Text variant="subheadSmall">
           {formatCurrencyAmount(nativeCurrencyAmount, NumberType.TokenTx)}{' '}
           {getSymbolDisplayText(nativeCurrencyInfo?.currency.symbol)}
         </Text>
-        <Text color="neutral2" loading={!usdValue} variant="subheadSmall">
+        <Text color="$neutral2" loading={!usdValue} variant="subheadSmall">
           ({formatUSDPrice(usdValue)})
         </Text>
       </Flex>

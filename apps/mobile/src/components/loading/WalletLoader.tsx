@@ -1,7 +1,6 @@
 import React from 'react'
-import { Text } from 'src/components/Text'
 import { ADDRESS_WRAPPER_HEIGHT } from 'src/features/import/WalletPreviewCard'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 
 interface Props {
   opacity: number

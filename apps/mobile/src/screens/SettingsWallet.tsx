@@ -21,7 +21,6 @@ import {
   SettingsSectionItem,
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
-import { Text } from 'src/components/Text'
 import { IS_ANDROID } from 'src/constants/globals'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
@@ -34,7 +33,7 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { Flex, Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import ChartIcon from 'ui/src/assets/icons/chart.svg'
 import EditIcon from 'ui/src/assets/icons/edit.svg'
@@ -276,7 +275,7 @@ export function SettingsWallet({
             renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
             renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
               <Flex bg="$surface1" gap="$none" pb="$spacing12">
-                <Text color="neutral2" variant="bodyLarge">
+                <Text color="$neutral2" variant="bodyLarge">
                   {subTitle}
                 </Text>
               </Flex>

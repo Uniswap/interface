@@ -2,9 +2,8 @@ import { ShadowProps } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
-import { ColorTokens, Flex, Icons, StackProps, useSporeColors } from 'ui/src'
+import { ColorTokens, Flex, FlexProps, Icons, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
@@ -39,7 +38,7 @@ export function Container({
   )
 }
 
-export function Shadow({ children, ...rest }: StackProps): JSX.Element {
+export function Shadow({ children, ...rest }: FlexProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const colors = useSporeColors()
 
@@ -82,7 +81,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
           <Flex row alignItems="center" gap="$spacing8">
             {icon}
             {typeof title === 'string' ? (
-              <Text color="neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheadSmall">
                 {title}
               </Text>
             ) : (
@@ -133,7 +132,7 @@ function EmptyState({
               {title}
             </Text>
           )}
-          <Text color="neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="bodySmall">
             {description}
           </Text>
         </Flex>
@@ -141,14 +140,14 @@ function EmptyState({
       <Flex row>
         {buttonLabel && (
           <TouchableArea hapticFeedback onPress={onPress}>
-            <Text color="accent1" variant="buttonLabelMedium">
+            <Text color="$accent1" variant="buttonLabelMedium">
               {buttonLabel}
             </Text>
           </TouchableArea>
         )}
         {additionalButtonLabel && (
           <TouchableArea onPress={onPressAdditional}>
-            <Text color="accent1" variant="buttonLabelMedium">
+            <Text color="$accent1" variant="buttonLabelMedium">
               {additionalButtonLabel}
             </Text>
           </TouchableArea>
@@ -180,7 +179,7 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
               {title}
             </Text>
           ) : null}
-          <Text color="neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="bodySmall">
             {description}
           </Text>
         </Flex>
@@ -188,7 +187,7 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
       <Flex row>
         {retryButtonLabel ? (
           <TouchableArea hapticFeedback onPress={onRetry}>
-            <Text color="accent1" variant="buttonLabelSmall">
+            <Text color="$accent1" variant="buttonLabelSmall">
               {retryButtonLabel}
             </Text>
           </TouchableArea>
@@ -200,7 +199,7 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
 
 type InlineErrorStateProps = {
   backgroundColor?: ColorTokens
-  textColor?: keyof Theme['colors']
+  textColor?: ColorTokens
 } & Pick<ErrorStateProps, 'icon' | 'title' | 'onRetry' | 'retryButtonLabel'>
 
 function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
@@ -208,7 +207,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
   const { t } = useTranslation()
   const {
     backgroundColor = '$surface2',
-    textColor = 'neutral1',
+    textColor = '$neutral1',
     title = t('Oops! Something went wrong.'),
     onRetry: retry,
     retryButtonLabel = t('Retry'),
@@ -245,7 +244,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
       </Flex>
       {retry ? (
         <TouchableArea hapticFeedback onPress={retry}>
-          <Text color="accent1" variant="buttonLabelSmall">
+          <Text color="$accent1" variant="buttonLabelSmall">
             {retryButtonLabel}
           </Text>
         </TouchableArea>

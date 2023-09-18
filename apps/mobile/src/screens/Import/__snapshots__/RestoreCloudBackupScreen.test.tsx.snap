@@ -67,21 +67,18 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       >
         <Text
           allowFontScaling={false}
-          maxFontSizeMultiplier={1.2}
           style={
-            [
-              {
-                "color": "#222222",
-                "display": "flex",
-                "fontFamily": "Basel-Book",
-                "fontSize": 25,
-                "fontWeight": "400",
-                "lineHeight": 32,
-                "paddingTop": 0,
-                "textAlign": "center",
-              },
-            ]
+            {
+              "color": "#222222",
+              "display": "flex",
+              "fontFamily": "Basel-Medium",
+              "fontSize": 25,
+              "lineHeight": 32,
+              "paddingTop": 0,
+              "textAlign": "center",
+            }
           }
+          suppressHighlighting={true}
         >
           Select backup to restore
         </Text>
@@ -89,18 +86,16 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
           style={
-            [
-              {
-                "color": "#7D7D7D",
-                "display": "flex",
-                "fontFamily": "Basel-Book",
-                "fontSize": 17,
-                "fontWeight": "400",
-                "lineHeight": 24,
-                "textAlign": "center",
-              },
-            ]
+            {
+              "color": "#7D7D7D",
+              "display": "flex",
+              "fontFamily": "Basel-Book",
+              "fontSize": 17,
+              "lineHeight": 24,
+              "textAlign": "center",
+            }
           }
+          suppressHighlighting={true}
         >
           There are multiple recovery phrases backed up to your iCloud.
         </Text>

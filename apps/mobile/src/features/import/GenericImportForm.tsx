@@ -8,12 +8,10 @@ import {
   TextInput as NativeTextInput,
 } from 'react-native'
 import PasteButton from 'src/components/buttons/PasteButton'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { SectionName } from 'src/features/telemetry/constants'
-import { useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { fonts } from 'ui/src/theme'
 
@@ -64,8 +62,8 @@ export function GenericImportForm({
   const INPUT_MAX_FONT_SIZE_MULTIPLIER = fonts.bodyLarge.maxFontSizeMultiplier
 
   const minHeight = useResponsiveProp({ xs: 90, sm: 120 })
-  const px = useResponsiveProp({ xs: 'spacing24', sm: 'spacing36' })
-  const py = useResponsiveProp({ xs: 'spacing8', sm: 'spacing16' })
+  const px = useResponsiveProp({ xs: '$spacing24', sm: '$spacing36' })
+  const py = useResponsiveProp({ xs: '$spacing8', sm: '$spacing16' })
 
   const handleBlur = (): void => {
     setFocused(false)
@@ -85,21 +83,21 @@ export function GenericImportForm({
 
   return (
     <Trace section={SectionName.ImportAccountForm}>
-      <Flex gap="spacing16" onTouchEnd={handleFocus}>
+      <Flex gap="$spacing16" onTouchEnd={handleFocus}>
         <Flex
           centered
-          backgroundColor="surface2"
+          shrink
+          backgroundColor="$surface2"
           borderColor={
             showSuccess
-              ? 'statusSuccess'
+              ? '$statusSuccess'
               : errorMessage && (liveCheck || !focused) && value
-              ? 'statusCritical'
-              : 'surface2'
+              ? '$statusCritical'
+              : '$surface2'
           }
-          borderRadius="rounded20"
+          borderRadius="$rounded20"
           borderWidth={1}
-          flexShrink={1}
-          gap="none"
+          gap="$none"
           minHeight={minHeight}
           px={px}
           py={py}
@@ -126,13 +124,13 @@ export function GenericImportForm({
               centered
               grow
               row
-              gap="spacing8"
+              gap="$spacing8"
               position="absolute"
-              pt="spacing4"
+              pt="$spacing4"
               onLayout={(event: LayoutChangeEvent): void => setLayout(event.nativeEvent.layout)}>
               <Text
                 adjustsFontSizeToFit
-                color="neutral2"
+                color="$neutral2"
                 maxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
                 numberOfLines={1}
                 style={styles.placeholderLabelStyle}
@@ -147,7 +145,7 @@ export function GenericImportForm({
               {placeholderLabel && (
                 <Text
                   adjustsFontSizeToFit
-                  color="neutral2"
+                  color="$neutral2"
                   numberOfLines={1}
                   style={styles.placeholderLabelStyle}
                   variant="bodyLarge">
@@ -159,9 +157,9 @@ export function GenericImportForm({
         </Flex>
         <Flex>
           {errorMessage && value && (liveCheck || !focused) && (
-            <Flex centered row gap="spacing12">
+            <Flex centered row gap="$spacing12">
               <AlertTriangle color={colors.statusCritical.val} />
-              <Text color="statusCritical" variant="bodyLarge">
+              <Text color="$statusCritical" variant="bodyLarge">
                 {errorMessage}
               </Text>
             </Flex>

@@ -2,30 +2,24 @@ import dayjs from 'dayjs'
 import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { Flex } from 'src/components/layout'
 import { ActionSheetModalContent, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
 import { openMoonpayHelpLink, openUniswapHelpLink } from 'src/utils/linking'
-import { Separator } from 'ui/src'
-import { Theme } from 'ui/src/theme/restyle'
+import { ColorTokens, Flex, Separator, Text } from 'ui/src'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 
-function renderOptionItem(
-  label: string,
-  textColorOverride?: keyof Theme['colors']
-): () => JSX.Element {
+function renderOptionItem(label: string, textColorOverride?: ColorTokens): () => JSX.Element {
   return function OptionItem(): JSX.Element {
     return (
       <>
         <Separator />
         <Text
-          color={textColorOverride ?? 'neutral1'}
-          p="spacing16"
+          color={textColorOverride ?? '$neutral1'}
+          p="$spacing16"
           textAlign="center"
           variant="bodyLarge">
           {label}
@@ -137,7 +131,7 @@ export default function TransactionActionsModal({
       transactionActionOptions.push({
         key: ElementName.Cancel,
         onPress: onCancel,
-        render: renderOptionItem(t('Cancel transaction'), 'statusCritical'),
+        render: renderOptionItem(t('Cancel transaction'), '$statusCritical'),
       })
     }
     return transactionActionOptions
@@ -159,10 +153,10 @@ export default function TransactionActionsModal({
       backgroundColor="statusCritical"
       name={ModalName.TransactionActions}
       onClose={handleClose}>
-      <Flex pb="spacing24" px="spacing12">
+      <Flex pb="$spacing24" px="$spacing12">
         <ActionSheetModalContent
           header={
-            <Text color="neutral3" p="spacing16" variant="bodySmall">
+            <Text color="$neutral3" p="$spacing16" variant="bodySmall">
               {t('Submitted on') + ' ' + dateString}
             </Text>
           }

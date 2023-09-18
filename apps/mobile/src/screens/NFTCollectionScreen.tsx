@@ -12,7 +12,6 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import { Screen } from 'src/components/layout/Screen'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { Loader } from 'src/components/loading'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { IS_IOS } from 'src/constants/globals'
 import { ListPriceBadge } from 'src/features/nfts/collection/ListPriceCard'
@@ -25,8 +24,8 @@ import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import { Flex } from 'ui/src'
-import { dimensions, spacing } from 'ui/src/theme'
+import { Flex, Text } from 'ui/src'
+import { dimensions, iconSizes, spacing } from 'ui/src/theme'
 import { theme } from 'ui/src/theme/restyle'
 import { isError } from 'wallet/src/data/utils'
 import {
@@ -141,7 +140,7 @@ export function NFTCollectionScreen({
       marginRight: middle ? theme.spacing.spacing8 : last ? theme.spacing.spacing16 : 0,
       marginBottom: theme.spacing.spacing8,
     }
-    const priceColor = IS_IOS ? 'sporeWhite' : 'neutral1'
+    const priceColor = IS_IOS ? '$sporeWhite' : '$neutral1'
 
     return (
       <Flex
@@ -175,7 +174,7 @@ export function NFTCollectionScreen({
                 bottom={spacing.spacing4}
                 gap="$none"
                 iconColor={priceColor}
-                iconSize="icon12"
+                iconSize={iconSizes.icon12}
                 position="absolute"
                 price={item.listPrice}
                 right={spacing.spacing4}

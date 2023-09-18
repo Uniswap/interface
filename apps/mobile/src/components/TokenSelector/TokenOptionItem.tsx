@@ -3,12 +3,11 @@ import React, { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
-import { Text } from 'src/components/Text'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -81,7 +80,7 @@ function _TokenOptionItem({
             <Flex shrink alignItems="flex-start" gap="$none">
               <Flex centered row gap="$spacing8">
                 <Flex shrink>
-                  <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
+                  <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
                     {currency.name}
                   </Text>
                 </Flex>
@@ -96,12 +95,12 @@ function _TokenOptionItem({
                 )}
               </Flex>
               <Flex centered row gap="$spacing8">
-                <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
+                <Text color="$neutral2" numberOfLines={1} variant="subheadSmall">
                   {getSymbolDisplayText(currency.symbol)}
                 </Text>
                 {!currency.isNative && showTokenAddress && (
                   <Flex shrink gap="$none">
-                    <Text color="neutral3" numberOfLines={1} variant="subheadSmall">
+                    <Text color="$neutral3" numberOfLines={1} variant="subheadSmall">
                       {shortenAddress(currency.address)}
                     </Text>
                   </Flex>
@@ -114,7 +113,7 @@ function _TokenOptionItem({
           {quantity && quantity !== 0 ? (
             <Flex alignItems="flex-end" gap="$none">
               <Text variant="bodyLarge">{formatNumber(quantity, NumberType.TokenTx)}</Text>
-              <Text color="neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheadSmall">
                 {formatUSDPrice(balanceUSD)}
               </Text>
             </Flex>

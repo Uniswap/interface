@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
-import { Text } from 'src/components/Text'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import InfoCircleSVG from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
@@ -27,7 +26,7 @@ export function NetworkFee({
   const feeSectionContent = (
     <>
       <Text
-        color={gasFallbackUsed && gasFeeUSD ? 'DEP_accentWarning' : 'neutral1'}
+        color={gasFallbackUsed && gasFeeUSD ? '$DEP_accentWarning' : '$neutral1'}
         variant="subheadSmall">
         {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
       </Text>

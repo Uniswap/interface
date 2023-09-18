@@ -8,7 +8,6 @@ import { LinkButton } from 'src/components/buttons/LinkButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
@@ -24,7 +23,7 @@ import {
   removePendingSession,
   WalletConnectPendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Separator, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import X from 'ui/src/assets/icons/x.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -61,7 +60,7 @@ const SitePermissions = (): JSX.Element => {
 
   return (
     <Flex gap="$spacing12" p="$spacing16">
-      <Text color="neutral2" variant="subheadSmall">
+      <Text color="$neutral2" variant="subheadSmall">
         {t('App permissions')}
       </Text>
       <Flex row alignItems="flex-start" gap="$spacing8">
@@ -72,8 +71,8 @@ const SitePermissions = (): JSX.Element => {
             width={iconSizes.icon16}
           />
         </Flex>
-        <Flex flex={1} gap="$none">
-          <Text color="neutral1" variant="bodySmall">
+        <Flex fill gap="$none">
+          <Text color="$neutral1" variant="bodySmall">
             {t('View your wallet address')}
           </Text>
         </Flex>
@@ -86,8 +85,8 @@ const SitePermissions = (): JSX.Element => {
             width={iconSizes.icon16}
           />
         </Flex>
-        <Flex flex={1} gap="$none">
-          <Text color="neutral1" variant="bodySmall">
+        <Flex fill gap="$none">
+          <Text color="$neutral1" variant="bodySmall">
             {t('View your token balances')}
           </Text>
         </Flex>
@@ -96,8 +95,8 @@ const SitePermissions = (): JSX.Element => {
         <Flex gap="$none" mt="$spacing2">
           <X color={colors.statusCritical.val} height={iconSizes.icon16} width={iconSizes.icon16} />
         </Flex>
-        <Flex flex={1} gap="$none">
-          <Text color="neutral1" variant="bodySmall">
+        <Flex fill gap="$none">
+          <Text color="$neutral1" variant="bodySmall">
             {t('Transfer your assets without consent')}
           </Text>
         </Flex>
@@ -118,7 +117,7 @@ const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
       justifyContent="space-between"
       p="$spacing12">
       <Flex grow row gap="$spacing8" justifyContent="space-between">
-        <Text color="neutral1" variant="subheadSmall">
+        <Text color="$neutral1" variant="subheadSmall">
           {t('Networks')}
         </Text>
         <NetworkLogos chains={chains} />

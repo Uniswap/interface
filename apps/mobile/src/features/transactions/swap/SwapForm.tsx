@@ -35,8 +35,7 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Flex, Text, useSporeColors } from 'ui/src'
-import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -173,7 +172,7 @@ function _SwapForm({
   const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 
   useSwapAnalytics(derivedSwapInfo)
-  const SwapWarningIcon = swapWarning?.icon ?? AlertTriangleIcon
+  const SwapWarningIcon = swapWarning?.icon ?? Icons.AlertTriangle
 
   const setValue = useCallback(
     (value: string): void => {
@@ -390,16 +389,16 @@ function _SwapForm({
               ) : null}
               {isBlocked && (
                 <BlockedAddressWarning
+                  grow
                   row
                   alignItems="center"
                   alignSelf="stretch"
-                  backgroundColor="surface2"
-                  borderBottomLeftRadius="rounded16"
-                  borderBottomRightRadius="rounded16"
-                  flexGrow={1}
-                  mt="spacing2"
-                  px="spacing16"
-                  py="spacing12"
+                  backgroundColor="$surface2"
+                  borderBottomLeftRadius="$rounded16"
+                  borderBottomRightRadius="$rounded16"
+                  mt="$spacing2"
+                  px="$spacing16"
+                  py="$spacing12"
                 />
               )}
               {showRate && !isBlocked ? (

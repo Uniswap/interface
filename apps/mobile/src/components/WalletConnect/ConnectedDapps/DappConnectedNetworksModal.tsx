@@ -5,12 +5,11 @@ import 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { ModalName } from 'src/features/telemetry/constants'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { removeSession, WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -66,11 +65,11 @@ export function DappConnectedNetworkModal({
             <Text variant="bodyLarge">{t('Connected to ')}</Text>
             {dapp.name || dapp.url}
           </Text>
-          <Text color="accent1" numberOfLines={1} textAlign="center" variant="buttonLabelMicro">
+          <Text color="$accent1" numberOfLines={1} textAlign="center" variant="buttonLabelMicro">
             {dapp.url}
           </Text>
         </Flex>
-        <Flex flexDirection="row" gap="$none">
+        <Flex row gap="$none">
           <Flex
             grow
             borderColor="$surface3"
@@ -81,7 +80,7 @@ export function DappConnectedNetworkModal({
             {session.chains.map((chainId) => (
               <Flex key={chainId} row alignItems="center" justifyContent="space-between">
                 <NetworkLogo chainId={chainId} size={iconSizes.icon24} />
-                <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
+                <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
                   {CHAIN_INFO[chainId].label}
                 </Text>
                 <Flex centered height={iconSizes.icon24} width={iconSizes.icon24}>

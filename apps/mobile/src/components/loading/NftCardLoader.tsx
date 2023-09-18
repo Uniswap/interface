@@ -1,7 +1,7 @@
 import React from 'react'
-import { Flex, StackProps } from 'ui/src'
+import { Flex, FlexProps } from 'ui/src'
 
-export function NftCardLoader({ ...props }: StackProps): JSX.Element {
+export function NftCardLoader({ ...props }: FlexProps): JSX.Element {
   return (
     <Flex flex={1} gap="$none" justifyContent="flex-start" m="$spacing4" {...props}>
       <Flex

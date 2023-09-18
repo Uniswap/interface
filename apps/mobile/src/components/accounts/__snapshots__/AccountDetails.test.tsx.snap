@@ -2,32 +2,25 @@
 
 exports[`AccountDetails renders without error 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "center",
-        "display": "flex",
-        "flexDirection": "row",
-        "flexShrink": 1,
-        "justifyContent": "space-between",
-      },
-    ]
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "flexShrink": 1,
+      "gap": 16,
+      "justifyContent": "space-between",
+    }
   }
 >
   <View
-    sentry-label="Flex"
     style={
-      [
-        {
-          "alignItems": "stretch",
-          "display": "flex",
-          "flex": 1,
-          "flexDirection": "row",
-          "flexShrink": 1,
-          "justifyContent": "flex-start",
-        },
-      ]
+      {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "row",
+        "flexShrink": 1,
+        "gap": 16,
+      }
     }
   >
     <View
@@ -269,47 +262,28 @@ exports[`AccountDetails renders without error 1`] = `
   </View>
   <View
     style={
-      [
-        {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 16,
-          "width": 16,
-        },
-      ]
-    }
-  />
-  <View
-    sentry-label="Flex"
-    style={
-      [
-        {
-          "alignItems": "stretch",
-          "display": "flex",
-          "flex": 1,
-          "flexDirection": "row",
-          "flexShrink": 1,
-          "justifyContent": "flex-end",
-        },
-      ]
+      {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "row",
+        "flexShrink": 1,
+        "gap": 4,
+        "justifyContent": "flex-end",
+      }
     }
   >
     <Text
       allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
       style={
-        [
-          {
-            "color": "#7D7D7D",
-            "display": "flex",
-            "fontFamily": "Basel-Book",
-            "fontSize": 17,
-            "fontWeight": "400",
-            "lineHeight": 24,
-          },
-        ]
+        {
+          "color": "#7D7D7D",
+          "display": "flex",
+          "fontFamily": "Basel-Book",
+          "fontSize": 17,
+          "lineHeight": 24,
+        }
       }
+      suppressHighlighting={true}
     >
       0x82D5...3Fa6
     </Text>
@@ -319,32 +293,25 @@ exports[`AccountDetails renders without error 1`] = `
 
 exports[`AccountDetails renders without error with chevron 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "center",
-        "display": "flex",
-        "flexDirection": "row",
-        "flexShrink": 1,
-        "justifyContent": "space-between",
-      },
-    ]
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "flexShrink": 1,
+      "gap": 16,
+      "justifyContent": "space-between",
+    }
   }
 >
   <View
-    sentry-label="Flex"
     style={
-      [
-        {
-          "alignItems": "stretch",
-          "display": "flex",
-          "flex": 1,
-          "flexDirection": "row",
-          "flexShrink": 1,
-          "justifyContent": "flex-start",
-        },
-      ]
+      {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "row",
+        "flexShrink": 1,
+        "gap": 16,
+      }
     }
   >
     <View
@@ -586,63 +553,31 @@ exports[`AccountDetails renders without error with chevron 1`] = `
   </View>
   <View
     style={
-      [
-        {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 16,
-          "width": 16,
-        },
-      ]
-    }
-  />
-  <View
-    sentry-label="Flex"
-    style={
-      [
-        {
-          "alignItems": "stretch",
-          "display": "flex",
-          "flex": 1,
-          "flexDirection": "row",
-          "flexShrink": 1,
-          "justifyContent": "flex-end",
-        },
-      ]
+      {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "row",
+        "flexShrink": 1,
+        "gap": 4,
+        "justifyContent": "flex-end",
+      }
     }
   >
     <Text
       allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
       style={
-        [
-          {
-            "color": "#7D7D7D",
-            "display": "flex",
-            "fontFamily": "Basel-Book",
-            "fontSize": 17,
-            "fontWeight": "400",
-            "lineHeight": 24,
-          },
-        ]
+        {
+          "color": "#7D7D7D",
+          "display": "flex",
+          "fontFamily": "Basel-Book",
+          "fontSize": 17,
+          "lineHeight": 24,
+        }
       }
+      suppressHighlighting={true}
     >
       0x82D5...3Fa6
     </Text>
-    <View
-      style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 4,
-            "width": 4,
-          },
-        ]
-      }
-    />
     <View
       style={
         {

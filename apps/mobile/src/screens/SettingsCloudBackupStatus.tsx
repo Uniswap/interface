@@ -6,18 +6,16 @@ import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
-import { Text } from 'src/components/Text'
 import { IS_ANDROID } from 'src/constants/globals'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
@@ -100,9 +98,9 @@ export function SettingsCloudBackupStatus({
         </Text>
       </BackHeader>
 
-      <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="spacing16" mx="spacing8">
-        <Flex grow gap="spacing24" justifyContent="flex-start">
-          <Text color="neutral2" variant="bodySmall">
+      <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="$spacing16" mx="$spacing8">
+        <Flex grow gap="$spacing24" justifyContent="flex-start">
+          <Text color="$neutral2" variant="bodySmall">
             {IS_ANDROID
               ? t(
                   'By having your recovery phrase backed up to Google Drive, you can recover your wallet just by being logged into your Google account on any device.'
@@ -113,9 +111,9 @@ export function SettingsCloudBackupStatus({
           </Text>
           <Flex row justifyContent="space-between">
             <Text variant="bodyLarge">{t('Recovery phrase')}</Text>
-            <Flex alignItems="flex-end" gap="spacing4">
-              <Flex row alignItems="center" gap="spacing12" justifyContent="space-around">
-                <Text color="neutral2" variant="buttonLabelMicro">
+            <Flex alignItems="flex-end" gap="$spacing4">
+              <Flex row alignItems="center" gap="$spacing12" justifyContent="space-around">
+                <Text color="$neutral2" variant="buttonLabelMicro">
                   {t('Backed up')}
                 </Text>
 
@@ -127,7 +125,7 @@ export function SettingsCloudBackupStatus({
                 />
               </Flex>
               {googleDriveEmail && (
-                <Text color="neutral3" variant="buttonLabelMicro">
+                <Text color="$neutral3" variant="buttonLabelMicro">
                   {googleDriveEmail}
                 </Text>
               )}

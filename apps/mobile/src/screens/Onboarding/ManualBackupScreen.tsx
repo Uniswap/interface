@@ -14,13 +14,12 @@ import { MnemonicConfirmation } from 'src/components/mnemonic/MnemonicConfirmati
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
-import { Text } from 'src/components/Text'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ManualPageViewScreen, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { Button, Flex, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import {
   EditAccountAction,
@@ -182,16 +181,16 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
             width={iconSizes.icon24}
           />
         </Flex>
-        <Text color="neutral1" variant="bodyLarge">
+        <Text color="$neutral1" variant="bodyLarge">
           {t('Do this step in a private place')}
         </Text>
-        <Text color="neutral2" textAlign="center" variant="bodySmall">
+        <Text color="$neutral2" textAlign="center" variant="bodySmall">
           {t(
             'Your recovery phrase is what grants you (and anyone who has it) access to your funds. Be sure to store it in a memorable, safe space.'
           )}
         </Text>
         <TouchableOpacity onPress={onPress}>
-          <Text color="accent1" paddingTop="spacing24" variant="buttonLabelMedium">
+          <Text color="$accent1" paddingTop="$spacing24" variant="buttonLabelMedium">
             {t('I’m ready')}
           </Text>
         </TouchableOpacity>

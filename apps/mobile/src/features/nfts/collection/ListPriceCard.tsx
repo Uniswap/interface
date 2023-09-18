@@ -1,21 +1,20 @@
 import { BlurView } from 'expo-blur'
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
-import { Text } from 'src/components/Text'
 import { IS_IOS } from 'src/constants/globals'
-import { Flex, Logos, SpaceTokens, StackProps, useSporeColors } from 'ui/src'
-import { theme as FixedTheme, Theme } from 'ui/src/theme/restyle'
+import { ColorTokens, Flex, FlexProps, Logos, SpaceTokens, Text, useSporeColors } from 'ui/src'
+import { iconSizes, TextVariantTokens } from 'ui/src/theme'
+import { theme as FixedTheme } from 'ui/src/theme/restyle'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
 import { Amount } from 'wallet/src/data/__generated__/types-and-hooks'
 
-type ListPriceProps = StackProps & {
+type ListPriceProps = FlexProps & {
   price: Amount
   gap?: SpaceTokens
-  iconSize?: keyof Theme['iconSizes']
-  textVariant?: keyof Theme['textVariants']
-  iconColor?: keyof Theme['colors']
-  textColor?: keyof Theme['colors']
+  iconSize?: number
+  textVariant?: TextVariantTokens
+  iconColor?: ColorTokens
+  textColor?: ColorTokens
 }
 
 export function ListPriceBadge({
@@ -47,12 +46,11 @@ export function ListPriceBadge({
 export function PriceAmount({
   price,
   gap = '$spacing4',
-  iconSize = 'icon16',
+  iconSize = iconSizes.icon16,
   textVariant = 'buttonLabelMicro',
-  iconColor = 'neutral1',
-  textColor = 'neutral1',
+  iconColor = '$neutral1',
+  textColor = '$neutral1',
 }: ListPriceProps): JSX.Element {
-  const theme = useAppTheme()
   const isUSD = price.currency === 'USD'
   const formattedAmount = isUSD
     ? formatNumber(price.value, NumberType.FiatTokenPrice)
@@ -61,11 +59,7 @@ export function PriceAmount({
   return (
     <Flex centered row gap={gap} overflow="hidden">
       {!isUSD && (
-        <Logos.Ethereum
-          color={theme.colors[iconColor || 'neutral1']}
-          height={theme.iconSizes[iconSize]}
-          width={theme.iconSizes[iconSize]}
-        />
+        <Logos.Ethereum color={iconColor || '$neutral1'} height={iconSize} width={iconSize} />
       )}
       <Text color={textColor} variant={textVariant}>
         {formattedAmount}

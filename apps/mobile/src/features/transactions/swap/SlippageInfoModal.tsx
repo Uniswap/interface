@@ -3,13 +3,11 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { openUri } from 'src/utils/linking'
-import { Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { formatCurrencyAmount, formatPercent, NumberType } from 'utilities/src/format/format'
@@ -56,8 +54,8 @@ export default function SlippageInfoModal({
       backgroundColor={colors.surface1.val}
       name={ModalName.SlippageInfo}
       onClose={onClose}>
-      <Flex centered fill gap="spacing16" mb="spacing12" p="spacing24">
-        <Flex centered backgroundColor="surface2" borderRadius="rounded12" p="spacing12">
+      <Flex centered fill gap="$spacing16" mb="$spacing12" p="$spacing24">
+        <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
           <Icons.Settings
             color={colors.neutral2.val}
             height={iconSizes.icon28}
@@ -67,7 +65,7 @@ export default function SlippageInfoModal({
         <Text textAlign="center" variant="bodyLarge">
           {t('Maximum slippage')}
         </Text>
-        <Text color="neutral2" textAlign="center" variant="bodySmall">
+        <Text color="$neutral2" textAlign="center" variant="bodySmall">
           {tradeType === TradeType.EXACT_INPUT
             ? t(
                 'If the price slips any further, your transaction will revert. Below is the minimum amount you are guaranteed to receive.'
@@ -77,55 +75,55 @@ export default function SlippageInfoModal({
               )}{' '}
           <TouchableArea onPress={onPressLearnMore}>
             <Text
-              color="accent1"
+              color="$accent1"
               lineHeight={fonts.bodySmall.fontSize - 1}
               variant="buttonLabelSmall">
               {t('Learn more')}
             </Text>
           </TouchableArea>
         </Text>
-        <Flex fill bg="surface2" borderRadius="rounded20" p="spacing12" width="100%">
+        <Flex fill bg="$surface2" borderRadius="$rounded20" p="$spacing12" width="100%">
           <Flex fill row justifyContent="space-between">
-            <Text color="neutral2" variant="bodySmall">
+            <Text color="$neutral2" variant="bodySmall">
               {t('Max slippage')}
             </Text>
-            <Flex row gap="spacing8">
+            <Flex row gap="$spacing8">
               {!isCustomSlippage ? (
-                <Flex centered bg="accent2" borderRadius="roundedFull" px="spacing8">
-                  <Text color="accent1" variant="buttonLabelMicro">
+                <Flex centered bg="$accent2" borderRadius="$roundedFull" px="$spacing8">
+                  <Text color="$accent1" variant="buttonLabelMicro">
                     {t('Auto')}
                   </Text>
                 </Flex>
               ) : null}
               <Text
-                color={showSlippageWarning ? 'DEP_accentWarning' : 'neutral1'}
+                color={showSlippageWarning ? '$DEP_accentWarning' : '$neutral1'}
                 variant="subheadSmall">
                 {formatPercent(slippageTolerance)}
               </Text>
             </Flex>
           </Flex>
           <Flex fill row justifyContent="space-between">
-            <Text color="neutral2" variant="bodySmall">
+            <Text color="$neutral2" variant="bodySmall">
               {tradeType === TradeType.EXACT_INPUT ? t('Receive at least') : t('Spend at most')}
             </Text>
-            <Text color="neutral1" textAlign="center" variant="subheadSmall">
+            <Text color="$neutral1" textAlign="center" variant="subheadSmall">
               {amount + ' ' + getSymbolDisplayText(symbol)}
             </Text>
           </Flex>
         </Flex>
         {showSlippageWarning ? (
-          <Flex centered row gap="spacing8">
+          <Flex centered row gap="$spacing8">
             <AlertTriangleIcon
               color={colors.DEP_accentWarning.val}
               height={iconSizes.icon16}
               width={iconSizes.icon16}
             />
-            <Text color="DEP_accentWarning" variant="bodySmall">
+            <Text color="$DEP_accentWarning" variant="bodySmall">
               {t('Slippage may be higher than necessary')}
             </Text>
           </Flex>
         ) : null}
-        <Flex centered row gap="spacing12" pt="spacing12">
+        <Flex centered row gap="$spacing12" pt="$spacing12">
           <Button fill emphasis={ButtonEmphasis.Secondary} label={t('Close')} onPress={onClose} />
         </Flex>
       </Flex>

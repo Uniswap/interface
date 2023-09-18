@@ -24,7 +24,7 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Icons, LinearGradient, StackProps, Text, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Icons, LinearGradient, Text, useSporeColors } from 'ui/src'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -80,9 +80,9 @@ export function NavBar(): JSX.Element {
         right={0}
         style={{ paddingBottom: insets.bottom + BUTTONS_OFFSET }}>
         <Flex
+          fill
           row
           alignItems="center"
-          flex={1}
           gap="$spacing12"
           justifyContent="space-between"
           mb={IS_ANDROID ? '$spacing8' : '$none'}
@@ -214,7 +214,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
     },
   })
 
-  const contentProps: StackProps = IS_IOS
+  const contentProps: FlexProps = IS_IOS
     ? {
         bg: '$surface2',
         opacity: isDarkMode ? 0.6 : 0.8,

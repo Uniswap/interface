@@ -17,7 +17,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { TextInputProps } from 'src/components/input/TextInput'
-import { AnimatedFlex } from 'src/components/layout/Flex'
+import { AnimatedFlex } from 'src/components/layout'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Pill } from 'src/components/text/Pill'
@@ -388,10 +388,10 @@ function PredefinedAmount({
   return (
     <TouchableOpacity onPress={(): void => onPress(amount)}>
       <Pill
-        backgroundColor={highlighted ? 'DEP_backgroundActionButton' : 'surface2'}
+        backgroundColor={highlighted ? '$DEP_backgroundActionButton' : '$surface2'}
         foregroundColor={theme.colors[highlighted ? 'accent1' : 'neutral2']}
         label={`$${amount}`}
-        px="spacing16"
+        px="$spacing16"
         textVariant="buttonLabelMedium"
       />
     </TouchableOpacity>

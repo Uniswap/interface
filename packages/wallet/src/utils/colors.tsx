@@ -44,6 +44,7 @@ export function getNetworkColorKey(chainId: ChainId): keyof Theme['colors'] {
 
 /** Helper to retrieve foreground and background colors for a given chain */
 export function useNetworkColors(chainId: ChainId): { foreground: string; background: string } {
+  // TODO (MOB-1336): fix only returning light mode version of colors
   const color = restyleTheme.colors[getNetworkColorKey(chainId)]
 
   const foreground = color
@@ -261,13 +262,15 @@ export function useExtractedTokenColor(
  * @param backgroundColor The hex value of the background color to check contrast against
  * @returns either 'sporeWhite' or 'sporeBlack'
  */
-export function getContrastPassingTextColor(backgroundColor: string): 'sporeWhite' | 'sporeBlack' {
+export function getContrastPassingTextColor(
+  backgroundColor: string
+): '$sporeWhite' | '$sporeBlack' {
   const lightText = FixedTheme.colors.sporeWhite
 
   if (hex(lightText, backgroundColor) >= MIN_COLOR_CONTRAST_THRESHOLD) {
-    return 'sporeWhite'
+    return '$sporeWhite'
   }
-  return 'sporeBlack'
+  return '$sporeBlack'
 }
 
 export function passesContrast(

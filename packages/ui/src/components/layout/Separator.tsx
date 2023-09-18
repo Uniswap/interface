@@ -19,8 +19,10 @@ export const Separator = styled(Stack, {
       true: {
         y: 0,
         // `as any` because its valid only on web
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         height: isWeb ? ('initial' as any) : 'auto',
         // `as any` because its valid only on web
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         maxHeight: isWeb ? ('initial' as any) : 'auto',
         width: 0,
         maxWidth: 0,

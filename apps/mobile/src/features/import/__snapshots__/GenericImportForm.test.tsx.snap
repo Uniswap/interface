@@ -3,38 +3,43 @@
 exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
 <View
   onTouchEnd={[Function]}
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "stretch",
-        "display": "flex",
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "gap": 16,
+    }
   }
 >
   <View
-    sentry-label="Flex"
     style={
-      [
-        {
-          "alignItems": "center",
-          "backgroundColor": "#F9F9F9",
-          "borderColor": "#F9F9F9",
-          "borderRadius": 20,
-          "borderWidth": 1,
-          "display": "flex",
-          "flexDirection": "column",
-          "flexShrink": 1,
-          "justifyContent": "center",
-          "minHeight": 120,
-          "paddingHorizontal": 36,
-          "paddingVertical": 16,
-          "width": "100%",
-        },
-      ]
+      {
+        "alignItems": "center",
+        "backgroundColor": "#F9F9F9",
+        "borderBottomColor": "#F9F9F9",
+        "borderBottomLeftRadius": 20,
+        "borderBottomRightRadius": 20,
+        "borderBottomWidth": 1,
+        "borderLeftColor": "#F9F9F9",
+        "borderLeftWidth": 1,
+        "borderRightColor": "#F9F9F9",
+        "borderRightWidth": 1,
+        "borderStyle": "solid",
+        "borderTopColor": "#F9F9F9",
+        "borderTopLeftRadius": 20,
+        "borderTopRightRadius": 20,
+        "borderTopWidth": 1,
+        "flexDirection": "column",
+        "flexShrink": 1,
+        "gap": 0,
+        "justifyContent": "center",
+        "minHeight": 120,
+        "paddingBottom": 16,
+        "paddingLeft": 36,
+        "paddingRight": 36,
+        "paddingTop": 16,
+        "width": "100%",
+      }
     }
   >
     <View
@@ -86,32 +91,17 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
       />
     </View>
     <View
-      style={
-        [
-          {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 0,
-          },
-        ]
-      }
-    />
-    <View
       onLayout={[Function]}
-      sentry-label="Flex"
       style={
-        [
-          {
-            "alignItems": "center",
-            "display": "flex",
-            "flexDirection": "row",
-            "flexGrow": 1,
-            "justifyContent": "center",
-            "paddingTop": 4,
-            "position": "absolute",
-          },
-        ]
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "flexGrow": 1,
+          "gap": 8,
+          "justifyContent": "center",
+          "paddingTop": 4,
+          "position": "absolute",
+        }
       }
     >
       <Text
@@ -120,36 +110,19 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         maxFontSizeMultiplier={1.4}
         numberOfLines={1}
         style={
-          [
-            {
-              "color": "#7D7D7D",
-              "display": "flex",
-              "fontFamily": "Basel-Book",
-              "fontSize": 19,
-              "fontWeight": "400",
-              "lineHeight": 24,
-            },
-            {
-              "flexShrink": 1,
-            },
-          ]
+          {
+            "color": "#7D7D7D",
+            "display": "flex",
+            "flexShrink": 1,
+            "fontFamily": "Basel-Book",
+            "fontSize": 19,
+            "lineHeight": 24,
+          }
         }
+        suppressHighlighting={true}
       >
         Type or
       </Text>
-      <View
-        style={
-          [
-            {
-              "display": "flex",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "height": 8,
-              "width": 8,
-            },
-          ]
-        }
-      />
       <View
         accessibilityState={
           {
@@ -254,39 +227,21 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           </Text>
         </View>
       </View>
-      <View
-        style={
-          [
-            {
-              "display": "flex",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "height": 8,
-              "width": 8,
-            },
-          ]
-        }
-      />
       <Text
         adjustsFontSizeToFit={true}
         allowFontScaling={true}
-        maxFontSizeMultiplier={1.4}
         numberOfLines={1}
         style={
-          [
-            {
-              "color": "#7D7D7D",
-              "display": "flex",
-              "fontFamily": "Basel-Book",
-              "fontSize": 19,
-              "fontWeight": "400",
-              "lineHeight": 24,
-            },
-            {
-              "flexShrink": 1,
-            },
-          ]
+          {
+            "color": "#7D7D7D",
+            "display": "flex",
+            "flexShrink": 1,
+            "fontFamily": "Basel-Book",
+            "fontSize": 19,
+            "lineHeight": 24,
+          }
         }
+        suppressHighlighting={true}
       >
         seed phrase
       </Text>
@@ -294,27 +249,11 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
   </View>
   <View
     style={
-      [
-        {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 16,
-        },
-      ]
-    }
-  />
-  <View
-    sentry-label="Flex"
-    style={
-      [
-        {
-          "alignItems": "stretch",
-          "display": "flex",
-          "flexDirection": "column",
-          "justifyContent": "flex-start",
-        },
-      ]
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+        "gap": 16,
+      }
     }
   />
 </View>

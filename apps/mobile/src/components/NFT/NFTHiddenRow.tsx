@@ -3,9 +3,8 @@ import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedBox, Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
-import { Icons } from 'ui/src'
+import { AnimatedBox } from 'src/components/layout'
+import { Flex, Icons, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export function HiddenNftsRowLeft({ numHidden }: { numHidden: number }): JSX.Element {
@@ -13,14 +12,14 @@ export function HiddenNftsRowLeft({ numHidden }: { numHidden: number }): JSX.Ele
 
   return (
     <Flex
+      grow
       row
       alignItems="center"
-      flexGrow={1}
       justifyContent="flex-start"
-      ml="spacing12"
-      my="spacing16"
-      py="spacing4">
-      <Text color="neutral2" variant="subheadSmall">
+      ml="$spacing12"
+      my="$spacing16"
+      py="$spacing4">
+      <Text color="$neutral2" variant="subheadSmall">
         {t('Hidden ({{numHidden}})', { numHidden })}
       </Text>
     </Flex>
@@ -58,17 +57,17 @@ export function HiddenNftsRowRight({
       flexGrow={1}
       hapticStyle={ImpactFeedbackStyle.Light}
       onPress={onPressRow}>
-      <Flex row justifyContent="flex-end" mr="spacing4" my="spacing16">
+      <Flex row justifyContent="flex-end" mr="$spacing4" my="$spacing16">
         <Flex
           row
           alignItems="center"
-          bg="surface2"
-          borderRadius="roundedFull"
-          gap="none"
-          pl="spacing12"
-          pr="spacing8"
-          py="spacing4">
-          <Text color="neutral2" variant="buttonLabelSmall">
+          bg="$surface2"
+          borderRadius="$roundedFull"
+          gap="$none"
+          pl="$spacing12"
+          pr="$spacing8"
+          py="$spacing4">
+          <Text color="$neutral2" variant="buttonLabelSmall">
             {isExpanded ? t('Hide') : t('Show')}
           </Text>
           <AnimatedBox gap="$none" style={chevronAnimatedStyle}>

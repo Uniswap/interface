@@ -6,13 +6,12 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
-import { Text } from 'src/components/Text'
 import { useAllCommonBaseCurrencies } from 'src/components/TokenSelector/hooks'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, Text } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import { fromMoonpayNetwork } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
@@ -156,7 +155,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, onBack }: Props): JSX.Element 
   }
 
   return (
-    <Flex flexGrow={1} gap="$none">
+    <Flex grow gap="$none">
       <Header onBack={onBack} />
       <BottomSheetFlatList
         ref={flatListRef}

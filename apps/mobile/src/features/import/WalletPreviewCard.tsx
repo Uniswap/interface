@@ -1,10 +1,9 @@
 import React from 'react'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SelectionCircle } from 'src/components/input/SelectionCircle'
-import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
@@ -58,7 +57,7 @@ export default function WalletPreviewCard({
           <Flex gap="$none">
             <Text variant="bodyLarge">{ensName ?? shortenAddress(address)}</Text>
             {balance ? (
-              <Text color="neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheadSmall">
                 {formatUSDPrice(balance, NumberType.FiatTokenQuantity)}
               </Text>
             ) : null}

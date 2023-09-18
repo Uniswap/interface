@@ -11,3 +11,4 @@ export const iconSizes = {
 }
 
 export type IconSize = keyof typeof iconSizes
+export type IconSizeTokens = `$${IconSize}`

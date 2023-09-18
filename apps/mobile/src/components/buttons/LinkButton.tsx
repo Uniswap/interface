@@ -1,12 +1,9 @@
 import React, { useMemo } from 'react'
 import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import { openUri } from 'src/utils/linking'
-import { useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Text, useSporeColors } from 'ui/src'
 import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
-import { iconSizes } from 'ui/src/theme'
-import { Theme } from 'ui/src/theme/restyle'
+import { iconSizes, TextVariantTokens } from 'ui/src/theme'
 
 interface LinkButtonProps extends Omit<BaseButtonProps, 'onPress'> {
   label: string
@@ -16,7 +13,7 @@ interface LinkButtonProps extends Omit<BaseButtonProps, 'onPress'> {
   color?: string
   iconColor?: string
   size?: number
-  textVariant?: keyof Theme['textVariants']
+  textVariant?: TextVariantTokens
 }
 
 export function LinkButton({
@@ -30,12 +27,12 @@ export function LinkButton({
   size = iconSizes.icon20,
   justifyContent = 'center',
   ...rest
-}: LinkButtonProps): JSX.Element {
+}: LinkButtonProps & Pick<FlexProps, 'justifyContent'>): JSX.Element {
   const colors = useSporeColors()
   const colorStyles = useMemo(() => {
     return color
       ? { style: { color } }
-      : // if a hex color is not defined, don't give the Text component a style prop, because that will override its default behavior of using textPrimary when no color prop is defined
+      : // if a hex color is not defined, don't give the Text component a style prop, because that will override its default behavior of using neutral1 when no color prop is defined
         {}
   }, [color])
 
@@ -43,7 +40,7 @@ export function LinkButton({
     <TouchableArea
       onPress={(): Promise<void> => openUri(url, openExternalBrowser, isSafeUri)}
       {...rest}>
-      <Flex row alignItems="center" gap="spacing4" justifyContent={justifyContent}>
+      <Flex row alignItems="center" gap="$spacing4" justifyContent={justifyContent}>
         <Text {...colorStyles} variant={textVariant}>
           {label}
         </Text>

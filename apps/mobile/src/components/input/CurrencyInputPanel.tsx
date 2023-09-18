@@ -11,12 +11,10 @@ import {
 } from 'react-native'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { MaxAmountButton } from 'src/components/input/MaxAmountButton'
-import { Flex } from 'src/components/layout/Flex'
 import { Warning, WarningLabel } from 'src/components/modals/WarningModal/types'
-import { Text } from 'src/components/Text'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
-import { useSporeColors } from 'ui/src'
+import { Flex, SpaceTokens, Text, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'utilities/src/format/format'
@@ -59,9 +57,9 @@ const MIN_INPUT_FONT_SIZE = 28
 const MAX_CHAR_PIXEL_WIDTH = 23
 
 interface DynamicSwapPanelPaddingValues {
-  paddingBottom: keyof Theme['spacing']
-  paddingTop: keyof Theme['spacing']
-  paddingHorizontal?: keyof Theme['spacing']
+  paddingBottom: SpaceTokens
+  paddingTop: SpaceTokens
+  paddingHorizontal?: SpaceTokens
 }
 
 const getSwapPanelPaddingValues = (
@@ -72,24 +70,24 @@ const getSwapPanelPaddingValues = (
     ? {
         // when there is a currency value, and the box is on the top, add a bit more
         // padding (spacing24) to account for the swap direction button
-        paddingBottom: isOutputBox ? 'spacing16' : 'spacing24',
-        paddingTop: isOutputBox ? 'spacing24' : 'spacing16',
-        paddingHorizontal: 'spacing16',
+        paddingBottom: isOutputBox ? '$spacing16' : '$spacing24',
+        paddingTop: isOutputBox ? '$spacing24' : '$spacing16',
+        paddingHorizontal: '$spacing16',
       }
     : {
         // spacing48 to account for the direction button (on the top or the bottom, depending
         // on whether this component is the top or bottom swap box)
-        paddingBottom: isOutputBox ? 'spacing36' : 'spacing48',
-        paddingTop: isOutputBox ? 'spacing48' : 'spacing36',
-        paddingHorizontal: 'spacing16',
+        paddingBottom: isOutputBox ? '$spacing36' : '$spacing48',
+        paddingTop: isOutputBox ? '$spacing48' : '$spacing36',
+        paddingHorizontal: '$spacing16',
       }
 
   const innerPadding: DynamicSwapPanelPaddingValues = {
     // when there is a currency value, and the box is on the top, add a bit more
     // 20px is the desired amount, so we're adding outer padding and inner padding (16px + 4px)
-    paddingBottom: 'none',
+    paddingBottom: '$none',
     // 20px is the desired amount, so we're adding outer padding and inner padding (16px + 4px)
-    paddingTop: isOutputBox ? 'none' : 'spacing4',
+    paddingTop: isOutputBox ? '$none' : '$spacing4',
   }
 
   return { outerPadding, innerPadding }
@@ -208,7 +206,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
 
   return (
     <Flex
-      gap="spacing8"
+      gap="$spacing8"
       {...transformedProps}
       pb={paddingBottom}
       pt={paddingTop}
@@ -216,7 +214,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
       <Flex
         row
         alignItems="center"
-        gap="spacing8"
+        gap="$spacing8"
         justifyContent={!currencyInfo ? 'center' : 'space-between'}
         paddingBottom={innerPaddingBottom}
         paddingTop={innerPaddingTop}>
@@ -259,7 +257,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
             />
           </Flex>
         )}
-        <Flex row alignItems="center" gap="none">
+        <Flex row alignItems="center" gap="$none">
           <SelectTokenButton
             selectedCurrencyInfo={currencyInfo}
             showNonZeroBalancesOnly={showNonZeroBalancesOnly}
@@ -269,15 +267,15 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
       </Flex>
 
       {currencyInfo && (
-        <Flex row alignItems="center" gap="spacing8" justifyContent="space-between" mb="spacing4">
+        <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" mb="$spacing4">
           <Flex shrink>
-            <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
+            <Text color="$neutral2" numberOfLines={1} variant="subheadSmall">
               {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
             </Text>
           </Flex>
-          <Flex row alignItems="center" gap="spacing8" justifyContent="flex-end">
+          <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
             <Text
-              color={showInsufficientBalanceWarning ? 'DEP_accentWarning' : 'neutral2'}
+              color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'}
               variant="subheadSmall">
               {t('Balance')}: {formatCurrencyAmount(currencyBalance, NumberType.TokenNonTx)}
             </Text>

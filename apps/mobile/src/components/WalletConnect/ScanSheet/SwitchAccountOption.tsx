@@ -1,7 +1,6 @@
 import React from 'react'
-import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
-import { Flex, Separator, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -25,13 +24,13 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
         <Unicon address={account.address} size={ICON_SIZE} />
         <Flex shrink alignItems="center" gap="$none" p="$none">
           <Text
-            color="neutral1"
+            color="$neutral1"
             numberOfLines={1}
             testID={`address-display/name/${displayName?.name}`}
             variant="bodyLarge">
             {displayName?.name}
           </Text>
-          <Text color="neutral2" variant="subheadSmall">
+          <Text color="$neutral2" variant="subheadSmall">
             {shortenAddress(account.address)}
           </Text>
         </Flex>

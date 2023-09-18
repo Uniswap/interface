@@ -2,9 +2,8 @@ import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React, { useState } from 'react'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
-import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useSporeColors } from 'ui/src'
+import { Text, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { Theme } from 'ui/src/theme/restyle'
 
@@ -33,7 +32,7 @@ export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps): 
           backgroundColor={colors.surface2.val}
           name={ModalName.TooltipContent}
           onClose={(): void => setShowModal(false)}>
-          <Text p="spacing16" variant="bodyLarge">
+          <Text p="$spacing16" variant="bodyLarge">
             {content}
           </Text>
         </BottomSheetDetachedModal>

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { WalletEmptyState } from 'src/components/home/WalletEmptyState'
 import { NoTokens } from 'src/components/icons/NoTokens'
-import { Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TabContentProps, TabProps } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
@@ -12,6 +11,7 @@ import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceLi
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { Flex } from 'ui/src'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -58,7 +58,7 @@ export const TokensTab = forwardRef<FlashList<any>, TabProps & { isExternalProfi
     }
 
     return (
-      <Flex grow bg="surface1">
+      <Flex grow bg="$surface1">
         <TokenBalanceList
           ref={ref}
           containerProps={formattedContainerProps}

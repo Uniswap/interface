@@ -1,3 +1,3 @@
 export * from './Box'
-export * from './Flex'
+export * from './DeprecatedMobileOnlyFlex'
 export * from './Inset'

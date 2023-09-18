@@ -12,11 +12,10 @@ import { AmountInput } from 'src/components/input/AmountInput'
 import { RecipientPrevTransfers } from 'src/components/input/RecipientInputPanel'
 import { AnimatedFlex } from 'src/components/layout'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
-import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { dimensions, fonts, iconSizes } from 'ui/src/theme'
 import { formatNumberOrString, NumberType } from 'utilities/src/format/format'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -121,7 +120,7 @@ export function TransactionReview({
         {currencyInInfo ? (
           <Flex centered gap={innerGap}>
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Text color="neutral2" variant="bodyLarge">
+              <Text color="$neutral2" variant="bodyLarge">
                 {recipient ? t('Sending') : t('You pay')}
               </Text>
               <AmountInput
@@ -144,12 +143,12 @@ export function TransactionReview({
                 value={formattedAmountIn}
               />
               {inputCurrencyUSDValue && !isUSDInput ? (
-                <Text color="neutral2" variant={equivalentValueTextVariant}>
+                <Text color="$neutral2" variant={equivalentValueTextVariant}>
                   {formattedInputUsdValue}
                 </Text>
               ) : null}
               {isUSDInput ? (
-                <Text color="neutral2" variant={equivalentValueTextVariant}>
+                <Text color="$neutral2" variant={equivalentValueTextVariant}>
                   {/* when sending a token with USD input, show the amount of the token being sent */}
                   {usdTokenEquivalentAmount}
                 </Text>
@@ -166,7 +165,7 @@ export function TransactionReview({
         {currencyOutInfo && formattedAmountOut ? (
           <Flex centered gap={innerGap} pb={bottomPadding}>
             <Flex centered gap={amountAndEquivalentValueGap}>
-              <Text color="neutral2" variant="bodyLarge">
+              <Text color="$neutral2" variant="bodyLarge">
                 {t('You receive')}
               </Text>
               <Flex gap="$none" height={lineHeight} justifyContent="center" overflow="hidden">
@@ -187,7 +186,7 @@ export function TransactionReview({
                 />
               </Flex>
               {outputCurrencyUSDValue ? (
-                <Text color="neutral2" variant={equivalentValueTextVariant}>
+                <Text color="$neutral2" variant={equivalentValueTextVariant}>
                   {formattedOutputUsdValue}
                 </Text>
               ) : null}
@@ -196,7 +195,7 @@ export function TransactionReview({
           </Flex>
         ) : recipient ? (
           <Flex centered gap="$spacing12">
-            <Text color="neutral2" variant="bodyLarge">
+            <Text color="$neutral2" variant="bodyLarge">
               {t('To')}
             </Text>
             <Flex centered gap="$spacing8">
@@ -247,7 +246,7 @@ function CurrencyLogoWithLabel({ currencyInfo }: { currencyInfo: CurrencyInfo })
   return (
     <Flex centered row gap={gap}>
       <CurrencyLogo currencyInfo={currencyInfo} size={size} />
-      <Text color="neutral1" variant="buttonLabelLarge">
+      <Text color="$neutral1" variant="buttonLabelLarge">
         {getSymbolDisplayText(currencyInfo.currency.symbol)}
       </Text>
     </Flex>

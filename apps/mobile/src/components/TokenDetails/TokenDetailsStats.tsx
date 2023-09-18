@@ -1,9 +1,7 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
-import { useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
 import { iconSizes } from 'ui/src/theme'
 import { formatNumber, NumberType } from 'utilities/src/format/format'
@@ -20,14 +18,14 @@ function StatsRow({
 }): JSX.Element {
   const colors = useSporeColors()
   return (
-    <Flex row justifyContent="space-between" paddingLeft="spacing2">
-      <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start">
+    <Flex row justifyContent="space-between" pl="$spacing2">
+      <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start">
         <StatsIcon
           color={tokenColor ?? colors.neutral3.val}
           height={iconSizes.icon12}
           width={iconSizes.icon12}
         />
-        <Text color="neutral1" variant="bodySmall">
+        <Text color="$neutral1" variant="bodySmall">
           {label}
         </Text>
       </Flex>
@@ -66,7 +64,7 @@ export function TokenDetailsMarketData({
   )
 
   return (
-    <Flex gap="spacing8">
+    <Flex gap="$spacing8">
       <StatsRow label={t('24h Uniswap volume')} tokenColor={tokenColor}>
         <FormattedValue numberType={NumberType.FiatTokenStats} value={volume} />
       </StatsRow>
@@ -99,15 +97,15 @@ export function TokenDetailsStats({
   const marketData = tokenProjectData?.markets ? tokenProjectData.markets[0] : null
 
   return (
-    <Flex gap="spacing24">
+    <Flex gap="$spacing24">
       {tokenProjectData?.description && (
-        <Flex gap="spacing4">
+        <Flex gap="$spacing4">
           {tokenProjectData?.name && (
-            <Text color="neutral2" variant="subheadSmall">
+            <Text color="$neutral2" variant="subheadSmall">
               {t('About {{ token }}', { token: tokenProjectData.name })}
             </Text>
           )}
-          <Flex gap="spacing16">
+          <Flex gap="$spacing16">
             <LongText
               gap="$spacing2"
               initialDisplayedLines={5}
@@ -118,8 +116,8 @@ export function TokenDetailsStats({
           </Flex>
         </Flex>
       )}
-      <Flex gap="spacing4">
-        <Text color="neutral2" variant="subheadSmall">
+      <Flex gap="$spacing4">
+        <Text color="$neutral2" variant="subheadSmall">
           {t('Stats')}
         </Text>
         <TokenDetailsMarketData

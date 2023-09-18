@@ -3,9 +3,8 @@ import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedBox, Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
-import { Icons } from 'ui/src'
+import { AnimatedBox } from 'src/components/layout'
+import { Flex, Icons, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export function HiddenTokensRow({
@@ -37,20 +36,20 @@ export function HiddenTokensRow({
 
   return (
     <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPressRow}>
-      <Flex row alignItems="center" justifyContent="space-between" px="spacing24" py="spacing12">
-        <Text color="neutral2" variant="subheadSmall">
+      <Flex row alignItems="center" justifyContent="space-between" px="$spacing24" py="$spacing12">
+        <Text color="$neutral2" variant="subheadSmall">
           {t('Hidden ({{numHidden}})', { numHidden })}
         </Text>
         <Flex
           row
           alignItems="center"
-          bg="surface2"
-          borderRadius="roundedFull"
-          gap="none"
-          pl="spacing12"
-          pr="spacing8"
-          py="spacing8">
-          <Text color="neutral2" variant="buttonLabelSmall">
+          bg="$surface2"
+          borderRadius="$roundedFull"
+          gap="$none"
+          pl="$spacing12"
+          pr="$spacing8"
+          py="$spacing8">
+          <Text color="$neutral2" variant="buttonLabelSmall">
             {isExpanded ? t('Hide') : t('Show')}
           </Text>
           <AnimatedBox gap="$none" style={chevronAnimatedStyle}>

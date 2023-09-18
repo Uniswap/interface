@@ -1,10 +1,9 @@
 import React from 'react'
 import { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useLineChartDatetime } from 'react-native-wagmi-charts'
-import { Flex } from 'src/components/layout'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { IS_ANDROID } from 'src/constants/globals'
-import { Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
@@ -40,7 +39,7 @@ export function RelativeChangeText({
 
   if (loading) {
     return (
-      <Flex mt={IS_ANDROID ? 'none' : 'spacing2'}>
+      <Flex mt={IS_ANDROID ? '$none' : '$spacing2'}>
         <AnimatedText loading loadingPlaceholderText="00.00%" variant="bodyLarge" />
       </Flex>
     )
@@ -50,8 +49,8 @@ export function RelativeChangeText({
     <Flex
       row
       alignItems={IS_ANDROID ? 'center' : 'flex-end'}
-      gap="spacing2"
-      mt={IS_ANDROID ? 'none' : 'spacing2'}>
+      gap="$spacing2"
+      mt={IS_ANDROID ? '$none' : '$spacing2'}>
       <Icons.AnimatedCaretChange
         height={iconSizes.icon16}
         strokeWidth={2}

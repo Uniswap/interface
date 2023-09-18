@@ -5,10 +5,9 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
-import { Text } from 'src/components/Text'
 import { resetDismissedWarnings } from 'src/features/tokens/tokensSlice'
 import { Screens } from 'src/screens/Screens'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -71,10 +70,10 @@ export function DevScreen(): JSX.Element {
       </Flex>
       <ScrollView>
         <Flex alignItems="center" gap="$none">
-          <Text color="neutral1" textAlign="center" variant="headlineSmall">
+          <Text color="$neutral1" textAlign="center" variant="headlineSmall">
             {`Your Account: ${activeAccount?.address || 'none'}`}
           </Text>
-          <Text mt="spacing16" textAlign="center" variant="headlineSmall">
+          <Text mt="$spacing16" textAlign="center" variant="headlineSmall">
             🌀🌀Screen Stargate🌀🌀
           </Text>
           <Flex centered row flexWrap="wrap" gap="$none">
@@ -84,24 +83,24 @@ export function DevScreen(): JSX.Element {
                 m="spacing8"
                 testID={`dev_screen/${s}`}
                 onPress={(): void => activateWormhole(s)}>
-                <Text color="neutral1">{s}</Text>
+                <Text color="$neutral1">{s}</Text>
               </TouchableArea>
             ))}
           </Flex>
-          <Text mt="spacing12" textAlign="center" variant="bodyLarge">
+          <Text mt="$spacing12" textAlign="center" variant="bodyLarge">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
           <TouchableArea mt="spacing16" onPress={onPressCreate}>
-            <Text color="neutral1">Create account</Text>
+            <Text color="$neutral1">Create account</Text>
           </TouchableArea>
           <TouchableArea mt="spacing12" onPress={onPressResetTokenWarnings}>
-            <Text color="neutral1">Reset token warnings</Text>
+            <Text color="$neutral1">Reset token warnings</Text>
           </TouchableArea>
           <TouchableArea mt="spacing12" onPress={onPressShowError}>
-            <Text color="neutral1">Show global error</Text>
+            <Text color="$neutral1">Show global error</Text>
           </TouchableArea>
           <TouchableArea mt="spacing12" onPress={onPressResetOnboarding}>
-            <Text color="neutral1">Reset onboarding</Text>
+            <Text color="$neutral1">Reset onboarding</Text>
           </TouchableArea>
         </Flex>
       </ScrollView>

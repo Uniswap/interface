@@ -7,7 +7,6 @@ import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
@@ -16,6 +15,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { Flex } from 'ui/src'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -109,8 +109,8 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   }, [value])
 
   const itemSpacing = useResponsiveProp({
-    xs: 'none',
-    sm: 'spacing8',
+    xs: '$none',
+    sm: '$spacing8',
   })
 
   return (

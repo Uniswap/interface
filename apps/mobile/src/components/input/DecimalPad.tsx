@@ -4,8 +4,7 @@ import { TextInputProps } from 'react-native'
 import { getNumberFormatSettings } from 'react-native-localize'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox } from 'src/components/layout'
-import { Text } from 'src/components/Text'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 
 // if this setting is changed in phone settings the app would be restarted
 const { decimalSeparator } = getNumberFormatSettings()
@@ -211,7 +210,7 @@ function KeyButton({
       onLongPress={onLongPress}
       onPress={onPress}>
       <Text
-        color={isDisabled ? 'neutral2' : 'neutral1'}
+        color={isDisabled ? '$neutral2' : '$neutral1'}
         textAlign="center"
         variant="headlineMedium">
         {

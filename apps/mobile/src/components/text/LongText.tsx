@@ -2,9 +2,8 @@ import React, { ComponentProps, useCallback, useMemo, useReducer, useState } fro
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
 import Markdown from 'react-native-markdown-display'
-import { Text } from 'src/components/Text'
 import { openUri } from 'src/utils/linking'
-import { Flex, SpaceTokens, useSporeColors } from 'ui/src'
+import { Flex, SpaceTokens, Text, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 
 type LongTextProps = {
@@ -117,8 +116,8 @@ export function LongText(props: LongTextProps): JSX.Element {
       This will cause mild thrash as data loads into a page but will ensure consistent spacing */}
       {textLengthExceedsLimit ? (
         <Text
-          my="none"
-          py="none"
+          my="$none"
+          py="$none"
           style={{ color: readMoreOrLessColor }}
           testID="read-more-button"
           variant="buttonLabelSmall"

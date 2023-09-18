@@ -1,7 +1,5 @@
 import React, { memo, useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import {
   usePortfolioBalancesForAddressById,
   usePortfolioTokenOptions,
@@ -14,6 +12,7 @@ import {
 } from 'src/components/TokenSelector/TokenSelectorList'
 import { formatSearchResults, getTokenOptionsSection } from 'src/components/TokenSelector/utils'
 import { useSearchTokens } from 'src/features/dataApi/searchTokens'
+import { Flex, Text } from 'ui/src'
 import { useDebounce } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
@@ -24,9 +23,9 @@ function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
   return (
     <Flex>
       <SectionHeader title={t('Search results')} />
-      <Text color="neutral3" textAlign="center" variant="subheadSmall">
+      <Text color="$neutral3" textAlign="center" variant="subheadSmall">
         <Trans t={t}>
-          No results found for <Text color="neutral1">"{searchFilter}"</Text>
+          No results found for <Text color="$neutral1">"{searchFilter}"</Text>
         </Trans>
       </Text>
     </Flex>

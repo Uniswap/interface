@@ -6,13 +6,12 @@ import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { cancelTransaction } from 'wallet/src/features/transactions/slice'
@@ -114,7 +113,7 @@ function TransactionSummaryLayout({
       />
     </Flex>
   ) : (
-    <Text color="neutral3" variant="bodyMicro">
+    <Text color="$neutral3" variant="bodyMicro">
       {formattedAddedTime}
     </Text>
   )
@@ -131,20 +130,20 @@ function TransactionSummaryLayout({
           <Flex grow shrink gap="$none">
             <Flex grow gap="$none">
               <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
-                <Text color="neutral2" numberOfLines={1} variant="bodyLarge">
+                <Text color="$neutral2" numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row>
                 <Flex grow shrink gap="$none">
-                  <Text color="neutral1" variant="subheadSmall">
+                  <Text color="$neutral1" variant="subheadSmall">
                     {caption}
                   </Text>
                 </Flex>
                 {status === TransactionStatus.Failed && onRetry && (
                   <Flex flexShrink={0} gap="$none">
-                    <Text color="accent1" variant="buttonLabelSmall" onPress={onRetry}>
+                    <Text color="$accent1" variant="buttonLabelSmall" onPress={onRetry}>
                       {t('Retry')}
                     </Text>
                   </Flex>

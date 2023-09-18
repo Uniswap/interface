@@ -1,7 +1,6 @@
 import React from 'react'
-import { Text } from 'src/components/Text'
 import { TOKEN_BALANCE_ITEM_HEIGHT } from 'src/components/TokenBalanceList/TokenBalanceItem'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 interface TokenLoaderProps {

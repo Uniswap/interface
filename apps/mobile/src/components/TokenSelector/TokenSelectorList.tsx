@@ -7,14 +7,13 @@ import { Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
 import { useBottomSheetFocusHook } from 'src/components/modals/hooks'
-import { Text } from 'src/components/Text'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import {
   renderSuggestedTokenItem,
   suggestedTokensKeyExtractor,
 } from 'src/components/TokenSelector/TokenSelectorSwapOutputList'
 import { TokenOption } from 'src/components/TokenSelector/types'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
@@ -185,7 +184,7 @@ function _TokenSelectorList({
 
   if (loading) {
     return (
-      <Flex gap="$none">
+      <Flex grow gap="$none">
         <Flex gap="$none" py="$spacing16" width={80}>
           <Loader.Box height={fonts.subheadSmall.lineHeight} />
         </Flex>
@@ -218,7 +217,7 @@ function _TokenSelectorList({
 export function SectionHeader({ title }: { title: string }): JSX.Element {
   return (
     <Flex backgroundColor="$surface1" py="$spacing16">
-      <Text color="neutral2" variant="subheadSmall">
+      <Text color="$neutral2" variant="subheadSmall">
         {title}
       </Text>
     </Flex>

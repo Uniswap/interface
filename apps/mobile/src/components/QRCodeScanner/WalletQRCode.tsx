@@ -7,10 +7,9 @@ import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradient'
 import { AnimatedFlex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
-import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { openUri } from 'src/utils/linking'
-import { useSporeColors } from 'ui/src'
+import { Text, useSporeColors } from 'ui/src'
 import { SUPPORTED_NETWORKS_PAGE_URL } from 'wallet/src/constants/urls'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
@@ -72,13 +71,13 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
           safeAreaColor="$surface1"
           size={QR_CODE_SIZE}
         />
-        <Text color="neutral2" lineHeight={20} textAlign="center" variant="bodyMicro">
+        <Text color="$neutral2" lineHeight={20} textAlign="center" variant="bodyMicro">
           {t(
             'Only send tokens on Ethereum, Arbitrum, Optimism, Polygon, Base, BNB networks to this address.'
           )}{' '}
         </Text>
         <TouchableArea height={18} onPress={onPressLearnMore}>
-          <Text color="accent1" variant="buttonLabelSmall">
+          <Text color="$accent1" variant="buttonLabelSmall">
             {t('Learn more')}
           </Text>
         </TouchableArea>

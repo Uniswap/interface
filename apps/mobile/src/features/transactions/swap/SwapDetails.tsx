@@ -3,14 +3,12 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout/Flex'
 import { Warning } from 'src/components/modals/WarningModal/types'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName } from 'src/features/telemetry/constants'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
-import { Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { formatPercent, formatPrice, NumberType } from 'utilities/src/format/format'
@@ -71,24 +69,24 @@ export function SwapDetails({
         newTradeRequiresAcceptance ? (
           <Flex
             row
+            shrink
             alignItems="center"
-            backgroundColor="surface2"
-            borderRadius="rounded16"
-            flexShrink={1}
-            gap="spacing12"
+            backgroundColor="$surface2"
+            borderRadius="$rounded16"
+            gap="$spacing12"
             justifyContent="space-between"
-            px="spacing12"
-            py="spacing12">
-            <Flex centered row gap="none">
-              <Text color="accent1" variant="subheadSmall">
+            px="$spacing12"
+            py="$spacing12">
+            <Flex centered row gap="$none">
+              <Text color="$accent1" variant="subheadSmall">
                 {t('New rate')}
               </Text>
             </Flex>
-            <Flex row flex={1} flexBasis="100%" flexShrink={1} gap="none" justifyContent="flex-end">
+            <Flex fill row shrink flexBasis="100%" gap="$none" justifyContent="flex-end">
               <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
                 <Text
                   adjustsFontSizeToFit
-                  color="accent1"
+                  color="$accent1"
                   numberOfLines={1}
                   textAlign="center"
                   variant="subheadSmall">
@@ -96,7 +94,7 @@ export function SwapDetails({
                 </Text>
               </TouchableOpacity>
             </Flex>
-            <Flex centered row gap="none">
+            <Flex centered row gap="$none">
               <Trace logPress element={ElementName.AcceptNewRate}>
                 <TouchableArea
                   backgroundColor="accent1"
@@ -104,7 +102,7 @@ export function SwapDetails({
                   px="spacing8"
                   py="spacing4"
                   onPress={onAcceptTrade}>
-                  <Text color="sporeWhite" variant="buttonLabelSmall">
+                  <Text color="$sporeWhite" variant="buttonLabelSmall">
                     {t('Accept')}
                   </Text>
                 </TouchableArea>
@@ -123,11 +121,11 @@ export function SwapDetails({
       onShowWarning={onShowWarning}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Text variant="subheadSmall">{t('Rate')}</Text>
-        <Flex row flexShrink={1} gap="none" justifyContent="flex-end">
+        <Flex row shrink gap="$none" justifyContent="flex-end">
           <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
             <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadSmall">
               {acceptedRate}
-              <Text color="neutral2" variant="subheadSmall">
+              <Text color="$neutral2" variant="subheadSmall">
                 {usdcPrice && ` (${formatPrice(usdcPrice, NumberType.FiatTokenPrice)})`}
               </Text>
             </Text>
@@ -137,7 +135,7 @@ export function SwapDetails({
       {shouldUseMevBlocker && (
         <Flex row alignItems="center" justifyContent="space-between">
           <TouchableArea onPress={onShowSwapProtectionModal}>
-            <Flex centered row gap="spacing4">
+            <Flex centered row gap="$spacing4">
               <Text variant="subheadSmall">{t('Swap protection')}</Text>
               <InfoCircle
                 color={colors.neutral1.val}
@@ -146,13 +144,13 @@ export function SwapDetails({
               />
             </Flex>
           </TouchableArea>
-          <Flex centered row gap="spacing8">
+          <Flex centered row gap="$spacing8">
             <Icons.ShieldCheck
               color={colors.neutral3.val}
               height={iconSizes.icon16}
               width={iconSizes.icon16}
             />
-            <Text color="neutral1" variant="subheadSmall">
+            <Text color="$neutral1" variant="subheadSmall">
               {t('On')}
             </Text>
           </Flex>
@@ -160,7 +158,7 @@ export function SwapDetails({
       )}
       <Flex row alignItems="center" justifyContent="space-between">
         <TouchableArea onPress={onShowSlippageModal}>
-          <Flex centered row gap="spacing4">
+          <Flex centered row gap="$spacing4">
             <Text variant="subheadSmall">{t('Max slippage')}</Text>
             <InfoCircle
               color={colors.neutral1.val}
@@ -169,16 +167,16 @@ export function SwapDetails({
             />
           </Flex>
         </TouchableArea>
-        <Flex row gap="spacing8">
+        <Flex row gap="$spacing8">
           {!customSlippageTolerance ? (
-            <Flex centered bg="accent2" borderRadius="roundedFull" px="spacing8">
-              <Text color="accent1" variant="buttonLabelMicro">
+            <Flex centered bg="$accent2" borderRadius="$roundedFull" px="$spacing8">
+              <Text color="$accent1" variant="buttonLabelMicro">
                 {t('Auto')}
               </Text>
             </Flex>
           ) : null}
           <Text
-            color={showSlippageWarning ? 'DEP_accentWarning' : 'neutral1'}
+            color={showSlippageWarning ? '$DEP_accentWarning' : '$neutral1'}
             variant="subheadSmall">
             {formatPercent(acceptedTrade.slippageTolerance)}
           </Text>

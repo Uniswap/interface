@@ -1,9 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Text } from 'src/components/Text'
 import { truncateDappName } from 'src/components/WalletConnect/ScanSheet/util'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { Text } from 'ui/src'
 import { EthMethod } from 'wallet/src/features/walletConnect/types'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 

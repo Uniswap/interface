@@ -1,8 +1,7 @@
 import React from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
-import { AnimatedFlex, Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
-import { useSporeColors } from 'ui/src'
+import { AnimatedFlex } from 'src/components/layout'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 
 interface PasswordErrorProps {
@@ -21,7 +20,7 @@ export function PasswordError({ errorText, style }: PasswordErrorProps): JSX.Ele
         width={ERROR_ICON_HEIGHT}
       />
       <Flex>
-        <Text color="statusCritical" variant="bodySmall">
+        <Text color="$statusCritical" variant="bodySmall">
           {errorText}
         </Text>
       </Flex>

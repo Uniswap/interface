@@ -2,8 +2,7 @@ import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { CHART_HEIGHT } from 'src/components/PriceExplorer/constants'
-import { Text } from 'src/components/Text'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 
 export function PriceExplorerError({
   showRetry,
@@ -15,7 +14,7 @@ export function PriceExplorerError({
   return (
     <Flex gap="$spacing16" mx="$spacing24">
       <Flex gap="$spacing12">
-        <Text color="neutral3" variant="headlineLarge">
+        <Text color="$neutral3" variant="headlineLarge">
           {
             '\u2013' // em dash
           }

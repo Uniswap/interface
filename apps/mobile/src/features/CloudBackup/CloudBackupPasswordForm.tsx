@@ -4,9 +4,9 @@ import { Keyboard, TextInput } from 'react-native'
 import { Button } from 'src/components/buttons/Button'
 import { CheckBox } from 'src/components/buttons/CheckBox'
 import { PasswordInput } from 'src/components/input/PasswordInput'
-import { Flex } from 'src/components/layout'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { ElementName } from 'src/features/telemetry/constants'
+import { Flex } from 'ui/src'
 import { validatePassword } from 'wallet/src/utils/password'
 
 export enum PasswordErrors {
@@ -80,8 +80,8 @@ export function CloudBackupPasswordForm({
 
   return (
     <>
-      <Flex gap="spacing24" mb="spacing24" mx="spacing8">
-        <Flex gap="spacing8">
+      <Flex gap="$spacing24" mb="$spacing24" mx="$spacing8">
+        <Flex gap="$spacing8">
           <PasswordInput
             ref={passwordInputRef}
             placeholder={isConfirmation ? t('Confirm password') : t('Create password')}

@@ -3,17 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { Text } from 'src/components/Text'
 import { getTokenSafetyHeaderText } from 'src/components/tokens/utils'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
+import { Flex, Text } from 'ui/src'
 import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { iconSizes, opacify } from 'ui/src/theme'
+import { iconSizes, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { TOKEN_WARNING_HELP_PAGE_URL } from 'wallet/src/constants/urls'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -83,28 +82,28 @@ export default function TokenWarningModal({
 
   return (
     <BottomSheetModal name={ModalName.TokenWarningModal} onClose={onClose}>
-      <Flex centered gap="spacing16" mb="spacing16" p="spacing12">
+      <Flex centered gap="$spacing16" mb="$spacing16" p="$spacing12">
         {showWarningIcon ? (
-          <Flex centered gap="spacing16">
+          <Flex centered gap="$spacing16">
             <Flex
               centered
-              borderRadius="rounded12"
-              p="spacing12"
+              borderRadius="$rounded12"
+              p="$spacing12"
               style={{
                 backgroundColor: opacify(12, theme.colors[warningColor]),
               }}>
-              <WarningIcon safetyLevel={safetyLevel} width={theme.iconSizes.icon24} />
+              <WarningIcon safetyLevel={safetyLevel} width={iconSizes.icon24} />
             </Flex>
             <Text variant="buttonLabelMedium">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
           </Flex>
         ) : (
-          <TokenLogo size={theme.imageSizes.image48} url={tokenLogoUrl} />
+          <TokenLogo size={imageSizes.image48} url={tokenLogoUrl} />
         )}
-        <Flex centered gap="spacing4" width="90%">
-          <Text color="neutral2" textAlign="center" variant="bodySmall">
+        <Flex centered gap="$spacing4" width="90%">
+          <Text color="$neutral2" textAlign="center" variant="bodySmall">
             {getTokenSafetyBodyText(safetyLevel, t)}{' '}
             <TouchableArea height={18} onPress={onPressLearnMore}>
-              <Text color="accent1" variant="buttonLabelSmall">
+              <Text color="$accent1" variant="buttonLabelSmall">
                 {t('Learn more')}
               </Text>
             </TouchableArea>
@@ -120,9 +119,9 @@ export default function TokenWarningModal({
           py="spacing8"
           onPress={(): Promise<void> => openUri(explorerLink)}>
           <Text
-            color="accent1"
+            color="$accent1"
             ellipsizeMode="tail"
-            mx="spacing8"
+            mx="$spacing8"
             numberOfLines={1}
             variant="buttonLabelMicro">
             {explorerLink}
@@ -133,7 +132,7 @@ export default function TokenWarningModal({
             width={iconSizes.icon16}
           />
         </TouchableArea>
-        <Flex centered row mt="spacing16">
+        <Flex centered row mt="$spacing16">
           <Button
             fill
             emphasis={ButtonEmphasis.Tertiary}

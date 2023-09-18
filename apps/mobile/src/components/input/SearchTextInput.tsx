@@ -4,12 +4,11 @@ import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } 
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
-import { AnimatedBox, AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedBox, AnimatedFlex } from 'src/components/layout'
 import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
-import { Text } from 'src/components/Text'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import X from 'ui/src/assets/icons/x.svg'
 import { dimensions, fonts, iconSizes, spacing } from 'ui/src/theme'
 import { Theme } from 'ui/src/theme/restyle'
@@ -159,7 +158,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       : null
 
     return (
-      <Flex row shrink alignItems="center" gap="none">
+      <Flex row shrink alignItems="center" gap="$none">
         <AnimatedFlex
           row
           alignItems="center"
@@ -173,7 +172,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           py={py}
           style={textInputStyle}
           {...shadowProps}>
-          <Flex gap="none" py="spacing4">
+          <Flex gap="$none" py="$spacing4">
             <Icons.Search color="$neutral2" height={iconSizes.icon20} width={iconSizes.icon20} />
           </Flex>
           <TextInput

@@ -19,14 +19,13 @@ import { Switch } from 'src/components/buttons/Switch'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { SwapProtectionInfoModal } from 'src/features/transactions/swap/SwapProtectionModal'
 import { slippageToleranceToPercent } from 'src/features/transactions/swap/utils'
 import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
 import { openUri } from 'src/utils/linking'
-import { Flex, Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
@@ -142,19 +141,19 @@ function SwapSettingsOptions({
   return (
     <Flex fill gap="$spacing16" py="$spacing12">
       <Flex fill row justifyContent="space-between">
-        <Text color="neutral1" variant="subheadSmall">
+        <Text color="$neutral1" variant="subheadSmall">
           {t('Max slippage')}
         </Text>
         <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Slippage)}>
           <Flex row gap="$spacing8">
             {!isCustomSlippage ? (
               <Flex centered bg="$accent2" borderRadius="$roundedFull" px="$spacing8">
-                <Text color="accent1" variant="buttonLabelMicro">
+                <Text color="$accent1" variant="buttonLabelMicro">
                   {t('Auto')}
                 </Text>
               </Flex>
             ) : null}
-            <Text color="neutral2" variant="subheadSmall">
+            <Text color="$neutral2" variant="subheadSmall">
               {formatPercent(slippage)}
             </Text>
             <Icons.Chevron
@@ -203,7 +202,7 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
           <TouchableArea onPress={(): void => setShowInfoModal(true)}>
             <Flex gap="$spacing4">
               <Flex row alignItems="center" gap="$spacing4">
-                <Text color="neutral1" variant="subheadSmall">
+                <Text color="$neutral1" variant="subheadSmall">
                   {t('Swap protection')}
                 </Text>
                 <InfoCircle
@@ -212,7 +211,7 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
                   width={iconSizes.icon16}
                 />
               </Flex>
-              <Text color="neutral2" variant="bodyMicro">
+              <Text color="$neutral2" variant="bodyMicro">
                 {subText}
               </Text>
             </Flex>
@@ -387,10 +386,10 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
 
   return (
     <Flex gap="$spacing16">
-      <Text color="neutral2" textAlign="center" variant="bodySmall">
+      <Text color="$neutral2" textAlign="center" variant="bodySmall">
         {t('Your transaction will revert if the price changes more than the slippage percentage.')}{' '}
         <TouchableArea height={18} onPress={onPressLearnMore}>
-          <Text color="accent1" variant="buttonLabelSmall">
+          <Text color="$accent1" variant="buttonLabelSmall">
             {t('Learn more')}
           </Text>
         </TouchableArea>
@@ -413,7 +412,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
             p="spacing16"
             style={inputAnimatedStyle}>
             <TouchableArea hapticFeedback onPress={onPressAutoSlippage}>
-              <Text color="accent1" variant="buttonLabelSmall">
+              <Text color="$accent1" variant="buttonLabelSmall">
                 {t('Auto')}
               </Text>
             </TouchableArea>
@@ -437,7 +436,7 @@ function SlippageSettings({ derivedSwapInfo, dispatch }: SwapSettingsModalProps)
               onFocus={onFocusSlippageInput}
             />
             <Flex gap="$none" width={iconSizes.icon28}>
-              <Text color="neutral2" textAlign="center" variant="subheadLarge">
+              <Text color="$neutral2" textAlign="center" variant="subheadLarge">
                 %
               </Text>
             </Flex>
@@ -482,7 +481,7 @@ function BottomLabel({
           height={iconSizes.icon16}
           width={iconSizes.icon16}
         />
-        <Text color="DEP_accentWarning" textAlign="center" variant="bodySmall">
+        <Text color="$DEP_accentWarning" textAlign="center" variant="bodySmall">
           {inputWarning}
         </Text>
       </Flex>
@@ -491,7 +490,7 @@ function BottomLabel({
 
   return trade ? (
     <Flex centered gap="$spacing8" height={fonts.bodySmall.lineHeight * 2 + spacing.spacing8}>
-      <Text color="neutral2" textAlign="center" variant="bodySmall">
+      <Text color="$neutral2" textAlign="center" variant="bodySmall">
         {trade.tradeType === TradeType.EXACT_INPUT
           ? t('Receive at least {{amount}} {{symbol}}', {
               amount: formatCurrencyAmount(
@@ -515,7 +514,7 @@ function BottomLabel({
             height={iconSizes.icon16}
             width={iconSizes.icon16}
           />
-          <Text color="DEP_accentWarning" variant="bodySmall">
+          <Text color="$DEP_accentWarning" variant="bodySmall">
             {t('Slippage may be higher than necessary')}
           </Text>
         </Flex>

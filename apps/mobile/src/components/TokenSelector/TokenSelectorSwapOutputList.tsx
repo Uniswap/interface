@@ -1,6 +1,5 @@
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex } from 'src/components/layout'
 import {
   useCommonTokensOptions,
   useFavoriteTokensOptions,
@@ -15,6 +14,7 @@ import {
 } from 'src/components/TokenSelector/TokenSelectorList'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { getTokenOptionsSection } from 'src/components/TokenSelector/utils'
+import { Flex } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -35,7 +35,7 @@ export function renderSuggestedTokenItem({
   onSelectCurrency: OnSelectCurrency
 }): JSX.Element {
   return (
-    <Flex row flexWrap="wrap" gap="none">
+    <Flex row flexWrap="wrap" gap="$none">
       {suggestedTokens.map((token) => (
         <SuggestedToken
           key={token.currencyInfo.currencyId}

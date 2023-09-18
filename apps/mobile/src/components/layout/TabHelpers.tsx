@@ -12,9 +12,8 @@ import {
 } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view/lib/typescript/types'
-import { Flex } from 'src/components/layout/Flex'
-import { Text } from 'src/components/Text'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
+import { Flex, Text } from 'ui/src'
 import { theme as FixedTheme } from 'ui/src/theme/restyle'
 
 export const TAB_VIEW_SCROLL_THROTTLE = 16
@@ -107,8 +106,8 @@ export const renderTabLabel = ({
   isExternalProfile?: boolean
 }): JSX.Element => {
   return (
-    <Flex row alignItems="center" gap="spacing4">
-      <Text color={focused ? 'neutral1' : 'neutral2'} variant="bodyLarge">
+    <Flex row alignItems="center" gap="$spacing4">
+      <Text color={focused ? '$neutral1' : '$neutral2'} variant="bodyLarge">
         {route.title}
       </Text>
       {/* Streamline UI by hiding the Activity tab spinner when focused

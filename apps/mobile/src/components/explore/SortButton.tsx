@@ -3,15 +3,13 @@ import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import {
   getTokensOrderByMenuLabel,
   getTokensOrderBySelectedLabel,
 } from 'src/features/explore/utils'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { Icons } from 'ui/src'
+import { Flex, Icons, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -83,9 +81,9 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         flexDirection="row"
         px="spacing16"
         py="spacing8">
-        <Flex row gap="spacing4">
+        <Flex row gap="$spacing4">
           {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}
-          <Text color="neutral2" variant="buttonLabelSmall">
+          <Text color="$neutral2" variant="buttonLabelSmall">
             {getTokensOrderBySelectedLabel(orderBy, t)}
           </Text>
           <Icons.RotatableChevron

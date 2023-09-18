@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
 import { NativeSafeAreaViewProps, useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Flex, StackProps } from 'ui/src'
+import { Flex, FlexProps } from 'ui/src'
 
-type ScreenProps = StackProps &
+type ScreenProps = FlexProps &
   // The SafeAreaView from react-native-safe-area-context also supports a `mode` prop which
   //  lets you choose if `edges` are added as margin or padding, but we don’t use that so
   // our Screen component doesn't need to support it

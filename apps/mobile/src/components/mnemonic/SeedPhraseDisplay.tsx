@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePrevious } from 'react-native-wagmi-charts'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout/Flex'
 import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletRestore } from 'src/features/wallet/hooks'
+import { Flex } from 'ui/src'
 
 type Props = {
   mnemonicId: string
@@ -68,11 +68,11 @@ export function SeedPhraseDisplay({
   return (
     <>
       {showSeedPhrase ? (
-        <Flex grow gap="none" mt="spacing16">
-          <Flex grow pt="spacing16" px="spacing16">
+        <Flex grow gap="$none" mt="$spacing16">
+          <Flex grow pt="$spacing16" px="$spacing16">
             <MnemonicDisplay mnemonicId={mnemonicId} />
           </Flex>
-          <Flex borderTopColor="surface3" borderTopWidth={1} pt="spacing12" px="spacing16">
+          <Flex borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
             <Button
               emphasis={ButtonEmphasis.Secondary}
               label={t('Hide recovery phrase')}

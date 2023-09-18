@@ -5,27 +5,26 @@ import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
-import { Text } from 'src/components/Text'
 import { IS_IOS } from 'src/constants/globals'
 import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
-import { useSporeColors } from 'ui/src'
+import { Flex, SpaceTokens, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
-import { flex, Theme } from 'ui/src/theme/restyle'
+import { flex } from 'ui/src/theme/restyle'
 
 type OnboardingScreenProps = {
   subtitle?: string
   title: string
-  paddingTop?: keyof Theme['spacing']
-  childrenGap?: keyof Theme['spacing']
+  paddingTop?: SpaceTokens
+  childrenGap?: SpaceTokens
 }
 
 export function SafeKeyboardOnboardingScreen({
   title,
   subtitle,
   children,
-  paddingTop = 'none',
+  paddingTop = '$none',
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const headerHeight = useHeaderHeight()
   const colors = useSporeColors()
@@ -43,12 +42,12 @@ export function SafeKeyboardOnboardingScreen({
   })
 
   const header = (
-    <Flex gap="spacing12" m="spacing12">
+    <Flex gap="$spacing12" m="$spacing12">
       <Text paddingTop={paddingTop} textAlign="center" variant={titleSize}>
         {title}
       </Text>
       {subtitle ? (
-        <Text color="neutral2" textAlign="center" variant={subtitleSize}>
+        <Text color="$neutral2" textAlign="center" variant={subtitleSize}>
           {subtitle}
         </Text>
       ) : null}

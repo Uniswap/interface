@@ -2,10 +2,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 import { EtherscanIcon } from 'src/components/icons/EtherscanIcon'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
+import { Flex, Text } from 'ui/src'
 import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
 import AddressIcon from 'ui/src/assets/icons/sticky-note-text-square.svg'
 import TwitterIcon from 'ui/src/assets/icons/twitter.svg'
@@ -33,12 +32,12 @@ export function TokenDetailsLinks({
   return (
     // eslint-disable-next-line react-native/no-inline-styles
     <View style={{ marginHorizontal: -14 }}>
-      <Flex gap="spacing8">
-        <Text color="neutral2" mx="spacing16" variant="subheadSmall">
+      <Flex gap="$spacing8">
+        <Text color="$neutral2" mx="$spacing16" variant="subheadSmall">
           {t('Links')}
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Flex row gap="spacing8" px="spacing16">
+          <Flex row gap="$spacing8" px="$spacing16">
             {tokenData?.address && (
               <LinkButton
                 Icon={AddressIcon}

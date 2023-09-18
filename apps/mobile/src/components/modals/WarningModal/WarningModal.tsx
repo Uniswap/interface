@@ -3,10 +3,9 @@ import { ColorValue } from 'react-native'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningColor, WarningSeverity } from 'src/components/modals/WarningModal/types'
-import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Flex, Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
 
 export type WarningModalProps = {
@@ -85,7 +84,7 @@ export default function WarningModal({
           {title}
         </Text>
         {caption && (
-          <Text color="neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="bodySmall">
             {caption}
           </Text>
         )}

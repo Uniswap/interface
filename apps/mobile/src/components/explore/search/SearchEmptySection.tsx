@@ -8,15 +8,14 @@ import { SearchPopularNFTCollections } from 'src/components/explore/search/Searc
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
-import { AnimatedFlex, Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
+import { AnimatedFlex } from 'src/components/layout'
 import {
   clearSearchHistory,
   SearchResultType,
   selectSearchHistory,
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
-import { useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import TrendArrowIcon from 'ui/src/assets/icons/trend-up.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -50,10 +49,10 @@ export function SearchEmptySection(): JSX.Element {
         <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
           <FlatList
             ListHeaderComponent={
-              <Flex row alignItems="center" justifyContent="space-between" mb="spacing4">
+              <Flex row alignItems="center" justifyContent="space-between" mb="$spacing4">
                 <SectionHeaderText icon={<RecentIcon />} title={t('Recent searches')} />
                 <TouchableArea onPress={onPressClearSearchHistory}>
-                  <Text color="accent1" variant="buttonLabelSmall">
+                  <Text color="$accent1" variant="buttonLabelSmall">
                     {t('Clear all')}
                   </Text>
                 </TouchableArea>
@@ -66,11 +65,11 @@ export function SearchEmptySection(): JSX.Element {
           />
         </AnimatedFlex>
       )}
-      <Flex gap="spacing4">
+      <Flex gap="$spacing4">
         <SectionHeaderText icon={<TrendIcon />} title={t('Popular tokens')} />
         <SearchPopularTokens />
       </Flex>
-      <Flex gap="spacing4">
+      <Flex gap="$spacing4">
         <SectionHeaderText icon={<TrendIcon />} title={t('Popular NFT collections')} />
         <SearchPopularNFTCollections />
       </Flex>

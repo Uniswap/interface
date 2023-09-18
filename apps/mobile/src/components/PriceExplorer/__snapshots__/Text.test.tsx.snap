@@ -62,16 +62,12 @@ exports[`PriceText renders loading state 1`] = `
         importantForAccessibility="no-hide-descendants"
       >
         <View
-          sentry-label="Flex"
           style={
-            [
-              {
-                "alignItems": "stretch",
-                "display": "flex",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-              },
-            ]
+            {
+              "alignItems": "stretch",
+              "flexDirection": "row",
+              "gap": 0,
+            }
           }
         >
           <TextInput
@@ -104,19 +100,6 @@ exports[`PriceText renders loading state 1`] = `
               ]
             }
             underlineColorAndroid="transparent"
-          />
-          <View
-            style={
-              [
-                {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 0,
-                  "width": 0,
-                },
-              ]
-            }
           />
           <Text
             style={
@@ -337,17 +320,13 @@ exports[`PriceText renders without error less than a dollar 1`] = `
 
 exports[`RelativeChangeText renders loading state 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "stretch",
-        "display": "flex",
-        "flexDirection": "column",
-        "justifyContent": "flex-start",
-        "marginTop": 2,
-      },
-    ]
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "gap": 16,
+      "marginTop": 2,
+    }
   }
 >
   <View
@@ -375,16 +354,12 @@ exports[`RelativeChangeText renders loading state 1`] = `
           importantForAccessibility="no-hide-descendants"
         >
           <View
-            sentry-label="Flex"
             style={
-              [
-                {
-                  "alignItems": "stretch",
-                  "display": "flex",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                },
-              ]
+              {
+                "alignItems": "stretch",
+                "flexDirection": "row",
+                "gap": 0,
+              }
             }
           >
             <TextInput
@@ -417,19 +392,6 @@ exports[`RelativeChangeText renders loading state 1`] = `
                 ]
               }
               underlineColorAndroid="transparent"
-            />
-            <View
-              style={
-                [
-                  {
-                    "display": "flex",
-                    "flexGrow": 0,
-                    "flexShrink": 0,
-                    "height": 0,
-                    "width": 0,
-                  },
-                ]
-              }
             />
             <Text
               style={
@@ -485,17 +447,13 @@ exports[`RelativeChangeText renders loading state 1`] = `
 
 exports[`RelativeChangeText renders without error 1`] = `
 <View
-  sentry-label="Flex"
   style={
-    [
-      {
-        "alignItems": "flex-end",
-        "display": "flex",
-        "flexDirection": "row",
-        "justifyContent": "flex-start",
-        "marginTop": 2,
-      },
-    ]
+    {
+      "alignItems": "flex-end",
+      "flexDirection": "row",
+      "gap": 2,
+      "marginTop": 2,
+    }
   }
 >
   <RNSVGSvgView
@@ -565,19 +523,6 @@ exports[`RelativeChangeText renders without error 1`] = `
       />
     </RNSVGGroup>
   </RNSVGSvgView>
-  <View
-    style={
-      [
-        {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 2,
-          "width": 2,
-        },
-      ]
-    }
-  />
   <TextInput
     allowFontScaling={true}
     animatedProps={

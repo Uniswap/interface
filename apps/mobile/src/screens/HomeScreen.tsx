@@ -45,7 +45,6 @@ import {
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
@@ -63,7 +62,7 @@ import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-receive.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
@@ -605,7 +604,7 @@ function ActionButton({
               strokeWidth={2}
               width={iconSizes.icon20 * iconScale}
             />
-            <Text color="accent1" marginLeft="spacing8" variant="buttonLabelMedium">
+            <Text color="$accent1" marginLeft="$spacing8" variant="buttonLabelMedium">
               {label}
             </Text>
           </AnimatedFlex>

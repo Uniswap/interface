@@ -7,12 +7,11 @@ import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { Text } from 'src/components/Text'
 import { IS_ANDROID } from 'src/constants/globals'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Icons, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 type Props = NativeStackScreenProps<
@@ -51,7 +50,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
           <Text variant="headlineSmall">
             {IS_ANDROID ? t('Back up to Google Drive') : t('Back up to iCloud')}
           </Text>
-          <Text color="neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="bodySmall">
             {IS_ANDROID
               ? t(
                   'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your Google Drive account is ever compromised.'
@@ -83,7 +82,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
                     ? t('Back up recovery phrase to Google Drive?')
                     : t('Back up recovery phrase to iCloud?')}
                 </Text>
-                <Text color="neutral2" textAlign="center" variant="bodySmall">
+                <Text color="$neutral2" textAlign="center" variant="bodySmall">
                   {IS_ANDROID
                     ? t(
                         'It looks like you haven’t backed up your recovery phrase to Google Drive yet. By doing so, you can recover your wallet just by being logged into Google Drive on any device.'

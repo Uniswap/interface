@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 import { FlexAlignType } from 'react-native'
-import { Flex } from 'src/components/layout'
+import { Flex } from 'ui/src'
 
 type TokenMetadataProps = PropsWithChildren<{
   align?: FlexAlignType
@@ -13,7 +13,7 @@ export const TokenMetadata = ({
 }: TokenMetadataProps): JSX.Element => {
   return (
     <Flex row>
-      <Flex alignItems={align} gap="spacing4" minWidth={70}>
+      <Flex alignItems={align} gap="$spacing4" minWidth={70}>
         {children}
       </Flex>
     </Flex>

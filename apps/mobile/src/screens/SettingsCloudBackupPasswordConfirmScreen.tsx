@@ -4,11 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { Flex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
-import { Text } from 'src/components/Text'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { Screens } from 'src/screens/Screens'
+import { Flex, Text } from 'ui/src'
 
 type Props = NativeStackScreenProps<
   SettingsStackParamList,
@@ -34,11 +33,11 @@ export function SettingsCloudBackupPasswordConfirmScreen({
     <Screen mx="$spacing16" my="$spacing16">
       <BackHeader mb="$spacing16" />
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
-        <Flex alignItems="center" justifyContent="space-between" mb="spacing24" mx="spacing12">
+        <Flex alignItems="center" justifyContent="space-between" mb="$spacing24" mx="$spacing12">
           <Text textAlign="center" variant="headlineSmall">
             {t('Confirm your backup password')}
           </Text>
-          <Text color="neutral2" textAlign="center" variant="bodySmall">
+          <Text color="$neutral2" textAlign="center" variant="bodySmall">
             {t(
               'You’ll need to enter this password to recover your account. It’s not stored anywhere, so it can’t be recovered by anyone else.'
             )}

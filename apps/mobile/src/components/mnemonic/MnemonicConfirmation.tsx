@@ -1,6 +1,6 @@
 import React from 'react'
 import { requireNativeComponent, StyleProp, ViewProps } from 'react-native'
-import { StackProps } from 'ui/src'
+import { FlexProps } from 'ui/src'
 import { dimensions } from 'ui/src/theme'
 
 interface NativeMnemonicConfirmationProps {
@@ -17,7 +17,7 @@ type MnemonicConfirmationProps = ViewProps & {
   onConfirmComplete: () => void
 }
 
-const mnemonicConfirmationStyle: StyleProp<StackProps> = {
+const mnemonicConfirmationStyle: StyleProp<FlexProps> = {
   flex: 1,
   flexGrow: 1,
 }

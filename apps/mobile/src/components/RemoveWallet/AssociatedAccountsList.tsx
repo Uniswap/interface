@@ -1,8 +1,7 @@
 import React from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Text } from 'src/components/Text'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { dimensions, spacing } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import {
@@ -62,7 +61,7 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
               size={24}
               variant="subheadSmall"
             />
-            <Text color="neutral2" loading={loading} numberOfLines={1} variant="bodyMicro">
+            <Text color="$neutral2" loading={loading} numberOfLines={1} variant="bodyMicro">
               {formatUSDPrice(balance, NumberType.PortfolioBalance)}
             </Text>
           </Flex>

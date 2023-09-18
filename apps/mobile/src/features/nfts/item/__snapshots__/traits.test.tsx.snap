@@ -21,40 +21,31 @@ exports[`renders trait card 1`] = `
 >
   <Text
     allowFontScaling={true}
-    maxFontSizeMultiplier={1.2}
     style={
-      [
-        {
-          "color": "#222222",
-          "display": "flex",
-          "fontFamily": "Basel-Medium",
-          "fontSize": 14,
-          "fontWeight": "500",
-          "lineHeight": 16,
-        },
-        {
-          "color": "#7D7D7D",
-        },
-      ]
+      {
+        "color": "#7D7D7D",
+        "display": "flex",
+        "fontFamily": "Basel-Book",
+        "fontSize": 13,
+        "lineHeight": 16,
+      }
     }
+    suppressHighlighting={true}
   >
     traitName
   </Text>
   <Text
     allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
     style={
-      [
-        {
-          "color": "#222222",
-          "display": "flex",
-          "fontFamily": "Basel-Book",
-          "fontSize": 17,
-          "fontWeight": "400",
-          "lineHeight": 24,
-        },
-      ]
+      {
+        "color": "#222222",
+        "display": "flex",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
     }
+    suppressHighlighting={true}
   >
     traitValue
   </Text>

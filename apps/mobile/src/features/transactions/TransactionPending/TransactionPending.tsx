@@ -2,11 +2,11 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedFlex, Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
+import { AnimatedFlex } from 'src/components/layout'
 import { ElementName } from 'src/features/telemetry/constants'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
 import { openTransactionLink } from 'src/utils/linking'
+import { Flex, Text } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 
@@ -42,18 +42,18 @@ export function TransactionPending({
 
   return (
     <AnimatedFlex grow px="spacing12">
-      <Flex grow alignItems="center" justifyContent="flex-start" paddingTop="spacing60">
-        <Flex alignItems="center" justifyContent="flex-end" paddingTop="spacing16">
+      <Flex grow alignItems="center" justifyContent="flex-start" pt="$spacing60">
+        <Flex alignItems="center" justifyContent="flex-end" pt="$spacing16">
           <StatusAnimation status={transaction?.status} transactionType={transactionType} />
         </Flex>
-        <Flex alignItems="center" gap="spacing12" justifyContent="flex-start">
+        <Flex alignItems="center" gap="$spacing12" justifyContent="flex-start">
           <Text variant="headlineSmall">{title}</Text>
-          <Text color="neutral3" textAlign="center" variant="bodyLarge">
+          <Text color="$neutral3" textAlign="center" variant="bodyLarge">
             {description}
           </Text>
           {transaction?.status === TransactionStatus.Failed ? (
             <TouchableArea onPress={onTryAgain}>
-              <Text color="accent1" variant="bodyLarge">
+              <Text color="$accent1" variant="bodyLarge">
                 {t('Try again')}
               </Text>
             </TouchableArea>

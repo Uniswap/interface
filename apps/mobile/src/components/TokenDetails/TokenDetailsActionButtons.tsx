@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { getButtonProperties } from 'src/components/buttons/utils'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { getContrastPassingTextColor } from 'wallet/src/utils/colors'
 
 function CTAButton({
@@ -40,7 +39,7 @@ function CTAButton({
         style={{ backgroundColor: tokenColor ?? colors.accent1.val }}
         onPress={onPress}>
         <Text
-          color={tokenColor ? getContrastPassingTextColor(tokenColor) : 'sporeWhite'}
+          color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$sporeWhite'}
           variant={textVariant}>
           {title}
         </Text>

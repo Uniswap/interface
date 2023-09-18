@@ -8,8 +8,7 @@ import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Butto
 import { TextInput } from 'src/components/input/TextInput'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { Text } from 'src/components/Text'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import PencilIcon from 'ui/src/assets/icons/pencil.svg'
 import { fonts } from 'ui/src/theme'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
@@ -86,7 +85,7 @@ export function SettingsWalletEdit({
             ) : (
               <Flex row alignItems="center">
                 <Flex shrink>
-                  <Text color="neutral1" variant="headlineMedium">
+                  <Text color="$neutral1" variant="headlineMedium">
                     {nickname || shortenAddress(address)}
                   </Text>
                 </Flex>

@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { WarmLoadingShimmer } from 'src/components/loading/WarmLoadingShimmer'
-import { Text } from 'src/components/Text'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
+import { Flex, Text } from 'ui/src'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { formatNumber, formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -80,12 +80,12 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
             symbol={currency.symbol}
             url={currencyInfo.logoUrl ?? undefined}
           />
-          <Flex alignItems="flex-start" flexShrink={1} gap="none">
+          <Flex shrink alignItems="flex-start" gap="$none">
             <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
               {currency.name ?? shortenedSymbol}
             </Text>
-            <Flex row alignItems="center" gap="spacing8" minHeight={20}>
-              <Text color="neutral2" numberOfLines={1} variant="subheadSmall">
+            <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
+              <Text color="$neutral2" numberOfLines={1} variant="subheadSmall">
                 {`${formatNumber(quantity)}`} {shortenedSymbol}
               </Text>
             </Flex>
@@ -95,11 +95,11 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
             {!portfolioBalance.balanceUSD ? (
               <Flex centered flex={1}>
-                <Text color="neutral2">{t('N/A')}</Text>
+                <Text color="$neutral2">{t('N/A')}</Text>
               </Flex>
             ) : (
-              <Flex alignItems="flex-end" gap="spacing4" pl="spacing8">
-                <Text color="neutral1" numberOfLines={1} variant="bodyLarge">
+              <Flex alignItems="flex-end" gap="$spacing4" pl="$spacing8">
+                <Text color="$neutral1" numberOfLines={1} variant="bodyLarge">
                   {formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
                 </Text>
                 <RelativeChange

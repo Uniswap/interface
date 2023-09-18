@@ -2,15 +2,13 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { Text } from 'src/components/Text'
 import Trace from 'src/components/Trace/Trace'
 import { UNISWAP_HELP_CENTER_WALLET_URL } from 'src/constants/urls'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { openUri } from 'src/utils/linking'
-import { useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import BookIcon from 'ui/src/assets/icons/book.svg'
 import DollarSign from 'ui/src/assets/icons/dollar.svg'
 import PaperStackIcon from 'ui/src/assets/icons/paper-stack.svg'
@@ -147,7 +145,7 @@ export function WalletEmptyState(): JSX.Element {
     : [...(!isViewOnly ? [options.Buy] : []), options.Scan, options.Learn]
 
   return (
-    <Flex gap="spacing8">
+    <Flex gap="$spacing8">
       {sortedOptions.map((option) => (
         <ActionCard key={option.title} {...option} />
       ))}
@@ -165,25 +163,25 @@ const ActionCard = ({
 }: ActionCardItem): JSX.Element => (
   <Trace logPress element={elementName}>
     <TouchableArea backgroundColor="surface2" borderRadius="rounded20" onPress={onPress}>
-      <Flex centered row p="spacing16">
+      <Flex centered row p="$spacing16">
         {icon}
-        <Flex flexShrink={1} gap="spacing4">
-          <Flex row alignItems="center" gap="spacing8">
+        <Flex shrink gap="$spacing4">
+          <Flex row alignItems="center" gap="$spacing8">
             <Text variant="subheadSmall">{title}</Text>
             {badgeText && (
               <Flex
                 centered
-                backgroundColor="DEP_magentaDark"
-                borderRadius="rounded8"
-                px="spacing8"
-                py="spacing4">
-                <Text color="accent1" variant="buttonLabelMicro">
+                backgroundColor="$DEP_magentaDark"
+                borderRadius="$rounded8"
+                px="$spacing8"
+                py="$spacing4">
+                <Text color="$accent1" variant="buttonLabelMicro">
                   {badgeText}
                 </Text>
               </Flex>
             )}
           </Flex>
-          <Text color="neutral2" variant="bodySmall">
+          <Text color="$neutral2" variant="bodySmall">
             {blurb}
           </Text>
         </Flex>
@@ -201,7 +199,7 @@ const IconContainer = ({
 }): JSX.Element => (
   <Flex
     centered
-    borderRadius="roundedFull"
+    borderRadius="$roundedFull"
     height={iconSizes.icon36}
     style={{ backgroundColor: opacify(10, backgroundColor) }}
     width={iconSizes.icon36}>

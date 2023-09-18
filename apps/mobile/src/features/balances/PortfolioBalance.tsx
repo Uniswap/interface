@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import AnimatedNumber from 'src/components/AnimatedNumber'
-import { Flex } from 'src/components/layout'
+import { DeprecatedMobileOnlyFlex } from 'src/components/layout'
 import { iconSizes } from 'ui/src/theme'
 import { formatUSDPrice, NumberType } from 'utilities/src/format/format'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -41,7 +41,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
   const totalBalance = portfolioBalance?.tokensTotalDenominatedValue?.value
 
   return (
-    <Flex gap="spacing4">
+    <DeprecatedMobileOnlyFlex gap="spacing4">
       <AnimatedNumber
         colorIndicationDuration={2000}
         loading={isWarmLoading || isLoading}
@@ -57,6 +57,6 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
         positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
         variant="bodyLarge"
       />
-    </Flex>
+    </DeprecatedMobileOnlyFlex>
   )
 }

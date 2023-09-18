@@ -1,12 +1,12 @@
 import { memo } from 'react'
-import { ColorTokens, Flex, Icons, StackProps } from 'ui/src'
+import { ColorTokens, Flex, FlexProps, Icons } from 'ui/src'
 
 type Props = {
   width?: string | number
   height?: string | number
   direction?: 'n' | 'e' | 's' | 'w'
   color?: ColorTokens
-} & Omit<StackProps, 'direction'>
+} & Omit<FlexProps, 'direction'>
 
 function _RotatableChevron({
   color,

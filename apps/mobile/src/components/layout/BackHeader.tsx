@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { Flex, StackProps } from 'ui/src'
+import { Flex, FlexProps } from 'ui/src'
 
 const BACK_BUTTON_SIZE = 24
 
@@ -8,7 +8,7 @@ type BackButtonRowProps = {
   alignment?: 'left' | 'center'
   endAdornment?: JSX.Element
   onPressBack?: () => void
-} & StackProps
+} & FlexProps
 
 export function BackHeader({
   alignment = 'center',

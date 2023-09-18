@@ -10,6 +10,7 @@ export {
   Stack,
   Switch,
   TamaguiProvider,
+  Theme,
   useMedia,
   useTheme as useSporeColors,
   useTheme,
@@ -30,7 +31,6 @@ export type {
   ListItemProps,
   SizeTokens,
   SpaceTokens,
-  StackProps,
   SwitchProps,
   TamaguiProviderProps,
   XStackProps,
@@ -41,10 +41,10 @@ export { Button } from './components/button/Button'
 export { withAnimated } from './components/factories/animated'
 export * as Icons from './components/icons/allIcons'
 export * from './components/input/utils'
-export { Box, Flex, Separator } from './components/layout'
+export { Box, Flex, FlexProps, Separator } from './components/layout'
 export type { BoxProps } from './components/layout'
 export * as Logos from './components/logos'
-export { Text } from './components/text/Text'
+export { Text, TextProps } from './components/text/Text'
 export * from './components/touchable/TouchableArea'
 export * from './components/Unicon'
 export * from './components/Unicon/utils'

@@ -1,13 +1,12 @@
 import React, { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex } from 'src/components/layout'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
-import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { TransferSpeedbump } from 'src/features/transactions/transfer/TransferTokenForm'
+import { Flex, Text } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
   useActiveAccountAddressWithThrow,
@@ -117,17 +116,17 @@ const TransferRecipient = ({
   return (
     <Flex
       centered
-      borderColor="surface3"
-      borderRadius="rounded12"
+      borderColor="$surface3"
+      borderRadius="$rounded12"
       borderWidth={1}
-      gap="spacing8"
-      px="spacing16"
-      py="spacing12">
-      <Text color="neutral1" textAlign="center" variant="subheadSmall">
+      gap="$spacing8"
+      px="$spacing16"
+      py="$spacing12">
+      <Text color="$neutral1" textAlign="center" variant="subheadSmall">
         {type === 'ens' ? displayName : address}
       </Text>
       {type === 'ens' && (
-        <Text color="neutral2" textAlign="center" variant="buttonLabelMicro">
+        <Text color="$neutral2" textAlign="center" variant="buttonLabelMicro">
           {address}
         </Text>
       )}

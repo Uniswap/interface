@@ -5,9 +5,8 @@ import { Keyboard, LayoutAnimation, StyleSheet, VirtualizedList } from 'react-na
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { useNetworkOptions } from 'src/components/Network/hooks'
-import { Text } from 'src/components/Text'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, Text } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { colors, iconSizes } from 'ui/src/theme'
 import {
