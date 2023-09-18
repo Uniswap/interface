@@ -78,8 +78,10 @@ const userSlice = createSlice({
       state.selectedWallet = wallet
     },
     updateUserLocale(state, action) {
-      state.userLocale = action.payload.userLocale
-      state.timestamp = currentTimestamp()
+      if (action.payload.userLocale !== state.userLocale) {
+        state.userLocale = action.payload.userLocale
+        state.timestamp = currentTimestamp()
+      }
     },
     updateUserSlippageTolerance(state, action) {
       state.userSlippageTolerance = action.payload.userSlippageTolerance
