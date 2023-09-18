@@ -1,14 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
+import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
-import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
@@ -27,6 +26,7 @@ import {
 } from 'state/mint/v3/hooks'
 import styled, { useTheme } from 'styled-components'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
+import { WrongChainError } from 'utils/errors'
 
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
@@ -56,7 +56,7 @@ import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { Bound, Field } from '../../state/mint/v3/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { TransactionType } from '../../state/transactions/types'
+import { TransactionInfo, TransactionType } from '../../state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { ThemedText } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
@@ -106,6 +106,7 @@ function AddLiquidity() {
   }>()
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
+  const trace = useTrace()
 
   const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
   const addTransaction = useTransactionAdder()
@@ -278,6 +279,9 @@ function AddLiquidity() {
         }
       }
 
+      const connectedChainId = await provider.getSigner().getChainId()
+      if (chainId !== connectedChainId) throw new WrongChainError()
+
       setAttemptingTxn(true)
 
       provider
@@ -294,7 +298,7 @@ function AddLiquidity() {
             .sendTransaction(newTxn)
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
-              addTransaction(response, {
+              const transactionInfo: TransactionInfo = {
                 type: TransactionType.ADD_LIQUIDITY_V3_POOL,
                 baseCurrencyId: currencyId(baseCurrency),
                 quoteCurrencyId: currencyId(quoteCurrency),
@@ -302,12 +306,13 @@ function AddLiquidity() {
                 expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
                 expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient?.toString() ?? '0',
                 feeAmount: position.pool.fee,
-              })
+              }
+              addTransaction(response, transactionInfo)
               setTxHash(response.hash)
-              sendEvent({
-                category: 'Liquidity',
-                action: 'Add',
+              sendAnalyticsEvent(LiquidityEventName.ADD_LIQUIDITY_SUBMITTED, {
                 label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
+                ...trace,
+                ...transactionInfo,
               })
             })
         })
@@ -434,11 +439,6 @@ function AddLiquidity() {
     const maxPrice = pricesAtLimit[Bound.UPPER]
     if (maxPrice) searchParams.set('maxPrice', maxPrice.toSignificant(5))
     setSearchParams(searchParams)
-
-    sendEvent({
-      category: 'Liquidity',
-      action: 'Full Range Clicked',
-    })
   }, [getSetFullRange, pricesAtLimit, searchParams, setSearchParams])
 
   // START: sync values with query string
@@ -545,7 +545,7 @@ function AddLiquidity() {
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >
-          <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
+          <Text fontWeight={535}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
         </ButtonError>
       </AutoColumn>
     )
@@ -597,7 +597,7 @@ function AddLiquidity() {
               )}
               bottomContent={() => (
                 <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
-                  <Text fontWeight={500} fontSize={20}>
+                  <Text fontWeight={535} fontSize={20}>
                     <Trans>Add</Trans>
                   </Text>
                 </ButtonPrimary>
@@ -771,10 +771,10 @@ function AddLiquidity() {
                         {Boolean(price && baseCurrency && quoteCurrency && !noLiquidity) && (
                           <AutoColumn gap="2px" style={{ marginTop: '0.5rem' }}>
                             <Trans>
-                              <ThemedText.DeprecatedMain fontWeight={500} fontSize={12} color="text1">
+                              <ThemedText.DeprecatedMain fontWeight={535} fontSize={12} color="text1">
                                 Current Price:
                               </ThemedText.DeprecatedMain>
-                              <ThemedText.DeprecatedBody fontWeight={500} fontSize={20} color="text1">
+                              <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
                                 {price && (
                                   <HoverInlineText
                                     maxCharacters={20}
@@ -818,9 +818,9 @@ function AddLiquidity() {
                           >
                             <ThemedText.DeprecatedBody
                               fontSize={14}
-                              style={{ fontWeight: 500 }}
+                              style={{ fontWeight: 535 }}
                               textAlign="left"
-                              color={theme.accentAction}
+                              color={theme.accent1}
                             >
                               <Trans>
                                 This pool must be initialized before you can add liquidity. To initialize, select a
@@ -839,7 +839,7 @@ function AddLiquidity() {
                         </OutlineCard>
                         <RowBetween
                           style={{
-                            backgroundColor: theme.deprecated_bg1,
+                            backgroundColor: theme.surface1,
                             padding: '12px',
                             borderRadius: '12px',
                           }}

@@ -1,12 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
+import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
@@ -15,7 +14,7 @@ import { useCallback, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useTheme } from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -24,7 +23,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, { RowBetween, RowFlat } from '../../components/Row'
+import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { ZERO_PERCENT } from '../../constants/misc'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -37,7 +36,7 @@ import { PairState } from '../../hooks/useV2Pairs'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { TransactionType } from '../../state/transactions/types'
+import { TransactionInfo, TransactionType } from '../../state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -51,12 +50,18 @@ import { PoolPriceBar } from './PoolPriceBar'
 
 const DEFAULT_ADD_V2_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
+const AddLiquidityHeaderContainer = styled(AutoColumn)`
+  gap: 20px;
+  margin-bottom: 16px;
+`
+
 export default function AddLiquidity() {
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA?: string; currencyIdB?: string }>()
   const navigate = useNavigate()
   const { account, chainId, provider } = useWeb3React()
 
   const theme = useTheme()
+  const trace = useTrace()
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -191,20 +196,22 @@ export default function AddLiquidity() {
         }).then((response) => {
           setAttemptingTxn(false)
 
-          addTransaction(response, {
+          const transactionInfo: TransactionInfo = {
             type: TransactionType.ADD_LIQUIDITY_V2_POOL,
             baseCurrencyId: currencyId(currencyA),
             expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient.toString() ?? '0',
             quoteCurrencyId: currencyId(currencyB),
             expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient.toString() ?? '0',
-          })
+          }
+
+          addTransaction(response, transactionInfo)
 
           setTxHash(response.hash)
 
-          sendEvent({
-            category: 'Liquidity',
-            action: 'Add',
+          sendAnalyticsEvent(LiquidityEventName.ADD_LIQUIDITY_SUBMITTED, {
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
+            ...trace,
+            ...transactionInfo,
           })
         })
       )
@@ -218,45 +225,47 @@ export default function AddLiquidity() {
   }
 
   const modalHeader = () => {
-    return noLiquidity ? (
-      <AutoColumn gap="20px">
-        <LightCard mt="20px" $borderRadius="20px">
-          <RowFlat>
-            <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
-              {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol}
-            </Text>
-            <DoubleCurrencyLogo
-              currency0={currencies[Field.CURRENCY_A]}
-              currency1={currencies[Field.CURRENCY_B]}
-              size={30}
-            />
-          </RowFlat>
-        </LightCard>
-      </AutoColumn>
-    ) : (
-      <AutoColumn gap="20px">
-        <RowFlat style={{ marginTop: '20px' }}>
-          <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
-            {liquidityMinted?.toSignificant(6)}
-          </Text>
-          <DoubleCurrencyLogo
-            currency0={currencies[Field.CURRENCY_A]}
-            currency1={currencies[Field.CURRENCY_B]}
-            size={30}
-          />
-        </RowFlat>
-        <Row>
-          <Text fontSize="24px">
-            {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
-          </Text>
-        </Row>
-        <ThemedText.DeprecatedItalic fontSize={12} textAlign="left" padding="8px 0 0 0 ">
-          <Trans>
-            Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
-            will revert.
-          </Trans>
-        </ThemedText.DeprecatedItalic>
-      </AutoColumn>
+    return (
+      <AddLiquidityHeaderContainer>
+        {noLiquidity ? (
+          <LightCard mt="20px" $borderRadius="20px">
+            <AutoRow justify="space-between">
+              <Text fontSize="24px" fontWeight={535} lineHeight="42px" marginRight={10}>
+                {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol}
+              </Text>
+              <DoubleCurrencyLogo
+                currency0={currencies[Field.CURRENCY_A]}
+                currency1={currencies[Field.CURRENCY_B]}
+                size={30}
+              />
+            </AutoRow>
+          </LightCard>
+        ) : (
+          <>
+            <RowFlat style={{ marginTop: '20px' }}>
+              <Text fontSize="48px" fontWeight={535} lineHeight="42px" marginRight={10}>
+                {liquidityMinted?.toSignificant(6)}
+              </Text>
+              <DoubleCurrencyLogo
+                currency0={currencies[Field.CURRENCY_A]}
+                currency1={currencies[Field.CURRENCY_B]}
+                size={30}
+              />
+            </RowFlat>
+            <Row>
+              <Text fontSize="24px">
+                {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
+              </Text>
+            </Row>
+            <ThemedText.DeprecatedItalic fontSize={12} textAlign="left" padding="8px 0 0 0 ">
+              <Trans>
+                Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your
+                transaction will revert.
+              </Trans>
+            </ThemedText.DeprecatedItalic>
+          </>
+        )}
+      </AddLiquidityHeaderContainer>
     )
   }
 
@@ -350,13 +359,13 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.DeprecatedLink fontWeight={600} color="accentAction">
+                      <ThemedText.DeprecatedLink fontWeight={535} color="accent1">
                         <Trans>You are the first liquidity provider.</Trans>
                       </ThemedText.DeprecatedLink>
-                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
+                      <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
                         <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
                       </ThemedText.DeprecatedLink>
-                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
+                      <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
                         <Trans>Once you are happy with the rate click supply to review.</Trans>
                       </ThemedText.DeprecatedLink>
                     </AutoColumn>
@@ -366,11 +375,11 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
+                      <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
+                        <b>
+                          <Trans>Tip:</Trans>
+                        </b>{' '}
                         <Trans>
-                          <b>
-                            <Trans>Tip:</Trans>
-                          </b>{' '}
                           When you add liquidity, you will receive pool tokens representing your position. These tokens
                           automatically earn fees proportional to your share of the pool, and can be redeemed at any
                           time.
@@ -393,7 +402,7 @@ export default function AddLiquidity() {
               showCommonBases
             />
             <ColumnCenter>
-              <Plus size="16" color={theme.textSecondary} />
+              <Plus size="16" color={theme.neutral2} />
             </ColumnCenter>
             <CurrencyInputPanel
               value={formattedAmounts[Field.CURRENCY_B]}
@@ -411,7 +420,7 @@ export default function AddLiquidity() {
               <>
                 <LightCard padding="0px" $borderRadius="20px">
                   <RowBetween padding="1rem">
-                    <ThemedText.DeprecatedSubHeader fontWeight={500} fontSize={14}>
+                    <ThemedText.DeprecatedSubHeader fontWeight={535} fontSize={14}>
                       {noLiquidity ? (
                         <Trans>Initial prices and pool share</Trans>
                       ) : (
@@ -495,7 +504,7 @@ export default function AddLiquidity() {
                   disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
                   error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                 >
-                  <Text fontSize={20} fontWeight={500}>
+                  <Text fontSize={20} fontWeight={535}>
                     {error ?? <Trans>Supply</Trans>}
                   </Text>
                 </ButtonError>

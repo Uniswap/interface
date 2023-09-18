@@ -9,12 +9,11 @@ import { TextProps } from 'rebass'
 import { Field } from 'state/swap/actions'
 import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
-import { formatReviewSwapCurrencyAmount } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
   margin-right: 8px;
 `
 
@@ -26,7 +25,7 @@ const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextPr
   }
 
   return (
-    <ThemedText.HeadlineLarge fontWeight={500} {...textProps}>
+    <ThemedText.HeadlineLarge fontWeight={535} {...textProps}>
       {children}
     </ThemedText.HeadlineLarge>
   )
@@ -45,6 +44,8 @@ interface AmountProps {
 }
 
 export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, field, currency }: AmountProps) {
+  const { formatNumber, formatReviewSwapCurrencyAmount } = useFormatter()
+
   return (
     <Row align="center" justify="space-between" gap="md">
       <Column gap="xs">
@@ -58,8 +59,11 @@ export function SwapModalHeaderAmount({ tooltipText, label, amount, usdAmount, f
             {formatReviewSwapCurrencyAmount(amount)} {currency?.symbol}
           </ResponsiveHeadline>
           {usdAmount && (
-            <ThemedText.BodySmall color="textTertiary">
-              {formatNumber(usdAmount, NumberType.FiatTokenQuantity)}
+            <ThemedText.BodySmall color="neutral2">
+              {formatNumber({
+                input: usdAmount,
+                type: NumberType.FiatTokenQuantity,
+              })}
             </ThemedText.BodySmall>
           )}
         </Column>

@@ -15,8 +15,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { formatCurrencyAmount, NumberType } from 'utils/formatNumbers'
-import { shallow } from 'zustand/shallow'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { TitleRow } from '../shared'
 import { ListModalSection, Section } from './ListModalSection'
@@ -29,10 +28,10 @@ const ListModalWrapper = styled.div`
   transform: translate(-50%, -50%);
   width: 420px;
   z-index: ${Z_INDEX.modal};
-  background: ${({ theme }) => theme.backgroundSurface};
+  background: ${({ theme }) => theme.surface1};
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  box-shadow: ${({ theme }) => theme.deepShadow};
+  border: 1px solid ${({ theme }) => theme.surface3};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   padding: 20px 24px 24px;
   display: flex;
   flex-direction: column;
@@ -48,6 +47,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const { provider, chainId } = useWeb3React()
   const signer = provider?.getSigner()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
+  const { formatCurrencyAmount } = useFormatter()
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const { setListingStatusAndCallback, setLooksRareNonce, getLooksRareNonce, collectionsRequiringApproval, listings } =
     useNFTList(
@@ -63,8 +63,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
         getLooksRareNonce,
         collectionsRequiringApproval,
         listings,
-      }),
-      shallow
+      })
     )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
@@ -75,7 +74,10 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
-  const usdcAmount = formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)
+  const usdcAmount = formatCurrencyAmount({
+    amount: usdcValue,
+    type: NumberType.FiatTokenPrice,
+  })
 
   const allCollectionsApproved = useMemo(
     () => collectionsRequiringApproval.every((collection) => collection.status === ListingStatus.APPROVED),

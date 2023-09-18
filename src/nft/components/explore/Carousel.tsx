@@ -38,7 +38,7 @@ const CarouselItemCard = styled(a.div)`
 
 const CarouselItemIcon = styled.div`
   align-items: center;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
   display: none;
   user-select: none;

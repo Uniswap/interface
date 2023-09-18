@@ -1,4 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ChainId,
@@ -26,9 +27,10 @@ import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
 import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
+import { sendAnalyticsEvent } from 'analytics'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { NonfungiblePositionManager, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
@@ -145,11 +147,21 @@ export function useMainnetInterfaceMulticall() {
 }
 
 export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
-  return useContract<NonfungiblePositionManager>(
+  const { account } = useWeb3React()
+  const contract = useContract<NonfungiblePositionManager>(
     NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
     NFTPositionManagerABI,
     withSignerIfPossible
   )
+  useEffect(() => {
+    if (contract && account) {
+      sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
+        source: 'useV3NFTPositionManagerContract',
+        contract,
+      })
+    }
+  }, [account, contract])
+  return contract
 }
 
 export function useTickLens(): TickLens | null {

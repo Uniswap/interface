@@ -7,14 +7,14 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme'
-import { formatNumber, NumberType } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Container = styled(AutoColumn)`
   padding: 4px;
 `
 
-const InlineLink = styled(ThemedText.Caption)`
-  color: ${({ theme }) => theme.accentAction};
+const InlineLink = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.accent1};
   display: inline;
   cursor: pointer;
   &:hover {
@@ -35,11 +35,17 @@ const GasCostItem = ({
   itemValue?: React.ReactNode
   amount?: number
 }) => {
+  const { formatNumber } = useFormatter()
+
   return (
     <Row justify="space-between">
       <ThemedText.SubHeaderSmall>{title}</ThemedText.SubHeaderSmall>
-      <ThemedText.SubHeaderSmall color="textPrimary">
-        {itemValue ?? formatNumber(amount, NumberType.FiatGasPrice)}
+      <ThemedText.SubHeaderSmall color="neutral1">
+        {itemValue ??
+          formatNumber({
+            input: amount,
+            type: NumberType.FiatGasPrice,
+          })}
       </ThemedText.SubHeaderSmall>
     </Row>
   )
@@ -79,7 +85,7 @@ export function GasBreakdownTooltip({
         </>
       )}
       {isUniswapXTrade(trade) && !hideUniswapXDescription ? (
-        <ThemedText.Caption color="textSecondary">
+        <ThemedText.BodySmall color="neutral2">
           <Trans>
             <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient> aggregates liquidity sources for better prices and
             gas free swaps.
@@ -89,16 +95,16 @@ export function GasBreakdownTooltip({
               <Trans>Learn more</Trans>
             </InlineLink>
           </ExternalLink>
-        </ThemedText.Caption>
+        </ThemedText.BodySmall>
       ) : (
-        <ThemedText.Caption color="textSecondary">
+        <ThemedText.BodySmall color="neutral2">
           <Trans>Network Fees are paid to the Ethereum network to secure transactions.</Trans>{' '}
           <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
             <InlineLink>
               <Trans>Learn more</Trans>
             </InlineLink>
           </ExternalLink>
-        </ThemedText.Caption>
+        </ThemedText.BodySmall>
       )}
     </Container>
   )

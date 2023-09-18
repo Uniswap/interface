@@ -20,7 +20,7 @@ export function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
 }
 
 export function isAppUniswapStagingOrg({ hostname }: { hostname: string }): boolean {
-  return hostname === 'app.uniswap-staging.org'
+  return hostname === 'app.corn-staging.com'
 }
 
 export function isBrowserRouterEnabled(): boolean {
@@ -28,14 +28,13 @@ export function isBrowserRouterEnabled(): boolean {
     if (
       isAppUniswapOrg(window.location) ||
       isAppUniswapStagingOrg(window.location) ||
-      // Cypress tests
-      isLocalhost(window.location)
+      isLocalhost(window.location) // cypress tests
     ) {
       return true
     }
-    return false
+    return false // production builds *not* served through our domains or localhost, eg IPFS
   }
-  return true
+  return true // local dev builds
 }
 
 function isLocalhost({ hostname }: { hostname: string }): boolean {

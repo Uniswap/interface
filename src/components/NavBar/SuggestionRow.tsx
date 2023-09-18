@@ -20,18 +20,15 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme'
 import { formatUSDPrice } from 'utils/formatNumbers'
 
-import { DeltaText, getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
+import { DeltaArrow, DeltaText } from '../Tokens/TokenDetails/Delta'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 
 const PriceChangeContainer = styled.div`
   display: flex;
   align-items: center;
-`
-
-const ArrowCell = styled.span`
-  padding-top: 5px;
-  padding-right: 3px;
+  padding-top: 4px;
+  gap: 2px;
 `
 
 interface CollectionRowProps {
@@ -156,8 +153,6 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
-  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 18)
-
   return (
     <Link
       data-testid={`searchbar-token-row-${token.chain}-${token.address ?? 'NATIVE'}`}
@@ -192,7 +187,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
               <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
             </Row>
             <PriceChangeContainer>
-              <ArrowCell>{arrow}</ArrowCell>
+              <DeltaArrow delta={token.market?.pricePercentChange?.value} />
               <ThemedText.BodySmall>
                 <DeltaText delta={token.market?.pricePercentChange?.value}>
                   {Math.abs(token.market?.pricePercentChange?.value ?? 0).toFixed(2)}%
@@ -213,13 +208,13 @@ export const SkeletonRow = () => {
         <Box className={styles.imageHolder} />
         <Column gap="4" width="full">
           <Row justifyContent="space-between">
-            <Box borderRadius="round" height="20" background="backgroundModule" style={{ width: '180px' }} />
-            <Box borderRadius="round" height="20" width="48" background="backgroundModule" />
+            <Box borderRadius="round" height="20" background="surface2" style={{ width: '180px' }} />
+            <Box borderRadius="round" height="20" width="48" background="surface2" />
           </Row>
 
           <Row justifyContent="space-between">
-            <Box borderRadius="round" height="16" width="120" background="backgroundModule" />
-            <Box borderRadius="round" height="16" width="48" background="backgroundModule" />
+            <Box borderRadius="round" height="16" width="120" background="surface2" />
+            <Box borderRadius="round" height="16" width="48" background="surface2" />
           </Row>
         </Column>
       </Row>

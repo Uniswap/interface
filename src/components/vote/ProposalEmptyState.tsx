@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme'
 
 const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.deprecated_text4};
+  border: 1px solid ${({ theme }) => theme.neutral2};
   padding: 16px 12px;
   border-radius: 12px;
   display: flex;

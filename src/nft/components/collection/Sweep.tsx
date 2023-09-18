@@ -18,10 +18,9 @@ const SweepContainer = styled.div`
   margin-top: 12px;
   padding: 16px;
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   justify-content: space-between;
-  background: linear-gradient(${({ theme }) => theme.backgroundSurface}, ${({ theme }) => theme.backgroundSurface})
-      padding-box,
+  background: linear-gradient(${({ theme }) => theme.surface1}, ${({ theme }) => theme.surface1}) padding-box,
     linear-gradient(to right, #4673fa, #9646fa) border-box;
   border: 2px solid transparent;
 `
@@ -66,13 +65,13 @@ const SweepSubContainer = styled.div`
 
 const InputContainer = styled.input`
   width: 96px;
-  color: ${({ theme }) => theme.textPrimary};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  color: ${({ theme }) => theme.neutral1};
+  border: 1px solid ${({ theme }) => theme.surface3};
   background: none;
   border-radius: 8px;
   padding: 6px 8px;
   font-size: 16px;
-  font-weight: 400px;
+  font-weight: 485;
   line-height: 20px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
@@ -82,13 +81,13 @@ const InputContainer = styled.input`
   :hover,
   :focus {
     outline: none;
-    border: 1px solid ${({ theme }) => theme.accentAction};
+    border: 1px solid ${({ theme }) => theme.accent1};
   }
 `
 
 const ToggleContainer = styled.div`
   display: flex;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   background: none;
   border-radius: 12px;
   padding: 4px;
@@ -96,12 +95,12 @@ const ToggleContainer = styled.div`
 `
 
 const ToggleSwitch = styled.div<{ active: boolean }>`
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
   padding: 4px 8px;
   border-radius: 8px;
-  background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : `none`)};
+  background-color: ${({ theme, active }) => (active ? theme.surface3 : `none`)};
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 535;
   line-height: 16px;
 `
 
@@ -118,7 +117,7 @@ const NftHolder = styled.div<{ index: number; src?: string }>`
   width: 26px;
   height: 26px;
   border-radius: 4px;
-  background: ${({ theme, src }) => (src ? `url(${src})` : theme.textTertiary)};
+  background: ${({ theme, src }) => (src ? `url(${src})` : theme.neutral3)};
   background-size: 26px;
   opacity: ${({ src, index }) => (src ? 1.0 : index === 0 ? 0.9 : index === 1 ? 0.6 : 0.3)};
   transform: ${({ index }) =>
@@ -391,12 +390,12 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
               borderRadius: '4px',
               border: 'none',
               opacity: '1',
-              boxShadow: `${theme.shallowShadow.slice(0, -1)}`,
+              boxShadow: `${theme.deprecated_shallowShadow.slice(0, -1)}`,
             }}
             railStyle={{
               top: '3px',
               height: '8px',
-              backgroundColor: `${theme.backgroundInteractive}`,
+              backgroundColor: `${theme.surface3}`,
             }}
             onChange={handleSliderChange}
           />

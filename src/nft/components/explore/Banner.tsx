@@ -4,7 +4,6 @@ import { calculateCardIndex } from 'nft/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { opacify } from 'theme/utils'
 
 import { Carousel, LoadingCarousel } from './Carousel'
 import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
@@ -19,29 +18,6 @@ const BannerContainer = styled.div`
   @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     padding: 32px 16px;
   }
-`
-
-const AbsoluteFill = styled.div`
-  position: absolute;
-  top: -96px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-`
-
-// Safari has issues with blur / overflow, forcing GPU rendering with `translate3d` fixes it
-// https://stackoverflow.com/a/71353198
-const BannerBackground = styled(AbsoluteFill)<{ backgroundImage: string }>`
-  transform: translate3d(0, 0, 0) scaleY(1.1);
-
-  background-image: ${(props) => `url(${props.backgroundImage})`};
-  filter: blur(62px);
-
-  opacity: ${({ theme }) => (theme.darkMode ? 0.3 : 0.2)};
-`
-
-const PlainBackground = styled(AbsoluteFill)`
-  background: ${({ theme }) => `linear-gradient(${opacify(10, theme.userThemeColor)}, transparent)`};
 `
 
 const BannerMainArea = styled.div`
@@ -66,14 +42,14 @@ const BannerMainArea = styled.div`
 const HeaderContainer = styled.div`
   display: flex;
   max-width: 500px;
-  font-weight: 500;
+  font-weight: 535;
   font-size: 72px;
   line-height: 88px;
   align-self: center;
   flex-shrink: 0;
   padding-bottom: 32px;
 
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     font-size: 48px;
@@ -134,17 +110,8 @@ const Banner = () => {
     [collections]
   )
 
-  const activeCollection = collections?.[activeCollectionIdx]
-
   return (
     <BannerContainer>
-      {activeCollection ? (
-        activeCollection.bannerImageUrl ? (
-          <BannerBackground backgroundImage={activeCollection.bannerImageUrl} />
-        ) : (
-          <PlainBackground />
-        )
-      ) : null}
       <BannerMainArea>
         <HeaderContainer>
           Better prices. <br />

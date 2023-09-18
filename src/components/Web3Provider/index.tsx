@@ -1,5 +1,4 @@
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
-import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'analytics'
@@ -13,6 +12,7 @@ import { ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
+import { getWalletMeta } from 'utils/walletMeta'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
   useEagerlyConnect()
@@ -59,17 +59,28 @@ function Updater() {
         (wallet) => wallet.account === account && wallet.walletType === walletType
       )
 
+      provider
+        ?.send('web3_clientVersion', [])
+        .then((clientVersion) => {
+          user.set(CustomUserProperties.WALLET_VERSION, clientVersion)
+        })
+        .catch((error) => {
+          console.warn('Failed to get client version', error)
+        })
+
       // User properties *must* be set before sending corresponding event properties,
       // so that the event contains the correct and up-to-date user properties.
       user.set(CustomUserProperties.WALLET_ADDRESS, account)
+      user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
+
       user.set(CustomUserProperties.WALLET_TYPE, walletType)
       user.set(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
       if (chainId) {
+        user.set(CustomUserProperties.CHAIN_ID, chainId)
         user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
       }
-      user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
 
-      sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+      sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account,
         wallet_type: walletType,

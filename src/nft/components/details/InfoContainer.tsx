@@ -6,20 +6,20 @@ const Header = styled.div<{ isOpen: boolean }>`
   display: flex;
   border-radius: ${({ isOpen }) => (isOpen ? '16px 16px 0px 0px' : '16px')};
   justify-content: space-between;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
   padding: 14px 20px;
   cursor: pointer;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   margin-top: 28px;
   width: 100%;
   align-items: center;
 
   &:hover {
-    background-color: ${({ theme }) => theme.stateOverlayHover};
+    background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
   }
 
   &:active {
-    background-color: ${({ theme }) => theme.stateOverlayPressed};
+    background-color: ${({ theme }) => theme.deprecated_stateOverlayPressed};
   }
 
   transition: ${({
@@ -33,15 +33,15 @@ const PrimaryHeader = styled.span`
   display: flex;
   align-items: center;
   gap: 16px;
-  color: ${({ theme }) => theme.textPrimary};
-  font-weight: 500;
+  color: ${({ theme }) => theme.neutral1};
+  font-weight: 535;
   line-height: 28px;
   font-size: 20px;
 `
 
 const SecondaryHeader = styled.span`
   font-size: 12px;
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 const SecondaryHeaderContainer = styled.span`
@@ -49,15 +49,15 @@ const SecondaryHeaderContainer = styled.span`
   align-items: center;
   justify-content: center;
   gap: 32px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.neutral1};
 `
 
 const ContentContainer = styled.div`
   padding: 20px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.surface3};
   border-top: none;
   border-radius: 0px 0px 16px 16px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.surface1};
 `
 
 const InfoContainer = ({

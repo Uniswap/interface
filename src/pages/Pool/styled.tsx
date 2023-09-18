@@ -11,27 +11,27 @@ export const ClickableText = styled(Text)`
   :hover {
     cursor: pointer;
   }
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
 `
 export const MaxButton = styled.button<{ width: string }>`
   padding: 0.5rem 1rem;
-  background-color: ${({ theme }) => theme.deprecated_primary5};
-  border: 1px solid ${({ theme }) => theme.deprecated_primary5};
+  background-color: ${({ theme }) => theme.accent2};
+  border: 1px solid ${({ theme }) => theme.accent2};
   border-radius: 0.5rem;
   font-size: 1rem;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     padding: 0.25rem 0.5rem;
   `};
-  font-weight: 500;
+  font-weight: 535;
   cursor: pointer;
   margin: 0.25rem;
   overflow: hidden;
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accent1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.accentAction};
+    border: 1px solid ${({ theme }) => theme.accent1};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.accentAction};
+    border: 1px solid ${({ theme }) => theme.accent1};
     outline: none;
   }
 `

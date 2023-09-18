@@ -129,7 +129,7 @@ export default function MigrateV2() {
             </div>
           </AutoRow>
 
-          <ThemedText.DeprecatedBody style={{ marginBottom: 8, fontWeight: 400 }}>
+          <ThemedText.DeprecatedBody style={{ marginBottom: 8, fontWeight: 485 }}>
             <Trans>
               For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
               Uniswap V3.
@@ -138,13 +138,13 @@ export default function MigrateV2() {
 
           {!account ? (
             <LightCard padding="40px">
-              <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+              <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                 <Trans>Connect to a wallet to view your V2 liquidity.</Trans>
               </ThemedText.DeprecatedBody>
             </LightCard>
           ) : v2IsLoading ? (
             <LightCard padding="40px">
-              <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+              <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                 <Dots>
                   <Trans>Loading</Trans>
                 </Dots>

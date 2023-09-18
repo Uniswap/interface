@@ -7,13 +7,7 @@ import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { WalletConnectV2 } from 'connection/WalletConnectV2'
 import { getChainInfo } from 'constants/chainInfo'
-import {
-  getChainPriority,
-  L1_CHAIN_IDS,
-  L2_CHAIN_IDS,
-  TESTNET_CHAIN_IDS,
-  UniWalletSupportedChains,
-} from 'constants/chains'
+import { getChainPriority, L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -39,14 +33,12 @@ interface ChainSelectorProps {
 
 function useWalletSupportedChains(): ChainId[] {
   const { connector } = useWeb3React()
-
   const connectionType = getConnection(connector).type
 
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
-      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
     case ConnectionType.UNISWAP_WALLET_V2:
-      return UniWalletSupportedChains
+      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
     default:
       return NETWORK_SELECTOR_CHAINS
   }
@@ -136,7 +128,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const chevronProps = {
     height: 20,
     width: 20,
-    color: theme.textSecondary,
+    color: theme.neutral2,
   }
 
   return (
@@ -147,11 +139,11 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
           as="button"
           gap="8"
           className={styles.ChainSelector}
-          background={isOpen ? 'accentActiveSoft' : 'none'}
+          background={isOpen ? 'accent2' : 'none'}
           onClick={() => setIsOpen(!isOpen)}
         >
           {!isSupported ? (
-            <AlertTriangle size={20} color={theme.textSecondary} />
+            <AlertTriangle size={20} color={theme.neutral2} />
           ) : (
             <img src={info.logoUrl} alt={info.label} className={styles.Image} data-testid="chain-selector-logo" />
           )}

@@ -35,6 +35,7 @@ export function formatCommonPropertiesForTrade(trade: InterfaceTrade, allowedSli
     type: trade.tradeType,
     ura_quote_id: isUniswapXTrade(trade) ? trade.quoteId : undefined,
     ura_request_id: trade.requestId,
+    ura_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
     token_in_symbol: trade.inputAmount.currency.symbol,
@@ -85,7 +86,9 @@ function getQuoteMethod(trade: InterfaceTrade) {
 export const formatSwapQuoteReceivedEventProperties = (
   trade: InterfaceTrade,
   allowedSlippage: Percent,
-  swapQuoteLatencyMs: number | undefined
+  swapQuoteLatencyMs: number | undefined,
+  inputTax: Percent,
+  outputTax: Percent
 ) => {
   return {
     ...formatCommonPropertiesForTrade(trade, allowedSlippage),
@@ -94,5 +97,7 @@ export const formatSwapQuoteReceivedEventProperties = (
     token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
     token_out_amount_min: trade.minimumAmountOut(allowedSlippage).toExact(),
     quote_latency_milliseconds: swapQuoteLatencyMs,
+    token_out_detected_tax: formatPercentNumber(outputTax),
+    token_in_detected_tax: formatPercentNumber(inputTax),
   }
 }

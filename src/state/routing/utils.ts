@@ -1,12 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MixedRouteSDK } from '@uniswap/router-sdk'
-import { ChainId, Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { AlphaRouter } from '@uniswap/smart-order-router'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { asSupportedChain } from 'constants/chains'
-import { RPC_PROVIDERS } from 'constants/providers'
 import { isAvalanche, isBsc, isMatic, nativeOnChain } from 'constants/tokens'
 import { toSlippagePercent } from 'utils/slippage'
 
@@ -37,22 +34,6 @@ interface RouteResult {
   mixedRoute: MixedRouteSDK<Currency, Currency> | null
   inputAmount: CurrencyAmount<Currency>
   outputAmount: CurrencyAmount<Currency>
-}
-
-const routers = new Map<ChainId, AlphaRouter>()
-export function getRouter(chainId: ChainId): AlphaRouter {
-  const router = routers.get(chainId)
-  if (router) return router
-
-  const supportedChainId = asSupportedChain(chainId)
-  if (supportedChainId) {
-    const provider = RPC_PROVIDERS[supportedChainId]
-    const router = new AlphaRouter({ chainId, provider })
-    routers.set(chainId, router)
-    return router
-  }
-
-  throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
 }
 
 /**
@@ -192,11 +173,20 @@ export async function transformRoutesToTrade(
   data: URAQuoteResponse,
   quoteMethod: QuoteMethod
 ): Promise<TradeResult> {
-  const { tradeType, needsWrapIfUniswapX, routerPreference, account, amount } = args
+  const {
+    tradeType,
+    needsWrapIfUniswapX,
+    routerPreference,
+    account,
+    amount,
+    isUniswapXDefaultEnabled,
+    inputTax,
+    outputTax,
+  } = args
 
-  // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
-  // even if it is the better quote.
-  const showUniswapXTrade = data.routing === URAQuoteType.DUTCH_LIMIT && routerPreference === RouterPreference.X
+  const showUniswapXTrade =
+    data.routing === URAQuoteType.DUTCH_LIMIT &&
+    (routerPreference === RouterPreference.X || (isUniswapXDefaultEnabled && routerPreference === RouterPreference.API))
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
   const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate } = getClassicTradeDetails(
@@ -247,11 +237,13 @@ export async function transformRoutesToTrade(
     isUniswapXBetter,
     requestId: data.quote.requestId,
     quoteMethod,
+    inputTax,
+    outputTax,
   })
 
   // During the opt-in period, only return UniswapX quotes if the user has turned on the setting,
   // even if it is the better quote.
-  if (isUniswapXBetter && args.routerPreference === RouterPreference.X) {
+  if (isUniswapXBetter && (routerPreference === RouterPreference.X || isUniswapXDefaultEnabled)) {
     const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
     const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)
 
@@ -266,6 +258,7 @@ export async function transformRoutesToTrade(
       wrapInfo,
       approveInfo,
       auctionPeriodSecs: data.quote.auctionPeriodSecs,
+      startTimeBufferSecs: data.quote.startTimeBufferSecs,
       deadlineBufferSecs: data.quote.deadlineBufferSecs,
       slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
     })
