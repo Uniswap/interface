@@ -32,8 +32,8 @@ export default function TradePrice({ price }: TradePriceProps) {
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const { baseCurrency, quoteCurrency } = price
-  const { data: usdPrice } = useUSDPrice(tryParseCurrencyAmount('1', showInverted ? baseCurrency : quoteCurrency))
+  const { quoteCurrency } = price
+  const { data: usdPrice } = useUSDPrice(tryParseCurrencyAmount('1', quoteCurrency))
 
   const formattedPrice = useMemo(() => {
     try {
@@ -63,7 +63,7 @@ export default function TradePrice({ price }: TradePriceProps) {
           <Trans>
             (
             {formatNumber({
-              input: usdPrice,
+              input: showInverted && formattedPrice ? Number(formattedPrice) * usdPrice : usdPrice,
               type: NumberType.FiatTokenPrice,
             })}
             )
