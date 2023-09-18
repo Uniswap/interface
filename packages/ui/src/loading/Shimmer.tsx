@@ -9,8 +9,8 @@ import Reanimated, {
   withTiming,
 } from 'react-native-reanimated'
 import { LinearGradient } from 'tamagui/linear-gradient'
-import { Flex } from 'ui/src'
 import { Box } from 'ui/src/components/layout/Box'
+import { Flex } from 'ui/src/components/layout/Flex'
 
 const SHIMMER_DURATION = 2000 // 2 seconds
 

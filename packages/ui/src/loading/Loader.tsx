@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { getToken } from 'ui/src'
+import { getToken } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
 import { BoxLoader } from 'ui/src/loading/BoxLoader'
 import { Shimmer } from 'ui/src/loading/Shimmer'

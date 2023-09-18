@@ -1,5 +1,7 @@
 import { memo } from 'react'
-import { ColorTokens, Flex, FlexProps, Icons } from 'ui/src'
+import { ColorTokens } from 'tamagui'
+import * as Icons from 'ui/src/components/icons/allIcons'
+import { Flex, FlexProps } from 'ui/src/components/layout'
 
 type Props = {
   width?: string | number

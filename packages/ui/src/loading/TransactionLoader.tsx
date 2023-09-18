@@ -1,5 +1,5 @@
-import { Text } from 'ui/src'
 import { Flex } from 'ui/src/components/layout/Flex'
+import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 
 interface TransactionLoaderProps {

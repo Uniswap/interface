@@ -33,6 +33,24 @@ module.exports = {
       files: ['*.js', '*.jsx'],
       rules: {},
     },
+
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        'no-restricted-imports': [
+          2,
+          {
+            paths: [
+              {
+                name: 'ui/src',
+                message:
+                  'Avoid importing directly from ui/src from within the ui package which causes circular imports.',
+              },
+            ],
+          },
+        ],
+      },
+    },
   ],
   rules: {},
-}
+};

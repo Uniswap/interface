@@ -1,7 +1,7 @@
 import type { IconProps } from '@tamagui/helpers-icon'
 import { memo } from 'react'
 import { Platform } from 'react-native'
-import { Icons } from 'ui/src'
+import * as Icons from 'ui/src/components/icons/allIcons'
 
 function _OSDynamicCloudIcon(iconProps: IconProps): JSX.Element {
   if (Platform.OS === 'ios') {
