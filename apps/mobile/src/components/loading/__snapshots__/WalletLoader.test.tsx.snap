@@ -69,6 +69,14 @@ exports[`renders wallet loader 1`] = `
     >
       <View
         onLayout={[Function]}
+        style={
+          {
+            "alignItems": "stretch",
+            "flexDirection": "column",
+            "gap": 0,
+            "opacity": 0,
+          }
+        }
       >
         <View
           style={
@@ -131,6 +139,14 @@ exports[`renders wallet loader 1`] = `
       </View>
       <View
         onLayout={[Function]}
+        style={
+          {
+            "alignItems": "stretch",
+            "flexDirection": "column",
+            "gap": 0,
+            "opacity": 0,
+          }
+        }
       >
         <View
           style={

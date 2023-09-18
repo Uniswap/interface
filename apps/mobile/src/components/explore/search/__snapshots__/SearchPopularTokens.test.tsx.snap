@@ -16,6 +16,14 @@ exports[`SearchPopularTokens renders without error 1`] = `
 >
   <View
     onLayout={[Function]}
+    style={
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+        "gap": 0,
+        "opacity": 0,
+      }
+    }
   >
     <View
       style={

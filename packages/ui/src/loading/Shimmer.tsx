@@ -1,6 +1,6 @@
 import MaskedView from '@react-native-masked-view/masked-view'
 import { useLayoutEffect, useState } from 'react'
-import { LayoutRectangle, StyleSheet, View } from 'react-native'
+import { LayoutRectangle, StyleSheet } from 'react-native'
 import Reanimated, {
   interpolate,
   useAnimatedStyle,
@@ -45,7 +45,11 @@ export function Shimmer({ children, contrast }: Props): JSX.Element {
   }))
 
   if (!layout) {
-    return <View onLayout={(event): void => setLayout(event.nativeEvent.layout)}>{children}</View>
+    return (
+      <Flex gap="$none" opacity={0} onLayout={(event): void => setLayout(event.nativeEvent.layout)}>
+        {children}
+      </Flex>
+    )
   }
 
   return (

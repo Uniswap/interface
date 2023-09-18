@@ -39,6 +39,14 @@ exports[`DatetimeText renders without error 1`] = `
 exports[`PriceText renders loading state 1`] = `
 <View
   onLayout={[Function]}
+  style={
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "gap": 0,
+      "opacity": 0,
+    }
+  }
 >
   <View
     style={
@@ -331,6 +339,14 @@ exports[`RelativeChangeText renders loading state 1`] = `
 >
   <View
     onLayout={[Function]}
+    style={
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+        "gap": 0,
+        "opacity": 0,
+      }
+    }
   >
     <View
       style={

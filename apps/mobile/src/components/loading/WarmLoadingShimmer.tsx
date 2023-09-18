@@ -1,7 +1,7 @@
 import MaskedView from '@react-native-masked-view/masked-view'
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { useEffect, useState } from 'react'
-import { LayoutRectangle, StyleSheet, View } from 'react-native'
+import { LayoutRectangle, StyleSheet } from 'react-native'
 import Reanimated, {
   interpolate,
   useAnimatedStyle,
@@ -47,7 +47,11 @@ export function WarmLoadingShimmer({
   }))
 
   if (!layout) {
-    return <View onLayout={(event): void => setLayout(event.nativeEvent.layout)}>{children}</View>
+    return (
+      <Flex gap="$none" opacity={0} onLayout={(event): void => setLayout(event.nativeEvent.layout)}>
+        {children}
+      </Flex>
+    )
   }
 
   if (isWarmLoading) {
