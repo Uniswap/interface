@@ -202,6 +202,7 @@ export const enum ElementName {
   SearchWalletItem = 'search-wallet-item',
   SelectColor = 'select-color',
   SelectRecipient = 'select-recipient',
+  Sell = 'sell',
   Send = 'send',
   SetMax = 'set-max',
   Settings = 'settings',

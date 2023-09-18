@@ -16,7 +16,7 @@ import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHisto
 import { Text } from 'src/components/Text'
 import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
-import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButton'
+import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButtons'
 import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks'
@@ -42,7 +42,7 @@ import {
   TokenDetailsScreenQuery,
   useTokenDetailsScreenQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { AssetType } from 'wallet/src/entities/assets'
+import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
@@ -51,7 +51,11 @@ import {
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 import { useExtractedTokenColor } from 'wallet/src/utils/colors'
-import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
+import {
+  currencyIdToAddress,
+  currencyIdToChain,
+  getNativeCurrencyAddressForChain,
+} from 'wallet/src/utils/currencyId'
 
 type Price = NonNullable<
   NonNullable<NonNullable<NonNullable<TokenDetailsScreenQuery['token']>['project']>['markets']>[0]
@@ -223,35 +227,36 @@ function TokenDetails({
     }
   }, [currencyAddress, currencyChainId])
 
-  const navigateToSwapBuy = useCallback(() => {
-    setActiveTransactionType(undefined)
-    const swapFormState: TransactionState = {
-      exactCurrencyField: CurrencyField.OUTPUT,
-      exactAmountToken: '',
-      [CurrencyField.INPUT]: null,
-      [CurrencyField.OUTPUT]: {
-        address: currencyAddress,
-        chainId: currencyChainId,
-        type: AssetType.Currency,
-      },
-    }
-    dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
-  }, [currencyAddress, currencyChainId, dispatch])
+  const navigateToSwap = useCallback(
+    (swapType: TransactionType) => {
+      if (swapType !== TransactionType.SELL && swapType !== TransactionType.BUY) return
 
-  const navigateToSwapSell = useCallback(() => {
-    setActiveTransactionType(undefined)
-    const swapFormState: TransactionState = {
-      exactCurrencyField: CurrencyField.INPUT,
-      exactAmountToken: '',
-      [CurrencyField.INPUT]: {
+      setActiveTransactionType(undefined)
+      const nativeTokenAddress = getNativeCurrencyAddressForChain(currencyChainId)
+      const nativeToken: CurrencyAsset = {
+        address: nativeTokenAddress,
+        chainId: currencyChainId,
+        type: AssetType.Currency,
+      }
+      const chosenToken: CurrencyAsset = {
         address: currencyAddress,
         chainId: currencyChainId,
         type: AssetType.Currency,
-      },
-      [CurrencyField.OUTPUT]: null,
-    }
-    dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
-  }, [currencyAddress, currencyChainId, dispatch])
+      }
+
+      const opposedToken = nativeTokenAddress !== currencyAddress ? nativeToken : null
+
+      const swapFormState: TransactionState = {
+        exactCurrencyField:
+          swapType === TransactionType.SELL ? CurrencyField.INPUT : CurrencyField.OUTPUT,
+        exactAmountToken: '',
+        [CurrencyField.INPUT]: swapType === TransactionType.SELL ? chosenToken : opposedToken,
+        [CurrencyField.OUTPUT]: swapType === TransactionType.BUY ? chosenToken : opposedToken,
+      }
+      dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+    },
+    [currencyAddress, currencyChainId, dispatch]
+  )
 
   const onPressSwap = useCallback(
     (swapType: TransactionType.BUY | TransactionType.SELL) => {
@@ -262,14 +267,10 @@ function TokenDetails({
         setActiveTransactionType(swapType)
         setShowWarningModal(true)
       } else {
-        if (swapType === TransactionType.BUY) {
-          navigateToSwapBuy()
-        } else if (swapType === TransactionType.SELL) {
-          navigateToSwapSell()
-        }
+        navigateToSwap(swapType)
       }
     },
-    [navigateToSwapBuy, navigateToSwapSell, safetyLevel, tokenWarningDismissed]
+    [navigateToSwap, safetyLevel, tokenWarningDismissed]
   )
 
   const onPressSend = useCallback(() => {
@@ -280,12 +281,10 @@ function TokenDetails({
   const onAcceptWarning = useCallback(() => {
     dismissWarningCallback()
     setShowWarningModal(false)
-    if (activeTransactionType === TransactionType.BUY) {
-      navigateToSwapBuy()
-    } else if (activeTransactionType === TransactionType.SELL) {
-      navigateToSwapSell()
+    if (activeTransactionType) {
+      navigateToSwap(activeTransactionType)
     }
-  }, [activeTransactionType, dismissWarningCallback, navigateToSwapBuy, navigateToSwapSell])
+  }, [activeTransactionType, dismissWarningCallback, navigateToSwap])
 
   const pb = useResponsiveProp(IS_IOS ? { xs: 'none', sm: 'spacing16' } : 'none')
 
@@ -369,9 +368,8 @@ function TokenDetails({
           style={{ marginBottom: IS_ANDROID ? insets.bottom : undefined }}>
           <TokenDetailsActionButtons
             tokenColor={tokenColor}
-            onPressSwap={(): void =>
-              onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
-            }
+            onPressBuy={(): void => onPressSwap(TransactionType.BUY)}
+            onPressSell={(): void => onPressSwap(TransactionType.SELL)}
           />
         </AnimatedFlex>
       ) : null}

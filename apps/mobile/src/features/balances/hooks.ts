@@ -202,17 +202,16 @@ export function useTokenContextMenu({
 }
 
 /**
- * Custom hook to group Token Balances fetched from API to visible and hidden.
+ * Custom hook to group Token Balances fetched from API to shown and hidden.
  *
  * @param balancesById - An object where keys are token ids and values are the corresponding balances. May be undefined.
- * @param owner - The owner address for which token balances are managed.
  *
  * @returns {object} An object containing two fields:
- *  - `tokens`: an array of tokens which could be a mix of PortfolioBalance instances or string (presumably token ids).
- *  - `numHidden`: the number of hidden tokens.
+ *  - `shownTokens`: shown tokens.
+ *  - `hiddenTokens`: hidden tokens.
  *
  * @example
- * const { tokens, numHidden } = useGroupTokenBalancesByVisibility({ balancesById, expandHiddenTokens, owner });
+ * const { tokens, numHidden } = useGroupTokenBalancesByVisibility({ balancesById });
  */
 export function useTokenBalancesGroupedByVisibility({
   balancesById,
