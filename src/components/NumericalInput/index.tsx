@@ -1,8 +1,8 @@
 import { SupportedLocale } from 'constants/locales'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import React, { forwardRef } from 'react'
 import styled from 'styled-components'
 import { escapeRegExp } from 'utils'
+import { useFormatterLocales } from 'utils/formatNumbers'
 
 const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; disabled?: boolean }>`
   color: ${({ error, theme }) => (error ? theme.critical : theme.neutral1)};
@@ -61,7 +61,7 @@ interface InputProps extends Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'on
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ value, onUserInput, placeholder, prependSymbol, ...rest }: InputProps, ref) => {
-    const activeLocale = useActiveLocale()
+    const { formatterLocale } = useFormatterLocales()
 
     const enforcer = (nextUserInput: string) => {
       if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
@@ -70,12 +70,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     }
 
     const formatValueWithLocale = (value: string | number) => {
-      const [searchValue, replaceValue] = localeUsesDecimal(activeLocale) ? [/\./g, ','] : [/,/g, '.']
+      const [searchValue, replaceValue] = localeUsesDecimal(formatterLocale) ? [/\./g, ','] : [/,/g, '.']
       return value.toString().replace(searchValue, replaceValue)
     }
 
     const valueFormattedWithLocale = formatValueWithLocale(value)
-    console.log('helo')
 
     return (
       <StyledInput
