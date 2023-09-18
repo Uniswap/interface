@@ -52,7 +52,9 @@ const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 export default function RemoveLiquidityWrapper() {
   const { chainId } = useWeb3React()
-  if (isSupportedChain(chainId)) {
+  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
+  const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
+  if (isSupportedChain(chainId) && currencyA !== currencyB) {
     return <RemoveLiquidity />
   } else {
     return <PositionPageUnsupportedContent />

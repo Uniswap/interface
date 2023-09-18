@@ -131,6 +131,12 @@ module.exports = {
         },
       })
 
+      // Retain source maps for node_modules packages:
+      webpackConfig.module.rules[0] = {
+        ...webpackConfig.module.rules[0],
+        exclude: /node_modules/,
+      }
+
       // Configure webpack transpilation (create-react-app specifies transpilation rules in a oneOf):
       webpackConfig.module.rules[1].oneOf = webpackConfig.module.rules[1].oneOf.map((rule) => {
         if (rule.loader && rule.loader.match(/babel-loader/)) {
@@ -169,13 +175,6 @@ module.exports = {
 
       // Configure webpack resolution. webpackConfig.cache is unused with swc-loader, but the resolver can still cache:
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, { unsafeCache: true })
-
-      webpackConfig.ignoreWarnings = [
-        // Source mappings for a package will fail if the package does not provide them, but the build will still succeed,
-        // so it is unnecessary (and bothersome) to log it. This should be turned off when debugging missing sourcemaps.
-        // See https://webpack.js.org/loaders/source-map-loader#ignoring-warnings.
-        /Failed to parse source map/,
-      ]
 
       return webpackConfig
     },
