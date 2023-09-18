@@ -319,14 +319,14 @@ export function Swap({
       (currencies[Field.INPUT]
         ? CurrencyAmount.fromRawAmount(currencies[Field.INPUT], JSBI.BigInt(10 ** currencies[Field.INPUT].decimals))
         : undefined),
-    currencies[Field.INPUT] ?? undefined
+    currencies[Field.INPUT]
   )
   const fiatValueOutput = useUSDPrice(
     parsedAmounts[Field.OUTPUT] ??
       (currencies[Field.OUTPUT]
         ? CurrencyAmount.fromRawAmount(currencies[Field.OUTPUT], JSBI.BigInt(10 ** currencies[Field.OUTPUT].decimals))
         : undefined),
-    currencies[Field.OUTPUT] ?? undefined
+    currencies[Field.OUTPUT]
   )
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
